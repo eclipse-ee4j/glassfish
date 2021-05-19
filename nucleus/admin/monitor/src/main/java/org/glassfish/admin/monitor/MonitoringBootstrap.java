@@ -243,7 +243,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
 
     /**
      * An application that has probes can be registered.
-     * 
+     *
      * @param appName application-name
      * @param appDir directory where application bits are present.
      * @param cl classloader that is used to load application files.
@@ -524,7 +524,7 @@ public class MonitoringBootstrap implements PostConstruct, PreDestroy, EventList
     }
 
     private boolean isCurrentInstanceMatchingTarget(PropertyChangeEvent event) {
-        // DAS receive all the events, so we need to figure out 
+        // DAS receive all the events, so we need to figure out
         // whether we should take action on DAS depending on the event.
 
         if (serverEnv.isInstance()) {

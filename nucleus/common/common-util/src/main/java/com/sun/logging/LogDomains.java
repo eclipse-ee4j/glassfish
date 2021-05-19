@@ -341,9 +341,9 @@ public class LogDomains {
                         }
                     }
                     //record.setThreadID((int) Thread.currentThread().getId());
-					if(record.getMessage()==null) {
-						record.setMessage("");
-					}
+                                        if(record.getMessage()==null) {
+                                                record.setMessage("");
+                                        }
                     super.log(record);
                 }
 

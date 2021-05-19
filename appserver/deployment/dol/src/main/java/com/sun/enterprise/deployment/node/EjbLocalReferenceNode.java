@@ -20,10 +20,10 @@ import com.sun.enterprise.deployment.EjbReferenceDescriptor;
 import com.sun.enterprise.deployment.types.EjbReference;
 
 /**
- * This node handles all information relative to ejb-local-ref 
+ * This node handles all information relative to ejb-local-ref
  *
  * @author  Jeorme Dochez
- * @version 
+ * @version
  */
 public class EjbLocalReferenceNode  extends EjbReferenceNode {
 

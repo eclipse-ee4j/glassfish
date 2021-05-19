@@ -55,4 +55,4 @@
       <property name="host" value="java.sun.com" />
       <property name="protocol" value="http" />
     </custom-resource>
-</resources> 
+</resources>

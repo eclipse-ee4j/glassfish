@@ -29,22 +29,22 @@ public abstract class ContextAccessController {
    * @param type the type of access required
    * @return true if access is allowed, false otherwise
    */
-  public abstract boolean isAccessAllowed(String key, 
+  public abstract boolean isAccessAllowed(String key,
       AccessControlledMap.ContextAccessLevel type);
-  
+
   /**
    * Checks if access is allowed and throws an InsufficientCredentialException
    * if access is not allowed.
    * @throws InsufficientCredentialException if access could not be granted
    */
-  public void checkAccessAllowed(String key, 
-      AccessControlledMap.ContextAccessLevel type) 
+  public void checkAccessAllowed(String key,
+      AccessControlledMap.ContextAccessLevel type)
           throws InsufficientCredentialException {
     if (!isAccessAllowed(key, type)) {
       throw new InsufficientCredentialException();
     }
   }
-  
+
   /**
    * @param key The name of a context
    * @return true if everyone can read the context named by key

@@ -37,7 +37,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 public class SecureServiceAccessPermission extends BasicPermission {
 
     private static final long serialVersionUID = -274181305911341984L;
-        
+
     public static final String RW_ACTION = "read,write";
     public static final String READ_ACTION = "read";
     public static final String WRITE_ACTION = "write";
@@ -68,23 +68,23 @@ public class SecureServiceAccessPermission extends BasicPermission {
     private transient boolean wildcard;
 
     private transient String path;
-        
+
     private String target;  //not used for now
     private String actions; //not used for now
 
     /**
-     * 
+     *
      * @param accessPermissionName  the permission name used inside the 'Secure' annotation of the protected service
      */
     public SecureServiceAccessPermission(String accessPermissionName) {
         this(accessPermissionName, null);
     }
 
-    
+
     /**
-     * 
+     *
      * @param accessPermissionName the permission name used inside the 'Secure' annotation of the protected service
-     * @param actions  use null (not used for now) 
+     * @param actions  use null (not used for now)
      */
     public SecureServiceAccessPermission(String accessPermissionName, String actions) {
         super(accessPermissionName, actions);
@@ -94,7 +94,7 @@ public class SecureServiceAccessPermission extends BasicPermission {
     }
 
     /**
-     * 
+     *
      * @param accessPermissionName the permission name used inside the 'Secure' annotation of the protected service
      * @param actions use null (not used for now)
      * @param targetName use null (not used for now)
@@ -104,7 +104,7 @@ public class SecureServiceAccessPermission extends BasicPermission {
         this(accessPermissionName, actions);
         this.target = targetName;
     }
-        
+
     private void init(int mask)
     {
 
@@ -211,16 +211,16 @@ public class SecureServiceAccessPermission extends BasicPermission {
     public String getActions() {
             return actions;
     }
-        
+
     int getActionMask() {
         return mask;
     }
 
-        
+
     public String getTarget() {
             return target;
     }
-        
+
         @Override
     public boolean equals(Object obj) {
         if (obj == this)
@@ -230,7 +230,7 @@ public class SecureServiceAccessPermission extends BasicPermission {
             return false;
 
         SecureServiceAccessPermission sp = (SecureServiceAccessPermission)obj;
-        
+
         return twoStringEq(getName(), sp.getName()) &&
                    mask == sp.getActionMask() &&
                    twoStringEq(this.getTarget(), sp.getTarget());
@@ -238,24 +238,24 @@ public class SecureServiceAccessPermission extends BasicPermission {
 
     //compare two strings
     private static boolean twoStringEq(String s1, String s2) {
-            
+
             if (s1 == null && s2 == null)
                 return true;
-            
+
             if (s1 == null) {
                 //s2 not null, s1 is null
                 return false;
-            } else 
-                //s1 not null, 
+            } else
+                //s1 not null,
                 return s1.equals(s2);
     }
-    
+
     @Override
     public int hashCode() {
-        return getName().hashCode(); 
+        return getName().hashCode();
     }
-        
-        
+
+
     @Override
     public boolean implies(Permission p) {
         if ((p == null) || (p.getClass() != getClass()))
@@ -263,21 +263,21 @@ public class SecureServiceAccessPermission extends BasicPermission {
 
         if (!(p instanceof SecureServiceAccessPermission))
             return false;
-        
+
         SecureServiceAccessPermission that = (SecureServiceAccessPermission) p;
 
-        
+
         boolean result = ((this.mask & that.mask) == that.mask) && nameImplies(that);
-        
+
         if (_log.isLoggable(Level.FINE)) {
                 _log.log(Level.FINE, "Implies for permission " + p + " return " + result);
         }
-        
+
         return result;
     }
-    
+
     private boolean nameImplies(SecureServiceAccessPermission that) {
-        
+
         if (this.wildcard) {
             if (that.wildcard) {
                 // one wildcard can imply another
@@ -297,7 +297,7 @@ public class SecureServiceAccessPermission extends BasicPermission {
             }
         }
     }
-    
+
 
     private void initWildCardPath(String name)
     {
@@ -326,7 +326,7 @@ public class SecureServiceAccessPermission extends BasicPermission {
             path = name;
         }
     }
-    
+
 
     final String getCanonicalName() {
         return  getName();
@@ -354,7 +354,7 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
         /**
          * This is set to <code>true</code> if this SecurityAccessPermissionCollection
          * contains a BasicPermission with '*' as its permission name.
-         * 
+         *
          * @see #serialPersistentFields
          */
         private boolean all_allowed;
@@ -362,12 +362,12 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
         /**
          * The class to which all BasicPermissions in this SecurityAccessPermissionCollection
          * belongs.
-         * 
+         *
          * @see #serialPersistentFields
          */
         private Class permClass;
 
-        
+
         private Logger log;
         private LocalStringManagerImpl localStrings;
 
@@ -382,15 +382,15 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
         /**
          * Adds a permission to the BasicPermissions. The key for the hash is
          * permission.path.
-         * 
+         *
          * @param permission
          *            the Permission object to add.
-         * 
+         *
          * @exception IllegalArgumentException
          *                - if the permission is not a BasicPermission, or if the
          *                permission is not of the same Class as the other
          *                permissions in this collection.
-         * 
+         *
          * @exception SecurityException
          *                - if this SecurityAccessPermissionCollection object has been marked
          *                readonly
@@ -416,9 +416,9 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
                 } else {
                         if (bp.getClass() != permClass)
                                 throw new IllegalArgumentException(
-                        localStrings.getLocalString(                                            
+                        localStrings.getLocalString(
                                         "perm.invalid.perm", "invalid permission: {0}", permission));
-                                                 
+
                 }
 
                 synchronized (this) {
@@ -435,10 +435,10 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
         /**
          * Check and see if this set of permissions implies the permissions
          * expressed in "permission".
-         * 
+         *
          * @param p
          *            the Permission object to compare
-         * 
+         *
          * @return true if "permission" is a proper subset of a permission in the
          *         set, false if not.
          */
@@ -497,7 +497,7 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
 
                 if (log.isLoggable(Level.FINE))
                         log.log(Level.FINE, "pemission collection returns false");
-                
+
                 // we don't have to check for "*" as it was already checked
                 // at the top (all_allowed), so we just return false
                 return false;
@@ -506,7 +506,7 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
         /**
          * Returns an enumeration of all the SecureServiceAccessPermission objects in the
          * container.
-         * 
+         *
          * @return an enumeration of all the SecureServiceAccessPermission objects.
          */
 
@@ -554,15 +554,15 @@ final class SecurityAccessPermissionCollection extends PermissionCollection  {
          */
         private void writeObject(ObjectOutputStream out) throws IOException {
             // Don't call out.defaultWriteObject()
-    
+
             // Copy perms into a Hashtable
             Hashtable<String, Permission> permissions =
                     new Hashtable<String, Permission>(perms.size()*2);
-    
+
             synchronized (this) {
                 permissions.putAll(perms);
             }
-    
+
             // Write out serializable fields
             ObjectOutputStream.PutField pfields = out.putFields();
             pfields.put("all_allowed", all_allowed);

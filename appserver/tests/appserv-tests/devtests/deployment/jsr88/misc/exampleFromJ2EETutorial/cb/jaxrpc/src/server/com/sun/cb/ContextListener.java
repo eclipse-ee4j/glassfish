@@ -17,7 +17,7 @@
 package com.sun.cb;
 
 import jakarta.servlet.*;
-import javax.xml.registry.*; 
+import javax.xml.registry.*;
 import java.util.ResourceBundle;
 import java.io.*;
 
@@ -32,15 +32,15 @@ public final class ContextListener
         ResourceBundle registryBundle =
            ResourceBundle.getBundle("com.sun.cb.CoffeeRegistry");
 
-        String username = 
+        String username =
             registryBundle.getString("registry.username");
-        String password = 
+        String password =
             registryBundle.getString("registry.password");
         String keyFile = registryBundle.getString("key.file");
 
         JAXRPublisher publisher = new JAXRPublisher();
         publisher.makeConnection(queryURL, publishURL);
-        String key = publisher.executePublish(username, 
+        String key = publisher.executePublish(username,
             password, endpoint);
         try {
             FileWriter out = new FileWriter(keyFile);
@@ -49,9 +49,9 @@ public final class ContextListener
             out.close();
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
-        }     
+        }
     }
-      
+
     public void contextDestroyed(ServletContextEvent event) {
         String keyStr = null;
 
@@ -61,9 +61,9 @@ public final class ContextListener
         ResourceBundle registryBundle =
             ResourceBundle.getBundle("com.sun.cb.CoffeeRegistry");
 
-        String username = 
+        String username =
             registryBundle.getString("registry.username");
-        String password = 
+        String password =
             registryBundle.getString("registry.password");
         String keyFile = registryBundle.getString("key.file");
 

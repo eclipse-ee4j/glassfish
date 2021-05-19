@@ -32,8 +32,8 @@ import jakarta.servlet.http.HttpSession;
 
 public class SFSBDriverServlet extends HttpServlet {
 
-   
-    /** 
+
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -47,7 +47,7 @@ public class SFSBDriverServlet extends HttpServlet {
         try {
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Servlet SFSBDriverServlet</title>");  
+            out.println("<title>Servlet SFSBDriverServlet</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h1>Servlet SFSBDriverServlet at " + request.getContextPath () + "</h1>");
@@ -63,13 +63,13 @@ public class SFSBDriverServlet extends HttpServlet {
             out.println("</html>");
         } catch (Exception nmEx) {
             nmEx.printStackTrace(out);
-        } finally { 
+        } finally {
             out.close();
         }
-    } 
+    }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -80,9 +80,9 @@ public class SFSBDriverServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -95,7 +95,7 @@ public class SFSBDriverServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

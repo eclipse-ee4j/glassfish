@@ -31,22 +31,22 @@ public class ManagedBean2Int extends ManagedBeanSuper {
     private String aroundInvoke = "";
 
     public void newInterceptorInstance() {
-	numInterceptorInstances++;
+        numInterceptorInstances++;
     }
 
     public int getNumInstances() {
-	return numInstances;
+        return numInstances;
     }
 
     public int getNumInterceptorInstances() {
-	return numInterceptorInstances;
+        return numInterceptorInstances;
     }
 
-   
+
 
     @PostConstruct
     private void init() {
-	numInstances++;
+        numInstances++;
     }
 
     @PreDestroy

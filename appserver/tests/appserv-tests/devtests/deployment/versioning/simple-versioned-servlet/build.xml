@@ -70,11 +70,11 @@
           <entry  key="version.identifier" value="${versionExpression}"/>
         </propertyfile>
         <property name="xmlFile" value="${gfDDDir}/${gfDDFile}"/>
-    	<antcall target="generate.xml.identifier"/>
+            <antcall target="generate.xml.identifier"/>
     </target>
 
     <!-- assemble: package the war archive -->
-    <target name="assemble" depends="compile">        
+    <target name="assemble" depends="compile">
         <war destfile="${archiveFile}" webxml="WEB-INF/web.xml" manifest="META-INF/MANIFEST.MF">
             <webinf dir="WEB-INF" includes="glassfish-web.xml"/>
             <classes dir="${classPath}" includes="**/*.class, **/*.properties">

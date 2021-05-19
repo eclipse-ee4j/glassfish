@@ -166,7 +166,7 @@ public class Util {
                 /*
                  * The next line quotes any $ signs and backslashes in the replacement string
                  * so they are not interpreted as meta-characters by the regular expression
-                 * processor's appendReplacement.  
+                 * processor's appendReplacement.
                  */
                 String adjustedPropertyValue =
                         propertyValue.replaceAll("\\\\",SLASH_REPLACEMENT).

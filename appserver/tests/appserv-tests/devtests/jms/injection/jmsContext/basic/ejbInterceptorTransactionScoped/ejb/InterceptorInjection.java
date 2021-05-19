@@ -40,7 +40,7 @@ public class InterceptorInjection implements InterceptorInjectionRemote {
     private JMSContext jmsContext;
 
     @Override
-    @Interceptors(MyInterceptor.class) 
+    @Interceptors(MyInterceptor.class)
     public void sendMessage(String text) {
     }
 

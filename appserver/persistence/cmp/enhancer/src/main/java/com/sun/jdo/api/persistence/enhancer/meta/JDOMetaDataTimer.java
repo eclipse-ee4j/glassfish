@@ -19,27 +19,23 @@ package com.sun.jdo.api.persistence.enhancer.meta;
 import com.sun.jdo.api.persistence.enhancer.util.Support;
 
 
-//@olsen: new class
-public final class JDOMetaDataTimer
-    extends Support
-    implements JDOMetaData
-{
+// @olsen: new class
+public final class JDOMetaDataTimer extends Support implements JDOMetaData {
+
     // delegate
     final protected JDOMetaData delegate;
 
     /**
      * Creates an instance.
      */
-    public JDOMetaDataTimer(JDOMetaData delegate)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+    public JDOMetaDataTimer(JDOMetaData delegate) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         affirm(delegate);
         this.delegate = delegate;
     }
 
-    public boolean isPersistenceCapableClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+
+    @Override
+    public boolean isPersistenceCapableClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isPersistenceCapableClass(String)",//NOI18N
                        "JDOMetaData.isPersistenceCapableClass(" + classPath + ")");//NOI18N
@@ -49,9 +45,9 @@ public final class JDOMetaDataTimer
         }
     }
 
-    public boolean isTransientClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+
+    @Override
+    public boolean isTransientClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isTransientClass(String)",//NOI18N
                        "JDOMetaData.isTransientClass(" + classPath + ")");//NOI18N
@@ -61,9 +57,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public boolean isPersistenceCapableRootClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isPersistenceCapableRootClass(String)",//NOI18N
                        "JDOMetaData.isPersistenceCapableRootClass(" + classPath + ")");//NOI18N
@@ -73,9 +70,9 @@ public final class JDOMetaDataTimer
         }
     }
 
-    public String getSuperClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+
+    @Override
+    public String getSuperClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.getSuperClass(String)",//NOI18N
                        "JDOMetaData.getSuperClass(" + classPath + ")");//NOI18N
@@ -85,9 +82,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public String getPersistenceCapableRootClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.getPersistenceCapableRootClass(String)",//NOI18N
                        "JDOMetaData.getPersistenceCapableRootClass(" + classPath + ")");//NOI18N
@@ -97,9 +95,9 @@ public final class JDOMetaDataTimer
         }
     }
 
-    public boolean isSecondClassObjectType(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+
+    @Override
+    public boolean isSecondClassObjectType(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isSecondClassObjectType(String)",//NOI18N
                        "JDOMetaData.isSecondClassObjectType(" + classPath + ")");//NOI18N
@@ -109,9 +107,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public boolean isMutableSecondClassObjectType(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isMutableSecondClassObjectType(String)",//NOI18N
                        "JDOMetaData.isMutableSecondClassObjectType(" + classPath + ")");//NOI18N
@@ -121,9 +120,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public boolean isPersistentField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isPersistentField(String,String)",//NOI18N
                        "JDOMetaData.isPersistentField(" + classPath//NOI18N
@@ -134,9 +134,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public boolean isTransactionalField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isTransactionalField(String,String)",//NOI18N
                        "JDOMetaData.isTransactionalField(" + classPath//NOI18N
@@ -147,9 +148,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public boolean isPrimaryKeyField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isPrimaryKeyField(String,String)",//NOI18N
                        "JDOMetaData.isPrimaryKeyField(" + classPath//NOI18N
@@ -160,9 +162,10 @@ public final class JDOMetaDataTimer
         }
     }
 
+
+    @Override
     public boolean isDefaultFetchGroupField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.isDefaultFetchGroupField(String,fieldName)",//NOI18N
                        "JDOMetaData.isDefaultFetchGroupField(" + classPath//NOI18N
@@ -173,9 +176,9 @@ public final class JDOMetaDataTimer
         }
     }
 
-    public int getFieldNo(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+
+    @Override
+    public int getFieldNo(String classPath, String fieldName) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.getFieldNo(String, String)",//NOI18N
                        "JDOMetaData.getFieldNo(" + classPath//NOI18N
@@ -186,9 +189,9 @@ public final class JDOMetaDataTimer
         }
     }
 
-    public String[] getManagedFields(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+
+    @Override
+    public String[] getManagedFields(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         try {
             timer.push("JDOMetaData.getPersistentFields(String)",//NOI18N
                        "JDOMetaData.getPersistentFields(" + classPath + ")");//NOI18N

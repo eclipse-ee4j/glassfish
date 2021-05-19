@@ -42,8 +42,8 @@ public class LocaleEncodingMappingNode extends DeploymentDescriptorNode<LocaleEn
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -52,21 +52,21 @@ public class LocaleEncodingMappingNode extends DeploymentDescriptorNode<LocaleEn
         table.put(WebTagNames.LOCALE, "setLocale");
         table.put(WebTagNames.ENCODING, "setEncoding");
         return table;
-    }    
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, LocaleEncodingMappingDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, LocaleEncodingMappingDescriptor descriptor) {
         Node envEntryNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(envEntryNode, WebTagNames.LOCALE, descriptor.getLocale());
-        appendTextChild(envEntryNode, WebTagNames.ENCODING, descriptor.getEncoding());        
+        appendTextChild(envEntryNode, WebTagNames.ENCODING, descriptor.getEncoding());
         return envEntryNode;
     }
 }

@@ -68,7 +68,7 @@
             </classpath>
             <arg value="http://${http.host}:${http.port}/wsclient/RequestProcessor"/>
           </java>
-        <!--restore the tokens back in file--> 
+        <!--restore the tokens back in file-->
          <replace file="webclient/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="webclient/Client.java" token="${http.port}" value="HTTP_PORT"/>
         </target>
@@ -141,5 +141,5 @@
 
     </project>
 
-    
-   
+
+

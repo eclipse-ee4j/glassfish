@@ -54,7 +54,7 @@ public class MyExtension implements Extension {
                 it.preDestroy(instance);
             }
 
-            public void dispose(PortableExtensionInjectionTargetTestServlet instance) {        
+            public void dispose(PortableExtensionInjectionTargetTestServlet instance) {
             }
 
             public Set<InjectionPoint> getInjectionPoints() {

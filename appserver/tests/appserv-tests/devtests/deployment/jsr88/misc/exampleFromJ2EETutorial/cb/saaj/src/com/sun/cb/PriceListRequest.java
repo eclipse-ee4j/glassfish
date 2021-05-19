@@ -24,7 +24,7 @@ import java.net.*;
 
 public class PriceListRequest {
     String url;
-  
+
     public PriceListRequest(String url){
         this.url = url;
     }
@@ -32,7 +32,7 @@ public class PriceListRequest {
     public PriceListBean getPriceList() {
         PriceListBean plb = null;
         try {
-            SOAPConnectionFactory scf = 
+            SOAPConnectionFactory scf =
                 SOAPConnectionFactory.newInstance();
             SOAPConnection con = scf.createConnection();
 
@@ -44,14 +44,14 @@ public class PriceListRequest {
             SOAPEnvelope envelope = part.getEnvelope();
             SOAPBody body = envelope.getBody();
 
-            // Create SOAPBodyElement request 
+            // Create SOAPBodyElement request
             Name bodyName = envelope.createName("request-prices",
                 "RequestPrices", "http://sonata.coffeebreak.com");
             SOAPBodyElement requestPrices =
                 body.addBodyElement(bodyName);
-      
+
             Name requestName = envelope.createName("request");
-            SOAPElement request = 
+            SOAPElement request =
                 requestPrices.addChildElement(requestName);
             request.addTextNode("Send updated price list.");
 
@@ -66,9 +66,9 @@ public class PriceListRequest {
 
             Vector list = new Vector();
 
-            SOAPBody responseBody = 
+            SOAPBody responseBody =
                 response.getSOAPPart().getEnvelope().getBody();
-            Iterator it1 = responseBody.getChildElements(); 
+            Iterator it1 = responseBody.getChildElements();
 
             // Get price-list element
             while (it1.hasNext()) {
@@ -90,7 +90,7 @@ public class PriceListRequest {
             ArrayList items = new ArrayList();
             for (int i = 0; i < list.size(); i = i + 2) {
                 items.add(
-                    new PriceItemBean(list.elementAt(i).toString(), 
+                    new PriceItemBean(list.elementAt(i).toString(),
                     new BigDecimal(list.elementAt(i + 1).toString())));
                 System.out.print(list.elementAt(i) + "        ");
                 System.out.println(list.elementAt(i + 1));
@@ -98,9 +98,9 @@ public class PriceListRequest {
 
             PriceItemBean[] priceItems = new PriceItemBean[items.size()];
             int i=0;
-      			for (Iterator it=items.iterator(); it.hasNext(); ) {
+                              for (Iterator it=items.iterator(); it.hasNext(); ) {
               priceItems[i] = (PriceItemBean)it.next();
-              i++;	
+              i++;
             }
             Date today = new Date();
             Date endDate = DateHelper.addDays(today, 30);

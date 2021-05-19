@@ -150,7 +150,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
 
     private static final Level TRACE_LEVEL = Level.FINE;
 
-    private EjbDescriptor		    ejbDescriptor;
+    private EjbDescriptor            ejbDescriptor;
 
     private StatefulSessionContainer sfsbContainer;
 
@@ -173,7 +173,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
 
     @Inject @Optional
     GMSAdapterService gmsAdapterService;
-    
+
     private LruSessionCache sessionCache;
 
     private BackingStore<Serializable, SimpleMetadata> backingStore;
@@ -209,7 +209,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
                             asyncReplication = params.asyncreplication;
                         }
                     }
-                    
+
                     _logger.log(Level.FINE, SFSB_BUILDER_GLOBAL_AND_APP_AVAILABILITY_ENABLED,
                             new Object[] {this.HAEnabled, appLevelHAEnabled});
                 }
@@ -286,7 +286,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
         String storeName = ejbDescriptor.getName() + "-" + ejbDescriptor.getUniqueId() + "-BackingStore";
 
         _logger.log(Level.FINE, SFSB_BUILDER_STORE_NAME, storeName);
-        
+
         String subDirName = "";
 
 /*        if (ejbDescriptor.getApplication().isVirtual()) {
@@ -301,7 +301,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
         }*/
 
         subDirName += ejbDescriptor.getName() + "-" + ejbDescriptor.getUniqueId();
-        
+
         conf.setShortUniqueName(""+ejbDescriptor.getUniqueId()).setStoreName(storeName)
                 .setStoreType(persistenceStoreType)
                 .setBaseDirectory(new File(ejbContainerConfig.getSessionStore(), subDirName))
@@ -325,7 +325,7 @@ public class StatefulContainerFactory extends BaseContainerFactory
                 conf.setInstanceName(gmsAdapter.getModule().getInstanceName());
             }
         }
-        
+
         BackingStoreFactory factory = null;
         try {
             factory = services.getService(BackingStoreFactory.class, persistenceStoreType);

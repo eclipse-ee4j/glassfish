@@ -24,11 +24,11 @@
     <description>simple soapfault service ref</description>
     <service-ref-name>service/soapfault</service-ref-name>
     <service-interface>javax.xml.rpc.Service</service-interface>
-    <wsdl-file>META-INF/wsdl/SoapFaultService.wsdl</wsdl-file>    
+    <wsdl-file>META-INF/wsdl/SoapFaultService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>SoapFaultMapping_ejb.xml</jaxrpc-mapping-file>
-    <service-qname xmlns:servicens="urn:SoapFaultTest">servicens:SoapFaultService</service-qname>               
+    <service-qname xmlns:servicens="urn:SoapFaultTest">servicens:SoapFaultService</service-qname>
     <port-component-ref>
       <service-endpoint-interface>soapfault.ejb.SimpleSoapFaultSEI</service-endpoint-interface>
-    </port-component-ref>          
+    </port-component-ref>
   </service-ref>
 </application-client>

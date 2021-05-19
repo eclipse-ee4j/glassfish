@@ -60,14 +60,14 @@ public class TextPayloadImpl {
             return new Inbound(messageContentType, is);
         }
 
-	/**
-	 * Does this Inbound Payload implementation support the given content type?
-	 * @return true if the content type is supported
-	 */
-	public static boolean supportsContentType(String contentType) {
-	    return PAYLOAD_IMPL_CONTENT_TYPE.regionMatches(true, 0,
-		    contentType, 0, PAYLOAD_IMPL_CONTENT_TYPE.length());
-	}
+        /**
+         * Does this Inbound Payload implementation support the given content type?
+         * @return true if the content type is supported
+         */
+        public static boolean supportsContentType(String contentType) {
+            return PAYLOAD_IMPL_CONTENT_TYPE.regionMatches(true, 0,
+                    contentType, 0, PAYLOAD_IMPL_CONTENT_TYPE.length());
+        }
 
         private Inbound(final String contentType, final InputStream is) {
             this.contentType = contentType;

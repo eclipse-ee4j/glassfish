@@ -36,7 +36,7 @@ import static javax.security.enterprise.identitystore.CredentialValidationResult
 @RequestScoped
 @AutoApplySession
 public class TestAuthenticationMechanism implements HttpAuthenticationMechanism {
-    
+
     @Inject
     private IdentityStoreHandler identityStoreHandler;
 
@@ -44,7 +44,7 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
 
         request.setAttribute("authentication-mechanism-called", "true");
-        
+
         if (request.getParameter("name") != null && request.getParameter("password") != null) {
 
             // Get the (caller) name and password from the request
@@ -61,17 +61,17 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
 
             if (result.getStatus() == VALID) {
                 // Communicate the details of the authenticated user to the
-                // container. In many cases the underlying handler will just store the details 
-                // and the container will actually handle the login after we return from 
+                // container. In many cases the underlying handler will just store the details
+                // and the container will actually handle the login after we return from
                 // this method.
                 return httpMessageContext.notifyContainerAboutLogin(
                     result.getCallerPrincipal(), result.getCallerGroups());
             } else {
                 return httpMessageContext.responseUnauthorized();
             }
-        } 
+        }
 
         return httpMessageContext.doNothing();
     }
-    
+
 }

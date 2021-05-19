@@ -24,9 +24,9 @@ import java.util.*;
  */
 
 public interface A1LocalHome extends jakarta.ejb.EJBLocalHome {
-    
+
     public  A1Local findByPrimaryKey(java.lang.String pk)  throws jakarta.ejb.FinderException;
-    
+
     public  A1Local create(java.lang.String id) throws jakarta.ejb.CreateException;
-    
+
 }

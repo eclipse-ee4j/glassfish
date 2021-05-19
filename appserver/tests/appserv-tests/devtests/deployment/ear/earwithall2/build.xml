@@ -129,7 +129,7 @@
             <param name="testName" value="${appName}"/>
         </antcall>
     </target>
-    
+
     <target name="deploy.asadmin.war" depends="prepare">
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="--deploymentorder 102 ${testWar}"/>
@@ -200,9 +200,9 @@
         </antcall>
     </target>
 
-    <target name="enable.asadmin"> 
+    <target name="enable.asadmin">
         <antcall target="common.enable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${appName}"/>
             <param name="testName" value="${appName}"/>
         </antcall>
@@ -210,7 +210,7 @@
 
     <target name="disable.asadmin">
         <antcall target="common.disable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${appName}"/>
             <param name="testName" value="${appName}"/>
         </antcall>
@@ -248,7 +248,7 @@
         </antcall>
     </target>
 
-   <!-- as it's not easy to implement the undeploy-stream using the 
+   <!-- as it's not easy to implement the undeploy-stream using the
         current JSR88 Deployer, let's just undeploy all -->
     <target name="undeploy-stream.jsr88">
         <antcall target="common.undeploy.jsr88">
@@ -289,7 +289,7 @@
             <param name="log.id" value="${log.id}"/>
         </antcall>
     </target>
-    
+
     <target name="runclient" depends="init">
         <echo message="TestClient ${arg.list}"/>
         <javaWithResult
@@ -412,15 +412,15 @@
     <target name="addClusterRefs" depends="prepare" if="doCluster">
         <!-- create-app-ref to cluster -->
         <antcall target="common.run.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="create-application-ref --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --target ${testCluster} ${appName}"/>
         </antcall>
     </target>
-    
+
     <target name="delClusterRefs" depends="prepare" if="doCluster">
         <!-- delete-app-ref to remote instance server -->
         <antcall target="common.run.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="delete-application-ref --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --target ${testCluster} ${appName}"/>
         </antcall>
     </target>
@@ -431,7 +431,7 @@
 
         <!-- deployment to Domain -->
         <antcall target="common.run.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="deploy --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --target domain ${all.ear}"/>
         </antcall>
 
@@ -452,7 +452,7 @@
         <antcall target="addInstanceRef"/>
         <antcall target="addClusterRefs"/>
         <antcall target="common.run.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="deploy --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --force=true --target domain ${all.ear}"/>
         </antcall>
         <antcall target="run.positive">
@@ -480,7 +480,7 @@
 
         <!-- undeploy from Domain -->
         <antcall target="common.run.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="undeploy --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --target domain ${appName}"/>
         </antcall>
     </target>

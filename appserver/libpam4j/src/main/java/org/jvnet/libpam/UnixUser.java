@@ -70,7 +70,7 @@ public class UnixUser {
             int gid = m.getInt(i * sz);
             Group grp = libc.getgrgid(gid);
             if( grp == null ) {
-            	 continue;
+                 continue;
             }
             groups.add(grp.gr_name);
         }

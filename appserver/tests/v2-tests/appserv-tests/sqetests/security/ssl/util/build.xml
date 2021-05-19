@@ -42,7 +42,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="."/>
@@ -50,11 +50,11 @@
     </target>
 
     <target name="build" depends="compile">
-	 <jar destfile="${env.APS_HOME}/lib/sslutil.jar">
-		 <fileset dir="${build.classes.dir}"
-			 includes="**/KeyTool.class"
-	    />
-	  </jar>
+      <jar destfile="${env.APS_HOME}/lib/sslutil.jar">
+         <fileset dir="${build.classes.dir}"
+             includes="**/KeyTool.class"
+        />
+      </jar>
     </target>
 
 </project>

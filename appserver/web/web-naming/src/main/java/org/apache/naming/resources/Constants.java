@@ -24,7 +24,7 @@ package org.apache.naming.resources;
 
 public final class Constants {
 
-    public static final String PROTOCOL_HANDLER_VARIABLE = 
+    public static final String PROTOCOL_HANDLER_VARIABLE =
         "java.protocol.handler.pkgs";
 
     public static final String Package = "org.apache.naming.resources";

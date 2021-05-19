@@ -51,4 +51,4 @@
       <property name="connectionAttributes" value=";create=true" />
     </jdbc-connection-pool>
     <jdbc-resource pool-name="java:app/jdbc-xa-pool" jndi-name="java:app/jdbc/xa" />
-</resources> 
+</resources>

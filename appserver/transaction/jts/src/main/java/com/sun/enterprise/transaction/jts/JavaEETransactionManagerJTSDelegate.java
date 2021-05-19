@@ -74,14 +74,14 @@ import org.glassfish.hk2.api.ServiceLocator;
  * @author Marina Vatkina
  */
 @Service
-public class JavaEETransactionManagerJTSDelegate 
+public class JavaEETransactionManagerJTSDelegate
             implements JavaEETransactionManagerDelegate, PostConstruct {
 
     @Inject private ServiceLocator serviceLocator;
 
     // an implementation of the JavaEETransactionManager that calls
     // this object.
-    // @Inject 
+    // @Inject
     private JavaEETransactionManager javaEETM;
 
     // an implementation of the JTA TransactionManager provided by JTS.
@@ -130,9 +130,9 @@ public class JavaEETransactionManagerJTSDelegate
 
     /** An XA transaction commit
      */
-    public void commitDistributedTransaction() throws 
-            RollbackException, HeuristicMixedException, 
-            HeuristicRollbackException, SecurityException, 
+    public void commitDistributedTransaction() throws
+            RollbackException, HeuristicMixedException,
+            HeuristicRollbackException, SecurityException,
             IllegalStateException, SystemException {
 
         if (_logger.isLoggable(Level.FINE))
@@ -141,9 +141,9 @@ public class JavaEETransactionManagerJTSDelegate
         TransactionManager tm = tmLocal.get();
         Object obj = tm.getTransaction(); // monitoring object
 
-        JavaEETransactionManagerSimplified javaEETMS = 
+        JavaEETransactionManagerSimplified javaEETMS =
                 (JavaEETransactionManagerSimplified)javaEETM;
-        
+
         boolean success = false;
         if (javaEETMS.isInvocationStackEmpty()) {
             try{
@@ -176,7 +176,7 @@ public class JavaEETransactionManagerJTSDelegate
 
     /** An XA transaction rollback
     */
-    public void rollbackDistributedTransaction() throws IllegalStateException, 
+    public void rollbackDistributedTransaction() throws IllegalStateException,
             SecurityException, SystemException {
 
         if (_logger.isLoggable(Level.FINE))
@@ -185,10 +185,10 @@ public class JavaEETransactionManagerJTSDelegate
 
         TransactionManager tm = tmLocal.get();
         Object obj = tm.getTransaction(); // monitoring object
-        
-        JavaEETransactionManagerSimplified javaEETMS = 
+
+        JavaEETransactionManagerSimplified javaEETMS =
                 (JavaEETransactionManagerSimplified)javaEETM;
-        
+
         try {
             if (javaEETMS.isInvocationStackEmpty()) {
                 tm.rollback();
@@ -215,9 +215,9 @@ public class JavaEETransactionManagerJTSDelegate
         int status = jakarta.transaction.Status.STATUS_NO_TRANSACTION;
 
         TransactionManager tm = tmLocal.get();
-        if ( tx != null) 
+        if ( tx != null)
             status = tx.getStatus();
-        else if (tm != null) 
+        else if (tm != null)
             status = tm.getStatus();
 
         if (_logger.isLoggable(Level.FINE))
@@ -226,7 +226,7 @@ public class JavaEETransactionManagerJTSDelegate
         return status;
     }
 
-    public Transaction getTransaction() 
+    public Transaction getTransaction()
             throws SystemException {
         JavaEETransaction tx = javaEETM.getCurrentTransaction();
         if (_logger.isLoggable(Level.FINE))
@@ -360,7 +360,7 @@ public class JavaEETransactionManagerJTSDelegate
         _logger = ((JavaEETransactionManagerSimplified)javaEETM).getLogger();
     }
 
-    public TransactionInternal startJTSTx(JavaEETransaction tran, boolean isAssociatedTimeout) 
+    public TransactionInternal startJTSTx(JavaEETransaction tran, boolean isAssociatedTimeout)
             throws RollbackException, IllegalStateException, SystemException {
         setTransactionManager();
 
@@ -456,7 +456,7 @@ public class JavaEETransactionManagerJTSDelegate
         }
     }
 
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, 
+    public boolean recoverIncompleteTx(boolean delegated, String logPath,
             XAResource[] xaresArray) throws Exception {
         boolean result = false;
         if (!delegated) {
@@ -491,20 +491,20 @@ public class JavaEETransactionManagerJTSDelegate
                     if (_logger.isLoggable(Level.FINE))
                         _logger.log(Level.FINE,"TM: LAO is disabled");
                 }
-        
+
                 value = txnService.getPropertyValue("oracle-xa-recovery-workaround");
                 if (value == null || "true".equals(value)) {
                     xaresourcewrappers.put(
                         "oracle.jdbc.xa.client.OracleXADataSource",
                         new OracleXAResource());
                 }
-        
+
                 if (Boolean.parseBoolean(txnService.getPropertyValue("sybase-xa-recovery-workaround"))) {
                     xaresourcewrappers.put(
                         "com.sybase.jdbc2.jdbc.SybXADataSource",
                         new SybaseXAResource());
                 }
-        
+
                 if (Boolean.parseBoolean(txnService.getAutomaticRecovery())) {
                     // If recovery on server startup is set, initialize other properties as well
                     Properties props = TransactionServiceProperties.getJTSProperties(serviceLocator, false);
@@ -548,7 +548,7 @@ public class JavaEETransactionManagerJTSDelegate
         }
     }
 
-    public TransactionAdminBean getTransactionAdminBean(Transaction t) 
+    public TransactionAdminBean getTransactionAdminBean(Transaction t)
             throws jakarta.transaction.SystemException {
         TransactionAdminBean tBean = null;
         if(t instanceof com.sun.jts.jta.TransactionImpl) {
@@ -655,19 +655,19 @@ public class JavaEETransactionManagerJTSDelegate
     private static class ReadWriteLock implements Lock {
         private static final RWLock freezeLock = new RWLock();
 
-        public void lock() { 
-            freezeLock.acquireReadLock(); 
-        }
-        
-        public void unlock() { 
-            freezeLock.releaseReadLock(); 
+        public void lock() {
+            freezeLock.acquireReadLock();
         }
 
-        private void acquireWriteLock() { 
+        public void unlock() {
+            freezeLock.releaseReadLock();
+        }
+
+        private void acquireWriteLock() {
             freezeLock.acquireWriteLock();
         }
 
-        private void releaseWriteLock() { 
+        private void releaseWriteLock() {
             freezeLock.releaseWriteLock();
         }
 
@@ -679,7 +679,7 @@ public class JavaEETransactionManagerJTSDelegate
             throw new UnsupportedOperationException();
         }
 
-        public boolean tryLock(long timeout, TimeUnit unit) 
+        public boolean tryLock(long timeout, TimeUnit unit)
                 throws InterruptedException {
             throw new UnsupportedOperationException();
         }

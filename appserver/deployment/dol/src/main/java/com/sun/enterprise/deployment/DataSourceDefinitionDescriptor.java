@@ -48,7 +48,7 @@ public class DataSourceDefinitionDescriptor extends ResourceDescriptor {
     private Properties properties = new Properties();
 
     private boolean transactionSet = false;
-    private boolean loginTimeoutSet = false; 
+    private boolean loginTimeoutSet = false;
     private boolean serverNameSet = false;
 
 

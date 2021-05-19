@@ -21,21 +21,21 @@ import java.rmi.RemoteException;
 
 public class SayHelloEJB implements SessionBean {
 
-	private SessionContext sc;
+        private SessionContext sc;
 
-	public SayHelloEJB() {}
+        public SayHelloEJB() {}
 
-	public void ejbCreate() throws CreateException {}
+        public void ejbCreate() throws CreateException {}
 
-	public String sayHello(String s) throws RemoteException {
-		return "Hello EJB returns your Hello : " + s;
-	}
+        public String sayHello(String s) throws RemoteException {
+                return "Hello EJB returns your Hello : " + s;
+        }
 
-	public void setSessionContext(SessionContext sc) {
-				this.sc = sc;
-	}
+        public void setSessionContext(SessionContext sc) {
+                                this.sc = sc;
+        }
 
-	public void ejbRemove() throws RemoteException {}
-	public void ejbActivate() {}
-	public void ejbPassivate() {}
-} 
+        public void ejbRemove() throws RemoteException {}
+        public void ejbActivate() {}
+        public void ejbPassivate() {}
+}

@@ -28,7 +28,7 @@ import org.apache.naming.TransactionRef;
 
 /**
  * Object factory for User trasactions.
- * 
+ *
  * @author Remy Maucherat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:08 $
  */
@@ -54,23 +54,23 @@ public class TransactionFactory
 
     /**
      * Crete a new User transaction instance.
-     * 
+     *
      * @param obj The reference object describing the DataSource
      */
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
                                     Hashtable<?,?> environment)
         throws Exception {
-        
+
         if (obj instanceof TransactionRef) {
             Reference ref = (Reference) obj;
             ObjectFactory factory = null;
             RefAddr factoryRefAddr = ref.get(Constants.FACTORY);
             if (factoryRefAddr != null) {
                 // Using the specified factory
-                String factoryClassName = 
+                String factoryClassName =
                     factoryRefAddr.getContent().toString();
                 // Loading factory
-                ClassLoader tcl = 
+                ClassLoader tcl =
                     Thread.currentThread().getContextClassLoader();
                 Class<?> factoryClass = null;
                 if (tcl != null) {
@@ -98,11 +98,11 @@ public class TransactionFactory
                 throw new NamingException
                     ("Cannot create resource instance");
             }
-            
+
         }
-        
+
         return null;
-        
+
     }
 
 

@@ -20,50 +20,50 @@ import java.beans.PropertyChangeEvent;
 import java.util.List;
 
 /**
- * Any object that want to be part of a configuration transaction 
+ * Any object that want to be part of a configuration transaction
  * should implement this interface.
  *
  * @author Jerome Dochez
  */
 public interface Transactor {
 
-	/**
-	 * Enter a new Transaction, this method should return false if this object
-	 * is already enlisted in another transaction, or cannot be enlisted with
-	 * the passed transaction. If the object returns true, the object
-	 * is enlisted in the passed transaction and cannot be enlisted in another 
-	 * transaction until either commit or abort has been issued.
-	 * 
-	 * @param t the transaction to enlist with
-	 * @return true if the enlisting with the passed transaction was accepted, 
-	 * false otherwise
-	 */
-    public boolean join(Transaction t);
-	
-	/**
-	 * Returns true of this Transaction can be committed on this object
-	 *
-	 * @param t is the transaction to commit, should be the same as the
-	 * one passed during the join(Transaction t) call.
-	 *
-	 * @return true if the transaction committing would be successful
+    /**
+     * Enter a new Transaction, this method should return false if this object
+     * is already enlisted in another transaction, or cannot be enlisted with
+     * the passed transaction. If the object returns true, the object
+     * is enlisted in the passed transaction and cannot be enlisted in another
+     * transaction until either commit or abort has been issued.
+     *
+     * @param t the transaction to enlist with
+     * @return true if the enlisting with the passed transaction was accepted,
+     * false otherwise
+     */
+    boolean join(Transaction t);
+
+    /**
+     * Returns true of this Transaction can be committed on this object
+     *
+     * @param t is the transaction to commit, should be the same as the
+     * one passed during the join(Transaction t) call.
+     *
+     * @return true if the transaction committing would be successful
      * @throws TransactionFailure if the changes cannot be validated
-	 */
-    public boolean canCommit(Transaction t) throws TransactionFailure;
+     */
+    boolean canCommit(Transaction t) throws TransactionFailure;
 
-	/**
-	 * Commit this Transaction.
-	 *
-	 * @param t the transaction commiting.
+    /**
+     * Commit this Transaction.
+     *
+     * @param t the transaction commiting.
      * @return list of applied property changes
-	 * @throws TransactionFailure if the transaction commit failed
-	 */
-    public List<PropertyChangeEvent> commit(Transaction t) throws TransactionFailure;
+     * @throws TransactionFailure if the transaction commit failed
+     */
+    List<PropertyChangeEvent> commit(Transaction t) throws TransactionFailure;
 
-	/**
-	 * Aborts this Transaction, reverting the state
-	 
-	 * @param t the aborting transaction
-	 */
-    public void abort(Transaction t);
+    /**
+     * Aborts this Transaction, reverting the state
+
+     * @param t the aborting transaction
+     */
+    void abort(Transaction t);
 }

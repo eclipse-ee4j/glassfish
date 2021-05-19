@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 import jakarta.ejb.CreateException;
 
 /**
- * A simple java client will: 
+ * A simple java client will:
  * <ul>
  * <li>Locates the home interface of the enterprise bean
  * <li>Gets a reference to the remote interface
@@ -43,9 +43,9 @@ public class ReadOnlyClient {
     private int numPKs_ = 1;
     private long sleepTimeInMillis_ = 100;
 
-    public static void main(String[] args) { 
+    public static void main(String[] args) {
 
-        ReadOnlyClient client = new ReadOnlyClient(); 
+        ReadOnlyClient client = new ReadOnlyClient();
 
         if( args.length == 4 ) {
 
@@ -54,16 +54,16 @@ public class ReadOnlyClient {
             int numPKs = Integer.parseInt(args[2]);
             long sleepTimeInMillis = Long.parseLong(args[3]);
             client.runThreadTest(numIterations, numThreads, numPKs,
-                                 sleepTimeInMillis);   
+                                 sleepTimeInMillis);
         } else {
-            client.runTestClient();               
+            client.runTestClient();
         }
 
         // run the tests
-        
+
     }
 
-    public void runTestClient() {       
+    public void runTestClient() {
 
         try{
             stat.addDescription("Testing Bmp ReadOnlyClient app.");
@@ -85,7 +85,7 @@ public class ReadOnlyClient {
     }
 
     public void runThreadTest(int numIterations, int numThreads, int numPKs,
-                              long sleepTimeInMillis) {       
+                              long sleepTimeInMillis) {
 
         numIterations_ = numIterations;
         numThreads_ = numThreads;
@@ -93,7 +93,7 @@ public class ReadOnlyClient {
         sleepTimeInMillis_ = sleepTimeInMillis;
 
         try{
-            stat.addDescription("Bmp ReadOnlyClient thread test");            
+            stat.addDescription("Bmp ReadOnlyClient thread test");
             test12();
             stat.printSummary("ReadOnlyClient");
         } catch (Exception ex) {
@@ -106,8 +106,8 @@ public class ReadOnlyClient {
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleStudent");
-            StudentHome sHome = 
-                (StudentHome) PortableRemoteObject.narrow(objref, 
+            StudentHome sHome =
+                (StudentHome) PortableRemoteObject.narrow(objref,
                                                           StudentHome.class);
 
             try {
@@ -119,7 +119,7 @@ public class ReadOnlyClient {
                 stat.addStatus("Bmp-ReadOnly Student   ", stat.FAIL);
                 System.err.println("Caught an exception!");
                 ex.printStackTrace();
-                //Expected 
+                //Expected
             }
         } catch (Throwable th) {
             System.err.println("Caught an unexpected exception!");
@@ -133,8 +133,8 @@ public class ReadOnlyClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleCourse");
 
-            CourseHome cHome = 
-                (CourseHome) PortableRemoteObject.narrow(objref, 
+            CourseHome cHome =
+                (CourseHome) PortableRemoteObject.narrow(objref,
                                                          CourseHome.class);
 
             try {
@@ -146,7 +146,7 @@ public class ReadOnlyClient {
                 stat.addStatus("Bmp-ReadOnly Course    ", stat.FAIL);
                 System.err.println("Caught an exception!");
                 ex.printStackTrace();
-                //Expected 
+                //Expected
             }
         } catch (Throwable th) {
             System.err.println("Caught an unexpected exception!");
@@ -161,8 +161,8 @@ public class ReadOnlyClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleEnroller");
 
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
 
             Enroller enroller = eHome.create();
@@ -180,15 +180,15 @@ public class ReadOnlyClient {
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         }
-    } 
+    }
 
     private void test04() {
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleEnroller");
 
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
 
             Enroller enroller = eHome.create();
@@ -227,8 +227,8 @@ public class ReadOnlyClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleEnroller");
 
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
 
             Enroller enroller = eHome.create();
@@ -250,17 +250,17 @@ public class ReadOnlyClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleEnroller");
 
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
 
             Enroller enroller = eHome.create();
             boolean status = enroller.canGetReadOnlyBeanLocalNotifier(true);
             if (status == true) {
-                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewNotifier ", 
+                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewNotifier ",
                                stat.PASS);
             } else {
-                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewNotifier ", 
+                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewNotifier ",
                                stat.FAIL);
             }
         } catch (Exception ex) {
@@ -275,22 +275,22 @@ public class ReadOnlyClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleEnroller");
 
-            EnrollerHome eHome = 
-                (EnrollerHome) PortableRemoteObject.narrow(objref, 
+            EnrollerHome eHome =
+                (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
 
             Enroller enroller = eHome.create();
-            boolean status = enroller.testReadOnlyBeanLocalStudentRefresh("student0", 
+            boolean status = enroller.testReadOnlyBeanLocalStudentRefresh("student0",
                                                                   true);
             if (status == true) {
-                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewStudentRefresh ", 
+                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewStudentRefresh ",
                                stat.PASS);
             } else {
-                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewStudentRefresh ", 
+                stat.addStatus("Bmp-ReadOnly SFSBLocal-NewStudentRefresh ",
                                stat.FAIL);
             }
         } catch (Exception ex) {
-            stat.addStatus("Bmp-ReadOnly SFSBLocalNotifierRefresh ", 
+            stat.addStatus("Bmp-ReadOnly SFSBLocalNotifierRefresh ",
                            stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
@@ -302,17 +302,17 @@ public class ReadOnlyClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleStudent");
 
-            StudentHome readOnlyStudentHome = 
-                (StudentHome) PortableRemoteObject.narrow(objref, 
+            StudentHome readOnlyStudentHome =
+                (StudentHome) PortableRemoteObject.narrow(objref,
                                                           StudentHome.class);
             objref = initial.lookup("java:comp/env/ejb/MutableStudent");
 
-            StudentHomeMutable mutableStudentHome = 
-                (StudentHomeMutable) PortableRemoteObject.narrow(objref, 
+            StudentHomeMutable mutableStudentHome =
+                (StudentHomeMutable) PortableRemoteObject.narrow(objref,
                                                     StudentHomeMutable.class);
 
             Student newStudent = mutableStudentHome.create("999", "Joe Schmo");
-            Student readOnlyStudent = 
+            Student readOnlyStudent =
                 readOnlyStudentHome.findByPrimaryKey("999");
             String name1  = newStudent.getName();
             String readOnlyName1 = readOnlyStudent.getName();
@@ -343,9 +343,9 @@ public class ReadOnlyClient {
             // to create a new instance of the bean and call ejbLoad on it.
             // So, only use name1 and name2 to decide if test passed.
             if (name1.equals(readOnlyName1) && name2.equals(readOnlyName2) &&
-                name1.equals(readOnlyName1Tx) && 
+                name1.equals(readOnlyName1Tx) &&
                 name2.equals(readOnlyName2Tx)) {
-                 
+
                 stat.addStatus("Bmp-ReadOnly ReadMostly  ", stat.PASS);
             } else {
                 stat.addStatus("Bmp-ReadOnly ReadMostly  ", stat.FAIL);
@@ -357,7 +357,7 @@ public class ReadOnlyClient {
             stat.addStatus("Bmp-ReadOnly ReadMostly  ", stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
-        } 
+        }
     }
 
     private void test12() {
@@ -366,7 +366,7 @@ public class ReadOnlyClient {
             System.out.println("Num Iterations = " + numIterations_);
             System.out.println("Num Threads = " + numThreads_);
             System.out.println("Num PKs = " + numPKs_);
-            System.out.println("Sleep time in milliseconds = " + 
+            System.out.println("Sleep time in milliseconds = " +
                                sleepTimeInMillis_);
 
             int numWriterIterations = numIterations_ / 100;
@@ -374,34 +374,34 @@ public class ReadOnlyClient {
 
             System.out.println("Num writer iterations = " +
                                numWriterIterations);
-            System.out.println("Writer sleep time in milliseconds = " + 
+            System.out.println("Writer sleep time in milliseconds = " +
                                writerSleepTimeInMillis);
 
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleStudent");
 
-            StudentHome readOnlyStudentHome = 
-                (StudentHome) PortableRemoteObject.narrow(objref, 
+            StudentHome readOnlyStudentHome =
+                (StudentHome) PortableRemoteObject.narrow(objref,
                                                           StudentHome.class);
             objref = initial.lookup("java:comp/env/ejb/MutableStudent");
 
-            StudentHomeMutable mutableStudentHome = 
-                (StudentHomeMutable) PortableRemoteObject.narrow(objref, 
+            StudentHomeMutable mutableStudentHome =
+                (StudentHomeMutable) PortableRemoteObject.narrow(objref,
                                                     StudentHomeMutable.class);
-          
+
             Student[] newStudents = new Student[numPKs_];
             Student[] readOnlyStudents = new Student[numPKs_];
             Thread[] readers = new Thread[numThreads_ * numPKs_];
             Thread[] writers = new Thread[numPKs_];
 
             for(int i = 0; i < numPKs_; i++) {
-                newStudents[i] = 
+                newStudents[i] =
                     mutableStudentHome.create("ReaderThread" + i, "ABC" + i);
-                readOnlyStudents[i] = 
+                readOnlyStudents[i] =
                     readOnlyStudentHome.findByPrimaryKey("ReaderThread" + i);
-                System.out.println("Creating student " + 
+                System.out.println("Creating student " +
                                    readOnlyStudents[i].getPrimaryKey());
-                writers[i] = new WriterThread(newStudents[i], 
+                writers[i] = new WriterThread(newStudents[i],
                                               numWriterIterations,
                                               writerSleepTimeInMillis);
                 for(int j = 0; j < numThreads_; j++) {
@@ -409,21 +409,21 @@ public class ReadOnlyClient {
                     int threadIndex = i*numThreads_ + j;
                     System.out.println("Thread index = " + threadIndex);
                     readers[threadIndex] = new ReaderThread
-                        (readOnlyStudents[i], numIterations_, 
+                        (readOnlyStudents[i], numIterations_,
                          sleepTimeInMillis_);
                 }
             }
-            
+
             for(int i = 0; i < readers.length; i++) {
                 System.out.println("Starting reader thread " + i);
                 readers[i].start();
-            }    
-                
+            }
+
             for(int i = 0; i < writers.length; i++) {
                 System.out.println("Starting writer thread " + i);
                 writers[i].start();
-            }     
-            
+            }
+
             System.out.println("Joining on " + readers.length + " readers");
             for(int i = 0; i < readers.length; i++) {
                 readers[i].join();
@@ -432,8 +432,8 @@ public class ReadOnlyClient {
             for(int i = 0; i < writers.length; i++) {
                 writers[i].join();
             }
-            
-           
+
+
             stat.addStatus("Bmp-ReadOnly ReaderThreads  ", stat.PASS);
 
             System.out.println("Removing all students");
@@ -445,24 +445,24 @@ public class ReadOnlyClient {
             stat.addStatus("Bmp-ReadOnly ReaderThreads  ", stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
-        } 
+        }
     }
 
     private class ReaderThread extends Thread {
 
-        Student readOnlyStudent_;              
+        Student readOnlyStudent_;
         int numReads_;
         long sleepTimeInMillis_;
-        String studentPK_;        
+        String studentPK_;
 
-        ReaderThread(Student readOnlyStudent, int numReads, 
+        ReaderThread(Student readOnlyStudent, int numReads,
                      long sleepTimeInMillis) {
-            readOnlyStudent_ = readOnlyStudent;           
+            readOnlyStudent_ = readOnlyStudent;
             numReads_ = numReads;
             sleepTimeInMillis_ = sleepTimeInMillis;
         }
 
-        public void run() {                           
+        public void run() {
             for( int i = 0; i < numReads_; i++) {
                 try {
                     if( i == 0 ) {
@@ -482,20 +482,20 @@ public class ReadOnlyClient {
 
     private class WriterThread extends Thread {
 
-        Student mutableStudent_;              
+        Student mutableStudent_;
         int numWrites_;
         long sleepTimeInMillis_;
         String studentPK_;
 
-        WriterThread(Student mutableStudent, int numWrites, 
+        WriterThread(Student mutableStudent, int numWrites,
                      long sleepTimeInMillis) {
-            mutableStudent_ = mutableStudent;           
+            mutableStudent_ = mutableStudent;
             numWrites_ = numWrites;
             sleepTimeInMillis_ = sleepTimeInMillis;
         }
 
-        public void run() {                           
-            for( int i = 0; i < numWrites_; i++) {                
+        public void run() {
+            for( int i = 0; i < numWrites_; i++) {
                 try {
                     if( i == 0 ) {
                         studentPK_ = (String) mutableStudent_.getPrimaryKey();
@@ -514,4 +514,4 @@ public class ReadOnlyClient {
 
     }
 
-} 
+}

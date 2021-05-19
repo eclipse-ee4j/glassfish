@@ -77,7 +77,7 @@ import jakarta.annotation.sql.*;
                 //The only way to confirm the fix for IT 9292 is that appclient console
                 //should not have "invalidDescriptorFailureException" printed
                 //no isolation level specified
-		@DataSourceDefinition(name = "java:comp/env/Appclient_DataSource2",
+                @DataSourceDefinition(name = "java:comp/env/Appclient_DataSource2",
                         minPoolSize = 0,
                         initialPoolSize = 0,
                         className = "org.apache.derby.jdbc.ClientXADataSource",
@@ -210,7 +210,7 @@ public class Client {
             return true;
         } catch (Exception e) {
             if(expectSuccess){
-            	e.printStackTrace();
+                    e.printStackTrace();
             }
             return false;
         } finally {

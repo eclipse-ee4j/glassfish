@@ -39,10 +39,10 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant readonly (Executes the ejb-cmp-readonly test)
-			ant all (Executes all the ejb-cmp tests)
-	</echo>
+    <echo>
+        Usage:
+            ant readonly (Executes the ejb-cmp-readonly test)
+            ant all (Executes all the ejb-cmp tests)
+    </echo>
     </target>
 </project>

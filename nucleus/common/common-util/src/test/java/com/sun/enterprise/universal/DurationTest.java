@@ -54,14 +54,14 @@ public class DurationTest {
                     Duration.MSEC_PER_HOUR * 23 +
                     Duration.MSEC_PER_MINUTE * 59 +
                     Duration.MSEC_PER_SECOND * 59;
-        
+
         Duration d = new Duration(msec);
         assertTrue(d.numWeeks == 3);
         assertTrue(d.numDays == 6);
         assertTrue(d.numHours == 23);
         assertTrue(d.numMinutes == 59);
         assertTrue(d.numSeconds == 59);
-        
+
     }
     @Test
     public void test2() {
@@ -71,8 +71,8 @@ public class DurationTest {
                     Duration.MSEC_PER_MINUTE * 59 +
                     Duration.MSEC_PER_SECOND * 59 +
                     999;
-                    
-        
+
+
         Duration d = new Duration(msec);
         assertTrue(d.numWeeks == 7);
         assertTrue(d.numDays == 6);
@@ -100,4 +100,4 @@ public class DurationTest {
         assertTrue(d.numMilliSeconds == 2);
     }
 }
-    
+

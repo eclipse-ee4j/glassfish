@@ -44,7 +44,7 @@ import org.glassfish.hk2.api.PerLookup;
 
 /**
  * Various utility methods which support secure admin operations.
- * 
+ *
  * @author Tim Quinn
  */
 @Service
@@ -53,25 +53,25 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
 
     private static final char[] emptyPassword = new char[0];
     private final static String DOMAIN_ADMIN_GROUP_NAME = "asadmin";
-    
+
 
     @Inject
     private SSLUtils sslUtils;
-    
+
     @Inject
     private DomainScopedPasswordAliasStore domainPasswordAliasStore;
-    
+
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private volatile AdminService as;
 
     /**
      * Returns the correct DN to use for a given secure admin principal, mapping
-     * the alias (if it's an alias specified) to the DN for the corresponding 
+     * the alias (if it's an alias specified) to the DN for the corresponding
      * cert in the key store.
-     * 
+     *
      * @param value user-provided value (alias name or the actual DN)
      * @param isAlias whether the value is an alias
-     * @return DN to use 
+     * @return DN to use
      * @throws IOException if there is an error accessing the key store
      * @throws KeyStoreException if the keystore has not been initialized
      * @throws IllegalArgumentException if the cert for the specified alias as fetched from the key store is not an X509 certificate
@@ -99,11 +99,11 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
     /**
      * Makes sure the username is a valid admin username and that the password
      * alias is defined.  This method does NOT make sure that the password
-     * associated with the username and the password associated with the 
+     * associated with the username and the password associated with the
      * password alias are the same.
-     * 
+     *
      * @param username user-provided username
-     * @param passwordAlias name of the password alias 
+     * @param passwordAlias name of the password alias
      */
     @Override
     public void validateInternalUsernameAndPasswordAlias(String username, String passwordAlias) {
@@ -114,7 +114,7 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
             throw new RuntimeException(Strings.get("errVal"), ex);
         }
     }
-    
+
     private void validateUser(final String username) throws BadRealmException, NoSuchRealmException {
         final FileRealm fr = adminRealm();
         try {
@@ -130,14 +130,14 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
             /*
              * The user is not valid, but use the same error as if the user
              * IS present but is not an admin user.  This provides a would-be
-             * intruder a little less information by not distinguishing 
+             * intruder a little less information by not distinguishing
              * between a valid user that's not an admin user and an
              * invalid user.
              */
             throw new RuntimeException(Strings.get("notAdminUser", username));
         }
     }
-    
+
     private boolean isInAdminGroup(final FileRealmUser user) {
         for (String group : user.getGroups()) {
             if (group.equals(DOMAIN_ADMIN_GROUP_NAME)) {
@@ -146,11 +146,11 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
         }
         return false;
     }
-    
-    private void validatePasswordAlias(final String passwordAlias) 
-            throws CertificateException, NoSuchAlgorithmException, 
+
+    private void validatePasswordAlias(final String passwordAlias)
+            throws CertificateException, NoSuchAlgorithmException,
             KeyStoreException, NoSuchAlgorithmException, IOException {
-            
+
         if ( ! domainPasswordAliasStore.containsKey(passwordAlias)) {
             throw new RuntimeException(Strings.get("noAlias", passwordAlias));
         }
@@ -164,20 +164,20 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
         }
         return null;
     }
-    
+
     /**
      * Returns whether at least one admin user has an empty password.
-     * 
-     * @return true if at least one admin user has an empty password; false otherwise 
+     *
+     * @return true if at least one admin user has an empty password; false otherwise
      * @throws BadRealmException
      * @throws NoSuchRealmException
-     * @throws NoSuchUserException 
+     * @throws NoSuchUserException
      */
     @Override
     public boolean isAnyAdminUserWithoutPassword() throws Exception {
         final FileRealm adminRealm = adminRealm();
         /*
-         * If the user has configured the admin realm to use a realm other than 
+         * If the user has configured the admin realm to use a realm other than
          * the default file realm bypass the check that makes sure no admin users have
          * an empty password.
          */
@@ -187,7 +187,7 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
         for (final Enumeration<String> e = adminRealm.getUserNames(); e.hasMoreElements(); ) {
             final String username = e.nextElement();
             /*
-                * Try to authenticate this user with an empty password.  If it 
+                * Try to authenticate this user with an empty password.  If it
                 * works we can stop.
                 */
             final String[] groupNames = adminRealm.authenticate(username, emptyPassword);
@@ -198,7 +198,7 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
                     }
                 }
             }
-                    
+
         }
         return false;
     }

@@ -59,13 +59,13 @@ import org.junit.Test;
 
 @Ignore
 public class WLSWireAdapterTest {
-//  WLSWireAdapter adapter = new WLSWireAdapter(); 
+//  WLSWireAdapter adapter = new WLSWireAdapter();
 //
 //  @BeforeClass
 //  public static void setupClass() {
 //    BootstrapUtils.bootstrap(new WLSWireAdapter());
-//    WLSWireAdapter.HELPER.registerContextFactoryForClass(MyWLSContext.class, 
-//        "org.glassfish.contextpropagation.weblogic.workarea.MyContext", 
+//    WLSWireAdapter.HELPER.registerContextFactoryForClass(MyWLSContext.class,
+//        "org.glassfish.contextpropagation.weblogic.workarea.MyContext",
 //        new SerializableContextFactory() {
 //      @Override
 //      public WLSContext createInstance() {
@@ -73,7 +73,7 @@ public class WLSWireAdapterTest {
 //      }
 //    });
 //  }
-//  
+//
 //  @Before public void before() {
 //    BootstrapUtils.reset();
 //    BootstrapUtils.bootstrap(new WLSWireAdapter());
@@ -114,16 +114,16 @@ public class WLSWireAdapterTest {
 //
 //  @Test
 //  public void testResilientWithBadSerializableInsertFirst() throws IOException, InsufficientCredentialException {
-//    badSerializable(true); 
+//    badSerializable(true);
 //  }
-//  
+//
 //  @Test
 //  public void testResilientWithBadSerializableInsertLast() throws IOException, InsufficientCredentialException {
 //    badSerializable(false);
 //  }
 //
 //  private void badSerializable(boolean insertFirst) throws IOException, InsufficientCredentialException {
-//    ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();  
+//    ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();
 //    String key = "faulty serializable";
 //    @SuppressWarnings("serial")
 //    Serializable faultySerializable = new Serializable() {
@@ -182,18 +182,18 @@ public class WLSWireAdapterTest {
 //
 //  @Test
 //  public void testResilientWithBadWorkContext() throws IOException, InsufficientCredentialException {
-//    ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();   
+//    ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();
 //    AccessControlledMap acm = ((PrivilegedWireAdapterAccessor) wcMap).getAccessControlledMap(true);
 //    String key = "bad work context";
 //    WLSContext ctx = new WLSContext() {
 //      @Override
 //      public void writeContext(ObjectOutput out) throws IOException {
-//        out.writeUTF("a string"); 
+//        out.writeUTF("a string");
 //      }
 //      @Override
 //      public void readContext(ObjectInput in) throws IOException {
 //        in.readLong(); // Expected to fail
-//      }     
+//      }
 //    };
 //    acm.put(key, Entry.createOpaqueEntryInstance(ctx, PropagationMode.defaultSet(), ctx.getClass().getName()).init(
 //        true, false));
@@ -224,15 +224,15 @@ public class WLSWireAdapterTest {
 //    BootstrapUtils.populateMap();
 //    //adapter.prepareToWriteTo(baos);
 //    ContextMapPropagator propagator = ContextMapHelper.getScopeAwarePropagator();
-//    Deencapsulation.setField(WLSWireAdapter.class, "WLS_CARRIER_CLASS_NAME", 
+//    Deencapsulation.setField(WLSWireAdapter.class, "WLS_CARRIER_CLASS_NAME",
 //        "org.glassfish.contextpropagation.weblogic.workarea.SerializableWorkContext$Carrier");
-//    Deencapsulation.setField(ClassNames.class, "ASCII", 
+//    Deencapsulation.setField(ClassNames.class, "ASCII",
 //        "org.glassfish.contextpropagation.weblogic.workarea.AsciiWorkContext".getBytes());
-//    Deencapsulation.setField(ClassNames.class, "LONG", 
+//    Deencapsulation.setField(ClassNames.class, "LONG",
 //        "org.glassfish.contextpropagation.weblogic.workarea.LongWorkContext".getBytes());
-//    Deencapsulation.setField(ClassNames.class, "STRING", 
+//    Deencapsulation.setField(ClassNames.class, "STRING",
 //        "org.glassfish.contextpropagation.weblogic.workarea.StringWorkContext".getBytes());
-//    Deencapsulation.setField(ClassNames.class, "SERIALIZABLE", 
+//    Deencapsulation.setField(ClassNames.class, "SERIALIZABLE",
 //        "org.glassfish.contextpropagation.weblogic.workarea.SerializableWorkContext".getBytes());
 //    propagator.sendRequest(baos, PropagationMode.RMI);
 //    //MockLoggerAdapter.debug(Utils.toString(baos.toByteArray()));
@@ -252,7 +252,7 @@ public class WLSWireAdapterTest {
 //        return null;
 //      }};
 //      Serializable s = new MySerializable();
-//      WLSWireAdapter.HELPER.registerContextFactoryForClass(MySerializable.class, 
+//      WLSWireAdapter.HELPER.registerContextFactoryForClass(MySerializable.class,
 //          "workarea.String", contextFactory);
 //      WLSWireAdapter.HELPER.registerContextFactoryForContextNamed(
 //          "foo", "workarea.Foo", contextFactory);
@@ -269,33 +269,33 @@ public class WLSWireAdapterTest {
 //
 //  @Test public void convertPropagationMode() {
 //    // LOCAL, WORK, RMI, TRANSACTION, JMS_QUEUE, JMS_TOPIC, SOAP, MIME_HEADER, ONEWAY
-//    checkPropModeConversion(EnumSet.of(PropagationMode.LOCAL), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.LOCAL),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.LOCAL);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.THREAD), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.THREAD),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.RMI), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.RMI),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.RMI);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.TRANSACTION), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.TRANSACTION),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.TRANSACTION);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.JMS_QUEUE), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.JMS_QUEUE),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.JMS_QUEUE);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.JMS_TOPIC), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.JMS_TOPIC),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.JMS_TOPIC);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.SOAP), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.SOAP),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.SOAP);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.MIME_HEADER), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.MIME_HEADER),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.MIME_HEADER);
-//    checkPropModeConversion(EnumSet.of(PropagationMode.ONEWAY), 
+//    checkPropModeConversion(EnumSet.of(PropagationMode.ONEWAY),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.ONEWAY);
 //    /*
-//     * Glassfish's default includes all of the WLS default plus THREAD (which 
+//     * Glassfish's default includes all of the WLS default plus THREAD (which
 //     * is equivalent to the WLS propagation mode WORK)
 //     */
 //    checkPropModeConversion(PropagationMode.defaultSet(),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.DEFAULT +
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);
-//    checkPropModeConversion(PropagationMode.defaultSet(), 
-//        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.GLOBAL + 
+//    checkPropModeConversion(PropagationMode.defaultSet(),
+//        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.GLOBAL +
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);
 //  }
 //
@@ -304,30 +304,30 @@ public class WLSWireAdapterTest {
 //  }
 //
 //  @Test public void toPropagationMode() {
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.LOCAL), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.LOCAL),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.LOCAL);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.THREAD), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.THREAD),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.RMI), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.RMI),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.RMI);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.TRANSACTION), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.TRANSACTION),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.TRANSACTION);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.JMS_QUEUE), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.JMS_QUEUE),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.JMS_QUEUE);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.JMS_TOPIC), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.JMS_TOPIC),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.JMS_TOPIC);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.SOAP), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.SOAP),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.SOAP);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.MIME_HEADER), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.MIME_HEADER),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.MIME_HEADER);
-//    checkReversePropModeConversion(EnumSet.of(PropagationMode.ONEWAY), 
+//    checkReversePropModeConversion(EnumSet.of(PropagationMode.ONEWAY),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.ONEWAY);
-//    checkReversePropModeConversion(PropagationMode.defaultSet(), 
+//    checkReversePropModeConversion(PropagationMode.defaultSet(),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.DEFAULT +
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);
-//    checkReversePropModeConversion(PropagationMode.defaultSet(), 
+//    checkReversePropModeConversion(PropagationMode.defaultSet(),
 //        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.GLOBAL +
-//        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);   
+//        org.glassfish.contextpropagation.weblogic.workarea.PropagationMode.WORK);
 //  }
 //
 //  private void checkReversePropModeConversion(

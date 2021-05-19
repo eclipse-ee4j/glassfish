@@ -25,33 +25,33 @@ import org.apache.catalina.*;
  * @author Jean-Francois Arcand
  */
 public class CatalinaListener  implements ContainerListener{
-    
-    public void containerEvent(ContainerEvent event) {    
+
+    public void containerEvent(ContainerEvent event) {
         if (Container.REMOVE_CHILD_EVENT.equals(event.getType()) ) {
             Context context;
             String contextPath;
             Host host;
 
-            Object container = event.getData();            
+            Object container = event.getData();
             if ( container instanceof Context) {
                 context = (Context)container;
-                
+
                 if (!context.hasConstraints() &&
-                        context.findFilterDefs().length == 0 ){        
+                        context.findFilterDefs().length == 0 ){
                     contextPath = context.getPath();
                     host = (Host)context.getParent();
                     String[] names = host.getNetworkListenerNames();
                     for (String name : names) {
-                        removeContextPath(name, contextPath); 
+                        removeContextPath(name, contextPath);
                     }
                 }
-            } 
-        }  
-    }  
-    
-    
+            }
+        }
+    }
+
+
     /**
-     * Remove from the <code>FileCache</code> all entries related to 
+     * Remove from the <code>FileCache</code> all entries related to
      * the <code>Context</code> path.
      * @param id the <code>FileCacheFactory</code> id
      * @param contextPath the <code>Context</code> path
@@ -70,6 +70,6 @@ public class CatalinaListener  implements ContainerListener{
 //                        new String[]{"java.lang.String"});
 //            }
 //        }
-    }  
+    }
 }
 

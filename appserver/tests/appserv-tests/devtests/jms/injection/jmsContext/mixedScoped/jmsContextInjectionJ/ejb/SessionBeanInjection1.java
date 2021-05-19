@@ -41,7 +41,7 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
     @JMSSessionMode(JMSContext.AUTO_ACKNOWLEDGE)
     private JMSContext jmsContext;
 
-    @EJB 
+    @EJB
     SessionBeanInjectionRemote2 bean2;
 
     @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -74,25 +74,25 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
             System.out.println("The context variables used in the first call are NOT in transaction scope.");
             return false;
         }
-            
+
         if (context2.indexOf(transactionScope) != -1){
             System.out.println("The context variables used in the second call are in transaction scope.");
         }else{
             System.out.println("The context variables used in the second call are NOT in transaction scope.");
             return false;
         }
-        
+
         if (context3.indexOf(transactionScope) != -1){
             System.out.println("The context variables used in the third call are in transaction scope.");
         }else{
             System.out.println("The context variables used in the third call are NOT in transaction scope.");
             return false;
         }
-        
+
         String context1Annotation = context1.substring(context1.indexOf(preIdentical),context1.indexOf(transactionScope));
         String context2Annotation = context2.substring(context2.indexOf(preIdentical),context2.indexOf(transactionScope));
         String context3Annotation = context3.substring(context3.indexOf(preIdentical),context3.indexOf(transactionScope));
-        
+
         if(context1Annotation.equals(context2Annotation)){
             System.out.println("The context variables in the first and second calls to context.send() injected are using identical annotations.");
             if(context1Annotation.equals(context3Annotation)){
@@ -112,7 +112,7 @@ public class SessionBeanInjection1 implements SessionBeanInjectionRemote1 {
         }else{
             System.out.println("The context variables used in the first and second calls to context.send() take place in the different transaction.");
         }
-        
+
         if (context1.substring(context1.indexOf(transactionScope)).equals(context3.substring(context3.indexOf(transactionScope)))){
             System.out.println("The context variables used in the first and third calls to context.send() take place in the same transaction.");
         }else{

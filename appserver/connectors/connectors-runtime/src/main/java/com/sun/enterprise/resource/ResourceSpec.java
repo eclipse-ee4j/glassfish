@@ -146,7 +146,7 @@ public class ResourceSpec implements Serializable {
     public boolean isPM() {
         return pmResource;
     }
-    
+
     /**
      * Returns the status of the noTxResource flag
      *

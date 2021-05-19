@@ -27,24 +27,24 @@ import jakarta.xml.ws.Response;
 
 import endpoint.SayHelloResponse;
 
-@Stateless 
+@Stateless
 public class HelloEJB implements Hello {
 
 
    @WebServiceRef
    WebServiceEJBService webService;
- 
+
     public String invokeSync(String string) {
-	WebServiceEJB ejb = webService.getWebServiceEJBPort();
-	return ejb.sayHello("SYNC CALL" + string);
+        WebServiceEJB ejb = webService.getWebServiceEJBPort();
+        return ejb.sayHello("SYNC CALL" + string);
    }
 
    public String invokeAsyncPoll(String msg) {
        try {
-	    WebServiceEJB ejb = webService.getWebServiceEJBPort();
+            WebServiceEJB ejb = webService.getWebServiceEJBPort();
             Response<SayHelloResponse> resp = ejb.sayHelloAsync("ASYNC POLL CALL" + msg);
-	    Thread.sleep (2000);
-	    SayHelloResponse out = resp.get();
+            Thread.sleep (2000);
+            SayHelloResponse out = resp.get();
             return(out.getReturn());
        } catch(Throwable t) {
             return(t.getMessage());
@@ -52,9 +52,9 @@ public class HelloEJB implements Hello {
    }
 
    public String invokeAsyncCallBack(String msg) {
-	try {
+        try {
 System.out.println("VIJ - invoking async call back");
-	    WebServiceEJB ejb = webService.getWebServiceEJBPort();
+            WebServiceEJB ejb = webService.getWebServiceEJBPort();
             MyCallBackHandler cbh = new MyCallBackHandler();
             Future<?> response =
                 ejb.sayHelloAsync("ASYNC CALL BACK CALL" + msg, cbh);

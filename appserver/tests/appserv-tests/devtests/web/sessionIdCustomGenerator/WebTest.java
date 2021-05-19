@@ -49,7 +49,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for CR 6275709");
         WebTest webTest = new WebTest(args);
@@ -58,8 +58,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeServlet();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -76,14 +76,14 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
-         
+
         URL url = new URL("http://" + host  + ":" + port
             + contextRoot + "/createSession");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             System.err.println("Wrong response code. Expected: 200"
                                + ", received: " + responseCode);
             stat.addStatus(TEST_NAME, stat.FAIL);

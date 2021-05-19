@@ -22,32 +22,32 @@ import java.util.TimerTask;
 
 
 /*
- * JDK timer task for timer expirations.  
+ * JDK timer task for timer expirations.
  *
  * @author Kenneth Saks
  */
 public class EJBTimerTask extends TimerTask {
-    
+
     private Date timeout_;
     private TimerPrimaryKey timerId_;
     private EJBTimerService timerService_;
 
-    EJBTimerTask(Date timeout, TimerPrimaryKey timerId, 
+    EJBTimerTask(Date timeout, TimerPrimaryKey timerId,
                  EJBTimerService timerService)
-    { 
+    {
         timeout_ = timeout;
         timerId_ = timerId;
         timerService_ = timerService;
     }
-    
+
     public void run() {
         // Delegate to Timer Service.
         timerService_.taskExpired(timerId_);
     }
-    
+
     public Date getTimeout() {
         return timeout_;
     }
 
-} 
+}
 

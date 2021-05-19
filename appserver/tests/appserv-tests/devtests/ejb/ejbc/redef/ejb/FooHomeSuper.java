@@ -23,6 +23,6 @@ import jakarta.ejb.*;
 
 
 public interface FooHomeSuper extends Remote {
-   
+
     Foo create() throws RemoteException, CreateException;
 }

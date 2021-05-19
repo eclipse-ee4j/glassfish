@@ -31,7 +31,7 @@ public class FindInterestClient {
     private static String testId = "jbi-serviceengine/jax-rpc/provider-oneway";
 
     public FindInterestClient() {
-	status.addDescription(testId);
+        status.addDescription(testId);
     }
 
     public static void main (String[] args) {
@@ -41,15 +41,15 @@ public class FindInterestClient {
         client.doTest();
   //      client.doServletTest();
     }
-    
+
     public void doTest() {
 
         //String targetEndpointAddress =
-	//		"http://localhost:8080/findintr/FindInterest";
+        //                "http://localhost:8080/findintr/FindInterest";
         String targetEndpointAddress =
-			"http://localhost:12013/InterestIFPort";
+                        "http://localhost:12013/InterestIFPort";
 
-    	try {
+            try {
             Context ic = new InitialContext();
             FindInterest findIntrService = (FindInterest)
                     ic.lookup("java:comp/env/service/FindInterest");
@@ -57,23 +57,23 @@ public class FindInterestClient {
             InterestIF interestIFPort = findIntrService.getInterestIFPort();
 
             ((Stub)interestIFPort)._setProperty (Stub.ENDPOINT_ADDRESS_PROPERTY,
-                 				targetEndpointAddress);
+                                                 targetEndpointAddress);
 
-	    interestIFPort.calculateInterest(balance, period);
-                
-	    status.addStatus(testId + "1 : EJB Endpoint and Servlet Endpoint Test", status.PASS);
+            interestIFPort.calculateInterest(balance, period);
 
-    	} catch (Exception ex) {
-		status.addStatus(testId + "1 : EJB Endpoint and Servlet Endpoint Test", status.FAIL);
+            status.addStatus(testId + "1 : EJB Endpoint and Servlet Endpoint Test", status.PASS);
+
+            } catch (Exception ex) {
+                status.addStatus(testId + "1 : EJB Endpoint and Servlet Endpoint Test", status.FAIL);
             System.out.println("findintr client failed");
             ex.printStackTrace();
-	} 
+        }
     }
 
    /* public void doServletTest() {
-    	try {
-	    String targetEndpointAddress =
-		"http://localhost:8080/FindInterestServlet/FindInterest";
+            try {
+            String targetEndpointAddress =
+                "http://localhost:8080/FindInterestServlet/FindInterest";
 
             Context ic = new InitialContext();
             FindInterest findIntrService = (FindInterest)
@@ -82,22 +82,22 @@ public class FindInterestClient {
             InterestIF interestIFPort = findIntrService.getInterestIFPort();
 
             ((Stub)interestIFPort)._setProperty (Stub.ENDPOINT_ADDRESS_PROPERTY,
-						targetEndpointAddress);
+                                                targetEndpointAddress);
 
-	    double interest = interestIFPort.calculateInterest(balance, period);
+            double interest = interestIFPort.calculateInterest(balance, period);
 
             System.out.println("Interest on $300 for a period of 3.5 years is "
-				+ interest);
-                
-	    if (interest == 210.0) {
-		status.addStatus(TEST_SUITE_ID+"2 : EJB Endpoint and Servlet Endpoint Test", status.PASS);
-	    }
-    	} catch (Exception ex) {
-		status.addStatus(TEST_SUITE_ID+"2 : EJB Endpoint and Servlet Endpoint Test", status.FAIL);
+                                + interest);
+
+            if (interest == 210.0) {
+                status.addStatus(TEST_SUITE_ID+"2 : EJB Endpoint and Servlet Endpoint Test", status.PASS);
+            }
+            } catch (Exception ex) {
+                status.addStatus(TEST_SUITE_ID+"2 : EJB Endpoint and Servlet Endpoint Test", status.FAIL);
             System.out.println("findintr client failed");
             ex.printStackTrace();
-	} 
-	status.printSummary("JSR109 - FindInterestTest");
+        }
+        status.printSummary("JSR109 - FindInterestTest");
     }*/
 }
 

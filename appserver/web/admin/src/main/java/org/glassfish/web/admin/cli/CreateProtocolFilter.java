@@ -55,8 +55,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Protocol.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-protocol-filter", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-protocol-filter",
         description="Create",
         params={
             @RestParam(name="protocol", value="$parent")

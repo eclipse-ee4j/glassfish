@@ -32,11 +32,11 @@ public class SlessBean
     }
 
     public String sayHello() {
-	return "Hello";
+        return "Hello";
     }
 
     public boolean wasEjbCreateCalled() {
-	return ejbCreateCalled;
+        return ejbCreateCalled;
     }
 
 }

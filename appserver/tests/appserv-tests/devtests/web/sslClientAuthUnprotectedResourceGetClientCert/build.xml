@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -44,18 +44,18 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="**/*.class"/> 
+            <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="WebTest.java"/>
-    </target> 
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="setup" depends="init-common">
         <antcall target="asadmin-common-ignore-fail">
             <param name="admin.command" value="set" />
@@ -85,10 +85,10 @@
             </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="restore" depends="init-common">
         <antcall target="asadmin-common-ignore-fail">

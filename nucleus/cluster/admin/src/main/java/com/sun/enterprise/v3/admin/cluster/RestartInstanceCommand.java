@@ -48,12 +48,12 @@ import jakarta.inject.Named;
 @ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_restart-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="_restart-instance",
         description="_restart-instance"),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="restart-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="restart-instance",
         description="restart-instance",
         params={
             @RestParam(name="id", value="$parent")
@@ -170,7 +170,7 @@ public class RestartInstanceCommand implements AdminCommand {
             // namely if the instance isn't running.
             throw new InstanceNotRunningException();
         }
-        
+
         String val = rac.findPropertyInReport("restartable");
         if (val != null && val.equals("false")) {
             return false;
@@ -240,7 +240,7 @@ public class RestartInstanceCommand implements AdminCommand {
         return rac.findPropertyInReport("pid");
     }
 
-    /* 
+    /*
      * The instance is not running -- so let's try to start it.
      * There is no good way to call a Command on ourself.  So use the
      * command directly.

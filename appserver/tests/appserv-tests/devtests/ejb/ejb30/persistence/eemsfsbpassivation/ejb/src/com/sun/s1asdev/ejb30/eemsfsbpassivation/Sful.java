@@ -27,4 +27,4 @@ public interface Sful {
 
     Map<String, Boolean> doTests(String prefix);
 
-} 
+}

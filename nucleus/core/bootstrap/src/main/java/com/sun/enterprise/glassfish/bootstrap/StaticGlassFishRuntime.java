@@ -82,7 +82,7 @@ public class StaticGlassFishRuntime extends GlassFishRuntime {
             setEnv(gfProps);
 
             final StartupContext startupContext = new StartupContext(gfProps.getProperties());
-            
+
             ModulesRegistry modulesRegistry = SingleHK2Factory.getInstance().createModulesRegistry();
 
             ServiceLocator serviceLocator = main.createServiceLocator(modulesRegistry, startupContext, Arrays.asList((PopulatorPostProcessor)new EmbeddedInhabitantsParser(), new ContextDuplicatePostProcessor()), null);

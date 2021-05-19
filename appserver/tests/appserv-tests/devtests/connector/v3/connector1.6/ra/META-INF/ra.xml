@@ -51,7 +51,7 @@
             </config-property-confidential>
         </config-property>
         <inbound-resourceadapter>
-            <messageadapter>          
+            <messageadapter>
                 <messagelistener>
                     <messagelistener-type>
                         connector.MyMessageListener
@@ -62,7 +62,7 @@
                         </activationspec-class>
                     </activationspec>
                 </messagelistener>
-            </messageadapter>          
+            </messageadapter>
         </inbound-resourceadapter>
         <adminobject>
           <adminobject-interface>connector.MyAdminObject</adminobject-interface>

@@ -52,9 +52,9 @@ public class StopDomainCommand extends StopServer implements AdminCommand {
     Boolean force;
 
     /**
-     * Shutdown of the application server : 
+     * Shutdown of the application server :
      *
-     * All running services are stopped. 
+     * All running services are stopped.
      * LookupManager is flushed.
      */
     public void execute(AdminCommandContext context) {

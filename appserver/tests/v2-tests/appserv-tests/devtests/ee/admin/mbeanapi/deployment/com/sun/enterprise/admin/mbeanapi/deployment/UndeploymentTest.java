@@ -22,7 +22,7 @@ public class UndeploymentTest extends BaseTest
 {
     private Cmd cmd;
 
-    public UndeploymentTest(String user, String password, String host, 
+    public UndeploymentTest(String user, String password, String host,
             int port, String name, String target)
     {
         CmdFactory cmdFactory = getCmdFactory();

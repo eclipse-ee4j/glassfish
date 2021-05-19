@@ -33,7 +33,7 @@ import javax.transaction.xa.XAResource;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class WorkDispatcher implements Work {
 
@@ -44,11 +44,11 @@ public class WorkDispatcher implements Work {
     protected ActivationSpec spec;
     protected WorkManager wm;
     protected XATerminator xa;
-    
+
     public WorkDispatcher(
             String id,
             BootstrapContext ctx,
-            MessageEndpointFactory factory, 
+            MessageEndpointFactory factory,
             ActivationSpec spec) {
         this.id      = id;
         this.ctx     = ctx;
@@ -61,7 +61,7 @@ public class WorkDispatcher implements Work {
     public void run() {
 
         debug("ENTER...");
-        
+
         try {
             synchronized (Controls.readyLock) {
                 debug("WAIT...");
@@ -111,15 +111,15 @@ public class WorkDispatcher implements Work {
                     //delete all.
                     ec = startTx();
                     debug("Start TX - " + ec.getXid());
-                    
+
                     w = new DeliveryWork(ep, 1, "DELETE_ALL");
                     wm.doWork(w, 0, ec, null);
                     xa.commit(ec.getXid(), true);
-                    
+
                     debug("DONE DELETE ALL FROM DB");
                     Controls.expectedResults = 0;
                     notifyAndWait();
-                    
+
                     done();
                 }
 
@@ -157,14 +157,14 @@ public class WorkDispatcher implements Work {
     }
 
     public Method getOnMessageMethod() {
-        
+
         Method onMessageMethod = null;
         try {
             Class msgListenerClass = connector.MyMessageListener.class;
             Class[] paramTypes = { java.lang.String.class };
-            onMessageMethod = 
+            onMessageMethod =
                 msgListenerClass.getMethod("onMessage", paramTypes);
-            
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }
@@ -187,13 +187,13 @@ public class WorkDispatcher implements Work {
         try {
             //Sleep for 5 seconds
             //Thread.currentThread().sleep(5*1000);
-            
+
             synchronized(Controls.readyLock) {
                 //Notify the client to check the results
-                Controls.readyLock.notifyAll(); 
+                Controls.readyLock.notifyAll();
 
                 //Wait until results are verified by the client
-                Controls.readyLock.wait(); 
+                Controls.readyLock.wait();
 
                 if (stop) {
                     return;

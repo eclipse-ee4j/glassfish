@@ -55,9 +55,9 @@ public class TransactionalInterceptorRequiresNew extends TransactionalIntercepto
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
-        
+
         setTransactionalTransactionOperationsManger(false);
-        
+
         try {
             Transaction suspendedTransaction = null;
             if (getTransactionManager().getTransaction() != null) {
@@ -70,11 +70,11 @@ public class TransactionalInterceptorRequiresNew extends TransactionalIntercepto
             } catch (Exception exception) {
                 _logger.log(INFO, CDI_JTA_MBREQNEWBT, exception);
                 throw new TransactionalException(
-                    "Managed bean with Transactional annotation and TxType of REQUIRES_NEW " + 
-                    "encountered exception during begin " + exception, 
+                    "Managed bean with Transactional annotation and TxType of REQUIRES_NEW " +
+                    "encountered exception during begin " + exception,
                     exception);
             }
-            
+
             Object proceed = null;
             try {
                 proceed = proceed(ctx);
@@ -89,24 +89,24 @@ public class TransactionalInterceptorRequiresNew extends TransactionalIntercepto
                 } catch (Exception exception) {
                     _logger.log(INFO, CDI_JTA_MBREQNEWCT, exception);
                     throw new TransactionalException(
-                        "Managed bean with Transactional annotation and TxType of REQUIRES_NEW " + 
-                        "encountered exception during commit " + exception, 
+                        "Managed bean with Transactional annotation and TxType of REQUIRES_NEW " +
+                        "encountered exception during commit " + exception,
                         exception);
                 }
-                
+
                 if (suspendedTransaction != null) {
                     try {
                         getTransactionManager().resume(suspendedTransaction);
                     } catch (Exception exception) {
                         _logger.log(INFO, CDI_JTA_MBREQNEWRT, exception);
                         throw new TransactionalException(
-                            "Managed bean with Transactional annotation and TxType of REQUIRED " + 
-                            "encountered exception during resume " + exception, 
+                            "Managed bean with Transactional annotation and TxType of REQUIRED " +
+                            "encountered exception during resume " + exception,
                             exception);
                     }
                 }
             }
-            
+
             return proceed;
 
         } finally {

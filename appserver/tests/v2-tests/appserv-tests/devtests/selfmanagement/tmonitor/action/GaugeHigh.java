@@ -23,7 +23,7 @@ public class GaugeHigh implements NotificationListener, com.sun.s1peqe.selfmanag
         private final String JMX_MONITOR_GAUGE_HIGH = "jmx.monitor.gauge.high";
         public GaugeHigh() {
         }
-                                                                                                                                               
+
         public synchronized void handleNotification(Notification notification,
                         Object handback) {
           try {

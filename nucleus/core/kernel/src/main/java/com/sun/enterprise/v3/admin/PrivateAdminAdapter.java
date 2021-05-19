@@ -30,7 +30,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 public class PrivateAdminAdapter extends AdminAdapter {
 
-    public final static String VS_NAME="__private_asadmin";    
+    public final static String VS_NAME="__private_asadmin";
     public final static String PREFIX_URI = "/" + VS_NAME;
 
     public PrivateAdminAdapter() {

@@ -43,23 +43,23 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @author kshitiz
  */
 public class Client {
-    
+
     private static int count = 10;
     private static boolean rollback;
     private static String tableName = "COFFEE";
-    
+
     //static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
     private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
     private static final String testSuite = "switchoffACCconnpooling";
     private static int testCount = 0;
-    
+
     private static boolean isXA=false;
 
     /** Creates a new instance of UnpooledTest */
     public Client() {
     }
-    
-    
+
+
     /**
      * @param args the command line arguments
      */
@@ -77,9 +77,9 @@ public class Client {
         runTest();
         stat.printSummary();
     }
-    
+
     private static void runTest() {
-        
+
         //Connection opened and closed within transaction
         //non-xa resource
         isXA = false;
@@ -87,8 +87,8 @@ public class Client {
         //xa resource
         isXA = true;
         test1("jdbc/xaresource");
-        
-        //Connection opened within transaction 
+
+        //Connection opened within transaction
         //but closed after transaction
         isXA = false;
         //non-xa resource
@@ -96,47 +96,47 @@ public class Client {
         //xa resource
         isXA = true;
         test2("jdbc/xaresource");
-                
+
         //XA and Non-XA resource within same transaction
         //non-xa resource and xa  resource together
         test3("jdbc/nonxaresource", "jdbc/xaresource");
-       
-        test4("jdbc/nonxaresource", "jdbc/xaresource");	
+
+        test4("jdbc/nonxaresource", "jdbc/xaresource");
         //openAndCloseConnection("jdbc/oraclexa", 40);
     }
-    
+
     public static void test1(String dsName) {
         UserTransaction ut = null;
         try {
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup(dsName);
             printConnection(ds);
-            
+
             createTable(ds);
-            
+
             int count1 = getCount(ds);
             System.out.println("count1 : " + count1);
-            
+
             ut = (UserTransaction) ic.lookup("java:comp/UserTransaction");
             ut.begin();
-            
+
             for(int i=0; i< count; i++)
                 insertRow(ds);
             if(rollback)
                 ut.rollback();
             else
                 ut.commit();
-            
+
             int count2=getCount(ds);
-            
+
             System.out.println("count2 : " + count2);
-            
+
             int diff = count2 - count1;
             if(( diff == count && !rollback) || (diff == 0 && rollback))
                 printStatus(true);
             else
                 printStatus(false);
-            
+
         } catch(Exception e){
             printStatus(false);
             e.printStackTrace();
@@ -152,9 +152,9 @@ public class Client {
                 }
             }
         };
-        
+
     }
-    
+
     public static void test2(String dsName) {
         UserTransaction ut = null;
         try {
@@ -164,32 +164,32 @@ public class Client {
             Connection[] con;
 
             createTable(ds);
-            
+
             int count1 = getCount(ds);
             System.out.println("count1 : " + count1);
-            
+
             ut = (UserTransaction) ic.lookup("java:comp/UserTransaction");
             ut.begin();
-            
+
             con = openConnections(dsName, count);
             insertRow(con);
             closeConnections(con, count);
-            
+
             if(rollback)
                 ut.rollback();
             else
                 ut.commit();
-            
+
             int count2=getCount(ds);
-            
+
             System.out.println("count2 : " + count2);
-            
+
             int diff = count2 - count1;
             if(( diff == count && !rollback) || (diff == 0 && rollback))
                 printStatus(true);
             else
                 printStatus(false);
-            
+
         } catch(Exception e){
             printStatus(false);
             e.printStackTrace();
@@ -205,69 +205,69 @@ public class Client {
                 }
             }
         };
-        
+
     }
-    
-    
+
+
     public static void test4(String dsName, String xaDsName) {
         UserTransaction ut = null;
         try {
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup(dsName);
-	    DataSource xads = (DataSource) ic.lookup(xaDsName);
+            DataSource xads = (DataSource) ic.lookup(xaDsName);
             printConnection(ds);
             Connection[] con;
-	    Connection[] xaCon;
+            Connection[] xaCon;
 
-	    isXA = false;
+            isXA = false;
             createTable(ds);
             isXA = true;
-	    createTable(xads);
+            createTable(xads);
 
-	    isXA = false;
+            isXA = false;
             int count1 = getCount(ds);
-	    isXA = true;
-	    int xacount1 = getCount(xads);
+            isXA = true;
+            int xacount1 = getCount(xads);
 
             System.out.println("count1 : " + count1 + " xacount1 : " + xacount1);
-            
+
             ut = (UserTransaction) ic.lookup("java:comp/UserTransaction");
             ut.begin();
-            
-            con = openConnections(dsName, count);
-	    xaCon = openConnections(xaDsName, 1);
-	    isXA = false;
-            insertRow(con);
-	    isXA = true;
-	    insertRow(xaCon);
 
-	    isXA = false;
+            con = openConnections(dsName, count);
+            xaCon = openConnections(xaDsName, 1);
+            isXA = false;
+            insertRow(con);
+            isXA = true;
+            insertRow(xaCon);
+
+            isXA = false;
             closeConnections(con, count);
 
-	    isXA = true;
-	    closeConnections(xaCon, 1);
-            
+            isXA = true;
+            closeConnections(xaCon, 1);
+
             if(rollback)
                 ut.rollback();
             else
                 ut.commit();
-            
-	    isXA = false;
-            int count2=getCount(ds);
-	    isXA = true;
-	    int xacount2 = getCount(xads);
-            
-            System.out.println("count2 : " + count2 + " xacount2 : " + xacount2);
-            
-            int diff = count2 - count1;
-	    int xadiff = xacount2 - xacount1;
 
-            if((( diff == count && !rollback) || (diff == 0 && rollback)) && 
-			((xadiff == 1 && !rollback) || (xadiff == 0 && rollback)))
+            isXA = false;
+            int count2=getCount(ds);
+            isXA = true;
+            int xacount2 = getCount(xads);
+
+            System.out.println("count2 : " + count2 + " xacount2 : " + xacount2);
+
+            int diff = count2 - count1;
+            int xadiff = xacount2 - xacount1;
+
+            if((( diff == count && !rollback) || (diff == 0 && rollback)) &&
+                        ((xadiff == 1 && !rollback) || (xadiff == 0 && rollback)))
                 printStatus(true);
             else
                 printStatus(false);
-            
+
         } catch(Exception e){
             printStatus(false);
             e.printStackTrace();
@@ -283,10 +283,10 @@ public class Client {
                 }
             }
         };
-        
+
     }
-    
-    
+
+
     public static void test3(String ds1Name, String ds2Name) {
         UserTransaction ut = null;
         try {
@@ -295,42 +295,42 @@ public class Client {
             printConnection(ds1);
             DataSource ds2 = (DataSource) ic.lookup(ds2Name);
             printConnection(ds2);
-            
+
             isXA = false;
             createTable(ds1);
             isXA = true;
             createTable(ds2);
-            
+
             isXA = false;
             int count1 = getCount(ds1);
             isXA = true;
             int count3 = getCount(ds2);
             System.out.println("count1 : " + count1);
             System.out.println("count3 : " + count3);
-            
+
             ut = (UserTransaction) ic.lookup("java:comp/UserTransaction");
             ut.begin();
-            
+
             isXA = false;
             for(int i=0; i< count; i++)
                 insertRow(ds1);
             isXA = true;
             for(int i=0; i< count; i++)
                 insertRow(ds2);
-            
+
             if(rollback)
                 ut.rollback();
             else
                 ut.commit();
-            
+
             isXA = false;
             int count2=getCount(ds1);
             isXA = true;
             int count4=getCount(ds2);
-            
+
             System.out.println("count2 : " + count2);
             System.out.println("count4 : " + count4);
-            
+
             int diff1 = count2 - count1;
             int diff2 = count4 - count3;
             if((( diff1 == count && !rollback) || (diff1 == 0 && rollback))
@@ -338,7 +338,7 @@ public class Client {
                 printStatus(true);
             else
                 printStatus(false);
-            
+
         } catch(Exception e){
             printStatus(false);
             e.printStackTrace();
@@ -354,21 +354,21 @@ public class Client {
                 }
             }
         };
-        
+
     }
-    
+
     private static void createTable(final DataSource ds) throws SQLException {
         String tableName;
         if(isXA)
             tableName = "COFFEE_XA";
         else
             tableName = "COFFEE";
-        
+
         Connection con;
         Statement stmt;
         con = ds.getConnection();
         stmt = con.createStatement();
-        
+
         try{
             stmt.executeUpdate("drop table " + tableName);
         }catch(Exception ex){
@@ -378,7 +378,7 @@ public class Client {
         stmt.close();
         con.close();
     }
-    
+
     private static int getCount(final DataSource ds) throws SQLException {
         String tableName;
         if(isXA)
@@ -398,7 +398,7 @@ public class Client {
         con.close();
         return count;
     }
-    
+
     private static void insertRow(final DataSource ds) throws SQLException {
         String tableName;
         if(isXA)
@@ -413,7 +413,7 @@ public class Client {
         stmt.close();
         con.close();
     }
-    
+
     private static void insertRow(final Connection[] con) throws SQLException {
         String tableName;
         if(isXA)
@@ -424,108 +424,108 @@ public class Client {
         for(int i=0; i < con.length; i++){
             stmt = con[i].createStatement();
             stmt.executeUpdate("INSERT INTO " + tableName + " values ('COFFEE', 100)");
-	    stmt.close();
+            stmt.close();
         }
     }
-    
-   
+
+
     private static void printConnection(final DataSource ds) throws SQLException{
         com.sun.appserv.jdbc.DataSource dsTyped = (com.sun.appserv.jdbc.DataSource) ds;
         Connection wrapper = dsTyped.getConnection();
         System.out.println("Connection type : " + dsTyped.getConnection(wrapper));
         wrapper.close();
     }
-    
+
     private static void openAndCloseConnection(String dsName, int count) {
         try {
             InitialContext ic = new InitialContext();
             DataSource ds = (DataSource) ic.lookup(dsName);
             com.sun.appserv.jdbc.DataSource dsTyped = (com.sun.appserv.jdbc.DataSource) ds;
-	    HashSet<String> connections = new HashSet<String>();
+            HashSet<String> connections = new HashSet<String>();
             Connection con;
-	    String conType;
-	    boolean status = true;
-	    int i = 0;
+            String conType;
+            boolean status = true;
+            int i = 0;
             for(; i < count; i++){
                 con = ds.getConnection();
-		conType = dsTyped.getConnection(con).toString();
-        	System.out.println("Connection type : " + conType);
+                conType = dsTyped.getConnection(con).toString();
+                System.out.println("Connection type : " + conType);
                 con.close();
-		if(!connections.add(conType)){
-			status = false;
-			break;
-		}
+                if(!connections.add(conType)){
+                        status = false;
+                        break;
+                }
             }
-       	    System.out.println("Total connection requested :  " + count);
-       	    System.out.println("Total connection created :  " + i);
-       	    System.out.println("Total number of unique connection :  " + connections.size());
-	    printStatus(status);
+                   System.out.println("Total connection requested :  " + count);
+                   System.out.println("Total connection created :  " + i);
+                   System.out.println("Total number of unique connection :  " + connections.size());
+            printStatus(status);
         }catch(Exception ex){
             ex.printStackTrace();
         }
     }
-    
+
     private static void openMaxConnections(String dsName, int count) {
         DataSource ds = null;
-	try{
-        	InitialContext ic = new InitialContext();
-		ds = (DataSource) ic.lookup(dsName);
-	}catch(NamingException ex){
-		System.out.println("Unable to lookup datasource");
-		ex.printStackTrace();
-		return;
-	}
-        
-        Connection[] con = new Connection[count];
-	int i = 0;
-        for(; i < count; i++){
-	   try{
-           	con[i] = ds.getConnection();
-	   }catch(SQLException ex){
-		System.out.println("Unable to create max connections");
-		printStatus(false);	
-	   }
-	}
+        try{
+                InitialContext ic = new InitialContext();
+                ds = (DataSource) ic.lookup(dsName);
+        }catch(NamingException ex){
+                System.out.println("Unable to lookup datasource");
+                ex.printStackTrace();
+                return;
+        }
 
-	if(i ==  count){
-		System.out.println("Able to create max connections");
-		printStatus(true);	
-		try{
-			ds.getConnection();
-                	System.out.println("Able to create beyond max connections");
-                	printStatus(false);
-		}catch(SQLException ex){
-                	System.out.println("Unable to create beyond max connections");
-                	printStatus(true);
-           	}
-	}
-        
+        Connection[] con = new Connection[count];
+        int i = 0;
+        for(; i < count; i++){
+           try{
+                   con[i] = ds.getConnection();
+           }catch(SQLException ex){
+                System.out.println("Unable to create max connections");
+                printStatus(false);
+           }
+        }
+
+        if(i ==  count){
+                System.out.println("Able to create max connections");
+                printStatus(true);
+                try{
+                        ds.getConnection();
+                        System.out.println("Able to create beyond max connections");
+                        printStatus(false);
+                }catch(SQLException ex){
+                        System.out.println("Unable to create beyond max connections");
+                        printStatus(true);
+                   }
+        }
+
         for(; i > 0; i--){
-	   try{
-            	con[i - 1].close();
-	   }catch(SQLException ex){
-		System.out.println("Unable to close connection");
-	   }
-	}
+           try{
+                    con[i - 1].close();
+           }catch(SQLException ex){
+                System.out.println("Unable to close connection");
+           }
+        }
     }
 
     private static Connection[] openConnections(String dsName, int count) throws NamingException, SQLException {
         InitialContext ic = new InitialContext();
         DataSource ds = (DataSource) ic.lookup(dsName);
-        
+
         Connection[] con = new Connection[count];
         for(int i=0; i < count; i++) {
             con[i] = ds.getConnection();
-	    System.out.println("con[" + i+ "]=" + con[i]);
-	}
+            System.out.println("con[" + i+ "]=" + con[i]);
+        }
         return con;
     }
-    
+
     private static void closeConnections(Connection[] con, int count) throws SQLException {
         for(int i=0; i < count; i++)
             con[i].close();
     }
-    
+
     private static void printStatus(boolean status){
         String testcaseID = testSuite + "-test" + (++testCount) ;
         if(status){

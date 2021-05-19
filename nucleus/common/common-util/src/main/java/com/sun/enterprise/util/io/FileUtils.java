@@ -615,9 +615,9 @@ public class FileUtils {
     * relative pathnames filtered with the filename filter (can be null for all files).
     */
     public static Set<File> getAllFilesUnder(File directory, FilenameFilter filenameFilter) throws IOException {
-	if (!directory.exists() || !directory.isDirectory()) {
-	    throw new IOException("Problem with: " + directory + ". You must supply a directory that exists");
-	}
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IOException("Problem with: " + directory + ". You must supply a directory that exists");
+        }
         return getAllFilesUnder(directory, filenameFilter, true);
     }
 
@@ -630,36 +630,36 @@ public class FileUtils {
     }
 
     public static Set<File> getAllFilesAndDirectoriesUnder(File directory) throws IOException {
-	if (!directory.exists() || !directory.isDirectory()) {
-	    throw new IOException("Problem with: " + directory + ". You must supply a directory that exists");
-	}
-	Set<File> allFiles = new TreeSet<File>();
-	recursiveGetFilesUnder(directory, directory, null, allFiles, true);
-	return allFiles;
+        if (!directory.exists() || !directory.isDirectory()) {
+            throw new IOException("Problem with: " + directory + ". You must supply a directory that exists");
+        }
+        Set<File> allFiles = new TreeSet<File>();
+        recursiveGetFilesUnder(directory, directory, null, allFiles, true);
+        return allFiles;
     }
 
     // relativizingRoot can be null, in which case no relativizing is
     // performed.
     private static void recursiveGetFilesUnder(File relativizingRoot, File directory, FilenameFilter filenameFilter, Set<File> set, boolean returnDirectories) {
-	File[] files = listFiles(directory, filenameFilter);
-	for (int i = 0; i < files.length; i++) {
-	    if (files[i].isDirectory()) {
-		recursiveGetFilesUnder(relativizingRoot, files[i], filenameFilter, set, returnDirectories);
-		if (returnDirectories) {
+        File[] files = listFiles(directory, filenameFilter);
+        for (int i = 0; i < files.length; i++) {
+            if (files[i].isDirectory()) {
+                recursiveGetFilesUnder(relativizingRoot, files[i], filenameFilter, set, returnDirectories);
+                if (returnDirectories) {
                     if( relativizingRoot != null ) {
                         set.add(relativize(relativizingRoot, files[i]));
                     } else {
                         set.add(files[i]);
                     }
-		}
-	    } else {
+                }
+            } else {
                 if( relativizingRoot != null ) {
                     set.add(relativize(relativizingRoot, files[i]));
                 } else {
                     set.add(files[i]);
                 }
-	    }
-    	}
+            }
+            }
     }
 
     /**
@@ -668,8 +668,8 @@ public class FileUtils {
      * that is relative to the parent.
      */
     public static File relativize(File parent, File child) {
-	String baseDir         = parent.getAbsolutePath();
-	String baseDirAndChild = child.getAbsolutePath();
+        String baseDir         = parent.getAbsolutePath();
+        String baseDirAndChild = child.getAbsolutePath();
 
         String relative = baseDirAndChild.substring(baseDir.length(),
                                                     baseDirAndChild.length());
@@ -679,7 +679,7 @@ public class FileUtils {
             relative = relative.substring(1);
         }
 
-	return new File(relative);
+        return new File(relative);
     }
 
 

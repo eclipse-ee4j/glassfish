@@ -28,7 +28,7 @@ import jakarta.servlet.annotation.WebServlet;
 @MultipartConfig(maxFileSize=200)
 public class ServletTest extends HttpServlet {
 
-    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
         response.setContentType("text/html");

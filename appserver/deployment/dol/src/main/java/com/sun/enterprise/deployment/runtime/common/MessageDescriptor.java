@@ -43,7 +43,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
     // when this message is defined from server side
     private WebServiceEndpoint endPoint = null;
 
-    private BundleDescriptor bundleDesc = null; 
+    private BundleDescriptor bundleDesc = null;
 
     private boolean isConverted = false;
 
@@ -52,7 +52,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
     public void setOperationName(String operationName) {
         this.operationName = operationName;
     }
-    
+
     public String getOperationName() {
         return operationName;
     }
@@ -64,7 +64,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
     public MethodDescriptor getMethodDescriptor() {
         return methodDescriptor;
     }
-    
+
     public void setServiceRefPortInfo(ServiceRefPortInfo portInfo) {
         this.portInfo = portInfo;
     }
@@ -82,9 +82,9 @@ public class MessageDescriptor extends RuntimeDescriptor {
     }
 
     public void setBundleDescriptor(BundleDescriptor bundleDesc){
-        this.bundleDesc = bundleDesc; 
+        this.bundleDesc = bundleDesc;
     }
-        
+
     public BundleDescriptor getBundleDescriptor() {
         return bundleDesc;
     }
@@ -92,7 +92,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
     /**
      * Return all methods defined in this message.
      *
-     * In the case of an empty message, it will return all methods 
+     * In the case of an empty message, it will return all methods
      * defined in the SEI.
      *
      * In the case of methods overloading, it will return all methods
@@ -113,7 +113,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
     private void doStyleConversion() {
         if (operationName == null && methodDescriptor == null) {
             // this is the empty message case
-            // and we need to expand to all methods 
+            // and we need to expand to all methods
             convertedMethodDescs =  getAllSEIMethodsOf(ALL_METHODS);
         } else if (methodDescriptor != null) {
             if (methodDescriptor.getName() != null  &&
@@ -121,9 +121,9 @@ public class MessageDescriptor extends RuntimeDescriptor {
                 // this is the exact case, so no conversion needed
                 convertedMethodDescs.add(methodDescriptor);
             } else if (methodDescriptor.getName() != null  &&
-                methodDescriptor.getParameterClassNames() == null) { 
+                methodDescriptor.getParameterClassNames() == null) {
                 // we need to check for overloading methods
-                convertedMethodDescs = 
+                convertedMethodDescs =
                     getAllSEIMethodsOf(methodDescriptor.getName());
             }
         }
@@ -141,14 +141,14 @@ public class MessageDescriptor extends RuntimeDescriptor {
         } else if (portInfo != null) {
             serviceInterfaceName = portInfo.getServiceEndpointInterface();
         }
-        
+
         // In the case of DII, client doesn't know the SEI name
         // return an empty list
-        if (serviceInterfaceName == null) { 
+        if (serviceInterfaceName == null) {
             return allMethodsInSEI;
         }
 
-        ClassLoader classLoader = null; 
+        ClassLoader classLoader = null;
         if (bundleDesc != null) {
             classLoader = bundleDesc.getClassLoader();
         }
@@ -163,7 +163,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
             Method[] methods = c.getMethods();
             for (int i = 0; i < methods.length; i++) {
                 // empty message or message name is *
-                if (methodName.equals(ALL_METHODS)) { 
+                if (methodName.equals(ALL_METHODS)) {
                     allMethodsInSEI.add(new MethodDescriptor(methods[i]));
                 // overloading methods with same method name
                 } else if (methodName.equals(methods[i].getName())) {
@@ -171,7 +171,7 @@ public class MessageDescriptor extends RuntimeDescriptor {
                 }
             }
         } catch (Exception e) {
-            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred", e); 
+            Logger.getAnonymousLogger().log(Level.WARNING, "Error occurred", e);
             // if there is exception in the class loading
             // then we just return the empty list
         }

@@ -74,27 +74,27 @@ public class WebServiceEndpointNode extends DisplayableComponentNode {
     protected WebServiceEndpoint createDescriptor() {
         return new WebServiceEndpoint();
     }
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(WebServicesTagNames.PORT_COMPONENT_NAME, "setEndpointName");
-        table.put(WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE, 
+        table.put(WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE,
                   "setServiceEndpointInterface");
         table.put(WebServicesTagNames.PROTOCOL_BINDING, "setProtocolBinding");
         table.put(WebServicesTagNames.ENABLE_MTOM, "setMtomEnabled");
         table.put(WebServicesTagNames.MTOM_THRESHOLD, "setMtomThreshold");
         return table;
     }
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -129,38 +129,38 @@ public class WebServiceEndpointNode extends DisplayableComponentNode {
             }
         } else super.setElementValue(element, value);
     }
-    
+
     /**
-     * write the method descriptor class to a query-method DOM tree 
+     * write the method descriptor class to a query-method DOM tree
      * and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, 
-                                WebServiceEndpoint descriptor) {        
+    public Node writeDescriptor(Node parent, String nodeName,
+                                WebServiceEndpoint descriptor) {
         Node wseNode = super.writeDescriptor(parent, nodeName, descriptor);
 
         writeDisplayableComponentInfo(wseNode, descriptor);
 
-        appendTextChild(wseNode, 
+        appendTextChild(wseNode,
                         WebServicesTagNames.PORT_COMPONENT_NAME,
                         descriptor.getEndpointName());
-        
+
         QName wsdlService = descriptor.getWsdlService();
         if((wsdlService!=null) &&
             (wsdlService.getLocalPart().length() != 0)) {
-            appendQNameChild(WebServicesTagNames.WSDL_SERVICE, wseNode, 
+            appendQNameChild(WebServicesTagNames.WSDL_SERVICE, wseNode,
                          wsdlService.getNamespaceURI(), wsdlService.getLocalPart(),
                          descriptor.getWsdlServiceNamespacePrefix());
         }
-        
+
         QName wsdlPort = descriptor.getWsdlPort();
         if((wsdlPort!=null) &&
             (wsdlPort.getLocalPart().length() != 0)) {
-            appendQNameChild(WebServicesTagNames.WSDL_PORT, wseNode, 
+            appendQNameChild(WebServicesTagNames.WSDL_PORT, wseNode,
                          wsdlPort.getNamespaceURI(), wsdlPort.getLocalPart(),
                          descriptor.getWsdlPortNamespacePrefix());
         }
@@ -173,22 +173,22 @@ public class WebServiceEndpointNode extends DisplayableComponentNode {
                         descriptor.getMtomThreshold());
         //TODO add addressing etc here
         if(descriptor.hasUserSpecifiedProtocolBinding()) {
-            appendTextChild(wseNode, 
+            appendTextChild(wseNode,
                         WebServicesTagNames.PROTOCOL_BINDING,
-                        descriptor.getProtocolBinding());            
+                        descriptor.getProtocolBinding());
         }
-        
-        appendTextChild(wseNode, 
-                        WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE, 
+
+        appendTextChild(wseNode,
+                        WebServicesTagNames.SERVICE_ENDPOINT_INTERFACE,
                         descriptor.getServiceEndpointInterface());
-        
+
         if( descriptor.implementedByWebComponent() ) {
-            Node linkNode = 
+            Node linkNode =
                 appendChild(wseNode, WebServicesTagNames.SERVICE_IMPL_BEAN);
             appendTextChild(linkNode, WebServicesTagNames.SERVLET_LINK,
                             descriptor.getWebComponentLink());
         } else if( descriptor.implementedByEjbComponent() ) {
-            Node linkNode = 
+            Node linkNode =
                 appendChild(wseNode, WebServicesTagNames.SERVICE_IMPL_BEAN);
             appendTextChild(linkNode, WebServicesTagNames.EJB_LINK,
                             descriptor.getEjbLink());
@@ -198,11 +198,11 @@ public class WebServiceEndpointNode extends DisplayableComponentNode {
         }
 
         WebServiceHandlerNode handlerNode = new WebServiceHandlerNode();
-        handlerNode.writeWebServiceHandlers(wseNode, 
+        handlerNode.writeWebServiceHandlers(wseNode,
                                             descriptor.getHandlers());
 
         WebServiceHandlerChainNode handlerChainNode = new WebServiceHandlerChainNode();
         handlerChainNode.writeWebServiceHandlerChains(wseNode, descriptor.getHandlerChain());
         return wseNode;
-    }    
+    }
 }

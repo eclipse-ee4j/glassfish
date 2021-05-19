@@ -39,15 +39,15 @@ public class SerializableWorkContext implements PrimitiveWorkContext,
   private byte[] data;
   private transient Serializable object;
   private transient boolean mutable = false;
-  
+
   private static class Carrier implements Serializable {
-    //This class carries the Serializable object along with its associated 
+    //This class carries the Serializable object along with its associated
     //attributes
     private static final int VERSION = 1; //for interop
     private static final long serialVersionUID = -197593099539117489L;
     private Serializable serializable;
     private boolean mutable;
-    
+
     @SuppressWarnings("unused")
     public Carrier() {
     }
@@ -59,15 +59,15 @@ public class SerializableWorkContext implements PrimitiveWorkContext,
     /*package*/ Serializable getSerializable() {
       return serializable;
     }
-    
+
     /*package*/ void setMutable() {
       this.mutable = true;
     }
-    
+
     /*package*/ boolean isMutable() {
       return mutable;
     }
-    
+
     private void writeObject(ObjectOutputStream out) throws IOException {
       out.writeInt(VERSION);
       out.writeObject(serializable);
@@ -76,7 +76,7 @@ public class SerializableWorkContext implements PrimitiveWorkContext,
 
     private void readObject(ObjectInputStream in)
       throws IOException, ClassNotFoundException {
-      /*int version =*/ in.readInt();      
+      /*int version =*/ in.readInt();
       serializable = (Serializable)in.readObject();
       mutable = in.readBoolean();
       /*
@@ -172,9 +172,9 @@ public class SerializableWorkContext implements PrimitiveWorkContext,
 
     Serializable obj = (Serializable)in.readObject();
     in.close();
-    if(obj instanceof Carrier) {      
+    if(obj instanceof Carrier) {
       object = ((Carrier)obj).getSerializable();
-      this.mutable = ((Carrier)obj).isMutable();      
+      this.mutable = ((Carrier)obj).isMutable();
     } else {
       object = obj;
     }

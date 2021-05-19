@@ -33,7 +33,7 @@
         <delete file="${env.APS_HOME}/test_results.xml"/>
         <record name="jbi-serviceengine.output" action="start" />
         <ant dir="server" target="all"/>
-	<ant dir="client" target="all"/>
+        <ant dir="client" target="all"/>
         <ant dir="jax-rpc" target="all"/>
         <ant dir="soapfault" target="all"/>
         <ant dir="oneway" target="all"/>

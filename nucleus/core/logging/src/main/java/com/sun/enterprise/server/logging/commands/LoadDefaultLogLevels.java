@@ -45,11 +45,11 @@ public class LoadDefaultLogLevels implements AdminCommand {
     LoggingConfigImpl loggingConfig;
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LoadDefaultLogLevels.class);
-    
+
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         final String target = "default template";
-        
+
         try {
             HashMap<String, String> props = null;
             props = (HashMap<String, String>) loggingConfig.getDefaultLoggingProperties();

@@ -26,7 +26,7 @@ import java.util.Properties;
 
 
 /**
- * Base command for creating managed executor service and managed 
+ * Base command for creating managed executor service and managed
  * scheduled executor service
  *
  */
@@ -77,17 +77,17 @@ public class CreateManagedExecutorServiceBase {
         attrList.put(ResourceConstants.JNDI_NAME, jndiName);
         attrList.put(ResourceConstants.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.put(ResourceConstants.CONTEXT_INFO, contextinfo);
-        attrList.put(ResourceConstants.THREAD_PRIORITY, 
+        attrList.put(ResourceConstants.THREAD_PRIORITY,
             threadpriority.toString());
-        attrList.put(ResourceConstants.LONG_RUNNING_TASKS, 
+        attrList.put(ResourceConstants.LONG_RUNNING_TASKS,
             longrunningtasks.toString());
-        attrList.put(ResourceConstants.HUNG_AFTER_SECONDS, 
+        attrList.put(ResourceConstants.HUNG_AFTER_SECONDS,
             hungafterseconds.toString());
-        attrList.put(ResourceConstants.CORE_POOL_SIZE, 
+        attrList.put(ResourceConstants.CORE_POOL_SIZE,
             corepoolsize.toString());
-        attrList.put(ResourceConstants.KEEP_ALIVE_SECONDS, 
+        attrList.put(ResourceConstants.KEEP_ALIVE_SECONDS,
             keepaliveseconds.toString());
-        attrList.put(ResourceConstants.THREAD_LIFETIME_SECONDS, 
+        attrList.put(ResourceConstants.THREAD_LIFETIME_SECONDS,
             threadlifetimeseconds.toString());
         attrList.put(ServerTags.DESCRIPTION, description);
         attrList.put(ResourceConstants.ENABLED, enabled.toString());

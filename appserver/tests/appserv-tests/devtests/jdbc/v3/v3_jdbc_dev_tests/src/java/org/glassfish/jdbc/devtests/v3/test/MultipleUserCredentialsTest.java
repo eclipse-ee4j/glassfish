@@ -26,7 +26,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 
 /**
  * Tests if Connection pool tries to evict (expel) some free connections
- * if a new connection cannot fit in the pool. Assumes max-pool-size = 32, 
+ * if a new connection cannot fit in the pool. Assumes max-pool-size = 32,
  * steady-pool-size = 8, pool-resize-quantity = 2, match-connections = true.
 
  * @author shalini
@@ -34,7 +34,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
 public class MultipleUserCredentialsTest implements SimpleTest {
 
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
-    
+
     public Map<String, Boolean> runTest(DataSource ds, PrintWriter out) {
         try {
             if (testMultipleUserCredentials(ds, out)) {
@@ -46,12 +46,12 @@ public class MultipleUserCredentialsTest implements SimpleTest {
             resultsMap.put("jdbc-multiple-user-credentials", false);
         }
 
-        HtmlUtil.printHR(out);        
-        return resultsMap;                        
+        HtmlUtil.printHR(out);
+        return resultsMap;
     }
 
     /**
-     * Tests if unmatched free connections are purged and new connections are 
+     * Tests if unmatched free connections are purged and new connections are
      * provided even if the user credentials don't match.
      * @param ds
      * @param out
@@ -62,7 +62,7 @@ public class MultipleUserCredentialsTest implements SimpleTest {
         Connection conns2[] = new Connection[16];
         boolean passed = true;
         out.println("<h4> Multiple User Credentials Test</h4>");
-        
+
         //First user acquires 16 connections
         out.println("<br> Getting 16 connections as DBUSER...");
         for(int i=0; i<conns1.length; i++) {
@@ -84,7 +84,7 @@ public class MultipleUserCredentialsTest implements SimpleTest {
                 passed = false;
             }
         }
-        
+
         //All connections are returned to the pool
         out.println("<br> Closing all the connections acquired by DBUSER");
         for(int i=0; i<conns1.length; i++) {
@@ -106,7 +106,7 @@ public class MultipleUserCredentialsTest implements SimpleTest {
             }
         }
 
-        //Request from third and fourth user 
+        //Request from third and fourth user
         out.println("<br> Getting subsequent connections for APP and DERBYUSER");
         try {
             Connection conn3 = ds.getConnection("APP", "APP");

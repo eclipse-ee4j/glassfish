@@ -32,7 +32,7 @@ public class GetResourceTest extends LifeCycle
     public GetResourceTest()
     {
     }
-    
+
     String testInternal() throws JMException, IOException
     {
         long msec = System.currentTimeMillis();
@@ -43,8 +43,8 @@ public class GetResourceTest extends LifeCycle
         String objname = "user:foo=" + name;
         create(classname, objname, name);
         msec = System.currentTimeMillis() - msec;
-        System.out.println("Created CMB, name: " + name + ", impl class: " 
-                + classname + ", obj-name: " + objname + ", Time(msec): " 
+        System.out.println("Created CMB, name: " + name + ", impl class: "
+                + classname + ", obj-name: " + objname + ", Time(msec): "
                 + msec + ", Memory Usage: " + getMemoryInfo());
 
         title("Stage II -- check ");
@@ -58,14 +58,14 @@ public class GetResourceTest extends LifeCycle
             Console.readLine("Go look at the AWT window and hit ENTER: ");
 
         title("Stage III -- delete ");
-        
+
         if(interactive)
             Console.readLine("Shall I delete the MBeans? [y]: ");
             delete(name);
             System.out.println("Deleted: " + name);
-        
+
         title("Stage IV  -- check deletion");
-        
+
         list = list();
         if(list.contains(name))
             throw new RuntimeException(name + " is still in the list of deployed MBeans");
@@ -75,12 +75,12 @@ public class GetResourceTest extends LifeCycle
     }
 
     private static final String[] classnames = {
-            "testmbeans.OneClassDynamicMBean", 
-            "testmbeans.MicrowaveOvenImpl", 
-            "testmbeans.SimpleStandard", 
-            "testmbeans.PrimitiveStandard", 
+            "testmbeans.OneClassDynamicMBean",
+            "testmbeans.MicrowaveOvenImpl",
+            "testmbeans.SimpleStandard",
+            "testmbeans.PrimitiveStandard",
     };
-    
+
     private int numIter = 500;
     private String namePrefix;
     private String alphabet = "abcdefghijklmnopqrstuvwxyz";

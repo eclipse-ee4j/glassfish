@@ -19,7 +19,7 @@ import java.util.List;
 @jakarta.inject.Named("SimpleItemWriter")
 public class SimpleItemWriter
     implements jakarta.batch.api.chunk.ItemWriter {
-    
+
     @Override
     public void open(Serializable e) throws Exception {
     }
@@ -31,7 +31,7 @@ public class SimpleItemWriter
     @Override
     public void writeItems(List lst) throws Exception {
         StringBuilder sb = new StringBuilder("SimpleItemWriter:");
-	List<String> list = (List<String>) lst;
+        List<String> list = (List<String>) lst;
         for (String s : list) {
             sb.append(" ").append(s);
         }
@@ -42,5 +42,5 @@ public class SimpleItemWriter
     public Serializable checkpointInfo() throws Exception {
         return null;
     }
-    
+
 }

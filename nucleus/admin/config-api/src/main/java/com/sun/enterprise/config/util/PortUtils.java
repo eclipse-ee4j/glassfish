@@ -26,7 +26,7 @@ import static com.sun.enterprise.config.util.PortConstants.*;
 
 /**
  * static methods useful for dealing with ports.
- * 
+ *
  * @author Byron Nevins
  */
 final class PortUtils {
@@ -37,7 +37,7 @@ final class PortUtils {
 
     /**
      * Make sure all ports that are specified by the user make sense.
-     * 
+     *
      * @param server The new Server element
      * @return null if all went OK. Otherwise return a String with the error message.
      */

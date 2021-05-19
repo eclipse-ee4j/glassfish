@@ -30,8 +30,8 @@ import jakarta.faces.component.UIComponentBase;
 
 /**
  * <p><strong>ChartItemComponent</strong> is a component that may be nested
- * inside a <code>ChartItem</code>, and causes the addition of a 
- * <code>ChartItem</code> instance to the list of available options for the 
+ * inside a <code>ChartItem</code>, and causes the addition of a
+ * <code>ChartItem</code> instance to the list of available options for the
  * parent component.  The contents of the
  * <code>ChartItem</code> can be specified in one of the following ways:</p>
  * <ul>
@@ -40,7 +40,7 @@ import jakarta.faces.component.UIComponentBase;
  * <li>The associated {@link ValueBinding} points at a model data
  *     item of type <code>ChartItem</code>.</li>
  * <li>A new <code>ChartItem</code> instance is synthesized from the values
- *     of the <code>itemLabel</code>, <code>itemColor</code>, 
+ *     of the <code>itemLabel</code>, <code>itemColor</code>,
  * <code>itemValue</code></li>
  * </ul>
  */
@@ -102,15 +102,15 @@ public class ChartItemComponent extends UIComponentBase {
      */
     public String getItemLabel() {
 
-	if (this.itemLabel != null) {
-	    return (this.itemLabel);
-	}
-	ValueBinding vb = getValueBinding("itemLabel");
-	if (vb != null) {
-	    return ((String) vb.getValue(getFacesContext()));
-	} else {
-	    return (null);
-	}
+    if (this.itemLabel != null) {
+        return (this.itemLabel);
+    }
+    ValueBinding vb = getValueBinding("itemLabel");
+    if (vb != null) {
+        return ((String) vb.getValue(getFacesContext()));
+    } else {
+        return (null);
+    }
 
     }
 
@@ -131,15 +131,15 @@ public class ChartItemComponent extends UIComponentBase {
      */
     public String getItemColor() {
 
-	if (this.itemColor != null) {
-	    return (this.itemColor);
-	}
-	ValueBinding vb = getValueBinding("itemColor");
-	if (vb != null) {
-	    return ((String) vb.getValue(getFacesContext()));
-	} else {
-	    return (null);
-	}
+    if (this.itemColor != null) {
+        return (this.itemColor);
+    }
+    ValueBinding vb = getValueBinding("itemColor");
+    if (vb != null) {
+        return ((String) vb.getValue(getFacesContext()));
+    } else {
+        return (null);
+    }
 
     }
 
@@ -154,23 +154,23 @@ public class ChartItemComponent extends UIComponentBase {
         this.itemColor = color;
 
     }
-    
+
     /**
      * <p>Return the server value for this selection item.
      */
     public Object getItemValue() {
 
-	if (this.itemValue != null) {
-	    return (this.itemValue);
-	}
-	ValueBinding vb = getValueBinding("itemValue");
-	if (vb != null) {
-	    return ((Integer) (vb.getValue(getFacesContext())));
-	} else {
-	    return null;
-	}
+    if (this.itemValue != null) {
+        return (this.itemValue);
     }
-    
+    ValueBinding vb = getValueBinding("itemValue");
+    if (vb != null) {
+        return ((Integer) (vb.getValue(getFacesContext())));
+    } else {
+        return null;
+    }
+    }
+
     /**
      * <p>Set the server value for this selection item.
      *
@@ -187,21 +187,21 @@ public class ChartItemComponent extends UIComponentBase {
      */
     public Object getValue() {
 
-	if (this.value != null) {
-	    return (this.value);
-	}
-	ValueBinding vb = getValueBinding("value");
-	if (vb != null) {
-	    return (vb.getValue(getFacesContext()));
-	} else {
-	    return (null);
-	}
+    if (this.value != null) {
+        return (this.value);
+    }
+    ValueBinding vb = getValueBinding("value");
+    if (vb != null) {
+        return (vb.getValue(getFacesContext()));
+    } else {
+        return (null);
+    }
     }
 
 
     /**
      * <p>Sets the <code>value</code> property of this chart item
-     * 
+     *
      * @param value the new value
      */
     public void setValue(Object value) {

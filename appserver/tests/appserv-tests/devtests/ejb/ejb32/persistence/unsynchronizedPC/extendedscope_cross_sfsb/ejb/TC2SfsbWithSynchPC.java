@@ -30,10 +30,10 @@ public class TC2SfsbWithSynchPC implements Tester{
             synchronization = SynchronizationType.SYNCHRONIZED,
             type = PersistenceContextType.EXTENDED)
     EntityManager em;
-    
+
     @EJB private TC2FinderHome finderHome;
     private TC2Finder finderLocalObject;
-    
+
     public boolean doTest() {
         try {
             // Should throw EJBException here
@@ -51,6 +51,6 @@ public class TC2SfsbWithSynchPC implements Tester{
             // Unexpected exception
             return false;
         }
-        
+
     }
 }

@@ -158,7 +158,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
     }
 
     /**
-     * Parses the key and removes the "set" string at the beginning of the 
+     * Parses the key and removes the "set" string at the beginning of the
      * property.
      * @param key
      * @return
@@ -190,7 +190,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
             }
         }
         return parsedKey;
-        
+
     }
 
     /**
@@ -282,7 +282,7 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
      * @param other <code>ManagedConnectionFactory</code> object for checking equality with
      * @return true    if the property sets of both the
      *         <code>ManagedConnectionFactory</code> objects are the same
-     *         false	otherwise
+     *         false    otherwise
      */
     public boolean equals(Object other) {
         logFine("In equals");
@@ -337,11 +337,11 @@ public class DMManagedConnectionFactory extends ManagedConnectionFactoryImpl {
     public void setURL(String url) {
         spec.setDetail(DataSourceSpec.URL, url);
     }
-    
+
     public String getURL() {
         return spec.getDetail(DataSourceSpec.URL);
     }
-    
+
     /**
      * Sets the connection url.
      *

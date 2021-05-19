@@ -36,7 +36,7 @@ import org.jvnet.hk2.annotations.Service;
  * that need to change configuration settings by delegating to a
  * sequence of other commands.
  * <p>
- * This is similar to some logic in the AdminAdapter.  
+ * This is similar to some logic in the AdminAdapter.
  *
  * @author Tim Quinn
  *

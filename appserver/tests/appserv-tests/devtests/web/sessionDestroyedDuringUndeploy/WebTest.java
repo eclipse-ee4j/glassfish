@@ -52,7 +52,7 @@ public class WebTest {
         adminPassword = args[4];
         run = args[5];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 834");
@@ -69,7 +69,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void firstRun() throws Exception {
@@ -128,7 +128,7 @@ public class WebTest {
                                 responseCode + ", expected: " +
                                 HttpURLConnection.HTTP_OK);
         }
-                     
+
         String cookie = conn.getHeaderField("set-cookie");
         if (cookie == null) {
             throw new Exception("Missing Set-Cookie response header");
@@ -160,7 +160,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -208,7 +208,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -260,7 +260,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionIdSSO + "\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -277,7 +277,7 @@ public class WebTest {
              */
             String line = null;
             String redirectUrl = "Location: http://" + host + ":" + port
-                + contextRoot + "/login.jsp"; 
+                + contextRoot + "/login.jsp";
             while ((line = br.readLine()) != null) {
                 System.out.println(line);
                 if (line.equals(redirectUrl)

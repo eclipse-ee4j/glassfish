@@ -22,7 +22,7 @@ import jakarta.jms.Message;
 import jakarta.jms.MessageListener;
 import javax.naming.*;
 
-public class OperationTestMsgBean implements MessageDrivenBean, 
+public class OperationTestMsgBean implements MessageDrivenBean,
     MessageListener {
 
     private MessageDrivenContext mdc = null;
@@ -39,7 +39,7 @@ public class OperationTestMsgBean implements MessageDrivenBean,
         System.out.println("In OperationTestMsgBean::ejbCreate() !!");
         try {
             Context context = new InitialContext();
-            beanManagedTx = 
+            beanManagedTx =
                 ((Boolean) context.lookup("java:comp/env/beanManagedTx")).booleanValue();
 
             if( beanManagedTx ) {
@@ -55,7 +55,7 @@ public class OperationTestMsgBean implements MessageDrivenBean,
     }
 
     public void onMessage(Message recvMsg) {
-        System.out.println("In OperationTestMsgBean::onMessage() : " 
+        System.out.println("In OperationTestMsgBean::onMessage() : "
                            + recvMsg);
 
         runTest(OperationTest.ON_MESSAGE);
@@ -64,7 +64,7 @@ public class OperationTestMsgBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println
             ("In OperationTestMsgBean::setMessageDrivenContext()!!");
-	this.mdc = mdc;
+        this.mdc = mdc;
         runTest(OperationTest.SET_CONTEXT);
     }
 

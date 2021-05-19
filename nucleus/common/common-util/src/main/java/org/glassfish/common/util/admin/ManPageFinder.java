@@ -77,12 +77,12 @@ public class ManPageFinder {
                         Locale locale, ClassLoader classLoader, Logger logger) {
 
         InputStream s = null;
- 
+
         Iterator it = getPossibleLocations(cmdName, cmdClass, locale, logger);
         while (s == null && it.hasNext()) {
             s = classLoader.getResourceAsStream((String)it.next());
         }
- 
+
         if (s == null)
             return null;
         Reader r;

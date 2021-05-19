@@ -28,11 +28,11 @@ public interface Dummy
 
 
 
-	public String isInterceptorCallCounOK();
+        public String isInterceptorCallCounOK();
 
 
 
-	public String isPostConstructCallCounOK();
+        public String isPostConstructCallCounOK();
 
 }
 

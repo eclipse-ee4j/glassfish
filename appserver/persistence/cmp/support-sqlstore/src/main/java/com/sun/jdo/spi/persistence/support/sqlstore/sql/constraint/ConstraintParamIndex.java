@@ -57,7 +57,7 @@ public class ConstraintParamIndex extends ConstraintValue
     public int getType() {
         return enumType;
     }
-    
+
     public Integer getIndex() {
         return (Integer) getValue();
     }

@@ -36,7 +36,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(EJBs.class)
 public class EJBsHandler extends EJBHandler {
-    
+
     public EJBsHandler() {
     }
 
@@ -45,7 +45,7 @@ public class EJBsHandler extends EJBHandler {
             throws AnnotationProcessorException {
 
         EJBs ejbsAnnotation = (EJBs) ainfo.getAnnotation();
-        
+
         EJB[] ejbAnnotations = ejbsAnnotation.value();
 
         if(ejbAnnotations.length == 0) {

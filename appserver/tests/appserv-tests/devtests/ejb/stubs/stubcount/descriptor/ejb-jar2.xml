@@ -44,7 +44,7 @@
       <security-identity>
         <use-caller-identity/>
       </security-identity>
-    </session>   
+    </session>
   </enterprise-beans>
   <assembly-descriptor>
   </assembly-descriptor>

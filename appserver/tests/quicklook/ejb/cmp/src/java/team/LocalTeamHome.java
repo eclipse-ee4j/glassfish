@@ -22,17 +22,17 @@ import jakarta.ejb.EJBLocalHome;
 import jakarta.ejb.FinderException;
 
 public interface LocalTeamHome extends EJBLocalHome {
-    
+
     public LocalTeam create (String id, String name, String city)
         throws CreateException;
-    
+
     public LocalTeam findByPrimaryKey (String id)
         throws FinderException;
 
-    public Collection findAll() 
+    public Collection findAll()
         throws FinderException;
-    
-    public Collection findByPlayerAndLeague(LocalPlayer player, 
+
+    public Collection findByPlayerAndLeague(LocalPlayer player,
                                             LocalLeague league)
                                             throws FinderException;
 }

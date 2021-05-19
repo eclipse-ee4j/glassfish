@@ -57,7 +57,7 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
     }
 
     /*
-    public void validateAdminUserAndPassword(DomainConfig domainConfig) 
+    public void validateAdminUserAndPassword(DomainConfig domainConfig)
         throws DomainException
     {
         try {
@@ -134,7 +134,7 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
             final File stopServ = layout.getStopServ();
             generateFromTemplate(tokens, stopServTemplate, stopServ);
             //final File killServ = layout.getKillServTemplate();
-            //generateFromTemplate(new TokenValueSet(), 
+            //generateFromTemplate(new TokenValueSet(),
             //layout.getKillServTemplate(), layout.getKillServ());
         } catch (Exception e) {
             throw new DomainException(strMgr.getString("stopServNotCreated"), e);
@@ -155,7 +155,7 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
 
     /**
      * Returns the domain user from the domainConfig.
-     * 
+     *
      * @param domainConfig that represents the domain configuration
      * @return String representing the domain user if the given map contains it, null otherwise
      */
@@ -166,7 +166,7 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
 
     /**
      * Returns the domain user's password in cleartext from the domainConfig.
-     * 
+     *
      * @param domainConfig that represents the domain configuration
      * @return String representing the domain user password if the given map contains it, null otherwise
      */
@@ -202,7 +202,7 @@ public class PEDomainsManager extends RepositoryManager implements DomainsManage
             //Change the password of the keystore and truststore
             changeSSLCertificateDatabasePassword(config, oldPass, newPass);
 
-            //Change the password in the masterpassword file or delete the file if it is 
+            //Change the password in the masterpassword file or delete the file if it is
             //not to be saved.
             changeMasterPasswordInMasterPasswordFile(config, newPass, saveMasterPassword(config));
         } catch (Exception ex) {

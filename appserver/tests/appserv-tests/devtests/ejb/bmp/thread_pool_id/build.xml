@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -48,52 +48,52 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
-	<echo message="asadmin create-threadpool ${as.props} express-service-thread-pool"/>
-	<exec executable="${ASADMIN}" >
-	    <arg line="create-threadpool "/>
-	    <arg line="${as.props}"/>
-	    <arg line="express-service-thread-pool"/>
-	</exec>
-	<antcall target="restart-server-instance-common"/>
-	<!--<exec executable="${ASADMIN}" >
-	    <arg line="stop-domain"/>
-	</exec>
-	<exec executable="${ASADMIN}" >
-	    <arg line="start-domain"/>
-	</exec>-->
+        <echo message="asadmin create-threadpool ${as.props} express-service-thread-pool"/>
+        <exec executable="${ASADMIN}" >
+            <arg line="create-threadpool "/>
+            <arg line="${as.props}"/>
+            <arg line="express-service-thread-pool"/>
+        </exec>
+        <antcall target="restart-server-instance-common"/>
+        <!--<exec executable="${ASADMIN}" >
+            <arg line="stop-domain"/>
+        </exec>
+        <exec executable="${ASADMIN}" >
+            <arg line="start-domain"/>
+        </exec>-->
       <antcall target="execute-ejb-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
       <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
       <antcall target="execute-ejb-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
       <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-ejb-sql-common">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
       </antcall>
 
-	<echo message="asadmin delete-threadpool ${as.props} express-service-thread-pool"/>
-	<exec executable="${ASADMIN}" >
-	    <arg line="delete-threadpool "/>
-	    <arg line="${as.props}"/>
-	    <arg line="express-service-thread-pool"/>
-	</exec>
-	<antcall target="restart-server-instance-common"/>
+        <echo message="asadmin delete-threadpool ${as.props} express-service-thread-pool"/>
+        <exec executable="${ASADMIN}" >
+            <arg line="delete-threadpool "/>
+            <arg line="${as.props}"/>
+            <arg line="express-service-thread-pool"/>
+        </exec>
+        <antcall target="restart-server-instance-common"/>
 
       <!--
       <antcall target="undeploy-jdbc-common">
@@ -102,7 +102,7 @@
       </antcall>
       -->
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

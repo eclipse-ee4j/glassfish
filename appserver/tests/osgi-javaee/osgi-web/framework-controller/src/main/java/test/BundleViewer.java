@@ -40,7 +40,7 @@ public class BundleViewer {
 
     @Context ServletContext ctx;
     @Context HttpServletResponse resp;
-    
+
     @GET
     public void getBundles() throws IOException {
         PrintWriter out = null;
@@ -57,7 +57,7 @@ public class BundleViewer {
                     "<td font color=\"black\" style=\"font-weight:bold\">BUNDLEID</td>" +
                     "<td font color=\"black\" style=\"font-weight:bold\">STATE</td>" +
                     "<td font color=\"black\" style=\"font-weight:bold\">BUNDLE SYMBOLIC NAME</td></tr>");
-            
+
             try {
                 for(int i=0; i<bundles.length; i++) {
                     out.println("<tr bgcolor=\""+ bgcolors[i%2] +"\">");

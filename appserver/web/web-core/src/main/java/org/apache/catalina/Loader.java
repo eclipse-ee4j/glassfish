@@ -77,7 +77,7 @@ public interface Loader {
      */
     public void setContainer(Container container);
 
-    
+
     /**
      * Return the "follow standard delegation model" flag used to configure
      * our ClassLoader.
@@ -170,4 +170,4 @@ public interface Loader {
     public void setIgnoreHiddenJarFiles(boolean ignoreHiddenJarFiles);
     // END PWC 1.1 6314481
 }
-   
+

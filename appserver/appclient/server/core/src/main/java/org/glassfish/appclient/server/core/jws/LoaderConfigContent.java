@@ -25,14 +25,14 @@ import java.net.URI;
 /**
  * Abstracts the OSGi configuration information so it can be served easily
  * via JNLP to Java Web Start.
- * 
+ *
  * @author tjquinn
  */
 class LoaderConfigContent {
 
     private static final String OSGI_CONFIG_FILE_PATH = "config/osgi.properties";
     private final String content;
-    
+
     LoaderConfigContent(final File installDir) throws FileNotFoundException, IOException {
         content = loadContent(configFileURI(installDir));
     }
@@ -40,7 +40,7 @@ class LoaderConfigContent {
     String content() {
         return content;
     }
-    
+
     private String loadContent(final URI configFileURI) throws FileNotFoundException, IOException {
         final File configFile = new File(configFileURI);
         final FileReader fr = new FileReader(configFile);
@@ -58,7 +58,7 @@ class LoaderConfigContent {
             fr.close();
         }
     }
-    
+
     private URI configFileURI(final File installDir) {
         return installDir.toURI().resolve(OSGI_CONFIG_FILE_PATH);
     }

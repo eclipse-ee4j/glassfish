@@ -25,65 +25,65 @@ import javax.naming.*;
 
 
 public abstract class ABean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: ABean ejbRemove");
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract long getId();
     public abstract void setId(long id);
 
@@ -101,8 +101,8 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
 
         return null;
     }
-    
+
     public void ejbPostCreate(long id, java.lang.String name, double s)
         throws jakarta.ejb.CreateException { }
-    
+
 }

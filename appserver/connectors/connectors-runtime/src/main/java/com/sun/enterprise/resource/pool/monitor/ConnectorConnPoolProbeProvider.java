@@ -21,18 +21,18 @@ import org.glassfish.external.probe.provider.annotations.Probe;
 import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 
 /**
- * Probe provider interface for Connector connection pool related events to provide 
+ * Probe provider interface for Connector connection pool related events to provide
  * information related to the various objects on jca pool monitoring.
- * 
+ *
  * @author Shalini M
  */
 @ProbeProvider(moduleProviderName="glassfish", moduleName="jca", probeProviderName="connection-pool")
 public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider {
 
     /**
-     * Emits probe event/notification that the given jca connection pool 
+     * Emits probe event/notification that the given jca connection pool
      * <code>poolName</code>has got a connection validation failed event.
-     * 
+     *
      * @param poolName for which connection validation has failed
      * @param increment number of times the validation failed
      */
@@ -47,7 +47,7 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
     /**
      * Emits probe event/notification that a jca connection pool with the given
      * name <code>poolName</code> has got a connection timed out event.
-     * 
+     *
      * @param poolName that has got a connection timed-out event
      */
     @Probe(name="connectionTimedOutEvent")
@@ -56,11 +56,11 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
                                         @ProbeParam("appName") String appName,
                                         @ProbeParam("moduleName") String moduleName
                                         ) { }
-    
+
     /**
-     * Emits probe event/notification that the pool with the given name 
+     * Emits probe event/notification that the pool with the given name
      * <code>poolName</code> is having a potentialConnLeak event.
-     * 
+     *
      * @param poolName
      */
     @Probe(name="potentialConnLeakEvent")
@@ -69,11 +69,11 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
                                        @ProbeParam("appName") String appName,
                                        @ProbeParam("moduleName") String moduleName
                                        ) { }
-    
+
     /**
-     * Emits probe event/notification that the given jca connection pool 
+     * Emits probe event/notification that the given jca connection pool
      * <code>poolName</code>has got a decrement free connections size event.
-     * 
+     *
      * @param poolName for which decrement numConnFree is got
      */
     @Probe(name="decrementNumConnFreeEvent")
@@ -85,12 +85,12 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
             ) { }
 
     /**
-     * Emits probe event/notification that the given jca connection pool 
+     * Emits probe event/notification that the given jca connection pool
      * <code>poolName</code>has got a decrement free connections size event.
-     * 
+     *
      * @param poolName for which decrement numConnFree is got
-     * @param beingDestroyed if the connection is destroyed due to error 
-     * @param steadyPoolSize 
+     * @param beingDestroyed if the connection is destroyed due to error
+     * @param steadyPoolSize
      */
     @Probe(name="incrementNumConnFreeEvent")
     @Override
@@ -99,12 +99,12 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
             @ProbeParam("appName") String appName,
             @ProbeParam("moduleName") String moduleName,
             @ProbeParam("beingDestroyed") boolean beingDestroyed,
-            @ProbeParam("steadyPoolSize") int steadyPoolSize) { }            
+            @ProbeParam("steadyPoolSize") int steadyPoolSize) { }
 
     /**
-     * Emits probe event/notification that the given jca connection pool 
+     * Emits probe event/notification that the given jca connection pool
      * <code>poolName</code>has got a decrement connections used event.
-     * 
+     *
      * @param poolName for which decrement numConnUsed is got
      */
     @Probe(name="decrementConnectionUsedEvent")
@@ -114,11 +114,11 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
             @ProbeParam("appName") String appName,
             @ProbeParam("moduleName") String moduleName
             ) { }
-    
+
     /**
-     * Emits probe event/notification that the given jca connection pool 
+     * Emits probe event/notification that the given jca connection pool
      * <code>poolName</code>has got a increment connections used event.
-     * 
+     *
      * @param poolName for which increment numConnUsed is got
      */
     @Probe(name="connectionUsedEvent")
@@ -130,9 +130,9 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
             ) { }
 
     /**
-     * Emits probe event/notification that the given jca connection pool 
+     * Emits probe event/notification that the given jca connection pool
      * <code>poolName</code>has got a increment connections free event.
-     * 
+     *
      * @param poolName for which increment numConnFree is got
      * @param count number of connections freed to pool
      */
@@ -147,9 +147,9 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
     /**
      * Emits probe event/notification that a connection request is served in the
      * time <code>timeTakenInMillis</code> for the given jca connection pool
-     * <code> poolName</code> 
-     * 
-     * @param poolName 
+     * <code> poolName</code>
+     *
+     * @param poolName
      * @param timeTakenInMillis time taken to serve a connection
      */
     @Probe(name="connectionRequestServedEvent")
@@ -161,10 +161,10 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
             @ProbeParam("timeTakenInMillis") long timeTakenInMillis) { }
 
     /**
-     * Emits probe event/notification that a connection is destroyed for the 
+     * Emits probe event/notification that a connection is destroyed for the
      * given jca connection pool <code>poolName</code>
-     * 
-     * @param poolName 
+     *
+     * @param poolName
      */
     @Probe(name="connectionDestroyedEvent")
     @Override
@@ -177,7 +177,7 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
     /**
      * Emits probe event/notification that a connection is acquired by application
      * for the given jca connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionAcquiredEvent")
@@ -191,7 +191,7 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
     /**
      * Emits probe event/notification that a connection is released for the given
      * jca connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionReleasedEvent")
@@ -204,7 +204,7 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
     /**
      * Emits probe event/notification that a new connection is created for the
      * given jca connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionCreatedEvent")
@@ -213,7 +213,7 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
                                        @ProbeParam("appName") String appName,
                                        @ProbeParam("moduleName") String moduleName
                                        ) { }
-    
+
     @Probe(name="toString", hidden=true)
     @Override
     public void toString(@ProbeParam("poolName") String poolName,
@@ -222,9 +222,9 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
             @ProbeParam("stackTrace") StringBuffer stackTrace) { }
 
     /**
-     * Emits probe event/notification that a connection under test matches the 
+     * Emits probe event/notification that a connection under test matches the
      * current request for the given connector connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionMatchedEvent")
@@ -235,10 +235,10 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
                                        ) { }
 
     /**
-     * Emits probe event/notification that a connection under test does not 
-     * match the current request for the given connector connection pool 
+     * Emits probe event/notification that a connection under test does not
+     * match the current request for the given connector connection pool
      * <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionNotMatchedEvent")
@@ -247,11 +247,11 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
                                           @ProbeParam("appName") String appName,
                                           @ProbeParam("moduleName") String moduleName
                                           ) { }
-    
+
     /**
-     * Emits probe event/notification that the wait queue length has increased 
+     * Emits probe event/notification that the wait queue length has increased
      * for the given connector connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionRequestQueuedEvent")
@@ -262,9 +262,9 @@ public class ConnectorConnPoolProbeProvider extends ConnectionPoolProbeProvider 
                                              ) { }
 
     /**
-     * Emits probe event/notification that the wait queue length has decreased 
+     * Emits probe event/notification that the wait queue length has decreased
      * for the given connector connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      */
     @Probe(name="connectionRequestDequeuedEvent")

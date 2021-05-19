@@ -40,8 +40,8 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="oracle_type4_pool" 
+    <jdbc-connection-pool
+        name="oracle_type4_pool"
         datasource-classname="oracle.jdbc.pool.OracleDataSource"
         res-type="javax.sql.DataSource">
         <property name="url" value="jdbc:oracle:thin:@DB_HOSTNAME:1521:DATABASE_NAME"/>
@@ -49,9 +49,9 @@
         <property name="password" value="DB_PASSWORD"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/oracle_type4_resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/oracle_type4_resource"
+        object-type="user"
         pool-name="oracle_type4_pool"/>
-</resources> 
+</resources>

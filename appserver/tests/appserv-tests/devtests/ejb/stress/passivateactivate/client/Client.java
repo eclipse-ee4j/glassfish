@@ -34,8 +34,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private static final int    MAX_SFSBS = 600;
@@ -50,13 +50,13 @@ public class Client {
         client.doTest();
         System.out.println("[passivateactivateClient] DONE doTest()...");
         stat.printSummary("passivateactivate");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
-        initSFSBList();     //create SFSBs 
+        initSFSBList();     //create SFSBs
         accessSFSB();       //access the SFBS
 
     }
@@ -92,7 +92,7 @@ public class Client {
                 SFSB sfsb = (SFSB) sfsbList.get(i);
                 String sfsbName = sfsb.getName();
                 System.out.println("Successfully accessed SFSB bean for: " + sfsbName);
-    
+
                 stat.addStatus("ejbclient accessSFSB", stat.PASS);
             }
         } catch (Exception ex) {

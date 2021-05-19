@@ -69,7 +69,7 @@ final class WebModuleListener
      * Used for loading persistence units.
      */
     private WebBundleDescriptor wbd;
-    
+
     private WebContainer webContainer;
 
     /**
@@ -104,12 +104,12 @@ final class WebModuleListener
         // Process the event that has occurred
         if (event.getType().equals(Lifecycle.START_EVENT)) {
             // post processing DOL object for standalone web module
-            if (wbd != null && wbd.getApplication() != null && 
+            if (wbd != null && wbd.getApplication() != null &&
                 wbd.getApplication().isVirtual()) {
                 wbd.setClassLoader(webModule.getLoader().getClassLoader());
                 wbd.visit(new WebValidatorWithCL());
             }
-            
+
             //loadPersistenceUnits(webModule);
             configureDefaultServlet(webModule);
             configureJsp(webModule);
@@ -220,7 +220,7 @@ final class WebModuleListener
                 wrapper.addInitParameter(pname, pvalue);
             }
         }
-           
+
         // Override any log setting with the container wide logging level
         wrapper.addInitParameter("logVerbosityLevel",getJasperLogLevel());
 
@@ -255,7 +255,7 @@ final class WebModuleListener
             // In embedded mode, services returns SingleModulesRegistry and
             // it has no modules.
             // Try "java.class.path" system property instead.
-            sysClassPath = System.getProperty("java.class.path"); 
+            sysClassPath = System.getProperty("java.class.path");
         }
         sysClassPath = trimSysClassPath(sysClassPath);
         wrapper.addInitParameter("com.sun.appserv.jsp.classpath",
@@ -369,7 +369,7 @@ final class WebModuleListener
             return "information";
         else if (level.equals(Level.FINER) || level.equals(Level.FINEST))
             return "debug";
-        else 
+        else
             return "warning";
     }
 
@@ -385,7 +385,7 @@ final class WebModuleListener
             } catch (Exception ee) {
                 _logger.log(Level.WARNING, LogFacade.CACHE_MRG_EXCEPTION, ee);
             }
-        
+
             if (cm != null) {
                 try {
                     // first start the CacheManager, if enabled
@@ -393,7 +393,7 @@ final class WebModuleListener
                     if (_logger.isLoggable(Level.FINE)) {
                         _logger.log(Level.FINE, LogFacade.CACHE_MANAGER_STARTED);
                     }
-                    // set this manager as a context attribute so that 
+                    // set this manager as a context attribute so that
                     // caching filters/tags can find it
                     ServletContext ctxt = webModule.getServletContext();
                     ctxt.setAttribute(CacheManager.CACHE_MANAGER_ATTR_NAME, cm);
@@ -425,7 +425,7 @@ final class WebModuleListener
 
 
     /**
-     * Configures the given web module's DefaultServlet with the 
+     * Configures the given web module's DefaultServlet with the
      * applicable web properties from sun-web.xml.
      */
     private void configureDefaultServlet(WebModule webModule) {

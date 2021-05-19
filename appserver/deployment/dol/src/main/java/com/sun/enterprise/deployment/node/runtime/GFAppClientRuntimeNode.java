@@ -25,7 +25,7 @@ import java.util.Map;
 
 
 /**
- * This node is responsible for handling all runtime information for 
+ * This node is responsible for handling all runtime information for
  * application client.
  */
 public class GFAppClientRuntimeNode extends AppClientRuntimeNode {
@@ -36,21 +36,21 @@ public class GFAppClientRuntimeNode extends AppClientRuntimeNode {
 
     public GFAppClientRuntimeNode() {
     }
-    
+
     /**
      * @return the XML tag associated with this XMLNode
      */
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.GF_APPCLIENT_RUNTIME_TAG);
-    }    
-    
-    /** 
+    }
+
+    /**
      * @return the DOCTYPE that should be written to the XML file
      */
     public String getDocType() {
         return DTDRegistry.GF_APPCLIENT_602_DTD_PUBLIC_ID;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */
@@ -60,12 +60,12 @@ public class GFAppClientRuntimeNode extends AppClientRuntimeNode {
 
    /**
     * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+    *
+    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
     * @return the doctype tag name
     */
-   public static String registerBundle(Map publicIDToDTD) {    
+   public static String registerBundle(Map publicIDToDTD) {
        publicIDToDTD.put(DTDRegistry.GF_APPCLIENT_602_DTD_PUBLIC_ID, DTDRegistry.GF_APPCLIENT_602_DTD_SYSTEM_ID);
-       return RuntimeTagNames.GF_APPCLIENT_RUNTIME_TAG;       
-   }    
+       return RuntimeTagNames.GF_APPCLIENT_RUNTIME_TAG;
+   }
 }

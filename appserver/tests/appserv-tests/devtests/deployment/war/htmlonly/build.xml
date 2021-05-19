@@ -78,16 +78,16 @@
         </antcall>
     </target>
 
-    <target name="enable.asadmin"> 
+    <target name="enable.asadmin">
         <antcall target="common.enable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
 
     <target name="disable.asadmin">
         <antcall target="common.disable.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
@@ -172,7 +172,7 @@
 
     <target name="private-all">
         <antcall target="assemble"/>
-        
+
         <antcall target="deploy.asadmin"/>
         <antcall target="run.positive">
             <param name="log.id" value="1"/>

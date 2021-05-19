@@ -34,7 +34,7 @@ import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 
 /**
- * 
+ *
  * @author Sheetal Vartak
  */
 public class CciLocalTxManagedConnectionFactory implements ManagedConnectionFactory, Serializable {

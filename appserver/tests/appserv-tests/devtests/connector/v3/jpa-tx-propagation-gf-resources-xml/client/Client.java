@@ -64,7 +64,7 @@ public class Client {
         PreparedStatement s = null;
         try {
             System.err.println("I am in client");
-            
+
             UserTransaction utx = (UserTransaction)(new javax.naming.InitialContext()).lookup("java:comp/UserTransaction");
             ds = (DataSource)(new javax.naming.InitialContext()).lookup("java:app/jdbc/xa");
 
@@ -78,7 +78,7 @@ public class Client {
 
             utx.begin();
             System.err.println("utx.begin called ");
-            
+
             connection = ds.getConnection();
             s = connection.prepareStatement("insert into EJB30_PERSISTENCE_EEM_INJECTION_PERSON values('1', '1')");
             s.execute();
@@ -94,7 +94,7 @@ public class Client {
                 utx.rollback();
                 System.err.println("utx.rollback called ");
             }
-            
+
             Iterator<String> iter = map.keySet().iterator();
             while (iter.hasNext()) {
                 String testName = iter.next();
@@ -125,7 +125,7 @@ public class Client {
 
         }
 
-    	return;
+            return;
     }
 
 

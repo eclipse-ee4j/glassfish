@@ -36,7 +36,7 @@ import org.junit.Test;
 
 /**
  * Tests for Context#addListener to default virtual server
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedAddListenerDefaultVSTest {
@@ -63,7 +63,7 @@ public class EmbeddedAddListenerDefaultVSTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedAddServletDefaultVS() throws Exception {
 
@@ -89,7 +89,7 @@ public class EmbeddedAddListenerDefaultVSTest {
         in.close();
 
         vs.removeContext(context);
-        
+
      }
 
     @AfterClass
@@ -101,6 +101,6 @@ public class EmbeddedAddListenerDefaultVSTest {
             glassfish = null;
         }
     }
-    
-    
+
+
 }

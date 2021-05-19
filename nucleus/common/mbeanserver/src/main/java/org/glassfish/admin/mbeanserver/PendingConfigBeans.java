@@ -72,7 +72,7 @@ public class PendingConfigBeans implements ConfigBeanListener, PostConstruct, Tr
     {
         return mJobs.peek();
     }
-    
+
     /**
     @return a ConfigBean, or null if it's not a ConfigBean
      */
@@ -112,14 +112,14 @@ public class PendingConfigBeans implements ConfigBeanListener, PostConstruct, Tr
     public PendingConfigBeanJob add(final ConfigBean cb, final boolean useLatch)
     {
         final PendingConfigBeanJob job = add(cb, useLatch ? new CountDownLatch(1) : null);
-        
+
         return job;
     }
 
     private PendingConfigBeanJob add(final ConfigBean cb, final CountDownLatch latch)
     {
         //debug( "PendingConfigBeans.add():  " + cb.getProxyType().getName() );
-        
+
         // determine if the ConfigBean is a child of Domain by getting its most distant ancestor
         ConfigBean ancestor = cb;
         ConfigBean parent;
@@ -128,9 +128,9 @@ public class PendingConfigBeans implements ConfigBeanListener, PostConstruct, Tr
             ancestor = parent;
         }
         //debug( "PendingConfigBeansNew.onEntered: " + cb.getProxyType().getName() + " with parent " + (parent == null ? "null" : parent.getProxyType().getName()) );
-        
+
         PendingConfigBeanJob job = null;
-        
+
         // ignore bogus ConfigBeans that are not part of the Domain
         if (ancestor.getProxyType().getName().endsWith(".Domain"))
         {
@@ -146,7 +146,7 @@ public class PendingConfigBeans implements ConfigBeanListener, PostConstruct, Tr
                 // job remains null
             }
         }
-        
+
         return job;
     }
 

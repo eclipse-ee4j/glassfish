@@ -121,7 +121,7 @@ public interface WebModuleConfig extends ConfigBeanProxy, ApplicationConfig {
 
         }
 
-        
+
 
         public static List<EnvEntry> envEntriesMatching(final WebModuleConfig instance,
                 final String nameOrNull) {

@@ -23,10 +23,10 @@ import java.net.URL;
 
 
 /**
- *  <p>	This is a noop file just to help test out the {@link ConsoleProvider}
- *	and <code>ConsolePluginService</code> files.</p>
+ *  <p>This is a noop file just to help test out the {@link ConsoleProvider}
+ * and <code>ConsolePluginService</code> files.</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen        (ken.paulsen@sun.com)
  */
 @Service
 public class CommonUtilPlugin implements ConsoleProvider {

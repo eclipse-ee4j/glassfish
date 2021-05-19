@@ -26,7 +26,7 @@ public class SSIServletRequestUtil {
      * Return the relative path associated with this servlet. Taken from
      * DefaultServlet.java. Perhaps this should be put in
      * org.apache.catalina.util somewhere? Seems like it would be widely used.
-     * 
+     *
      * @param request
      *            The servlet request we are processing
      */
@@ -62,7 +62,7 @@ public class SSIServletRequestUtil {
      * the same as DefaultServlet.normalize, which is almost the same ( see
      * source code below ) as RequestUtil.normalize. Do we need all this
      * duplication?
-     * 
+     *
      * @param path
      *            Path to be normalized
      * @deprecated

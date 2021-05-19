@@ -29,20 +29,20 @@ public class ManagedBean1Int extends ManagedBeanSuper {
     static private int numInterceptorInstances = 0;
 
     public void newInterceptorInstance() {
-	numInterceptorInstances++;
+        numInterceptorInstances++;
     }
 
     public int getNumInstances() {
-	return numInstances;
+        return numInstances;
     }
 
     public int getNumInterceptorInstances() {
-	return numInterceptorInstances;
+        return numInterceptorInstances;
     }
-   
+
     @PostConstruct
     private void init() {
-	numInstances++;
+        numInstances++;
     }
 
     @PreDestroy

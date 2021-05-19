@@ -33,7 +33,7 @@ public class RequestProbeProvider {
         @ProbeParam("serverPort") int serverPort,
         @ProbeParam("contextPath") String contextPath,
         @ProbeParam("servletPath") String servletPath) {}
-    
+
     @Probe(name="requestEndEvent")
     public void requestEndEvent(
         @ProbeParam("appName") String appName,

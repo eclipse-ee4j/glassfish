@@ -45,20 +45,20 @@ import java.util.regex.Pattern;
  */
 public class Util {
 
-    /** Pattern to match placeholders in dynamic document templates. 
+    /** Pattern to match placeholders in dynamic document templates.
      *The pattern specifies a non-aggressive match for ${token-name} strings.
      *(Non-aggressive means the pattern consumes as little of the input string
-     *as possible in searching for a match.)  The pattern also stores the token 
+     *as possible in searching for a match.)  The pattern also stores the token
      *name in group 1 of the pattern matcher.
      */
     private static Pattern placeholderPattern = Pattern.compile("\\$\\{(.*?)\\}");
 
     /** used in finding the name of the first class in a jar file */
     private static final String CLASS_SUFFIX = ".class";
-    
+
     /** size of buffer used to load resources */
     private static final int BUFFER_SIZE = 1024;
-    
+
     /** Creates a new instance of Util */
     public Util() {
     }
@@ -121,12 +121,12 @@ public class Util {
      public static String getMainClassNameForAppClient(ModuleDescriptor moduleDescr) throws IOException, FileNotFoundException, org.xml.sax.SAXParseException {
          RootDeploymentDescriptor bd = moduleDescr.getDescriptor();
          ApplicationClientDescriptor acDescr = (ApplicationClientDescriptor) bd;
-         
+
          String mainClassName = acDescr.getMainClassName();
-         
+
          return mainClassName;
      }
-     
+
      /**
       *Writes the provided text to a temporary file marked for deletion on exit.
       *@param content the content to be written
@@ -155,7 +155,7 @@ public class Util {
             }
         }
     }
-    
+
     /**
      *Writes the provided text to a temporary file marked for deletion on exit.
      *@param the content to be written
@@ -217,7 +217,7 @@ public class Util {
             }
         }
     }
-    
+
     /**
      *Copy an existing file into a temporary file.
      *@param existing file
@@ -239,7 +239,7 @@ public class Util {
             while ( (bytesRead = is.read(buffer) ) != -1) {
                 os.write(buffer, 0, bytesRead);
             }
-            
+
             return result;
         } finally {
             try {
@@ -253,7 +253,7 @@ public class Util {
             }
         }
     }
-    
+
     /**
      *Returns a codeBase expression, usable in a policy file, for the specified
      *URL.
@@ -269,13 +269,13 @@ public class Util {
             /*
              *If we cannot locate the file, it may be a jar listed in the
              *manifest's Class-Path of a top-level archive.  The spec does
-             *not require containers to handle such jars, so just 
+             *not require containers to handle such jars, so just
              *return null.
              */
             //throw new FileNotFoundException(classPathElement.toURI().toASCIIString());
             return null;
         }
-        
+
         /*
          *The format of the codebase is different for a directory vs. a jar
          *file.  Also note that the codebase must use the platform-neutral

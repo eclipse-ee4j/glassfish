@@ -41,7 +41,7 @@ public class WebTest {
         contextRoot = args[2];
         numRun = args[3];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for @PreDestroy on JSP tag handler");
@@ -60,10 +60,10 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
-    public void runFirst() throws Exception {     
+    public void runFirst() throws Exception {
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/jsp/test.jsp");
         System.out.println("Connecting to: " + url.toString());

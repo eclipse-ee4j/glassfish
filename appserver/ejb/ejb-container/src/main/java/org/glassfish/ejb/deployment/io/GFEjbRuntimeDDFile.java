@@ -44,7 +44,7 @@ public class GFEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      */
     public String getDeploymentDescriptorPath() {
         return DOLUtils.warType().equals(getArchiveType()) ?
-        		DescriptorConstants.GF_EJB_IN_WAR_ENTRY : DescriptorConstants.GF_EJB_JAR_ENTRY;
+                DescriptorConstants.GF_EJB_IN_WAR_ENTRY : DescriptorConstants.GF_EJB_JAR_ENTRY;
     }
 
     /**

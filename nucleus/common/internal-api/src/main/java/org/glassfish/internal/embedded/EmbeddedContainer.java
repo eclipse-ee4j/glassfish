@@ -57,7 +57,7 @@ public interface EmbeddedContainer {
 
     /**
      * Stops the embedded container instance
-     * 
+     *
      * @throws LifecycleException if the container cannot be stopped
      */
     public void stop() throws LifecycleException;

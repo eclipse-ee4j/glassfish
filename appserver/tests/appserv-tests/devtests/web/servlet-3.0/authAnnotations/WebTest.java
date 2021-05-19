@@ -37,7 +37,7 @@ public class WebTest {
         port = Integer.parseInt(args[1]);
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for @ServletSecurity");
@@ -51,7 +51,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public boolean run() throws Exception {
@@ -72,7 +72,7 @@ public class WebTest {
     }
 
     private boolean doWebMethod(String webMethod, String host, int port,
-            String contextPath, boolean requireAuthenticate, 
+            String contextPath, boolean requireAuthenticate,
             int responseCode, String expected) throws Exception {
 
         String urlStr = "http://" + host + ":" + port + contextPath;
@@ -102,7 +102,7 @@ public class WebTest {
                     ok = ok && expected.equals(line);
                 }
             } catch( Exception ex){
-                ex.printStackTrace();   
+                ex.printStackTrace();
                 throw new Exception("Test UNPREDICTED-FAILURE");
             } finally {
                 try {

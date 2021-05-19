@@ -53,9 +53,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes set of ejb-ejb32-sfsb tests)
-	</echo>
+        <echo>
+                Usage:
+                        ant all (Executes set of ejb-ejb32-sfsb tests)
+        </echo>
     </target>
 </project>

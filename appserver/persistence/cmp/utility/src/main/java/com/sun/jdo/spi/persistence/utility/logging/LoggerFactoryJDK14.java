@@ -53,8 +53,8 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
         LogManager.getLogManager().getLogger(absoluteLoggerName);
     }
 
-    /** Create a new Logger.  create a logger for the named component.  
-     * The bundle name and class loader are passed to allow the implementation 
+    /** Create a new Logger.  create a logger for the named component.
+     * The bundle name and class loader are passed to allow the implementation
      * to properly find and construct the internationalization bundle.
      * This operation is executed as a privileged action to allow
      * permission access for the following operations:
@@ -72,9 +72,9 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
      */
     protected Logger createLogger (final String absoluteLoggerName,
         final String bundleName, final ClassLoader loader) {
-        return (Logger) AccessController.doPrivileged ( 
-            new PrivilegedAction () { 
-                public Object run () { 
+        return (Logger) AccessController.doPrivileged (
+            new PrivilegedAction () {
+                public Object run () {
                     LoggerJDK14 logger = null;
                     ClassLoader pushed = Thread.currentThread().getContextClassLoader();
                     if(loader!=null) {
@@ -97,8 +97,8 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
                     }
 
                     return logger;
-                } 
-            } 
+                }
+            }
         );
     }
 
@@ -112,14 +112,14 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
             Thread.currentThread().setContextClassLoader (loader);
         }
     } //setContextClassLoader
- 
+
 
     protected LoggerJDK14 createLogger (String absoluteLoggerName, String
         bundleName) {
             LoggerJDK14 result = new LoggerJDK14(absoluteLoggerName, bundleName);
             return result;
     }
-    
+
     /**
      * This method throws  SecurityException  if a security manager exists and if
      * the caller does not have <tt>LoggingPermission("control"))</tt> or the
@@ -129,13 +129,13 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
         String name = logger.getName();
         String baseName = name + ".FileHandler"; //NOI18N
         LogManager logManager = LogManager.getLogManager();
-        
+
         String pattern = logManager.getProperty(baseName + ".pattern"); //NOI18N
         if(pattern != null) {
-            //If pattern != null, create and attach a FileHandler to logger. 
-            //Look various properties . If not found, fall back to 
+            //If pattern != null, create and attach a FileHandler to logger.
+            //Look various properties . If not found, fall back to
             //defaults
-            
+
             int defaultLimit = 0;
             String limit = logManager.getProperty(baseName + ".limit"); //NOI18N
             if(limit != null) {
@@ -159,13 +159,13 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
                 catch (NumberFormatException e) {
                 }
             }
-            
+
             boolean defaultAppend = false;
             String append = logManager.getProperty(baseName + ".append"); //NOI18N
             if(append != null) {
                 defaultAppend = Boolean.valueOf(append).booleanValue();
             }
-            
+
             FileHandler fileHandler = null;
             try {
                 fileHandler = new FileHandler(pattern, defaultLimit,
@@ -175,7 +175,7 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
                 MessageFormat messageFormat = new MessageFormat( getMessages().getString(
                     "errorlogger.filehandler.initialize.exception")); //NOI18N
 
-                getErrorLogger().log(Logger.WARNING, 
+                getErrorLogger().log(Logger.WARNING,
                     messageFormat.format(new String[]{name}), e);
             }
 
@@ -208,13 +208,13 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
 
                       getErrorLogger().log(Logger.WARNING, messageFormat.format(new String[]{name}), e);
                     }
-                
+
                 }
-                
+
                 if (defaultFormatter == null) {
                     defaultFormatter = new SimpleFormatter();
                 }
-                
+
                 try {
                    fileHandler.setFormatter(defaultFormatter);
                 }
@@ -223,9 +223,9 @@ public class LoggerFactoryJDK14 extends AbstractLoggerFactory {
 
                 logger.addHandler(fileHandler);
 
-            }   //if(fileHandler != null) 
-            
-        }   //if(pattern != null) 
+            }   //if(fileHandler != null)
+
+        }   //if(pattern != null)
 
     }
 }

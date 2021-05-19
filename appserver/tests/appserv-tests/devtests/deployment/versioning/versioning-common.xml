@@ -200,7 +200,7 @@
   Test that the given version is registred or not on the ${testServer} target.
   In clustering mode, the default target that is used is ${testCluster},
   but we have also to test the ${testServer} references.
-  
+
   @param ${versionExpression} (optional)
   @param ${description} (optional, but very important for investigations)
 -->
@@ -235,7 +235,7 @@
   <antcall target="test.notregistred.cluster"/>
 </target>
 
-<!-- 
+<!--
   PROPERTIES PROCESSING TARGETS, not directly usable for making scenarios
 -->
 

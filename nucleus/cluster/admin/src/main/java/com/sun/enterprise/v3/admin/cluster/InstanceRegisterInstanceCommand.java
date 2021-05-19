@@ -55,8 +55,8 @@ import org.glassfish.api.admin.*;
 @ExecuteOn(value={RuntimeType.INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_register-instance-at-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="_register-instance-at-instance",
         description="_register-instance-at-instance")
 })
 public class InstanceRegisterInstanceCommand extends InstanceRegisterInstanceCommandParameters implements AdminCommand {

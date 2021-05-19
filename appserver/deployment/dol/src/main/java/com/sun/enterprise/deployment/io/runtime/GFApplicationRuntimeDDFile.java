@@ -37,15 +37,15 @@ import java.util.Map;
 @ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
 @Service
-public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {  
+public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.GF_APPLICATION_JAR_ENTRY;        
+        return DescriptorConstants.GF_APPLICATION_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -53,7 +53,7 @@ public class GFApplicationRuntimeDDFile extends ConfigurationDeploymentDescripto
      * @param the descriptor for which we need the node
      */
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-   
+
         if (descriptor instanceof Application) {
             return new GFApplicationRuntimeNode((Application) descriptor);
         }

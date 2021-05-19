@@ -16,14 +16,18 @@
 
 package com.sun.jndi.ldap.obj;
 
-import javax.naming.spi.DirObjectFactory;
-import javax.naming.*;
-import javax.naming.directory.*;
-
 import java.util.Hashtable;
-import org.omg.CORBA.ORB;
 
-import com.sun.jndi.toolkit.corba.CorbaUtils;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.DirContext;
+import javax.naming.spi.DirObjectFactory;
+
+import org.glassfish.jndi.toolkit.corba.CorbaUtils;
+import org.omg.CORBA.ORB;
 
 /**
   * A DirObjectFactory that returns a omg.org.CORBA.Object when given
@@ -58,60 +62,61 @@ public class AttrsToCorba implements DirObjectFactory {
       * using the <tt>DirContext</tt>, <tt>orig</tt>.
       *
       * @param orig The non-null DirContext object representing the directory entry;
-      * 	If not a DirContext, return null.
+      *     If not a DirContext, return null.
       * @param name Ignored
       * @param ctx  Ignored
       * @param env The possibly null environment properties. The caller can pass
-      *		the ORB to use (via the <tt>java.naming.corba.orb</tt> property)
-      *		or pass properties like the applet and the org.omg.CORBA.* 
-      *		properties for creating the ORB. If none of these is available,
-      * 	a default (static) ORB is used.
+      *        the ORB to use (via the <tt>java.naming.corba.orb</tt> property)
+      *        or pass properties like the applet and the org.omg.CORBA.*
+      *        properties for creating the ORB. If none of these is available,
+      *     a default (static) ORB is used.
       * @param attrs The possibly null attributes containing at least the
-      *		directory entry's <tt>objectclass</tt> attribute. 
-      * @return The CORBA object represented by the directory entry; null if 
-      * 	the entry does not represent a CORBA object.
+      *        directory entry's <tt>objectclass</tt> attribute.
+      * @return The CORBA object represented by the directory entry; null if
+      *     the entry does not represent a CORBA object.
       * @exception NamingException If an error is encountered while getting the
-      * 	corbaIor attribute using <tt>orig</tt>.
+      *     corbaIor attribute using <tt>orig</tt>.
       * @exception Exception If an error occurred while converting the IOR to
-      * 	a CORBA object or using the ORB.
+      *     a CORBA object or using the ORB.
       */
-    public Object getObjectInstance(Object orig, Name name, Context ctx,
-	Hashtable env, Attributes attrs) throws Exception {
-	    Attribute oc;
-	    if (attrs != null && 
-		(oc = attrs.get("objectclass")) != null &&
-		(oc.contains("corbaObject") || oc.contains("corbaobject")) && 
-		orig instanceof DirContext) {
+    @Override
+    public Object getObjectInstance(Object orig, Name name, Context ctx, Hashtable env, Attributes attrs)
+        throws Exception {
+        Attribute oc;
+        if (attrs != null
+            && (oc = attrs.get("objectclass")) != null
+            && (oc.contains("corbaObject") || oc.contains("corbaobject"))
+            && orig instanceof DirContext) {
 
-		// See if IOR already available
-		Attribute iorAttr = attrs.get("corbaIor");
-		
-		if (iorAttr == null) {
-		    // have to get from directory
-		    attrs = ((DirContext)orig).getAttributes("",
-			new String[]{"corbaIor"});
-		    iorAttr = attrs.get("corbaIor");
-		}
+        // See if IOR already available
+        Attribute iorAttr = attrs.get("corbaIor");
 
-		String ior = null;
-		if (iorAttr != null && (ior = (String)iorAttr.get()) != null) {
+        if (iorAttr == null) {
+            // have to get from directory
+            attrs = ((DirContext)orig).getAttributes("",
+            new String[]{"corbaIor"});
+            iorAttr = attrs.get("corbaIor");
+        }
 
-		    // Use ORB supplied or default ORB
-		    ORB orb = (env != null) ? 
-			(ORB)env.get("java.naming.corba.orb") : null;
-		    if (orb == null) {
-			orb = getDefaultOrb(env);
-		    }
+        String ior = null;
+        if (iorAttr != null && (ior = (String)iorAttr.get()) != null) {
 
-		    // Convert IOR to Object
-		    return orb.string_to_object(ior);
-		}
+            // Use ORB supplied or default ORB
+            ORB orb = (env != null) ?
+            (ORB)env.get("java.naming.corba.orb") : null;
+            if (orb == null) {
+            orb = getDefaultOrb(env);
+            }
 
-		// %%% else should we indicate any error or just ignore
-	    }
+            // Convert IOR to Object
+            return orb.string_to_object(ior);
+        }
 
-	    // depend on 
-	    return null; 
+        // %%% else should we indicate any error or just ignore
+        }
+
+        // depend on
+        return null;
     }
 
     /**
@@ -123,11 +128,11 @@ public class AttrsToCorba implements DirObjectFactory {
      * @return null
      * @exception Exception Never thrown
      */
-    public Object getObjectInstance(Object orig, Name name, Context ctx,
-	Hashtable env) throws Exception {
-	    // Too expensive if we must fetch attributes each time,
-	    // effectively doubling all calls
-	    return null;
+    @Override
+    public Object getObjectInstance(Object orig, Name name, Context ctx, Hashtable env) throws Exception {
+        // Too expensive if we must fetch attributes each time,
+        // effectively doubling all calls
+        return null;
     }
 
     //private static ORB defaultOrb = null;
@@ -137,12 +142,12 @@ public class AttrsToCorba implements DirObjectFactory {
      * The ORB is used for turning a stringified IOR into an Object.
      *
      * @param env The possibly null environment properties. The caller can pass
-     * 		the ORB to use (via the <tt>java.naming.corba.orb</tt> property)
-     * 		or pass properties like the applet and the org.omg.CORBA.* 
-     * 		properties for creating the ORB.
+     *         the ORB to use (via the <tt>java.naming.corba.orb</tt> property)
+     *         or pass properties like the applet and the org.omg.CORBA.*
+     *         properties for creating the ORB.
      * @return A non-null ORB.
      */
     private static ORB getDefaultOrb(Hashtable env) {
-	return CorbaUtils.getOrb(null, -1, env);
+        return CorbaUtils.getOrb(null, -1, env);
     }
 }

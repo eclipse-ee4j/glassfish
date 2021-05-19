@@ -26,7 +26,7 @@ import java.beans.PropertyVetoException;
 
 /**
  * Tag interface for all types of resource.
- * 
+ *
  * @author Jerome Dochez
  */
 @Configured
@@ -55,7 +55,7 @@ public interface Resource extends ConfigBeanProxy {
 
     /**
      * Gets the value of deployment-order.
-     * 
+     *
      * @return
      */
     @Attribute(defaultValue = "100", dataType = Integer.class)
@@ -63,7 +63,7 @@ public interface Resource extends ConfigBeanProxy {
 
     /**
      * Sets the value of the deployment order.
-     * 
+     *
      * @param value
      * @throws PropertyVetoException
      */

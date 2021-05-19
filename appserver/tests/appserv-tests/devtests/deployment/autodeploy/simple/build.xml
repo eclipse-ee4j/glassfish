@@ -22,38 +22,38 @@
 <!ENTITY commonBuild SYSTEM "./../../config/common.xml">
 ]>
 <!--
-    This makes sure that redeployment of an autodeployed app works.  Specifically, 
+    This makes sure that redeployment of an autodeployed app works.  Specifically,
     it tests that the validations (governing app refcs in particular) pass as
     the autodeployed app is removed and then redeployed.
 -->
- 
+
 <project name="autodeploy-simple" default="all" basedir=".">
 
- 	&commonBuild;
+         &commonBuild;
         &autodeployUtil;
 
     <property name="testName" value="simpleautodeploy"/>
-        
+
     <target name="prepare" depends="init">
         <property name="result.property.file" value="${build}/result.properties"/>
-<echo>in simple/build.xml and build is ${build}</echo>            
+<echo>in simple/build.xml and build is ${build}</echo>
         <mkdir dir="${build}" />
 
     </target>
-	
+
     <target name="build" depends="prepare">
-        
+
         <echo>Using previously-built ${autodeploy.archive}</echo>
         <!--
             Some earlier tests should have run already, so the app we use for autodeploy testing
             should already be in place in the build directory.
         -->
     </target>
-    
-	
-    
+
+
+
     <target name="private-all" depends="build">
-        
+
         <antcall target="declare-test">
             <param name="description" value="autodeploy/simple Test autodeploy, auto-redeploy, and autoundeploy"/>
         </antcall>
@@ -63,7 +63,7 @@
             record the results of the autodeploy directory monitoring Java class.
         -->
         <delete file="${result.property.file}" quiet="true"/>
-        
+
         <!--
             Do the auto-deployment.
        -->
@@ -75,7 +75,7 @@
         </antcall>
 
         <!--
-            Redeploy the archive.  This used to trigger an error because the 
+            Redeploy the archive.  This used to trigger an error because the
             app ref was not removed before the app was removed.
         -->
         <antcall target="deploy.autodeploy">
@@ -113,7 +113,7 @@
                 <equals arg1="${simple.autodeploy.undeployResult}" arg2="0"/>
             </and>
         </condition>
-        
+
         <!--
             If the property "result" was not set by the "condition" task just above then something
             went wrong and we set result to 1 now.
@@ -123,12 +123,12 @@
                 <isset property="result"/>
             </not>
         </condition>
-        
+
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/output.log"/>
         </antcall>
 
     </target>
-    
+
 </project>

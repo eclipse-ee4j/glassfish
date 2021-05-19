@@ -33,7 +33,7 @@ import java.util.Locale;
 /**
  * <p>Rule that modifies the docBase of the host, setting it appropriately,
  * before adding the Context to the parent Host.</p>
- * 
+ *
  * @author Remy Maucherat
  */
 public class SetDocBaseRule extends Rule {
@@ -82,7 +82,7 @@ public class SetDocBaseRule extends Rule {
         if (host instanceof StandardHost) {
             unpackWARs = ((StandardHost) host).isUnpackWARs();
         }
-        if (!unpackWARs 
+        if (!unpackWARs
             && !("true".equals(attributes.getValue("unpackWAR")))) {
             return;
         }
@@ -94,7 +94,7 @@ public class SetDocBaseRule extends Rule {
         if (canonicalAppBase.isAbsolute()) {
             canonicalAppBase = canonicalAppBase.getCanonicalFile();
         } else {
-            canonicalAppBase = 
+            canonicalAppBase =
                 new File(System.getProperty("catalina.base"), appBase)
                 .getCanonicalFile();
         }

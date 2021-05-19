@@ -33,7 +33,7 @@ import java.lang.annotation.Annotation;
 
 /**
  * Implementation of the Sniffer for the Ejb container.
- * 
+ *
  * @author Mahesh Kannan
  */
 @Service(name="Ejb")
@@ -49,15 +49,15 @@ public class EjbSniffer  extends GenericSniffer {
     public EjbSniffer() {
         this("ejb", "META-INF/ejb-jar.xml", null);
     }
-    
+
     public EjbSniffer(String containerName, String appStigma, String urlPattern) {
         super(containerName, appStigma, urlPattern);
-    }    
+    }
 
     final String[] containers = {
             "org.glassfish.ejb.startup.EjbContainerStarter",
     };
-        
+
     public String[] getContainersNames() {
         return containers;
     }
@@ -75,8 +75,8 @@ public class EjbSniffer  extends GenericSniffer {
 
         if (result == false) {
             try {
-                result = location.exists("META-INF/sun-ejb-jar.xml") || 
-                    location.exists("META-INF/glassfish-ejb-jar.xml"); 
+                result = location.exists("META-INF/sun-ejb-jar.xml") ||
+                    location.exists("META-INF/glassfish-ejb-jar.xml");
             } catch (IOException ioe) {
                 // Ignore
             }

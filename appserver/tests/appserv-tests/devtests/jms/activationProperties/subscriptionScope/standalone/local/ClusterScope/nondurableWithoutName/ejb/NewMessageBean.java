@@ -29,7 +29,7 @@ import jakarta.jms.*;
 })
 public class NewMessageBean implements MessageListener {
     private static final Logger logger = Logger.getLogger(NewMessageBean.class.getName());
-    
+
     @Resource
     private MessageDrivenContext mdc;
 
@@ -38,16 +38,16 @@ public class NewMessageBean implements MessageListener {
 
     @Resource(mappedName = "jms/jms_unit_test_QCF")
     private QueueConnectionFactory qconFactory;
-    
+
     public NewMessageBean() {
     }
-    
+
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {
         sendMsg(message);
     }
-    
+
     private void sendMsg(Message msg) {
         QueueConnection qcon = null;
         QueueSession qsession = null;

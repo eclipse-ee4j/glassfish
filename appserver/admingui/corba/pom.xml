@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-corba-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console Corba Plugin</name>
     <description>Corba plugin bundle for GlassFish Admin Console</description>
 

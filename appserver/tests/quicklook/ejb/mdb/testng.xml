@@ -17,7 +17,7 @@
 -->
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
- 
+
 <suite name="QuickLookTests" verbose="2">
   <parameter name="MDB_APP_DIR" value="../../dist/mdb/"/>
   <parameter name="BATCH_FILE1" value="./create_resources.asadmin"/>

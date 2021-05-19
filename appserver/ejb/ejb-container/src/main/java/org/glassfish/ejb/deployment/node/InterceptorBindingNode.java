@@ -64,7 +64,7 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
             needsOverloadResolution = false;
 
         }
-          
+
         super.startElement(element, attributes);
     }
 
@@ -80,13 +80,13 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
             super.setElementValue(element, value);
         }
 
-    }                        
+    }
 
 
 
-    /** 
+    /**
      * receives notification of the end of an XML element by the Parser
-     * 
+     *
      * @param element the xml tag identification
      * @return true if this node is done processing the XML sub tree
      */
@@ -109,7 +109,7 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
             InterceptorBindingDescriptor bindingDesc = getDescriptor();
             businessMethod.setEjbClassSymbol(MethodDescriptor.EJB_BEAN);
             bindingDesc.setBusinessMethod(businessMethod);
-            
+
             if( needsOverloadResolution ) {
                 bindingDesc.setNeedsOverloadResolution(true);
             }
@@ -120,12 +120,12 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
         }
 
         return super.endElement(element);
-    } 
+    }
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -134,18 +134,18 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
 
         table.put(EjbTagNames.EJB_NAME, "setEjbName");
         table.put(EjbTagNames.INTERCEPTOR_CLASS, "appendInterceptorClass");
-        table.put(EjbTagNames.EXCLUDE_DEFAULT_INTERCEPTORS, 
+        table.put(EjbTagNames.EXCLUDE_DEFAULT_INTERCEPTORS,
                   "setExcludeDefaultInterceptors");
-        table.put(EjbTagNames.EXCLUDE_CLASS_INTERCEPTORS, 
+        table.put(EjbTagNames.EXCLUDE_CLASS_INTERCEPTORS,
                   "setExcludeClassInterceptors");
 
         return table;
-    }    
-    
+    }
+
     /**
      * Write interceptor bindings for this ejb.
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param the descriptor to write
      */
     public void writeBindings(Node parent, EjbDescriptor ejbDesc) {
@@ -161,7 +161,7 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
         for(Map.Entry<MethodDescriptor, List<EjbInterceptor>> mapEntry:
             methodInterceptorsMap.entrySet()) {
             List<EjbInterceptor> interceptors = mapEntry.getValue();
-            
+
             if(interceptors.isEmpty()) {
                 writeExclusionBinding(parent, ejbDesc, mapEntry.getKey());
             } else {
@@ -172,15 +172,15 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
         return;
     }
 
-    private void writeTotalOrdering(Node parent, 
+    private void writeTotalOrdering(Node parent,
                                     List<EjbInterceptor> interceptors,
                                     EjbDescriptor ejbDesc,
                                     MethodDescriptor method) {
 
-        Node bindingNode = appendChild(parent, 
+        Node bindingNode = appendChild(parent,
                                        EjbTagNames.INTERCEPTOR_BINDING);
 
-        appendTextChild(bindingNode, EjbTagNames.EJB_NAME, 
+        appendTextChild(bindingNode, EjbTagNames.EJB_NAME,
                         ejbDesc.getName());
 
         Node totalOrderingNode = appendChild(bindingNode,
@@ -192,7 +192,7 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
         }
 
         if( method != null ) {
-            
+
             MethodNode methodNode = new MethodNode();
 
             // Write out method description. void methods will be written
@@ -206,13 +206,13 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
 
     }
 
-    private void writeExclusionBinding(Node parent, EjbDescriptor ejbDesc, 
+    private void writeExclusionBinding(Node parent, EjbDescriptor ejbDesc,
                                        MethodDescriptor method) {
 
-        Node bindingNode = appendChild(parent, 
+        Node bindingNode = appendChild(parent,
                                        EjbTagNames.INTERCEPTOR_BINDING);
 
-        appendTextChild(bindingNode, EjbTagNames.EJB_NAME, 
+        appendTextChild(bindingNode, EjbTagNames.EJB_NAME,
                         ejbDesc.getName());
 
         appendTextChild(bindingNode, EjbTagNames.EXCLUDE_CLASS_INTERCEPTORS,
@@ -226,6 +226,6 @@ public class InterceptorBindingNode extends DeploymentDescriptorNode<Interceptor
         methodNode.writeJavaMethodDescriptor
             (bindingNode, EjbTagNames.INTERCEPTOR_BUSINESS_METHOD, method,
              true);
-                                             
+
     }
 }

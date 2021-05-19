@@ -177,24 +177,24 @@ import java.util.ResourceBundle;
  * <PRE>
  * import com.sun.jdo.api.persistence.support.*;
  * void getT1Data() {
- * 	// The following connection is from the connection pool.
- * 	Connection myConn = myTransaction.getConnection();
- * 	Statement myStatement = myConn.createStatement();
- * 	ResultSet myResults = myStatement.executeQuery(
- * 		"SELECT * FROM T1);
- * 	// Free the connection; it is returned to the connection pool.
- * 	myConn.close();
+ *     // The following connection is from the connection pool.
+ *     Connection myConn = myTransaction.getConnection();
+ *     Statement myStatement = myConn.createStatement();
+ *     ResultSet myResults = myStatement.executeQuery(
+ *         "SELECT * FROM T1);
+ *     // Free the connection; it is returned to the connection pool.
+ *     myConn.close();
  *
- * 	// The connection manager creates a new connection for the
- * 	// following request.
- * 	Connection yourConn = myConnMgr.getConnection(
- * 		"data:oracle:thin:@CUSTOMERDB:1521:ORCL", "paul", "omni8");
- * 	Statement yourStatement = yourConn.createStatement();
- * 	ResultSet yourResults = yourStatement.executeQuery(
- * 	"SELECT Customer, Date, Amount FROM Orders");
- * 	.
- * 	.
- * 	.
+ *     // The connection manager creates a new connection for the
+ *     // following request.
+ *     Connection yourConn = myConnMgr.getConnection(
+ *         "data:oracle:thin:@CUSTOMERDB:1521:ORCL", "paul", "omni8");
+ *     Statement yourStatement = yourConn.createStatement();
+ *     ResultSet yourResults = yourStatement.executeQuery(
+ *     "SELECT Customer, Date, Amount FROM Orders");
+ *     .
+ *     .
+ *     .
  * }
  * </PRE>
  */
@@ -339,12 +339,12 @@ public class ConnectionManager {
      */
     private transient ConnectionImpl freeConn = null;
 
-    
+
     /**
      * The logger
      */
     private static Logger logger = LogHelperSQLStore.getLogger();
-    
+
     /**
      * I18N message handler
      */
@@ -871,10 +871,10 @@ public class ConnectionManager {
      * Creates a new connection manager, loads the named JDBC driver, and
      * sets the default database URL, user name, and password for the new
      * connection manager.
-     * @param	driverName  the name of JDBC driver.
+     * @param    driverName  the name of JDBC driver.
      * @param   url         the default database URL for the data source.
      * @param   userName    the default user name for database connections.
-     * @param	password		the default password for database connections.
+     * @param    password        the default password for database connections.
      * @exception  ClassNotFoundException if the driver cannot be found.
      * @exception  SQLException  if a SQL error is encountered.
      */
@@ -906,12 +906,12 @@ public class ConnectionManager {
      * If minPool is greater than 0 and maxPool is greater than or equal
      * to minPool, this constructor creates a connection pool containing
      * minPool connections.
-     * @param	driverName	the name of JDBC driver.
-     * @param   url			the default database URL for the data source.
-     * @param   userName	the default user name for database connections.
-     * @param	password	the default password for database connections.
-     * @param	minPool		the default minimum size of the connection pool.
-     * @param	maxPool		the default maximum size of the connection pool.
+     * @param    driverName    the name of JDBC driver.
+     * @param   url            the default database URL for the data source.
+     * @param   userName    the default user name for database connections.
+     * @param    password    the default password for database connections.
+     * @param    minPool        the default minimum size of the connection pool.
+     * @param    maxPool        the default maximum size of the connection pool.
      * @exception  ClassNotFoundException if the driver cannot be found.
      * @exception  SQLException  if a SQL error is encountered or if the
      * specified  value of minPool is not less than or equal to the specified
@@ -961,12 +961,12 @@ public class ConnectionManager {
      * the <code>ConnectionManager</code> constructor that
      * specifies the msInterval parameter or the <code>setInterval</code>
      * method.
-     * @param	driverName	the name of JDBC driver.
-     * @param   url			the default database URL for the data source.
-     * @param   userName	the default user name for database connections.
-     * @param	password	the default password for database connections.
-     * @param	minPool		the default minimum size of the connection pool.
-     * @param	maxPool		the default maximum size of the connection pool.
+     * @param    driverName    the name of JDBC driver.
+     * @param   url            the default database URL for the data source.
+     * @param   userName    the default user name for database connections.
+     * @param    password    the default password for database connections.
+     * @param    minPool        the default minimum size of the connection pool.
+     * @param    maxPool        the default maximum size of the connection pool.
      * @param      msWait   the total number of milliseconds to wait for a successful connection.
      * @exception  ClassNotFoundException if the driver cannot be found.
      * @exception  SQLException  if a SQL error is encountered or if the
@@ -1017,12 +1017,12 @@ public class ConnectionManager {
      * If the value for msInterval is greater than the value for msWait,
      * the connection manager tries again to return a connection once, then
      * fails if it could get a connection.
-     * @param	driverName	the name of JDBC driver.
-     * @param   url			the default database URL for the data source.
-     * @param   userName	the default user name for database connections.
-     * @param	password	the default password for database connections.
-     * @param	minPool		the default minimum size of the connection pool.
-     * @param	maxPool		the default maximum size of the connection pool.
+     * @param    driverName    the name of JDBC driver.
+     * @param   url            the default database URL for the data source.
+     * @param   userName    the default user name for database connections.
+     * @param    password    the default password for database connections.
+     * @param    minPool        the default minimum size of the connection pool.
+     * @param    maxPool        the default maximum size of the connection pool.
      * @param      msWait   the total number of milliseconds to wait to get a connection.
      * @param msInterval the number of milliseconds to wait before trying again to get a connection.
      * @exception  ClassNotFoundException if the driver cannot be found.
@@ -1087,7 +1087,7 @@ public class ConnectionManager {
      * SQLState = "08003".
      *
      * @return      A new or pooled database connection.
-     * @exception	SQLException	if no database connection is available.
+     * @exception    SQLException    if no database connection is available.
      *
      */
     public synchronized Connection getConnection() throws SQLException {
@@ -1108,24 +1108,24 @@ public class ConnectionManager {
 
         if (conn != null) {
             // We already know about this transaction.
-        } else if (!this.pooling)					// Get a non-pooled connection.
+        } else if (!this.pooling)                    // Get a non-pooled connection.
         {
             conn = (ConnectionImpl) this.getConnection(this.userName,
                     this.password);
             conn.setPooled(false);
             conn.checkXact();
-        } else	// This is a pooled connection.
+        } else    // This is a pooled connection.
         {
-            if (this.freeList.size <= 0)			// Is pool empty?
+            if (this.freeList.size <= 0)            // Is pool empty?
             {
-                if (this.poolSize < this.maxPool)	// Can we expand the pool?
+                if (this.poolSize < this.maxPool)    // Can we expand the pool?
                 {
                     try {
                         this.expandPool(1); // Add new connection to the pool.
                     } catch (SQLException se) {
                         throw se;
                     }
-                } else if (this.connectionBlocking != true)	// Can't expand the pool.
+                } else if (this.connectionBlocking != true)    // Can't expand the pool.
                 {
                     // If not blocking, give up.
                     SQLException se = new SQLException
@@ -1138,10 +1138,10 @@ public class ConnectionManager {
                                     SQL_INVAL_PARAM_VALUE // 22023
                             );
                     throw se;
-                } else								// We are blocking, so...
+                } else                                // We are blocking, so...
                 {
                     try {
-                        this.waitForConnection();	// wait for a connection.
+                        this.waitForConnection();    // wait for a connection.
                     } catch (SQLException se) {
                         throw se;
                     }
@@ -1157,7 +1157,7 @@ public class ConnectionManager {
                                 I18NHelper.getMessage(messages,
                                         "connection.connectionmanager.badvalue") // NOI18N
                         ),
-                                SQL_INVAL_PARAM_VALUE	// 22023
+                                SQL_INVAL_PARAM_VALUE    // 22023
                         );
                 throw se;
             }
@@ -1242,7 +1242,7 @@ public class ConnectionManager {
                                 I18NHelper.getMessage(messages,
                                         "connection.connectionmanager.getconnection.mismatch") // NOI18N
                         ),
-                                SQL_NO_CONN		// 08003
+                                SQL_NO_CONN        // 08003
                         );
                 throw se;
             }
@@ -1328,7 +1328,7 @@ public class ConnectionManager {
                                 I18NHelper.getMessage(messages,
                                         "connection.connectionmanager.getconnection.mismatch") // NOI18N
                         ),
-                                SQL_NO_CONN	// 08003
+                                SQL_NO_CONN    // 08003
                         );
                 throw se;
             }
@@ -1350,17 +1350,17 @@ public class ConnectionManager {
         Transaction tran = null;
 
         /* RESOLVE: Need to reimplement this???
-		try
-		{
-			// Is this ForteJDBCConnet participating in a transaction?
-			tran = ThreadContext.transactionContext().getTransaction();
-		}
-		catch (SystemException ex)
-		{
-			// There is no transaction.
-			return null;
-		}
-		*/
+        try
+        {
+            // Is this ForteJDBCConnet participating in a transaction?
+            tran = ThreadContext.transactionContext().getTransaction();
+        }
+        catch (SystemException ex)
+        {
+            // There is no transaction.
+            return null;
+        }
+        */
 
         // Return Connection associated with this transaction - maybe null?
         if (tran == null)
@@ -1678,7 +1678,7 @@ public class ConnectionManager {
                             I18NHelper.getMessage(messages,
                                     "connection.connectionmanager.zero") // NOI18N
                     ),
-                            SQL_INVAL_PARAM_VALUE	// 22023
+                            SQL_INVAL_PARAM_VALUE    // 22023
                     );
             throw se;
         }
@@ -1692,7 +1692,7 @@ public class ConnectionManager {
                             Integer.toString(minPool),
                             Integer.toString(minPool)
                     ),
-                            SQL_INVAL_PARAM_VALUE	// 22023
+                            SQL_INVAL_PARAM_VALUE    // 22023
                     );
             throw se;
         }
@@ -1705,7 +1705,7 @@ public class ConnectionManager {
                                 I18NHelper.getMessage(messages,
                                         "connection.connectionmanager.poolsize") // NOI18N
                         ),
-                                SQL_INVAL_PARAM_VALUE	// 22023
+                                SQL_INVAL_PARAM_VALUE    // 22023
                         );
                 throw se;
             }
@@ -1762,7 +1762,7 @@ public class ConnectionManager {
                             I18NHelper.getMessage(messages,
                                     "connection.connectionmanager.isdown") // NOI18N
                     ),
-                            SQL_CONN_FAIL	// 08006
+                            SQL_CONN_FAIL    // 08006
                     );
             throw se;
         }
@@ -1775,7 +1775,7 @@ public class ConnectionManager {
                                     "connection.connectionmanager.zero"), // NOI18N
                             Integer.toString(maxPool)
                     ),
-                            SQL_INVAL_PARAM_VALUE	// 22023
+                            SQL_INVAL_PARAM_VALUE    // 22023
                     );
             throw se;
         }
@@ -1790,7 +1790,7 @@ public class ConnectionManager {
                                 Integer.toString(maxPool),
                                 Integer.toString(maxPool)
                         ),
-                                SQL_INVAL_PARAM_VALUE	// 22023
+                                SQL_INVAL_PARAM_VALUE    // 22023
                         );
                 throw se;
             }
@@ -1804,7 +1804,7 @@ public class ConnectionManager {
                             I18NHelper.getMessage(messages,
                                     "connection.connectionmanager.poolsize") // NOI18N
                     ),
-                            SQL_INVAL_PARAM_VALUE	// 22023
+                            SQL_INVAL_PARAM_VALUE    // 22023
                     );
             throw se;
         }
@@ -1866,7 +1866,7 @@ public class ConnectionManager {
                                     "connection.connectionmanager.badvalue"), // NOI18N
                             Integer.toString(msWait)
                     ),
-                            SQL_INVAL_PARAM_VALUE	// 22023
+                            SQL_INVAL_PARAM_VALUE    // 22023
                     );
             throw se;
         } else if (msWait > 0) {
@@ -1932,7 +1932,7 @@ public class ConnectionManager {
                             "MsInterval", // NOI18N
                             "MsWait" // NOI18N
                     ),
-                            SQL_INVAL_PARAM_VALUE	// 22023
+                            SQL_INVAL_PARAM_VALUE    // 22023
                     );
             throw se;
         } else {
@@ -1948,55 +1948,55 @@ public class ConnectionManager {
      */
     public synchronized String toString() {
         /*
-		TraceLogger lgr = ThreadContext.lgr();
-		// Check for trace flag sp:1:1
-		boolean dif = ThreadContext.lgr().test
-		(
-			TraceLogger.CONFIGURATION,
-			TraceLogger.SVC_SP,
-			SPLogFlags.CFG_DIFFABLE_EXCEPTS,
-			1
-		);
-		String buf = "ConnectManager@\n"; // NOI18N
-		if (dif == false)
-		{
-			buf = buf + "    busyList = " + this.busyList + "\n"; // NOI18N
-		}
-		if (this.busyList != null)
-		{
-			buf = buf + "    busyList Object = " + this.busyList.toString(); // NOI18N
-		}
-		buf = buf + "    connectionBlocking = " + this.connectionBlocking + "\n"; // NOI18N
-		buf = buf + "    driverName = " + this.driverName + "\n"; // NOI18N
-		if (dif == false)
-		{
-			buf = buf + "    expandedDriverName = " + this.expandedDriverName + "\n"; // NOI18N
-			buf = buf + "    expandedPassword = " + this.expandedPassword + "\n"; // NOI18N
-			buf = buf + "    expandedUrl = " + this.expandedUrl	+ "\n"; // NOI18N
-			buf = buf + "    expandedUserName = " + this.expandedUserName + "\n"; // NOI18N
-			buf = buf + "    freeList = " + this.freeList + "\n"; // NOI18N
-		}
-		if (this.freeList != null)
-		{
-			buf = buf + "    freeList Object = " + this.freeList.toString(); // NOI18N
-		}
-		if (dif == false)
-		{
-			buf = buf + "    hashCode = " + this.hashCode() + "\n"; // NOI18N
-		}
-		buf = buf + "    maxPool = " + this.maxPool + "\n"; // NOI18N
-		buf = buf + "    minPool = " + this.minPool	+ "\n"; // NOI18N
-		buf = buf + "    msInterval = " + this.msInterval + "\n"; // NOI18N
-		buf = buf + "    msWait = " + this.msWait + "\n"; // NOI18N
-		buf = buf + "    password = " + this.password + "\n"; // NOI18N
-		buf = buf + "    pooling = " + this.pooling + "\n"; // NOI18N
-		buf = buf + "    poolSize = " + this.poolSize + "\n"; // NOI18N
-		buf = buf + "    shutDownPending = " + this.shutDownPending + "\n"; // NOI18N
-		buf = buf + "    url = " + this.url + "\n"; // NOI18N
-		buf = buf + "    userName = " + this.userName + "\n"; // NOI18N
+        TraceLogger lgr = ThreadContext.lgr();
+        // Check for trace flag sp:1:1
+        boolean dif = ThreadContext.lgr().test
+        (
+            TraceLogger.CONFIGURATION,
+            TraceLogger.SVC_SP,
+            SPLogFlags.CFG_DIFFABLE_EXCEPTS,
+            1
+        );
+        String buf = "ConnectManager@\n"; // NOI18N
+        if (dif == false)
+        {
+            buf = buf + "    busyList = " + this.busyList + "\n"; // NOI18N
+        }
+        if (this.busyList != null)
+        {
+            buf = buf + "    busyList Object = " + this.busyList.toString(); // NOI18N
+        }
+        buf = buf + "    connectionBlocking = " + this.connectionBlocking + "\n"; // NOI18N
+        buf = buf + "    driverName = " + this.driverName + "\n"; // NOI18N
+        if (dif == false)
+        {
+            buf = buf + "    expandedDriverName = " + this.expandedDriverName + "\n"; // NOI18N
+            buf = buf + "    expandedPassword = " + this.expandedPassword + "\n"; // NOI18N
+            buf = buf + "    expandedUrl = " + this.expandedUrl    + "\n"; // NOI18N
+            buf = buf + "    expandedUserName = " + this.expandedUserName + "\n"; // NOI18N
+            buf = buf + "    freeList = " + this.freeList + "\n"; // NOI18N
+        }
+        if (this.freeList != null)
+        {
+            buf = buf + "    freeList Object = " + this.freeList.toString(); // NOI18N
+        }
+        if (dif == false)
+        {
+            buf = buf + "    hashCode = " + this.hashCode() + "\n"; // NOI18N
+        }
+        buf = buf + "    maxPool = " + this.maxPool + "\n"; // NOI18N
+        buf = buf + "    minPool = " + this.minPool    + "\n"; // NOI18N
+        buf = buf + "    msInterval = " + this.msInterval + "\n"; // NOI18N
+        buf = buf + "    msWait = " + this.msWait + "\n"; // NOI18N
+        buf = buf + "    password = " + this.password + "\n"; // NOI18N
+        buf = buf + "    pooling = " + this.pooling + "\n"; // NOI18N
+        buf = buf + "    poolSize = " + this.poolSize + "\n"; // NOI18N
+        buf = buf + "    shutDownPending = " + this.shutDownPending + "\n"; // NOI18N
+        buf = buf + "    url = " + this.url + "\n"; // NOI18N
+        buf = buf + "    userName = " + this.userName + "\n"; // NOI18N
 
         return buf;
-		*/
+        */
 
         return null;
     }
@@ -2059,7 +2059,7 @@ public class ConnectionManager {
      * Expand connection pool by connections size.
      * <p>
      * @param     connections   Number of connections to add to pool.
-     * @exception SQLException	if connection fails.
+     * @exception SQLException    if connection fails.
      * @ForteInternal
      */
     private synchronized void expandPool(int connections) throws SQLException {
@@ -2121,31 +2121,31 @@ public class ConnectionManager {
      * corresponding values; e.g, if url = ${MYURL}, expand ${MYURL} into
      * its corresponding value.
      * <P>
-     * @param envname	environment variable name.
+     * @param envname    environment variable name.
      * @exceptions  SQLException  We should come up with a better one.
      */
     private String expandAttribute(String envname) throws SQLException {
         String attribute = null;
         /*RESOLVE:
-		try
-		{
-			attribute = ForteProperties.expandVars(envname);
-		}
-		catch (EnvVariableException e)
-		{
-			SQLException se = new SQLException
-			(
-				StringScanner.createParamString
-				(
-				  I18NHelper.getMessage(messages,
+        try
+        {
+            attribute = ForteProperties.expandVars(envname);
+        }
+        catch (EnvVariableException e)
+        {
+            SQLException se = new SQLException
+            (
+                StringScanner.createParamString
+                (
+                  I18NHelper.getMessage(messages,
                                              "connection.connectionmanager.badvalue"), // NOI18N
-					envname
-				),
-				SQL_INVAL_PARAM_VALUE
-			);
-			throw se;
-		}
-		*/
+                    envname
+                ),
+                SQL_INVAL_PARAM_VALUE
+            );
+            throw se;
+        }
+        */
         if (attribute != null) {
             return attribute;
         } else {
@@ -2159,7 +2159,7 @@ public class ConnectionManager {
      * If no connection is available after msWait milliseconds, an
      * exception is thrown.
      * <p>
-     * @exception SQLException	if connection fails.
+     * @exception SQLException    if connection fails.
      * @ForteInternal
      */
     private synchronized void waitForConnection() throws SQLException {

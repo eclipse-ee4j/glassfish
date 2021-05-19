@@ -34,7 +34,7 @@
     <echo message="================================================"/>
     <echo message="         SJSAS Quicklook: Security Tests        "/>
     <echo message="================================================"/>
-    
+
     <ant dir="wss" target="all"/>
     <ant dir="authoriz/methodperms" target="all" />
     <ant dir="simple" target="all"/>
@@ -68,10 +68,10 @@
 
   <target name="usage">
      <echo>
-	ant all --> Setup and Run all tests
-	ant setup --> Setup configuration for all tests
-	ant run-test --> Run all tests without setup
-	ant unsetup --> Unsetup configuration for all tests
+    ant all --> Setup and Run all tests
+    ant setup --> Setup configuration for all tests
+    ant run-test --> Run all tests without setup
+    ant unsetup --> Unsetup configuration for all tests
      </echo>
   </target>
 

@@ -19,8 +19,8 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * 
- * 
+ *
+ *
  */
 public class WebTest {
 
@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for classloader in"
                             + "HttpSessionListener.sessionDestroyed()");
@@ -49,7 +49,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -60,7 +60,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         String baseUrl = "http://" + host + ":" + port + contextRoot + "/test";
 
         HttpURLConnection conn = (HttpURLConnection)(new URL(baseUrl + "?timeout=1")).openConnection();
@@ -89,7 +89,7 @@ public class WebTest {
             input = new BufferedReader(new InputStreamReader(is));
             String line = input.readLine();
             if (!EXPECTED_RESPONSE.equals(line)) {
-                throw new Exception("Wrong response. Expected: " + 
+                throw new Exception("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + line);
             }
         } finally {
@@ -109,7 +109,7 @@ public class WebTest {
             }
         }
     }
-    
+
     private String getSessionId(HttpURLConnection conn) {
         String sessionId = null;
         String cookieString = conn.getHeaderField("Set-Cookie");

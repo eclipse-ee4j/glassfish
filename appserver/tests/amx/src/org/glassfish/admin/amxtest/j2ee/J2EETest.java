@@ -62,7 +62,7 @@ public final class J2EETest
     getCapabilities() {
         return getOfflineCapableCapabilities(false);
     }
-    
+
     /**
      Verify that there is one J2EEServer for each ServerConfig (standalone or not)
      */
@@ -340,8 +340,8 @@ public final class J2EETest
         if (failedSet.size() != 0) {
             failure("Failures in the following " + failedSet.size() + " MBeans:\n" +
                     toString(failedSet) );
-		}
-	}
+        }
+    }
 }
 
 

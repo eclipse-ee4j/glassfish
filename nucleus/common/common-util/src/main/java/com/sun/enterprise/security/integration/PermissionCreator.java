@@ -35,16 +35,16 @@ public class PermissionCreator {
             NoSuchMethodException, InvocationTargetException {
 
         Class<?> pc = null;
-        
+
         try {
-            pc = Class.forName(type, true, 
+            pc = Class.forName(type, true,
                 Thread.currentThread().getContextClassLoader());
         } catch (ClassNotFoundException e) {
-            //this class is not recognized 
+            //this class is not recognized
             Permission pm = new UnresolvedPermission(type, name, actions, null);
             return pm;  // policy provider suppose to translate this permission later
         }
-        
+
         if (name == null && actions == null) {
             try {
                 Constructor<?> c = pc.getConstructor(PARAMS0);
@@ -76,5 +76,5 @@ public class PermissionCreator {
             }
         }
     }
-    
+
 }

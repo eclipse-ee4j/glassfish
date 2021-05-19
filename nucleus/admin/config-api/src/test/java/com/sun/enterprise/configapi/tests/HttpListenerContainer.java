@@ -43,7 +43,7 @@ public class HttpListenerContainer implements ConfigListener {
     NetworkListener httpListener;
 
     volatile boolean received=false;
-    
+
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         if (received) {
             // I am alredy happy

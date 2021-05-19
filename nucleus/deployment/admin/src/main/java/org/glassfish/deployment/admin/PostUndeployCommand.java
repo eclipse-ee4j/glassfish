@@ -36,7 +36,7 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * Runs after any replications of the undeploy command have been sent to
  * instances.
- * 
+ *
  * @author Tim Quinn
  */
 @Service(name="_postundeploy")
@@ -46,7 +46,7 @@ import org.jvnet.hk2.annotations.Service;
 @AccessRequired(resource=DeploymentCommandUtils.APPLICATION_RESOURCE_NAME, action="write")
 
 public class PostUndeployCommand extends UndeployCommandParameters implements AdminCommand {
-    
+
     @Inject
     private ServiceLocator habitat;
 
@@ -70,7 +70,7 @@ public class PostUndeployCommand extends UndeployCommandParameters implements Ad
             return;
         }
         final ExtendedDeploymentContext dc = suppInfo.deploymentContext();
-        
+
         final InterceptorNotifier notifier = new InterceptorNotifier(habitat, dc);
 
         try {

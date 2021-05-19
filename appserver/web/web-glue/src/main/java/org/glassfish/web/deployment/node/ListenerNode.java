@@ -46,8 +46,8 @@ public class ListenerNode extends DisplayableComponentNode<AppListenerDescriptor
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -56,17 +56,17 @@ public class ListenerNode extends DisplayableComponentNode<AppListenerDescriptor
         table.put(WebTagNames.LISTENER_CLASS, "setListener");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, AppListenerDescriptorImpl descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName, AppListenerDescriptorImpl descriptor) {
         Node myNode = appendChild(parent, nodeName);
         writeDisplayableComponentInfo(myNode, descriptor);
         appendTextChild(myNode, WebTagNames.LISTENER_CLASS, descriptor.getListener());

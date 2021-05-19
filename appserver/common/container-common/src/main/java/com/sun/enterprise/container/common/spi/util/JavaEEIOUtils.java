@@ -33,29 +33,29 @@ import java.io.*;
  *   d) (Non serializable) StatefulSessionBeans
  *
  * @author Mahesh Kannan
- * 
+ *
  */
 @Contract
 public interface JavaEEIOUtils {
-	
+
     public ObjectInputStream createObjectInputStream(InputStream is, boolean resolveObject, ClassLoader loader)
-	    throws Exception;
+        throws Exception;
 
     public ObjectOutputStream createObjectOutputStream(OutputStream os, boolean replaceObject)
-	    throws IOException;
+        throws IOException;
 
     public byte[] serializeObject(Object obj, boolean replaceObject)
-	    throws java.io.IOException;
+        throws java.io.IOException;
 
     public Object deserializeObject(byte[] data, boolean resolveObject, ClassLoader appClassLoader)
             throws Exception;
-    
+
     public void addGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler);
-    
+
     public void removeGlassFishOutputStreamHandler(GlassFishOutputStreamHandler handler);
-    
+
     public void addGlassFishInputStreamHandler(GlassFishInputStreamHandler handler);
-    
+
     public void removeGlassFishInputStreamHandler(GlassFishInputStreamHandler handler);
 
 }

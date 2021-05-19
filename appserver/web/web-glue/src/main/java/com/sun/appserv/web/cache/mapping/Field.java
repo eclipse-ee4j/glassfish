@@ -36,11 +36,11 @@ public class Field {
      */
     private static final ResourceBundle _rb = _logger.getResourceBundle();
 
-    // field name and scope 
-    protected String name; 
+    // field name and scope
+    protected String name;
 
     // scope defs in Constants
-    protected int scope; 
+    protected int scope;
 
     /**
      * create a new cache field, given a string representation of the scope
@@ -119,7 +119,7 @@ public class Field {
      *  @param request <code>HttpServletRequest</code>
      *  @return field value in the scope
      */
-    public Object getValue(ServletContext context, 
+    public Object getValue(ServletContext context,
                            HttpServletRequest request) {
 
         Object value = null;

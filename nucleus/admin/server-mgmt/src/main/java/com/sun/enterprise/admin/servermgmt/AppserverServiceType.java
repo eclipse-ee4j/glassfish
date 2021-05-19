@@ -19,7 +19,7 @@ package com.sun.enterprise.admin.servermgmt;
 /**
  * A type that defines the application server entity that can have service support. Currently, only a
  * <code> Domain </code> and <code> Noade Agent </code> can have such support.
- * 
+ *
  * @since 9.1
  * @author Kedar Mhaswade
  *

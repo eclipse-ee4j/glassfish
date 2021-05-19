@@ -27,11 +27,11 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 /**
- * User defined constraint for Jdbc/Connector Connection Pools. 
- * 
- * Different validations are done based on the value and appropriate error 
+ * User defined constraint for Jdbc/Connector Connection Pools.
+ *
+ * Different validations are done based on the value and appropriate error
  * messages are displayed in case of failure.
- * 
+ *
  * @author Shalini M
  */
 @Retention(RUNTIME)

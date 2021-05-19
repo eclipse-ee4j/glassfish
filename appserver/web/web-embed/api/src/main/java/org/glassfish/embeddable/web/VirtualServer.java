@@ -25,13 +25,13 @@ import org.glassfish.embeddable.GlassFishException;
  * Representation of a virtual server.
  *
  * <p>Instances of <tt>VirtualServer</tt> may be in one of two states:
- * <i>stopped</i> or <i>started</i>. Any requests mapped to a 
+ * <i>stopped</i> or <i>started</i>. Any requests mapped to a
  * <tt>VirtualServer</tt> that was stopped will result in a response with
  * a status code equal to
  * jakarta.servlet.http.HttpServletResponse#SC_NOT_FOUND.
  *
  * <p/>See {@link WebContainer} for usage example.
- * 
+ *
  * @author Rajiv Mordani
  * @author Jan Luehe
  */
@@ -47,7 +47,7 @@ public interface VirtualServer {
 
     /**
      * Gets the id of this <tt>VirtualServer</tt>.
-     * 
+     *
      * @return the id of this <tt>VirtualServer</tt>
      */
     public String getID();
@@ -61,7 +61,7 @@ public interface VirtualServer {
 
     /**
      * Gets the docroot of this <tt>VirtualServer</tt>.
-     * 
+     *
      * @return the docroot of this <tt>VirtualServer</tt>
      */
     public File getDocRoot();
@@ -69,7 +69,7 @@ public interface VirtualServer {
     /**
      * Gets the collection of <tt>WebListener</tt> instances from which
      * this <tt>VirtualServer</tt> receives requests.
-     * 
+     *
      * @return the collection of <tt>WebListener</tt> instances from which
      * this <tt>VirtualServer</tt> receives requests.
      */
@@ -77,7 +77,7 @@ public interface VirtualServer {
 
     /**
      * Adds the given <tt>Valve</tt> to this <tt>VirtualServer</tt>
-     * 
+     *
      * @param valve the <tt>Valve</tt> to be added
      */
     //public void addValve(Valve valve);
@@ -126,7 +126,7 @@ public interface VirtualServer {
     /**
      * Gets the collection of <tt>Context</tt> instances registered with
      * this <tt>VirtualServer</tt>.
-     * 
+     *
      * @return the (possibly empty) collection of <tt>Context</tt>
      * instances registered with this <tt>VirtualServer</tt>
      */
@@ -140,7 +140,7 @@ public interface VirtualServer {
      * <tt>VirtualServer</tt> may be stopped and restarted.
      *
      * @param config the configuration to be applied
-     * 
+     *
      * @throws ConfigException if the configuration requires a restart,
      * and this <tt>VirtualServer</tt> fails to be restarted
      */

@@ -44,13 +44,13 @@ import org.glassfish.hk2.api.PerLookup;
 @Service(name = "list-virtual-servers")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@I18n("list.virtual.servers")  
+@I18n("list.virtual.servers")
 @ExecuteOn(RuntimeType.DAS)
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=HttpService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-virtual-servers", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-virtual-servers",
         description="list-virtual-servers")
 })
 public class ListVirtualServers implements AdminCommand {

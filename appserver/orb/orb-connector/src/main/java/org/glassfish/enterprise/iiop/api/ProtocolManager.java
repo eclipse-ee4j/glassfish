@@ -68,7 +68,7 @@ public interface ProtocolManager {
     /**
      * Check that all Remote interfaces implemented by target object
      * conform to the rules for valid RMI-IIOP interfaces.  Throws
-     * runtime exception if validation fails.  
+     * runtime exception if validation fails.
      */
     void validateTargetObjectInterfaces(Remote targetObj);
 
@@ -95,5 +95,5 @@ public interface ProtocolManager {
     EjbDescriptor getEjbDescriptor(byte[] ejbKey);
 
 }
-    
+
 

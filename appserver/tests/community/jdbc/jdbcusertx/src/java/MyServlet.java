@@ -33,7 +33,7 @@ public class MyServlet extends HttpServlet {
     @Resource(name = "jdbc/__default", mappedName = "jdbc/__default")
     DataSource ds1;
 
-    /** 
+    /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -60,11 +60,11 @@ public class MyServlet extends HttpServlet {
           buf = new StringBuffer();
 
           try {
-	    if ("usertx".equals(testcase)) {
+        if ("usertx".equals(testcase)) {
                  tests = initializeUserTxTest();
-	    } else if ("noleak".equals(testcase)) {
+        } else if ("noleak".equals(testcase)) {
                  tests = initializeLeakTest();
-	    }
+        }
           } catch (Exception e) {
                HtmlUtil.printException(e, out);
           }
@@ -91,7 +91,7 @@ public class MyServlet extends HttpServlet {
                out.close();
                out.flush();
            }
-	}
+    }
     }
 
     private SimpleTest[] initializeUserTxTest() throws Exception {
@@ -123,7 +123,7 @@ public class MyServlet extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -133,7 +133,7 @@ public class MyServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -143,7 +143,7 @@ public class MyServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      */
     public String getServletInfo() {

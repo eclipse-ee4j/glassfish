@@ -20,14 +20,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
         <groupId>org.glassfish.main.web</groupId>
-    	<artifactId>web</artifactId>
+        <artifactId>web</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>gf-web-connector</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Connector for GlassFish Web Container</name>
 
     <developers>
@@ -40,7 +40,7 @@
                 <role>developer</role>
             </roles>
         </developer>
-    </developers>  
+    </developers>
 
     <dependencies>
         <dependency>
@@ -61,7 +61,7 @@
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>internal-api</artifactId>
             <version>${project.version}</version>
-        </dependency>              
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
             <artifactId>deployment-common</artifactId>

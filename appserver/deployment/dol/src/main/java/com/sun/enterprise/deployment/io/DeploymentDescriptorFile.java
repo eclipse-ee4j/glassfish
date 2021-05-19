@@ -52,64 +52,61 @@ import java.util.logging.Level;
  *
  * @author Jerome Dochez
  */
-
 public abstract class DeploymentDescriptorFile<T extends Descriptor> {
-    
+
     public final static String FULL_VALIDATION = "full";
     public final static String PARSING_VALIDATION = "parsing";
-    
+
     // should we validate the XML ?
     private boolean xmlValidation = true;
-    
+
     // error reporting level
     private String validationLevel=PARSING_VALIDATION;
-    
+
     // error reporting string, used for xml validation error
     private String errorReportingString=null;
-    
+
     // for i18N
     private static LocalStringManagerImpl localStrings=
-	    new LocalStringManagerImpl(DeploymentDescriptorFile.class);        
+        new LocalStringManagerImpl(DeploymentDescriptorFile.class);
 
     private ArchiveType archiveType;
-    
+
     /** Creates a new instance of DeploymentDescriptorFile */
     public DeploymentDescriptorFile() {
     }
-    
+
     /**
-     * @return a non validating SAX Parser to read an XML file (containing 
+     * @return a non validating SAX Parser to read an XML file (containing
      * Deployment Descriptors) into DOL descriptors
      */
     public SAXParser getSAXParser() {
         return getSAXParser(false);
     }
-    
+
     /**
-     * @return a SAX Parser to read an XML file (containing 
+     * @return a SAX Parser to read an XML file (containing
      * Deployment Descriptors) into DOL descriptors
-     * 
+     *
      * @param validating true if the parser should excercise DTD validation
      */
-    public SAXParser getSAXParser (boolean validating) { 
+    public SAXParser getSAXParser (boolean validating) {
         // always use system SAXParser to parse DDs, see IT 8229
-        ClassLoader currentLoader =
-            Thread.currentThread().getContextClassLoader();
-        Thread.currentThread().setContextClassLoader(
-            getClass().getClassLoader());
+        ClassLoader currentLoader = Thread.currentThread().getContextClassLoader();
+        Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
         try {
             SAXParserFactory spf = SAXParserFactory.newInstance();
 
             // set the namespace awareness
             spf.setNamespaceAware(true);
-            
-	    // turn validation on for deployment descriptor XML files
-            spf.setValidating(validating);    
 
-	    // this feature is needed for backward compat with old DDs 
-	    // constructed by J2EE1.2 which used Java encoding names
-	    // such as ISO8859_1 etc.
-            
+            // turn validation on for deployment descriptor XML files
+            spf.setValidating(validating);
+
+            // this feature is needed for backward compat with old DDs
+            // constructed by J2EE1.2 which used Java encoding names
+            // such as ISO8859_1 etc.
+
             // this is a hack for a few days so people can continue runnning
             // with crimson
             if (spf.getClass().getName().indexOf("xerces")!=-1) {
@@ -118,8 +115,8 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             } else {
                 DOLUtils.getDefaultLogger().log(Level.WARNING, "SAXParserFactory should be xerces, but was not.");
             }
-	    
-	    try {
+
+            try {
                 if (!validating) {
                     // if we are not validating, let's not load the DTD
                     if (getDeploymentDescriptorPath().indexOf(DescriptorConstants.WLS) != -1) {
@@ -128,25 +125,25 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                     }
                 }
 
-		// Validation part 2a: set the schema language if necessary            
-		spf.setFeature("http://apache.org/xml/features/validation/schema",validating);		
-	    
-            	SAXParser sp = spf.newSAXParser();
-                
+                // Validation part 2a: set the schema language if necessary
+                spf.setFeature("http://apache.org/xml/features/validation/schema",validating);
+
+                SAXParser sp = spf.newSAXParser();
+
                 // put the default schema for this deployment file type
                 String path = getDefaultSchemaSource();
                 if (path!=null) {
                     sp.setProperty("http://apache.org/xml/properties/schema/external-schemaLocation",path);
                 }
 
-		// Set Xerces feature to allow dynamic validation. This prevents
-		// SAX errors from being reported when no schemaLocation attr
-		// is seen for a DTD based (J2EE1.3) XML descriptor.
-		sp.getXMLReader().setFeature(
-		    "http://apache.org/xml/features/validation/dynamic", validating);
-		    
-		return sp;
-		
+                // Set Xerces feature to allow dynamic validation. This prevents
+                // SAX errors from being reported when no schemaLocation attr
+                // is seen for a DTD based (J2EE1.3) XML descriptor.
+                sp.getXMLReader().setFeature(
+                    "http://apache.org/xml/features/validation/dynamic", validating);
+
+                return sp;
+
             } catch (SAXNotRecognizedException x) {
                 // This can happen if the parser does not support JAXP 1.2
                 DOLUtils.getDefaultLogger().log(Level.SEVERE,
@@ -155,7 +152,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                  DOLUtils.getDefaultLogger().log(Level.SEVERE,
                     "Check to see if parser conforms to JAXP 1.2 spec.");
 
-            }            
+            }
         } catch (Exception e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
                                 new Object[]{e.getMessage()});
@@ -166,6 +163,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         }
         return null;
     }
+
     /**
      * @return a DOM parser to read XML File into a DOM tree
      *
@@ -176,16 +174,16 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             // always use system default to parse DD
             System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            System.clearProperty("javax.xml.parsers.DocumentBuilderFactory"); 
+            System.clearProperty("javax.xml.parsers.DocumentBuilderFactory");
 
             // set the namespace awareness
             dbf.setNamespaceAware(true);
-            
-	    // turn validation on for deployment descriptor XML files
-            dbf.setValidating(validating);            
+
+            // turn validation on for deployment descriptor XML files
+            dbf.setValidating(validating);
 
             // Validation part 2a: set the schema language if necessary
-            try     {
+            try {
                 // put the default schema for this deployment file type
                 String path = getDefaultSchemaSource();
                 if (path!=null) {
@@ -200,7 +198,7 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE,
                     "Check to see if parser conforms to JAXP 1.2 spec.");
 
-            }            
+            }
         } catch (Exception e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
                                 new Object[]{e.getMessage()});
@@ -208,30 +206,27 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         }
         return null;
     }
-    
+
     /**
-     * read and parse a J2EE Deployment Descriptor input file and 
+     * read and parse a J2EE Deployment Descriptor input file and
      * return the constructed DOL descriptors for the J2EE Module
-     * 
+     *
      * @param is the input stream for the XML file
      * @return the DOL descriptor for the J2EE Module
      */
-    public T read(InputStream is)
-        throws IOException, SAXException {
+    public T read(InputStream is) throws IOException, SAXException {
         return read(null, is);
     }
-       
+
     /**
-     * read and parse a J2EE Deployment Descriptor input file and 
+     * read and parse a J2EE Deployment Descriptor input file and
      * return the constructed DOL descriptors for the J2EE Module
-     * 
+     *
      * @param descriptor the read is incremental, the descriptor to apply the DDs to
      * @param in the input stream for the XML file
      * @return the DOL descriptor for the J2EE Module
      */
-    public T read(T descriptor, File in)
-        throws IOException, SAXException {
-        
+    public T read(T descriptor, File in) throws IOException, SAXException {
         FileInputStream fis = new FileInputStream(in);
         try {
             return read(descriptor, fis);
@@ -239,63 +234,60 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             fis.close();
         }
     }
-    
+
     /**
-     * read and parse a J2EE Deployment Descriptor input file and 
+     * read and parse a J2EE Deployment Descriptor input file and
      * return the constructed DOL descriptors for the J2EE Module
-     * 
+     *
      * @param descriptor the read is incremental, the descriptor to apply the DDs to
      * @param in the input archive abstraction for the XML file
      * @return the DOL descriptor for the J2EE Module
-     */    
-    public T read(T descriptor, ReadableArchive in)
-        throws IOException, SAXException {
-            
-            InputStream is = in.getEntry(getDeploymentDescriptorPath());
-            try {
-                return read(descriptor, is);
-            } finally {
-                is.close();
-            }
+     */
+    public T read(T descriptor, ReadableArchive in) throws IOException, SAXException {
+        InputStream is = in.getEntry(getDeploymentDescriptorPath());
+        try {
+            return read(descriptor, is);
+        } finally {
+            is.close();
+        }
     }
-    
+
     /**
-     * read and parse a J2EE Deployment Descriptor input file and 
+     * read and parse a J2EE Deployment Descriptor input file and
      * return the constructed DOL descriptors for the J2EE Module
-     * 
+     *
      * @param descriptor if the read is incremental, the descriptor to apply the DDs to
      * @param is the input stream for the XML file
      * @return the DOL descriptor for the J2EE Module
      */
     @SuppressWarnings("unchecked")
-    public T read(T descriptor, InputStream is)
-            throws IOException, SAXException {
-        
+    public T read(T descriptor, InputStream is) throws IOException, SAXException {
+
         errorReportingString = FileUtils.revertFriendlyFilenameExtension(errorReportingString);
         String error = (errorReportingString == null)? errorReportingString:new File(errorReportingString).getName();
         String errorReporting = localStrings.getLocalString(
-			"enterprise.deployment.io.errorcontext",
-			"archive {0} and deployment descriptor file {1}",
+            "enterprise.deployment.io.errorcontext",
+            "archive {0} and deployment descriptor file {1}",
                         error, getDeploymentDescriptorPath());
-        
+
         SAXParser sp = getSAXParser(getXMLValidation());
         SaxParserHandler dh = SaxParserHandlerFactory.newInstance();
-	if (validationLevel.equals(FULL_VALIDATION)) {
-	    dh.setStopOnError(true);
-	} 
+        if (validationLevel.equals(FULL_VALIDATION)) {
+            dh.setStopOnError(true);
+        }
         if (descriptor!=null) {
             dh.setTopNode(getRootXMLNode(descriptor));
         }
 
         dh.setErrorReportingString(errorReporting);
-        
+
         InputSource input =new InputSource(is);
         try {
             sp.parse(input,dh);
         } catch(SAXParseException e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
                                 new Object[]{e.getMessage()});
-            
+
             errorReporting += "  " + e.getLocalizedMessage();
             SAXParseException spe = new SAXParseException(errorReporting,
                                                         e.getSystemId(),
@@ -304,23 +296,23 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
                                                         e.getColumnNumber(),
                                                         e);
 
-            throw spe;            
+            throw spe;
         } catch(SAXException e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                new Object[]{e.getMessage()});            
+                                new Object[]{e.getMessage()});
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "Error occurred", e);
             throw e;
         } catch (IOException e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
-                                e.getMessage() == null ? "" : new Object[]{e.getMessage()});            
+                                e.getMessage() == null ? "" : new Object[]{e.getMessage()});
 
-            // Let's check if the root cause of this IOException is failing to 
-            // connect. If yes, it means two things: 
-            // 1. The public id declared is not one of the pre-defined ones. 
+            // Let's check if the root cause of this IOException is failing to
+            // connect. If yes, it means two things:
+            // 1. The public id declared is not one of the pre-defined ones.
             //    So we need to ask user the check for typo.
             // 2. If the user does intend to use the system id to go outside.
-            //    We need to ask them to check whether they have proper 
-            //    access to the internet (proxy setting etc).      
+            //    We need to ask them to check whether they have proper
+            //    access to the internet (proxy setting etc).
             for (StackTraceElement stElement : e.getStackTrace()) {
                 if (stElement.getClassName().equals("java.net.Socket") &&
                         stElement.getMethodName().equals("connect")) {
@@ -344,19 +336,19 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             return ((RootXMLNode<T>) dh.getTopNode()).getDescriptor();
         }
         return null;
-    }                
-    
+    }
+
     /**
      * @return a Document for the passed descriptor
      * @param descriptor
-     */    
+     */
     public Document getDocument(T descriptor) {
         return J2EEDocumentBuilder.getDocument(descriptor, getRootXMLNode(descriptor));
     }
-    
+
     /**
      * writes the descriptor to an output stream
-     * 
+     *
      * @param descriptor the descriptor
      * @param os the output stream
      */
@@ -371,15 +363,15 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             throw ioe;
         }
     }
-    
+
     /**
      * writes the descriptor classes into a new XML file
-     * 
+     *
      * @param descriptor the DOL descriptor to write
      * @param path the file to use
      */
     public void write(T descriptor, String path) throws IOException {
-        
+
         String dir;
         String fileName = getDeploymentDescriptorPath();
         if (fileName.lastIndexOf('/')!=-1) {
@@ -391,16 +383,17 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
         File dirs = new File(dir.replace('/', File.separatorChar));
         if (!dirs.exists()) {
             boolean ok = dirs.mkdirs();
-            if (! ok)
-              throw new IOException(dirs.getAbsolutePath() + " not created");
+            if (!ok) {
+                throw new IOException(dirs.getAbsolutePath() + " not created");
+            }
         }
-        File out = new File(dirs, fileName);        
+        File out = new File(dirs, fileName);
         write(descriptor, out);
-    }    
-    
+    }
+
     /**
      * writes the descriptor classes into a new XML file
-     * 
+     *
      * @param descriptor the DOL descriptor to write
      * @param out the file to use
      */
@@ -416,13 +409,13 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
             fos.close();
         }
     }
-    
-    /** 
-     * @return the location of the deployment descriptor file for a 
+
+    /**
+     * @return the location of the deployment descriptor file for a
      * particular type of Java EE Archive
      */
     public abstract String getDeploymentDescriptorPath();
-        
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this Java EE module
@@ -430,68 +423,69 @@ public abstract class DeploymentDescriptorFile<T extends Descriptor> {
      * @param descriptor the descriptor for which we need the node
      */
     public abstract RootXMLNode<T> getRootXMLNode(T descriptor);
-     
+
     /**
      * @return true if XML validation should be performed at load time
-     */    
+     */
     protected boolean getXMLValidation() {
         return xmlValidation;
     }
-    
+
     /**
      * sets wether XML validation should be performed at load time
      * @param validate true to validate
-     */    
+     */
     public void setXMLValidation(boolean validate) {
         xmlValidation = validate;
     }
-    
+
     /**
     * Sets the xml validation error reporting/recovering level.
     * The reporting level is active only when xml validation is
     * turned on @see setXMLValidation.
-    * so far, two values can be passed, medium which reports the 
-    * xml validation and continue and full which reports the 
+    * so far, two values can be passed, medium which reports the
+    * xml validation and continue and full which reports the
     * xml validation and stop the xml parsing.
     */
     public void setXMLValidationLevel(String level) {
-	validationLevel = level;
+        validationLevel = level;
     }
-    
+
     /**
-    * @return the xml validation reporting level
-    */
+     * @return the xml validation reporting level
+     */
     public String getXMLValidationLevel() {
-	return validationLevel;
-    }    
-    
+        return validationLevel;
+    }
+
     /**
     * @return the default schema source for this deployment descriptors
     */
     protected String getDefaultSchemaSource() {
-	RootXMLNode<?> node = getRootXMLNode(null);
-	if (node!=null) {
-	    List<String> systemIDs = node.getSystemIDs();
+        RootXMLNode<?> node = getRootXMLNode(null);
+        if (node != null) {
+            List<String> systemIDs = node.getSystemIDs();
             if (systemIDs != null) {
                 StringBuilder path = new StringBuilder();
                 for (String systemID : systemIDs) {
-                    if (path.length()>0)
+                    if (path.length() > 0) {
                         path.append(' ');
+                    }
                     path.append(systemID);
                 }
                 return path.toString();
             }
-	}
-	return null;
+        }
+        return null;
     }
-    
+
     /**
      * Sets the error reporting string
      */
     public void setErrorReportingString(String s) {
         this.errorReportingString = s;
     }
-    
+
     /**
      * @return the archive type associated with this deployment descriptor file
      */

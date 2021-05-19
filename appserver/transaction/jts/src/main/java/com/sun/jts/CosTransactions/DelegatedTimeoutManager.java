@@ -49,12 +49,12 @@ class DelegatedTimeoutManager {
     static final int NO_TIMEOUT       = 0;
     static final int ACTIVE_TIMEOUT   = 1;
     static final int IN_DOUBT_TIMEOUT = 2;
-    
+
     /**
      * this attribute indicates whether initialisation has been started.
      */
     private static boolean initialised = false;
-    
+
     private Hashtable     pendingTimeouts = new Hashtable();
     private Hashtable     indoubtTimeouts = new Hashtable();
     private DelegatedTimeoutThread timeoutThread = null;
@@ -62,7 +62,7 @@ class DelegatedTimeoutManager {
     private boolean       quiescing = false;
     private boolean       isSetTimeout = false;
     private String        logPath = null;
-    
+
         /*
                 Logger to log transaction messages
          */
@@ -96,15 +96,15 @@ class DelegatedTimeoutManager {
      * }
      * }
      **/
-    
+
     DelegatedTimeoutManager() {
     }
-    
+
     DelegatedTimeoutManager(String logPath) {
         this.logPath = logPath;
     }
-    
-    
+
+
     synchronized void initSetTimeout() {
         if (isSetTimeout)
             return;
@@ -112,7 +112,7 @@ class DelegatedTimeoutManager {
         timeoutThread = new DelegatedTimeoutThread(this);
         timeoutThread.start();
     }
-    
+
     /**
      * Sets the timeout for the transaction to the specified type and time in
      * seconds.
@@ -131,18 +131,18 @@ class DelegatedTimeoutManager {
      */
     boolean setTimeout(Long localTID, int timeoutType,
     int seconds) {
-        
+
         boolean result = true;
-        
+
         // Modify the timeout to the required type and value.
-        
+
         DelegatedTimeoutInfo timeoutInfo = null;
-        
+
         switch (timeoutType) {
-            
+
             // If the new type is active or in_doubt, then create a
             // new TimeoutInfo if necessary, and set up the type and interval.
-            
+
             case DelegatedTimeoutManager.ACTIVE_TIMEOUT :
                 if (!isSetTimeout) {
                     initSetTimeout();
@@ -166,20 +166,20 @@ class DelegatedTimeoutManager {
                 timeoutInfo.timeoutType = timeoutType;
                 indoubtTimeouts.put(localTID,timeoutInfo);
                 break;
-                
+
                 // For any other type, remove the timeout if there is one.
-                
+
             default:
                 if (!isSetTimeout)
                     break;
                 result = (pendingTimeouts.remove(localTID) != null);
                 if (!result)
                     result = (indoubtTimeouts.remove(localTID) != null);
-                
+
                 // If the transaction service is quiescing and
                 // there are no more pending timeouts,
                 // deactivate timeout and stop the timeout thread.
-                
+
                 if (quiescing && pendingTimeouts.isEmpty() && indoubtTimeouts.isEmpty()) {
                     timeoutThread.stop();
                     timeoutActive = false;
@@ -189,7 +189,7 @@ class DelegatedTimeoutManager {
         }
         return result;
     }
-    
+
     /**
      * Takes appropriate action for a timeout.
      * <p>
@@ -207,12 +207,12 @@ class DelegatedTimeoutManager {
      * @see
      */
     void timeoutCoordinator(Long localTID, int  timeoutType) {
-        
+
         // Look up the Coordinator for the transaction.
         // If there is none, then the transaction has already gone.
         // Otherwise do something with the transaction.
-        
-        
+
+
         CoordinatorImpl coord = DelegatedRecoveryManager.getLocalCoordinator(localTID, logPath);
         if (coord == null) {
             if(_logger.isLoggable(Level.FINER)) {
@@ -224,11 +224,11 @@ class DelegatedTimeoutManager {
         } else {
             synchronized (coord) {
                 boolean[] isRoot = new boolean[1];
-                
+
                 switch (timeoutType) {
-                    
+
                     // If active, then attempt to roll the transaction back.
-                    
+
                     case DelegatedTimeoutManager.ACTIVE_TIMEOUT :
                         if(_logger.isLoggable(Level.FINER)) {
                             _logger.logp(Level.FINER,"DelegatedTimeoutManager","timeoutCoordinator()",
@@ -243,13 +243,13 @@ class DelegatedTimeoutManager {
                             coord.rollback_only();
                         } catch (Throwable exc) {}
                         break;
-                        
+
                         // If in doubt, it must be a TopCoordinator.
                         // In that case replay_completion needs to be driven.
                         // This is done by telling the TopCoordinator to act as
                         // if in recovery.  The result is then used to
                         // determine what to do with the Coordinator.
-                        
+
                     case DelegatedTimeoutManager.IN_DOUBT_TIMEOUT :
                         if(_logger.isLoggable(Level.FINER)) {
                             _logger.logp(Level.FINER,"DelegatedTimeoutManager","timeoutCoordinator()",
@@ -260,24 +260,24 @@ class DelegatedTimeoutManager {
                             ((TopCoordinator)coord).superInfo.globalTID.toString());
                         }
                         Status state = ((TopCoordinator) coord).recover(isRoot);
-                        
+
                         if (state == Status.StatusUnknown) {
-                            
+
                             // If the outcome is not currently known, we do
                             // nothing with the transaction, as we expect to
                             // eventually get an outcome from the parent.
-                            
+
                             // GDH put out warning in case this state
                             // continues for a long time.
                             _logger.log(Level.WARNING, "jts.transaction_resync_from_orginator_failed");
-                            
+
                         } else if (state == Status.StatusCommitted) {
-                            
+
                             // For committed or rolled back, proceed with
                             // completion of the transaction, regardless of whether
                             // it is the root or a subordinate. This will
                             // result in the removal of the in-doubt timeout.
-                            
+
                             try {
                                 ((TopCoordinator)coord).commit();
                                 if (isRoot[0]) {
@@ -295,9 +295,9 @@ class DelegatedTimeoutManager {
                                 }
                             } catch (Throwable exc) {}
                         }
-                        
+
                         break;
-                        
+
                     default:
                         // Otherwise do nothing.
                         break;
@@ -305,7 +305,7 @@ class DelegatedTimeoutManager {
             }
         }
     }
-    
+
     /**
      * Periodically checks the existing timeouts.
      * <p>
@@ -326,114 +326,114 @@ class DelegatedTimeoutManager {
     Enumeration checkTimeouts() {
         if (!isSetTimeout)
             return null;
-        
+
         Enumeration result = null;
-        
+
         // When woken up, go through all current timeouts and identify those
         // which have expired.
-        
+
         if (timeoutActive && ((pendingTimeouts.size() != 0) || (indoubtTimeouts.size() != 0))) {
             Vector timedOut = null;
-            
+
             Enumeration timeouts = null;
-            
+
             synchronized (pendingTimeouts) {
                 timeouts = pendingTimeouts.elements();
-                
+
                 while (timeouts.hasMoreElements()) {
-                    
+
                     DelegatedTimeoutInfo timeoutInfo = (DelegatedTimeoutInfo)timeouts.nextElement();
-                    
+
                     // For each timeout in the list, check whether it has expired.
                     // If so, look up the Coordinator and roll it back.
-                    
+
                     if (new Date().getTime() > timeoutInfo.expireTime) {
-                        
+
                         // Add the TimeoutInfo to the queue of
                         //those that have timed out.
-                        
+
                         if (timedOut == null) {
                             timedOut = new Vector();
                         }
-                        
+
                         timedOut.addElement(timeoutInfo);
                     }
                 }
             }
-            
+
             synchronized (indoubtTimeouts) {
-                
+
                 timeouts = indoubtTimeouts.elements();
-                
+
                 while (timeouts.hasMoreElements()) {
-                    
+
                     DelegatedTimeoutInfo timeoutInfo = (DelegatedTimeoutInfo)timeouts.nextElement();
-                    
+
                     // For each timeout in the list, check whether it has expired.
                     // If so, look up the Coordinator and roll it back.
-                    
+
                     if (new Date().getTime() > timeoutInfo.expireTime) {
-                        
+
                         // Add the TimeoutInfo to the queue of
                         //those that have timed out.
-                        
+
                         if (timedOut == null) {
                             timedOut = new Vector();
                         }
-                        
+
                         timedOut.addElement(timeoutInfo);
                     }
                 }
-                
+
             }
             // Enumerate the transactions which have timed out.
-            
+
             if (timedOut != null) {
                 result = timedOut.elements();
             }
         }
-        
+
         // The remainder of the timeout processing is not carried out here
         // because we would get deadlocked with addCoordinator or
         // removeCoordinator that also update the timeout list.  Hence the
         // returned enumeration, which may be processed with
         // no concurrency control.
-        
+
         return result;
     }
-    
+
     /**
      * @return a set of in-doubt transaction ids.
      */
     XID[] getInDoubtXids() {
-        
+
         synchronized (indoubtTimeouts) {
             Vector inDoubtList = new Vector();
-            
+
             Enumeration timeouts = indoubtTimeouts.elements();
-            
+
             while (timeouts.hasMoreElements()) {
-                
+
                 DelegatedTimeoutInfo timeoutInfo = (DelegatedTimeoutInfo) timeouts.nextElement();
-                
+
                 // Look up the Coordinator for the transaction.
                 // If there is none, then the transaction has already gone.
                 // Otherwise do something with the transaction.
-                
+
                 CoordinatorImpl coord =
                 DelegatedRecoveryManager.getLocalCoordinator(timeoutInfo.localTID, logPath);
-                
+
                 if (coord != null) {
                     XID xid = new XID();
                     xid.copy(coord.getGlobalTID());
                     inDoubtList.addElement(xid);
                 }
             }
-            
+
             return (XID[]) inDoubtList.toArray(new XID[] {});
         }
     }
-    
+
     /**
      * Returns the amount of time left before the given transaction times out.
      *
@@ -446,7 +446,7 @@ class DelegatedTimeoutManager {
      * @see
      */
     long timeLeft(Long localTID) {
-        
+
         DelegatedTimeoutInfo timeoutInfo = (DelegatedTimeoutInfo) pendingTimeouts.get(localTID);
         if (timeoutInfo == null)
             timeoutInfo = (DelegatedTimeoutInfo) indoubtTimeouts.get(localTID);
@@ -457,10 +457,10 @@ class DelegatedTimeoutManager {
                 result = 0;
             }
         }
-        
+
         return result;
     }
-    
+
     /**
      * Informs the TimeoutManager that the transaction service
      * is being shut down. For immediate shutdown, the timeout thread is
@@ -476,22 +476,22 @@ class DelegatedTimeoutManager {
      * @see
      */
     void shutdown(boolean immediate) {
-        
+
         // For immediate, kill the timeout thread and throw
         // away all information. Also, if there are no pending
         // timeouts, there is nothing to quiesce so
         // shutdown immediately regardless.
-        
+
         if (immediate ||
         pendingTimeouts == null || pendingTimeouts.isEmpty()) {
             if (timeoutThread != null) {
                 timeoutThread.stop();
             }
-            
+
             if (pendingTimeouts != null) {
                 pendingTimeouts.clear();
             }
-            
+
             pendingTimeouts = null;
             timeoutThread = null;
             timeoutActive = false;
@@ -499,7 +499,7 @@ class DelegatedTimeoutManager {
             quiescing = true;
         }
     }
-    
+
 }
 
 /**
@@ -537,10 +537,10 @@ class DelegatedTimeoutInfo extends Object {
 
 
 class DelegatedTimeoutThread extends Thread {
-    
+
     private int TIMEOUT_INTERVAL ;
     private DelegatedTimeoutManager tmoutMgr = null;
-    
+
     static Logger _logger = LogDomains.getLogger(DelegatedTimeoutThread.class, LogDomains.TRANSACTION_LOGGER);
     /**
      * TimeoutThread constructor.
@@ -573,7 +573,7 @@ class DelegatedTimeoutThread extends Thread {
             TIMEOUT_INTERVAL=10000;
         }
     }
-    
+
     /**
      * Performs timeout checking on a regular basis (every ten seconds or so).
      *
@@ -586,30 +586,30 @@ class DelegatedTimeoutThread extends Thread {
     public void run() {
         try {
             while (true) {
-                
+
                 // Sleep for a while between checks.
-                
+
                 Thread.sleep(TIMEOUT_INTERVAL);
-                
+
                 // Perform timeout checks, getting a list of timed-out
                 // transactions.
-                
+
                 Enumeration timedOut = tmoutMgr.checkTimeouts();
-                
+
                 // Now we must go through the list, telling each
                 // timed-out Coordinator to do something appropriate.
-                
+
                 if (timedOut != null) {
                     while (timedOut.hasMoreElements()) {
                         DelegatedTimeoutInfo timeoutInfo =
                         (DelegatedTimeoutInfo) timedOut.nextElement();
-                        
+
                         // Look up the Coordinator and tell it to roll back
                         // if it still exists. Note that we rely on the
                         // Coordinator calling removeCoordinator when it
                         // has finished, which will remove the timeout from
                         // the list, and remove other associations as well.
-                        
+
                         tmoutMgr.
                         timeoutCoordinator(timeoutInfo.localTID,
                         timeoutInfo.timeoutType);

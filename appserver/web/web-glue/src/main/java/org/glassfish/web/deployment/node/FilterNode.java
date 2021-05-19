@@ -29,7 +29,7 @@ import java.util.Vector;
  * This class is responsible for handling filter xml node
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class FilterNode extends DisplayableComponentNode<ServletFilterDescriptor> {
 
@@ -37,11 +37,11 @@ public class FilterNode extends DisplayableComponentNode<ServletFilterDescriptor
 
     // constructor. register sub nodes.
     public FilterNode() {
-        super();        
-        registerElementHandler(new XMLElement(WebTagNames.INIT_PARAM), 
-                                                            InitParamNode.class, "addInitializationParameter");            
+        super();
+        registerElementHandler(new XMLElement(WebTagNames.INIT_PARAM),
+                                                            InitParamNode.class, "addInitializationParameter");
     }
-    
+
    /**
     * @return the descriptor instance to associate with this XMLNode
     */
@@ -56,8 +56,8 @@ public class FilterNode extends DisplayableComponentNode<ServletFilterDescriptor
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -71,7 +71,7 @@ public class FilterNode extends DisplayableComponentNode<ServletFilterDescriptor
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -82,29 +82,29 @@ public class FilterNode extends DisplayableComponentNode<ServletFilterDescriptor
             super.setElementValue(element, value);
         }
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, ServletFilterDescriptor descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName, ServletFilterDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         writeDisplayableComponentInfo(myNode, descriptor);
-        appendTextChild(myNode, WebTagNames.FILTER_NAME, descriptor.getName());         
-        appendTextChild(myNode, WebTagNames.FILTER_CLASS, descriptor.getClassName());     
-        if (descriptor.isAsyncSupported() != null) { 
-            appendTextChild(myNode, WebTagNames.ASYNC_SUPPORTED, String.valueOf(descriptor.isAsyncSupported()));     
+        appendTextChild(myNode, WebTagNames.FILTER_NAME, descriptor.getName());
+        appendTextChild(myNode, WebTagNames.FILTER_CLASS, descriptor.getClassName());
+        if (descriptor.isAsyncSupported() != null) {
+            appendTextChild(myNode, WebTagNames.ASYNC_SUPPORTED, String.valueOf(descriptor.isAsyncSupported()));
         }
         Vector initParams = descriptor.getInitializationParameters();
         if (!initParams.isEmpty()) {
             WebCommonNode.addInitParam(myNode, WebTagNames.INIT_PARAM, initParams.elements());
         }
-        
+
         return myNode;
-    }       
+    }
 }

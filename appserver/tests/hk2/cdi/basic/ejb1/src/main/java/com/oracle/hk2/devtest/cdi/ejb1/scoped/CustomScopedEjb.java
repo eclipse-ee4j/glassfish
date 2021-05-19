@@ -28,25 +28,25 @@ import jakarta.inject.Named;
 public class CustomScopedEjb {
     @Inject
     private HK2Service hk2Service;
-    
+
     @Inject @Named
     private HK2NamedService rumplestiltskin;
-    
+
     @Inject @Named(HK2NamedServiceFactory2.NAME)
     private HK2NamedService carol;
-    
+
     public void checkMe() {
         int jobValue = hk2Service.doAJob();
-        
+
         if (jobValue != HK2Service.RETURN_VALUE) {
             throw new AssertionError("The doAJob method should have returned " + HK2Service.RETURN_VALUE +
                     " but returned " + jobValue);
         }
-        
+
         if (!rumplestiltskin.getName().equals(HK2NamedServiceFactory.NAMED_SERVICE_NAME)) {
             throw new AssertionError("The naked @Named HK2NamedService was not set or had the wrong name: " + rumplestiltskin.getName());
         }
-        
+
         if (!carol.getName().equals(HK2NamedServiceFactory2.NAME)) {
             throw new AssertionError("The specific @Named HK2NamedService was not set or had the wrong name: " + carol.getName());
         }

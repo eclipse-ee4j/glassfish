@@ -21,24 +21,24 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
  */
 public interface TestStateManager
 {
-	/**
+    /**
      * This method is used to test if a field identified by fieldName
      * is loaded in memory. It returns true is the field is loaded and
      * false, otehrwise.
-	 */
-	boolean testIsLoaded(String fieldName);
+     */
+    boolean testIsLoaded(String fieldName);
 
-	/**
+    /**
      * This method is used to test if a field identified by fieldNumber
      * is loaded in memory. It returns true is the field is loaded and
      * false otehrwise.
-	 */
-	boolean testIsLoaded(int fieldNumber);
+     */
+    boolean testIsLoaded(int fieldNumber);
 
-	/**
+    /**
      * This method is used to determine if an instance is in the autopersistent
-	 * state. It returns true if the instance is autopersistence and false otherwise.
-	 */
-	boolean testIsAutoPersistent();
+     * state. It returns true if the instance is autopersistence and false otherwise.
+     */
+    boolean testIsAutoPersistent();
 }
 

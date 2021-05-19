@@ -57,12 +57,12 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
     ListJdbcResources listCommand = null;
     AdminCommandContext context = null;
     CommandRunner cr = habitat.getService(CommandRunner.class);
-    
+
     @Override
     public DomDocument getDocument(ServiceLocator habitat) {
 
         return new TestDocument(habitat);
-    }    
+    }
 
     /**
      * Returns the file name without the .xml extension to load the test configuration
@@ -73,71 +73,71 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
     public String getFileName() {
         return "DomainTest";
     }
-    
+
     @Before
     public void setUp() {
         for (Resource resource : resources.getResources()) {
             if (resource instanceof JdbcResource) {
                 origNum = origNum + 1;
             }
-        }       
+        }
     }
 
     @After
     public void tearDown() throws TransactionFailure {
         parameters = new ParameterMap();
     }
-    
+
     /**
      * Test of execute method, of class ListJdbcResources.
      * list-jdbc-resources
      */
     @Test
     public void testExecuteSuccessListOriginal() {
-        // List the original set of JDBC Resources 
+        // List the original set of JDBC Resources
         //Get an instance of the ListJdbcResources command
         ListJdbcResources listCommand = habitat.getService(ListJdbcResources.class);
 
         AdminCommandContext context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
-        
+
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum, list.size());
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
-    
+
     /**
      * Test of execute method, of class ListJdbcResource.
      * list-jdbc-resources server
      */
     @Test
     public void testExecuteSuccessValidTargetOperand() {
-        // List the original set of JDBC Resources 
+        // List the original set of JDBC Resources
         //Get an instance of the ListJdbcResources command
         listCommand = habitat.getService(ListJdbcResources.class);
 
         parameters.add("DEFAULT", "server");
-        
+
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
-        
-        List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();        
+
+        List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum, list.size());
-        
+
         // Check the exit code is Success
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
-    
+
     /**
      * Test of execute method, of class ListJdbcResource.
      * create-jdbc-resource --connectionpoolid DerbyPool bob
@@ -147,22 +147,22 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
     public void testExecuteSuccessListBob() {
         // Create JDBC Resource bob
         assertTrue(resources!=null);
-        
+
         //Get an instance of the CreateJdbcResource command
         createCommand = habitat.getService(CreateJdbcResource.class);
         assertTrue(createCommand!=null);
 
         parameters.add("connectionpoolid", "DerbyPool");
         parameters.add("DEFAULT", "bob");
-        
+
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
-        
+
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         // List JDBC Resources and check if bob is in the list
         //Get an instance of the ListJdbcResources command
         listCommand = habitat.getService(ListJdbcResources.class);
@@ -170,24 +170,24 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
-                
+
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        
+
         assertEquals(origNum + 1, list.size());
-        
+
         List<String> listStr = new java.util.ArrayList();
         for (MessagePart mp : list) {
             listStr.add(mp.getMessage());
-        }  
+        }
         assertTrue(listStr.contains("bob"));
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
-    
+
     /**
      * Test of execute method, of class ListJdbcResource.
      * delete-jdbc-resource bob
@@ -197,68 +197,68 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
     public void testExecuteSuccessListNoBob() {
         // Create JDBC Resource bob
         assertTrue(resources!=null);
-        
+
         //Get an instance of the CreateJdbcResource command
         createCommand = habitat.getService(CreateJdbcResource.class);
         assertTrue(createCommand!=null);
-        
+
         parameters.add("connectionpoolid", "DerbyPool");
         parameters.add("DEFAULT", "bob2");
-        
+
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
-        
+
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         // Delete JDBC Resource bob
         //assertTrue(resources!=null);
-        
+
         //Get an instance of the CreateJdbcResource command
         deleteCommand = habitat.getService(DeleteJdbcResource.class);
         assertTrue(deleteCommand!=null);
-        
+
         parameters = new ParameterMap();
         parameters.add("DEFAULT", "bob2");
-        
+
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
 
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         // List JDBC Resources and check if bob is in the list
         //Get an instance of the ListJdbcResources command
         listCommand = habitat.getService(ListJdbcResources.class);
-        parameters = new ParameterMap();        
+        parameters = new ParameterMap();
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        
+
         int numResources = 0;
         for (Resource resource : resources.getResources()) {
             if (resource instanceof JdbcResource) {
                 numResources = numResources + 1;
             }
-        }    
-        
+        }
+
         assertEquals(numResources, list.size());
-        
+
         List<String> listStr = new java.util.ArrayList();
         for (MessagePart mp : list) {
             listStr.add(mp.getMessage());
-        }  
+        }
         assertFalse(listStr.contains("bob2"));
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
-    
+
    /**
      * Test of execute method, of class ListJdbcResource.
      * list-jdbc-resources invalid
@@ -266,23 +266,23 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
     @Ignore
     @Test
     public void testExecuteFailInvalidTargetOperand() {
-        // List the original set of JDBC Resources 
+        // List the original set of JDBC Resources
         //Get an instance of the ListJdbcResources command
         listCommand = habitat.getService(ListJdbcResources.class);
 
         parameters.add("DEFAULT", "invalid");
-        
+
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
-        
+
         // Need bug fix before uncommenting assertion
         //List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         //assertEquals(0, list.size());
-        
+
         // Check the exit code is FAILURE
         // Need bug fix before uncommenting assertion
         //assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -306,12 +306,12 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(1, list.size());
-        
+
         for (MessagePart mp : list) {
             assertEquals("Usage: list-jdbc-resources ", mp.getMessage());
-        }  
+        }
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
     }
-    
+
 }

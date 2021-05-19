@@ -51,7 +51,7 @@ public class Client {
 
     private int numMessages = 2;
     public Client(String[] args) {
-        
+
         if( args.length == 1 ) {
             numMessages = new Integer(args[0]).intValue();
         }
@@ -60,9 +60,9 @@ public class Client {
     public void doTest() {
         try {
             setup();
-	    doTest("jms/ejb_mdb_cmt_InQueue", numMessages);
-	    // @@@ message-destination-ref support
-	    // oTest("java:comp/env/jms/MsgBeanQueue", numMessages);
+            doTest("jms/ejb_mdb_cmt_InQueue", numMessages);
+            // @@@ message-destination-ref support
+            // oTest("java:comp/env/jms/MsgBeanQueue", numMessages);
             stat.addStatus("cmt main", stat.PASS);
         } catch(Throwable t) {
             stat.addStatus("cmt main", stat.FAIL);
@@ -74,31 +74,31 @@ public class Client {
 
     public void setup() throws Exception {
         context = new InitialContext();
-        
-        QueueConnectionFactory queueConFactory = 
+
+        QueueConnectionFactory queueConFactory =
             (QueueConnectionFactory) context.lookup
             ("java:comp/env/FooCF");
-            
+
         queueCon = queueConFactory.createQueueConnection();
 
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         // Producer will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(null);        
+        queueSender = queueSession.createSender(null);
 
         queueCon.start();
 
         /*
-        TopicConnectionFactory topicConFactory = 
+        TopicConnectionFactory topicConFactory =
             (TopicConnectionFactory) context.lookup
             ("jms/TopicConnectionFactory");
-                
+
         topicCon = topicConFactory.createTopicConnection();
 
-        topicSession = 
+        topicSession =
             topicCon.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            
+
         // Producer will be specified when actual msg is published.
         topicPublisher = topicSession.createPublisher(null);
         */
@@ -114,18 +114,18 @@ public class Client {
         }
     }
 
-    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
-            System.out.println("Sending message " + i + " to " + queue + 
+            System.out.println("Sending message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
             queueSender.send(queue, msg);
-            System.out.println("Sent message " + i + " to " + queue + 
+            System.out.println("Sent message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
         }
     }
 
-    public void sendMsgs(Topic topic, Message msg, int num) 
+    public void sendMsgs(Topic topic, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             //            System.out.println("Publishing message " + i + " to " + queue);
@@ -134,11 +134,11 @@ public class Client {
         }
     }
 
-    public void doTest(String destName, int num) 
+    public void doTest(String destName, int num)
         throws Exception {
 
         Destination dest = (Destination) context.lookup(destName);
-            
+
         Message message = queueSession.createTextMessage(destName);
         //        Message message = topicSession.createTextMessage(destName);
         message.setBooleanProperty("flag", true);

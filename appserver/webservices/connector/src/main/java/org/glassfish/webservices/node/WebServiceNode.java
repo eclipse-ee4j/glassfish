@@ -25,7 +25,7 @@ import org.w3c.dom.Node;
 
 import java.util.Map;
 
-/** 
+/**
  * This node is responsible for loading web services
  * reference information
  *
@@ -54,15 +54,15 @@ public class WebServiceNode extends DisplayableComponentNode {
         return new WebService();
     }
     /**
-     * all sub-implementation of this class can use a dispatch table 
-     * to map xml element to method name on the descriptor class for 
-     * setting the element value. 
-     *  
+     * all sub-implementation of this class can use a dispatch table
+     * to map xml element to method name on the descriptor class for
+     * setting the element value.
+     *
      * @return map with the element name as a key, the setter method as a value
      */
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME, 
+        table.put(WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
                   "setName");
         table.put(WebServicesTagNames.WSDL_FILE, "setWsdlFileUri");
         table.put(WebServicesTagNames.JAXRPC_MAPPING_FILE, "setMappingFileUri");
@@ -77,41 +77,41 @@ public class WebServiceNode extends DisplayableComponentNode {
     }
 
     /**
-     * Adds  a new DOL descriptor instance to the descriptor 
+     * Adds  a new DOL descriptor instance to the descriptor
      * instance associated with this XMLNode
      *
      * @param descriptor the new descriptor
      */
-    public void addDescriptor(Object descriptor) {    
+    public void addDescriptor(Object descriptor) {
         WebServiceEndpoint endpoint = (WebServiceEndpoint) descriptor;
         WebService webService = (WebService) getDescriptor();
         webService.addEndpoint(endpoint);
     }
 
     /**
-     * write the method descriptor class to a query-method DOM tree and 
+     * write the method descriptor class to a query-method DOM tree and
      * return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, 
-                                WebService descriptor) {        
-        Node topNode = 
+    public Node writeDescriptor(Node parent, String nodeName,
+                                WebService descriptor) {
+        Node topNode =
             super.writeDescriptor(parent, nodeName, descriptor);
 
         writeDisplayableComponentInfo(topNode, descriptor);
 
-        appendTextChild(topNode, 
+        appendTextChild(topNode,
                         WebServicesTagNames.WEB_SERVICE_DESCRIPTION_NAME,
                         descriptor.getName());
         appendTextChild(topNode, WebServicesTagNames.WSDL_FILE,
                         descriptor.getWsdlFileUri());
         appendTextChild(topNode, WebServicesTagNames.JAXRPC_MAPPING_FILE,
                         descriptor.getMappingFileUri());
-        
+
         WebServiceEndpointNode endpointNode = new WebServiceEndpointNode();
         for(WebServiceEndpoint next : descriptor.getEndpoints()) {
             endpointNode.writeDescriptor
@@ -119,6 +119,6 @@ public class WebServiceNode extends DisplayableComponentNode {
         }
 
         return topNode;
-    }    
-    
+    }
+
 }

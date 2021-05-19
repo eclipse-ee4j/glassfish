@@ -19,6 +19,6 @@ package test.beans;
 public interface TestBeanInterface {
     public void m1();
     public void m2();
-    
+
     public String testDatasourceInjection();
 }

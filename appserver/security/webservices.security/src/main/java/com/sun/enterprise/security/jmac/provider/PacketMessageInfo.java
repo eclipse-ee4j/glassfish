@@ -20,29 +20,18 @@ import jakarta.security.auth.message.MessageInfo;
 import com.sun.xml.ws.api.message.Packet;
 
 /**
- * 
+ *
  */
 public interface PacketMessageInfo extends MessageInfo {
 
-    public SOAPAuthParam getSOAPAuthParam();
+    SOAPAuthParam getSOAPAuthParam();
 
-    public Packet getRequestPacket();
+    Packet getRequestPacket();
 
-    public Packet getResponsePacket();
+    Packet getResponsePacket();
 
-    public void setRequestPacket(Packet p);
+    void setRequestPacket(Packet p);
 
-    public void setResponsePacket(Packet p);
+    void setResponsePacket(Packet p);
 
 }
-
-
-
-
-
-
-
-
-
-
-

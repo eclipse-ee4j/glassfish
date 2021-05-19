@@ -26,7 +26,7 @@ import org.testng.annotations.Test;
  */
 @Test(testName="MiscCommandsTest")
 public class MiscCommandsTest {
-    
+
     public void uptime() {
         assertTrue(nadmin("uptime"));
     }

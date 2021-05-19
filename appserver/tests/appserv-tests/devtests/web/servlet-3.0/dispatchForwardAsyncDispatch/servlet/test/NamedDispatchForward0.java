@@ -18,27 +18,27 @@ package test;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-            
+
 import jakarta.servlet.DispatcherType;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-                
+
 @WebServlet(urlPatterns={"/nameddispatchforward0"}, asyncSupported=true)
 public class NamedDispatchForward0 extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
-                    
+
         String servletName = "test.DispatchForward";
         if (!req.getDispatcherType().equals(DispatcherType.ASYNC)) {
             System.out.println("DF0: named forwarding " + servletName);
             getServletContext().getNamedDispatcher(servletName).forward(req, res);
-        } else {        
+        } else {
             System.out.println("DF0: async dispatch type ...");
             PrintWriter writer = res.getWriter();
             writer.write("Hello from DispatchForward0\n");
-        } 
-    }       
+        }
+    }
 }

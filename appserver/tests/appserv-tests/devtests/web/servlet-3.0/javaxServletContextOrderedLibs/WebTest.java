@@ -29,7 +29,7 @@ import com.sun.ejte.ccl.reporter.*;
  *
  * The main web.xml declares an absolute ordering of the two web fragments,
  * with webFragment2 listed first, followed by webFragment1.
- * 
+ *
  * Either ServletContextListener checks for the presence and contents of the
  * jakarta.servlet.context.orderedLibs ServletContext attribute and, if
  * satisfied, registers a Servlet.
@@ -54,7 +54,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for " +
             "jakarta.servlet.context.orderedLibs ServletContext attribute");
@@ -71,7 +71,7 @@ public class WebTest {
     }
 
     private void doTest() throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot +
             "/webFragment1Servlet";
         HttpURLConnection conn = (HttpURLConnection)

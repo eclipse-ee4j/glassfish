@@ -57,7 +57,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
  * the command class implements {@link AdminCommandSecurity.AccessCheckProvider} it also invokes the corresponding
  * {@code getAccessChecks} method. To succeed the overall authorization all access checks - whether inferred from
  * annotations or returned from {@code getAccessChecks} - for which {@code isFailureFatal} is true must pass.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -113,7 +113,7 @@ public class CommandSecurityChecker implements PostConstruct {
 
     /**
      * Maps RestEndpoint HTTP methods to the corresponding security action.
-     * 
+     *
      * @return
      */
     private static EnumMap<RestEndpoint.OpType, String> initOptypeMap() {
@@ -132,7 +132,7 @@ public class CommandSecurityChecker implements PostConstruct {
 
     /**
      * Reports whether the Subject is allowed to perform the specified admin command.
-     * 
+     *
      * @param subject Subject for the current user to authorize
      * @param env environmental settings that might be used in the resource name expression
      * @param command the admin command the Subject wants to execute
@@ -265,7 +265,7 @@ public class CommandSecurityChecker implements PostConstruct {
 
     /**
      * Returns all AccessCheck objects which apply to the specified command.
-     * 
+     *
      * @param command the AdminCommand for which the AccessChecks are needed
      * @param subject the Subject resulting from successful authentication
      * @return the AccessChecks resulting from analyzing the command
@@ -285,7 +285,7 @@ public class CommandSecurityChecker implements PostConstruct {
 
     /**
      * Adds access checks from the command's explicit getAccessChecks method.
-     * 
+     *
      * @param subject
      * @param command
      * @param accessChecks
@@ -424,36 +424,36 @@ public class CommandSecurityChecker implements PostConstruct {
         /*
          * The config beans convention - although not a requirement - is that
          * an owner bean which has a collection of sub-beans has a single
-         * child named for the plural of the subtype, and then that single 
-         * child actually holds the collection.  For example, the domain 
+         * child named for the plural of the subtype, and then that single
+         * child actually holds the collection.  For example, the domain
          * can contain multiple resources, each of which can be of a different
          * subtype of resource.  This is modeled with the Domain having
-         * 
-         *  Resources getResources(); 
-         * 
-         * (this returns a single Resources object) and 
-         * the Resources object has 
-         * 
+         *
+         *  Resources getResources();
+         *
+         * (this returns a single Resources object) and
+         * the Resources object has
+         *
          *  List<*> getResources();  // plural
-         * 
+         *
          * Note that the name for the method on the single container object is not
-         * consistent.  For example, Domain also has 
-         * 
+         * consistent.  For example, Domain also has
+         *
          *  Servers getServers();
-         * 
+         *
          * and then the Servers bean has
-         * 
+         *
          *  List<*> getServer();  // singular
-         * 
+         *
          * But in either case, the config path to an actual child is
-         * 
+         *
          *  parent/collectionName/childType/childID
-         * 
+         *
          * or in these examples,
-         * 
+         *
          *  domain/resources/javamail-resource/MyIMAPMail
          *  domain/servers/server/MyInstance
-         * 
+         *
          * The AccessRequired.NewChild annotation requires the developer to provide
          * the type of the child to be created and the name of the collection
          * in which it is to be stored.  (Maybe in the future we can be
@@ -562,7 +562,7 @@ public class CommandSecurityChecker implements PostConstruct {
         resource = resourceNameFromRestEndpoint(restEndpoint.configBean(), restEndpoint.path(), locator);
         //        } else {
         //            // TODO need to do something with the endpoint params
-        //            resource = resourceNameFromRestEndpoint(restEndpoint.configBean(), 
+        //            resource = resourceNameFromRestEndpoint(restEndpoint.configBean(),
         //                    restEndpoint.path(),
         //                    locator);
         //        }

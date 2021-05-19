@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for testing very long request URI");
@@ -58,7 +58,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest(String pathInfo, String expected) throws Exception {
@@ -68,7 +68,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                 ", received: " + responseCode);
         }

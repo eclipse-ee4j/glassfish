@@ -24,7 +24,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -74,7 +74,7 @@ public class EnterpriseServerTest extends BaseSeleniumTestClass {
         gotoDasPage();
         clickAndWait("propertyForm:serverInstTabs:serverInstProps");
         assertTableRowCount("propertyForm:sysPropsTable", count);
-        
+
         //delete the property used to test
         gotoDasPage();
         clickAndWait("propertyForm:serverInstTabs:serverInstProps");
@@ -96,7 +96,7 @@ public class EnterpriseServerTest extends BaseSeleniumTestClass {
         gotoDasPage();
         JdbcTest jdbcTest = new JdbcTest();
         jdbcTest.createJDBCResource(jndiName, description, "server", "server");
-        
+
         gotoDasPage();
         clickAndWait("propertyForm:serverInstTabs:resources");
         String prefix = getTableRowByValue(tableID, jndiName, "col1");

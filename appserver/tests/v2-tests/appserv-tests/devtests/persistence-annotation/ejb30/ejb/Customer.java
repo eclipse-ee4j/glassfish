@@ -34,14 +34,14 @@ import static jakarta.persistence.AccessType.*;
  * @author ss141213
  */
 @Entity(access=FIELD)
-public class Customer { 
-    @Id(generate=AUTO) 
-    protected Long id; 
-    @Version protected int version; 
+public class Customer {
+    @Id(generate=AUTO)
+    protected Long id;
+    @Version protected int version;
     @ManyToOne protected Address address;
-    @Basic protected String description; 
-    @OneToMany(targetEntity="com.acme.Order", mappedBy="customer") 
-    protected Collection orders = new Vector(); 
-    @ManyToMany(mappedBy="customers") 
-    protected Set<DeliveryService> serviceOptions = new HashSet(); 
+    @Basic protected String description;
+    @OneToMany(targetEntity="com.acme.Order", mappedBy="customer")
+    protected Collection orders = new Vector();
+    @ManyToMany(mappedBy="customers")
+    protected Set<DeliveryService> serviceOptions = new HashSet();
 }

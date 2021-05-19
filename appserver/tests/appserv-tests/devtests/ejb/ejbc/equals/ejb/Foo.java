@@ -24,7 +24,7 @@ import java.io.Serializable;
 public interface Foo extends EJBObject, FooSuper, java.rmi.Remote {
     void callHello() throws RemoteException;
     String sayHello() throws RemoteException;
-    
+
     public boolean assertValidRemoteObject(String msg)
-	throws RemoteException;
+        throws RemoteException;
 }

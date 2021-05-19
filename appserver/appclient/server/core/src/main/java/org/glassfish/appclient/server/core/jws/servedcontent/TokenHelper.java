@@ -110,7 +110,7 @@ public abstract class TokenHelper {
      * the same place as the context root; that is where its facade and
      * client JAR reside.  For a nested app client, the
      * anchor is the subdirectory ${clientName}Client.
-     * 
+     *
      * @return
      */
     protected abstract String anchorSubpath();

@@ -21,7 +21,7 @@ import jakarta.jws.WebService;
 import jakarta.jws.WebMethod;
 
 /**
- * FedTax WebService endpoint using the Java EE 5 annotations. 
+ * FedTax WebService endpoint using the Java EE 5 annotations.
  * Used for testing Web Services Security tests on Java EE 5 platform.
  *
  * @version 1.1  08 Aug 2005
@@ -45,5 +45,5 @@ public class Tax {
         return ((income -  deductions) * FED_TAX_RATE);
     }
 
-    
+
 }

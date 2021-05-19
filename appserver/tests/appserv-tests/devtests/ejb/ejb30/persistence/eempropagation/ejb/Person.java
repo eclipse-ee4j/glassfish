@@ -42,7 +42,7 @@ public class Person implements java.io.Serializable {
         this.data = data;
     }
 
-    @Override 
+    @Override
     public String toString() {
         return "Person: (name=" + name + "; data= " + data + ")";
     }

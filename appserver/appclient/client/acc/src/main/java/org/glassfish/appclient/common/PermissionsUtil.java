@@ -55,7 +55,7 @@ public class PermissionsUtil {
         }
 
         try {
-            return new 
+            return new
                 XMLPermissionsHandler(null, permUrl.openStream(), car)
                     .getAppDeclaredPermissions();
         } catch (XMLStreamException | FileNotFoundException e) {
@@ -103,10 +103,10 @@ public class PermissionsUtil {
 
         return getEEPolicyPermissions(new URL("file:" + policyFilename));
     }
-    
+
     private static PermissionCollection getEEPolicyPermissions(URL fileUrl) throws IOException {
         try {
-            return 
+            return
                 Policy.getInstance("JavaPolicy", new URIParameter(fileUrl.toURI()))
                       .getPermissions(new CodeSource(new URL(CLIENT_TYPE_CODESOURCE), (Certificate[]) null));
         } catch (NoSuchAlgorithmException | MalformedURLException | URISyntaxException e) {

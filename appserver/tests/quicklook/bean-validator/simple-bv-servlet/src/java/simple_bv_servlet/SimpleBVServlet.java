@@ -104,10 +104,10 @@ public class SimpleBVServlet extends HttpServlet {
             out.print("case2: caught IllegalArgumentException.  Message: " +
                     iae.getMessage());
             out.print("</p>");
-	    System.out.println("Caught IllegalArgumentException: must pass test");
+        System.out.println("Caught IllegalArgumentException: must pass test");
         }catch (Exception ex) {
             System.out.println("check: if any other exception?");
-	    ex.printStackTrace();
+        ex.printStackTrace();
         }
         Person person = new Person();
 

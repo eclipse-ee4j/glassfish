@@ -32,15 +32,15 @@ public class SlessBean implements Tester{
     @PersistenceContext(unitName="lib/unsynchpc_disallowed_methods-par.jar#em",
             synchronization=SynchronizationType.UNSYNCHRONIZED)
     EntityManager em;
-    
+
     @Override
     public Map<String, Boolean> doTest() {
         Map<String, Boolean> resultMap = new HashMap<String, Boolean>();
-        
+
         /*
          * SPEC: The application's use of queries with pessimistic locks,
-         * bulk update or delete queries, etc. result in the provider 
-         * throwing the TransactionRequiredException. 
+         * bulk update or delete queries, etc. result in the provider
+         * throwing the TransactionRequiredException.
          */
         //Query with pessimistic locks
         Query query = em.createQuery("SELECT OBJECT(p) FROM Person p WHERE p.name='Tom'");
@@ -56,7 +56,7 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestPessimisticLockQuery", false);
         }
-        
+
         //Bulk update
         Query updateQuery = em.createQuery("UPDATE Person p SET p.name='Jim' WHERE p.id > 100");
         try {
@@ -70,7 +70,7 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestBulkUpdate", false);
         }
-        
+
         //Bulk delete
         Query deleteQuery = em.createQuery("DELETE FROM Person p WHERE p.name = 'Jim'");
         try {
@@ -84,12 +84,12 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestBulkDelete", false);
         }
-        
-        
+
+
         /*
-         * SPEC: The application is permitted to invoke the persist, merge, remove, 
-         * and refresh entity lifecycle operations on an entity manager of type 
-         * SynchronizationType.UNSYNCHRONIZED independent of whether the 
+         * SPEC: The application is permitted to invoke the persist, merge, remove,
+         * and refresh entity lifecycle operations on an entity manager of type
+         * SynchronizationType.UNSYNCHRONIZED independent of whether the
          * persistence context is joined to the current transaction.
          */
         Person person2 = new Person("Jack");
@@ -100,7 +100,7 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestPersist", false);
         }
-        
+
         try {
             em.merge(new Person("Lily"));
             resultMap.put("TestMerge", true);
@@ -108,7 +108,7 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestMerge", false);
         }
-        
+
         Person person3 = em.find(Person.class, 2);
         person3.setName("Lucy2");
         try {
@@ -118,7 +118,7 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestRefresh", false);
         }
-        
+
         try {
             em.remove(person2);
             resultMap.put("TestRemove", true);
@@ -126,7 +126,7 @@ public class SlessBean implements Tester{
             e.printStackTrace();
             resultMap.put("TestRemove", false);
         }
-        
+
         return resultMap;
     }
 }

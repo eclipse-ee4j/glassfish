@@ -30,7 +30,7 @@
     <artifactId>cdi</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish HK2 CDI Tests</name>  
+    <name>GlassFish HK2 CDI Tests</name>
     <modules>
         <module>basic</module>
         <module>ear</module>

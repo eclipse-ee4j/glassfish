@@ -22,13 +22,13 @@ package com.sun.enterprise.admin.monitor.registry;
  * @author  Shreedhar Ganapathy
  */
 public class MonitoringRegistrationException extends java.lang.Exception {
-    
+
     /**
      * Creates a new instance of <code>MonitoringRegistrationException</code> without detail message.
      */
     public MonitoringRegistrationException() {
     }
-    
+
     /**
      * Constructs an instance of <code>MonitoringRegistrationException</code> with the specified detail message.
      * @param msg the detail message.
@@ -36,12 +36,12 @@ public class MonitoringRegistrationException extends java.lang.Exception {
     public MonitoringRegistrationException(String msg) {
         super(msg);
     }
-	
-	public MonitoringRegistrationException(String msg, Throwable cause){
-		super(msg, cause);
-	}
-	
-	public MonitoringRegistrationException(Throwable cause){
-		super(cause);
-	}
+
+    public MonitoringRegistrationException(String msg, Throwable cause){
+        super(msg, cause);
+    }
+
+    public MonitoringRegistrationException(Throwable cause){
+        super(cause);
+    }
 }

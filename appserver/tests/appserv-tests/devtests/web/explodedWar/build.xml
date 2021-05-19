@@ -37,7 +37,7 @@
       <antcall target="clean-common"/>
       <delete file="WebTest.class"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -60,17 +60,17 @@
         <copy file="${web.xml}" todir="${assemble.dir}/WEB-INF"/>
         <echo message="test.ServletContainerInitializerTest"
             file="${assemble.dir}/WEB-INF/lib/foo.jar/META-INF/services/jakarta.servlet.ServletContainerInitializer"/>
-        
+
         <javac
             srcdir="."
             classpath="${env.APS_HOME}/lib/reportbuilder.jar"
             includes="WebTest.java"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-dir"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
           <arg value="${http.host}"/>
@@ -82,10 +82,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

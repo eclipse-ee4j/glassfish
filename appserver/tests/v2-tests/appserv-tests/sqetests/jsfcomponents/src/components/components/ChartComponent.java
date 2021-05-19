@@ -47,12 +47,12 @@ public class ChartComponent extends UIOutput {
      * <p>The standard component family for this component.</p>
      */
     public static final String COMPONENT_FAMILY = "Chart";
-    
+
     /**
      * <p>Name of the servlet that renders the image.</p>
      */
     public static final String CHART_SERVLET_NAME = "ChartServlet";
-    
+
     // ------------------------------------------------------ Instance Variables
     private String width = null;
     private String height = null;
@@ -61,15 +61,15 @@ public class ChartComponent extends UIOutput {
     private String title = null;
     private String xlabel = null;
     private String ylabel = null;
-    
-    // --------------------------------------------------------------Constructors 
+
+    // --------------------------------------------------------------Constructors
 
     public ChartComponent() {
         super();
         setRendererType(null);
     }
 
-    
+
     // -------------------------------------------------------------- Properties
     /**
      * <p>Return the width of the chart
@@ -94,9 +94,9 @@ public class ChartComponent extends UIOutput {
      */
     public void setWidth(String width) {
         this.width = width;
-        
+
     }
-    
+
     /**
      * <p>Return the height of the chart
      */
@@ -121,7 +121,7 @@ public class ChartComponent extends UIOutput {
     public void setHeight(String height) {
         this.height = height;
     }
-    
+
     /**
      * <p>Return the orientation of the chart
      */
@@ -146,7 +146,7 @@ public class ChartComponent extends UIOutput {
     public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
-    
+
     /**
      * <p>Return the type of the chart
      */
@@ -252,7 +252,7 @@ public class ChartComponent extends UIOutput {
         return (COMPONENT_FAMILY);
 
     }
-   
+
     // ----------------------------------------------------- StateHolder Methods
     /**
      * <p>Return the state to be saved for this component.
@@ -292,11 +292,11 @@ public class ChartComponent extends UIOutput {
         xlabel = (String) values[6];
         ylabel = (String) values[7];
     }
-    
+
     public void encodeEnd(FacesContext context) throws IOException {
         placeChartDataInScope(context);
-        // render an image that would initiate a request to a URL pointing 
-        // back into the webapp passing in whatever parameters are needed to 
+        // render an image that would initiate a request to a URL pointing
+        // back into the webapp passing in whatever parameters are needed to
         // create the dynamic image.
         ResponseWriter writer = context.getResponseWriter();
         writer.startElement("img", this);
@@ -304,9 +304,9 @@ public class ChartComponent extends UIOutput {
         writer.writeAttribute("src", src(context, this), "value");
         writer.endElement("img");
     }
-    
+
     // ----------------------------------------------------- Private Methods
-    
+
     protected void writeIdAttributeIfNecessary(FacesContext context,
                                                ResponseWriter writer,
                                                UIComponent component) {
@@ -323,38 +323,38 @@ public class ChartComponent extends UIOutput {
             }
         }
     }
-    
+
     private String src(FacesContext context, UIComponent component) {
         String contextPath = context.getExternalContext().getRequestContextPath();
         StringBuffer result = new StringBuffer(contextPath);
         result.append("/");
         result.append(CHART_SERVLET_NAME);
-        
+
         // append parameters to be passed to be servlet
-        // ChartServlet will use clientId as the attribute name to get the chart 
+        // ChartServlet will use clientId as the attribute name to get the chart
         // data from session.
         result.append("?chartId=");
         result.append(getClientId(context));
         result.append("&");
-        
+
         result.append("height=");
         if ( getHeight() != null ) {
             result.append(getHeight());
         }
         result.append("&");
-        
+
         result.append("width=");
         if ( getWidth() != null ) {
             result.append(getWidth());
         }
         result.append("&");
-     
+
         result.append("orientation=");
         if ( getOrientation() != null ) {
             result.append(getOrientation());
         }
         result.append("&");
-        
+
         result.append("type=");
         if ( type != null ) {
             result.append(type);
@@ -372,7 +372,7 @@ public class ChartComponent extends UIOutput {
             result.append(xlabel);
         }
         result.append("&");
-      
+
         result.append("ylabel=");
         if ( ylabel != null ) {
             result.append(ylabel);
@@ -380,10 +380,10 @@ public class ChartComponent extends UIOutput {
 
         return (result.toString());
      }
-    
+
     /** Place the appropriate data for chart in session scope, so that
      * it will be there when the separate request for the image is
-     * processed by the chart servlet. This servlet is responsible for 
+     * processed by the chart servlet. This servlet is responsible for
      * writing out the chart as an image into the respone stream.
      */
     protected void placeChartDataInScope(FacesContext context) {
@@ -402,7 +402,7 @@ public class ChartComponent extends UIOutput {
                     ChartItemComponent ci = (ChartItemComponent) kid;
                     ChartItem item = (ChartItem) ci.getValue();
                     if (item == null) {
-                        int itemVal = 
+                        int itemVal =
                             (new Integer((String)ci.getItemValue())).intValue();
                         item = new ChartItem(ci.getItemLabel(),itemVal,
                             ci.getItemColor());
@@ -412,10 +412,10 @@ public class ChartComponent extends UIOutput {
                 }
             }
         }
-        // store the chart data against the clientId in session. 
+        // store the chart data against the clientId in session.
         Map sessionMap =
             getFacesContext().getExternalContext().getSessionMap();
         sessionMap.put(getClientId(context), chartItems);
     }
-    
+
 }

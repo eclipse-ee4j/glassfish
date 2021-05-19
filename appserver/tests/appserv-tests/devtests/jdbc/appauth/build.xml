@@ -40,7 +40,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -52,13 +52,13 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
@@ -81,7 +81,7 @@
       <antcall target="runclient-common"/>
         <antcall target="reset-derby-for-no-authentication"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
@@ -94,7 +94,7 @@
       </antcall>
       -->
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

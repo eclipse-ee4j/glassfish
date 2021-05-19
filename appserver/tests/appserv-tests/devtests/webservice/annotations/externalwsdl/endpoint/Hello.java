@@ -26,10 +26,10 @@ import jakarta.jws.WebMethod;
     wsdlLocation="http://localhost:8080/wsdl/HelloService.wsdl"
 )
 public class Hello {
-	public Hello() {}
+        public Hello() {}
 
-	@WebMethod(operationName="sayHello", action="urn:SayHello")
-	public String sayHello(String who) {
-		return "WebSvcTest-Hello " + who;
-	}
+        @WebMethod(operationName="sayHello", action="urn:SayHello")
+        public String sayHello(String who) {
+                return "WebSvcTest-Hello " + who;
+        }
 }

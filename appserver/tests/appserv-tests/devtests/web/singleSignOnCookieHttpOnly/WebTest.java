@@ -49,7 +49,7 @@ public class WebTest {
         adminUser = args[3];
         adminPassword = args[4];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 3823");
@@ -63,7 +63,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void run() throws Exception {

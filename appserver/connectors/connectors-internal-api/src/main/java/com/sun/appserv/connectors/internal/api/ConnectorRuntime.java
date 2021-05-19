@@ -276,7 +276,7 @@ public interface ConnectorRuntime extends ConnectorConstants{
     boolean isServer();
 
     /**
-     * Checks whether the executing environment is embedded runtime 
+     * Checks whether the executing environment is embedded runtime
      * @return true if execution environment is embedded mode
      *         false if it non-embedded
      */
@@ -318,7 +318,7 @@ public interface ConnectorRuntime extends ConnectorConstants{
      * @return Map<String, Object> String represents property name
       * and Object is the defaultValue that is a primitive type or String
       */
-    public Map<String, Object> getConnectionDefinitionPropertiesAndDefaults(String connectionDefinitionClassName, 
+    public Map<String, Object> getConnectionDefinitionPropertiesAndDefaults(String connectionDefinitionClassName,
             String resType);
 
     /**
@@ -395,7 +395,7 @@ public interface ConnectorRuntime extends ConnectorConstants{
      *  If ra.xml has only the property and no value, empty string is the value
      *  returned.
      *  If the Resource Adapter Java bean is annotated, properties will be the result of merging
-     *  annotated config property and config-property of Resource Adapter bean in ra.xml 
+     *  annotated config property and config-property of Resource Adapter bean in ra.xml
      *  @param rarName rar module name
      *  @return Resource adapter javabean properties with default values.
      *  @throws ConnectorRuntimeException if property retrieval fails.
@@ -577,9 +577,9 @@ public interface ConnectorRuntime extends ConnectorConstants{
      * @param application Application being undeployed.
      */
     public void unRegisterDataSourceDefinitions(com.sun.enterprise.deployment.Application application);
-    
+
     /**
-     * Flush Connection pool by reinitializing the connections 
+     * Flush Connection pool by reinitializing the connections
      * established in the pool.
      * @param PoolInfo connection pool info
      * @throws ConnectorRuntimeException
@@ -595,7 +595,7 @@ public interface ConnectorRuntime extends ConnectorConstants{
     public boolean flushConnectionPool(String poolName) throws ConnectorRuntimeException;
 
      /**
-     * Fetch the DataSource/Driver implementation class names for a particular 
+     * Fetch the DataSource/Driver implementation class names for a particular
      * dbVendor and resource type. Sometimes an already stored datasource <br>
      * classname is used in this method.
      * @param dbVendor database vendor name
@@ -624,7 +624,7 @@ public interface ConnectorRuntime extends ConnectorConstants{
     /**
      * Check if Ping attribute is on during pool creation. This is used for
      * pinging the pool for erroneous values during pool creation.
-     * 
+     *
      * @param PoolInfo connection pool info
      * @return true if ping is on
      */
@@ -640,7 +640,7 @@ public interface ConnectorRuntime extends ConnectorConstants{
      */
     public ConnectorDescriptor getConnectorDescriptor(String rarName)
             throws ConnectorRuntimeException ;
-    
+
     /**
      * Get jdbc database vendor names list. This is used for getting a list
      * of all common database vendor names.

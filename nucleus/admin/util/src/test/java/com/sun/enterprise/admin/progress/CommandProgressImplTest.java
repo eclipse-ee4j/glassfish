@@ -28,7 +28,7 @@ import org.junit.Test;
  * @author mmares
  */
 public class CommandProgressImplTest {
-    
+
     public CommandProgressImplTest() {
     }
 
@@ -51,5 +51,5 @@ public class CommandProgressImplTest {
         assertNotNull(ch1);
         assertTrue(ch2 instanceof ProgressStatusImpl);
     }
-    
+
 }

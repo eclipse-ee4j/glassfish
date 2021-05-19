@@ -23,7 +23,7 @@
     <small-icon></small-icon>
     <large-icon></large-icon>
   </icon>
-  <display-name>notification-lookupApp</display-name>  
+  <display-name>notification-lookupApp</display-name>
   <module>
     <java>notification-lookup-client.jar</java>
   </module>

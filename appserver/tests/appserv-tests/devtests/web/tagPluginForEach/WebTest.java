@@ -66,17 +66,17 @@ public class WebTest {
     /*
      * Returns true in case of success, false otherwise.
      */
-    private static boolean doTest(String urlString, 
+    private static boolean doTest(String urlString,
                                   String expected1,
                                   String expected2,
                                   String expected3) {
-        try { 
+        try {
             URL url = new URL(urlString);
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.out.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 return false;
@@ -96,8 +96,8 @@ public class WebTest {
 
             if (!found) {
                 System.out.println("Invalid response. Response did not " +
-                                   "contain one of the expected strings: " + 
-                                   expected1 + "," + 
+                                   "contain one of the expected strings: " +
+                                   expected1 + "," +
                                    expected2 + "," +
                                    expected3);
                 return false;

@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -34,13 +34,13 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-dcodeID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB SfulHome sfulHome;
-    
+
     private static final String HANDLE_FILE_NAME = "sfulhandle";
 
     private Sful[] sfuls = new Sful[20];
@@ -58,11 +58,11 @@ public class Client {
                 System.out.println("handle file already exists.  reconstituting stateful reference");
 
                 FileInputStream fis = new FileInputStream(handleFile);
-                
+
                 ObjectInputStream ois = new ObjectInputStream(fis);
 
                 for(int i = 0; i < sfuls.length; i++) {
-                    
+
                     Handle sfulHandle = (Handle) ois.readObject();
 
                     sfuls[i] = (Sful) sfulHandle.getEJBObject();
@@ -79,10 +79,10 @@ public class Client {
                 stat.addStatus("dcodewithhandles main", stat.PASS);
 
             } else {
-                
+
                 System.out.println("handle file doesn't exist.  Creating sful" +
                                    " bean");
-                
+
                 FileOutputStream fos = new FileOutputStream(handleFile);
                 ObjectOutputStream oos = new ObjectOutputStream(fos);
 
@@ -101,7 +101,7 @@ public class Client {
                 oos.close();
 
                 System.out.println("test complete");
-                
+
                 stat.addStatus("dcodenohandles main", stat.PASS);
 
             }
@@ -110,8 +110,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
 }

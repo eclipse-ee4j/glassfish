@@ -89,7 +89,7 @@ echo "\n"
 
 #Create Pool/Resource for lazy-connection-associationtest
 echo Creating Pool/Resource Lazy connection association test
-./bin/asadmin create-jdbc-connection-pool --maxwait=10 --datasourceclassname=org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource --restype=javax.sql.ConnectionPoolDataSource  --lazyconnectionenlistment=true --lazyconnectionassociation=true --property="password=APP:user=APP:databaseName=sun-appserv-samples:connectionAttributes=\;create\\=true" jdbc-lazy-assoc-test-pool 
+./bin/asadmin create-jdbc-connection-pool --maxwait=10 --datasourceclassname=org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource --restype=javax.sql.ConnectionPoolDataSource  --lazyconnectionenlistment=true --lazyconnectionassociation=true --property="password=APP:user=APP:databaseName=sun-appserv-samples:connectionAttributes=\;create\\=true" jdbc-lazy-assoc-test-pool
 ./bin/asadmin create-jdbc-resource --connectionpoolid=jdbc-lazy-assoc-test-pool jdbc/jdbc-lazy-assoc-test-resource
 echo "\n"
 

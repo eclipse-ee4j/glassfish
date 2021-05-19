@@ -30,14 +30,13 @@ import org.xml.sax.Attributes;
 * @author Jerome Dochez
 */
 public class LocaleCharsetInfoNode extends RuntimeDescriptorNode<LocaleCharsetInfo> {
-    
+
     /**
      * Initialize the child handlers
      */
     public LocaleCharsetInfoNode() {
-	
-        registerElementHandler(new XMLElement(RuntimeTagNames.LOCALE_CHARSET_MAP), 
-                               LocaleCharsetMapNode.class, "addLocaleCharsetMap");		       
+        registerElementHandler(new XMLElement(RuntimeTagNames.LOCALE_CHARSET_MAP),
+            LocaleCharsetMapNode.class, "addLocaleCharsetMap");
     }
 
     protected LocaleCharsetInfo descriptor = null;
@@ -53,38 +52,35 @@ public class LocaleCharsetInfoNode extends RuntimeDescriptorNode<LocaleCharsetIn
         return descriptor;
     }
 
+
     @Override
     public void startElement(XMLElement element, Attributes attributes) {
-	if (element.getQName().equals(RuntimeTagNames.LOCALE_CHARSET_INFO)) {
-            LocaleCharsetInfo info = (LocaleCharsetInfo) getDescriptor();
-            for (int i=0; i<attributes.getLength();i++) {
-                if (RuntimeTagNames.DEFAULT_LOCALE.equals( 
-                    attributes.getQName(i))) {
-                    info.setAttributeValue(LocaleCharsetInfo.DEFAULT_LOCALE, 
-                        attributes.getValue(i));
+        if (element.getQName().equals(RuntimeTagNames.LOCALE_CHARSET_INFO)) {
+            LocaleCharsetInfo info = getDescriptor();
+            for (int i = 0; i < attributes.getLength(); i++) {
+                if (RuntimeTagNames.DEFAULT_LOCALE.equals(attributes.getQName(i))) {
+                    info.setAttributeValue(LocaleCharsetInfo.DEFAULT_LOCALE, attributes.getValue(i));
                 }
             }
-        } else if (element.getQName().equals(
-            RuntimeTagNames.PARAMETER_ENCODING)) {
-	    LocaleCharsetInfo info = (LocaleCharsetInfo) getDescriptor();
+        } else if (element.getQName().equals(RuntimeTagNames.PARAMETER_ENCODING)) {
+            LocaleCharsetInfo info = getDescriptor();
             info.setParameterEncoding(true);
-            for (int i=0; i<attributes.getLength();i++) {
-                if (RuntimeTagNames.DEFAULT_CHARSET.equals(
-                    attributes.getQName(i))) {
-                    info.setAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING,
-                        LocaleCharsetInfo.DEFAULT_CHARSET, 
+            for (int i = 0; i < attributes.getLength(); i++) {
+                if (RuntimeTagNames.DEFAULT_CHARSET.equals(attributes.getQName(i))) {
+                    info.setAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.DEFAULT_CHARSET,
                         attributes.getValue(i));
                 }
-                if (RuntimeTagNames.FORM_HINT_FIELD.equals(
-                    attributes.getQName(i))) {
-                    info.setAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, 
-                        LocaleCharsetInfo.FORM_HINT_FIELD,
+                if (RuntimeTagNames.FORM_HINT_FIELD.equals(attributes.getQName(i))) {
+                    info.setAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.FORM_HINT_FIELD,
                         attributes.getValue(i));
                 }
             }
-	} else super.startElement(element, attributes);
+        } else {
+            super.startElement(element, attributes);
+        }
     }
-    
+
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -95,41 +91,41 @@ public class LocaleCharsetInfoNode extends RuntimeDescriptorNode<LocaleCharsetIn
      */
     @Override
     public Node writeDescriptor(Node parent, String nodeName, LocaleCharsetInfo descriptor) {
-	
-	Element locale = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-	
-	// locale-charset-map+
-	if (descriptor.sizeLocaleCharsetMap()>0) {
-	    LocaleCharsetMapNode lcmn = new LocaleCharsetMapNode();
-	    for (int i=0;i<descriptor.sizeLocaleCharsetMap();i++) {
-		lcmn.writeDescriptor(locale, RuntimeTagNames.LOCALE_CHARSET_MAP, descriptor.getLocaleCharsetMap(i));
-	    }
-	}
-	
-	// <!ELEMENT parameter-encoding EMPTY>
-	//<!ATTLIST parameter-encoding form-hint-field CDATA #IMPLIED
-	//		     default-charset CDATA #IMPLIED>
-	if (descriptor.isParameterEncoding()) {
-	    Element parameter = (Element) appendChild(locale, RuntimeTagNames.PARAMETER_ENCODING);
-	    
-	    if (descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.FORM_HINT_FIELD)!=null) {
-	        setAttribute(parameter, RuntimeTagNames.FORM_HINT_FIELD, 
-	    	(String) descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.FORM_HINT_FIELD));
-	    }
-	    
-	    
-	    if (descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.DEFAULT_CHARSET)!=null) {
-	        setAttribute(parameter, RuntimeTagNames.DEFAULT_CHARSET, 
-	    	(String) descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.DEFAULT_CHARSET));
-	    }
-	}	    
-	
-	// default_locale
+        Element locale = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+
+        // locale-charset-map+
+        if (descriptor.sizeLocaleCharsetMap() > 0) {
+            LocaleCharsetMapNode lcmn = new LocaleCharsetMapNode();
+            for (int i = 0; i < descriptor.sizeLocaleCharsetMap(); i++) {
+                lcmn.writeDescriptor(locale, RuntimeTagNames.LOCALE_CHARSET_MAP, descriptor.getLocaleCharsetMap(i));
+            }
+        }
+
+        // <!ELEMENT parameter-encoding EMPTY>
+        // <!ATTLIST parameter-encoding form-hint-field CDATA #IMPLIED
+        // default-charset CDATA #IMPLIED>
+        if (descriptor.isParameterEncoding()) {
+            Element parameter = appendChild(locale, RuntimeTagNames.PARAMETER_ENCODING);
+
+            if (descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING,
+                LocaleCharsetInfo.FORM_HINT_FIELD) != null) {
+                setAttribute(parameter, RuntimeTagNames.FORM_HINT_FIELD,
+                    descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.FORM_HINT_FIELD));
+            }
+
+            if (descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING,
+                LocaleCharsetInfo.DEFAULT_CHARSET) != null) {
+                setAttribute(parameter, RuntimeTagNames.DEFAULT_CHARSET,
+                    descriptor.getAttributeValue(LocaleCharsetInfo.PARAMETER_ENCODING, LocaleCharsetInfo.DEFAULT_CHARSET));
+            }
+        }
+
+        // default_locale
         if (descriptor.getAttributeValue(LocaleCharsetInfo.DEFAULT_LOCALE) != null) {
-	    setAttribute(locale, RuntimeTagNames.DEFAULT_LOCALE, 
-	        (String) descriptor.getAttributeValue(LocaleCharsetInfo.DEFAULT_LOCALE));
-        }	
-	return locale;
+            setAttribute(locale, RuntimeTagNames.DEFAULT_LOCALE,
+                descriptor.getAttributeValue(LocaleCharsetInfo.DEFAULT_LOCALE));
+        }
+        return locale;
     }
 
 }

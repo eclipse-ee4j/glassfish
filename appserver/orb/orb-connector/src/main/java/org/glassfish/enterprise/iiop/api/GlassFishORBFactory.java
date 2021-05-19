@@ -27,7 +27,7 @@ import java.util.Properties;
  */
 @Contract
 public interface GlassFishORBFactory {
-    
+
     // This is ORBConstants.ENV_IS_SERVER_PROPERTY. We cannot
     // reference ORBConstants from this class.
     String ENV_IS_SERVER_PROPERTY = "com.sun.corba.ee.ORBEnvironmentIsGlassFishServer";

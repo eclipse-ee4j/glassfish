@@ -56,20 +56,20 @@ public class SimpleServlet extends HttpServlet {
         //stat.addDescription("Running serializable connector test ");
         SimpleBMP bean = simpleBMPHome.create();
 
-	    for(int i=0; i<3; i++){
+            for(int i=0; i<3; i++){
                 if(!bean.test1()){
                     out.println("TEST:FAIL");
-	            break;
-	        }
-	    }
-	    out.println("TEST:PASS");
-	} catch(NamingException ne) {
-	    ne.printStackTrace();
-	} catch(CreateException e) {
-	    e.printStackTrace();
+                    break;
+                }
+            }
+            out.println("TEST:PASS");
+        } catch(NamingException ne) {
+            ne.printStackTrace();
+        } catch(CreateException e) {
+            e.printStackTrace();
         } finally {
-	    out.println("END_OF_TEST");
-	    out.flush();
-	}
+            out.println("END_OF_TEST");
+            out.flush();
+        }
     }
 }

@@ -43,12 +43,12 @@ public class LifeCycleTest {
         logger.info("Instance1 created" + instance1);
         instance1.start();
         logger.info("Instance1 started #1");
-	sleep();
+    sleep();
         instance1.stop();
         logger.info("Instance1 stopped #1");
         instance1.start();
         logger.info("Instance1 started #2");
-	sleep();
+    sleep();
         instance1.stop();
         logger.info("Instance1 stopped #2");
         instance1.dispose();
@@ -62,12 +62,12 @@ public class LifeCycleTest {
         logger.info("instance2 created" + instance2);
         instance2.start();
         logger.info("Instance2 started #1");
-	sleep();
+    sleep();
         instance2.stop();
         logger.info("Instance2 stopped #1");
         instance2.start();
         logger.info("Instance2 started #2");
-	sleep();
+    sleep();
         instance2.stop();
         logger.info("Instance2 stopped #2");
         instance2.dispose();
@@ -76,10 +76,10 @@ public class LifeCycleTest {
     }
 
     private void sleep() {
-	try {
-	  Thread.sleep(1000);
-	} catch(Exception ex) {
-	}
+    try {
+      Thread.sleep(1000);
+    } catch(Exception ex) {
+    }
     }
     // throws exception if the temp dir is not cleaned out.
 

@@ -265,7 +265,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
                     dsd.setDeployed(true);
                 } catch (NamingException e) {
                     Object params[] = new Object[]{appName, dsdName, e};
-                    _logger.log(Level.WARNING, "dsd.registration.failed", params);    
+                    _logger.log(Level.WARNING, "dsd.registration.failed", params);
                 }
             }
         }
@@ -347,7 +347,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
         @Override
         public <T extends ConfigBeanProxy> T createChild(Class<T> tClass) throws TransactionFailure {
             return null;
-        }        
+        }
     }
 
     class DataSourceProperty extends FakeConfigBean implements Property {
@@ -908,7 +908,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
             //do nothing
         }
 
-        public String getPing() {            
+        public String getPing() {
             return String.valueOf(false);
         }
 
@@ -950,7 +950,7 @@ public class DataSourceDefinitionDeployer implements ResourceDeployer {
         public void setStatementLeakReclaim(String value) throws PropertyVetoException {
             //do nothing
         }
-	
+
         public String getStatementCacheType() {
                 return null;
         }

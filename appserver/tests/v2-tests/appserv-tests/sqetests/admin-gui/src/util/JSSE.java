@@ -97,10 +97,10 @@ public class JSSE {
     }
 
     private static class AcceptAnyHostName implements HostnameVerifier{
-		public boolean verify(String s, SSLSession ssl) {
-			return true;
-		}
-	}
+        public boolean verify(String s, SSLSession ssl) {
+            return true;
+        }
+    }
 
 
 }

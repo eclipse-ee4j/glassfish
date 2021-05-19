@@ -38,7 +38,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
  *
  * @see org.glassfish.contextpropagation.weblogic.workarea.WorkContextMap
  */
-/* package */ final class WorkContextLocalMap 
+/* package */ final class WorkContextLocalMap
                 implements WorkContextMap, WorkContextMapInterceptor
 {
   @SuppressWarnings("rawtypes")
@@ -49,9 +49,9 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
 
   @SuppressWarnings("unchecked")
   public WorkContext put(String key, WorkContext workContext,
-                  int propagationMode) throws PropertyReadOnlyException 
+                  int propagationMode) throws PropertyReadOnlyException
   {
-      
+
     if (debugWorkContext.isLoggable(Level.FINEST)) {
           debugWorkContext.log(Level.FINEST, "put(" + key + ", " + workContext + ")");
     }
@@ -107,7 +107,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
       throw new NoWorkContextException(key);
     }
     else if (!wce.isOriginator() &&
-             !WorkContextAccessController.isAccessAllowed(key, 
+             !WorkContextAccessController.isAccessAllowed(key,
                                                           WorkContextAccessController.DELETE)) {
       throw new PropertyReadOnlyException("No DELETE permission for key: \"" + key + "\"");
     }
@@ -164,7 +164,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
 
   @SuppressWarnings("unchecked")
   public void sendRequest(WorkContextOutput out, int propagationMode)
-    throws IOException 
+    throws IOException
   {
     for (Iterator<WorkContextEntry> i = map.values().iterator(); i.hasNext(); ) {
       WorkContextEntry wce = (WorkContextEntry)i.next();
@@ -179,8 +179,8 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
   }
 
   @SuppressWarnings("rawtypes")
-  public void sendResponse(WorkContextOutput out, int propagationMode) 
-    throws IOException 
+  public void sendResponse(WorkContextOutput out, int propagationMode)
+    throws IOException
   {
     // Only propagate back NORMAL properties. FIXED and READ_ONLY
     // cannot be changed.
@@ -199,7 +199,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
 
   @SuppressWarnings("unchecked")
   public void receiveRequest(WorkContextInput in)
-    throws IOException 
+    throws IOException
   {
     while (true) {
       try {
@@ -225,20 +225,20 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
 
   @SuppressWarnings("unchecked")
   public void receiveResponse(WorkContextInput in)
-    throws IOException 
+    throws IOException
   {
     HashSet<String> propKeySet = new HashSet<String>();
     // First purge the local map of all NORMAL properties since these
     // should come back in the response.
     synchronized(map){
-	  for (Iterator<WorkContextEntry> i = map.values().iterator(); i.hasNext(); ) {
-	    WorkContextEntry wce = (WorkContextEntry)i.next();
-	    int propMode = wce.getPropagationMode();
-	    // If PropagationMode is "not" ONEWAY and LOCAL, remove the entry
-	    if (((propMode & PropagationMode.ONEWAY) == 0) && ((propMode  & PropagationMode.LOCAL) == 0)) {
-	      propKeySet.add(wce.getName());
-	      i.remove();
-	      version++;
+          for (Iterator<WorkContextEntry> i = map.values().iterator(); i.hasNext(); ) {
+            WorkContextEntry wce = (WorkContextEntry)i.next();
+            int propMode = wce.getPropagationMode();
+            // If PropagationMode is "not" ONEWAY and LOCAL, remove the entry
+            if (((propMode & PropagationMode.ONEWAY) == 0) && ((propMode  & PropagationMode.LOCAL) == 0)) {
+              propKeySet.add(wce.getName());
+              i.remove();
+              version++;
         }
       }
     }
@@ -257,7 +257,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
           break;
         }
         if(propKeySet.contains(wce.getName())) {
-          //this allows the caller to remain the originator of the properties.             
+          //this allows the caller to remain the originator of the properties.
           map.put(wce.getName(), new WorkContextEntryImpl(wce.getName(),
               wce.getWorkContext(),wce.getPropagationMode()));
         } else {
@@ -289,7 +289,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInte
       }
       if (debugWorkContext.isLoggable(Level.FINEST)) {
           debugWorkContext.log(Level.FINEST, "copyThreadContexts(" + e.toString() + ")");
-      }   
+      }
     }
     if (copy.map.isEmpty()) {
       return null;

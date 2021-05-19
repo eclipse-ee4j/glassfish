@@ -84,7 +84,7 @@ public interface Sample extends AMXProxy
     /** explicity getter using an array, must work through proxy code */
     @ManagedAttribute
     public ObjectName[] getAllAMX();
-    
+
     /** Attribute whose values will have a variety of types that should pass the AMXValidtor */
     @ManagedAttribute
     public Object[] getAllSortsOfStuff();

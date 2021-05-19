@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejbc.sameimpl;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -33,11 +33,11 @@ public class FooBean implements SessionBean {
     public FooBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In FooBean::ejbCreate !!");
+        System.out.println("In FooBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public String sayHello() {
@@ -62,21 +62,21 @@ public class FooBean implements SessionBean {
             Context ic = new InitialContext();
 
             //
-                
+
             System.out.println("Looking up ejb ref hello ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             Object objref = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
-                
+
             HelloHome  home = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
-                
+
             Hello hr = home.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello ejb");
 
             hr.sayHello();
@@ -90,10 +90,10 @@ public class FooBean implements SessionBean {
             HelloLocalHome  localHome = (HelloLocalHome)
                 ic.lookup("java:comp/env/ejb/hellolocal");
             System.err.println("Looked up home!!");
-                
+
             HelloLocal hl = localHome.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello ejb");
 
             hl.sayHello();
@@ -104,19 +104,19 @@ public class FooBean implements SessionBean {
             //
 
             System.out.println("Looking up ejb ref hello ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             objref = ic.lookup("java:comp/env/ejb/hello2");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
-                
+
             HelloHome  home2 = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
-                
+
             Hello hr2 = home2.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello ejb");
 
             String said = hr2.sayHello();
@@ -128,10 +128,10 @@ public class FooBean implements SessionBean {
             HelloLocalHome  localHome2 = (HelloLocalHome)
                 ic.lookup("java:comp/env/ejb/hellolocal2");
             System.err.println("Looked up home!!");
-                
+
             HelloLocal hl2 = localHome2.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello2 ejb");
 
             String saidLocal = hl2.sayHello();

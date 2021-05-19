@@ -46,7 +46,7 @@ import jakarta.inject.Named;
 /**
  * Archive handler for resource-adapters
  *
- * @author Jagadish Ramu 
+ * @author Jagadish Ramu
  */
 @Service(name= RarDetector.ARCHIVE_TYPE)
 public class RarHandler extends AbstractArchiveHandler {
@@ -94,7 +94,7 @@ public class RarHandler extends AbstractArchiveHandler {
             } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
-            
+
             ClassLoader carCL;
             if (isEmbedded(context)) {
                 String applicationName = ConnectorsUtil.getApplicationName(context);
@@ -102,16 +102,16 @@ public class RarHandler extends AbstractArchiveHandler {
                 // ear's classloader hierarchy is : module-CL -> ear-CL (contains all ejb module classpath)
                 // -> embedded-RAR-CL -> ear-lib-CL.
                 // parent provided here is ear-CL, we need to use
-                // ear-lib-CL as parent for embedded-RAR module-CL 
+                // ear-lib-CL as parent for embedded-RAR module-CL
                 carCL = loader.createRARClassLoader(moduleDir, parent.getParent().getParent(), embeddedRarName, appLibs);
             } else {
                 carCL = loader.createRARClassLoader(moduleDir, null, moduleName, appLibs);
             }
-                        
+
             try {
                 final DeploymentContext dc = context;
                 final ClassLoader cl = carCL;
-                
+
                 AccessController.doPrivileged(
                         new PermsArchiveDelegate.SetPermissionsAction(
                                 SMGlobalPolicyUtil.CommponentType.rar, dc, cl));
@@ -120,7 +120,7 @@ public class RarHandler extends AbstractArchiveHandler {
             }
 
             return carCL;
-            
+
         } catch (ConnectorRuntimeException e) {
             throw new RuntimeException(e);
         }

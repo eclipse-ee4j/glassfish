@@ -81,7 +81,7 @@ public class JobsResourceTest extends RestTestBase {
         resource = resources.getJSONObject(0);
         assertEquals("parent", resource.getString("rel"));
         assertTrue(resource.getString("uri").endsWith(URL_JOBS));
-        
+
         // verify that the collection returned the item too
         item = null;
         for (int i = 0; item == null && i < items.length(); i++) {

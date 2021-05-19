@@ -52,7 +52,7 @@ public class CarHandler extends AbstractArchiveHandler {
     @Inject @Named(CarDetector.ARCHIVE_TYPE)
     private ArchiveDetector detector;
 
-    private static final Logger _logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+    private static final Logger _logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     @Override
@@ -94,11 +94,11 @@ public class CarHandler extends AbstractArchiveHandler {
             for (URL url : getManifestLibraries(context)) {
                 cloader.addURL(url);
             }
-                       
+
             try {
                 final DeploymentContext dc = context;
                 final ClassLoader cl = cloader;
-                
+
                 AccessController.doPrivileged(
                         new PermsArchiveDelegate.SetPermissionsAction(
                                 SMGlobalPolicyUtil.CommponentType.car, dc, cl));

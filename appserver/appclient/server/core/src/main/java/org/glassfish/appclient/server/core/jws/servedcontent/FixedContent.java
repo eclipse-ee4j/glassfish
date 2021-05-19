@@ -37,14 +37,14 @@ import org.glassfish.grizzly.http.server.StaticHttpHandler;
 public class FixedContent extends Content.Adapter implements StaticContent {
 
     private final File file;
-    
+
     private static final Logger logger = Logger.getLogger(AppClientDeployerHelper.ACC_MAIN_LOGGER,
             AppClientDeployerHelper.LOG_MESSAGE_RESOURCE);
 
     public FixedContent(final File file) {
         this.file = file;
     }
-    
+
     public FixedContent() {
         this.file = null;
     }
@@ -53,7 +53,7 @@ public class FixedContent extends Content.Adapter implements StaticContent {
     public File file() throws IOException {
         return file;
     }
-    
+
     @Override
     public void process(String relativeURIString, Request gReq, Response gResp) throws IOException {
        /*
@@ -101,6 +101,6 @@ public class FixedContent extends Content.Adapter implements StaticContent {
         return hash;
     }
 
-    
+
 
 }

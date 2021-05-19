@@ -50,16 +50,16 @@ public class SlessEJB3 implements Sless3
     @ExcludeDefaultInterceptors
     @Interceptors({InterceptorE.class, InterceptorF.class})
     public void dcef() {}
-    
+
     @ExcludeDefaultInterceptors
     @ExcludeClassInterceptors
     public void nothing() {}
 
-    @Interceptors({InterceptorE.class, InterceptorF.class})    
+    @Interceptors({InterceptorE.class, InterceptorF.class})
     public void dcbaef() {}
 
     // total ordering overridden in deployment descriptor
-    @Interceptors({InterceptorE.class, InterceptorF.class})    
+    @Interceptors({InterceptorE.class, InterceptorF.class})
     public void abcdef() {}
 
     // binding described in deployment descriptor
@@ -71,5 +71,5 @@ public class SlessEJB3 implements Sless3
         Common.checkResults(ctx);
         return null;
     }
-    
+
 }

@@ -48,7 +48,7 @@ public class OfflineConfigTest extends TestCase
     static String TEST_DIR = "build/internal/testclasses/asadmintest";
 
     private OfflineConfigMgr _mgr; // = new AdminTester(_mode, _registry, _configContext);
-    
+
     public OfflineConfigTest(String name) throws Exception
     {
         super(name);
@@ -94,16 +94,16 @@ public class OfflineConfigTest extends TestCase
             System.out.println("usage: offlineconfigtest -testpath <path to test directory> [print|create]");
             System.exit(1);
         }
-        TEST_DIR = args[1]; 
- System.out.println("TEST_DIR = "+TEST_DIR );       
+        TEST_DIR = args[1];
+ System.out.println("TEST_DIR = "+TEST_DIR );
         final TestRunner runner= new TestRunner();
         final TestResult result = runner.doRun(OfflineConfigTest.suite(), false);
         System.exit(result.errorCount() + result.failureCount());
     }
 
-    
 
-    
+
+
     //******************************************************************
     //******************HELPERS***************************************
     //******************************************************************
@@ -120,7 +120,7 @@ public class OfflineConfigTest extends TestCase
         for(int i=0; i<attrs.size(); i++)
         {
             Attribute attr = (Attribute)attrs.get(i);
-            System.out.println("         "+ 
+            System.out.println("         "+
                     attr.getName() + " = " + attr.getValue());
         }
     }
@@ -142,7 +142,7 @@ public class OfflineConfigTest extends TestCase
     {
         assertNotNull("_mgr==null", _mgr);
     }
-    
+
     @Test(groups = {"OfflineConfigTests"})
     public void testGetWildcardAttributes() throws Exception
     {
@@ -166,7 +166,7 @@ public class OfflineConfigTest extends TestCase
         attrs = _mgr.getAttributes("server-config.http-service.virtual-server.server.id");
         printAttributes("     -====== server-config.http-service.virtual-server.server.id", attrs);
     }
-    
+
     @Test(groups = {"OfflineConfigTests"})
     public void testGetProperties() throws Exception
     {
@@ -176,7 +176,7 @@ public class OfflineConfigTest extends TestCase
         attrs = _mgr.getAttributes("server-config.http-service.virtual-server.server.property.chubaka");
         printAttributes("     ====== server-config.http-service.virtual-server.server.property.chubaka", attrs);
     }
-    
+
     @Test(groups = {"OfflineConfigTests"})
     public void testGetWildcardProperties() throws Exception
     {
@@ -225,7 +225,7 @@ public class OfflineConfigTest extends TestCase
         attrs = _mgr.getAttributes("server-config.http-service.virtual-server.server.state");
         printAttributes("     ====== get after set (by server-config)", attrs);
     }
-    
+
     @Test(groups = {"OfflineConfigTests"})
     public void testAddProperty() throws Exception
     {
@@ -237,7 +237,7 @@ public class OfflineConfigTest extends TestCase
         attrs = _mgr.getAttributes("server-config.http-service.virtual-server.server.property.qwerty");
         printAttributes("     ====== get after set", attrs);
     }
-    
+
     @Test(groups = {"OfflineConfigTests"})
     public void testDeleteProperty() throws Exception
     {

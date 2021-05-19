@@ -27,5 +27,5 @@ import jakarta.ejb.CreateException;
 public interface MethodPermRemoteHome extends EJBHome {
 
     public MethodPermRemote create (String str) throws RemoteException, CreateException;
-    
+
 }

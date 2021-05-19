@@ -41,8 +41,8 @@ import jakarta.inject.Inject;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-jdbc-driver-class-names", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-jdbc-driver-class-names",
         description="Get JDBC Driver Class Names")
 })
 public class GetJdbcDriverClassNames implements AdminCommand {

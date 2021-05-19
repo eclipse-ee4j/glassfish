@@ -18,7 +18,7 @@ package org.glassfish.admin.amx.util.jmx.stringifier;
 
 import javax.management.monitor.MonitorNotification;
 
-public class MonitorNotificationStringifier extends NotificationStringifier 
+public class MonitorNotificationStringifier extends NotificationStringifier
 {
     public static final MonitorNotificationStringifier DEFAULT =
             new MonitorNotificationStringifier();

@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * This model holds information for detached jobs
- * 
+ *
  * @author jdlee
  */
 @Service

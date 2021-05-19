@@ -23,7 +23,7 @@
 <target name="report">
 <echo message="Comparing results with expected results"/>
 
- 
+
     <xslt style="${stylesheet}"
             in="${xmlfile}" out="${htmlfile}"
             basedir="." destdir="." />

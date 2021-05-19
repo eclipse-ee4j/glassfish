@@ -45,16 +45,16 @@ public class HelloSingleton implements Hello {
     @PersistenceUnit(unitName = "pu1")
     @TestDatabase
     private EntityManagerFactory emf;
-    
+
     @Inject
     TestManagedBean tmb;
-    
+
     @Inject
     TestDependentBeanInLib tdbil;
-    
+
     @Inject
     TestSessionScopedBeanInLib tssil;
-    
+
 
     @PostConstruct
     private void init() {

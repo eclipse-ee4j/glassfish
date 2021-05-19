@@ -80,30 +80,30 @@ public class Servlet extends HttpServlet {
     }
 
 
-    @PersistenceUnit 
+    @PersistenceUnit
         private EntityManagerFactory emf1;
 
-    @PersistenceUnit(name="myemf", unitName="foo") 
+    @PersistenceUnit(name="myemf", unitName="foo")
         private EntityManagerFactory emf2;
 
     @PersistenceContext
         private EntityManager em1;
 
-    @PersistenceContext(name="myem", 
+    @PersistenceContext(name="myem",
                         unitName="foo", type=PersistenceContextType.TRANSACTION)
         private EntityManager em2;
 
     public void  init( ServletConfig config) throws ServletException {
-        
+
         super.init(config);
         System.out.println("In webclient::servlet... init()");
     }
-    
+
     public void service ( HttpServletRequest req , HttpServletResponse resp ) throws ServletException, IOException {
-                 
+
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        
+
         try {
 
             InitialContext ic = new InitialContext();
@@ -122,7 +122,7 @@ public class Servlet extends HttpServlet {
 
                 EntityManager lookupem2 = (EntityManager)
                     ic.lookup("java:comp/env/myem");
-                
+
                 System.out.println("Servlet successful injection of EMF/EM references!");
             } else {
                 throw new Exception("One or more EMF/EM references" +
@@ -152,17 +152,17 @@ public class Servlet extends HttpServlet {
             helloStateful.hello();
             helloStateful2.hello();
 
-            Hello helloStateless3 = (Hello) 
+            Hello helloStateless3 = (Hello)
                 ic.lookup("java:comp/env/helloStateless3");
 
             helloStateless3.hello();
 
-            Hello helloStateless4 = (Hello) 
+            Hello helloStateless4 = (Hello)
                 ic.lookup("java:comp/env/helloStateless4");
 
             helloStateless4.hello();
 
-            HelloStateful helloStateful3 = (HelloStateful) 
+            HelloStateful helloStateful3 = (HelloStateful)
                 ic.lookup("java:comp/env/helloStateful3");
 
             helloStateful3.hello();
@@ -194,66 +194,66 @@ public class Servlet extends HttpServlet {
             System.out.println("ds6 login timeout = " + loginTimeout);
 
 
-	    try {
-		MyThread thread = new MyThread(helloStateful2);
-		thread.start();
+            try {
+                MyThread thread = new MyThread(helloStateful2);
+                thread.start();
 
-		sleepFor(10);
-		helloStateful2.ping();
-		throw new EJBException("Did not get ConcurrentAccessException");
-	    } catch (jakarta.ejb.ConcurrentAccessException conEx) {
-		System.out.println("Got expected ConcurrentAccessException");   //Everything is fine
-	    } catch (Throwable th) {
-		throw new EJBException("Got some wierd exception: " + th);
-	    }
+                sleepFor(10);
+                helloStateful2.ping();
+                throw new EJBException("Did not get ConcurrentAccessException");
+            } catch (jakarta.ejb.ConcurrentAccessException conEx) {
+                System.out.println("Got expected ConcurrentAccessException");   //Everything is fine
+            } catch (Throwable th) {
+                throw new EJBException("Got some wierd exception: " + th);
+            }
 
             System.out.println("successfully accessed connections");
 
             out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
-            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" ); 
+            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" );
             out.println("</BODY> </HTML> ");
-            
+
         }catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("webclient servlet test failed");
             throw new ServletException(ex);
-        } 
+        }
     }
 
-    
-    
+
+
     public void  destroy() {
         System.out.println("in webclient::servlet destroy");
     }
 
     class MyThread extends Thread {
-	HelloStateful ref;
+        HelloStateful ref;
 
-	MyThread(HelloStateful ref) {
-	    this.ref = ref;
-	}
+        MyThread(HelloStateful ref) {
+            this.ref = ref;
+        }
 
-	public void run() {
-	    try {
-		ref.sleepFor(20);
-	    } catch (Throwable th) {
-		throw new RuntimeException("Could not invoke waitfor() method");
-	    }
-	}
+        public void run() {
+            try {
+                ref.sleepFor(20);
+            } catch (Throwable th) {
+                throw new RuntimeException("Could not invoke waitfor() method");
+            }
+        }
     }
 
 
     private void sleepFor(int sec) {
-	try {
-	    for (int i=0 ; i<sec; i++) {
-		Thread.currentThread().sleep(1000);
-		System.out.println("[" + i + "/" + sec + "]: Sleeping....");
-	    }
-	} catch (Exception ex) {
-	}
+        try {
+            for (int i=0 ; i<sec; i++) {
+                Thread.currentThread().sleep(1000);
+                System.out.println("[" + i + "/" + sec + "]: Sleeping....");
+            }
+        } catch (Exception ex) {
+        }
     }
 
 }

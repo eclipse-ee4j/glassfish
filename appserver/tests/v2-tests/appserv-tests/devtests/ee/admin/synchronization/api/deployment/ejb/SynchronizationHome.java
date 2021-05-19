@@ -23,6 +23,6 @@ import jakarta.ejb.CreateException;
 public interface SynchronizationHome
     extends EJBHome
 {
-	public Synchronization create()
+    public Synchronization create()
         throws CreateException, RemoteException;
 }

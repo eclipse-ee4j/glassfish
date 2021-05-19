@@ -35,7 +35,7 @@
    &commonSecurity;
    &testProperties;
    &testProperties2;
-    
+
    <property file="../config.properties"/>
 
 <!--
@@ -50,27 +50,27 @@
    </target>
 
    <target name="all-reg" depends="init-common,env-check">
-	   <antcall target="setup"/>
-	   <antcall target="build"/>
-	   <antcall target="deploy"/>
-	   <antcall target="run"/>
-	   <antcall target="undeploy"/>
-	   <antcall target="unsetup"/>
+           <antcall target="setup"/>
+           <antcall target="build"/>
+           <antcall target="deploy"/>
+           <antcall target="run"/>
+           <antcall target="undeploy"/>
+           <antcall target="unsetup"/>
    </target>
 
    <target name="all-ssl" depends="init-common,env-check">
-	   <antcall target="setup-ssl"/>
-	   <antcall target="build"/>
-	   <antcall target="deploy"/>
-	   <antcall target="run"/>
-	   <antcall target="undeploy"/>
-	   <antcall target="unsetup-ssl"/>
+           <antcall target="setup-ssl"/>
+           <antcall target="build"/>
+           <antcall target="deploy"/>
+           <antcall target="run"/>
+           <antcall target="undeploy"/>
+           <antcall target="unsetup-ssl"/>
    </target>
 
    <target name="display-header">
      <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>
    </target>
-   
+
     <target name="setup" depends="init-common">
       <!-- create auth realms -->
       <antcall target="create-auth-ldaprealm"/>
@@ -106,7 +106,7 @@
     <target name="run" depends="init-common">
       <java classname="HttpBasicAuthTest" fork="true">
         <classpath>
-  	       <pathelement path="${build.classes.dir}:${s1astest.classpath}"/>
+                 <pathelement path="${build.classes.dir}:${s1astest.classpath}"/>
         </classpath>
         <arg value="-url"/>
         <arg value="http://${http.host}:${http.port}/${appname}/TestServlet"/>
@@ -133,26 +133,26 @@
 
     <target name="create-ldap-usrgrps" depends="init-common">
 
-  	  <copy file="${create.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
-  	  <replace file="temp.ldif" token="UNIQUE_SUB_CONTEXT" value="${unique-ldap-sub-context-id}"/>
-	  <echo message="Creating ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?dc=${unique-ldap-sub-context-id},${directory.server.basedn}"/>
-	  <antcall target="execute-ldap-ldif">
-		<param name="ldif.file.path" value="temp.ldif"/>
-	  </antcall>
-	  <echo message="deleting temp file..."/>
-	  <delete file="temp.ldif"/>
+            <copy file="${create.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
+            <replace file="temp.ldif" token="UNIQUE_SUB_CONTEXT" value="${unique-ldap-sub-context-id}"/>
+          <echo message="Creating ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?dc=${unique-ldap-sub-context-id},${directory.server.basedn}"/>
+          <antcall target="execute-ldap-ldif">
+                <param name="ldif.file.path" value="temp.ldif"/>
+          </antcall>
+          <echo message="deleting temp file..."/>
+          <delete file="temp.ldif"/>
 
     </target>
 
     <target name="delete-ldap-usrgrps" depends="init-common">
-  	  <copy file="${delete.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
-  	  <replace file="temp.ldif" token="UNIQUE_SUB_CONTEXT" value="${unique-ldap-sub-context-id}"/>
+            <copy file="${delete.ldif.file}" tofile="temp.ldif" overwrite="true" failonerror="false"/>
+            <replace file="temp.ldif" token="UNIQUE_SUB_CONTEXT" value="${unique-ldap-sub-context-id}"/>
       <echo message="Deleting ldap test users and groups at ldap://${directory.server.host}:${directory.server.port}/?dc=${unique-ldap-sub-context-id},${directory.server.basedn}"/>
-	  <antcall target="execute-ldap-ldif">
-		<param name="ldif.file.path" value="temp.ldif"/>
-	  </antcall>
-	  <echo message="deleting temp file..."/>
-	  <delete file="temp.ldif"/>
+          <antcall target="execute-ldap-ldif">
+                <param name="ldif.file.path" value="temp.ldif"/>
+          </antcall>
+          <echo message="deleting temp file..."/>
+          <delete file="temp.ldif"/>
     </target>
 
     <target name="restart">
@@ -161,35 +161,35 @@
 
 
 <target name="execute-ldap-ldif" depends="init-common">
-	<java classname="LDAPModify" fork="true" failonerror="false">
-		<arg line="-h ${directory.server.host}"/>
-		<arg line="-p ${directory.server.port}"/>
-		<arg line="-D &quot;${directory.manager.dn}&quot;"/>
-		<arg line="-w ${directory.manager.passwd}"/>
-		<arg line="-f ${ldif.file.path}"/>
-		<classpath>
-			<pathelement path="${env.APS_HOME}/lib/ldapjdk.jar"/>
-		</classpath>
-	</java>
+        <java classname="LDAPModify" fork="true" failonerror="false">
+                <arg line="-h ${directory.server.host}"/>
+                <arg line="-p ${directory.server.port}"/>
+                <arg line="-D &quot;${directory.manager.dn}&quot;"/>
+                <arg line="-w ${directory.manager.passwd}"/>
+                <arg line="-f ${ldif.file.path}"/>
+                <classpath>
+                        <pathelement path="${env.APS_HOME}/lib/ldapjdk.jar"/>
+                </classpath>
+        </java>
 </target>
 
 <target name="create-auth-ldaprealm" depends="init-common">
-	<!-- workaround for handling the special character : in the admin command -->
-	<echo message="directory=${directory.server.url}" file="temp.txt"/>
-	<replace file="temp.txt" token=":" value="\\:"/>
-	<loadproperties srcFile="temp.txt"/>
-	<delete file="temp.txt"/>
-	<echo message="base-dn=${directory.server.basedn}" file="temp.txt"/>
-	<replace file="temp.txt" token="dc=" value="dc\\="/>
-	<loadproperties srcFile="temp.txt"/>
-	<delete file="temp.txt"/>
+        <!-- workaround for handling the special character : in the admin command -->
+        <echo message="directory=${directory.server.url}" file="temp.txt"/>
+        <replace file="temp.txt" token=":" value="\\:"/>
+        <loadproperties srcFile="temp.txt"/>
+        <delete file="temp.txt"/>
+        <echo message="base-dn=${directory.server.basedn}" file="temp.txt"/>
+        <replace file="temp.txt" token="dc=" value="dc\\="/>
+        <loadproperties srcFile="temp.txt"/>
+        <delete file="temp.txt"/>
     <echo message="url=${directory}"/>
     <echo message="base-dn=${base-dn}"/>
-	
-	<antcall target="create-auth-realm">
-	    <param name="realmname" value="${ldap.realm.name}"/> 
-		<param name="realmclass" value="${ldap.realm.class}"/>
-		<param name="realmproperties" value="--property directory=${directory}:base-dn=dc\=${unique-ldap-sub-context-id},${base-dn}:jaas-context=ldapRealm:com.sun.jndi.ldap.connect.pool=true:com.sun.jndi.ldap.connect.pool.maxsize=2"/>
+
+        <antcall target="create-auth-realm">
+            <param name="realmname" value="${ldap.realm.name}"/>
+                <param name="realmclass" value="${ldap.realm.class}"/>
+                <param name="realmproperties" value="--property directory=${directory}:base-dn=dc\=${unique-ldap-sub-context-id},${base-dn}:jaas-context=ldapRealm:com.sun.jndi.ldap.connect.pool=true:com.sun.jndi.ldap.connect.pool.maxsize=2"/>
       </antcall>
 </target>
 
@@ -254,21 +254,21 @@
 </target>
 
 <target name="create-auth-ldaprealm-ssl" depends="init-common">
-	<echo message="directory=${directory.server.url.ssl}" file="temp.txt"/>
-	<replace file="temp.txt" token=":" value="\\:"/>
-	<loadproperties srcFile="temp.txt"/>
-	<delete file="temp.txt"/>
-	<echo message="base-dn=${directory.server.basedn}" file="temp.txt"/>
-	<replace file="temp.txt" token="dc=" value="dc\\="/>
-	<loadproperties srcFile="temp.txt"/>
-	<delete file="temp.txt"/>
+        <echo message="directory=${directory.server.url.ssl}" file="temp.txt"/>
+        <replace file="temp.txt" token=":" value="\\:"/>
+        <loadproperties srcFile="temp.txt"/>
+        <delete file="temp.txt"/>
+        <echo message="base-dn=${directory.server.basedn}" file="temp.txt"/>
+        <replace file="temp.txt" token="dc=" value="dc\\="/>
+        <loadproperties srcFile="temp.txt"/>
+        <delete file="temp.txt"/>
     <echo message="url=${directory}"/>
     <echo message="base-dn=${base-dn}"/>
-	
-	<antcall target="create-auth-realm">
-	    <param name="realmname" value="${ldap.realm.name}"/> 
-		<param name="realmclass" value="${ldap.realm.class}"/>
-		<param name="realmproperties" value="--property directory=${directory}:base-dn=dc\=${unique-ldap-sub-context-id},${base-dn}:jaas-context=ldapRealm:com.sun.jndi.ldap.connect.pool=true:com.sun.jndi.ldap.connect.pool.maxsize=2"/>
+
+        <antcall target="create-auth-realm">
+            <param name="realmname" value="${ldap.realm.name}"/>
+                <param name="realmclass" value="${ldap.realm.class}"/>
+                <param name="realmproperties" value="--property directory=${directory}:base-dn=dc\=${unique-ldap-sub-context-id},${base-dn}:jaas-context=ldapRealm:com.sun.jndi.ldap.connect.pool=true:com.sun.jndi.ldap.connect.pool.maxsize=2"/>
       </antcall>
 </target>
 

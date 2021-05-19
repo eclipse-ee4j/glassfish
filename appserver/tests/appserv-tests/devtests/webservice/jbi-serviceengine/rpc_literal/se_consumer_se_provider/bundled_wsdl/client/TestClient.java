@@ -30,7 +30,7 @@ public class TestClient {
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-	private static String testId = "jbi-serviceengine/rpc-literal/se_consumer_se_provider/bundled_wsdl";
+        private static String testId = "jbi-serviceengine/rpc-literal/se_consumer_se_provider/bundled_wsdl";
 
 
     public static void main (String[] args) {
@@ -46,8 +46,8 @@ public class TestClient {
         try {
             int code = invokeServlet(url);
             report(code);
-	} catch (Exception e) {
-	    fail();
+        } catch (Exception e) {
+            fail();
         }
     }
 
@@ -58,15 +58,15 @@ public class TestClient {
         int code = c1.getResponseCode();
         InputStream is = c1.getInputStream();
         BufferedReader input = new BufferedReader (new InputStreamReader(is));
-		StringBuffer buffer = new StringBuffer();
+                StringBuffer buffer = new StringBuffer();
         String line = null;
-		boolean found = false;
+                boolean found = false;
         while ((line = input.readLine()) != null) {
-			if(line.indexOf("SUCCESS") != -1) found = true;	
-			buffer.append(line + "\n");
+                        if(line.indexOf("SUCCESS") != -1) found = true;
+                        buffer.append(line + "\n");
         }
         log(buffer.toString());
-	    if(!found) return 505;	
+            if(!found) return 505;
         return code;
     }
 

@@ -24,9 +24,9 @@ import jakarta.enterprise.event.Observes;
  *
  */
 public class EventObserver {
-    
+
     public void iObserve(@Observes AnEvent event) {
-        
+
     }
 
 }

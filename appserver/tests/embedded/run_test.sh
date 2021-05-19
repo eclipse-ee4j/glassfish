@@ -42,7 +42,7 @@ merge_junits(){
   echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${JUD}
   echo "<testsuites>" >> ${JUD}
   for i in `find . -type d -name "surefire-reports"`
-  do    
+  do
     ls -d -1 ${i}/*.xml | xargs cat | ${SED} 's/<?xml version=\"1.0\" encoding=\"UTF-8\" *?>//g' >> ${JUD}
   done
   echo "</testsuites>" >> ${JUD}
@@ -54,12 +54,12 @@ run_test_id(){
   case ${TEST_ID} in
     embedded_all)
       unzip_test_resources ${WORKSPACE}/bundles/glassfish.zip
-   	  test_run_embedded;;
+         test_run_embedded;;
   esac
 }
 
 list_test_ids(){
-	echo embedded_all
+    echo embedded_all
 }
 
 OPT=${1}
@@ -67,9 +67,9 @@ TEST_ID=${2}
 source `dirname ${0}`/../common_test.sh
 
 case ${OPT} in
-	list_test_ids )
-		list_test_ids;;
-	run_test_id )
-		trap "copy_test_artifacts ${TEST_ID}" EXIT
+    list_test_ids )
+        list_test_ids;;
+    run_test_id )
+        trap "copy_test_artifacts ${TEST_ID}" EXIT
     run_test_id ${TEST_ID} ;;
 esac

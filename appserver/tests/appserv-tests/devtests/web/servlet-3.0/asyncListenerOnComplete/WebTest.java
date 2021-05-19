@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for AsyncListener#onComplete");
@@ -54,7 +54,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest(String mode) throws Exception {
@@ -84,7 +84,7 @@ public class WebTest {
                 if (input != null) input.close();
             } catch (IOException ex) {}
             if (conn != null) conn.disconnect();
-        }     
+        }
     }
 
     private HttpURLConnection getHttpURLConnection(String path) throws Exception {

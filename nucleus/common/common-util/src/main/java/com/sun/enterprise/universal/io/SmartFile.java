@@ -26,18 +26,18 @@ import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 
 /**
  * A class for sanitizing Files.
- * Note that the main reason for this class is that on non-Windows, 
- * getCanonicalXXX and getAbsoluteXXX might point at different files.  
+ * Note that the main reason for this class is that on non-Windows,
+ * getCanonicalXXX and getAbsoluteXXX might point at different files.
  * If the file is a soft link then the Canonical will be the file that is linked to.
  * The Absolute will be the link file itself.
  * This method will give you the benefits of Canonical -- but will always point
- * at the link file itself. 
+ * at the link file itself.
  * Windows is horribly complex compared to "everything else".  Windows does not have
  * the symbolic link issue -- so use getCanonicalXXX to do the work on Windows.
  * Windows will return paths with all forward slashes -- no backward slashes unless it
  * is the special Windows network address that starts with "\\"
  * <p>
- * I.e. It is just like getAbsoluteXXX -- but it removes all relative path 
+ * I.e. It is just like getAbsoluteXXX -- but it removes all relative path
  * elements from the path.
  * @author bnevins
  */
@@ -57,12 +57,12 @@ public class SmartFile {
     /**
      * Sanitize a path -- remove all relative path portions, i.e. dots
      * e.g. "/xxx/yyy/././././../yyy"  --> /xxx/yyy on UNIX, perhaps C:/xxx/yyy on Windows
-     * Note that the main reason for this class is that on non-Windows, 
-     * getCanonicalXXX and getAbsoluteXXX might point at different files.  
+     * Note that the main reason for this class is that on non-Windows,
+     * getCanonicalXXX and getAbsoluteXXX might point at different files.
      * If the file is a soft link then the Canonical will be the file that is linked to.
      * The Absolute will be the link file itself.
      * This method will give you the benefits of Canonical -- but will always point
-     * at the link file path itself. 
+     * at the link file path itself.
      * @param filename The path to sanitize
      * @return The sanitized path
      */
@@ -160,7 +160,7 @@ public class SmartFile {
     }
 
     private void convertNix(String oldPath) {
-        // guarantee -- the beginning will not have "." or ".." 
+        // guarantee -- the beginning will not have "." or ".."
         // (because of getAbsolutePath()...)
         char[] p = oldPath.toCharArray();
 

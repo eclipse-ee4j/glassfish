@@ -84,5 +84,5 @@ public class LoggerSettingsTest extends BaseSeleniumTestClass {
         // need to be fixed
         //deleteRow("form1:basicTable:topActionsGroup1:button1", "form1:basicTable", loggerName);
         //clickAndWait("form1:title:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
-    } 
+    }
 }

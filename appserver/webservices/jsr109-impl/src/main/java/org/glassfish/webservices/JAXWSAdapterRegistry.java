@@ -27,24 +27,24 @@ import java.text.MessageFormat;
  * Registry of JAXWS Adapter of endpoints.
  */
 public class JAXWSAdapterRegistry {
-    
+
     private static JAXWSAdapterRegistry registry = null;
     private final Map<String, ContextAdapter> store;
 
     private static final Logger logger = LogUtils.getLogger();
-    
+
     /** Creates a new instance of JAXWSServletUtil */
     private JAXWSAdapterRegistry() {
         store = Collections.synchronizedMap(new HashMap<String, ContextAdapter>());
     }
-    
+
     public static synchronized JAXWSAdapterRegistry getInstance() {
         if(registry == null)
             registry = new JAXWSAdapterRegistry();
         return registry;
     }
-    
-    public void addAdapter(String contextRoot, String urlPattern, 
+
+    public void addAdapter(String contextRoot, String urlPattern,
             Adapter info) {
         if (contextRoot == null)
             contextRoot = "";
@@ -57,7 +57,7 @@ public class JAXWSAdapterRegistry {
             store.put(contextRoot, contextRtInfo);
         }
     }
-    
+
      public Adapter getAdapter(String contextRoot,
              String path, String urlPattern ) {
             ContextAdapter serviceInfo = store.get(contextRoot);
@@ -66,7 +66,7 @@ public class JAXWSAdapterRegistry {
             }
             return serviceInfo.getAdapter(path, urlPattern);
      }
-  
+
      public void removeAdapter(String contextRoot) {
          if(contextRoot == null)
              contextRoot = "";
@@ -78,7 +78,7 @@ public class JAXWSAdapterRegistry {
             store.remove(contextRoot);
          }
      }
-     
+
     static class ContextAdapter {
 
         final Map<String, Adapter> fixedUrlPatternEndpoints;
@@ -108,7 +108,7 @@ public class JAXWSAdapterRegistry {
 
         Adapter getAdapter(String path, String urlPattern) {
             Adapter result = fixedUrlPatternEndpoints.get(path);
-            if (result == null) {                
+            if (result == null) {
                 // This loop is unnecessary.Essentially what it is doing to always
                 // return the first element from pathUrlPatternEndpoints
                 // TO DO clean up after SCF required

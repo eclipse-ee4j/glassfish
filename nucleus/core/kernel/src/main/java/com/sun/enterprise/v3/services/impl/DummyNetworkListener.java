@@ -47,7 +47,7 @@ public class DummyNetworkListener implements NetworkListener {
     private String jkEnabled;
     private String jkConfigurationFile;
     private final List<Property> properties = new ArrayList<Property>();
-    
+
     public DummyNetworkListener() {
     }
 
@@ -60,7 +60,7 @@ public class DummyNetworkListener implements NetworkListener {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     @Override
     public String getAddress() {
         return address;
@@ -206,7 +206,7 @@ public class DummyNetworkListener implements NetworkListener {
     @Override
     public Property getProperty(String name) {
         if (name == null) return null;
-        
+
         for(Property property : properties) {
             if (name.equals(property.getName())) {
                 return property;

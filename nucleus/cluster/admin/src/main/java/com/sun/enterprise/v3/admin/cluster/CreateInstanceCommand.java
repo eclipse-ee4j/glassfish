@@ -60,8 +60,8 @@ import jakarta.inject.Inject;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-instance",
         description="Create Instance")
 })
 public class CreateInstanceCommand implements AdminCommand {
@@ -151,7 +151,7 @@ public class CreateInstanceCommand implements AdminCommand {
                 return;
             }
         }
-        
+
         // First, update domain.xml by calling _register-instance
         CommandInvocation ci = cr.getCommandInvocation("_register-instance", report, context.getSubject());
         ParameterMap map = new ParameterMap();
@@ -237,7 +237,7 @@ public class CreateInstanceCommand implements AdminCommand {
             }
         }
     }
-    
+
     /**
      * Returns the directory for the selected instance that is on the local
      * system.
@@ -263,11 +263,11 @@ public class CreateInstanceCommand implements AdminCommand {
     }
 
     private File defaultLocalNodeDirFile() {
-        final Map<String,String> systemProps = 
+        final Map<String,String> systemProps =
             Collections.unmodifiableMap(new ASenvPropertyReader().getProps());
         /*
-         * The default "nodes" directory we want to use 
-         * has been set in asenv.conf named as 
+         * The default "nodes" directory we want to use
+         * has been set in asenv.conf named as
          * AS_DEF_NODES_PATH
          */
         String nodeDirDefault = systemProps.get(
@@ -307,7 +307,7 @@ public class CreateInstanceCommand implements AdminCommand {
             return reportFailure(ex, report);
         }
     }
-    
+
     private int reportFailure(final Exception ex, final ActionReport report) {
         String msg = Strings.get("create.instance.local.boot.failed", instance, node, nodeHost);
         logger.log(Level.SEVERE, msg, ex);

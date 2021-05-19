@@ -64,7 +64,7 @@ public final class BackupDomainCommand extends BackupCommands {
         // only if domain name is not specified, it should try to find one
         if (domainName == null)
             super.validate();
-        
+
         checkOptions();
 
         setDomainName(domainName);
@@ -88,7 +88,7 @@ public final class BackupDomainCommand extends BackupCommands {
                     throw new CommandException(strings.get("DomainIsNotStopped",
                         domainName));
                 }
-            } 
+            }
         }
 
         int limit = 0;
@@ -117,9 +117,9 @@ public final class BackupDomainCommand extends BackupCommands {
     protected int executeCommand()
             throws CommandException {
 
-        try {            
+        try {
             BackupManager mgr = new BackupManager(request);
-            logger.info(mgr.backup());            
+            logger.info(mgr.backup());
         } catch (BackupWarningException bwe) {
             logger.info(bwe.getMessage());
         } catch (BackupException be) {
@@ -139,7 +139,7 @@ public final class BackupDomainCommand extends BackupCommands {
     private boolean canSuspend() {
 
         try {
-            RemoteCLICommand cmd = new RemoteCLICommand("list-commands", 
+            RemoteCLICommand cmd = new RemoteCLICommand("list-commands",
                                                   programOpts, env);
             String response = cmd.executeAndReturnOutput("list-commands");
 
@@ -151,7 +151,7 @@ public final class BackupDomainCommand extends BackupCommands {
         }
 
         return false;
-    } 
+    }
 
     /**
      * This method determines if the DAS is currently suspended.
@@ -159,7 +159,7 @@ public final class BackupDomainCommand extends BackupCommands {
     private boolean isSuspended() {
 
         try {
-            RemoteCLICommand cmd = new RemoteCLICommand("suspend-domain", 
+            RemoteCLICommand cmd = new RemoteCLICommand("suspend-domain",
                                                   programOpts, env);
             String response = cmd.executeAndReturnOutput("suspend-domain",
                                                          "--_test=true");
@@ -173,5 +173,5 @@ public final class BackupDomainCommand extends BackupCommands {
         }
 
         return false;
-    } 
+    }
 }

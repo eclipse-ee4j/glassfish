@@ -741,7 +741,7 @@ public class GFServerConfigProvider implements AuthConfigProvider {
             this.type = type;
             if (handler == null) {
                 handler = AuthMessagePolicy.getDefaultCallbackHandler();
-                //		this.newHandler = true;
+                //        this.newHandler = true;
             }
             this.handler = handler;
         }

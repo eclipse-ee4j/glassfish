@@ -52,7 +52,7 @@
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
-  
+
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>secure2</web-resource-name>
@@ -71,7 +71,7 @@
     <auth-method>BASIC</auth-method>
     <realm-name>default</realm-name>
   </login-config>
-  
+
   <security-role>
     <role-name>manager</role-name>
   </security-role>

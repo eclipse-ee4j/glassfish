@@ -224,7 +224,7 @@ public class HACNonceCacheImpl  implements CNonceCache {
         postConstruct();
         localStore.setCnonceCacheSize(size);
         localStore.setNonceValidity(validity);
-        
+
     }
 
     @Override
@@ -237,5 +237,5 @@ public class HACNonceCacheImpl  implements CNonceCache {
         } catch (Exception ex) {
         }
     }
-   
+
 }

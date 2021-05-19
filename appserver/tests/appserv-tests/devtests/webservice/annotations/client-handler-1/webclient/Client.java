@@ -27,8 +27,8 @@ public class Client extends HttpServlet {
 
        @WebServiceRef(wsdlLocation="WEB-INF/wsdl/SubtractNumbers.wsdl") SubtractNumbersService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

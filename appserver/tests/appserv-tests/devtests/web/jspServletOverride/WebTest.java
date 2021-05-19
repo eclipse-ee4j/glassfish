@@ -69,13 +69,13 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                 ", received: " + responseCode);
         }
-        
+
         BufferedReader br = null;
-        try {     
+        try {
             br = new BufferedReader(new InputStreamReader(
                 conn.getInputStream()));
             String line = null;
@@ -84,7 +84,7 @@ public class WebTest {
                     break;
                 }
             }
-  
+
             if (line != null) {
                 // Check <OBJECT> classid comment
                 System.out.println(line);
@@ -115,7 +115,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                 ", received: " + responseCode);
         }

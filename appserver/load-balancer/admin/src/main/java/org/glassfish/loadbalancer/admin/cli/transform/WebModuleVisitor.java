@@ -39,37 +39,37 @@ public class WebModuleVisitor implements Visitor {
     }
 
     /**
-     * Visit reader class 
+     * Visit reader class
      */
     @Override
     public void visit(BaseReader br) throws Exception {
         // FIXME, make as assert here about no class cast exception
-		if (br instanceof BaseReader) {
-			WebModuleReader wRdr = (WebModuleReader) br;
+        if (br instanceof BaseReader) {
+            WebModuleReader wRdr = (WebModuleReader) br;
 
-			_w.setContextRoot(wRdr.getContextRoot());
+            _w.setContextRoot(wRdr.getContextRoot());
 
-			String url = wRdr.getErrorUrl();
-			if ((url != null) && (!"".equals(url))) {
-				// XXX start of bug fix for 6171814
-				_c.createAttribute(Cluster.WEB_MODULE, "error-url", "ErrorUrl",
-						AttrProp.CDATA, null, "");
-				// XXX end of bug fix for 6171814
-				_w.setErrorUrl(wRdr.getErrorUrl());
-			}
+            String url = wRdr.getErrorUrl();
+            if ((url != null) && (!"".equals(url))) {
+                // XXX start of bug fix for 6171814
+                _c.createAttribute(Cluster.WEB_MODULE, "error-url", "ErrorUrl",
+                        AttrProp.CDATA, null, "");
+                // XXX end of bug fix for 6171814
+                _w.setErrorUrl(wRdr.getErrorUrl());
+            }
 
-			_w.setEnabled(Boolean.toString(wRdr.getLbEnabled()));
+            _w.setEnabled(Boolean.toString(wRdr.getLbEnabled()));
 
-			_w.setDisableTimeoutInMinutes(wRdr.getDisableTimeoutInMinutes());
+            _w.setDisableTimeoutInMinutes(wRdr.getDisableTimeoutInMinutes());
 
-			IdempotentUrlPatternReader[] iRdrs = wRdr.getIdempotentUrlPattern();
+            IdempotentUrlPatternReader[] iRdrs = wRdr.getIdempotentUrlPattern();
 
-			if ((iRdrs != null) && (iRdrs.length > 0)) {
-				for (int i = 0; i < iRdrs.length; i++) {
-					iRdrs[i].accept(new IdempotentUrlPatternVisitor(_w, i));
-				}
-			}
-		}
+            if ((iRdrs != null) && (iRdrs.length > 0)) {
+                for (int i = 0; i < iRdrs.length; i++) {
+                    iRdrs[i].accept(new IdempotentUrlPatternVisitor(_w, i));
+                }
+            }
+        }
     }
     //--- PRIVATE VARS ----
     WebModule _w = null;

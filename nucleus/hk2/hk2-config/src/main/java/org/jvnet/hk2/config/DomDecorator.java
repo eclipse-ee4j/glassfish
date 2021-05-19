@@ -23,7 +23,7 @@ import javax.xml.stream.XMLStreamReader;
 
 @Contract
 public interface DomDecorator<T extends Dom> {
-    
+
     public Dom decorate(ServiceLocator habitat, DomDocument document, T parent, ConfigModel model, XMLStreamReader in);
 
 }

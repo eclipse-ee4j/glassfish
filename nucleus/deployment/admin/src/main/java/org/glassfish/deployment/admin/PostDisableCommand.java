@@ -33,6 +33,6 @@ import org.jvnet.hk2.annotations.Service;
 @ExecuteOn(value={RuntimeType.DAS})
 
 public class PostDisableCommand extends PostStateCommand  {
-    
+
 }
 

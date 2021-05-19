@@ -56,8 +56,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=JavaConfig.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-profiler", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-profiler",
         description="Create Profiler")
 })
 public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -87,7 +87,7 @@ public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preaut
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
-    
+
     @AccessRequired.To("update")
     private JavaConfig javaConfig;
 
@@ -97,8 +97,8 @@ public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preaut
         javaConfig = config.getJavaConfig();
         return true;
     }
-    
-    
+
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -135,7 +135,7 @@ public class CreateProfiler implements AdminCommand, AdminCommandSecurity.Preaut
                             newProfiler.getProperty().add(prop);
                         }
                     }
-                    param.setProfiler(newProfiler);                    
+                    param.setProfiler(newProfiler);
                     return newProfiler;
                 }
             }, javaConfig);

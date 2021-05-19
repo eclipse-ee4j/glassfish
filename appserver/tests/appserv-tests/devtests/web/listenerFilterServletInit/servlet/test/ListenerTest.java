@@ -26,7 +26,7 @@ public class ListenerTest implements ServletContextListener {
     }
 
     public void contextInitialized(ServletContextEvent sce) {
-        System.out.println("[Listener.contextInitialized]");        
+        System.out.println("[Listener.contextInitialized]");
         Record.addData("Li");
     }
 

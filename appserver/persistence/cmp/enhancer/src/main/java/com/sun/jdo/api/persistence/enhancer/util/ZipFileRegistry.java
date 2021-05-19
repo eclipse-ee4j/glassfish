@@ -16,48 +16,50 @@
 
 package com.sun.jdo.api.persistence.enhancer.util;
 
-import java.util.Hashtable;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.zip.ZipFile;
-import java.io.*;
 
 /**
  * ZipFileRegistry provides a central point for lookup of zip files
- * within the filter tool.  It needs to be public because it's
+ * within the filter tool. It needs to be public because it's
  * accessed from outside the filter.util package.
  */
+public class ZipFileRegistry {
 
-public
-class ZipFileRegistry {
-  /* A mapping of file name to ZipFile */
-  private static Hashtable zipFileMap = new Hashtable(11); 
+    /* A mapping of file name to ZipFile */
+    private static Hashtable zipFileMap = new Hashtable(11);
 
-  /**
-   * Return a zip file which may already be open
-   */
-  public static ZipFile openZipFile(File f)
-    throws FileNotFoundException, IOException {
-    ZipFile zf = (ZipFile) zipFileMap.get(f.getPath());
-    if (zf == null) {
-      zf = new ZipFile(f);
-      zipFileMap.put(zf.getName(), zf);
+    /**
+     * Return a zip file which may already be open
+     */
+    public static ZipFile openZipFile(File f) throws FileNotFoundException, IOException {
+        ZipFile zf = (ZipFile) zipFileMap.get(f.getPath());
+        if (zf == null) {
+            zf = new ZipFile(f);
+            zipFileMap.put(zf.getName(), zf);
+        }
+        return zf;
     }
-    return zf;
-  }
 
-  /**
-   * Return a zip file which must already be open
-   */
-  public static ZipFile getZipFile(String path) {
-    return (ZipFile) zipFileMap.get(path);
-  }
 
-  /**
-   * Returns an enumeration of the zip files in the registry
-   * Each element is a ZipFile.
-   */
-  public static Enumeration zipFiles() {
-    return zipFileMap.elements();
-  }
-  
+    /**
+     * Return a zip file which must already be open
+     */
+    public static ZipFile getZipFile(String path) {
+        return (ZipFile) zipFileMap.get(path);
+    }
+
+
+    /**
+     * Returns an enumeration of the zip files in the registry
+     * Each element is a ZipFile.
+     */
+    public static Enumeration zipFiles() {
+        return zipFileMap.elements();
+    }
+
 }

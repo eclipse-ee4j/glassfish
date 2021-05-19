@@ -20,17 +20,17 @@ import org.glassfish.api.admin.ProgressStatus;
 import org.junit.*;
 import static org.junit.Assert.*;
 
-/** 
+/**
  *
  * @author mmares
  */
 public class ProgressStatusImplTest {
-    
+
     private DummyParent parent;
-    
+
     public ProgressStatusImplTest() {
     }
-    
+
     @Before
     public void prepareParent() {
         parent = new DummyParent();
@@ -177,7 +177,7 @@ public class ProgressStatusImplTest {
         assertTrue(ch1.isComplete());
         assertTrue(ch2.isComplete());
     }
-    
+
     @Test
     public void testIdGeneration() {
         ProgressStatusImpl psi = new ProgressStatusImpl("A", 10, null, null);

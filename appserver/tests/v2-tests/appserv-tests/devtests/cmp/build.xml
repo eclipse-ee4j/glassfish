@@ -42,7 +42,7 @@
         </delete>
         <record name="cmp.output" action="start" />
 
-	<ant dir="blob" target="all"/>
+        <ant dir="blob" target="all"/>
         <ant dir="cascadeDelete" target="all"/>
 
 <!-- Need to fix the client to report pass/fail status
@@ -266,9 +266,9 @@
 
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ejb30 tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the ejb-ejb30 tests)
+    </echo>
     </target>
 </project>

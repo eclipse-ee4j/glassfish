@@ -35,7 +35,7 @@ public class StopServerTask extends AdminTask {
         addCommandParameter("domaindir", domaindir);
     }
 
-	public void setForce(boolean force) {
+    public void setForce(boolean force) {
         addCommandParameter("force", Boolean.toString(force));
     }
 

@@ -52,7 +52,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
     public static final int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
     public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
     public static final boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
- 
+
     /**
      * Gets the value of the steadyPoolSize property.
      *
@@ -71,12 +71,12 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      * This prevents threads from blocking till the pool is replenished by the
      * background thread. steady-pool-size must be greater than 1 and at most
      * equal to the max-pool-size.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
     @Attribute (defaultValue="0")
-    @Min(value=0)        
+    @Min(value=0)
     String getSteadyPoolSize();
 
     /**
@@ -97,7 +97,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *         {@link String }
      */
     @Attribute (defaultValue="8")
-    @Min(value=0)        
+    @Min(value=0)
     String getPoolResizeQuantity();
 
     /**
@@ -119,7 +119,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *         {@link String }
      */
     @Attribute (defaultValue="32")
-    @Min(value=0)    
+    @Min(value=0)
     String getMaxPoolSize();
 
     /**
@@ -208,7 +208,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *         {@link String }
      */
     @Attribute (defaultValue="600")
-    @Min(value=0)    
+    @Min(value=0)
     String getPoolIdleTimeoutInSeconds();
 
     /**
@@ -229,7 +229,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *         {@link String }
      */
     @Attribute (defaultValue="600")
-    @Min(value=0)    
+    @Min(value=0)
     String getCacheIdleTimeoutInSeconds();
 
     /**
@@ -250,7 +250,7 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *         {@link String }
      */
     @Attribute (defaultValue="5400")
-    @Min(value=0)    
+    @Min(value=0)
     String getRemovalTimeoutInSeconds();
 
     /**
@@ -353,17 +353,17 @@ public interface EjbContainer extends ConfigBeanProxy, PropertyBag, ConfigExtens
      *              {@link EjbTimerService }
      */
     void setEjbTimerService(EjbTimerService value) throws PropertyVetoException;
-    
-    
+
+
     /**
-    	Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props = {
         @PropertyDesc(name = "disable-nonportable-jndi-names",
         defaultValue = "false",
         values = {"true", "false"}),
-        
+
         @PropertyDesc(name = "thread-core-pool-size"),
         @PropertyDesc(name = "thread-max-pool-size"),
         @PropertyDesc(name = "thread-keep-alive-seconds"),

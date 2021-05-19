@@ -39,9 +39,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the hk2-ejb tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the hk2-ejb tests)
+    </echo>
     </target>
 </project>

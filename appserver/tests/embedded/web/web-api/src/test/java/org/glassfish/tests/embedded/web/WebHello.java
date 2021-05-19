@@ -29,7 +29,7 @@ public class WebHello extends HttpServlet {
     public WebHello() {
         System.out.println("Servlet WEB-HELLO initialized");
     }
-   
+
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 

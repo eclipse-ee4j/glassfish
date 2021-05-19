@@ -40,7 +40,7 @@ import javax.transaction.xa.Xid;
 /**
  * This is a sample resource adapter
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 @Connector(
    displayName = "Simple Resource Adapter",
@@ -48,7 +48,7 @@ import javax.transaction.xa.Xid;
    eisType = "Generic Type",
    version = "1.0Alpha"
 )
-public class SimpleResourceAdapterImpl_1 
+public class SimpleResourceAdapterImpl_1
 implements ResourceAdapter, java.io.Serializable {
 
     private BootstrapContext ctx;
@@ -84,11 +84,11 @@ implements ResourceAdapter, java.io.Serializable {
 
     public void
     endpointDeactivation (
-            MessageEndpointFactory endpointFactory, 
+            MessageEndpointFactory endpointFactory,
             ActivationSpec spec) {
-        throw new IllegalStateException("This resource-adapter should not have been initialized");  
+        throw new IllegalStateException("This resource-adapter should not have been initialized");
     }
-  
+
     public String getTestName() {
         return testName;
     }
@@ -120,7 +120,7 @@ implements ResourceAdapter, java.io.Serializable {
             System.out.println("[SimpleResourceAdapterImpl] ==> " + message);
     }
 
-    public XAResource[] getXAResources(ActivationSpec[] specs) 
+    public XAResource[] getXAResources(ActivationSpec[] specs)
         throws ResourceException {
         throw new UnsupportedOperationException();
     }

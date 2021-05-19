@@ -43,7 +43,7 @@ import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.loadbalancer.admin.cli.LbLogUtil;
 
 /**
- * Impl class for ClusterReader. This provides loadbalancer 
+ * Impl class for ClusterReader. This provides loadbalancer
  * data for a cluster.
  *
  * @author Kshitiz Saxena
@@ -58,7 +58,7 @@ public class ClusterReaderHelper {
      *                          instance
      * @param   target          Name of the cluster or stand alone instance
      *
-     * @return  WebModuleReader[]   Array of the corresponding web module 
+     * @return  WebModuleReader[]   Array of the corresponding web module
      *                              reader(s).
      *
      * @throws  LbReaderException   In case of any error(s).

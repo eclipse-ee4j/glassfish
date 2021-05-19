@@ -56,7 +56,7 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the providerId property.
      *
      * Identifier used to uniquely identify this provider-config element
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(key = true)
@@ -75,7 +75,7 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the providerType property.
      *
      * Defines whether the provider is a client authentication provider or a server authentication provider.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -100,7 +100,7 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
      * Server-side providers must implement the com.sun.enterprise.security.jauth.ServerAuthModule interface.
      *
      * A provider may implement both interfaces, but it must implement the interface corresponding to its provider type.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -120,7 +120,7 @@ public interface ProviderConfig extends ConfigBeanProxy, PropertyBag {
      *
      * Defines the authentication policy requirements associated with request processing performed by the authentication
      * provider
-     * 
+     *
      * @return possible object is {@link RequestPolicy }
      */
     @Element

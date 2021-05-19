@@ -120,10 +120,10 @@ public class SecurityContainer implements Container, PostConstruct {
             }
         } catch (Exception cnfe) {
             //            _logger.log(Level.SEVERE,
-            //			_localStrings.getLocalString("j2ee.norolemapper", "Cannot instantiate the SecurityRoleMapperFactory"),
-            //			cnfe);
-            //		cnfe.printStackTrace();
-            //		throw new RuntimeException(cnfe);
+            //            _localStrings.getLocalString("j2ee.norolemapper", "Cannot instantiate the SecurityRoleMapperFactory"),
+            //            cnfe);
+            //        cnfe.printStackTrace();
+            //        throw new RuntimeException(cnfe);
             // throw cnfe;
         }
     }

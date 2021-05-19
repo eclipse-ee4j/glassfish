@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
 import org.glassfish.admin.amx.base.DomainRoot;
 import org.glassfish.admin.amx.config.AMXConfigConstants;
-import org.glassfish.admin.amx.core.Util;
 import org.glassfish.admin.amx.core.proxy.ProxyFactory;
 import org.glassfish.admin.amx.impl.config.ConfigBeanRegistry;
 import org.glassfish.admin.amx.impl.j2ee.DASJ2EEServerImpl;
@@ -49,13 +48,12 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.management.ObjectInstance;
 import org.glassfish.admin.amx.j2ee.AMXEELoggerInfo;
 
 
 /**
- * Startup service that loads support for AMX config MBeans.  How this is to be
- * triggered is not yet clear.
+ * Startup service that loads support for AMX config MBeans.
+ * How this is to be triggered is not yet clear.
  */
 @Service
 public final class AMXJ2EEStartupService
@@ -97,18 +95,19 @@ public final class AMXJ2EEStartupService
         //debug( "AMXStartupService.AMXStartupService()" );
     }
 
+    @Override
     public void postConstruct() {
         addListenerToServer();
     }
 
     private void addListenerToServer() {
         Servers servers = domain.getServers();
-        ObservableBean bean = (ObservableBean) ConfigSupport.getImpl((ConfigBeanProxy) servers);
+        ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(servers);
         bean.addListener(this);
     }
 
     @Override
-    public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {       
+    public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
         return ConfigSupport.sortAndDispatch(propertyChangeEvents, new PropertyChangeHandler(propertyChangeEvents), logger);
     }
 
@@ -126,6 +125,7 @@ public final class AMXJ2EEStartupService
          * @param changedType     type of the configuration object
          * @param changedInstance changed instance.
          */
+        @Override
         public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
             switch (type) {
                 case ADD:
@@ -174,26 +174,29 @@ public final class AMXJ2EEStartupService
         }
     }
 
+    @Override
     public void preDestroy() {
         unloadAMXMBeans();
     }
+
 
     private DomainRoot getDomainRootProxy() {
         return ProxyFactory.getInstance(mMBeanServer).getDomainRootProxy();
     }
 
-    public ObjectName
-    getJ2EEDomain() {
+
+    public ObjectName getJ2EEDomain() {
         return getDomainRootProxy().child(J2EETypes.J2EE_DOMAIN).extra().objectName();
     }
 
-    private J2EEDomain
-    getJ2EEDomainProxy() {
+
+    private J2EEDomain getJ2EEDomainProxy() {
         return ProxyFactory.getInstance(mMBeanServer).getProxy(getJ2EEDomain(), J2EEDomain.class);
     }
 
-    public synchronized ObjectName
-    loadAMXMBeans() {
+
+    @Override
+    public synchronized ObjectName loadAMXMBeans() {
         FeatureAvailability.getInstance().waitForFeature(FeatureAvailability.AMX_CORE_READY_FEATURE, "" + this);
         FeatureAvailability.getInstance().waitForFeature(AMXConfigConstants.AMX_CONFIG_READY_FEATURE, "" + this);
 
@@ -204,15 +207,14 @@ public final class AMXJ2EEStartupService
         final Metadata metadata = new MetadataImpl();
         metadata.add(Metadata.CORRESPONDING_CONFIG, ConfigBeanRegistry.getInstance().getObjectNameForProxy(domain));
 
-        String serverName = mHabitat.<Server>getService(Server.class).getName();
+        String serverName = mHabitat.<Server> getService(Server.class).getName();
 
         final J2EEDomainImpl impl = new J2EEDomainImpl(domainRoot, metadata);
         impl.setServerName(serverName);
         ObjectName objectName = objectNames.buildChildObjectName(J2EEDomain.class);
         try {
             objectName = mMBeanServer.registerMBean(impl, objectName).getObjectName();
-        }
-        catch (JMException e) {
+        } catch (JMException e) {
             throw new Error(e);
         }
 
@@ -220,6 +222,8 @@ public final class AMXJ2EEStartupService
         return objectName;
     }
 
+
+    @Override
     public synchronized void unloadAMXMBeans() {
         final J2EEDomain j2eeDomain = getJ2EEDomainProxy();
         if (j2eeDomain != null) {
@@ -227,18 +231,3 @@ public final class AMXJ2EEStartupService
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

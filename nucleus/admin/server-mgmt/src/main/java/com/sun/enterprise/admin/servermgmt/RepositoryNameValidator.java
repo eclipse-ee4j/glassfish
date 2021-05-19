@@ -44,7 +44,7 @@ public class RepositoryNameValidator extends StringValidator {
 
     /**
      * Constructs new RepositoryNameValidator object.
-     * 
+     *
      * @param name
      */
     public RepositoryNameValidator(String name) {
@@ -54,7 +54,7 @@ public class RepositoryNameValidator extends StringValidator {
     /**
      * Validates the given value for the given entry. This method first invokes its superclass's validate method and then
      * performs additional validations.
-     * 
+     *
      * @throws InvalidConfigException
      */
     public void validate(Object str) throws InvalidConfigException {

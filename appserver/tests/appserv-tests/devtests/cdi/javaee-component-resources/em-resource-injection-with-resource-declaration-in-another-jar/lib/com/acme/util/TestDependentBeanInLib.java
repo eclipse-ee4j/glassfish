@@ -21,7 +21,7 @@ public class TestDependentBeanInLib {
     public TestDependentBeanInLib() {
         super();
     }
-    
+
     public String foo(){
         return "foo!";
     }

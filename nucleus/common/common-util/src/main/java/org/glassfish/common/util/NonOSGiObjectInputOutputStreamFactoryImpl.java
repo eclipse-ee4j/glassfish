@@ -39,7 +39,7 @@ public class NonOSGiObjectInputOutputStreamFactoryImpl
 
     public Class<?> resolveClass(ObjectInputStream in, ObjectStreamClass desc)
             throws IOException, ClassNotFoundException
-    {        
+    {
         return null;
     }
 

@@ -16,45 +16,42 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
-import org.glassfish.j2ee.statistics.TimeStatistic;
-import com.sun.enterprise.admin.monitor.stats.AverageRangeStatistic;
 
 /**
- *
  * @since 8.1
  */
 public interface HAStatefulSessionStoreStats extends StatefulSessionStoreStats {
-    
+
     /**
      * Returns the total number of sessions checkpointed using this store
      * @return CountStatistic
      */
-    public CountStatistic getCheckpointCount();
-    
+    CountStatistic getCheckpointCount();
+
     /**
      * Returns the total number of sessions successfully checkpointed using
      * this store
      * @return CountStatistic
      */
-    public CountStatistic getCheckpointSuccessCount();
-    
+    CountStatistic getCheckpointSuccessCount();
+
     /**
      * Returns the total number of sessions that could not be checkpointed
      * using this store
      * @return CountStatistic
      */
-    public CountStatistic getCheckpointErrorCount();
-    
+    CountStatistic getCheckpointErrorCount();
+
     /**
      * Returns the total number of bytes checkpointed by the store
      * @return AverageRangeStatistic
      */
-    public AverageRangeStatistic getCheckpointedBeanSize();
-    
+    AverageRangeStatistic getCheckpointedBeanSize();
+
     /**
      * Returns the time spent on checkpointing beans to the store
      * @return AverageRangeStatistic
      */
-    public AverageRangeStatistic getCheckpointTime();
-    
+    AverageRangeStatistic getCheckpointTime();
+
 }

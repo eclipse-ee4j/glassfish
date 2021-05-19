@@ -22,8 +22,8 @@
 <sun-web-app>
   <session-config>
     <session-manager/>
-  </session-config>  
-  <jsp-config/> 
+  </session-config>
+  <jsp-config/>
   <locale-charset-info default-locale="ja">
       <locale-charset-map charset="EUC-JP" locale="ja" agent="Mozilla/4.7 [en] (X11; I; SunOS 5.8 sun4u)">
         <description>Charset mapping for Japanese locale</description>
@@ -36,11 +36,11 @@
       </locale-charset-map>
       <locale-charset-map charset="Shift_JIS" locale="ja" agent="Mozilla/4.79 [en] (Windows NT 5.0; U)">
         <description>Charset mapping for Japanese locale</description>
-      </locale-charset-map>      
+      </locale-charset-map>
       <locale-charset-map charset="ISO-8859-1" locale="de_DE">
         <description>Charset mapping for German locale</description>
       </locale-charset-map>
       <parameter-encoding form-hint-field="charsetval" />
-  </locale-charset-info>  
+  </locale-charset-info>
 </sun-web-app>
 

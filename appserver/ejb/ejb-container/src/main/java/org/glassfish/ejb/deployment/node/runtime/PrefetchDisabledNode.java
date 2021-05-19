@@ -29,8 +29,7 @@ import org.glassfish.ejb.deployment.descriptor.runtime.PrefetchDisabledDescripto
 import org.w3c.dom.Node;
 
 /**
- * This node handles the prefetch-disabled runtime deployment descriptors 
- *
+ * This node handles the prefetch-disabled runtime deployment descriptors
  */
 public class PrefetchDisabledNode extends DeploymentDescriptorNode<PrefetchDisabledDescriptor> {
 
@@ -40,44 +39,40 @@ public class PrefetchDisabledNode extends DeploymentDescriptorNode<PrefetchDisab
         registerElementHandler(new XMLElement(RuntimeTagNames.QUERY_METHOD), MethodNode.class);
     }
 
+
     @Override
     public PrefetchDisabledDescriptor getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new PrefetchDisabledDescriptor();
             Object parentDesc = getParentNode().getDescriptor();
             if (parentDesc instanceof EjbDescriptor) {
-                descriptor.setEjbDescriptor((EjbDescriptor)parentDesc);
+                descriptor.setEjbDescriptor((EjbDescriptor) parentDesc);
             }
         }
         return descriptor;
     }
 
+
     @Override
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof MethodDescriptor) {
-            descriptor.addMethodDescriptor(
-                (MethodDescriptor) newDescriptor);
+            descriptor.addMethodDescriptor((MethodDescriptor) newDescriptor);
         }
     }
 
+
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-        PrefetchDisabledDescriptor prefetchDisabledDescriptor) {    
-	Node prefetchDisabledNode = super.writeDescriptor(parent, nodeName, 
-            prefetchDisabledDescriptor);
-        ArrayList methodDescs = 
-            prefetchDisabledDescriptor.getConvertedMethodDescs();
+    public Node writeDescriptor(Node parent, String nodeName, PrefetchDisabledDescriptor prefetchDisabledDescriptor) {
+        Node prefetchDisabledNode = super.writeDescriptor(parent, nodeName, prefetchDisabledDescriptor);
+        ArrayList methodDescs = prefetchDisabledDescriptor.getConvertedMethodDescs();
         if (!methodDescs.isEmpty()) {
             MethodNode methodNode = new MethodNode();
-            for (Iterator methodIterator = methodDescs.iterator();
-                methodIterator.hasNext();) {
-                MethodDescriptor methodDesc = 
-                    (MethodDescriptor) methodIterator.next();
-                methodNode.writeQueryMethodDescriptor(prefetchDisabledNode, 
-                    RuntimeTagNames.QUERY_METHOD, methodDesc);
+            for (Iterator methodIterator = methodDescs.iterator(); methodIterator.hasNext();) {
+                MethodDescriptor methodDesc = (MethodDescriptor) methodIterator.next();
+                methodNode.writeQueryMethodDescriptor(prefetchDisabledNode, RuntimeTagNames.QUERY_METHOD, methodDesc);
             }
         }
 
-	return prefetchDisabledNode;
+        return prefetchDisabledNode;
     }
 }

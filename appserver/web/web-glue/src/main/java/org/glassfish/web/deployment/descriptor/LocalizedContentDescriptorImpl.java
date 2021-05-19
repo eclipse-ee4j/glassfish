@@ -22,41 +22,45 @@ import com.sun.enterprise.deployment.web.LocalizedContentDescriptor;
 public class LocalizedContentDescriptorImpl implements LocalizedContentDescriptor, java.io.Serializable {
     private String url;
     private String locale;
-    
+
     public LocalizedContentDescriptorImpl() {
     }
-    
+
     public LocalizedContentDescriptorImpl(String locale, String url) {
-	this.locale = locale;
-	this.url = url;
+        this.locale = locale;
+        this.url = url;
     }
 
+    @Override
     public String getLocale() {
-	if (this.locale == null) {
-	    this.locale = "";
-	}
-	return this.locale;
+        if (this.locale == null) {
+            this.locale = "";
+        }
+        return this.locale;
     }
-    
+
+    @Override
     public void setLocale(String locale) {
-	this.locale = locale;
+        this.locale = locale;
     }
-    
+
+    @Override
     public String getUrl() {
-	if (this.url == null) {
-	    this.url = "";
-	}
-	return this.url;
+        if (this.url == null) {
+            this.url = "";
+        }
+        return this.url;
     }
-	
+
+    @Override
     public void setUrl(String url) {
-	this.url = url;
+        this.url = url;
     }
 
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("LocalizedContent: ");
-	toStringBuffer.append(" locale: ").append(locale);
-	toStringBuffer.append(" url: ").append(url);
+        toStringBuffer.append("LocalizedContent: ");
+        toStringBuffer.append(" locale: ").append(locale);
+        toStringBuffer.append(" url: ").append(url);
     }
 
 }

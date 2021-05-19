@@ -27,7 +27,7 @@ public abstract class LargeTransactionDecorator implements Account {
    public static boolean withDrawCalled = false;
    public static boolean depositCalled = false;
 
-   @Inject @Delegate 
+   @Inject @Delegate
    Account account;
 
    @Override

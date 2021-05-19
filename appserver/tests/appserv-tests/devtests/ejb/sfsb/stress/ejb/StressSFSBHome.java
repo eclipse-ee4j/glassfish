@@ -24,5 +24,5 @@ public interface StressSFSBHome
     extends EJBHome
 {
     public StressSFSB create(String sfsbName)
-	throws CreateException, RemoteException;
+        throws CreateException, RemoteException;
 }

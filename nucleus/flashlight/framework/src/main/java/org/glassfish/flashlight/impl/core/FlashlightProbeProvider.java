@@ -60,9 +60,9 @@ public class FlashlightProbeProvider implements ProbeProviderInfo{
 
     }
 
-	public String toString() {
-		return ObjectAnalyzer.toString(this);
-	}
+        public String toString() {
+                return ObjectAnalyzer.toString(this);
+        }
     public Class getProviderClass() {
         return providerClazz;
     }
@@ -108,7 +108,7 @@ public class FlashlightProbeProvider implements ProbeProviderInfo{
     public void setDTraceInstrumented(boolean b) {
         dtraceIsInstrumented = b;
     }
-    
+
     // note that it is IMPOSSIBLE for an object instance to have null variables --
     // they are final and checked at instantiation time...
     // we are NOT checking the probes --
@@ -127,7 +127,7 @@ public class FlashlightProbeProvider implements ProbeProviderInfo{
             fpp.probeProviderName.equals(probeProviderName) &&
             fpp.providerClazz == providerClazz;
     }
-    
+
     private static boolean ok(String s) {
         return s != null && s.length() > 0;
     }

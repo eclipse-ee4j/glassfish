@@ -37,17 +37,17 @@ public class SymbolTable
      */
     protected Map symbols = new HashMap();
 
-	/**
-	 * This method adds the specified identifier to this SymbolTable. 
-     * The specified decl object provides details anbout the declaration. 
-     * If this SymbolTable already defines an identifier with the same name, 
-     * the SymbolTable is not changed and the existing declaration is returned. 
+    /**
+     * This method adds the specified identifier to this SymbolTable.
+     * The specified decl object provides details anbout the declaration.
+     * If this SymbolTable already defines an identifier with the same name,
+     * the SymbolTable is not changed and the existing declaration is returned.
      * Otherwise <code>null</code> is returned.
      * @param   ident   identifier to be declared
      * @param   decl new definition of identifier
-     * @return  the old definition if the identifier was already declared; 
+     * @return  the old definition if the identifier was already declared;
      * <code>null</code> otherwise
-	 */
+     */
     public Object declare(String ident, Object decl)
     {
         Object old = symbols.get(ident);
@@ -58,9 +58,9 @@ public class SymbolTable
     }
 
     /**
-     * Checks whether the specified identifier is declared.  
+     * Checks whether the specified identifier is declared.
      * @param ident the name of identifier to be tested
-     * @return <code>true</code> if the identifier is declared; 
+     * @return <code>true</code> if the identifier is declared;
      * <code>false</code> otherwise.
      */
     public boolean isDeclared(String ident)
@@ -69,9 +69,9 @@ public class SymbolTable
     }
 
     /**
-     * Checks the symbol table for the actual declaration of the specified 
+     * Checks the symbol table for the actual declaration of the specified
      * identifier. The method returns the declaration object if available or
-     * <code>null</code> for an undeclared identifier. 
+     * <code>null</code> for an undeclared identifier.
      * @param ident the name of identifier
      * @return the declaration object if ident is declared;
      * <code>null</code> otherise.
@@ -80,5 +80,5 @@ public class SymbolTable
     {
         return symbols.get(ident.toUpperCase());
     }
-	
+
 }

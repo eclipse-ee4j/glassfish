@@ -133,7 +133,7 @@
         <!-- create-app-ref to cluster -->
         <antcall target="common.run.asadmin">
             <param name="arg.list"
-                   value="create-application-ref --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --target ${testCluster} ${testName2}"/>      
+                   value="create-application-ref --port ${admin.port} --user ${admin.user} --passwordfile ${passwordFile} --target ${testCluster} ${testName2}"/>
         </antcall>
     </target>
 

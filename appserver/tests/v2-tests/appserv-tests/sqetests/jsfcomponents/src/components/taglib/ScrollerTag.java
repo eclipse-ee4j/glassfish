@@ -52,7 +52,7 @@ public class ScrollerTag extends UIComponentTag {
      * When rendering a widget representing "page navigation" where
      * should the facet markup be rendered in relation to the page
      * navigation widget?  Values are "NORTH", "SOUTH", "EAST", "WEST".
-     * Case insensitive. This can be value or a value binding 
+     * Case insensitive. This can be value or a value binding
      * reference expression.
      */
     public void setNavFacetOrientation(String navFacetOrientation) {

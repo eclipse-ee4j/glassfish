@@ -92,7 +92,7 @@ public abstract class ExtensionsArchivist  {
 
     /**
      * @param the moduleType
-     * @return whether this extension archivist supports this module type 
+     * @return whether this extension archivist supports this module type
      *
      */
     public abstract boolean supportsModuleType(ArchiveType moduleType);
@@ -124,7 +124,7 @@ public abstract class ExtensionsArchivist  {
 
    /**
      * Read the standard deployment descriptor of the extension
-     * @param archivist the primary archivist for this archive 
+     * @param archivist the primary archivist for this archive
      * @param archive the archive
      * @param descriptor the main deployment descriptor
      * @return the extension descriptor object
@@ -145,7 +145,7 @@ public abstract class ExtensionsArchivist  {
                 if (deplLogger.isLoggable(Level.FINE)) {
                     deplLogger.log(Level.FINE, "Deployment descriptor: " +
                                    standardDD.getDeploymentDescriptorPath(),
-                                   " does not exist in archive: " + 
+                                   " does not exist in archive: " +
                                    archive.getURI().getSchemeSpecificPart());
                 }
 
@@ -165,7 +165,7 @@ public abstract class ExtensionsArchivist  {
     /**
      * Read the runtime deployment descriptors of the extension
      *
-     * @param archivist the primary archivist for this archive 
+     * @param archivist the primary archivist for this archive
      * @param archive the archive
      * @param descriptor the extension deployment descriptor
      * @return the extension descriptor object with additional runtime information
@@ -175,7 +175,7 @@ public abstract class ExtensionsArchivist  {
 
         ConfigurationDeploymentDescriptorFile ddFile = getConfigurationDDFile(main, descriptor, archive);
 
-        // if this extension archivist has no runtime DD, just return the 
+        // if this extension archivist has no runtime DD, just return the
         // original descriptor
         if (ddFile == null) {
             return descriptor;

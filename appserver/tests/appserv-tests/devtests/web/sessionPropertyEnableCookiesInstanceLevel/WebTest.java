@@ -23,7 +23,7 @@ import com.sun.ejte.ccl.reporter.*;
  *
  *   https://glassfish.dev.java.net/issues/show_bug.cgi?id=3137
  *   (Changing "enableCookies" session property has no effect)
- * 
+ *
  * Make sure that if the "enableCookies" property at the domain instance level
  * is set to FALSE, and the webapp does not override this property to TRUE in
  * its sun-web.xml, there will be no session cookie present in the response,
@@ -49,7 +49,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("URL rewriting with session id");
         WebTest webTest = new WebTest(args);
@@ -58,8 +58,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeServlet();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -84,7 +84,7 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
-         
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/redirectFrom" + " HTTP/1.0\n";
@@ -132,7 +132,7 @@ public class WebTest {
             fail = true;
             return;
         }
-        
+
         System.out.println("redirectLine: " + redirectLine);
         if (redirectLine == null) {
             System.err.println("Missing Location response header");
@@ -154,7 +154,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             System.err.println("Wrong response code. Expected: 200"
                                + ", received: " + responseCode);
             fail = true;

@@ -19,7 +19,7 @@
 -->
 
 <application>
-  <display-name>ConverterApp</display-name>  
+  <display-name>ConverterApp</display-name>
   <module>
     <java>ejb-stateful-persistence-client.jar</java>
   </module>

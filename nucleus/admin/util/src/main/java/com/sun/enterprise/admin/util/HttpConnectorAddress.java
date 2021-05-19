@@ -52,7 +52,7 @@ public final class HttpConnectorAddress {
 
     /**
      * construct an address which indicates the host, port and security attributes desired.
-     * 
+     *
      * @param host a host address
      * @param port a port number
      * @param secure a boolean indication of whether the connection should be secure (i.e. confidential) or not
@@ -79,7 +79,7 @@ public final class HttpConnectorAddress {
 
     /**
      * Open a connection using the reciever and the given path
-     * 
+     *
      * @param path the path to the required resource (path here is the portion after the <code>hostname:port</code> portion
      * of a URL)
      * @return a connection to the required resource. The connection returned may be a sub-class of
@@ -147,7 +147,7 @@ public final class HttpConnectorAddress {
 
     /**
      * get the protocol prefix to be used for a connection for the receiver
-     * 
+     *
      * @return the protocol prefix - one of <code>http</code> or <code>https</code> depending upon the security setting.
      */
     public String getConnectorType() {

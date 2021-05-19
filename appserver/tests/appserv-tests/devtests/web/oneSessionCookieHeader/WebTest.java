@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for one session cookie header");
         WebTest webTest = new WebTest(args);
@@ -46,7 +46,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             Socket sock = new Socket(host, new Integer(port).intValue());
             OutputStream os = sock.getOutputStream();
             String get = "GET " + contextRoot + "/index.jsp HTTP/1.0\n";

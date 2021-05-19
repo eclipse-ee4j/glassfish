@@ -75,7 +75,7 @@ public class JAXWSContainer extends Container {
                 return ((T) spiType.cast(module));
             }
         }
-        
+
         return null;
     }
 }

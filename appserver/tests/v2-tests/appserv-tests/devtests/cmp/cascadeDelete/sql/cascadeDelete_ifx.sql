@@ -7,7 +7,7 @@ DROP TABLE A;
 CREATE TABLE A
 (
     id INT          PRIMARY KEY,
-    name   VARCHAR(32) 
+    name   VARCHAR(32)
 );
 
 CREATE TABLE B

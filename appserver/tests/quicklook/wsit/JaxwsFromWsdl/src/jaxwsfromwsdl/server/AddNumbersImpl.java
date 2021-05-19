@@ -18,7 +18,7 @@ package jaxwsfromwsdl.server;
 
 @jakarta.jws.WebService (endpointInterface="jaxwsfromwsdl.server.AddNumbersPortType")
 public class AddNumbersImpl{
-    
+
     /**
      * @param number1
      * @param number2
@@ -38,12 +38,12 @@ public class AddNumbersImpl{
         }
         return number1 + number2;
     }
-    
+
     /*
      * Simple one-way method that takes an integer.
      */
     public void oneWayInt(int number) {
         System.out.println("Service received: " + number);
     }
-    
+
 }

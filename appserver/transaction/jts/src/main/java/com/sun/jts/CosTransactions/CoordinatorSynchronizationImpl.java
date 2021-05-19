@@ -70,10 +70,10 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
 
     private Long           localTID = null;
     private TopCoordinator coordinator = null;
-	/*
-		Logger to log transaction messages
-	*/ 
-	static Logger _logger = LogDomains.getLogger(CoordinatorSynchronizationImpl.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+    static Logger _logger = LogDomains.getLogger(CoordinatorSynchronizationImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     /**Default CoordinatorSynchronizationImpl constructor.
      *
@@ -117,7 +117,7 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
      *
      * @see
      */
-    public void before_completion() 
+    public void before_completion()
         throws SystemException {
 
         // If there is no Coordinator reference, raise an exception.
@@ -184,23 +184,23 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
                             narrow(poa.servant_to_reference(this));
                 //thisRef = (Synchronization)this;
             } catch( ServantAlreadyActive saexc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorSynchronization_object_error");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-	 						  "jts.create_CoordinatorSynchronization_object_error");
-				  throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,
+                        "jts.create_CoordinatorSynchronization_object_error");
+                 String msg = LogFormatter.getLocalizedMessage(_logger,
+                               "jts.create_CoordinatorSynchronization_object_error");
+                  throw  new org.omg.CORBA.INTERNAL(msg);
             } catch( ServantNotActive snexc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorSynchronization_object_error");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-	 						  "jts.create_CoordinatorSynchronization_object_error");
-				  throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,
+                        "jts.create_CoordinatorSynchronization_object_error");
+                 String msg = LogFormatter.getLocalizedMessage(_logger,
+                               "jts.create_CoordinatorSynchronization_object_error");
+                  throw  new org.omg.CORBA.INTERNAL(msg);
             } catch( Exception exc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorSynchronization_object_error");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-	 						  "jts.create_CoordinatorSynchronization_object_error");
-				  throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,
+                        "jts.create_CoordinatorSynchronization_object_error");
+                 String msg = LogFormatter.getLocalizedMessage(_logger,
+                               "jts.create_CoordinatorSynchronization_object_error");
+                  throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -222,8 +222,8 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
                 poa.deactivate_object(poa.reference_to_id(thisRef));
                 thisRef = null;
             } catch( Exception exc ) {
-				 _logger.log(Level.WARNING,"jts.object_destroy_error",
-				 		"CoordinatorResource");
+                 _logger.log(Level.WARNING,"jts.object_destroy_error",
+                         "CoordinatorResource");
             }
 
         coordinator = null;
@@ -256,8 +256,8 @@ class CoordinatorSynchronizationImpl extends SynchronizationPOA {
                 if( result.thisRef == null )
                     result.thisRef = sync;
             } catch( Exception exc ) {
-			    _logger.log(Level.WARNING,"jts.cannot_locate_servant",
-							"CoordinatorSynchronization");
+                _logger.log(Level.WARNING,"jts.cannot_locate_servant",
+                            "CoordinatorSynchronization");
             }
         }
 

@@ -29,41 +29,41 @@ import jakarta.transaction.*;
 
 /**
  */
-public class MyMessageBean implements MessageDrivenBean, 
+public class MyMessageBean implements MessageDrivenBean,
         MyMessageListener {
 
     private transient MessageDrivenContext mdc = null;
     private Context context;
-    
+
     /**
      * Constructor, which is public and takes no arguments.
      */
     public MyMessageBean() {}
 
     /**
-     * setMessageDrivenContext method, declared as public (but 
-     * not final or static), with a return type of void, and 
+     * setMessageDrivenContext method, declared as public (but
+     * not final or static), with a return type of void, and
      * with one argument of type jakarta.ejb.MessageDrivenContext.
      *
      * @param mdc    the context to set
      */
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
-	this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     /**
-     * ejbCreate method, declared as public (but not final or 
-     * static), with a return type of void, and with no 
+     * ejbCreate method, declared as public (but not final or
+     * static), with a return type of void, and with no
      * arguments.
      */
     public void ejbCreate() { }
 
     /**
-     * onMessage method, declared as public (but not final or 
+     * onMessage method, declared as public (but not final or
      * static), with a return type of void, and with one argument
      * of type jakarta.jms.Message.
      *
-     * Casts the incoming Message to a TextMessage and displays 
+     * Casts the incoming Message to a TextMessage and displays
      * the text.
      *
      * @param inMessage    the incoming message
@@ -74,7 +74,7 @@ public class MyMessageBean implements MessageDrivenBean,
 
         try {
             if (inMessage.endsWith("WRITE")) {
-                doDbStuff("WRITE", 
+                doDbStuff("WRITE",
                         inMessage.substring(0, inMessage.lastIndexOf(":")));
             } else if (inMessage.endsWith("DELETE")) {
                 doDbStuff("DELETE",
@@ -90,10 +90,10 @@ public class MyMessageBean implements MessageDrivenBean,
         }
 
     }
-    
+
     /**
-     * ejbRemove method, declared as public (but not final or 
-     * static), with a return type of void, and with no 
+     * ejbRemove method, declared as public (but not final or
+     * static), with a return type of void, and with no
      * arguments.
      */
     public void ejbRemove() {}
@@ -103,62 +103,62 @@ public class MyMessageBean implements MessageDrivenBean,
 
         java.sql.Connection dbConnection = null;
         String id    = message.substring(0, message.indexOf(":"));
-        String body  = message.substring(message.indexOf(":")+1); 
+        String body  = message.substring(message.indexOf(":")+1);
         try {
             Context ic = new InitialContext();
-            
+
             if ("READ".equals(op)) {
-                
+
                 debug("Reading row from database...");
-                
+
                 // Creating a database connection
 
                   DataSource ds = (DataSource) ic.lookup("java:comp/env/MyDB");
                   debug("Looked up Datasource\n");
                   debug("Get JDBC connection, auto sign on");
                   dbConnection = ds.getConnection();
-                  
+
                   Statement stmt = dbConnection.createStatement();
-                  String query = 
+                  String query =
                   "SELECT id from messages where id = 'QQ'";
                   ResultSet results = stmt.executeQuery(query);
                   results.next();
-                  System.out.println("QQ has balance " + 
+                  System.out.println("QQ has balance " +
                   results.getInt("balance") + " dollars");
                   results.close();
                   stmt.close();
-                  
+
                   System.out.println("Read one account\n");
 
             } else if ("WRITE".equals(op)) {
 
                 debug("Inserting one message in the database\n");
-            
+
                 // Creating a database connection
                 DataSource ds = (DataSource) ic.lookup("java:comp/env/MyDB");
                 //debug("Looked up Datasource\n");
                 //debug("Get JDBC connection, auto sign on");
                 dbConnection = ds.getConnection();
-                
+
                 createRow(id, body, dbConnection);
                 System.out.println("Created one message\n");
-                
+
             } else if ("DELETE".equals(op)) {
-                
+
                 debug("Deleting one message from the database\n");
-                
+
                 // Creating a database connection
                 DataSource ds = (DataSource) ic.lookup("java:comp/env/MyDB");
                 //debug("Looked up Datasource\n");
                 //debug("Get JDBC connection, auto sign on");
                 dbConnection = ds.getConnection();
-                
+
                 deleteRow(id, dbConnection);
                 System.out.println("Deleted one message\n");
             } else if ("DELETE_ALL".equals(op)) {
-                
+
                 debug("Deleting all messages from the database\n");
-                
+
                 // Creating a database connection
                 DataSource ds = (DataSource) ic.lookup("java:comp/env/MyDB");
                 //debug("Looked up Datasource\n");
@@ -169,7 +169,7 @@ public class MyMessageBean implements MessageDrivenBean,
             } else {
                 //unsupported op
             }
-            
+
         }finally{
             try{
                 dbConnection.close();
@@ -178,9 +178,9 @@ public class MyMessageBean implements MessageDrivenBean,
             }
         }
     }
-    
-    private void createRow(String id, String body, 
-            java.sql.Connection dbConnection) 
+
+    private void createRow(String id, String body,
+            java.sql.Connection dbConnection)
         throws Exception {
 
         // Create row for this message
@@ -196,9 +196,9 @@ public class MyMessageBean implements MessageDrivenBean,
         stmt.close();
     }
 
-    private void deleteRow(String id, java.sql.Connection dbConnection) 
+    private void deleteRow(String id, java.sql.Connection dbConnection)
         throws Exception {
-        
+
         // Delete row for this message
         debug("DeleteRow with ID = " + id);
         Statement stmt = dbConnection.createStatement();
@@ -211,9 +211,9 @@ public class MyMessageBean implements MessageDrivenBean,
         stmt.close();
     }
 
-    private void deleteAll(java.sql.Connection dbConnection) 
+    private void deleteAll(java.sql.Connection dbConnection)
         throws Exception {
-        
+
         // Delete row for this message
         Statement stmt = dbConnection.createStatement();
         String query = "DELETE FROM messages";

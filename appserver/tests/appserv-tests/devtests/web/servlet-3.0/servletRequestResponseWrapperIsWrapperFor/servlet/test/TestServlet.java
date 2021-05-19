@@ -28,7 +28,7 @@ public class TestServlet extends HttpServlet {
         ServletRequestWrapper reqWrapper1 = new SubFirstLevelRequestWrapper(req);
         ServletRequestWrapper reqWrapper2 = new SecondLevelRequestWrapper(reqWrapper1);
         ServletRequestWrapper reqWrapper3 = new ThirdLevelRequestWrapper(reqWrapper2);
-       
+
         if (!reqWrapper3.isWrapperFor(reqWrapper1) ||
                 !reqWrapper3.isWrapperFor(FirstLevelRequestWrapper.class)) {
             throw new ServletException("Unexpected result");
@@ -44,7 +44,7 @@ public class TestServlet extends HttpServlet {
         ServletResponseWrapper resWrapper1 = new SubFirstLevelResponseWrapper(res);
         ServletResponseWrapper resWrapper2 = new SecondLevelResponseWrapper(resWrapper1);
         ServletResponseWrapper resWrapper3 = new ThirdLevelResponseWrapper(resWrapper2);
-       
+
         if (!resWrapper3.isWrapperFor(resWrapper1) ||
                 !resWrapper3.isWrapperFor(FirstLevelResponseWrapper.class)) {
             throw new ServletException("Unexpected result");

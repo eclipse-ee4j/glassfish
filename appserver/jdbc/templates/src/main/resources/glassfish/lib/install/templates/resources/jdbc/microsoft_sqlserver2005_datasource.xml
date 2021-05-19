@@ -41,8 +41,8 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="microsoft_sqlserver2005_pool" 
+    <jdbc-connection-pool
+        name="microsoft_sqlserver2005_pool"
         datasource-classname="com.microsoft.sqlserver.jdbc.SQLServerDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -52,9 +52,9 @@
         <property name="databaseName" value="DATABASE_NAME"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/microsoft_sqlserver2005_resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/microsoft_sqlserver2005_resource"
+        object-type="user"
         pool-name="microsoft_sqlserver2005_pool"/>
-</resources> 
+</resources>

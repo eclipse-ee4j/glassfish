@@ -20,7 +20,7 @@ import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface Enroller extends EJBObject {
- 
+
    public String doTest(String threadId)
       throws RemoteException;
 

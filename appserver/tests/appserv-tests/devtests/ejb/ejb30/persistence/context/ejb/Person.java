@@ -35,7 +35,7 @@ public class Person implements java.io.Serializable {
     public Person(String name){
         this.name = name;
     }
-    
+
     @Override public String toString(){
         return "Person: {"+"(name = "+name+")}";
     }
@@ -44,4 +44,4 @@ public class Person implements java.io.Serializable {
         return name;
     }
 }
- 
+

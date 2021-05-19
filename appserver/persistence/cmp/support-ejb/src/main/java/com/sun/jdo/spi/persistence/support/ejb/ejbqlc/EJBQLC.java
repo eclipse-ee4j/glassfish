@@ -36,15 +36,15 @@ import com.sun.jdo.spi.persistence.utility.logging.Logger;
 import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 
 /**
- * This class is the driver of the EJBQL compiler. It controls the compiler 
+ * This class is the driver of the EJBQL compiler. It controls the compiler
  * passes: syntax analysis, semantic analysis and generation of the JDOQL query.
  * <p>
- * A EJBQLC instance is able to compile multiple EJBQL queries as long as they 
- * come from the same deployement descriptor. The class uses the model instance 
- * passed to the constructor to access any meta data from the deployement 
- * descriptor. Method {@link #compile} compiles a single EJBQL query string 
- * together with the java.lang.reflect.Method instance of the corresponding 
- * finder/selector method. The result is a JDOQLElements instance, that can be 
+ * A EJBQLC instance is able to compile multiple EJBQL queries as long as they
+ * come from the same deployement descriptor. The class uses the model instance
+ * passed to the constructor to access any meta data from the deployement
+ * descriptor. Method {@link #compile} compiles a single EJBQL query string
+ * together with the java.lang.reflect.Method instance of the corresponding
+ * finder/selector method. The result is a JDOQLElements instance, that can be
  * used to construct a JDOQL query instance.
  *
  * @author  Michael Bouschen
@@ -54,28 +54,28 @@ public class EJBQLC
 {
     /** Meta data access. */
     protected Model model;
-    
+
     /** Name mapping EJB <-> JDO. */
     protected NameMapper nameMapper;
-    
+
     /** The intermediate form of the EJBQL query string. */
     protected EJBQLAST ast;
-    
+
     /** The logger */
     private static Logger logger = LogHelperQueryCompilerEJB.getLogger();
-    
+
     /** I18N support. */
     protected final static ResourceBundle msgs = I18NHelper.loadBundle(
         EJBQLC.class);
-        
+
     /**
      * Signature with CVS keyword substitution for identifying the generated code
      */
     public static final String SIGNATURE = "$RCSfile: EJBQLC.java,v $ $Revision: 1.3 $"; //NOI18N
-    
+
     /**
-     * Constructor. 
-     * 
+     * Constructor.
+     *
      * @param model meta data access.
      * @param nameMapper name mapping EJB <-> JDO.
      */
@@ -84,18 +84,18 @@ public class EJBQLC
         this.model = model;
         this.nameMapper = nameMapper;
     }
-    
+
     /**
-     * Compiles the specified query string for the specified 
+     * Compiles the specified query string for the specified
      * finder/selector method.
      * @param ejbqlQuery the EJBQL query text
      * @param method the Method instance of the finder or selector
      * @param resultTypeMapping result-type-mapping element from the DD
      * @param finderNotSelector <code>true</code> indicates a finder,
      * <code>false</code> a selector
-     * @param ejbName the ejb name of the entity bean 
+     * @param ejbName the ejb name of the entity bean
      */
-    public JDOQLElements compile(String ejbqlQuery, Method method, 
+    public JDOQLElements compile(String ejbqlQuery, Method method,
                                  int resultTypeMapping,
                                  boolean finderNotSelector, String ejbName)
         throws EJBQLException
@@ -103,16 +103,16 @@ public class EJBQLC
         boolean finer = logger.isLoggable(Logger.FINER);
         boolean finest = logger.isLoggable(Logger.FINEST);
         if (method == null)
-            ErrorMsg.fatal(I18NHelper.getMessage(msgs, 
+            ErrorMsg.fatal(I18NHelper.getMessage(msgs,
                 "ERR_MissingMethodInstance")); //NOI18N
         if ((ejbqlQuery == null) || ejbqlQuery.trim().length() == 0)
-            ErrorMsg.error(I18NHelper.getMessage(msgs, 
+            ErrorMsg.error(I18NHelper.getMessage(msgs,
                 "EXC_MissingEjbqlQueryText", ejbName, //NOI18N
-                getMethodSignature(method))); 
-        if (finer) 
+                getMethodSignature(method)));
+        if (finer)
             logger.finer("LOG_EJBQLCCompile", ejbName, //NOI18N
                          getMethodSignature(method), ejbqlQuery);
-                                    
+
         JDOQLElements result = null;
         TypeSupport typeSupport = new TypeSupport(model, nameMapper);
         ParameterSupport paramSupport = new ParameterSupport(method);
@@ -151,26 +151,26 @@ public class EJBQLC
         }
         catch (EJBQLException ex) {
             // add EJB name, finder/selector, EJBQL to error message.
-            Object[] msgArgs = { ejbName, getMethodSignature(method), 
+            Object[] msgArgs = { ejbName, getMethodSignature(method),
                                  ejbqlQuery, ex.getMessage() };
-            ErrorMsg.error(I18NHelper.getMessage(msgs, 
+            ErrorMsg.error(I18NHelper.getMessage(msgs,
                 "EXC_InvalidEJBQLQuery", msgArgs)); //NOI18N
         }
         catch (Throwable t) {
-            Object[] msgArgs = { ejbName, getMethodSignature(method), 
+            Object[] msgArgs = { ejbName, getMethodSignature(method),
                                  ejbqlQuery, t.toString() };
             // log a SEVERE message with nested exception
             ErrorMsg.log(Logger.SEVERE, I18NHelper.getMessage(msgs,
                     "EXC_EJBQLQueryInternalError", msgArgs), t); //NOI18N
         }
 
-        // return the JDOQLElements instance representing the elements 
+        // return the JDOQLElements instance representing the elements
         // of the JDOQL query.
         return result;
     }
 
     //========= Internal helper methods ==========
-    
+
     /**
      * Creates an ANTLR EJBQL parser reading a string.
      */
@@ -183,19 +183,19 @@ public class EJBQLC
         parser.setASTFactory(EJBQLASTFactory.getInstance());
         return parser;
     }
-    
-    /** 
-     * Returns the signature of a method w/o exceptions and modifiers 
+
+    /**
+     * Returns the signature of a method w/o exceptions and modifiers
      * as a string.
      */
     private String getMethodSignature(Method m)
     {
-        if (m == null) 
+        if (m == null)
             return ""; //NOI18N
-        
-        return m.getReturnType().getName() + ' ' + m.getName() + 
+
+        return m.getReturnType().getName() + ' ' + m.getName() +
             JavaClassWriterHelper.parenleft_ +
-            JavaClassWriterHelper.getParameterTypesList(m) + 
+            JavaClassWriterHelper.getParameterTypesList(m) +
             JavaClassWriterHelper.parenright_ ;
     }
 

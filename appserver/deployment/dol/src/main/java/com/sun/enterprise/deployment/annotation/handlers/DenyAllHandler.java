@@ -35,10 +35,10 @@ import jakarta.annotation.security.RolesAllowed;
 @Service
 @AnnotationHandlerFor(DenyAll.class)
 public class DenyAllHandler extends AbstractAuthAnnotationHandler {
-    
+
     public DenyAllHandler() {
     }
-    
+
     @Override
     protected void processEjbMethodSecurity(Annotation authAnnotation,
             MethodDescriptor md, EjbDescriptor ejbDesc) {
@@ -48,8 +48,8 @@ public class DenyAllHandler extends AbstractAuthAnnotationHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     @Override

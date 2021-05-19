@@ -25,20 +25,20 @@
          domain="Catalina"
          group="Valve"
          type="org.apache.catalina.authenticator.BasicAuthenticator">
-    
+
     <attribute   name="algorithm"
                description="The message digest algorithm to be used when generating session identifiers"
                type="java.lang.String"/>
-      
+
     <attribute name="cache"
                description="Should we cache authenticated Principals if the request is part of an HTTP session?"
                type="boolean"/>
-      
+
     <attribute   name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute name="debug"
                description="The debugging detail level for this component"
                type="int"/>
@@ -47,18 +47,18 @@
                description="A String initialization parameter used to increase the  entropy of the initialization of our random number generator"
                type="java.lang.String"/>
   </mbean>
-  
-  
+
+
   <mbean name="DigestAuthenticator"
          description="An Authenticator and Valve implementation of HTTP DIGEST Authentication"
          domain="Catalina"
          group="Valve"
          type="org.apache.catalina.authenticator.DigestAuthenticator">
-    
+
     <attribute name="algorithm"
                description="The message digest algorithm to be used when generating session identifiers"
                type="java.lang.String"/>
-      
+
     <attribute name="cache"
                description="Should we cache authenticated Principals if the request is part of an HTTP session?"
                type="boolean"/>
@@ -67,26 +67,26 @@
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute   name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
     <attribute   name="entropy"
                description="A String initialization parameter used to increase the  entropy of the initialization of our random number generator"
                type="java.lang.String"/>
   </mbean>
-  
+
   <mbean name="FormAuthenticator"
          description="An Authenticator and Valve implementation of FORM BASED Authentication"
          domain="Catalina"
          group="Valve"
          type="org.apache.catalina.authenticator.FormAuthenticator">
-    
+
     <attribute   name="algorithm"
                description="The message digest algorithm to be used when generating session identifiers"
                type="java.lang.String"/>
-      
+
     <attribute   name="cache"
                description="Should we cache authenticated Principals if the request is part of an HTTP session?"
                type="boolean"/>
@@ -99,26 +99,26 @@
     <attribute   name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
     <attribute   name="entropy"
                description="A String initialization parameter used to increase the entropy of the initialization of our random number generator"
                type="java.lang.String"/>
   </mbean>
-  
+
   <mbean name="NonLoginAuthenticator"
          description="An Authenticator and Valve implementation that checks only security constraints not involving user authentication"
          domain="Catalina"
          group="Valve"
          type="org.apache.catalina.authenticator.NonLoginAuthenticator">
-    
+
     <attribute name="algorithm"
                description="The message digest algorithm to be used when generating session identifiers"
                type="java.lang.String"/>
-      
+
     <attribute name="cache"
                description="Should we cache authenticated Principals if the request is part of an HTTP session?"
                type="boolean"/>
-      
+
     <attribute name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
@@ -132,23 +132,23 @@
                description="A String initialization parameter used to increase the entropy of the initialization of our random number generator"
                type="java.lang.String"/>
   </mbean>
-  
-  
+
+
   <mbean name="SingleSignOn"
          description="A Valve that supports a 'single signon' user experience"
          domain="Catalina"
          group="Valve"
          type="org.apache.catalina.authenticator.SingleSignOn">
-    
+
     <attribute   name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
   </mbean>
 
 
@@ -161,7 +161,7 @@
     <attribute name="algorithm"
                description="The message digest algorithm to be used when generating session identifiers"
                type="java.lang.String"/>
-      
+
     <attribute name="cache"
                description="Should we cache authenticated Principals if the request is part of an HTTP session?"
                type="boolean"/>
@@ -174,10 +174,10 @@
     <attribute name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
     <attribute name="entropy"
                description="A String initialization parameter used to increase the entropy of the initialization of our random number generator"
                type="java.lang.String"/>
   </mbean>
-  
+
 </mbeans-descriptors>

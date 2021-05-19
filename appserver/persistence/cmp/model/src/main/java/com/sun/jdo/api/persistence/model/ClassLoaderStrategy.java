@@ -29,71 +29,71 @@ package com.sun.jdo.api.persistence.model;
  */
 public class ClassLoaderStrategy
 {
-	/** System property key used to define the model behavior concerning
-	 * multiple class loaders. 
-	 * Value should be one of 
-	 * {@link #MULTIPLE_CLASS_LOADERS_IGNORE},
-	 * {@link #MULTIPLE_CLASS_LOADERS_RELOAD}, or 
-	 * {@link #MULTIPLE_CLASS_LOADERS_ERROR}
-	 */
-	public static final String PROPERTY_MULTIPLE_CLASS_LOADERS =
-		"com.sun.jdo.api.persistence.model.multipleClassLoaders"; //NOI18N
-	
-	/** Constant representing the value "ignore" of the System property
-	 * com.sun.jdo.api.persistence.model.multipleClassLoaders
-	 * Setting the system property to "ignore" causes the model to ignore
-	 * any new class loader for the same fully qualified class name.
-	 * @see RuntimeModel#findClassLoader
-	 */
-	public static final String MULTIPLE_CLASS_LOADERS_IGNORE = "ignore"; //NOI18N
+    /** System property key used to define the model behavior concerning
+     * multiple class loaders.
+     * Value should be one of
+     * {@link #MULTIPLE_CLASS_LOADERS_IGNORE},
+     * {@link #MULTIPLE_CLASS_LOADERS_RELOAD}, or
+     * {@link #MULTIPLE_CLASS_LOADERS_ERROR}
+     */
+    public static final String PROPERTY_MULTIPLE_CLASS_LOADERS =
+        "com.sun.jdo.api.persistence.model.multipleClassLoaders"; //NOI18N
 
-	/** Constant representing the value "reload" of the System property
-	 * com.sun.jdo.api.persistence.model.multipleClassLoaders 
-	 * Setting the system property to "reload" causes the model to reload 
-	 * the class mapping if it is specified with a new class loader.
-	 * @see RuntimeModel#findClassLoader
-	 */
-	public static final String MULTIPLE_CLASS_LOADERS_RELOAD = "reload"; //NOI18N
+    /** Constant representing the value "ignore" of the System property
+     * com.sun.jdo.api.persistence.model.multipleClassLoaders
+     * Setting the system property to "ignore" causes the model to ignore
+     * any new class loader for the same fully qualified class name.
+     * @see RuntimeModel#findClassLoader
+     */
+    public static final String MULTIPLE_CLASS_LOADERS_IGNORE = "ignore"; //NOI18N
 
-	/** Constant representing the value "error" of the System property
-	 * com.sun.jdo.api.persistence.model.multipleClassLoaders
-	 * Setting the system property to "reload" causes the model to throw an
-	 * exception if the same class is used with a diferent class loader.
-	 * @see RuntimeModel#findClassLoader
-	 */
-	public static final String MULTIPLE_CLASS_LOADERS_ERROR = "error"; //NOI18N
+    /** Constant representing the value "reload" of the System property
+     * com.sun.jdo.api.persistence.model.multipleClassLoaders
+     * Setting the system property to "reload" causes the model to reload
+     * the class mapping if it is specified with a new class loader.
+     * @see RuntimeModel#findClassLoader
+     */
+    public static final String MULTIPLE_CLASS_LOADERS_RELOAD = "reload"; //NOI18N
 
-	/** Value of the property used to define the model behavior concerning
-	 * multiple class loaders.
-	 */
-	private static String _strategy = System.getProperty(
-		PROPERTY_MULTIPLE_CLASS_LOADERS, MULTIPLE_CLASS_LOADERS_ERROR);
+    /** Constant representing the value "error" of the System property
+     * com.sun.jdo.api.persistence.model.multipleClassLoaders
+     * Setting the system property to "reload" causes the model to throw an
+     * exception if the same class is used with a diferent class loader.
+     * @see RuntimeModel#findClassLoader
+     */
+    public static final String MULTIPLE_CLASS_LOADERS_ERROR = "error"; //NOI18N
 
-	/** Get the value of the property 
-	 * {@link #PROPERTY_MULTIPLE_CLASS_LOADERS} used to define the model 
-	 * behavior concerning multiple class loaders.
-	 * @return the value of the property, one of
-	 * {@link #MULTIPLE_CLASS_LOADERS_IGNORE},
-	 * {@link #MULTIPLE_CLASS_LOADERS_RELOAD}, or
-	 * {@link #MULTIPLE_CLASS_LOADERS_ERROR}
-	 */
-	public static String getStrategy ()
-	{
-		return _strategy;
-	}
+    /** Value of the property used to define the model behavior concerning
+     * multiple class loaders.
+     */
+    private static String _strategy = System.getProperty(
+        PROPERTY_MULTIPLE_CLASS_LOADERS, MULTIPLE_CLASS_LOADERS_ERROR);
 
-	/** Sets the value of the property 
-	 * {@link #PROPERTY_MULTIPLE_CLASS_LOADERS} used to define the model 
-	 * behavior concerning multiple class loaders.
-	 * @param strategy the new value of the property. Value should be one of
-	 * {@link #MULTIPLE_CLASS_LOADERS_IGNORE},
-	 * {@link #MULTIPLE_CLASS_LOADERS_RELOAD}, or
-	 * {@link #MULTIPLE_CLASS_LOADERS_ERROR}
-	 * @see RuntimeModel#findClassLoader
-	 */
-	public static void setStrategy (String strategy)
-	{
-		_strategy = strategy;
-	}
+    /** Get the value of the property
+     * {@link #PROPERTY_MULTIPLE_CLASS_LOADERS} used to define the model
+     * behavior concerning multiple class loaders.
+     * @return the value of the property, one of
+     * {@link #MULTIPLE_CLASS_LOADERS_IGNORE},
+     * {@link #MULTIPLE_CLASS_LOADERS_RELOAD}, or
+     * {@link #MULTIPLE_CLASS_LOADERS_ERROR}
+     */
+    public static String getStrategy ()
+    {
+        return _strategy;
+    }
+
+    /** Sets the value of the property
+     * {@link #PROPERTY_MULTIPLE_CLASS_LOADERS} used to define the model
+     * behavior concerning multiple class loaders.
+     * @param strategy the new value of the property. Value should be one of
+     * {@link #MULTIPLE_CLASS_LOADERS_IGNORE},
+     * {@link #MULTIPLE_CLASS_LOADERS_RELOAD}, or
+     * {@link #MULTIPLE_CLASS_LOADERS_ERROR}
+     * @see RuntimeModel#findClassLoader
+     */
+    public static void setStrategy (String strategy)
+    {
+        _strategy = strategy;
+    }
 
 }

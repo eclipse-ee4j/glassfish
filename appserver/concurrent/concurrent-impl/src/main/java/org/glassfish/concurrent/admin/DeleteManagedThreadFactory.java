@@ -36,7 +36,7 @@ import jakarta.inject.Inject;
 
 /**
  * Delete Managed Thread Factory Command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @ExecuteOn(RuntimeType.ALL)
@@ -44,12 +44,12 @@ import jakarta.inject.Inject;
 @PerLookup
 @I18n("delete.managed.thread.factory")
 public class DeleteManagedThreadFactory implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteManagedThreadFactory.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteManagedThreadFactory.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-    
+
     @Param(name="managed_thread_factory_name", primary=true)
     private String jndiName;
 
@@ -74,7 +74,7 @@ public class DeleteManagedThreadFactory implements AdminCommand {
                 report.setMessage(rs.getMessage());
             }
             if (rs.getStatus() == ResourceStatus.SUCCESS) {
-                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);       
+                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             } else {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 if (rs.getException() != null)

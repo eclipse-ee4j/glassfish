@@ -27,282 +27,282 @@ import java.util.ArrayList;
 import com.sun.jdo.api.persistence.model.ModelException;
 
 /* TODO:
-	1. throw (Model or IllegalArgument)Exception on set illegal constant values?
-		also applies to PersistenceClass, Relationship classes
-	2. document default values for all constants (should that go in impl docs?)
-		also applies to PersistenceClass, Relationship classes
+    1. throw (Model or IllegalArgument)Exception on set illegal constant values?
+        also applies to PersistenceClass, Relationship classes
+    2. document default values for all constants (should that go in impl docs?)
+        also applies to PersistenceClass, Relationship classes
  */
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public class PersistenceFieldElement extends PersistenceMemberElement
 {
-	/** Constant representing a persistent field modifier. */
-	public static final int PERSISTENT = 0;
+    /** Constant representing a persistent field modifier. */
+    public static final int PERSISTENT = 0;
 
-	/** Constant representing a derived field modifier. */
-	public static final int DERIVED = 1;
+    /** Constant representing a derived field modifier. */
+    public static final int DERIVED = 1;
 
-	/** Constant representing a transient field modifier.  This constant is 
-	 * only here for comparison purposes, it will not be returned by 
-	 * <code>getPersistenceType</code> since there will be no instance of 
-	 * this class for transient fields.
-	 */
-	public static final int TRANSIENT = 2;
+    /** Constant representing a transient field modifier.  This constant is
+     * only here for comparison purposes, it will not be returned by
+     * <code>getPersistenceType</code> since there will be no instance of
+     * this class for transient fields.
+     */
+    public static final int TRANSIENT = 2;
 
-	/** Create new PersistenceFieldElement with no implementation. 
-	 * This constructor should only be used for cloning and archiving.
-	 */
-	public PersistenceFieldElement ()
-	{
-		this(null, null);
-	}
+    /** Create new PersistenceFieldElement with no implementation.
+     * This constructor should only be used for cloning and archiving.
+     */
+    public PersistenceFieldElement ()
+    {
+        this(null, null);
+    }
 
-	/** Create new PersistenceFieldElement with the provided implementation. The 
-	 * implementation is responsible for storing all properties of the object.
-	 * @param impl the implementation to use
-	 * @param declaringClass the class to attach to
-	 */
-	public PersistenceFieldElement (PersistenceFieldElement.Impl impl, 
-		PersistenceClassElement declaringClass)
-	{
-		super(impl, declaringClass);
-	}
+    /** Create new PersistenceFieldElement with the provided implementation. The
+     * implementation is responsible for storing all properties of the object.
+     * @param impl the implementation to use
+     * @param declaringClass the class to attach to
+     */
+    public PersistenceFieldElement (PersistenceFieldElement.Impl impl,
+        PersistenceClassElement declaringClass)
+    {
+        super(impl, declaringClass);
+    }
 
-	/** @return implemetation factory for this field
-	 */
-	final Impl getFieldImpl () { return (Impl)getImpl(); }
+    /** @return implemetation factory for this field
+     */
+    final Impl getFieldImpl () { return (Impl)getImpl(); }
 
-	/** Get the persistence type of this field element.
-	 * @return the persistence type, one of {@link #PERSISTENT} or 
-	 * {@link #DERIVED}
-	 */
-	public int getPersistenceType ()
-	{
-		return getFieldImpl().getPersistenceType();
-	}
+    /** Get the persistence type of this field element.
+     * @return the persistence type, one of {@link #PERSISTENT} or
+     * {@link #DERIVED}
+     */
+    public int getPersistenceType ()
+    {
+        return getFieldImpl().getPersistenceType();
+    }
 
-	/** Set the persistence type of this field element.
-	 * @param type - an integer indicating the persistence type, one of:
-	 * {@link #PERSISTENT} or {@link #DERIVED}
-	 * @exception ModelException if impossible
-	 */
-	public void setPersistenceType (int type) throws ModelException
-	{
-		getFieldImpl().setPersistenceType(type);
-	}	
+    /** Set the persistence type of this field element.
+     * @param type - an integer indicating the persistence type, one of:
+     * {@link #PERSISTENT} or {@link #DERIVED}
+     * @exception ModelException if impossible
+     */
+    public void setPersistenceType (int type) throws ModelException
+    {
+        getFieldImpl().setPersistenceType(type);
+    }
 
-	/** Determines whether this field element is read sensitive or not.  
-	 * This value is only used if <code>getPersistenceType</code> returns 
-	 * <code>DERIVED</code>
-	 * @return <code>true</code> if the field is read sensitive, 
-	 * <code>false</code> if it is not or if the persistence type is not derived
-	 * @see #isWriteSensitive
-	 * @see #setPersistenceType
-	 * @see #DERIVED
-	 */
-	public boolean isReadSensitive ()
-	{
-		return ((getPersistenceType() == DERIVED) &&
-			getFieldImpl().isReadSensitive());
-	}
+    /** Determines whether this field element is read sensitive or not.
+     * This value is only used if <code>getPersistenceType</code> returns
+     * <code>DERIVED</code>
+     * @return <code>true</code> if the field is read sensitive,
+     * <code>false</code> if it is not or if the persistence type is not derived
+     * @see #isWriteSensitive
+     * @see #setPersistenceType
+     * @see #DERIVED
+     */
+    public boolean isReadSensitive ()
+    {
+        return ((getPersistenceType() == DERIVED) &&
+            getFieldImpl().isReadSensitive());
+    }
 
-	/** Set whether this field element is read sensitive or not.
-	 * @param flag - if <code>true</code> and this is a derived field, the field
-	 * element is marked as read sensitive; otherwise, it is not
-	 * This value is only used if <code>getPersistenceType</code> returns 
-	 * <code>DERIVED</code>
-	 * @exception ModelException if impossible
-	 * @see #setWriteSensitive
-	 * @see #setPersistenceType
-	 * @see #DERIVED
-	 */
-	public void setReadSensitive (boolean flag) throws ModelException
-	{
-		getFieldImpl().setReadSensitive(flag);
-	}
+    /** Set whether this field element is read sensitive or not.
+     * @param flag - if <code>true</code> and this is a derived field, the field
+     * element is marked as read sensitive; otherwise, it is not
+     * This value is only used if <code>getPersistenceType</code> returns
+     * <code>DERIVED</code>
+     * @exception ModelException if impossible
+     * @see #setWriteSensitive
+     * @see #setPersistenceType
+     * @see #DERIVED
+     */
+    public void setReadSensitive (boolean flag) throws ModelException
+    {
+        getFieldImpl().setReadSensitive(flag);
+    }
 
-	/** Determines whether this field element is write sensitive or not.  
-	 * This value is only used if <code>getPersistenceType</code> returns 
-	 * <code>DERIVED</code>
-	 * @return <code>true</code> if the field is write sensitive, 
-	 * <code>false</code> if it is not or if the persistence type is not derived
-	 * @see #isReadSensitive
-	 * @see #setPersistenceType
-	 * @see #DERIVED
-	 */
-	public boolean isWriteSensitive ()
-	{		
-		return ((getPersistenceType() == DERIVED) &&
-			getFieldImpl().isWriteSensitive());
-	}
+    /** Determines whether this field element is write sensitive or not.
+     * This value is only used if <code>getPersistenceType</code> returns
+     * <code>DERIVED</code>
+     * @return <code>true</code> if the field is write sensitive,
+     * <code>false</code> if it is not or if the persistence type is not derived
+     * @see #isReadSensitive
+     * @see #setPersistenceType
+     * @see #DERIVED
+     */
+    public boolean isWriteSensitive ()
+    {
+        return ((getPersistenceType() == DERIVED) &&
+            getFieldImpl().isWriteSensitive());
+    }
 
-	/** Set whether this field element is write sensitive or not.
-	 * @param flag - if <code>true</code> and this is a derived field, the field
-	 * element is marked as write sensitive; otherwise, it is not
-	 * This value is only used if <code>getPersistenceType</code> returns 
-	 * <code>DERIVED</code>
-	 * @exception ModelException if impossible
-	 * @see #setReadSensitive
-	 * @see #setPersistenceType
-	 * @see #DERIVED
-	 */
-	public void setWriteSensitive (boolean flag) throws ModelException
-	{
-		getFieldImpl().setWriteSensitive(flag);
-	}
+    /** Set whether this field element is write sensitive or not.
+     * @param flag - if <code>true</code> and this is a derived field, the field
+     * element is marked as write sensitive; otherwise, it is not
+     * This value is only used if <code>getPersistenceType</code> returns
+     * <code>DERIVED</code>
+     * @exception ModelException if impossible
+     * @see #setReadSensitive
+     * @see #setPersistenceType
+     * @see #DERIVED
+     */
+    public void setWriteSensitive (boolean flag) throws ModelException
+    {
+        getFieldImpl().setWriteSensitive(flag);
+    }
 
-	/** Determines whether this field element is a key field or not.  
-	 * @return <code>true</code> if the field is a key field, 
-	 * <code>false</code> otherwise
-	 * @see PersistenceClassElement#getKeyClass
-	 */
-	public boolean isKey () { return getFieldImpl().isKey(); }
+    /** Determines whether this field element is a key field or not.
+     * @return <code>true</code> if the field is a key field,
+     * <code>false</code> otherwise
+     * @see PersistenceClassElement#getKeyClass
+     */
+    public boolean isKey () { return getFieldImpl().isKey(); }
 
-	/** Set whether this field element is a key field or not.
-	 * @param flag - if <code>true</code>, the field element is marked 
-	 * as a key field; otherwise, it is not
-	 * @exception ModelException if impossible
-	 * @see PersistenceClassElement#getKeyClass
-	 */
-	public void setKey (boolean flag) throws ModelException
-	{
-		getFieldImpl().setKey(flag);
-	}
+    /** Set whether this field element is a key field or not.
+     * @param flag - if <code>true</code>, the field element is marked
+     * as a key field; otherwise, it is not
+     * @exception ModelException if impossible
+     * @see PersistenceClassElement#getKeyClass
+     */
+    public void setKey (boolean flag) throws ModelException
+    {
+        getFieldImpl().setKey(flag);
+    }
 
-	//================== ConcurrencyGroups ===============================
-	// convenience method to access ConcurrencyGroupElements
+    //================== ConcurrencyGroups ===============================
+    // convenience method to access ConcurrencyGroupElements
 
-	/** Returns the array of concurrency groups to which this field belongs.
-	 * @return the concurrency groups in which this field participates
-	 * @see PersistenceClassElement#getConcurrencyGroups
-	 */
-	public ConcurrencyGroupElement[] getConcurrencyGroups ()
-	{
-		ConcurrencyGroupElement[] groups = getDeclaringClass().
-			getConcurrencyGroups();
-		int i, count = ((groups != null) ? groups.length : 0);
-		ArrayList myGroups = new ArrayList(count);
+    /** Returns the array of concurrency groups to which this field belongs.
+     * @return the concurrency groups in which this field participates
+     * @see PersistenceClassElement#getConcurrencyGroups
+     */
+    public ConcurrencyGroupElement[] getConcurrencyGroups ()
+    {
+        ConcurrencyGroupElement[] groups = getDeclaringClass().
+            getConcurrencyGroups();
+        int i, count = ((groups != null) ? groups.length : 0);
+        ArrayList myGroups = new ArrayList(count);
 
-		for (i = 0; i < count; i++)
-		{
-			ConcurrencyGroupElement group = groups[i];
+        for (i = 0; i < count; i++)
+        {
+            ConcurrencyGroupElement group = groups[i];
 
-			if (group.containsField(this))
-				myGroups.add(group);
-		}
-		
-		count = myGroups.size();
+            if (group.containsField(this))
+                myGroups.add(group);
+        }
 
-		return ((ConcurrencyGroupElement[])myGroups.toArray(
-			new ConcurrencyGroupElement[count]));
-	}
+        count = myGroups.size();
 
-	/** Computes the field number of this field element.
-	 * @return the field number of this field, -1 if it cannot be found
-	 */
-	public int getFieldNumber ()
-	{
-		// for later - take into account the class 
-		// get/setFieldInheritanceFlag behavior (i.e. might need to climb 
-		// inheritance hierarchy
-		PersistenceFieldElement[] fields = getDeclaringClass().getFields();
-		int i, count = ((fields != null) ? fields.length : 0);
+        return ((ConcurrencyGroupElement[])myGroups.toArray(
+            new ConcurrencyGroupElement[count]));
+    }
 
-		for (i = 0; i < count; i++)
-			if (equals(fields[i]))
-				return i;
+    /** Computes the field number of this field element.
+     * @return the field number of this field, -1 if it cannot be found
+     */
+    public int getFieldNumber ()
+    {
+        // for later - take into account the class
+        // get/setFieldInheritanceFlag behavior (i.e. might need to climb
+        // inheritance hierarchy
+        PersistenceFieldElement[] fields = getDeclaringClass().getFields();
+        int i, count = ((fields != null) ? fields.length : 0);
 
-		return -1;
-	}
+        for (i = 0; i < count; i++)
+            if (equals(fields[i]))
+                return i;
 
-	/* won't be used now -- we will compute this number whenever it is requested
-	public void setFieldNumber (int fieldNumber) {} */
+        return -1;
+    }
 
-	/** Pluggable implementation of the storage of field element properties.
-	 * @see PersistenceFieldElement#PersistenceFieldElement
-	 */
-	public interface Impl extends PersistenceMemberElement.Impl
-	{
-		/** Get the persistence type of this field element.
-		 * @return the persistence type, one of {@link #PERSISTENT} or 
-		 * {@link #DERIVED}
-		 */
-		public int getPersistenceType ();
+    /* won't be used now -- we will compute this number whenever it is requested
+    public void setFieldNumber (int fieldNumber) {} */
 
-		/** Set the persistence type of this field element.
-		 * @param type - an integer indicating the persistence type, one of:
-		 * {@link #PERSISTENT} or {@link #DERIVED}
-		 * @exception ModelException if impossible
-		 */
-		public void setPersistenceType (int type) throws ModelException;
+    /** Pluggable implementation of the storage of field element properties.
+     * @see PersistenceFieldElement#PersistenceFieldElement
+     */
+    public interface Impl extends PersistenceMemberElement.Impl
+    {
+        /** Get the persistence type of this field element.
+         * @return the persistence type, one of {@link #PERSISTENT} or
+         * {@link #DERIVED}
+         */
+        public int getPersistenceType ();
 
-		/** Determines whether this field element is read sensitive or not.  
-		 * This value is only used if <code>getPersistenceType</code> returns 
-		 * <code>DERIVED</code>
-		 * @return <code>true</code> if the field is read sensitive, 
-		 * <code>false</code> if it is not or if the persistence type is not 
-		 * derived
-		 * @see #isWriteSensitive
-		 * @see #setPersistenceType
-		 * @see #DERIVED
-		 * 
-		 */
-		public boolean isReadSensitive ();
+        /** Set the persistence type of this field element.
+         * @param type - an integer indicating the persistence type, one of:
+         * {@link #PERSISTENT} or {@link #DERIVED}
+         * @exception ModelException if impossible
+         */
+        public void setPersistenceType (int type) throws ModelException;
 
-		/** Set whether this field element is read sensitive or not.
-		 * @param flag - if <code>true</code> and this is a derived field, the 
-		 * field element is marked as read sensitive; otherwise, it is not
-		 * This value is only used if <code>getPersistenceType</code> returns 
-		 * <code>DERIVED</code>
-		 * @exception ModelException if impossible
-		 * @see #setWriteSensitive
-		 * @see #setPersistenceType
-		 * @see #DERIVED
-		 */
-		public void setReadSensitive (boolean flag) throws ModelException;
+        /** Determines whether this field element is read sensitive or not.
+         * This value is only used if <code>getPersistenceType</code> returns
+         * <code>DERIVED</code>
+         * @return <code>true</code> if the field is read sensitive,
+         * <code>false</code> if it is not or if the persistence type is not
+         * derived
+         * @see #isWriteSensitive
+         * @see #setPersistenceType
+         * @see #DERIVED
+         *
+         */
+        public boolean isReadSensitive ();
 
-		/** Determines whether this field element is write sensitive or not.  
-		 * This value is only used if <code>getPersistenceType</code> returns 
-		 * <code>DERIVED</code>
-		 * @return <code>true</code> if the field is write sensitive, 
-		 * <code>false</code> if it is not or if the persistence type is not 
-		 * derived
-		 * @see #isReadSensitive
-		 * @see #setPersistenceType
-		 * @see #DERIVED
-		 * 
-		 */
-		public boolean isWriteSensitive ();
+        /** Set whether this field element is read sensitive or not.
+         * @param flag - if <code>true</code> and this is a derived field, the
+         * field element is marked as read sensitive; otherwise, it is not
+         * This value is only used if <code>getPersistenceType</code> returns
+         * <code>DERIVED</code>
+         * @exception ModelException if impossible
+         * @see #setWriteSensitive
+         * @see #setPersistenceType
+         * @see #DERIVED
+         */
+        public void setReadSensitive (boolean flag) throws ModelException;
 
-		/** Set whether this field element is write sensitive or not.
-		 * @param flag - if <code>true</code> and this is a derived field, the 
-		 * field element is marked as write sensitive; otherwise, it is not
-		 * This value is only used if <code>getPersistenceType</code> returns 
-		 * <code>DERIVED</code>
-		 * @exception ModelException if impossible
-		 * @see #setReadSensitive
-		 * @see #setPersistenceType
-		 * @see #DERIVED
-		 */
-		public void setWriteSensitive (boolean flag) throws ModelException;
+        /** Determines whether this field element is write sensitive or not.
+         * This value is only used if <code>getPersistenceType</code> returns
+         * <code>DERIVED</code>
+         * @return <code>true</code> if the field is write sensitive,
+         * <code>false</code> if it is not or if the persistence type is not
+         * derived
+         * @see #isReadSensitive
+         * @see #setPersistenceType
+         * @see #DERIVED
+         *
+         */
+        public boolean isWriteSensitive ();
 
-		/** Determines whether this field element is a key field or not.  
-		 * @return <code>true</code> if the field is a key field, 
-		 * <code>false</code> otherwise
-		 * @see PersistenceClassElement#getKeyClass
-		 */
-		public boolean isKey ();
+        /** Set whether this field element is write sensitive or not.
+         * @param flag - if <code>true</code> and this is a derived field, the
+         * field element is marked as write sensitive; otherwise, it is not
+         * This value is only used if <code>getPersistenceType</code> returns
+         * <code>DERIVED</code>
+         * @exception ModelException if impossible
+         * @see #setReadSensitive
+         * @see #setPersistenceType
+         * @see #DERIVED
+         */
+        public void setWriteSensitive (boolean flag) throws ModelException;
 
-		/** Set whether this field element is a key field or not.
-		 * @param flag - if <code>true</code>, the field element is marked 
-		 * as a key field; otherwise, it is not
-		 * @exception ModelException if impossible
-		 * @see PersistenceClassElement#getKeyClass
-		 */
-		public void setKey (boolean flag) throws ModelException;
-	}
+        /** Determines whether this field element is a key field or not.
+         * @return <code>true</code> if the field is a key field,
+         * <code>false</code> otherwise
+         * @see PersistenceClassElement#getKeyClass
+         */
+        public boolean isKey ();
+
+        /** Set whether this field element is a key field or not.
+         * @param flag - if <code>true</code>, the field element is marked
+         * as a key field; otherwise, it is not
+         * @exception ModelException if impossible
+         * @see PersistenceClassElement#getKeyClass
+         */
+        public void setKey (boolean flag) throws ModelException;
+    }
 }

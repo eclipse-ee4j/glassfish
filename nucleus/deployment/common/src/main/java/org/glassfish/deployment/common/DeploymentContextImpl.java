@@ -183,7 +183,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      *         source
      * @link {org.jvnet.glassfish.apu.deployment.archive.ArchiveHandler.getClassLoader()}
      */
-    public ClassLoader getClassLoader() { 
+    public ClassLoader getClassLoader() {
       /* TODO -- Replace this method with another that does not imply it is
        * an accessor and conveys that the result may change depending on the
        * current lifecycle. For instance contemporaryClassLoader()
@@ -197,12 +197,12 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
     }
 
 
-    // this classloader will be used for sniffer retrieval, metadata parsing 
+    // this classloader will be used for sniffer retrieval, metadata parsing
     // and the prepare
     public synchronized void createDeploymentClassLoader(ClassLoaderHierarchy clh, ArchiveHandler handler)
             throws URISyntaxException, MalformedURLException {
         this.addTransientAppMetaData(ExtendedDeploymentContext.IS_TEMP_CLASSLOADER, Boolean.TRUE);
-        this.sharableTemp = createClassLoader(clh, handler, null); 
+        this.sharableTemp = createClassLoader(clh, handler, null);
     }
 
     // this classloader will used to load and start the application
@@ -235,9 +235,9 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
                 return cl.copy();
             }
         } else {
-            // we are out of the prepare phase, destroy the shareableTemp and 
+            // we are out of the prepare phase, destroy the shareableTemp and
             // return the final classloader
-            if (sharableTemp!=null) { 
+            if (sharableTemp!=null) {
                 try {
                     PreDestroy.class.cast(sharableTemp).preDestroy();
                 } catch (Exception e) {
@@ -359,9 +359,9 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      * @return the module's properties.
      */
     public Properties getModuleProps() {
-        // for standalone case, it would return the same as application level 
+        // for standalone case, it would return the same as application level
         // properties
-        // for composite case, the composite deployer will return proper 
+        // for composite case, the composite deployer will return proper
         // module level properties
         if (props==null) {
             props = new Properties();
@@ -413,7 +413,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
      * Returns the list of transformers registered to this context.
      *
      * @return the transformers list
-     */ 
+     */
     public List<ClassFileTransformer> getTransformers() {
         return transformers;
     }
@@ -422,7 +422,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
             throws URISyntaxException {
         List<URI> libURIs = new ArrayList<URI>();
         if (parameters.libraries() != null) {
-            URL[] urls = 
+            URL[] urls =
                 ASClassLoaderUtil.getDeployParamLibrariesAsURLs(
                     parameters.libraries(), env);
             for (URL url : urls) {
@@ -460,7 +460,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
             // for undeploy or deploy failure roll back
 
             // need to remove the generated directories...
-            // need to remove generated/xml, generated/ejb, generated/jsp, 
+            // need to remove generated/xml, generated/ejb, generated/jsp,
 
             // remove generated/xml
             File generatedXmlRoot = getScratchDir("xml");
@@ -618,7 +618,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
           if (deplLogger.isLoggable(Level.FINEST)) {
               deplLogger.log(Level.FINEST, "Unable to create directory " + f.getAbsolutePath());
           }
-          
+
         }
         return f;
     }
@@ -650,7 +650,7 @@ public class DeploymentContextImpl implements ExtendedDeploymentContext, PreDest
                 transientAppMetaData.clear();
             } else {
                 final String [] classNamesToClean = {Types.class.getName(), Parser.class.getName()};
-        
+
                 for (String className : classNamesToClean) {
                     transientAppMetaData.remove(className);
                 }

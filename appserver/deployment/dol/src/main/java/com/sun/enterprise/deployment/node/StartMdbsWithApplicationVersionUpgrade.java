@@ -21,7 +21,7 @@ package com.sun.enterprise.deployment.node;
  * start-mdbs-with-application to the latest version
  *
  * @author  Gerald Ingalls
- * @version 
+ * @version
  */
 public class StartMdbsWithApplicationVersionUpgrade extends RemoveVersionUpgrade {
   private static String START_MDBS_WITH_APPLICATION =

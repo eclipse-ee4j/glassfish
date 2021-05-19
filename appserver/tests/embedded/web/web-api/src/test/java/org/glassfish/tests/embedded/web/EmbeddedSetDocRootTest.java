@@ -36,7 +36,7 @@ import org.junit.Test;
 
 /**
  * Tests WebBuilding#setListings for directory listing feature
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedSetDocRootTest {
@@ -62,7 +62,7 @@ public class EmbeddedSetDocRootTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedWebAPIConfig() throws Exception {
         VirtualServer vs = (VirtualServer)
@@ -85,7 +85,7 @@ public class EmbeddedSetDocRootTest {
             sb.append(inputLine);
         }
         in.close();
-        
+
      }
 
     @AfterClass
@@ -97,6 +97,6 @@ public class EmbeddedSetDocRootTest {
             glassfish = null;
         }
     }
-    
-    
+
+
 }

@@ -49,7 +49,7 @@ import org.omg.IOP.*;
  * This class implements a client side security request interceptor for CSIV2. It is used to send and receive the
  * service context in a service context element in the service context list in an IIOP header.
  *
- * 
+ *
  */
 
 public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject implements ClientRequestInterceptor {
@@ -95,7 +95,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
     /**
      * Retrieves a single credential from a credset for the specified class. It also performs some semantic checking and
      * logging.
-     * 
+     *
      * A null is returned if semantic checking fails.
      */
     private java.lang.Object getCred(Set credset, Class c) {
@@ -148,7 +148,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
     private IdentityToken createIdToken(java.lang.Object cred, Class cls, ORB orb) throws Exception {
 
         IdentityToken idtok = null;
-        
+
         // byte[] cdrval ; // CDR encoding buffer
         Any any = orb.create_any();
         idtok = new IdentityToken();
@@ -162,16 +162,16 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
             idtok.dn(codec.encode_value(any));
         } else if (X509CertificateCredential.class.isAssignableFrom(cls)) {
             _logger.log(Level.FINE, "Constructing an X509 Certificate Chain Identity Token");
-            
+
             /* create a DER encoding */
             X509CertificateCredential certcred = (X509CertificateCredential) cred;
             X509Certificate[] certchain = certcred.getX509CertificateChain();
             _logger.log(Level.FINE, "Certchain length = " + certchain.length);
-            
+
             byte[] certBytes = CertificateFactory.getInstance("X.509")
                     .generateCertPath(asList(certchain))
                     .getEncoded();
-            
+
             X509CertificateChainHelper.insert(any, certBytes);
 
             /* IdentityToken with CDR encoded certificate chain */
@@ -192,7 +192,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
             /* IdentityToken with CDR encoded GSSUPName */
             idtok.principal_name(codec.encode_value(any));
         }
-        
+
         return (idtok);
     }
 
@@ -342,7 +342,7 @@ public class SecClientRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
     /**
      * Map the reply status code to a format suitable for J2EE RI.
-     * 
+     *
      * @param repst reply status from the service context field.
      * @return mapped status code
      *

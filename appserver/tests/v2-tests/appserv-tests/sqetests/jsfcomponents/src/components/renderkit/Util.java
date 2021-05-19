@@ -134,7 +134,7 @@ public class Util extends Object {
 // Relationship Instance Variables
 
 //
-// Constructors and Initializers    
+// Constructors and Initializers
 //
 
     private Util() {
@@ -170,7 +170,7 @@ public class Util extends Object {
 
 
     /**
-     * <p> Return a Locale instance using the following algorithm: 
+     * <p> Return a Locale instance using the following algorithm:
      *
      * <ul>
      *
@@ -204,9 +204,9 @@ public class Util extends Object {
                                         UIComponent component) {
         Locale result = null;
         String bundleName = null, bundleAttr = "bundle";
-	
-//	ParameterCheck.nonNull(context);
-//	ParameterCheck.nonNull(component);
+
+//    ParameterCheck.nonNull(context);
+//    ParameterCheck.nonNull(component);
 
         // verify our component has the proper attributes for bundle.
         if (null !=
@@ -217,7 +217,7 @@ public class Util extends Object {
                 (jakarta.servlet.jsp.jstl.fmt.LocalizationContext)
                 (Util.getValueBinding(bundleName)).getValue(context))) {
                 result = locCtx.getLocale();
-//		Assert.assert_it(null != result);
+//        Assert.assert_it(null != result);
             }
         }
         if (null == result) {

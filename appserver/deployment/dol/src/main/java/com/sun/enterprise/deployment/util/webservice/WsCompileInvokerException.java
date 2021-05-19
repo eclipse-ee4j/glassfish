@@ -17,15 +17,15 @@
 package com.sun.enterprise.deployment.util.webservice;
 
 /**
- * Represents an error in wscompile invocation 
+ * Represents an error in wscompile invocation
  */
+public class WsCompileInvokerException extends Exception {
 
-public class WsCompileInvokerException extends Exception 
-{
-	public WsCompileInvokerException() {}
-        
-	public WsCompileInvokerException(String s) 
-	{
-		super(s);
-	}
+    public WsCompileInvokerException() {
+    }
+
+
+    public WsCompileInvokerException(String s) {
+        super(s);
+    }
 }

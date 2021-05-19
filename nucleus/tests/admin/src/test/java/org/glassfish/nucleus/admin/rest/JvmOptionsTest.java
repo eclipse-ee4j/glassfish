@@ -235,7 +235,7 @@ public class JvmOptionsTest extends RestTestBase {
 
         return jvmOptions;
     }
-  
+
     protected String escape(String part) {
         String changed = part
                 .replace("\\", "\\\\")

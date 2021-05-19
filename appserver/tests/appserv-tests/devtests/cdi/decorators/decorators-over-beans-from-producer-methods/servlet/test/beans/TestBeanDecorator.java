@@ -22,9 +22,9 @@ import jakarta.inject.Inject;
 
 @Decorator
 public abstract class TestBeanDecorator implements TestBeanInterface{
-    
+
     public static boolean decoratorCalled = false;
-    
+
     @Inject
     @Delegate
     @ProducedAtRuntime
@@ -36,7 +36,7 @@ public abstract class TestBeanDecorator implements TestBeanInterface{
         decoratorCalled = true;
         return tb.m1();
     }
-    
-    
+
+
 
 }

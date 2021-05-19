@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static final String TEST_NAME = "get-attribute-after-include";
 
     private static final SimpleReporterAdapter stat =

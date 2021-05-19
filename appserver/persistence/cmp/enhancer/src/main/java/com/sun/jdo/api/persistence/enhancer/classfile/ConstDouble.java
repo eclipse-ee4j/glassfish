@@ -16,67 +16,68 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Class representing a double constant in the constant pool of a class file
  */
-
 public class ConstDouble extends ConstValue {
-  /* The tag value associated with ConstDouble */
-  public static final int MyTag = CONSTANTDouble;
+    /* The tag value associated with ConstDouble */
+    public static final int MyTag = CONSTANTDouble;
 
-  /* The value */
-  private double doubleValue;
+    /* The value */
+    private double doubleValue;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * The tag of this constant entry
-   */
-  public int tag () {
-    return MyTag;
-  }
+    /**
+     * The tag of this constant entry
+     */
+    public int tag () {
+        return MyTag;
+    }
 
-  /**
-   * return the value associated with the entry
-   */
-  public double value() {
-    return doubleValue;
-  }
+    /**
+     * return the value associated with the entry
+     */
+    public double value() {
+        return doubleValue;
+    }
 
-  /**
-   * Return the descriptor string for the constant type.
-   */
-  public String descriptor() {
-      return "D";//NOI18N
-  }
+    /**
+     * Return the descriptor string for the constant type.
+     */
+    public String descriptor() {
+        return "D";//NOI18N
+    }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTDouble(" + indexAsString() + "): " + //NOI18N
-          "doubleValue(" + Double.toString(doubleValue) + ")";//NOI18N
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTDouble(" + indexAsString() + "): " + //NOI18N
+            "doubleValue(" + Double.toString(doubleValue) + ")";//NOI18N
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  /**
-   * Construct a ConstDouble object 
-   */
-  ConstDouble (double f) {
-    doubleValue = f;
-  }
+    /**
+     * Construct a ConstDouble object
+     */
+    ConstDouble (double f) {
+        doubleValue = f;
+    }
 
-  void formatData (DataOutputStream b) throws IOException {
-    b.writeDouble(doubleValue);
-  }
+    void formatData (DataOutputStream b) throws IOException {
+        b.writeDouble(doubleValue);
+    }
 
-  static ConstDouble read (DataInputStream input) throws IOException {
-    return new ConstDouble (input.readDouble());
-  }
+    static ConstDouble read (DataInputStream input) throws IOException {
+        return new ConstDouble (input.readDouble());
+    }
 
-  void resolve (ConstantPool p) { }
+    void resolve (ConstantPool p) { }
 }
 

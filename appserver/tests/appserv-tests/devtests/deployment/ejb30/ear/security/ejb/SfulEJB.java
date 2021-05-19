@@ -51,12 +51,12 @@ public class SfulEJB implements Sful
         } catch(EJBException ex) {
             System.out.println("Expected failure from slessLocal.goodBye()");
         }
-        
+
         System.out.println(slessLocal.hello());
         return sless.hello();
     }
 
-    @RolesAllowed({"j2ee"}) 
+    @RolesAllowed({"j2ee"})
     public String goodAfternoon() {
         if (!sc.isCallerInRole("j2ee") || sc.isCallerInRole("sunuser")) {
             throw new RuntimeException("not of role j2ee or of role sunuser");

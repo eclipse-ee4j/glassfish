@@ -30,7 +30,7 @@ public class Client {
 
     private static final String TEST_NAME = "em-resource-injection-with-resource-declaration-in-another-jar";
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
                             new SimpleReporterAdapter("appserv-tests");
 
     private static String appName;

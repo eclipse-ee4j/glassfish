@@ -100,7 +100,7 @@ public class BasicAuthenticator
             (HttpServletResponse) response.getResponse();
         String authorization = request.getAuthorization();
 
-        /* IASRI 4868073 
+        /* IASRI 4868073
         String username = parseUsername(authorization);
         String password = parsePassword(authorization);
         principal = context.getRealm().authenticate(username, password);

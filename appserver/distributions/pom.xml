@@ -113,7 +113,7 @@
                                 </mappings>
                             </configuration>
                         </execution>
-                        
+
                         <execution>
                             <id>create-domain</id>
                             <phase>process-resources</phase>
@@ -122,7 +122,7 @@
                                 <commandlineArgs>${create-domain.args}</commandlineArgs>
                             </configuration>
                         </execution>
-                        
+
                         <!-- Build glassfish.zip -->
                         <execution>
                             <id>default-zip</id>

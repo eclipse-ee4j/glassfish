@@ -24,27 +24,27 @@ package com.sun.s1asdev.ejb.classload.lifecycle;
 public class DirectoryCategory {
     protected java.lang.String fullViewableName;
     protected java.lang.String specialEncoding;
-    
+
     public DirectoryCategory() {
     }
-    
+
     public DirectoryCategory(java.lang.String fullViewableName, java.lang.String specialEncoding) {
         this.fullViewableName = fullViewableName;
         this.specialEncoding = specialEncoding;
     }
-    
+
     public java.lang.String getFullViewableName() {
         return fullViewableName;
     }
-    
+
     public void setFullViewableName(java.lang.String fullViewableName) {
         this.fullViewableName = fullViewableName;
     }
-    
+
     public java.lang.String getSpecialEncoding() {
         return specialEncoding;
     }
-    
+
     public void setSpecialEncoding(java.lang.String specialEncoding) {
         this.specialEncoding = specialEncoding;
     }

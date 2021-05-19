@@ -22,9 +22,9 @@ import jakarta.persistence.*;
 @Table(name="EMPLOYEE")
 public class Employee implements java.io.Serializable {
 
-    private int	     	     id;
-    private String	     firstName;
-    private String	     lastName;
+    private int                  id;
+    private String         firstName;
+    private String         lastName;
     private Department       department;
 
     public Employee() {
@@ -32,18 +32,18 @@ public class Employee implements java.io.Serializable {
 
     public Employee(int id, String firstName, String lastName)
     {
-        	this.id = id;
-        	this.firstName = firstName;
-        	this.lastName = lastName;
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
     }
 
-    public Employee(int id, String firstName, String lastName, 
-		    Department department)
+    public Employee(int id, String firstName, String lastName,
+            Department department)
     {
-        	this.id = id;
-        	this.firstName = firstName;
-        	this.lastName = lastName;
-        	this.department = department;
+            this.id = id;
+            this.firstName = firstName;
+            this.lastName = lastName;
+            this.department = department;
     }
 
    // ===========================================================
@@ -100,9 +100,9 @@ public class Employee implements java.io.Serializable {
     }
 
     public String toString() {
-        return "Employee id=" + getId() 
-                + ", firstName=" + getFirstName() 
-                + ", lastName=" + getLastName() 
+        return "Employee id=" + getId()
+                + ", firstName=" + getFirstName()
+                + ", lastName=" + getLastName()
                 + ", department=" + getDepartment();
     }
 

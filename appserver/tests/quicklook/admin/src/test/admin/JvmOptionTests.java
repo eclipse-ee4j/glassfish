@@ -34,7 +34,7 @@ public class JvmOptionTests extends BaseAsadminTest {
     private static final String CJ          = "create-jvm-options";
     private static final String DJ          = "delete-jvm-options";
     private static final String LJ          = "list-jvm-options";
-    
+
     @Test(groups={"pulse"}) // test method
     public void createJoe() {
         Map<String, String> options = Collections.EMPTY_MAP;
@@ -54,12 +54,12 @@ public class JvmOptionTests extends BaseAsadminTest {
             String children = URLDecoder.decode(GeneralUtils.getValueForTypeFromManifest(man, GeneralUtils.AsadminManifestKeyType.CHILDREN), "UTF-8");
             if (!children.contains(TEST_JOE)) {
                 throw new RuntimeException("added JVM option: " + TEST_JOE + " does not exist in the list: " + children);
-            }   
+            }
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
     }
-    
+
     @Test(groups={"pulse"}, dependsOnMethods={"ensureCreatedJoeExists"})
     public void deleteJoe() {
         Map<String, String> options = Collections.EMPTY_MAP;
@@ -67,7 +67,7 @@ public class JvmOptionTests extends BaseAsadminTest {
         String up = GeneralUtils.toFinalURL(adminUrl, DJ, options, operand);
 //        Reporter.log("url: " + up);
         Manifest man = super.invokeURLAndGetManifest(up);
-        GeneralUtils.handleManifestFailure(man);        
+        GeneralUtils.handleManifestFailure(man);
     }
 
     @Test(groups={"pulse"}, dependsOnMethods={"deleteJoe"})
@@ -79,11 +79,11 @@ public class JvmOptionTests extends BaseAsadminTest {
             String children = URLDecoder.decode(GeneralUtils.getValueForTypeFromManifest(man, GeneralUtils.AsadminManifestKeyType.CHILDREN), "UTF-8");
             if (children.contains(TEST_JOE)) {
                 throw new RuntimeException("deleted JVM option: " + TEST_JOE + " exists in the list: " + children);
-            } 
+            }
         } catch (UnsupportedEncodingException ex) {
             throw new RuntimeException(ex);
         }
-            
+
     }
 
     private Manifest runListJoesCommand() {
@@ -93,5 +93,5 @@ public class JvmOptionTests extends BaseAsadminTest {
 //        Reporter.log("url: " + up);
         Manifest man = super.invokeURLAndGetManifest(up);
         return ( man );
-    }    
+    }
 }

@@ -62,7 +62,7 @@ public class BeanToTestProgrammaticLookup {
         System.out.println("# of Unproxyable types:"
                 + numberOfUnproxyableTypes);
         System.out.println("mock payment procssor:" + pp);
-        
+
         return (numberOfPaymentProcessors == 5)
         // Async, Sync, Cheque,
                 // ReliableCash,

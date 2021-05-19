@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for 
+ * Unit test for
  *   https://glassfish.dev.java.net/issues/show_bug.cgi?id=6810
  *   ("WebappClassLoader can not resolve resource with "." suffix")
  */
@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish IT 6810");
@@ -52,11 +52,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/TestServlet");
         System.out.println("Connecting to: " + url.toString());

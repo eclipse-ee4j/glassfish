@@ -76,9 +76,9 @@ public class JavaConfigSubTypesTest extends ConfigPersistence {
 
     @Override
     public ServiceLocator getHabitat() {
-    	return getBaseServiceLocator();
+            return getBaseServiceLocator();
     }
-    
+
     @Test
     public void doTest() throws TransactionFailure {
 
@@ -98,5 +98,5 @@ public class JavaConfigSubTypesTest extends ConfigPersistence {
     public boolean assertResult(String s) {
         return s.indexOf("-XFooBar")!=-1;
     }
-    
+
 }

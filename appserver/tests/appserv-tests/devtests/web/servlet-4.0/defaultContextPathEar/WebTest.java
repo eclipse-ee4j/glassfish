@@ -36,7 +36,7 @@ public class WebTest {
         host = args[0];
         port = Integer.parseInt(args[1]);
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for default-context-path setting in web.xml in an ear file");
         WebTest webTest = new WebTest(args);
@@ -44,8 +44,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {

@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-community-branding-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console Community Edition Theme Plugin</name>
     <description>Custom Theme Plugin for GlassFish Admin Console</description>
 

@@ -27,17 +27,17 @@ public interface Sful
     public String hello();
 
     public int getCount();
-    
+
     public void throwAppException(String msg)
         throws AppException;
 
     public String computeMid(int min, int max)
-	    throws SwapArgumentsException;
+            throws SwapArgumentsException;
 
     public String callDummy()
-	    throws Exception;
+            throws Exception;
 
-    public String eatException() 
+    public String eatException()
         throws EatException;
 
     public void  resetLifecycleCallbackCounters();
@@ -45,9 +45,9 @@ public interface Sful
     public int getPrePassivateCallbackCount();
 
     public int getPostActivateCallbackCount();
-    
+
     public void setID(int val);
-    
+
     public boolean isStateRestored();
 
     public Map<String, Boolean> checkSetParams();

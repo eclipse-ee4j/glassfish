@@ -33,8 +33,8 @@ import org.glassfish.gmbal.*;
 public class RealmStatsProvider {
 
     private CountStatisticImpl realmCount;
-    
-    
+
+
     public RealmStatsProvider() {
         realmCount = new CountStatisticImpl("RealmCount", "realm","No of Realms");
     }
@@ -44,17 +44,17 @@ public class RealmStatsProvider {
     public CountStatistic getRealmCount() {
         return realmCount;
     }
-    
+
     @ProbeListener("glassfish:security:realm:realmAddedEvent")
     public void realmAddedEvent(@ProbeParam("realmName")String realmName){
        realmCount.increment();
     }
-    
+
    @ProbeListener("glassfish:security:realm:realmRemovedEvent")
     public void realmRemovedEvent(@ProbeParam("realmName")String realmName){
        realmCount.decrement();
     }
-   
-    
-    
+
+
+
 }

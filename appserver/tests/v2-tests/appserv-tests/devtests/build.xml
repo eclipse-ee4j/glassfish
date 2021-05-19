@@ -42,16 +42,16 @@
         <ant dir="ejb" target="orb_integration"/>
         <record name="orb_integration.output" action="stop" />
         <antcall target="report">
-           <param name="result_count.sh" 
+           <param name="result_count.sh"
                   value="orb_integration_resultCount.sh" />
         </antcall>
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant orb_integration (Executes the orb integration tests)
+    <echo>
+        Usage:
+            ant orb_integration (Executes the orb integration tests)
 
-	</echo>
+    </echo>
     </target>
 </project>

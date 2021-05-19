@@ -33,12 +33,12 @@ import org.junit.Test;
  * @author tjquinn
  */
 public class PasswordAliasTest {
-    
+
     private static final char[] TEST_STORE_PW = "dontChangeIt".toCharArray();
-    
+
     private static File storeFile;
     private static PasswordAliasStore store;
-    
+
     @BeforeClass
     public static void createStore() throws Exception {
         storeFile = File.createTempFile("pwAliasStore", "jks");
@@ -47,37 +47,37 @@ public class PasswordAliasTest {
         final OutputStream os = new BufferedOutputStream(new FileOutputStream(storeFile));
         ks.store(os, TEST_STORE_PW);
         os.close();
-        
+
         store = JCEKSPasswordAliasStore.newInstance(storeFile.getAbsolutePath(), TEST_STORE_PW);
-        
+
         System.out.println("Created temporary store " + storeFile.getAbsolutePath());
     }
-    
+
     @AfterClass
     public static void deleteStore() throws Exception {
         if ( ! storeFile.delete()) {
             throw new IOException("Error cleaning up test alias store file " + storeFile.getAbsolutePath());
         }
     }
-    
+
     @Test
     public void checkShortPW() {
         checkStoreAndGetPWByAlias("aliasFoo", "123456");
     }
-    
+
     @Test
     public void checkLongPW() {
         checkStoreAndGetPWByAlias("aliasBar", "12345678901234567890");
     }
-    
+
     private void checkStoreAndGetPWByAlias(final String alias, final String pw) {
         store.put(alias, pw.toCharArray());
         final String retrievedPW = new String(store.get(alias));
-        Assert.assertEquals("Retrieved password failed to match stored password", 
-                getBytesInHex(pw.getBytes()), 
+        Assert.assertEquals("Retrieved password failed to match stored password",
+                getBytesInHex(pw.getBytes()),
                 getBytesInHex(retrievedPW.getBytes()));
     }
-    
+
     private static String getBytesInHex(final byte[] bytes) {
         StringBuilder sb = new StringBuilder();
         for (byte b: bytes) {

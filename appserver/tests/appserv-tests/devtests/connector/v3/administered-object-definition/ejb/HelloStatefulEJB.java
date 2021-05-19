@@ -115,7 +115,7 @@ public class HelloStatefulEJB implements HelloStateful {
         lookupAdminObject("java:app/env/HelloEJB_DD_AdminObject", true);
         lookupAdminObject("java:module/env/HelloEJB_DD_AdminObject", true);
         lookupAdminObject("java:comp/env/HelloEJB_DD_AdminObject", false);
-        
+
         System.out.println("StatefulEJB datasource-definitions Success");
 
     }

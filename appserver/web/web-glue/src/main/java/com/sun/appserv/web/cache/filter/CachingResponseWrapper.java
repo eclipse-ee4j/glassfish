@@ -30,7 +30,7 @@ import java.util.Locale;
 
 /**
  * a wrapper to HttpServletResponse to cache the outbound headers and content
- * @see jakarta.servlet.http.HttpServletResponseWrapper and 
+ * @see jakarta.servlet.http.HttpServletResponseWrapper and
  * @see jakarta.servlet.http.HttpServletResponse
  */
 public class CachingResponseWrapper extends HttpServletResponseWrapper {
@@ -75,14 +75,14 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
     CachingOutputStreamWrapper cosw;
     PrintWriter writer;
 
-    /** 
+    /**
      * Constructs a response adaptor wrapping the given response.
      * @throws java.lang.IllegalArgumentException if the response is null
      */
     public CachingResponseWrapper(HttpServletResponse response) {
-	    super(response);
+        super(response);
     }
-    
+
     /**
      * Create and return a ServletOutputStream to write the content
      * associated with this Response.
@@ -110,8 +110,8 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
         }
 
         return (ServletOutputStream)cosw;
-    }  
-      
+    }
+
     /**
      * Return the writer associated with this Response.
      *
@@ -135,8 +135,8 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
         writer = new PrintWriter(osw);
 
         return (writer);
-	}
-    
+    }
+
     /**
      * Set the content length (in bytes) for this Response.
      *
@@ -147,7 +147,7 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
 
         this.contentLength = len;
     }
-    
+
     /**
      * Set the content type for this Response.
      *
@@ -158,7 +158,7 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
 
         this.contentType = type;
     }
-    
+
     /**
      * Set the Locale that is appropriate for this response, including
      * setting the appropriate character encoding.
@@ -182,7 +182,7 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
             cookies.add(cookie);
         }
     }
-    
+
     /**
      * Set the specified header to the specified value.
      *
@@ -289,7 +289,7 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
 
         this.statusCode = sc;
     }
- 
+
     /**
      * Send an error response with the specified status and a
      * default message.
@@ -369,7 +369,7 @@ public class CachingResponseWrapper extends HttpServletResponseWrapper {
 
         return entry;
     }
-    
+
     /**
      * clear the contents of this wrapper
      */

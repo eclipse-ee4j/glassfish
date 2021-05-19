@@ -74,7 +74,7 @@ public final class NotificationEmitterSupport
         if ( mSenderThread != null )
         {
         mSenderThread.quit();
-        mSenderThread	= null;
+        mSenderThread        = null;
         }
          */
     }

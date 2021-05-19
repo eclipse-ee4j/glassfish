@@ -50,7 +50,7 @@ Responsible for loading ConfigBeanProxy MBeans (com.sun.enterprise.config.server
  * @author llc
  */
 @Taxonomy(stability = Stability.NOT_AN_INTERFACE)
-public final class AMXConfigLoader 
+public final class AMXConfigLoader
         implements TransactionListener {
 
     private static void debug(final String s) {
@@ -62,14 +62,14 @@ public final class AMXConfigLoader
     private final PendingConfigBeans mPendingConfigBeans;
     private final ConfigBeanRegistry mRegistry = ConfigBeanRegistry.getInstance();
     private final MBeanServer mServer;
-    
+
     /**
      * Detects illegal characters in MBean name values.  (Used instead of
      * individual character searches for efficiency)
      */
     private static final Pattern ILLEGAL_JMX_NAME_PATTERN = Pattern.compile(".*[=:"
             + Pattern.quote("\"") + Pattern.quote("*") + Pattern.quote("?") + "].*");
-    
+
     public AMXConfigLoader(
             final MBeanServer mbeanServer,
             final PendingConfigBeans pending,
@@ -152,11 +152,11 @@ public final class AMXConfigLoader
         // Process all ADD and REMOVE events first, placing leftovers into 'remainingEvents'
         // We do this even if AMX is *not* running, because they new ConfigBeans need to go
         // into the queue for when and if AMX starts running.
-        // 
+        //
         for (final PropertyChangeEvent event : events) {
             final Object oldValue = event.getOldValue();
             final Object newValue = event.getNewValue();
-            
+
             if (oldValue == null && newValue instanceof ConfigBeanProxy) {
                 // ADD: a new ConfigBean was added
                 final ConfigBeanProxy cbp = (ConfigBeanProxy) newValue;
@@ -526,7 +526,7 @@ public final class AMXConfigLoader
     }
 
     public Domain getDomain() {
-    	return InjectedValues.getInstance().getHabitat().getService(Domain.class);
+            return InjectedValues.getInstance().getHabitat().getService(Domain.class);
     }
 
     private static final AtomicLong sCounter = new AtomicLong(1);
@@ -558,11 +558,11 @@ public final class AMXConfigLoader
 
         return objectName;
     }
-    
+
     /**
      * Quotes the name string if it contains any characters that are illegal
      * in MBean names.
-     * 
+     *
      * @param name the string to examine
      * @return quoted string if it contains illegal characters; the string otherwise
      */
@@ -571,7 +571,7 @@ public final class AMXConfigLoader
          * JMX names cannot include =  or , or : or * or ? unless they are part of
          * the value and they are quoted.
          */
-        
+
         if (name != null && ILLEGAL_JMX_NAME_PATTERN.matcher(name).matches()) {
             return "\"" + name + "\"";
         } else {

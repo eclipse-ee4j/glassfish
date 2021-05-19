@@ -52,9 +52,9 @@ public final class Timer {
         long total;
 
         MethodCall(MethodDescriptor method,
-                   String message,
-                   long self,
-                   long total) {
+            String message,
+            long self,
+            long total) {
             this.method = method;
             this.message = message;
             this.self = self;
@@ -70,21 +70,20 @@ public final class Timer {
 
     // method call stack
     private final ArrayList calls = new ArrayList(16);
-    
-    public Timer()
-    {
-        
+
+    public Timer() {
     }
 
-    public Timer(PrintWriter out)
-    {
+
+    public Timer(PrintWriter out) {
         this.out = out;
     }
+
 
     public final synchronized void push(String name) {
         push(name, name);
     }
-    
+
     public final synchronized void push(String name, String message) {
         // get time
         final long now = System.currentTimeMillis();
@@ -104,8 +103,8 @@ public final class Timer {
         calls.add(new MethodCall(current, message, now, now));
     }
 
-    public final synchronized void pop()
-    {
+
+    public final synchronized void pop() {
         // get time
         final long now = System.currentTimeMillis();
 
@@ -131,36 +130,36 @@ public final class Timer {
 
         if (false) {
             out.println("Timer (n,g): " + call.message + " : ("
-                        + currentSelf + ", " + currentTotal + ")");
+                + currentSelf + ", " + currentTotal + ")");
         }
     }
 
-    static private final String pad(String s, int i)
-    {
+
+    static private final String pad(String s, int i) {
         StringBuffer b = new StringBuffer();
         for (i -= s.length(); i > 0; i--)
             b.append((char)' ');
         b.append(s);
         return b.toString();
     }
-    
-    public final synchronized void print()
-    {
+
+
+    public final synchronized void print() {
         out.println("Timer : printing accumulated times ...");
         final Object[] calls = methods.values().toArray();
 
         Arrays.sort(calls,
-                    new Comparator() {
-                            public int compare(Object o1,
-                                               Object o2) {
-                                return (int)(((MethodDescriptor)o2).total
-                                             - ((MethodDescriptor)o1).total);
-                            }
-                            public boolean equals(Object obj) {
-                                return (obj != null && compare(this, obj) == 0);
-                            }
-                        });
-        
+            new Comparator() {
+            public int compare(Object o1,
+                Object o2) {
+                return (int)(((MethodDescriptor)o2).total
+                    - ((MethodDescriptor)o1).total);
+            }
+            public boolean equals(Object obj) {
+                return (obj != null && compare(this, obj) == 0);
+            }
+        });
+
         out.println("Timer :  total s    self s  #calls  name");
         DecimalFormat nf = new DecimalFormat();
         nf.setMaximumFractionDigits(2);
@@ -171,10 +170,10 @@ public final class Timer {
             final MethodDescriptor current = (MethodDescriptor)calls[i];
 
             out.println("Timer : "
-                        + pad(nf.format(current.total / 1000.0), 8) + "  "
-                        + pad(nf.format(current.self / 1000.0), 8) + "  "
-                        + pad(String.valueOf(current.calls), 6) + "  "
-                        + current.name);
+                + pad(nf.format(current.total / 1000.0), 8) + "  "
+                + pad(nf.format(current.self / 1000.0), 8) + "  "
+                + pad(String.valueOf(current.calls), 6) + "  "
+                + current.name);
         }
     }
 }

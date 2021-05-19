@@ -18,5 +18,5 @@ package test.beans;
 
 
 public class TestRequestScopedBean {
-    
+
 }

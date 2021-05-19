@@ -48,9 +48,9 @@ public class StlesEJB implements Stles, SessionBean, TimedObject {
 
     public void verifyTimers() throws Exception {
         if (!timers.contains("Timer01"))
-            throw new EJBException("Timer01 hadn't fired"); 
+            throw new EJBException("Timer01 hadn't fired");
         if (!timers.contains("Timer00"))
-            throw new EJBException("Timer00 hadn't fired"); 
+            throw new EJBException("Timer00 hadn't fired");
     }
 
 }

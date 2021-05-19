@@ -21,23 +21,24 @@ import org.glassfish.admin.amx.annotation.ManagedOperation;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 /**
-A J2EE WebModule. Extends the J2EE management model with
-additional product-specific Attributes and operations.
-<br>
-The monitoring peer as returned from getMonitoringPeer() is
-{@link org.glassfish.admin.amx.monitor.WebModuleVirtualServerMonitor}
+ * A J2EE WebModule. Extends the J2EE management model with
+ * additional product-specific Attributes and operations.
+ * <br>
+ * The monitoring peer as returned from getMonitoringPeer() is
+ * {@link org.glassfish.admin.amx.monitor.WebModuleVirtualServerMonitor}
  */
 
 @AMXMBeanMetadata(type = J2EETypes.WEB_MODULE, leaf = true)
-public interface WebModule extends J2EEModule
-{
+public interface WebModule extends J2EEModule {
+
     /**
-    Note that the Attribute name is case-sensitive
-    "servlets" as defined by JSR 77.
+     * Note that the Attribute name is case-sensitive
+     * "servlets" as defined by JSR 77.
      */
     @ManagedAttribute
-    public String[] getservlets();
+    String[] getservlets();
+
 
     @ManagedOperation
-    public void reload();
+    void reload();
 }

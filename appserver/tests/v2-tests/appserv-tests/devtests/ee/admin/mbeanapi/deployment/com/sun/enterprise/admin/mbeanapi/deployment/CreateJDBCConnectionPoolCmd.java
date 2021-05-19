@@ -38,8 +38,8 @@ public class CreateJDBCConnectionPoolCmd extends BaseResourceCmd
         assert isConnected();
 
         final JDBCConnectionPoolConfig resource =
-        	getDomainConfig().createJDBCConnectionPoolConfig(
-            	getName(), getDatasourceClassname(), getOptional());
+            getDomainConfig().createJDBCConnectionPoolConfig(
+                getName(), getDatasourceClassname(), getOptional());
         return resource;
     }
 

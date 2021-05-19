@@ -21,7 +21,7 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 /**
  * Listener, which is interested in intercepting web services
  * deployment/undeployment
- * 
+ *
  * @author Alexey Stashok
  */
 public interface WebServiceDeploymentListener {

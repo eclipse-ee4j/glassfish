@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
             String name = (String)en.nextElement();
             String value = getInitParameter(name);
             msg += name + "=" + value + ", ";
-        } 
+        }
         writer.write(", initParams: " + msg + "\n");
     }
 }

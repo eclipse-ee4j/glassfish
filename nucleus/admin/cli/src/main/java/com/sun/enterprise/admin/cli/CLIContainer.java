@@ -223,7 +223,7 @@ public final class CLIContainer {
                     return result;
                 }
             } catch (Exception ex) {
-                //Not special case. 
+                //Not special case.
             }
         }
         if (logger.isLoggable(Level.FINER)) {

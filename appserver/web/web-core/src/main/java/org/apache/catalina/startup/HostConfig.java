@@ -45,7 +45,7 @@ import java.util.logging.Logger;
 
 public class HostConfig
     implements LifecycleListener {
-    
+
     private static final Logger log = LogFacade.getLogger();
     private static final ResourceBundle rb = log.getResourceBundle();
 
@@ -257,8 +257,8 @@ public class HostConfig
         this.unpackWARs = unpackWARs;
 
     }
-    
-    
+
+
      /**
      * Set the validation feature of the XML parser used when
      * parsing xml instances.
@@ -294,7 +294,7 @@ public class HostConfig
      */
     public void setXmlNamespaceAware(boolean xmlNamespaceAware){
         this.xmlNamespaceAware=xmlNamespaceAware;
-    }    
+    }
 
 
     // --------------------------------------------------------- Public Methods
@@ -453,8 +453,8 @@ public class HostConfig
                     if (host.findChild(contextPath) != null) {
                         if ((deployed.contains(file))
                             || (deployed.contains(file + ".war"))) {
-                            // If this is a newly added context file and 
-                            // it overrides a context with a simple path, 
+                            // If this is a newly added context file and
+                            // it overrides a context with a simple path,
                             // that was previously deployed by the auto
                             // deployer, undeploy the context
                             ((Deployer) host).remove(contextPath);
@@ -694,10 +694,10 @@ public class HostConfig
     private boolean validateContextPath(File appBase, String contextPath) {
         // More complicated than the ideal as the canonical path may or may
         // not end with File.separator for a directory
-        
+
         StringBuilder docBase;
         String canonicalDocBase = null;
-        
+
         try {
             String canonicalAppBase = appBase.getCanonicalPath();
             docBase = new StringBuilder(canonicalAppBase);
@@ -709,10 +709,10 @@ public class HostConfig
             }
             // At this point docBase should be canonical but will not end
             // with File.separator
-            
+
             canonicalDocBase =
                 (new File(docBase.toString())).getCanonicalPath();
-    
+
             // If the canonicalDocBase ends with File.separator, add one to
             // docBase before they are compared
             if (canonicalDocBase.endsWith(File.separator)) {
@@ -721,9 +721,9 @@ public class HostConfig
         } catch (IOException ioe) {
             return false;
         }
-        
+
         // Compare the two. If they are not the same, the contextPath must
-        // have /../ like sequences in it 
+        // have /../ like sequences in it
         return canonicalDocBase.equals(docBase.toString());
     }
 
@@ -755,11 +755,11 @@ public class HostConfig
                     // the context
                     continue;
                 }
-                ResourceAttributes webXmlAttributes = 
-                    (ResourceAttributes) 
+                ResourceAttributes webXmlAttributes =
+                    (ResourceAttributes)
                     resources.getAttributes("/WEB-INF/web.xml");
-                ResourceAttributes webInfAttributes = 
-                    (ResourceAttributes) 
+                ResourceAttributes webInfAttributes =
+                    (ResourceAttributes)
                     resources.getAttributes("/WEB-INF");
                 long newLastModified = webXmlAttributes.getLastModified();
                 long webInfLastModified = webInfAttributes.getLastModified();
@@ -800,7 +800,7 @@ public class HostConfig
                         contextXmlLastModified.remove(contextName);
                         String fileName = configFileName;
                         if (fileName.startsWith(configBase)) {
-                            fileName = 
+                            fileName =
                                 fileName.substring(configBase.length() + 1);
                             try {
                                 deployed.remove(fileName);
@@ -851,7 +851,7 @@ public class HostConfig
                                 deployed.remove(files[i]);
                                 deployed.remove(expandedDir + ".xml");
                                 if (host.findChild(contextPath) != null) {
-                                    ((Deployer) host).remove(contextPath, 
+                                    ((Deployer) host).remove(contextPath,
                                                              false);
                                     ExpandWar.deleteDir(expanded);
                                 }
@@ -862,7 +862,7 @@ public class HostConfig
                             }
                             deployApps();
                         }
-                        // If deployment was successful, reset 
+                        // If deployment was successful, reset
                         // the last modified values
                         if (host.findChild(contextPath) != null) {
                             webXmlLastModified.remove(contextPath);
@@ -909,7 +909,7 @@ public class HostConfig
             log.log(Level.WARNING, msg, e);
             result = false;
         }
-        
+
         return result;
     }
 
@@ -1004,7 +1004,7 @@ public class HostConfig
                 String configFiles[] = configBase.list();
                 deployDescriptors(configBase, configFiles);
             }
-        } 
+        }
 
     }
 

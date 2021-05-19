@@ -24,11 +24,10 @@ import org.glassfish.persistence.common.I18NHelper;
 /**
  * Basic support for enhancer implementation.
  */
-//@olsen: added class
-public class Support
-    extends Assertion {
+// @olsen: added class
+public class Support extends Assertion {
 
-    //^olsen: hack
+    // ^olsen: hack
     static public final Timer timer = new Timer();
 
     /**
@@ -36,21 +35,12 @@ public class Support
      */
     static private ResourceBundle MESSAGES;
 
-
-    /**
-     *
-     */
-    static
-    {
-        try
-        {
-            MESSAGES = I18NHelper.loadBundle(
-                "com.sun.jdo.api.persistence.enhancer.Bundle", //NOI18N
+    static {
+        try {
+            MESSAGES = I18NHelper.loadBundle("com.sun.jdo.api.persistence.enhancer.Bundle", // NOI18N
                 Support.class.getClassLoader());
-        }
-        catch (java.util.MissingResourceException ex)
-        {
-            ex.printStackTrace ();
+        } catch (java.util.MissingResourceException ex) {
+            ex.printStackTrace();
         }
     }
 
@@ -61,48 +51,43 @@ public class Support
         return I18NHelper.getMessage(MESSAGES, key);
     }
 
+
     /**
      * Returns the I18N message.
      */
-    static protected final String getI18N(String key,
-                                          String arg) {
+    static protected final String getI18N(String key, String arg) {
         return I18NHelper.getMessage(MESSAGES, key, arg);
     }
 
+
     /**
      * Returns the I18N message.
      */
-    static protected final String getI18N(String key,
-                                          String arg1,
-                                          String arg2) {
+    static protected final String getI18N(String key, String arg1, String arg2) {
         return I18NHelper.getMessage(MESSAGES, key, arg1, arg2);
     }
 
+
     /**
      * Returns the I18N message.
      */
-    static protected final String getI18N(String key,
-                                          String arg1,
-                                          String arg2,
-                                          String arg3) {
+    static protected final String getI18N(String key, String arg1, String arg2, String arg3) {
         return I18NHelper.getMessage(MESSAGES, key, arg1, arg2, arg3);
     }
 
-    /**
-     * Returns the I18N message.
-     */
-    static protected final String getI18N(String key,
-                                          int arg1,
-                                          String arg2) {
-        return I18NHelper.getMessage(MESSAGES, key,
-                                     new Object[]{new Integer(arg1), arg2});
-    }
 
     /**
      * Returns the I18N message.
      */
-    static protected final String getI18N(String key,
-                                          Object[] args) {
+    static protected final String getI18N(String key, int arg1, String arg2) {
+        return I18NHelper.getMessage(MESSAGES, key, new Object[] {Integer.valueOf(arg1), arg2});
+    }
+
+
+    /**
+     * Returns the I18N message.
+     */
+    static protected final String getI18N(String key, Object[] args) {
         return I18NHelper.getMessage(MESSAGES, key, args);
     }
 }

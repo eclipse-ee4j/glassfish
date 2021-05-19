@@ -71,8 +71,8 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=LbConfig.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-http-lb-ref", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-http-lb-ref",
         description="create-http-lb-ref",
         params={
             @RestParam(name="config", value="$parent")
@@ -130,7 +130,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
 
     final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(CreateHTTPLBRefCommand.class);
-    
+
     @Override
     public void execute(AdminCommandContext context) {
 
@@ -202,7 +202,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
                 return;
             }
         }
-        
+
         Cluster c = null;
         Server s = null;
         if (isCluster) {
@@ -230,7 +230,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
         if (report.getActionExitCode() != ActionReport.ExitCode.SUCCESS) {
             return;
         }
-        
+
         if(healthcheckerurl != null ){
             try {
                 final CreateHTTPHealthCheckerCommand command =
@@ -251,7 +251,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
                 return;
             }
         }
-        
+
         if(Boolean.parseBoolean(lbenableallinstances)) {
             try {
                 final EnableHTTPLBServerCommand command = (EnableHTTPLBServerCommand)runner
@@ -278,7 +278,7 @@ public final class CreateHTTPLBRefCommand extends LBCommandsBase
                         enableApp(context, ref.getRef());
                     }
                 }
-            }            
+            }
         }
     }
 

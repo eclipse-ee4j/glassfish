@@ -23,7 +23,7 @@ import org.glassfish.web.deployment.runtime.SessionConfig;
 import org.w3c.dom.Node;
 
 /**
-* superclass node for WebProperty container 
+* superclass node for WebProperty container
 *
 * @author Jerome Dochez
 */
@@ -47,45 +47,46 @@ public class SessionConfigNode extends RuntimeDescriptorNode<SessionConfig> {
      * Initialize the child handlers
      */
     public SessionConfigNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.SESSION_MANAGER), 
-                               SessionManagerNode.class, "setSessionManager");	
-        registerElementHandler(new XMLElement(RuntimeTagNames.SESSION_PROPERTIES), 
+        registerElementHandler(new XMLElement(RuntimeTagNames.SESSION_MANAGER),
+                               SessionManagerNode.class, "setSessionManager");
+        registerElementHandler(new XMLElement(RuntimeTagNames.SESSION_PROPERTIES),
                                SessionPropertiesNode.class, "setSessionProperties");
-        registerElementHandler(new XMLElement(RuntimeTagNames.COOKIE_PROPERTIES), 
+        registerElementHandler(new XMLElement(RuntimeTagNames.COOKIE_PROPERTIES),
                                CookiePropertiesNode.class, "setCookieProperties");
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, SessionConfig descriptor) {
-	Node sessionConfig = super.writeDescriptor(parent, nodeName, descriptor);
+        Node sessionConfig = super.writeDescriptor(parent, nodeName, descriptor);
 
-	// session-manager?
-	if (descriptor.getSessionManager()!=null) {
-	    SessionManagerNode smn = new SessionManagerNode();
-	    smn.writeDescriptor(sessionConfig, RuntimeTagNames.SESSION_MANAGER, descriptor.getSessionManager());
-	}
-	
-	// session-properties?
-	if (descriptor.getSessionProperties()!=null) {
-	    WebPropertyNode wpn = new WebPropertyNode();
-	    Node sessionProps = appendChild(sessionConfig, RuntimeTagNames.SESSION_PROPERTIES);
-	    wpn.writeDescriptor(sessionProps, RuntimeTagNames.PROPERTY, descriptor.getSessionProperties().getWebProperty());
-	}
-	
-	// cookie-properties?
-	if (descriptor.getCookieProperties()!=null) {
-	    WebPropertyNode wpn = new WebPropertyNode();
-	    Node cookieProps = appendChild(sessionConfig, RuntimeTagNames.COOKIE_PROPERTIES);
-	    wpn.writeDescriptor(cookieProps, RuntimeTagNames.PROPERTY, descriptor.getCookieProperties().getWebProperty());
-	}
-	
-	return sessionConfig;
+        // session-manager?
+        if (descriptor.getSessionManager()!=null) {
+            SessionManagerNode smn = new SessionManagerNode();
+            smn.writeDescriptor(sessionConfig, RuntimeTagNames.SESSION_MANAGER, descriptor.getSessionManager());
+        }
+
+        // session-properties?
+        if (descriptor.getSessionProperties()!=null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node sessionProps = appendChild(sessionConfig, RuntimeTagNames.SESSION_PROPERTIES);
+            wpn.writeDescriptor(sessionProps, RuntimeTagNames.PROPERTY, descriptor.getSessionProperties().getWebProperty());
+        }
+
+        // cookie-properties?
+        if (descriptor.getCookieProperties()!=null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node cookieProps = appendChild(sessionConfig, RuntimeTagNames.COOKIE_PROPERTIES);
+            wpn.writeDescriptor(cookieProps, RuntimeTagNames.PROPERTY, descriptor.getCookieProperties().getWebProperty());
+        }
+
+        return sessionConfig;
     }
 }

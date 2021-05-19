@@ -57,7 +57,7 @@ import org.glassfish.kernel.KernelLoggerInfo;
  * Very simple ModuleStartup that basically force an immediate shutdown.
  * When start() is invoked, the upgrade of the domain.xml has already been
  * performed.
- * 
+ *
  * @author Jerome Dochez
  */
 @Service(name="upgrade")
@@ -75,13 +75,13 @@ public class UpgradeStartup implements ModuleStartup {
     @Inject
     ArchiveFactory archiveFactory;
 
-    @Inject 
+    @Inject
     ServerEnvironment env;
 
     @Inject @Named( ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Server server;
 
-    @Inject 
+    @Inject
     Domain domain;
 
     @Inject
@@ -93,7 +93,7 @@ public class UpgradeStartup implements ModuleStartup {
     // we need to refine, a better logger should be used.
     @Inject
     Logger logger;
-    
+
     @Inject
     private InternalSystemAdministrator kernelIdentity;
 
@@ -106,7 +106,7 @@ public class UpgradeStartup implements ModuleStartup {
 
     private final static String SIGNATURE_TYPES_PARAM = "-signatureTypes";
 
-    private List<String> sigTypeList = new ArrayList<String>(); 
+    private List<String> sigTypeList = new ArrayList<String>();
 
     public void setStartupContext(StartupContext startupContext) {
         appservStartup.setStartupContext(startupContext);
@@ -116,7 +116,7 @@ public class UpgradeStartup implements ModuleStartup {
     // run correctly.
     public void start() {
 
-        // we need to disable all the applications before starting server 
+        // we need to disable all the applications before starting server
         // so the applications will not get loaded before redeployment
         // store the list of previous enabled applications
         // so we can reset these applications back to enabled after
@@ -162,13 +162,13 @@ public class UpgradeStartup implements ModuleStartup {
                 (ServerTags.IS_LIFECYCLE))) {
                 continue;
             }
-            logger.log(Level.INFO, "Redeploy application " + app.getName() + " located at " + app.getLocation());    
-            // we let upgrade proceed even if one application 
+            logger.log(Level.INFO, "Redeploy application " + app.getName() + " located at " + app.getLocation());
+            // we let upgrade proceed even if one application
             // failed to redeploy
             redeployApp(app);
         }
 
-        // re-enables all applications. 
+        // re-enables all applications.
         // we need to use the names in the enabledAppNames to find all
         // the application refs that need to be re-enabled
         // as the previous application collected not longer exist
@@ -218,25 +218,25 @@ public class UpgradeStartup implements ModuleStartup {
     private void cleanupLeftOverDirectories() {
         // 1. remove applications/j2ee-apps(modules) directory
         File oldJ2eeAppsRepository = new File(
-            env.getApplicationRepositoryPath(), J2EE_APPS); 
+            env.getApplicationRepositoryPath(), J2EE_APPS);
         FileUtils.whack(oldJ2eeAppsRepository);
         File oldJ2eeModulesRepository = new File(
             env.getApplicationRepositoryPath(), J2EE_MODULES);
         FileUtils.whack(oldJ2eeModulesRepository);
 
         // 2. remove generated/xml/j2ee-apps(modules) directory
-        File oldJ2eeAppsGeneratedXMLDir = new File( 
+        File oldJ2eeAppsGeneratedXMLDir = new File(
            env.getApplicationGeneratedXMLPath(), J2EE_APPS);
         FileUtils.whack(oldJ2eeAppsGeneratedXMLDir);
-        File oldJ2eeModulesGeneratedXMLDir = new File( 
+        File oldJ2eeModulesGeneratedXMLDir = new File(
            env.getApplicationGeneratedXMLPath(), J2EE_MODULES);
         FileUtils.whack(oldJ2eeModulesGeneratedXMLDir);
 
         // 3. remove generated/ejb/j2ee-apps(modules) directory
-        File oldJ2eeAppsEJBStubDir = new File( 
+        File oldJ2eeAppsEJBStubDir = new File(
            env.getApplicationEJBStubPath(), J2EE_APPS);
         FileUtils.whack(oldJ2eeAppsEJBStubDir);
-        File oldJ2eeModulesEJBStubDir = new File( 
+        File oldJ2eeModulesEJBStubDir = new File(
            env.getApplicationEJBStubPath(), J2EE_MODULES);
         FileUtils.whack(oldJ2eeModulesEJBStubDir);
 
@@ -267,7 +267,7 @@ public class UpgradeStartup implements ModuleStartup {
     private boolean redeployApp(Application app) {
         // we don't need to redeploy any v3 type application
         if (app.getModule().size() > 0 ) {
-            logger.log(Level.INFO, "Skip redeploying v3 type application " + 
+            logger.log(Level.INFO, "Skip redeploying v3 type application " +
                 app.getName());
             return true;
         }
@@ -278,8 +278,8 @@ public class UpgradeStartup implements ModuleStartup {
         // for archive deployment, let's repackage the archive and redeploy
         // that way
         // we cannot just directory redeploy the archive deployed apps in
-        // v2->v3 upgrade as the repository layout was different in v2 
-        // we should not have to repackage for any upgrade from v3 
+        // v2->v3 upgrade as the repository layout was different in v2
+        // we should not have to repackage for any upgrade from v3
         if (! Boolean.valueOf(app.getDirectoryDeployed())) {
             File repackagedFile = null;
             try {
@@ -293,19 +293,19 @@ public class UpgradeStartup implements ModuleStartup {
                 return false;
             }
             logger.log(Level.INFO, "Repackaged application " + app.getName()
-                + " at " + repackagedFile.getPath()); 
+                + " at " + repackagedFile.getPath());
             deployParams.path = repackagedFile;
         }
 
         deployParams.properties = app.getDeployProperties();
-        // remove the marker properties so they don't get carried over 
+        // remove the marker properties so they don't get carried over
         // through redeployment
         deployParams.properties.remove(MODULE_TYPE);
-        // add the compatibility property so the applications are 
+        // add the compatibility property so the applications are
         // upgraded/redeployed in a backward compatible way
         deployParams.properties.setProperty(
             DeploymentProperties.COMPATIBILITY, "v2");
-      
+
         // now override the ones needed for the upgrade
         deployParams.enabled = null;
         deployParams.force = true;
@@ -337,7 +337,7 @@ public class UpgradeStartup implements ModuleStartup {
         if (uri == null) {
             return null;
         }
-        
+
         Properties appProperties = app.getDeployProperties();
         String moduleType = appProperties.getProperty(MODULE_TYPE);
         String suffix = getSuffixFromType(moduleType);
@@ -381,13 +381,13 @@ public class UpgradeStartup implements ModuleStartup {
         Collection<String> directoryEntries = source.getDirectories();
         List<String> subModuleEntries = new ArrayList<String>();
         List<String> entriesToExclude = new ArrayList<String>();
- 
+
         // first put all the sub module jars to the target archive
         for (String directoryEntry : directoryEntries) {
-            if (directoryEntry.endsWith("_jar") || 
-                directoryEntry.endsWith("_war") || 
+            if (directoryEntry.endsWith("_jar") ||
+                directoryEntry.endsWith("_war") ||
                 directoryEntry.endsWith("_rar")) {
-                subModuleEntries.add(directoryEntry); 
+                subModuleEntries.add(directoryEntry);
                 File moduleJar = processModule(new File(
                     appDir, directoryEntry), targetParentDir, null);
                 OutputStream os = null;
@@ -422,8 +422,8 @@ public class UpgradeStartup implements ModuleStartup {
             if (! entriesToExclude.contains(entryName)) {
                 InputStream sis = source.getEntry(entryName);
                 if (isSigFile(entryName)) {
-                    logger.log(Level.INFO, "Excluding signature file: " 
-                        + entryName + " from repackaged application: " + 
+                    logger.log(Level.INFO, "Excluding signature file: "
+                        + entryName + " from repackaged application: " +
                         appName + "\n");
                     continue;
                 }
@@ -454,22 +454,22 @@ public class UpgradeStartup implements ModuleStartup {
 
         source.close();
         target.close();
-      
+
         return tempEar;
     }
 
-    private File repackageStandaloneModule(File moduleDirName, 
+    private File repackageStandaloneModule(File moduleDirName,
         String targetParentDir, String suffix) throws IOException {
         return processModule(moduleDirName, targetParentDir, suffix);
     }
 
     // repackage a module and return it as a jar file
-    private File processModule(File moduleDir, String targetParentDir, 
+    private File processModule(File moduleDir, String targetParentDir,
         String suffix) throws IOException {
- 
+
         String moduleName = moduleDir.getName();
 
-        // sub module in ear case 
+        // sub module in ear case
         if (moduleName.endsWith("_jar") || moduleName.endsWith("_war") || moduleName.endsWith("_rar")) {
             suffix = "." +  moduleName.substring(moduleName.length() - 3);
             moduleName = moduleName.substring(0, moduleName.lastIndexOf('_'));
@@ -492,8 +492,8 @@ public class UpgradeStartup implements ModuleStartup {
         while (e.hasMoreElements()) {
             String entryName = e.nextElement();
             if (isSigFile(entryName)) {
-                logger.log(Level.INFO, "Excluding signature file: " 
-                    + entryName + " from repackaged module: " + moduleName + 
+                logger.log(Level.INFO, "Excluding signature file: "
+                    + entryName + " from repackaged module: " + moduleName +
                     "\n");
                 continue;
             }
@@ -533,19 +533,19 @@ public class UpgradeStartup implements ModuleStartup {
             return null;
         }
         if (moduleType.equals(ServerTags.CONNECTOR_MODULE)) {
-            return ".rar"; 
+            return ".rar";
         }
         if (moduleType.equals(ServerTags.EJB_MODULE)) {
-            return ".jar"; 
+            return ".jar";
         }
         if (moduleType.equals(ServerTags.WEB_MODULE)) {
-            return ".war"; 
+            return ".war";
         }
         if (moduleType.equals(ServerTags.APPCLIENT_MODULE)) {
-            return ".jar"; 
+            return ".jar";
         }
         if (moduleType.equals(ServerTags.J2EE_APPLICATION)) {
-            return ".ear"; 
+            return ".ear";
         }
         return null;
     }
@@ -576,8 +576,8 @@ public class UpgradeStartup implements ModuleStartup {
 
     private void processManifest(Manifest m, String moduleName) {
         // remove signature related entries from the file
-        Map<String, Attributes> entries = m.getEntries(); 
-        Iterator<Map.Entry<String, Attributes>> entryItr = entries.entrySet().iterator(); 
+        Map<String, Attributes> entries = m.getEntries();
+        Iterator<Map.Entry<String, Attributes>> entryItr = entries.entrySet().iterator();
         while (entryItr.hasNext()) {
             Attributes attr = entryItr.next().getValue();
             Iterator<Map.Entry<Object, Object>> attrItr  = attr.entrySet().iterator();
@@ -587,8 +587,8 @@ public class UpgradeStartup implements ModuleStartup {
                     Attributes.Name attrKey2 = (Attributes.Name) attrKey;
                     if (attrKey2.toString().trim().equals("Digest-Algorithms")
                         || attrKey2.toString().indexOf("-Digest") != -1) {
-                        logger.log(Level.INFO, "Removing signature attribute " 
-                            + attrKey2 + " from manifest in "  + 
+                        logger.log(Level.INFO, "Removing signature attribute "
+                            + attrKey2 + " from manifest in "  +
                             moduleName + "\n");
                         attrItr.remove();
                     }

@@ -21,40 +21,38 @@ import com.sun.enterprise.deployment.MessageDestinationReferenceDescriptor;
 import java.util.Set;
 
 /**
- * This type defines the behaviour of a J2EE Component containing 
+ * This type defines the behaviour of a J2EE Component containing
  * message destination references.
  *
- * @author  Kennneth Saks
- * @version 
+ * @author Kennneth Saks
+ * @version
  */
 public interface MessageDestinationReferenceContainer {
-    
+
     /**
      * Add a message destination reference to myself
-     * 
+     *
      * @param the new message destination ref
      */
-    public void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference);
-    
+    void addMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestReference);
+
     /**
      * Return a message destination reference by the same name or throw an IllegalArgumentException.
      *
      * @param the message destination reference name
      */
-    public MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
-    
-   /**
-    * Return the set of message destination references declared.
-    */
-    public Set getMessageDestinationReferenceDescriptors();
+    MessageDestinationReferenceDescriptor getMessageDestinationReferenceByName(String name);
 
-    /**  
-     * Removes the specified message destination reference from the receiver.
-     *   
-     * @param ref MessageDestinationReferenceDescriptor to remove.
-     *
+    /**
+     * Return the set of message destination references declared.
      */
-    public void removeMessageDestinationReferenceDescriptor
-        (MessageDestinationReferenceDescriptor msgDestRef);   
+    Set getMessageDestinationReferenceDescriptors();
+
+    /**
+     * Removes the specified message destination reference from the receiver.
+     *
+     * @param ref MessageDestinationReferenceDescriptor to remove.
+     */
+    void removeMessageDestinationReferenceDescriptor(MessageDestinationReferenceDescriptor msgDestRef);
 }
 

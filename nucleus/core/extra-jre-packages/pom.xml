@@ -61,7 +61,7 @@
                         <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>system.bundle; extension:=framework</Fragment-Host>
-            
+
                             <Bundle-Description>${project.description}</Bundle-Description>
                               <Export-Package>com.ibm.security.util,
                                 com.ibm.security.x509,

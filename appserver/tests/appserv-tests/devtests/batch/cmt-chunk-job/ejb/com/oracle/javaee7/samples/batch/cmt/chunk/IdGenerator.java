@@ -21,5 +21,5 @@ package com.oracle.javaee7.samples.batch.cmt.chunk;
 public interface IdGenerator {
 
     public String nextId();
-    
+
 }

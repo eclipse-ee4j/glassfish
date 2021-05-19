@@ -128,7 +128,7 @@ public class Client {
                     e.printStackTrace();
                 }
             }
-        }   
+        }
         stat.addStatus("EJB embedded " + appName + " EJB", (pass)? stat.PASS : stat.FAIL);
         System.out.println("..........FINISHED test");
     }

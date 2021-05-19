@@ -32,7 +32,7 @@
         <pathelement location="${jmxri.jar}"/>
         <pathelement location="${mbeanapi.jar}"/>
         <pathelement location="${mbeanapi-impl.jar}"/>
-	    <pathelement location="${mgmtapi.jar}"/>
+        <pathelement location="${mgmtapi.jar}"/>
     </path>
 
     <path id="run.classpath">
@@ -40,7 +40,7 @@
       <pathelement location="${jmxri.jar}"/>
       <pathelement location="${mbeanapi.jar}"/>
       <pathelement location="${mbeanapi-impl.jar}"/>
-      <pathelement location="${jmxremote.jar}"/>       
+      <pathelement location="${jmxremote.jar}"/>
       <pathelement location="${mgmtapi.jar}"/>
     </path>
 
@@ -77,27 +77,27 @@
 
     <target name="run-standalone-instance-manager" description="runs the standalone instance manager unit test twice to create two standalone instances">
       <java classname="com.sun.enterprise.admin.mbeanapi.common.StandaloneInstanceManager">
-	<classpath refid="run.classpath"/>
-	<arg value="${standalone.instance.one}"/>	
+        <classpath refid="run.classpath"/>
+        <arg value="${standalone.instance.one}"/>
       </java>
       <java classname="com.sun.enterprise.admin.mbeanapi.common.StandaloneInstanceManager">
-	<classpath refid="run.classpath"/>
-	<arg value="${standalone.instance.two}"/>
-	<sysproperty key="HOST" value="localhost"/>
-	<sysproperty key="PORT" value="8686"/>
-	<sysproperty key="ADMIN_USER" value="admin"/>
-	<sysproperty key="ADMIN_PASSWORD" value="adminadmin"/>
+        <classpath refid="run.classpath"/>
+        <arg value="${standalone.instance.two}"/>
+        <sysproperty key="HOST" value="localhost"/>
+        <sysproperty key="PORT" value="8686"/>
+        <sysproperty key="ADMIN_USER" value="admin"/>
+        <sysproperty key="ADMIN_PASSWORD" value="adminadmin"/>
       </java>
     </target>
 
     <target name="run-amx-connection-verifier" description="runs the amx connection verifier unit test">
       <java classname="com.sun.enterprise.admin.mbeanapi.common.AMXConnectionVerifier">
-	<classpath refid="run.classpath"/>
-	<arg value="${standalone.instance.one}"/>	
-	<sysproperty key="HOST" value="localhost"/>
-	<sysproperty key="PORT" value="8686"/>
-	<sysproperty key="ADMIN_USER" value="admin"/>
-	<sysproperty key="ADMIN_PASSWORD" value="adminadmin"/>
+        <classpath refid="run.classpath"/>
+        <arg value="${standalone.instance.one}"/>
+        <sysproperty key="HOST" value="localhost"/>
+        <sysproperty key="PORT" value="8686"/>
+        <sysproperty key="ADMIN_USER" value="admin"/>
+        <sysproperty key="ADMIN_PASSWORD" value="adminadmin"/>
       </java>
     </target>
 </project>

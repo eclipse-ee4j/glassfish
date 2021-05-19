@@ -40,13 +40,13 @@ import java.lang.annotation.Annotation;
 @Service
 @AnnotationHandlerFor(RunAs.class)
 public class RunAsHandler extends AbstractCommonAttributeHandler {
-    
+
     public RunAsHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
-        
+
         RunAs runAsAn = (RunAs)ainfo.getAnnotation();
 
         for (EjbContext ejbContext : ejbContexts) {

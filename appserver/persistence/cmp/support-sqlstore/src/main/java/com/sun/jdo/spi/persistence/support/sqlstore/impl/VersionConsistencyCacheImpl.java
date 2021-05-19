@@ -52,7 +52,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     private static CacheFactory cacheFactory;
 
     private final static ResourceBundle messages =
-        I18NHelper.loadBundle(VersionConsistencyCacheImpl.class); 
+        I18NHelper.loadBundle(VersionConsistencyCacheImpl.class);
 
     /** Use the PersistenceManager's logger. */
     private static Logger logger = LogHelperPersistenceManager.getLogger();
@@ -112,7 +112,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
 
      /** LruCache only, 10 minute timeout */
     private static long timeout = 1000L * 60 * 10;
-    
+
     /** Name of property for specifying timeout. */
     private static final String TIMEOUT_PROPERTY =
         PROPERTY_PREFIX + "timeout"; // NOI18N
@@ -121,7 +121,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     static {
         cacheFactory = createCacheFactory();
     }
-    
+
 
     /** Empty default constructor. */
     private VersionConsistencyCacheImpl() {
@@ -144,7 +144,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      * on the setting of the runtime properties.  If the flag
      * <code>com.sun.jdo.spi.persistence.support.sqlstore.impl.VersionConsistency.LruCache</code>
      * is true, then the LruCache cache is used.  If it has some other value,
-     * the BucketizedHashtable cache is used.  If not set, but we can load 
+     * the BucketizedHashtable cache is used.  If not set, but we can load
      * the LruCache class, the LruCache cache is used.  Otherwise, we use
      * the BucketizedHashtable cache.  Other properties control particulars
      * of those two caches.
@@ -159,7 +159,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      */
     static CacheFactory createCacheFactory() {
         CacheFactory rc = null;
-        
+
         loadFactor = getFloatValue(LOAD_FACTOR_PROPERTY, loadFactor);
 
         bucketSize = getIntValue(BUCKET_SIZE_PROPERTY, bucketSize);
@@ -173,14 +173,14 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         // Determine whether to use LRU cache or not.
         boolean lruCache = false;
         try {
-            
+
             // Don't use Boolean.getBoolean, because we want to know if the
             // flag is given or not.
             String s = System.getProperty(LRU_CACHE_PROPERTY);
             if (s != null) {
                 lruCache = Boolean.valueOf(s).booleanValue();
                 if (lruCache) {
-                    
+
                     // If user specifies lruCache, but it is not available,
                     // log a WARNING and use the basic cache.
                     try {
@@ -193,7 +193,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
                         lruCache = false;
                     }
                 }
-                
+
             } else {
                 // No flag given: Try to load LRU cache
                 try {
@@ -204,7 +204,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
                 }
             }
         } catch (Exception ex) {
-            
+
             // This probably should not happen, but fallback to the
             // default cache just in case.
             lruCache = false;
@@ -332,7 +332,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         VCCache oid2sm = null;
         synchronized (pcTypeMap) {
             oid2sm = (VCCache) pcTypeMap.get(pcType);
-    
+
             if (null == oid2sm) {
                 oid2sm = cacheFactory.create();
                 pcTypeMap.put(pcType, oid2sm);
@@ -371,7 +371,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         synchronized (pcTypeMap) {
             oid2sm = (VCCache) pcTypeMap.get(pcType);
         }
-    
+
         if (null != oid2sm) {
             rc = oid2sm.get(oid);
         }
@@ -471,7 +471,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
                 rc += oid2sm.size();
             }
         }
-        return rc;                
+        return rc;
     }
 
     /**
@@ -480,7 +480,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
     public boolean isHighPerf() {
         return LruCacheFactory.class.equals(cacheFactory.getClass());
     }
-    
+
     //
     // Support for the inner map.  It is either HashMap- or Cache- based.
     //
@@ -512,7 +512,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
      */
     static class BasicVCCache implements VCCache {
         private final Map cache;
-        
+
         BasicVCCache() {
             if (logger.isLoggable(Logger.FINER)) {
                 logger.finer(
@@ -529,7 +529,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
                     new BucketizedHashtable(
                             bucketSize, initialCapacity, loadFactor));
         }
-        
+
         /** @see Map#put */
         public StateManager put(Object key, StateManager value) {
             return (StateManager) cache.put(key, value);
@@ -544,7 +544,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
         public StateManager remove(Object key) {
             return (StateManager) cache.remove(key);
         }
-        
+
         /** @see Map#clear */
         public void clear() {
             cache.clear();
@@ -560,7 +560,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
             return cache.size();
         }
     }
-        
+
     /**
      * VCCache that uses LRU cachd.  Methods are not synchronized, but
      * underlying cache implementation <em>is</em>.
@@ -605,7 +605,7 @@ public class VersionConsistencyCacheImpl implements VersionConsistencyCache {
                     });
             cache = c;
         }
-        
+
         /** @see Map#put */
         public StateManager put(Object key, StateManager value) {
             return (StateManager) cache.put(key, value);

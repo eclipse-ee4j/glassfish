@@ -37,7 +37,7 @@ public class SubjectUtil {
      */
     public static List<String> getUsernamesFromSubject(Subject subject) {
 
-        List<String> userList = new ArrayList<String>();
+        List<String> userList = new ArrayList<>();
 
         Set<Principal> princSet = null;
 
@@ -45,10 +45,9 @@ public class SubjectUtil {
 
             princSet = subject.getPrincipals();
             for (Principal p : princSet) {
-                if ((p != null) && (
-                  p.getClass().isAssignableFrom(PrincipalImpl.class)  ||
-                  "weblogic.security.principal.WLSUserImpl".equals(p.getClass().getCanonicalName())
-                		)) {
+                if ((p != null)
+                    && (p.getClass().isAssignableFrom(PrincipalImpl.class)
+                    || "weblogic.security.principal.WLSUserImpl".equals(p.getClass().getCanonicalName()))) {
                     String uName = p.getName();
                     userList.add(uName);
                 }
@@ -68,7 +67,7 @@ public class SubjectUtil {
      */
     public static List<String> getGroupnamesFromSubject(Subject subject) {
 
-        List<String> groupList = new ArrayList<String>();
+        List<String> groupList = new ArrayList<>();
 
         Set<Group> princSet = null;
 

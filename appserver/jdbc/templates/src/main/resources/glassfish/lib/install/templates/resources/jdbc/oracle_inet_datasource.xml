@@ -27,23 +27,23 @@
     Administration Guide >> JDBC Resources  >> Configurations for Specific JDBC Drivers
     http://docs.sun.com/app/docs/doc/819-3658/6n5s5nklk?a=view
 
-    For detailed explanation of attributes and elements of this resources xml 
+    For detailed explanation of attributes and elements of this resources xml
     pl. refer to sun-resources_1_3.dtd
 
     ====================================================================
     |  res-type                             datasource-classname       |
     ====================================================================
-    |  javax.sql.DataSource  		    com.inet.ora.OraDataSource |
+    |  javax.sql.DataSource              com.inet.ora.OraDataSource |
     |  javax.sql.ConnectionPoolDataSource   com.inet.ora.PDataSource   |
-    |  javax.sql.XADataSource 		    com.inet.ora.XDataSource   |
+    |  javax.sql.XADataSource             com.inet.ora.XDataSource   |
     ====================================================================
 
     URL Format : jdbc:inetora:SERVER_NAME:PORT_NUMBER:DATABASE_NAME
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="oracle_inet_pool" 
+    <jdbc-connection-pool
+        name="oracle_inet_pool"
         datasource-classname="com.inet.ora.OraDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -53,9 +53,9 @@
         <property name="port" value="1521"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/oracle_inet_resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/oracle_inet_resource"
+        object-type="user"
         pool-name="oracle_inet_pool"/>
-</resources> 
+</resources>

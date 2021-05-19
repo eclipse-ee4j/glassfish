@@ -34,14 +34,14 @@ import org.junit.Test;
 
 /**
  * Tests VirtualServer#getContexts after deploy
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedGetContextsTest {
 
     static GlassFish glassfish;
     static WebContainer embedded;
-    static File root;                
+    static File root;
     static String contextRoot = "test";
 
     @BeforeClass
@@ -53,7 +53,7 @@ public class EmbeddedGetContextsTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -118,7 +118,7 @@ public class EmbeddedGetContextsTest {
         if (appName!=null)
             deployer.undeploy(appName);
 
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -129,5 +129,5 @@ public class EmbeddedGetContextsTest {
             glassfish = null;
         }
     }
-    
+
 }

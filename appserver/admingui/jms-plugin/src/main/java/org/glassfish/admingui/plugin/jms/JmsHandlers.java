@@ -430,7 +430,7 @@ public class JmsHandlers {
 
         return map;
     }
-    
+
     private static MBeanServerConnection getMBeanServerConnection(String target) throws ConnectorRuntimeException, Exception {
         ServiceLocator habitat = GuiUtil.getHabitat();
         Domain domain = habitat.getService(Domain.class);
@@ -442,16 +442,16 @@ public class JmsHandlers {
         } else {
             configRef = cluster.getConfigRef();
         }
-        
+
         PhysicalDestinations pd = new PhysicalDestinations();
         MQJMXConnectorInfo mqInfo = pd.getConnectorInfo(target, configRef, habitat, domain);
-        
+
         return mqInfo.getMQMBeanServerConnection();
     }
-    
+
     private static class PhysicalDestinations extends JMSDestination {
         public MQJMXConnectorInfo getConnectorInfo(String target, String configName, ServiceLocator habitat, Domain domain) throws Exception {
-            return getMQJMXConnectorInfo(target, domain.getConfigNamed(configName), habitat.<ServerContext>getService(ServerContext.class), 
+            return getMQJMXConnectorInfo(target, domain.getConfigNamed(configName), habitat.<ServerContext>getService(ServerContext.class),
                 domain, habitat.<ConnectorRuntime>getService(ConnectorRuntime.class));
         }
     }

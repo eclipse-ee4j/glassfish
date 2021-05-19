@@ -78,7 +78,7 @@ public class TransactionListenerTest extends ConfigApiTest {
             assertTrue("500".equals(http.getMaxConnections()));
 
             transactions.waitForDrain();
-            
+
             assertTrue(events!=null);
             logger.fine("Number of events " + events.size());
             assertTrue(events.size()==1);

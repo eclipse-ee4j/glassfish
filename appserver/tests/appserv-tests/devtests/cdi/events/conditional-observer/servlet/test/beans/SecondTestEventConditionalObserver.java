@@ -27,7 +27,7 @@ public class SecondTestEventConditionalObserver implements Serializable{
     public static int documentCreatedEvent = 0;
 
     //should not get called as there is no conversation is in this test
-    public void onDocumentCreate(@Observes(notifyObserver=Reception.IF_EXISTS) 
+    public void onDocumentCreate(@Observes(notifyObserver=Reception.IF_EXISTS)
             @Created Document d) {
         System.out.println("TestEventObserver:onDocumentCreate");
         documentCreatedEvent++;

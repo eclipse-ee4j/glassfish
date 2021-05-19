@@ -22,7 +22,7 @@ package org.glassfish.common.locator;
  */
 @ProxiableSingletonScope
 public class SimpleService {
-    
+
     /**
      * Ensures a method can be called on a proxied service
      */

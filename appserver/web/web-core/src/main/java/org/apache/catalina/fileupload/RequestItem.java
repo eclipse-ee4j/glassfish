@@ -95,7 +95,7 @@ interface RequestItem {
      *         field; <code>false</code> if it represents an uploaded file.
      */
     boolean isFormField();
-    
+
     /**
      * Returns the item headers.
      * @return The items header object

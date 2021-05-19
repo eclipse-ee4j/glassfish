@@ -55,7 +55,7 @@ import com.sun.enterprise.admin.mbeanapi.common.AMXConnector;
  */
 public class EJBMonitoring {
 
-    private final DomainRoot	mDomainRoot;
+    private final DomainRoot    mDomainRoot;
 
     private String SERVER_NAME = "server";
 
@@ -73,9 +73,9 @@ public class EJBMonitoring {
                         getServerRootMonitorMap().  get(SERVER_NAME);
         Map appsMtrMgr = svrRootMtr.getApplicationMonitorMap();
 
-        ApplicationMonitor appMtr = 
+        ApplicationMonitor appMtr =
             (ApplicationMonitor) appsMtrMgr.get(APP_NAME);
-       
+
         Map ejbMgr = appMtr.getEJBModuleMonitorMap();
 
         Stats stats = null;
@@ -90,12 +90,12 @@ public class EJBMonitoring {
             EJBModuleMonitor beanMgr =  (EJBModuleMonitor) tmp;
 
             Map beans = beanMgr.getEJBMonitorMap();
-       
+
             Iterator it = beans.values().iterator();
 
             while (it.hasNext()) {
                 EJBMonitor em = (EJBMonitor) it.next();
-                listStats(em); 
+                listStats(em);
 
                 Map methodMap = em.getBeanMethodMonitorMap();
                 itr = methodMap.values().iterator();
@@ -138,40 +138,40 @@ public class EJBMonitoring {
         printStats(sts);
     }
 
-    public void printStats(Statistic[] stats) 
+    public void printStats(Statistic[] stats)
     {
         if (stats == null)
             return;
 
-        for ( int i=0; i < stats.length; i++) 
+        for ( int i=0; i < stats.length; i++)
         {
             printStat(stats[i]);
         }
-        
+
     }
-    
-    public void printStat(Statistic stat) 
+
+    public void printStat(Statistic stat)
     {
         if (stat == null)
             return;
         else
-            System.out.println(" Stat name is " + stat.getName() + 
-                " description: " + stat.getDescription() + " start time " 
-                + stat.getStartTime() + " last sample time " 
+            System.out.println(" Stat name is " + stat.getName() +
+                " description: " + stat.getDescription() + " start time "
+                + stat.getStartTime() + " last sample time "
                 + stat.getLastSampleTime() + " unit " + stat.getUnit());
     }
 
-    public EJBMonitoring(final String host, 
-                                   final int port, 
-                                   final String adminUser, 
+    public EJBMonitoring(final String host,
+                                   final int port,
+                                   final String adminUser,
                                    final String adminPassword,
                                    final boolean useTLS)
                                     throws IOException
     {
-        final AMXConnector ct	= 
+        final AMXConnector ct    =
             new AMXConnector( host, port, adminUser, adminPassword, useTLS );
 
-        mDomainRoot	= ct.getDomainRoot();
+        mDomainRoot    = ct.getDomainRoot();
 
     }
 
@@ -189,7 +189,7 @@ public class EJBMonitoring {
             System.getProperty("ADMIN_PASSWORD", "adminadmin"),
             Boolean.getBoolean(System.getProperty("USE_TLS", "false")));
 
-           ejbMtr.testEJBPoolStats(); 
+           ejbMtr.testEJBPoolStats();
         }
         catch( Throwable t )
         {

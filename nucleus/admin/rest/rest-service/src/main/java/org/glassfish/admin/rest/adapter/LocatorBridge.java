@@ -22,7 +22,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * This is a bridge from one service locator to another, which is not related via parentage
- * 
+ *
  * @author jwells
  *
  */

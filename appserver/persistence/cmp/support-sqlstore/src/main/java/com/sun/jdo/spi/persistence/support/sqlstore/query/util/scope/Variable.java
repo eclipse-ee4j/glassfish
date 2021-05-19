@@ -43,14 +43,14 @@ public class Variable
     {
         super(type);
     }
-	
+
     /**
      *
      */
-	public String getName()
-	{
-		return I18NHelper.getMessage(messages, "scope.variable.getname.name"); //NOI18N
-	}
+    public String getName()
+    {
+        return I18NHelper.getMessage(messages, "scope.variable.getname.name"); //NOI18N
+    }
 
     /**
      *

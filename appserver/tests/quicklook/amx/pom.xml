@@ -31,14 +31,14 @@
     </parent>
     <description>Runs the tests on admin/asadmin code</description>
     <build>
-      <testSourceDirectory>src</testSourceDirectory>  
+      <testSourceDirectory>src</testSourceDirectory>
       <plugins>
         <plugin>
           <artifactId>maven-compiler-plugin</artifactId>
           <configuration>
             <encoding>iso-8859-1</encoding>
             <source>1.5</source>
-            <target>1.5</target>   
+            <target>1.5</target>
           </configuration>
         </plugin>
       </plugins>

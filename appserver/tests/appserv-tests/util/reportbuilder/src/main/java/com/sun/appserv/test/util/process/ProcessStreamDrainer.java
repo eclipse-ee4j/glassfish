@@ -82,7 +82,7 @@ public class ProcessStreamDrainer
     }
 
     /**
-     * Create an instance, drain and redirect the process' stderr and stdout to 
+     * Create an instance, drain and redirect the process' stderr and stdout to
      * System.err and System.out respectively.
      * @param process The Process to drain
      * @param processName The name will be used to name the drainer threads
@@ -126,23 +126,23 @@ public class ProcessStreamDrainer
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private ProcessStreamDrainer(String processName, Process process, boolean redirect, boolean save)
     {
         if(process == null)
             throw new NullPointerException("Internal Error: null Process object");
-        
+
         this.process = process;
-        
+
         if(processName == null || processName.length() <= 0)
             this.processName = "UnknownProcessName";
         else
             this.processName = processName;
-        
+
         redirectStandardStreams = redirect;
 
         ProcessStreamDrainerWorker worker;
-        
+
         if(redirectStandardStreams)
             outWorker = new ProcessStreamDrainerWorker(process.getInputStream(), System.out, save);
         else
@@ -150,19 +150,19 @@ public class ProcessStreamDrainer
 
         outThread = new Thread(outWorker, processName + "-" + OUT_DRAINER);
         outThread.setDaemon(true);
-        
+
         if(redirectStandardStreams)
             errWorker = new ProcessStreamDrainerWorker(process.getErrorStream(), System.err, save);
         else
             errWorker = new ProcessStreamDrainerWorker(process.getErrorStream(), null, save);
-        
+
         errThread = new Thread(errWorker, processName + "-" + ERROR_DRAINER);
         errThread.setDaemon(true);
     }
-    
+
     /**
      * Start the draining.
-     * We start them here instead of the constructor so that "this" doesn't 
+     * We start them here instead of the constructor so that "this" doesn't
      * leak out of the constructor.
      */
     private void drain()
@@ -170,9 +170,9 @@ public class ProcessStreamDrainer
         outThread.start();
         errThread.start();
     }
-    
+
     ///////////////////////////////////////////////////////////////////////////
-    
+
     private final           Process                     process;
     private final           ProcessStreamDrainerWorker  outWorker;
     private final           ProcessStreamDrainerWorker  errWorker;
@@ -182,7 +182,7 @@ public class ProcessStreamDrainer
     private final           boolean                     redirectStandardStreams;
     private final   static  String                      ERROR_DRAINER   = "StderrDrainer";
     private final   static  String                      OUT_DRAINER     = "StdoutDrainer";
-    
+
     ///////////////////////////////////////////////////////////////////////////
 
 }

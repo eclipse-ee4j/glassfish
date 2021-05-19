@@ -31,7 +31,7 @@ public class CreateClusteredInstanceCmd extends BaseInstanceCmd
     {
         assert isConnected();
 
-        return (ClusteredServerConfig) getDomainConfig().createClusteredServerConfig(getInstanceName(), 
+        return (ClusteredServerConfig) getDomainConfig().createClusteredServerConfig(getInstanceName(),
                 getClusterName(), getNodeAgentName(), getOptional());
     }
 }

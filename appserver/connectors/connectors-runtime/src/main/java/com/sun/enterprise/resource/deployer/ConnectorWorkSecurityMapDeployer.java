@@ -32,7 +32,7 @@ public class ConnectorWorkSecurityMapDeployer  extends AbstractConnectorResource
             throws Exception {
         //no-op
     }
-    
+
     public void deployResource(Object resoure) throws Exception {
         //no-op
     }

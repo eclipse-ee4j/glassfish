@@ -45,7 +45,7 @@ public class AppHAMOrderingIT extends ArquillianBase {
     public static void printSummary(){
       stat.printSummary();
     }
-   
+
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
         return mavenWar();

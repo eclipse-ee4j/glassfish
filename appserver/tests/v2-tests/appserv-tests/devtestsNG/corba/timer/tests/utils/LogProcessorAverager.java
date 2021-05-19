@@ -64,75 +64,75 @@ public class LogProcessorAverager
 
     private static final long SCALE = 1000000000;
 
-    public static void main(String[] av) 
+    public static void main(String[] av)
     {
-	data = new HashMap<Integer, Point>();
-	beginPointNameToInt = new HashMap<String, Integer>();
-	filename = av[0];
+        data = new HashMap<Integer, Point>();
+        beginPointNameToInt = new HashMap<String, Integer>();
+        filename = av[0];
 
-	try {
-	    BufferedReader br = new BufferedReader(new FileReader(filename));
-	    readPoints(br);
-	    readData(br);
-	    showResults();
-	} catch (Exception e) {
+        try {
+            BufferedReader br = new BufferedReader(new FileReader(filename));
+            readPoints(br);
+            readData(br);
+            showResults();
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public static void readPoints(BufferedReader br)
-	throws Exception
+        throws Exception
     {
-	String line;
-	int id = 0;
-	while ((line = br.readLine()) != null) {
-	    if (line.equals("#####")) {
-		return;
-	    }
-	    String[] beginOrEndAndPointName = line.split(" ");
-	    String beginOrEnd = beginOrEndAndPointName[0];
-	    String name       = beginOrEndAndPointName[1];
-	    int intId = id++;
-	    if (beginOrEnd.equals("BEGIN")) {
-		beginPointNameToInt.put(name, intId);
-		data.put(intId, new BeginPoint(intId, name));
-	    } else {
-		data.put(intId, 
-			 new EndPoint(intId, name, data, beginPointNameToInt));
-	    }
-	}
+        String line;
+        int id = 0;
+        while ((line = br.readLine()) != null) {
+            if (line.equals("#####")) {
+                return;
+            }
+            String[] beginOrEndAndPointName = line.split(" ");
+            String beginOrEnd = beginOrEndAndPointName[0];
+            String name       = beginOrEndAndPointName[1];
+            int intId = id++;
+            if (beginOrEnd.equals("BEGIN")) {
+                beginPointNameToInt.put(name, intId);
+                data.put(intId, new BeginPoint(intId, name));
+            } else {
+                data.put(intId,
+                    new EndPoint(intId, name, data, beginPointNameToInt));
+            }
+        }
     }
 
     public static void readData(BufferedReader br)
-	throws Exception
+        throws Exception
     {
-	String line;
-	while ((line = br.readLine()) != null) {
-	    String[] idAndTime = line.split(" ");
-	    int id = Integer.parseInt(idAndTime[0]);
-	    long time = Long.parseLong(idAndTime[1]);
-	    data.get(id).setValue(time);
-	}
+        String line;
+        while ((line = br.readLine()) != null) {
+            String[] idAndTime = line.split(" ");
+            int id = Integer.parseInt(idAndTime[0]);
+            long time = Long.parseLong(idAndTime[1]);
+            data.get(id).setValue(time);
+        }
     }
 
     public static void showResults()
     {
-	// Remove begin points.
-	for (Integer id : beginPointNameToInt.values()) {
-	    data.remove(id);
-	}
-	System.out.println("----------------------------------------");
-	System.out.println(filename);
-	for (Point point : data.values()) {
-	    System.out.println(point.getName() 
-			       + " " 
-			       + point.getAverage() / SCALE
-			       + " " 
-			       + format(point.getAverage() / SCALE)
-			       + " "
-			       + " iterations " + point.getIterations());
-	}
-	System.out.println("----------------------------------------");
+        // Remove begin points.
+        for (Integer id : beginPointNameToInt.values()) {
+            data.remove(id);
+        }
+        System.out.println("----------------------------------------");
+        System.out.println(filename);
+        for (Point point : data.values()) {
+            System.out.println(point.getName()
+                + " "
+                + point.getAverage() / SCALE
+                + " "
+                + format(point.getAverage() / SCALE)
+                + " "
+                + " iterations " + point.getIterations());
+        }
+        System.out.println("----------------------------------------");
     }
 
     public static String format(double d) {
@@ -148,9 +148,9 @@ class Point
 
     Point(int intId, String name)
     {
-	this.intId = intId;
-	this.name = name;
-	value = -1;
+        this.intId = intId;
+        this.name = name;
+        value = -1;
     }
     int getIntId() { return intId; }
     String getName() { return name; }
@@ -158,9 +158,9 @@ class Point
     void setValue(long x) { value = x; }
     double getAverage() { throw new RuntimeException("Not Implemented"); }
     int getIterations() { throw new RuntimeException("Not Implemented"); }
-    String toStringString() 
+    String toStringString()
     {
-	return intId + " " + name  + " " + value;
+        return intId + " " + name  + " " + value;
     }
 }
 
@@ -168,11 +168,11 @@ class BeginPoint extends Point
 {
     BeginPoint(int intId, String name)
     {
-	super(intId, name);
+        super(intId, name);
     }
     public String toString()
     {
-	return "BeginPoint[ " + toStringString() + " ]";
+        return "BeginPoint[ " + toStringString() + " ]";
     }
 }
 
@@ -183,32 +183,32 @@ class EndPoint extends Point
     int iterations;
 
     EndPoint(int intId, String name, Map<Integer, Point> data,
-	     Map<String, Integer> beginPointNameToInt)
+        Map<String, Integer> beginPointNameToInt)
     {
-	super(intId, name);
-	this.data = data;
-	this.beginPointNameToInt = beginPointNameToInt;
-	iterations = 0;
+        super(intId, name);
+        this.data = data;
+        this.beginPointNameToInt = beginPointNameToInt;
+        iterations = 0;
     }
     void setValue(long endTime)
     {
-	int startId = beginPointNameToInt.get(name);
-	long startTime = data.get(startId).getValue();
-	long elapsedTime = endTime - startTime;
-	value += elapsedTime;
-	iterations++;
+        int startId = beginPointNameToInt.get(name);
+        long startTime = data.get(startId).getValue();
+        long elapsedTime = endTime - startTime;
+        value += elapsedTime;
+        iterations++;
     }
-    double getAverage() 
+    double getAverage()
     {
-	return value / iterations;
+        return value / iterations;
     }
     int getIterations()
     {
-	return iterations;
+        return iterations;
     }
     public String toString()
     {
-	return "EndPoint[ " + toStringString() + " " + iterations + " ]";
+        return "EndPoint[ " + toStringString() + " " + iterations + " ]";
     }
 }
 

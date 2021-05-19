@@ -45,7 +45,7 @@ public class ReplicatedBackingStoreFactory
 
         KeyMapper keyMapper = new GlassFishKeyMapper(conf.getInstanceName(), conf.getClusterName());
         conf.getVendorSpecificSettings().put("key.mapper", keyMapper);
-        
+
         Class<V> vClazz = conf.getValueClazz();
         if (Storeable.class.isAssignableFrom(vClazz)) {
             StoreableReplicatedBackingStore srbs = new StoreableReplicatedBackingStore();

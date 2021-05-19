@@ -26,19 +26,19 @@ import org.glassfish.contextpropagation.View;
 import org.glassfish.contextpropagation.bootstrap.ContextBootstrap;
 import org.glassfish.contextpropagation.internal.Entry.ContextType;
 
-/* 
+/*
  *  - Consider a View that uses shorter keys (key minus the prefix)
  *     - It would not use the workarea map storage but would have its own with its own serialization methods
  *     - Could produce more compact on the wire representation even for the WLS adapter
  *     - The long keys have the advantage that the serialization is already handled by workarea,
  *       and that the constituents would be accessible from WLS -- that is both good and bad.
  *  - View does not need to extend SimpleMap, it was done that way for a quick prototype
- *     - The method signatures can be even more convenient 
+ *     - The method signatures can be even more convenient
  *       put(String,  <TYPE see ContextMapAccessor>) instead of put(String, Entry)
  */
 /**
- * Provides access to a subset of the ContextMap. 
- * Views bypass security checks. However Views are hidden in ViewCapable 
+ * Provides access to a subset of the ContextMap.
+ * Views bypass security checks. However Views are hidden in ViewCapable
  * instances for which access is verified.
  */
 public class ViewImpl implements View {
@@ -78,7 +78,7 @@ public class ViewImpl implements View {
   @Override
   public <T, U extends Number> T put(String name, U context,
       EnumSet<PropagationMode> propagationModes) {
-    return (T) sMap.put(newKey(name), new Entry(context, propagationModes, 
+    return (T) sMap.put(newKey(name), new Entry(context, propagationModes,
         ContextType.fromNumberClass(context.getClass())).init(true, allowAllToRead(name)));
   }
 

@@ -30,13 +30,13 @@ import java.util.regex.Pattern;
 /**
  * Filter to process SSI requests within a webpage. Mapped to a content types
  * from within web.xml.
- * 
+ *
  * @author David Becker
  * @version $Revision: 1.1 $, $Date: 2007/02/13 19:16:21 $
  * @see org.apache.catalina.ssi.SSIServlet
  */
 public class SSIFilter implements Filter {
-	protected FilterConfig config = null;
+    protected FilterConfig config = null;
     /** Debug level for this servlet. */
     protected int debug = 0;
     /** Expiration time in seconds for the doc. */
@@ -44,22 +44,22 @@ public class SSIFilter implements Filter {
     /** virtual path can be webapp-relative */
     protected boolean isVirtualWebappRelative = false;
     /** regex pattern to match when evaluating content types */
-	protected Pattern contentTypeRegEx = null;
-	/** default pattern for ssi filter content type matching */
-	protected Pattern shtmlRegEx =
+    protected Pattern contentTypeRegEx = null;
+    /** default pattern for ssi filter content type matching */
+    protected Pattern shtmlRegEx =
         Pattern.compile("text/x-server-parsed-html(;.*)?");
 
 
     //----------------- Public methods.
     /**
      * Initialize this servlet.
-     * 
+     *
      * @exception ServletException
      *                if an error occurs
      */
     public void init(FilterConfig config) throws ServletException {
-    	this.config = config;
-    	
+        this.config = config;
+
         if (config.getInitParameter("debug") != null) {
             debug = Integer.parseInt(config.getInitParameter("debug"));
         }
@@ -70,7 +70,7 @@ public class SSIFilter implements Filter {
             contentTypeRegEx = shtmlRegEx;
         }
 
-        isVirtualWebappRelative = 
+        isVirtualWebappRelative =
             Boolean.parseBoolean(config.getInitParameter("isVirtualWebappRelative"));
 
         if (config.getInitParameter("expires") != null)
@@ -86,9 +86,9 @@ public class SSIFilter implements Filter {
         // cast once
         HttpServletRequest req = (HttpServletRequest)request;
         HttpServletResponse res = (HttpServletResponse)response;
-        
+
         // indicate that we're in SSI processing
-        req.setAttribute(Globals.SSI_FLAG_ATTR, "true");           
+        req.setAttribute(Globals.SSI_FLAG_ATTR, "true");
 
         // setup to capture output
         ByteArrayServletOutputStream basos = new ByteArrayServletOutputStream();
@@ -109,28 +109,28 @@ public class SSIFilter implements Filter {
         if (contentTypeRegEx.matcher(contentType).matches()) {
             String encoding = res.getCharacterEncoding();
 
-            // set up SSI processing 
+            // set up SSI processing
             SSIExternalResolver ssiExternalResolver =
                 new SSIServletExternalResolver(config.getServletContext(), req,
                         res, isVirtualWebappRelative, debug, encoding);
             SSIProcessor ssiProcessor = new SSIProcessor(ssiExternalResolver,
                     debug);
-            
+
             // prepare readers/writers
             Reader reader =
                 new InputStreamReader(new ByteArrayInputStream(bytes), encoding);
             ByteArrayOutputStream ssiout = new ByteArrayOutputStream();
             PrintWriter writer =
                 new PrintWriter(new OutputStreamWriter(ssiout, encoding));
-            
-            // do SSI processing  
+
+            // do SSI processing
             long lastModified = ssiProcessor.process(reader,
                     responseIncludeWrapper.getLastModified(), writer);
-            
+
             // set output bytes
             writer.flush();
             bytes = ssiout.toByteArray();
-            
+
             // override headers
             if (expires != null) {
                 res.setDateHeader("expires", (new java.util.Date()).getTime()
@@ -140,14 +140,14 @@ public class SSIFilter implements Filter {
                 res.setDateHeader("last-modified", lastModified);
             }
             res.setContentLength(bytes.length);
-            
+
             Matcher shtmlMatcher =
                 shtmlRegEx.matcher(responseIncludeWrapper.getContentType());
             if (shtmlMatcher.matches()) {
-            	// Convert shtml mime type to ordinary html mime type but preserve
+                // Convert shtml mime type to ordinary html mime type but preserve
                 // encoding, if any.
-            	String enc = shtmlMatcher.group(1);
-            	res.setContentType("text/html" + ((enc != null) ? enc : ""));
+                String enc = shtmlMatcher.group(1);
+                res.setContentType("text/html" + ((enc != null) ? enc : ""));
             }
         }
 

@@ -34,7 +34,7 @@ import java.util.Collections;
  * the JNLPClassLoader will try to resolve them itself. That resolution will use the downloaded GlassFish JARs, thereby
  * making sure the Java Web Start launch uses the GlassFish-provided endorsed JARs instead of whatever happens to be in
  * the Java system JARs.
- * 
+ *
  * @author Tim Quinn
  */
 class JWSACCMaskingClassLoader extends MaskingClassLoader {

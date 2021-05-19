@@ -22,14 +22,14 @@ import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest
 {
-    
+
     private static boolean pass = false;
     private static int bTag = 0;
     private static int useBean = 0;
     private static int scriptlet = 0;
     private static int ELvalue1 = 0;
     private static int ELvalue2 = 0;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -38,14 +38,14 @@ public class WebTest
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Test tagdependent bodies are handled correctly in XML syntax");
 
         String host = args[0];
         String portS = args[1];
         String contextRoot = args[2];
         int port = new Integer(portS).intValue();
-        
+
         try {
             goGet(host, port, contextRoot + "/test.jspx" );
             if (bTag == 6 && useBean == 1 && scriptlet == 1 &&
@@ -109,7 +109,7 @@ public class WebTest
                 }
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         } finally {
             try {

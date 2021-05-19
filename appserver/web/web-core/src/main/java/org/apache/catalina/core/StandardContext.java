@@ -109,7 +109,7 @@ public class StandardContext
 
     private static final RuntimePermission GET_CLASSLOADER_PERMISSION =
         new RuntimePermission("getClassLoader");
-    
+
     /**
      * GMT timezone - all HTTP dates are on GMT
      */
@@ -1836,7 +1836,7 @@ public class StandardContext
 
         final DirContext oldResources = ContextsAdapterUtility.unwrap(
                 alternateDocBase.getWebappResources());
-        
+
         if (oldResources == resources)
             return;
 
@@ -2957,8 +2957,8 @@ public class StandardContext
             listener = createListenerInstance(listenerClass);
         } catch(Throwable t) {
              throw new IllegalArgumentException(t);
-        }    
-        
+        }
+
         addListener(listener);
     }
 
@@ -5166,7 +5166,7 @@ public class StandardContext
             sc.setInitParameter(entry.getKey(), entry.getValue());
         }
     }
-    
+
     /**
      * Allocate resources, including proxy.
      * Return <code>true</code> if initialization was successfull,
@@ -7204,7 +7204,7 @@ public class StandardContext
                         // START SJAS 6318494
                         ("jndi", "", 0, getJNDIUri(hostName, fullPath),
                         // END SJSAS 6318494
-		         new DirContextURLStreamHandler(resources));
+                        new DirContextURLStreamHandler(resources));
                 } catch (Exception e) {
                     // do nothing
                 }
@@ -7697,7 +7697,7 @@ public class StandardContext
         boolean isAncestor(ClassLoader start, ClassLoader cl) {
             ClassLoader acl = start;
             do {
-	        acl = acl.getParent();
+            acl = acl.getParent();
                 if (cl == acl) {
                     return true;
                 }

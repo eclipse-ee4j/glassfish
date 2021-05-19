@@ -193,7 +193,7 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
             File inhabitantsCache = new File(cacheDir, INHABITANTS_CACHE);
             if (inhabitantsCache.exists()) {
                 if (!inhabitantsCache.delete()) {
-                    throw new GlassFishException("cannot delete cache:" + 
+                    throw new GlassFishException("cannot delete cache:" +
                             inhabitantsCache.getAbsolutePath());
                 }
             }

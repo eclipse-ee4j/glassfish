@@ -46,14 +46,14 @@ public class ConfigBean extends Dom implements ConfigView {
     private volatile boolean writeLock = false;
     private final Map<Class , ConfigBeanInterceptor> optionalFeatures =
             new HashMap<Class, ConfigBeanInterceptor>();
-    
+
     /**
         ObjectName will be null until when/if an MBean is registered.
      */
     private volatile ObjectName objectName = null;
-    
+
     public ObjectName getObjectName() { return objectName; }
-    
+
     public void setObjectName( final ObjectName objectNameIn )
     {
         if ( objectName != null ) throw new IllegalStateException();
@@ -98,7 +98,7 @@ public class ConfigBean extends Dom implements ConfigView {
     /**
      * Copy constructor, used to get a deep copy of the passed instance.
      *
-     * @param source  the instance to copy 
+     * @param source  the instance to copy
      */
     public ConfigBean(Dom source, Dom parent) {
         super(source, parent);
@@ -133,11 +133,11 @@ public class ConfigBean extends Dom implements ConfigView {
      * by other objects and attached to this instance. Attached features can be queried
      * using the getOptionalFeature method giving the type of the requestion optional
      * feature.
-     * 
+     *
      * @param featureType type of the optional feature requested.
      * @return optional feature implementation is one is attached to this instance
      */
-    @SuppressWarnings("unchecked")    
+    @SuppressWarnings("unchecked")
     public <T> T getOptionalFeature(Class<T> featureType) {
         if (optionalFeatures.containsKey(featureType)) {
             return (T) optionalFeatures.get(featureType).getConfiguration();
@@ -158,7 +158,7 @@ public class ConfigBean extends Dom implements ConfigView {
         _setter(target, value);
     }
 
-    void _setter(ConfigModel.Property target, Object value) throws Exception  {    
+    void _setter(ConfigModel.Property target, Object value) throws Exception  {
         Object oldValue = super.getter(target, value.getClass());
         PropertyChangeEvent evt = new PropertyChangeEvent(this, target.xmlName(), oldValue, value);
         for (ConfigBeanInterceptor interceptor : optionalFeatures.values()) {
@@ -175,7 +175,7 @@ public class ConfigBean extends Dom implements ConfigView {
         for (ConfigBeanInterceptor interceptor : optionalFeatures.values()) {
             interceptor.readValue(this, target.xmlName(), value);
         }
-        return value;        
+        return value;
     }
 
     protected Object getter(ConfigModel.Property target, Type t) {
@@ -230,7 +230,7 @@ public class ConfigBean extends Dom implements ConfigView {
         return this;
     }
 
-    public void setMasterView(ConfigView view) {        
+    public void setMasterView(ConfigView view) {
     }
 
     /**
@@ -312,7 +312,7 @@ public class ConfigBean extends Dom implements ConfigView {
      * simplistic non reentrant lock implementation, needs rework
      */
     final private Lock lock = new Lock() {
-        
+
         public void lock() {
             throw new UnsupportedOperationException();
         }

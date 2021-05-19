@@ -63,11 +63,11 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
         String username = null;
         String password = null;
         try {
-            
+
             HttpServletRequest request =
                 (HttpServletRequest)messageInfo.getRequestMessage();
             String authorization = request.getHeader("authorization");
-            if (authorization != null && 
+            if (authorization != null &&
                     authorization.toLowerCase().startsWith("basic ")) {
                 authorization = authorization.substring(6).trim();
                 BASE64Decoder decoder = new BASE64Decoder();
@@ -83,7 +83,7 @@ public class HttpServletChallengeTestAuthModule implements ServerAuthModule {
             HttpServletResponse response =
                      (HttpServletResponse)messageInfo.getResponseMessage();
             if (username == null || password == null) {
-                response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");  
+                response.setHeader("WWW-Authenticate", "Basic realm=\"default\"");
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
                 System.out.println("login prompt for username/password");
                 return AuthStatus.SEND_CONTINUE;

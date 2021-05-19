@@ -26,11 +26,11 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 public class ShrinkWrap {
 
-    public static WebArchive mavenWar() {        
-        return 
+    public static WebArchive mavenWar() {
+        return
             create(ZipImporter.class, getProperty("finalName") + ".war")
                 .importFrom(new File("target/" + getProperty("finalName") + ".war"))
                 .as(WebArchive.class);
     }
-    
+
 }

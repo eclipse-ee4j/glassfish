@@ -27,7 +27,7 @@ import org.w3c.dom.Node;
 
 /**
  * This class is responsible for handling cookie-config xml node.
- * 
+ *
  * @author Shing Wai Chan
  */
 public class CookieConfigNode extends DeploymentDescriptorNode<CookieConfigDescriptor> {
@@ -50,8 +50,8 @@ public class CookieConfigNode extends DeploymentDescriptorNode<CookieConfigDescr
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -66,7 +66,7 @@ public class CookieConfigNode extends DeploymentDescriptorNode<CookieConfigDescr
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -85,30 +85,30 @@ public class CookieConfigNode extends DeploymentDescriptorNode<CookieConfigDescr
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, CookieConfigDescriptor descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName, CookieConfigDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
         if (descriptor.getName() != null && descriptor.getName().length() > 0) {
-            appendTextChild(myNode, WebTagNames.COMMON_NAME, descriptor.getName());         
+            appendTextChild(myNode, WebTagNames.COMMON_NAME, descriptor.getName());
         }
         if (descriptor.getDomain() != null) {
-            appendTextChild(myNode, WebTagNames.DOMAIN, descriptor.getDomain());         
+            appendTextChild(myNode, WebTagNames.DOMAIN, descriptor.getDomain());
         }
         if (descriptor.getPath() != null) {
-            appendTextChild(myNode, WebTagNames.PATH, descriptor.getPath());     
+            appendTextChild(myNode, WebTagNames.PATH, descriptor.getPath());
         }
         if (descriptor.getComment() != null) {
-            appendTextChild(myNode, WebTagNames.COMMENT, descriptor.getComment());     
+            appendTextChild(myNode, WebTagNames.COMMENT, descriptor.getComment());
         }
-        appendTextChild(myNode, WebTagNames.HTTP_ONLY, Boolean.toString(descriptor.isHttpOnly()));     
-        appendTextChild(myNode, WebTagNames.SECURE, Boolean.toString(descriptor.isSecure()));     
-        appendTextChild(myNode, WebTagNames.MAX_AGE, Integer.toString(descriptor.getMaxAge()));     
-        
+        appendTextChild(myNode, WebTagNames.HTTP_ONLY, Boolean.toString(descriptor.isHttpOnly()));
+        appendTextChild(myNode, WebTagNames.SECURE, Boolean.toString(descriptor.isSecure()));
+        appendTextChild(myNode, WebTagNames.MAX_AGE, Integer.toString(descriptor.getMaxAge()));
+
         return myNode;
-    }   
+    }
 }

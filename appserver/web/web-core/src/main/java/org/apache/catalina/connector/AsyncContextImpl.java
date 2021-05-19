@@ -224,7 +224,7 @@ class AsyncContextImpl implements AsyncContext {
     boolean isDispatchInScope() {
         return isDispatchInScope.get();
     }
-    
+
     boolean getAndResetDispatchInScope() {
         final boolean flag = isDispatchInScope.get();
         isDispatchInScope.set(Boolean.FALSE);
@@ -250,7 +250,7 @@ class AsyncContextImpl implements AsyncContext {
             if (delayAsyncDispatchAndComplete) {
                 return;
             }
-            
+
             doComplete();
         } else {
             throw new IllegalStateException(rb.getString(
@@ -263,7 +263,7 @@ class AsyncContextImpl implements AsyncContext {
             origRequest.asyncComplete();
         }
     }
-    
+
     void processAsyncOperations() {
         processAsyncOperations(false);
     }
@@ -276,18 +276,18 @@ class AsyncContextImpl implements AsyncContext {
         }
     }
 
-    
+
     /**
      * The method is called once service thread finished with the
      * request/response processing and doesn't rely on its existence anymore.
-     * 
+     *
      * Now it's safe to finish async request/response processing.
      */
     void onExitService() {
         delayAsyncDispatchAndComplete = false;
         processAsyncOperations(true);
     }
-    
+
     @Override
     public void start(Runnable run) {
         ClassLoader oldCL = null;

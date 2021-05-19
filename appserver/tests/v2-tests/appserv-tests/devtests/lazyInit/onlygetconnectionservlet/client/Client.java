@@ -29,22 +29,22 @@ public class Client {
 
     public static void main(String[] args)
         throws Exception {
-        
- 	SimpleReporterAdapter stat = new SimpleReporterAdapter();
-	String testSuite = "jdbc-onlygetconnection ";
-        
+
+     SimpleReporterAdapter stat = new SimpleReporterAdapter();
+    String testSuite = "jdbc-onlygetconnection ";
+
         HttpURLConnection conn =(HttpURLConnection) new URL("http://localhost:8080/" +
             "onlygetconnectionservlet/onlygetconnectionservlet").openConnection();
 
         Client c = new Client();
         if (c.doTest()) {
-	    stat.addStatus(testSuite+" test1 : ", stat.PASS);
+        stat.addStatus(testSuite+" test1 : ", stat.PASS);
         } else {
-	    stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-	}
-        
-	stat.printSummary();
-        
+        stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+    }
+
+    stat.printSummary();
+
     }
 
     public boolean doTest() throws Exception {
@@ -57,11 +57,11 @@ public class Client {
                     conn =(HttpURLConnection) new URL("http://localhost:8080/" +
                          "onlygetconnectionservlet/onlygetconnectionservlet").openConnection();
 
-                    InputStream sis = conn.getInputStream(); 
+                    InputStream sis = conn.getInputStream();
                     BufferedReader in = new BufferedReader( new InputStreamReader(sis) );
                     System.out.println( conn.getResponseMessage() );
                     String op = null;
-                    System.out.println(" Reading response"); 
+                    System.out.println(" Reading response");
                     while( (op = in.readLine()) != null ) {
                         System.out.println(op);
                         if (op.indexOf("PASSED") != -1) {

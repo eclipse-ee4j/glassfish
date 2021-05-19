@@ -27,17 +27,17 @@ import test.beans.nonmock.ShoppingCart;
 @Specializes
 @Transactional(requiresNew=true)
 //This alternative (via MockStereotype) does not specify Preferred
-//qualifier, but since it specializes ShoppingCart, it 
+//qualifier, but since it specializes ShoppingCart, it
 //gets ShoppingCart's qualifers etc
 //Interceptors are not inherited and so we need to specify Transactional
 //explicitly
 public class MockShoppingCart  extends ShoppingCart{
     public static boolean mockShoppingCartInvoked = false;
-    
+
     public void addItem(String s) {
         mockShoppingCartInvoked = true;
         System.out.println("MockShoppingCart::addItem called");
-        
+
     }
 
 }

@@ -55,7 +55,7 @@
             <form-error-page>/login_error.jsf</form-error-page>
         </form-login-config>
     </login-config>
-    
+
     <security-role>
         <role-name>admin</role-name>
     </security-role>

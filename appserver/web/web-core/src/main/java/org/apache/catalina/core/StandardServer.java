@@ -55,7 +55,7 @@ public final class StandardServer
      private static final ResourceBundle rb = log.getResourceBundle();
 
      //--------------------------------------------------------------
-   
+
 
     // -------------------------------------------------------------- Constants
 
@@ -127,7 +127,7 @@ public final class StandardServer
 
 
     /**
-     * The set of class names that are the standard implementations of 
+     * The set of class names that are the standard implementations of
      * components, and hence should not be persisted.
      */
     private static String standardImplementations[] = {
@@ -548,7 +548,7 @@ public final class StandardServer
         return (services);
 
     }
-    
+
     /**
      * @return the object names of all registered Service instances
      */
@@ -765,13 +765,13 @@ public final class StandardServer
     public void init() throws Exception {
         initialize();
     }
-    
+
     /**
      * Invoke a pre-startup initialization. This is used to allow connectors
      * to bind to restricted ports under Unix operating environments.
      */
     public void initialize()
-        throws LifecycleException 
+        throws LifecycleException
     {
         if (initialized) {
             log.log(Level.INFO, LogFacade.STANDARD_SERVER_INITIALIZE_INITIALIZED);
@@ -790,13 +790,13 @@ public final class StandardServer
                 log.log(Level.SEVERE, msg, e);
             }
         }
-        
+
         // Initialize our defined Services
         for (int i = 0; i < services.length; i++) {
             services[i].initialize();
         }
     }
-    
+
     private String type;
     private String domain;
     private String suffix;
@@ -809,5 +809,5 @@ public final class StandardServer
     public String getDomain() {
         return domain;
     }
-    
+
 }

@@ -27,7 +27,7 @@ import java.util.Map;
  * xml tag
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class MessageDestinationNode extends DisplayableComponentNode  {
 
@@ -35,14 +35,14 @@ public class MessageDestinationNode extends DisplayableComponentNode  {
     protected Object createDescriptor() {
         return new MessageDestinationDescriptor();
     }
-    
+
     /**
-     * all sub-implementation of this class can use a dispatch table to 
-     * map xml element to method name on the descriptor class for setting 
-     * the element value. 
+     * all sub-implementation of this class can use a dispatch table to
+     * map xml element to method name on the descriptor class for setting
+     * the element value.
      *
      * @return map with the element name as a key, the setter method as a value
-     */    
+     */
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(TagNames.MESSAGE_DESTINATION_NAME, "setName");
@@ -50,30 +50,30 @@ public class MessageDestinationNode extends DisplayableComponentNode  {
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
                                 MessageDestinationDescriptor desc) {
-    
-                             
+
+
         Node msgDestNode = super.writeDescriptor(parent, nodeName, desc);
 
         writeDisplayableComponentInfo(msgDestNode, desc);
 
         appendTextChild(msgDestNode, TagNames.MESSAGE_DESTINATION_NAME,
-                        desc.getName()); 
+                        desc.getName());
         appendTextChild(msgDestNode, TagNames.MAPPED_NAME,
-                        desc.getMappedName()); 
+                        desc.getMappedName());
         appendTextChild(msgDestNode, TagNames.LOOKUP_NAME,
-                        desc.getLookupName()); 
+                        desc.getLookupName());
 
         return msgDestNode;
-    }    
+    }
 }

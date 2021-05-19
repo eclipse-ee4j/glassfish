@@ -118,7 +118,7 @@ public abstract class AbstractCommonAttributeHandler extends AbstractHandler {
             Class clazz = (Class)ainfo.getAnnotatedElement();
             if (!clazz.getName().equals(context.getComponentClassName())) {
                 if (logger.isLoggable(Level.WARNING)) {
-                    log(Level.WARNING, ainfo, 
+                    log(Level.WARNING, ainfo,
                         localStrings.getLocalString(
                         "enterprise.deployment.annotation.handlers.typeinhernotsupp",
                         "The annotation symbol inheritance is not supported."));

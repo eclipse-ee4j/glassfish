@@ -25,7 +25,7 @@ import javax.management.MBeanServerConnection;
 import com.sun.enterprise.util.net.NetUtils;
 
 public class TestDriver {
-    
+
     private final String adminUser;
     private final String adminPassword;
     private final String adminHost;
@@ -34,7 +34,7 @@ public class TestDriver {
     private final File testFile;
     private List<RemoteAdminQuicklookTest> tests;
     private MBeanServerConnection mbsc;
-    
+
     private static final String SCRIPT_COMMENT = "#"; //this is how comment is denoted, traditionally
     private static final SimpleReporterAdapter reporter = new SimpleReporterAdapter("appserv-tests");
     private static final String DESC = "Admin Infrastructure Tests";
@@ -54,7 +54,7 @@ public class TestDriver {
         initializeConnection();
         initializeTestClasses();
     }
-    
+
     public static void main(final String[] env) throws Exception {
         final TestDriver t = new TestDriver(env);
         t.testAndReportAll();
@@ -82,7 +82,7 @@ public class TestDriver {
             } catch(final Exception e) {}
         }
     }
-    
+
     private RemoteAdminQuicklookTest c2T(final String testClass) throws RuntimeException {
         try {
             final Class c                       = Class.forName(testClass);
@@ -105,7 +105,7 @@ public class TestDriver {
                 reporter.addStatus(t.getName(), reporter.PASS);
             } catch(final Exception e) {
                 e.printStackTrace();
-                reporter.addStatus(t.getName(), reporter.FAIL);   
+                reporter.addStatus(t.getName(), reporter.FAIL);
                 total += t.getExecutionTime();
                 reporter.printSummary(getSummaryString(total));
                 System.out.println(getSummaryString(total));

@@ -31,12 +31,12 @@ import org.glassfish.hk2.api.PerLookup;
 /**
  * Represents the action report as XML like this:
  * <br>
- * <!-- 
- *     Apologies for the formatting - it's necessary for the JavaDoc to be readable 
+ * <!--
+ *     Apologies for the formatting - it's necessary for the JavaDoc to be readable
  *     If you are using NetBeans, for example, click anywhere in this comment area to see
  *     the document example clearly in the JavaDoc preview
  * -->
- * <code> 
+ * <code>
  * <br>&lt;action-report description="xxx" exit-code="xxx" [failure-cause="xxx"]>
  * <br>&nbsp;&nbsp;&lt;message-part message="">
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;property name="xxx" value="xxx"/>
@@ -52,7 +52,7 @@ import org.glassfish.hk2.api.PerLookup;
  * Currently this is used to return the metadata for a command, although
  * it could be used more generally to return XML content.  In the general
  * case the action-report and message-part elements ought to be removed.
- * 
+ *
  * @author tjquinn
  * @author Bill Shannon
  */
@@ -75,7 +75,7 @@ public class XMLContentActionReporter extends ActionReporter {
             throw new RuntimeException(e);
         }
     }
-    
+
     /**
      * Creates a new Element representing the XML content describing an
      * action report.  Invokes itself recursively to capture information
@@ -85,13 +85,13 @@ public class XMLContentActionReporter extends ActionReporter {
      * @return Element for the specified ActionReporter (and any sub-reports)
      */
     private Element writeActionReport(Document owningDocument,
-	    ActionReporter report) {
+            ActionReporter report) {
         Element result = owningDocument.createElement("action-report");
         result.setAttribute("description", report.actionDescription);
         result.setAttribute("exit-code", report.getActionExitCode().name());
         if (exception != null) {
             result.setAttribute("failure-cause",
-		exception.getLocalizedMessage());
+                exception.getLocalizedMessage());
         }
 
         writePart(result, report.getTopMessagePart(), null);
@@ -103,11 +103,11 @@ public class XMLContentActionReporter extends ActionReporter {
 
     @Override
     public String getContentType() {
-        return "text/xml"; 
+        return "text/xml";
     }
 
     private void writePart(Element actionReport, MessagePart part,
-	    String childType) {
+            String childType) {
         Document d = actionReport.getOwnerDocument();
         Element messagePart = d.createElement("message-part");
         actionReport.appendChild(messagePart);
@@ -133,14 +133,14 @@ public class XMLContentActionReporter extends ActionReporter {
      * are attributes of the element.  Recurse for any subparts.
      */
     private void writeSubPart(Element actionReport, MessagePart part,
-	    String childType) {
+            String childType) {
         Document d = actionReport.getOwnerDocument();
         Element messagePart = d.createElement(childType);
         actionReport.appendChild(messagePart);
 
         for (Map.Entry prop : part.getProps().entrySet()) {
             messagePart.setAttribute(prop.getKey().toString(),
-		prop.getValue().toString());
+                prop.getValue().toString());
         }
         for (MessagePart subPart : part.getChildren())
             writeSubPart(messagePart, subPart, subPart.getChildrenType());
@@ -154,7 +154,7 @@ public class XMLContentActionReporter extends ActionReporter {
      * @throws TransformerException if anything goes wrong
      */
     private void writeXML(Document doc, OutputStream os)
-	    throws TransformerException {
+            throws TransformerException {
         Source source = new DOMSource(doc);
 
         Result result = new StreamResult(os);

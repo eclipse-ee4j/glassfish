@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for ServletContext#getResourcePaths");
         new WebTest(args).doTest();
@@ -48,7 +48,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invokeServlet();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {

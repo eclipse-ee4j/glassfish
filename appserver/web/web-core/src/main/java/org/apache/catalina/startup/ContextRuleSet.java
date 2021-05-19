@@ -115,16 +115,16 @@ public class ContextRuleSet extends RuleSetBase {
      *  should be added.
      */
     public void addRuleInstances(Digester digester) {
-        
-        if (create) {            
+
+        if (create) {
             digester.addObjectCreate(prefix + "Context",
                     "org.apache.catalina.core.StandardContext", "className");
             digester.addSetProperties(prefix + "Context");
-        } else {            
+        } else {
             digester.addRule(prefix + "Context", new SetContextPropertiesRule());
         }
-        
-        if (create) {            
+
+        if (create) {
             digester.addRule(prefix + "Context",
                              new LifecycleListenerRule
                                  (digester,
@@ -133,10 +133,10 @@ public class ContextRuleSet extends RuleSetBase {
             digester.addSetNext(prefix + "Context",
                                 "addChild",
                                 "org.apache.catalina.Container");
-        }                        
+        }
         digester.addCallMethod(prefix + "Context/InstanceListener",
                                "addInstanceListener", 0);
-                            
+
         digester.addObjectCreate(prefix + "Context/Listener",
                                  null, // MUST be specified in the element
                                  "className");
@@ -144,10 +144,10 @@ public class ContextRuleSet extends RuleSetBase {
         digester.addSetNext(prefix + "Context/Listener",
                             "addLifecycleListener",
                             "org.apache.catalina.LifecycleListener");
-                            
+
         digester.addObjectCreate(prefix + "Context/Loader",
                             "org.apache.catalina.loader.WebappLoader",
-                            "className"); 
+                            "className");
         digester.addSetProperties(prefix + "Context/Loader");
         digester.addSetNext(prefix + "Context/Loader",
                             "setLoader",

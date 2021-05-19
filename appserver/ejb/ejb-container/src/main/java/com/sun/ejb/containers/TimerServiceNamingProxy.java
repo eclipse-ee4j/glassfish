@@ -35,7 +35,7 @@ import javax.naming.NamingException;
  */
 @Service
 @NamespacePrefixes(TimerServiceNamingProxy.EJB_TIMER_SERVICE)
-public class TimerServiceNamingProxy 
+public class TimerServiceNamingProxy
         implements NamedNamingObjectProxy {
 
     static final String EJB_TIMER_SERVICE
@@ -51,12 +51,12 @@ public class TimerServiceNamingProxy
 
     private Object getTimerServiceWrapper() {
 
-        // Cannot store EjbContainerUtilImpl.getInstance() in an instance 
-        // variable because it shouldn't be accessed before EJB container 
-        // is initialized. 
+        // Cannot store EjbContainerUtilImpl.getInstance() in an instance
+        // variable because it shouldn't be accessed before EJB container
+        // is initialized.
         // NamedNamingObjectProxy is initialized on the first lookup.
 
-        ComponentInvocation currentInv = 
+        ComponentInvocation currentInv =
                 EjbContainerUtilImpl.getInstance().getCurrentInvocation();
 
         if(currentInv == null) {

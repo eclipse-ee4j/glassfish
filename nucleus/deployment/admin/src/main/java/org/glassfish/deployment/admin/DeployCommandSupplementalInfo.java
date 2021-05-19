@@ -33,7 +33,7 @@ public class DeployCommandSupplementalInfo implements Serializable{
     private transient ExtendedDeploymentContext dc = null;
     private List<String> previousTargets = null;
     private Collection<? extends AccessCheck> accessChecks = null;
-    
+
     public void setDeploymentContext(final ExtendedDeploymentContext dc) {
         this.dc = dc;
         /*
@@ -51,15 +51,15 @@ public class DeployCommandSupplementalInfo implements Serializable{
     public void setAccessChecks(final Collection<? extends AccessCheck> accessChecks) {
         this.accessChecks = accessChecks;
     }
-    
+
     public Collection<? extends AccessCheck> getAccessChecks() {
         return accessChecks;
     }
-    
+
     public ExtendedDeploymentContext deploymentContext() {
         return dc;
     }
-    
+
     public List<String> previousTargets() {
         return previousTargets;
     }

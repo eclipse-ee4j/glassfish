@@ -19,7 +19,7 @@ package com.sun.s1peqe.selfmanagement.tmonitor.action;
 import javax.management.*;
 import java.io.*;
 
-public class StringMatch implements NotificationListener, 
+public class StringMatch implements NotificationListener,
     com.sun.s1peqe.selfmanagement.tmonitor.action.StringMatchMBean {
         private final String JMX_MONITOR_STRING_MATCHES = "jmx.monitor.string.matches";
         public StringMatch() {

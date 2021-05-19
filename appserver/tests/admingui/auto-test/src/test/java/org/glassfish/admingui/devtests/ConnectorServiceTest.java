@@ -45,7 +45,7 @@ public class ConnectorServiceTest extends BaseSeleniumTestClass {
         select.selectByVisibleText(policy);
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:connectorService:connectorService_link");
         assertEquals(timeout, getValue("propertyForm:propertySheet:propertSectionTextField:timeout:tiimeout", "value"));

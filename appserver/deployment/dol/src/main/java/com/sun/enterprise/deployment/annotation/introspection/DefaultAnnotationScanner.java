@@ -27,33 +27,33 @@ import java.util.Set;
 
 
 /**
- * This class contains the list of all annotations types name 
- * which can be present at the class level (Type.TYPE).  
+ * This class contains the list of all annotations types name
+ * which can be present at the class level (Type.TYPE).
  *
  * @author Jerome Dochez
  */
 @Service(name="default")
 @Singleton
-public class DefaultAnnotationScanner implements AnnotationScanner, 
+public class DefaultAnnotationScanner implements AnnotationScanner,
     PostConstruct {
 
-    @Inject 
+    @Inject
     SJSASFactory factory;
-    
+
     private Set<String> annotations=null;
     private Set<String> annotationsMetaDataComplete=null;
-    
+
     /**
-     * Test if the passed constant pool string is a reference to 
+     * Test if the passed constant pool string is a reference to
      * a Type.TYPE annotation of a J2EE component
      *
-     * @String the constant pool info string 
+     * @String the constant pool info string
      * @return true if it is a J2EE annotation reference
      */
     public boolean isAnnotation(String value) {
         return annotations.contains(value);
     }
-    
+
     public void postConstruct() {
         annotations = factory.getAnnotations(false);
         annotationsMetaDataComplete = factory.getAnnotations(true);

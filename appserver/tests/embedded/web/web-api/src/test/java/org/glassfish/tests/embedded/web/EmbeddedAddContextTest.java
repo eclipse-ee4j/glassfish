@@ -34,14 +34,14 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer#createContext
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedAddContextTest {
 
     static GlassFish glassfish;
     static WebContainer embedded;
-    static File root;                
+    static File root;
     static String contextRoot = "test";
 
     @BeforeClass
@@ -60,7 +60,7 @@ public class EmbeddedAddContextTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -93,7 +93,7 @@ public class EmbeddedAddContextTest {
         in.close();
 
         embedded.removeContext(context);
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -104,5 +104,5 @@ public class EmbeddedAddContextTest {
             glassfish = null;
         }
     }
-    
+
 }

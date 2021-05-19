@@ -35,20 +35,20 @@ import javax.management.Attribute;
 public class NameHelper
 {
     OfflineConfigMgr _mgr;
-    
+
     /** Creates a new instance of NameHelper */
     public NameHelper(String fileName) throws Exception
     {
        _mgr = new OfflineConfigMgr(fileName);
     }
-    
-    void fillDottedNamesTree(DefaultMutableTreeNode root) 
+
+    void fillDottedNamesTree(DefaultMutableTreeNode root)
        throws Exception
     {
-       fillAddNodeChildren(root, ""); 
+       fillAddNodeChildren(root, "");
     }
-    
-    void fillAddNodeChildren(DefaultMutableTreeNode parentNode, 
+
+    void fillAddNodeChildren(DefaultMutableTreeNode parentNode,
                     String parentDottedName)
           throws Exception
     {
@@ -56,13 +56,13 @@ public class NameHelper
         for (int i=0; i<childList.size(); i++)
         {
             String childName = (String)childList.get(i);
-            DefaultMutableTreeNode childNode = 
+            DefaultMutableTreeNode childNode =
                     new DefaultMutableTreeNode(new DottedNameInfo(childName,parentDottedName));
             fillAddNodeChildren(childNode, childName);
             parentNode.add(childNode);
         }
     }
-    
+
 
     Object[][] getAttributesForNodeInPrintForm(DefaultMutableTreeNode node, boolean bProperties) throws Exception
     {
@@ -79,7 +79,7 @@ public class NameHelper
         int iOffset = name.length()+1;
         if(bProperties)
             iOffset += "property.".length();
-            
+
         for (int i=0; i<list.size(); i++)
         {
             Attribute attr = (Attribute)list.get(i);
@@ -101,7 +101,7 @@ public class NameHelper
         DottedNameInfo info = (DottedNameInfo)node.getUserObject();
         setValue(info, name, value, bProperties);
     }
-    
+
     void setValue(DottedNameInfo info, String name, Object value, boolean bProperties)
         throws Exception
     {

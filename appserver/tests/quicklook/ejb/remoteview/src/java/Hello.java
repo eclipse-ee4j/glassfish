@@ -29,10 +29,10 @@ public interface Hello {
     Future<String> asyncBlock(int seconds);
 
     void fireAndForget();
-	
+
     Future<String> asyncThrowException(String exceptionType);
 
     Future<String> asyncCancel(int seconds) throws Exception;
-    
+
     void throwException(String exceptionType);
 }

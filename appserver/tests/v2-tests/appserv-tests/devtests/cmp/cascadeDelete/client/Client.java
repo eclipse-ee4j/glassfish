@@ -33,12 +33,12 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @version
  */
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
             stat.addDescription("copySemantics");
@@ -108,10 +108,9 @@ public class Client {
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient cascadeDelete", stat.FAIL);
+            stat.addStatus("ejbclient cascadeDelete", stat.FAIL);
         }
-	  stat.printSummary("cascadeDelete");
-
+        stat.printSummary("cascadeDelete");
     }
-    
+
 }

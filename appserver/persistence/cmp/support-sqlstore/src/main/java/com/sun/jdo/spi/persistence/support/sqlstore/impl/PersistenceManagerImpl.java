@@ -320,7 +320,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
         _requireCopyObjectId = pmf.getRequireCopyObjectId();
         _requireTrackedSCO = pmf.getRequireTrackedSCO();
 
-        this._jta = t;	// if null, nothing is changed
+        this._jta = t;    // if null, nothing is changed
         _isClosed = false;
 
         _multithreaded = ( ! EJBHelper.isManaged());
@@ -471,7 +471,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     /**
      * Returns transaction associated with this persistence manager
-     * @return transaction	current transaction
+     * @return transaction    current transaction
      */
     public Transaction currentTransaction() {
         assertIsOpen();
@@ -831,7 +831,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
             }
 
         if (pc == null)
-            return;		// ignore
+            return;        // ignore
 
         acquireShareLock();
         try {
@@ -856,7 +856,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
      */
     public void makePersistent(Object[] pcs) {
         if (pcs == null)
-            return;		// ignore
+            return;        // ignore
 
         for (int i = 0; i < pcs.length; i++) {
             makePersistent(pcs[i]);
@@ -865,14 +865,14 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     public void makePersistent(Collection pcs) {
         if (pcs == null)
-            return;		// ignore
+            return;        // ignore
 
         makePersistent(pcs.toArray());
     }
 
     public void deletePersistent(Object pc) {
         if (pc == null)
-            return;		// ignore
+            return;        // ignore
 
         acquireShareLock();
 
@@ -888,7 +888,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     public void deletePersistent(Object[] pcs) {
         if (pcs == null)
-            return;		// ignore
+            return;        // ignore
 
         for (int i = 0; i < pcs.length; i++) {
             deletePersistent(pcs[i]);
@@ -897,7 +897,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     public void deletePersistent(Collection pcs) {
         if (pcs == null)
-            return;		// ignore
+            return;        // ignore
 
         deletePersistent(pcs.toArray());
     }
@@ -1044,8 +1044,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Returns a new instance of the object defined by the given
      * StateManager
-     * @param 	sm	StateManager
-     * @return	new instance of the object
+     * @param     sm    StateManager
+     * @return    new instance of the object
      */
     public Object newInstance(StateManager sm) {
         Object o = null;
@@ -1517,7 +1517,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Called by Transaction commit() or rollback()
      * cleans up transactional cache
-     * @param	status		jakarta.transaction.Status
+     * @param    status        jakarta.transaction.Status
      */
     public void afterCompletion(int status) {
         assertIsOpen();
@@ -2303,7 +2303,7 @@ public class PersistenceManagerImpl implements PersistenceManager {
     /**
      * Set key field values from Oid into the Object
      *
-     * @param sm	StateManager of the Object to set key field values to
+     * @param sm    StateManager of the Object to set key field values to
      */
     private void setKeyFields(StateManager sm) {
         Object o = sm.getPersistent();
@@ -2335,9 +2335,9 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
     /**
      * Creates local copy of an oid object
-     * @param oid 	original object
-     * @param sm 	StateManager to be used for the field info.
-     * @return 	object 	local copy
+     * @param oid     original object
+     * @param sm     StateManager to be used for the field info.
+     * @return     object     local copy
      */
     private Object internalCloneOid(Object oid, StateManager sm) {
         if (oid == null)
@@ -2664,8 +2664,8 @@ public class PersistenceManagerImpl implements PersistenceManager {
 
         /**
          * Tests if a specified file should be included in a file list.
-         * @param dir 	the directory in which the file was found
-         * @param name	the name of the file
+         * @param dir     the directory in which the file was found
+         * @param name    the name of the file
          * @return true if the name should be included in the file list
          */
         public boolean accept(File dir, String name) {

@@ -35,15 +35,15 @@ import test.*;
 /**
  * This class is used to test Read-Only CMP beans by accessing
  * field 'shortName' before and after jdbc update of the same table.
- * It also tests that a non-DFG field 'description' is loaded 
- * correctly for Read-Only beans when bean is accessed after both 
+ * It also tests that a non-DFG field 'description' is loaded
+ * correctly for Read-Only beans when bean is accessed after both
  * findByPrimaryKey and custom finders.
  * The test is executed for CMP1.1 bean (A1RO) and CMP2.x bean (A2RO).
  *
  * @author  mvatkina
  */
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -53,10 +53,10 @@ public class Client {
     private  static Test tbean = null;
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
-	    stat.addDescription("robeans");
+            stat.addDescription("robeans");
 
             lookupBeans();
             tbean = thome.create();
@@ -64,18 +64,18 @@ public class Client {
             testA1();
             testA2();
 
-	    stat.addStatus("ejbclient robeans", stat.PASS);
+            stat.addStatus("ejbclient robeans", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient robeans", stat.FAIL);
+            stat.addStatus("ejbclient robeans", stat.FAIL);
         }
-	    stat.printSummary("robeans");
+        stat.printSummary("robeans");
     }
 
-    /** Run CMP1.1 test. 
+    /** Run CMP1.1 test.
      * getShortName() must return the same value.
      * getDescription() must return non-null value.
      */
@@ -92,15 +92,15 @@ public class Client {
         // Find another bean.
         Collection c = a1home.findByShortName("A1RO1");
         if (c.size() != 1) {
-            System.out.println("ERROR: 1.1 findByShortName returned wrong number of records: " 
+            System.out.println("ERROR: 1.1 findByShortName returned wrong number of records: "
                     + c.size());
         }
         a1bean = (A1)c.iterator().next();
 
         verifyDescription(a1bean.getDescription(), "A1RO", false);
     }
-    
-    /** Run CMP2.x test. 
+
+    /** Run CMP2.x test.
      * getShortName() must return the same value.
      * getDescription() must return non-null value.
      */
@@ -117,14 +117,14 @@ public class Client {
         // Find another bean.
         Collection c = a2home.findByShortName("A2RO1");
         if (c.size() != 1) {
-            System.out.println("ERROR: 2.x findByShortName returned wrong number of records: " 
+            System.out.println("ERROR: 2.x findByShortName returned wrong number of records: "
                     + c.size());
         }
         a2bean = (A2)c.iterator().next();
 
         verifyDescription(a2bean.getDescription(), "A2RO", false);
     }
-    
+
     private static void lookupBeans() throws NamingException {
         Context initial = new InitialContext();
         Object objref = initial.lookup("java:comp/env/ejb/A1RO");
@@ -157,15 +157,15 @@ public class Client {
      * @param isFindByPK true if verification is done after findByPrimaryKey
      * call.
      */
-    private static void verifyDescription(String description, String beanName, 
+    private static void verifyDescription(String description, String beanName,
             boolean isFindByPK) {
 
         if (description != null) {
-            System.out.println(beanName + " non-DFG field OK" 
-                    + ((isFindByPK)? "" : " after custom finder") + ": " 
+            System.out.println(beanName + " non-DFG field OK"
+                    + ((isFindByPK)? "" : " after custom finder") + ": "
                     + description);
         } else {
-            System.out.println(beanName + " FAILED: non-DFG field is NULL" 
+            System.out.println(beanName + " FAILED: non-DFG field is NULL"
                     + ((isFindByPK)? "" : " after custom finder"));
         }
     }

@@ -30,6 +30,6 @@
   </resource-ref>
   <resource-ref>
       <res-ref-name>jdbc/jdbc-multiple-user-test-resource</res-ref-name>
-      <jndi-name>jdbc/jdbc-multiple-user-test-resource</jndi-name>      
+      <jndi-name>jdbc/jdbc-multiple-user-test-resource</jndi-name>
     </resource-ref>
 </sun-web-app>

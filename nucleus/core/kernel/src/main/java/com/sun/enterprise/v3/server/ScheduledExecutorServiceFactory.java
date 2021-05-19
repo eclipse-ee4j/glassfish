@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Factory to create the scheduled executor service
- * 
+ *
  * @author Jerome Dochez
  */
 @Service
@@ -52,6 +52,6 @@ public class ScheduledExecutorServiceFactory implements Factory<ScheduledExecuto
     @Override
     public void dispose(ScheduledExecutorService instance) {
         // TODO Auto-generated method stub
-        
+
     }
 }

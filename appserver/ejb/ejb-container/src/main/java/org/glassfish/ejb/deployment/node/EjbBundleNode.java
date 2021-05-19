@@ -45,7 +45,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
     public final static XMLElement tag = new XMLElement(EjbTagNames.EJB_BUNDLE_TAG);
     public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 2.0//EN";
     public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD Enterprise JavaBeans 1.1//EN";
-    
+
     /** The system ID of an ejb-jar document.*/
     public final static String SYSTEM_ID = "http://java.sun.com/dtd/ejb-jar_2_0.dtd";
     public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/ejb-jar_1_1.dtd";
@@ -59,8 +59,8 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
 
    /**
     * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+    *
+    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
     * @return the doctype tag name
     */
    @Override
@@ -87,29 +87,29 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         systemIDs.add(SCHEMA_ID_21);
         return Collections.unmodifiableList(systemIDs);
    }
-   
-    // Descriptor class we are using   
+
+    // Descriptor class we are using
    private EjbBundleDescriptorImpl descriptor;
-      
+
    public EjbBundleNode() {
        super();
        // register sub XMLNodes
        registerElementHandler(new XMLElement(EjbTagNames.SESSION),
-                                                            EjbSessionNode.class);           
-       registerElementHandler(new XMLElement(EjbTagNames.ENTITY), 
-                                                            EjbEntityNode.class);                   
-       registerElementHandler(new XMLElement(EjbTagNames.MESSAGE_DRIVEN), 
-                                                            MessageDrivenBeanNode.class);          
-       registerElementHandler(new XMLElement(EjbTagNames.METHOD_PERMISSION), 
-                                                            MethodPermissionNode.class);                  
+                                                            EjbSessionNode.class);
+       registerElementHandler(new XMLElement(EjbTagNames.ENTITY),
+                                                            EjbEntityNode.class);
+       registerElementHandler(new XMLElement(EjbTagNames.MESSAGE_DRIVEN),
+                                                            MessageDrivenBeanNode.class);
+       registerElementHandler(new XMLElement(EjbTagNames.METHOD_PERMISSION),
+                                                            MethodPermissionNode.class);
        registerElementHandler(new XMLElement(TagNames.ROLE),
-                                                            SecurityRoleNode.class, "addRole");       
-       registerElementHandler(new XMLElement(EjbTagNames.CONTAINER_TRANSACTION), 
-                                                            ContainerTransactionNode.class);       
-       registerElementHandler(new XMLElement(EjbTagNames.EXCLUDE_LIST), 
-                                                            ExcludeListNode.class);                     
-       registerElementHandler(new XMLElement(EjbTagNames.RELATIONSHIPS), 
-                                                            RelationshipsNode.class);                     
+                                                            SecurityRoleNode.class, "addRole");
+       registerElementHandler(new XMLElement(EjbTagNames.CONTAINER_TRANSACTION),
+                                                            ContainerTransactionNode.class);
+       registerElementHandler(new XMLElement(EjbTagNames.EXCLUDE_LIST),
+                                                            ExcludeListNode.class);
+       registerElementHandler(new XMLElement(EjbTagNames.RELATIONSHIPS),
+                                                            RelationshipsNode.class);
        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION),
                                              MessageDestinationNode.class,
                                              "addMessageDestination");
@@ -128,7 +128,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
    }
 
    @Override
-   public void addDescriptor(Object newDescriptor) {       
+   public void addDescriptor(Object newDescriptor) {
        if (newDescriptor instanceof EjbDescriptor) {
            descriptor.addEjb((EjbDescriptor) newDescriptor);
        } else if (newDescriptor instanceof RelationshipDescriptor) {
@@ -137,14 +137,14 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
            MethodPermissionDescriptor   nd = (MethodPermissionDescriptor) newDescriptor;
            MethodDescriptor[] array = nd.getMethods();
            for (int i=0;i<array.length;i++) {
-                EjbDescriptor target  = descriptor.getEjbByName(array[i].getEjbName());           
+                EjbDescriptor target  = descriptor.getEjbByName(array[i].getEjbName());
                 MethodPermission[] mps = nd.getMethodPermissions();
                 for (int j=0;j<mps.length;j++) {
                     DOLUtils.getDefaultLogger().fine("Adding mp " + mps[j] + " to " + array[i] + " for ejb " + array[i].getEjbName());
                     target.addPermissionedMethod(mps[j], array[i]);
                 }
             }
-       } else super.addDescriptor(newDescriptor);       
+       } else super.addDescriptor(newDescriptor);
    }
 
     @Override
@@ -155,7 +155,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
             // ejb-jar.xml <module-name> only applies if this is an ejb-jar
             if( bundleDesc.getModuleDescriptor().getDescriptor() instanceof EjbBundleDescriptorImpl) {
                 bundleDesc.getModuleDescriptor().setModuleName(value);
-            }        
+            }
         } else {
             super.setElementValue(element, value);
         }
@@ -200,7 +200,7 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         }
 
         if( ejbDesc.hasInterceptors() ) {
-            Node interceptorsNode = appendChild(jarNode, 
+            Node interceptorsNode = appendChild(jarNode,
                                                 EjbTagNames.INTERCEPTORS);
             EjbInterceptorNode interceptorNode = new EjbInterceptorNode();
             for(EjbInterceptor next : ejbDesc.getInterceptors()) {
@@ -213,11 +213,11 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
         if (ejbDesc.hasRelationships()) {
             (new RelationshipsNode()).writeDescriptor(jarNode, EjbTagNames.RELATIONSHIPS, ejbDesc);
         }
-        
+
         // assembly-descriptor
         writeAssemblyDescriptor(jarNode, ejbDesc);
-        
-        appendTextChild(jarNode, EjbTagNames.EJB_CLIENT_JAR, ejbDesc.getEjbClientJarUri());        
+
+        appendTextChild(jarNode, EjbTagNames.EJB_CLIENT_JAR, ejbDesc.getEjbClientJarUri());
         return jarNode;
     }
 
@@ -241,18 +241,18 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
      */
     private void writeAssemblyDescriptor(Node parentNode, EjbBundleDescriptorImpl bundleDescriptor) {
        Node assemblyNode = parentNode.getOwnerDocument().createElement(EjbTagNames.ASSEMBLY_DESCRIPTOR);
-       
+
        // security-role*
        SecurityRoleNode roleNode = new SecurityRoleNode();
        for (Iterator e = bundleDescriptor.getRoles().iterator();e.hasNext();) {
            roleNode.writeDescriptor(assemblyNode, TagNames.ROLE, (Role) e.next());
        }
-       
-       // method-permission*       
+
+       // method-permission*
        Map excludedMethodsByEjb = new HashMap();
-       MethodPermissionNode mpNode = new MethodPermissionNode();       
+       MethodPermissionNode mpNode = new MethodPermissionNode();
        for (EjbDescriptor ejbDesc : bundleDescriptor.getEjbs()) {
-           if (ejbDesc instanceof EjbMessageBeanDescriptor)                
+           if (ejbDesc instanceof EjbMessageBeanDescriptor)
                continue;
            Vector excludedMethods = new Vector();
            addMethodPermissions(ejbDesc, ejbDesc.getPermissionedMethodsByPermission(), excludedMethods,  mpNode, assemblyNode);
@@ -279,27 +279,27 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
        // message-destination*
        writeMessageDestinations
            (assemblyNode, bundleDescriptor.getMessageDestinations().iterator());
-                                
-       // exclude-list*              
+
+       // exclude-list*
        if (excludedMethodsByEjb.size()>0) {
            Node excludeListNode = this.appendChild(assemblyNode, EjbTagNames.EXCLUDE_LIST);
            for (Object o : excludedMethodsByEjb.entrySet()) {
                Map.Entry entry = (Map.Entry) o;
                EjbDescriptor ejbDesc = (EjbDescriptor) entry.getKey();
                Vector excludedMethods = (Vector) entry.getValue();
-               
+
                MethodPermissionDescriptor mpd = new MethodPermissionDescriptor();
                mpd.addMethodPermission(MethodPermission.getExcludedMethodPermission());
                mpd.addMethods(excludedMethods);
                mpNode.writeDescriptorInNode(excludeListNode, mpd, ejbDesc);
            }
        }
-       
-       for(EjbApplicationExceptionInfo next : 
+
+       for(EjbApplicationExceptionInfo next :
                bundleDescriptor.getApplicationExceptions().values()) {
 
            EjbApplicationExceptionNode node = new EjbApplicationExceptionNode();
-           
+
            node.writeDescriptor(assemblyNode, EjbTagNames.APPLICATION_EXCEPTION,
                                 next);
 
@@ -309,18 +309,18 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
            parentNode.appendChild(assemblyNode);
        }
     }
-    
+
     private void addMethodPermissions(
-            EjbDescriptor ejb, 
-            Map mpToMethods,  
+            EjbDescriptor ejb,
+            Map mpToMethods,
             Vector  excludedMethods,
-            MethodPermissionNode mpNode, 
+            MethodPermissionNode mpNode,
             Node assemblyNode) {
-                
+
         if (mpToMethods==null || mpToMethods.size()==0) {
             return;
         }
-        
+
         for (Object o : mpToMethods.entrySet()) {
             Map.Entry entry = (Map.Entry) o;
             MethodPermission mp = (MethodPermission) entry.getKey();
@@ -341,5 +341,5 @@ public class EjbBundleNode extends AbstractBundleNode<EjbBundleDescriptorImpl> {
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-    
+
 }

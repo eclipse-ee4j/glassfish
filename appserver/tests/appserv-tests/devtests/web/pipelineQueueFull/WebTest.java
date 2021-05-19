@@ -25,16 +25,16 @@ import com.sun.ejte.ccl.reporter.*;
  * ("NPE When stressing GlassFish and the Pipeline Queue is full")
  */
 public class WebTest {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
     private static URLConnection conn = null;
     private static URL url;
     private static ObjectOutputStream objectWriter = null;
-    private static ObjectInputStream objectReader = null;  
+    private static ObjectInputStream objectReader = null;
 
     public static void main(String args[]) {
 
@@ -55,7 +55,7 @@ public class WebTest {
                HttpURLConnection urlConnection = (HttpURLConnection)conn;
                urlConnection.setDoOutput(true);
                int responseCode=  urlConnection.getResponseCode();
-               System.out.println("Response code: " + responseCode + " Expected code: 503"); 
+               System.out.println("Response code: " + responseCode + " Expected code: 503");
                if (responseCode != 503){
                     stat.addStatus("pipelineQueueFull", stat.FAIL);
                } else {

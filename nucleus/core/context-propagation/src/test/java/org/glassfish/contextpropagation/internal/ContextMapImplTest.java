@@ -50,31 +50,31 @@ public class ContextMapImplTest {
 //  private static Entry DUMMY_ENTRY;
 //  private static EnumSet<PropagationMode> PROP_MODES = PropagationMode.defaultSet();
 //  static ContextMap cm;
-//  static AccessControlledMap acMap, savedMap; 
+//  static AccessControlledMap acMap, savedMap;
 //  static AccessControlledMapFinder mapFinder = new AccessControlledMapFinder() {
 //    @Override
 //    protected AccessControlledMap getMapIfItExists() {
 //      AccessControlledMap map = super.getMapIfItExists();
 //      return map == null ? acMap : map;
-//    }    
+//    }
 //  };
-//  
+//
 //  @BeforeClass
 //  public static void setupClass() {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());
-//    DUMMY_ENTRY = 
+//    DUMMY_ENTRY =
 //        new Entry("dummy", PropagationMode.defaultSet(), ContextType.STRING).init(true, true);
 //    savedMap = new AccessControlledMap();
 //    Deencapsulation.setField(Utils.class, "mapFinder", mapFinder);
 //    cm = Utils.getScopeAwareContextMap();
 //    savedMap.simpleMap.put("key", DUMMY_ENTRY);
 //    savedMap.simpleMap.put("removeMe", DUMMY_ENTRY);
-//    savedMap.simpleMap.put(Location.KEY, 
-//        new Entry(new Location(new ViewImpl(Location.KEY)){}, 
-//            PropagationMode.defaultSet(), 
+//    savedMap.simpleMap.put(Location.KEY,
+//        new Entry(new Location(new ViewImpl(Location.KEY)){},
+//            PropagationMode.defaultSet(),
 //            ContextType.VIEW_CAPABLE).init(true, true));
 //  }
-//  
+//
 //  @Before
 //  public void setup() {
 //    BootstrapUtils.bootstrap(new DefaultWireAdapter());
@@ -82,7 +82,7 @@ public class ContextMapImplTest {
 //
 //  @Test
 //  public void testGet() throws InsufficientCredentialException {
-//    acMap = null;   
+//    acMap = null;
 //    assertNull(cm.get("key"));
 //    acMap = savedMap;
 //    assertEquals("dummy", cm.get("key"));
@@ -121,7 +121,7 @@ public class ContextMapImplTest {
 //  public void testCreateViewCapable() throws InsufficientCredentialException {
 //    acMap = savedMap;
 //    String prefix = "a view capable";
-//    ContextMapHelper.registerContextFactoryForPrefixNamed(prefix, 
+//    ContextMapHelper.registerContextFactoryForPrefixNamed(prefix,
 //        new ContextViewFactory() {
 //          @Override
 //          public EnumSet<PropagationMode> getPropagationModes() {
@@ -142,7 +142,7 @@ public class ContextMapImplTest {
 //
 //  @Test
 //  public void testGetPropagationModes() throws InsufficientCredentialException {
-//    acMap = null;   
+//    acMap = null;
 //    assertNull(cm.getPropagationModes("key"));
 //    acMap = savedMap;
 //    assertEquals(PropagationMode.defaultSet(), cm.getPropagationModes("key"));
@@ -165,13 +165,13 @@ public class ContextMapImplTest {
 //    acMap = null;
 //    cm.getLocation();
 //  }
-//  
+//
 //  @Ignore@Test(expected=AssertionError.class) // TODO re-evaluate this test
 //  public void testGetLocationBeforeItIsSet2() {
 //    acMap = new AccessControlledMap();
 //    cm.getLocation();
 //  }
-//  
+//
 //  @Test
 //  public void testGetLocationNormalCase() {
 //    acMap = savedMap;
@@ -186,7 +186,7 @@ public class ContextMapImplTest {
 //    acMap = new AccessControlledMap();
 //    assertTrue(cm.isEmpty());
 //    acMap = savedMap;
-//    assertFalse(cm.isEmpty());    
+//    assertFalse(cm.isEmpty());
 //  }
 //
 //  @Test

@@ -22,9 +22,9 @@ import jakarta.servlet.annotation.*;
 
 public class SharedLib2ServContInit implements ServletContainerInitializer {
     public SharedLib2ServContInit() {
-	System.out.println("SHARED LIB 2 CONST");
+        System.out.println("SHARED LIB 2 CONST");
     }
     public void onStartup(Set<Class<?>> c, ServletContext ctx) {
-	ctx.setAttribute("SHAREDLIB-2", "CALLED SHAREDLIB-2");
+        ctx.setAttribute("SHAREDLIB-2", "CALLED SHAREDLIB-2");
     }
 }

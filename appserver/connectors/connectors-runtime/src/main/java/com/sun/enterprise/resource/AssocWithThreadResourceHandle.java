@@ -68,5 +68,5 @@ public class AssocWithThreadResourceHandle extends ResourceHandle{
         // The equals method for the subclass just return the result of invoking super.equals()
         return super.equals(other);
     }
-    
+
 }

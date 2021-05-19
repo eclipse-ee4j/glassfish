@@ -27,7 +27,7 @@ package com.sun.jdo.spi.persistence.support.sqlstore.model;
 
 /**
  * This class encapsulate the association of two KeyDescs.
- * It can be used to represent the inheritance key or 
+ * It can be used to represent the inheritance key or
  * the reference key between primary and secondary tables.
  */
 public class ReferenceKeyDesc extends Object {
@@ -37,23 +37,23 @@ public class ReferenceKeyDesc extends Object {
 
     private TableDesc table;
 
-	public ReferenceKeyDesc(TableDesc table, 
-							KeyDesc referencingKey,
-							KeyDesc referencedKey) {
-		this.referencingKey = referencingKey;
-		this.referencedKey = referencedKey;
-		this.table = table;
-	}
+    public ReferenceKeyDesc(TableDesc table,
+                            KeyDesc referencingKey,
+                            KeyDesc referencedKey) {
+        this.referencingKey = referencingKey;
+        this.referencedKey = referencedKey;
+        this.table = table;
+    }
 
-	public KeyDesc getReferencingKey() {
-		return referencingKey;
-	}
+    public KeyDesc getReferencingKey() {
+        return referencingKey;
+    }
 
-	public KeyDesc getReferencedKey() {
-		return referencedKey;
-	}
+    public KeyDesc getReferencedKey() {
+        return referencedKey;
+    }
 
-	public TableDesc getTableDesc() {
-		return table;
-	}
+    public TableDesc getTableDesc() {
+        return table;
+    }
 }

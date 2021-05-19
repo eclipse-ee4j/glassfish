@@ -29,13 +29,13 @@ public interface LoggerInfoMetadata {
      * @return
      */
     public Set<String> getLoggerNames();
-    
+
     /**
      * Gets the description for the named logger.
      * @return
      */
     public String getDescription(String logger);
-    
+
     /**
      * Get description for the named logger for given locale
      * @param logger
@@ -43,14 +43,14 @@ public interface LoggerInfoMetadata {
      * @return
      */
     public String getDescription(String logger, Locale locale);
-    
+
     /**
      * Gets the subsystem grouping to which a specified logger belongs.
      * @param logger
      * @return
      */
     public String getSubsystem(String logger);
-    
+
     /**
      * Gets whether the specified logger is to be included in the public doc.
      * @param logger
@@ -58,5 +58,5 @@ public interface LoggerInfoMetadata {
      * <code>false</code> for internal fine-grained loggers.
      */
     public boolean isPublished(String logger);
-    
+
 }

@@ -63,9 +63,9 @@ import com.sun.enterprise.config.serverbeans.SecureAdmin;
 import com.sun.enterprise.security.SecurityServicesUtil;
 
 /**
- *  <p>	This class is responsible for providing the Authentication support
- *	needed by the admin console to both access the admin console pages
- *	as well as invoke REST requests.</p>
+ * This class is responsible for providing the Authentication support
+ * needed by the admin console to both access the admin console pages
+ * as well as invoke REST requests.
  */
 public class AdminConsoleAuthModule implements ServerAuthModule {
     //public static final String TOKEN_ADMIN_LISTENER_PORT = "${ADMIN_LISTENER_PORT}";
@@ -89,25 +89,25 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
     private static final String RESPONSE_TYPE = "application/json";
 
     /**
-     *	The Session key for the REST Server Name.
+     * The Session key for the REST Server Name.
      */
     public static final String REST_SERVER_NAME = "serverName";
 
     /**
-     *	The Session key for the REST Server Port.
+     * The Session key for the REST Server Port.
      */
     public static final String REST_SERVER_PORT = "serverPort";
 
     /**
-     *	The Session key for the REST authentication token.
+     * The Session key for the REST authentication token.
      */
     public static final String REST_TOKEN = "__rTkn__";
 
     private static final Logger logger = GuiUtil.getLogger();
 
     /**
-     *	<p> This method configures this AuthModule and makes sure all the
-     *	    information needed to continue is present.</p>
+     * This method configures this AuthModule and makes sure all the
+     * information needed to continue is present.
      */
     @Override
     public void initialize(MessagePolicy requestPolicy, MessagePolicy responsePolicy, CallbackHandler handler, Map options) throws AuthException {
@@ -145,8 +145,9 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         return SUPPORTED_MESSAGE_TYPES;
     }
 
+
     /**
-     *	<p> This is where the validation happens...</p>
+     * This is where the validation happens...
      */
     @Override
     public AuthStatus validateRequest(MessageInfo messageInfo, Subject clientSubject, Subject serviceSubject) throws AuthException {
@@ -213,10 +214,10 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         }
 
 // Don't use the PasswordValidationCallback... use REST authorization instead.
-//	char[] pwd = new char[password.length()];
-//	password.getChars(0, password.length(), pwd, 0);
-//	PasswordValidationCallback pwdCallback =
-//	    new PasswordValidationCallback(clientSubject, username, pwd);
+//        char[] pwd = new char[password.length()];
+//        password.getChars(0, password.length(), pwd, 0);
+//        PasswordValidationCallback pwdCallback =
+//            new PasswordValidationCallback(clientSubject, username, pwd);
 
         // Make REST Request
 
@@ -305,25 +306,16 @@ public class AdminConsoleAuthModule implements ServerAuthModule {
         }
     }
 
-    /**
-     *
-     */
     @Override
     public AuthStatus secureResponse(MessageInfo messageInfo, Subject serviceSubject) throws AuthException {
         return AuthStatus.SUCCESS;
     }
 
-    /**
-     *
-     */
     @Override
     public void cleanSubject(MessageInfo messageInfo, Subject subject) throws AuthException {
         // FIXME: Cleanup...
     }
 
-    /**
-     *
-     */
     private boolean isMandatory(MessageInfo messageInfo) {
         return Boolean.valueOf((String) messageInfo.getMap().get(
                 "jakarta.security.auth.message.MessagePolicy.isMandatory"));

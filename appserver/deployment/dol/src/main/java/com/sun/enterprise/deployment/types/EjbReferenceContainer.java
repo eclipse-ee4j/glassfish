@@ -23,28 +23,28 @@ import java.util.Set;
  * references
  *
  * @author Jerome Dochez
- * @version 
+ * @version
  */
 public interface EjbReferenceContainer {
 
     /**
      * Add a reference to an ejb.
-     * 
+     *
      * @param the ejb reference
      */
-    public void addEjbReferenceDescriptor(EjbReference ejbReference);
-    
+    void addEjbReferenceDescriptor(EjbReference ejbReference);
+
     /**
      * Looks up an ejb reference with the given name. Throws an IllegalArgumentException
      * if it is not found.
      *
      * @param the name of the ejb-reference
      */
-    public EjbReference getEjbReference(String name);
-    
+    EjbReference getEjbReference(String name);
+
     /**
      * Return the set of references to ejbs that I have.
      */
-    public Set getEjbReferenceDescriptors();
+    Set getEjbReferenceDescriptors();
 }
 

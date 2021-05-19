@@ -18,7 +18,7 @@
 -->
 
 <!--
-   
+
   Note: The targets here use properties that need to be modified
         to suit your local settings in the JdbcCommon.properties
 -->
@@ -42,10 +42,10 @@
     <target name="create-jdbc-connpool-oracle-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-connection-pool
-	    --datasourceclassname=${oracle.datasource.class}
-	    --restype=${oracle.resource.type}"/>
-	<param name="operand.props" value="${oracle.pool.name}"/>    
+          value="create-jdbc-connection-pool
+            --datasourceclassname=${oracle.datasource.class}
+            --restype=${oracle.resource.type}"/>
+        <param name="operand.props" value="${oracle.pool.name}"/>
       </antcall>
 
       <antcall target="set-oracle-props-common"/>
@@ -55,10 +55,10 @@
     <target name="create-jdbc-driver-connpool-oracle-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-connection-pool
-	    --driverclassname=${oracle.driver.class}
-	    --restype=${oracle.resource.type}"/>
-	<param name="operand.props" value="${oracle.pool.name}"/>    
+          value="create-jdbc-connection-pool
+            --driverclassname=${oracle.driver.class}
+            --restype=${oracle.resource.type}"/>
+        <param name="operand.props" value="${oracle.pool.name}"/>
       </antcall>
 
       <antcall target="set-oracle-props-common"/>
@@ -68,18 +68,18 @@
     <target name="set-oracle-props-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.pool.name}.property.User=${oracle.user}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.pool.name}.property.User=${oracle.user}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.pool.name}.property.Password=${oracle.password}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.pool.name}.property.Password=${oracle.password}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.pool.name}.property.URL=${oracle.url}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.pool.name}.property.URL=${oracle.url}"/>
       </antcall>
     </target>
 
@@ -87,9 +87,9 @@
     <target name="create-jdbc-resource-oracle-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-resource
-	    --connectionpoolid ${oracle.pool.name}"/>
-	<param name="operand.props" value="${oracle.resource.name}"/>
+          value="create-jdbc-resource
+            --connectionpoolid ${oracle.pool.name}"/>
+        <param name="operand.props" value="${oracle.resource.name}"/>
       </antcall>
     </target>
 
@@ -97,8 +97,8 @@
     <target name="delete-jdbc-connpool-oracle-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="delete-jdbc-connection-pool"/>
-	<param name="operand.props" value="${oracle.pool.name}"/>  
+          value="delete-jdbc-connection-pool"/>
+        <param name="operand.props" value="${oracle.pool.name}"/>
       </antcall>
     </target>
 
@@ -106,8 +106,8 @@
     <target name="delete-jdbc-resource-oracle-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="delete-jdbc-resource"/>
-	<param name="operand.props" value="${oracle.resource.name}"/>  
+          value="delete-jdbc-resource"/>
+        <param name="operand.props" value="${oracle.resource.name}"/>
       </antcall>
     </target>
 
@@ -125,50 +125,50 @@
     <target name="create-jdbc-connpool-oracle-xa-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-connection-pool
-	    --datasourceclassname=${oracle.xadatasource.class}
-	    --restype=javax.sql.XADataSource"/>
-	<param name="operand.props" value="${oracle.xapool.name}"/>    
+          value="create-jdbc-connection-pool
+            --datasourceclassname=${oracle.xadatasource.class}
+            --restype=javax.sql.XADataSource"/>
+        <param name="operand.props" value="${oracle.xapool.name}"/>
       </antcall>
 
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.xapool.name}.property.User=${oracle.user}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.xapool.name}.property.User=${oracle.user}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.xapool.name}.property.Password=${oracle.password}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.xapool.name}.property.Password=${oracle.password}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.xapool.name}.property.URL=${oracle.url}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${oracle.xapool.name}.property.URL=${oracle.url}"/>
       </antcall>
     </target>
 
     <target name="create-jdbc-resource-oracle-xa-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-resource
-	    --connectionpoolid ${oracle.xapool.name}"/>
-	<param name="operand.props" value="${oracle.xaresource.name}"/>
+          value="create-jdbc-resource
+            --connectionpoolid ${oracle.xapool.name}"/>
+        <param name="operand.props" value="${oracle.xaresource.name}"/>
       </antcall>
     </target>
 
     <target name="delete-jdbc-connpool-oracle-xa-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="delete-jdbc-connection-pool"/>
-	<param name="operand.props" value="${oracle.xapool.name}"/>  
+          value="delete-jdbc-connection-pool"/>
+        <param name="operand.props" value="${oracle.xapool.name}"/>
       </antcall>
     </target>
     <target name="delete-jdbc-resource-oracle-xa-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="delete-jdbc-resource"/>
-	<param name="operand.props" value="${oracle.xaresource.name}"/>  
+          value="delete-jdbc-resource"/>
+        <param name="operand.props" value="${oracle.xaresource.name}"/>
       </antcall>
     </target>
 
@@ -184,7 +184,7 @@
         output="${build.classes.dir}/setupDBTables.out"
         classpath="${env.APS_HOME}/devtests/jdbc/classes12.zip"
       />
-    
+
     </target>
 
 
@@ -215,65 +215,65 @@
           <param name="operand.props" value="${mysql.xa.pool.name}"/>
         </antcall>
     </target>
-							      
+
 
     <target name="create-jdbc-connpool-mysql-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-connection-pool
-	    --datasourceclassname=${mysql.datasource.class}
-	    --restype=javax.sql.DataSource"/>
-	<param name="operand.props" value="${mysql.pool.name}"/>    
+          value="create-jdbc-connection-pool
+            --datasourceclassname=${mysql.datasource.class}
+            --restype=javax.sql.DataSource"/>
+        <param name="operand.props" value="${mysql.pool.name}"/>
       </antcall>
 
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.User=${mysql.user}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.User=${mysql.user}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.Password=${mysql.password}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.Password=${mysql.password}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.serverName=${mysql.serverName}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.serverName=${mysql.serverName}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.databaseName=${mysql.databaseName}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.databaseName=${mysql.databaseName}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.port=${mysql.port}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.pool.name}.property.port=${mysql.port}"/>
       </antcall>
     </target>
 
     <target name="create-jdbc-resource-mysql-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-resource
-	    --connectionpoolid ${mysql.pool.name}"/>
-	<param name="operand.props" value="${mysql.resource.name}"/>
+          value="create-jdbc-resource
+            --connectionpoolid ${mysql.pool.name}"/>
+        <param name="operand.props" value="${mysql.resource.name}"/>
       </antcall>
     </target>
 
     <target name="delete-jdbc-connpool-mysql-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="delete-jdbc-connection-pool"/>
-	<param name="operand.props" value="${mysql.pool.name}"/>  
+          value="delete-jdbc-connection-pool"/>
+        <param name="operand.props" value="${mysql.pool.name}"/>
       </antcall>
     </target>
     <target name="delete-jdbc-resource-mysql-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="delete-jdbc-resource"/>
-	<param name="operand.props" value="${mysql.resource.name}"/>  
+          value="delete-jdbc-resource"/>
+        <param name="operand.props" value="${mysql.resource.name}"/>
       </antcall>
     </target>
 
@@ -290,45 +290,45 @@
     <target name="create-jdbc-connpool-mysql-xa-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-connection-pool
-	    --datasourceclassname=${mysql.xa.datasource.class}
-	    --restype=javax.sql.XADataSource"/>
-	<param name="operand.props" value="${mysql.xa.pool.name}"/>    
+          value="create-jdbc-connection-pool
+            --datasourceclassname=${mysql.xa.datasource.class}
+            --restype=javax.sql.XADataSource"/>
+        <param name="operand.props" value="${mysql.xa.pool.name}"/>
       </antcall>
 
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.User=${mysql.user}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.User=${mysql.user}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.Password=${mysql.password}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.Password=${mysql.password}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.serverName=${mysql.serverName}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.serverName=${mysql.serverName}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.databaseName=${mysql.databaseName}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.databaseName=${mysql.databaseName}"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.port=${mysql.port}"/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.${mysql.xa.pool.name}.property.port=${mysql.port}"/>
       </antcall>
     </target>
 
     <target name="create-jdbc-resource-mysql-xa-common" depends="init-common">
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command"
-	  value="create-jdbc-resource
-	    --connectionpoolid ${mysql.xa.pool.name}"/>
-	<param name="operand.props" value="${mysql.xa.resource.name}"/>
+          value="create-jdbc-resource
+            --connectionpoolid ${mysql.xa.pool.name}"/>
+        <param name="operand.props" value="${mysql.xa.resource.name}"/>
       </antcall>
     </target>
 
@@ -342,7 +342,7 @@
         onerror="continue"
         print="yes"
         output="${build.classes.dir}/setupDBTables.out"
-	classpath="${env.S1AS_HOME}/lib/mysql-connector-java-5.1.7-bin.jar"
+        classpath="${env.S1AS_HOME}/lib/mysql-connector-java-5.1.7-bin.jar"
       />
     </target>
 
@@ -358,7 +358,7 @@
    <condition property="aix">
        <os name="AIX"/>
    </condition>
-	       
+
    <target name="start-derby" depends="init-common">
        <antcall target="start-derby-aix"/>
        <antcall target="start-derby-nonaix"/>
@@ -398,7 +398,7 @@
       <parallel>
            <java classname="org.apache.derby.drda.NetworkServerControl"
                  classpath="${db.classpath}" failonerror="true" fork="true">
-		 <arg line="-h localhost -p 1527 -user ${derby.user} -password ${derby.password} shutdown"/>
+                 <arg line="-h localhost -p 1527 -user ${derby.user} -password ${derby.password} shutdown"/>
            </java>
       </parallel>
    </target>
@@ -408,7 +408,7 @@
       <parallel>
            <java classname="org.apache.derby.drda.NetworkServerControl"
                  classpath="${db.classpath}" failonerror="true" fork="true">
-		 <arg line="-h 0.0.0.0 -p 1527 -user ${derby.user} -password ${derby.password} shutdown"/>
+                 <arg line="-h 0.0.0.0 -p 1527 -user ${derby.user} -password ${derby.password} shutdown"/>
            </java>
       </parallel>
    </target>

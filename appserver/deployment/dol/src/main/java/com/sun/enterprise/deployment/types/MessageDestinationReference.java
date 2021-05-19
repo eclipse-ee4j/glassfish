@@ -18,7 +18,7 @@ package com.sun.enterprise.deployment.types;
 
 import com.sun.enterprise.deployment.BundleDescriptor;
 
-/** 
+/**
  * Protocol associated with defining an EJB Interface
  *
  * @author Kenneth Saks
@@ -26,43 +26,43 @@ import com.sun.enterprise.deployment.BundleDescriptor;
 
 public interface MessageDestinationReference extends MessageDestinationReferencer, NamedInformation {
 
-    public static String CONSUMES = "Consumes";
-    public static String PRODUCES = "Produces";
-    public static String CONSUMES_AND_PRODUCES = "ConsumesProduces";
+    String CONSUMES = "Consumes";
+    String PRODUCES = "Produces";
+    String CONSUMES_AND_PRODUCES = "ConsumesProduces";
 
-    /** 
+    /**
      * @return the type of the message destination reference
      */
-    public String getType();
+    String getType();
 
     /**
      * @param type the type of the message destination reference
      */
-    public void setType(String type);
+    void setType(String type);
 
     /**
      * @return the usage type of the message destination reference
-     * (Consumes, Produces, ConsumesProduces)
+     *         (Consumes, Produces, ConsumesProduces)
      */
-    public String getUsage();
+    String getUsage();
 
     /**
      * @param usage the usage type of the message destination reference
-     * (Consumes, Produces, ConsumesProduces)
+     *            (Consumes, Produces, ConsumesProduces)
      */
-    public void setUsage(String usage);
+    void setUsage(String usage);
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * message destination reference is declared. 
+     * message destination reference is declared.
      */
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
+    void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * message destinaion reference is declared.  
+     * message destinaion reference is declared.
      */
-    public BundleDescriptor getReferringBundleDescriptor();
+    BundleDescriptor getReferringBundleDescriptor();
 
 }
 

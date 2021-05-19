@@ -73,7 +73,7 @@ public class ISBNValidator {
         int sum = 0;
         for (int i = 0; i < 10; i++) {
             sum += (10 - i) * is[i];
-        }   
+        }
         return (sum % 11 == 0);
     }
 

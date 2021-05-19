@@ -39,13 +39,13 @@ public interface Request extends EJBObject {
     public double getBillOfMaterialPrice(BomRequest bomRequest) throws RemoteException;
 
     public Double getAvgPrice() throws RemoteException;
-    
+
     public Double getTotalPricePerVendor(VendorRequest vendorRequest) throws RemoteException;
-    
+
     public double getOrderPrice(Integer orderId) throws RemoteException;
-    
+
     public void adjustOrderDiscount(int adjustment) throws RemoteException;
-    
+
     public Collection locateVendorsByPartialName(String name) throws RemoteException;
 
     public String reportVendorsByOrder(Integer orderId) throws RemoteException;

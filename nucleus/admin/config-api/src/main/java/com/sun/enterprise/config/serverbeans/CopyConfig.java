@@ -38,7 +38,7 @@ import java.util.logging.Logger;
 /**
  * This is the abstract class which will be used by the config beans {@link Cluster} and {@link Server} classes to copy
  * the default-configs
- * 
+ *
  */
 public abstract class CopyConfig implements AdminCommand {
 

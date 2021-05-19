@@ -48,7 +48,7 @@ public class EjbApplicationExceptionNode extends DeploymentDescriptorNode<EjbApp
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
                                 EjbApplicationExceptionInfo descriptor) {
         Node appExceptionNode = appendChild(parent, nodeName);
         appendTextChild(appExceptionNode, EjbTagNames.APP_EXCEPTION_CLASS,

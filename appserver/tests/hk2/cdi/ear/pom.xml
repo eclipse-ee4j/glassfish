@@ -30,7 +30,7 @@
     <artifactId>ear</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish HK2 CDI EAR test</name>  
+    <name>GlassFish HK2 CDI EAR test</name>
     <modules>
         <module>lib1</module>
         <module>ejb1</module>

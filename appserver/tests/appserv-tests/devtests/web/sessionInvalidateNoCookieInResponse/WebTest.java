@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish 896");
         WebTest webTest = new WebTest(args);
@@ -52,8 +52,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             run();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -72,7 +72,7 @@ public class WebTest {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -91,7 +91,7 @@ public class WebTest {
             System.err.println("Wrong number of cookie response headers. ");
             System.err.println("Expected 1, got " + cookieCount);
             stat.addStatus(TEST_NAME, stat.FAIL);
-	} else if (!EXPECTED_COOKIE_HEADER.equals(cookieHeader)) {
+        } else if (!EXPECTED_COOKIE_HEADER.equals(cookieHeader)) {
             System.err.println("Wrong cookie response header. ");
             System.err.println("Expected: " + EXPECTED_COOKIE_HEADER
                                + ", got: " + cookieHeader);

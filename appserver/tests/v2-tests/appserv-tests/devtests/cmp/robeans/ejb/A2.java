@@ -26,7 +26,7 @@ import java.rmi.*;
 public interface A2 extends jakarta.ejb.EJBObject {
 
     public String getShortName() throws RemoteException;
- 
+
     public String getDescription() throws RemoteException;
- 
+
 }

@@ -25,7 +25,7 @@ package com.sun.jdo.spi.persistence.utility;
 //XXX FIXME This file may need to move under support/sqlstore.
 public class ParameterInfo
 {
-    /** 
+    /**
      * Parameter index.
      * The index corresponds to JDO QL parameters.
      */

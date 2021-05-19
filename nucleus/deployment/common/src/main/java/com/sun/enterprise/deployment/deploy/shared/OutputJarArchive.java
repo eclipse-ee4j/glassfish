@@ -77,7 +77,7 @@ public class OutputJarArchive extends JarArchive implements WritableArchive {
     }
 
     protected JarEntry getJarEntry(String entryName) {
-        return null; 
+        return null;
     }
 
     /**

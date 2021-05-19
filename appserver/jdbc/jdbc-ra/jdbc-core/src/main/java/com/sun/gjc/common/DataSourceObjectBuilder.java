@@ -162,7 +162,7 @@ public class DataSourceObjectBuilder implements java.io.Serializable {
      * @throws ResourceException If delimiter is not provided and property string
      *                           is not null.
      */
-    public Hashtable parseDriverProperties(DataSourceSpec spec, boolean returnUpperCase) 
+    public Hashtable parseDriverProperties(DataSourceSpec spec, boolean returnUpperCase)
             throws ResourceException {
         String delim = spec.getDetail(DataSourceSpec.DELIMITER);
         String escape = spec.getDetail(DataSourceSpec.ESCAPECHARACTER);
@@ -187,11 +187,11 @@ public class DataSourceObjectBuilder implements java.io.Serializable {
      * @param delimiter delimiter
      * @return Hashtable
      */
-    public Hashtable parseDriverProperties(String values, String escape, 
+    public Hashtable parseDriverProperties(String values, String escape,
                 String delimiter, boolean returnUpperCase){
         Hashtable result = new Hashtable();
         String parsedValue = "";
-        String name = "";                
+        String name = "";
         String value = "";
         char escapeChar = escape.charAt(0);
         char delimiterChar = delimiter.charAt(0);
@@ -284,7 +284,7 @@ public class DataSourceObjectBuilder implements java.io.Serializable {
     public static boolean isJDBC41() {
         return jdbc41;
     }
-    
+
     /**
      * Check whether the jdbc api version is 4.0 or not.
      *

@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="build" depends="init-common">
         <property name="hasWebclient" value="yes"/>
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
@@ -50,7 +50,7 @@
         dest="jsf-cardemo.war"/>
       <antcall target="deploy-war-name"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
             <arg value="${http.host}"/>
@@ -62,10 +62,10 @@
             </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-name"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

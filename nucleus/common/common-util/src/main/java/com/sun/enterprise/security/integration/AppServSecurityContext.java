@@ -24,7 +24,7 @@ import org.glassfish.hk2.api.PerLookup;
 
 /**
  * The SecurityContext Interface, also provide factory methods
- * 
+ *
  */
 @Contract
 @PerLookup
@@ -34,43 +34,43 @@ public interface AppServSecurityContext {
      * This method should  be implemented by the subclasses to
      * return the caller principal. This information may be redundant
      * since the same information can be inferred by inspecting the
-     * Credentials of the caller. 
-     * @return The caller Principal. 
+     * Credentials of the caller.
+     * @return The caller Principal.
      */
     public Principal getCallerPrincipal();
-    
+
     /**
-     * This method should be implemented by the subclasses to return 
+     * This method should be implemented by the subclasses to return
      * the Credentials of the caller principal.
-     * @return A credentials object associated with the current client 
+     * @return A credentials object associated with the current client
      * invocation.
      */
     public Subject getSubject();
-    
+
     /**
      * @return a new instance
      */
     public AppServSecurityContext newInstance(String userName, Subject subject, String realm);
-    
+
     /**
      * @return a new instance
      */
     public AppServSecurityContext newInstance(String userName, Subject subject);
-    
+
     /**
      * set the current security context
      */
     public void setCurrentSecurityContext(AppServSecurityContext context);
-     
+
      /**
       * @return the current security context
       */
-     public AppServSecurityContext getCurrentSecurityContext(); 
+     public AppServSecurityContext getCurrentSecurityContext();
      /**
       * set the unauthenticated context
       */
      public void setUnauthenticatedSecurityContext();
-     
+
      /**
       * set the SecurityContext with given Principal
       */

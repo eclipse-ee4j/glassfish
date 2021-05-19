@@ -24,7 +24,7 @@ public class TestAroundInvokeInterceptor {
         aroundInvokeCount = 0;
     }
 
-   @AroundInvoke 
+   @AroundInvoke
    public Object testMethod(InvocationContext ctx) throws Exception {
         System.out.println("TestAroundInvokeIntercetpr:: aroundInvoke called - target:" + ctx.getTarget() + " , params:"+ ctx.getParameters());
         aroundInvokeCount ++;

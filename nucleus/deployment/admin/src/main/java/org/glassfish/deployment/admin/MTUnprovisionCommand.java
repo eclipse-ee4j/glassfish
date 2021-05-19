@@ -74,7 +74,7 @@ public class MTUnprovisionCommand implements AdminCommand, AdminCommandSecurity.
 
     @Inject
     ArchiveFactory archiveFactory;
-    
+
     private Application app;
     private AppTenant appTenant = null;
 
@@ -94,10 +94,10 @@ public class MTUnprovisionCommand implements AdminCommand, AdminCommandSecurity.
         return accessChecks;
     }
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MTUnprovisionCommand.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(MTUnprovisionCommand.class);
 
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         final Logger logger = context.getLogger();
@@ -118,7 +118,7 @@ public class MTUnprovisionCommand implements AdminCommand, AdminCommandSecurity.
         ApplicationInfo appInfo = deployment.get(internalAppName);
 
         ReadableArchive archive = null;
-    
+
         try {
             if (appInfo != null) {
                 archive = appInfo.getSource();
@@ -134,7 +134,7 @@ public class MTUnprovisionCommand implements AdminCommand, AdminCommandSecurity.
                 }
             }
 
-            UndeployCommandParameters commandParams = 
+            UndeployCommandParameters commandParams =
                 new UndeployCommandParameters();
 
             commandParams.target = DeploymentUtils.DAS_TARGET_NAME;

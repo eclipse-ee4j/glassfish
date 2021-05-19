@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Issue 9816");
         WebTest webTest = new WebTest(args);
@@ -46,7 +46,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             boolean ok = invoke("/mytest2", 200, EXPECTED_RESPONSE);
             stat.addStatus(TEST_NAME, ((ok)? stat.PASS : stat.FAIL));
         } catch (Exception ex) {
@@ -58,7 +58,7 @@ public class WebTest {
 
     private boolean invoke(String urlPattern,
             int expectedCode, String expectedResponse) throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot
                      + urlPattern;
         System.out.println("Accessing " + url);
@@ -101,10 +101,10 @@ public class WebTest {
             if (expectedResponse.equals(line)) {
                 return true;
             } else {
-                System.out.println("Wrong response. Expected: " + 
+                System.out.println("Wrong response. Expected: " +
                         expectedResponse + ", received: " + line);
                 return false;
             }
-        }    
+        }
     }
 }

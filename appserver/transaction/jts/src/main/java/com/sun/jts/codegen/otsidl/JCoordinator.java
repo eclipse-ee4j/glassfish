@@ -26,6 +26,6 @@ package com.sun.jts.codegen.otsidl;
 
 
 //#-----------------------------------------------------------------------------
-public interface JCoordinator extends JCoordinatorOperations, org.omg.CosTransactions.Coordinator, org.omg.CORBA.portable.IDLEntity 
+public interface JCoordinator extends JCoordinatorOperations, org.omg.CosTransactions.Coordinator, org.omg.CORBA.portable.IDLEntity
 {
 } // interface JCoordinator

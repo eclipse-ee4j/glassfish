@@ -62,7 +62,7 @@
 
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
             includes="WebTest.java"/>
-    </target> 
+    </target>
 
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
@@ -83,7 +83,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="restore" depends="setup">
         <antcall target="delete-user-common">

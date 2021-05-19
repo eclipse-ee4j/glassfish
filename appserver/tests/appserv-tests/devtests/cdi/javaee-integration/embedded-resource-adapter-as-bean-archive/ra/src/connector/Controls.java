@@ -17,7 +17,7 @@
 package connector;
 
 /**
- * 
+ *
  * @author Qingqing Ouyang
  */
 public class Controls {

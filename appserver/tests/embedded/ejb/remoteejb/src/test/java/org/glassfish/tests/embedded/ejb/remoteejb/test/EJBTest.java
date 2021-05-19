@@ -85,7 +85,7 @@ public class EJBTest {
 //        } finally {
 //            Thread.currentThread().setContextClassLoader(oldCL);
 //        }
-        
+
         glassfish.stop();
         glassfish.dispose();
 

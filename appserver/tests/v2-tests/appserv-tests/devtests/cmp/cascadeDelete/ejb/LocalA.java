@@ -25,8 +25,8 @@ import jakarta.ejb.*;
  */
 
 public interface LocalA extends jakarta.ejb.EJBLocalObject {
-    
+
     public String getName();
-    
+
 }
 

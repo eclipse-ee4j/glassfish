@@ -40,7 +40,7 @@ import java.beans.PropertyVetoException;
 
 /**
  * Delete Admin Object command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.CONFIG, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @ExecuteOn(value={RuntimeType.ALL})
@@ -48,12 +48,12 @@ import java.beans.PropertyVetoException;
 @PerLookup
 @I18n("delete.admin.ojbect")
 public class DeleteAdminObject implements AdminCommand {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteAdminObject.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-    
+
     @Param(name="jndi_name", primary=true)
     private String jndiName;
 
@@ -65,7 +65,7 @@ public class DeleteAdminObject implements AdminCommand {
 
     @Inject
     private ServerEnvironment environment;
-    
+
 
     /**
      * Executes the command with the command parameters passed as Properties

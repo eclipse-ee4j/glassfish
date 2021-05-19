@@ -38,13 +38,13 @@ import com.sun.enterprise.util.Utility;
 import java.util.concurrent.TimeUnit;
 
 
-/** 
+/**
  * Handler for EJBHome invocations through EJBHome proxy.
  *
  * @author Kenneth Saks
- */    
+ */
 
-public class EJBHomeInvocationHandler 
+public class EJBHomeInvocationHandler
     extends EJBHomeImpl  implements InvocationHandler {
 
     private static LocalStringManagerImpl localStrings =
@@ -62,7 +62,7 @@ public class EJBHomeInvocationHandler
     // container.  It's populated during container initialization and
     // passed in when the InvocationHandler is created.  This avoids the
     // overhead of building the method info each time a Home proxy
-    // is created.  
+    // is created.
     private MethodMap invocationInfoMap_;
 
     private EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
@@ -73,7 +73,7 @@ public class EJBHomeInvocationHandler
         throws Exception {
 
         if( ejbDescriptor instanceof EjbSessionDescriptor ) {
-            isStatelessSession_ = 
+            isStatelessSession_ =
                 ((EjbSessionDescriptor)ejbDescriptor).isStateless();
         } else {
             isStatelessSession_ = false;
@@ -81,7 +81,7 @@ public class EJBHomeInvocationHandler
 
         homeIntfClass_ = homeIntfClass;
 
-        // NOTE : Container is not set on super-class until after 
+        // NOTE : Container is not set on super-class until after
         // constructor is called.
     }
 
@@ -100,7 +100,7 @@ public class EJBHomeInvocationHandler
     /**
      * Called by EJBHome proxy.
      */
-    public Object invoke(Object proxy, Method method, Object[] args) 
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
         ClassLoader originalClassLoader = null;
@@ -111,15 +111,15 @@ public class EJBHomeInvocationHandler
             ((BaseContainer) getContainer()).onEnteringContainer();
 
             // In some cases(e.g. if the Home/Remote interfaces appear in
-            // a parent of the application's classloader), 
+            // a parent of the application's classloader),
             // ServantLocator.preinvoke() will not be called by the
             // ORB, and therefore BaseContainer.externalPreInvoke will not have
-            // been called for this invocation.  In those cases we need to set 
-            // the context classloader to the application's classloader before 
-            // proceeding. Otherwise, the context classloader could still 
-            // reflect the caller's class loader.  
-            
-            if( Thread.currentThread().getContextClassLoader() != 
+            // been called for this invocation.  In those cases we need to set
+            // the context classloader to the application's classloader before
+            // proceeding. Otherwise, the context classloader could still
+            // reflect the caller's class loader.
+
+            if( Thread.currentThread().getContextClassLoader() !=
                 getContainer().getClassLoader() ) {
                 originalClassLoader = Utility.setContextClassLoader
                     (getContainer().getClassLoader());
@@ -129,27 +129,27 @@ public class EJBHomeInvocationHandler
 
             if( methodClass == java.lang.Object.class )  {
                 return InvocationHandlerUtil.invokeJavaObjectMethod
-                    (this, method, args);    
+                    (this, method, args);
             } else if (invokeSpecialEJBHomeMethod(method, methodClass, args)) {
                 return null;
             }
 
-            // Use optimized version of get that takes param count as an 
+            // Use optimized version of get that takes param count as an
             // argument.
             InvocationInfo invInfo = (InvocationInfo)
-                invocationInfoMap_.get(method, 
+                invocationInfoMap_.get(method,
                                        ((args != null) ? args.length : 0) );
-            
+
             if( invInfo == null ) {
 
-                throw new RemoteException("Unknown Home interface method :" 
+                throw new RemoteException("Unknown Home interface method :"
                                           + method);
 
             } else if( (methodClass == jakarta.ejb.EJBHome.class) ||
                        invInfo.ejbIntfOverride ) {
-                
+
                 return invokeEJBHomeMethod(method.getName(), args);
-                
+
             } else if( GenericEJBHome.class.isAssignableFrom(methodClass) ) {
 
                 if( method.getName().equals("create")) {
@@ -173,7 +173,7 @@ public class EJBHomeInvocationHandler
                     } else if( method.getName().equals("get") ) {
 
                         asyncResult = asyncManager.remoteGet(asyncTaskID);
-                    
+
                     } else if( method.getName().equals("isDone")) {
 
                         asyncResult = asyncManager.remoteIsDone(asyncTaskID);
@@ -188,13 +188,13 @@ public class EJBHomeInvocationHandler
                     return asyncResult;
 
                 }
-                
-            }                
-            
+
+            }
+
             // Process finder, create method, or home method.
             EJBObjectImpl ejbObjectImpl = null;
             Object returnValue = null;
-            
+
             if( invInfo.startsWithCreate ) {
                 ejbObjectImpl = createEJBObjectImpl();
                 if (ejbObjectImpl != null) {
@@ -202,11 +202,11 @@ public class EJBHomeInvocationHandler
                     returnValue = ejbObjectImpl.getStub();
                 }
             }
-            
+
             if( !isStatelessSession_ ) {
-                
+
                 if( invInfo.targetMethod1 == null ) {
-                    
+
                     _logger.log(Level.SEVERE,
                             "ejb.bean_class_method_not_found", new Object[] {
                                     invInfo.ejbName, "Home",
@@ -214,62 +214,62 @@ public class EJBHomeInvocationHandler
                     //in exception use message without ID
                     String errorMsg = localStrings.getLocalString
                         ("ejb.bean_class_method_not_found", "", new Object[]
-                            { invInfo.ejbName, "Home", 
+                            { invInfo.ejbName, "Home",
                               invInfo.method.toString() });
-                    throw new RemoteException(errorMsg);            
-                    
+                    throw new RemoteException(errorMsg);
+
                 }
-                
+
                 EjbInvocation inv = ((BaseContainer) getContainer()).createEjbInvocation();
-                
-                
+
+
                 inv.isRemote = true;
                 inv.method  = method;
                 inv.isHome  = true;
-                
+
                 inv.clientInterface = homeIntfClass_;
 
-                // Set cached invocation params.  This will save 
+                // Set cached invocation params.  This will save
                 // additional lookups in BaseContainer.
 
                 inv.transactionAttribute = invInfo.txAttr;
                 inv.invocationInfo = invInfo;
-                
+
                 if( ejbObjectImpl != null && invInfo.startsWithCreate ) {
                     inv.ejbObject = (EJBLocalRemoteObject) ejbObjectImpl;
                 }
-                
+
                 BaseContainer container = (BaseContainer) getContainer();
-                
+
                 try {
-                    
+
                     container.preInvoke(inv);
-                    
+
                     if( invInfo.startsWithCreate ) {
-                        
-                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container, 
-                                                   invInfo.targetMethod1, 
+
+                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container,
+                                                   invInfo.targetMethod1,
                                                    inv, inv.ejb, args);
                         postCreate(container, inv, invInfo, ejbCreateReturnValue, args);
                         if( inv.ejbObject != null ) {
                             returnValue = ((EJBObjectImpl)inv.ejbObject).
                                 getStub();
-                        } 
-                        
+                        }
+
                     } else if (invInfo.startsWithFindByPrimaryKey) {
 
                         returnValue = container.invokeFindByPrimaryKey
                             (invInfo.targetMethod1, inv, args);
-                                                                           
+
                     } else if ( invInfo.startsWithFind ) {
-                        
+
                         Object pKeys = invokeTargetBeanMethod(container,
                                  invInfo.targetMethod1, inv, inv.ejb, args);
-                                                                        
+
                         returnValue = container.postFind(inv, pKeys, null);
-                        
+
                     } else {
-                        
+
                         returnValue = invokeTargetBeanMethod(container,
                                  invInfo.targetMethod1, inv, inv.ejb, args);
                     }
@@ -280,16 +280,16 @@ public class EJBHomeInvocationHandler
                 } finally {
                     container.postInvoke(inv);
                 }
-                
+
                 if (inv.exception != null) {
                     InvocationHandlerUtil.throwRemoteException
                         (inv.exception, method.getExceptionTypes());
                 }
             }
-            
+
             return returnValue;
         } finally {
-            
+
             if( originalClassLoader != null ) {
                 Utility.setContextClassLoader(originalClassLoader);
             }
@@ -299,19 +299,19 @@ public class EJBHomeInvocationHandler
     }
 
     // default impl to be overridden in subclass if necessary
-    protected boolean invokeSpecialEJBHomeMethod(Method method, Class methodClass, 
+    protected boolean invokeSpecialEJBHomeMethod(Method method, Class methodClass,
             Object[] args) throws Exception {
         return false;
     }
 
     // default impl to be overridden in subclass if necessary
     protected void postCreate(Container container, EjbInvocation inv,
-            InvocationInfo invInfo, Object primaryKey, Object[] args) 
+            InvocationInfo invInfo, Object primaryKey, Object[] args)
             throws Throwable {
     }
 
     // allow subclasses to execute a protected method in BaseContainer
-    protected Object invokeTargetBeanMethod(BaseContainer container, 
+    protected Object invokeTargetBeanMethod(BaseContainer container,
             Method beanClassMethod, EjbInvocation inv, Object target, Object[] params)
             throws Throwable {
 
@@ -334,19 +334,19 @@ public class EJBHomeInvocationHandler
         BaseContainer container = (BaseContainer) getContainer();
         try {
             if( methodName.equals("getEJBMetaData") ) {
-    
+
                 methodIndex = container.EJBHome_getEJBMetaData;
                 container.onEjbMethodStart(methodIndex);
                 returnValue = super.getEJBMetaData();
-    
+
             } else if( methodName.equals("getHomeHandle") ) {
-    
+
                 methodIndex = container.EJBHome_getHomeHandle;
                 container.onEjbMethodStart(methodIndex);
                 returnValue = super.getHomeHandle();
-    
+
             } else if( methodName.equals("remove") ) {
-    
+
                 if( args[0] instanceof jakarta.ejb.Handle ) {
                     methodIndex = container.EJBHome_remove_Handle;
                     container.onEjbMethodStart(methodIndex);
@@ -356,11 +356,11 @@ public class EJBHomeInvocationHandler
                     container.onEjbMethodStart(methodIndex);
                     super.remove(args[0]);
                 }
-    
+
             } else {
-    
+
                throw new RemoteException("unknown EJBHome method = " + methodName);
-    
+
             }
         } catch (Exception ex) {
             caughtException = ex;

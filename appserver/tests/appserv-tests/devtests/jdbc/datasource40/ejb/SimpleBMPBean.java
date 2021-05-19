@@ -108,16 +108,16 @@ public class SimpleBMPBean
             String physicalConnection2 = (((com.sun.appserv.jdbc.DataSource) ds).getConnection(conn)).toString();
 
             //Ensure that both the connections are the same.
- 		System.out.println("PhysicalConn 1 : " + physicalConnection1);
+                 System.out.println("PhysicalConn 1 : " + physicalConnection1);
                 System.out.println("PhysicalConn 2 : " + physicalConnection1);
 
             if (physicalConnection2.equals(physicalConnection1)) {
                 passed = true;
-		System.out.println("Physical Connections are equal");
+                System.out.println("Physical Connections are equal");
             }else{
-		System.out.println("Physical Connections are not equal");
-	    }
-	    
+                System.out.println("Physical Connections are not equal");
+            }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -178,7 +178,7 @@ public class SimpleBMPBean
                 System.out.println("DataSource unwrap() did not return appropriate db-datasources");
             }
 
-                
+
         } catch (Exception e) {
             e.printStackTrace();
             passed = false;

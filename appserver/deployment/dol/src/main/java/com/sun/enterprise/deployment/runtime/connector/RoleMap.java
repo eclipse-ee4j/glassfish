@@ -15,9 +15,9 @@
  */
 
 /**
- *	This generated bean class RoleMap matches the DTD element role-map
+ *    This generated bean class RoleMap matches the DTD element role-map
  *
- *	Generated on Mon May 13 13:36:49 PDT 2002
+ *    Generated on Mon May 13 13:36:49 PDT 2002
  */
 
 package com.sun.enterprise.deployment.runtime.connector;
@@ -27,65 +27,63 @@ import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 /**
  * This class was based on the schema2beans generated one modified
  * to remove its dependencies on schema2beans libraries.
- 
+
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
-public class RoleMap extends RuntimeDescriptor
-{
-    
-    static public final String DESCRIPTION = "Description";	// NOI18N
-    static public final String MAP_ELEMENT = "MapElement";	// NOI18N
+public class RoleMap extends RuntimeDescriptor {
+
+    static public final String DESCRIPTION = "Description"; // NOI18N
+    static public final String MAP_ELEMENT = "MapElement"; // NOI18N
     static public final String MAP_ID = "MapId";
-    
+
     // This attribute is an array, possibly empty
-    public void setMapElement(int index, MapElement value)
-    {
-	this.setValue(MAP_ELEMENT, index, value);
+    public void setMapElement(int index, MapElement value) {
+        this.setValue(MAP_ELEMENT, index, value);
     }
-    
+
+
     //
-    public MapElement getMapElement(int index)
-    {
-	return (MapElement)this.getValue(MAP_ELEMENT, index);
+    public MapElement getMapElement(int index) {
+        return (MapElement) this.getValue(MAP_ELEMENT, index);
     }
-    
+
+
     // This attribute is an array, possibly empty
-    public void setMapElement(MapElement[] value)
-    {
-	this.setValue(MAP_ELEMENT, value);
+    public void setMapElement(MapElement[] value) {
+        this.setValue(MAP_ELEMENT, value);
     }
-    
+
+
     //
-    public MapElement[] getMapElement()
-    {
-	return (MapElement[])this.getValues(MAP_ELEMENT);
+    public MapElement[] getMapElement() {
+        return (MapElement[]) this.getValues(MAP_ELEMENT);
     }
-    
+
+
     // Return the number of properties
-    public int sizeMapElement()
-    {
-	return this.size(MAP_ELEMENT);
+    public int sizeMapElement() {
+        return this.size(MAP_ELEMENT);
     }
-    
+
+
     // Add a new element returning its index in the list
-    public int addMapElement(MapElement value)
-    {
-	return this.addValue(MAP_ELEMENT, value);
+    public int addMapElement(MapElement value) {
+        return this.addValue(MAP_ELEMENT, value);
     }
-    
+
+
     //
     // Remove an element using its reference
     // Returns the index the element had in the list
     //
-    public int removeMapElement(MapElement value)
-    {
-	return this.removeValue(MAP_ELEMENT, value);
+    public int removeMapElement(MapElement value) {
+        return this.removeValue(MAP_ELEMENT, value);
     }
-    
+
+
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-	return true;
+    public boolean verify() {
+        return true;
     }
 }

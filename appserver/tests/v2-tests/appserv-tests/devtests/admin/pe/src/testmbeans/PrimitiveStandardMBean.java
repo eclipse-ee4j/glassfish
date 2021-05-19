@@ -110,7 +110,7 @@ public interface PrimitiveStandardMBean
     */
     public void setTemperature(double value);
 
-    /** 
+    /**
      * Get Name as the String
      */
     public String getName();
@@ -118,22 +118,22 @@ public interface PrimitiveStandardMBean
      * Set the Name
      */
     public void setName(String name);
-    
+
     /**
      * Get the StartDate attribute
      */
     public Date getStartDate();
-    
+
     /**
      * Set the StartDate attribute
      */
     public void setStartDate(Date date);
-    
+
     /**
      * Get the ObjectName of Resource
      */
     public ObjectName getResourceObjectName();
-    
+
     /**
      * Set the ObjectName of Resource
      */

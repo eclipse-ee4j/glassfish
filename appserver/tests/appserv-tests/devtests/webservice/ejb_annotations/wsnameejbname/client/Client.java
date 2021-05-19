@@ -37,21 +37,21 @@ public class Client {
         static AddNumbersImplService service;
 
         public static void main(String[] args) {
-	    stat.addDescription("wsname-ejbname-service");
+            stat.addDescription("wsname-ejbname-service");
             Client client = new Client();
             client.doSyncTest();
-	    stat.printSummary("wsname-ejbname-service");
+            stat.printSummary("wsname-ejbname-service");
         }
 
         public void doSyncTest() {
             try {
                 ThisShouldBeIgnored port = service.getThisShouldBeIgnoredPort();
                 int ret = port.addNumbers(2222, 1234);
-		if(ret!=(2222+1234)) {
+                if(ret!=(2222+1234)) {
                     System.out.println("Unexpected add result " + ret);
                     stat.addStatus("wsname-ejbname-service-test", stat.FAIL);
                     return;
-		}
+                }
                 System.out.println(ret);
                 stat.addStatus("wsname-ejbname-service-test", stat.PASS);
             } catch(Exception e) {

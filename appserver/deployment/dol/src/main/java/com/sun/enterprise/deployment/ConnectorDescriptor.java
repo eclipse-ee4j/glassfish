@@ -18,20 +18,24 @@
 
 import com.sun.enterprise.deployment.node.connector.ConnectorNode;
 import com.sun.enterprise.deployment.runtime.connector.SunConnector;
-import com.sun.enterprise.deployment.util.ConnectorVisitor;
+import com.sun.enterprise.deployment.util.ComponentVisitor;
 import com.sun.enterprise.deployment.util.ConnectorTracerVisitor;
 import com.sun.enterprise.deployment.util.ConnectorValidator;
+import com.sun.enterprise.deployment.util.ConnectorVisitor;
 import com.sun.enterprise.deployment.util.DOLUtils;
-import com.sun.enterprise.deployment.util.ComponentVisitor;
-import org.glassfish.deployment.common.DescriptorVisitor;
-import org.glassfish.api.deployment.archive.ArchiveType;
 
-import java.io.IOException;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.zip.ZipEntry;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.glassfish.apf.AnnotationInfo;
+import org.glassfish.api.deployment.archive.ArchiveType;
+import org.glassfish.deployment.common.DescriptorVisitor;
 
 /**
  * Deployment Information for connector
@@ -65,7 +69,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     private String connectionClass;
     private String connectionFactoryInterface;
     private String connectionFactoryClass;
-      
+
     //connector1.5 begin
     private String  resourceAdapterClass = "";
     private ConnectorConfigProperty configProperty = null;
@@ -80,8 +84,8 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     //FIXME remove messagelisteners
     private Set messageListeners;
     //connector1.5 end
-    
-    // following are all the get and set methods for the 
+
+    // following are all the get and set methods for the
     // various variables listed above
     private Set requiredWorkContexts;
 
@@ -108,18 +112,18 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
 
     public ConnectorDescriptor() {
         this.configProperties = new OrderedSet();
-	this.authMechanisms = new OrderedSet();
-	this.securityPermissions = new OrderedSet();
-	this.adminObjects = new OrderedSet();
-    this.requiredWorkContexts = new OrderedSet();
+        this.authMechanisms = new OrderedSet();
+        this.securityPermissions = new OrderedSet();
+        this.adminObjects = new OrderedSet();
+        this.requiredWorkContexts = new OrderedSet();
 
-        //FIXME.  need to remove the following
-	this.messageListeners = new OrderedSet();
+            //FIXME.  need to remove the following
+        this.messageListeners = new OrderedSet();
 
-    this.connectorAnnotations = new OrderedSet<AnnotationInfo>();
-    this.configPropertyAnnotations = new HashMap<String, Set<AnnotationInfo>>();
-    this.configPropertyProcessedClasses = new HashSet<String>();
-    this.defaultResourceNames = new OrderedSet<String>();
+        this.connectorAnnotations = new OrderedSet<>();
+        this.configPropertyAnnotations = new HashMap<>();
+        this.configPropertyProcessedClasses = new HashSet<>();
+        this.defaultResourceNames = new OrderedSet<>();
     }
 
 
@@ -132,19 +136,20 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public void removeRequiredWorkContext(String workContextClass) {
-	    this.requiredWorkContexts.remove(workContextClass);
+        this.requiredWorkContexts.remove(workContextClass);
     }
-    
+
     /**
      * @return the default version of the deployment descriptor
      * loaded by this descriptor
      */
+    @Override
     public String getDefaultSpecVersion() {
         return ConnectorNode.SPEC_VERSION;
     }
 
     ////////////////////////////////////////////////////////////////////
-    // The following are access methods for connector1.0's 
+    // The following are access methods for connector1.0's
     // resourceadapter element.
     // We no longer support them.
     ////////////////////////////////////////////////////////////////////
@@ -152,225 +157,225 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     //QQ. FIXME.  After verifier stops using this interface,
     //this REALLY needs to be removed. (for 1.0 cases only)
 
-    // The methods for connection and connection factories have now shifted 
+    // The methods for connection and connection factories have now shifted
     //to OutboundResourceAdapter to maintain backward compatibility
-    //Sheetal. These methods should be removed from here once we start 
+    //Sheetal. These methods should be removed from here once we start
     //using new DOL
 
     /**
-     * @deprecated 
+     * @deprecated
      */
+    @Deprecated
     public String getConnectionFactoryInterface() {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
-    public void 
-    setConnectionFactoryInterface(String connectionFactoryInterface) {
-        throw new UnsupportedOperationException();
-    }
-    
-    /** 
-     * @deprecated 
-     */
-    public String 
-    getConnectionFactoryImpl() {
-        throw new UnsupportedOperationException();
-    }
-    
-    /** 
-     * @deprecated 
-     */
-    public void 
-    setConnectionFactoryImpl(String connectionFactoryImpl) {
+    @Deprecated
+    public void setConnectionFactoryInterface(String connectionFactoryInterface) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public String 
-    getConnectionInterface() {
-        throw new UnsupportedOperationException();
-    }
-    
-    /** 
-     * @deprecated 
-     */
-    public void 
-    setConnectionInterface(String connectionInterface) {
+    @Deprecated
+    public String getConnectionFactoryImpl() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public String 
-    getConnectionImpl() {
-        throw new UnsupportedOperationException();
-    }
- 
-    /** 
-     * @deprecated 
-     */
-    public void 
-    setConnectionImpl(String connectionImpl) {
+    @Deprecated
+    public void setConnectionFactoryImpl(String connectionFactoryImpl) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
+    public String getConnectionInterface() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public void setConnectionInterface(String connectionInterface) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public String getConnectionImpl() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public void setConnectionImpl(String connectionImpl) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
     public String getManagedConnectionFactoryImpl() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public void setManagedConnectionFactoryImpl(String managedConnectionFactoryImpl) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public boolean supportsReauthentication() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public String getReauthenticationSupport() {
         throw new UnsupportedOperationException();
-    } 
- 
-    /** 
-     * @deprecated 
+    }
+
+    /**
+     * @deprecated
      */
+    @Deprecated
     public void setReauthenticationSupport(boolean reauthenticationSupport) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public void setReauthenticationSupport(String reauthSupport) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public String getTransSupport() {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public int getTransactionSupport() {
         throw new UnsupportedOperationException();
     }
-    
-    /** 
-     * @deprecated 
+
+    /**
+     * @deprecated
      */
+    @Deprecated
     public void setTransactionSupport(int transactionSupport) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
+    @Deprecated
     public void setTransactionSupport(String support) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public Set 
-    getAuthMechanisms() {
+    @Deprecated
+    public Set getAuthMechanisms() {
         throw new UnsupportedOperationException();
     }
-    
+
     /**
      * @return a set of service-ref from this bundle or null
-     * if none
+     *         if none
      */
     public Set getServiceReferenceDescriptors() {
         return new OrderedSet();
-    }    
+    }
 
-    /** 
-     *Set of SecurityPermission objects 
+    /**
+     * Set of SecurityPermission objects
      */
-    public Set 
-    getSecurityPermissions() 
-    {
+    public Set getSecurityPermissions() {
         if (securityPermissions == null) {
             securityPermissions = new OrderedSet();
         }
         return securityPermissions;
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public boolean 
-    addAuthMechanism(AuthMechanism mech) 
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-    /** 
-     * @deprecated 
-     */
-    public boolean 
-    removeAuthMechanism(AuthMechanism mech) 
-    {
+    @Deprecated
+    public boolean addAuthMechanism(AuthMechanism mech) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
-     * @deprecated 
+    /**
+     * @deprecated
      */
-    public boolean 
-    addAuthMechanism(int mech) 
-    {
-        throw new UnsupportedOperationException();
-    }
-    
-
-    /** 
-     * @deprecated 
-     */
-    public boolean 
-    removeAuthMechanism(int mech) 
-    {
+    @Deprecated
+    public boolean removeAuthMechanism(AuthMechanism mech) {
         throw new UnsupportedOperationException();
     }
 
-    /** 
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public boolean addAuthMechanism(int mech) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @deprecated
+     */
+    @Deprecated
+    public boolean removeAuthMechanism(int mech) {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * Add a SecurityPermission object to the set
      */
-    public void 
-    addSecurityPermission(SecurityPermission permission) 
-    {
-	securityPermissions.add(permission);
+    public void addSecurityPermission(SecurityPermission permission) {
+        securityPermissions.add(permission);
     }
 
-    /** 
+    /**
      * Remove a SecurityPermission object to the set
-     */  
-    public void 
-    removeSecurityPermission(SecurityPermission permission) 
-    {
-	securityPermissions.remove(permission);
+     */
+    public void removeSecurityPermission(SecurityPermission permission) {
+        securityPermissions.remove(permission);
     }
 
     ///////////////////////////////////////////////////////////////////////
@@ -384,72 +389,74 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public String getResourceAdapterClass() {
         return resourceAdapterClass;
     }
-    
+
     public void setResourceAdapterClass (String raClass) {
         resourceAdapterClass = raClass;
     }
-    
-    /** Set of ConnectorConfigProperty 
+
+    /**
+     * Set of ConnectorConfigProperty
      */
     public Set getConfigProperties() {
         return configProperties;
     }
 
-    /** add a configProperty to the set
+    /**
+     * add a configProperty to the set
      */
     public void addConfigProperty(ConnectorConfigProperty configProperty) {
-	this.configProperties.add(configProperty);
+        this.configProperties.add(configProperty);
     }
 
-    /** remove a configProperty from the set
-     */ 
+    /**
+     * remove a configProperty from the set
+     */
     public void removeConfigProperty(ConnectorConfigProperty configProperty) {
-	configProperties.remove(configProperty);
+        configProperties.remove(configProperty);
     }
 
     public LicenseDescriptor getLicenseDescriptor() {
         return licenseDescriptor;
     }
 
-    public void setLicenseDescriptor (LicenseDescriptor licenseDescriptor) {
+    public void setLicenseDescriptor(LicenseDescriptor licenseDescriptor) {
         this.licenseDescriptor = licenseDescriptor;
     }
 
     public OutboundResourceAdapter getOutboundResourceAdapter() {
         return this.outboundRA;
     }
-    
-    public void 
-    setOutboundResourceAdapter (OutboundResourceAdapter outboundRA) {
+
+    public void setOutboundResourceAdapter(OutboundResourceAdapter outboundRA) {
         this.outboundRA = outboundRA;
     }
-    
+
     public InboundResourceAdapter getInboundResourceAdapter() {
         return this.inboundRA;
     }
-    
-    public void 
-    setInboundResourceAdapter(InboundResourceAdapter inboundRA) {
+
+    public void setInboundResourceAdapter(InboundResourceAdapter inboundRA) {
         this.inboundRA = inboundRA;
     }
 
-    /** 
-     *@return admin objects
+    /**
+     * @return admin objects
      */
     public Set getAdminObjects() {
         return adminObjects;
     }
 
-    /** 
+    /**
      * set admin object
      */
     public void addAdminObject(AdminObject admin) {
-        boolean duplicate = false; //hasAdminObject(admin.getAdminObjectInterface(), admin.getAdminObjectClass(), adminObjects);
-        if(!duplicate){
+        boolean duplicate = false; // hasAdminObject(admin.getAdminObjectInterface(),
+                                   // admin.getAdminObjectClass(), adminObjects);
+        if (!duplicate) {
             adminObjects.add(admin);
-        }else{
-            throw new IllegalStateException("Cannot add duplicate admin object with interface " +
-                    "[ "+admin.getAdminObjectInterface()+" ], class [ " +admin.getAdminObjectClass() +" ]");
+        } else {
+            throw new IllegalStateException("Cannot add duplicate admin object with interface " + "[ "
+                + admin.getAdminObjectInterface() + " ], class [ " + admin.getAdminObjectClass() + " ]");
         }
     }
 
@@ -478,7 +485,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     public boolean getOutBoundDefined() {
-	return outboundRA != null;
+        return outboundRA != null;
     }
 
     //for the purpose of writing this optional node back to XML format.
@@ -497,55 +504,59 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     // are common to both connector1.0 and connector1.5
     /////////////////////////////////////////////////////////////
 
-
-    /** get the connector description
-    */
+    /**
+     * get the connector description
+     */
     public String getConnectorDescription() {
         return connectorDescription;
     }
- 
-    /** set the connector description
-    */
+
+    /**
+     * set the connector description
+     */
     public void setConnectorDescription(String description) {
         connectorDescription = description;
     }
 
-
-    /** get value for vendorName
-    */
+    /**
+     * get value for vendorName
+     */
     public String getVendorName() {
         return vendorName;
     }
- 
-    /** set value for vendorName
-    */
+
+    /**
+     * set value for vendorName
+     */
     public void setVendorName(String vendorName) {
         this.vendorName = vendorName;
     }
 
-
-    /** get eisType
-    */
+    /**
+     * get eisType
+     */
     public String getEisType() {
         return eisType;
     }
- 
-   
-    /** set eisType
-    */
+
+    /**
+     * set eisType
+     */
     public void setEisType(String eisType) {
         this.eisType = eisType;
-    } 
-
-    /** get value for version
-    */
-    public String getVersion() {
-        return version;
-        //throw new UnsupportedOperationException();
     }
 
-    /** set value for version
-    */ 
+    /**
+     * get value for version
+     */
+    public String getVersion() {
+        return version;
+        // throw new UnsupportedOperationException();
+    }
+
+    /**
+     * set value for version
+     */
     public void setVersion(String version) {
         //TODO V3 validate version ?
         this.version = version;
@@ -561,7 +572,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     }
 
     /** set value for resourceadater version (1.5 schema)
-    */ 
+    */
     public void setResourceAdapterVersion(String resourceAdapterVersion) {
         this.resourceAdapterVersion = resourceAdapterVersion;
     }
@@ -573,108 +584,101 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /** return name used for deployment
     */
     public String getDeployName() {
-	return getModuleDescriptor().getArchiveUri();
+        return getModuleDescriptor().getArchiveUri();
     }
 
 
-    /** 
+    /**
      * visit the descriptor and all sub descriptors with a DOL visitor implementation
-     * 
+     *
      * @param aVisitor visitor to traverse the descriptors
-     */    
+     */
+    @Override
     public void visit(DescriptorVisitor aVisitor) {
         if (aVisitor instanceof ConnectorVisitor) {
             visit((ComponentVisitor) aVisitor);
         } else {
             super.visit(aVisitor);
         }
-    }    
+    }
 
-    /*
+    /**
      * @param type The full qualified name for connection factory interface
      */
-    public ConnectionDefDescriptor 
-    getConnectionDefinitionByCFType (String type)
-    {
+    public ConnectionDefDescriptor getConnectionDefinitionByCFType(String type) {
         return getConnectionDefinitionByCFType(type, true);
     }
 
-    /*
+    /**
      * @param type The full qualified name for connection factory interface
      * @param useDefault This param is to support the backward compatibility
      *                   of connector 1.0 resource adapter where there is
      *                   only one connection factory type.  If type is null
      *                   and useDefault is true, the only CF will be returned.
      */
-    public ConnectionDefDescriptor 
-    getConnectionDefinitionByCFType (String type, boolean useDefault)
-    {
+    public ConnectionDefDescriptor getConnectionDefinitionByCFType(String type, boolean useDefault) {
         if (this.outboundRA == null) {
             return null;
         }
         Iterator it = this.outboundRA.getConnectionDefs().iterator();
-        while (it.hasNext())
-        {
+        while (it.hasNext()) {
             ConnectionDefDescriptor desc = (ConnectionDefDescriptor) it.next();
-            
-            if (type == null)
-            {
-                if (useDefault 
-                        && this.outboundRA.getConnectionDefs().size() == 1)
+
+            if (type == null) {
+                if (useDefault && this.outboundRA.getConnectionDefs().size() == 1) {
                     return desc;
-                else
+                } else {
                     return null;
+                }
             }
-                    
-            if (desc.getConnectionFactoryIntf().equals(type))
+
+            if (desc.getConnectionFactoryIntf().equals(type)) {
                 return desc;
+            }
         }
         return null;
     }
 
-    public int getNumOfSupportedCFs ()
-    {
+    public int getNumOfSupportedCFs() {
         if (outboundRA == null) {
             return 0;
         }
         return outboundRA.getConnectionDefs().size();
     }
 
-    public AdminObject getAdminObject(String adminObjectInterface, String adminObjectClass){
+    public AdminObject getAdminObject(String adminObjectInterface, String adminObjectClass) {
         Iterator i = getAdminObjects().iterator();
-        while (i.hasNext())
-        {
+        while (i.hasNext()) {
             AdminObject ao = (AdminObject) i.next();
             if (adminObjectInterface.equals(ao.getAdminObjectInterface())
-                    && adminObjectClass.equals(ao.getAdminObjectClass()))
+                && adminObjectClass.equals(ao.getAdminObjectClass())) {
                 return ao;
+            }
         }
 
         return null;
     }
 
-    public List<AdminObject> getAdminObjectsByType(String type)
-    {
-        List<AdminObject> adminObjects = new ArrayList<AdminObject>();
+    public List<AdminObject> getAdminObjectsByType(String type) {
+        List<AdminObject> adminObjects = new ArrayList<>();
         Iterator i = getAdminObjects().iterator();
-        while (i.hasNext())
-        {
+        while (i.hasNext()) {
             AdminObject ao = (AdminObject) i.next();
-            if (type.equals(ao.getAdminObjectInterface()))
+            if (type.equals(ao.getAdminObjectInterface())) {
                 adminObjects.add(ao);
+            }
         }
         return adminObjects;
     }
 
-    public List<AdminObject> getAdminObjectsByClass(String adminObjectClass)
-    {
-        List<AdminObject> adminObjects = new ArrayList<AdminObject>();
+    public List<AdminObject> getAdminObjectsByClass(String adminObjectClass) {
+        List<AdminObject> adminObjects = new ArrayList<>();
         Iterator i = getAdminObjects().iterator();
-        while (i.hasNext())
-        {
+        while (i.hasNext()) {
             AdminObject ao = (AdminObject) i.next();
-            if (adminObjectClass.equals(ao.getAdminObjectClass()))
+            if (adminObjectClass.equals(ao.getAdminObjectClass())) {
                 adminObjects.add(ao);
+            }
         }
         return adminObjects;
     }
@@ -683,142 +687,114 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * A formatted string representing my state.
      */
-    public void print(StringBuffer toStringBuffer)
-    {
+    @Override
+    public void print(StringBuffer toStringBuffer) {
         StringBuffer buf = toStringBuffer;
         super.print(buf);
-        
-	buf.append("\n displayName : " + super.getName());
-	buf.append("\n connector_description : " + connectorDescription);
-	buf.append("\n smallIcon : " + super.getSmallIconUri());
-	buf.append("\n largeIcon : " + super.getLargeIconUri());
-	buf.append("\n vendorName : " + vendorName);
-	buf.append("\n eisType : " + eisType);
-	//buf.append("\n version : " + version);
-	buf.append("\n resourceadapter version : " + resourceAdapterVersion);
 
-        //license info
+        buf.append("\n displayName : " + super.getName());
+        buf.append("\n connector_description : " + connectorDescription);
+        buf.append("\n smallIcon : " + super.getSmallIconUri());
+        buf.append("\n largeIcon : " + super.getLargeIconUri());
+        buf.append("\n vendorName : " + vendorName);
+        buf.append("\n eisType : " + eisType);
+        // buf.append("\n version : " + version);
+        buf.append("\n resourceadapter version : " + resourceAdapterVersion);
+
+        // license info
         if (getLicenseDescriptor() != null) {
- 	    buf.append("\n license_description : " + getLicenseDescriptor().getDescription());
-       	    buf.append("\n licenseRequired : " + getLicenseDescriptor().getLicenseRequiredValue());
+            buf.append("\n license_description : " + getLicenseDescriptor().getDescription());
+            buf.append("\n licenseRequired : " + getLicenseDescriptor().getLicenseRequiredValue());
         }
 
-	buf.append("\n resourceAdapterClass : " + resourceAdapterClass);
+        buf.append("\n resourceAdapterClass : " + resourceAdapterClass);
 
-	buf.append("\n resourceAdapterClass [" + resourceAdapterClass 
-                + "] config properties :");
+        buf.append("\n resourceAdapterClass [" + resourceAdapterClass + "] config properties :");
         appendConfigProperties(this.configProperties, buf);
-            
-        if (this.outboundRA == null)
+
+        if (this.outboundRA == null) {
             buf.append("\n Outbound Resource Adapter NOT available");
-        else
-        {
+        } else {
             buf.append("\n Outbound Resource Adapter Info : ");
 
             buf.append("\n connection-definitions: ");
-            for (Iterator i = this.outboundRA.getConnectionDefs().iterator(); 
-                 i.hasNext();)
-            {
+            for (Object element : this.outboundRA.getConnectionDefs()) {
                 buf.append("\n------------\n");
 
-                ConnectionDefDescriptor conDef = 
-                    (ConnectionDefDescriptor) i.next();
-                buf.append("MCF : " 
-                        + conDef.getManagedConnectionFactoryImpl() + ", ");
-                buf.append("\n MCF [" + 
-                        conDef.getManagedConnectionFactoryImpl() 
-                        + "] config properties :");
+                ConnectionDefDescriptor conDef = (ConnectionDefDescriptor) element;
+                buf.append("MCF : " + conDef.getManagedConnectionFactoryImpl() + ", ");
+                buf.append("\n MCF [" + conDef.getManagedConnectionFactoryImpl() + "] config properties :");
                 appendConfigProperties(conDef.getConfigProperties(), buf);
-                
-                buf.append("[CF Interface : " 
-                        + conDef.getConnectionFactoryIntf() + "], ");
-                buf.append("[CF Class : " 
-                        + conDef.getConnectionFactoryImpl() + "], ");
-                buf.append("[Connection Interface : " 
-                        + conDef.getConnectionIntf() + "], ");
-                buf.append("[Connection Class : " 
-                        + conDef.getConnectionImpl() + "] ");
-                
+
+                buf.append("[CF Interface : " + conDef.getConnectionFactoryIntf() + "], ");
+                buf.append("[CF Class : " + conDef.getConnectionFactoryImpl() + "], ");
+                buf.append("[Connection Interface : " + conDef.getConnectionIntf() + "], ");
+                buf.append("[Connection Class : " + conDef.getConnectionImpl() + "] ");
+
                 buf.append("\n------------\n");
             }
 
-            buf.append("\n transaction-support : " 
-                    + this.outboundRA.getTransSupport());
-            
+            buf.append("\n transaction-support : " + this.outboundRA.getTransSupport());
+
             buf.append("\n authentication-mechanism: ");
-            for (Iterator i = this.outboundRA.getAuthMechanisms().iterator(); 
-                 i.hasNext();) 
-            {
-                AuthMechanism conf = (AuthMechanism) i.next(); 
+            for (Object element : this.outboundRA.getAuthMechanisms()) {
+                AuthMechanism conf = (AuthMechanism) element;
                 buf.append("\n------------\n");
                 buf.append("[Type : " + conf.getAuthMechType() + "], ");
-                buf.append("[Interface : " 
-                        + conf.getCredentialInterface() + "]");
-                buf.append("\n------------" );
+                buf.append("[Interface : " + conf.getCredentialInterface() + "]");
+                buf.append("\n------------");
             }
 
-            buf.append("\n reauthenticate-support : " 
-                    + this.outboundRA.getReauthenticationSupport());
+            buf.append("\n reauthenticate-support : " + this.outboundRA.getReauthenticationSupport());
 
-            buf.append("\n security-permission : "); 
-            for (Iterator i = 
-                     getSecurityPermissions().iterator(); 
-                 i.hasNext();) 
-            {
-                SecurityPermission conf = (SecurityPermission) i.next(); 
+            buf.append("\n security-permission : ");
+            for (Object element : getSecurityPermissions()) {
+                SecurityPermission conf = (SecurityPermission) element;
                 buf.append("\n------------\n");
                 buf.append("[persmission : " + conf.getPermission() + "], ");
                 buf.append("[discription : " + conf.getDescription() + "]");
-                buf.append("\n------------" );
+                buf.append("\n------------");
             }
 
-        } //outbound resourceadapter
+        } // outbound resourceadapter
 
-        if (this.inboundRA == null)
+        if (this.inboundRA == null) {
             buf.append("\n Inbound Resource Adapter NOT available");
-        else
-        {
+        } else {
             buf.append("\n Inbound Resource Adapter Info : ");
-            
+
             buf.append("\n Message Listeners Info : ");
-            for (Iterator i = this.inboundRA.getMessageListeners().iterator();
-                 i.hasNext();)
-            {
+            for (Object element : this.inboundRA.getMessageListeners()) {
                 buf.append("\n------------\n");
-                MessageListener l = (MessageListener) i.next();
+                MessageListener l = (MessageListener) element;
                 buf.append("[Type : " + l.getMessageListenerType() + "], ");
                 buf.append("[AS Class : " + l.getActivationSpecClass() + "]");
                 buf.append("\n------------ ");
             }
-            
-        } //inbound resourceadapter
-        
-        
-        if (this.adminObjects.size() == 0)
+
+        } // inbound resourceadapter
+
+        if (this.adminObjects.size() == 0) {
             buf.append("\n Admin Objects NOT available");
-        else
-        {
+        } else {
             buf.append("\n Admin Objects Info : ");
-            for (Iterator i = this.adminObjects.iterator(); i.hasNext();)
-            {
+            for (Object element : this.adminObjects) {
                 buf.append("\n------------\n");
-                AdminObject a = (AdminObject) i.next();
+                AdminObject a = (AdminObject) element;
                 buf.append("[Type : " + a.getAdminObjectInterface() + "], ");
                 buf.append("[Class : " + a.getAdminObjectClass() + "]");
                 appendConfigProperties(a.getConfigProperties(), buf);
                 buf.append("\n------------ ");
             }
-            
-        } //admin objects
-        
+
+        } // admin objects
     }
 
-    private StringBuffer appendConfigProperties (Set props, StringBuffer buf)
-    {
+
+    private StringBuffer appendConfigProperties(Set props, StringBuffer buf) {
         buf.append("\n------------");
-        for (Iterator i = props.iterator(); i.hasNext();)
-        {
-            ConnectorConfigProperty config = (ConnectorConfigProperty) i.next();
+        for (Object prop : props) {
+            ConnectorConfigProperty config = (ConnectorConfigProperty) prop;
             buf.append("[Name : " + config.getName() + "], ");
             buf.append("[Value: " + config.getValue() + "], ");
             buf.append("[Type : " + config.getType() + "]");
@@ -829,10 +805,11 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         buf.append("\n------------");
         return buf;
     }
-    
+
     /**
      * @return the module type for this bundle descriptor
      */
+    @Override
     public ArchiveType getModuleType() {
         return DOLUtils.rarType();
     }
@@ -840,6 +817,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * @return the tracer visitor for this descriptor
      */
+    @Override
     public DescriptorVisitor getTracerVisitor() {
         return new ConnectorTracerVisitor();
     }
@@ -847,18 +825,19 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * @return the visitor for this bundle descriptor
      */
+    @Override
     public ComponentVisitor getBundleVisitor() {
         return new ConnectorValidator();
     }
-    
+
     /**
      *@param type message listener type
      */
     public MessageListener getSupportedMessageListener(String type) {
         if (this.inboundRA == null) {
-            return null; 
+            return null;
         }
-        
+
         Iterator i = this.inboundRA.getMessageListeners().iterator();
         while (i.hasNext()) {
             MessageListener l = (MessageListener) i.next();
@@ -872,11 +851,13 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     /**
      * @deprecated
      */
+    @Deprecated
     public boolean isMessageListenerSupported(String type) {
         throw new UnsupportedOperationException();
     }
 
 
+    @Override
     public boolean isEmpty() {
         return false;
     }
@@ -887,21 +868,21 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
      * Member Variable: sunConnector
      * Methods: setSunDescriptor, getSunDescriptor
      ***********************************************************************************************/
-    
-    private SunConnector sunConnector = null; 
-    
-    /** 
+
+    private SunConnector sunConnector = null;
+
+    /**
      * This returns the extra ejb sun specific info not in the RI DID.
      *
-     * @return object representation of connector deployment descriptor 
+     * @return object representation of connector deployment descriptor
      */
     public SunConnector getSunDescriptor(){
         return sunConnector;
     }
-    
-    /** 
+
+    /**
      * This sets the extra connector sun specific info not in the RI DID.
-     * 
+     *
      * @param connector SunConnector object representation of connector deployment descriptor
      */
     public void setSunDescriptor(SunConnector connector){
@@ -945,7 +926,7 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
     public void addConfigPropertyAnnotation(String className, AnnotationInfo info){
         Set<AnnotationInfo> configProperties = configPropertyAnnotations.get(className);
         if(configProperties == null){
-            configProperties = new HashSet<AnnotationInfo>();
+            configProperties = new HashSet<>();
             configPropertyAnnotations.put(className, configProperties);
         }
         configProperties.add(info);
@@ -985,4 +966,3 @@ public class ConnectorDescriptor extends CommonResourceBundleDescriptor {
         defaultResourceNames.add(resourceName);
     }
 }
-

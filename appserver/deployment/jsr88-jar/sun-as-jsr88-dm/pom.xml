@@ -24,7 +24,7 @@
         <artifactId>jsr-88</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-    </parent>    
+    </parent>
     <artifactId>sun-as-jsr88-dm</artifactId>
     <packaging>jar</packaging>
     <name>JSR-88 implementation declaration JAR</name>

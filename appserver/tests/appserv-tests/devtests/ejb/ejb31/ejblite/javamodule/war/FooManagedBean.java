@@ -36,20 +36,20 @@ public class FooManagedBean extends ManagedSuper {
 
     @PostConstruct
     private void init() {
-	System.out.println("In FooManagedBean::init() ");
+        System.out.println("In FooManagedBean::init() ");
     }
 
     public void foo() {
-	System.out.println("In FooManagedBean::foo() ");
-	bmb.bar();
+        System.out.println("In FooManagedBean::foo() ");
+        bmb.bar();
     }
 
     public void foobar(String s) {
-	System.out.println("foobar::s = " + s);
+        System.out.println("foobar::s = " + s);
     }
 
     public Object getThis() {
-	return this;
+        return this;
     }
 
     public int returnIntNoExceptions() { return 1; }
@@ -68,19 +68,19 @@ public class FooManagedBean extends ManagedSuper {
 
     @PreDestroy
     private void destroy() {
-	System.out.println("In FooManagedBean::destroy() ");
+        System.out.println("In FooManagedBean::destroy() ");
     }
 
 
     public String toString() {
-	return "FooManagedBean this = " + super.toString() + 
+        return "FooManagedBean this = " + super.toString() +
                 " s = " + s + " , bmb = " + bmb + " , em = " + em;
     }
 
     @AroundInvoke
     public Object around(InvocationContext c) throws Exception {
-	System.out.println("In FooManagedBean::around() ");
-	return c.proceed();
+        System.out.println("In FooManagedBean::around() ");
+        return c.proceed();
     }
 
 }

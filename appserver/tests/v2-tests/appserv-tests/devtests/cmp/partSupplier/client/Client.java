@@ -33,12 +33,12 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @version
  */
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
             stat.addDescription("partSupplier");
@@ -76,5 +76,5 @@ public class Client {
           stat.printSummary("partSupplier");
 
     }
-    
+
 }

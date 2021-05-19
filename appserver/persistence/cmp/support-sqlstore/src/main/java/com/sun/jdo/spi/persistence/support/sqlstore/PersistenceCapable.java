@@ -19,7 +19,7 @@
  *
  * Created on February 28, 2000
  */
- 
+
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
 
@@ -30,7 +30,7 @@ public interface PersistenceCapable
     extends com.sun.jdo.api.persistence.support.PersistenceCapable
 {
     /**
-     * Returns the associated state manager. 
+     * Returns the associated state manager.
      */
     StateManager jdoGetStateManager();
 
@@ -40,7 +40,7 @@ public interface PersistenceCapable
     void jdoSetStateManager(StateManager sm);
 
     /**
-     * Returns the value of the JDO flags. 
+     * Returns the value of the JDO flags.
      */
     byte jdoGetFlags();
 
@@ -73,13 +73,13 @@ public interface PersistenceCapable
 
     /**
      * Clears the fields of each persistent field.
-     * 
+     *
      * This method stores zero or null values into each persistent
      * field of the instance, in effect reverting it to its initial
      * state. Clearing fields allows objects referred to by this
      * instance to be garbage collected. The associated StateManager
      * calls this method when transitioning an instance to the hollow
-     * state. This will normally be during post completion. 
+     * state. This will normally be during post completion.
      */
     // removed parameter: StateManager sm
     void jdoClear();
@@ -97,7 +97,7 @@ public interface PersistenceCapable
      * persistent instance.
      *
      * The enhancement-added fields (jdoFlags and jdoStateManager) are not
-     * affected by jdoCopy(). 
+     * affected by jdoCopy().
      */
     //@olsen: fix 4435059: this method is not generated anymore
     // additional parameter: boolean cloneSCOs

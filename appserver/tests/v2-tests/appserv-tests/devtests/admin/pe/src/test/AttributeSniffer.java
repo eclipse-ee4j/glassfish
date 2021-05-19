@@ -32,17 +32,17 @@ public class AttributeSniffer extends LifeCycle
     public AttributeSniffer()
     {
     }
-    
+
     String testInternal() throws JMException, IOException
     {
         title("AttributeSniffer");
-       
+
         for(String classname : classnames)
         {
             System.out.println(classname);
             MBeanInfo info = getMBeanInfo(classname);
             MBeanAttributeInfo[] atts = info.getAttributes();
-            
+
             for(MBeanAttributeInfo ainfo : atts)
             {
                 System.out.println("ATTRIBUTE --> name=[" + ainfo.getName() + "], type=[" + ainfo.getType() + "], Is Writable: " + ainfo.isWritable());
@@ -52,12 +52,12 @@ public class AttributeSniffer extends LifeCycle
     }
 
     private static final String[] classnames = {
-            "testmbeans.OneClassDynamicMBean", 
-            "testmbeans.MicrowaveOvenImpl", 
-            "testmbeans.SimpleStandard", 
-            "testmbeans.PrimitiveStandard", 
+            "testmbeans.OneClassDynamicMBean",
+            "testmbeans.MicrowaveOvenImpl",
+            "testmbeans.SimpleStandard",
+            "testmbeans.PrimitiveStandard",
     };
-    
+
     //private int numIter = 500;
     //private String namePrefix;
     //private String alphabet = "abcdefghijklmnopqrstuvwxyz";

@@ -42,7 +42,7 @@ import org.glassfish.admin.rest.utils.Util;
 
 /**
  * This class encapsulates the metadata for the specified REST resource method.
- * 
+ *
  * @author jdlee
  */
 public class RestMethodMetadata {
@@ -145,7 +145,7 @@ public class RestMethodMetadata {
 
     /**
      * Build and return a JSON object representing the metadata for the resource method
-     * 
+     *
      * @return
      * @throws JSONException
      */
@@ -201,7 +201,7 @@ public class RestMethodMetadata {
      * declaration via reflection. This method does not take into account types with multiple generic types, but, given the
      * style guide, this should not be an issue. If the style guide is modified to allow non-RestModel and
      * non-RestCollection returns (for example), this may need to be modified.
-     * 
+     *
      * @param method
      * @return
      */
@@ -254,7 +254,7 @@ public class RestMethodMetadata {
      * setting that value, meaning its presence need not be exposed to the client. Any parameter marked with
      * <code>@QueryParameter</code> is stored in the <code>queryParameter</code> list. Anything left is considered the type
      * of the request body. There should be only one of these.
-     * 
+     *
      * @param method
      */
     private void processParameters(Method method) {
@@ -283,7 +283,7 @@ public class RestMethodMetadata {
     /**
      * This method will analyze the getters of the given class to determine its properties. Currently, for simplicity's
      * sake, only getters are checked.
-     * 
+     *
      * @param type
      * @return
      * @throws JSONException

@@ -35,7 +35,7 @@
     <module>
       <connector>cfd-ra.rar</connector>
     </module>
-    
+
 
     <connection-factory>
        <description>global-scope resource defined in application DD</description>

@@ -61,7 +61,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
     @Inject
     ServerContext context;
 
-    @Inject 
+    @Inject
     Applications apps;
 
     @Inject
@@ -69,7 +69,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
     @Inject @Named( ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Server server;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
@@ -77,7 +77,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
      * The set of registered LifecycleListeners for event notifications.
      */
     private ArrayList listeners = new ArrayList();
-    
+
     List<Future<Result<Thread>>> futures = new ArrayList();
 
     public void postConstruct() {
@@ -131,7 +131,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
             String enabled = next.getEnabled();
             if ( isEnabled(next.getName(), enabled) ) {
                 String strOrder = (String)props.remove(
-                    ServerTags.LOAD_ORDER); 
+                    ServerTags.LOAD_ORDER);
 
                 int order = Integer.MAX_VALUE;
                 if (strOrder != null && strOrder.length() > 0) {
@@ -144,8 +144,8 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
                 String className = (String)props.remove(
                     ServerTags.CLASS_NAME);
-                ServerLifecycleModule slcm = 
-                    new ServerLifecycleModule(context, 
+                ServerLifecycleModule slcm =
+                    new ServerLifecycleModule(context,
                                 next.getName(), className);
 
                 slcm.setLoadOrder(order);
@@ -160,7 +160,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
 
                 props.remove(ServerTags.IS_LIFECYCLE);
                 props.remove(ServerTags.OBJECT_TYPE);
-                    
+
                 for (String propName : props.stringPropertyNames()) {
                     slcm.setProperty(propName, props.getProperty(propName));
                 }
@@ -183,7 +183,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
     private boolean isEnabled(String name, String enabled) {
 
         // true if enabled in both lifecyle module and in the ref
-        return (Boolean.valueOf(enabled) && 
+        return (Boolean.valueOf(enabled) &&
             Boolean.valueOf(configBeansUtilities.getEnabled(
                 server.getName(), name)));
     }
@@ -199,7 +199,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
             }
         );
     }
-    
+
     private void sortModules(HashSet listenerSet) {
         // FIXME: use a better sorting algo
         for(Iterator iter = listenerSet.iterator(); iter.hasNext();) {
@@ -214,8 +214,8 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
             this.listeners.add(i,next);
         }
     }
-    
-    private void initialize() 
+
+    private void initialize()
                             throws ServerLifecycleException {
 
         if (listeners.isEmpty())
@@ -229,7 +229,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
         // set it back
         resetClassLoader(cl);
     }
-    
+
     private void onStartup() throws ServerLifecycleException {
 
         if (listeners.isEmpty())
@@ -243,7 +243,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
         // set it back
         resetClassLoader(cl);
     }
-    
+
     private void onReady() throws ServerLifecycleException {
 
         if (listeners.isEmpty())
@@ -271,7 +271,7 @@ public class LifecycleModuleService implements PreDestroy, PostConstruct, EventL
         // set it back
         resetClassLoader(cl);
     }
-    
+
     private void onTermination() throws ServerLifecycleException {
 
         if (listeners.isEmpty())

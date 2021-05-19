@@ -21,7 +21,7 @@ import jakarta.annotation.PostConstruct;
 
 @Stateful public class HelloStatefulEJB implements HelloStateful {
 
-    
+
     @PostConstruct public void postConstruction() {
         System.out.println("In HelloStatefulEJB::postConstruction()");
     }
@@ -31,12 +31,12 @@ import jakarta.annotation.PostConstruct;
     }
 
     public void sleepFor(int sec) {
-	try {
-	    for (int i=0 ; i<sec; i++) {
-		Thread.currentThread().sleep(1000);
-	    }
-	} catch (Exception ex) {
-	}
+        try {
+            for (int i=0 ; i<sec; i++) {
+                Thread.currentThread().sleep(1000);
+            }
+        } catch (Exception ex) {
+        }
     }
 
     public void ping() {

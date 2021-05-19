@@ -19,11 +19,11 @@ package justbean;
 import java.rmi.RemoteException;
 import jakarta.ejb.EJBHome;
 import jakarta.ejb.CreateException;
- 
+
 public interface JustBeanHome extends EJBHome {
- 
-    public JustBean 
-    create() 
+
+    public JustBean
+    create()
         throws RemoteException, CreateException;
-    
+
 }

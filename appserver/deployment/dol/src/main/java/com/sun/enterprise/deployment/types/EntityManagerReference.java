@@ -23,46 +23,44 @@ import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.SynchronizationType;
 import java.util.Map;
 
-/** 
+/**
  * Protocol associated with defining an EntityManager reference
- *
  */
-public interface EntityManagerReference extends NamedInformation, 
-    InjectionCapable {
+public interface EntityManagerReference extends NamedInformation, InjectionCapable {
 
     /**
      * Set the unit name of the entity manager factory to which this
      * reference is associated.
      */
-    public void setUnitName(String unitName);
-
+    void setUnitName(String unitName);
 
     /**
      * Get the unit name of the entity manager factory to which this
      * reference is associated.
      */
-    public String getUnitName();
+    String getUnitName();
 
-    
-    public void setPersistenceContextType(PersistenceContextType type);
-    public PersistenceContextType getPersistenceContextType();
+    void setPersistenceContextType(PersistenceContextType type);
 
-    public SynchronizationType getSynchronizationType();
-    public void setSynchronizationType(SynchronizationType type);
+    PersistenceContextType getPersistenceContextType();
 
-    public Map<String,String> getProperties();
+    SynchronizationType getSynchronizationType();
+
+    void setSynchronizationType(SynchronizationType type);
+
+    Map<String, String> getProperties();
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * reference is declared. 
+     * reference is declared.
      */
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
+    void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * reference is declared.  
+     * reference is declared.
      */
-    public BundleDescriptor getReferringBundleDescriptor();
+    BundleDescriptor getReferringBundleDescriptor();
 
 }
 

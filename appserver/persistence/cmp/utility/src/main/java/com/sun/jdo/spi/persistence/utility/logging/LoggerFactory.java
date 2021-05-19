@@ -17,7 +17,7 @@
 package com.sun.jdo.spi.persistence.utility.logging;
 
 /** This interface provides for isolation between the JDO components that
- * need logging services and the implementation of the service.  
+ * need logging services and the implementation of the service.
  * <P>
  * This interface has no JDK 1.4 dependencies.
  *
@@ -26,7 +26,7 @@ package com.sun.jdo.spi.persistence.utility.logging;
  */
 
 public interface LoggerFactory {
-    
+
     /** Get a Logger.  The class that implements this interface is responsible
      * for creating a logger for the named component.
      * The bundle name and class loader are passed to allow the implementation

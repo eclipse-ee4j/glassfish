@@ -27,7 +27,7 @@ public class TestServlet extends HttpServlet {
             throws IOException, ServletException {
 
         boolean success = false;
-        
+
         AtomicInteger count = (AtomicInteger) req.getAttribute("filterCount");
         if (count != null && count.intValue() == 2) {
             success = true;

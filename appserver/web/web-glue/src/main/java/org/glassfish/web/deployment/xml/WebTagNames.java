@@ -28,14 +28,14 @@ import com.sun.enterprise.deployment.xml.TagNames;
  * Holds all tag names for the web application dtd
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface WebTagNames extends TagNames {
 
     public static final String COMMON_NAME = "name";
     public static final String WEB_BUNDLE = "web-app";
     public static final String WEB_FRAGMENT = "web-fragment";
-    public static final String SERVLET = "servlet";    
+    public static final String SERVLET = "servlet";
     public static final String SERVLET_NAME = "servlet-name";
     public static final String SERVLET_CLASS = "servlet-class";
     public static final String JSP_FILENAME = "jsp-file";
@@ -46,14 +46,14 @@ public interface WebTagNames extends TagNames {
     public static final String FILTER_CLASS = "filter-class";
     public static final String FILTER_NAME = "filter-name";
     public static final String DISPATCHER = "dispatcher";
-  
+
     public static final String INIT_PARAM = "init-param";
     public static final String PARAM_NAME = "param-name";
-    public static final String PARAM_VALUE = "param-value";    
+    public static final String PARAM_VALUE = "param-value";
     public static final String CONTEXT_PARAM = "context-param";
     public static final String ENABLED = "enabled";
     public static final String ASYNC_SUPPORTED = "async-supported";
-    
+
     public static final String SECURITY_CONSTRAINT = "security-constraint";
     public static final String WEB_RESOURCE_COLLECTION = "web-resource-collection";
     public static final String AUTH_CONSTRAINT = "auth-constraint";
@@ -61,42 +61,42 @@ public interface WebTagNames extends TagNames {
     public static final String TRANSPORT_GUARANTEE = "transport-guarantee";
     public static final String WEB_RESOURCE_NAME = "web-resource-name";
     public static final String URL_PATTERN = "url-pattern";
-    public static final String HTTP_METHOD = "http-method";    
-    public static final String HTTP_METHOD_OMISSION = "http-method-omission";    
-    public static final String DISTRIBUTABLE = "distributable";    
+    public static final String HTTP_METHOD = "http-method";
+    public static final String HTTP_METHOD_OMISSION = "http-method-omission";
+    public static final String DISTRIBUTABLE = "distributable";
     public static final String SESSION_CONFIG = "session-config";
-    public static final String SESSION_TIMEOUT = "session-timeout";    
-    public static final String COOKIE_CONFIG = "cookie-config";    
-    public static final String DOMAIN = "domain";    
-    public static final String PATH = "path";    
-    public static final String COMMENT = "comment";    
-    public static final String HTTP_ONLY = "http-only";    
-    public static final String SECURE = "secure";    
-    public static final String MAX_AGE = "max-age";    
-    public static final String TRACKING_MODE = "tracking-mode";    
+    public static final String SESSION_TIMEOUT = "session-timeout";
+    public static final String COOKIE_CONFIG = "cookie-config";
+    public static final String DOMAIN = "domain";
+    public static final String PATH = "path";
+    public static final String COMMENT = "comment";
+    public static final String HTTP_ONLY = "http-only";
+    public static final String SECURE = "secure";
+    public static final String MAX_AGE = "max-age";
+    public static final String TRACKING_MODE = "tracking-mode";
     public static final String WELCOME_FILE_LIST = "welcome-file-list";
     public static final String WELCOME_FILE = "welcome-file";
-    public static final String SERVLET_MAPPING = "servlet-mapping";    
-    
+    public static final String SERVLET_MAPPING = "servlet-mapping";
+
     public static final String MIME_MAPPING  = "mime-mapping";
     public static final String EXTENSION = "extension";
-    public static final String MIME_TYPE  = "mime-type";    
-    
+    public static final String MIME_TYPE  = "mime-type";
+
     public static final String LISTENER = "listener";
-    public static final String LISTENER_CLASS = "listener-class";    
-    
+    public static final String LISTENER_CLASS = "listener-class";
+
     public static final String ERROR_PAGE = "error-page";
     public static final String ERROR_CODE = "error-code";
     public static final String EXCEPTION_TYPE = "exception-type";
-    public static final String LOCATION = "location";    
-    
+    public static final String LOCATION = "location";
+
     public static final String LOGIN_CONFIG = "login-config";
     public static final String AUTH_METHOD = "auth-method";
     public static final String REALM_NAME = "realm-name";
     public static final String FORM_LOGIN_CONFIG = "form-login-config";
     public static final String FORM_LOGIN_PAGE = "form-login-page";
-    public static final String FORM_ERROR_PAGE = "form-error-page";    
-    
+    public static final String FORM_ERROR_PAGE = "form-error-page";
+
     public static final String JSPCONFIG = "jsp-config";
     public static final String TAGLIB = "taglib";
     public static final String TAGLIB_URI = "taglib-uri";
@@ -108,14 +108,14 @@ public interface WebTagNames extends TagNames {
     public static final String INCLUDE_PRELUDE = "include-prelude";
     public static final String INCLUDE_CODA = "include-coda";
     public static final String IS_XML = "is-xml";
-    public static final String DEFERRED_SYNTAX_ALLOWED_AS_LITERAL = 
+    public static final String DEFERRED_SYNTAX_ALLOWED_AS_LITERAL =
         "deferred-syntax-allowed-as-literal";
-    public static final String TRIM_DIRECTIVE_WHITESPACES = 
+    public static final String TRIM_DIRECTIVE_WHITESPACES =
         "trim-directive-whitespaces";
     public static final String DEFAULT_CONTENT_TYPE = "default-content-type";
     public static final String BUFFER = "buffer";
     public static final String ERROR_ON_UNDECLARED_NAMESPACE = "error-on-undeclared-namespace";
-    
+
     public static final String LOCALE_ENCODING_MAPPING_LIST = "locale-encoding-mapping-list";
     public static final String LOCALE_ENCODING_MAPPING = "locale-encoding-mapping";
     public static final String LOCALE = "locale";

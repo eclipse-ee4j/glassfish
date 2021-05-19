@@ -35,13 +35,14 @@ import jakarta.inject.Inject;
  * @author Jerome Dochez
  */
 public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
-  
-	@Inject
-	private ServiceLocator serviceLocator;
 
-	public EmbeddedInhabitantsParser() {
-	}
-	
+    @Inject
+    private ServiceLocator serviceLocator;
+
+    public EmbeddedInhabitantsParser() {
+    }
+
+
     public String getName() {
         return "Embedded";
     }
@@ -59,52 +60,52 @@ public class EmbeddedInhabitantsParser implements PopulatorPostProcessor {
 //            parser.drop(PrivateAdminAdapter.class);
 //        }
 //        parser.replace(GFDomainXml.class, EmbeddedDomainXml.class);
-//        
+//
 //        parser.replace(DomainXmlPersistence.class, EmbeddedDomainPersistence.class);
 //
 //    }
 
-	@Override
-	public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
+    @Override
+    public DescriptorImpl process(ServiceLocator serviceLocator, DescriptorImpl descriptorImpl) {
 
-		// we don't want to reconfigure the loggers.
+        // we don't want to reconfigure the loggers.
 
-		boolean skip = false;
+        boolean skip = false;
 
-		if (AdminConsoleAdapter.class.getCanonicalName().equals(
-				descriptorImpl.getImplementation())) {
-			skip = true;
-		}
+        if (AdminConsoleAdapter.class.getCanonicalName().equals(
+            descriptorImpl.getImplementation())) {
+            skip = true;
+        }
 
-		String enableCLI = System.getenv("GF_EMBEDDED_ENABLE_CLI");
-		if (enableCLI == null || !enableCLI.equalsIgnoreCase("true")) {
+        String enableCLI = System.getenv("GF_EMBEDDED_ENABLE_CLI");
+        if (enableCLI == null || !enableCLI.equalsIgnoreCase("true")) {
 
-			if (PublicAdminAdapter.class.getCanonicalName().equals(
-					descriptorImpl.getImplementation())
-					|| LogManagerService.class.getCanonicalName().equals(
-							descriptorImpl.getImplementation())
-					|| PrivateAdminAdapter.class.getCanonicalName().equals(
-							descriptorImpl.getImplementation())) {
-				skip = true;
-			}
-		}
+            if (PublicAdminAdapter.class.getCanonicalName().equals(
+                descriptorImpl.getImplementation())
+                || LogManagerService.class.getCanonicalName().equals(
+                    descriptorImpl.getImplementation())
+                || PrivateAdminAdapter.class.getCanonicalName().equals(
+                    descriptorImpl.getImplementation())) {
+                skip = true;
+            }
+        }
 
-		if (GFDomainXml.class.getCanonicalName().equals(
-				descriptorImpl.getImplementation())) {
-			descriptorImpl.setImplementation(EmbeddedDomainXml.class
-					.getCanonicalName());
-		}
+        if (GFDomainXml.class.getCanonicalName().equals(
+            descriptorImpl.getImplementation())) {
+            descriptorImpl.setImplementation(EmbeddedDomainXml.class
+                .getCanonicalName());
+        }
 
-		if (DomainXmlPersistence.class.getCanonicalName().equals(
-				descriptorImpl.getImplementation())) {
-			descriptorImpl.setImplementation(EmbeddedDomainPersistence.class
-					.getCanonicalName());
-		}
+        if (DomainXmlPersistence.class.getCanonicalName().equals(
+            descriptorImpl.getImplementation())) {
+            descriptorImpl.setImplementation(EmbeddedDomainPersistence.class
+                .getCanonicalName());
+        }
 
-		if (!skip) {
-			return descriptorImpl;
-		}
-		return null;
-	}
+        if (!skip) {
+            return descriptorImpl;
+        }
+        return null;
+    }
 }
 

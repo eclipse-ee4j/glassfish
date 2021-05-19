@@ -28,16 +28,16 @@ import javax.naming.InitialContext;
 
 @Stateless public class HelloEJB implements Hello {
 
-    @PersistenceUnit 
+    @PersistenceUnit
         private EntityManagerFactory emf1;
 
-    @PersistenceUnit(name="myemf", unitName="foo") 
+    @PersistenceUnit(name="myemf", unitName="foo")
         private EntityManagerFactory emf2;
 
     @PersistenceContext
         private EntityManager em1;
 
-    @PersistenceContext(name="myem", unitName="foo") 
+    @PersistenceContext(name="myem", unitName="foo")
         private EntityManager em2;
 
     public void hello() {
@@ -59,11 +59,11 @@ import javax.naming.InitialContext;
 
                 EntityManager lookupem2 = (EntityManager)
                     ic.lookup("java:comp/env/myem");
-                
+
             } catch(Exception e) {
                 throw new jakarta.ejb.EJBException(e);
             }
-            
+
 
             System.out.println("HelloEJB successful injection of EMF/EM references!");
         } else {

@@ -45,11 +45,11 @@ import org.glassfish.api.admin.ParameterMap;
  */
 
 public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements Job {
-    
+
     private static final long serialVersionUID = 1L;
-    
+
 //    private final static LocalStringManagerImpl adminStrings = new LocalStringManagerImpl(AdminCommandInstanceImpl.class);
-    
+
     private CommandProgress commandProgress;
     private transient Payload.Outbound payload;
     private transient AdminCommandEventBroker broker;
@@ -67,9 +67,9 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     private File jobsFile;
 
     private long completionDate;
-    
+
     private ParameterMap parameters;
-    
+
     private boolean failToRetryable;
 
     protected AdminCommandInstanceImpl(String id, String name, String commandScope, Subject sub, boolean managedJob, ParameterMap parameters) {
@@ -86,7 +86,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     protected AdminCommandInstanceImpl(String name, String scope, Subject sub, boolean managedJob, ParameterMap parameters) {
         this(null, name, scope, sub, managedJob, parameters);
     }
-    
+
     @Override
     public CommandProgress getCommandProgress() {
         return commandProgress;
@@ -102,7 +102,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     public AdminCommandEventBroker getEventBroker() {
         return this.broker;
     }
-    
+
     public void setEventBroker(AdminCommandEventBroker eventBroker) {
         this.broker = eventBroker;
     }
@@ -116,12 +116,12 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     public void setJobsFile(File jobsFile) {
         this.jobsFile = jobsFile;
     }
-    
+
     @Override
     public List<String> getSubjectUsernames() {
         return subjectUsernames;
     }
-    
+
     @Override
     public String getName() {
         return commandName;
@@ -134,12 +134,12 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
             getEventBroker().fireEvent(EVENT_STATE_CHANGED, this);
         }
     }
-    
+
     @Override
     public boolean isOutboundPayloadEmpty() {
         return payload == null || payload.size() == 0;
     }
-    
+
     @Override
     public void complete(ActionReport report, Payload.Outbound outbound) {
         if (commandProgress != null && report != null && report.getActionExitCode() == ExitCode.SUCCESS) {
@@ -184,7 +184,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
             setState(State.COMPLETED);
         }
     }
-    
+
     @Override
     public void revert() {
         setState(State.REVERTING);
@@ -210,7 +210,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     public long getCommandCompletionDate() {
          return completionDate;
     }
-    
+
     @Override
     public void setFailToRetryable(boolean value) {
         this.failToRetryable = value;
@@ -220,7 +220,7 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     public ParameterMap getParameters() {
         return parameters;
     }
-    
+
     private void readObject(ObjectInputStream in) throws IOException,ClassNotFoundException {
         in.defaultReadObject();
         this.payload = null; //Lazy loaded

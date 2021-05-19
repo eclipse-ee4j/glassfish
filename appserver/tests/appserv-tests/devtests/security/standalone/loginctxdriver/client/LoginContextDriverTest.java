@@ -34,20 +34,20 @@ import com.sun.enterprise.security.common.SecurityConstants;
  */
 public class LoginContextDriverTest {
 
-	private static String testId="Standalone-client-login-context-driver";
+        private static String testId="Standalone-client-login-context-driver";
     private static boolean testStatus=false;
     private static SimpleReporterAdapter stat =  new SimpleReporterAdapter();
 
     private static InitialContext ic = null;
-    
+
     private static MySession1Remote my1r = null;
-        
+
     public static void main(String[] args) {
 
         stat.addDescription("Security::EJB Method permissions test using " +
                 "Login Context Driver Standalone Client");
-    
-        System.out.println("*** EJBMethod Permission Test using Login Context Driver Standalone client ***");  
+
+        System.out.println("*** EJBMethod Permission Test using Login Context Driver Standalone client ***");
 
 
         try{
@@ -58,16 +58,16 @@ public class LoginContextDriverTest {
 
             // Initialize the Context
             ic = new InitialContext();
-            
+
             System.out.println("EJB lookup start...");
-            java.lang.Object objref = ic.lookup("ejb/MySession1Bean");		
-            
+            java.lang.Object objref = ic.lookup("ejb/MySession1Bean");
+
             MySession1RemoteHome my1rh = (MySession1RemoteHome)
               PortableRemoteObject.narrow(objref, MySession1RemoteHome.class);
 
-            my1r = my1rh.create(); 
-            
-	     	String retValue = my1r.businessMethod("blah");
+            my1r = my1rh.create();
+
+                     String retValue = my1r.businessMethod("blah");
             System.out.println("retValue="+retValue);
 
             testStatus = true;
@@ -75,7 +75,7 @@ public class LoginContextDriverTest {
         } catch(Exception e) {
             e.printStackTrace();
         } finally {
-            if( testStatus) 
+            if( testStatus)
                 stat.addStatus(testId, stat.PASS);
             else
                 stat.addStatus(testId, stat.FAIL);
@@ -83,5 +83,5 @@ public class LoginContextDriverTest {
             stat.printSummary(testId);
         }
     }
-    
+
 }

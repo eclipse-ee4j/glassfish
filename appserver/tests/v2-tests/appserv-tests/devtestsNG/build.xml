@@ -29,7 +29,7 @@
 
     <target name="all">
         <!-- call ant all in the subdirs -->
-        <!-- 
+        <!--
             <ant dir="web" target="all"/>
             <ant dir="corba" target="all"/>
         -->
@@ -52,8 +52,8 @@
     </target>
 
     <target name="usage">
-	  <echo>Usage: ant (all | clean | run-groups -Dgroup-names=${comma-separated-group-name} | run-failed)
-	  </echo>
+      <echo>Usage: ant (all | clean | run-groups -Dgroup-names=${comma-separated-group-name} | run-failed)
+      </echo>
     </target>
 
 </project>

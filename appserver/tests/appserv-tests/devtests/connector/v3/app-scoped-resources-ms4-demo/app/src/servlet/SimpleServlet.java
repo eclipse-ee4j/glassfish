@@ -45,7 +45,7 @@ public class SimpleServlet extends HttpServlet {
     }
 
     public String doTest(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        System.out.println("This is to test application-scoped-resources"); 
+        System.out.println("This is to test application-scoped-resources");
 
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();

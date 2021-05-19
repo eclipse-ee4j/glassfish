@@ -42,7 +42,7 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
         this();
         parentDescriptor = descriptor;
     }
-    
+
     public WLWebServicesDescriptorNode() {
         registerElementHandler(new XMLElement(WLWebServicesTagNames.WEB_SERVICE),
                 WLWebServiceNode.class);
@@ -97,7 +97,7 @@ public class WLWebServicesDescriptorNode extends AbstractBundleNode {
         return Collections.EMPTY_MAP;
     }
 
-    
+
     /**
      * @return the complete URL for J2EE schemas
      */

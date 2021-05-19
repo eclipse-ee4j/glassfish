@@ -22,7 +22,7 @@ import jakarta.ejb.TransactionAttributeType;
 
 @Stateful
 public class SfulEJB
-	implements Sful, SfulGreeter
+        implements Sful, SfulGreeter
 {
 
     private Sful ref;
@@ -40,19 +40,19 @@ public class SfulEJB
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void incrementCounter() {
-	counter++;
+        counter++;
     }
 
     public int getCounter() {
-	return counter;
+        return counter;
     }
 
     public void setSfulRef(Sful ref) {
-	this.ref = ref;
+        this.ref = ref;
     }
 
     public Sful getSfulRef() {
-	return ref;
+        return ref;
     }
 
 }

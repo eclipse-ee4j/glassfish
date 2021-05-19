@@ -67,21 +67,21 @@ public class DeployCmd extends BaseCmd
     {
         try
         {
-		    final DeploymentMgr	mgr	= getDeploymentMgr();
-		    assert( mgr != null );
-		
-            final int	totalSize	= (int)fileSize;
-            final int	chunkSize	= 32 * 1024;
-		
-            final Object	uploadID	= mgr.initiateFileUpload( totalSize );
-            int remaining	= totalSize;
-            boolean	done	= false;
+            final DeploymentMgr    mgr    = getDeploymentMgr();
+            assert( mgr != null );
+
+            final int    totalSize    = (int)fileSize;
+            final int    chunkSize    = 32 * 1024;
+
+            final Object    uploadID    = mgr.initiateFileUpload( totalSize );
+            int remaining    = totalSize;
+            boolean    done    = false;
             while ( remaining != 0 )
             {
-                final int	actual	= remaining < chunkSize ? 
+                final int    actual    = remaining < chunkSize ?
                         remaining : chunkSize;
-                
-                final byte[]	bytes	= new byte[ actual ];
+
+                final byte[]    bytes    = new byte[ actual ];
                 try
                 {
                     is.read(bytes);
@@ -91,11 +91,11 @@ public class DeployCmd extends BaseCmd
                     done = true;
                     break;
                 }
-                done	= mgr.uploadBytes( uploadID, bytes );
-                remaining	-= actual;
+                done    = mgr.uploadBytes( uploadID, bytes );
+                remaining    -= actual;
             }
             assert( done );
-		
+
             return( uploadID );
         }
         finally
@@ -113,27 +113,27 @@ public class DeployCmd extends BaseCmd
         {
             final File archive = getArchive();
             mgr = getDeploymentMgr();
-			
+
             myListener = new DeployListener();
             mgr.addNotificationListener(myListener, null, null);
 
             final Object    deployID    = mgr.initDeploy( );
             assert( deployID instanceof String );
-			
-			if(archive.isDirectory())
-			{
-				DeploymentSourceImpl dsi = new DeploymentSourceImpl(archive.getAbsolutePath(), true,
-					new String[1], new String[1], new String[1], new HashMap());			
-	            mgr.startDeploy( deployID, dsi.asMap(), null, getDeploymentOptions());
-			}
-			else
-			{
-				bis = new BufferedInputStream(new FileInputStream(archive));
-				Object uploadID = upload(bis, archive.length());
-	            mgr.startDeploy( deployID, uploadID, null, getDeploymentOptions());
-			}
 
-            
+            if(archive.isDirectory())
+            {
+                DeploymentSourceImpl dsi = new DeploymentSourceImpl(archive.getAbsolutePath(), true,
+                    new String[1], new String[1], new String[1], new HashMap());
+                mgr.startDeploy( deployID, dsi.asMap(), null, getDeploymentOptions());
+            }
+            else
+            {
+                bis = new BufferedInputStream(new FileInputStream(archive));
+                Object uploadID = upload(bis, archive.length());
+                mgr.startDeploy( deployID, uploadID, null, getDeploymentOptions());
+            }
+
+
             while ( ! myListener.isCompleted() )
             {
                 try
@@ -149,8 +149,8 @@ public class DeployCmd extends BaseCmd
         finally
         {
             if (bis != null) { bis.close(); }
-			
-			if(myListener != null && mgr != null)
+
+            if(myListener != null && mgr != null)
             {
                 try
                 {
@@ -169,7 +169,7 @@ public class DeployCmd extends BaseCmd
         final String target = getTarget();
         if (!DEFAULT_DEPLOY_TARGET.equals(target)) //not a "domain".
         {
-            final DeployedItemRefConfig refConfig = 
+            final DeployedItemRefConfig refConfig =
                 getDeployedItemRefConfigCR(target).createDeployedItemRefConfig(getAppName());
             assert refConfig != null;
         }
@@ -181,32 +181,32 @@ public class DeployCmd extends BaseCmd
         final String target = getTarget();
         if (!DEFAULT_DEPLOY_TARGET.equals(target)) //not a "domain".
         {
-            J2EELogicalServer	server		= getLogicalServer();
+            J2EELogicalServer    server        = getLogicalServer();
             server.startApp(getAppName(), null);
         }
     }
-	
+
     protected void stopApp() throws Exception
     {
         final String target = getTarget();
         if (!DEFAULT_DEPLOY_TARGET.equals(target)) //not a "domain".
         {
-            J2EELogicalServer	server		= getLogicalServer();
+            J2EELogicalServer    server        = getLogicalServer();
             server.stopApp(getAppName(), null);
         }
     }
 
-	 
+
     protected DeployedItemRefConfigCR getDeployedItemRefConfigCR()
         throws Exception
     {
-		return getDeployedItemRefConfigCR(getTarget());
-	}
-	
+        return getDeployedItemRefConfigCR(getTarget());
+    }
+
     protected DeployedItemRefConfigCR getDeployedItemRefConfigCR(String target)
         throws Exception
     {
-		final AMXConfig clusterOrServer = getClusterOrServer(target);
+        final AMXConfig clusterOrServer = getClusterOrServer(target);
         assert clusterOrServer != null;
         DeployedItemRefConfigCR mgr = null;
         if (clusterOrServer instanceof StandaloneServerConfig)
@@ -219,7 +219,7 @@ public class DeployCmd extends BaseCmd
         }
         else
         {
-            throw new Exception("Invaid deployment target: " + 
+            throw new Exception("Invaid deployment target: " +
                     "Target has to be a cluster or standalone server");
         }
         assert mgr != null;
@@ -229,25 +229,25 @@ public class DeployCmd extends BaseCmd
     protected AMXConfig getClusterOrServer(String target) throws Exception
     {
         final DomainConfig domainConfig = getDomainConfig();
-       	final Map standAloneServers  = domainConfig.getStandaloneServerConfigMap();
-       	final Map clusters           = domainConfig.getClusterConfigMap();
-       	final Map clusteredServers   = domainConfig.getClusteredServerConfigMap();
+           final Map standAloneServers  = domainConfig.getStandaloneServerConfigMap();
+           final Map clusters           = domainConfig.getClusterConfigMap();
+           final Map clusteredServers   = domainConfig.getClusteredServerConfigMap();
 
-       	AMXConfig proxy = null;
-       	if (standAloneServers.containsKey(target))
-       	{
+           AMXConfig proxy = null;
+           if (standAloneServers.containsKey(target))
+           {
             proxy = (AMXConfig)standAloneServers.get(target);
-       	}
-       	else if (clusters.containsKey(target))
-       	{
+           }
+           else if (clusters.containsKey(target))
+           {
             proxy = (AMXConfig)clusters.get(target);
-       	}
-       	else
-       	{
+           }
+           else
+           {
             //assert !clusteredServers.containsKey(target);
             proxy = (AMXConfig)clusteredServers.get(target);
-       	}
-       	return proxy;
+           }
+           return proxy;
     }
 
     protected DeploymentMgr getDeploymentMgr() throws Exception
@@ -296,22 +296,22 @@ public class DeployCmd extends BaseCmd
         return (Map)getCmdEnv().get(kDeployOptions);
     }
 
-	J2EELogicalServer getLogicalServer() throws Exception
+    J2EELogicalServer getLogicalServer() throws Exception
     {
-		J2EELogicalServer	server		= null;
-		J2EEDomain			domain		= getJ2EEDomain();
-		Map					serverMap	= domain.getServerMap();
-		Map					clusterMap	= domain.getClusterMap();
-		String				target		= getTarget();
-		
-		serverMap.putAll(clusterMap);
-		
-		if(!serverMap.containsKey(target))
+        J2EELogicalServer    server        = null;
+        J2EEDomain            domain        = getJ2EEDomain();
+        Map                    serverMap    = domain.getServerMap();
+        Map                    clusterMap    = domain.getClusterMap();
+        String                target        = getTarget();
+
+        serverMap.putAll(clusterMap);
+
+        if(!serverMap.containsKey(target))
         {
-			throw new RuntimeException("Can't find target: " + getTarget());
+            throw new RuntimeException("Can't find target: " + getTarget());
         }
 
-		return (J2EELogicalServer)serverMap.get(target);
+        return (J2EELogicalServer)serverMap.get(target);
     }
 
     public static Throwable checkForException(final DeploymentStatus s)
@@ -320,7 +320,7 @@ public class DeployCmd extends BaseCmd
         final Iterator it = s.getSubStages();
         while ((ex == null) && (it.hasNext()))
         {
-            final DeploymentStatus subStage = 
+            final DeploymentStatus subStage =
                 DeploymentSupport.mapToDeploymentStatus((Map)it.next());
             ex = subStage.getThrowable();
         }
@@ -329,7 +329,7 @@ public class DeployCmd extends BaseCmd
 
     public void checkFailed(final Throwable t) throws Exception
     {
-        if ( t != null ) 
+        if ( t != null )
         {
             if ( t instanceof Exception )
             {

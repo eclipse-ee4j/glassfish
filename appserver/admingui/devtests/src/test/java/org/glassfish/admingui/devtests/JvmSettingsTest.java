@@ -81,7 +81,7 @@ public class JvmSettingsTest extends BaseSeleniumTestClass {
                 getConfirmation();
             }
         }
-        
+
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:profilerNameProp:ProfilerName", "profiler" + generateRandomString());
         int count = addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton", "Options");
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", "-Dfoo=" + generateRandomString());
@@ -100,7 +100,7 @@ public class JvmSettingsTest extends BaseSeleniumTestClass {
     public void testJvmProfilerForRunningInstance() {
         testProfilerForInstance (true);
     }
-    
+
     @Test
     public void testJvmProfilerForStoppedInstance() {
         testProfilerForInstance (false);

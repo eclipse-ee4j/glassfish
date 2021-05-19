@@ -82,19 +82,19 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
             throw new NoSuchElementException();
         }
     };
-    
+
     final static Logger logger = KernelLoggerInfo.getLogger();
-    
+
     private HK2Module APIModule;
-    
+
     /*
-     * Implementation Note: 
-     * 
+     * Implementation Note:
+     *
      * 1. This class currently depends on a special which is configured such that it can load all
      * public APIs. The APIClassLoader is a wrapper around such a module's loader. This is how we are independent of actual
      * module system like OSGi. So far it has worked when we run in OSGi mode as well as when we run in a single classpath
-     * mode. 
-     * 
+     * mode.
+     *
      * 2. APIClassLoader maintains a blacklist, i.e., classes and resources that could not be loaded to avoid
      * unnecessary delegation. It flushes that list every time a new bundle is installed in the system. This takes care of
      * performance problem in typical production use of GlassFish.
@@ -122,18 +122,18 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
         // The default module to load from is the common module, this dynamically loads from every other module.
         APIModule = modulesRegistry.getModules(APIExporterModuleName).iterator().next();
         assert APIModule != null;
-        
+
         /*
          * We don't directly return APIModule's class loader, because that class loader does not delegate to the parent.
-         * 
+         *
          * Instead, it relies on OSGi bundle or some such module implementation to load the classes. That behavior is fine if we
          * want to mimic underlying module system's classloading semantics. But, APIClassLoader has a slightly different
          * requirement. It has to use classic delegation model as well so that deployed applications can use classes made
-         * available via extension class loader. 
-         * 
+         * available via extension class loader.
+         *
          * Since the parent of bundle classloader will have glassfish launching classes,
          * felix or any other OSGi framework classes and their dependencies, we don't want to delegate to such a class loader.
-         * 
+         *
          * Instead, we delegate to JRE's extension class loader if we don't find any class via APIModuleLoader. With this, user
          * can actually embed a different version of Felix as part of their app.
          */
@@ -161,12 +161,12 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
     private class APIClassLoader extends ClassLoader {
 
         private final ClassLoader apiModuleLoader;
-        
+
         // list of not found classes and resources.
         // the string represents resource name, so foo/Bar.class for foo.Bar
         private Set<String> blacklist;
-        
-        private ModuleState punchInModuleState = 
+
+        private ModuleState punchInModuleState =
             ModuleState.valueOf(System.getProperty(PUNCHIN_MODULE_STATE_PROP, PUNCHIN_MODULE_STATE_DEFAULT_VALUE.toString()));
 
         /**
@@ -215,8 +215,8 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
         public Class<?> loadClass(String name) throws ClassNotFoundException {
             return loadClass(name, false);
         }
-        
-       
+
+
 
         @Override
         protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
@@ -228,23 +228,23 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
 
             // Then check if the class has already been loaded
             Class<?> loadedClass = findLoadedClass(name);
-            
+
             if (loadedClass == null) {
                 if (!name.startsWith("java.")) { // java classes always come from parent
                     try {
                         loadedClass = apiModuleLoader.loadClass(name); // we ignore the resolution flag
                     } catch (ClassNotFoundException cnfe) {
-                        
-                        // Punch in. 
+
+                        // Punch in.
                         // Find the module that provides the class, no matter where we are.
                         HK2Module classProvidingModule = modulesRegistry.getProvidingModule(name);
-                        
+
                         if (classProvidingModule != null) {
                             if (select(classProvidingModule)) {
                                 try {
                                     return classProvidingModule.getClassLoader().loadClass(name); // abort search if we fail to load.
                                 } catch (ClassNotFoundException cnfe2) {
-                                    
+
                                     // Only in debug mode, since the child classloader can legitimately  try other souces to load a class
                                     if ((Boolean.valueOf(System.getProperty(DEBUG_MODE_PROPERTY)))) {
                                         logger.logp(SEVERE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass", name, cnfe2);
@@ -253,16 +253,16 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                                             String message = prettyPrintExceptionMessage(cnfe2.getCause().getMessage());
 
                                             if (message != null && !message.isEmpty()) {
-                                                logger.logp(SEVERE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass", 
-                                                        
-                                                    "\nFailed loading class " + name + " by API Class Loader\n\n" +    
+                                                logger.logp(SEVERE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass",
+
+                                                    "\nFailed loading class " + name + " by API Class Loader\n\n" +
                                                     message + "\n");
                                             }
                                         }
                                     }
-                                    
+
                                     throw cnfe2;
-                                    
+
                                 }
                             } else {
                                 logger.logp(FINE, "APIClassLoaderServiceImpl$APIClassLoader", "loadClass",
@@ -271,7 +271,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                         }
                     }
                 }
-                
+
                 // This would be called for javax.* classes, and in the rare(?) case there's no providing module.
                 if (loadedClass == null) {
                     // Call super class implementation which takes care of delegating to parent.
@@ -283,7 +283,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                     }
                 }
             }
-            
+
             return loadedClass;
         }
 
@@ -296,7 +296,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
          */
         private boolean select(HK2Module module) {
             ModuleState state = module.getState();
-            
+
             return state.compareTo(punchInModuleState) >= 0 && state != ModuleState.ERROR;
         }
 
@@ -305,7 +305,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
             if (isBlackListed(name)) {
                 return null;
             }
-            
+
             URL url = null;
             if (!name.startsWith("java/")) {
                 url = apiModuleLoader.getResource(name);
@@ -335,7 +335,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                         if (!select(module)) {
                             continue;
                         }
-                        
+
                         List<URL> list = module.getMetadata().getDescriptors(serviceName);
                         if (!list.isEmpty()) {
                             return list.get(0);
@@ -343,7 +343,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                     }
                 }
             }
-            
+
             // Either requested resource belongs to java/ namespace or
             // it was not found in any of the bundles, so call
             // super class implementation which will delegate to parent.
@@ -351,7 +351,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
             if (url == null) {
                 addToBlackList(name);
             }
-            
+
             return url;
         }
 
@@ -378,7 +378,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
             if (getParent_() != null) {
                 enumerators.add(getParent_().getResources(name));
             }
-            
+
             return new CompositeEnumeration(enumerators);
         }
 
@@ -389,7 +389,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
         @Override
         protected Enumeration<URL> findResources(String name) throws IOException {
             if (!name.startsWith("java/")) {
-                
+
                 List<Enumeration<URL>> enumerations = new ArrayList<>();
                 Enumeration<URL> apiResources = apiModuleLoader.getResources(name);
                 if (apiResources.hasMoreElements()) {
@@ -397,25 +397,25 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                 }
 
                 // Now punch-ins for various cases that require special handling
-                
+
                 if (name.equals(MAILCAP)) {
-                    
+
                     // Punch in for META-INF/mailcap files. see issue #8426
                     for (HK2Module module : modulesRegistry.getModules()) {
                         if (!select(module)) {
                             continue; // We don't look in unresolved modules
                         }
-                        
+
                         if (module == APIModule) {
                             continue; // we have already looked up resources in apiModuleLoader
                         }
-                        
+
                         enumerations.add(module.getClassLoader().getResources(name));
                     }
                 } else if (name.startsWith(META_INF_SERVICES)) {
-                    
+
                     // Punch in. find the service loader from any module
-                    
+
                     String serviceName = name.substring(META_INF_SERVICES.length());
                     List<URL> punchedInURLs = new ArrayList<>();
                     for (HK2Module module : modulesRegistry.getModules()) {
@@ -427,7 +427,7 @@ public class APIClassLoaderServiceImpl implements PostConstruct {
                         }
                         punchedInURLs.addAll(module.getMetadata().getDescriptors(serviceName));
                     }
-                    
+
                     if (!punchedInURLs.isEmpty()) {
                         enumerations.add(enumeration(punchedInURLs));
                     }

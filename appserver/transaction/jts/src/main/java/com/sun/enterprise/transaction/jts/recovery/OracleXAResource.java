@@ -35,44 +35,48 @@ import com.sun.logging.LogDomains;
  * @author <a href="mailto:bala.dutt@sun.com">Bala Dutt</a>
  * @version 1.0
  */
-public class OracleXAResource extends XAResourceWrapper
-{
+public class OracleXAResource extends XAResourceWrapper {
 
-    // Use superclass for Sting Manager 
+    // Use superclass for Sting Manager
     private static final StringManager sm = StringManager.getManager(XAResourceWrapper.class);
 
-    // Use JTA_LOGGER for backward compatibility, so use a class from 
+    // Use JTA_LOGGER for backward compatibility, so use a class from
     // 'jta' bundle to load it.
     private static final Logger _logger = LogDomains.getLogger(
-            com.sun.enterprise.transaction.JavaEETransactionManagerSimplified.class, 
+            com.sun.enterprise.transaction.JavaEETransactionManagerSimplified.class,
             LogDomains.JTA_LOGGER);
 
     public XAResourceWrapper getInstance() {
         return new OracleXAResource();
     }
-	
-  /**
-   * Recovers list of xids in transaction table. Recover on oracle ignores flags sent to it, this method
-   * takes care of flags in addition to calling recoverList for xid list.
-   *
-   * @param flag an <code>int</code> value
-   * @return a <code>Xid[]</code> value
-   * @exception XAException if an error occurs
-   */
+
+    /**
+     * Recovers list of xids in transaction table. Recover on oracle ignores flags sent to it, this method
+     * takes care of flags in addition to calling recoverList for xid list.
+     *
+     * @param flag an <code>int</code> value
+     * @return a <code>Xid[]</code> value
+     * @exception XAException if an error occurs
+     */
     public Xid[] recover(int flag) throws XAException {
-        if(flag==XAResource.TMNOFLAGS)
+        if (flag == XAResource.TMNOFLAGS) {
             return null;
-	return recoverList(flag);
+        }
+        return recoverList(flag);
     }
-  /**
-   * Fires a select statement so that transaction xids are updated and retrieve the xid list. Oracle
-   * doesn't update the xid's for sometime. After this update, recover of real oracle xa resource is
-   * is used get xid list.
-   *
-   * @return a <code>Xid[]</code> value
-   * @exception XAException if an error occurs
-   */
-  private Xid [] recoverList(int flag) throws XAException{
+
+
+    /**
+     * Fires a select statement so that transaction xids are updated and retrieve the xid list.
+     * Oracle
+     * doesn't update the xid's for sometime. After this update, recover of real oracle xa resource
+     * is
+     * is used get xid list.
+     *
+     * @return a <code>Xid[]</code> value
+     * @exception XAException if an error occurs
+     */
+    private Xid [] recoverList(int flag) throws XAException{
         Statement stmt = null;
         ResultSet resultset = null;
         Connection con = null;
@@ -115,20 +119,26 @@ public class OracleXAResource extends XAResourceWrapper
                 catch(SQLException sqlexception2) { }
         }
     }
-    public void commit(Xid xid, boolean flag) throws XAException{
+
+
+    public void commit(Xid xid, boolean flag) throws XAException {
         doRecovery(xid, true);
     }
-    public void rollback(Xid xid) throws XAException{
+
+
+    public void rollback(Xid xid) throws XAException {
         doRecovery(xid, false);
     }
-  /**
-   * Does actual recovery depending on boolean argument - true for commmit.
-   *
-   * @param xid a <code>Xid</code> value
-   * @param isCommit a <code>boolean</code> value
-   * @exception XAException if an error occurs
-   */
-  private void doRecovery(Xid xid, boolean isCommit) throws XAException{
+
+
+    /**
+     * Does actual recovery depending on boolean argument - true for commmit.
+     *
+     * @param xid a <code>Xid</code> value
+     * @param isCommit a <code>boolean</code> value
+     * @exception XAException if an error occurs
+     */
+    private void doRecovery(Xid xid, boolean isCommit) throws XAException{
 
         try {
             if (isCommit)
@@ -190,17 +200,19 @@ public class OracleXAResource extends XAResourceWrapper
                 catch(SQLException sqlexception2) { }
         }
     }
+
     private static final char HEX_DIGITS[] = {
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
         'A', 'B', 'C', 'D', 'E', 'F'
     };
-  /**
-   * Converts Xids into string that can be used in sql statements for oracle.
-   *
-   * @param abyte0[] a <code>byte</code> value
-   * @return a <code>String</code> value
-   */
-  private static String toHexString(byte abyte0[]) {
+
+    /**
+     * Converts Xids into string that can be used in sql statements for oracle.
+     *
+     * @param abyte0[] a <code>byte</code> value
+     * @return a <code>String</code> value
+     */
+    private static String toHexString(byte abyte0[]) {
         StringBuffer stringbuffer = new StringBuffer();
         if(null != abyte0 && 0 < abyte0.length) {
             for(int i = 0; i < abyte0.length; i++) {
@@ -208,8 +220,8 @@ public class OracleXAResource extends XAResourceWrapper
                 stringbuffer.append(HEX_DIGITS[abyte0[i] & 0xf]);
             }
             return stringbuffer.toString();
-         } else {
+        } else {
             return "";
-         }
+        }
     }
 }

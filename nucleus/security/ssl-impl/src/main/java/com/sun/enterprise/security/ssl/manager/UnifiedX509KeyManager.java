@@ -33,7 +33,7 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     private String[] tokenNames = null;
 
     /**
-     * @param mgrs  
+     * @param mgrs
      * @param tokenNames Array of tokenNames with order corresponding to mgrs
      */
     public UnifiedX509KeyManager(X509KeyManager[] mgrs, String[] tokenNames) {

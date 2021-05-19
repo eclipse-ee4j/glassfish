@@ -28,7 +28,7 @@ import java.util.HashMap;
 public class ServletTest extends HttpServlet {
 
     private ServletContext context;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         context = config.getServletContext();
@@ -38,12 +38,12 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-            
+
         RequestDispatcher rd = context.getRequestDispatcher("/ServletTest2");
-        rd.forward(request, response);       
+        rd.forward(request, response);
     }
 }
 

@@ -50,7 +50,7 @@ public final class KeyTool {
     // The respective in-memory keystores
     private KeyStore pkcs12KeyStore = null;
     private KeyStore jksKeyStore = null;
-    
+
     private static String PKCS12 = "-pkcs12";
     private static String INFILE = "-pkcsFile";
     private static String OUTFILE = "-jksFile";
@@ -60,46 +60,46 @@ public final class KeyTool {
     private static String JKSKEYSTOREPASS = "-jksKeyStorePass";
     private static String JKSKEYPASS = "-jksKeyPass";
     private static LocalStringManagerImpl localStrings =
-	new LocalStringManagerImpl(KeyTool.class);
+        new LocalStringManagerImpl(KeyTool.class);
 
     /**
-     * The class is only instantiated for PKCS12 - all other 
+     * The class is only instantiated for PKCS12 - all other
      * keytool functionality is passed to the sun.security.tools.KeyTool
      * @param the file name of the PKCS12 file
      * @param the output file name of the JKS file
      * @param the provider - In this case SunJSSE
      * @param password to the PKCS12 keystore
-     * @param password to the key in the PKCS12 keystore 
+     * @param password to the key in the PKCS12 keystore
      * @param password to the JKS keystore
      * @param password to the key in the JKS keystore
      * currently it has to be the same as the JKS keystore password
      * @exception Problem in loading the keystores
      */
     public KeyTool (String infile, String outfile, String pkcsKeyStorePass,
-		    String pkcsKeyPass, String jksKeyStorePass, 
-		    String jksKeyPass,
-		    String provider) throws IOException {
-	    inputFile = new File (infile);
-	    outputFile = new File (outfile);
-	    this.pkcsKeyStorePass = pkcsKeyStorePass.toCharArray ();
-	    this.pkcsKeyPass = pkcsKeyPass.toCharArray ();
-	    this.jksKeyStorePass = jksKeyStorePass.toCharArray ();
-	    this.jksKeyPass = jksKeyPass.toCharArray ();
-	    this.provider = provider;
-	    // if the output file exists delete it and create a new file
-	    try{
-		if (outputFile.exists ()){
-		    throw new IOException ("Output file already exists!");
-		}
-		// Get the keystores from the engines.
-		pkcs12KeyStore = KeyStore.getInstance ("PKCS12", provider);
-		jksKeyStore = KeyStore.getInstance ("JKS");
+        String pkcsKeyPass, String jksKeyStorePass,
+        String jksKeyPass,
+        String provider) throws IOException {
+        inputFile = new File (infile);
+        outputFile = new File (outfile);
+        this.pkcsKeyStorePass = pkcsKeyStorePass.toCharArray ();
+        this.pkcsKeyPass = pkcsKeyPass.toCharArray ();
+        this.jksKeyStorePass = jksKeyStorePass.toCharArray ();
+        this.jksKeyPass = jksKeyPass.toCharArray ();
+        this.provider = provider;
+        // if the output file exists delete it and create a new file
+        try{
+            if (outputFile.exists ()){
+                throw new IOException ("Output file already exists!");
+            }
+            // Get the keystores from the engines.
+            pkcs12KeyStore = KeyStore.getInstance ("PKCS12", provider);
+            jksKeyStore = KeyStore.getInstance ("JKS");
 
-	    } catch (Exception e) {
-		// catch possible security and io exceptions
-		throw new IOException (e.getMessage ());
-	    }
-	    readKeyStores ();  
+        } catch (Exception e) {
+            // catch possible security and io exceptions
+            throw new IOException (e.getMessage ());
+        }
+        readKeyStores ();
     }
     /**
      * Load both the keystore's into memory.
@@ -107,211 +107,211 @@ public final class KeyTool {
      * is created.
      */
     public void readKeyStores() throws IOException {
-	FileInputStream pkcsFis = null;
-	FileInputStream jksFis = null;
-	try {
-	    pkcsFis = new FileInputStream(inputFile);
-	    jksFis = new FileInputStream (outputFile);
-	} catch(Exception e) {
-	    // No problem we'll create one....
-	    // e.printStackTrace();
-	} finally {
-	    try {
-		pkcs12KeyStore.load(pkcsFis, pkcsKeyStorePass);
-		// Dont need a password as creating a new 
-		// keystore.
-		jksKeyStore.load (jksFis, null);
-	    } catch(Exception ce) {
-		// Can't do much... too bad.
-		ce.printStackTrace();
-	    }
-	    if(pkcsFis != null)
-		pkcsFis.close();
-	    if (jksFis != null)
-		jksFis.close ();
+        FileInputStream pkcsFis = null;
+        FileInputStream jksFis = null;
+        try {
+            pkcsFis = new FileInputStream(inputFile);
+            jksFis = new FileInputStream (outputFile);
+        } catch(Exception e) {
+            // No problem we'll create one....
+            // e.printStackTrace();
+        } finally {
+            try {
+                pkcs12KeyStore.load(pkcsFis, pkcsKeyStorePass);
+                // Dont need a password as creating a new
+                // keystore.
+                jksKeyStore.load (jksFis, null);
+            } catch(Exception ce) {
+                // Can't do much... too bad.
+                ce.printStackTrace();
+            }
+            if(pkcsFis != null)
+                pkcsFis.close();
+            if (jksFis != null)
+                jksFis.close ();
         }
-    }   
+    }
     /**
-     * Write the JKS keystore that is populated with values from 
+     * Write the JKS keystore that is populated with values from
      * the PKCS12 keystore to the outputfile.
      */
     public void writeJksKeyStore() throws IOException {
-	FileOutputStream fos = null;
-	try {
-	    fos = new FileOutputStream(outputFile);
-	} catch(Exception e) {
-	    // No problem we'll create one....
-	    // e.printStackTrace();
-	} finally {
-	    try {
-		jksKeyStore.store (fos, jksKeyStorePass);
-	    } catch(Exception ce) {
-		// Can't do much... too bad.
-		ce.printStackTrace();
-	    }
-	    if(fos != null)
-		fos.close();
+        FileOutputStream fos = null;
+        try {
+            fos = new FileOutputStream(outputFile);
+        } catch(Exception e) {
+            // No problem we'll create one....
+            // e.printStackTrace();
+        } finally {
+            try {
+                jksKeyStore.store (fos, jksKeyStorePass);
+            } catch(Exception ce) {
+                // Can't do much... too bad.
+                ce.printStackTrace();
+            }
+            if(fos != null)
+                fos.close();
         }
-    }   
-    /** 
-     * Copies the keys and certificates in the PKCS12 file to 
+    }
+    /**
+     * Copies the keys and certificates in the PKCS12 file to
      * the in-memory JKS keystore
      * @exception If the keystore has not been instantiated or
      * the password to the key is'nt proper
      */
     public void replicatePkcs12ToJks () throws Exception {
-	Enumeration e = pkcs12KeyStore.aliases ();
-	for (; e.hasMoreElements (); ){
-	    String alias = (String)e.nextElement ();
-	    if (pkcs12KeyStore.isKeyEntry (alias)){
+        Enumeration e = pkcs12KeyStore.aliases ();
+        for (; e.hasMoreElements (); ){
+            String alias = (String)e.nextElement ();
+            if (pkcs12KeyStore.isKeyEntry (alias)){
                 if (debug)
-		    System.out.println ("Alias "+alias+ " is a key entry "); 
-		
-		/* Get the key and associated certificate chain
-		 * from PKCS12 keystore and put in JKS keystore
-		 */
-		Key key = pkcs12KeyStore.getKey (alias, pkcsKeyPass);
-		Certificate[] certs = 
-		    pkcs12KeyStore.getCertificateChain (alias);
-		jksKeyStore.setKeyEntry (alias,  key, jksKeyPass, certs);
-	    } else if (pkcs12KeyStore.isCertificateEntry (alias)){
-		if (debug)
-		    System.out.println (" Alias "+alias +
-					" is a certificate entry");
-		jksKeyStore.setCertificateEntry 
-		    (alias, pkcs12KeyStore.getCertificate (alias));
-	    }
-	}
+                    System.out.println ("Alias "+alias+ " is a key entry ");
+
+                /* Get the key and associated certificate chain
+                 * from PKCS12 keystore and put in JKS keystore
+                 */
+                Key key = pkcs12KeyStore.getKey (alias, pkcsKeyPass);
+                Certificate[] certs =
+                    pkcs12KeyStore.getCertificateChain (alias);
+                jksKeyStore.setKeyEntry (alias,  key, jksKeyPass, certs);
+            } else if (pkcs12KeyStore.isCertificateEntry (alias)){
+                if (debug)
+                    System.out.println (" Alias "+alias +
+                        " is a certificate entry");
+                jksKeyStore.setCertificateEntry
+                (alias, pkcs12KeyStore.getCertificate (alias));
+            }
+        }
     }
     /**
      * Prints the information in the PKCS12 keystore
      */
     public void info () throws Exception{
-	System.out.println (" Keystore Information");
-	System.out.println (" Type = " + pkcs12KeyStore.getType ());
-	System.out.println (" Provider = "+ pkcs12KeyStore.getProvider ());
-	System.out.println (" KeyStore size = "+pkcs12KeyStore.size ());
-	Enumeration e = pkcs12KeyStore.aliases ();
-	System.out.println (" Kstore Aliases "); 
-	for (; e.hasMoreElements (); ){
-	    String alias = (String)e.nextElement ();
-	    System.out.println (" Alias = "+ alias);
-	    if (pkcs12KeyStore.isKeyEntry (alias)){
-		System.out.println ("Alias is a key entry "); 
-		Key key = pkcs12KeyStore.getKey (alias, pkcsKeyPass);
-		System.out.println (" Format = "+key.getFormat ()); 
-	    } else if (pkcs12KeyStore.isCertificateEntry (alias)){
-		System.out.println (" Alias is a certificate entry"); 
-	    }
-	}
-	System.out.println (" End of Information"); 
+        System.out.println (" Keystore Information");
+        System.out.println (" Type = " + pkcs12KeyStore.getType ());
+        System.out.println (" Provider = "+ pkcs12KeyStore.getProvider ());
+        System.out.println (" KeyStore size = "+pkcs12KeyStore.size ());
+        Enumeration e = pkcs12KeyStore.aliases ();
+        System.out.println (" Kstore Aliases ");
+        for (; e.hasMoreElements (); ){
+            String alias = (String)e.nextElement ();
+            System.out.println (" Alias = "+ alias);
+            if (pkcs12KeyStore.isKeyEntry (alias)){
+                System.out.println ("Alias is a key entry ");
+                Key key = pkcs12KeyStore.getKey (alias, pkcsKeyPass);
+                System.out.println (" Format = "+key.getFormat ());
+            } else if (pkcs12KeyStore.isCertificateEntry (alias)){
+                System.out.println (" Alias is a certificate entry");
+            }
+        }
+        System.out.println (" End of Information");
     }
-    /** 
+    /**
      * Initializes the provider to be the JSSE provider
      */
     public static void initProvider() {
-	try { 
-	    Provider p =
-		(Provider) Class.forName(JSSE_PROVIDER).newInstance();
-	    Security.addProvider(p);
+        try {
+            Provider p =
+                (Provider) Class.forName(JSSE_PROVIDER).newInstance();
+            Security.addProvider(p);
 
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
-    } 
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
     /**
      * Gets the provider name for JSSE
      */
     public static String getProviderName (){
-	try{
-	    Provider p = 
-		(Provider) Class.forName(JSSE_PROVIDER).newInstance();
-	    return p.getName ();
-	} catch (Exception e) {
-	    e.printStackTrace ();
-	}
-	return null;
+        try{
+            Provider p =
+                (Provider) Class.forName(JSSE_PROVIDER).newInstance();
+            return p.getName ();
+        } catch (Exception e) {
+            e.printStackTrace ();
+        }
+        return null;
     }
     public static void help (boolean exit){
 
-	System.out.println 
-	    (localStrings.getLocalString ("enterprise.security.keytool",
-					  "keytool"));
-	System.out.println
-	    (localStrings.getLocalString
-	     ("enterprise.security.keytooloptions", "PKCS Options:"));
-	System.out.println (" "+ PKCS12 + 
-			    " "+ INFILE + " fileName" +
-			    " "+ PKCSKEYSTOREPASS + " password" +
-			    " "+PKCSKEYPASS +" password" +
-			    " "+OUTFILE+ " outputFileName"+
-			    " "+JKSKEYSTOREPASS + " password"); 
-	/* uncomment when support for this present in JSSE
-	   System.Out.Println (" "+JKSKEYPASS+ " password"); 
-	*/
-	if (exit)
-	    System.exit (-1);
+        System.out.println
+        (localStrings.getLocalString ("enterprise.security.keytool",
+            "keytool"));
+        System.out.println
+        (localStrings.getLocalString
+            ("enterprise.security.keytooloptions", "PKCS Options:"));
+        System.out.println (" "+ PKCS12 +
+            " "+ INFILE + " fileName" +
+            " "+ PKCSKEYSTOREPASS + " password" +
+            " "+PKCSKEYPASS +" password" +
+            " "+OUTFILE+ " outputFileName"+
+            " "+JKSKEYSTOREPASS + " password");
+        /* uncomment when support for this present in JSSE
+       System.Out.Println (" "+JKSKEYPASS+ " password");
+         */
+        if (exit)
+            System.exit (-1);
     }
     public static void main(String[] args) {
-	boolean pkcs = false;
-	initProvider();
-	String provider = null;
-	String inFile = null;
-	String outFile = null;
-	String jksKeyPass  = null;
-	String jksKeyStorePass = null;
-	String pkcsKeyPass = null;
-	String pkcsKeyStorePass = null;
-	try{
-	    if (args.length == 0){
-		help (false);
-		sun.security.tools.KeyTool.main (args);
-	    }
-	    if (args[0].equalsIgnoreCase (PKCS12)){
-		pkcs = true;
-		if (args.length != 11)
-		    help (true);
-		if (!args[1].equalsIgnoreCase (INFILE))
-		    help (true);
-		inFile = args[2];
-		if (!args[3].equalsIgnoreCase (PKCSKEYSTOREPASS))
-		    help (true);
-		pkcsKeyStorePass = args[4];
-		if (!args[5].equalsIgnoreCase (PKCSKEYPASS))
-		    help (true);
-		pkcsKeyPass = args[6];
-		if (!args[7].equalsIgnoreCase (OUTFILE))
-		    help (true);
-		outFile = args[8];
-		if (!args[9].equalsIgnoreCase (JKSKEYSTOREPASS))
-		    help (true);
-		
-		jksKeyStorePass = args[10];
-		jksKeyPass = jksKeyStorePass;
-		/*
-		// Uncomment the following when support
-		// for different keystore and key pass present in JSSE
+        boolean pkcs = false;
+        initProvider();
+        String provider = null;
+        String inFile = null;
+        String outFile = null;
+        String jksKeyPass  = null;
+        String jksKeyStorePass = null;
+        String pkcsKeyPass = null;
+        String pkcsKeyStorePass = null;
+        try{
+            if (args.length == 0){
+                help (false);
+                sun.security.tools.KeyTool.main (args);
+            }
+            if (args[0].equalsIgnoreCase (PKCS12)){
+                pkcs = true;
+                if (args.length != 11)
+                    help (true);
+                if (!args[1].equalsIgnoreCase (INFILE))
+                    help (true);
+                inFile = args[2];
+                if (!args[3].equalsIgnoreCase (PKCSKEYSTOREPASS))
+                    help (true);
+                pkcsKeyStorePass = args[4];
+                if (!args[5].equalsIgnoreCase (PKCSKEYPASS))
+                    help (true);
+                pkcsKeyPass = args[6];
+                if (!args[7].equalsIgnoreCase (OUTFILE))
+                    help (true);
+                outFile = args[8];
+                if (!args[9].equalsIgnoreCase (JKSKEYSTOREPASS))
+                    help (true);
 
-		if (!args[11].equalsIgnoreCase (JKSKEYPASS))
-		    help ();
-		jksKeyPass = args[12];
-		*/
-	    }
-	    if (!pkcs){
-		sun.security.tools.KeyTool.main(args);
-	    } else{
-		provider = getProviderName ();
-		KeyTool kt = new KeyTool (inFile, outFile, pkcsKeyStorePass,
-					  pkcsKeyPass, jksKeyStorePass,
-					  jksKeyPass,
-					  provider);
-		kt.replicatePkcs12ToJks ();
-		kt.writeJksKeyStore ();
-	    }
-	} catch (Exception e){
-	    System.out.println (e.getMessage ()); 
-	    e.printStackTrace ();
-	}
+                jksKeyStorePass = args[10];
+                jksKeyPass = jksKeyStorePass;
+                /*
+        // Uncomment the following when support
+        // for different keystore and key pass present in JSSE
+
+        if (!args[11].equalsIgnoreCase (JKSKEYPASS))
+            help ();
+        jksKeyPass = args[12];
+                 */
+            }
+            if (!pkcs){
+                sun.security.tools.KeyTool.main(args);
+            } else{
+                provider = getProviderName ();
+                KeyTool kt = new KeyTool (inFile, outFile, pkcsKeyStorePass,
+                    pkcsKeyPass, jksKeyStorePass,
+                    jksKeyPass,
+                    provider);
+                kt.replicatePkcs12ToJks ();
+                kt.writeJksKeyStore ();
+            }
+        } catch (Exception e){
+            System.out.println (e.getMessage ());
+            e.printStackTrace ();
+        }
     }
 }
 

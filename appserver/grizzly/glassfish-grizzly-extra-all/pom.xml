@@ -46,7 +46,7 @@
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
 
-    <build>       
+    <build>
         <plugins>
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
@@ -73,7 +73,6 @@
                         </goals>
                     </execution>
                 </executions>
-
             </plugin>
 
             <plugin>
@@ -94,11 +93,11 @@
                         <Include-Resource>META-INF/hk2-locator/=target/classes/META-INF/hk2-locator/</Include-Resource>
                         <DynamicImport-Package>*</DynamicImport-Package>
                     </instructions>
-                    
+
                     <supportedProjectTypes>
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
-                    
+
                     <unpackBundle>true</unpackBundle>
                 </configuration>
                 <executions>
@@ -143,7 +142,7 @@
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
             <version>${servlet-api.version}</version>
-	    <scope>provided</scope>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

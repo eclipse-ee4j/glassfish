@@ -42,7 +42,7 @@ public final class CatalinaLogger extends LoggerBase {
 
     @Override
     protected void write(String msg, int verbosity) {
-        
+
         if (logger == null) {
             return;
         }
@@ -67,7 +67,7 @@ public final class CatalinaLogger extends LoggerBase {
     /**
      * Set the verbosity level of this logger.  Messages logged with a
      * higher verbosity than this level will be silently ignored.
-     * 
+     *
      * @param logLevel The new verbosity level, as a string
      */
     public void setLevel(String logLevel) {

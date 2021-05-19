@@ -49,9 +49,7 @@ public interface ExtendedJDOMetaData
      *  @return  All known classnames.
      *********************************************************************/
 
-    public String [] getKnownClasses ()
-                     throws JDOMetaDataUserException,
-                            JDOMetaDataFatalError;
+    String[] getKnownClasses() throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -62,9 +60,7 @@ public interface ExtendedJDOMetaData
      *  @return  All known fieldnames.
      *********************************************************************/
 
-    public String [] getKnownFields (String classname)
-                     throws JDOMetaDataUserException,
-                            JDOMetaDataFatalError;
+    String[] getKnownFields(String classname) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -76,10 +72,7 @@ public interface ExtendedJDOMetaData
      *  @return  The type of the field.
      *********************************************************************/
 
-    public String getFieldType (String classname,
-                                String fieldname)
-                  throws JDOMetaDataUserException,
-                         JDOMetaDataFatalError;
+    String getFieldType(String classname, String fieldname) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -93,10 +86,7 @@ public interface ExtendedJDOMetaData
      *  @see  java.lang.reflect.Modifier
      *********************************************************************/
 
-    public int getClassModifiers (String classname)
-               throws JDOMetaDataUserException,
-                      JDOMetaDataFatalError;
-
+    int getClassModifiers(String classname) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
     /**********************************************************************
      *  Gets the modifiers of a field. The return value is a constant of the
@@ -110,10 +100,7 @@ public interface ExtendedJDOMetaData
      *  @see  java.lang.reflect.Modifier
      *********************************************************************/
 
-    public int getFieldModifiers (String classname,
-                                  String fieldname)
-               throws JDOMetaDataUserException,
-                      JDOMetaDataFatalError;
+    int getFieldModifiers(String classname, String fieldname) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -128,8 +115,7 @@ public interface ExtendedJDOMetaData
      * @see #isPersistenceCapableClass(String)
      *********************************************************************/
 
-    public String getKeyClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    String getKeyClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -148,16 +134,14 @@ public interface ExtendedJDOMetaData
      * @param fieldSig the non-null type signature of the field
      * @return true if this field is known to be non-managed; otherwise false
      * @see #isManagedField(String, String)
-     * 
+     *
      *********************************************************************/
 
-    public boolean isKnownNonManagedField(String classPath,
-                                   String fieldName,
-                                   String fieldSig)
+    boolean isKnownNonManagedField(String classPath, String fieldName, String fieldSig)
         throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
-   /********************************************************************** 
+   /**********************************************************************
      * Returns whether a field of a class is transient transactional
      * or persistent.
      * <P>
@@ -177,8 +161,7 @@ public interface ExtendedJDOMetaData
      * @see #isPersistenceCapableClass(String)
      *********************************************************************/
 
-    public boolean isManagedField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+   boolean isManagedField(String classPath, String fieldName) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -195,12 +178,10 @@ public interface ExtendedJDOMetaData
      * @param fieldName the non-null name of the field
      * @return true if this field is key; otherwise false
      * @see #isPersistentField(String, String)
-     * 
+     *
      *********************************************************************/
 
-    public boolean isKeyField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
-
+    boolean isKeyField(String classPath, String fieldName) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
     /**********************************************************************
      * Returns the field flags for a declared field of a class.
@@ -234,13 +215,12 @@ public interface ExtendedJDOMetaData
      * @param classPath the non-null JVM-qualified name of the class
      * @param fieldName the non-null name of the field
      * @return the field flags for this field
-     * 
+     *
      *********************************************************************/
 
-    public int getFieldFlags(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    int getFieldFlags(String classPath, String fieldName) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
-    
+
     /**********************************************************************
      * Returns the field flags for some declared, managed fields of a class.
      * <P>
@@ -248,11 +228,10 @@ public interface ExtendedJDOMetaData
      * @param classPath the non-null JVM-qualified name of the class
      * @param fieldNames the non-null array of names of the declared fields
      * @return the field flags for the fields
-     * 
+     *
      *********************************************************************/
 
-    public int[] getFieldFlags(String classPath, String[] fieldNames)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    int[] getFieldFlags(String classPath, String[] fieldNames) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -263,9 +242,7 @@ public interface ExtendedJDOMetaData
      *  @return  The type of the fields.
      *********************************************************************/
 
-    public String[] getFieldType(String classname,
-                          String[] fieldnames)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    String[] getFieldType(String classname, String[] fieldnames) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -276,11 +253,10 @@ public interface ExtendedJDOMetaData
      * @param classPath the non-null JVM-qualified name of the class
      * @param fieldNames the non-null array of names of the declared fields
      * @return the non-negative, unique field indices
-     * 
+     *
      *********************************************************************/
 
-    public int[] getFieldNo(String classPath, String[] fieldNames)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    int[] getFieldNo(String classPath, String[] fieldNames) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -289,11 +265,10 @@ public interface ExtendedJDOMetaData
      * This method requires all fields having been declared by declareField().
      * @param classPath the non-null JVM-qualified name of the class
      * @return an array of all declared key fields of a class
-     * 
+     *
      *********************************************************************/
 
-    public String[] getKeyFields(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    String[] getKeyFields(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -309,8 +284,7 @@ public interface ExtendedJDOMetaData
      * @see #getPersistenceCapableRootClass(String)
      *********************************************************************/
 
-    public String getPersistenceCapableSuperClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    String getPersistenceCapableSuperClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 
     /**********************************************************************
@@ -328,8 +302,7 @@ public interface ExtendedJDOMetaData
      * @see #getPersistenceCapableSuperClass(String)
      *********************************************************************/
 
-    public String getSuperKeyClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError;
+    String getSuperKeyClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError;
 
 }  //ExtendedJDOMetaData
 

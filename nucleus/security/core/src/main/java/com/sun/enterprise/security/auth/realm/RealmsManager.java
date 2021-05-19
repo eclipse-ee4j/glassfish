@@ -54,7 +54,7 @@ public class RealmsManager {
     //per domain list of loaded Realms
     //Wanted to get rid of Hashtable but the API exporting  Enumeration<String> is preventing
     // it for now.
-    private final Map<String, Hashtable<String, Realm>> loadedRealms = 
+    private final Map<String, Hashtable<String, Realm>> loadedRealms =
             Collections.synchronizedMap(new HashMap<String, Hashtable<String, Realm>>());
 
     // Keep track of name of default realm for this domain. This is updated during startup
@@ -62,7 +62,7 @@ public class RealmsManager {
     private volatile String defaultRealmName="default";
     private final RealmsProbeProvider probeProvider = new RealmsProbeProvider();
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
-    
+
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
@@ -72,8 +72,9 @@ public class RealmsManager {
 
 
     public RealmsManager() {
-        
+
     }
+
     /**
      * Checks if the given realm name is loaded/valid.
      * @param name of the realm to check.
@@ -99,18 +100,18 @@ public class RealmsManager {
             return configContainsRealm(name, configName);
         }
     }
-    
+
     /**
      * Returns the names of accessible realms.
      * @return set of realm names
      */
-    public  Enumeration<String>	getRealmNames() {
-	return getRealmNames(config.getName());
+    public Enumeration<String> getRealmNames() {
+        return getRealmNames(config.getName());
     }
 
     Realm _getInstance(String configName, String name) {
-	Realm retval = null;
-	retval = configGetRealmInstance(configName, name);
+        Realm retval = null;
+        retval = configGetRealmInstance(configName, name);
 
         // Some tools as well as numerous other locations assume that
         // getInstance("default") always works; keep them from breaking
@@ -141,7 +142,7 @@ public class RealmsManager {
         putIntoLoadedRealms(config.getName(), realmName, realm);
         probeProvider.realmAddedEvent(realmName);
     }
-    
+
     public Realm getFromLoadedRealms(String realmName) {
         return configGetRealmInstance(config.getName(),realmName);
     }
@@ -157,7 +158,7 @@ public class RealmsManager {
     public synchronized void setDefaultRealmName(String defaultRealmName) {
         this.defaultRealmName = defaultRealmName;
     }
-    
+
    /**
     * Returns names of predefined AuthRealms' classes supported by security service.
     * @returns array of predefind AuthRealms' classes
@@ -179,8 +180,8 @@ public class RealmsManager {
        for (ActiveDescriptor<?> it : collection) {
            arr.add(it.getImplementation());
        }
-      
-       return arr;   
+
+       return arr;
    }
 
    public void createRealms() {
@@ -202,7 +203,7 @@ public class RealmsManager {
        List<Property> props = service.getProperty();
        if(props == null) {
            return;
-       }  
+       }
        Iterator<Property> propsIterator = props.iterator();
        while(propsIterator != null && propsIterator.hasNext()) {
            Property prop = propsIterator.next();
@@ -210,7 +211,7 @@ public class RealmsManager {
                this.defaultDigestAlgorithm = prop.getValue();
                break;
            }
-       }     
+       }
    }
 
    public String getDefaultDigestAlgorithm() {
@@ -275,7 +276,7 @@ public class RealmsManager {
 
     private Realm configGetRealmInstance(String configName, String realm) {
         Hashtable<String, Realm> containedRealms = loadedRealms.get(configName);
-	return  (containedRealms != null) ? (Realm) containedRealms.get(realm) : null;
+        return  (containedRealms != null) ? (Realm) containedRealms.get(realm) : null;
     }
 
     public Realm removeFromLoadedRealms (String configName, String realmName) {
@@ -294,7 +295,7 @@ public class RealmsManager {
          }
          containedRealms.put(realmName, realm);
     }
-    
+
     public void refreshRealm(String configName, String realmName) {
         if (realmName != null && realmName.length() > 0) {
             try {
@@ -304,9 +305,9 @@ public class RealmsManager {
                     realm.refresh(configName);
                 }
             } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
-                //	    _logger.fine("Realm: "+realmName+" is not configured");
+                //            _logger.fine("Realm: "+realmName+" is not configured");
             } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
-                //	    _logger.fine("Realm: "+realmName+" is not configured");
+                //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }
     }

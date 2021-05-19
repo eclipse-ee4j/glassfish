@@ -29,7 +29,7 @@
    &commonSetup;
    &commonBuild;
    &testProperties;
-    
+
     <target name="all" depends="build,deploy,run,undeploy"/>
     <target name="run-test" depends="build,deploy,run,undeploy"/>
 
@@ -48,7 +48,7 @@
     </target>
 
     <target name="build" depends="compile">
-<!--	<property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
+<!--    <property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
 -->
         <antcall target="build-ear"/>
     </target>
@@ -57,11 +57,11 @@
         <antcall target="deploy-common"/>
        <!-- As this app contain common ejbs to be shared by other apps, copying the client.jar to instance lib directory and restart the instance-->
 
-	<!-- 
-	commented as other dependent apps are not putting under this workspace directory 
+    <!--
+    commented as other dependent apps are not putting under this workspace directory
        <copy file="${assemble.dir}/${appname}AppClient.jar" tofile="${env.S1AS_HOME}/domains/domain1/${appserver.instance.name}/lib/${appname}AppClient.jar"/>
        <ant antfile="build.xml" dir="../" target="restart-server"/>
-	-->
+    -->
     </target>
 
 
@@ -72,11 +72,11 @@
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
         <arg value="-xml"/>
         <arg value="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-	<arg value="-textauth"/>
-	<arg value="-user"/>
-	<arg value="scott"/>
-	<arg value="-password"/>
-	<arg value="j2ee"/>
+        <arg value="-textauth"/>
+        <arg value="-user"/>
+        <arg value="scott"/>
+        <arg value="-password"/>
+        <arg value="j2ee"/>
       </exec>
     </target>
 
@@ -159,5 +159,5 @@
     </antcall>
 </target>
 
-  
+
 </project>

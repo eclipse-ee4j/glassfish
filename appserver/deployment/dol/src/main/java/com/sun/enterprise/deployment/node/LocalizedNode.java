@@ -33,66 +33,73 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * This class is responsible for handling the xml lang attribute of 
+ * This class is responsible for handling the xml lang attribute of
  * an xml element
  *
  * @author Jerome Dochez
  */
 public class LocalizedNode extends DeploymentDescriptorNode {
-    
+
     protected String lang = null;
     protected String localizedValue = null;
-    
+
     /**
      * @return the descriptor for this node
      */
+    @Override
     public Object getDescriptor() {
         return getParentNode().getDescriptor();
     }
-    
+
     /**
      * notification of element start with attributes.
      */
+    @Override
     public void startElement(XMLElement element, Attributes attributes) {
-        if (attributes.getLength()>0) {
-            for (int i=0;i<attributes.getLength();i++) {
+        if (attributes.getLength() > 0) {
+            for (int i = 0; i < attributes.getLength(); i++) {
                 if (attributes.getLocalName(i).equals(TagNames.LANG)) {
                     lang = attributes.getValue(i);
                 }
-            } 
+            }
         }
-    }      
-    
+    }
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
         if (element.equals(getXMLRootTag())) {
             localizedValue=value;
-        } else 
-            super.setElementValue(element, value);        
+        } else {
+            super.setElementValue(element, value);
+        }
     }
-    
+
     /**
-     * writes all the localized map element usign the tagname with 
+     * writes all the localized map element usign the tagname with
      * the lang attribute to a DOM node
      */
     public void writeLocalizedMap(Node parentNode, String tagName, Map localizedMap) {
-        if (localizedMap!=null) {
+        if (localizedMap != null) {
             Set<Map.Entry> entrySet = localizedMap.entrySet();
             Iterator<Map.Entry> entryIt = entrySet.iterator();
             while (entryIt.hasNext()) {
                 Map.Entry entry = entryIt.next();
-                String lang = (String)entry.getKey();
+                String lang = (String) entry.getKey();
                 Element aLocalizedNode = (Element) appendTextChild(parentNode, tagName, (String) entry.getValue());
-                if ((aLocalizedNode!=null) && (Locale.getDefault().getLanguage().equals(lang))) { 
-		    aLocalizedNode.setAttributeNS(TagNames.XML_NAMESPACE, TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG, lang);
- 		 } 
+                if (aLocalizedNode != null && Locale.getDefault().getLanguage().equals(lang)) {
+                    aLocalizedNode.setAttributeNS(
+                        TagNames.XML_NAMESPACE,
+                        TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG,
+                        lang);
+                }
             }
-        }        
+        }
     }
-    
+
 }

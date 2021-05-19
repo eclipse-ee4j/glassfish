@@ -89,7 +89,7 @@ public class CourseBean implements EntityBean {
                 (DataSource) ic.lookup("java:comp/env/jdbc/bmp-finderDB");
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/Enroller");
-            enrollerHome = 
+            enrollerHome =
                 (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
         } catch (Exception ex) {
@@ -235,7 +235,7 @@ public class CourseBean implements EntityBean {
         con.close();
     }
 
-    private ArrayList selectAllCourses() 
+    private ArrayList selectAllCourses()
         throws SQLException {
 
         String selectStatement =
@@ -243,7 +243,7 @@ public class CourseBean implements EntityBean {
             "from FinderEnrollment ";
 
         Connection con =  dataSource.getConnection();
-        Statement stmt = 
+        Statement stmt =
             con.createStatement();
 
         ResultSet rs = stmt.executeQuery(selectStatement);
@@ -276,7 +276,7 @@ public class CourseBean implements EntityBean {
 
         try {
             // In BMP, can't get timer service or call timer service methods
-            TimerService ts = context.getTimerService(); 
+            TimerService ts = context.getTimerService();
             throw new EJBException("should have gotten timer service method " +
                                    " illegal state exception ");
         } catch(IllegalStateException ise) {

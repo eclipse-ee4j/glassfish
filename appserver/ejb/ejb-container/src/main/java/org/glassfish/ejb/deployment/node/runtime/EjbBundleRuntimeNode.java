@@ -36,9 +36,9 @@ import org.w3c.dom.Node;
 
 /**
  * This node handles runtime deployment descriptors for ejb bundle
- * 
+ *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class EjbBundleRuntimeNode extends
         RuntimeBundleNode<EjbBundleDescriptorImpl> {
@@ -82,11 +82,11 @@ public class EjbBundleRuntimeNode extends
 
    /**
     * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+    *
+    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
     * @return the doctype tag name
     */
-   public static String registerBundle(Map publicIDToDTD) {    
+   public static String registerBundle(Map publicIDToDTD) {
        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_200_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_200_DTD_SYSTEM_ID);
        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_201_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_201_DTD_SYSTEM_ID);
        publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_210_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_210_DTD_SYSTEM_ID);
@@ -96,7 +96,7 @@ public class EjbBundleRuntimeNode extends
 
        if (!restrictDTDDeclarations()) {
            publicIDToDTD.put(DTDRegistry.SUN_EJBJAR_210beta_DTD_PUBLIC_ID, DTDRegistry.SUN_EJBJAR_210beta_DTD_SYSTEM_ID);
-       }           
+       }
        return RuntimeTagNames.S1AS_EJB_RUNTIME_TAG;
    }
 
@@ -150,12 +150,12 @@ public class EjbBundleRuntimeNode extends
 
         // security-role-mapping*
         List<SecurityRoleMapping> roleMappings = bundleDescriptor.getSecurityRoleMappings();
-        for (int i = 0; i < roleMappings.size(); i++) { 
+        for (int i = 0; i < roleMappings.size(); i++) {
             SecurityRoleMappingNode srmn = new SecurityRoleMappingNode();
             srmn.writeDescriptor(ejbs, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMappings.get(i));
         }
-	
-	    // entreprise-beans
+
+        // entreprise-beans
         EnterpriseBeansRuntimeNode ejbsNode = new EnterpriseBeansRuntimeNode();
         ejbsNode.writeDescriptor(ejbs, RuntimeTagNames.EJBS, bundleDescriptor);
 
@@ -167,7 +167,7 @@ public class EjbBundleRuntimeNode extends
         if (djndi != null) {
             appendTextChild(ejbs, RuntimeTagNames.DISABLE_NONPORTABLE_JNDI_NAMES, String.valueOf(djndi));
         }
- 
+
         // keep-state
         appendTextChild(ejbs, RuntimeTagNames.KEEP_STATE, String.valueOf(bundleDescriptor.getKeepState()));
 

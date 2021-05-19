@@ -37,20 +37,20 @@ import java.util.Vector;
  * @author tjquinn
  */
 public class ShowArgsClient2 {
-    
+
     private String outFileSpec = null;
     private PrintStream outStream = null;
 
     private String expectedArgsFileSpec = null;
-    
+
     private Vector<String> otherArgs = new Vector<String>();
-    
+
     private Map<String,String> optionValues = new HashMap<String,String>();
-    
+
     /** Creates a new instance of ShowArgsClient */
     public ShowArgsClient2() {
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -64,9 +64,9 @@ public class ShowArgsClient2 {
             status = 1;
             throw new RuntimeException("Client detected the following error", thr);
         }
-        
+
     }
-    
+
     private void run(String[] args) throws FileNotFoundException, IOException {
         System.err.println("Command line arguments from client #2:");
         for (String arg : args) {
@@ -74,15 +74,15 @@ public class ShowArgsClient2 {
         }
         System.out.println();
         prepareArguments(args);
-        
+
         /*
-         *Default is for all output to go to System.out, which will be a 
+         *Default is for all output to go to System.out, which will be a
          *trace file in the Java Web Start directory if Java Web Start tracing is on.
          */
         if (outStream == null) {
             outStream = System.out;
         }
-        
+
         outStream.println("Command line arguments:");
         for (int i = 0; i < 25; i++) {
             outStream.println("This is a test line to use up some space: " + i);
@@ -90,14 +90,14 @@ public class ShowArgsClient2 {
         for (String arg : args) {
             outStream.println(arg);
         }
-        
+
 //        /*
 //         *Make sure the command line argument values for otherArgs agree with
 //         *what is stored in the temporary file.
 //         */
 //        checkActualArgsVsExpected();
-//        
-        
+//
+
         outStream.flush();
     }
 
@@ -116,12 +116,12 @@ public class ShowArgsClient2 {
             }
             otherArgsAsLine.append(s);
         }
-        
+
         if ( ! otherArgsAsLine.toString().equals(expectedArgValues)) {
             throw new IllegalArgumentException("Actual arguments were " + otherArgsAsLine.toString() + "; expected " + expectedArgValues);
         }
     }
-    
+
     private void prepareArguments(String[] args) throws IllegalArgumentException, FileNotFoundException {
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(0) == '-') {
@@ -139,7 +139,7 @@ public class ShowArgsClient2 {
         }
 //        statusFileSpec = optionValues.get("statusFile");
 //        expectedArgsFileSpec = optionValues.get("expectedArgsFile");
-        
+
         System.err.println("out = " + outFileSpec);
         if (outFile != null) {
             System.err.println("     which is the file " + outFile.getAbsolutePath());
@@ -148,7 +148,7 @@ public class ShowArgsClient2 {
 //        System.err.println("expectedArgsFile = " + expectedArgsFileSpec);
 
         System.err.println("Other arguments: " + otherArgs);
-        
+
 //        if (outFileSpec == null || statusFileSpec == null || expectedArgsFileSpec == null) {
 //            throw new IllegalArgumentException("At least one of -out, -statusFile, and -expectedArgsFile is missing and all are required");
 //        }

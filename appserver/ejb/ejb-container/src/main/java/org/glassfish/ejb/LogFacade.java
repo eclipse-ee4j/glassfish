@@ -36,5 +36,5 @@ public final class LogFacade {
     public static Logger getLogger() {
         return LOGGER;
     }
-    
+
 }

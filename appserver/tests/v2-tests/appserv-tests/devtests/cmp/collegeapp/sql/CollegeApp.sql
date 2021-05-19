@@ -21,7 +21,7 @@ drop table course CASCADE CONSTRAINTS;
 create table course (courseId Number, deptId Number, courseName Varchar2(255), sylabus BLOB ,constraint course_ct primary key (courseId),
 FOREIGN KEY (deptId) REFERENCES dept (deptId)
 );
- 
+
 drop table stud_course CASCADE CONSTRAINTS;
 create table stud_course (courseId Number, studentId Number,
 constraint stuc_c primary key (courseId,studentId),

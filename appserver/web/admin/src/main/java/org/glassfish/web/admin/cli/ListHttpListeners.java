@@ -48,8 +48,8 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=HttpService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-http-listeners", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-http-listeners",
         description="list-http-listeners")
 })
 public class ListHttpListeners implements AdminCommand {

@@ -15,21 +15,21 @@
  */
 
  package wstoejb;
- 
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
- 
+
  /*
-  * This interface  is the service endpoint interface for a simple webservices 
+  * This interface  is the service endpoint interface for a simple webservices
   * interfacing a simple EJB
-  * 
+  *
   * @author Jerome Dochez
   */
  public interface WebServiceToEjbSEI extends Remote {
- 	
- 	/*
- 	 * Invoke the ejb
- 	 */ 	
- 	 public String payload(String requestInfo) throws RemoteException;
- 	 
+
+         /*
+          * Invoke the ejb
+          */
+          public String payload(String requestInfo) throws RemoteException;
+
  }

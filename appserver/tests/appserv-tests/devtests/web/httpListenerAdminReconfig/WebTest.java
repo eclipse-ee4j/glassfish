@@ -36,7 +36,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("adminReconfig");
         WebTest webTest = new WebTest(args);
@@ -44,8 +44,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed.");
@@ -55,7 +55,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         sock.setSoTimeout(5000);
         OutputStream os = sock.getOutputStream();
@@ -64,7 +64,7 @@ public class WebTest {
         os.write(get.getBytes());
         os.write("Host: localhost\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 

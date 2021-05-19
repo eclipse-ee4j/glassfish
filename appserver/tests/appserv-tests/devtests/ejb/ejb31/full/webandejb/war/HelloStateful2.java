@@ -23,14 +23,14 @@ import jakarta.annotation.*;
 @LocalBean
 public class HelloStateful2 implements java.util.Observer {
 
-    @PostConstruct 
+    @PostConstruct
     private void init() {
-	System.out.println("HelloStateful2::init()");
+        System.out.println("HelloStateful2::init()");
     }
 
     public String hello() {
-	System.out.println("In HelloStateful2::hello()");	
-	return "hello, world!\n";
+        System.out.println("In HelloStateful2::hello()");
+        return "hello, world!\n";
     }
 
 
@@ -39,12 +39,12 @@ public class HelloStateful2 implements java.util.Observer {
 
     @PreDestroy
     private void destroy() {
-	System.out.println("HelloStateful2::destroy()");
+        System.out.println("HelloStateful2::destroy()");
     }
 
     // not part of public interface
     public void update(java.util.Observable o, Object a) {
-	throw new EJBException("shouldn't be invoked by client");
+        throw new EJBException("shouldn't be invoked by client");
     }
 
 }

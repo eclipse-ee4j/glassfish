@@ -52,7 +52,7 @@ public class EJBContainerImpl extends EJBContainer {
             LogDomains.getLogger(EjbContainerUtilImpl.class, LogDomains.EJB_LOGGER);
 
     private final GlassFish server;
-    
+
     private final Deployer deployer;
 
     private String deployedAppName;
@@ -69,8 +69,8 @@ public class EJBContainerImpl extends EJBContainer {
     private final static int CLOSED = 3;
 
     /**
-     * Construct new EJBContainerImpl instance 
-     */                                               
+     * Construct new EJBContainerImpl instance
+     */
     EJBContainerImpl(GlassFish server) throws GlassFishException {
         this.server = server;
         this.server.start();
@@ -100,7 +100,7 @@ public class EJBContainerImpl extends EJBContainer {
 
             // Check if appName was set by application creation code
             appName = res_app.getAppName();
-            
+
             String[] params;
             if (appName != null) {
                 params = new String[] {"--name", appName};
@@ -132,7 +132,7 @@ public class EJBContainerImpl extends EJBContainer {
      *
      * @return naming context
      */
-    public Context getContext() { 
+    public Context getContext() {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("IN getContext()");
         }

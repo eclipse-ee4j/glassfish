@@ -140,7 +140,7 @@ public class CMCSingletonContainer
 
         //Now that we have acquired the lock, remember it
         inv.setCMCLock(theLock);
-        
+
         //Now that we have the lock return the singletonCtx
         return singletonCtx;
     }

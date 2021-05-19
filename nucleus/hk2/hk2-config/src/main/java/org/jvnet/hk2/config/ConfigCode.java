@@ -16,8 +16,6 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.config.TransactionFailure;
-
 import java.beans.PropertyVetoException;
 
 /**
@@ -29,15 +27,15 @@ import java.beans.PropertyVetoException;
  */
 public interface ConfigCode {
 
-	/**
-	 * Runs the following command passing the configration object. The code will be run
-	 * within a transaction, returning true will commit the transaction, false will abort
-	 * it.
-	 *
-	 * @param params is the list of configuration objects protected by the transaction
+    /**
+     * Runs the following command passing the configration object. The code will be run
+     * within a transaction, returning true will commit the transaction, false will abort
+     * it.
+     *
+     * @param params is the list of configuration objects protected by the transaction
      * @return true if the changes on param should be commited or false for abort.
      * @throws PropertyVetoException if the changes cannot be applied
      * to the configuration
-	 */
-    public Object run(ConfigBeanProxy... params) throws PropertyVetoException, TransactionFailure;
+     */
+    Object run(ConfigBeanProxy... params) throws PropertyVetoException, TransactionFailure;
 }

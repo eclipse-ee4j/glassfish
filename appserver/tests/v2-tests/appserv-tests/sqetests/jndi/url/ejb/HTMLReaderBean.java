@@ -22,7 +22,7 @@ import java.net.*;
 import java.io.*;
 
 public class HTMLReaderBean implements SessionBean {
- 
+
   public StringBuffer getContents() throws HTTPResponseException {
 
      Context context;
@@ -33,10 +33,10 @@ public class HTMLReaderBean implements SessionBean {
      HttpURLConnection connection;
      InputStream input;
      BufferedReader dataInput;
- 
+
      try {
         context = new InitialContext();
-        url = (URL)context.lookup("java:comp/env/url/MyURL");  
+        url = (URL)context.lookup("java:comp/env/url/MyURL");
         connection = (HttpURLConnection)url.openConnection();
         responseCode = connection.getResponseCode();
      } catch (Exception ex) {
@@ -44,7 +44,7 @@ public class HTMLReaderBean implements SessionBean {
      }
 
      if (responseCode != HttpURLConnection.HTTP_OK) {
-        throw new HTTPResponseException("HTTP response code: " + 
+        throw new HTTPResponseException("HTTP response code: " +
            String.valueOf(responseCode));
      }
 
@@ -55,7 +55,7 @@ public class HTMLReaderBean implements SessionBean {
         while ((line = dataInput.readLine()) != null) {
            buffer.append(line);
            buffer.append('\n');
-        }  
+        }
      } catch (Exception ex) {
          throw new EJBException(ex.getMessage());
      }

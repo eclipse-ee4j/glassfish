@@ -20,20 +20,20 @@ import java.io.File;
 
 /**
  * @goal generate-test-injectors
- * @phase generate-test-sources 
+ * @phase generate-test-sources
  * @requiresDependencyResolution test
  */
 public class TestConfigGeneratorMojo extends AbstractConfigGeneratorMojo {
-    
+
     /**
      * @parameter expression="${project.build.testOutputDirectory}"
      */
     private File outputDirectory;
-    
+
     /**
      * @parameter expression="${project.build.testSourceDirectory}"
      */
-    private File sourceDirectory;    
+    private File sourceDirectory;
 
     private static String generatedDirectory;
     static {
@@ -41,11 +41,11 @@ public class TestConfigGeneratorMojo extends AbstractConfigGeneratorMojo {
         sb.append(GENERATED_SOURCES).append(File.separatorChar).append(TEST_NAME).append(File.separatorChar).append(JAVA_NAME);
         generatedDirectory = sb.toString();
     }
-    
+
     @Override
     protected File getSourceDirectory() {
         return sourceDirectory;
-    }    
+    }
 
     @Override
         protected File getGeneratedDirectory() {

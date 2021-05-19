@@ -25,16 +25,16 @@ import com.sun.appserv.util.cache.Cache;
  */
 
 public interface EJBObjectCache
-    extends Cache 
+    extends Cache
 {
     public Object get(Object key, boolean incrementRefCount);
-    
+
     public Object put(Object key, Object value, boolean incrementRefCount);
-    
+
     public Object remove(Object key, boolean decrementRefCount);
-    
+
     public void init(int maxEntries, int numberOfVictimsToSelect,
        long timeout, float loadFactor, java.util.Properties props);
-    
+
     public void setEJBObjectCacheListener(EJBObjectCacheListener listener);
 }

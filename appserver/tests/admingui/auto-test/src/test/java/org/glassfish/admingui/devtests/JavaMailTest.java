@@ -23,7 +23,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -39,7 +39,7 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         ClusterTest clusterTest = new ClusterTest();
         standaloneTest.deleteAllStandaloneInstances();
         clusterTest.deleteAllCluster();
-        
+
         clickAndWait("treeForm:tree:resources:mailResources:mailResources_link");
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton");
 
@@ -58,7 +58,7 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         sleep(500);
         setFieldValue("form:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form:propertyContentPage:topButtons:newButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "col1");
         assertEquals(resourceName, getText(prefix + "col1:link"));
 
@@ -72,12 +72,12 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button2");
-        
+
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", resourceName);
     }
@@ -102,7 +102,7 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         setFieldValue("form:propertySheet:propertSectionTextField:descProp:desc", description);
         int count = addTableRow("form:basicTable", "form:basicTable:topActionsGroup1:addSharedTableButton");
 
-        
+
         sleep(500);
         setFieldValue("form:basicTable:rowGroup1:0:col2:col1St", "property"+generateRandomString());
         sleep(500);
@@ -117,7 +117,7 @@ public class JavaMailTest extends BaseSeleniumTestClass {
 
         clickAndWait("form:propertyContentPage:topButtons:newButton");
 
-        
+
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "col1");
         assertEquals(resourceName, getText(prefix + "col1:link"));
 
@@ -132,12 +132,12 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button2");
-        
+
         //test manage target
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(clickId);
@@ -149,7 +149,7 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
 
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:resources:mailResources:mailResources_link");
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", resourceName);

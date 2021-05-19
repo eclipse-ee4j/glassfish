@@ -31,7 +31,7 @@ public final class EJBModuleImpl extends J2EEModuleImplBase {
         super(parentObjectName, meta, INTF);
     }
 
-    private static final Set<String> EJB_TYPES	= SetUtil.newUnmodifiableStringSet(
+    private static final Set<String> EJB_TYPES    = SetUtil.newUnmodifiableStringSet(
         ENTITY_BEAN,
         STATELESS_SESSION_BEAN,
         STATEFUL_SESSION_BEAN,

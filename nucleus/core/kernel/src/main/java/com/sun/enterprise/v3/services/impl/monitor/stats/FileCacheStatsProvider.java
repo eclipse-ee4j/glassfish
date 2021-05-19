@@ -29,7 +29,7 @@ import org.glassfish.grizzly.http.server.filecache.FileCache;
 
 /**
  * File cache statistics
- * 
+ *
  * @author Alexey Stashok
  */
 @AMXMetadata(type="file-cache-mon", group="monitoring")
@@ -54,7 +54,7 @@ public class FileCacheStatsProvider implements StatsProvider {
     protected final AtomicLong maxMappedMemorySize = new AtomicLong();
 
     protected volatile FileCache fileCache;
-    
+
     public FileCacheStatsProvider(String name) {
         this.name = name;
     }
@@ -261,5 +261,5 @@ public class FileCacheStatsProvider implements StatsProvider {
         if (name.equals(fileCacheName)) {
             mappedMemorySize.addAndGet(-size);
         }
-    }    
+    }
 }

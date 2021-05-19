@@ -59,22 +59,22 @@
   <antcall target="report"/>
 </target>
 
-<target name="package-war">  
+<target name="package-war">
   <echo message="Creating ${appname}.war file"/>
   <copy toDir="${build.classes.dir}/WEB-INF/classes" failonerror="false">
         <fileset dir="${build.base.dir}"/>
   </copy>
   <jar destfile="${destfile}" manifest="${manifest.mf}">
-	<fileset dir="${build.classes.dir}"
-	     excludes="**/main/**"
-	/>
+    <fileset dir="${build.classes.dir}"
+         excludes="**/main/**"
+    />
   </jar>
   <delete dir="${build.classes.dir}/WEB-INF/classes" failonerror="false"/>
 </target>
 
 <target name="deploy-application">
   <echo message="common.xml: Deploying Application : ${app.path}"
-	level="verbose"/>
+    level="verbose"/>
   <antcall target="autodeploy-app"/>
 <!--  <antcall target="asadmin-deploy-app"/ -->
 </target>
@@ -107,7 +107,7 @@
 
 <target name="undeploy-application">
   <echo message="common.xml: Undeploying Application : ${appname}"
-	level="verbose"/>
+    level="verbose"/>
   <antcall target="autoundeploy-app"/>
 <!--  <antcall target="asadmin-undeploy-app"/ -->
 </target>
@@ -115,7 +115,7 @@
 <target name="autoundeploy-app">
   <delete file="${deploy.dir}/${appname}.war" failonerror="false"/>
   <sleep seconds="7"/>
-</target> 
+</target>
 
 <target name="asadmin-undeploy-app">
    <echo message="Deploying ${appname}" level="verbose"/>
@@ -137,7 +137,7 @@
   <antcall target="report"/>
 </target>
 
-<target name="report" if="FailStatus"> 
+<target name="report" if="FailStatus">
    <java classname="Reporter">
       <classpath>
         <pathelement path="${TEST_HOME_WEB}/common/classes"/>

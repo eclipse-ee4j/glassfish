@@ -43,7 +43,7 @@ public class SecurityAccessValidator implements Validator {
     private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(SecurityAccessValidator.class);
 
-    
+
     @Override
     public boolean validate(ValidationInformation info) {
 
@@ -116,26 +116,26 @@ public class SecurityAccessValidator implements Validator {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Lookup candiate is reified, candidate = " + candidate);
             }
-        }        
-        
+        }
+
         Set<String> contracts = candidate.getAdvertisedContracts();
 
         if (contracts == null)
             return true;
 
         Map<String, List<String>> md = candidate.getMetadata();
-        
-        if (LOG.isLoggable(Level.FINE)) {            
+
+        if (LOG.isLoggable(Level.FINE)) {
             Iterator<Map.Entry<String, List<String>>> itr = md.entrySet().iterator();
             while (itr.hasNext()) {
                 Map.Entry<String, List<String>> entry = itr.next();
                 String k = entry.getKey();
                 for (String v : entry.getValue()) {
                     LOG.fine("$$ key= " + k + ", value= " + v);
-                }                                
+                }
             }
         }
-        
+
         Permission perm = null;
         List<String> names = md.get(Secure.NAME);
         if (names == null || names.isEmpty()) {
@@ -143,10 +143,10 @@ public class SecurityAccessValidator implements Validator {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Perm name is empty, will use default value");
             }
-            
+
             //the 'Secure' annotation did not specify a accessPermissionName, use default accessPermissionName name
             perm = getAccessPermision(Secure.DEFAULT_PERM_NAME, null);
-            
+
         } else {
             String permName = names.get(0);
             perm = getAccessPermision(permName, null);
@@ -158,9 +158,9 @@ public class SecurityAccessValidator implements Validator {
         boolean check_result = false;
         if (injectee == null) {
             // lookup style check
-            
+
             Class caller = getServiceLookupCaller();
-            
+
             check_result = checkPerm(perm, caller);
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("Lookup, checked perm for = " + perm + ", result= "
@@ -177,16 +177,16 @@ public class SecurityAccessValidator implements Validator {
 
         return check_result;
     }
-    
-    
+
+
     //temporary alternative fixing to JIRA-HK2:116
     private Class getServiceLookupCaller() {
 /*
         StackTraceElement[] steArr = new Exception().getStackTrace();
-        
+
         for (int i = 0; i < steArr.length; i++ ) {
             StackTraceElement elm = steArr[i];
-            
+
             if (elm.getClassName().equals("org.jvnet.hk2.internal.ServiceLocatorImpl") &&
                     (elm.getMethodName().equals("getService") ||
                      elm.getMethodName().equals("getAllServices") ||
@@ -195,11 +195,11 @@ public class SecurityAccessValidator implements Validator {
                      elm.getMethodName().equals("create") ||
                      elm.getMethodName().equals("createAndInitialize") ||
                      elm.getMethodName().equals("shutdown")
-                     
+
                )) {
 
                 if (LOG.isLoggable(Level.FINE)) {
-                    LOG.fine("Found the service locator, classname= " 
+                    LOG.fine("Found the service locator, classname= "
                             + steArr[i+1].getClassName() + ", ste =" + steArr[i+1]);
                 }
 
@@ -212,8 +212,8 @@ public class SecurityAccessValidator implements Validator {
                     else {
                         StackTraceElement caller = elmj;
                         //found the caller class which is not ServiceLocatorImpl
-                        System.out.println("%%%caller Class name= " + caller.getClassName() + ", caller ste =" + caller + 
-                                ", method=" + caller.getMethodName());                
+                        System.out.println("%%%caller Class name= " + caller.getClassName() + ", caller ste =" + caller +
+                                ", method=" + caller.getMethodName());
                         try {
                             return Class.forName(caller.getClassName(), true, Thread.currentThread().getContextClassLoader());
                         } catch (ClassNotFoundException e) {
@@ -227,7 +227,7 @@ public class SecurityAccessValidator implements Validator {
                                         "Lookup Class not found in classpath: {0}", caller.getClassName()));
                                 throw new RuntimeException(e);
                             }
-                            
+
                         }
                     }
                 }
@@ -238,7 +238,7 @@ public class SecurityAccessValidator implements Validator {
         LOG.warning(localStrings.getLocalString("sec.validate.lookup.fail", "Cannot find the looup caller class"));
 */
         return null;
-        
+
     }
 
     private boolean checkPerm(Permission p, Class caller) {
@@ -246,16 +246,16 @@ public class SecurityAccessValidator implements Validator {
             LOG.fine("Checked perm for = " + p);
         }
 
-        
+
         try {
             if (caller != null) {
                 ProtectionDomain pd = this.getCallerProtDomain(caller);
                 pd.implies(p);
             } else
                 AccessController.checkPermission(p);
-            
+
         } catch (SecurityException e) {
-            
+
             LOG.warning(localStrings.getLocalString(
                     "sec.validate.lookup.deny", "Check Permission failed in lookup for permission = {0}",  p));
 
@@ -287,15 +287,15 @@ public class SecurityAccessValidator implements Validator {
         }
 
         if (!pd.implies(p)) {
-            
+
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("permission check failed for " + injectee + ", to get perm " + p + ", for candidate "
                         + candidate);
             }
 
-            throw new AccessControlException(localStrings.getLocalString("sec.validate.injection.deny",   
+            throw new AccessControlException(localStrings.getLocalString("sec.validate.injection.deny",
                     "Access denied for injectee {0} to get permission {1}.", injectee, p));
-                    
+
         } else {
             if (LOG.isLoggable(Level.FINE)) {
                 LOG.fine("permission check success for " + injectee
@@ -321,7 +321,7 @@ public class SecurityAccessValidator implements Validator {
 
     /**
      * The permission to be checked
-     * 
+     *
      * @return permission to be checked
      */
     private Permission getAccessPermision(String protectName, String action) {

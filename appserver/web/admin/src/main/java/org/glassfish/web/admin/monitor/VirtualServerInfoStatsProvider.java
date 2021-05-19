@@ -54,7 +54,7 @@ public class VirtualServerInfoStatsProvider {
 
     private StringStatisticImpl mode = new StringStatisticImpl(
         "Mode", "String", MODE_DESCRIPTION);
-    
+
     public VirtualServerInfoStatsProvider(VirtualServer host) {
         this.host = host;
     }
@@ -71,7 +71,7 @@ public class VirtualServerInfoStatsProvider {
     public StringStatistic getHosts() {
         hosts.setCurrent(host.getHosts());
         return hosts;
-    }  
+    }
 
     @ManagedAttribute(id="id")
     @Description(ID_DESCRIPTION)

@@ -26,11 +26,11 @@ import java.util.logging.Logger;
  * Implementation of a local string manager. Provides access to i18n messages
  * for classes that need them.
  *
- * <p> One StringManager per package can be created and accessed by the 
- * getManager method call. The ResourceBundle name is constructed from 
+ * <p> One StringManager per package can be created and accessed by the
+ * getManager method call. The ResourceBundle name is constructed from
  * the given package name in the constructor plus the suffix of "LocalStrings".
- * Thie means that localized information will be contained in a 
- * LocalStrings.properties file located in the package directory of the 
+ * Thie means that localized information will be contained in a
+ * LocalStrings.properties file located in the package directory of the
  * classpath.
  *
  * <xmp>
@@ -47,8 +47,8 @@ import java.util.logging.Logger;
  *  try {
  *      ....
  *  } catch (Exception e) {
- *      String localizedMsg = sm.getString("test", 
- *          new Integer(7), new java.util.Date(System.currentTimeMillis()), 
+ *      String localizedMsg = sm.getString("test",
+ *          new Integer(7), new java.util.Date(System.currentTimeMillis()),
  *          "a disturbance in the Force");
  *
  *      throw new MyException(localizedMsg, e);
@@ -70,7 +70,7 @@ public class StringManager extends StringManagerBase {
 
     /** name of the resource bundle property file name */
     private static final String RES_BUNDLE_NM = ".LocalStrings";
-    
+
 
     /** cache for all the local string managers (per pkg) */
     private static Hashtable managers = new Hashtable();
@@ -81,7 +81,7 @@ public class StringManager extends StringManagerBase {
      * @param    packageName    name of the package
      */
     private StringManager(String packageName, ClassLoader classLoader) {
-        super(packageName + RES_BUNDLE_NM, classLoader);        
+        super(packageName + RES_BUNDLE_NM, classLoader);
     }
 
     /**

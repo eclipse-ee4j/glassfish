@@ -30,30 +30,30 @@ import org.glassfish.internal.api.Globals;
  * @author tjquinn
  */
 public class SaxParserHandlerFactory {
-    
+
     /** Creates a new instance of SaxParserHandlerFactory */
     public SaxParserHandlerFactory() {
     }
-    
+
     public static SaxParserHandler newInstance() {
         SaxParserHandler result = null;
-        
+
         /*
-         *If the property com.sun.aas.installRoot is defined, use the 
+         *If the property com.sun.aas.installRoot is defined, use the
          *original implementation (SaxParserHandler) which fetches DTDs and
-         *schemas from the installation directory tree.  Otherwise, assume that 
+         *schemas from the installation directory tree.  Otherwise, assume that
          *the app client container is running under Java Web Start. In that
          *case, there is no product installation directory (at least none can
          *be assumed).  The DTDs and schemas will be retrieved from the
          *JWS-specific jar file instead (SaxParserHandlerBundled).
          *
          *bnevins, Oct 16, 2008.  On Oct. 8, 2008 installRoot was changed to be setup
-         *earlier in the startup.  As a result, Embedded GF broke.  It sets up a fake installRoot, 
+         *earlier in the startup.  As a result, Embedded GF broke.  It sets up a fake installRoot,
          *because there is *no* install-root.
          *Improvement: don't just see if installRoot is set -- make sure installRoot
          *is bonafide.
-          */ 
-        
+          */
+
         final ServiceLocator habitat = Globals.getDefaultHabitat();
 
         if(installRootIsValid())
@@ -63,21 +63,21 @@ public class SaxParserHandlerFactory {
 
         return result;
     }
-    
+
     private static boolean installRootIsValid() {
-        // In the context of this class, we need to make sure that we know if we 
+        // In the context of this class, we need to make sure that we know if we
         //have a route to local DTDs.  Period.
-        
+
         String ir = System.getProperty(INSTALL_ROOT_PROPERTY);
-        
+
         if(!ok(ir))
             return false;
-        
+
         File dtds = new File(new File(ir), "lib/dtds");
-        
+
         if(!dtds.isDirectory())
             return false;
-        
+
         return true;
     }
 

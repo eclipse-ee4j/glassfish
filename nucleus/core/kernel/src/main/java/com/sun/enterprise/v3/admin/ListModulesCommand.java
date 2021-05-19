@@ -42,8 +42,8 @@ import org.glassfish.api.admin.*;
 @I18n("list.modules.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-modules", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-modules",
         description="list-modules")
 })
 @AccessRequired(resource="domain", action="dump")

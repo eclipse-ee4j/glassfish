@@ -33,7 +33,7 @@ public class TestClient {
         TestClient client = new TestClient();
         client.doTest(args);
     }
-    
+
     public void doTest(String[] args) {
 
         String url = args[0];
@@ -53,7 +53,7 @@ public class TestClient {
                 log("Caught EXPECTED IOException: " + ex);
                 pass();
             }
-	} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }

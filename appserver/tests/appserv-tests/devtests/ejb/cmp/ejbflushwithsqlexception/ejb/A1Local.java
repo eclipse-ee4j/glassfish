@@ -24,9 +24,9 @@ import jakarta.ejb.*;
 
 public interface A1Local extends jakarta.ejb.EJBLocalObject {
 
-    public void setName(String name); 
+    public void setName(String name);
 
-    public void setNameWithFlush(String name); 
+    public void setNameWithFlush(String name);
 
 }
 

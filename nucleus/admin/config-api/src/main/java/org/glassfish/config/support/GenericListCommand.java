@@ -290,7 +290,7 @@ public class GenericListCommand extends GenericCrudCommand implements AdminComma
         return rv;
     }
 
-    /* 
+    /*
      * Validate that all specified output options are valid column names
      */
     private boolean isOutputOptsValid(List<ColumnInfo> cols, String[] outputOpts) {

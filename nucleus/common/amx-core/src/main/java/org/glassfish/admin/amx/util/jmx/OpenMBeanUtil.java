@@ -271,9 +271,9 @@ public final class OpenMBeanUtil
     Create a CompositeType from a Map.  Each key in the map must be a String,
     and each value must be a type consistent with OpenTypes.
 
-    @param typeName	the arbitrary name of the OpenType to be used
-    @param description	the arbitrary description of the OpenType to be used
-    @param map	a Map keyed by String, whose values may not be null
+    @param typeName        the arbitrary name of the OpenType to be used
+    @param description        the arbitrary description of the OpenType to be used
+    @param map        a Map keyed by String, whose values may not be null
      */
     public static CompositeType mapToCompositeType(
             final String typeName,
@@ -319,9 +319,9 @@ public final class OpenMBeanUtil
     Create a CompositeData from a Map.  Each key in the map must be a String,
     and each value must be a type consistent with OpenTypes.
 
-    @param typeName	the arbitrary name of the OpenType to be used
-    @param description	the arbitrary description of the OpenType to be used
-    @param map	a Map keyed by String, whose values may not be null
+    @param typeName        the arbitrary name of the OpenType to be used
+    @param description        the arbitrary description of the OpenType to be used
+    @param map        a Map keyed by String, whose values may not be null
      */
     public static CompositeData mapToCompositeData(
             final String typeName,

@@ -22,7 +22,7 @@ import jakarta.ejb.EJBContext;
 
 /**
  * This interface provides access to the exported portions of the
- * ejb invocation object.  
+ * ejb invocation object.
  * @author Kenneth Saks
  */
 
@@ -30,36 +30,36 @@ import jakarta.ejb.EJBContext;
 public interface EJBInvocation {
 
     public EJBContext getEJBContext();
-    
+
     /**
      * This is for EJB JAXWS only.
      * @return the JAXWS message
      */
     public Object getMessage();
-    
+
     /**
      * This is for EJB JAXWS only.
      * @param message  an unconsumed message
      */
     public <T> void setMessage(T message);
-    
+
     /**
-     * 
+     *
      * @return true if it is a webservice invocation
      */
     public boolean isAWebService();
-    
+
     /**
      * @return the Java Method object for this Invocation
      */
     public Method getMethod();
-    
+
     /**
-     * 
+     *
      * @return the Method parameters for this Invocation
      */
     public Object[] getMethodParams();
-    
+
     /**
      * Used by JACC implementation to get an enterprise bean
      * instance for the EnterpriseBean policy handler.  The jacc
@@ -67,14 +67,14 @@ public interface EJBInvocation {
      * accessing the ejb field.
      */
     public Object getJaccEjb();
-    
+
     /**
      * Use the underlying container to authorize this invocation
      * @return true if the invocation was authorized by the underlying container
      * @throws java.lang.Exception TODO, change this to throw some subclass
      */
     public boolean authorizeWebService(Method m) throws Exception;
-    
+
 /**
     *
     * @return true if the SecurityManager reports that the caller is in role

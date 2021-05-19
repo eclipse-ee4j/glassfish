@@ -34,7 +34,7 @@ public class EjbFutureTask<V>
 
     // Used to remember if cancel() was called already
     private boolean cancelCalled = false;
-        
+
     // State which could be set from both the caller's thread and
     // the thread on which the task is executing.
     private volatile boolean complete = false;
@@ -63,7 +63,7 @@ public class EjbFutureTask<V>
         }
 
         // For now we don't even try checking to see if the task has started running.
-        // Just return false so the caller knows the task could not be cancelled.      
+        // Just return false so the caller knows the task could not be cancelled.
         return false;
     }
 
@@ -108,7 +108,7 @@ public class EjbFutureTask<V>
 
         // If get() has already been called, produce the same behavior
         // as initial call, except if get(timeout, unit) resulted in a
-        // TimeoutException        
+        // TimeoutException
 
         if( !complete ) {
             try {
@@ -141,7 +141,7 @@ public class EjbFutureTask<V>
         }
 
         return resultValue;
-        
+
     }
 
     @Override

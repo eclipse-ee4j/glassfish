@@ -19,72 +19,73 @@ import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
 /**
- * A Stats interface, to expose the monitoring information 
+ * A Stats interface, to expose the monitoring information
  * about the JVM memory subsystem. This interfaces exposes
  * the memory usage information for the heap and the non-heap
  * areas of the memory subsystem.
+ *
  * @since 8.1
  */
 public interface JVMMemoryStats extends Stats {
-    
+
     /**
      * Returns the approximate number of objects, that are
      * pending finalization.
      * @return CountStatistic   Objects pending finalization
      */
-    public CountStatistic getObjectPendingFinalizationCount();
-    
+    CountStatistic getObjectPendingFinalizationCount();
+
     /**
      * Returns the size of the heap initially requested by the JVM
      * @return CountStatistic initial heap size in bytes
      */
-    public CountStatistic getInitHeapSize();
-    
+    CountStatistic getInitHeapSize();
+
     /**
      * Returns the size of the heap currently in use
      * @return CountStatistic current heap usage in bytes
      */
-    public CountStatistic getUsedHeapSize();
-    
+    CountStatistic getUsedHeapSize();
+
     /**
      * Returns the maximum amount of memory in bytes that can be used
      * for memory management
      * @return CountStatistic maximum heap size in bytes
      */
-    public CountStatistic getMaxHeapSize();
-    
+    CountStatistic getMaxHeapSize();
+
     /**
      * Returns the amount of memory in bytes that is committed
      * for the JVM to use
      * @return CountStatistic memory committed for the jvm in bytes
      */
-    public CountStatistic getCommittedHeapSize();
-    
+    CountStatistic getCommittedHeapSize();
+
     /**
-     * Returns the size of the non=heap area initially 
+     * Returns the size of the non=heap area initially
      * requested by the JVM
      * @return CountStatistic initial size of the non-heap area in bytes
      */
-    public CountStatistic getInitNonHeapSize();
-    
+    CountStatistic getInitNonHeapSize();
+
     /**
      * Returns the size of the non-heap area currently in use
      * @return CountStatistic current usage of the non-heap area in bytes
      */
-    public CountStatistic getUsedNonHeapSize();
-    
+    CountStatistic getUsedNonHeapSize();
+
     /**
      * Returns the maximum amount of memory in bytes that can be used
      * for memory management
      * @return CountStatistic maximum non-heap area size in bytes
      */
-    public CountStatistic getMaxNonHeapSize();
-    
+    CountStatistic getMaxNonHeapSize();
+
     /**
      * Returns the amount of memory in bytes that is committed
      * for the JVM to use
      * @return CountStatistic memory committed for the jvm in bytes
      */
-    public CountStatistic getCommittedNonHeapSize();
-    
+    CountStatistic getCommittedNonHeapSize();
+
 }

@@ -37,18 +37,18 @@ import org.w3c.dom.Node;
  * This node handles the cmp-resource runtime xml tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDescriptor> {
 
     private ResourceReferenceDescriptor descriptor;
 
     public CmpResourceNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL), 
+        registerElementHandler(new XMLElement(RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL),
                                DefaultResourcePrincipalNode.class, "setResourcePrincipal");
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), 
-                               RuntimeNameValuePairNode.class, "addProperty");		
-        registerElementHandler(new XMLElement(RuntimeTagNames.SCHEMA_GENERATOR_PROPERTIES), 
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
+                               RuntimeNameValuePairNode.class, "addProperty");
+        registerElementHandler(new XMLElement(RuntimeTagNames.SCHEMA_GENERATOR_PROPERTIES),
                                 PropertiesNode.class, "setSchemaGeneratorProperties");
     }
 
@@ -59,14 +59,14 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         table.put(RuntimeTagNames.CREATE_TABLES_AT_DEPLOY, "setCreateTablesAtDeploy");
         table.put(RuntimeTagNames.DROP_TABLES_AT_UNDEPLOY, "setDropTablesAtUndeploy");
         table.put(RuntimeTagNames.DATABASE_VENDOR_NAME, "setDatabaseVendorName");
         return table;
-    } 
+    }
 
     @Override
     public void postParsing() {
@@ -80,42 +80,41 @@ public class CmpResourceNode extends RuntimeDescriptorNode<ResourceReferenceDesc
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-                                ResourceReferenceDescriptor descriptor) {     
+    public Node writeDescriptor(Node parent, String nodeName, ResourceReferenceDescriptor descriptor) {
         Node cmp = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(cmp, RuntimeTagNames.JNDI_NAME, descriptor.getJndiName());
         if (descriptor.getResourcePrincipal() != null) {
             DefaultResourcePrincipalNode drpNode = new DefaultResourcePrincipalNode();
-            drpNode.writeDescriptor(cmp, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL, 
+            drpNode.writeDescriptor(cmp, RuntimeTagNames.DEFAULT_RESOURCE_PRINCIPAL,
                 descriptor.getResourcePrincipal());
         }
         // properties*
         Iterator properties = descriptor.getProperties();
-	if (properties!=null) {
-	    RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();        
-	    while (properties.hasNext()) {
-		NameValuePairDescriptor aProp = (NameValuePairDescriptor) properties.next();
-		propNode.writeDescriptor(cmp, RuntimeTagNames.PROPERTY, aProp);
-	    }
-	}
-        
+        if (properties!=null) {
+            RuntimeNameValuePairNode propNode = new RuntimeNameValuePairNode();
+            while (properties.hasNext()) {
+                NameValuePairDescriptor aProp = (NameValuePairDescriptor) properties.next();
+                propNode.writeDescriptor(cmp, RuntimeTagNames.PROPERTY, aProp);
+            }
+        }
+
         // createTableAtDeploy, dropTableAtUndeploy
         if (descriptor.isCreateTablesAtDeploy()) {
             appendTextChild(cmp, RuntimeTagNames.CREATE_TABLES_AT_DEPLOY, RuntimeTagNames.TRUE);
         }
         if (descriptor.isDropTablesAtUndeploy()) {
             appendTextChild(cmp, RuntimeTagNames.DROP_TABLES_AT_UNDEPLOY, RuntimeTagNames.TRUE);
-        }        
+        }
         // database vendor name
         appendTextChild(cmp, RuntimeTagNames.DATABASE_VENDOR_NAME, descriptor.getDatabaseVendorName());
-        
+
         // schema-generator-properties?
         Properties schemaGeneratorProps = descriptor.getSchemaGeneratorProperties();
         if (schemaGeneratorProps!=null) {
             PropertiesNode pn = new PropertiesNode();
             pn.writeDescriptor(cmp, RuntimeTagNames.SCHEMA_GENERATOR_PROPERTIES, schemaGeneratorProps);
         }
-        
+
         return cmp;
     }
 }

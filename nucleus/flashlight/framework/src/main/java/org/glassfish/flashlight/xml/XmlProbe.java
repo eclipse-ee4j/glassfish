@@ -61,7 +61,7 @@ public class XmlProbe {
     public boolean getStateful() { return stateful; }
     public boolean getStatefulReturn() { return statefulReturn; }
     public boolean getStatefulException() { return statefulException; }
-    public String getProfileNames() { return profileNames; } 
+    public String getProfileNames() { return profileNames; }
 
     public XmlProbe(String probeName, String method, List<XmlProbeParam> params, boolean hasSelf, boolean isHidden) {
         this.probeName = probeName;

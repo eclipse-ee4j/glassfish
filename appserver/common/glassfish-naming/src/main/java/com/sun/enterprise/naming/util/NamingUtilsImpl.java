@@ -76,13 +76,13 @@ public class NamingUtilsImpl implements NamingUtils {
         NamingObjectFactory delegate, boolean cacheResult) {
         return new DelegatingNamingObjectFactory(name, delegate, cacheResult);
     }
-    
+
     public Object makeCopyOfObject(Object obj) {
         if ( !(obj instanceof Context) && (obj instanceof Serializable) ) {
             if(logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, "** makeCopyOfObject:: " + obj);
             }
-            
+
             try {
                 // first serialize the object
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();

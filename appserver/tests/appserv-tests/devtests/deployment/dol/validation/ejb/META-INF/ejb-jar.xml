@@ -37,13 +37,13 @@
       <env-entry>
         <description>beas env entryr</description>
         <env-entry-name>BEAS</env-entry-name>
-	<env-entry-type>java.lang.Double </env-entry-type>
-	<env-entry-value>100.0</env-entry-value>
+        <env-entry-type>java.lang.Double </env-entry-type>
+        <env-entry-value>100.0</env-entry-value>
       </env-entry>
       <env-entry>
         <env-entry-name>MSFT</env-entry-name>
-	<env-entry-type>java.lang.Double </env-entry-type>
-	<env-entry-value>150.0</env-entry-value>
+        <env-entry-type>java.lang.Double </env-entry-type>
+        <env-entry-value>150.0</env-entry-value>
       </env-entry>
       <ejb-ref>
         <description>enroller ref</description>
@@ -548,7 +548,7 @@
     <container-transaction>
       <method>
         <ejb-name>statefulSession</ejb-name>
-	<method-name>*</method-name>
+        <method-name>*</method-name>
       </method>
       <trans-attribute>Required</trans-attribute>
     </container-transaction>
@@ -563,6 +563,6 @@
         </method-params>
       </method>
     </exclude-list>
-  </assembly-descriptor>  
+  </assembly-descriptor>
   <ejb-client-jar>cart-ejb-client.jar</ejb-client-jar>
 </ejb-jar>

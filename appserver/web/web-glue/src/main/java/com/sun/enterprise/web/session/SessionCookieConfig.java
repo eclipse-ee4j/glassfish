@@ -21,7 +21,7 @@ import org.apache.catalina.Globals;
 import java.net.URLEncoder;
 
 /**
- * Representation of the session cookie configuration element for a web 
+ * Representation of the session cookie configuration element for a web
  * application.
  *
  * This configuration is not specified as part of the standard deployment
@@ -91,10 +91,10 @@ public final class SessionCookieConfig {
     /**
      * When set to "dynamic", the cookie is marked as secure only if the
      * connection on which the request was received is secure. To override this
-     * behaviour, the value of this property can be set to "true" or "false". 
+     * behaviour, the value of this property can be set to "true" or "false".
      * If set to "true", user agents will use secure means to contact the
      * origin server when sending back the cookie regardless of whether the
-     * connection on which the request was received is secure. If set to 
+     * connection on which the request was received is secure. If set to
      * "false", user agents do not have to use secure means to contact the
      * origin server when sending back the cookie regardless of whether the
      * connection on which the request was received is secure.

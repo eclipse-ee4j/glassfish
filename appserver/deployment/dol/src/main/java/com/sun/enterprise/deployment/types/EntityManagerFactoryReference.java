@@ -19,38 +19,33 @@ package com.sun.enterprise.deployment.types;
 import com.sun.enterprise.deployment.BundleDescriptor;
 import com.sun.enterprise.deployment.InjectionCapable;
 
-/** 
+/**
  * Protocol associated with defining an EntityManagerFactory reference
- *
  */
-public interface EntityManagerFactoryReference extends NamedInformation, 
-    InjectionCapable {
+public interface EntityManagerFactoryReference extends NamedInformation, InjectionCapable {
 
     /**
-     * Set the unit name of the entity manager factory to which this
+     * Set the unit name of the entity manager fa ctory to which this
      * reference is associated.
      */
-    public void setUnitName(String unitName);
+    void setUnitName(String unitName);
 
 
     /**
      * Get the unit name of the entity manager factory to which this
      * reference is associated.
      */
-    public String getUnitName();
+    String getUnitName();
 
     /**
      * Set the referring bundle, i.e. the bundle within which this
-     * reference is declared. 
+     * reference is declared.
      */
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle);
+    void setReferringBundleDescriptor(BundleDescriptor referringBundle);
 
     /**
      * Get the referring bundle, i.e. the bundle within which this
-     * reference is declared.  
+     * reference is declared.
      */
-    public BundleDescriptor getReferringBundleDescriptor();
-
-
+    BundleDescriptor getReferringBundleDescriptor();
 }
-

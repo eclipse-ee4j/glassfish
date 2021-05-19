@@ -33,7 +33,7 @@
     &testproperties;
     &jaxwsTools;
 
-  
+
     <path id="classpath">
         <fileset dir="${env.S1AS_HOME}/modules">
                       <include name="*.jar"/>
@@ -109,7 +109,7 @@
         <arg line="--port ${admin.port}"/>
         <arg line="${client.war}"/>
       </exec>
-    </target>   
+    </target>
 
     <target name="undeploy-client" depends="init-common">
       <exec executable="${ASADMIN}">
@@ -135,6 +135,6 @@
         <antcall target="undeploy-client"/>
     </target>
 
-    
+
 </project>
 

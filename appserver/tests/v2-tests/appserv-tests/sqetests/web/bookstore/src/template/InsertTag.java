@@ -65,7 +65,7 @@ public class InsertTag extends SimpleTagSupport {
                 context.getOut()
                        .print(parameter.getValue());
             }
-            // if parameter is indirect, include results of dispatching to page 
+            // if parameter is indirect, include results of dispatching to page
             else {
                 if ((parameter != null) && (parameter.getValue() != null)) {
                     context.include(parameter.getValue());

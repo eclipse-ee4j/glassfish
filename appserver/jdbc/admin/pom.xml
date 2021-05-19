@@ -24,10 +24,10 @@
         <artifactId>jdbc</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-    </parent>    
+    </parent>
     <artifactId>jdbc-admin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>JDBC admin</name>
 
     <developers>
@@ -42,7 +42,7 @@
         </developer>
     </developers>
     <build>
-	<resources>
+        <resources>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -56,9 +56,9 @@
                     <include>**/*.1</include>
                 </includes>
             </resource>
-          </resources>
+        </resources>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
@@ -94,7 +94,7 @@
             <artifactId>kernel</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
-        </dependency>        
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.tests</groupId>
             <artifactId>utils</artifactId>

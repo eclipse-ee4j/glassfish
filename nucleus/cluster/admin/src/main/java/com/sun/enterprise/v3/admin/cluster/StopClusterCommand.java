@@ -36,8 +36,8 @@ import org.glassfish.hk2.api.PerLookup;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="stop-cluster", 
+        opType=RestEndpoint.OpType.POST,
+        path="stop-cluster",
         description="Stop Cluster",
         params={
             @RestParam(name="id", value="$parent")

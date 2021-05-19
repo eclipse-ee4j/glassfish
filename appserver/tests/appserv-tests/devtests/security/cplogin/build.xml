@@ -39,7 +39,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -51,7 +51,7 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common"/>
-    </target> 
+    </target>
 
     <target name="setup" depends="init-common">
         <antcall target="create-auth-filerealm">
@@ -93,7 +93,7 @@
     </target>
 
     <target name="create-permission" depends="init-common">
-      <copy file="${admin.domain.dir}/../lib/appclient/client.policy" 
+      <copy file="${admin.domain.dir}/../lib/appclient/client.policy"
         tofile="${admin.domain.dir}/../lib/appclient/client.policy.org"
         overwrite="true"/>
       <!-- replace "\" by "/" in PC env -->
@@ -110,18 +110,18 @@
     </target>
 
     <target name="restore-permission" depends="init-common">
-      <copy file="${admin.domain.dir}/../lib/appclient/client.policy.org" 
+      <copy file="${admin.domain.dir}/../lib/appclient/client.policy.org"
         tofile="${admin.domain.dir}/../lib/appclient/client.policy"
-        overwrite="true"/> 
+        overwrite="true"/>
     </target>
-    
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
-        <antcall target="runclient-local"/> 
- 	<antcall target="run-standalone-client"/>
+        <antcall target="runclient-local"/>
+         <antcall target="run-standalone-client"/>
     </target>
 
     <target name="runclient-local" depends="init-common">
@@ -129,12 +129,12 @@
       <exec executable="${APPCLIENT}">
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-  	<!-- dummy user added as appclient throwing login window -->	
+          <!-- dummy user added as appclient throwing login window -->
       </exec>
     </target>
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
   <!-- =============================================== -->
     <!-- Target to run the standalone client without ACC -->
@@ -152,7 +152,7 @@
         <jvmarg value="-Djava.security.auth.login.config=${admin.domain.dir}/../lib/appclient/appclientlogin.conf"/>
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
         <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
-	<jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
+        <jvmarg value="-Dcom.sun.CORBA.connection.ORBSocketFactoryClass=com.sun.enterprise.iiop.IIOPSSLSocketFactory"/>
 <!--
         <jvmarg value="-Djavax.rmi.CORBA.UtilClass=com.sun.corba.ee.impl.javax.rmi.CORBA.Util"/>
         <jvmarg value="-Djavax.rmi.CORBA.StubClass=com.sun.corba.ee.impl.javax.rmi.CORBA.StubDelegateImpl"/>

@@ -192,7 +192,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         if (logger.isLoggable(FINER)) {
             logger.log(FINER, SETTING_CONTEXT_CLASS_LOADER, new Object[] { this.id, this.moduleClassLoaderForBDA });
         }
-        
+
         if (!isDeploymentComplete()) {
             // The TCL is unset at the end of deployment of CDI beans in WeldDeployer.event
             // XXX: This is a workaround for issue https://issues.jboss.org/browse/WELD-781.
@@ -221,7 +221,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
                 if (logger.isLoggable(FINE)) {
                     logger.log(FINE, ADD_BEAN_CLASS, new Object[] { moduleClassName, beanClassNames });
                 }
-                
+
                 beanClassNames.add(moduleClassName);
                 try {
                     beanClasses.add(getClassLoader().loadClass(moduleClassName));
@@ -244,7 +244,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         if (beansXmlURLs.size() == 1) {
             return weldBootstrap.parse(beansXmlURLs.get(0));
         }
-        
+
         // This method attempts to performs a merge, but loses some
         // information (e.g., version, bean-discovery-mode)
         return weldBootstrap.parse(beansXmlURLs);
@@ -278,7 +278,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         if (simpleServiceRegistry == null) {
             simpleServiceRegistry = new SimpleServiceRegistry();
         }
-        
+
         return simpleServiceRegistry;
     }
 
@@ -680,7 +680,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         if (cdiAnnotatedClassNames == null) {
             cdiAnnotatedClassNames = getCDIAnnotatedClassNames(context);
         }
-        
+
         return cdiAnnotatedClassNames.contains(className);
     }
 

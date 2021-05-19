@@ -33,7 +33,7 @@ import com.sun.ejte.ccl.reporter.*;
 public class WebSSLClient {
 
     private static final String TEST_NAME
-        = "security-web-mutual-ssl";    
+        = "security-web-mutual-ssl";
 
     private static final String EXPECTED_RESPONSE
         = "[Ljava.security.cert.X509Certificate;";
@@ -52,7 +52,7 @@ public class WebSSLClient {
         String sslPassword = args[5];
 
         System.out.println("host/port=" + host + "/" + port);
-        
+
         try {
             stat.addDescription(TEST_NAME);
             SSLSocketFactory ssf = getSSLSocketFactory(sslPassword,
@@ -62,9 +62,9 @@ public class WebSSLClient {
                                                     + port + contextRoot
                                                     + "/TestClientCert",
                                                     ssf);
-            
+
             parseResponse(connection);
-            
+
         } catch (Throwable t) {
             stat.addStatus(TEST_NAME, stat.FAIL);
             t.printStackTrace();
@@ -81,7 +81,7 @@ public class WebSSLClient {
         try {
             in = new BufferedReader(new InputStreamReader(
                             connection.getInputStream()));
-            
+
             String line = null;
             while ((line = in.readLine()) != null) {
                 if (EXPECTED_RESPONSE.equals(line)) {
@@ -111,7 +111,7 @@ public class WebSSLClient {
 
         SSLContext ctx = SSLContext.getInstance("TLS");
 
-        // Keystore 
+        // Keystore
         KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = sslPassword.toCharArray();
         ks.load(new FileInputStream(keyStorePath), passphrase);
@@ -125,7 +125,7 @@ public class WebSSLClient {
         tmf.init(trustStore);
 
         ctx.init(kmf.getKeyManagers(),tmf.getTrustManagers(), null);
-        
+
         return ctx.getSocketFactory();
     }
 

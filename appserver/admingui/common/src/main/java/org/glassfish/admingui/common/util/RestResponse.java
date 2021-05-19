@@ -35,7 +35,7 @@ import java.util.logging.Logger;
 
 
 /**
- * <p>	This class abstracts the response from the admin console code so that
+ * <p>This class abstracts the response from the admin console code so that
  * we can use JSON / REST interchangeably.</p>
  *
  * @author jasonlee
@@ -65,14 +65,14 @@ public abstract class RestResponse {
      * Map&lt;String, Object&gt;
      * {
      * "responseCode" : Integer    // HTTP Response code, ie. 200
-     * "output" : String	    // The Raw Response Body
-     * "description" : String	    // Command Description
+     * "output" : String            // The Raw Response Body
+     * "description" : String            // Command Description
      * // 0 or more messages returned from the command
      * "messages" : List&lt;Map&lt;String, Object&gt;&gt;
      * [
      * {
      * "message" : String  // Raw Message String
-     * "..."	  : String  // Additional custom attributes
+     * "..."          : String  // Additional custom attributes
      * // List of properties for this message
      * "properties" : List&lt;Map&lt;String, Object&gt;&gt;
      * [
@@ -199,7 +199,7 @@ class JerseyRestResponse extends RestResponse {
             } else {
                 // Unsupported Response Format!
                 System.out.println("Unsupported Response Format: '"
-		    + contentType + "'!");
+                    + contentType + "'!");
             }
         }
 

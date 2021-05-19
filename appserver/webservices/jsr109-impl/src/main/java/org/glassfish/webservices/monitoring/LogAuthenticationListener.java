@@ -30,16 +30,16 @@ import org.glassfish.webservices.LogUtils;
  * @author Jerome Dochez
  */
 public class LogAuthenticationListener implements AuthenticationListener {
-    
+
     private static final Logger logger = LogUtils.getLogger();
-    
-    
+
+
     /** Creates a new instance of LogAuthenticationListener */
     public LogAuthenticationListener() {
     }
-    
+
     /**
-     * notification that a user properly authenticated while making 
+     * notification that a user properly authenticated while making
      * a web service invocation.
      */
     public void authSucess(BundleDescriptor bundleDesc, Endpoint endpoint, Principal principal) {
@@ -57,10 +57,10 @@ public class LogAuthenticationListener implements AuthenticationListener {
             }
         }
     }
-    
+
     /**
      * notification that a user authentication attempt has failed.
-     * @param endpoint the endpoint selector 
+     * @param endpoint the endpoint selector
      * @param principal Optional principal that failed
      */
     public void authFailure(BundleDescriptor bundleDesc, Endpoint endpoint, Principal principal) {

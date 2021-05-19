@@ -40,7 +40,7 @@ public class NumericConverterFactory {
 
      /**
       * This method returns an instance of NumericConverter for a given policy.
-      * @param policy for determining mechanism for conversion from 
+      * @param policy for determining mechanism for conversion from
       *        inexact type to exact type.
       * @return NumericConverter corresponds to a policy
       */

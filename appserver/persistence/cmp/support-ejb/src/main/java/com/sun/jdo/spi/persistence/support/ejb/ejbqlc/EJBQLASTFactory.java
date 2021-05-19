@@ -28,7 +28,7 @@ import antlr.ASTFactory;
 import java.util.ResourceBundle;
 import org.glassfish.persistence.common.I18NHelper;
 
-/** 
+/**
  * Factory to create and connect EJBQLAST nodes.
  *
  * @author  Michael Bouschen
@@ -36,24 +36,24 @@ import org.glassfish.persistence.common.I18NHelper;
 public class EJBQLASTFactory
     extends ASTFactory
 {
-    /** The singleton EJBQLASTFactory instance. */    
+    /** The singleton EJBQLASTFactory instance. */
     private static EJBQLASTFactory factory = new EJBQLASTFactory();
 
     /** I18N support. */
-    private final static ResourceBundle msgs = 
+    private final static ResourceBundle msgs =
         I18NHelper.loadBundle(EJBQLASTFactory.class);
-    
-    /** 
+
+    /**
      * Get an instance of EJBQLASTFactory.
      * @return an instance of EJBQLASTFactory
-     */    
+     */
     public static EJBQLASTFactory getInstance()
     {
         return factory;
     }
-    
+
     /**
-     * Constructor. EJBQLASTFactory is a singleton, please use 
+     * Constructor. EJBQLASTFactory is a singleton, please use
      * {@link #getInstance} to get the factory instance.
      */
     protected EJBQLASTFactory()
@@ -61,22 +61,22 @@ public class EJBQLASTFactory
         this.theASTNodeTypeClass = EJBQLAST.class;
         this.theASTNodeType = this.theASTNodeTypeClass.getName();
     }
-    
+
     /** Overwrites superclass method to create the correct AST instance. */
-    public AST create() 
+    public AST create()
     {
         return new EJBQLAST();
     }
 
     /** Overwrites superclass method to create the correct AST instance. */
-    public AST create(AST tr) 
-    { 
+    public AST create(AST tr)
+    {
         return create((EJBQLAST)tr);
     }
 
     /** Creates a clone of the specified EJBQLAST instance. */
-    public EJBQLAST create(EJBQLAST tr) 
-    { 
+    public EJBQLAST create(EJBQLAST tr)
+    {
         try {
             return (tr==null) ? null : (EJBQLAST)tr.clone();
         }

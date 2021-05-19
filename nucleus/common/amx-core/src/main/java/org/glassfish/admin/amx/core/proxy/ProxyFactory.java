@@ -250,8 +250,8 @@ public final class ProxyFactory implements NotificationListener {
      * previously-instantiated ones. Such usage is discouraged, as it duplicates
      * proxies. Pass 'true' unless there is an excellent reason to pass 'false'.
      *
-     * @param connSource	the ConnectionSource
-     * @param useMBeanServerID	use the MBeanServerID to determine if it's the
+     * @param connSource        the ConnectionSource
+     * @param useMBeanServerID        use the MBeanServerID to determine if it's the
      * same server
      */
     public static synchronized ProxyFactory getInstance(
@@ -357,7 +357,7 @@ public final class ProxyFactory implements NotificationListener {
      * false. If an MBean is no longer registered, the proxy returned will be
      * null.
      *
-     * @param objectName	ObjectName for which a proxy should be created
+     * @param objectName        ObjectName for which a proxy should be created
      * @param intf class of returned proxy, avoids casts and compiler warnings
      * @return an appropriate {@link AMXProxy} interface for the ObjectName
      */

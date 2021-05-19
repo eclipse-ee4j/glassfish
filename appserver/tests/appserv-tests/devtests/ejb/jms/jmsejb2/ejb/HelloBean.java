@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.jms.jmsejb2;
 
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -34,7 +34,7 @@ public class HelloBean implements SessionBean {
     public HelloBean() {}
 
     public void ejbCreate(String str) throws RemoteException {
-	System.out.println("In ejbCreate !!");
+        System.out.println("In ejbCreate !!");
         this.str = str;
         try {
             Context context = new InitialContext();
@@ -43,7 +43,7 @@ public class HelloBean implements SessionBean {
 
             queue = (Queue) context.lookup("java:comp/env/jms/QueueName");
 
-            qcFactory = (QueueConnectionFactory) 
+            qcFactory = (QueueConnectionFactory)
                 context.lookup("java:comp/env/jms/MyQueueConnectionFactory");
 
         } catch(Exception e) {
@@ -75,7 +75,7 @@ public class HelloBean implements SessionBean {
             throw new EJBException(e);
         }
 
-        // NOTE : leave connection and session open.  they will be 
+        // NOTE : leave connection and session open.  they will be
         // re-enlisted when the next business method is called since
         // the transaction is still active.
 
@@ -122,7 +122,7 @@ public class HelloBean implements SessionBean {
         }
     }
 
-    private void sendMessageInternal(QueueSession session, String msg) 
+    private void sendMessageInternal(QueueSession session, String msg)
         throws JMSException {
         // Create a message producer.
         QueueSender sender = session.createSender(queue);
@@ -133,7 +133,7 @@ public class HelloBean implements SessionBean {
         sender.send(message);
     }
 
-    private Message recvMessageInternal(QueueSession session) 
+    private Message recvMessageInternal(QueueSession session)
         throws JMSException {
         // Create a message consumer
         QueueReceiver receiver = session.createReceiver(queue);
@@ -143,7 +143,7 @@ public class HelloBean implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public void ejbRemove() throws RemoteException {}

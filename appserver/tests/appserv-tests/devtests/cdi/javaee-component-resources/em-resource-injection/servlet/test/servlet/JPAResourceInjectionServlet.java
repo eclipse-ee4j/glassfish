@@ -47,7 +47,7 @@ public class JPAResourceInjectionServlet extends HttpServlet {
 
     private @Resource
     UserTransaction utx;
-    
+
     @Inject
     @Preferred
     TestBeanInterface tbi;
@@ -59,11 +59,11 @@ public class JPAResourceInjectionServlet extends HttpServlet {
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
         System.out.println("JPAResourceInjectionServlet::@PersistenceUnit " +
-        		"CDI EntityManagerFactory=" + emf_at_inj);
+                        "CDI EntityManagerFactory=" + emf_at_inj);
 
         EntityManager em = emf_at_inj;
         System.out.println("JPAResourceInjectionServlet::createEM" +
-        		"EntityManager=" + em);
+                        "EntityManager=" + em);
         String testcase = request.getParameter("testcase");
         System.out.println("testcase=" + testcase);
 
@@ -77,7 +77,7 @@ public class JPAResourceInjectionServlet extends HttpServlet {
             } else if ("llquery".equals(testcase)) {
                 status = jt.lazyLoadingByQuery("Carla");
             } else if ("llinj".equals(testcase)){
-                status = ((tbi != null) && 
+                status = ((tbi != null) &&
                         (tbi.testDatasourceInjection().trim().length()==0));
             }
             if (status) {

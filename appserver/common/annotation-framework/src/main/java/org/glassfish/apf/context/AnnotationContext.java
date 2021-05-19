@@ -31,28 +31,28 @@ import org.glassfish.apf.ProcessingContext;
  * @author Jerome Dochez
  */
 public class AnnotationContext implements AnnotatedElementHandler {
-   
+
     ProcessingContext processingContext;
-    
+
     /** Creates a new instance of AnnotationContext */
     public AnnotationContext() {
     }
-    
+
     public void setProcessingContext(ProcessingContext processingContext) {
-        this.processingContext = processingContext;        
+        this.processingContext = processingContext;
     }
-    
+
     public ProcessingContext getProcessingContext() {
         return processingContext;
     }
-    
-    public void startElement(ElementType type, AnnotatedElement element) 
+
+    public void startElement(ElementType type, AnnotatedElement element)
         throws AnnotationProcessorException {
     }
-   
+
     public void endElement(ElementType type, AnnotatedElement element)
         throws AnnotationProcessorException {
-    }     
-    
+    }
+
 
 }

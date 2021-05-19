@@ -28,21 +28,21 @@ public class JsonUtilTest {
     public void readNumbers() {
          assertEquals(3L, JSONUtil.jsonToJava("3"));
     }
-    
-    @Test 
+
+    @Test
     public void readConstants() {
         assertTrue((Boolean)JSONUtil.jsonToJava("true"));
         assertFalse((Boolean)JSONUtil.jsonToJava("false"));
         assertNull(JSONUtil.jsonToJava("null"));
     }
-    
+
     @Test
     public void readLists() {
         List list = (List)JSONUtil.jsonToJava("[null]");
         assertNotNull(list);
         assertEquals(1, list.size());
         assertNull(list.get(0));
-        
+
         list = (List)JSONUtil.jsonToJava("[true,false,null,{'a':'b'},['1','2','3']]");
         assertNotNull(list);
         assertEquals(5, list.size());
@@ -71,7 +71,7 @@ public class JsonUtilTest {
         assertEquals(2L, ((List)list.get(4)).get(1));
         assertEquals(3.3F, ((List)list.get(4)).get(2));
     }
-    
+
     @Test
     public void readObjects() {
         Map<String, Object> map = (Map<String, Object>)JSONUtil.jsonToJava("{'x':['foo',null ,{'a':true, 'b':false }]}");
@@ -79,19 +79,19 @@ public class JsonUtilTest {
         assertTrue(map.get("x") instanceof List);
         assertEquals(3, ((List)map.get("x")).size());
         assertTrue(((List)map.get("x")).get(2) instanceof Map);
-        
+
         map = (Map<String, Object>)JSONUtil.jsonToJava("{            'key'   :        \"value\" ,\n  \r \"key2\"   :   {  'innerKey'  : [  3.3E-2 , false  , 800e+8, null , 37  , \"test\" ] , \n \"innerKey2\" : {'a' : 'b', 'c' : 'd'}, 'innerKey3' : true} }");
         assertEquals(2, map.size());
         assertEquals("value", map.get("key"));
         assertTrue(map.get("key2") instanceof Map);
     }
-    
+
     @Test
     public void testEncoding() {
         Map map = new HashMap<String, String>() {{ put("foo", "bar"); }};
         assertEquals("{\"foo\":\"bar\"}", JSONUtil.javaToJSON(map, 2));
     }
-    
+
     @Test
     public void multibyteCharacters() {
         String json = "{\"value\":\"這或是因\"}";

@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class JdbcConnectionPoolDefaultsTest extends ConfigApiTest{
 
     JdbcConnectionPool onlyOnePool = null;
-    
+
     public JdbcConnectionPoolDefaultsTest() {
     }
 
@@ -55,7 +55,7 @@ public class JdbcConnectionPoolDefaultsTest extends ConfigApiTest{
     //
     @Test
     public void testFewDefaults() {
-    
+
         assertEquals("8", onlyOnePool.getSteadyPoolSize());
         assertEquals("32", onlyOnePool.getMaxPoolSize());
         assertEquals("false", onlyOnePool.getMatchConnections());

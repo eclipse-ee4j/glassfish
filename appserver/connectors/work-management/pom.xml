@@ -26,7 +26,7 @@
     <artifactId>work-management</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>Work Management</name>    
+    <name>Work Management</name>
     <description>Java EE Connector Architecture Work Management module</description>
 
     <developers>
@@ -89,13 +89,13 @@
         </dependency>
 
         <dependency>
-	    <groupId>org.glassfish.external</groupId>
-	    <artifactId>management-api</artifactId>
-	</dependency>
-	
-	<dependency>
-	    <groupId>org.glassfish.gmbal</groupId>
-	    <artifactId>gmbal</artifactId>
+            <groupId>org.glassfish.external</groupId>
+            <artifactId>management-api</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish.gmbal</groupId>
+            <artifactId>gmbal</artifactId>
         </dependency>
 
         <dependency>
@@ -119,8 +119,8 @@
             <groupId>org.glassfish.main.orb</groupId>
             <artifactId>orb-connector</artifactId>
             <version>${project.parent.version}</version>
-        </dependency> 
-        
+        </dependency>
+
         <dependency>
             <groupId>org.glassfish.annotations</groupId>
             <artifactId>logging-annotation-processor</artifactId>

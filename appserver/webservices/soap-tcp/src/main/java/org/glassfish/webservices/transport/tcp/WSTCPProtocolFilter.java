@@ -39,7 +39,7 @@ public class WSTCPProtocolFilter extends BaseFilter {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private volatile Connector connector;
-    
+
     private final Object sync = new Object();
 
     private static final V3Module module = new V3Module();
@@ -62,10 +62,10 @@ public class WSTCPProtocolFilter extends BaseFilter {
                 }
             }
         }
-        
+
         final Buffer buffer = ctx.getMessage();
         final ByteBuffer byteBuffer = buffer.toByteBuffer();
-                
+
         final SocketChannel channel = (SocketChannel) connection.getChannel();
         connector.process(byteBuffer, channel);
 

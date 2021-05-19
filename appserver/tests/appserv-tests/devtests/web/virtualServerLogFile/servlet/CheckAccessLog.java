@@ -28,6 +28,6 @@ public class CheckAccessLog extends HttpServlet {
         System.out.println("Checking file location "+location+"/domains/domain1/logs/vslogs");
         if (files != null && files.length == 2) {
             resp.getWriter().println("SUCCESS!");
-        }    
+        }
     }
 }

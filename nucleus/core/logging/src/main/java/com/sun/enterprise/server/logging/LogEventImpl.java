@@ -41,7 +41,7 @@ public class LogEventImpl implements LogEvent {
     private String user = "";
 
     public LogEventImpl() {}
-    
+
     public LogEventImpl(LogRecord rec) {
         level = rec.getLevel().getName();
         logger = rec.getLoggerName();
@@ -50,7 +50,7 @@ public class LogEventImpl implements LogEvent {
         timeMillis = rec.getMillis();
         levelValue = rec.getLevel().intValue();
     }
-    
+
     @Override
     public String getComponentId() {
         return componentId;

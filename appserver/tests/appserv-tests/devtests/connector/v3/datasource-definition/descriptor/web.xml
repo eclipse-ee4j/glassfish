@@ -43,7 +43,7 @@
          <value>;create=true</value>
        </property>
      </data-source>
-     
+
      <data-source>
        <name>java:comp/env/Servlet_DD_DataSource</name>
        <class-name>org.apache.derby.jdbc.ClientDataSource</class-name>
@@ -58,6 +58,6 @@
        </property>
      </data-source>
 
-    
+
 </web-app>
 

@@ -20,64 +20,64 @@ import jakarta.ejb.*;
 import javax.naming.*;
 
 /**
- * 1.1 bean. 
+ * 1.1 bean.
  * @author mvatkina
  */
 
 
 public class A1Bean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: A1Bean ejbRemove");
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
@@ -93,8 +93,8 @@ public class A1Bean implements jakarta.ejb.EntityBean {
         name = "ABC";
         return null;
     }
-    
-    public void ejbPostCreate(java.lang.String id) throws jakarta.ejb.CreateException { 
+
+    public void ejbPostCreate(java.lang.String id) throws jakarta.ejb.CreateException {
     }
 
     public void setName(String s) {

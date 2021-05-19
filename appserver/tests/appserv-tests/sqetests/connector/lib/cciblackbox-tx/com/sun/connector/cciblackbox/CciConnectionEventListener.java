@@ -25,7 +25,7 @@ import jakarta.resource.spi.ManagedConnection;
 /**
  * The connector architecture provides an event callback mechanism that
  * enables an application server to receive notifications from a
- * ManagedConnection instance. The App server implements this class in order to 
+ * ManagedConnection instance. The App server implements this class in order to
  * listen to event notifications from ManagedConnection instance.
  *
  * @author Sheetal Vartak

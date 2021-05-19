@@ -34,14 +34,14 @@ class ClassReporter {
     public String getClassReport() throws RuntimeException {
         try {
             final StringBuilderNewLineAppender sb = new StringBuilderNewLineAppender(new StringBuilder());
-            final ClassLoadingMXBean clmb = ManagementFactory.newPlatformMXBeanProxy(mbsc, 
+            final ClassLoadingMXBean clmb = ManagementFactory.newPlatformMXBeanProxy(mbsc,
                     ManagementFactory.CLASS_LOADING_MXBEAN_NAME, ClassLoadingMXBean.class);
             sb.append(sm.getString("classloading.info"));
             sb.append(sm.getString("classes.loaded", clmb.getLoadedClassCount()));
             sb.append(sm.getString("classes.total", clmb.getTotalLoadedClassCount()));
             sb.append(sm.getString("classes.unloaded", clmb.getUnloadedClassCount()));
-            
-            final CompilationMXBean cmb = ManagementFactory.newPlatformMXBeanProxy(mbsc, 
+
+            final CompilationMXBean cmb = ManagementFactory.newPlatformMXBeanProxy(mbsc,
                     ManagementFactory.COMPILATION_MXBEAN_NAME, CompilationMXBean.class);
             sb.append(sm.getString("complilation.info"));
             sb.append(sm.getString("compilation.monitor.status", cmb.isCompilationTimeMonitoringSupported()));

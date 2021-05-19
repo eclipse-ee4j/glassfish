@@ -96,7 +96,7 @@ public class FileArchiveTest {
 
     private static  RecordingHandler handler;
     private static MemoryHandler memoryHandler;
-      
+
     public FileArchiveTest() {
     }
 
@@ -186,7 +186,7 @@ public class FileArchiveTest {
     private void createAndPopulateAndCheckArchive(
             final Set<String> entryNames) throws Exception {
         final ReadableArchive instance = createAndPopulateArchive(entryNames);
-        
+
         checkArchive(instance, usualExpectedEntryNames);
 
     }
@@ -210,7 +210,7 @@ public class FileArchiveTest {
 
         instance.getListOfFiles(archiveDir, foundEntryNames, null, logger);
 
-        assertEquals("Missing or unexpected entry names reported", expectedEntryNames, 
+        assertEquals("Missing or unexpected entry names reported", expectedEntryNames,
                 new HashSet<String>(foundEntryNames));
     }
 
@@ -272,7 +272,7 @@ public class FileArchiveTest {
 
         System.out.println("testSubarchive");
         final ArchiveAndSubarchive archives = createAndPopulateArchiveAndSubarchive();
-        
+
 
         checkArchive((FileArchive) archives.parent, archives.fullExpectedEntryNames);
 
@@ -321,7 +321,7 @@ public class FileArchiveTest {
         checkArchive((FileArchive) archives.subarchive, usualExpectedSubarchiveEntryNames);
 
         getListOfFilesCheckForLogRecord((FileArchive) archives.parent, archives.fullExpectedEntryNames);
-        
+
     }
 
     private static class ArchiveAndSubarchive {
@@ -360,7 +360,7 @@ public class FileArchiveTest {
 
         getListOfFilesCheckForLogRecord((FileArchive) instance, usualExpectedEntryNames);
 
-        
+
     }
 
     @Test
@@ -465,7 +465,7 @@ public class FileArchiveTest {
          */
         final String EXPECTED_LOG_KEY = "enterprise.deployment.nullFileList";
         System.out.println("testInaccessibleDirectoryInFileArchive");
-        
+
         final FileArchive archive = (FileArchive) createAndPopulateArchive(usualEntryNames);
 
         /*
@@ -510,7 +510,7 @@ public class FileArchiveTest {
         assertTrue("FileArchive was incorrectly unable to list files; error key in log record:" +
                 (logRecords.isEmpty() ? "" : logRecords.get(0).getMessage()),
                 logRecords.isEmpty());
-        
+
     }
 
     private static class RecordingHandler extends Handler {

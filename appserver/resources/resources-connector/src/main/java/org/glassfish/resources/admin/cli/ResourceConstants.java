@@ -28,7 +28,7 @@ public final class ResourceConstants {
 
     public static final String POOL_NAME = "pool-name";
 
-    // JMS Resource                                        
+    // JMS Resource
     public static final String RES_TYPE = "res-type";
 
     public static final String FACTORY_CLASS = "factory-class";
@@ -110,7 +110,7 @@ public final class ResourceConstants {
     public static final String VALIDATION_CLASSNAME = "validation-classname";
 
     public static final String WRAP_JDBC_OBJECTS = "wrap-jdbc-objects";
-    
+
     public static final String CASCADE = "cascade";
 
     public static final String STATEMENT_LEAK_TIMEOUT_IN_SECONDS = "statement-leak-timeout-in-seconds";

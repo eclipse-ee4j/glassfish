@@ -29,7 +29,7 @@ import jakarta.resource.*;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class DeliveryWork implements Work, ResourceAdapterAssociation {
 
@@ -39,7 +39,7 @@ public class DeliveryWork implements Work, ResourceAdapterAssociation {
     private boolean keepCount;
     private static int counter = 0;
     protected ResourceAdapter raBean;
-    
+
     public DeliveryWork(MessageEndpoint ep, int numOfMessages, String op) {
         this.ep = ep;
         this.num = numOfMessages;
@@ -47,7 +47,7 @@ public class DeliveryWork implements Work, ResourceAdapterAssociation {
         this.keepCount = false;
     }
 
-    public DeliveryWork(MessageEndpoint ep, int numOfMessages, 
+    public DeliveryWork(MessageEndpoint ep, int numOfMessages,
             String op, boolean keepCount) {
         this.ep = ep;
         this.num = numOfMessages;
@@ -94,11 +94,11 @@ public class DeliveryWork implements Work, ResourceAdapterAssociation {
             }
 
             //ep.afterDelivery();
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-        
+
         debug("LEAVE...");
     }
 
@@ -109,14 +109,14 @@ public class DeliveryWork implements Work, ResourceAdapterAssociation {
     }
 
     private Method getOnMessageMethod() {
-        
+
         Method onMessageMethod = null;
         try {
             Class msgListenerClass = connector.MyMessageListener.class;
             Class[] paramTypes = { java.lang.String.class };
-            onMessageMethod = 
+            onMessageMethod =
                 msgListenerClass.getMethod("onMessage", paramTypes);
-            
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }

@@ -262,8 +262,8 @@ public class XID implements Xid {
      * @return the string representation of this XID
      */
     public String toString() {
-        /* toString() method is slightly expensive and this needs to be done because 
-	 * some of the drivers XAResource methods have the "trace("some thing " + xid)" 
+        /* toString() method is slightly expensive and this needs to be done because
+     * some of the drivers XAResource methods have the "trace("some thing " + xid)"
          * kind of code which is executing this method resulting in performance degradation.
          */
         if (_logger.isLoggable(Level.FINE)) {

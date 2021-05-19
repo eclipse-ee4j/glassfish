@@ -23,7 +23,7 @@ import org.openqa.selenium.support.ui.Select;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -91,7 +91,7 @@ public class LoggerSettingsTest extends BaseSeleniumTestClass {
         clickAndWait("form1:title:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
         assertTableRowCount("form1:basicTable", count);
-        
+
         //delete the property used to test
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:loggerSetting:loggerSetting_link");
@@ -103,5 +103,5 @@ public class LoggerSettingsTest extends BaseSeleniumTestClass {
         waitforBtnDisable("form1:basicTable:topActionsGroup1:button1");
         clickAndWait("form1:title:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-    } 
+    }
 }

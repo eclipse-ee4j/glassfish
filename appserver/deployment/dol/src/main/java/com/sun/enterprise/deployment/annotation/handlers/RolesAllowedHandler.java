@@ -37,10 +37,10 @@ import java.lang.annotation.Annotation;
 @Service
 @AnnotationHandlerFor(RolesAllowed.class)
 public class RolesAllowedHandler extends AbstractAuthAnnotationHandler {
-    
+
     public RolesAllowedHandler() {
     }
-    
+
     /**
      * Add roles and permissions to given method in EjbDescriptor.
      * @param annotation
@@ -61,8 +61,8 @@ public class RolesAllowedHandler extends AbstractAuthAnnotationHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     @Override

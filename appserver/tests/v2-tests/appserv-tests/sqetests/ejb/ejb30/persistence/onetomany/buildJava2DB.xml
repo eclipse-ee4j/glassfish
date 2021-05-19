@@ -58,7 +58,7 @@
         <property name="ejb.jar" value="${assemble.dir}/${appname}-persistence.par"/>
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
-        </antcall>   
+        </antcall>
 
         <mkdir dir="${assemble.dir}"/>
         <delete file="${ejb.jar}" failonerror="false"/>
@@ -66,7 +66,7 @@
         <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <!-- optional files -->
-        <copy file="${persistence.xml}" 
+        <copy file="${persistence.xml}"
             tofile="${build.classes.dir}/META-INF/persistence.xml"
             failonerror="false"/>
 
@@ -80,23 +80,23 @@
         </jar>
 
         <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
-    </target>  
+    </target>
 
 
-    <target name="build" depends="init-common,clean">    
+    <target name="build" depends="init-common,clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
-        </antcall> 
+        </antcall>
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-       
+
         <!--<antcall target="build-entity"/>-->
         <antcall target="build-ear-common"/>
     </target>
 
     <target name="run" depends="init-common">
-	<antcall target="runclient-common">
+    <antcall target="runclient-common">
             <param name="appclient.application.args" value="${testsuite.id} "/>
         </antcall>
     </target>
@@ -104,7 +104,7 @@
     <target name="unsetup" depends="init-common">
         <antcall target="delete-jdbc-resource-common"/>
         <antcall target="delete-jdbc-connpool-common"/>
-    </target>   
+    </target>
 
 
     <target name="create-resource-ref" depends="init-common">
@@ -116,5 +116,5 @@
   </exec>
 </target>
 
-       
+
 </project>

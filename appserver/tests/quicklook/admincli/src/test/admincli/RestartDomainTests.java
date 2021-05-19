@@ -32,10 +32,10 @@ public class RestartDomainTests {
 
     @Test
     public void restartDomainTest() throws Exception {
-	outPutFile = "admincli-restart.output";
-	expectedOutPut = "Command restart-domain executed successfully.";
-	testErr = "Restart domain failed.";
-	parseTestResults(outPutFile, expectedOutPut, testErr);    
+    outPutFile = "admincli-restart.output";
+    expectedOutPut = "Command restart-domain executed successfully.";
+    testErr = "Restart domain failed.";
+    parseTestResults(outPutFile, expectedOutPut, testErr);
     }
 
     public void parseTestResults(String outPutFile, String expectedOutPut, String testErr) throws Exception {
@@ -60,9 +60,9 @@ public class RestartDomainTests {
                 if(line.indexOf(expectedOutPut)!=-1){
                   result=true;
                   testLine = line;
-                  //System.out.println(testLine); 
-		} 
-	      }
+                  //System.out.println(testLine);
+        }
+          }
               Assert.assertEquals(result, true, testErr);
            }catch(Exception e){
               e.printStackTrace();

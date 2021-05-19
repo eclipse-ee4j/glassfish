@@ -18,7 +18,7 @@ package com.sun.connector.cciblackbox;
 
 import jakarta.resource.ResourceException;
 
-/**This implementation class defines a local transaction demarcation 
+/**This implementation class defines a local transaction demarcation
  * at the application level.
  * @author Sheetal Vartak
  */

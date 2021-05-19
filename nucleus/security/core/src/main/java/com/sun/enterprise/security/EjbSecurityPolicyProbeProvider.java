@@ -37,5 +37,5 @@ public class EjbSecurityPolicyProbeProvider {
     public void policyCreationEndedEvent(
             @ProbeParam("appName") String appName) {
     }
-    
+
 }

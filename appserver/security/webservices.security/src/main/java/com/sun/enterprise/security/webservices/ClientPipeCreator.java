@@ -34,9 +34,9 @@ import com.sun.xml.ws.api.pipe.Tube;
  * to the StandAlonePipeAssembler and TangoPipeAssembler
  */
 public class ClientPipeCreator extends ClientPipelineHook {
-    
+
     private ServiceReferenceDescriptor svcRef = null;
-    
+
     public ClientPipeCreator(){
     }
 
@@ -45,7 +45,7 @@ public class ClientPipeCreator extends ClientPipelineHook {
     }
 
     @Override
-    public Pipe createSecurityPipe(PolicyMap map, 
+    public Pipe createSecurityPipe(PolicyMap map,
             ClientPipeAssemblerContext ctxt, Pipe tail) {
         HashMap propBag = new HashMap();
         propBag.put(PipeConstants.POLICY, map);
@@ -56,7 +56,7 @@ public class ClientPipeCreator extends ClientPipelineHook {
         if (svcRef != null) {
             propBag.put(PipeConstants.SERVICE_REF, svcRef);
         }
-	propBag.put(PipeConstants.NEXT_PIPE,tail);
+    propBag.put(PipeConstants.NEXT_PIPE,tail);
         propBag.put(PipeConstants.CONTAINER,ctxt.getContainer());
         propBag.put(PipeConstants.ASSEMBLER_CONTEXT, ctxt);
         ClientSecurityPipe ret = new ClientSecurityPipe(propBag, tail);
@@ -71,15 +71,15 @@ public class ClientPipeCreator extends ClientPipelineHook {
             ClientPipeCloser.getInstance().registerListenerWrapper(
                     svcRef, ret.getPipeHelper().getRegistrationWrapper());
         }
-  
+
         return ret;
     }
-    
+
 //    @Override
 //    public @NotNull
 //    Tube createSecurityTube(ClientTubelineAssemblyContext ctxt) {
-//       
-//        
+//
+//
 //        HashMap propBag = new HashMap();
 //        /*TODO V3 enable
 //        propBag.put(PipeConstants.POLICY, map);
@@ -88,7 +88,7 @@ public class ClientPipeCreator extends ClientPipelineHook {
 //        propBag.put(PipeConstants.BINDING, ctxt.getBinding());
 //        propBag.put(PipeConstants.ENDPOINT_ADDRESS, ctxt.getAddress());
 //        propBag.put(PipeConstants.SERVICE_REF, svcRef);
-//	propBag.put(PipeConstants.NEXT_PIPE,tail);
+//    propBag.put(PipeConstants.NEXT_PIPE,tail);
 //        propBag.put(PipeConstants.CONTAINER,ctxt.getContainer());
 //         */
 //        ClientSecurityTube ret = new ClientSecurityTube(propBag, ctxt.getTubelineHead());
@@ -103,9 +103,9 @@ public class ClientPipeCreator extends ClientPipelineHook {
 //            ClientPipeCloser.getInstance().registerListenerWrapper(
 //                    svcRef, ret.getPipeHelper().getRegistrationWrapper());
 //        }
-//  
+//
 //        return ret;
-//        
+//
 //    }
-    
+
 }

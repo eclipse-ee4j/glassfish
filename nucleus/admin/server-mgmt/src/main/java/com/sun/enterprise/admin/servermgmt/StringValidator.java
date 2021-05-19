@@ -29,7 +29,7 @@ public class StringValidator extends Validator {
 
     /**
      * Constructs new StringValidator object.
-     * 
+     *
      * @param name
      */
     public StringValidator(String name) {
@@ -39,7 +39,7 @@ public class StringValidator extends Validator {
     /**
      * Validates the given value for the given entry. This method first invokes its superclass's validate method and then
      * checks additional string validations such as 0 length.
-     * 
+     *
      * @throws InvalidConfigException
      */
     public void validate(Object str) throws InvalidConfigException {

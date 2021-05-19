@@ -99,11 +99,11 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
         //ResourceProxy which is synchronized
 
         //intentional no-op
-        //From 8.1 PE/SE/EE, JDBC connection pools are no more resources and 
+        //From 8.1 PE/SE/EE, JDBC connection pools are no more resources and
         //they would be available only to server instances that have a resoruce-ref
-        //that maps to a pool. So deploy resource would not be called during 
-        //JDBC connection pool creation. The actualDeployResource method 
-        //below is invoked by JdbcResourceDeployer when a resource-ref for a 
+        //that maps to a pool. So deploy resource would not be called during
+        //JDBC connection pool creation. The actualDeployResource method
+        //below is invoked by JdbcResourceDeployer when a resource-ref for a
         //resource that is pointed to this pool is added to a server instance
         JdbcConnectionPool jcp = (JdbcConnectionPool)resource;
         PoolInfo poolInfo = new PoolInfo(jcp.getName(), applicationName, moduleName);
@@ -211,7 +211,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
      * @inheritDoc
      */
     public Class[] getProxyClassesForDynamicReconfiguration() {
-        return new Class[]{com.sun.appserv.jdbc.DataSource.class};  
+        return new Class[]{com.sun.appserv.jdbc.DataSource.class};
     }
 
 
@@ -469,10 +469,10 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
 
                 } else if ("STATEMENT-CACHE-TYPE".equals(name.toUpperCase(Locale.getDefault()))) {
 
-		    if(adminPool.getStatementCacheType() != null) {
-                        propList.add(new ConnectorConfigProperty("StatementCacheType",
-                                rp.getValue(), "StatementCacheType", "java.lang.String"));
-		    }
+                    if (adminPool.getStatementCacheType() != null) {
+                        propList.add(new ConnectorConfigProperty("StatementCacheType", rp.getValue(),
+                            "StatementCacheType", "java.lang.String"));
+                    }
 
                 } else if ("NUMBER-OF-TOP-QUERIES-TO-REPORT".equals(name.toUpperCase(Locale.getDefault()))) {
 
@@ -679,9 +679,9 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
             ccp.setLazyConnectionAssoc(lazyConnectionAssociation);
             ccp.setLazyConnectionEnlist(lazyConnectionEnlistment);
         }
-        
+
         boolean pooling = Boolean.valueOf(adminPool.getPooling());
-        
+
         if(!pooling) {
             //Throw exception if assoc with thread is set to true.
             if(Boolean.valueOf(adminPool.getAssociateWithThread())) {
@@ -691,7 +691,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
                         "cpou.pooling_disabled_assocwiththread_invalid_combination", poolName);
                 throw new RuntimeException(i18nMsg);
             }
-            
+
             //Below are useful in pooled environment only.
             //Throw warning for connection validation/validate-atmost-once/
             //match-connections/max-connection-usage-count/idele-timeout
@@ -725,7 +725,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
 
         ccp.setValidateAtmostOncePeriod(adminPool.getValidateAtmostOncePeriodInSeconds());
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -841,7 +841,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
                                     "Interrupted while waiting for all existing clients to return connections to pool", ie);
                             }
                         }
-                        
+
                         if(_logger.isLoggable(Level.FINEST)){
                             _logger.finest("woke-up after giving time for in-use connections to return, " +
                                 "WaitQueue-Length : ["+oldPool.getPoolWaitQueue().getQueueContents()+"], " +
@@ -861,7 +861,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
                 }
 
             }else{
-                handlePoolRecreationForExistingProxies(connConnPool);     
+                handlePoolRecreationForExistingProxies(connConnPool);
             }
         } else if(oldPool.getReconfigWaitTime() > 0){
             //reconfig is being switched off, invalidate proxies
@@ -932,7 +932,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
      * @exception UnsupportedOperationException Currently we are not supporting this method.
      *
      */
-	public synchronized void enableResource(Object resource) throws Exception {
+    public synchronized void enableResource(Object resource) throws Exception {
         throw new UnsupportedOperationException(msg);
     }
 
@@ -943,7 +943,7 @@ public class JdbcConnectionPoolDeployer implements ResourceDeployer {
      * @exception UnsupportedOperationException Currently we are not supporting this method.
      *
      */
-	public synchronized void disableResource(Object resource) throws Exception {
+    public synchronized void disableResource(Object resource) throws Exception {
         throw new UnsupportedOperationException(msg);
     }
 

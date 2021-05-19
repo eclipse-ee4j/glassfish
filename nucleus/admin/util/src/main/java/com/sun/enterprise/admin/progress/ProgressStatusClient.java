@@ -43,7 +43,7 @@ public class ProgressStatusClient {
     /**
      * Mirror incoming events and structures into given ProgressStatus. If null, CommandProgess will be created with first
      * event or structure.
-     * 
+     *
      * @param status
      */
     public ProgressStatusClient(ProgressStatus status) {

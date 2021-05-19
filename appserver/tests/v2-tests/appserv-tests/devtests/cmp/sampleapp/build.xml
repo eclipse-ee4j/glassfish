@@ -34,19 +34,19 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
-    <target name="deploy" 
+
+    <target name="deploy"
             depends="init-common">
-	<mkdir dir="${build.classes.dir}"/>
-	<mkdir dir="${assemble.dir}"/>
+        <mkdir dir="${build.classes.dir}"/>
+        <mkdir dir="${assemble.dir}"/>
         <echo message="assemble.dir => ${assemble.dir} " />
-	<copy file="${basedir}/ear/SampleWebApp.ear" todir="${assemble.dir}" />
+        <copy file="${basedir}/ear/SampleWebApp.ear" todir="${assemble.dir}" />
         <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/SampleWebApp_derby.sql"/>
         </antcall>
         <antcall target="deploy-common">
-	    <param name="${deployed.app}" value="${basedir}/ear/SampleWebApp.ear"/>
-	</antcall>
+            <param name="${deployed.app}" value="${basedir}/ear/SampleWebApp.ear"/>
+    </antcall>
     </target>
 
    <target name="create-resources" depends="init-common">
@@ -60,18 +60,18 @@
           <param name="asadmin.file" value="${basedir}/../common/delete_resources.asadmin"/>
         </antcall>
     </target>
- 
+
 
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
            <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_SampleWebApp_derby.sql"/>
         </antcall>
-    </target>   
+    </target>
 
 
 <!--
@@ -79,12 +79,12 @@
         <antcall target="execute-ejb-sql-common">
            <param name="sql.file" value="sql/delete_tables.sql"/>
         </antcall>
-    </target>   
+    </target>
 -->
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant all
         </echo>
     </target>

@@ -49,11 +49,11 @@ import org.netbeans.modules.schema2beans.Schema2BeansException;
 
 /*
  * This class will generate mapping classes from sun-cmp-mappings.xml
- * and dbschema if they are available in the jar, or it will generate mapping 
- * classes based on ejb-jar.xml, bean classes and policy by invoking the 
+ * and dbschema if they are available in the jar, or it will generate mapping
+ * classes based on ejb-jar.xml, bean classes and policy by invoking the
  * database generation backend.
  *
- * @author Jie Leng 
+ * @author Jie Leng
  */
 public class MappingGenerator {
 
@@ -74,17 +74,17 @@ public class MappingGenerator {
      */
     private boolean skipGeneratedFields = false;
 
-    //hold strong reference to mapping class elements 
+    //hold strong reference to mapping class elements
     private List strongRefs = new ArrayList();
 
-    /** 
+    /**
      * Constructor
      * @param infoHelper an instance of an EJBInfoHelper
      * @param loader a class loader
-     * @param skipGeneratedFields a boolean indicating to remove generated 
-     * fields from jdo model and mapping model 
+     * @param skipGeneratedFields a boolean indicating to remove generated
+     * fields from jdo model and mapping model
      */
-    public MappingGenerator(EJBInfoHelper infoHelper, 
+    public MappingGenerator(EJBInfoHelper infoHelper,
             ClassLoader loader, boolean skipGeneratedFields) {
         this.infoHelper = infoHelper;
         this.model = infoHelper.getModel();
@@ -136,7 +136,7 @@ public class MappingGenerator {
         // to generate sun-cmp-mappings.xml, *.dbschema
 
         List pcClasses = new ArrayList();
-        sunCmpMappings = getPartialSunCmpMappings(pcClasses, 
+        sunCmpMappings = getPartialSunCmpMappings(pcClasses,
                 (uniqueTableNames != null)? uniqueTableNames.booleanValue() : false);
 
         // load real jdo model and fake mapping model in memory
@@ -172,9 +172,9 @@ public class MappingGenerator {
         // update mapping classes
         updateMappingClasses(mappingClasses);
 
-        // If skipGeneratedFields is set to true, the generated fields should 
-        // not be kept in jdo model and mapping model. 
-        // Remove generated fields from jdo model and mapping 
+        // If skipGeneratedFields is set to true, the generated fields should
+        // not be kept in jdo model and mapping model.
+        // Remove generated fields from jdo model and mapping
         // model before returning the result.
         if (skipGeneratedFields) {
             Iterator iter = mappingClasses.iterator();
@@ -195,26 +195,26 @@ public class MappingGenerator {
                         // loop through all persistence fields to put generated
                         // fields in a list, loop though the list to remove
                         // the generated fields from the model.
-                        for (int i = 0; i < allFields.length; i++) { 
+                        for (int i = 0; i < allFields.length; i++) {
                             PersistenceFieldElement pfe = allFields[i];
-                            if (pfe != null) { 
+                            if (pfe != null) {
                                 String pFieldName = pfe.getName();
                                 String ejbFieldName = nameMapper.
-                                    getEjbFieldForPersistenceField(className, 
+                                    getEjbFieldForPersistenceField(className,
                                     pFieldName);
-                                if (nameMapper.isGeneratedField(ejbName, 
+                                if (nameMapper.isGeneratedField(ejbName,
                                     ejbFieldName)) {
                                     generatedFieldList.add(pfe);
                                 }
                             }
                         }
 
-                        // If the field is a version field, don't remove it 
-                        // from the model even though it is generated because 
+                        // If the field is a version field, don't remove it
+                        // from the model even though it is generated because
                         // it is needed to hold the version column information.
                         Iterator iterator = generatedFieldList.iterator();
                         while (iterator.hasNext()) {
-                            PersistenceFieldElement pfe = 
+                            PersistenceFieldElement pfe =
                                 (PersistenceFieldElement)iterator.next();
                             MappingFieldElement mfe = mapClassElt.
                                  getField(pfe.getName());
@@ -241,8 +241,8 @@ public class MappingGenerator {
      * @throws ModelException
      * @throws ConversionException
      */
-    protected Map loadMappingClasses(SunCmpMappings sunMapping, 
-        ClassLoader classLoader) 
+    protected Map loadMappingClasses(SunCmpMappings sunMapping,
+        ClassLoader classLoader)
         throws DBException, ModelException, ConversionException {
         MappingFile mapFile = new MappingFile(classLoader);
 
@@ -253,7 +253,7 @@ public class MappingGenerator {
         return allMappings;
     }
 
-    /** 
+    /**
      * Clean up strong reference. It should be called by end of deployment
      * or deploytool.
      */
@@ -264,9 +264,9 @@ public class MappingGenerator {
         strongRefs.clear();
     }
 
-    /** 
+    /**
      * Call DatabaseGenerator to generate database model and mapping model
-     * @param pcClasses a list of DatabaseGenerator.GeneratorNameTuple objects 
+     * @param pcClasses a list of DatabaseGenerator.GeneratorNameTuple objects
      * @param dbVendorName the string of database name
      * @param useUniqueTableNames the string to determine use of unique table
      * names for database generation
@@ -277,9 +277,9 @@ public class MappingGenerator {
      * @throws DBException
      * @throws ModelException
      */
-    private DatabaseGenerator.Results generateSchema(List pcClasses, 
-            String dbName, Boolean useUniqueTableNames, 
-            Properties userPolicy) 
+    private DatabaseGenerator.Results generateSchema(List pcClasses,
+            String dbName, Boolean useUniqueTableNames,
+            Properties userPolicy)
             throws IOException, DBException, ModelException {
 
         MappingPolicy mappingPolicy = MappingPolicy.getMappingPolicy(dbName);
@@ -291,14 +291,14 @@ public class MappingGenerator {
         }
 
        return DatabaseGenerator.generate(
-                model, pcClasses, mappingPolicy, 
+                model, pcClasses, mappingPolicy,
                 infoHelper.getSchemaNameToGenerate(), CLASS_SUFFIX, true);
     }
 
-    /** 
+    /**
      * Puts mapping classes into model's cache
      * @param mappingClasses a collection of mapping classes
-     */ 
+     */
     private void updateMappingClasses(Collection mappingClasses) {
         Iterator iter = mappingClasses.iterator();
         while (iter.hasNext()) {
@@ -310,22 +310,22 @@ public class MappingGenerator {
         }
     }
 
-    /** 
-     * Generates partial sun-cmp-mapping (contains fake table name and 
+    /**
+     * Generates partial sun-cmp-mapping (contains fake table name and
      * fake column name) for MappingFile.intoMappings()
-     * @param pcClasses a list of DatabaseGenerator.NameTuple objects 
-     * @param useUniqueTableNames a boolean to determine whether to use 
+     * @param pcClasses a list of DatabaseGenerator.NameTuple objects
+     * @param useUniqueTableNames a boolean to determine whether to use
      * unique table names during database generation
      * @return a SunCmpMappings object
      * @throws Schema2BeansException
      */
-    private SunCmpMappings getPartialSunCmpMappings(List pcClasses, 
+    private SunCmpMappings getPartialSunCmpMappings(List pcClasses,
              boolean useUniqueTableNames) throws Schema2BeansException {
 
        // Create a new name mapper with perisistence class name differing
-        // from bean name if useUniqueTableName flag is true. 
+        // from bean name if useUniqueTableName flag is true.
         // So persistence class name can be used for unique table name.
-        AbstractNameMapper nameMapper2 = (useUniqueTableNames) ? 
+        AbstractNameMapper nameMapper2 = (useUniqueTableNames) ?
                 infoHelper.createUniqueNameMapper() : nameMapper;
 
         SunCmpMappings mappings = null;
@@ -339,10 +339,10 @@ public class MappingGenerator {
             String pcClass = ddHelper.getMappedClassName(ejbName);
             String hashClassName = JavaTypeHelper.getShortClassName(pcClass);
 
-            // Make sure hash class name differs from ejb name 
+            // Make sure hash class name differs from ejb name
             // if useUniqueTableName flag is true.
-            // if useUniqueTableName flag is false, ejb name is used for 
-            // table name and hash class name is ignored. 
+            // if useUniqueTableName flag is false, ejb name is used for
+            // table name and hash class name is ignored.
             if (useUniqueTableNames && hashClassName.equals(ejbName)) {
                 hashClassName = JavaTypeHelper.getShortClassName(
                        nameMapper2.getPersistenceClassForEjbName(ejbName));
@@ -368,7 +368,7 @@ public class MappingGenerator {
                 cmpField.setFieldName(fieldName);
                 cmpField.addColumnName(FAKE_NAME);
                 entity.addCmpFieldMapping(cmpField);
-            } 
+            }
             // cmr field
             fIter = rels.iterator();
             while (fIter.hasNext()) {
@@ -389,9 +389,9 @@ public class MappingGenerator {
         return mappings;
     }
 
-    /** 
+    /**
      * Returns <code>true</code> if the specified propertyValue represents
-     * a defined value, <code>false</code> otherwise.  This implementation 
+     * a defined value, <code>false</code> otherwise.  This implementation
      * returns <code>true</code> if the value is not empty, but subclasses
      * may override this method to compare to a constant which represents an
      * undefined value.
@@ -403,19 +403,19 @@ public class MappingGenerator {
         return !StringHelper.isEmpty(propertyValue);
     }
 
-    /** 
-     * Update column in the SchemaElement with jdbc type and its length, 
+    /**
+     * Update column in the SchemaElement with jdbc type and its length,
      * scale and precision.
      * @param column a ColumnElement to be updated
      * @param jdbcType jdbc type from java.sql.Types
-     * @param length an Integer for length or <code>null</code> 
+     * @param length an Integer for length or <code>null</code>
      * if it does not apply
-     * @param scale an Integer for scale or <code>null</code> 
+     * @param scale an Integer for scale or <code>null</code>
      * if it does not apply
-     * @param precision an Integer for precision or <code>null</code> 
+     * @param precision an Integer for precision or <code>null</code>
      * if it does not apply
      */
-    public static void updateColumn(ColumnElement column, int jdbcType, 
+    public static void updateColumn(ColumnElement column, int jdbcType,
             Integer length, Integer scale, Integer precision)
             throws DBException {
 
@@ -438,8 +438,8 @@ public class MappingGenerator {
      * @param precision an Integer for precision or <code>null</code>
      * if it does not apply
      */
-    public static void updateProperties(Properties prop, String className, 
-            String fieldName, int jdbcType, Integer length, Integer scale, 
+    public static void updateProperties(Properties prop, String className,
+            String fieldName, int jdbcType, Integer length, Integer scale,
             Integer precision) {
 
         prop.setProperty(
@@ -458,13 +458,13 @@ public class MappingGenerator {
 
     /**
      * This method updates property. If the value is not <code>null</code>,
-     * update the property. If the value is <code>null</code>, 
+     * update the property. If the value is <code>null</code>,
      * remove the property.
      * @param prop a property object which needs to be updated
      * @param key a key for the property
      * @param value a value for the propety
      */
-    private static void updateProperty(Properties prop, String key, 
+    private static void updateProperty(Properties prop, String key,
             Integer value) {
         if (value != null) {
             prop.setProperty(key, value.toString());
@@ -475,8 +475,8 @@ public class MappingGenerator {
     }
 
     /**
-     * The contents of this class will eventually be added to SQLTypeUtil 
-     * in dbmodel. It is an util class which provides methods for jdbc type 
+     * The contents of this class will eventually be added to SQLTypeUtil
+     * in dbmodel. It is an util class which provides methods for jdbc type
      * compatible and jdbc attribute.
      */
     public static class SQLTypeUtil {
@@ -485,7 +485,7 @@ public class MappingGenerator {
         private static final Map numericMap = new HashMap();
         private static final Map blobMap = new HashMap();
         private static final Map timeMap = new HashMap();
-        
+
         private static final String NONE_ATTRIBUTE = "none";
         private static final String LENGTH_ATTRIBUTE = "length";
         private static final String SCALE_ATTRIBUTE = "scale";
@@ -514,7 +514,7 @@ public class MappingGenerator {
 
         /** Returns if the given data type is numeric type or not.
          * @param jdbcType the type from java.sql.Types
-         * @return <code>true</code> if the given type is numeric type; 
+         * @return <code>true</code> if the given type is numeric type;
          * <code>false</code> otherwise
          */
         public static boolean isNumeric (int jdbcType) {
@@ -523,7 +523,7 @@ public class MappingGenerator {
 
         /** Returns if the given data type is character type or not.
          * @param jdbcType the type from java.sql.Types
-         * @return <code>true</code> if the given type is character type; 
+         * @return <code>true</code> if the given type is character type;
          * <code>false</code> otherwise
          */
         public static boolean isCharacter (int jdbcType) {
@@ -532,7 +532,7 @@ public class MappingGenerator {
 
         /** Returns if a given data type is blob type or not.
          * @param jdbcType the type from java.sql.Types
-         * @return <code>true</code> if the give type is blob type; 
+         * @return <code>true</code> if the give type is blob type;
          * <code>false</code> otherwise
          */
         public static boolean isBlob (int jdbcType) {
@@ -541,7 +541,7 @@ public class MappingGenerator {
 
         /** Returns if a given data type is time type or not.
          * @param jdbcType the type from java.sql.Types
-         * @return <code>true</code> if the give type is time type; 
+         * @return <code>true</code> if the give type is time type;
          * <code>false</code> otherwise
          */
         public static boolean isTime (int jdbcType) {
@@ -553,8 +553,8 @@ public class MappingGenerator {
         }
 
         /** Returns a collection of compatible jdbc types.
-         * @param jdbcType the type from java.sql.Types 
-         * @return a collection of compatible jdbc types 
+         * @param jdbcType the type from java.sql.Types
+         * @return a collection of compatible jdbc types
          */
         public static Collection getCompatibleTypes(int jdbcType) {
             if (isNumeric(jdbcType)) {
@@ -573,10 +573,10 @@ public class MappingGenerator {
         }
 
         /**
-         * This method returns true if the jdbc type has scale. 
+         * This method returns true if the jdbc type has scale.
          * @param jdbcType a jdbc type from java.sql.Types
          * @return <code>true</code> if the type has scale;
-         * <code>false</code> otherwise 
+         * <code>false</code> otherwise
          */
         public static boolean hasScale(int jdbcType) {
             if (getAttribute(jdbcType).equals(SCALE_ATTRIBUTE)
@@ -586,11 +586,11 @@ public class MappingGenerator {
         }
 
         /**
-         * This method returns true if the jdbc type has precision. 
-         * If the jdbc type has the precision, it means it also has scale. 
+         * This method returns true if the jdbc type has precision.
+         * If the jdbc type has the precision, it means it also has scale.
          * @param jdbcType a jdbc type from java.sql.Types
-         * @return <code>true</code> if the type has precision; 
-         * <code>false</code> otherwise 
+         * @return <code>true</code> if the type has precision;
+         * <code>false</code> otherwise
          */
         public static boolean hasPrecision(int jdbcType) {
             if (getAttribute(jdbcType).equals(SCALE_PRECISION_ATTRIBUTE))

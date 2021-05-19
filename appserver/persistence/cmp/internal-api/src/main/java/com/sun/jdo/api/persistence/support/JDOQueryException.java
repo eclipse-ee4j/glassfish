@@ -22,18 +22,18 @@
 
 package com.sun.jdo.api.persistence.support;
 
-/** 
+/**
  *
  * @author  Michael Bouschen
  * @version 0.1
  */
-public class JDOQueryException 
+public class JDOQueryException
     extends JDOUserException
 {
     /**
      * Creates a new <code>JDOQueryException</code> without detail message.
      */
-    public JDOQueryException() 
+    public JDOQueryException()
     {
     }
 
@@ -41,18 +41,18 @@ public class JDOQueryException
      * Constructs a new <code>JDOQueryException</code> with the specified detail message.
      * @param msg the detail message.
      */
-    public JDOQueryException(String msg) 
+    public JDOQueryException(String msg)
     {
         super(msg);
     }
-    
+
     /**
       * Constructs a new <code>JDOQueryException</code> with the specified detail message
       * and nested Exception.
       * @param msg the detail message.
       * @param nested the nested <code>Exception</code>.
       */
-    public JDOQueryException(String msg, Exception nested) 
+    public JDOQueryException(String msg, Exception nested)
     {
         super(msg, nested);
     }

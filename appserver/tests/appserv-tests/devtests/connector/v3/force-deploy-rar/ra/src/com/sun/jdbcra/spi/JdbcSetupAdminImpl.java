@@ -66,62 +66,62 @@ public class JdbcSetupAdminImpl implements JdbcSetupAdmin {
     public boolean checkSetup(){
 
         if (jndiName== null || jndiName.trim().equals("")) {
-	   return false;
-	}
+           return false;
+        }
 
         if (tableName== null || tableName.trim().equals("")) {
-	   return false;
-	}
+           return false;
+        }
 
         Connection con = null;
-	Statement s = null;
-	ResultSet rs = null;
-	boolean b = false;
+        Statement s = null;
+        ResultSet rs = null;
+        boolean b = false;
         try {
-	    InitialContext ic = new InitialContext();
-	    DataSource ds = (DataSource) ic.lookup(jndiName);
+            InitialContext ic = new InitialContext();
+            DataSource ds = (DataSource) ic.lookup(jndiName);
             con = ds.getConnection();
-	    String fullTableName = tableName;
-	    if (schemaName != null && (!(schemaName.trim().equals("")))) {
-	        fullTableName = schemaName.trim() + "." + fullTableName;
-	    }
-	    String qry = "select * from " + fullTableName; 
+            String fullTableName = tableName;
+            if (schemaName != null && (!(schemaName.trim().equals("")))) {
+                fullTableName = schemaName.trim() + "." + fullTableName;
+            }
+            String qry = "select * from " + fullTableName;
 
-	    System.out.println("Executing query :" + qry);
+            System.out.println("Executing query :" + qry);
 
-	    s = con.createStatement();
-	    rs = s.executeQuery(qry); 
+            s = con.createStatement();
+            rs = s.executeQuery(qry);
 
             int i = 0;
-	    if (rs.next()) {
-	        i++;
-	    }
+            if (rs.next()) {
+                i++;
+            }
 
             System.out.println("No of rows found:" + i);
             System.out.println("No of rows expected:" + noOfRows);
 
-	    if (i == noOfRows.intValue()) {
-	       b = true;
-	    } else {
-	       b = false;
-	    }
-	} catch(Exception e) {
-	    e.printStackTrace();
-	    b = false;
-	} finally {
-	    try {
-	        if (rs != null) rs.close();
-	        if (s != null) s.close();
-	        if (con != null) con.close();
+            if (i == noOfRows.intValue()) {
+               b = true;
+            } else {
+               b = false;
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+            b = false;
+        } finally {
+            try {
+                if (rs != null) rs.close();
+                if (s != null) s.close();
+                if (con != null) con.close();
             } catch (Exception e) {
-	    }
-	}
-	System.out.println("Returning setup :" +b);
-	return b;
+            }
+        }
+        System.out.println("Returning setup :" +b);
+        return b;
     }
-    
+
     public int getVersion(){
-	    return ResourceAdapter.VERSION;
+            return ResourceAdapter.VERSION;
     }
 
 }

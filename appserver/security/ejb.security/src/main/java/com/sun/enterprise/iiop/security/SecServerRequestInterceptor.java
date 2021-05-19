@@ -17,9 +17,9 @@
 package com.sun.enterprise.iiop.security;
 
 /**
- * This class is a server side request interceptor for CSIV2. 
- * It is used to send and receive the service context in a 
- * a service context element in the service context list in  
+ * This class is a server side request interceptor for CSIV2.
+ * It is used to send and receive the service context in a
+ * a service context element in the service context list in
  * an IIOP header.
  *
  * @author: Nithya Subramanian
@@ -61,7 +61,7 @@ import java.util.logging.*;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 
 /*
- * Security server request interceptor 
+ * Security server request interceptor
  */
 
 public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject implements ServerRequestInterceptor {
@@ -119,7 +119,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
     private SASContextBody createContextError(int status) {
         /**
          * CSIV2 SPEC NOTE:
-         * 
+         *
          * Check that CSIV2 spec does not require an error token to be sent for the GSSUP mechanism.
          */
 
@@ -150,7 +150,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
     private SASContextBody createCompleteEstablishContext(int status) {
         /**
          * CSIV2 SPEC NOTE:
-         * 
+         *
          * Check CSIV2 spec to make sure that there is no final_context_token for GSSUP mechanism
          */
         if (_logger.isLoggable(Level.FINE)) {
@@ -191,9 +191,9 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
     /**
      * Create an identity from an Identity Token and stores it as a public credential in the JAAS subject in a security
      * context.
-     * 
+     *
      * Set the identcls field in the security context.
-     * 
+     *
      */
     private void createIdCred(SecurityContext sc, IdentityToken idtok) throws Exception {
 
@@ -255,13 +255,13 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
                 /* Extract DER encoding */
                 derenc = X509CertificateChainHelper.extract(any);
             }
-            
+
             List<? extends Certificate> certificates = CertificateFactory.getInstance("X.509")
                     .generateCertPath(new ByteArrayInputStream(derenc))
                     .getCertificates();
 
             X509Certificate[] certchain = new X509Certificate[certificates.size()];
-           
+
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.log(Level.FINE, "Contents of X509 Certificate chain:");
             }
@@ -276,7 +276,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
             }
             /**
              * The alias field in the X509CertificateCredential is currently ignored by the RI. So it is set to "dummy".
-             * 
+             *
              */
             X509CertificateCredential cred = new X509CertificateCredential(certchain, certchain[0].getSubjectX500Principal().getName(), "default");
             if (_logger.isLoggable(Level.FINE)) {
@@ -318,7 +318,7 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
     /**
      * Check if given byte is CDR encapsulated.
-     * 
+     *
      * @param bytes an input array of byte
      * @return boolean indicates whether input is CDR
      */
@@ -446,11 +446,11 @@ public class SecServerRequestInterceptor extends org.omg.CORBA.LocalObject imple
 
         /**
          * CSIV2 SPEC NOTE:
-         * 
+         *
          * CSIV2 spec does not specify the actions for any message other than a MessageInContext and EstablishContext message.So
          * for such messages, this implementation simply drops the message on the floor. No other message is sent back. Neither
          * is an exception raised.
-         * 
+         *
          * ISSUE: Should there be some other action ?
          */
 

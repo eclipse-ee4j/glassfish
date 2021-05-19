@@ -39,44 +39,44 @@
   &run;
 
   <target name="all" depends="display-header,init-common">
-	<antcall target="setup"/>
-	<ant dir="servletjaxws" target="all"/>
-	<ant dir="ejbws" target="all"/>
-	<ant dir="servletws" target="all"/>
-	
-	<antcall target="unsetup"/>
+    <antcall target="setup"/>
+    <ant dir="servletjaxws" target="all"/>
+    <ant dir="ejbws" target="all"/>
+    <ant dir="servletws" target="all"/>
+
+    <antcall target="unsetup"/>
   </target>
-  
+
   <target name="display-header">
-    <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>      
+    <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>
   </target>
-  
+
   <target name="run-test">
-	<ant dir="servletjaxws" target="all"/>
-	<ant dir="ejbws" target="all"/>
-	<ant dir="servletws" target="all"/>
+    <ant dir="servletjaxws" target="all"/>
+    <ant dir="ejbws" target="all"/>
+    <ant dir="servletws" target="all"/>
   </target>
-  
+
   <target name="setup" depends="init-common">
-	<!-- *** The following is commented as message security level is being provided at application level. Uncomment only to test with default provider at server level policies. **
-	<antcall target="enable-wss-message-security-provider"/>
-	<antcall target="enable-wss-client-message-security-provider"/>
-	<copy failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"
+    <!-- *** The following is commented as message security level is being provided at application level. Uncomment only to test with default provider at server level policies. **
+    <antcall target="enable-wss-message-security-provider"/>
+    <antcall target="enable-wss-client-message-security-provider"/>
+    <copy failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"
                 tofile="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.baseconfig"/>
-	-->
-	<antcall target="setup-client-cert-s1as"/>
-	<antcall target="create-users"/>
-	<antcall target="enable-wss-log"/>
+    -->
+    <antcall target="setup-client-cert-s1as"/>
+    <antcall target="create-users"/>
+    <antcall target="enable-wss-log"/>
   </target>
 
 
   <target name="enable-wss-client-message-security-provider" depends="set-appserver-version">
-	<antcall target="enable-wss-client-message-security-provider-pe"/>
-	<antcall target="enable-wss-client-message-security-provider-ee"/>
+    <antcall target="enable-wss-client-message-security-provider-pe"/>
+    <antcall target="enable-wss-client-message-security-provider-ee"/>
   </target>
 
   <target name="enable-wss-client-message-security-provider-pe" unless="isEE">
-	<copy  failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"
+    <copy  failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"
                 tofile="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.sqe"/>
         <copy overwrite="true"   failonerror="false" file="config/glassfish-acc.xml"
                 tofile="config/glassfish-acc.xml.org"/>
@@ -108,38 +108,38 @@
   </target>
 
   <target name="generate-sample-jks-cert" depends="init-common">
-	<antcall target="create-sample-self-jks-cert"/>
+    <antcall target="create-sample-self-jks-cert"/>
   </target>
 
   <target name="unsetup" depends="init-common">
 
-	<!-- *** The following is commented as message security level is being provided at application level. Uncomment only to test with default provider at server level policies. **
+    <!-- *** The following is commented as message security level is being provided at application level. Uncomment only to test with default provider at server level policies. **
 
         <antcall target="disable-wss-message-security-provider"/>
-	<copy overwrite="true" failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.sqe"
-		tofile="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-	<delete file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.sqe" failonerror="false"/>
-	<delete file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.baseconfig" failonerror="false"/>
-	-->
-	<antcall target="unsetup-client-cert-s1as"/>
-	<antcall target="delete-users"/>
-	<antcall target="disable-wss-log"/>
+    <copy overwrite="true" failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.sqe"
+        tofile="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+    <delete file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.sqe" failonerror="false"/>
+    <delete file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml.baseconfig" failonerror="false"/>
+    -->
+    <antcall target="unsetup-client-cert-s1as"/>
+    <antcall target="delete-users"/>
+    <antcall target="disable-wss-log"/>
   </target>
 
   <target name="usage">
-	<echo message="=============================================="/>
- 	<echo message="****** Security-WSS Testsuites *****"/>
-	<echo message="ant all -->Run all tests"/>
-	<echo message="=============================================="/>
+    <echo message="=============================================="/>
+    <echo message="****** Security-WSS Testsuites *****"/>
+    <echo message="ant all -->Run all tests"/>
+    <echo message="=============================================="/>
   </target>
 
   <target name="restart" depends="init-common">
-	<antcall target="restart-server-instance-common"/>
+    <antcall target="restart-server-instance-common"/>
   </target>
 
   <target name="setup-client-cert" depends="set-appserver-version">
-	<antcall target="create-sample-jks-cert"/>
-	<antcall target="est-cert-trust-ee"/>
+    <antcall target="create-sample-jks-cert"/>
+    <antcall target="est-cert-trust-ee"/>
   </target>
 
     <target name="create-sample-jks-cert" if="isEE">
@@ -170,13 +170,13 @@
                 <param name="cert.file" value="clientcert_rfc.crt"/>
         </antcall>
 
-	<!-- JSSE trust store -->
-	<antcall target="est-cert-trust-jks-ee"/>
+        <!-- JSSE trust store -->
+        <antcall target="est-cert-trust-jks-ee"/>
 
     </target>
-    
+
     <target name="est-cert-trust-jks-ee" depends="init-common">
-	<antcall target="get-certdb-to-jks">
+        <antcall target="get-certdb-to-jks">
                 <param name="cert.nickname" value="s1as"/>
         </antcall>
         <antcall target="import-cert-jks">
@@ -184,11 +184,11 @@
           <param name="keystore.file" value="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
           <param name="cert.file" value="clientcert_rfc.crt"/>
         </antcall>
-	
+
     </target>
 
     <target name="unsetup-client-cert" depends="set-appserver-version">
-	<antcall target="unsetup-client-cert-ee"/>
+    <antcall target="unsetup-client-cert-ee"/>
         <antcall target="update-back-wss-client-alias"/>
     </target>
 
@@ -207,11 +207,11 @@
     </target>
 
   <target name="update-wss-client-alias" depends="init-common">
-	<echo message="commented the clientcert replacement in wss-client-config-2.0.xml" />
-	<!--
+    <echo message="commented the clientcert replacement in wss-client-config-2.0.xml" />
+    <!--
         <replace token="s1as" value="clientcert" file="${env.S1AS_HOME}/lib/appclient/wss-client-config-2.0.xml"/>
         <replace token="s1as" value="clientcert" file="${admin.domain.dir}/${admin.domain}/config/wss-client-config-2.0.xml"/>
-	-->
+    -->
   </target>
 
   <target name="update-back-wss-client-alias" depends="init-common">
@@ -220,63 +220,63 @@
   </target>
 
   <target name="setup-client-cert-s1as" depends="set-appserver-version">
-	<antcall target="setup-client-cert-s1as-ee"/>	
+    <antcall target="setup-client-cert-s1as-ee"/>
   </target>
 
   <target name="unsetup-client-cert-s1as" depends="set-appserver-version">
-	<antcall target="unsetup-client-cert-s1as-ee"/>	
+    <antcall target="unsetup-client-cert-s1as-ee"/>
   </target>
 
   <target name="setup-client-cert-s1as-ee" depends="init-common" if="isEE">
-	<antcall target="export-cert-p12-nss">
-		<param name="cert.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
-		<param name="cert.dir" value="${admin.domain.dir}/${admin.domain}/config"/>
-		<param name="certdb.pwd" value="${ssl.password}"/>
-		<param name="cert.pwd" value="${ssl.password}"/>
-		<param name="cert.nickname" value="s1as"/>
-	</antcall>
-	<antcall target="convert-pkcs12-to-jks">
-		<param name="pkcs12.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
-		<param name="pkcs12.pass" value="${ssl.password}"/>
-		<param name="jks.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.jks"/>
-		<param name="jks.pass" value="changeit"/>
+    <antcall target="export-cert-p12-nss">
+        <param name="cert.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
+        <param name="cert.dir" value="${admin.domain.dir}/${admin.domain}/config"/>
+        <param name="certdb.pwd" value="${ssl.password}"/>
+        <param name="cert.pwd" value="${ssl.password}"/>
+        <param name="cert.nickname" value="s1as"/>
+    </antcall>
+    <antcall target="convert-pkcs12-to-jks">
+        <param name="pkcs12.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
+        <param name="pkcs12.pass" value="${ssl.password}"/>
+        <param name="jks.file" value="${env.APS_HOME}/sqetests/security/wss/s1as.jks"/>
+        <param name="jks.pass" value="changeit"/>
         </antcall>
-	<antcall target="get-certdb-to-jks">
-                <param name="cert.nickname" value="s1as"/>
-        </antcall>
+    <antcall target="get-certdb-to-jks">
+       <param name="cert.nickname" value="s1as"/>
+    </antcall>
   </target>
 
   <target name="unsetup-client-cert-s1as-ee" depends="init-common" if="isEE">
-	<delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/s1as.jks"/>
-	<delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
-	<delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/certpassfile"/>
-	<delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/passfile"/>
-	<delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
-	<delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
+    <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/s1as.jks"/>
+    <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/s1as.p12"/>
+    <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/certpassfile"/>
+    <delete failonerror="false" file="${env.APS_HOME}/sqetests/security/wss/passfile"/>
+    <delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks"/>
+    <delete failonerror="false" file="${admin.domain.dir}/${admin.domain}/config/certdb.rfc"/>
   </target>
 
  <target name="enable-wss-log" depends="init-common">
-	<replace token="dumpMessages=&quot;false&quot;" 
+    <replace token="dumpMessages=&quot;false&quot;"
                  value="dumpMessages=&quot;true&quot;"
-		 file="${admin.domain.dir}/${admin.domain}/config/wss-server-config-2.0.xml"/>
-	<replace token="dumpMessages=&quot;false&quot;" 
+         file="${admin.domain.dir}/${admin.domain}/config/wss-server-config-2.0.xml"/>
+    <replace token="dumpMessages=&quot;false&quot;"
                  value="dumpMessages=&quot;true&quot;"
-		 file="${env.S1AS_HOME}/lib/appclient/wss-client-config-2.0.xml"/>
-	<replace token="&quot;WARNING&quot;" 
+         file="${env.S1AS_HOME}/lib/appclient/wss-client-config-2.0.xml"/>
+    <replace token="&quot;WARNING&quot;"
                  value="&quot;INFO&quot;"
-		 file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+         file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
  </target>
 
  <target name="disable-wss-log" depends="init-common">
-	<replace token="dumpMessages=&quot;true&quot;" 
+    <replace token="dumpMessages=&quot;true&quot;"
                  value="dumpMessages=&quot;false&quot;"
-		 file="${admin.domain.dir}/${admin.domain}/config/wss-server-config-2.0.xml"/>
-	<replace token="dumpMessages=&quot;true&quot;" 
+         file="${admin.domain.dir}/${admin.domain}/config/wss-server-config-2.0.xml"/>
+    <replace token="dumpMessages=&quot;true&quot;"
                  value="dumpMessages=&quot;false&quot;"
-		 file="${env.S1AS_HOME}/lib/appclient/wss-client-config-2.0.xml"/>
-	<replace token="&quot;INFO&quot;" 
+         file="${env.S1AS_HOME}/lib/appclient/wss-client-config-2.0.xml"/>
+    <replace token="&quot;INFO&quot;"
                  value="&quot;WARNING&quot;"
-		 file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+         file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
  </target>
 
  <target name="create-users" depends="init-common">
@@ -307,6 +307,6 @@
    </antcall>
  </target>
 
- 
+
 </project>
 

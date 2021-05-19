@@ -33,7 +33,7 @@ public interface LocalStringManager {
      *
      * <p>This simplifies access to resources, at the cost of checking for
      * the resource bundle of several classes upon each call. However, due
-     * to the caching performed by <tt>ResourceBundle</tt> this seems 
+     * to the caching performed by <tt>ResourceBundle</tt> this seems
      * reasonable.
      *
      * <p>Due to that, sub-classes <strong>must</strong> make sure they don't
@@ -45,9 +45,9 @@ public interface LocalStringManager {
      * @return The localized value for the resource
      */
     public String getLocalString(
-	Class callerClass,
-	String key,
-	String defaultValue
+        Class callerClass,
+        String key,
+        String defaultValue
     );
 
     /**
@@ -59,10 +59,10 @@ public interface LocalStringManager {
      * @return A formatted localized string
      */
     public String getLocalString(
-	Class callerClass,
-	String key,
-	String defaultFormat,
-	Object arguments[]
+        Class callerClass,
+        String key,
+        String defaultFormat,
+        Object arguments[]
     );
 
     public String getLocalString(String key, String defaultValue);

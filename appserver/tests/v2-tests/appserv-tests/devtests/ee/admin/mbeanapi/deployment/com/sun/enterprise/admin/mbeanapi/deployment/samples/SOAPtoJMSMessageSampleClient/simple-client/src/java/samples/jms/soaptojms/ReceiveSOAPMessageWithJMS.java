@@ -44,7 +44,7 @@ public class ReceiveSOAPMessageWithJMS implements MessageListener {
     /**
      * Default constructor.
      *
-     * @param topicName  a String that contains the name of a JMS Topic  
+     * @param topicName  a String that contains the name of a JMS Topic
      *
      */
     public ReceiveSOAPMessageWithJMS(String topicName) {
@@ -54,7 +54,7 @@ public class ReceiveSOAPMessageWithJMS implements MessageListener {
     /**
      * JMS Connection/Session/Destination/MessageListener set ups.
      *
-     * @param topicName a String that contains the name of a JMS Topic  
+     * @param topicName a String that contains the name of a JMS Topic
      */
     public void init(String topicName) {
         try {
@@ -66,12 +66,12 @@ public class ReceiveSOAPMessageWithJMS implements MessageListener {
 
             /**
              * JMS set up.
-             */            
+             */
             ServiceLocator servicelocator = new ServiceLocator();
             tcf = servicelocator.getTopicConnectionFactory(JNDINames.TOPIC_CONNECTION_FACTORY);
             tc = tcf.createTopicConnection();
             session = tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            topic = servicelocator.getTopic(topicName); 
+            topic = servicelocator.getTopic(topicName);
             subscriber = session.createSubscriber(topic);
             subscriber.setMessageListener( this );
             tc.start();
@@ -81,9 +81,9 @@ public class ReceiveSOAPMessageWithJMS implements MessageListener {
         } catch (Exception jmse) {
             jmse.printStackTrace();
         }
-    }   
-     
-     
+    }
+
+
     /**
      * JMS Messages are delivered to this method. The body of the message
      * contains SOAP streams.
@@ -152,5 +152,5 @@ public class ReceiveSOAPMessageWithJMS implements MessageListener {
         }
         return;
     }
-   
+
 }

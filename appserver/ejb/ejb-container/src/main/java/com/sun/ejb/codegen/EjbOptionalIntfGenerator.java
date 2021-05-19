@@ -85,7 +85,7 @@ public class EjbOptionalIntfGenerator
             throw new ClassNotFoundException(name);
         }
 
-        return clz;       
+        return clz;
     }
 
     public void generateOptionalLocalInterface(Class ejbClass, String intfClassName)
@@ -112,7 +112,7 @@ public class EjbOptionalIntfGenerator
         String intfInternalName = intfClassName.replace('.', '/');
         tv.visit(V1_1, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE,
                 intfInternalName, null,
-                Type.getType(Object.class).getInternalName(), 
+                Type.getType(Object.class).getInternalName(),
                 interfaceNames );
 
         for (java.lang.reflect.Method m : ejbClass.getMethods()) {
@@ -126,7 +126,7 @@ public class EjbOptionalIntfGenerator
         byte[] classData = cw.toByteArray();
         classMap.put(intfClassName, classData);
     }
-    
+
     /**
      * Determines if a method from a bean class can be considered as a business
      * method for EJB of no-interface view.
@@ -173,7 +173,7 @@ public class EjbOptionalIntfGenerator
        ClassVisitor tv = cw;
 //        ClassVisitor tv = (_debug)
 //                ? new TraceClassVisitor(cw, new PrintWriter(System.out)) : cw;
-        
+
         String[] interfaceNames = new String[interfaces.length + 1];
         interfaceNames[0] = OptionalLocalInterfaceProvider.class.getName().replace('.', '/');
         for (int i = 0; i < interfaces.length; i++) {
@@ -188,41 +188,41 @@ public class EjbOptionalIntfGenerator
                 fldDesc, null, null);
         fv.visitEnd();
 
-	// Generate constructor. The EJB spec only allows no-arg constructors, but
-	// JSR 299 added requirements that allow a single constructor to define
-	// parameters injected by CDI.
-	{
+        // Generate constructor. The EJB spec only allows no-arg constructors, but
+        // JSR 299 added requirements that allow a single constructor to define
+        // parameters injected by CDI.
+        {
 
-	    Constructor[] ctors = superClass.getConstructors();
-	    Constructor ctorWithParams = null;
-	    for(Constructor ctor : ctors) {
-		if(ctor.getParameterTypes().length == 0) {
-                    ctorWithParams = null;    //exists the no-arg ctor, use it
-                    break;
-                } else if(ctorWithParams == null) {
-		    ctorWithParams = ctor;
-		}
-	    }
+            Constructor[] ctors = superClass.getConstructors();
+            Constructor ctorWithParams = null;
+            for(Constructor ctor : ctors) {
+            if(ctor.getParameterTypes().length == 0) {
+                        ctorWithParams = null;    //exists the no-arg ctor, use it
+                        break;
+                    } else if(ctorWithParams == null) {
+                ctorWithParams = ctor;
+            }
+            }
 
-	    MethodVisitor cv = tv.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-	    cv.visitVarInsn(ALOAD, 0);
-	    String paramTypeString = "()V";
-	    // if void, only one param (implicit 'this' param)
-	    int maxValue = 1;
-	    if( ctorWithParams != null ) {
-		Class[] paramTypes = ctorWithParams.getParameterTypes();
-		for(int i = 0; i < paramTypes.length; i++) {
-		    cv.visitInsn(ACONST_NULL);
-		}
-		paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
-		// num params + one for 'this' pointer
-		maxValue = paramTypes.length + 1;
-	    }
-	    cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>",
-			   paramTypeString);
-	    cv.visitInsn(RETURN);
-	    cv.visitMaxs(maxValue, 1);
-	}
+            MethodVisitor cv = tv.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+            cv.visitVarInsn(ALOAD, 0);
+            String paramTypeString = "()V";
+            // if void, only one param (implicit 'this' param)
+            int maxValue = 1;
+            if( ctorWithParams != null ) {
+            Class[] paramTypes = ctorWithParams.getParameterTypes();
+            for(int i = 0; i < paramTypes.length; i++) {
+                cv.visitInsn(ACONST_NULL);
+            }
+            paramTypeString = Type.getConstructorDescriptor(ctorWithParams);
+            // num params + one for 'this' pointer
+            maxValue = paramTypes.length + 1;
+            }
+            cv.visitMethodInsn(INVOKESPECIAL,  Type.getType(superClass).getInternalName(), "<init>",
+                   paramTypeString);
+            cv.visitInsn(RETURN);
+            cv.visitMaxs(maxValue, 1);
+        }
 
         generateSetDelegateMethod(tv, delegateClass, subClassName);
 
@@ -245,13 +245,13 @@ public class EjbOptionalIntfGenerator
 
 
         Set<java.lang.reflect.Method> allMethods = new HashSet<java.lang.reflect.Method>();
-        
+
         for (java.lang.reflect.Method m : superClass.getMethods()) {
             if (qualifiedAsBeanMethod(m)) {
                 generateBeanMethod(tv, subClassName, m, delegateClass);
             }
         }
-        
+
         for (Class clz = superClass; clz != Object.class; clz = clz.getSuperclass()) {
             java.lang.reflect.Method[] beanMethods = clz.getDeclaredMethods();
             for (java.lang.reflect.Method mth : beanMethods) {
@@ -266,7 +266,7 @@ public class EjbOptionalIntfGenerator
 
                     if( (isPackage || isProtected) && !isStatic ) {
                         generateNonAccessibleMethod(tv, mth);
-                    }                    
+                    }
                     allMethods.add(mth);
                 }
             }
@@ -362,9 +362,9 @@ public class EjbOptionalIntfGenerator
 
         mg.throwException(Type.getType(jakarta.ejb.EJBException.class),
                 "Illegal non-business method access on no-interface view");
-        
+
         mg.returnValue();
-        
+
         mg.endMethod();
 
     }
@@ -383,8 +383,6 @@ public class EjbOptionalIntfGenerator
                 "()L" + SerializableObjectFactory.class.getName().replace('.', '/') + ";");
         cv.visitInsn(ARETURN);
         cv.visitMaxs(1, 1);
-
-        
     }
 
 
@@ -417,8 +415,7 @@ public class EjbOptionalIntfGenerator
         mg2.visitVarInsn(ALOAD, 1);
         mg2.visitTypeInsn(CHECKCAST, delegateClass.getName().replace('.', '/'));
         String delIntClassDesc = Type.getType(delegateClass).getDescriptor();
-        mg2.visitFieldInsn(PUTFIELD, subClassName.replace('.', '/'),
-                DELEGATE_FIELD_NAME, delIntClassDesc);
+        mg2.visitFieldInsn(PUTFIELD, subClassName.replace('.', '/'), DELEGATE_FIELD_NAME, delIntClassDesc);
         mg2.returnValue();
         mg2.endMethod();
     }
@@ -426,40 +423,35 @@ public class EjbOptionalIntfGenerator
      // A Method for the protected ClassLoader.defineClass method, which we access
     // using reflection.  This requires the supressAccessChecks permission.
     private static final java.lang.reflect.Method defineClassMethod = AccessController.doPrivileged(
-	new PrivilegedAction<java.lang.reflect.Method>() {
-	    public java.lang.reflect.Method run() {
-		try {
-		    java.lang.reflect.Method meth = ClassLoader.class.getDeclaredMethod(
-			"defineClass", String.class,
-			byte[].class, int.class, int.class,
-			ProtectionDomain.class ) ;
-		    meth.setAccessible( true ) ;
-		    return meth ;
-		} catch (Exception exc) {
-		    throw new RuntimeException(
-			"Could not find defineClass method!", exc ) ;
-		}
-	    }
-	}
-    ) ;
+        new PrivilegedAction<java.lang.reflect.Method>() {
+            public java.lang.reflect.Method run() {
+                try {
+                    java.lang.reflect.Method meth = ClassLoader.class.getDeclaredMethod(
+                    "defineClass", String.class,
+                    byte[].class, int.class, int.class,
+                    ProtectionDomain.class ) ;
+                    meth.setAccessible( true ) ;
+                    return meth ;
+                } catch (Exception exc) {
+                    throw new RuntimeException(
+                    "Could not find defineClass method!", exc ) ;
+                }
+            }
+        }
+    );
 
-    private static final Permission accessControlPermission =
-	    new ReflectPermission( "suppressAccessChecks" ) ;
+    private static final Permission accessControlPermission = new ReflectPermission("suppressAccessChecks");
 
     // This requires a permission check
-    private Class<?> makeClass( String name, byte[] def, ProtectionDomain pd,
-	    ClassLoader loader ) {
-
-	SecurityManager sman = System.getSecurityManager() ;
-	if (sman != null)
-	    sman.checkPermission( accessControlPermission ) ;
-
-	try {
-	    return (Class)defineClassMethod.invoke( loader,
-		name, def, 0, def.length, pd ) ;
-	} catch (Exception exc) {
-	    throw new RuntimeException( "Could not invoke defineClass!",
-		exc ) ;
-	}
+    private Class<?> makeClass(String name, byte[] def, ProtectionDomain pd, ClassLoader loader) {
+        SecurityManager sman = System.getSecurityManager();
+        if (sman != null) {
+            sman.checkPermission(accessControlPermission);
+        }
+        try {
+            return (Class) defineClassMethod.invoke(loader, name, def, 0, def.length, pd);
+        } catch (Exception exc) {
+            throw new RuntimeException("Could not invoke defineClass!", exc);
+        }
     }
 }

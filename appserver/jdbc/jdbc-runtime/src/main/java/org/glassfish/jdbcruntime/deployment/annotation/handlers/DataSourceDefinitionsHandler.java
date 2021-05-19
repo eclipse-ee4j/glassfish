@@ -42,7 +42,7 @@ public class DataSourceDefinitionsHandler extends AbstractResourceHandler {
 
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DataSourceDefinitionsHandler.class);
-    
+
     public DataSourceDefinitionsHandler() {
     }
 

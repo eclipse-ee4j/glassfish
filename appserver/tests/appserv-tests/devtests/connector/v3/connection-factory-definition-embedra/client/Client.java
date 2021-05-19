@@ -58,7 +58,7 @@ public class Client {
             } else {
                 stat.addStatus(tcName, stat.PASS);
             }
-            
+
         }catch(Exception e){
             stat.addStatus(tcName, stat.FAIL);
             throw e;
@@ -79,7 +79,7 @@ public class Client {
         InputStream is = c1.getInputStream();
         BufferedReader input = new BufferedReader(new InputStreamReader(is));
         String line = null;
-        
+
         while ((line = input.readLine()) != null)
             System.out.println(line);
         if (code != 200) {

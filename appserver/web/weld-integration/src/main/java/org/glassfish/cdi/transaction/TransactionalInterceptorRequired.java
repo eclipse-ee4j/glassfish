@@ -53,7 +53,7 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
-        
+
         setTransactionalTransactionOperationsManger(false);
         try {
             boolean isTransactionStarted = false;
@@ -64,13 +64,13 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
                 } catch (Exception exception) {
                     _logger.log(INFO, CDI_JTA_MBREQUIREDBT, exception);
                     throw new TransactionalException(
-                        "Managed bean with Transactional annotation and TxType of REQUIRED " + 
-                        "encountered exception during begin " + exception, 
+                        "Managed bean with Transactional annotation and TxType of REQUIRED " +
+                        "encountered exception during begin " + exception,
                         exception);
                 }
                 isTransactionStarted = true;
             }
-            
+
             Object proceed = null;
             try {
                 proceed = proceed(ctx);
@@ -86,15 +86,15 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
                     } catch (Exception exception) {
                         _logger.log(INFO, CDI_JTA_MBREQUIREDCT, exception);
                         throw new TransactionalException(
-                            "Managed bean with Transactional annotation and TxType of REQUIRED " + 
-                            "encountered exception during commit " + exception, 
+                            "Managed bean with Transactional annotation and TxType of REQUIRED " +
+                            "encountered exception during commit " + exception,
                             exception);
                     }
                 }
             }
-            
+
             return proceed;
-            
+
         } finally {
             resetTransactionOperationsManager();
         }

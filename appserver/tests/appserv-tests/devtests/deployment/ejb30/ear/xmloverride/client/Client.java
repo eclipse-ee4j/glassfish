@@ -28,8 +28,8 @@ public class Client {
         System.out.println("deployment-ejb30-ear-xmloverride");
         Client client = new Client();
         client.doTest();
-    }  
-    
+    }
+
     private static @EJB Sless sless;
     private static @EJB Sful sful;
 
@@ -73,6 +73,6 @@ public class Client {
             System.exit(-1);
         }
 
-    	return;
+            return;
     }
 }

@@ -49,7 +49,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 /**
  * Create Admin Object Command
  *
- * @author Jennifer Chou, Jagadish Ramu 
+ * @author Jennifer Chou, Jagadish Ramu
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.CONFIG, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @ExecuteOn(RuntimeType.ALL)
@@ -57,8 +57,8 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 @PerLookup
 @I18n("create.admin.object")
 public class CreateAdminObject implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateAdminObject.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateAdminObject.class);
 
     @Param(name=AOR_RES_TYPE)
     private String resType;
@@ -74,16 +74,16 @@ public class CreateAdminObject implements AdminCommand {
 
     @Param(name=DESCRIPTION, optional=true)
     private String description;
-    
+
     @Param(name=PROPERTY, optional=true, separator=':')
     private Properties properties;
-    
+
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(name=AOR_JNDI_NAME, primary=true)
     private String jndiName;
-    
+
     @Inject
     private Domain domain;
 

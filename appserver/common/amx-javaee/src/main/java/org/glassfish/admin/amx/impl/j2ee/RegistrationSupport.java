@@ -75,15 +75,15 @@ final class RegistrationSupport
 
     /** The Server config for this J2EEServer */
     private final Server mServer;
-    
+
     /** type of any resource ref */
     private final String mResourceRefType;
-    
+
     /** type of any application ref */
     private final String mApplicationRefType;
 
     private final Logger mLogger = AMXEELoggerInfo.getLogger();
-    
+
     public RegistrationSupport(final J2EEServer server)
     {
         mJ2EEServer = server;
@@ -125,26 +125,26 @@ final class RegistrationSupport
 
     private Domain getDomain()
     {
-    	return InjectedValues.getInstance().getHabitat().getService(Domain.class);
+        return InjectedValues.getInstance().getHabitat().getService(Domain.class);
     }
-    
+
     private ObjectName getObjectName(ConfigBeanProxy cbp)
     {
-    	return ConfigBeanRegistry.getInstance().getObjectNameForProxy(cbp);
+        return ConfigBeanRegistry.getInstance().getObjectNameForProxy(cbp);
     }
 
     private String getDeploymentDescriptor(
         final BundleDescriptor bundleDesc )
     {
         final ArchivistFactory archivistFactory = J2EEInjectedValues.getInstance().getArchivistFactory();
-        
+
         String dd = "unavailable";
         ByteArrayOutputStream out = null;
         try
         {
             final Archivist moduleArchivist = archivistFactory.getArchivist(bundleDesc.getModuleDescriptor().getModuleType());
             final DeploymentDescriptorFile ddFile =  moduleArchivist.getStandardDDFile();
-            
+
             out = new ByteArrayOutputStream();
             ddFile.write(bundleDesc, out);
             final String charsetName = "UTF-8";
@@ -161,12 +161,12 @@ final class RegistrationSupport
                 try { out.close(); } catch( Exception ee) {}
             }
         }
-                
+
         return dd;
     }
-  
+
     private ObjectName createAppMBeans(
-    	com.sun.enterprise.config.serverbeans.Application appConfig,
+        com.sun.enterprise.config.serverbeans.Application appConfig,
         final Application application,
         final MetadataImpl meta)
     {
@@ -225,7 +225,7 @@ final class RegistrationSupport
         mLogger.fine("Registered JSR 77 MBeans for application/module: " + top);
         return top;
     }
-    
+
         private com.sun.enterprise.config.serverbeans.Module
     getModuleConfig( final com.sun.enterprise.config.serverbeans.Application appConfig, final String name)
     {
@@ -233,7 +233,7 @@ final class RegistrationSupport
         {
             throw new IllegalArgumentException( "Can't find module named " + name + " in " + appConfig );
         }
-        
+
         return appConfig.getModule(name);
     }
 
@@ -250,12 +250,12 @@ final class RegistrationSupport
             meta.setDeploymentDescriptor( xmlDesc );
         }
         final String moduleName = ejbBundleDescriptor.getModuleName();
-        
+
         final com.sun.enterprise.config.serverbeans.Module moduleConfig = getModuleConfig(appConfig, moduleName );
         meta.setCorrespondingConfig(getObjectName(moduleConfig));
-        
+
         final ObjectName ejbModuleObjectName = registerJ2EEChild(parentMBean, meta, EJBModule.class, EJBModuleImpl.class, moduleName);
-        
+
         meta.remove( Metadata.CORRESPONDING_CONFIG );   // none for an EJB MBean
         meta.remove( Metadata.DEPLOYMENT_DESCRIPTOR );   // none for an EJB MBean
         for (final EjbDescriptor desc : ejbBundleDescriptor.getEjbs())
@@ -324,9 +324,9 @@ final class RegistrationSupport
         {
             meta.setDeploymentDescriptor( xmlDesc );
         }
-        
+
         final String moduleName = webBundleDescriptor.getModuleName();
-        
+
         final com.sun.enterprise.config.serverbeans.Module moduleConfig = getModuleConfig(appConfig, moduleName );
         meta.setCorrespondingConfig(getObjectName(moduleConfig));
 
@@ -337,7 +337,7 @@ final class RegistrationSupport
         for (final WebComponentDescriptor desc : webBundleDescriptor.getWebComponentDescriptors())
         {
             final String servletName = desc.getCanonicalName();
-            
+
             registerJ2EEChild(webModuleObjectName, meta, Servlet.class, ServletImpl.class, servletName);
         }
 
@@ -353,10 +353,10 @@ final class RegistrationSupport
     {
         meta.setCorrespondingConfig(getObjectName(appConfig));
         final ObjectName objectName = createRARModuleMBean(parentMBean, meta, appConfig, bundleDesc);
-        
+
         final com.sun.enterprise.config.serverbeans.Module moduleConfig = getModuleConfig(appConfig, bundleDesc.getModuleName() );
         meta.setCorrespondingConfig(getObjectName(moduleConfig));
-        
+
         registerJ2EEChild(objectName, meta, ResourceAdapter.class, ResourceAdapterImpl.class, bundleDesc.getName());
 
         return objectName;
@@ -398,7 +398,7 @@ final class RegistrationSupport
         return registerJ2EEChild(parentMBean, meta, AppClientModule.class, AppClientModuleImpl.class, moduleName);
     }
 
-  
+
     protected void registerApplications()
     {
         final List<ApplicationRef> appRefs = mServer.getApplicationRef();
@@ -411,12 +411,12 @@ final class RegistrationSupport
             catch( final Exception e )
             {
                 // log it: we want to continue with other apps, even if this one had a problem
-                mLogger.log( Level.INFO, AMXEELoggerInfo.registeringApplicationException, 
+                mLogger.log( Level.INFO, AMXEELoggerInfo.registeringApplicationException,
                         new Object[] { ref.getRef(), e});
             }
         }
     }
-    
+
    /**
         Examine the MBean to see if it is a ResourceRef that should be manifested under this server,
         and if so, register a JSR 77 MBean for it.
@@ -428,9 +428,9 @@ final class RegistrationSupport
 
         final MetadataImpl meta = new MetadataImpl();
         meta.setCorrespondingRef(getObjectName(ref));
-        
+
         final String appName = ref.getRef();
-        
+
         final ApplicationInfo appInfo = appRegistry.get(appName);
         if (appInfo == null)
         {
@@ -446,14 +446,14 @@ final class RegistrationSupport
             }
             return null;
         }
-        
+
         final com.sun.enterprise.config.serverbeans.Application appConfig = getDomain().getApplications().getApplication(appName);
         if ( appConfig == null )
         {
             mLogger.log(Level.WARNING, AMXEELoggerInfo.errorGetappconfig, appName);
             return null;
         }
-        
+
         meta.setCorrespondingConfig( getObjectName(appConfig) );
         final ObjectName mbean77 = createAppMBeans(appConfig, app, meta);
         synchronized (mConfigRefTo77)
@@ -473,9 +473,9 @@ final class RegistrationSupport
             final String name)
     {
         ObjectName objectName = null;
-        
+
         final String j2eeType = Util.deduceType(intf);
-        
+
         // must make a copy! May be an input value that is reused by caller
         final Metadata metadata = new MetadataImpl(metadataIn);
         try
@@ -493,7 +493,7 @@ final class RegistrationSupport
         return objectName;
     }
 
-      
+
     /**
         Examine the MBean to see if it is a ResourceRef that should be manifested under this server,
         and if so, register a JSR 77 MBean for it.
@@ -526,8 +526,8 @@ final class RegistrationSupport
             if (resource instanceof ResourcePool) {
                 name = ((ResourcePool) resource).getName();
             }
-        	if (name != null && name.equals(ref.getRef()))
-        		res = resource;
+            if (name != null && name.equals(ref.getRef()))
+                res = resource;
         }
         if (res == null)
         {
@@ -549,7 +549,7 @@ final class RegistrationSupport
             final MetadataImpl meta = new MetadataImpl();
             meta.setCorrespondingRef(getObjectName(ref));
             meta.setCorrespondingConfig(getObjectName(res));
-            
+
             mbean77 = registerJ2EEChild(mJ2EEServer.objectName(), meta, intf, implClass, Util.getNameProp(getObjectName(res)));
             synchronized (mConfigRefTo77)
             {
@@ -577,7 +577,7 @@ final class RegistrationSupport
         public RefListener()
         {
         }
-      
+
         public void handleNotification(final Notification notifIn, final Object handback)
         {
             if (!(notifIn instanceof MBeanServerNotification))
@@ -591,7 +591,7 @@ final class RegistrationSupport
             {
                 return;
             }
-            
+
             final String type = Util.getTypeProp(objectName);
 
             if (notif.getType().equals(MBeanServerNotification.REGISTRATION_NOTIFICATION))
@@ -651,7 +651,7 @@ final class RegistrationSupport
                 throw new RuntimeException(e);
             }
 
-            // register all existing 
+            // register all existing
             final List<ResourceRef> resourceRefs = mServer.getResourceRef();
             for (final ResourceRef ref : resourceRefs)
             {

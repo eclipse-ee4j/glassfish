@@ -39,7 +39,7 @@ public class Util {
     public static Logger getLogger() {
         return logger;
     }
-    
+
     /**
      * Gets a property value from the supplied properties object, if not defined there from system properties.
      *

@@ -50,7 +50,7 @@ public class SimpleEventObserverTestServlet extends HttpServlet {
         if (TestEventObserver.documentUpdatedEvent != 1){
             msg += "Document updated event not received by observer";
         }
-        
+
         if (TestEventObserver.documentAnyEvents != 2){
             msg += "# of Document event received by observer does not match expected values. expected = 2. observed="+ TestEventObserver.documentAnyEvents;
         }

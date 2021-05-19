@@ -50,7 +50,7 @@ public class WebContainerConfig {
     private String hostNames = "${com.sun.aas.hostName}";
     private String  listenerName = "embedded-listener";
     private boolean listings = false;
-    private int port = 8080;    
+    private int port = 8080;
     private String virtualServerId = "server";
 
     /**

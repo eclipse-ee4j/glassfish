@@ -24,6 +24,6 @@ import java.io.File;
  */
 public class SmartFile {
     static File sanitize(File f) {
-		return f.getAbsoluteFile();
-	}
+        return f.getAbsoluteFile();
+    }
 }

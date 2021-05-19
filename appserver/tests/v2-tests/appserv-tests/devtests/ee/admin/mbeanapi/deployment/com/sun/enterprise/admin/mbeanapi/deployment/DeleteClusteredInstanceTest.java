@@ -30,7 +30,7 @@ public class DeleteClusteredInstanceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final DeleteClusteredInstanceCmd deleteClusteredInstanceCmd = 
+        final DeleteClusteredInstanceCmd deleteClusteredInstanceCmd =
                 cmdFactory.createDeleteClusteredInstanceCmd(instanceName);
 
         target = new PipeCmd(connectCmd, deleteClusteredInstanceCmd);
@@ -43,7 +43,7 @@ public class DeleteClusteredInstanceTest extends BaseTest
 
     public static void main(String[] args) throws Exception
     {
-        new DeleteClusteredInstanceTest("admin", "password", "localhost", 
+        new DeleteClusteredInstanceTest("admin", "password", "localhost",
             8686, args[0]).run();
     }
 }

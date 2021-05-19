@@ -23,7 +23,7 @@ import java.io.*;
 import java.util.*;
 
 public class ParseML{
-    private String vendorParserClass = 
+    private String vendorParserClass =
     "org.apache.xerces.parsers.SAXParser";
     public static boolean debug = false;
     boolean inTestcase = false;
@@ -46,7 +46,7 @@ public class ParseML{
         }
         Hashtable[] filehash = new Hashtable[no_of_files];
         fileDiffs = new Vector[no_of_files];
-        for(int i = 0; i<args.length; i++){              
+        for(int i = 0; i<args.length; i++){
             filehash[i] = new Hashtable();
             fileDiffs[i] = new Vector();
             fileDiffs[i].add("</u><b>File:"+args[i]+"</b></u><br>\n"); // add the filename to the vector
@@ -59,7 +59,7 @@ public class ParseML{
                 System.out.println("Displaying hashtable # "+i);
                 pml.displayHash(filehash[i]);
             }
-        }                                
+        }
         pml.diffHash(filehash);
         pml.displayVectorArr(fileDiffs);
         System.out.print("writing diffs to file...");
@@ -70,14 +70,14 @@ public class ParseML{
         //hash = null;
         try{
             //Initialize a reader
-            XMLReader reader = 
+            XMLReader reader =
             XMLReaderFactory.createXMLReader(vendorParserClass);
             //Register Content Handler
             ContentHandler myContentHandler = new MyContentHandler();
             reader.setContentHandler(myContentHandler);
 
             //Parse
-            InputSource inputSource = 
+            InputSource inputSource =
             new InputSource(new java.io.FileInputStream(new java.io.File(xmlURI)));
             reader.parse(inputSource);
 
@@ -105,7 +105,7 @@ public class ParseML{
         }
         public void endPrefixMapping(String prefix){
         }
-        public void startElement(String namespaceURI, String localName, 
+        public void startElement(String namespaceURI, String localName,
                                  String qName, Attributes atts)
             throws SAXException{
             // add the local name into vector
@@ -118,29 +118,29 @@ public class ParseML{
                     System.out.println("inside testcase id.");
                 }
             }
-            // assuming that when its time to get the status, the value for the keys would have been obtained. 
+            // assuming that when its time to get the status, the value for the keys would have been obtained.
             if(localName.equals("status") && (inTestcase)){
                 //get attributes: pass/fail
                 if(debug){
-                    System.out.println("getting testcase status...");                   
+                    System.out.println("getting testcase status...");
                 }
                 value = atts.getValue(0).trim();
                 if((key!=null) && (!(key.equals(""))) && (value!=null) && (!value.equals(""))){
                     if(debug){
-                        System.out.println("Key["+key+"] has value["+value+"]");                   
+                        System.out.println("Key["+key+"] has value["+value+"]");
                     }
                     hash.put(key,value);
                     gotStatus = true;
-                    key = ""; 
+                    key = "";
                     value = "";
-                } 
+                }
                 else{
                     if(key == null || key.equals("")){
                         System.out.println("invalid key!");
                     }
                     if(value== null || value.equals("")){
                         System.out.println("invalid value!");
-                    }             
+                    }
                 }
             }
         }
@@ -149,17 +149,17 @@ public class ParseML{
             if(localName.equals("testcase")){
                 inTestcase = false;
                 if(debug){
-                        System.out.println("Outside testcase tag");                   
+                        System.out.println("Outside testcase tag");
                 }
             }
             if(localName.equals("id") && (inTestcase)){
                 inTestcaseID = false;
                 if(debug){
-                    System.out.println("Outside testcase-ID tag");                   
+                    System.out.println("Outside testcase-ID tag");
                 }  /*
                 key = key.trim();
                 value = value.trim();
-                if((key!=null) && (value!=null) && 
+                if((key!=null) && (value!=null) &&
                    (!(value.equals(""))) && (!(key.equals("")))){
 
                 }    */
@@ -187,16 +187,16 @@ public class ParseML{
         }
         public void skippedEntity(String name) throws SAXException{
             System.out.println("Skipped entity is:"+name);
-        }  
+        }
     }
     /*======= End of Inner Class Definition ================*/
 
-    public void displayHash(Hashtable hashtable){ 
+    public void displayHash(Hashtable hashtable){
         for (Enumeration e = hashtable.keys() ; e.hasMoreElements() ;) {
             String keyval = (String)e.nextElement();
             System.out.println(keyval +":"+hashtable.get(keyval));
         }
-    } 
+    }
 
     public void displayVector(Vector v){
         for(int i=0; i<v.size(); i++){
@@ -214,8 +214,8 @@ public class ParseML{
         try{
             File inputfile = new File("fileDiffs.html");
             FileWriter fw = new FileWriter(inputfile);
-            String filecontent = "<h3>File Diff Output</h3><hr>\n";            
-            for(int i = 0; i<v.length ; i++){    
+            String filecontent = "<h3>File Diff Output</h3><hr>\n";
+            for(int i = 0; i<v.length ; i++){
                 for(int j = 0; j<v[i].size(); j++){
                     filecontent += v[i].get(j)+"<br>\n";
                 }
@@ -228,14 +228,14 @@ public class ParseML{
                                "Please check the file name and try again");
         } catch(Exception ex){
             ex.printStackTrace();
-        }        
+        }
     }
 
     public Vector getKeyList(Hashtable[] hashes){
         int hashtables = hashes.length;
         Vector allkeys= new Vector();
         Vector[] hashVecs = new Vector[hashtables];
-        for(int i=0; i<hashtables; i++){            
+        for(int i=0; i<hashtables; i++){
             hashVecs[i] = new Vector((Collection)hashes[i].keySet());
         }
         allkeys = getUnion(hashVecs);
@@ -260,7 +260,7 @@ public class ParseML{
             System.out.println("total hashtables to diff:"+hashtables);
         }
         int bigHash = 0; // take the first hashtable as the golden file.
-        /*Get a list of most keys*/ 
+        /*Get a list of most keys*/
         Vector keylist = new Vector();
         keylist = getKeyList(hashes);
         /*Start comparing all other hashtable elements to this golden list of testcases*/
@@ -269,7 +269,7 @@ public class ParseML{
         if(debug){
             System.out.println("Total number of testcases gathered: "+totalkeys);
         }
-        for(int keyno=0; keyno<totalkeys; keyno++){ 
+        for(int keyno=0; keyno<totalkeys; keyno++){
             String keyObj = (String)keylist.get(keyno);
             Object val = null;
             Object bigHashVal = null;
@@ -277,8 +277,8 @@ public class ParseML{
             if(debug){
                 System.out.println("checking out key:"+keyObj);
             }
-            for(int i = 0; i<hashtables ; i++){               
-                if(i==bigHash){ 
+            for(int i = 0; i<hashtables ; i++){
+                if(i==bigHash){
                     continue;
                 }
                 // key exists
@@ -289,10 +289,10 @@ public class ParseML{
                             continue;
                         } else {
                             // key exists but the values are different
-                            // add it into both the vectors, if not already there. 
+                            // add it into both the vectors, if not already there.
                             String diffObj = "<font color=blue>"+keyObj+
                                 " has an inconsistent status:"+(String)val+
-                                "</font>"; 
+                                "</font>";
                             String bigdiffObj =  "<font color=blue>"+keyObj+
                                 " has an inconsistent status:"+(String)bigHashVal+
                                 "</font>";
@@ -302,10 +302,10 @@ public class ParseML{
                             if(!fileDiffs[bigHash].contains(bigdiffObj)){
                                 fileDiffs[bigHash].add(bigdiffObj);
                             }
-                        }   
+                        }
                     } else {
                         // key doesn't exist
-                        /*add it into the vector for smaller tables, if not already there.*/   
+                        /*add it into the vector for smaller tables, if not already there.*/
                         String diffObj =  "<font color=red>"+keyObj+
                             " testcase is missing </font>";
                         if(!fileDiffs[i].contains(diffObj)){
@@ -319,13 +319,13 @@ public class ParseML{
                         " testcase is missing </font>";
                     if(!fileDiffs[bigHash].contains(bigdiffObj)){
                         fileDiffs[bigHash].add(bigdiffObj);
-                    }// end missing-key if                        
+                    }// end missing-key if
                 }
             } // end for-loop for going through the hashtable array
         } // end for-loop for keys in the bigHash hashtable
-    } // end diff-hash method              
+    } // end diff-hash method
 
-    public void usage(){    
+    public void usage(){
         String usageStr = "Usage:\n java ParseML <xml_file_1> <xml_file_2> <xml_file_3>..."+
             "\n\tThis Utility will let you 'diff' multiple xml"+
             "\n\t files and produce a fileDiff.html file in the "+

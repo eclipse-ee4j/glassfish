@@ -30,23 +30,23 @@ import org.glassfish.apf.HandlerProcessingResult;
  * @author Jerome Dochez
  */
 public class ProcessingResultImpl implements ProcessingResult {
-    
+
     Map<AnnotatedElement, HandlerProcessingResult> results;
     ResultType overallResult = ResultType.UNPROCESSED;
-    
+
     /** Creates a new instance of ProcessingResultImpl */
     public ProcessingResultImpl() {
         results = new HashMap<AnnotatedElement, HandlerProcessingResult>();
     }
-    
+
     public void add(ProcessingResult pr) {
-        
+
         Map<AnnotatedElement, HandlerProcessingResult> results = pr.getResults();
         for (Map.Entry<AnnotatedElement, HandlerProcessingResult> element : results.entrySet()) {
             add(element.getKey(), element.getValue());
         }
     }
-    
+
     public void add(AnnotatedElement element, HandlerProcessingResult elementResult) {
 
         if (elementResult.getOverallResult().compareTo(overallResult)>0) {
@@ -65,11 +65,11 @@ public class ProcessingResultImpl implements ProcessingResult {
             }
         }
     }
-    
+
     public Map<AnnotatedElement,HandlerProcessingResult> getResults() {
         return results;
     }
-    
+
     public ResultType getOverallResult(){
         return overallResult;
     }

@@ -37,7 +37,7 @@ public interface StatsHolder {
      * @param statsHolder
      */
     StatsHolder addChild(String name, MonitoredObjectType type);
-    
+
     /**
      * return an array of StatHolder objects each representing a child
      * of this node.
@@ -54,62 +54,62 @@ public interface StatsHolder {
      * Returns name of this hierarchical node
      */
     String getName();
-    
+
     /**
      * Returns type of this hierarchical node
      */
     MonitoredObjectType getType();
-    
+
     /**
      * sets this hierarchical node's associated stats object. Used when node was
-     * originally created without a Stats implementation or a new monitoring 
+     * originally created without a Stats implementation or a new monitoring
      * level has been set requiring a new Stats registration
      */
     void setStats(Stats stats);
-	
-	Stats getStats();
-    
-	void setStatsClass(Class c);
-	
-	Class getStatsClass();
-	
-	void setStatsClassName(String cName);
-	
-	String getStatsClassName();
 
-	/**
+    Stats getStats();
+
+    void setStatsClass(Class c);
+
+    Class getStatsClass();
+
+    void setStatsClassName(String cName);
+
+    String getStatsClassName();
+
+    /**
      * Sets the ObjectName pertaining to the MBean for this node.
      */
-    void setObjectName(ObjectName name);    
-    
+    void setObjectName(ObjectName name);
+
     /**
      * Gets the ObjectName pertaining to the MBean for this node.
      */
-    ObjectName getObjectName();    
+    ObjectName getObjectName();
 
-	/**
-	 * Sets the hierarchically denoted dotted name for this node.
-	 */
-	void setDottedName(String dottedName);
-	
-	/**
-	 * Gets the hierarchically denoted dotted name for this node.
-	 */
-	String getDottedName();
-	
+    /**
+     * Sets the hierarchically denoted dotted name for this node.
+     */
+    void setDottedName(String dottedName);
+
+    /**
+     * Gets the hierarchically denoted dotted name for this node.
+     */
+    String getDottedName();
+
     /**
      * Registers a monitoring MBean with the MBeanServer
      */
     void registerMBean();
-    
+
     /**
      * Unregisters a monitoring MBean from the MBean Server
      */
     void unregisterMBean();
-	
-	void setType(MonitoredObjectType type);
-	
-	StatsHolder getChild(String name);
-	
-	void removeChild(String name);
+
+    void setType(MonitoredObjectType type);
+
+    StatsHolder getChild(String name);
+
+    void removeChild(String name);
 }

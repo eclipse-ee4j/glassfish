@@ -66,7 +66,7 @@
 <target name="start-nodeagent-common" depends="init-common">
 <echo message="Starting nodeagent ${nodeagent.name}" level="verbose"/>
   <antcall target="asadmin-common-ignore-fail">
-    <param name="admin.command" 
+    <param name="admin.command"
       value="start-node-agent
         --user ${admin.user}
         --passwordfile ${admin.password.file}
@@ -107,7 +107,7 @@
 <target name="stop-nodeagent-common" depends="init-common">
 <echo message="Stopping nodeagent ${nodeagent.name}" level="verbose"/>
   <antcall target="asadmin-common-ignore-fail">
-    <param name="admin.command" 
+    <param name="admin.command"
       value="stop-node-agent" />
     <param name="as.props" value=""/>
     <param name="operand.props"
@@ -121,7 +121,7 @@
 <target name="create-cluster-common" depends="init-common">
 <echo message="Creating cluster ${cluster.name}" level="verbose"/>
   <antcall target="asadmin-common-ignore-fail">
-    <param name="admin.command" 
+    <param name="admin.command"
       value="create-cluster" />
     <param name="operand.props"
       value="${cluster.name}" />
@@ -146,7 +146,7 @@
 <target name="start-cluster-common" depends="init-common">
 <echo message="Starting cluster ${cluster.name}" level="verbose"/>
   <antcall target="asadmin-common-ignore-fail">
-    <param name="admin.command" 
+    <param name="admin.command"
       value="start-cluster" />
     <param name="operand.props"
       value="${cluster.name}" />
@@ -159,7 +159,7 @@
 <target name="stop-cluster-common" depends="init-common">
 <echo message="Stopping cluster ${cluster.name}" level="verbose"/>
   <antcall target="asadmin-common-ignore-fail">
-    <param name="admin.command" 
+    <param name="admin.command"
       value="stop-cluster" />
     <param name="operand.props"
       value="${cluster.name}" />
@@ -315,9 +315,9 @@
         <param name="orb.listener1.port" value="${orb.listener1.port.two}"/>
         <param name="ssl.port" value="${ssl.port.two}"/>
         <param name="ssl.mutualauth.port" value="${ssl.mutualauth.port.two}"/>
-        <param name="jmx.system.connector.port" 
+        <param name="jmx.system.connector.port"
           value="${jmx.system.connector.port.two}"/>
-        <param name="clustered.server.name" 
+        <param name="clustered.server.name"
           value="${clustered.server.name.two}"/>
     </antcall>
 </target>
@@ -345,7 +345,7 @@
 <!-- ================================================================ -->
 <target name="remove-default-cluster-common" depends="init-common">
     <antcall target="delete-clustered-instance-common">
-        <param name="clustered.server.name" 
+        <param name="clustered.server.name"
           value="${clustered.server.name.two}"/>
     </antcall>
     <antcall target="delete-clustered-instance-common"/>
@@ -499,10 +499,10 @@
 <!-- ================================================================ -->
 <target name="eesetup-ant" depends="env-ee">
    <echo file="${admin.password.file}" append="false">
-	AS_ADMIN_USERPASSWORD=${password}
-	AS_ADMIN_PASSWORD=${admin.password}
-	AS_ADMIN_ADMINPASSWORD=${admin.password}
-	AS_ADMIN_MASTERPASSWORD=${master.password}
+        AS_ADMIN_USERPASSWORD=${password}
+        AS_ADMIN_PASSWORD=${admin.password}
+        AS_ADMIN_ADMINPASSWORD=${admin.password}
+        AS_ADMIN_MASTERPASSWORD=${master.password}
    </echo>
    <antcall target="createDomain"/>
    <antcall target="startDomain">
@@ -511,7 +511,7 @@
    <antcall target="create-nodeagent-common"/>
    <antcall target="create-instance-common"/>
    <antcall target="start-nodeagent"/>
-   <sleep seconds="30"/>   
+   <sleep seconds="30"/>
    <echo message="Done eesetup-ant!"/>
 </target>
 
@@ -570,7 +570,7 @@
         <arg line="--echo=true --terse=true" />
         <arg line="--domaindir ${admin.domain.dir}"/>
         <arg line="--adminport ${admin.port}"/>
-        <arg line="--instanceport ${admin.http.port}"/> 
+        <arg line="--instanceport ${admin.http.port}"/>
         <arg line="--adminuser ${admin.user}"/>
         <arg line="--passwordfile ${admin.password.file}"/>
         <arg line="${admin.domain}"/>

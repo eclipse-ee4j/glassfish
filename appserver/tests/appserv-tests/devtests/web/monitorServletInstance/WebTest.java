@@ -63,12 +63,12 @@ public class WebTest {
         contextRoot = args[6];
         appName = args[7];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for issue 9481");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	    stat.printSummary();
+            stat.printSummary();
     }
 
     public void doTest() {
@@ -80,7 +80,7 @@ public class WebTest {
 
             String testResult = invokeURL("http://" + host + ":" + port + contextRoot + "/test");
             System.out.println(testResult);
-            
+
             long appReqCount2 = getValue("test/requestcount", "requestcount", "count");
             System.out.println("app request count: " + appReqCount2);
             long processTime2 = getValue("test/processingtime", "processingtime", "lastsampletime");
@@ -94,7 +94,7 @@ public class WebTest {
             System.out.println("app error count: " + appErrorCount1);
 
             invokeURL("http://" + host + ":" + port + contextRoot + "/badrequest");
-            
+
             long appErrorCount2 = getValue("badrequest/errorcount", "errorcount", "count");
             System.out.println("app error count: " + appErrorCount2);
 
@@ -109,7 +109,7 @@ public class WebTest {
     }
 
     private String invokeURL(String urlString) throws Exception {
-     
+
         StringBuilder sb = new StringBuilder();
 
         URL url = new URL(urlString);

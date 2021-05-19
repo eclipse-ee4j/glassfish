@@ -35,7 +35,7 @@
       <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish</developerConnection>
       <url>https://github.com/eclipse-ee4j/glassfish</url>
     </scm>
-    
+
     <modules>
         <module>cluster</module>
         <module>instance</module>
@@ -79,7 +79,7 @@
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <forkCount>0</forkCount> 
+                    <forkCount>0</forkCount>
                 </configuration>
             </plugin>
         </plugins>

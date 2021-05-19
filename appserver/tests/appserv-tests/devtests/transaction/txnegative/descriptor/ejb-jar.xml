@@ -64,7 +64,7 @@
     </session>
   </enterprise-beans>
   <assembly-descriptor>
-	<container-transaction>
+        <container-transaction>
              <method>
                 <ejb-name>TestHung</ejb-name>
                 <method-name>*</method-name>

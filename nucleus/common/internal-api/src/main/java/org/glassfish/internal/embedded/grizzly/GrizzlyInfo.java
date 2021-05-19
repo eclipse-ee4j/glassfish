@@ -21,7 +21,7 @@ import org.glassfish.internal.embedded.ContainerBuilder;
 import java.util.Properties;
 
 /**
- * 
+ *
  */
 public abstract class GrizzlyInfo implements ContainerBuilder<GrizzlyContainer> {
 
@@ -30,6 +30,6 @@ public abstract class GrizzlyInfo implements ContainerBuilder<GrizzlyContainer> 
     public void setProperty(String key, String value) {
         props.setProperty(key, value);
     }
-    
+
 
 }

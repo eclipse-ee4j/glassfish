@@ -19,8 +19,8 @@ package com.sun.s1asdev.security.wss.permethod.servlet;
 import jakarta.servlet.SingleThreadModel;
 import javax.xml.rpc.server.ServiceLifecycle;
 
-public class HelloServlet implements 
-			SingleThreadModel, ServiceLifecycle {
+public class HelloServlet implements
+                        SingleThreadModel, ServiceLifecycle {
 
     public HelloServlet() {
         System.out.println("HelloServlet() instantiated");
@@ -43,7 +43,7 @@ public class HelloServlet implements
         System.out.println("sendSecret invoked from servlet endpoint");
         return message.hashCode();
     }
-        
+
     public String getSecret(double key) {
         System.out.println("getSecret invoked from servlet endpoint");
         return "Secret-" + key;

@@ -21,7 +21,7 @@ import org.glassfish.api.deployment.archive.ArchiveType;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * {@link ArchiveType} 
+ * {@link ArchiveType}
  *
  * @author sanjeeb.sahoo@oracle.com
  */

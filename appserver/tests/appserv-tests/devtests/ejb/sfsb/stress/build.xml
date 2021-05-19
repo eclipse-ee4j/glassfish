@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -48,13 +48,13 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/**.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class, **/*Load*.class **/*SFSB*.class" />
         </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="build,init-common">
         <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/create_pointbase.sql"/>
@@ -69,7 +69,7 @@
         </antcall>
     -->
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
     <!--
         <antcall target="asadmin-batch-common">
@@ -81,13 +81,13 @@
     <target name="run" depends="init-common">
         <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
            <antcall target="execute-ejb-sql-common">
             <param name="sql.file" value="sql/drop_pointbase.sql"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="runloadgenerator">
        <java  fork="true" failonerror="true"
@@ -97,7 +97,7 @@
            <arg value="ejb/ejb_sfsb_stress_StressSFSBHome"/>
            <arg value="${ictx.props}"/>
         </java>
-    </target>     
+    </target>
 
     <target name="run_cosnaming" depends="init-common">
         <antcall target="runloadgenerator">
@@ -108,7 +108,7 @@
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant create-resources Create all destinations and connection factories
           ant delete-resources Delete all destinations and connection factories
         </echo>

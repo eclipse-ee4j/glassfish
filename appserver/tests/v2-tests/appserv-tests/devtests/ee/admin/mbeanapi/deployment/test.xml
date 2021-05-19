@@ -21,7 +21,7 @@
 
 <target name="init-common" depends="">
 <echo message="Loading props from file ${env.APS_HOME}/config.properties" level="verbose"/>
-   <property file="./config.properties"/>   
+   <property file="./config.properties"/>
       <echo message="admin.user ${admin.user}" />
       <echo message="admin.password ${admin.password}" />
       <echo message="admin.host ${admin.host}" />

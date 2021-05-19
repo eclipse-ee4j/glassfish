@@ -26,17 +26,17 @@ public class StatefulExpiration {
 
     @PostConstruct
     public void init() {
-	System.out.println("In StatefulExpiration::init()");
+        System.out.println("In StatefulExpiration::init()");
     }
 
     public String hello() {
-	System.out.println("In StatefulExpiration::hello()");
-	return "hello, world\n";
+        System.out.println("In StatefulExpiration::hello()");
+        return "hello, world\n";
     }
 
     @PreDestroy
     public void destroy() {
-	System.out.println("In StatefulExpiration::destroy()");
+        System.out.println("In StatefulExpiration::destroy()");
     }
 
 

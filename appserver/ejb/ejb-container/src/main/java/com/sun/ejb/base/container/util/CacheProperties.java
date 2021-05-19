@@ -132,7 +132,7 @@ public class CacheProperties implements PostConstruct {
 
         // If portable @StatefulTimeout is specified, it takes precedence over
         // any default value in domain.xml.  However, if a removal timeout is
-        // specified in sun-ejb-jar.xml, that has highest precedence. 
+        // specified in sun-ejb-jar.xml, that has highest precedence.
         if( ejbDesc instanceof EjbSessionDescriptor ) {
 
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbDesc;
@@ -142,16 +142,16 @@ public class CacheProperties implements PostConstruct {
                 TimeUnit unit = sessionDesc.getStatefulTimeoutUnit();
 
                 value = TimeUnit.SECONDS.convert(value, unit);
-		if (value < 0) {
+        if (value < 0) {
                     this.removalTimeoutInSeconds = -1;
                     this.cacheIdleTimeoutInSeconds = -1;
-		} else if (value == 0) {
+        } else if (value == 0) {
                     this.removalTimeoutInSeconds = 1;
                     this.cacheIdleTimeoutInSeconds = 2;
-		} else {
+        } else {
                     this.removalTimeoutInSeconds = (int) value;
                     this.cacheIdleTimeoutInSeconds = (int) (value + 1);
-		}
+        }
 
             }
 
@@ -159,12 +159,12 @@ public class CacheProperties implements PostConstruct {
                for the 1st interval and removalTimeoutInSeconds for the 2nd. So if you add them, the sfsb will stay
                in the cache to the max possible interval, and because it'll be never written to disk,
                there will be nothing to remove from there.
-               
+
                set cacheIdleTimeoutInSeconds and maxCacheSize will cause cache never overflow, and sfsb just be
                removed from cache when cacheIdleTimeoutInSeconds arrives */
             if (sessionDesc.isStateful() && !sessionDesc.isPassivationCapable()) {
                 cacheIdleTimeoutInSeconds = cacheIdleTimeoutInSeconds + removalTimeoutInSeconds;
-                maxCacheSize = -1;                
+                maxCacheSize = -1;
             }
         }
 
@@ -191,4 +191,4 @@ public class CacheProperties implements PostConstruct {
     }
 
 }
-   
+

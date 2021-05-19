@@ -24,7 +24,8 @@ import java.util.HashMap;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.Statistic;
 
-/** Provides for generic implementation of any Stats interface. This class facilitates
+/**
+ * Provides for generic implementation of any Stats interface. This class facilitates
  * composition over inheritance for all the classes that implement their
  * specific Stats interfaces. None of them has to implement the methods defined
  * by the {@link org.glassfish.j2ee.statistics.Stats} interface. This class
@@ -32,31 +33,32 @@ import org.glassfish.j2ee.statistics.Statistic;
  * have to do is implement the specific accessing methods in their Stats interfaces
  * and delegate the rest to this class. <b> This class invokes all these methods in
  * implementing class through introspection. </b>
+ *
  * @author Kedar Mhaswade
  * @since S1AS8.0
  * @version $Version$
  */
 public class GenericStatsImpl implements Stats {
-    
+
     private final Class     statsInterface;
     private final Object    statsProvider;
     /** A map with binding of a String XXX to a method with name <b>get</b>XXX */
     private final Map       getters;
-    
+
     /**
      */
-    public GenericStatsImpl(String statsInterfaceName, Object statsProvider) 
+    public GenericStatsImpl(String statsInterfaceName, Object statsProvider)
     throws ClassNotFoundException {
         this(statsInterfaceName, GenericStatsImpl.class.getClassLoader(), statsProvider);
     }
-    
+
     /**
      */
-    public GenericStatsImpl(String statsInterfaceName, ClassLoader loader, 
+    public GenericStatsImpl(String statsInterfaceName, ClassLoader loader,
     Object statsProvider) throws ClassNotFoundException {
         this(Class.forName(statsInterfaceName, true, loader), statsProvider);
     }
-    
+
     /** Constructs a new instance of this class for a given interface and its implementation.
      * It is mandatory that following contract is satisfied to call this satisfactorily:
      * <ul>
@@ -79,7 +81,8 @@ public class GenericStatsImpl implements Stats {
         this.getters        = new HashMap();
         populateGetterMap();
     }
-    
+
+    @Override
     public Statistic getStatistic(String statisticName) {
         final Method getter = (Method) getters.get(statisticName);
         assert (getter != null) : ("Getter not initialized properly: " + statisticName);
@@ -94,13 +97,15 @@ public class GenericStatsImpl implements Stats {
         }
         return ( (Statistic)result );
     }
-    
+
+    @Override
     public String[] getStatisticNames() {
         /* The return array is fixed at the construction time */
         final String[] names = new String[getters.size()];
         return ( (String[])getters.keySet().toArray(names) ); //TODOOOOOOO
     }
-    
+
+    @Override
     public Statistic[] getStatistics() {
         return ( getStatisticsOneByOne() );         //invokes sequentially
     }
@@ -116,24 +121,24 @@ public class GenericStatsImpl implements Stats {
         assert (stats.length == i);
         return ( stats );
     }
-    
+
     private boolean implementsInterface(Class c, Object o) {
         boolean impls = false;
         final Class[] interfaces = o.getClass().getInterfaces();
-        for (int i = 0 ; i < interfaces.length ; i++) {
-            if (interfaces[i].equals(c)){
+        for (Class element : interfaces) {
+            if (element.equals(c)){
                 impls = true;
                 break;
             }
         }
         return ( impls );
     }
-    
+
     private boolean extendsStatsInterface(Class i) {
         final Class statsInterface = org.glassfish.j2ee.statistics.Stats.class;
         return ( statsInterface.isAssignableFrom(i) );
     }
-    
+
     private void populateGetterMap() {
         // Fix for Bugs 5045435, 6172088
         //final Method[] apis     = statsInterface.getDeclaredMethods(); //all of these should be PUBLIC.
@@ -149,11 +154,10 @@ public class GenericStatsImpl implements Stats {
         }
         assert (getters.size() == i) : ("Getters map is incorrect, names.length = " + names.length + " methods.length = " + methods.length);
     }
-    
+
     private Method[] getGetters(Method[] all) {
         final ArrayList l = new ArrayList();
-        for (int i = 0 ; i < all.length ; i++) {
-            final Method am = all[i];
+        for (final Method am : all) {
             if (isValidGetter(am)) {
                 l.add(am);
             }
@@ -161,15 +165,15 @@ public class GenericStatsImpl implements Stats {
         final Method[] m = new Method[l.size()];
         return ( (Method[])l.toArray(m) );
     }
-    
+
     private boolean isValidGetter(Method m) {
         final boolean startsWithGet     = m.getName().startsWith("get");
         final boolean hasNoParams       = m.getParameterTypes().length == 0;
         final boolean returnsStatistic  = Statistic.class.isAssignableFrom(m.getReturnType());
-        
+
         return ( startsWithGet && hasNoParams && returnsStatistic );
     }
-    
+
     private String[] methods2Statistics(Method[] methods) {
         final String[] names = new String[methods.length];
         for (int i = 0 ; i < methods.length ; i++) {
@@ -179,24 +183,25 @@ public class GenericStatsImpl implements Stats {
         }
         return ( names );
     }
-    
+
     private boolean isStatsInterfaceMethod(String name) {
         final Method[] methods = org.glassfish.j2ee.statistics.Stats.class.getMethods();
         boolean isInterfaceMethod = false;
-        for (int i = 0 ; i < methods.length ; i++) {
-            if (methods[i].getName().equals(name)) {
+        for (Method method : methods) {
+            if (method.getName().equals(name)) {
                 isInterfaceMethod = true;
                 break;
             }
         }
         return ( isInterfaceMethod );
     }
-    
+
     private Method[] filterStatsMethods(Method[] m) {
         ArrayList methodList = new ArrayList();
-        for(int i = 0; i < m.length; i++) {
-            if(! isStatsInterfaceMethod(m[i].getName()))
-                methodList.add(m[i]);
+        for (Method element : m) {
+            if(! isStatsInterfaceMethod(element.getName())) {
+                methodList.add(element);
+            }
         }
         final Method[] methods = new Method[methodList.size()];
         return (Method[])methodList.toArray(methods);

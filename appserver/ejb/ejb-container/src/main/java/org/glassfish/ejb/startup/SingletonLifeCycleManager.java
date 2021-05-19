@@ -78,7 +78,7 @@ public class SingletonLifeCycleManager {
         c.setSingletonLifeCycleManager(this);
         EjbSessionDescriptor sdesc = (EjbSessionDescriptor) c.getEjbDescriptor();
         String src = normalizeSingletonName(sdesc.getName(), sdesc);
-        
+
         String[] depends = sdesc.getDependsOn();
         String[] newDepends = new String[depends.length];
 
@@ -261,7 +261,7 @@ public class SingletonLifeCycleManager {
         } while (!stk.empty());
 
         dependencies.remove(dependencies.size() - 1);
-        
+
         return dependencies;
     }
 

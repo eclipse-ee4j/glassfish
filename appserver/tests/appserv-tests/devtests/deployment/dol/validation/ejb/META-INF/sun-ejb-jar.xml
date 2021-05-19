@@ -23,7 +23,7 @@
     <unique-id>1</unique-id>
     <ejb>
       <ejb-name>statefulSession</ejb-name>
-      <jndi-name>MyTraderBean</jndi-name>      
+      <jndi-name>MyTraderBean</jndi-name>
     </ejb>
   </enterprise-beans>
   <security-role-mapping>

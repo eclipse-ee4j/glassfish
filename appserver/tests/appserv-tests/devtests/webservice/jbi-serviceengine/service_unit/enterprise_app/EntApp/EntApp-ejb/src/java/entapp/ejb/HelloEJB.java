@@ -49,5 +49,5 @@ public class HelloEJB {
         System.out.println(hello);
         return hello;
     }
-    
+
 }

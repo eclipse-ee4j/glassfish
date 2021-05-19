@@ -19,7 +19,7 @@ package org.glassfish.ejb.deployment.descriptor.runtime;
 import org.glassfish.deployment.common.Descriptor;
 
 
-/** 
+/**
  * This class contains information about the persistent state
  * (abstract persistence schema)
  * for EJB2.0 CMP EntityBeans .
@@ -28,7 +28,7 @@ import org.glassfish.deployment.common.Descriptor;
  */
 
 public class IASPersistenceManagerDescriptor extends Descriptor {
-    
+
     public static final String PM_IDENTIFIER_DEFAULT = "SunOne"; // NOI18N
     public static final String PM_VERSION_DEFAULT = "1.0"; // NOI18N
     public static final String PM_CONFIG_DEFAULT = "myconfig.config";
@@ -49,7 +49,7 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
        pm_mapping_factory = PM_MAPPING_FACTORY_DEFAULT;
     }
 
-    /** 
+    /**
      * The copy constructor.
      */
     public IASPersistenceManagerDescriptor(String id, String ver, String conf, String generator, String factory) {
@@ -63,7 +63,7 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
     public String getPersistenceManagerIdentifier() {
       return pm_identifier;
     }
-    
+
     public void setPersistenceManagerIdentifier(String pm_identifier) {
         if (pm_identifier == null) {
             this.pm_identifier = PM_IDENTIFIER_DEFAULT;
@@ -71,11 +71,11 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
             this.pm_identifier = pm_identifier;
         }
     }
-    
+
     public String getPersistenceManagerVersion() {
       return pm_version;
     }
-    
+
     public void setPersistenceManagerVersion(String pm_version) {
         if (pm_version == null) {
             this.pm_version = PM_VERSION_DEFAULT;
@@ -83,23 +83,23 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
             this.pm_version = pm_version;
         }
     }
-    
+
     public String getPersistenceManagerConfig () {
       return pm_config;
     }
-    
+
     public void setPersistenceManagerConfig(String pm_config) {
         if (pm_config == null) {
             this.pm_config = PM_CONFIG_DEFAULT;
         } else {
             this.pm_config = pm_config;
         }
-    }    
-    
+    }
+
     public String getPersistenceManagerClassGenerator() {
       return pm_class_generator;
     }
-    
+
     public void setPersistenceManagerClassGenerator(String pm_class_generator) {
         if (pm_class_generator == null) {
             this.pm_class_generator = PM_CLASS_GENERATOR_DEFAULT;
@@ -107,11 +107,11 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
             this.pm_class_generator = pm_class_generator;
         }
     }
-    
+
     public String getPersistenceManagerMappingFactory() {
       return pm_mapping_factory;
     }
-    
+
     public void setPersistenceManagerMappingFactory(String pm_mapping_factory) {
         if (pm_mapping_factory == null) {
             this.pm_mapping_factory = PM_MAPPING_FACTORY_DEFAULT;
@@ -120,10 +120,10 @@ public class IASPersistenceManagerDescriptor extends Descriptor {
         }
     }
 
-    /**     
+    /**
      * Called from EjbCMPEntityDescriptor
      * when some classes in this object are updated.
-     */         
+     */
     public boolean classesChanged() {
         return false;
     }

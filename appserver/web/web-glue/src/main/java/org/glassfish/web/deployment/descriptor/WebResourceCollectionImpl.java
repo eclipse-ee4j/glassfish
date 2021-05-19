@@ -22,9 +22,9 @@ import org.glassfish.deployment.common.Descriptor;
 import java.util.HashSet;
 import java.util.Set;
 
-/** 
+/**
  * This descriptor represents a description of a portion of a web app
- * in terms of a collection of url patterns and 
+ * in terms of a collection of url patterns and
  * a collection of http methods on this patterns.
  *
  *@author Danny Coward
@@ -32,12 +32,12 @@ import java.util.Set;
 
 
 public class WebResourceCollectionImpl extends Descriptor
-				implements WebResourceCollection 
+                implements WebResourceCollection
 {
     private Set<String> urlPatterns;
     private Set<String> httpMethods;
     private Set<String> httpMethodOmissions;
-    
+
     public WebResourceCollectionImpl() {
     }
 
@@ -53,17 +53,17 @@ public class WebResourceCollectionImpl extends Descriptor
         }
     }
 
-    /** 
+    /**
      * Return my urls patterns (String objects)
      * @return the set of the url patterns.
      */
     public Set<String> getUrlPatterns() {
         if (this.urlPatterns == null) {
             this.urlPatterns = new HashSet<String>();
-	    }
+        }
         return this.urlPatterns;
     }
-    
+
     /**
      * Add a URL pattern to this collection.
      * @param the url pattern to be added.
@@ -71,7 +71,7 @@ public class WebResourceCollectionImpl extends Descriptor
     public void addUrlPattern(String urlPattern) {
         this.getUrlPatterns().add(urlPattern);
     }
-    
+
     /**
      * Remove the specified url pattern from the collection.
      * @param the url pattern to be removed.
@@ -79,16 +79,16 @@ public class WebResourceCollectionImpl extends Descriptor
     public void removeUrlPattern(String urlPattern) {
         this.getUrlPatterns().remove(urlPattern);
     }
-    
+
     /**
      * Clean out the collection of URL pattern and replace
      * it with the given Set of (String) url patterns.
-     * @param the url patterns to replace the current set. 
+     * @param the url patterns to replace the current set.
      */
     public void setUrlPatterns(Set<String> urlPatterns) {
         this.urlPatterns = urlPatterns;
     }
-    
+
     /**
      * Return the enumeration of HTTP methods this collection has.
      * @return the enumeration of HTTP methods.
@@ -96,11 +96,11 @@ public class WebResourceCollectionImpl extends Descriptor
     public Set<String> getHttpMethods() {
         if (this.httpMethods == null) {
             this.httpMethods = new HashSet<String>();
-        }    
+        }
         return this.httpMethods;
     }
 
-    /** 
+    /**
      * Returns the HttpMethods this collection has in an array of strings
      * This is added to speed up processing while creating webresource permissions
      * @return array of strings of HttpMethods
@@ -128,13 +128,13 @@ public class WebResourceCollectionImpl extends Descriptor
     public void addHttpMethod(String httpMethod) {
         this.getHttpMethods().add(httpMethod);
     }
-    
+
     /**
      * Removes the given HTTP method from the collection of http methods.
      * @param the HTTP method to be removed.
      */
     public void removeHttpMethod(String httpMethod) {
-        this.getHttpMethods().remove(httpMethod);    
+        this.getHttpMethods().remove(httpMethod);
     }
 
     /**
@@ -148,7 +148,7 @@ public class WebResourceCollectionImpl extends Descriptor
         return this.httpMethodOmissions;
     }
 
-    /** 
+    /**
      * Returns the HttpMethodOmissions this collection has in an array of strings
      * This is added to speed up processing while creating webresource permissions
      * @return array of strings of HttpMethodOmissions
@@ -175,13 +175,13 @@ public class WebResourceCollectionImpl extends Descriptor
     public void addHttpMethodOmission(String httpMethodOmission) {
         this.getHttpMethodOmissions().add(httpMethodOmission);
     }
-    
+
     /**
      * Removes the given HTTP method omission from the collection of http methods.
      * @param the HTTP method to be removed.
      */
     public void removeHttpMethodOmission(String httpMethodOmission) {
-        this.getHttpMethodOmissions().remove(httpMethodOmission);    
+        this.getHttpMethodOmissions().remove(httpMethodOmission);
     }
 
     /**

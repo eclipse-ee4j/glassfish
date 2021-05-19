@@ -37,36 +37,36 @@ public class MessageSecurityNode extends DeploymentDescriptorNode {
 
     public MessageSecurityNode() {
         registerElementHandler(new XMLElement(
-            WebServicesTagNames.MESSAGE), MessageNode.class, 
+            WebServicesTagNames.MESSAGE), MessageNode.class,
             "addMessageDescriptor");
         registerElementHandler(new XMLElement(
-            WebServicesTagNames.REQUEST_PROTECTION), ProtectionNode.class, 
+            WebServicesTagNames.REQUEST_PROTECTION), ProtectionNode.class,
             "setRequestProtectionDescriptor");
         registerElementHandler(new XMLElement(
-            WebServicesTagNames.RESPONSE_PROTECTION), ProtectionNode.class, 
+            WebServicesTagNames.RESPONSE_PROTECTION), ProtectionNode.class,
             "setResponseProtectionDescriptor");
     }
-    
+
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
        if (descriptor == null) {
             descriptor = new MessageSecurityDescriptor();
         }
         return descriptor;
-    }     
+    }
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name for 
+     * @param node name for
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, 
-        MessageSecurityDescriptor messageSecurityDesc) {    
+     */
+    public Node writeDescriptor(Node parent, String nodeName,
+        MessageSecurityDescriptor messageSecurityDesc) {
         Node messageSecurityNode = super.writeDescriptor(parent, nodeName,
            messageSecurityDesc);
 
@@ -84,7 +84,7 @@ public class MessageSecurityNode extends DeploymentDescriptorNode {
         }
 
         // request-protection
-        ProtectionDescriptor requestProtectionDesc = 
+        ProtectionDescriptor requestProtectionDesc =
             messageSecurityDesc.getRequestProtectionDescriptor();
         if (requestProtectionDesc != null) {
             ProtectionNode requestProtectionNode = new ProtectionNode();
@@ -93,12 +93,12 @@ public class MessageSecurityNode extends DeploymentDescriptorNode {
         }
 
         // response-protection
-        ProtectionDescriptor responseProtectionDesc = 
+        ProtectionDescriptor responseProtectionDesc =
             messageSecurityDesc.getResponseProtectionDescriptor();
         if (responseProtectionDesc != null) {
             ProtectionNode responseProtectionNode = new ProtectionNode();
             responseProtectionNode.writeDescriptor(messageSecurityNode,
-                WebServicesTagNames.RESPONSE_PROTECTION, 
+                WebServicesTagNames.RESPONSE_PROTECTION,
                     responseProtectionDesc);
         }
 

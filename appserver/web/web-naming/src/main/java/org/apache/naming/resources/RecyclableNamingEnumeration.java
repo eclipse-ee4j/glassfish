@@ -29,7 +29,7 @@ import javax.naming.NamingEnumeration;
  * @version $Revision: 1.1.2.1 $ $Date: 2007/08/17 15:46:28 $
  */
 
-public class RecyclableNamingEnumeration<E> 
+public class RecyclableNamingEnumeration<E>
     implements NamingEnumeration<E> {
 
 

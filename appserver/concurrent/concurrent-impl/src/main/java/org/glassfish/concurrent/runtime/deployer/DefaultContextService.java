@@ -37,7 +37,7 @@ public class DefaultContextService implements NamedNamingObjectProxy, DefaultRes
     static final String DEFAULT_CONTEXT_SERVICE = "java:comp/DefaultContextService";
     static final String DEFAULT_CONTEXT_SERVICE_PHYS = "concurrent/__defaultContextService";
     private ContextService contextService;
-    
+
     // Ensure that config for this object has been created
     @Inject org.glassfish.concurrent.config.ContextService.ContextServiceConfigActivator config;
 

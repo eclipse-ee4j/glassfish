@@ -21,7 +21,7 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "CMP3_ITEM")
 @NamedQuery(name = "findAllItemsByName", query =
-    "SELECT OBJECT(item) FROM ItemEntity item WHERE item.name = ?1") 
+    "SELECT OBJECT(item) FROM ItemEntity item WHERE item.name = ?1")
 public class ItemEntity implements java.io.Serializable {
 
     private Integer itemId;
@@ -46,7 +46,7 @@ public class ItemEntity implements java.io.Serializable {
         this.itemId = id;
     }
 
-    @Version@Column(name = "ITEM_VERSION") 
+    @Version@Column(name = "ITEM_VERSION")
     protected int getVersion() {
         return version;
     }

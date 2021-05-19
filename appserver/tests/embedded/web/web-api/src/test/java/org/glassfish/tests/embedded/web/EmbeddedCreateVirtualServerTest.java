@@ -25,7 +25,7 @@ import java.util.logging.Level;
 import java.util.ArrayList;
 import java.util.List;
 import org.glassfish.embeddable.*;
-import org.glassfish.embeddable.web.*;  
+import org.glassfish.embeddable.web.*;
 import org.glassfish.embeddable.web.config.*;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -34,7 +34,7 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer#createVirtualServerTest
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedCreateVirtualServerTest {
@@ -43,7 +43,7 @@ public class EmbeddedCreateVirtualServerTest {
     static WebContainer embedded;
     static int newPort = 9090;
     static String contextRoot = "test";
-    
+
     @BeforeClass
     public static void setupServer() throws GlassFishException {
         glassfish = GlassFishRuntime.bootstrap().newGlassFish();
@@ -53,7 +53,7 @@ public class EmbeddedCreateVirtualServerTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -61,7 +61,7 @@ public class EmbeddedCreateVirtualServerTest {
         httpListener.setPort(8080);
         httpListener.setId("embedded-listener-1");
         embedded.addWebListener(httpListener);
-        
+
         List<WebListener> listenerList = new ArrayList(embedded.getWebListeners());
         Assert.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
@@ -71,11 +71,11 @@ public class EmbeddedCreateVirtualServerTest {
         testListener.setPort(newPort);
         WebListener[] webListeners = new HttpListener[1];
         webListeners[0] = testListener;
-        
+
         File f = new File("target/classes");
         String virtualServerId = "embedded-server";
         VirtualServer virtualServer = (VirtualServer)
-                embedded.createVirtualServer(virtualServerId, f, webListeners);         
+                embedded.createVirtualServer(virtualServerId, f, webListeners);
         VirtualServerConfig config = new VirtualServerConfig();
         config.setHostNames("localhost");
         virtualServer.setConfig(config);
@@ -108,14 +108,14 @@ public class EmbeddedCreateVirtualServerTest {
 
         vs.removeContext(context);
         System.out.println("Removing web listener "+testListener.getId());
-        embedded.removeWebListener(testListener);                       
+        embedded.removeWebListener(testListener);
 
         listenerList = new ArrayList(embedded.getWebListeners());
         System.out.println("Network listener size after deletion " + listenerList.size());
         Assert.assertTrue(listenerList.size()==1);
         for (WebListener listener : embedded.getWebListeners())
             System.out.println("Web listener "+listener.getId()+" "+listener.getPort());
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -126,5 +126,5 @@ public class EmbeddedCreateVirtualServerTest {
             glassfish = null;
         }
     }
-    
+
 }

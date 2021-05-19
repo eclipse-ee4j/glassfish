@@ -48,23 +48,23 @@ public class WebModuleConfig {
      * The work directory
      */
     private String workDir = null;
-            
+
     /**
      * The directory under which the work directory for files generated
      * by the web application (i.e compiled JSP class files etc) resides.
      */
     private String _workDir = null;
-    
+
     /**
      * The source directory for the web application
      */
     private File _dir = null;
-    
+
     /**
      * The objectType property
      */
     private String _objectType = null;
-    
+
     /**
      * The parent classloader for the web application.
      */
@@ -75,7 +75,7 @@ public class WebModuleConfig {
      */
     private WebBundleDescriptorImpl _wbd = null;
 
-    /** 
+    /**
      * keep a list of virtual servers that this webmodule is associated with
      */
     private String _vsIDs;
@@ -98,7 +98,7 @@ public class WebModuleConfig {
     public void setAppClassLoader(ClassLoader _appClassLoader) {
         this._appClassLoader = _appClassLoader;
     }
-    
+
     /**
      * Set the elements of information specified in the web-module element
      * in server.xml.
@@ -145,7 +145,7 @@ public class WebModuleConfig {
         }
         return ctxPath;
     }
-    
+
     /**
      * Set the directory in which the web application is deployed.
      */
@@ -175,7 +175,7 @@ public class WebModuleConfig {
     public void setVirtualServers(String virtualServers) {
         _vsIDs = virtualServers;
     }
-    
+
     /**
      * Set the parent classloader for the web application.
      */
@@ -246,7 +246,7 @@ public class WebModuleConfig {
         return getWebDir(stubBaseDir);
     }
     // END S1AS 6178005
-    
+
     /**
      * Sets the parent of the work directory for this web application.
      *
@@ -290,7 +290,7 @@ public class WebModuleConfig {
     public void setDescriptor(WebBundleDescriptorImpl wbd) {
         _wbd = wbd;
     }
-        
+
     /**
      * Return the objectType property
      */
@@ -306,7 +306,7 @@ public class WebModuleConfig {
     public void setObjectType(String objectType) {
         _objectType = objectType;
     }
-        
+
     /*
      * Appends this web module's id to the given base directory path, and
      * returns it.

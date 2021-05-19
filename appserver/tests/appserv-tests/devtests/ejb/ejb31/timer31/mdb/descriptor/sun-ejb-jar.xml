@@ -21,6 +21,6 @@
 <sun-ejb-jar>
     <security-role-mapping>
       <role-name>foo</role-name>
-      <principal-name>bob</principal-name>  
+      <principal-name>bob</principal-name>
     </security-role-mapping>
 </sun-ejb-jar>

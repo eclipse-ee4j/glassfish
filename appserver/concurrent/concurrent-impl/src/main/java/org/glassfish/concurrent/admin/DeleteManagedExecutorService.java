@@ -36,7 +36,7 @@ import jakarta.inject.Inject;
 
 /**
  * Delete Managed Executor Service Command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @ExecuteOn(RuntimeType.ALL)
@@ -44,12 +44,12 @@ import jakarta.inject.Inject;
 @PerLookup
 @I18n("delete.managed.executor.service")
 public class DeleteManagedExecutorService implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteManagedExecutorService.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteManagedExecutorService.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-    
+
     @Param(name="managed_executor_service_name", primary=true)
     private String jndiName;
 
@@ -74,7 +74,7 @@ public class DeleteManagedExecutorService implements AdminCommand {
                 report.setMessage(rs.getMessage());
             }
             if (rs.getStatus() == ResourceStatus.SUCCESS) {
-                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);       
+                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             } else {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 if (rs.getException() != null)

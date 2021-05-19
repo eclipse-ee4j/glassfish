@@ -28,23 +28,23 @@ import org.glassfish.jdbc.devtests.v3.util.TablesUtil;
 
 /**
  * Tests Connection Leak tracing/ Leak reclaim.
- * 
- * Assumes that steady-pool-size=1, max-pool-size=1, 
+ *
+ * Assumes that steady-pool-size=1, max-pool-size=1,
  * connection-leak-timeout-in-seconds = 10, connection-leak-reclaim = true
  * attributes are set in the pool configuration.
  * @author shalini
  */
 public class ConnectionLeakTracingTest implements SimpleTest {
 
-    Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();    
-    
+    Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
+
     public Map<String, Boolean> runTest(DataSource ds, PrintWriter out) {
         //create CUSTOMER table needed for this test
         String tableName = "CUSTOMER";
         createTables(ds, out, tableName);
-        
+
         out.println("<h4> Connection Leak Tracing Test </h4>");
-        
+
         for(int i=0; i<3; i++) {
             try {
                 out.println("<br> Trial " + i);
@@ -63,15 +63,15 @@ public class ConnectionLeakTracingTest implements SimpleTest {
         }
         out.println("<br> Test result : true");
         resultsMap.put("conn-leak-tracing-test1", true);
-        
+
         //Delete the CUSTOMER table created.
         TablesUtil.deleteTables(ds, out, tableName);
-        
+
         HtmlUtil.printHR(out);
         return resultsMap;
     }
 
-    private boolean connLeakTracingTest1(DataSource ds, PrintWriter out, 
+    private boolean connLeakTracingTest1(DataSource ds, PrintWriter out,
             String tableName) {
         Connection conn = null;
         boolean passed = true;
@@ -116,7 +116,7 @@ public class ConnectionLeakTracingTest implements SimpleTest {
             } catch (Exception e) {
                 HtmlUtil.printException(e, out);
             }
-        }        
+        }
     }
 
     private void emptyTable(Connection conn, String tableName) throws SQLException {
@@ -129,7 +129,7 @@ public class ConnectionLeakTracingTest implements SimpleTest {
         Statement stmt = conn.createStatement();
         stmt.executeUpdate("INSERT into " + tableName +
                 "  values (1, 'abcd')");
-        stmt.close();        
+        stmt.close();
     }
 
 }

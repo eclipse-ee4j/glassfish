@@ -16,14 +16,12 @@
 
 package com.sun.jndi.ldap.ext;
 
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
-
 import java.io.IOException;
 
-import com.sun.jndi.ldap.Ber;
-import com.sun.jndi.ldap.BerEncoder;
+import javax.naming.ConfigurationException;
+import javax.naming.NamingException;
+import javax.naming.ldap.ExtendedRequest;
+import javax.naming.ldap.ExtendedResponse;
 
 /**
  * This class implements the LDAPv3 Extended Request for BulkImportStart. The
@@ -49,7 +47,7 @@ import com.sun.jndi.ldap.BerEncoder;
  * <p>
  * The object identifier for BulkImportStart is 2.16.840.1.113730.3.5.7
  * and the extended request value is the naming context to import to.
- * 
+ *
  * <p>
  * The following code sample shows how the extended operation may be used:
  * <pre>
@@ -61,14 +59,14 @@ import com.sun.jndi.ldap.BerEncoder;
  *
  *     // Bulk import starts
  *     ctx.extendedOperation(new BulkImportStartRequest(
- *					 namingContext));
+ *                     namingContext));
  *     System.out.println("Bulk import operation begins");
  *
- *     // Add entries 
+ *     // Add entries
  *     ctx.createSubcontext(entryName, entryAttrs);
  *           :
- *	     :
- *     // Bulk import done 
+ *         :
+ *     // Bulk import done
  *     ctx.extendedOperation(new BulkImportFinishedRequest());
  *     System.out.println("Bulk import operation finished");
  * </pre>
@@ -81,7 +79,7 @@ public class BulkImportStartRequest implements ExtendedRequest {
 
     /**
      * The BulkImportStart extended operation's assigned object identifier
-     * is  2.16.840.1.113730.3.5.7 
+     * is  2.16.840.1.113730.3.5.7
      */
     public static final String OID = "2.16.840.1.113730.3.5.7";
 
@@ -89,7 +87,7 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * ASN1 Ber encoded value of the extended request
      * @serial
      */
-    private byte[] value; 
+    private byte[] value;
 
     private static final long serialVersionUID = 8280455967681862705L;
 
@@ -101,9 +99,9 @@ public class BulkImportStartRequest implements ExtendedRequest {
      * attribute contained in the servers' rootDSE entry.
      * @exception IOException If a BER encoding error occurs.
      */
-    public BulkImportStartRequest(String importName) 
-	throws IOException {
-	value = importName.getBytes("UTF8");
+    public BulkImportStartRequest(String importName)
+        throws IOException {
+        value = importName.getBytes("UTF8");
     }
 
     /**
@@ -111,6 +109,7 @@ public class BulkImportStartRequest implements ExtendedRequest {
      *
      * @return The non-null object identifier string.
      */
+    @Override
     public String getID() {
         return OID;
     }
@@ -120,23 +119,24 @@ public class BulkImportStartRequest implements ExtendedRequest {
      *
      * @return The ASN.1 BER encoded value of the LDAP extended request.
      */
+    @Override
     public byte[] getEncodedValue() {
-	return value;
+        return value;
     }
 
     /**
-     * Creates an extended response object that corresponds to the 
+     * Creates an extended response object that corresponds to the
      * LDAP BulkImportStart extended request.
      * <p>
      */
+    @Override
     public ExtendedResponse createExtendedResponse(String id, byte[] berValue,
         int offset, int length) throws NamingException {
 
         // Confirm that the object identifier is correct
         if ((id != null) && (!id.equals(OID))) {
             throw new ConfigurationException(
-                "BulkImportStart received the following response instead of " +
-                OID + ": " + id);
+                "BulkImportStart received the following response instead of " + OID + ": " + id);
         }
         return new EmptyExtendedResponse(id);
     }

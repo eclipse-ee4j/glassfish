@@ -40,9 +40,9 @@ public class BeanMessage implements BeanMessageInterface{
         this.message += message;
         System.out.println("BeanMessage: appendMessage="+this.message);
     }
-    
+
     public String sayHello() {
         return "Hello from: " + this.getClass().getName() + "; " + System.identityHashCode(this);
     }
-    
+
 }

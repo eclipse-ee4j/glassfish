@@ -20,6 +20,6 @@ import jakarta.ejb.*;
 import java.rmi.*;
 
 public interface SimpleBMP extends EJBObject {
-    public boolean test1(int maxPoolSize, boolean expectToPass, boolean useXA ) 
+    public boolean test1(int maxPoolSize, boolean expectToPass, boolean useXA )
         throws RemoteException;
 }

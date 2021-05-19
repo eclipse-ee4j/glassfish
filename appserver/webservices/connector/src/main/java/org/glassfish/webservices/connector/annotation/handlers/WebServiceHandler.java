@@ -452,7 +452,7 @@ public class WebServiceHandler extends AbstractHandler {
             }
         } else {
 
-           
+
             //TODO BM handle stateless
             String name = getEjbName(annElem);
             EjbDescriptor ejb = ((EjbBundleDescriptor) bundleDesc).getEjbByName(name);

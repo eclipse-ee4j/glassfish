@@ -94,13 +94,13 @@ public class EnableMonitoring implements AdminCommand, AdminCommandSecurity.Prea
             return false;
         }
     }
-    
+
     private void fail(final ActionReport report, final String messageKey,
             final String fallbackMessageText, final Object... args) {
         report.setMessage(localStrings.getLocalString(messageKey, fallbackMessageText, args));
         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();

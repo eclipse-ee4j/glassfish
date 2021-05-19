@@ -48,7 +48,7 @@ public abstract class ReplicationManagerBase<T extends Storeable> extends Persis
     }
 
     public abstract void createBackingStore(String persistenceType, String storeName, Class<T> metadataClass, Map<String, Object> vendorMap);
-    
+
     public Session createNewSession() {
         return sessionFactory.createSession(this);
     }
@@ -76,7 +76,7 @@ public abstract class ReplicationManagerBase<T extends Storeable> extends Persis
     }
 
     public boolean isSessionVersioningSupported() {
-        return true; 
+        return true;
     }
 
     public Session findSession(String id, String version) throws IOException {
@@ -188,5 +188,5 @@ public abstract class ReplicationManagerBase<T extends Storeable> extends Persis
 
     public abstract void doValveSave(Session session);
 
-    public abstract String getReplicaFromPredictor(String sessionId, String oldJreplicaValue); 
+    public abstract String getReplicaFromPredictor(String sessionId, String oldJreplicaValue);
 }

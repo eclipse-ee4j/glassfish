@@ -29,7 +29,7 @@ public class MethodPerf {
 
         return ((timeInMillis * 1000.0) / numIterations) + " micro-seconds";
     }
-    
+
     public static void main(String args[]) {
 
 
@@ -40,7 +40,7 @@ public class MethodPerf {
 
         try {
             Class clz = Class.forName(className);
-            
+
             Map methodMap = new HashMap();
 
             Method[] methods = clz.getMethods();
@@ -49,7 +49,7 @@ public class MethodPerf {
                 methodMap.put(methods[i], methods[i].toString());
             }
 
-            
+
             System.out.println("--------------------");
             System.out.println("With regular hashmap");
             System.out.println("--------------------");
@@ -60,11 +60,11 @@ public class MethodPerf {
                 totalTime += time;
                 System.out.println(toMicroSeconds(time, numIterations) + " : " + m.getName());
             }
-            System.out.println("Avg time = " + 
+            System.out.println("Avg time = " +
                                toMicroSeconds(totalTime / methods.length,
                                               numIterations));
-            
-            
+
+
             System.out.println("--------------------");
             System.out.println("With optimized method lookup");
             System.out.println("--------------------");
@@ -77,11 +77,11 @@ public class MethodPerf {
                 totalTime += time;
                 System.out.println(toMicroSeconds(time, numIterations) + " : " + m.getName());
             }
-            System.out.println("Avg time = " + 
+            System.out.println("Avg time = " +
                                toMicroSeconds(totalTime / methods.length,
                                               numIterations));
-                                              
-            
+
+
             System.out.println("--------------------");
             System.out.println("With extra optimized method lookup");
             System.out.println("--------------------");
@@ -94,10 +94,10 @@ public class MethodPerf {
                 totalTime += time;
                 System.out.println(toMicroSeconds(time, numIterations) + " : " + m.getName());
             }
-            System.out.println("Avg time = " + 
+            System.out.println("Avg time = " +
                                toMicroSeconds(totalTime / methods.length,
                                               numIterations));
-                                  
+
             /*
             System.out.println("--------------------");
             System.out.println("With java.util.IdentityHashMap lookup");
@@ -113,10 +113,10 @@ public class MethodPerf {
 
             */
 
-            
-            long ihcTime = testSystemIdentityHashCode(numIterations);            
+
+            long ihcTime = testSystemIdentityHashCode(numIterations);
             System.out.println("system identity hash code= " + toMicroSeconds(ihcTime, numIterations));
-           
+
 
             MethodPerf ml = new MethodPerf();
 
@@ -131,7 +131,7 @@ public class MethodPerf {
             System.out.println("instance strong typed invocation time = " + toMicroSeconds(i_sTime, numIterations));
             long i_rTime = testStaticReflectiveInvocation(numIterations, fooMethod);
             System.out.println("instance reflective invocation time = " + toMicroSeconds(i_rTime, numIterations));
-            
+
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -151,10 +151,10 @@ public class MethodPerf {
         long end = System.currentTimeMillis();
 
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);
@@ -169,10 +169,10 @@ public class MethodPerf {
         }
         long end = System.currentTimeMillis();
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);
@@ -187,10 +187,10 @@ public class MethodPerf {
         }
         long end = System.currentTimeMillis();
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);
@@ -205,10 +205,10 @@ public class MethodPerf {
         }
         long end = System.currentTimeMillis();
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);
@@ -222,48 +222,48 @@ public class MethodPerf {
         }
         long end = System.currentTimeMillis();
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);
         return (end - begin) - loopTime;
     }
 
-    private static long testStaticReflectiveInvocation(int numIterations, Method m) 
+    private static long testStaticReflectiveInvocation(int numIterations, Method m)
         throws Exception {
-                                                 
-        long begin = System.currentTimeMillis();        
+
+        long begin = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
             m.invoke(null, null);
         }
         long end = System.currentTimeMillis();
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);
         return (end - begin) - loopTime;
     }
 
-    private static long testInstanceReflectiveInvocation(int numIterations, Object o, Method m) 
+    private static long testInstanceReflectiveInvocation(int numIterations, Object o, Method m)
         throws Exception {
-                                                 
-        long begin = System.currentTimeMillis();        
+
+        long begin = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
             m.invoke(o, null);
         }
         long end = System.currentTimeMillis();
 
-        // measure the time for the loop processing itself 
+        // measure the time for the loop processing itself
         long beginLoop = System.currentTimeMillis();
         for(int i = 0; i < numIterations; i++) {
-        }        
+        }
         long endLoop = System.currentTimeMillis();
         long loopTime = endLoop - beginLoop;
         System.out.println("Loop time = " + loopTime);

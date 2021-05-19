@@ -24,23 +24,23 @@ import javax.xml.rpc.Stub;
  * This is AppClient program that access StateTaxEJB and FedTax EJB Webservices.
  * It expects StateTax webservice endpoint and FedTax endpoint URLs.
  * This client is accessed in the ant run target after configuring the webservices
- * message security at system level or applevel.  
+ * message security at system level or applevel.
  *
  * @version 1.1  03 May 2004
  * @author Jagadesh Munta
  */
 public class TaxCalClient {
     /*
-     * Tests the getStateTax and getFedTax with expected values. If value 
+     * Tests the getStateTax and getFedTax with expected values. If value
      * matched,then test PASSED else FAILED.
      */
- 	private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
+     private static SimpleReporterAdapter stat = new SimpleReporterAdapter();
             // J2EE simple reporter for logging the test status.
-	private static String stateTaxEndpoint = null;
-	private static String fedTaxEndpoint = null;
-	private static String testSuite = "Security-wss-ejbws-";
-	private static String testCase = null;
-	private static TaxCalEjbService taxCalService = null;
+    private static String stateTaxEndpoint = null;
+    private static String fedTaxEndpoint = null;
+    private static String testSuite = "Security-wss-ejbws-";
+    private static String testCase = null;
+    private static TaxCalEjbService taxCalService = null;
 
     public static void main (String[] args) {
 
@@ -55,7 +55,7 @@ public class TaxCalClient {
         }
 
         stat.addDescription("This is to test message security with sign or username token on request and response with signing using ejb based webservices.");
-        try { 
+        try {
             TaxCalClient client = new TaxCalClient();
             Context ic = new InitialContext();
             taxCalService = (TaxCalEjbService)
@@ -69,7 +69,7 @@ public class TaxCalClient {
 
         stat.printSummary(testSuite);
     }
-    
+
     public void callStateTaxService() {
         double income = 85000.00;
         double deductions = 5000.00;
@@ -95,7 +95,7 @@ public class TaxCalClient {
                 System.out.println("State TaxCalEjbWebservice client failed");
                 stat.addStatus(testSuite + "mesgsign-StateTaxPort", stat.FAIL);
                 ex.printStackTrace();
-        } 
+        }
     }
 
     public void callFedTaxService() {
@@ -122,7 +122,7 @@ public class TaxCalClient {
                 System.out.println("Fed TaxCalEjbWebService client failed");
                 stat.addStatus(testSuite + "username-FedTaxPort", stat.FAIL);
                 ex.printStackTrace();
-        } 
+        }
     }
 }
 

@@ -508,7 +508,7 @@ public interface ModuleLogLevels extends ConfigBeanProxy, PropertyBag {
     public void setManagementEvent(String value) throws PropertyVetoException;
 
     /*
-     * Get all the log levels for all the modules.  
+     * Get all the log levels for all the modules.
      */
     @DuckTyped
     public Map<String, String> getAllLogLevels();

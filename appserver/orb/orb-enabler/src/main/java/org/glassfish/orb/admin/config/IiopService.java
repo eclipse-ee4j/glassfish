@@ -46,7 +46,7 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      *         {@link String }
      */
     @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getClientAuthenticationRequired();
+    String getClientAuthenticationRequired();
 
     /**
      * Sets the value of the clientAuthenticationRequired property.
@@ -54,7 +54,7 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setClientAuthenticationRequired(String value) throws PropertyVetoException;
+    void setClientAuthenticationRequired(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the orb property.
@@ -63,7 +63,7 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      *         {@link Orb }
      */
     @Element(required=true)
-    public Orb getOrb();
+    Orb getOrb();
 
     /**
      * Sets the value of the orb property.
@@ -71,7 +71,7 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      * @param value allowed object is
      *              {@link Orb }
      */
-    public void setOrb(Orb value) throws PropertyVetoException;
+    void setOrb(Orb value) throws PropertyVetoException;
 
     /**
      * Gets the value of the sslClientConfig property.
@@ -80,7 +80,7 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      *         {@link SslClientConfig }
      */
     @Element
-    public SslClientConfig getSslClientConfig();
+    SslClientConfig getSslClientConfig();
 
     /**
      * Sets the value of the sslClientConfig property.
@@ -88,7 +88,7 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      * @param value allowed object is
      *              {@link SslClientConfig }
      */
-    public void setSslClientConfig(SslClientConfig value) throws PropertyVetoException;
+    void setSslClientConfig(SslClientConfig value) throws PropertyVetoException;
 
     /**
      * Gets the value of the iiopListener property.
@@ -111,8 +111,5 @@ public interface IiopService extends ConfigBeanProxy, ConfigExtension   {
      * {@link IiopListener }
      */
     @Element
-    public List<IiopListener> getIiopListener();
-
-
-
+    List<IiopListener> getIiopListener();
 }

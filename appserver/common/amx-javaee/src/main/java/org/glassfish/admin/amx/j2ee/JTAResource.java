@@ -18,8 +18,6 @@ package org.glassfish.admin.amx.j2ee;
 
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
-
-@AMXMBeanMetadata(type=J2EETypes.JTA_RESOURCE, leaf=true)
-public interface JTAResource extends J2EEResource
-{
+@AMXMBeanMetadata(type = J2EETypes.JTA_RESOURCE, leaf = true)
+public interface JTAResource extends J2EEResource {
 }

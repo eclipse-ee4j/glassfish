@@ -75,7 +75,7 @@ public interface PortUnification extends ConfigBeanProxy, PropertyBag {
 
     @DuckTyped
     Protocol getParent();
-    
+
     class Duck {
         public static Protocol getParent(PortUnification pu) {
             return pu.getParent(Protocol.class);

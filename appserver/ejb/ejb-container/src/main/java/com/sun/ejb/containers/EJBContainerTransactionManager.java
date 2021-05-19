@@ -75,10 +75,8 @@ public class EJBContainerTransactionManager {
         IASEjbExtraDescriptors iased = ejbDesc.getIASEjbExtraDescriptors();
 
         if(iased.getCmtTimeoutInSeconds() != 0){
-        	cmtTimeoutInSeconds = iased.getCmtTimeoutInSeconds();
+            cmtTimeoutInSeconds = iased.getCmtTimeoutInSeconds();
         }
-
-
     }
 
     /**
@@ -322,9 +320,9 @@ public class EJBContainerTransactionManager {
             try {
                 transactionManager.setRollbackOnly();
             } catch ( Exception e ) {
-		//FIXME: Use LogStrings.properties
-		_logger.log(Level.FINEST, "", e);
-	    }
+                //FIXME: Use LogStrings.properties
+                _logger.log(Level.FINEST, "", e);
+            }
             throw new TransactionRolledbackLocalException("", ex);
         }
 
@@ -368,9 +366,9 @@ public class EJBContainerTransactionManager {
                 try {
                     transactionManager.setRollbackOnly();
                 } catch ( Exception e ) {
-					//FIXME: Use LogStrings.properties
-					_logger.log(Level.FINEST, "", e);
-				}
+                    //FIXME: Use LogStrings.properties
+                    _logger.log(Level.FINEST, "", e);
+                }
                 throw new TransactionRolledbackLocalException("", ex);
             }
         } else { // Bean already has a transaction associated with it.
@@ -394,7 +392,7 @@ public class EJBContainerTransactionManager {
                     } catch ( Exception e ) {
                         //FIXME: Use LogStrings.properties
                         _logger.log(Level.FINEST, "", e);
-					}
+                    }
                     throw new TransactionRolledbackLocalException("", ex);
                 }
             }
@@ -639,10 +637,10 @@ public class EJBContainerTransactionManager {
             }
             if ( exception instanceof Exception ) {
                 newException = new TransactionRolledbackLocalException(
-                	"Exception thrown from bean", (Exception)exception);
+                    "Exception thrown from bean", (Exception)exception);
             } else {
                 newException = new TransactionRolledbackLocalException(
-                	"Exception thrown from bean: "+exception.toString());
+                    "Exception thrown from bean: "+exception.toString());
                 newException.initCause(exception);
             }
         } else if( isAppExceptionRequiringRollback(exception ) ) {

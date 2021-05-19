@@ -28,22 +28,22 @@ import javax.naming.Reference;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 /**
- * Holds the <code>java.sql.Connection</code> object, which is to be 
+ * Holds the <code>java.sql.Connection</code> object, which is to be
  * passed to the application program.
  *
- * @version	1.0, 02/07/31
- * @author	Binod P.G
+ * @version        1.0, 02/07/31
+ * @author        Binod P.G
  */
 public class DataSource implements javax.sql.DataSource, java.io.Serializable,
-		com.sun.appserv.jdbcra.DataSource, jakarta.resource.Referenceable{ 
-				   
+                com.sun.appserv.jdbcra.DataSource, jakarta.resource.Referenceable{
+
     private ManagedConnectionFactory mcf;
-    private ConnectionManager cm;				   				   
+    private ConnectionManager cm;
     private int loginTimeout;
     private PrintWriter logWriter;
-    private String description;				   
+    private String description;
     private Reference reference;
-    
+
     private static Logger _logger;
     static {
         _logger = Logger.getAnonymousLogger();
@@ -51,57 +51,57 @@ public class DataSource implements javax.sql.DataSource, java.io.Serializable,
     private boolean debug = false;
 
     /**
-     * Constructs <code>DataSource</code> object. This is created by the 
+     * Constructs <code>DataSource</code> object. This is created by the
      * <code>ManagedConnectionFactory</code> object.
      *
-     * @param	mcf	<code>ManagedConnectionFactory</code> object 
-     *			creating this object.
-     * @param	cm	<code>ConnectionManager</code> object either associated
-     *			with Application server or Resource Adapter.
+     * @param        mcf        <code>ManagedConnectionFactory</code> object
+     *                        creating this object.
+     * @param        cm        <code>ConnectionManager</code> object either associated
+     *                        with Application server or Resource Adapter.
      */
     public DataSource (ManagedConnectionFactory mcf, ConnectionManager cm) {
-    	this.mcf = mcf;
-    	if (cm == null) {
-    	    this.cm = (ConnectionManager) new com.sun.jdbcra.spi.ConnectionManager();
-    	} else {
-    	    this.cm = cm;
-    	}    	
-    }   
-    
+            this.mcf = mcf;
+            if (cm == null) {
+                this.cm = (ConnectionManager) new com.sun.jdbcra.spi.ConnectionManager();
+            } else {
+                this.cm = cm;
+            }
+    }
+
     /**
      * Retrieves the <code> Connection </code> object.
-     * 
-     * @return	<code> Connection </code> object.
-     * @throws SQLException In case of an error.      
+     *
+     * @return        <code> Connection </code> object.
+     * @throws SQLException In case of an error.
      */
     public Connection getConnection() throws SQLException {
-    	try {
-    	    return (Connection) cm.allocateConnection(mcf,null);    	    
-    	} catch (ResourceException re) {
+            try {
+                return (Connection) cm.allocateConnection(mcf,null);
+            } catch (ResourceException re) {
 // This is temporary. This needs to be changed to SEVERE after TP
-	    _logger.log(Level.WARNING, "jdbc.exc_get_conn", re.getMessage());
-    	    throw new SQLException (re.getMessage());
-    	}
+            _logger.log(Level.WARNING, "jdbc.exc_get_conn", re.getMessage());
+                throw new SQLException (re.getMessage());
+            }
     }
-    
+
     /**
      * Retrieves the <code> Connection </code> object.
-     * 
-     * @param	user	User name for the Connection.
-     * @param	pwd	Password for the Connection.
-     * @return	<code> Connection </code> object.
-     * @throws SQLException In case of an error.      
+     *
+     * @param        user        User name for the Connection.
+     * @param        pwd        Password for the Connection.
+     * @return        <code> Connection </code> object.
+     * @throws SQLException In case of an error.
      */
     public Connection getConnection(String user, String pwd) throws SQLException {
-    	try {
-    	    ConnectionRequestInfo info = new ConnectionRequestInfo (user, pwd);
-    	    return (Connection) cm.allocateConnection(mcf,info);
-    	} catch (ResourceException re) {
+            try {
+                ConnectionRequestInfo info = new ConnectionRequestInfo (user, pwd);
+                return (Connection) cm.allocateConnection(mcf,info);
+            } catch (ResourceException re) {
 // This is temporary. This needs to be changed to SEVERE after TP
-	    _logger.log(Level.WARNING, "jdbc.exc_get_conn", re.getMessage());
-    	    throw new SQLException (re.getMessage());
-    	}
-    }    
+            _logger.log(Level.WARNING, "jdbc.exc_get_conn", re.getMessage());
+                throw new SQLException (re.getMessage());
+            }
+    }
 
     /**
      * Retrieves the actual SQLConnection from the Connection wrapper
@@ -114,91 +114,91 @@ public class DataSource implements javax.sql.DataSource, java.io.Serializable,
      */
     public Connection getConnection(Connection con) throws SQLException {
 
-        Connection driverCon = con; 
+        Connection driverCon = con;
         if (con instanceof com.sun.jdbcra.spi.ConnectionHolder) {
-           driverCon = ((com.sun.jdbcra.spi.ConnectionHolder) con).getConnection(); 
-        } 
+           driverCon = ((com.sun.jdbcra.spi.ConnectionHolder) con).getConnection();
+        }
 
         return driverCon;
     }
-    
+
     /**
      * Get the login timeout
      *
      * @return login timeout.
-     * @throws	SQLException	If a database error occurs.
+     * @throws        SQLException        If a database error occurs.
      */
     public int getLoginTimeout() throws SQLException{
-    	return	loginTimeout;
+            return        loginTimeout;
     }
-    
+
     /**
      * Set the login timeout
      *
-     * @param	loginTimeout	Login timeout.
-     * @throws	SQLException	If a database error occurs.
+     * @param        loginTimeout        Login timeout.
+     * @throws        SQLException        If a database error occurs.
      */
     public void setLoginTimeout(int loginTimeout) throws SQLException{
-    	this.loginTimeout = loginTimeout;
+            this.loginTimeout = loginTimeout;
     }
-    
-    /** 
+
+    /**
      * Get the logwriter object.
      *
      * @return <code> PrintWriter </code> object.
-     * @throws	SQLException	If a database error occurs.
+     * @throws        SQLException        If a database error occurs.
      */
     public PrintWriter getLogWriter() throws SQLException{
-    	return	logWriter;
+            return        logWriter;
     }
-        
+
     /**
      * Set the logwriter on this object.
      *
      * @param <code>PrintWriter</code> object.
-     * @throws	SQLException	If a database error occurs.
+     * @throws        SQLException        If a database error occurs.
      */
     public void setLogWriter(PrintWriter logWriter) throws SQLException{
-    	this.logWriter = logWriter;
-    }        
-        
+            this.logWriter = logWriter;
+    }
+
     public Logger getParentLogger() throws SQLFeatureNotSupportedException{
       throw new SQLFeatureNotSupportedException("Do not support Java 7 feature.");
     }
     /**
      * Retrieves the description.
      *
-     * @return	Description about the DataSource.
+     * @return        Description about the DataSource.
      */
     public String getDescription() {
-    	return description;
+            return description;
     }
-    
+
     /**
      * Set the description.
      *
      * @param description Description about the DataSource.
      */
     public void setDescription(String description) {
-    	this.description = description;
-    }    
-    
+            this.description = description;
+    }
+
     /**
      * Get the reference.
      *
      * @return <code>Reference</code>object.
      */
     public Reference getReference() {
-    	return reference;
+            return reference;
     }
-    
+
     /**
      * Get the reference.
      *
-     * @param	reference <code>Reference</code> object.
+     * @param        reference <code>Reference</code> object.
      */
     public void setReference(Reference reference) {
-    	this.reference = reference;
+            this.reference = reference;
     }
 
     public <T> T unwrap(Class<T> iface) throws SQLException {

@@ -633,7 +633,7 @@ public class InterceptorManager {
                 throw new IllegalStateException("No callback method of name " +
                    callbackDesc.getLifecycleCallbackMethod()
                    + " found on class " + className, e);
-	        }
+            }
 
             CallbackInterceptor interceptor = null;
             if (inter.getFromBeanClass()) {
@@ -778,8 +778,8 @@ public class InterceptorManager {
     }
 
     public interface InterceptorChain {
-	public Object invokeNext(int index, AroundInvokeContext invCtx)
-	    throws Throwable;
+    public Object invokeNext(int index, AroundInvokeContext invCtx)
+        throws Throwable;
     }
 
 

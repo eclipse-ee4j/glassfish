@@ -24,21 +24,21 @@ import java.util.logging.Level;
  * @author rinamdar
  */
 public class GFLogRecord extends LogRecord {
-    
+
     /**
-     * SVUID for serialization compatibility 
+     * SVUID for serialization compatibility
      */
     private static final long serialVersionUID = -818792012235891720L;
-    
+
     private String threadName;
-    
+
     public GFLogRecord(Level level, String msg) {
         super(level, msg);
     }
-        
+
     public GFLogRecord(LogRecord record) {
         this(record.getLevel(), record.getMessage());
-        
+
         this.setLoggerName(record.getLoggerName());
         this.setMillis(record.getMillis());
         this.setParameters(record.getParameters());

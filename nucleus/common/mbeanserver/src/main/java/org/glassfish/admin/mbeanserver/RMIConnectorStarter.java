@@ -79,22 +79,22 @@ final class RMIConnectorStarter extends ConnectorStarter {
     private String masterPassword = null;
 
     private final static Logger JMX_LOGGER = Util.JMX_LOGGER;
-    
+
     @LogMessageInfo(level = "INFO", message = "Security enabled")
     private static final String SECURITY_ENABLED = Util.LOG_PREFIX + "00009";
-    
+
     @LogMessageInfo(level = "INFO", message = "Binding RMI port to single IP address = {0}, port {1}")
     private static final String BINDING_TO_SINGLE_ADDR = Util.LOG_PREFIX + "00026";
-    
+
     @LogMessageInfo(level = "SEVERE", message = "Error stopping RMIConnector", action = "unknown", cause = "unknown")
     private static final String ERROR_STOPPING = Util.LOG_PREFIX + "00011";
-    
+
     @LogMessageInfo(level = "INFO", message = "MyRMIJRMPServerImpl: exported on address {0}")
     private static final String EXPORTED = Util.LOG_PREFIX + "00012";
-                
+
     @LogMessageInfo(message = "MyRMIJRMPServerImpl: makeClient on address = {0}")
     private final static String MAKE_CLIENT = Util.LOG_PREFIX + "00013";
-                
+
     public RMIConnectorStarter(
             final MBeanServer mbeanServer,
             final String address,
@@ -310,8 +310,8 @@ final class RMIConnectorStarter extends ConnectorStarter {
             }
             UnicastRemoteObject.unexportObject(mRegistry, true);
         } catch (RemoteException ex) {
-            
-            
+
+
             Util.getLogger().log(Level.SEVERE, ERROR_STOPPING, ex);
         } catch (NotBoundException ex) {
             Util.getLogger().log(Level.SEVERE, ERROR_STOPPING, ex);
@@ -479,9 +479,9 @@ final class RMIConnectorStarter extends ConnectorStarter {
         @Override
         protected synchronized RMIConnection makeClient(final String connectionId, final Subject subject) throws IOException {
             final String saved = setupRMIHostname(mBindToAddr);
-            
+
             try {
-                Util.getLogger().log(Level.INFO, MAKE_CLIENT, 
+                Util.getLogger().log(Level.INFO, MAKE_CLIENT,
                         System.getProperty(RMI_HOSTNAME_PROP));
                 return super.makeClient(connectionId, subject);
             } finally {

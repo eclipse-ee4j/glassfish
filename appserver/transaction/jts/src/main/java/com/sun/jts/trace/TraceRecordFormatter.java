@@ -21,15 +21,15 @@ import javax.transaction.xa.*;
 import java.util.*;
 
 /**
- * This class is used to format the trace record. 
+ * This class is used to format the trace record.
  *
  * @author <a href="mailto:kannan.srinivasan@sun.com">Kannan Srinivasan</a>
  * @version 1.0
  */
-public class TraceRecordFormatter 
+public class TraceRecordFormatter
 {
   /**
-   * Returns the formatted record, by accepting the simple string 
+   * Returns the formatted record, by accepting the simple string
    * message, tid and originator, which can be written to OutputStream
    * @param tid an <code>Object</code> value
    * @param origin an <code>Object</code> value
@@ -52,7 +52,7 @@ public class TraceRecordFormatter
                 strBuf.append(tid);
             }
             else if(tid instanceof otid_t)
-            {    
+            {
                         strBuf.append(convertToString(((otid_t)tid).tid));
             }
         }
@@ -95,8 +95,8 @@ public class TraceRecordFormatter
         StringBuffer strBuf=new StringBuffer();
         for(i = 0; i < byteArray.length; i++)
          {
-            strBuf.append(byteArray[i]);    
-        }    
+            strBuf.append(byteArray[i]);
+        }
         return strBuf.toString();
     }
 
@@ -144,10 +144,10 @@ public class TraceRecordFormatter
             if(val==null)
                 strBuf.append("null");
             else
-                strBuf.append((String)val);        
+                strBuf.append((String)val);
             strBuf.append(" ] ");
-        }        
+        }
         strBuf.append("}");
         return strBuf.toString();
-    } 
+    }
 }

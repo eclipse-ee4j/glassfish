@@ -19,7 +19,7 @@ package com.sun.enterprise.deployment.web;
  /** For the mime Mapping table. Objects exhibiting this interface represent
  * a mapping between a file extension and a mime type. */
 public interface MimeMapping {
-    
+
     public String getExtension();
     public void setExtension(String extension);
     public String getMimeType();

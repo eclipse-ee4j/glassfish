@@ -39,16 +39,16 @@
         <ant dir="jaxrpc-hello-ejb" target="all"/>
         <delete dir="${env.APS_HOME}/build/module"/>
         <ant dir="jaxrpc-hello-web" target="all"/>
-<!--	<ant dir="googleserver" target="all"/>--> <!-- 3 tests -->
+<!--        <ant dir="googleserver" target="all"/>--> <!-- 3 tests -->
         <ant dir="xsdany" target="all"/> <!-- 1 test -->
         <ant dir="filter_urlhandling" target="all"/> <!-- 1 test -->
     <!--    <ant dir="security" target="all"/>-->         <!-- 9 test -->
-<!--	<ant dir="simplefault" target="all"/>
-	<ant dir="handler" target="all"/> 
-        <ant dir="webstub_properties" target="all"/> 
-	<ant dir="servlethandler" target="all"/>--> 
-	<ant dir="annotations" target="all"/>
-	<ant dir="ejb_annotations" target="all"/>
+<!--        <ant dir="simplefault" target="all"/>
+        <ant dir="handler" target="all"/>
+        <ant dir="webstub_properties" target="all"/>
+        <ant dir="servlethandler" target="all"/>-->
+        <ant dir="annotations" target="all"/>
+        <ant dir="ejb_annotations" target="all"/>
         <ant dir="mapping/j2w/signature" target="all"/> <!-- 2 tests -->
         <ant dir="google" target="all"/> <!-- 1 test -->
         <ant dir="gf_dd/endpoint_address_uri" target="all"/> <!-- 1 test -->
@@ -87,24 +87,24 @@
 
     <target name="clean">
         <delete>
-            <fileset dir="${basedir}" 
+            <fileset dir="${basedir}"
                      includes="**.output, count.txt"/>
         </delete>
         <ant dir="google" target="clean"/>
         <ant dir="xsdany" target="clean"/>
         <ant dir="mapping/j2w/signature" target="clean"/>
         <ant dir="webstub_properties" target="clean"/>
-        <ant dir="filter_urlhandling" target="clean"/>        
+        <ant dir="filter_urlhandling" target="clean"/>
      </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the webservice tests)
+        <echo>
+                Usage:
+                        ant all (Executes all the webservice tests)
 
-			ant google (Executes the google tests)
-			ant xsdany (Executes the xsdany tests)
-	</echo>
+                        ant google (Executes the google tests)
+                        ant xsdany (Executes the xsdany tests)
+        </echo>
     </target>
 
 </project>

@@ -53,8 +53,8 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 @I18n("synchronize.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_synchronize-files", 
+        opType=RestEndpoint.OpType.POST,
+        path="_synchronize-files",
         description="_synchronize-files")
 })
 public class SynchronizeFiles implements AdminCommand {

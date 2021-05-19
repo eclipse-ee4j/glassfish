@@ -54,7 +54,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      * Gets the value of the enabled property.
      *
      * Defines if this connector is enabled. For EE this must be enabled
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
@@ -72,7 +72,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      *
      * Defines the protocol that this jmx-connector should support. Supported protocols are defined by Entity rjmx-protocol.
      * Other protocols can be used by user applications independently.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "rmi_jrmp")
@@ -89,7 +89,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      * Gets the value of the address property.
      *
      * Specifies the IP address or host-name.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -108,7 +108,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      *
      * Specifies the port of the jmx-connector-server. Note that jmx-service-url is a function of protocol, port and address
      * as defined by the JSR 160 1.0 Specification.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -127,7 +127,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      *
      * Determines whether the connection can be made on all the network interfaces. A value of false implies that the
      * connections only for this specific address will be selected.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
@@ -148,7 +148,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      *
      * Note: This is deprecated since GlassFish v3 FCS. Use similarly named attribute on admin-service. This will be used
      * only when the admin-service attribute in missing.
-     * 
+     *
      * @return String representing the name of auth realm
      */
     @Deprecated
@@ -169,7 +169,7 @@ public interface JmxConnector extends ConfigBeanProxy, Named, PropertyBag, Paylo
      * Gets the value of the securityEnabled property.
      *
      * Decides whether the transport layer security be used in jmx-connector. If true, configure the ssl element
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)

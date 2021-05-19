@@ -40,19 +40,19 @@ class GlassFishObjectInputStream extends ObjectInputStream
 {
     private ClassLoader appLoader;
 
-	private static Logger _logger = LogDomains.getLogger(GlassFishObjectInputStream.class, LogDomains.JNDI_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(GlassFishObjectInputStream.class, LogDomains.JNDI_LOGGER);
 
     private ObjectInputOutputStreamFactory inputStreamHelper;
 
     private Collection<GlassFishInputStreamHandler> handlers;
-    
+
     GlassFishObjectInputStream(Collection<GlassFishInputStreamHandler> handlers,  InputStream in, ClassLoader appCl, boolean resolve)
         throws IOException, StreamCorruptedException
     {
         super(in);
         appLoader = appCl;
         this.handlers = handlers;
-        
+
         if (resolve) {
             enableResolveObject(resolve);
 
@@ -65,20 +65,20 @@ class GlassFishObjectInputStream extends ObjectInputStream
     protected Object resolveObject(Object obj)
         throws IOException
     {
-    	Object result = obj;
+        Object result = obj;
         try {
             if (obj instanceof SerializableObjectFactory) {
                 return ((SerializableObjectFactory) obj).createObject();
             } else {
-            	for (GlassFishInputStreamHandler handler : handlers) {
-					Object r = handler.resolveObject(obj);
-					if (r != null) {
-						result = r == GlassFishInputStreamHandler.NULL_OBJECT ? null : r;
-						break;
-					}
-				}
-            	
-            	return result;
+                for (GlassFishInputStreamHandler handler : handlers) {
+                    Object r = handler.resolveObject(obj);
+                    if (r != null) {
+                        result = r == GlassFishInputStreamHandler.NULL_OBJECT ? null : r;
+                        break;
+                    }
+                }
+
+                return result;
             }
         } catch (IOException ioEx ) {
             _logger.log(Level.SEVERE, "ejb.resolve_object_exception", ioEx);
@@ -124,7 +124,7 @@ class GlassFishObjectInputStream extends ObjectInputStream
                 clazz = appLoader.loadClass(desc.getName());
             }  catch (ClassNotFoundException e) {
 
-                clazz = super.resolveClass(desc);               
+                clazz = super.resolveClass(desc);
             }
 
         }

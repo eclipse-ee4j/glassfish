@@ -29,11 +29,11 @@ import org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput;
  * underlying protocol.
  * @exclude
  */
-public interface WorkContextEntry 
+public interface WorkContextEntry
 {
   public static final WorkContextEntry
     NULL_CONTEXT = new WorkContextEntryImpl(null, null, 1);
-  
+
   public WorkContext getWorkContext();
   public String getName();
   public int getPropagationMode();

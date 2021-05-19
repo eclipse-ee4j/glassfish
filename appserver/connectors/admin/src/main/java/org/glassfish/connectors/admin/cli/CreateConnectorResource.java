@@ -48,7 +48,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
  * Create Connector Resource Command
  *
  * @author Jennifer Chou, Jagadish Ramu
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @RestEndpoints({
@@ -62,8 +62,8 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.POOL_NAME;
 @PerLookup
 @I18n("create.connector.resource")
 public class CreateConnectorResource implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateConnectorResource.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateConnectorResource.class);
 
     @Param(name=CR_POOL_NAME)
     private String poolName;
@@ -76,10 +76,10 @@ public class CreateConnectorResource implements AdminCommand {
 
     @Param(name=CR_OBJECT_TYPE, defaultValue="user", optional=true)
     private String objectType;
-    
+
     @Param(name=PROPERTY, optional=true, separator=':')
     private Properties properties;
-    
+
     @Param(name=TARGET, optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 

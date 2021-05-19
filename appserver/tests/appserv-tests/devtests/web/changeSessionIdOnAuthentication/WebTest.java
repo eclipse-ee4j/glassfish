@@ -23,10 +23,10 @@ import com.sun.ejte.ccl.reporter.*;
  * Fix for CR 6947296
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "change-session-id-on-authentication";
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -39,7 +39,7 @@ public class WebTest {
         String contextRoot = args[2];
 
         int port = new Integer(portS).intValue();
-        
+
         try {
             String result = goGet(host, port, contextRoot + "/welcome.jsp",
                    null, false);
@@ -47,12 +47,12 @@ public class WebTest {
             if (result != null && result.length() > 0) {
                 result2 = goGet(host, port, contextRoot + "/secure.jsp",
                         result, true);
-            } 
-                
+            }
+
             stat.addStatus(TEST_NAME,
                     (result != null && result.length() > 0 &&
                     result2 != null && result2.length() > 0 &&
-                    !result.equals(result2)) ? 
+                    !result.equals(result2)) ?
                     stat.PASS : stat.FAIL);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -97,7 +97,7 @@ public class WebTest {
                 lineNum++;
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
          } finally {
             try {
@@ -118,5 +118,5 @@ public class WebTest {
         }
 
    }
-  
+
 }

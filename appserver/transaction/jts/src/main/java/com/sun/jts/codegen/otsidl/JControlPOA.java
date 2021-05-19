@@ -136,7 +136,7 @@ public abstract class JControlPOA extends org.omg.PortableServer.Servant
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:otsidl/JControl:1.0", 
+    "IDL:otsidl/JControl:1.0",
     "IDL:omg.org/CosTransactions/Control:1.0"};
 
   public String[] _all_interfaces (org.omg.PortableServer.POA poa, byte[] objectId)
@@ -144,13 +144,13 @@ public abstract class JControlPOA extends org.omg.PortableServer.Servant
     return (String[])__ids.clone ();
   }
 
-  public JControl _this() 
+  public JControl _this()
   {
     return JControlHelper.narrow(
     super._this_object());
   }
 
-  public JControl _this(org.omg.CORBA.ORB orb) 
+  public JControl _this(org.omg.CORBA.ORB orb)
   {
     return JControlHelper.narrow(
     super._this_object(orb));

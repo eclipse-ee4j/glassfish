@@ -44,7 +44,7 @@ public class WebTest {
         adminUser = args[3];
         adminPassword = args[4];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for Tomcat bug 49779");

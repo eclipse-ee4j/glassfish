@@ -90,8 +90,8 @@
                 parentId="propSheetSection"
                 content="configuration/systemPropsConfigurationLink.jsf"
         />
-	<!-- navNode IPs -->
-        
+        <!-- navNode IPs -->
+
         <integration-point
                 id="common_domain"
                 type="org.glassfish.admingui:navNode"

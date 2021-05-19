@@ -21,59 +21,64 @@ import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.security.common.Role;
 
 /**
-    * I am an abstract role..
-    *
-    *@author Danny Coward
-    */
+ * I am an abstract role..
+ *
+ * @author Danny Coward
+ */
 public class SecurityRoleDescriptor extends Descriptor implements SecurityRole {
-    
+
     /**
-    * Construct a SecurityRoleDescriptor from the given role name and description.
-    */
+     * Construct a SecurityRoleDescriptor from the given role name and description.
+     */
     public SecurityRoleDescriptor(String name, String description) {
-	super(name, description);
+        super(name, description);
     }
-    
+
+
     /**
-    * Construct a SecurityRoleDescriptor from the given role object.
-    */
-    
+     * Construct a SecurityRoleDescriptor from the given role object.
+     */
     public SecurityRoleDescriptor(Role role) {
-	super(role.getName(), role.getDescription());
+        super(role.getName(), role.getDescription());
     }
-    
+
+
     /**
-    * Default constructor.
-    */
+     * Default constructor.
+     */
     public SecurityRoleDescriptor() {
     }
-    
+
+
     /**
-    * Equality on rolename.
-    */
-    
+     * Equality on rolename.
+     */
+    @Override
     public boolean equals(Object other) {
-	if (other instanceof SecurityRoleDescriptor &&
-	    this.getName().equals( ((SecurityRoleDescriptor) other).getName() )) {
-		return true;
-	}
-	return false;
+        if (other instanceof SecurityRoleDescriptor
+            && this.getName().equals(((SecurityRoleDescriptor) other).getName())) {
+            return true;
+        }
+        return false;
     }
-    
+
+
     /**
-    * My hashcode.
-    */
-    
+     * My hashcode.
+     */
+    @Override
     public int hashCode() {
-	return this.getName().hashCode();
+        return this.getName().hashCode();
     }
-    
+
+
     /**
-    * Formatted string representing my state.
-    */    
+     * Formatted string representing my state.
+     */
+    @Override
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("SecurityRole ");
-	super.print(toStringBuffer);
+        toStringBuffer.append("SecurityRole ");
+        super.print(toStringBuffer);
     }
 
 }

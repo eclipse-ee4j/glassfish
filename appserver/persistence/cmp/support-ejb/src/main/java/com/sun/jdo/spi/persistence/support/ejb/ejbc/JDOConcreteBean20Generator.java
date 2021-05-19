@@ -41,7 +41,7 @@ import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.EJBQLException;
 import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.spi.persistence.utility.generator.*;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
- 
+
 /*
  * This is the JDO specific generator for the concrete CMP beans for EJB2.0
  *
@@ -53,8 +53,8 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
     private EJBQLC ejbqlc;
 
     /**
-     * Map that holds EJBQL compilation results for CMP 2.x beans queries. 
-     * <tt>key</tt> is java.lang.reflect.Method object for the bean's 
+     * Map that holds EJBQL compilation results for CMP 2.x beans queries.
+     * <tt>key</tt> is java.lang.reflect.Method object for the bean's
      * finder or selector and the <tt>value</tt> is JDOQLElements object
      * that represents EJBQL compilation results.
      */
@@ -72,9 +72,9 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
     /**
      * Signature with CVS keyword substitution for identifying the generated code
      */
-    static final String SIGNATURE = 
+    static final String SIGNATURE =
             "$RCSfile: JDOConcreteBean20Generator.java,v $ $Revision: 1.2 $"; //NOI18N
-    
+
     JDOConcreteBean20Generator(ClassLoader loader,
                              Model model,
                              NameMapper nameMapper)
@@ -83,7 +83,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         super(loader, model, nameMapper);
         CMP20TemplateFormatter.initHelpers();
 
-        // Add the code generation signature of the generic and 2.x-specific 
+        // Add the code generation signature of the generic and 2.x-specific
         // generator classes.
         addCodeGeneratorClassSignature(getSignaturesOfGeneratorClasses());
 
@@ -97,14 +97,14 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
      * @param methodHelper the AbstractMethodHelper instance that contains
      * all categorized methods and some other convenience methods for this bean.
      * @param beanName the ejb name for this bean.
-     * @return a Collection of Exception instances with a separate instance for 
+     * @return a Collection of Exception instances with a separate instance for
      * each failed validation.
      */
     Collection validate(AbstractMethodHelper methodHelper, String beanName) {
         Collection rc = super.validate(methodHelper, beanName);
 
         this.beanName = beanName;
-        rc.addAll(validateEJBQL(methodHelper)); 
+        rc.addAll(validateEJBQL(methodHelper));
 
         return rc;
     }
@@ -172,7 +172,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
                 if (fieldInfo.isGeneratedField) {
                 // Skip generated fields as they are not present in the bean class.
-                // A field is generated for the unknown PK class, version consistency, or 
+                // A field is generated for the unknown PK class, version consistency, or
                 // a 2 way managed relationship.
                     if (fieldInfo.isKey) {
                         // This is an extra field for the unknown PK class.
@@ -201,7 +201,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
                 // Now generate getter and setter:
                 CMPTemplateFormatter.addGenericMethod(
-                    fieldInfo.getter, Modifier.PUBLIC, fieldInfo.type, 
+                    fieldInfo.getter, Modifier.PUBLIC, fieldInfo.type,
                     CMP20TemplateFormatter.getBodyAsStrings(gbody),
                     concreteImplWriter);
 
@@ -224,7 +224,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
                concreteImplWriter);
     }
 
-    /** Generate bodies of getters and setters for CMP field 
+    /** Generate bodies of getters and setters for CMP field
      * @param fieldInfo the field information as FieldInfo instance.
      */
     private void generateCMPGetSetBodies(FieldInfo fieldInfo) {
@@ -267,7 +267,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         } else if( fieldInfo.isSerializable ) {
             // A special case for a Serializable CMP field (but not byte[]) -
             // it should be serialized to/from a byte[] in PC instance.
-            
+
             threeParams[0] = fieldInfo.getter;
             threeParams[1] = fieldInfo.type;
             threeParams[2] = concreteImplName;
@@ -295,8 +295,8 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
                         sb.append(
                             CMP20TemplateFormatter.assertpksformatter.format(twoParams));
                     }
-    
-                    sb.append(requireTrimOnSet(fieldInfo.type) ? 
+
+                    sb.append(requireTrimOnSet(fieldInfo.type) ?
                         CMP20TemplateFormatter.pkstringsformatter.format(oneParam) :
                         CMP20TemplateFormatter.pksformatter.format(oneParam));
 
@@ -307,12 +307,12 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
 
     }
 
-    /** Generate bodies of getters and setters for CMR field 
+    /** Generate bodies of getters and setters for CMR field
      * @param fieldInfo the field information as FieldInfo instance.
      * @param cmrcleanbodyBuf the StringBuffer to append code for CMR cleanup
      * if necessary.
      */
-    private void generateCMRGetSetBodies(FieldInfo fieldInfo, 
+    private void generateCMRGetSetBodies(FieldInfo fieldInfo,
             StringBuffer cmrcleanbodyBuf) throws IOException {
 
         RelationshipElement rel = (RelationshipElement)fieldInfo.pfe;
@@ -323,7 +323,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         if (logger.isLoggable(Logger.FINE)) {
             RelationshipElement otherField = rel.getInverseRelationship(model);
             String otherFieldName = ((otherField != null) ?
-                    nameMapper.getEjbFieldForPersistenceField(otherPC, 
+                    nameMapper.getEjbFieldForPersistenceField(otherPC,
                             otherField.getName()) :
                     null);
 
@@ -414,10 +414,10 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
             try {
                 // EJBQLC needs to know if we are processing a finder or a selector.
                 jdoqlElementsMap.put(m,
-                        ejbqlc.compile(methodHelper.getQueryString(m), m, 
-                               methodHelper.getQueryReturnType(m), 
-                               mname.startsWith(CMP20TemplateFormatter.find_), 
-                               beanName)); 
+                        ejbqlc.compile(methodHelper.getQueryString(m), m,
+                               methodHelper.getQueryReturnType(m),
+                               mname.startsWith(CMP20TemplateFormatter.find_),
+                               beanName));
             } catch (EJBQLException e) {
                 rc.add(e);
             }
@@ -442,7 +442,7 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
                 logger.fine("JDOQLElements NOT FOUND for: " + m.getName());
             }
 
-            rs = ejbqlc.compile(methodHelper.getQueryString(m), m, 
+            rs = ejbqlc.compile(methodHelper.getQueryString(m), m,
                     methodHelper.getQueryReturnType(m), true, beanName);
         }
 
@@ -760,11 +760,11 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         if (isSelectorReturningSet(m)) convertToSet = true;
 
         int queryReturnType = methodHelper.getQueryReturnType(m);
-        if ((queryReturnType == AbstractMethodHelper.NO_RETURN) && 
+        if ((queryReturnType == AbstractMethodHelper.NO_RETURN) &&
             jdoqlElements.isPCResult()) {
-            // Use LOCAL_RETURN as default, 
-            // if there is no result-type-mapping specified and 
-            // the JDOQL query returns a collection of pc instances 
+            // Use LOCAL_RETURN as default,
+            // if there is no result-type-mapping specified and
+            // the JDOQL query returns a collection of pc instances
             queryReturnType = AbstractMethodHelper.LOCAL_RETURN;
         }
 
@@ -838,11 +838,11 @@ class JDOConcreteBean20Generator extends JDOConcreteBeanGenerator {
         oneParam[0] = CMP20TemplateFormatter.none_;
 
         int queryReturnType = methodHelper.getQueryReturnType(m);
-        if ((queryReturnType == AbstractMethodHelper.NO_RETURN) && 
+        if ((queryReturnType == AbstractMethodHelper.NO_RETURN) &&
             jdoqlElements.isPCResult()) {
-            // Use LOCAL_RETURN as default, 
-            // if there is no result-type-mapping specified and 
-            // the JDOQL query returns a collection of pc instances 
+            // Use LOCAL_RETURN as default,
+            // if there is no result-type-mapping specified and
+            // the JDOQL query returns a collection of pc instances
             queryReturnType = AbstractMethodHelper.LOCAL_RETURN;
         }
 

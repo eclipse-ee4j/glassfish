@@ -35,22 +35,22 @@ public class InstanceVisitor implements Visitor {
     }
 
     /**
-     * Visit reader class 
+     * Visit reader class
      */
     @Override
     public void visit(BaseReader br) throws Exception{
         // FIXME, make as assert here about no class cast exception
-		if (br instanceof InstanceReader) {
-			InstanceReader iRdr = (InstanceReader) br;
-			_c.setInstanceName(_i, iRdr.getName());
-			_c.setInstanceEnabled(_i, "" + iRdr.getLbEnabled());
-			_c.setInstanceDisableTimeoutInMinutes(_i,
-					iRdr.getDisableTimeoutInMinutes());
-			_c.setInstanceListeners(_i, iRdr.getListeners());
-			_c.setInstanceWeight(_i, iRdr.getWeight());
-		}
+        if (br instanceof InstanceReader) {
+            InstanceReader iRdr = (InstanceReader) br;
+            _c.setInstanceName(_i, iRdr.getName());
+            _c.setInstanceEnabled(_i, "" + iRdr.getLbEnabled());
+            _c.setInstanceDisableTimeoutInMinutes(_i,
+                    iRdr.getDisableTimeoutInMinutes());
+            _c.setInstanceListeners(_i, iRdr.getListeners());
+            _c.setInstanceWeight(_i, iRdr.getWeight());
+        }
     }
-    
+
     //--- PRIVATE VARS ----
     Cluster _c = null;
     int _i = 0;

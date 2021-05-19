@@ -34,7 +34,7 @@ public interface Sless
 
     public double computeMidPoint(int min, int max)
 
-	    throws SwapArgumentsException;
+            throws SwapArgumentsException;
 
 }
 

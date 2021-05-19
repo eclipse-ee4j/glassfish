@@ -40,7 +40,7 @@ public final class GlassFishConfigBean extends ConfigBean {
 
     /**
      * Returns the translated view of a configuration object
-     * 
+     *
      * @param s the config-api interface implementation
      * @return the new interface implementation providing the raw view
      */

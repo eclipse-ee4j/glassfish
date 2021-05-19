@@ -60,7 +60,7 @@ public class ConcurrentAccessTest extends ConfigApiTest {
 
 
     private void runTest(final int waitTime) throws TransactionFailure, InterruptedException {
-        
+
         final Domain domain = getHabitat().getService(Domain.class);
 
         // my lock.

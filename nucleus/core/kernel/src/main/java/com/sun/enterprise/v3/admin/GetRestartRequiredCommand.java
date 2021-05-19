@@ -48,8 +48,8 @@ import org.glassfish.internal.config.UnprocessedConfigListener;
 @I18n("get.restart.required.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_get-restart-required", 
+        opType=RestEndpoint.OpType.GET,
+        path="_get-restart-required",
         description="Restart Reasons")
 })
 @AccessRequired(resource="domain", action="dump")

@@ -46,7 +46,7 @@ public class FileValidator extends Validator {
 
     /**
      * Constructs a new FileValidator object.
-     * 
+     *
      * @param name The name of the entity that will be validated. This name is used in the error message.
      * @param constraints The constaint set that will be checked for any given file during validation.
      */
@@ -77,7 +77,7 @@ public class FileValidator extends Validator {
 
     /**
      * Validates the given File.
-     * 
+     *
      * @param str Must be the absolute path of the File that will be validated.
      * @throws InvalidConfigException
      */
@@ -123,7 +123,7 @@ public class FileValidator extends Validator {
 
     /**
      * Checks if the given constraint set is a subset of valid constraint set.
-     * 
+     *
      * @param constraints
      * @return Returns true if the given constraint set is subset or equal to the valid constraint set - "drwx".
      */

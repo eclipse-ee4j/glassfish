@@ -48,7 +48,7 @@ public interface PersistenceManagerFactoryResource extends ConfigBeanProxy, Reso
      * Gets the value of the factoryClass property.
      *
      * Class that creates persistence manager instance
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -115,9 +115,9 @@ public interface PersistenceManagerFactoryResource extends ConfigBeanProxy, Reso
      *              {@link String }
      */
     public void setDescription(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link org.glassfish.api.admin.config.PropertyBag}
+        Properties as per {@link org.glassfish.api.admin.config.PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

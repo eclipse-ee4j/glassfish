@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for pluggability of sharedlib with interrace implementation and extensions");
         WebTest webTest = new WebTest(args);
@@ -46,7 +46,7 @@ public class WebTest {
     }
 
     public void doTest(String root) {
-        try { 
+        try {
             invoke(root);
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -57,7 +57,7 @@ public class WebTest {
     }
 
     private void invoke(String root) throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot
                      + root;
         HttpURLConnection conn = (HttpURLConnection)
@@ -93,7 +93,7 @@ public class WebTest {
         }
 
         if (!EXPECTED_RESPONSE.equals(line)) {
-            throw new Exception("Wrong response. Expected: " + 
+            throw new Exception("Wrong response. Expected: " +
                 EXPECTED_RESPONSE + ", received: " + line);
         }
     }

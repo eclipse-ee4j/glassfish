@@ -37,7 +37,7 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 public class DependencyProviderImpl implements DependencyProvider {
-  
+
   private boolean isClosedSource;
 
   public DependencyProviderImpl() {
@@ -83,7 +83,7 @@ public class DependencyProviderImpl implements DependencyProvider {
 
       @Override
       public void set(AccessControlledMap contextMap) {
-        mapThreadLocal.set(contextMap);    
+        mapThreadLocal.set(contextMap);
       }
 
       @Override

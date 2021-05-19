@@ -26,7 +26,7 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-/** General test for AdminCache implementations which has file system 
+/** General test for AdminCache implementations which has file system
  * on background
  *
  * @author mmares
@@ -111,7 +111,7 @@ public abstract class AdminCacheTstBase {
     public AdminCache getCache() {
         return cache;
     }
-    
+
     @Test
     public void testPutGet() {
         if (isSkipThisTest()) {
@@ -152,7 +152,7 @@ public abstract class AdminCacheTstBase {
         //Done
         System.out.println(this.getClass().getName() + ".testPutGet(): Done");
     }
-    
+
     @Test
     public void testExistence() throws InterruptedException {
         if (isSkipThisTest()) {

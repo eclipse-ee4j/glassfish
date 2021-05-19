@@ -19,7 +19,7 @@
 -->
 
 <web-app>
-  
+
   <display-name>security-defaultp2r</display-name>
   <distributable></distributable>
   <servlet>
@@ -30,7 +30,7 @@
     <servlet-name>TestServlet</servlet-name>
     <url-pattern>/TestServlet</url-pattern>
   </servlet-mapping>
-  
+
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>secure</web-resource-name>
@@ -45,14 +45,14 @@
       <transport-guarantee>NONE</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
-  
+
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>default</realm-name>
   </login-config>
-  
+
   <security-role>
     <role-name>mygroup</role-name>
   </security-role>
-  
+
 </web-app>

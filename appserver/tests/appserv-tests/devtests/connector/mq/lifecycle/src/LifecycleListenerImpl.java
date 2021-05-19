@@ -34,8 +34,8 @@ import com.sun.appserv.server.LifecycleEventContext;
  *  3. READY_EVENT: Server started up applications and is ready to service requests
  *  4. SHUTDOWN_EVENT: Server is shutting down applications
  *  5. TERMINATION_EVENT: Server is terminating the subsystems and the runtime environment.
- * 
- *  In this sample, on STARTUP_EVENT, a thread is started which sends a simple JMS message to 
+ *
+ *  In this sample, on STARTUP_EVENT, a thread is started which sends a simple JMS message to
  *  sampleTopic every minute. On SHUTDOWN_EVENT, this thread is stopped.
  *  </p>
  */
@@ -47,37 +47,37 @@ public class LifecycleListenerImpl implements LifecycleListener {
      */
     LifecycleEventContext ctx;
 
-    /** 
-     *  Receives a server lifecycle event 
+    /**
+     *  Receives a server lifecycle event
      *  @param event associated event
      *  @throws <code>ServerLifecycleException</code> for exceptional condition.
      */
-    public void handleEvent(LifecycleEvent event) 
+    public void handleEvent(LifecycleEvent event)
                          throws ServerLifecycleException {
 
         ctx = event.getLifecycleEventContext();
 
-	switch(event.getEventType()) {
-	    case LifecycleEvent.INIT_EVENT:
-		onInitTask();
-	  	break;
+        switch(event.getEventType()) {
+            case LifecycleEvent.INIT_EVENT:
+                onInitTask();
+                  break;
 
-	    case LifecycleEvent.STARTUP_EVENT:
-		onStartTask();
-	  	break;
+            case LifecycleEvent.STARTUP_EVENT:
+                onStartTask();
+                  break;
 
             case LifecycleEvent.READY_EVENT:
                 onReadyTask();
                 break;
 
-	    case LifecycleEvent.SHUTDOWN_EVENT:
-		onShutdownTask();
-	  	break;
+            case LifecycleEvent.SHUTDOWN_EVENT:
+                onShutdownTask();
+                  break;
 
-	    case LifecycleEvent.TERMINATION_EVENT:
-		onTerminationTask();
-	  	break;
-	}
+            case LifecycleEvent.TERMINATION_EVENT:
+                onTerminationTask();
+                  break;
+        }
 
     }
 
@@ -98,47 +98,47 @@ public class LifecycleListenerImpl implements LifecycleListener {
         // my code
         QueueSession qsession[] = new QueueSession[10];
         Queue queue[] = new Queue[10];
-        
+
             try{
                 for (int i =0; i < 10; i++) {
                     // Get initial context
                     ctx.log("Get initial context");
                     InitialContext initialContext = new InitialContext();
-                
+
                     // look up the connection factory from the object store
                     ctx.log("Looking up the queue connection factory from JNDI");
                     QueueConnectionFactory factory = (QueueConnectionFactory) initialContext.lookup("jms/QCFactory");
-                
+
                     // look up queue from the object store
                     ctx.log("Create queue connection");
                     QueueConnection qconn = factory.createQueueConnection();
-                
+
                     ctx.log("Create queue session");
                     qsession[i] = qconn.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-                
+
                     ctx.log("Looking up the queue from JNDI");
                     queue[i] = (Queue) initialContext.lookup("jms/SampleQueue");
                 }
 
                 updateDB();
-      
+
             }
             catch( Exception e ){
                 ctx.log( "Exception caught in test code" );
                 e.printStackTrace();
             }
 
-       
-        
-        // end my code        
-        
+
+
+        // end my code
+
         // my code
         //createAccount();
-        // end my code        
+        // end my code
     }
 
     /**
-     *  Tasks to be carried out in the READY_EVENT. 
+     *  Tasks to be carried out in the READY_EVENT.
      *  Logs a message.
      */
     private void onReadyTask() {
@@ -146,7 +146,7 @@ public class LifecycleListenerImpl implements LifecycleListener {
     }
 
     /**
-     *  Tasks to be carried out in the SHUTDOWN_EVENT. 
+     *  Tasks to be carried out in the SHUTDOWN_EVENT.
      *  Logs a message
      */
     private void onShutdownTask() {
@@ -170,7 +170,7 @@ public class LifecycleListenerImpl implements LifecycleListener {
 
 
     /**
-     *  Tasks to be carried out in the TERMINATION_EVENT. 
+     *  Tasks to be carried out in the TERMINATION_EVENT.
      *  Log a message.
      */
     private void onTerminationTask() {

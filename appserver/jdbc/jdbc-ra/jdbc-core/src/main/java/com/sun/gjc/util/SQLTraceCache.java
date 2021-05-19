@@ -63,7 +63,7 @@ public class SQLTraceCache {
     public String getPoolName() {
         return poolName;
     }
-    
+
     /**
      * Schedule timer to perform purgeEntries on the cache after the
      * specified timeToKeepQueries delay and period.
@@ -118,7 +118,7 @@ public class SQLTraceCache {
      * in the list, the number of times it is executed is incremented by one
      * along with the timestamp.
      * If the query is a new one, it is added to the list.
-     * 
+     *
      * @param cacheObj
      * @return
      */

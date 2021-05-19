@@ -68,21 +68,21 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
 
     @Param(name="profiler", optional=true)
     Boolean addToProfiler=false;
-    
+
     @Param(name="jvm_option_name", primary=true, separator=':')
     List<String> jvmOptions;
-    
+
     @Inject
     Target targetService;
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
-    private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class); 
+    private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class);
 
     @AccessRequired.To("update")
     private JavaConfig jc;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         config = CLIUtil.updateConfigIfNeeded(config, targetService, target);
@@ -90,7 +90,7 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
         return true;
     }
 
-    
+
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         try {
@@ -114,7 +114,7 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         } catch (Exception e) {
-            String msg = e.getMessage() != null ? e.getMessage() : 
+            String msg = e.getMessage() != null ? e.getMessage() :
                 lsm.getStringWithDefault("create.jvm.options.failed",
                     "Command: create-jvm-options failed", new String[]{e.getMessage()});
             report.setMessage(msg);
@@ -122,7 +122,7 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
             report.setFailureCause(e);
             return;
         }
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);        
+        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 
     private void validateSoft(JvmOptionBag bag, List<String> opts, ActionReport report) {
@@ -199,7 +199,7 @@ public final class CreateJvmOptions implements AdminCommand, AdminCommandSecurit
         }
     }
 
-    private void validate(JvmOptionBag bag, List<String> opts, ActionReport report) 
+    private void validate(JvmOptionBag bag, List<String> opts, ActionReport report)
             throws IllegalArgumentException {
         Iterator<String> siter = opts.iterator();
         while (siter.hasNext()) {

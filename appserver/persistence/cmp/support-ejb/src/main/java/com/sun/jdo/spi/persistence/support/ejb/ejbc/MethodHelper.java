@@ -35,7 +35,7 @@ import org.glassfish.ejb.deployment.descriptor.runtime.IASEjbCMPFinder;
 import org.glassfish.ejb.deployment.descriptor.runtime.PrefetchDisabledDescriptor;
 import org.glassfish.persistence.common.I18NHelper;
 
-/** This is a subclass of {@link AbstractMethodHelper} 
+/** This is a subclass of {@link AbstractMethodHelper}
  * which provides overridden method implementations based on an SunONE
  * implementation.
  *
@@ -43,148 +43,148 @@ import org.glassfish.persistence.common.I18NHelper;
  */
 public class MethodHelper extends AbstractMethodHelper
 {
-	/** I18N message handler */
-	private final static ResourceBundle messages = I18NHelper.loadBundle(
-        	MethodHelper.class);
+    /** I18N message handler */
+    private final static ResourceBundle messages = I18NHelper.loadBundle(
+            MethodHelper.class);
 
-	/** Creates a new instance of MethodHelper
-	 * @param descriptor the IASEjbCMPEntityDescriptor which defines the 
-	 * information for this bean.
-	 */
-	public MethodHelper (IASEjbCMPEntityDescriptor descriptor)
-	{
-		super(descriptor);
-	}
+    /** Creates a new instance of MethodHelper
+     * @param descriptor the IASEjbCMPEntityDescriptor which defines the
+     * information for this bean.
+     */
+    public MethodHelper (IASEjbCMPEntityDescriptor descriptor)
+    {
+        super(descriptor);
+    }
 
-	/**
-	 * Reads all known methods and sorts them by name into specific
-	 * Collections for further processing.
-	 */
-	protected void categorizeMethods ()
-	{
-		IASEjbCMPEntityDescriptor cmpDescriptor = 
-			(IASEjbCMPEntityDescriptor)getDescriptor();
+    /**
+     * Reads all known methods and sorts them by name into specific
+     * Collections for further processing.
+     */
+    protected void categorizeMethods ()
+    {
+        IASEjbCMPEntityDescriptor cmpDescriptor =
+            (IASEjbCMPEntityDescriptor)getDescriptor();
 
-		super.categorizeMethods();
+        super.categorizeMethods();
 
-		// replace the finders and selectors with ias specific info
-		setFinders(getListForCollection(cmpDescriptor.getFinders()));
-		setSelectors(getListForCollection(cmpDescriptor.getSelectors()));
-	}
+        // replace the finders and selectors with ias specific info
+        setFinders(getListForCollection(cmpDescriptor.getFinders()));
+        setSelectors(getListForCollection(cmpDescriptor.getSelectors()));
+    }
 
-	// returns a non-null list for the supplied collection
-	private static ArrayList getListForCollection (Collection aCollection)
-	{
-		return ((aCollection != null) ? 
-			new ArrayList(aCollection) : new ArrayList());
-	}
+    // returns a non-null list for the supplied collection
+    private static ArrayList getListForCollection (Collection aCollection)
+    {
+        return ((aCollection != null) ?
+            new ArrayList(aCollection) : new ArrayList());
+    }
 
-	/** Returns <code>true</code> if prefetch is enabled for the specified
-	 * method, <code>false</code> otherwise. Prefetch is enabled by default.
-	 * @param method the java.lang.reflect.Method object used to find the
-	 * prefetch setting.
-	 * @return a boolean representing the prefetch setting
-	 */
-	public boolean isQueryPrefetchEnabled (Method method) 
-	{
-		boolean enabled = true;
-		QueryDescriptor queryDescriptor = getQueryDescriptor(method);
+    /** Returns <code>true</code> if prefetch is enabled for the specified
+     * method, <code>false</code> otherwise. Prefetch is enabled by default.
+     * @param method the java.lang.reflect.Method object used to find the
+     * prefetch setting.
+     * @return a boolean representing the prefetch setting
+     */
+    public boolean isQueryPrefetchEnabled (Method method)
+    {
+        boolean enabled = true;
+        QueryDescriptor queryDescriptor = getQueryDescriptor(method);
 
-		if (queryDescriptor != null) 
-		{
-			IASEjbCMPEntityDescriptor cmpDescriptor = 
-				(IASEjbCMPEntityDescriptor)getDescriptor();
-			PrefetchDisabledDescriptor pdDescriptor = 
-				cmpDescriptor.getPrefetchDisabledDescriptor();
-
-			if (pdDescriptor != null)
-			{
-				MethodDescriptor methodDescriptor =
-					queryDescriptor.getQueryMethodDescriptor();
-
-				enabled = !pdDescriptor.isPrefetchDisabledFor(
-					methodDescriptor);
-			}
-		}
-
-		return enabled;
-	}
-
-	/** Gets the jdo filter expression associated with the specified method 
-	 * if it exists.  Note that this method should only be used for CMP 1.1 - 
-	 * use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * query filter
-	 * @return the jdo filter expression
-	 */
-	public String getJDOFilterExpression (Method method)
-	{
-		IASEjbCMPFinder cmpFinder = getFinder(method);
-
-		return ((cmpFinder != null) ? cmpFinder.getQueryFilter() : null);
-	}
-
-	/** Gets the jdo parameter declaration associated with the specified 
-	 * method if it exists.  Note that this method should only be used for 
-	 * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * parameter declaration
-	 * @return the jdo parameter declaration
-	 */
-	public String getJDOParameterDeclaration (Method method)
-	{
-		IASEjbCMPFinder cmpFinder = getFinder(method);
-
-		return ((cmpFinder != null) ? 
-			cmpFinder.getQueryParameterDeclaration() : null);
-	}
-
-	/** Gets the jdo variables declaration associated with the specified 
-	 * method if it exists.  Note that this method should only be used for 
-	 * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * parameter declaration
-	 * @return the jdo variables declaration
-	 */
-	public String getJDOVariableDeclaration (Method method)
-	{
-		IASEjbCMPFinder cmpFinder = getFinder(method);
-
-		return ((cmpFinder != null) ? cmpFinder.getQueryVariables() : null);
-	}
-
-	/** Gets the jdo ordering specification associated with the specified
-	 * method if it exists.  Note that this method should only be used for
-	 * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the
-	 * parameter declaration
-	 * @return the jdo ordering specification
-	 */
-	public String getJDOOrderingSpecification (Method method)
+        if (queryDescriptor != null)
         {
-		IASEjbCMPFinder cmpFinder = getFinder(method);
+            IASEjbCMPEntityDescriptor cmpDescriptor =
+                (IASEjbCMPEntityDescriptor)getDescriptor();
+            PrefetchDisabledDescriptor pdDescriptor =
+                cmpDescriptor.getPrefetchDisabledDescriptor();
 
-		return ((cmpFinder != null) ? cmpFinder.getQueryOrdering() : null);
+            if (pdDescriptor != null)
+            {
+                MethodDescriptor methodDescriptor =
+                    queryDescriptor.getQueryMethodDescriptor();
+
+                enabled = !pdDescriptor.isPrefetchDisabledFor(
+                    methodDescriptor);
+            }
+        }
+
+        return enabled;
+    }
+
+    /** Gets the jdo filter expression associated with the specified method
+     * if it exists.  Note that this method should only be used for CMP 1.1 -
+     * use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * query filter
+     * @return the jdo filter expression
+     */
+    public String getJDOFilterExpression (Method method)
+    {
+        IASEjbCMPFinder cmpFinder = getFinder(method);
+
+        return ((cmpFinder != null) ? cmpFinder.getQueryFilter() : null);
+    }
+
+    /** Gets the jdo parameter declaration associated with the specified
+     * method if it exists.  Note that this method should only be used for
+     * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * parameter declaration
+     * @return the jdo parameter declaration
+     */
+    public String getJDOParameterDeclaration (Method method)
+    {
+        IASEjbCMPFinder cmpFinder = getFinder(method);
+
+        return ((cmpFinder != null) ?
+            cmpFinder.getQueryParameterDeclaration() : null);
+    }
+
+    /** Gets the jdo variables declaration associated with the specified
+     * method if it exists.  Note that this method should only be used for
+     * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * parameter declaration
+     * @return the jdo variables declaration
+     */
+    public String getJDOVariableDeclaration (Method method)
+    {
+        IASEjbCMPFinder cmpFinder = getFinder(method);
+
+        return ((cmpFinder != null) ? cmpFinder.getQueryVariables() : null);
+    }
+
+    /** Gets the jdo ordering specification associated with the specified
+     * method if it exists.  Note that this method should only be used for
+     * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * parameter declaration
+     * @return the jdo ordering specification
+     */
+    public String getJDOOrderingSpecification (Method method)
+        {
+        IASEjbCMPFinder cmpFinder = getFinder(method);
+
+        return ((cmpFinder != null) ? cmpFinder.getQueryOrdering() : null);
         }
 
 
-	private IASEjbCMPFinder getFinder (Method method)
-	{
-		IASEjbCMPEntityDescriptor cmpDescriptor = 
-			(IASEjbCMPEntityDescriptor)getDescriptor();
-		IASEjbCMPFinder finder = cmpDescriptor.getIASEjbCMPFinder(method);
+    private IASEjbCMPFinder getFinder (Method method)
+    {
+        IASEjbCMPEntityDescriptor cmpDescriptor =
+            (IASEjbCMPEntityDescriptor)getDescriptor();
+        IASEjbCMPFinder finder = cmpDescriptor.getIASEjbCMPFinder(method);
 
-		if (finder == null) {
-			String methodSignature = cmpDescriptor.getName() + '.' +
-				method.getName() + 
-				JavaClassWriterHelper.parenleft_ +
-				JavaClassWriterHelper.getParameterTypesList(method) + 
-				JavaClassWriterHelper.parenright_ ;
-			String msg = I18NHelper.getMessage(messages, 
-				"EXC_MissingCMP11Finder", methodSignature);//NOI18N
-			throw new RuntimeException(msg);
-		}
+        if (finder == null) {
+            String methodSignature = cmpDescriptor.getName() + '.' +
+                method.getName() +
+                JavaClassWriterHelper.parenleft_ +
+                JavaClassWriterHelper.getParameterTypesList(method) +
+                JavaClassWriterHelper.parenright_ ;
+            String msg = I18NHelper.getMessage(messages,
+                "EXC_MissingCMP11Finder", methodSignature);//NOI18N
+            throw new RuntimeException(msg);
+        }
 
-		return finder;
-	}
+        return finder;
+    }
 }

@@ -24,48 +24,48 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-	Names of log level modules.
-	@see Logging
+        Names of log level modules.
+        @see Logging
     @since AppServer 9.0
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public class LogModuleNames
 {
-	protected LogModuleNames()	{}
-	
-	public static final String ROOT_KEY					= "Root";
-	public static final String SERVER_KEY				= "Server";
-	public static final String EJB_CONTAINER_KEY		= "EJBContainer";
-    public static final String CMP_CONTAINER_KEY		= "CMPContainer";
-    public static final String MDB_CONTAINER_KEY		= "MDBContainer";
-    public static final String WEB_CONTAINER_KEY		= "WebContainer";
-    public static final String CLASSLOADER_KEY			= "Classloader";
-    public static final String CONFIGURATION_KEY		= "Configuration";
-    public static final String NAMING_KEY				= "Naming";
-    public static final String SECURITY_KEY				= "Security";
-	public static final String JTS_KEY					= "JTS";
-	public static final String JTA_KEY					= "JTA";
-    public static final String ADMIN_KEY				= "Admin";
-    public static final String DEPLOYMENT_KEY			= "Deployment";
-    public static final String VERIFIER_KEY				= "Verifier";
-    public static final String JAXR_KEY					= "JAXR";
-    public static final String JAXRPC_KEY				= "JAXRPC";
-    public static final String SAAJ_KEY					= "SAAJ";
-    public static final String CORBA_KEY				= "CORBA";
-    public static final String JAVAMAIL_KEY				= "Javamail";
-    public static final String JMS_KEY					= "JMS";
-    public static final String CONNECTOR_KEY			= "Connector";
-    public static final String JDO_KEY					= "JDO";
-    public static final String CMP_KEY					= "CMP";
-    public static final String UTIL_KEY					= "Util";
-    public static final String RESOURCE_ADAPTER_KEY		= "ResourceAdapter";
-    public static final String SYNCHRONIZATION_KEY		= "Synchronization";
-    public static final String NODE_AGENT_KEY			= "NodeAgent";
-    
+    protected LogModuleNames()        {}
+
+    public static final String ROOT_KEY                                        = "Root";
+    public static final String SERVER_KEY                                = "Server";
+    public static final String EJB_CONTAINER_KEY                = "EJBContainer";
+    public static final String CMP_CONTAINER_KEY                = "CMPContainer";
+    public static final String MDB_CONTAINER_KEY                = "MDBContainer";
+    public static final String WEB_CONTAINER_KEY                = "WebContainer";
+    public static final String CLASSLOADER_KEY                        = "Classloader";
+    public static final String CONFIGURATION_KEY                = "Configuration";
+    public static final String NAMING_KEY                                = "Naming";
+    public static final String SECURITY_KEY                                = "Security";
+    public static final String JTS_KEY                                        = "JTS";
+    public static final String JTA_KEY                                        = "JTA";
+    public static final String ADMIN_KEY                                = "Admin";
+    public static final String DEPLOYMENT_KEY                        = "Deployment";
+    public static final String VERIFIER_KEY                                = "Verifier";
+    public static final String JAXR_KEY                                        = "JAXR";
+    public static final String JAXRPC_KEY                                = "JAXRPC";
+    public static final String SAAJ_KEY                                        = "SAAJ";
+    public static final String CORBA_KEY                                = "CORBA";
+    public static final String JAVAMAIL_KEY                                = "Javamail";
+    public static final String JMS_KEY                                        = "JMS";
+    public static final String CONNECTOR_KEY                        = "Connector";
+    public static final String JDO_KEY                                        = "JDO";
+    public static final String CMP_KEY                                        = "CMP";
+    public static final String UTIL_KEY                                        = "Util";
+    public static final String RESOURCE_ADAPTER_KEY                = "ResourceAdapter";
+    public static final String SYNCHRONIZATION_KEY                = "Synchronization";
+    public static final String NODE_AGENT_KEY                        = "NodeAgent";
+
     /**
      */
     public static final Set<String> ALL_NAMES =
-        Collections.unmodifiableSet( SetUtil.newSet( new String[] 
+        Collections.unmodifiableSet( SetUtil.newSet( new String[]
         {
             ROOT_KEY,
             SERVER_KEY,

@@ -32,7 +32,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * This annotation works with the Listing annotation to provide additional information about columns in the output. The
  * annotation can be placed on any method that takes no arguments and returns a type that can be converted to a String,
  * including DuckTyped methods.
- * 
+ *
  * @author Tom Mueller
  */
 @Retention(RUNTIME)

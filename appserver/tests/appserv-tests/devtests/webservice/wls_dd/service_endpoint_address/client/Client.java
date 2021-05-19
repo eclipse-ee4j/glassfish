@@ -32,7 +32,7 @@ public class Client {
         static AddNumbersImplService service;
 
         public static void main(String[] args) {
-	        stat.addDescription("wls_dd.service_endpoint_address");
+                stat.addDescription("wls_dd.service_endpoint_address");
             Client client = new Client();
             client.runTest();
             stat.printSummary("wls_dd.service_endpoint_address");

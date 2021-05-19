@@ -34,7 +34,7 @@ package org.apache.catalina;
 
 public interface Auditor
 {
-    
+
     /**
      * Notify auditor of an authentication event.
      *
@@ -47,17 +47,17 @@ public interface Auditor
      */
     public void authentication(String user, String realm, boolean success);
 
-    
+
     /**
      * Notify auditor of a servlet container invocation.
      *
      * <P>This method will get invoked on every request whether it
      * was permitted or not by the authorization infrastructure.
-     *     
+     *
      * @param req the HttpRequest
      * @param success true if the invocation was allowed, false if denied.
      */
     public void webInvocation(HttpRequest req, boolean success);
 
-    
+
 }

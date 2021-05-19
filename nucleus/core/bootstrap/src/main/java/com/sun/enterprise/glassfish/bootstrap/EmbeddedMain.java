@@ -30,14 +30,14 @@ import com.sun.enterprise.module.bootstrap.Main;
  */
 
 public class EmbeddedMain extends Main {
-	
+
     ClassLoader classLoader;
-    
+
     @Override
-	protected void defineParentClassLoader() throws BootException {
-    	  // deliberate no-op
-	}
-    
+    protected void defineParentClassLoader() throws BootException {
+          // deliberate no-op
+    }
+
 
     public String getName() {
         return "Embedded";

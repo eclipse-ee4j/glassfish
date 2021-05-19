@@ -64,12 +64,12 @@ public class WebTest {
         port = args[6];
         contextRoot = args[7];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for issue 9309");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	    stat.printSummary();
+            stat.printSummary();
     }
 
     public void doTest() {
@@ -81,7 +81,7 @@ public class WebTest {
 
             String testResult = invokeURL("http://" + host + ":" + port + contextRoot + "/test");
             System.out.println(testResult);
-            
+
             int webReqCount2 = getCount("web/request/requestcount", "requestcount");
             System.out.println("web request count: " + webReqCount2);
             int appReqCount2 = getCount("applications" + contextRoot + "-web/" + instanceName + "/requestcount", "requestcount");
@@ -98,7 +98,7 @@ public class WebTest {
             System.out.println("app error count: " + appErrorCount1);
 
             invokeURL("http://" + host + ":" + port + contextRoot + "/badrequest");
-            
+
             int webErrorCount2 = getCount("web/request/errorcount", "errorcount");
             System.out.println("web error count: " + webErrorCount2);
             int appErrorCount2 = getCount("applications" + contextRoot + "-web/" + instanceName + "/errorcount", "errorcount");
@@ -116,7 +116,7 @@ public class WebTest {
     }
 
     private String invokeURL(String urlString) throws Exception {
-     
+
         StringBuilder sb = new StringBuilder();
 
         URL url = new URL(urlString);
@@ -172,5 +172,5 @@ public class WebTest {
         return ((Long)((Map)((Map)((Map)((Map)map.get("data")).get("extraProperties")).get(
                 "entity")).get(countName)).get("count")).intValue();
     }
-    
+
 }

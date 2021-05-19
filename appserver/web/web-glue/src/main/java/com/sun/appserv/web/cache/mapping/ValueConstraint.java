@@ -22,8 +22,8 @@ import java.util.logging.Logger;
 
 import org.glassfish.web.LogFacade;
 
-/** ValueConstraint class represents a field's value constraint; 
- *  supports common matching expressions. 
+/** ValueConstraint class represents a field's value constraint;
+ *  supports common matching expressions.
  */
 public class ValueConstraint {
 
@@ -38,16 +38,16 @@ public class ValueConstraint {
      */
     private static final ResourceBundle _rb = _logger.getResourceBundle();
 
-    // field values to match 
-    private String matchValue = null; 
-    private float minValue = Float.MIN_VALUE; 
-    private float maxValue = Float.MAX_VALUE; 
+    // field values to match
+    private String matchValue = null;
+    private float minValue = Float.MIN_VALUE;
+    private float maxValue = Float.MAX_VALUE;
 
-    // the default match expr 
-    private int matchExpr = Constants.MATCH_EQUALS; 
+    // the default match expr
+    private int matchExpr = Constants.MATCH_EQUALS;
 
     // string representation of this expr and the object
-    private String str; 
+    private String str;
 
     // whether to cache if there was a match
     private boolean cacheOnMatch = true;
@@ -58,7 +58,7 @@ public class ValueConstraint {
      * @param value specific value to match
      * @param expr match expression
      */
-    public ValueConstraint(String value, String expr) 
+    public ValueConstraint(String value, String expr)
                                 throws IllegalArgumentException {
         int match;
 
@@ -131,9 +131,9 @@ public class ValueConstraint {
         // get the separator first
         int separator;
         if (value.charAt(0) == '-') {
-           separator = value.indexOf('-', 1); 
+           separator = value.indexOf('-', 1);
         } else {
-           separator = value.indexOf('-', 0); 
+           separator = value.indexOf('-', 0);
         }
         if (separator == -1) {
             String msg = _rb.getString(LogFacade.MISSING_RANGE_SEP);
@@ -215,7 +215,7 @@ public class ValueConstraint {
     }
 
     /** set whether to cache if there was a failure to match
-     * @param cacheOnMatchFailure should the field value doesn't match, 
+     * @param cacheOnMatchFailure should the field value doesn't match,
      *  enable cache?
      */
     public void setCacheOnMatchFailure(boolean cacheOnMatchFailure) {
@@ -223,9 +223,9 @@ public class ValueConstraint {
     }
 
     /** match with the given <code>Object</code> value.
-     *  @return <code>true</code> if the value passes the constraint, 
-     *  <code>false</code> otherwise. 
-     */ 
+     *  @return <code>true</code> if the value passes the constraint,
+     *  <code>false</code> otherwise.
+     */
     public boolean matches(Object value) {
         boolean result;
         switch (matchExpr) {
@@ -253,7 +253,7 @@ public class ValueConstraint {
                 // convert to a Float type
                 {
                     Float lval = new Float(value.toString());
-                    result = (lval.floatValue() >= minValue && 
+                    result = (lval.floatValue() >= minValue &&
                                     lval.floatValue() <= maxValue);
                 }
                 break;

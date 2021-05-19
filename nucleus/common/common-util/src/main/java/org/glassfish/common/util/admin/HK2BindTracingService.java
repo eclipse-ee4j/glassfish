@@ -31,7 +31,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * This file is used to turn on HK2 bind and unbind tracing
- * 
+ *
  * @author jwells
  *
  */
@@ -45,7 +45,7 @@ public class HK2BindTracingService implements ValidationService {
         public boolean matches(Descriptor d) {
             return false;
         }
-        
+
     };
     private final static boolean TRACE_BINDS = Boolean.parseBoolean(
             System.getProperty("org.glassfish.hk2.tracing.binds", "false"));
@@ -55,10 +55,10 @@ public class HK2BindTracingService implements ValidationService {
             System.getProperty("org.glassfish.hk2.tracing.lookups", "false"));
     private final static String TRACE_LOOKUPS_PATTERN =
             System.getProperty("org.glassfish.hk2.tracing.lookupsPattern");
-    
+
     private final static String STACK_PATTERN =
             System.getProperty("org.glassfish.hk2.tracing.binds.stackPattern");
-    
+
     private final static Validator VALIDATOR = new ValidatorImpl();
 
     /* (non-Javadoc)
@@ -67,7 +67,7 @@ public class HK2BindTracingService implements ValidationService {
     @Override
     public Filter getLookupFilter() {
         if (TRACE_LOOKUPS == true) return ALL_FILTER;
-        
+
         return NONE_FILTER;
     }
 
@@ -78,29 +78,29 @@ public class HK2BindTracingService implements ValidationService {
     public Validator getValidator() {
         return VALIDATOR;
     }
-    
+
     private static boolean matchesPattern(String pattern, ActiveDescriptor<?> descriptor) {
         if (pattern == null) return true;
-        
+
         StringTokenizer st = new StringTokenizer(pattern, "|");
-        
+
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
-            
+
             if (descriptor.getImplementation().contains(token)) {
                 return true;
             }
-            
+
             for (String contract : descriptor.getAdvertisedContracts()) {
                 if (contract.contains(token)) {
                     return true;
                 }
             }
         }
-        
-        return false;        
+
+        return false;
     }
-    
+
     private static class ValidatorImpl implements Validator {
 
         /* (non-Javadoc)
@@ -109,7 +109,7 @@ public class HK2BindTracingService implements ValidationService {
         @Override
         public boolean validate(ValidationInformation info) {
             if (!TRACE_BINDS && !TRACE_LOOKUPS) return true;
-            
+
             switch (info.getOperation()) {
             case BIND:
                 if (TRACE_BINDS && matchesPattern(TRACE_BINDS_PATTERN, info.getCandidate())) {
@@ -131,16 +131,16 @@ public class HK2BindTracingService implements ValidationService {
                 break;
             default:
                 // Do nothing
-                    
+
             }
-            
+
             if ((STACK_PATTERN != null) && matchesPattern(STACK_PATTERN, info.getCandidate())) {
                 Thread.dumpStack();
             }
-            
+
             return true;
         }
-        
+
     }
 
 }

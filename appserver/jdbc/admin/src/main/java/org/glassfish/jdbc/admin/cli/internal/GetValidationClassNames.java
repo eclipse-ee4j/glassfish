@@ -44,8 +44,8 @@ import jakarta.inject.Inject;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-validation-class-names", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-validation-class-names",
         description="Get Validation Class Names")
 })
 public class GetValidationClassNames implements AdminCommand {

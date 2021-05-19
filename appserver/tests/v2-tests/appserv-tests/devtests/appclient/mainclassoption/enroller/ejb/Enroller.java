@@ -21,7 +21,7 @@ import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface Enroller extends EJBObject {
- 
+
  /**
   * Enrolls a Student in a course
   * @param studentId primary key of the student object
@@ -40,7 +40,7 @@ public interface Enroller extends EJBObject {
    public void unEnroll(String studentId, String courseId)
       throws RemoteException;
  /**
-  * Deletes a Student 
+  * Deletes a Student
   * @param studentId primary key of the student object
   * @exception RemoteException
   */
@@ -49,7 +49,7 @@ public interface Enroller extends EJBObject {
       throws RemoteException;
 
  /**
-  * Deletes a Course 
+  * Deletes a Course
   * @param courseId primary key of the course object
   * @exception RemoteException
   */

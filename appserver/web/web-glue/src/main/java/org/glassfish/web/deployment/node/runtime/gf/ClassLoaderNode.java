@@ -29,10 +29,10 @@ import org.w3c.dom.Node;
 * node for class-loader tag
 */
 public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
-    
+
     public ClassLoaderNode() {
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), 
-            WebPropertyNode.class, "addWebProperty"); 	
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
+            WebPropertyNode.class, "addWebProperty");
     }
 
     protected ClassLoader descriptor = null;
@@ -57,24 +57,24 @@ public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
      * @return true if the attribute was processed
      */
     @Override
-    protected boolean setAttributeValue(XMLElement elementName, 
+    protected boolean setAttributeValue(XMLElement elementName,
         XMLElement attributeName, String value) {
-	RuntimeDescriptor descriptor = getDescriptor();
-	if (attributeName.getQName().equals(RuntimeTagNames.EXTRA_CLASS_PATH)) {
-	    descriptor.setAttributeValue(ClassLoader.EXTRA_CLASS_PATH, value);
-	    return true;    
-	} else if (attributeName.getQName().equals(RuntimeTagNames.DELEGATE)) {
-	    descriptor.setAttributeValue(ClassLoader.DELEGATE, value);
-	    return true;    
-	} else if (attributeName.getQName().equals(
+        RuntimeDescriptor descriptor = getDescriptor();
+        if (attributeName.getQName().equals(RuntimeTagNames.EXTRA_CLASS_PATH)) {
+            descriptor.setAttributeValue(ClassLoader.EXTRA_CLASS_PATH, value);
+            return true;
+        } else if (attributeName.getQName().equals(RuntimeTagNames.DELEGATE)) {
+            descriptor.setAttributeValue(ClassLoader.DELEGATE, value);
+            return true;
+        } else if (attributeName.getQName().equals(
             RuntimeTagNames.DYNAMIC_RELOAD_INTERVAL)) {
-	    descriptor.setAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL, 
+            descriptor.setAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL,
                 value);
-	    return true;    
-	}
-	return false;
+            return true;
+        }
+        return false;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -84,25 +84,25 @@ public class ClassLoaderNode extends RuntimeDescriptorNode<ClassLoader> {
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
-        ClassLoader descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName,
+        ClassLoader descriptor) {
 
-	Element classLoader = (Element) super.writeDescriptor(parent, 
+        Element classLoader = (Element) super.writeDescriptor(parent,
             nodeName, descriptor);
-	
+
         // property*
         WebProperty[] properties = descriptor.getWebProperty();
         if (properties != null && properties.length > 0) {
             WebPropertyNode wpn = new WebPropertyNode();
-            wpn.writeDescriptor(classLoader, RuntimeTagNames.PROPERTY, 
+            wpn.writeDescriptor(classLoader, RuntimeTagNames.PROPERTY,
                 properties);
         }
 
-	// extra-class-path, delegate, dynamic-reload-interval
-	setAttribute(classLoader, RuntimeTagNames.EXTRA_CLASS_PATH, (String) descriptor.getAttributeValue(ClassLoader.EXTRA_CLASS_PATH));
-	setAttribute(classLoader, RuntimeTagNames.DELEGATE, (String) descriptor.getAttributeValue(ClassLoader.DELEGATE));
-	setAttribute(classLoader, RuntimeTagNames.DYNAMIC_RELOAD_INTERVAL, (String) descriptor.getAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL));
-	
-	return classLoader;
+        // extra-class-path, delegate, dynamic-reload-interval
+        setAttribute(classLoader, RuntimeTagNames.EXTRA_CLASS_PATH, descriptor.getAttributeValue(ClassLoader.EXTRA_CLASS_PATH));
+        setAttribute(classLoader, RuntimeTagNames.DELEGATE, descriptor.getAttributeValue(ClassLoader.DELEGATE));
+        setAttribute(classLoader, RuntimeTagNames.DYNAMIC_RELOAD_INTERVAL, descriptor.getAttributeValue(ClassLoader.DYNAMIC_RELOAD_INTERVAL));
+
+        return classLoader;
     }
 }

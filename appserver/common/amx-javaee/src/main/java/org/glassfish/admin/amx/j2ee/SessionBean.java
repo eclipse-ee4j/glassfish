@@ -16,10 +16,7 @@
 
 package org.glassfish.admin.amx.j2ee;
 
-import org.glassfish.admin.amx.core.AMXMBeanMetadata;
-
 /**
  */
-public interface SessionBean extends EJB
-{
+public interface SessionBean extends EJB {
 }

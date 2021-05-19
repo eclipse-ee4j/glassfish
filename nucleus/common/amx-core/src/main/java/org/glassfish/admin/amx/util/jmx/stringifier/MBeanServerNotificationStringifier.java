@@ -19,7 +19,7 @@ package org.glassfish.admin.amx.util.jmx.stringifier;
 import javax.management.MBeanServerNotification;
 
 public class MBeanServerNotificationStringifier
-        extends NotificationStringifier 
+        extends NotificationStringifier
 {
     public static final MBeanServerNotificationStringifier DEFAULT =
             new MBeanServerNotificationStringifier();

@@ -25,9 +25,9 @@ public class SimpleBatchlet
     public String process() throws Exception {
         return  "GREAT_SUCCESS";
     }
-    
+
     @Override
     public void  stop() throws Exception {
     }
-    
+
 }

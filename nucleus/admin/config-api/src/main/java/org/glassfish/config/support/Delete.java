@@ -38,7 +38,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  *
  * X is the type of instance that will be deleted, the name of the method is actually immaterial. So for example, the
  * following
- * 
+ *
  * <pre>
  * <code>
  * &#64;Delete
@@ -62,7 +62,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  * parameters for instance).
  *
  * See {@link Create} for initialization information
- * 
+ *
  * @author Jerome Dochez
  */
 @Retention(RUNTIME)

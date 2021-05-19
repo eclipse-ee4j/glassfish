@@ -42,18 +42,18 @@ import org.jvnet.hk2.config.TransactionFailure;
 public class ConfigDisposalTest {
     private final static String TEST_NAME = "ConfigDisposal";
     private final static Random RANDOM = new Random();
-    
+
     private ServiceLocator habitat;
 
     @Before
     public void before() {
         String testName = TEST_NAME + RANDOM.nextInt();
-        
+
         habitat = ServiceLocatorFactory.getInstance().create(testName);
         DynamicConfigurationService dcs = habitat.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
         new ConfigModule(habitat).configure(config);
-        
+
         config.commit();
         parseDomainXml();
     }
@@ -87,7 +87,7 @@ public class ConfigDisposalTest {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
         assertEquals("Extensions", 1, sc.getExtensions().size());
         assertEquals("Nested children", 2, sc.getExtensions().get(0).getExtensions().size());
-        
+
         ConfigSupport.apply(new SingleConfigCode<SimpleConnector>() {
             @Override
             public Object run(SimpleConnector sc)
@@ -101,7 +101,7 @@ public class ConfigDisposalTest {
 
         assertEquals("Removed extensions", 0, sc.getExtensions().size());
         // NOTE, habitat.getService(GenericConfig.class) creates new instance
-        //       if not all instances of GenericConfig descriptors are removed 
+        //       if not all instances of GenericConfig descriptors are removed
         assertNull("GenericContainer descriptor still has " +
                 habitat.getDescriptors(BuilderHelper.createContractFilter(GenericContainer.class.getName())),
                 habitat.getService(GenericContainer.class));
@@ -115,12 +115,12 @@ public class ConfigDisposalTest {
         // select x.implementation.toString() from org.jvnet.hk2.config.test.SimpleConfigBeanWrapper x
     }
 
-    @Test 
+    @Test
     public void testRemoveNamed() throws TransactionFailure {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
         assertEquals("Eextensions", 1, sc.getExtensions().size());
         assertEquals("Nested children", 2, sc.getExtensions().get(0).getExtensions().size());
-        
+
         GenericContainer extension = sc.getExtensions().get(0);
 
         ConfigSupport.apply(new SingleConfigCode<GenericContainer>() {
@@ -141,7 +141,7 @@ public class ConfigDisposalTest {
         assertNotNull("Nested named grand child", habitat.getService(GenericConfig.class, "test"));
     }
 
-    @Test 
+    @Test
     public void testRemovedOne() throws TransactionFailure {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
         assertEquals("Extensions", 1, sc.getExtensions().size());
@@ -180,11 +180,11 @@ public class ConfigDisposalTest {
         assertNotNull("GenericContainer Service", habitat.getService(GenericContainer.class));
     }
 
-    @Test 
+    @Test
     public void testReplaceNode() throws TransactionFailure {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
         assertEquals("Eextensions", 1, sc.getExtensions().size());
-        
+
         GenericContainer extension = sc.getExtensions().get(0);
         assertEquals("Child extensions", 2, extension.getExtensions().size());
         GenericConfig nestedChild = extension.getExtensions().get(0);
@@ -206,11 +206,11 @@ public class ConfigDisposalTest {
         assertNull("Nested named grand child replaced", habitat.getService(GenericConfig.class, "test"));
     }
 
-    @Test 
+    @Test
     public void testReplaceChild() throws TransactionFailure {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
         assertEquals("Eextensions", 1, sc.getExtensions().size());
-        
+
         GenericContainer extension = sc.getExtensions().get(0);
         assertEquals("Child extensions", 2, extension.getExtensions().size());
 

@@ -19,11 +19,11 @@ package com.sun.appserv.web.cache;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpServletRequest;
 
-/** CacheKeyGenerator: a helper interface to generate the key that is 
+/** CacheKeyGenerator: a helper interface to generate the key that is
  *  used to cache this request.
  */
 public interface CacheKeyGenerator {
-    
+
     /** getCacheKey: generate the key to be used to cache the response.
      *  @param context the web application context
      *  @param request incoming <code>HttpServletRequest</code>

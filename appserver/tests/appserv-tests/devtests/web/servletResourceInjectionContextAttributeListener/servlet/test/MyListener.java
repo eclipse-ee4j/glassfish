@@ -49,7 +49,7 @@ public class MyListener implements ServletContextAttributeListener {
     public void attributeAdded(ServletContextAttributeEvent scae) {
 
         ServletContext sc = scae.getServletContext();
-    
+
         try {
 
             int loginTimeout = ds1.getLoginTimeout();

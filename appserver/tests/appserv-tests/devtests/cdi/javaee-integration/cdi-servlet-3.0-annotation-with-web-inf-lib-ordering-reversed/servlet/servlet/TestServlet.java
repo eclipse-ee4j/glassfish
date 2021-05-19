@@ -37,21 +37,21 @@ import jakarta.enterprise.util.AnnotationLiteral;
 import javax.naming.InitialContext;
 
 @WebServlet(
-    name = "mytest", 
-    urlPatterns = { "/myurl" }, 
-    initParams = { 
+    name = "mytest",
+    urlPatterns = { "/myurl" },
+    initParams = {
         @WebInitParam(name = "n1", value = "v1"),
         @WebInitParam(name = "n2", value = "v2") })
 public class TestServlet extends HttpServlet {
     @Inject
     TestBean tb;
-    
+
     @Inject
     BeanManager bm;
 
     @Inject
     Foo f; // from WEB-INF/lib/alpha.jar
-    
+
     @Inject
     Bar b; // from WEB-INF/lib/bravo.jar
 

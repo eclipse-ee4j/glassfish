@@ -83,7 +83,7 @@ class ParentThread extends Thread {
     ParentThread(String name) {
         super(name);
     }
-    @Override 
+    @Override
     public void run() {
         try {
             GFSystem.setProperty("foo", getName());
@@ -107,7 +107,7 @@ class ChildThread extends Thread {
         super(name);
         this.parentName = parentName;
     }
-    @Override 
+    @Override
     public void run() {
         try {
             Thread t = new GrandChildThread(parentName, getName() + "__grandchild");
@@ -131,7 +131,7 @@ class GrandChildThread extends Thread {
         super(name);
         this.grandParentName = grandParentName;
     }
-    @Override 
+    @Override
     public void run() {
         String result = GFSystem.getProperty("foo");
 

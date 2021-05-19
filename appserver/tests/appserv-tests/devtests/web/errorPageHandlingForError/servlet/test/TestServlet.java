@@ -25,6 +25,6 @@ public class TestServlet extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
-        if (true) throw new NoClassDefFoundError(); 
+        if (true) throw new NoClassDefFoundError();
     }
 }

@@ -37,7 +37,7 @@ public class TestBean {
         InitialContext ic = new InitialContext(props);
         return (T) ic.lookup(name);
     }
-    
+
     public NamingEnumeration<NameClassPair> listEmptyString() throws NamingException {
         Context context = new InitialContext();
         return context.list("");
@@ -57,7 +57,7 @@ public class TestBean {
         Context context = new InitialContext();
         return context.listBindings("java:global");
     }
-    
+
     public NamingEnumeration<NameClassPair> listJavaComp() throws NamingException {
         Context context = (Context) new InitialContext().lookup("java:comp/");
         return context.list("env");
@@ -67,7 +67,7 @@ public class TestBean {
         Context context = (Context) new InitialContext().lookup("java:comp/");
         return context.listBindings("env");
     }
-    
+
     public NamingEnumeration<NameClassPair> listJavaModule() throws NamingException {
         Context context = (Context) new InitialContext().lookup("java:module/");
         return context.list("");
@@ -77,7 +77,7 @@ public class TestBean {
         Context context = (Context) new InitialContext().lookup("java:module/");
         return context.listBindings("");
     }
-    
+
     public NamingEnumeration<NameClassPair> listJavaApp() throws NamingException {
         Context context = (Context) new InitialContext().lookup("java:app/");
         return context.list("");
@@ -87,22 +87,22 @@ public class TestBean {
         Context context = (Context) new InitialContext().lookup("java:app/");
         return context.listBindings("");
     }
-    
+
     public void closeNamingEnumerations() throws NamingException {
         listEmptyString().close();
         listBindingsEmptyString().close();
-        
+
         listJavaComp().close();
         listBindingsJavaComp().close();
-        
+
         listJavaModule().close();
         listBindingsJavaModule().close();
-       
+
         listJavaApp().close();
         listBindingsJavaApp().close();
     }
-    
-	public Boolean getIsInAppClientContainer() {
-		return isInAppClientContainer;
-	}
+
+        public Boolean getIsInAppClientContainer() {
+                return isInAppClientContainer;
+        }
 }

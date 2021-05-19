@@ -738,7 +738,7 @@ class PartItem
     public String getHeader(String name) {
         return headers.getHeader(name);
     }
-    
+
 
     /**
      * Returns all the values of the specified Part header

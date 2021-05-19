@@ -43,7 +43,7 @@ public class SfulDelegateBean {
     public EntityManager getEM() {
         return extendedEM;
     }
-    
+
     @Init
     public void createDelegate(String name, String data) {
     }
@@ -55,7 +55,7 @@ public class SfulDelegateBean {
     public Person createPerson(String name, String data) {
 
         Person person = new Person(name, data);
-        
+
         extendedEM.persist(person);
         return person;
     }

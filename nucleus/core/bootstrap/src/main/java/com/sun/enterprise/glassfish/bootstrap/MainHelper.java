@@ -37,9 +37,9 @@ import java.util.regex.Pattern;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class MainHelper {
-    
+
     private static Logger logger = LogFacade.BOOTSTRAP_LOGGER;
-    
+
     /*protected*/
 
     static void checkJdkVersion() {
@@ -746,18 +746,18 @@ public class MainHelper {
         protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
             cpb.addJar(new File(fwDir, "bin/felix.jar"));
         }
-      
+
         @Override
         protected Properties readPlatformConfiguration() throws IOException {
             // GlassFish filesystem layout does not recommend use of upper case char in file names.
             // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
             // Hence, we set it here.
             Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE, 
+            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
                                        new File(domainDir, "osgi-cache/felix/").getAbsolutePath());
             return platformConfig;
         }
-            
+
     }
 
     static class EquinoxHelper extends PlatformHelper {
@@ -796,7 +796,7 @@ public class MainHelper {
             // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
             // Hence, we set it here.
             Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE, 
+            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
                                        new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
             return platformConfig;
         }
@@ -833,7 +833,7 @@ public class MainHelper {
             // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
             // Hence, we set it here.
             Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE, 
+            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
                                        new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
             return platformConfig;
         }

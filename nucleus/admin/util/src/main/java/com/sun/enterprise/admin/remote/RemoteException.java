@@ -21,7 +21,7 @@ package com.sun.enterprise.admin.remote;
  * @author bnevins
  */
 public abstract class RemoteException extends Exception {
-    // save the cause string from server 
+    // save the cause string from server
     private String remoteCause = "";
 
     RemoteException(String msg) {

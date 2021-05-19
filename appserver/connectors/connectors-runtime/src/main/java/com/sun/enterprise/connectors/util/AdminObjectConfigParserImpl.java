@@ -89,7 +89,7 @@ public class AdminObjectConfigParserImpl implements AdminObjectConfigParser {
      * present for the corresponding adminobjectInterface, null is returned.
      *
      * @param desc                 ConnectorDescriptor pertaining to rar.
-     * @param adminObjectInterface AdminObject interface 
+     * @param adminObjectInterface AdminObject interface
      * @param adminObjectClass AdminObject class
      * @return Javabean properties with the propety names and values
      *         of propeties. The property values will be the values

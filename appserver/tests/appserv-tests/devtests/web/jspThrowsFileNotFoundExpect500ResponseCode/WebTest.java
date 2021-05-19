@@ -53,18 +53,18 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/jsp/notfound.jsp");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode == 500) { 
+        if (responseCode == 500) {
             stat.addStatus(TEST_NAME, stat.PASS);
         } else {
             System.err.println("Wrong response code. Expected: 500"

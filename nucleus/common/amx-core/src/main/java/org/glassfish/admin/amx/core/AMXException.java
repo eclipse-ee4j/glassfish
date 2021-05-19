@@ -20,14 +20,17 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-    Runtime exception used in proxying code and similar situations on the client side.
+ * Runtime exception used in proxying code and similar situations on the client side.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 public final class AMXException extends RuntimeException {
-    public AMXException( final String msg, final Throwable t ) {
+
+    public AMXException(final String msg, final Throwable t) {
         super(msg, t);
     }
-    public AMXException( final String msg ) {
+
+
+    public AMXException(final String msg) {
         super(msg);
     }
 }

@@ -109,7 +109,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
 
     @Inject
     private Provider<GMSAdapter> gmsAdapterProvider;
-    
+
     static private final Object lock = new Object();
 
     List<GMSAdapter> gmsAdapters = new LinkedList<GMSAdapter>();
@@ -220,7 +220,7 @@ public class GMSAdapterService implements PostConstruct, ConfigListener {
                     return null;
                 }
                 ServiceLocatorUtilities.addOneConstant(habitat, result, cluster.getName(), GMSAdapter.class);
-                
+
                 if (GMSBS_LOGGER.isLoggable(TRACE_LEVEL)) {
                     GMSBS_LOGGER.log(TRACE_LEVEL, "loadModule: registered created gmsadapter for cluster " + cluster.getName() + " initialized result=" + initResult);
                 }

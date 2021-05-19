@@ -50,7 +50,7 @@ public class MessageBean implements MessageListener {
 
         QueueConnection connection = null;
         try {
-            
+
             System.out.println("Calling hello1 stateless bean");
             hello1.hello("local ejb3.0 stateless");
             System.out.println("Calling hello2 stateful bean");
@@ -75,7 +75,7 @@ public class MessageBean implements MessageListener {
             QueueSender sender = session.createSender(queue);
             TextMessage tmessage = session.createTextMessage();
             tmessage.setText("mdb() invoked. Interceptor count: "
-		    + BaseInterceptor.getCount());
+                    + BaseInterceptor.getCount());
             System.out.println("Sending message");
             sender.send(tmessage);
             System.out.println("message sent");

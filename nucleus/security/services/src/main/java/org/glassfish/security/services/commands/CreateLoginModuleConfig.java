@@ -21,8 +21,6 @@ import java.util.Properties;
 
 import jakarta.inject.Inject;
 
-import org.glassfish.security.services.config.SecurityConfiguration;
-
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
@@ -40,7 +38,6 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 
 import org.glassfish.security.services.config.LoginModuleConfig;
-import org.glassfish.security.services.config.SecurityConfigurations;
 import org.glassfish.security.services.config.SecurityProvider;
 
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -76,7 +73,7 @@ public class CreateLoginModuleConfig implements AdminCommand, AdminCommandSecuri
 
     @Inject
     private Domain domain;
-    
+
     @AccessRequired.NewChild(type=LoginModuleConfig.class)
     private SecurityProvider provider;
 
@@ -86,12 +83,12 @@ public class CreateLoginModuleConfig implements AdminCommand, AdminCommandSecuri
         return (provider != null);
     }
 
-    
-	/**
-	 * Execute the create-login-module-config admin command.
-	 */
-	@Override
-	public void execute(AdminCommandContext context) {
+
+    /**
+     * Execute the create-login-module-config admin command.
+     */
+    @Override
+    public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         // Add LoginModule configuration to the security provider setup
@@ -101,12 +98,12 @@ public class CreateLoginModuleConfig implements AdminCommand, AdminCommandSecuri
             config = (LoginModuleConfig) ConfigSupport.apply(new SingleConfigCode<SecurityProvider>() {
                 @Override
                 public Object run(SecurityProvider param) throws PropertyVetoException, TransactionFailure {
-                	LoginModuleConfig lmConfig = param.createChild(LoginModuleConfig.class);
-                	lmConfig.setName(name);
-                	lmConfig.setModuleClass(moduleClass);
-                	lmConfig.setControlFlag(controlFlag);
+                    LoginModuleConfig lmConfig = param.createChild(LoginModuleConfig.class);
+                    lmConfig.setName(name);
+                    lmConfig.setModuleClass(moduleClass);
+                    lmConfig.setControlFlag(controlFlag);
                     // TODO - Should prevent multiple security provider config entries
-                	param.getSecurityProviderConfig().add(lmConfig);
+                    param.getSecurityProviderConfig().add(lmConfig);
                     return lmConfig;
                 }
             }, provider);
@@ -119,25 +116,25 @@ public class CreateLoginModuleConfig implements AdminCommand, AdminCommandSecuri
 
         // Setup LoginModule configuration options
         if ((config != null) && (configuration != null) && (!configuration.isEmpty())) {
-	        try {
-	            ConfigSupport.apply(new SingleConfigCode<LoginModuleConfig>() {
-	                @Override
-	                public Object run(LoginModuleConfig param) throws PropertyVetoException, TransactionFailure {
-	                    for (Object configPropName: configuration.keySet()) {
-		                	Property prop = param.createChild(Property.class);
-		                	String propName = (String) configPropName; 
-	                        prop.setName(propName);
-	                        prop.setValue(configuration.getProperty(propName));            
-	                        param.getProperty().add(prop);    
-	                    }
-	                    return param;
-	                }
-	            }, config);
-	        } catch (TransactionFailure transactionFailure) {
-	            report.setMessage("Unable to create login module options: " + transactionFailure.getMessage());
-	            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-	            report.setFailureCause(transactionFailure);
-	        }
+            try {
+                ConfigSupport.apply(new SingleConfigCode<LoginModuleConfig>() {
+                    @Override
+                    public Object run(LoginModuleConfig param) throws PropertyVetoException, TransactionFailure {
+                        for (Object configPropName: configuration.keySet()) {
+                            Property prop = param.createChild(Property.class);
+                            String propName = (String) configPropName;
+                            prop.setName(propName);
+                            prop.setValue(configuration.getProperty(propName));
+                            param.getProperty().add(prop);
+                        }
+                        return param;
+                    }
+                }, config);
+            } catch (TransactionFailure transactionFailure) {
+                report.setMessage("Unable to create login module options: " + transactionFailure.getMessage());
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                report.setFailureCause(transactionFailure);
+            }
         }
-	}
+    }
 }

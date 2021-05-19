@@ -31,7 +31,7 @@ public class NewPropDialog extends javax.swing.JDialog {
     {
         return new String[]{_name, _value};
     }
-    
+
     /** Creates new form NewPropDialog */
     public NewPropDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -39,7 +39,7 @@ public class NewPropDialog extends javax.swing.JDialog {
         this.setTitle("Add new property");
         jPropValue.setText("");
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -128,7 +128,7 @@ public class NewPropDialog extends javax.swing.JDialog {
         _value = jPropValue.getText();
         this.dispose();
     }//GEN-LAST:event_jOkButtonActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
@@ -139,7 +139,7 @@ public class NewPropDialog extends javax.swing.JDialog {
             }
         });
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jCancelButton;
     private javax.swing.JLabel jLabel1;
@@ -148,5 +148,5 @@ public class NewPropDialog extends javax.swing.JDialog {
     private javax.swing.JTextField jPropName;
     private javax.swing.JTextField jPropValue;
     // End of variables declaration//GEN-END:variables
-    
+
 }

@@ -50,7 +50,7 @@ public interface WebServiceEndpoint extends ApplicationExtension {
      * |EndpointName|, if the web service endpoint belongs to stand alone
      * ejb-module or web-module (Parent of this element is either ejb-module
      * or web-module).
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -109,7 +109,7 @@ public interface WebServiceEndpoint extends ApplicationExtension {
      * Gets the value of the jbiEnabled property.
      *
      * If true, it enables the visibility of this endoint as a service in JBI.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */

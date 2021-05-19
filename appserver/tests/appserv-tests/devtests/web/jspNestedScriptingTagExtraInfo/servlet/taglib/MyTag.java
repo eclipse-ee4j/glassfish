@@ -21,7 +21,7 @@ import jakarta.servlet.jsp.tagext.*;
 
 public class MyTag extends TagSupport {
 
-    private static int counter = 1; 
+    private static int counter = 1;
 
     private String name;
 

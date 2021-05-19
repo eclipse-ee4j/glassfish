@@ -56,7 +56,7 @@
 
     <target name="deploydir.asadmin" depends="prepare">
         <antcall target="common.deploydir.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${build}/${testName}"/>
         </antcall>
     </target>
@@ -72,7 +72,7 @@
         <antcall target="common.v3.redeploy.asadmin">
             <param name="arg.list"
                    value="--name ${testName}"/>
-        </antcall> 
+        </antcall>
     </target>
 
 
@@ -85,7 +85,7 @@
 
     <target name="undeploy.asadmin">
         <antcall target="common.undeploy.asadmin">
-            <param name="arg.list" 
+            <param name="arg.list"
                    value="${testName}"/>
         </antcall>
     </target>
@@ -172,7 +172,7 @@
         <antcall target="run.positive.foo"><param name="log.id" value="5"/></antcall>
          <antcall target="declare-test">
             <param name="description" value="war/deploydir Test asadmin redeploydir preserves context root"/>
-        </antcall>        
+        </antcall>
         <antcall target="redeploydir.asadmin"/>
         <antcall target="run.positive.foo"><param name="log.id" value="6"/></antcall>
         <antcall target="declare-test">

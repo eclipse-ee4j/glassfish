@@ -262,20 +262,20 @@ public abstract class RequestFilterValve
         for (int i = 0; i < denies.length; i++) {
             if (denies[i].matcher(property).matches()) {
                 //ServletResponse sres = response.getResponse();
-                /* GlassFish 6386229 
+                /* GlassFish 6386229
                 if (sres instanceof HttpServletResponse) {
                     HttpServletResponse hres = (HttpServletResponse) sres;
                     hres.sendError(HttpServletResponse.SC_FORBIDDEN);
                     return END_PIPELINE;
                 }
                 */
-                // START GlassFish 6386229 
+                // START GlassFish 6386229
                 //HttpServletResponse hres = (HttpServletResponse) sres;
                 //hres.sendError(HttpServletResponse.SC_FORBIDDEN);
                 handleError(request, response, HttpServletResponse.SC_FORBIDDEN);
-                // END GlassFish 6386229                 
+                // END GlassFish 6386229
                 return END_PIPELINE;
-                // GlassFish 638622                   
+                // GlassFish 638622
             }
         }
 
@@ -293,18 +293,18 @@ public abstract class RequestFilterValve
 
         // Deny this request
         //ServletResponse sres = response.getResponse();
-        /* GlassFish 6386229 
+        /* GlassFish 6386229
         if (sres instanceof HttpServletResponse) {
             HttpServletResponse hres = (HttpServletResponse) sres;
             hres.sendError(HttpServletResponse.SC_FORBIDDEN);
             return END_PIPELINE;
         }
         */
-        // START GlassFish 6386229 
+        // START GlassFish 6386229
         //HttpServletResponse hres = (HttpServletResponse) sres;
         //hres.sendError(HttpServletResponse.SC_FORBIDDEN);
         handleError(request, response, HttpServletResponse.SC_FORBIDDEN);
-        // END GlassFish 6386229        
+        // END GlassFish 6386229
         return END_PIPELINE;
     }
 
@@ -324,7 +324,7 @@ public abstract class RequestFilterValve
         }
         if (errorPage != null) {
             try {
-                hres.setStatus(statusCode);   
+                hres.setStatus(statusCode);
                 ServletContext servletContext =
                     request.getContext().getServletContext();
                 ApplicationDispatcher dispatcher = (ApplicationDispatcher)
@@ -332,7 +332,7 @@ public abstract class RequestFilterValve
 
                 if (hres.isCommitted()) {
                     // Response is committed - including the error page is the
-                    // best we can do 
+                    // best we can do
                     dispatcher.include(sreq, sres);
                 } else {
                     // Reset the response (keeping the real error code and message)

@@ -16,10 +16,10 @@
 
 package org.glassfish.admingui.common.handlers;
 
-import com.sun.jsftemplating.annotation.Handler;  
-import com.sun.jsftemplating.annotation.HandlerInput; 
+import com.sun.jsftemplating.annotation.Handler;
+import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
-import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;  
+import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.logging.Level;
@@ -34,11 +34,11 @@ import org.glassfish.admingui.common.util.RestUtil;
  * @author anilam
  */
 public class SecurityHandler {
-    
+
 
     /**
-     *	<p> This handler returns the a Map for storing the attributes for realm creation.
-     *	@param	handlerCtx	The HandlerContext.
+     * <p> This handler returns the a Map for storing the attributes for realm creation.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getRealmAttrForCreate",
     output={
@@ -47,7 +47,7 @@ public class SecurityHandler {
         @HandlerOutput(name="realmClasses",      type=List.class),
         @HandlerOutput(name="properties", type=List.class)})
     public static void getRealmAttrForCreate(HandlerContext handlerCtx) {
-        
+
         handlerCtx.setOutputValue("realmClasses", realmClassList);
         handlerCtx.setOutputValue("classnameOption", "predefine");
         Map attrMap = new HashMap();
@@ -55,11 +55,11 @@ public class SecurityHandler {
         handlerCtx.setOutputValue("attrMap", attrMap);
         handlerCtx.setOutputValue("properties", new ArrayList());
     }
-    
+
     /**
-     *	<p> This handler returns the a Map for storing the attributes for editing a realm.
+     * <p> This handler returns the a Map for storing the attributes for editing a realm.
      *  This can be used by either the node agent realm or the realm in configuration-Security-realm
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getRealmAttrForEdit",
     input={
@@ -75,7 +75,7 @@ public class SecurityHandler {
         String endpoint = (String) handlerCtx.getInputValue("endpoint");
 
         HashMap<String, Object> realmMap = (HashMap<String, Object>) RestUtil.getEntityAttrs(endpoint, "entity");
-        
+
         HashMap<String, Object> responseMap = (HashMap<String, Object>) RestUtil.restRequest(endpoint + "/property.json", null, "GET", null, false);
         HashMap propsMap = (HashMap) ((Map<String, Object>) responseMap.get("data")).get("extraProperties");
         ArrayList<HashMap> propList = (ArrayList<HashMap>) propsMap.get("properties");
@@ -143,7 +143,7 @@ public class SecurityHandler {
             //Custom realm class
             handlerCtx.setOutputValue("classnameOption", "input");
             attrMap.put("predefinedClassname", Boolean.FALSE);
-	    attrMap.put("classnameInput", classname);
+            attrMap.put("classnameInput", classname);
             attrMap.put("classname", classname);
             List props = getChildrenMapForTableList(propList, "property", null);
             handlerCtx.setOutputValue("properties", props);
@@ -190,7 +190,7 @@ public class SecurityHandler {
         }
         return result;
     }
-    
+
     @Handler(id="saveRealm",
     input={
         @HandlerInput(name="endpoint",   type=String.class),
@@ -306,21 +306,21 @@ public class SecurityHandler {
     /* Handler for Group/User managemenet */
 
     /**
-     *	<p> This handler update's user info.</p>
+     * <p> This handler update's user info.</p>
      *  <p> Input value: "Realm" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "UserId" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "GroupList" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "Password" -- Type: <code>java.lang.String</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="saveUser",
-	input={
-	    @HandlerInput(name="Realm", type=String.class, required=true),
+        input={
+            @HandlerInput(name="Realm", type=String.class, required=true),
             @HandlerInput(name="configName", type=String.class, required=true),
-	    @HandlerInput(name="UserId", type=String.class, required=true),
-	    @HandlerInput(name="GroupList", type=String.class, required=true),
-	    @HandlerInput(name="Password", type=String.class, required=true),
-	    @HandlerInput(name="CreateNew", type=String.class, required=true)})
+            @HandlerInput(name="UserId", type=String.class, required=true),
+            @HandlerInput(name="GroupList", type=String.class, required=true),
+            @HandlerInput(name="Password", type=String.class, required=true),
+            @HandlerInput(name="CreateNew", type=String.class, required=true)})
     public static void saveUser(HandlerContext handlerCtx) {
         char[] password = null;
         try {
@@ -371,12 +371,12 @@ public class SecurityHandler {
     }
 
    /**
-     *	<p> This handler returns the attribute values in the
+     * <p> This handler returns the attribute values in the
      *      Edit Manage User Password Page.</p>
      *  <p> Input value: "Realm" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "UserId" -- Type: <code>java.lang.String</code></p>
      *  <p> Output value: "GroupList" -- Type: <code>java.lang.String</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getUserInfo",
     input={
@@ -395,8 +395,8 @@ public class SecurityHandler {
     }
 
    /**
-     *	<p> This handler returns the list of file users for specified realm.
-     *	@param	handlerCtx	The HandlerContext.
+     * <p> This handler returns the list of file users for specified realm.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getFileUsers",
         input={
@@ -434,8 +434,8 @@ public class SecurityHandler {
 
 
   /**
-     *	<p> This handler removes users for specified realm.
-     *	@param	handlerCtx	The HandlerContext.
+     * <p> This handler removes users for specified realm.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="removeUser",
         input={
@@ -513,7 +513,7 @@ public class SecurityHandler {
     private static List skipRealmPropsList = new ArrayList();
     private static List realmClassList = new ArrayList();
     static {
-        String endpoint = GuiUtil.getSessionValue("REST_URL") 
+        String endpoint = GuiUtil.getSessionValue("REST_URL")
             + "/list-predefined-authrealm-classnames";
             //+ "/configs/config/server-config/security-service/auth-realm/list-predefined-authrealm-classnames";
         Map<String, Object> responseMap = RestUtil.restRequest(endpoint, null, "GET", null, false);
@@ -637,12 +637,12 @@ public class SecurityHandler {
         String edit = (String)handlerCtx.getInputValue("edit");
         String msgSecurityName = attrMap.get("msgSecurityName");
         String configName = (String)handlerCtx.getInputValue("configName");
-        
+
         try{
             String providerName = URLEncoder.encode((String)attrMap.get("Name"), "UTF-8");
             String providerEndpoint = GuiUtil.getSessionValue("REST_URL") + "/configs/config/" + configName +
                     "/security-service/message-security-config/" + msgSecurityName + "/provider-config/" + providerName;
-        
+
             if (edit.equals("true")){
                 boolean providerExist = RestUtil.get(providerEndpoint).isSuccess();
                 if (!providerExist){
@@ -803,5 +803,5 @@ public class SecurityHandler {
 
     private static final String JVM_OPTION_SECURITY_MANAGER = "-Djava.security.manager";
     private static final String JVM_OPTION_SECURITY_MANAGER_WITH_EQUAL = "-Djava.security.manager=";
-    
+
 }

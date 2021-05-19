@@ -23,7 +23,7 @@
     <small-icon></small-icon>
     <large-icon></large-icon>
   </icon>
-  <display-name>synchronization-cleaner-applicationApp</display-name>  
+  <display-name>synchronization-cleaner-applicationApp</display-name>
   <module>
     <java>synchronization-cleaner-application-client.jar</java>
   </module>

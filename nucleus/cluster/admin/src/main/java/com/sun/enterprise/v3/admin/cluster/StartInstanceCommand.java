@@ -53,8 +53,8 @@ import com.sun.enterprise.config.serverbeans.Node;
 @I18n("start.instance.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="start-instance", 
+        opType=RestEndpoint.OpType.POST,
+        path="start-instance",
         description="Start Instance",
         params={
             @RestParam(name="id", value="$parent")

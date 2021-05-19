@@ -56,7 +56,7 @@ public class ProcessManagerTest {
 
     /**
      * Temporary Test of ProcessManager
-     * This stuff is platform dependent.  
+     * This stuff is platform dependent.
      */
     @Test
     public void test1() throws ProcessManagerException {

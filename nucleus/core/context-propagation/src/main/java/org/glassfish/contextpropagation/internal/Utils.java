@@ -63,7 +63,7 @@ public class Utils {
         PropagationMode mode) {
       EnumSet<PropagationMode> modes = mapEntry.getValue().getPropagationModes();
       return modes.contains(mode) && !modes.contains(PropagationMode.ONEWAY);
-    }    
+    }
   };
   protected static final Long DUMMY_VALUE = 1L;
 
@@ -72,8 +72,8 @@ public class Utils {
   }
 
   /**
-   * 
-   * @return The in-scope instance of ContextMapPropagator so that 
+   *
+   * @return The in-scope instance of ContextMapPropagator so that
    * communication protocols can ask the ContextMapPropagator to handle
    * the context propagation bytes on the wire.
    */
@@ -168,7 +168,7 @@ public class Utils {
         final Set<String> keySet = clearPropagatedEntries(mode, map);
         ContextBootstrap.debug(MessageID.CLEARED_ENTRIES, keySet);
         receive(in, new OriginatorFinder() {
-          @Override public boolean isOriginator(String key) { 
+          @Override public boolean isOriginator(String key) {
             return keySet.contains(key);
           }
         });
@@ -203,7 +203,7 @@ public class Utils {
         }
         if (srcContexts == null) {
           throw new IllegalArgumentException("You must specify a ContextMap.");
-        } 
+        }
         SimpleMap srcSimpleMap = srcContexts.simpleMap;
         if (!srcSimpleMap.map.isEmpty()) {
           SimpleMap destSimpleMap = mapFinder.getMapAndCreateIfNeeded().simpleMap;
@@ -211,7 +211,7 @@ public class Utils {
           if (destSimpleMap == srcSimpleMap) {
             throw new IllegalArgumentException("Cannot restore a ContextMap on itself. The source and destination maps must not be the same.");
           }
-          Iterator<Map.Entry<String, Entry>> iterator = 
+          Iterator<Map.Entry<String, Entry>> iterator =
               srcSimpleMap.iterator(propagationModeFilter, PropagationMode.THREAD);
           while (iterator.hasNext()) {
             Map.Entry<String, Entry> mapEntry = iterator.next();
@@ -221,7 +221,7 @@ public class Utils {
             context.contextAdded();
           }
           if (ContextBootstrap.IS_DEBUG) {
-            ContextBootstrap.debug(MessageID.RESTORING_CONTEXTS, 
+            ContextBootstrap.debug(MessageID.RESTORING_CONTEXTS,
                 asList(mapFinder.getMapIfItExists().entryIterator()));
           }
         }
@@ -238,10 +238,10 @@ public class Utils {
 
       @Override
       public void useWireAdapter(WireAdapter aWireAdapter) {
-        wireAdapter = aWireAdapter;        
+        wireAdapter = aWireAdapter;
       }
 
-    }; 
+    };
   }
 
   protected static class AccessControlledMapFinder {
@@ -270,14 +270,14 @@ public class Utils {
 
     @SuppressWarnings("unchecked")
     public <T> T get(String key) throws InsufficientCredentialException {
-      return (T) (mapFinder.getMapIfItExists() == null ? 
+      return (T) (mapFinder.getMapIfItExists() == null ?
           null : mapFinder.getMapIfItExists().get(key));
     }
 
     public <T> T put(String key, String value,
         EnumSet<PropagationMode> propagationModes) throws InsufficientCredentialException {
       return (T) mapFinder.getMapAndCreateIfNeeded().put(
-          key,  new Entry(value , propagationModes, 
+          key,  new Entry(value , propagationModes,
               isAsciiString(value) ?Entry.ContextType.ASCII_STRING : Entry.ContextType.STRING));
     }
 
@@ -318,8 +318,8 @@ public class Utils {
       if (factory == null) {
         throw new IllegalStateException("Unable to create ViewCapable object for prefix, " + prefix);
       } else {
-        ViewImpl view = new ViewImpl(prefix); 
-        Entry entry = Entry.createViewEntryInstance(DUMMY_VALUE , EnumSet.of(PropagationMode.LOCAL), 
+        ViewImpl view = new ViewImpl(prefix);
+        Entry entry = Entry.createViewEntryInstance(DUMMY_VALUE , EnumSet.of(PropagationMode.LOCAL),
             view).init(isOriginator, ContextBootstrap.getContextAccessController().isEveryoneAllowedToRead(prefix));
         mapFinder.getMapAndCreateIfNeeded().put(prefix,  entry);
         entry.value = factory.createInstance(view);
@@ -335,13 +335,13 @@ public class Utils {
     }
 
     public EnumSet<PropagationMode> getPropagationModes(String key) throws InsufficientCredentialException {
-      return mapFinder.getMapIfItExists() == null ? 
+      return mapFinder.getMapIfItExists() == null ?
           null : mapFinder.getMapIfItExists().getPropagationModes(key);
     }
 
     @SuppressWarnings("unchecked")
     public <T> T remove(String key) throws InsufficientCredentialException {
-      return (T) (mapFinder.getMapIfItExists() == null ? 
+      return (T) (mapFinder.getMapIfItExists() == null ?
           null : mapFinder.getMapIfItExists().remove(key));
     }
 
@@ -360,7 +360,7 @@ public class Utils {
         if (location == null) {
           //throw new AssertionError("No location set");
           location = new Location(new ViewImpl(Location.KEY)) {};
-          final Entry locationEntry = new Entry(location, 
+          final Entry locationEntry = new Entry(location,
               Location.PROP_MODES, ContextType.VIEW_CAPABLE).init(true, false);
           mapFinder.getMapAndCreateIfNeeded().put(Location.KEY, locationEntry);
         }
@@ -381,20 +381,20 @@ public class Utils {
       AccessControlledMap acMap = mapFinder.getMapIfItExists();
       return acMap == null ? null : acMap.names();
     }
-    
+
     public interface StringFilter {
       public boolean accept(String s);
     }
-    
+
     public Iterator<String>names(final StringFilter stringFilter) {
       return new Iterator<String>() {
         Iterator<String> it = names();
         String next;
-        
+
         @Override public boolean hasNext() {
           if (next == null && it.hasNext()) {
             while (it.hasNext()) {
-              String name = it.next(); 
+              String name = it.next();
               if (stringFilter.accept(name)) {
                 next = name;
                 break;
@@ -414,12 +414,12 @@ public class Utils {
         @Override public void remove() {
           throw new UnsupportedOperationException();
         }
-        
+
       };
     }
 
     public AccessControlledMap getAccessControlledMap(boolean create) {
-      return create ? mapFinder.getMapAndCreateIfNeeded() : mapFinder.getMapIfItExists();     
+      return create ? mapFinder.getMapAndCreateIfNeeded() : mapFinder.getMapIfItExists();
     }
 
     @Override
@@ -435,16 +435,16 @@ public class Utils {
   static Map<String, ContextViewFactory> viewFactoriesByPrefix = new HashMap<String, ContextViewFactory>();
 
   /**
-   * ViewCapable objects are created by the context propagation framework 
+   * ViewCapable objects are created by the context propagation framework
    * when needed using the ContextViewFactory registered against the
    * specified context name
    * @param prefixName This is the name of the context that should be instantiated
-   * with the corresponding factory. 
+   * with the corresponding factory.
    * @param factory A ContextViewFactory.
    */
   public static void registerContextFactoryForPrefixNamed(String prefixName, ContextViewFactory factory) {
-    Utils.validateFactoryRegistrationArgs("prefixName", 
-        MessageID.WARN_FACTORY_ALREADY_REGISTERED_FOR_PREFIX, prefixName, 
+    Utils.validateFactoryRegistrationArgs("prefixName",
+        MessageID.WARN_FACTORY_ALREADY_REGISTERED_FOR_PREFIX, prefixName,
         factory, viewFactoriesByPrefix);
     viewFactoriesByPrefix.put(prefixName, factory);
   }
@@ -473,7 +473,7 @@ public class Utils {
     if (factoriesByKey.containsKey(contextClassName)) {
       ContextBootstrap.getLoggerAdapter().log(
           Level.WARN, messageID, contextClassName, factoriesByKey.get(contextClassName), factory);
-    } 
+    }
   }
 
   static { // Register Default Factories
@@ -494,12 +494,12 @@ public class Utils {
      * Store the specified work context under the specified name into the in-scope ContextMap.
      * @param name The name to associate to the specified work context
      * @param context an ascii String work context.
-     * @param propagationModes A set of propagation modes that control over 
+     * @param propagationModes A set of propagation modes that control over
      * which protocol this work context will be propagated.
      * @return The work context being replaced.
-     * @throws InsufficientCredentialException If the user has insufficient 
+     * @throws InsufficientCredentialException If the user has insufficient
      * privileges to access that work context.
-     */  
+     */
     <T> T putAscii(String name, String context, EnumSet<PropagationMode> propagationModes) throws InsufficientCredentialException;
 
     public <T> T putNotAscii(String key, String value,

@@ -575,8 +575,8 @@ public class ClassDesc
 
     /**
      * Validity checks on secondary tables:
-     *	1) Ensure that every secondary table has a TableDesc
-     *	2) Every referencing key is the same length as the table's key
+     *    1) Ensure that every secondary table has a TableDesc
+     *    2) Every referencing key is the same length as the table's key
      * Build the referencing keys.
      * NOTE: This method assumes that the entries of <code>mdTables</code>
      * and <code>tables</code> are sorted in the same order.
@@ -1122,8 +1122,8 @@ public class ClassDesc
 
                 // We would never reach this code because we are in the else part
                 // case MappingClassElement.NONE_CONSISTENCY :
-                //	concurrency = (Concurrency) databaseConcurrency.clone();
-                //	break;
+                //    concurrency = (Concurrency) databaseConcurrency.clone();
+                //    break;
 
             case MappingClassElement.CHECK_MODIFIED_AT_COMMIT_CONSISTENCY :
                 concurrency = (Concurrency) checkDirtyConcurrency.clone();

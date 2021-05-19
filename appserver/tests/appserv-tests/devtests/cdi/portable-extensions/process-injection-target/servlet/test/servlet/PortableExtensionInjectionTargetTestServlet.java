@@ -40,10 +40,10 @@ import jakarta.servlet.http.HttpServletResponse;
  */
 @WebServlet(name = "mytest", urlPatterns = { "/myurl" })
 public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
-    
+
 //    @Inject
 //    BeanManager bm;
-    
+
     String msg = "";
 
     public static volatile boolean pitCalled;
@@ -62,7 +62,7 @@ public class PortableExtensionInjectionTargetTestServlet extends HttpServlet {
         if (!pitsInjectionTargetUsed) {
             msg += " MyExtension's replaced InjectionTarget is not used";
         }
-        
+
         writer.write(msg + "\n");
     }
 

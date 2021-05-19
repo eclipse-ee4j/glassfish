@@ -81,7 +81,7 @@ public class TraderBean implements SessionBean {
    * This method corresponds to the create method in the home interface
    * "TraderHome.java".
    * The parameter sets of the two methods are identical. When the client calls
-   * <code>TraderHome.create()</code>, the container allocates an instance of 
+   * <code>TraderHome.create()</code>, the container allocates an instance of
    * the EJBean and calls <code>ejbCreate()</code>.
    *
    * @exception               jakarta.ejb.CreateException
@@ -158,13 +158,13 @@ public class TraderBean implements SessionBean {
    * @exception               examples.ejb20.basic.statefulSession.ProcessingErrorException
    *                          if there is an error while checking the price
    */
-  public double getStockPrice(String stockSymbol) 
-    throws ProcessingErrorException 
+  public double getStockPrice(String stockSymbol)
+    throws ProcessingErrorException
   {
     try {
       return ((Double) environment.lookup(stockSymbol)).doubleValue();
     } catch (NamingException ne) {
-      throw new ProcessingErrorException ("Stock symbol " + stockSymbol + 
+      throw new ProcessingErrorException ("Stock symbol " + stockSymbol +
                                           " does not exist");
     } catch (NumberFormatException nfe) {
       throw new ProcessingErrorException("Invalid price for stock "+stockSymbol);

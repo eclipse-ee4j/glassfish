@@ -27,18 +27,18 @@ import java.util.Iterator;
 import java.util.Set;
 
 /**
- * This class validates the part of the web bundle descriptor 
+ * This class validates the part of the web bundle descriptor
  *
  */
 public class WebBundleValidator extends ApplicationValidator implements WebBundleVisitor {
-    
+
     public void accept (BundleDescriptor descriptor) {
         if (descriptor instanceof WebBundleDescriptor) {
             WebBundleDescriptor webBundle = (WebBundleDescriptor)descriptor;
             accept(webBundle);
 
             // Visit all injectables first.  In some cases, basic type
-            // information has to be derived from target inject method or 
+            // information has to be derived from target inject method or
             // inject field.
             for (InjectionCapable injectable : webBundle.getInjectableResources(webBundle)) {
                 accept(injectable);

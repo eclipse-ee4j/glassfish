@@ -89,15 +89,15 @@
             <artifactId>ejb-full-container</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
-        <!-- 
-            We depend on the deployment/dtds and deployment/schemas modules 
-            but only at build-time. 
-            
-            We extract the DTD and schema files and add them 
-            to the module JAR so they will be accessible at tuntime on the class path. 
-            
-            Because we don't really rely on the zip files at runtime, we use scope "provided" 
+
+        <!--
+            We depend on the deployment/dtds and deployment/schemas modules
+            but only at build-time.
+
+            We extract the DTD and schema files and add them
+            to the module JAR so they will be accessible at tuntime on the class path.
+
+            Because we don't really rely on the zip files at runtime, we use scope "provided"
             for the dependencies. -->
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -122,7 +122,7 @@
             <artifactId>container-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <!-- Required for AnnotationDetector, AnnotationScanner, PersistenceUnitDescriptor -->
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -182,8 +182,8 @@
         </dependency>
 
 
-        <!-- Ken C. reports that eight ORB-related modules are needed, but 
-            the one "orb" module directly or indirectly depends on the others so I have 
+        <!-- Ken C. reports that eight ORB-related modules are needed, but
+            the one "orb" module directly or indirectly depends on the others so I have
             just included it here. -->
         <dependency>
             <groupId>org.glassfish.corba</groupId>
@@ -284,7 +284,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- The next two mail-related dependencies allow mail session look-up 
+        <!-- The next two mail-related dependencies allow mail session look-up
             and use from clients. -->
         <dependency>
             <groupId>org.glassfish.main.resources</groupId>
@@ -337,17 +337,17 @@
                     <exclude>**/.gitkeep_empty_dir</exclude>
                 </excludes>
             </resource>
-            
-            <!-- The next resource definition will include the DTDs and schemas 
-                in the module so we can find them at runtime in the client. 
-                
-                The dependency:unpack-dependency 
-                goal below will by default deposit the unpacked contents into target/dependency. 
-                The .dtd and .xsd files are packaged into their respective JARs in glassfish/lib, 
-                so we define that combined directory as a resource location so the .dtd and 
-                .xsd files will be packaged by default. 
-                
-                This is coordinated with the SaxParserHandlerBundled 
+
+            <!-- The next resource definition will include the DTDs and schemas
+                in the module so we can find them at runtime in the client.
+
+                The dependency:unpack-dependency
+                goal below will by default deposit the unpacked contents into target/dependency.
+                The .dtd and .xsd files are packaged into their respective JARs in glassfish/lib,
+                so we define that combined directory as a resource location so the .dtd and
+                .xsd files will be packaged by default.
+
+                This is coordinated with the SaxParserHandlerBundled
                 class which resolves entities via the class path. -->
             <resource>
                 <directory>target/dependency/glassfish/lib/</directory>
@@ -359,7 +359,7 @@
         </resources>
         <plugins>
 
-            <!-- Unpack the modules which contain the DTDs and schemas so 
+            <!-- Unpack the modules which contain the DTDs and schemas so
                 we can package them as resources. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -389,13 +389,13 @@
                         <manifest>
                             <mainClass>org.glassfish.main.appclient.client.acc.AppClientCommand</mainClass>
                         </manifest>
-                        <!-- 
-                            It's discouraging to have to specify the class 
-                            path manually. 
-                            
-                            Ideally the plug-in would do this for us, but the jar plug-in 
-                            uses the name of the modules including the version strings; when the GlassFish 
-                            modules are packaged into the distributions the version strings are stripped 
+                        <!--
+                            It's discouraging to have to specify the class
+                            path manually.
+
+                            Ideally the plug-in would do this for us, but the jar plug-in
+                            uses the name of the modules including the version strings; when the GlassFish
+                            modules are packaged into the distributions the version strings are stripped
                             off. -->
                     </archive>
                 </configuration>

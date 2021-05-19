@@ -23,6 +23,6 @@ import jakarta.ejb.CreateException;
 public interface SFSBHome
     extends EJBHome
 {
-	public SFSB create(String sfsbName)
+        public SFSB create(String sfsbName)
         throws CreateException, RemoteException;
 }

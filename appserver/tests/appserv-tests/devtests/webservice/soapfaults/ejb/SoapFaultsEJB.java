@@ -17,7 +17,7 @@
 package soapfaultsejb;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -28,14 +28,14 @@ public class SoapFaultsEJB implements SessionBean {
     private SessionContext sc;
 
     public SoapFaultsEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In SoapFaultsEJB::ejbCreate !!");
+        System.out.println("In SoapFaultsEJB::ejbCreate !!");
     }
 
     public Test1ResponseType test1(String a, String b,
                      Test2RequestType c)
-        throws FaultOne, FaultThree, FaultTwo, java.rmi.RemoteException 
+        throws FaultOne, FaultThree, FaultTwo, java.rmi.RemoteException
     {
         MessageContext msgContext = sc.getMessageContext();
         System.out.println("msgContext = " + msgContext);
@@ -65,16 +65,16 @@ public class SoapFaultsEJB implements SessionBean {
         Test1ResponseType t = new Test1ResponseType(1,2);
         return t;
     }
-        
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 
 }

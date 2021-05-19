@@ -29,7 +29,7 @@ import org.testng.annotations.Test;
 public class MetadataTest extends RestTestBase {
     protected static final String URL_CONFIG = "/domain/configs/config.json";
     protected static final String URL_UPTIMECOMMAND = "/domain/uptime.json";
-    
+
     @Test
     public void configParameterTest() {
         Response response = options(URL_CONFIG);
@@ -43,7 +43,7 @@ public class MetadataTest extends RestTestBase {
         response = getClient().target(getAddress(URL_CONFIG)).request().get(Response.class);
         assertTrue(response.readEntity(String.class).contains("extraProperties"));
     }
-    
+
     @Test
     public void UpTimeMetadaDataTest() {
         Response response = options(URL_UPTIMECOMMAND);

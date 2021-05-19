@@ -18,20 +18,20 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
+    <modelVersion>4.0.0</modelVersion>
 
-   <parent>
+    <parent>
         <groupId>org.glassfish.main.ha</groupId>
         <artifactId>ha</artifactId>
         <version>6.1.1-SNAPSHOT</version>
     </parent>
 
-   <artifactId>ha-file-store</artifactId>
-   <packaging>glassfish-jar</packaging>
+    <artifactId>ha-file-store</artifactId>
+    <packaging>glassfish-jar</packaging>
 
-   <name>GlassFish ha-file-store</name>
+    <name>GlassFish ha-file-store</name>
 
-   <developers>
+    <developers>
         <developer>
             <id>mk111283</id>
             <name>Mahesh Kannan</name>
@@ -41,10 +41,10 @@
                 <role>lead</role>
                 <role>developer</role>
             </roles>
-	</developer>
+        </developer>
     </developers>
 
-   <dependencies>
+    <dependencies>
         <dependency>
             <groupId>org.glassfish.ha</groupId>
             <artifactId>ha-api</artifactId>

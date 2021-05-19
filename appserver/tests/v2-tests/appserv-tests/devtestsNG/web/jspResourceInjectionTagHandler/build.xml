@@ -68,7 +68,7 @@
         <antcall target="common-build-war">
             <param name="hasWebclient" value="yes"/>
         </antcall>
-   </target> 
+   </target>
 
    <!-- deploy war file -->
    <target name="deploy" depends="init-common">
@@ -104,7 +104,7 @@
    <!-- Undeploy the test app -->
    <target name="undeploy" depends="init-common">
         <antcall target="common-undeploy-war"/>
-   </target>   
+   </target>
 
    <!-- Cleanup -->
    <target name="clean" depends="init-common">

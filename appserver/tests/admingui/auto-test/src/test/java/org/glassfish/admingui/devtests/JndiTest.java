@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.assertEquals;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -45,7 +45,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         Select select = new Select(driver.findElement(By.id("form:propertySheet:propertSectionTextField:cp:Classname")));
         select.selectByVisibleText("java.lang.Double");
         int count = addTableRow("form:basicTable", "form:basicTable:topActionsGroup1:addSharedTableButton");
-        
+
         sleep(500);
         setFieldValue("form:basicTable:rowGroup1:0:col2:col1St", "property"+generateRandomString());
         sleep(500);
@@ -56,7 +56,7 @@ public class JndiTest extends BaseSeleniumTestClass {
 
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "col1");
         assertEquals(resourceName, getText(prefix + "col1:link"));
-        
+
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
         assertTableRowCount("form1:basicTable", count);
@@ -66,7 +66,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
@@ -80,10 +80,10 @@ public class JndiTest extends BaseSeleniumTestClass {
     public void testCustomResourcesWithTargets() {
         final String resourceName = "customResource" + generateRandomString();
         final String instanceName = "standalone" + generateRandomString();
-       
+
         StandaloneTest instanceTest = new StandaloneTest();
         instanceTest.createStandAloneInstance(instanceName);
-        
+
         clickAndWait("treeForm:tree:resources:jndi:customResources:customResources_link");
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton");
 
@@ -99,7 +99,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         setFieldValue("form:basicTable:rowGroup1:0:col3:col1St", "value");
         sleep(500);
         setFieldValue("form:basicTable:rowGroup1:0:col4:col1St", "description");
-        
+
         Select select2 = new Select(driver.findElement(By.id("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available")));
         select2.selectByVisibleText(instanceName);
         select2.selectByVisibleText("server");
@@ -108,7 +108,7 @@ public class JndiTest extends BaseSeleniumTestClass {
 
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "col1");
         assertEquals(resourceName, getText(prefix + "col1:link"));
-        
+
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
         assertTableRowCount("form1:basicTable", count);
@@ -119,12 +119,12 @@ public class JndiTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button2");
-        
+
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(clickId);
         clickAndWait("form1:resEditTabs:targetTab");
@@ -134,7 +134,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         select5.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:resources:jndi:customResources:customResources_link");
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", resourceName);
@@ -142,7 +142,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:standaloneTreeNode:standaloneTreeNode_link");
         deleteRow("propertyForm:instancesTable:topActionsGroup1:button1", "propertyForm:instancesTable", instanceName);
     }
-    
+
     @Test
     public void testExternalResources() {
         final String resourceName = "externalResource" + generateRandomString();
@@ -174,12 +174,12 @@ public class JndiTest extends BaseSeleniumTestClass {
 
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "col1");
         assertEquals(resourceName, getText(prefix + "col1:link"));
-        
+
         //test disable button
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
@@ -224,7 +224,7 @@ public class JndiTest extends BaseSeleniumTestClass {
 
         String prefix = getTableRowByValue("propertyForm:resourcesTable", resourceName, "col1");
         assertEquals(resourceName, getText(prefix + "col1:link"));
-        
+
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
         assertTableRowCount("form:basicTable", count);
@@ -234,12 +234,12 @@ public class JndiTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button2");
-        
+
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(clickId);
         clickAndWait("form:resEditTabs:targetTab");
@@ -249,7 +249,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         select5.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
-        
+
         //Delete the External resource
         gotoDasPage();
         clickAndWait("treeForm:tree:resources:jndi:externalResources:externalResources_link");

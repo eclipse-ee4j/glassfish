@@ -53,11 +53,11 @@ public final class ConnectionPoolReconfigHelper {
     /*
      * Compare the Original ConnectorConnectionPool with the passed one
      * If MCF properties are changed, indicate that pool recreation is
-     * required 
+     * required
      * We only check the MCF properties since a pool restart is required
      * for changes in MCF props. For pool specific properties we can get
      * away without restart
-     * If the new pool and old pool have identical MCF properties returns 
+     * If the new pool and old pool have identical MCF properties returns
      * true
      */
     private static ReconfigAction isEqualConnectorConnectionPool(ConnectorConnectionPool
@@ -69,7 +69,7 @@ public final class ConnectionPoolReconfigHelper {
         if(newCcp.isPoolingOn() != oldCcp.isPoolingOn()) {
             return ReconfigAction.RECREATE_POOL;
         }
-        
+
         if (newCcp.getTransactionSupport() != oldCcp.getTransactionSupport()) {
             return ReconfigAction.RECREATE_POOL;
         }

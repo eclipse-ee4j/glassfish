@@ -95,7 +95,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
                             annInfo);
                 }
             }
-            
+
             annotatedType = annotatedField.getType();
             declaringClass = annotatedField.getDeclaringClass();
             defaultServiceRefName = declaringClass.getName() + "/" +
@@ -107,7 +107,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
             // this is a method injection
             Method annotatedMethod = (Method) annElem;
             validateInjectionMethod(annotatedMethod, annInfo);
-            
+
             if (annCtx instanceof AppClientContext){
                 if (!Modifier.isStatic(annotatedMethod.getModifiers())){
                     throw new AnnotationProcessorException(
@@ -117,7 +117,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
                             annInfo);
                 }
             }
-            
+
             annotatedType = annotatedMethod.getParameterTypes()[0];
             declaringClass = annotatedMethod.getDeclaringClass();
             // Derive javabean property name.
@@ -135,7 +135,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
                 throw new AnnotationProcessorException(
                         localStrings.getLocalString(
                         "enterprise.deployment.annotation.handlers.nonametypelevel",
-                        "TYPE-Level annotation  must specify name member."),  annInfo);                
+                        "TYPE-Level annotation  must specify name member."),  annInfo);
             }
             // this is a dependency declaration, we need the service interface
             // to be specified
@@ -144,16 +144,16 @@ public class WebServiceRefHandler extends AbstractHandler  {
                 throw new AnnotationProcessorException(
                         localStrings.getLocalString(
                         "enterprise.deployment.annotation.handlers.typenotfound",
-                        "TYPE-level annotation symbol must specify type member."),  
+                        "TYPE-level annotation symbol must specify type member."),
                          annInfo);
             }
             declaringClass = (Class) annElem;
-        } else {    
+        } else {
             throw new AnnotationProcessorException(
                     localStrings.getLocalString(
                     "enterprise.deployment.annotation.handlers.invalidtype",
                     "annotation not allowed on this element."),  annInfo);
-            
+
         }
 
         MTOM mtom = null;
@@ -262,7 +262,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
 
             if (target != null)
                 aRef.addInjectionTarget(target);
- 
+
             // Read the WebServiceClient annotation for the service name space
             // uri and wsdl (if required)
             WebServiceClient wsclientAnn;
@@ -278,7 +278,7 @@ public class WebServiceRefHandler extends AbstractHandler  {
                 if (aRef.getServiceInterface() == null) {
                     aRef.setServiceInterface(annotation.value().getName());
                 }
-                
+
                 if (aRef.getPortInfoBySEI(annotatedType.getName()) == null) {
                     ServiceRefPortInfo portInfo = new ServiceRefPortInfo();
                     portInfo.setServiceEndpointInterface(annotatedType.getName());
@@ -325,9 +325,9 @@ public class WebServiceRefHandler extends AbstractHandler  {
         if(annElem.getAnnotation(jakarta.jws.HandlerChain.class) == null) {
             return (new HandlerChainHandler()).processHandlerChainAnnotation(annInfo, annCtx, annotatedType, declaringClass, false);
         }
-        return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);        
+        return HandlerProcessingResultImpl.getDefaultResult(getAnnotationType(), ResultType.PROCESSED);
     }
-    
+
     @Override
     public HandlerProcessingResult processAnnotation(AnnotationInfo annInfo)
             throws AnnotationProcessorException {

@@ -23,7 +23,7 @@
         <groupId>org.glassfish.tests.embedded</groupId>
         <artifactId>maven-plugin</artifactId>
         <version>6.1.1-SNAPSHOT</version>
-    </parent>    
+    </parent>
     <groupId>org.glassfish</groupId>
     <artifactId>maven-glassfish-plugin-tester-deploy</artifactId>
     <packaging>pom</packaging>
@@ -38,7 +38,7 @@
                 <configuration>
                     <goalPrefix>glassfish</goalPrefix>
                     <app>hello.war</app>
-                    <port>8080</port>  
+                    <port>8080</port>
                 </configuration>
                 <executions>
                     <execution>

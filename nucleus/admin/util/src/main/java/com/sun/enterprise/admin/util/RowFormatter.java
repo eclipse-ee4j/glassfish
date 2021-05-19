@@ -33,7 +33,7 @@ public class RowFormatter {
 
     /**
      * This will return a String of the format HEADING1 :value1 HEADING2 :value 2
-     * 
+     *
      * @param objs : The values which are to be displayed
      * @return The String containing the formatted headings and values
      */

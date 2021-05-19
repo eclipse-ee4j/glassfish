@@ -47,8 +47,8 @@ import java.util.List;
 @I18n("list.jndi.resources")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jndi-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jndi-resources",
         description="list-jndi-resources")
 })
 public class ListJndiResources implements AdminCommand {

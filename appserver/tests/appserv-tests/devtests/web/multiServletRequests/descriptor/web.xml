@@ -22,23 +22,23 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd"
          version="2.4">
-     
+
     <servlet>
         <display-name>ServletTest</display-name>
         <servlet-name>ServletTest</servlet-name>
         <servlet-class>test.ServletTest</servlet-class>
-    </servlet>  
+    </servlet>
     <servlet>
         <display-name>ServletTest2</display-name>
         <servlet-name>ServletTest2</servlet-name>
         <servlet-class>test.ServletTest2</servlet-class>
-    </servlet>  
+    </servlet>
     <servlet>
         <display-name>ServletTest3</display-name>
         <servlet-name>ServletTest3</servlet-name>
         <servlet-class>test.ServletTest3</servlet-class>
-    </servlet>  
-    
+    </servlet>
+
    <servlet-mapping>
         <servlet-name>ServletTest</servlet-name>
         <url-pattern>/ServletTest</url-pattern>
@@ -51,7 +51,7 @@
         <servlet-name>ServletTest3</servlet-name>
         <url-pattern>/ServletTest3</url-pattern>
     </servlet-mapping>
-    
+
     <session-config>
         <session-timeout>10</session-timeout>
     </session-config>

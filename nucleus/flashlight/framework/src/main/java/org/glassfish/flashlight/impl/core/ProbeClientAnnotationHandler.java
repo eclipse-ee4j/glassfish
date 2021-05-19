@@ -26,5 +26,5 @@ public interface ProbeClientAnnotationHandler {
     public boolean canHandle(Method clientMethod);
 
     public void handle(Method method);
-    
+
 }

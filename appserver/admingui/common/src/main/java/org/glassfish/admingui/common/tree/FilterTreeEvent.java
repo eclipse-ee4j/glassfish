@@ -24,48 +24,48 @@ import jakarta.faces.component.UIComponent;
 
 /**
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen        (ken.paulsen@sun.com)
  */
 public class FilterTreeEvent extends EventObjectBase {
 
     /**
-     *	<p> Constructor.</p>
+     * <p> Constructor.</p>
      *
-     *	@param	component   The <code>UIComponent</code> associated with this
-     *			    <code>EventObject</code>.
+     * @param        component   The <code>UIComponent</code> associated with this
+     *                     <code>EventObject</code>.
      */
     public FilterTreeEvent(UIComponent component, List childObjects) {
-	super(component);
+        super(component);
         setChildObjects(childObjects);
     }
 
     /**
-     *	<p> This method provides access to an array of Objects that are to
-     *	    become child <code>TreeNode</code>s.  This allows you to manipluate
-     *	    them (filter them) before they are processed.  You may return a new
-     *	    List from your handler that processes this event.  Note that
-     *	    you NOT set the child object array using this event.</p>
+     * <p> This method provides access to an array of Objects that are to
+     *     become child <code>TreeNode</code>s.  This allows you to manipluate
+     *     them (filter them) before they are processed.  You may return a new
+     *     List from your handler that processes this event.  Note that
+     *     you NOT set the child object array using this event.</p>
      */
     public List getChildObjects() {
         return _childObjects;
     }
-    
+
     /**
-     *	<p> This method is protected because it is only meaningful to set this
-     *	    array during the creation of this event.  Setting it any other
-     *	    time would not effect the original data structure and would serve
-     *	    no purpose.  To provide a different object array, return a new
-     *	    <code>Object[]</code> from your handler that processes this
-     *	    event.</p>
+     * <p> This method is protected because it is only meaningful to set this
+     *     array during the creation of this event.  Setting it any other
+     *     time would not effect the original data structure and would serve
+     *     no purpose.  To provide a different object array, return a new
+     *     <code>Object[]</code> from your handler that processes this
+     *     event.</p>
      */
     protected void setChildObjects(List objects) {
         _childObjects = objects;
     }
 
     /**
-     *	<p> The "filterTree" event type. ("filterTree")</p>
+     * <p> The "filterTree" event type. ("filterTree")</p>
      */
-    public static final String	EVENT_TYPE  = "filterTree";
-    
+    public static final String        EVENT_TYPE  = "filterTree";
+
     private List _childObjects = null;
 }

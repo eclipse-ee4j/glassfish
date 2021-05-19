@@ -29,15 +29,15 @@ public interface League extends  jakarta.ejb.EJBObject   {
     public String getSport() throws RemoteException;
     public Collection getTeams() throws RemoteException;
 
-    public Team getRemoteTeamByCity(String city) throws FinderException, 
+    public Team getRemoteTeamByCity(String city) throws FinderException,
                                                         RemoteException;
-    
-    public Set getRemoteTeamsOfThisLeague() throws FinderException, 
+
+    public Set getRemoteTeamsOfThisLeague() throws FinderException,
                                                     RemoteException;
 
-    public Collection getRemotePlayersFromLeague() throws FinderException, 
+    public Collection getRemotePlayersFromLeague() throws FinderException,
                                                    RemoteException;
-    
+
 //    public void addTeam(Team team) throws RemoteException;
 //    public void dropTeam(Team team) throws RemoteException;
 

@@ -98,7 +98,7 @@ public class StudentBean implements EntityBean {
         courseIds = new ArrayList();
         try {
             InitialContext ic = new InitialContext();
-            dataSource = 
+            dataSource =
                 (DataSource) ic.lookup("java:comp/env/jdbc/bmp-enrollerDB");
             Context initial = new InitialContext();
             Object objref = initial.lookup("ejb/MyEnroller");

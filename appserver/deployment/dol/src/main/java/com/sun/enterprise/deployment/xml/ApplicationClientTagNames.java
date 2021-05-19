@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.deployment.xml;
 
-/** 
+/**
  * The XML Tag names for application clients.
  * @author Danny Coward
  */
@@ -25,6 +25,6 @@ public interface ApplicationClientTagNames extends TagNames {
 
     public static String APPLICATION_CLIENT_TAG = "application-client";
     public static String CALLBACK_HANDLER = "callback-handler";
-    
+
 }
 

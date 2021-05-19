@@ -70,5 +70,5 @@ public class ExistingDomainTest {
     public static void shutdownServer() throws Exception {
         EmbeddedServerUtils.shutdownServer(server);
     }
-    
+
 }

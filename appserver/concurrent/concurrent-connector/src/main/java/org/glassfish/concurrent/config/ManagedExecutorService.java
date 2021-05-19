@@ -49,7 +49,7 @@ import java.beans.PropertyVetoException;
 @UniqueResourceNameConstraint(message="{resourcename.isnot.unique}", payload=ManagedExecutorService.class)
 @CustomConfiguration(baseConfigurationFileName = "managed-executor-service-conf.xml")
 public interface ManagedExecutorService extends ConfigBeanProxy, Resource,
-        BindableResource, ConcurrencyResource, ManagedExecutorServiceBase, 
+        BindableResource, ConcurrencyResource, ManagedExecutorServiceBase,
         Payload {
 
     /**

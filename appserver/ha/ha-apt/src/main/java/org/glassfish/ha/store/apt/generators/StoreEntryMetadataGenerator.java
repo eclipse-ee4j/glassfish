@@ -99,7 +99,7 @@ public class StoreEntryMetadataGenerator
         println("}");
         println();
     }
-    
+
     private void generateStoreEntryMetadataMethods() {
         /*
         println("public AttributeMetadata<" + className + ", ?> getAttributeMetadata("

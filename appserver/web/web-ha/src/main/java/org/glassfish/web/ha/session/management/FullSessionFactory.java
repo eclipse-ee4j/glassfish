@@ -30,17 +30,17 @@ import org.apache.catalina.Session;
  * @author  lwhite
  */
 public class FullSessionFactory implements SessionFactory {
-    
+
     /** Creates a new instance of FullSessionFactory */
     public FullSessionFactory() {
     }
 
-    /** 
-     * create a new session 
-     * @param mgr                                                                                                         
-     */    
+    /**
+     * create a new session
+     * @param mgr
+     */
     public Session createSession(Manager mgr) {
         return new FullHASession(mgr);
     }
-    
+
 }

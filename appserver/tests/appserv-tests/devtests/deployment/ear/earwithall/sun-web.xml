@@ -21,6 +21,6 @@
 <sun-web-app>
     <ejb-ref>
         <ejb-ref-name>ejb/MyStatelesshello</ejb-ref-name>
-	<jndi-name>ejb/MyStatelesshello</jndi-name>
+        <jndi-name>ejb/MyStatelesshello</jndi-name>
     </ejb-ref>
 </sun-web-app>

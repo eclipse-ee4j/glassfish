@@ -75,10 +75,10 @@ public class ProbeServlet extends HttpServlet {
             // KISS
             for (Iterator<String> it = getAllProbes().iterator(); it.hasNext();) {
                 String s = it.next();
-                
+
                 if(s.startsWith("fooblog"))
                     s = "<b>" + s + "</b>";
-                
+
                 pr("<li>" + s + "</li>");
             }
             pr("</ul>");
@@ -147,7 +147,7 @@ public class ProbeServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -160,7 +160,7 @@ public class ProbeServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      * @return a String containing servlet description
      */

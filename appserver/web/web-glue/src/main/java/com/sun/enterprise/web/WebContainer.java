@@ -220,7 +220,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
     @Inject
     private Transactions transactions;
-    
+
     @Inject
     private LoggingRuntime loggingRuntime;
 
@@ -376,25 +376,25 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             useDOLforDeployment = Boolean.valueOf(System.getProperty(DOL_DEPLOYMENT));
         }
     }
-    
+
     private WebConfigListener addAndGetWebConfigListener() {
-    	ServiceLocator locator = (ServiceLocator) habitat;
-    	
-    	DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
-    	DynamicConfiguration config = dcs.createDynamicConfiguration();
-    	
-    	config.addActiveDescriptor(WebConfigListener.class);
-    	
-    	config.commit();
-    	
-    	return locator.getService(WebConfigListener.class);
+        ServiceLocator locator = (ServiceLocator) habitat;
+
+        DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
+        DynamicConfiguration config = dcs.createDynamicConfiguration();
+
+        config.addActiveDescriptor(WebConfigListener.class);
+
+        config.commit();
+
+        return locator.getService(WebConfigListener.class);
     }
 
     public void postConstruct() {
 
         final ReentrantReadWriteLock mapperLock = grizzlyService.obtainMapperLock();
         mapperLock.writeLock().lock();
-        
+
         try {
             createProbeProviders();
 
@@ -440,7 +440,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
             String maxDepth = null;
             org.glassfish.web.config.serverbeans.WebContainer configWC =
                    serverConfig.getExtensionByType(
-                   org.glassfish.web.config.serverbeans.WebContainer.class); 
+                   org.glassfish.web.config.serverbeans.WebContainer.class);
             if (configWC != null)
                 maxDepth = configWC.getPropertyValue(DISPATCHER_MAX_DEPTH);
             if (maxDepth != null) {
@@ -460,7 +460,7 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
 
             File currentLogFile = loggingRuntime.getCurrentLogFile();
             if (currentLogFile != null) {
-                logServiceFile = currentLogFile.getAbsolutePath();            
+                logServiceFile = currentLogFile.getAbsolutePath();
             }
 
             Level level = Logger.getLogger("org.apache.catalina.level").getLevel();

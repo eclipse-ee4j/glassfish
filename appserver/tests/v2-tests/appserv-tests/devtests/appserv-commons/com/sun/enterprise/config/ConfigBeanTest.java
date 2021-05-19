@@ -71,10 +71,10 @@ public class ConfigBeanTest extends TestCase {
         as.addJmxConnector(jc);
         assertNotNull(jc.beanProp());
         assertTrue(jc.beanProp().isIndexed());
-        
+
     }
-    
-        
+
+
         // This test demonstrates that an element that has different
         // cardinality will have different xpath expressions
     public void testXPath() throws Exception {
@@ -94,7 +94,7 @@ public class ConfigBeanTest extends TestCase {
         jc.setName("jc1");
         as.addJmxConnector(jc);
         assertEquals("/domain/configs/config[@name='server-config']/admin-service/jmx-connector[@name='jc1']", as.getJmxConnectorByName("jc1").getXPath());
-        
+
 
     }
 
@@ -130,5 +130,5 @@ public class ConfigBeanTest extends TestCase {
         return ts;
     }
 
-        
+
 }

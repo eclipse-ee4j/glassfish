@@ -29,7 +29,7 @@
   </parent>
 
     <artifactId>osgi-main</artifactId>
-    
+
     <name>GlassFish UberJar OSGI Main Module</name>
 
     <dependencies>

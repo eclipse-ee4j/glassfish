@@ -37,9 +37,9 @@ public class Client {
         }
 
         stat.addDescription(testSuite);
-        
+
         HelloIF helloIFPort = null;
-        try { 
+        try {
             Context ic = new InitialContext();
             HelloServletService helloService = (HelloServletService)
                 ic.lookup("java:comp/env/service/HelloServletService");
@@ -54,7 +54,7 @@ public class Client {
             stat.addStatus(testSuite + " sayHello", stat.FAIL);
             e.printStackTrace();
         }
-       
+
         try {
             System.out.println("Calling sendSecret");
             int code = helloIFPort.sendSecret("It is a secret");

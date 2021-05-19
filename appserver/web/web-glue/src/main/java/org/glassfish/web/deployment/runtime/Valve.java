@@ -21,4 +21,3 @@ public class Valve extends WebPropertyContainer {
     static public final String CLASS_NAME = "ClassName";
 
 }
-

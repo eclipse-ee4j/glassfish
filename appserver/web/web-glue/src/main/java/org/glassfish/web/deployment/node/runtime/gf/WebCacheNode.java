@@ -19,10 +19,10 @@ package org.glassfish.web.deployment.node.runtime.gf;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
 
 /**
- * This node handles the web-cache untime deployment descriptors 
+ * This node handles the web-cache untime deployment descriptors
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class WebCacheNode extends DeploymentDescriptorNode {
 }

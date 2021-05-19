@@ -28,7 +28,7 @@ public class MyInterceptor
         return postConstructCalled;
     }
 
-    @PostConstruct 
+    @PostConstruct
     private void postConstruct(InvocationContext ctx) {
         postConstructCalled = true;
         System.out.println("MyInterceptor::postConstruct called");

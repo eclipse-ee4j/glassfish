@@ -84,7 +84,7 @@ public class SQLPersistenceManagerFactory
      * I18N message handler
      */
     private final static ResourceBundle messages = I18NHelper.loadBundle(
-            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", //NOI18N 
+            "com.sun.jdo.spi.persistence.support.sqlstore.Bundle", //NOI18N
             SQLPersistenceManagerFactory.class.getClassLoader());
 
     /**
@@ -136,7 +136,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Creates new <code>SQLPersistenceManagerFactory</code> with user info
-     * @param connectionFactory	Connection Factory as java.lang.Object
+     * @param connectionFactory    Connection Factory as java.lang.Object
      */
     public SQLPersistenceManagerFactory(Object connectionFactory) {
         if (connectionFactory instanceof ConnectionFactory)
@@ -152,7 +152,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Creates new <code>SQLPersistenceManagerFactory</code> with user parameters
-     * @param persistenceManagerFactory	PersistenceManagerFactory instance
+     * @param persistenceManagerFactory    PersistenceManagerFactory instance
      */
     public SQLPersistenceManagerFactory(
             PersistenceManagerFactory persistenceManagerFactory) {
@@ -169,7 +169,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Sets database user name
-     * @param userName	 user name
+     * @param userName     user name
      */
     public void setConnectionUserName(String userName) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
@@ -178,7 +178,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Returns database user name
-     * @return	current database user name
+     * @return    current database user name
      */
     public String getConnectionUserName() {
         return _persistenceManagerFactory.getConnectionUserName();
@@ -195,7 +195,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Sets connection URL
-     * @param	url connection URL
+     * @param    url connection URL
      */
     public void setConnectionURL(String url) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
@@ -204,7 +204,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Returns connection URL
-     * @return	connection URL
+     * @return    connection URL
      */
     public String getConnectionURL() {
         return _persistenceManagerFactory.getConnectionURL();
@@ -213,7 +213,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Sets JDBC driver name
-     * @param	driverName driver name
+     * @param    driverName driver name
      */
     public void setConnectionDriverName(String driverName) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
@@ -222,7 +222,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Returns JDBC driver name
-     * @return	driver name
+     * @return    driver name
      */
     public String getConnectionDriverName() {
         return _persistenceManagerFactory.getConnectionDriverName();
@@ -231,7 +231,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Sets ConnectionFactory
-     * @param	cf as java.lang.Object
+     * @param    cf as java.lang.Object
      */
     public void setConnectionFactory(Object cf) {
         throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
@@ -240,7 +240,7 @@ public class SQLPersistenceManagerFactory
 
     /**
      * Returns ConnectionFactory
-     * @return	Connection Factory as java.lang.Object
+     * @return    Connection Factory as java.lang.Object
      */
     public Object getConnectionFactory() {
         if (_dataSource != null)
@@ -494,8 +494,8 @@ public class SQLPersistenceManagerFactory
      * @param identifier
      */
     public void setIdentifier(String identifier) {
-		throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-				"jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
+        throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
+                "jdo.persistencemanagerfactoryimpl.notsupported")); //NOI18N
     }
 
     /**
@@ -624,7 +624,7 @@ public class SQLPersistenceManagerFactory
     public boolean getRequireTrackedSCO() {
         return _persistenceManagerFactory.getRequireTrackedSCO();
     }
-  
+
     /**
      * Sets the requireTrackedSCO flag for this PersistenceManagerFactory.
      * If set to false, by default the PersistenceManager will not create tracked
@@ -653,7 +653,7 @@ public class SQLPersistenceManagerFactory
      * username and password. Used to call ConnectionFactory.getConnection(String, String)
      * @param       username      datasource user
      * @param       password      datasource user password
-     * @return	the persistence manager
+     * @return    the persistence manager
      * @exception JDOUserException if data source info is not set
      */
     public PersistenceManager getPersistenceManager(String username, char[] password) {
@@ -809,7 +809,7 @@ public class SQLPersistenceManagerFactory
         return pm;
 
     }
-    
+
     /**
      * Returns unused PersistenceManager to the free pool
      */
@@ -828,7 +828,7 @@ public class SQLPersistenceManagerFactory
         if (debug) {
             Object[] items = new Object[] {pm,t};
             logger.finest("sqlstore.sqlpersistencemgrfactory.releasepm.pmt",items); // NOI18N
-            
+
         }
 
         if (t != null) {
@@ -864,7 +864,7 @@ public class SQLPersistenceManagerFactory
 
     private void initializeSQLStoreManager(String username, char[] password) {
         Connection conn = null;
-        try { 
+        try {
              conn = getConnection(username, password);
             if (conn != null) {
                 _store = new SQLStoreManager(conn.getMetaData(),
@@ -888,9 +888,9 @@ public class SQLPersistenceManagerFactory
                 } catch(Exception ex) {}
             }
         }
-        
+
     }
-    
+
     /**
      * Get Database connection for username and password.
      */
@@ -909,9 +909,9 @@ public class SQLPersistenceManagerFactory
             }
         }
 
-        return conn;            
+        return conn;
     }
-    
+
     /**
      * Determines whether obj is a SQLPersistenceManagerFactory with the same configuration
      *

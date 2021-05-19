@@ -48,11 +48,11 @@ public class ValidatorFactoryInjectionTestServlet extends HttpServlet {
         out.print("<p>");
         out.print("Obtained ValidatorFactory: " + validatorFactory + ".");
         out.print("</p>");
-        
+
         out.print("<h1>");
         out.print("Validating person class using validateValue with valid property");
         out.print("</h1>");
-	
+
         List<String> listOfString = new ArrayList<String>();
         listOfString.add("one");
         listOfString.add("two");
@@ -60,7 +60,7 @@ public class ValidatorFactoryInjectionTestServlet extends HttpServlet {
 
         Set<ConstraintViolation<Person>> violations =
                 beanValidator.validateValue(Person.class, "listOfString", listOfString);
-        
+
         printConstraintViolations(out, violations, "case1");
 
         out.print("<h1>");
@@ -77,28 +77,28 @@ public class ValidatorFactoryInjectionTestServlet extends HttpServlet {
             out.print("</p>");
         }
         Person person = new Person();
-        
+
         out.print("<h1>");
         out.print("Validating invalid person instance using validate.");
         out.print("</h1>");
-        
+
         violations = beanValidator.validate(person);
-        
+
         printConstraintViolations(out, violations, "case3");
-        
+
         out.print("<h1>");
         out.print("Validating valid person.");
         out.print("</h1>");
-        
+
         person.setFirstName("John");
         person.setLastName("Yaya");
         person.setListOfString(listOfString);
-        
+
         violations = beanValidator.validate(person);
         printConstraintViolations(out, violations, "case4");
-        
+
         out.print("</body></html>");
-        
+
     }
 
     private void printConstraintViolations(PrintWriter out,

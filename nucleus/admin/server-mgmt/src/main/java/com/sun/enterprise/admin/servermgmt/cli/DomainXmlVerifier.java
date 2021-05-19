@@ -35,7 +35,7 @@ import java.util.Set;
 /**
  * Does basic level verification of domain.xml. This is helpful as there is no DTD to validate the domain's config i.e.
  * domain.xml
- * 
+ *
  * @author Nandini Ektare
  */
 public class DomainXmlVerifier {

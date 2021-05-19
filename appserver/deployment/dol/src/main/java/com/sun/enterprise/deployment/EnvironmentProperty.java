@@ -29,13 +29,15 @@ import org.glassfish.internal.api.RelativePathResolver;
 import java.util.HashSet;
 import java.util.Set;
 
-    /** 
-    ** The EnvironmentProperty class hold the data about a single environment entry for J2EE components.
-    ** @author Danny Coward 
-    */
- 
-public class EnvironmentProperty extends Descriptor implements InitializationParameter, ContextParameter, ApplicationParam, WebDescriptor, EnvironmentEntry, InjectionCapable {
-    private String value; 
+/**
+ * The EnvironmentProperty class hold the data about a single environment entry for J2EE components.
+ *
+ * @author Danny Coward
+ */
+public class EnvironmentProperty extends Descriptor implements InitializationParameter, ContextParameter,
+    ApplicationParam, WebDescriptor, EnvironmentEntry, InjectionCapable {
+
+    private String value;
     private String type;
     private Object valueObject;
     private boolean setValueCalled = false;
@@ -44,163 +46,169 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     private Set<InjectionTarget> injectionTargets;
 
     private static Class[] allowedTypes = {
-                                        int.class,
-                                        boolean.class,
-                                        double.class,
-                                        float.class,
-                                        long.class,
-                                        short.class,
-                                        byte.class,
-                                        char.class,
-					java.lang.String.class,
-					java.lang.Boolean.class,
-					java.lang.Integer.class,
-					java.lang.Double.class,
-					java.lang.Byte.class,
-					java.lang.Short.class,
-					java.lang.Long.class,
-					java.lang.Float.class,
-                                        java.lang.Character.class,
-                                        java.lang.Class.class
-					    };
-    static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(EnvironmentProperty.class);
+                int.class,
+                boolean.class,
+                double.class,
+                float.class,
+                long.class,
+                short.class,
+                byte.class,
+                char.class,
+                java.lang.String.class,
+                java.lang.Boolean.class,
+                java.lang.Integer.class,
+                java.lang.Double.class,
+                java.lang.Byte.class,
+                java.lang.Short.class,
+                java.lang.Long.class,
+                java.lang.Float.class,
+                java.lang.Character.class,
+                java.lang.Class.class
+    };
+
+    static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EnvironmentProperty.class);
 
     protected String mappedName;
 
     protected String lookupName;
 
-    /** 
-    ** Construct an environment property if type String and empty string value and no description.
-    */
-
+    /**
+     * Construct an environment property if type String and empty string value and no description.
+     */
     public EnvironmentProperty() {
-    }  
-    
-     /** 
-    ** Construct an environment property of given name value and description. 
-    */
-    
-    public EnvironmentProperty(String name, String value, String description) {
-	this(name, value, description, null);
-    }  
-    
-    /** 
-    ** Construct an environment property of given name value and description and type.
-    ** Throws an IllegalArgumentException if bounds checking is true and the value cannot be
-    ** reconciled with the given type. 
-    */ 
-    
-    public EnvironmentProperty(String name, String value, String description, String type) {
-	super(name, description);
-	this.value = value;
-	checkType(type);
-	this.type = type;
-    } 
-    
-    /** 
-    ** Returns the String value of this environment property 
-    */
-    public String getValue() {
-	if (this.value == null) {
-	    this.value = "";
-	}
-	return value;
     }
-    
+
+
+    /**
+     * Construct an environment property of given name value and description.
+     */
+
+    public EnvironmentProperty(String name, String value, String description) {
+        this(name, value, description, null);
+    }
+
+
+    /**
+     * Construct an environment property of given name value and description and type.
+     * Throws an IllegalArgumentException if bounds checking is true and the value cannot be
+     * reconciled with the given type.
+     */
+    public EnvironmentProperty(String name, String value, String description, String type) {
+        super(name, description);
+        this.value = value;
+        checkType(type);
+        this.type = type;
+    }
+
+
+    /**
+     * Returns the String value of this environment property
+     */
+    @Override
+    public String getValue() {
+        if (this.value == null) {
+            this.value = "";
+        }
+        return value;
+    }
+
+
     /**
      * Returns a resolved value of this environment property
      */
     public String getResolvedValue() {
-    	return RelativePathResolver.resolvePath(getValue());
+        return RelativePathResolver.resolvePath(getValue());
     }
-    
-    /** 
-     ** Returns the typed value object of this environment property. Throws an IllegalArgumentException if bounds checking is 
-     ** true and the value cannot be
-     ** reconciled with the given type. 
+
+
+    /**
+     * Returns the typed value object of this environment property. Throws an
+     * IllegalArgumentException if bounds checking is
+     * true and the value cannot be
+     * reconciled with the given type.
      */
-     public Object getResolvedValueObject() {
- 	if (this.valueObject == null) {
- 	    this.valueObject = "";
- 	}
- 	return getObjectFromString(this.getResolvedValue(), this.getValueType()); 
-     }
-    
-    /** 
-    ** checks the given class type. throws an IllegalArgumentException if bounds checking
-    ** if the type is not allowed.
-    */
-    
+    public Object getResolvedValueObject() {
+        if (this.valueObject == null) {
+            this.valueObject = "";
+        }
+        return getObjectFromString(this.getResolvedValue(), this.getValueType());
+    }
+
+
+    /**
+     * checks the given class type. throws an IllegalArgumentException if bounds checking
+     * if the type is not allowed.
+     */
     private void checkType(String type) {
-	if (type != null) {
-	    Class typeClass = null;
-	    // is it loadable ?
-	    try {
-		typeClass = Class.forName(type, true,
-                    Thread.currentThread().getContextClassLoader());
-	    } catch (Throwable t) {
-		if (this.isBoundsChecking()) {
-		    throw new IllegalArgumentException(localStrings.getLocalString(
-										   "enterprise.deployment.exceptiontypenotallowedpropertytype",
-										   "{0} is not an allowed property value type", new Object[] {type}));
-		} else {
-		    return;
-		}
-	    }
-	    boolean allowedType = false;
-	    for (int i = 0; i < allowedTypes.length; i++) {
-		if (allowedTypes[i].equals(typeClass)) {
-		    allowedType = true;
-		    break;
-		}
-	    }
+        if (type != null) {
+            Class typeClass = null;
+            // is it loadable ?
+            try {
+                typeClass = Class.forName(type, true, Thread.currentThread().getContextClassLoader());
+            } catch (Throwable t) {
+                if (Descriptor.isBoundsChecking()) {
+                    throw new IllegalArgumentException(
+                        localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedpropertytype",
+                            "{0} is not an allowed property value type", new Object[] {type}));
+                } else {
+                    return;
+                }
+            }
+            boolean allowedType = false;
+            for (Class allowedType2 : allowedTypes) {
+                if (allowedType2.equals(typeClass)) {
+                    allowedType = true;
+                    break;
+                }
+            }
             if (typeClass != null && typeClass.isEnum()) {
                 allowedType = true;
             }
 
-	    if (this.isBoundsChecking() && !allowedType) {
-		throw new IllegalArgumentException(localStrings.getLocalString(
-										   "enterprise.deployment.exceptiontypenotallowedprprtytype",
-										   "{0} is not an allowed property value type", new Object[] {type}));
-	    }
-	}
+            if (Descriptor.isBoundsChecking() && !allowedType) {
+                throw new IllegalArgumentException(
+                    localStrings.getLocalString("enterprise.deployment.exceptiontypenotallowedprprtytype",
+                        "{0} is not an allowed property value type", new Object[] {type}));
+            }
+        }
     }
-    
-    /** 
-    ** Returns the typed value object of this environment property. Throws an IllegalArgumentException if bounds checking is 
-    ** true and the value cannot be
-    ** reconciled with the given type. 
-    */
+
+
+    /**
+     * Returns the typed value object of this environment property.
+     * Throws an IllegalArgumentException if bounds checking is true and the value cannot be
+     * reconciled with the given type.
+     */
     public Object getValueObject() {
-	if (this.valueObject == null) {
-	    this.valueObject = "";
-	}
-	return getObjectFromString(this.getValue(), this.getValueType()); 
+        if (this.valueObject == null) {
+            this.valueObject = "";
+        }
+        return getObjectFromString(this.getValue(), this.getValueType());
     }
-    
-    /** 
-    ** Returns value type of this environment property. 
-    */
-    
+
+
+    /**
+     * Returns value type of this environment property.
+     */
+
     public Class getValueType() {
-	if (this.type == null) {
-	    return String.class;
-	} else {
-	    try {
-		return Class.forName(this.type, true,
-                    Thread.currentThread().getContextClassLoader());
-	    } catch (Throwable t) {
-		return null;
-	    }
-	}
+        if (this.type == null) {
+            return String.class;
+        } else {
+            try {
+                return Class.forName(this.type, true, Thread.currentThread().getContextClassLoader());
+            } catch (Throwable t) {
+                return null;
+            }
+        }
     }
-    
-     /** 
-    ** Returns value type of this environment property. Throws Illegal argument exception if this is not an
-    ** allowed type and bounds checking.
-    */
-    
+
+
+    /**
+     * Returns value type of this environment property.
+     * Throws Illegal argument exception if this is not an allowed type and bounds checking.
+     */
+    @Override
     public void setType(String type) {
         checkType(type);
         this.type = type;
@@ -231,13 +239,13 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
         return type;
     }
 
-    
-     /** 
-    ** Returns value type of this environment property as a classname. 
-    */
-    
+
+    /**
+     * Returns value type of this environment property as a classname.
+     */
+    @Override
     public String getType() {
-        if (type == null && this.isBoundsChecking()) {
+        if (type == null && Descriptor.isBoundsChecking()) {
             return String.class.getName();
         } else {
             type = convertPrimitiveTypes(type);
@@ -245,121 +253,135 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
         }
     }
 
+
     public void setMappedName(String mName) {
         mappedName = mName;
     }
 
+
     public String getMappedName() {
-        return (mappedName != null)? mappedName : "";
+        return (mappedName != null) ? mappedName : "";
     }
 
-   public void setLookupName(String lName) {
+
+    public void setLookupName(String lName) {
         lookupName = lName;
     }
 
+
     public String getLookupName() {
-        return (lookupName != null)? lookupName : "";
+        return (lookupName != null) ? lookupName : "";
     }
+
 
     public boolean hasLookupName() {
         return (lookupName != null && lookupName.length() > 0);
     }
-    
-     /** 
-    ** Sets the value of the environment property to the given string.
-    */
-    
+
+
+    /**
+     * Sets the value of the environment property to the given string.
+     */
+    @Override
     public void setValue(String value) {
-	this.value = value;
+        this.value = value;
         this.setValueCalled = true;
 
     }
+
 
     public boolean isSetValueCalled() {
         return setValueCalled;
     }
 
+
     public boolean hasAValue() {
-        return ( setValueCalled || hasLookupName() || getMappedName().length() > 0);
+        return (setValueCalled || hasLookupName() || getMappedName().length() > 0);
     }
 
-     /** 
-    ** Returns true if the argument is an environment property of the same name, false else.
-    */
-    
+
+    /**
+     * Returns true if the argument is an environment property of the same name, false else.
+     */
+    @Override
     public boolean equals(Object other) {
-	if (other instanceof EnvironmentProperty &&
-	    this.getName().equals( ((EnvironmentProperty) other).getName() )) {
-		return true;
-	}
-	return false;
+        if (other instanceof EnvironmentProperty && this.getName().equals(((EnvironmentProperty) other).getName())) {
+            return true;
+        }
+        return false;
     }
-    
-    /** 
-    ** The hashCode of an environment property is the same as that of the name String.
-    */
+
+
+    /**
+     * The hashCode of an environment property is the same as that of the name String.
+     */
+    @Override
     public int hashCode() {
-	return this.getName().hashCode();
+        return this.getName().hashCode();
     }
-    
-    /** 
-    ** Returns a String representation of this environment property.
-    */
+
+
+    /**
+     * Returns a String representation of this environment property.
+     */
+    @Override
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
+    toStringBuffer.append("Env-Prop: ").append(super.getName()).append("@");
         printInjectableResourceInfo(toStringBuffer);
         toStringBuffer.append("@").append(this.getType()).append("@").append(this.getValue()).append("@").append("@").append(super.getDescription());
     }
-    
+
+
     private Object getObjectFromString(String string, Class type) {
-        if (type == null && !this.isBoundsChecking()) {
+        if (type == null && !Descriptor.isBoundsChecking()) {
             Object obj = getValueObjectUsingAllowedTypes(string);
-            if (obj != null) return obj;
+            if (obj != null) {
+                return obj;
+            }
         }
-	if (string == null || ("".equals(string) && !type.equals(String.class))) {
-	    return null;
-	}
-	try {
+        if (string == null || ("".equals(string) && !type.equals(String.class))) {
+            return null;
+        }
+        try {
             if (String.class.equals(type)) {
-		return string;
+                return string;
             } else if (Boolean.class.equals(type)) {
-		return Boolean.valueOf(string);
-	    } else if (Integer.class.equals(type)) {
-		return Integer.valueOf(string);
-	    } else if (Double.class.equals(type)) {
+                return Boolean.valueOf(string);
+            } else if (Integer.class.equals(type)) {
+                return Integer.valueOf(string);
+            } else if (Double.class.equals(type)) {
                 return Double.valueOf(string);
-	    } else if (Float.class.equals(type)) {
-		return Float.valueOf(string);
-	    } else if (Short.class.equals(type)) {
-		return Short.valueOf(string);
-	    } else if (Byte.class.equals(type)) {
-		return Byte.valueOf(string);
-	    } else if (Long.class.equals(type)) {
-		return Long.valueOf(string);
-	    } else if (Character.class.equals(type)) {
+            } else if (Float.class.equals(type)) {
+                return Float.valueOf(string);
+            } else if (Short.class.equals(type)) {
+                return Short.valueOf(string);
+            } else if (Byte.class.equals(type)) {
+                return Byte.valueOf(string);
+            } else if (Long.class.equals(type)) {
+                return Long.valueOf(string);
+            } else if (Character.class.equals(type)) {
                 if (string.length() != 1) {
                     throw new IllegalArgumentException();
                 } else {
                     return Character.valueOf(string.charAt(0));
                 }
             } else if (Class.class.equals(type)) {
-                return Class.forName(string, true,
-                    Thread.currentThread().getContextClassLoader());
+                return Class.forName(string, true, Thread.currentThread().getContextClassLoader());
             } else if (type != null && type.isEnum()) {
                 return Enum.valueOf(type, string);
             }
-	} catch (Throwable t) {
-	    throw new IllegalArgumentException(localStrings.getLocalString(
-									   "enterprise.deployment.exceptioncouldnotcreateinstancetype",
-									   "Could not create instance of {0} from {1}\n reason: {2}" + t, new Object[] {type, string, t}));
-	}
-	throw new IllegalArgumentException(localStrings.getLocalString(
-								       "enterprise.deployment.exceptionillegaltypeenvproperty",
-								       "Illegal type for environment properties: {0}", new Object[] {type}));
+        } catch (Throwable t) {
+            throw new IllegalArgumentException(localStrings.getLocalString(
+                                           "enterprise.deployment.exceptioncouldnotcreateinstancetype",
+                                           "Could not create instance of {0} from {1}\n reason: {2}" + t, new Object[] {type, string, t}));
+        }
+        throw new IllegalArgumentException(localStrings.getLocalString(
+                                           "enterprise.deployment.exceptionillegaltypeenvproperty",
+                                           "Illegal type for environment properties: {0}", new Object[] {type}));
     }
-	
 
-    private Object getValueObjectUsingAllowedTypes(String string) 
+
+    private Object getValueObjectUsingAllowedTypes(String string)
                                   throws IllegalArgumentException {
         if (this.type.equals(int.class.getName())) {
             return Integer.valueOf(string);
@@ -381,7 +403,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
             } else {
                 return Character.valueOf(string.charAt(0));
             }
-        } 
+        }
         return null;
     }
 
@@ -402,9 +424,10 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
     //
     // InjectableResource implementation
     //
+    @Override
     public void addInjectionTarget(InjectionTarget target) {
         if (injectionTargets==null) {
-            injectionTargets = new HashSet<InjectionTarget>();
+            injectionTargets = new HashSet<>();
         }
         boolean found = false;
         for (InjectionTarget injTarget : injectionTargets) {
@@ -417,11 +440,13 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
             injectionTargets.add(target);
         }
     }
-    
+
+    @Override
     public Set<InjectionTarget> getInjectionTargets() {
-        return (injectionTargets != null) ? injectionTargets : new HashSet<InjectionTarget>();
+        return (injectionTargets != null) ? injectionTargets : new HashSet<>();
     }
 
+    @Override
     public boolean isInjectable() {
         return (injectionTargets!=null && injectionTargets.size()>0);
         //return (getInjectTargetName() != null);
@@ -440,22 +465,25 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
         return fromXml;
     }
 
+    @Override
     public String getComponentEnvName() {
         return getName();
     }
 
+    @Override
     public String getInjectResourceType() {
         return type;
     }
 
+    @Override
     public void setInjectResourceType(String resourceType) {
         type = convertPrimitiveTypes(resourceType);
     }
-    
+
 
     public StringBuffer printInjectableResourceInfo
         (StringBuffer toStringBuffer) {
-        
+
         if( isInjectable() ) {
             for (InjectionTarget target : getInjectionTargets()) {
                 if( target.isFieldInjectable() ) {
@@ -464,7 +492,7 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
                             append(target.getFieldName());
                 } else {
                     toStringBuffer.append("Method-Injectable Resource. Class name =").
-                            append(target.getClassName()).append(" Method =").                            
+                            append(target.getClassName()).append(" Method =").
                             append(target.getMethodName());
                 }
             }
@@ -474,10 +502,8 @@ public class EnvironmentProperty extends Descriptor implements InitializationPar
 
         return toStringBuffer;
     }
-    
-    // 
+
+    //
     // End InjectableResource implementation
     //
-    
-    
 }

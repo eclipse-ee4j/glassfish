@@ -28,12 +28,12 @@
         <servlet-name>ServletTest</servlet-name>
         <servlet-class>test.ServletTest</servlet-class>
         <load-on-startup>1000</load-on-startup>
-    </servlet>  
+    </servlet>
 
    <servlet-mapping>
         <servlet-name>ServletTest</servlet-name>
         <url-pattern>/*</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
 
 </web-app>
 

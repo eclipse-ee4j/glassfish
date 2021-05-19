@@ -34,23 +34,23 @@ public class ServletTest extends HttpServlet{
 
     private ServletContext context;
     private static String status = "ApplicationDispatcher::PASS";
-   
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         System.out.println("[Servlet.init]");
 
         try{
-            RequestDispatcher requestD = 
+            RequestDispatcher requestD =
                             getServletContext().getRequestDispatcher("/test.jsp");
 
             if ( requestD == null){
-                status = "ApplicationDispatcher::FAIL";          
+                status = "ApplicationDispatcher::FAIL";
             }
             System.out.println("[Servlet.RequestDispatcher: " + requestD + "]");
         } catch (Throwable t){
-                status = "ApplicationDispatcher::FAIL";          
+                status = "ApplicationDispatcher::FAIL";
         }
-        System.out.println("status: " + status); 
+        System.out.println("status: " + status);
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -58,7 +58,7 @@ public class ServletTest extends HttpServlet{
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
 
         PrintWriter out = response.getWriter();

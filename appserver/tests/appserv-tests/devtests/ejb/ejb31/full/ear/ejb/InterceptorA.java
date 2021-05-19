@@ -35,21 +35,21 @@ public class InterceptorA extends InterceptorSuper {
 
     @PostConstruct
     private void init(InvocationContext c) throws Exception {
-	System.out.println("In InterceptorA::init() ");
-	c.proceed();
+        System.out.println("In InterceptorA::init() ");
+        c.proceed();
     }
 
 
     @AroundInvoke
     public Object roundInvoke(InvocationContext c) throws Exception {
-	System.out.println("In InterceptorA::roundInvoke() ");
-	return c.proceed();
+        System.out.println("In InterceptorA::roundInvoke() ");
+        return c.proceed();
     }
 
     @PreDestroy
     private void destroy(InvocationContext c) throws Exception {
-	System.out.println("In Interceptor::destroy() ");
-	c.proceed();
+        System.out.println("In Interceptor::destroy() ");
+        c.proceed();
     }
 
 }

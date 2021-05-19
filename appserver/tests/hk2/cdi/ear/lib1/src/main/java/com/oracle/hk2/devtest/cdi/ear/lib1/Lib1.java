@@ -17,7 +17,7 @@
 package com.oracle.hk2.devtest.cdi.ear.lib1;
 
 /**
- * 
+ *
  * @author jwells
  *
  */

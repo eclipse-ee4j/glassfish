@@ -23,17 +23,24 @@ import com.sun.enterprise.security.jauth.AuthParam;
 import com.sun.enterprise.security.jmac.WebServicesDelegate;
 import com.sun.enterprise.security.jmac.config.ConfigHelper.AuthConfigRegistrationWrapper;
 import com.sun.enterprise.security.jmac.provider.PacketMessageInfo;
+import com.sun.enterprise.security.jmac.provider.SOAPAuthParam;
 import com.sun.xml.ws.api.message.Message;
 import com.sun.xml.ws.api.message.Packet;
 import com.sun.xml.ws.api.model.wsdl.WSDLBoundOperation;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
-import com.sun.enterprise.security.jmac.provider.SOAPAuthParam;
+
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import jakarta.security.auth.message.MessageInfo;
+
 import javax.xml.namespace.QName;
+
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Singleton;
+import jakarta.security.auth.message.MessageInfo;
 import jakarta.xml.soap.MimeHeaders;
 import jakarta.xml.soap.Name;
 import jakarta.xml.soap.SOAPBody;
@@ -42,10 +49,6 @@ import jakarta.xml.soap.SOAPEnvelope;
 import jakarta.xml.soap.SOAPException;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.xml.soap.SOAPPart;
-import org.glassfish.api.invocation.ComponentInvocation;
-
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
 
 /**
  *
@@ -57,10 +60,10 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
 
     protected static final Logger _logger = LogUtils.getLogger();
 
-    private static final String DEFAULT_WEBSERVICES_PROVIDER=
-            "com.sun.xml.wss.provider.wsit.WSITAuthConfigProvider";
-    
-     public MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties) {
+    private static final String DEFAULT_WEBSERVICES_PROVIDER = "com.sun.xml.wss.provider.wsit.WSITAuthConfigProvider";
+
+    @Override
+    public MessageSecurityBindingDescriptor getBinding(ServiceReferenceDescriptor svcRef, Map properties) {
         MessageSecurityBindingDescriptor binding = null;
         WSDLPort p = (WSDLPort) properties.get("WSDL_MODEL");
         QName portName = null;
@@ -76,27 +79,31 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
         return binding;
     }
 
+
+    @Override
     public void removeListener(AuthConfigRegistrationWrapper listener) {
-        //TODO:V3 convert the pipes to Tubes.
+        // TODO:V3 convert the pipes to Tubes.
         ClientPipeCloser.getInstance().removeListenerWrapper(listener);
     }
 
+
+    @Override
     public String getDefaultWebServicesProvider() {
         return DEFAULT_WEBSERVICES_PROVIDER;
     }
 
-    public String getAuthContextID(MessageInfo messageInfo) {
 
-        // make this more efficient by operating on packet 
+    @Override
+    public String getAuthContextID(MessageInfo messageInfo) {
+        // make this more efficient by operating on packet
         String rvalue = null;
         if (messageInfo instanceof PacketMessageInfo) {
             PacketMessageInfo pmi = (PacketMessageInfo) messageInfo;
-            Packet p = (Packet) pmi.getRequestPacket();
+            Packet p = pmi.getRequestPacket();
             if (p != null) {
                 Message m = p.getMessage();
                 if (m != null) {
-                    WSDLPort port =
-                            (WSDLPort) messageInfo.getMap().get("WSDL_MODEL");
+                    WSDLPort port = (WSDLPort) messageInfo.getMap().get("WSDL_MODEL");
                     if (port != null) {
                         WSDLBoundOperation w = m.getOperation(port);
                         if (w != null) {
@@ -110,18 +117,19 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
             }
             return rvalue;
         } else {
-            // make this more efficient by operating on packet 
+            // make this more efficient by operating on packet
             return getOpName((SOAPMessage) messageInfo.getRequestMessage());
         }
 
     }
 
-    public AuthParam newSOAPAuthParam(MessageInfo messageInfo) {
-        return new SOAPAuthParam((SOAPMessage)
-                                  messageInfo.getRequestMessage(),
-			         (SOAPMessage)
-			          messageInfo.getResponseMessage());
 
+    @Override
+    public AuthParam newSOAPAuthParam(MessageInfo messageInfo) {
+        return new SOAPAuthParam(
+            (SOAPMessage) messageInfo.getRequestMessage(),
+            (SOAPMessage) messageInfo.getResponseMessage()
+        );
     }
 
     private String getOpName(SOAPMessage message) {
@@ -131,7 +139,7 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
 
         String rvalue = null;
 
-        // first look for a SOAPAction header. 
+        // first look for a SOAPAction header.
         // this is what .net uses to identify the operation
 
         MimeHeaders headers = message.getMimeHeaders();
@@ -187,24 +195,25 @@ public class WebServicesDelegateImpl implements WebServicesDelegate {
         return rvalue;
     }
 
+    @Override
     public Object getSOAPMessage(ComponentInvocation inv) {
         /*V3 commented getting this from EJBPolicyContextDelegate instead
          * currently getting this from EjbPolicyContextDelegate which might be OK
         SOAPMessage soapMessage = null;
-	    MessageContext msgContext = inv.messageContext;
+        MessageContext msgContext = inv.messageContext;
 
             if (msgContext != null) {
                 if (msgContext instanceof SOAPMessageContext) {
-		    SOAPMessageContext smc =
+            SOAPMessageContext smc =
                             (SOAPMessageContext) msgContext;
-		    soapMessage = smc.getMessage();
+            soapMessage = smc.getMessage();
                 }
-	    } else {
+        } else {
                 soapMessage = inv.getSOAPMessage();
             }
 
-	    return soapMessage;*/
-        return null; 
+        return soapMessage;*/
+        return null;
     }
-	
+
 }

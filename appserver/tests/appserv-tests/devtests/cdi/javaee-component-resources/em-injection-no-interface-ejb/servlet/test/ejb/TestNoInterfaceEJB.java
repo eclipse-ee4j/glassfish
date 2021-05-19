@@ -22,7 +22,7 @@ import jakarta.inject.Inject;
 
 @Stateless
 public class TestNoInterfaceEJB extends TestSuperClass {
-    @Inject 
+    @Inject
     EntityManager em;
 
     public String m2() {

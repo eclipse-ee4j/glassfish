@@ -35,7 +35,6 @@ import com.sun.enterprise.deployment.xml.ApplicationTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
-import org.glassfish.deployment.common.JavaEEResourceType;
 import org.glassfish.deployment.common.ModuleDescriptor;
 import org.jvnet.hk2.annotations.Service;
 import org.w3c.dom.Node;
@@ -49,17 +48,17 @@ import org.w3c.dom.Node;
 @Service
 public class ApplicationNode extends AbstractBundleNode<Application> {
 
-   /** 
+   /**
     * The public ID.
     */
     public final static String PUBLIC_DTD_ID = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.3//EN";
     public final static String PUBLIC_DTD_ID_12 = "-//Sun Microsystems, Inc.//DTD J2EE Application 1.2//EN";
-    /** 
+    /**
      * The system ID.
      */
     public final static String SYSTEM_ID = "http://java.sun.com/dtd/application_1_3.dtd";
     public final static String SYSTEM_ID_12 = "http://java.sun.com/dtd/application_1_2.dtd";
-    
+
     public final static String SCHEMA_ID_14 = "application_1_4.xsd";
 
     public final static String SCHEMA_ID_15 = "application_5.xsd";
@@ -69,7 +68,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public final static String SCHEMA_ID = "application_9.xsd";
     public final static String SPEC_VERSION = "9";
     private final static List<String> systemIDs = initSystemIDs();
-     
+
     // The XML tag associated with this Node
     public final static XMLElement tag = new XMLElement(ApplicationTagNames.APPLICATION);
 
@@ -83,14 +82,14 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
         systemIDs.add(SCHEMA_ID_18);
         return Collections.unmodifiableList(systemIDs);
     }
-    
+
     // The DOL Descriptor we are working for
     private Application descriptor;
-    
+
     /**
      * register this node as a root node capable of loading entire DD files
-     * 
-     * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
      * @return the doctype tag name
      */
     public String registerBundle(Map publicIDToDTD) {
@@ -124,16 +123,16 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     protected String topLevelTagValue(Application descriptor) {
         return descriptor.getAppName();
     }
-    
+
     /** Creates new ApplicationNode */
     public ApplicationNode() {
-        super();	
-        registerElementHandler(new XMLElement(ApplicationTagNames.MODULE), ModuleNode.class, "addModule");    
-        registerElementHandler(new XMLElement(ApplicationTagNames.ROLE), SecurityRoleNode.class, "addAppRole");            
+        super();
+        registerElementHandler(new XMLElement(ApplicationTagNames.MODULE), ModuleNode.class, "addModule");
+        registerElementHandler(new XMLElement(ApplicationTagNames.ROLE), SecurityRoleNode.class, "addAppRole");
         registerElementHandler(new XMLElement(TagNames.ENVIRONMENT_PROPERTY), EnvEntryNode.class, "addEnvironmentProperty");
         registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbReferenceNode.class);
         registerElementHandler(new XMLElement(TagNames.EJB_LOCAL_REFERENCE), EjbLocalReferenceNode.class);
-        JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF); 
+        JndiEnvRefNode serviceRefNode = habitat.getService(JndiEnvRefNode.class, WebServicesTagNames.SERVICE_REF);
         if (serviceRefNode != null) {
             registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), serviceRefNode.getClass(),"addServiceReferenceDescriptor");
         }
@@ -157,13 +156,13 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
 
         SaxParserHandler.registerBundleNode(this, ApplicationTagNames.APPLICATION);
     }
-    
+
     /**
      * @return the XML tag associated with this XMLNode
      */
     protected XMLElement getXMLRootTag() {
         return tag;
-    }    
+    }
 
    /**
      * receives notiification of the value for a particular tag
@@ -174,7 +173,7 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public void setElementValue(XMLElement element, String value) {
         Application application = getDescriptor();
         if (element.getQName().equals(
-            ApplicationTagNames.LIBRARY_DIRECTORY)) {          
+            ApplicationTagNames.LIBRARY_DIRECTORY)) {
             application.setLibraryDirectory(value);
         } else if(element.getQName().equals(
             ApplicationTagNames.APPLICATION_NAME)) {
@@ -183,33 +182,32 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
             ApplicationTagNames.INITIALIZE_IN_ORDER)) {
             application.setInitializeInOrder(Boolean.valueOf(value));
         } else super.setElementValue(element, value);
-    }   
+    }
 
-    
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param newDescriptor the new descriptor
      */
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof BundleDescriptor) {
-	        if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
-		    DOLUtils.getDefaultLogger().fine("In  " + toString() +
-		        " adding descriptor " + newDescriptor);
-	        }
+            if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+            DOLUtils.getDefaultLogger().fine("In  " + toString() +
+                " adding descriptor " + newDescriptor);
+            }
            descriptor.addBundleDescriptor((BundleDescriptor) newDescriptor);
         } else if (newDescriptor instanceof EjbReference) {
-            descriptor.addEjbReferenceDescriptor(
-                        (EjbReference) newDescriptor);
+            descriptor.addEjbReferenceDescriptor((EjbReference) newDescriptor);
         }
-    }   
-   
+    }
+
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Application getDescriptor() {
-        if (descriptor==null) {        	
+        if (descriptor==null) {
             descriptor = Application.createApplication();
         }
         return descriptor;
@@ -217,11 +215,11 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
 
     /**
      * @return the DOCTYPE  of the XML file
-     */    
+     */
     public String getDocType() {
         return null;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */
@@ -235,14 +233,14 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
     public List<String> getSystemIDs() {
         return systemIDs;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent parent node
      * @param application  to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, Application application) {
         Node appNode = super.writeDescriptor(parent, application);
 
@@ -255,14 +253,14 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
             moduleNode.writeDescriptor(appNode, ApplicationTagNames.MODULE, md);
         }
 
-        // security-role* 
+        // security-role*
         // this information is not written out since it's already included
         // in the sub module deployment descriptors
 
 
         // library-directory
         if (application.getLibraryDirectoryRawValue() != null) {
-            appendTextChild(appNode, ApplicationTagNames.LIBRARY_DIRECTORY, 
+            appendTextChild(appNode, ApplicationTagNames.LIBRARY_DIRECTORY,
                 application.getLibraryDirectoryRawValue());
         }
 
@@ -298,12 +296,12 @@ public class ApplicationNode extends AbstractBundleNode<Application> {
 
         return appNode;
     }
-        
+
     /**
      * @return the default spec version level this node complies to
      */
     public String getSpecVersion() {
         return SPEC_VERSION;
     }
-    
+
 }

@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 @EJB(name="ejb/GG", beanInterface=Sless.class)
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -35,22 +35,22 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("batch-pay-rool-job-ejb-stateless");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB(name="ejb/kk") Sless sless;
 
     public void doTest() {
         try {
             (new InitialContext()).lookup("java:comp/env/ejb/GG");
-	    long result = sless.submitJob();
-	    System.out.println("************************************************");
-	    System.out.println("******* JobID: " + result + " ******************");
-	    System.out.println("************************************************");
+            long result = sless.submitJob();
+            System.out.println("************************************************");
+            System.out.println("******* JobID: " + result + " ******************");
+            System.out.println("************************************************");
             stat.addStatus("batch payroll", stat.PASS);
-	} catch (Exception ex) {
+        } catch (Exception ex) {
             stat.addStatus("batch payroll", stat.FAIL);
         }
     }

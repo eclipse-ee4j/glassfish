@@ -24,6 +24,6 @@ public interface SFSBHome
     extends EJBHome
 {
     public SFSB create(String accountHolderName, int balance)
-	throws CreateException, RemoteException;
+        throws CreateException, RemoteException;
 
 }

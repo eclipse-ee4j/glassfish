@@ -33,7 +33,7 @@ import org.glassfish.web.LogFacade;
  * identified by the key.
  *
  * Usage Example:
- * <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %> 
+ * <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %>
  * <ias:flush key="<%= cacheKey %>" />
  */
 public class FlushTag extends TagSupport {
@@ -69,7 +69,7 @@ public class FlushTag extends TagSupport {
         Cache cache = CacheUtil.getCache(pageContext, _scope);
 
         // generate the cache key using the user specified key.
-   
+
         if (_key != null) {
             String key = CacheUtil.generateKey(_key, pageContext);
 

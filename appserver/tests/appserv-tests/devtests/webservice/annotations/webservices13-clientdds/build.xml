@@ -64,7 +64,7 @@
       <antcall target="wsimport">
         <param name="wsimport.args"
           value=" -Xendorsed -p endpoint -keep -d ${build.classes.dir} ${env.APS_HOME}/devtests/webservice/annotations/webservices13-clientdds/SubtractNumbers.wsdl"/>
-      </antcall> 
+      </antcall>
       <antcall target="compile"/>
       <antcall target="pkg-war">
         <param name="wsdlfile.location" value="${env.APS_HOME}/devtests/webservice/annotations/webservices13-clientdds"/>
@@ -83,7 +83,7 @@
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
             includes="webclient/**">
          <classpath refid="classpath"/>
- 
+
       </javac>
       <copy file="client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
@@ -125,11 +125,11 @@
         <antcall target="undeploy-war-common"/>
         <antcall target="undeploy-client"/>
     </target>
-    
+
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">

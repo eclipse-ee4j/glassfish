@@ -31,7 +31,7 @@ public class CreateInstanceCmd extends BaseInstanceCmd
     {
         assert isConnected();
 
-        return (StandaloneServerConfig) getDomainConfig().createStandaloneServerConfig(getInstanceName(), 
+        return (StandaloneServerConfig) getDomainConfig().createStandaloneServerConfig(getInstanceName(),
                 getNodeAgentName(), getConfigName(), getOptional());
     }
 }

@@ -26,18 +26,18 @@ import org.glassfish.hk2.api.Validator;
 import org.jvnet.hk2.annotations.Service;
 
 
-@Service 
+@Service
 @Singleton
 public class SecurityAccessValidationService implements ValidationService {
 
-    
+
     private SecurityAccessValidator commValidator = new SecurityAccessValidator();
 
     private SecurityAccessFilter flt = new SecurityAccessFilter();
 
-    static final Logger _theLog = Logger.getLogger("org.glassfish.security.services"); 
-        
-    
+    static final Logger _theLog = Logger.getLogger("org.glassfish.security.services");
+
+
     @Override
     public Filter getLookupFilter() {
         return flt;

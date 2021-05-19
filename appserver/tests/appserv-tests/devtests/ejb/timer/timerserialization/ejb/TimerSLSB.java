@@ -22,7 +22,7 @@ public interface TimerSLSB
     extends EJBLocalObject
 {
 
-	public Timer createTimer(int ms);
+        public Timer createTimer(int ms);
 
 }
 

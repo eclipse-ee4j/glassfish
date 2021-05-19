@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <echo message="common.xml: Compiling source files with vbjc..." level="verbose"/>
         <exec executable="/space/Borland/VisiBroker/bin/vbjc" dir="src/Bank" failonerror="false">
@@ -47,54 +47,54 @@
         <exec  dir="src" executable="/space/Borland/VisiBroker/bin/java2iiop" failonerror="false">
             <arg line="Bank.AccountData Bank.AccountManager"/>
         </exec>
-           
+
         <mkdir dir="${build.classes.dir}"/>
         <exec dir="src" executable="/space/Borland/VisiBroker/bin/vbjc"  failonerror="false">
             <arg line="Bank/AccountHelper.java  Bank/AccountHolder.java Bank/AccountManagerHelper.java Bank/AccountManagerHolder.java Bank/AccountManagerPOA.java Bank/AccountManagerPOATie.java Bank/AccountOperations.java Bank/AccountPOA.java Bank/_AccountManagerStub.java Bank/_Account_Stub.java Bank/_Account_Tie.java"/>
 
         </exec>
 <exec dir="src" executable="/space/Borland/VisiBroker/bin/vbjc"  failonerror="false">
-            <arg line="AccountImpl.java	AccountManagerImpl.java Client.java Server.java"/>
+            <arg line="AccountImpl.java        AccountManagerImpl.java Client.java Server.java"/>
 
         </exec>
 
         <copy todir="${build.classes.dir}">
-	    <fileset dir="src/Bank">
+            <fileset dir="src/Bank">
               <exclude name="**/*.java"/>
             </fileset>
             <fileset dir="src">
-	       <exclude name="**/*.java"/>
+               <exclude name="**/*.java"/>
             </fileset>
-            
+
         </copy>
- 
+
     </target>
 
 
 <target name="build" depends="compile">
-    <property name="hasWebclient" value="yes"/> 
+    <property name="hasWebclient" value="yes"/>
     <antcall target="webclient-war-common">
     <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="*.class,**/*.class"/> 
+    <param name="webclient.war.classes" value="*.class,**/*.class"/>
     </antcall>
 </target>
 
- 
+
     <target name="deploy" depends="init-common">
       <echo message="Deploying via asadmin..."/>
       <antcall target="deploy-war-common"/>
-    </target> 
+    </target>
 
 
 <target name="run" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="rmiiiop"/>
-	</antcall>
+        <param name="testsuite.id" value="rmiiiop"/>
+        </antcall>
     </target>
 
    <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
-  
+
 </project>

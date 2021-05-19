@@ -35,7 +35,7 @@ public class ProducerMethodDisposesTestServlet1 extends HttpServlet {
 
     @Inject @Preferred
     TestRequestScopedBean trs;
-    
+
     @Inject @TestQualifier
     TestRequestScopedBean trs2;
 
@@ -53,7 +53,7 @@ public class ProducerMethodDisposesTestServlet1 extends HttpServlet {
         if (trs2 == null)
             msg += "RequestScoped Bean injection into Servlet of Bean created through "
                     + "programmatic instantiation in producer method (TestQualifier) failed";
-        
+
         writer.write(msg + "\n");
     }
 

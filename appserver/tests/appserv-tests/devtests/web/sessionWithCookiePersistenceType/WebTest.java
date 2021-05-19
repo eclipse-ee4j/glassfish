@@ -38,7 +38,7 @@ public class WebTest {
 
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
- 
+
    private static final String TEST_NAME = "session-with-cookie-persistence-type";
 
     private String host;
@@ -51,7 +51,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for cookie-based session persistence");
         new WebTest(args).doTest();
@@ -59,7 +59,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -81,7 +81,7 @@ public class WebTest {
 
         /*
          * Create session
-         */        
+         */
         String url = "http://" + host + ":" + port + contextRoot + "/CreateSession";
         System.out.println("Connecting to: " + url);
         HttpURLConnection conn = (HttpURLConnection)
@@ -117,12 +117,12 @@ public class WebTest {
 
         /*
          * Resume session
-         */        
+         */
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String getRequestLine = "GET " + contextRoot + "/CheckSession" +
             " HTTP/1.0\n";
-        System.out.print("\nConnecting to: " + getRequestLine); 
+        System.out.print("\nConnecting to: " + getRequestLine);
         os.write(getRequestLine.getBytes());
         String cookieHeaderLine = "Cookie: " + jsessionIdCookie + "\n";
         System.out.print(cookieHeaderLine);
@@ -131,7 +131,7 @@ public class WebTest {
         System.out.print(cookieHeaderLine);
         os.write(cookieHeaderLine.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;

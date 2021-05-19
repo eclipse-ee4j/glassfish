@@ -58,7 +58,7 @@ public class AppClientSniffer extends GenericSniffer {
 
     /**
      * Returns true if the passed file or directory is recognized by this
-     * instance.                   
+     * instance.
      *
      * @param location the file or directory to explore
      * @return true if this sniffer handles this application type
@@ -76,7 +76,7 @@ public class AppClientSniffer extends GenericSniffer {
 
         try {
             Manifest manifest = location.getManifest();
-            if (manifest != null && 
+            if (manifest != null &&
                 manifest.getMainAttributes().containsKey(Attributes.Name.MAIN_CLASS)) {
                 return true;
             }

@@ -50,7 +50,7 @@ public class WebTest extends BaseDevTest {
         serverLog = args[4];
         appName = args[5];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for @RunAs with init and destroy");
@@ -65,7 +65,7 @@ public class WebTest extends BaseDevTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-    	stat.printSummary();
+            stat.printSummary();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class WebTest extends BaseDevTest {
                 ok = ok && EXPECTED_RESPONSE.equals(line);
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         } finally {
             try {

@@ -55,79 +55,79 @@ import org.glassfish.appclient.client.acc.JWSACCClassLoader;
  * @author tjquinn
  */
 public class JWSACCMain implements Runnable {
-    
+
 //    /** path to a class in one of the app server lib jars downloaded by Java Web Start */
 //    private static final String APPSERVER_LIB_CLASS_NAME = "com.sun.enterprise.server.ApplicationServer";
-    
+
     /** name of the permissions template */
     private static final String PERMISSIONS_TEMPLATE_NAME = "jwsclient.policy";
-    
+
     /** placeholder used in the policy template to substitute dynamically-generated grant clauses */
     private static final String GRANT_CLAUSES_PROPERTY_EXPR = "${grant.clauses}";
-    
+
     /** line separator */
     private static final String lineSep = System.getProperty("line.separator");
-    
+
     /** the user-specified security policy template to use */
     private static String jwsPolicyTemplateURL = null;
-    
+
     /** unpublished command-line argument conveying jwsacc information */
     private static final String JWSACC_ARGUMENT_PREFIX = "-jwsacc";
-    
+
     private static final String JWSACC_EXIT_AFTER_RETURN = "ExitAfterReturn";
-    
+
     private static final String JWSACC_FORCE_ERROR = "ForceError";
-    
+
     private static final String JWSACC_KEEP_JWS_CLASS_LOADER = "KeepJWSClassLoader";
-    
+
     private static final String JWSACC_RUN_ON_SWING_THREAD = "RunOnSwingThread";
-    
+
     /** grant clause template for dynamically populating the policy */
     private static final String GRANT_CLAUSE_TEMPLATE = "grant codeBase \"{0}\" '{'\n" +
-	"    permission java.security.AllPermission;\n" + 
+    "    permission java.security.AllPermission;\n" +
         "'}';";
-    
+
     /**
      * request to exit the JVM upon return from the client - should be set (via
-     * the -jwsacc command-line argument value) only for 
+     * the -jwsacc command-line argument value) only for
      * command-line clients; otherwise it can prematurely end the JVM when
      * the GUI and other user work is continuing
      */
     private static boolean exitAfterReturn = false;
-    
+
     /*
      *Normally the ACC is not run with the Java Web Start classloader as the
      *parent class loader because this causes problems loading dynamic stubs.
-     *To profile performance, though, sometimes we need to keep the JWS 
+     *To profile performance, though, sometimes we need to keep the JWS
      *class loader as the parent rather than skipping it.
      */
     private static boolean keepJWSClassLoader = false;
-    
+
     private static boolean runOnSwingThread = false;
-    
+
     /** helper for building the class loader and policy changes */
     private static ClassPathManager classPathManager = null;
-    
+
     /** URLs for downloaded JAR files to be used in the class path */
     private static URL [] downloadedJarURLs;
-    
+
     /** URLs for persistence-related JAR files for the class path and permissions */
     private static URL [] persistenceJarURLs;
-    
+
     /** localizable strings */
-    private static final ResourceBundle rb = 
+    private static final ResourceBundle rb =
         ResourceBundle.getBundle(
             dotToSlash(JWSACCMain.class.getPackage().getName() + ".LocalStrings"));
 
 
     /** make the arguments passed to the constructor available to the main method */
     private String args[];
-    
+
     /** Creates a new instance of JWSMain */
     public JWSACCMain(String[] args) {
         this.args = args;
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -138,7 +138,7 @@ public class JWSACCMain implements Runnable {
                 classPathManager = getClassPathManager();
                 downloadedJarURLs = classPathManager.locateDownloadedJars();
                 persistenceJarURLs = classPathManager.locatePersistenceJARs();
-            
+
             } catch (Throwable thr) {
                 throw new IllegalArgumentException(rb.getString("jwsacc.errorLocJARs"), thr);
             }
@@ -168,7 +168,7 @@ public class JWSACCMain implements Runnable {
            System.exit(1);
         }
     }
-    
+
     private static String dotToSlash(String orig) {
         return orig.replaceAll("\\.","/");
     }
@@ -210,7 +210,7 @@ public class JWSACCMain implements Runnable {
             ErrorDisplayDialog.showErrors(thr, rb);
         } finally {
             /*
-             *If the user has requested, invoke System.exit as soon as the main 
+             *If the user has requested, invoke System.exit as soon as the main
              *method returns.  Do so on the Swing event thread so the ACC
              *main can complete whatever it may be doing.
              */
@@ -221,7 +221,7 @@ public class JWSACCMain implements Runnable {
                         System.out.printf("Exiting after return from client with status %1$d%n", statusValue);
                         System.exit(statusValue);
                     }
-                    
+
                     public Runnable init(int exitStatus) {
                         statusValue = exitStatus;
                         return this;
@@ -236,7 +236,7 @@ public class JWSACCMain implements Runnable {
             }
         }
     }
-    
+
     /**
      *Process any command line arguments that are targeted for the
      *Java Web Start ACC main program (this class) as opposed to the
@@ -254,11 +254,11 @@ public class JWSACCMain implements Runnable {
                 nonJWSACCArgs.add(arg);
             }
         }
-        
+
         processJWSArgs(JWSACCArgs);
         return nonJWSACCArgs.toArray(new String[nonJWSACCArgs.size()]);
     }
-    
+
     /**
      *Interpret the JWSACC arguments (if any) supplied on the command line.
      *@param args the JWSACC arguments
@@ -276,16 +276,16 @@ public class JWSACCMain implements Runnable {
             }
         }
     }
-    
+
     private static void setPermissions() {
         try {
             /*
              *Get the permissions template and write it to a temporary file.
              */
             String permissionsTemplate = Util.loadResource(JWSACCMain.class, PERMISSIONS_TEMPLATE_NAME);
-            
+
             /*
-             *Prepare the grant clauses for the downloaded jars and substitute 
+             *Prepare the grant clauses for the downloaded jars and substitute
              *those clauses into the policy template.
              */
             StringBuilder grantClauses = new StringBuilder();
@@ -293,17 +293,17 @@ public class JWSACCMain implements Runnable {
             for (URL url : downloadedJarURLs) {
                 grantClauses.append(MessageFormat.format(GRANT_CLAUSE_TEMPLATE, url.toExternalForm()));
             }
-            
+
             for (URL url : persistenceJarURLs) {
                 grantClauses.append(MessageFormat.format(GRANT_CLAUSE_TEMPLATE, url.toExternalForm()));
             }
-            
+
             String substitutedPermissionsTemplate = permissionsTemplate.replace(GRANT_CLAUSES_PROPERTY_EXPR, grantClauses.toString());
             boolean retainTempFiles = Boolean.getBoolean(AppClientContainer.APPCLIENT_RETAIN_TEMP_FILES_PROPERTYNAME);
             File policyFile = writeTextToTempFile(substitutedPermissionsTemplate, "jwsacc", ".policy", retainTempFiles);
 
             refreshPolicy(policyFile);
-            
+
         } catch (IOException ioe) {
             throw new RuntimeException("Error loading permissions template", ioe);
         }
@@ -319,14 +319,14 @@ public class JWSACCMain implements Runnable {
         do {
             propValue = java.security.Security.getProperty("policy.url." + String.valueOf(++i));
         } while ((propValue != null) && ( ! propValue.equals("")));
-        
+
         return i;
     }
-    
+
     /**
      *Refreshes the current policy object using the contents of the specified file
      *as additional policy.
-     *@param policyFile the file containing additional policy 
+     *@param policyFile the file containing additional policy
      */
     public static void refreshPolicy(File policyFile) {
         int idx = firstFreePolicyIndex();
@@ -335,7 +335,7 @@ public class JWSACCMain implements Runnable {
         Policy p = Policy.getPolicy();
         p.refresh();
     }
-    
+
     /**
      *The methods below are duplicates from the com.sun.enterprise.appclient.jws.Util class.
      *At the time this class is running, Java Web Start will not yet permit the Util class to
@@ -371,31 +371,31 @@ public class JWSACCMain implements Runnable {
             }
         }
     }
-     
+
     /**
      *Create the class loader for loading code from the unsigned downloaded
      *app server jars.
      *<p>
      *During a Java Web Start launch the ACC will be run under this class loader.
-     *Otherwise the JNLPClassLoader will load any stub classes that are 
+     *Otherwise the JNLPClassLoader will load any stub classes that are
      *packaged at the top-level of the generated app client jar file.  (It can
      *see them because it downloaded the gen'd app client jar, and therefore
      *includes the downloaded jar in its class path.  This allows it to see the
      *classes at the top level of the jar but does not automatically let it see
      *classes in the jars nested within the gen'd app client jar.  As a result,
-     *the JNLPClassLoader would be the one to try to define the class for a 
+     *the JNLPClassLoader would be the one to try to define the class for a
      *web services stub, for instance.  But the loader will not be able to find
-     *other classes and interfaces needed to completely define the class - 
+     *other classes and interfaces needed to completely define the class -
      *because these are in the jars nested inside the gen'd app client jar.  So
      *the attempt to define the class would fail.
      *@param downloadedAppclientJarFile the app client jar file
      *@return the class loader
      */
     private static ClassLoader prepareClassLoader(File downloadedAppclientJarFile) throws IOException, URISyntaxException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException {
-        ClassLoader ldr = new JWSACCClassLoader(downloadedJarURLs, classPathManager.getParentClassLoader());             
+        ClassLoader ldr = new JWSACCClassLoader(downloadedJarURLs, classPathManager.getParentClassLoader());
         return ldr;
     }
-    
+
     /*
      *Returns the jar that contains the specified resource.
      *@param target entry name to look for
@@ -413,7 +413,7 @@ public class JWSACCMain implements Runnable {
         }
         return result;
     }
-    
+
     /**
      *Locate the app client jar file during a Java Web Start launch.
      *@param loader the class loader to use in searching for the descriptor entries
@@ -437,7 +437,7 @@ public class JWSACCMain implements Runnable {
         }
         return containingJar;
     }
-    
+
     /**
      *Return the class path manager appropriate to the current version.
      *@return the correct type of ClassPathManager

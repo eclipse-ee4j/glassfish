@@ -46,10 +46,10 @@ public class ConnectorConnectionPoolDeployerTest extends TestCase {
     public ConnectorConnectionPoolDeployerTest(String name) {
          super(name);
     }
-    
-    //TODO: Should ther be a unit test for null resources passed to the 
+
+    //TODO: Should ther be a unit test for null resources passed to the
     //deploy method???
-    
+
     /**
      * Tests the deployResource method.
      *
@@ -74,7 +74,7 @@ public class ConnectorConnectionPoolDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the deployResource method.
      */
@@ -88,7 +88,7 @@ public class ConnectorConnectionPoolDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the deployResource method.
      */
@@ -112,9 +112,9 @@ public class ConnectorConnectionPoolDeployerTest extends TestCase {
                 return new Switch() {
                     public ManagementObjectManager getManagementObjectManager() {
                         return new J2EEManagementObjectManager() {
-                            public void registerJMSResource(String name, 
-                                    String resType, String username, 
-                                    String password, String[] propNames, 
+                            public void registerJMSResource(String name,
+                                    String resType, String username,
+                                    String password, String[] propNames,
                                     String[] propValues) {
                                 System.out.println("Jsr77 Registration Complete...");
                             }
@@ -123,7 +123,7 @@ public class ConnectorConnectionPoolDeployerTest extends TestCase {
                 };
             }
         };
-        
+
         //initialize the dummy resource object
         resource = new ConnectorConnectionPool();
         resource.setName("jms/Tester");
@@ -137,7 +137,7 @@ public class ConnectorConnectionPoolDeployerTest extends TestCase {
         TestSuite suite = new TestSuite(ConnectorConnectionPoolDeployerTest.class);
         return suite;
     }
-    
+
      public static void main(String args[]) throws Exception {
         final TestRunner runner= new TestRunner();
         final TestResult result =

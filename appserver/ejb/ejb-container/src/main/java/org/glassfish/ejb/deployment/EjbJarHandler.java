@@ -142,7 +142,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
             try {
                 final DeploymentContext dc = context;
                 final ClassLoader cl = cloader;
-                
+
                 AccessController.doPrivileged(
                         new PermsArchiveDelegate.SetPermissionsAction(
                                 SMGlobalPolicyUtil.CommponentType.ejb, dc, cl));
@@ -150,7 +150,7 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 throw new SecurityException(e.getException());
             }
 
-            
+
         } catch (Exception e) {
             _logger.log(Level.SEVERE, e.getMessage());
             throw new RuntimeException(e);
@@ -177,8 +177,8 @@ public class EjbJarHandler extends AbstractArchiveHandler {
                 try {
                     read(input);
                 } catch (Throwable t) {
-                    String msg = localStrings.getLocalString("ejb.deployment.exception_parsing_glassfishejbjarxml", 
-                            "Error in parsing glassfish-ejb-jar.xml for archive [{0}]: {1}", 
+                    String msg = localStrings.getLocalString("ejb.deployment.exception_parsing_glassfishejbjarxml",
+                            "Error in parsing glassfish-ejb-jar.xml for archive [{0}]: {1}",
                             archive.getURI(), t.getMessage());
                     throw new RuntimeException(msg);
                 }

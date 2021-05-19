@@ -23,17 +23,16 @@ import org.jvnet.hk2.annotations.Contract;
  * DOL into the respective container (jaxws in this case) so we have to use this
  * workarounds
  *
- * @author Jerome Dochez 
+ * @author Jerome Dochez
  */
 @Contract
 public interface WSDolSupport {
 
-    public String getProtocolBinding(String value);
+    String getProtocolBinding(String value);
 
-    public String getSoapAddressPrefix(String protocolBinding);
+    String getSoapAddressPrefix(String protocolBinding);
 
-    public void setServiceRef(Class annotatedClass, ServiceReferenceDescriptor ref);
+    void setServiceRef(Class annotatedClass, ServiceReferenceDescriptor ref);
 
-    public  Class getType(String className) throws ClassNotFoundException;
-
+    Class getType(String className) throws ClassNotFoundException;
 }

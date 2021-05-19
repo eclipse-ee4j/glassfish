@@ -38,7 +38,7 @@ public class InsertTag extends SimpleTagSupport {
    public void doTag() throws JspTagException {
     Definition definition = null;
     Parameter parameter = null;
-    boolean directInclude = false;		    
+    boolean directInclude = false;
     PageContext context = (PageContext)getJspContext();
 
     // get the definition from the page context
@@ -54,7 +54,7 @@ public class InsertTag extends SimpleTagSupport {
         // if parameter is direct, print to out
         if (directInclude && parameter  != null)
           context.getOut().print(parameter.getValue());
-        // if parameter is indirect, include results of dispatching to page 
+        // if parameter is indirect, include results of dispatching to page
         else {
           if ((parameter != null) && (parameter.getValue() !=  null))
               context.include(parameter.getValue());
@@ -62,9 +62,9 @@ public class InsertTag extends SimpleTagSupport {
       } catch (Exception ex) {
           Throwable rootCause = null;
           if (ex instanceof ServletException) {
-      			rootCause = ((ServletException) ex).getRootCause();
+                              rootCause = ((ServletException) ex).getRootCause();
           }
-     			throw new JspTagException(ex.getMessage(), rootCause);
-    	}
+                             throw new JspTagException(ex.getMessage(), rootCause);
+            }
    }
 }

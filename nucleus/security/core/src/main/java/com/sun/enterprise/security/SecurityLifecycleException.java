@@ -18,7 +18,7 @@ package com.sun.enterprise.security;
 
 /**
  *
- * 
+ *
  */
 class SecurityLifecycleException extends RuntimeException {
 

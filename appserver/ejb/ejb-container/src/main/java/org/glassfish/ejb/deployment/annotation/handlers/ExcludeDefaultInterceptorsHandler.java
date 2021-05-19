@@ -34,15 +34,15 @@ import org.glassfish.ejb.deployment.descriptor.InterceptorBindingDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling the 
+ * This handler is responsible for handling the
  * jakarta.ejb.ExcludeDefaultInterceptors annotation.
  *
  */
 @Service
 @AnnotationHandlerFor(ExcludeDefaultInterceptors.class)
-public class ExcludeDefaultInterceptorsHandler 
+public class ExcludeDefaultInterceptorsHandler
     extends AbstractAttributeHandler {
-    
+
     public ExcludeDefaultInterceptorsHandler() {
     }
 
@@ -56,22 +56,22 @@ public class ExcludeDefaultInterceptorsHandler
          EjbBundleDescriptorImpl ejbBundle =
              ((EjbDescriptor)ejbContexts[0].getDescriptor()).
                  getEjbBundleDescriptor();
-        
+
          for(EjbContext next : ejbContexts) {
 
             EjbDescriptor ejbDescriptor = (EjbDescriptor) next.getDescriptor();
 
-            // Create binding information.  
-            InterceptorBindingDescriptor binding = 
+            // Create binding information.
+            InterceptorBindingDescriptor binding =
                 new InterceptorBindingDescriptor();
 
             binding.setEjbName(ejbDescriptor.getName());
 
             binding.setExcludeDefaultInterceptors(true);
-            
+
             if(ElementType.METHOD.equals(ainfo.getElementType())) {
                 Method m = (Method) ainfo.getAnnotatedElement();
-                MethodDescriptor md = 
+                MethodDescriptor md =
                     new MethodDescriptor(m, MethodDescriptor.EJB_BEAN);
                 binding.setBusinessMethod(md);
             } else if(ElementType.CONSTRUCTOR.equals(ainfo.getElementType())) {
@@ -91,8 +91,8 @@ public class ExcludeDefaultInterceptorsHandler
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

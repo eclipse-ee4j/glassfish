@@ -37,7 +37,7 @@ import org.glassfish.loader.util.ASClassLoaderUtil;
  */
 
 public final class ServerLifecycleModule {
-    
+
     private LifecycleListener slcl;
     private String name;
     private String className;
@@ -45,7 +45,7 @@ public final class ServerLifecycleModule {
     private int loadOrder;
     private boolean isFatal = false;
     private String statusMsg = "OK";
-    
+
     private ServerContext ctx;
     private LifecycleEventContext leContext;
     private ClassLoader urlClassLoader;
@@ -54,7 +54,7 @@ public final class ServerLifecycleModule {
     private static final Logger _logger = KernelLoggerInfo.getLogger();
     private static boolean _isTraceEnabled = false;
 
-    private final static String LIFECYCLE_PREFIX = "lifecycle_"; 
+    private final static String LIFECYCLE_PREFIX = "lifecycle_";
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ServerLifecycleModule.class);
 
@@ -66,31 +66,31 @@ public final class ServerLifecycleModule {
 
         _isTraceEnabled = _logger.isLoggable(Level.FINE);
     }
-    
+
     void setClasspath(String classpath) {
         this.classpath = classpath;
     }
-    
+
     void setProperty(String name, String value) {
         props.put(name, value);
     }
-    
+
     Properties getProperties() {
         return this.props;
     }
-    
+
     void setLoadOrder(int loadOrder) {
         this.loadOrder = loadOrder;
     }
-    
+
     void setIsFatal(boolean isFatal) {
         this.isFatal = isFatal;
     }
-        
+
     String getName() {
         return this.name;
     }
-    
+
     String getClassName() {
         return this.className;
     }
@@ -102,11 +102,11 @@ public final class ServerLifecycleModule {
     int getLoadOrder() {
         return this.loadOrder;
     }
-    
+
     boolean isFatal() {
         return isFatal;
     }
-    
+
     LifecycleListener loadServerLifecycle() throws ServerLifecycleException {
         ClassLoader classLoader = ctx.getLifecycleParentClassLoader();
 
@@ -120,7 +120,7 @@ public final class ServerLifecycleModule {
                         sb.append(urls[i].toString());
                     }
                     if (_isTraceEnabled)
-                        _logger.fine("Lifecycle module = " + getName() + 
+                        _logger.fine("Lifecycle module = " + getName() +
                                         " has classpath URLs = " + sb.toString());
                 }
 
@@ -140,7 +140,7 @@ public final class ServerLifecycleModule {
 
         return slcl;
     }
-    
+
     private URL[] getURLs() {
         List<URL> urlList = ASClassLoaderUtil.getURLsFromClasspath(
             this.classpath, File.pathSeparator, "");
@@ -164,7 +164,7 @@ public final class ServerLifecycleModule {
         try {
             slcl.handleEvent(slcEvent);
         } catch (ServerLifecycleException sle) {
-            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException, 
+            _logger.log(Level.WARNING, KernelLoggerInfo.serverLifecycleException,
                     new Object[] {this.name, sle});
 
             if (isFatal)
@@ -178,8 +178,8 @@ public final class ServerLifecycleModule {
             }
         }
     }
-    
-    public void onInitialization() 
+
+    public void onInitialization()
                                 throws ServerLifecycleException {
         postEvent(LifecycleEvent.INIT_EVENT, props);
     }
@@ -188,7 +188,7 @@ public final class ServerLifecycleModule {
                                     throws ServerLifecycleException {
         postEvent(LifecycleEvent.STARTUP_EVENT, props);
     }
-    
+
     public void onReady() throws ServerLifecycleException {
         postEvent(LifecycleEvent.READY_EVENT, props);
     }
@@ -196,11 +196,11 @@ public final class ServerLifecycleModule {
     public void onShutdown() throws ServerLifecycleException {
         postEvent(LifecycleEvent.SHUTDOWN_EVENT, props);
     }
-    
+
     public void onTermination() throws ServerLifecycleException {
         postEvent(LifecycleEvent.TERMINATION_EVENT, props);
     }
-    
+
     private void setClassLoader() {
          // set the url class loader as the thread context class loader
         java.security.AccessController.doPrivileged(

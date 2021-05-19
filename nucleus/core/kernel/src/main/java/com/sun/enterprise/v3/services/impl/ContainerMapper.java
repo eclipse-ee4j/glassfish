@@ -70,7 +70,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             Request.<DataChunk>createNote("DataChunk");
     private final ReentrantReadWriteLock mapperLock;
 
-    
+
     private static final AfterServiceListener afterServiceListener =
             new AfterServiceListenerImpl();
     /**
@@ -139,16 +139,16 @@ public class ContainerMapper extends ADBAwareHttpHandler {
     public void service(final Request request, final Response response) throws Exception {
         try {
             request.addAfterServiceListener(afterServiceListener);
-            
+
             final Callable handler = lookupHandler(request, response);
             handler.call();
         } catch (Exception ex) {
             try {
                 if (LOGGER.isLoggable(Level.WARNING)) {
-                    LogHelper.log(LOGGER, Level.WARNING, KernelLoggerInfo.exceptionMapper, ex, 
+                    LogHelper.log(LOGGER, Level.WARNING, KernelLoggerInfo.exceptionMapper, ex,
                             request.getRequest().getRequestURIRef().getDecodedRequestURIBC());
                 }
-                
+
                 response.sendError(500);
             } catch (Exception ex2) {
                 if (LOGGER.isLoggable(Level.WARNING)) {
@@ -164,9 +164,9 @@ public class ContainerMapper extends ADBAwareHttpHandler {
     private Callable lookupHandler(final Request request,
             final Response response) throws CharConversionException, Exception {
         MappingData mappingData;
-        
+
         mapperLock.readLock().lock();
-        
+
         try {
             // If we have only one Adapter deployed, invoke that Adapter directly.
             if (!mapMultipleAdapter) {
@@ -236,9 +236,9 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             }
         } finally {
             mapperLock.readLock().unlock();
-        }         
+        }
     }
-    
+
     private void initializeFileURLPattern(String ext) {
         for (Sniffer sniffer : grizzlyService.getHabitat().<Sniffer>getAllServices(Sniffer.class)) {
             boolean match = false;
@@ -270,7 +270,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
                         mapperLock.readLock().lock();
                         mapperLock.writeLock().unlock();
                     }
-                    
+
                     return;
                 }
             }
@@ -331,7 +331,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
 
     HttpHandler map(final Request req, final DataChunk decodedURI,
             MappingData mappingData) throws Exception {
-        
+
         if (mappingData == null) {
             mappingData = req.getNote(MAPPING_DATA);
         }
@@ -396,7 +396,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
         mapMultipleAdapter = true;
         final String contextRoot = endpoint.getContextRoot();
         final Collection<String> vs = endpoint.getVirtualServers();
-        
+
         ContextRootInfo c = new ContextRootInfo(new ContextRootInfo.Holder() {
             @Override
             public HttpHandler getHttpHandler() {
@@ -408,7 +408,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
                 return endpoint.getContainer();
             }
         });
-        
+
         for (String host : vs) {
             mapper.addContext(host, contextRoot, c, new String[0], null);
             /*
@@ -457,7 +457,7 @@ public class ContainerMapper extends ADBAwareHttpHandler {
             return null;
         }
     }
-    
+
     private static final class AfterServiceListenerImpl implements AfterServiceListener {
 
         @Override

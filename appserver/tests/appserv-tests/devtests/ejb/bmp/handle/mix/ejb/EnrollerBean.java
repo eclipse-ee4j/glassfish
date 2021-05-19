@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp.handle.mix.ejb;
 
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
@@ -26,7 +26,7 @@ import javax.rmi.PortableRemoteObject;
 import java.io.*;
 
 public class EnrollerBean implements SessionBean {
- 
+
     private Connection con;
     private String dbName = "java:comp/env/jdbc/bmp-handle-mixDB";
     private SessionContext context;
@@ -61,7 +61,7 @@ public class EnrollerBean implements SessionBean {
     }
 
     /**
-     * Deletes a Student 
+     * Deletes a Student
      * @param studentId primary key of the student object
      * @exception RemoteException
      */
@@ -74,7 +74,7 @@ public class EnrollerBean implements SessionBean {
     }
 
     /**
-     * Deletes a Course 
+     * Deletes a Course
      * @param courseId primary key of the course object
      * @exception RemoteException
      */
@@ -143,8 +143,8 @@ public class EnrollerBean implements SessionBean {
         } catch (SQLException ex) {
             throw new EJBException("ejbPassivate Exception: " + ex.getMessage());
         } finally {
-	    con = null;
-	}
+            con = null;
+        }
     }
 
     public void setSessionContext(SessionContext context) {
@@ -166,7 +166,7 @@ public class EnrollerBean implements SessionBean {
 
         String insertStatement =
             "insert into HandleEnrollment values ( ? , ? )";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(insertStatement);
 
         prepStmt.setString(1, studentId);
@@ -176,7 +176,7 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private void deleteEntry(String studentId, String courseId) 
+    private void deleteEntry(String studentId, String courseId)
         throws SQLException {
 
         String deleteStatement =
@@ -219,13 +219,13 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private ArrayList selectStudent(String courseId) 
+    private ArrayList selectStudent(String courseId)
         throws SQLException {
 
         String selectStatement =
             "select studentid " +
             "from HandleEnrollment where courseid = ? ";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, courseId);
@@ -241,13 +241,13 @@ public class EnrollerBean implements SessionBean {
         return a;
     }
 
-    private ArrayList selectCourse(String studentId) 
+    private ArrayList selectCourse(String studentId)
         throws SQLException {
 
         String selectStatement =
             "select courseid " +
             "from HandleEnrollment where studentid = ? ";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, studentId);
@@ -303,7 +303,7 @@ public class EnrollerBean implements SessionBean {
             Object objref = initial.lookup("java:comp/env/ejb/Student");
             StudentHome studentHome =
                 (StudentHome) PortableRemoteObject.narrow(objref, StudentHome.class);
-            
+
             HomeHandle homeHandle = studentHome.getHomeHandle();
             StringBuffer sbuf = new StringBuffer("BEGIN: testStudentHomeHandle");
             HomeHandle retHomeHandle = doHomeHandleTest(homeHandle, sbuf, "testStudentHomeHandle");
@@ -324,7 +324,7 @@ public class EnrollerBean implements SessionBean {
             Object objref = initial.lookup("java:comp/env/ejb/Student");
             StudentHome studentHome =
                 (StudentHome) PortableRemoteObject.narrow(objref, StudentHome.class);
-            
+
             Student student = studentHome.findByPrimaryKey(studentID);
             Handle handle = student.getHandle();
             StringBuffer sbuf = new StringBuffer("BEGIN: testStudentHandle");
@@ -343,7 +343,7 @@ public class EnrollerBean implements SessionBean {
     private HomeHandle doHomeHandleTest(HomeHandle handle, StringBuffer sbuf, String msg)
         throws Exception
     {
-            
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(handle);
@@ -363,7 +363,7 @@ public class EnrollerBean implements SessionBean {
     private Handle doHandleTest(Handle handle, StringBuffer sbuf, String msg)
         throws Exception
     {
-            
+
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(bos);
         oos.writeObject(handle);
@@ -380,7 +380,7 @@ public class EnrollerBean implements SessionBean {
         return newHandle;
     }
 
-    private boolean isSame(HomeHandle h1, HomeHandle h2) 
+    private boolean isSame(HomeHandle h1, HomeHandle h2)
         throws RemoteException
     {
         EJBMetaData meta1 = h1.getEJBHome().getEJBMetaData();

@@ -65,7 +65,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
 
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    final private static LocalStringManagerImpl localStrings = 
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(ConnectorConnectionPoolManager.class);
 
     private String raname = null;
@@ -274,7 +274,7 @@ public class ConnectorConnectionPoolManager implements ResourceManager {
         ping = (String) attrList.get(PING);
         transactionSupport = (String) attrList.get(CONN_TRANSACTION_SUPPORT);
     }
-    
+
     private ResourceStatus validateConnectorConnPoolAttributes(String raName, String connDef)
             throws ConnectorRuntimeException {
         ResourceStatus status = isValidRAName(raName);

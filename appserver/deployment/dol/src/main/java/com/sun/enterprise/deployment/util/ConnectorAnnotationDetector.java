@@ -41,7 +41,7 @@ public class ConnectorAnnotationDetector extends AnnotationDetector {
     public ConnectorAnnotationDetector(AnnotationScanner scanner) {
         super(scanner);
     }
-    
+
     @Override
     public boolean hasAnnotationInArchive(ReadableArchive archive) throws IOException {
 
@@ -52,7 +52,7 @@ public class ConnectorAnnotationDetector extends AnnotationDetector {
                 if (containsAnnotation(archive, entryName)) {
                     return true;
                 }
-            } 
+            }
 
             // scan classes in top level jars
             File archiveFile = new File(archive.getURI());
@@ -65,7 +65,7 @@ public class ConnectorAnnotationDetector extends AnnotationDetector {
 
             if (jarFiles != null && jarFiles.length > 0) {
                 for (File file : jarFiles) {
-                    JarFile jarFile = null; 
+                    JarFile jarFile = null;
                     try {
                         jarFile = new JarFile(file);
                         Enumeration<JarEntry> jarEntries = jarFile.entries();
@@ -77,7 +77,7 @@ public class ConnectorAnnotationDetector extends AnnotationDetector {
                                     return true;
                                 }
                             }
-                        } 
+                        }
                     } finally {
                         if (jarFile != null) {
                             jarFile.close();

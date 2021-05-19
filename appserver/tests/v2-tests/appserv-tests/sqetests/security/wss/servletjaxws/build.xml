@@ -35,13 +35,13 @@
     &testproperties;
 
     <target name="all" depends="display-header, clean, build, deploy, build-client,run,undeploy"/>
-     
+
     <target name="build-deploy-run" depends="display-header, clean, build, deploy, build-client, run"/>
-    
+
     <target name="display-header">
-      <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>          
+      <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>
     </target>
-    
+
     <target name="run-test" depends="clean, build, deploy, build-client, run, undeploy"/>
 
     <target name="clean" depends="init-common">
@@ -55,8 +55,8 @@
     </target>
 
    <target name="update-wsdl-location" depends="init-common">
-	<copy file="client/TaxCalClient.java.template" tofile="client/TaxCalClient.java" overwrite="true"/>
-	<replace file="client/TaxCalClient.java" token="localhost:8080" value="${http.host}:${http.port}"/>
+    <copy file="client/TaxCalClient.java.template" tofile="client/TaxCalClient.java" overwrite="true"/>
+    <replace file="client/TaxCalClient.java" token="localhost:8080" value="${http.host}:${http.port}"/>
    </target>
 
    <target name="compile-client" depends="init-common,clean-common">
@@ -67,7 +67,7 @@
         </antcall>
     </target>
 
-    
+
    <!-- Generation of service wsdl file.
       Run this target in case you need to update the wsdl file
         after making changes to the endpoint.
@@ -91,27 +91,27 @@
             <arg line="wsdl/TaxService.wsdl"/>
         </exec>
     </target>
-    
+
    <target name="generate-client-artifacts" depends="init-common">
         <exec executable="${WSIMPORT}">
             <arg line="-keep "/>
             <arg line="-d ${build.classes.dir}"/>
             <arg line="http://${http.host}:${http.port}/${appname}-web/wss/TaxService?wsdl"/>
         </exec>
-    </target>    
+    </target>
 
    <target name="build-war" depends="init-common">
-	<antcall target="webclient-war-common">
+    <antcall target="webclient-war-common">
             <param name="hasWebclient" value="true"/>
-            <param name="webclient.war.classes" 
+            <param name="webclient.war.classes"
               value="**/wss/annotations/*.class" />
-            <param name="war.classes" 
+            <param name="war.classes"
               value="**/wss/annotations/*.class" />
-	</antcall>   
+    </antcall>
    </target>
-   
+
    <target name="build-client" depends="init-common, compile-client">
-   	<antcall target="ws-package-appclientjar-common">
+       <antcall target="ws-package-appclientjar-common">
             <param name="appclientjar.classes"
               value="**/taxws/*.class **/wss/annotations/client/*.class" />
             <param name="appclientjar.files"
@@ -120,7 +120,7 @@
               value="${assemble.dir}/${appname}-client.jar"/>
         </antcall>
     </target>
-    
+
     <target name="ws-package-appclientjar-common" depends="init-common">
         <mkdir dir="${assemble.dir}"/>
         <delete file="${appclient.jar}" failonerror="false"/>
@@ -145,11 +145,11 @@
                 </metainf>
         </jar>
         <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
-    </target>    
-   
+    </target>
+
     <target name="build" depends="init-common,compile">
         <antcall target="build-war"/>
-    </target> 
+    </target>
 
     <target name="deploy-war" depends="init-common">
         <antcall target="deploy-war-common">
@@ -173,27 +173,27 @@
     </target>
 
     <target name="runclient-nossl" depends="init-common">
-        <property name="endpoint-url" 
+        <property name="endpoint-url"
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
-      <exec executable="${APPCLIENT}" dir="${build.classes.dir}">
-	<env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
-	<arg line="-client"/>
-        <arg line="${assemble.dir}/${appname}-client.jar"/>
-	<arg line="${endpoint-url}"/>
+        <exec executable="${APPCLIENT}" dir="${build.classes.dir}">
+            <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+            <arg line="-client"/>
+            <arg line="${assemble.dir}/${appname}-client.jar"/>
+            <arg line="${endpoint-url}"/>
       </exec>
     </target>
 
     <target name="runclient-ssl" depends="set-appserver-version">
-     	<antcall target="runclient-ssl-pe"/>
-     	<antcall target="runclient-ssl-ee"/>
+         <antcall target="runclient-ssl-pe"/>
+         <antcall target="runclient-ssl-ee"/>
      </target>
 
     <target name="runclient-local" depends="init-common">
       <echo message="Executing appclient at ${basedir}"/>
-      <property name="endpoint-url" 
+      <property name="endpoint-url"
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
-      <exec executable="${APPCLIENT}" 
-          failonerror="false" timeout="1500000" 
+      <exec executable="${APPCLIENT}"
+          failonerror="false" timeout="1500000"
           outputproperty="runclientCommonOutput">
         <arg line="-client" />
         <arg line="${assemble.dir}/${appname}-client.jar"/>
@@ -201,7 +201,7 @@
         <arg line="-user j2ee"/>
         <arg line="-password j2ee"/>
         <arg line="-xml ${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-	<env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
       </exec>
       <echo message="${runclientCommonOutput}"/>
       <antcall target="check-runclient-output" inheritAll="true" inheritRefs="true"/>
@@ -211,16 +211,16 @@
           <param name="test.description" value="${test.description}"/>
           <param name="test.count" value="1"/>
       </antcall>
-    </target>     
-     
+    </target>
+
     <target name="runclient-ssl-pe" depends="init-common" unless="isEE">
       <echo message="Test is running on Platform Edition!"/>
-      <property name="endpoint-url" 
+      <property name="endpoint-url"
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
 
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value="-Djavax.net.ssl.keyStore=${admin.domain.dir}/${admin.domain}/config/keystore.jks  -Djavax.net.ssl.keyStorePassword=${master.password} -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/cacerts.jks -Djavax.net.ssl.trustStorePassword=${master.password}" />
-	<env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}-client.jar"/>
         <arg value="-textauth"/>
@@ -241,12 +241,12 @@
 
     <target name="runclient-ssl-ee" depends="init-common" if="isEE">
       <echo message="Test is running on Standard/Enterprise Edition!"/>
-      <property name="endpoint-url" 
+      <property name="endpoint-url"
             value="http://${http.host}:${http.port}/${appname}-web/wss/TaxService"/>
 
       <exec executable="${APPCLIENT}">
         <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${env.APS_HOME}/sqetests/security/wss/s1as.jks -Djavax.net.ssl.trustStore=${admin.domain.dir}/${admin.domain}/config/certdb_cacerts.jks -Djavax.net.ssl.trustStorePassword=changeit" />
-	<env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
+        <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}-client.jar"/>
         <!-- dummy user added as appclient throwing login window -->
@@ -264,21 +264,21 @@
         <param name="test.description" value="${test.description}"/>
         <param name="test.count" value="1"/>
       </antcall>
-   
+
     </target>
 
 
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
     </target>
 
-  <!-- 
-  ======================================================= 
+  <!--
+  =======================================================
   User Defined specific targets
   =======================================================
   -->

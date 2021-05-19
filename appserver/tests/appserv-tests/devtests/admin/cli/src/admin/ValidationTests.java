@@ -73,9 +73,9 @@ public class ValidationTests extends AdminBaseDevTest {
 
         report("issue11200-create-message-sec-provider", !asadmin( "create-message-security-provider", "--classname", "com.sun.foo", "--layer" ,"SOAP" ,"<script>alert(\"x\")</script>"));
 
-        report("create-message-sec-provider-invalid-classname", ! asadmin( "create-message-security-provider", "--layer", "SOAP", 
+        report("create-message-sec-provider-invalid-classname", ! asadmin( "create-message-security-provider", "--layer", "SOAP",
                 "--classname", "com/sun", "ggg"));
-        
+
         report("create-audit-module-invalid-classname",! asadmin( "create-audit-module",
                 "--classname", "*fffs344:33",  "foo1"));
 

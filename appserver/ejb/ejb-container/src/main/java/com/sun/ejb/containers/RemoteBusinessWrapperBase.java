@@ -25,14 +25,14 @@ import java.io.IOException;
 
 import com.sun.ejb.EJBUtils;
 
-public class RemoteBusinessWrapperBase 
+public class RemoteBusinessWrapperBase
     implements java.io.Serializable {
 
     // This is the name of the developer-written business interface.
     private String businessInterface_;
 
     private Remote stub_;
-    
+
     private transient int hashCode_;
 
     public RemoteBusinessWrapperBase(Remote stub, String busIntf) {
@@ -44,13 +44,13 @@ public class RemoteBusinessWrapperBase
     public Remote getStub() {
         return stub_;
     }
-    
+
     public int hashCode() {
         return hashCode_;
     }
 
     public boolean equals(Object obj) {
-        
+
         boolean result = (obj == this); //Most efficient
         if ((result == false) && (obj != null)) { //Do elaborate checks
             if (obj instanceof RemoteBusinessWrapperBase) {
@@ -66,20 +66,20 @@ public class RemoteBusinessWrapperBase
                 }
             }
         }
-        
+
         return result;
     }
-    
+
     public String getBusinessInterfaceName() {
         return businessInterface_;
     }
 
     public Object writeReplace() throws ObjectStreamException {
-        return new RemoteBusinessWrapperBase(stub_, businessInterface_); 
+        return new RemoteBusinessWrapperBase(stub_, businessInterface_);
     }
 
-    private void writeObject(java.io.ObjectOutputStream oos) 
-        throws java.io.IOException 
+    private void writeObject(java.io.ObjectOutputStream oos)
+        throws java.io.IOException
     {
 
         oos.writeObject(businessInterface_);
@@ -87,7 +87,7 @@ public class RemoteBusinessWrapperBase
 
     }
 
-    private void readObject(ObjectInputStream ois) 
+    private void readObject(ObjectInputStream ois)
         throws IOException, ClassNotFoundException {
 
         try {
@@ -106,7 +106,7 @@ public class RemoteBusinessWrapperBase
             throw ioe;
         }
     }
-                 
+
     public Object readResolve() throws ObjectStreamException {
 
         try {
@@ -120,7 +120,7 @@ public class RemoteBusinessWrapperBase
         }
 
     }
-                
+
 
 
 

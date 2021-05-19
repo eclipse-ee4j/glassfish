@@ -44,7 +44,7 @@
        </executions>
      </plugin>
     </plugins>
-  </build>    
+  </build>
   <profiles>
         <profile>
             <id>run-with-uber-jar</id>
@@ -78,13 +78,13 @@
                 </dependency>
             </dependencies>
         </profile>
-    </profiles>    
-	<dependencies>
+    </profiles>
+    <dependencies>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.13.2</version>
         </dependency>
-    </dependencies>    
+    </dependencies>
 
 </project>

@@ -26,7 +26,7 @@
     <servlet-name>war1</servlet-name>
     <servlet-class>com.oracle.hk2.devtest.cdi.ear.war1.War1</servlet-class>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>war1</servlet-name>
     <url-pattern>/war1</url-pattern>

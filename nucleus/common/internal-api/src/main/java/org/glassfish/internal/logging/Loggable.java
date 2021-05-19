@@ -81,7 +81,7 @@ public class Loggable {
    * Gets the contents of the message body without appending a stack trace. This
    * is particularly useful when using the value of a loggables message as the
    * value when creating an exception.
-   * 
+   *
    */
   public String getMessageBody() {
     return getMessage(true, false);

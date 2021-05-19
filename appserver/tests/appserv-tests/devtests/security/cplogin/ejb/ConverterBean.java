@@ -33,7 +33,7 @@ public class ConverterBean implements SessionBean {
     BigDecimal yenRate = new BigDecimal("121.6000");
     BigDecimal euroRate = new BigDecimal("0.0077");
     SessionContext mysc = null;
-    
+
     public String myCallerPrincipal(){
         return mysc.getCallerPrincipal().toString();
     }
@@ -41,7 +41,7 @@ public class ConverterBean implements SessionBean {
      * Returns the yen value for a given dollar amount.
      * @param dollars dollar amount to be converted to yen.
      */
-    public BigDecimal dollarToYen(BigDecimal dollars) {       
+    public BigDecimal dollarToYen(BigDecimal dollars) {
         BigDecimal result = dollars.multiply(yenRate);
         return result.setScale(2,BigDecimal.ROUND_UP);
     }
@@ -75,7 +75,7 @@ public class ConverterBean implements SessionBean {
      * Loads the state of the bean from secondary storage. Required by EJB spec.
      */
     public void ejbActivate() {}
-    
+
     /**
      * Keeps the state of the bean to secondary storage. Required by EJB spec.
      */

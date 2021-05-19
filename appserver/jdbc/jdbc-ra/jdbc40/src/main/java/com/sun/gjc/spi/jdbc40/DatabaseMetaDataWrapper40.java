@@ -348,7 +348,7 @@ public class DatabaseMetaDataWrapper40 extends DatabaseMetaDataWrapper {
     public ResultSet getPseudoColumns(String catalog, String schemaPattern,
             String tableNamePattern, String columnNamePattern) throws SQLException {
         if (DataSourceObjectBuilder.isJDBC41()) {
-            Class<?>[] valueTypes = 
+            Class<?>[] valueTypes =
                     new Class<?>[]{String.class, String.class, String.class, String.class};
             try {
                 return (ResultSet) getMethodExecutor().invokeMethod(databaseMetaData,

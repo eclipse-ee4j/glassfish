@@ -65,7 +65,7 @@ abstract class XPathToDeveloperProvidedContentRefs<T extends Content> {
     private final static XPath xPath = xPathFactory.newXPath();
 
     private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
-    
+
     @LogMessageInfo (
             message = "Client JNLP document {0} refers to the static resource {1} that does not exist or is not readable.",
             cause = "The developer-provided JNLP content refers to a file as if the file is in the application but the server could not find the file.",
@@ -77,7 +77,7 @@ abstract class XPathToDeveloperProvidedContentRefs<T extends Content> {
             cause = "During deployment of nested app clients (those inside EARs), the system should use an ApplicationSignedJARManager but it is null.",
             action = "This is a system error.  Please report this as a bug.")
     public static final String SIGNED_JAR_MGR_NULL = "AS-ACDEPL-00114";
-    
+
     @LogMessageInfo(
             message = "Tbe custom JNLP document {0} in a stand-alone app client incorrectly refers to a JAR {1}",
             cause = "The app client includes a custom JNLP document which refers to a JAR.  Stand-alone app clients cannot refer to other JARs because they are self-contained deployment units.",
@@ -113,7 +113,7 @@ abstract class XPathToDeveloperProvidedContentRefs<T extends Content> {
                 parse(p, XPathToDeveloperProvidedContentRefs.Type.DYNAMIC));
         return result;
     }
-    
+
     /**
      * Extracts the relevant information from the Properties object and
      * creates the correct set of content objects depending on which type

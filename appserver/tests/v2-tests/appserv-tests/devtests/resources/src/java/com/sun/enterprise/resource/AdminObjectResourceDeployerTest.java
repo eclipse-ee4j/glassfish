@@ -59,7 +59,7 @@ public class AdminObjectResourceDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the deployResource method.
      */
@@ -73,7 +73,7 @@ public class AdminObjectResourceDeployerTest extends TestCase {
             fail("Exception caught -> " + e.getMessage());
         }
     }
-    
+
     /**
      * Tests the deployResource method.
      */
@@ -97,8 +97,8 @@ public class AdminObjectResourceDeployerTest extends TestCase {
                 return new Switch() {
                     public ManagementObjectManager getManagementObjectManager() {
                         return new J2EEManagementObjectManager() {
-                            public void registerAdminObjectResource(String name, 
-                                    String raName, String type, String [] names, 
+                            public void registerAdminObjectResource(String name,
+                                    String raName, String type, String [] names,
                                     String [] values) {
                                 System.out.println("Jsr77 Registration Complete...");
                             }
@@ -107,7 +107,7 @@ public class AdminObjectResourceDeployerTest extends TestCase {
                 };
             }
         };
-        
+
         //initialize the dummy resource object
         resource = new AdminObjectResource();
         resource.setJndiName("javamail/Tester");
@@ -121,7 +121,7 @@ public class AdminObjectResourceDeployerTest extends TestCase {
         TestSuite suite = new TestSuite(AdminObjectResourceDeployerTest.class);
         return suite;
     }
-    
+
      public static void main(String args[]) throws Exception {
         final TestRunner runner= new TestRunner();
         final TestResult result =

@@ -19,38 +19,38 @@
 
 <project name="Verify MessagedIds in GlassFish" default="all" basedir=".">
     <!-- init. Initialization involves creating publishing directories and
-         OS specific targets. --> 
+         OS specific targets. -->
     <target name="init" description="initialization">
         <tstamp>
             <format property="start.time" pattern="MM/dd/yyyy hh:mm aa"/>
-        </tstamp>    
+        </tstamp>
     </target>
 
     <path id="compile.classpath">
          <pathelement location="."/>
-    </path> 
+    </path>
 
-    <target name="compile" 
+    <target name="compile"
         depends="init"
         description="Builds Java files">
-	     <javac srcdir="."     
-              destdir="."   
-	          fork="true" 
- 		      failonerror="true">
+         <javac srcdir="."
+              destdir="."
+              fork="true"
+               failonerror="true">
               <classpath refid="compile.classpath"/>
-        </javac>    
-    </target> 
+        </javac>
+    </target>
 
-	<target name="run">
-	 <echo message="Verifying GlassFish Code under ${glassfish_home} for ${options}."/>
-	 <java classname="Filter"
+    <target name="run">
+     <echo message="Verifying GlassFish Code under ${glassfish_home} for ${options}."/>
+     <java classname="Filter"
            fork="true"
            failonerror="true">
-	 	   <arg value="${glassfish_home}"/>
-		   <arg value="${options}"/>	
-     </java>		 
-	</target>	       
-   
+            <arg value="${glassfish_home}"/>
+           <arg value="${options}"/>
+     </java>
+    </target>
+
    <target name="all" depends="compile,run"/>
 
    </project>

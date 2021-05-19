@@ -29,15 +29,15 @@ import java.util.Iterator;
  * @author Kenneth Saks
  * @author Jerome Dochez
  */
-
 public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
     // Module in which these web services are defined.
     private BundleDescriptor bundleDesc;
 
     private Collection<WebService> webServices;
-    /** 
-     * Default constructor. 
+
+    /**
+     * Default constructor.
      */
     public WebServicesDescriptor() {
         webServices = new HashSet<WebService>();
@@ -97,9 +97,9 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
      * @return WebServiceEndpoint or null if not found
      */
     public WebServiceEndpoint getEndpointByName(String endpointName) {
-        for(Iterator iter = getEndpoints().iterator(); iter.hasNext();) {
+        for (Iterator iter = getEndpoints().iterator(); iter.hasNext();) {
             WebServiceEndpoint next = (WebServiceEndpoint) iter.next();
-            if( next.getEndpointName().equals(endpointName) ) {
+            if (next.getEndpointName().equals(endpointName)) {
                 return next;
             }
         }
@@ -112,9 +112,9 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
     public Collection<WebServiceEndpoint> getEndpointsImplementedBy(EjbDescriptor ejb) {
         Collection<WebServiceEndpoint> endpoints = new HashSet();
-        if( ejb instanceof EjbSessionDescriptor ) {
-            for(WebServiceEndpoint next : getEndpoints()) {
-                if( next.implementedByEjbComponent(ejb) ) {
+        if (ejb instanceof EjbSessionDescriptor) {
+            for (WebServiceEndpoint next : getEndpoints()) {
+                if (next.implementedByEjbComponent(ejb)) {
                     endpoints.add(next);
                 }
             }
@@ -128,8 +128,8 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
     public Collection<WebServiceEndpoint> getEndpointsImplementedBy(WebComponentDescriptor desc) {
         Collection<WebServiceEndpoint> endpoints = new HashSet();
-        for(WebServiceEndpoint next : getEndpoints()) {
-            if( next.implementedByWebComponent(desc) ) {
+        for (WebServiceEndpoint next : getEndpoints()) {
+            if (next.implementedByWebComponent(desc)) {
                 endpoints.add(next);
             }
         }
@@ -138,33 +138,40 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
 
     public Collection<WebServiceEndpoint> getEndpoints() {
         Collection allEndpoints = new HashSet();
-        for(WebService webService : webServices) {
-            allEndpoints.addAll( webService.getEndpoints() );
+        for (WebService webService : webServices) {
+            allEndpoints.addAll(webService.getEndpoints());
         }
         return allEndpoints;
     }
-    
+
     public ArchiveType getModuleType() {
-        if (bundleDesc!=null) {
-          return bundleDesc.getModuleType();  
-        } 
-        return null; 
+        if (bundleDesc != null) {
+            return bundleDesc.getModuleType();
+        }
+        return null;
     }
 
-    
     //
     // Dummy RootDeploymentDescriptor implementations for methods that
     // do not apply to WebServicesDescriptor.
     //
-    public String getModuleID() { return ""; } 
-    public ClassLoader getClassLoader() { return null; }
-    public boolean isApplication() {return false; }
+    public String getModuleID() {
+        return "";
+    }
+
+    public ClassLoader getClassLoader() {
+        return null;
+    }
+
+    public boolean isApplication() {
+        return false;
+    }
 
     /**
      * Returns a formatted String of the attributes of this object.
      */
     public void print(StringBuffer toStringBuffer) {
-	super.print(toStringBuffer);
+        super.print(toStringBuffer);
         if (hasWebServices()) {
             for (Iterator itr = getWebServices().iterator();itr.hasNext();) {
                 WebService aWebService = (WebService) itr.next();
@@ -173,5 +180,4 @@ public class WebServicesDescriptor extends RootDeploymentDescriptor {
             }
         }
     }
-    
-}    
+}

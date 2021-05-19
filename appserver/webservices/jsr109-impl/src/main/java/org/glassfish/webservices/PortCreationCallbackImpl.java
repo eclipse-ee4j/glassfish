@@ -39,15 +39,15 @@ public class PortCreationCallbackImpl extends ServiceInterceptor {
     private ServiceReferenceDescriptor ref;
 
     private static Logger logger = LogUtils.getLogger();
-    
+
     public PortCreationCallbackImpl(ServiceReferenceDescriptor svcRef) {
         ref = svcRef;
     }
-    
+
     public void postCreateProxy(WSBindingProvider bp, Class<?> serviceEndpointInterface) {
-        
+
         ServiceRefPortInfo portInfo = ref.getPortInfoBySEI(serviceEndpointInterface.getName());
-        if (portInfo!=null) {          
+        if (portInfo!=null) {
             // Set MTOM for this port
             boolean mtomEnabled = false;
             if(portInfo.getMtomEnabled() != null &&
@@ -63,16 +63,16 @@ public class PortCreationCallbackImpl extends ServiceInterceptor {
                     logger.log(Level.SEVERE, LogUtils.INVALID_MTOM, portInfo.getName());
                 }
             }
-            
+
             // Set stub properties
-            Set properties = portInfo.getStubProperties();            
+            Set properties = portInfo.getStubProperties();
             for(Iterator iter = properties.iterator(); iter.hasNext();) {
-                NameValuePairDescriptor next = (NameValuePairDescriptor) 
+                NameValuePairDescriptor next = (NameValuePairDescriptor)
                     iter.next();
                 bp.getRequestContext().put(next.getName(), next.getValue());
-                
+
             }
-        }        
+        }
     }
 
     public void postCreateDispatch(WSBindingProvider bp) {}

@@ -25,7 +25,7 @@ import org.glassfish.web.deployment.runtime.StoreProperties;
  * This node is the superclass for all web related runtime nodes
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class StorePropertiesNode extends RuntimeDescriptorNode {
 

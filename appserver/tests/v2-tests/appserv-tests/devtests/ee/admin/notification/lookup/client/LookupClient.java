@@ -26,12 +26,12 @@ import com.sun.devtest.admin.notification.lookup.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /**
- * A simple java client. This uses the services provided by the 
+ * A simple java client. This uses the services provided by the
  * <code>LookupBean</code>.
  */
 public class LookupClient {
 
-    private SimpleReporterAdapter stat = 
+    private SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
 
     LookupClient() {

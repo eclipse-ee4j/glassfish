@@ -76,7 +76,7 @@ public class UpdateObjectDescImpl implements UpdateObjectDesc {
             UpdateObjectDescImpl.class.getClassLoader());
 
     public UpdateObjectDescImpl(Class pcClass) {
-		this.pcClass = pcClass;
+        this.pcClass = pcClass;
         updatedFields = new ArrayList();
     }
 

@@ -59,7 +59,7 @@ public class JavaModuleNamingProxy
 
     @Inject
     private ProcessEnvironment processEnv;
-    
+
     @Inject
     private ApplicationRegistry applicationRegistry;
 
@@ -92,7 +92,7 @@ public class JavaModuleNamingProxy
 
     static final String JAVA_MODULE_NAME
             = "java:module/ModuleName";
-    
+
     static final String JAVA_APP_SERVICE_LOCATOR
             = "java:app/hk2/ServiceLocator";
 
@@ -108,9 +108,9 @@ public class JavaModuleNamingProxy
         } else if( name.equals(JAVA_MODULE_NAME) ) {
 
             returnValue = getModuleName();
-            
+
         } else if( name.equals(JAVA_APP_SERVICE_LOCATOR) ) {
-            
+
             returnValue = getAppServiceLocator();
 
         } else if (name.startsWith(JAVA_MODULE_CONTEXT) || name.startsWith(JAVA_APP_CONTEXT)) {
@@ -150,11 +150,11 @@ public class JavaModuleNamingProxy
 
                 Application app = bd.getApplication();
 
-                appName = app.getAppName();               
+                appName = app.getAppName();
             }
             else {
                 ApplicationEnvironment applicationEnvironment = namingMgr.getCurrentApplicationEnvironment();
-                
+
                 if (applicationEnvironment != null) {
                     appName = applicationEnvironment.getName();
                 }
@@ -199,17 +199,17 @@ public class JavaModuleNamingProxy
         return moduleName;
 
     }
-    
+
     private ServiceLocator getAppServiceLocator() throws NamingException {
-        
+
         String appName = getAppName();
 
         ApplicationInfo info = applicationRegistry.get(appName);
-        
+
         if (info == null) {
             throw new NamingException("Could not resolve " + JAVA_APP_SERVICE_LOCATOR);
         }
-        
+
         return info.getAppServiceLocator();
 
     }
@@ -262,7 +262,7 @@ public class JavaModuleNamingProxy
                         if (appName != null) {
                             javaGlobalName.append(appName);
                             javaGlobalName.append("/");
-                        } 
+                        }
 
                         // Replace java:app/ with the fully-qualified global portion
                         int javaAppLength = JAVA_APP_CONTEXT.length();
@@ -273,7 +273,7 @@ public class JavaModuleNamingProxy
                         // For portable EJB names relative to java:module, only add
                         // the application name if it's an .ear, but always add
                         // the module name.
-   
+
                         if (appName != null) {
                             javaGlobalName.append(appName);
                             javaGlobalName.append("/");
@@ -307,7 +307,7 @@ public class JavaModuleNamingProxy
                     } catch(Exception e) {
                         NamingException ne = new NamingException("Error creating ACC managed bean " + newName);
                         ne.initCause(e);
-                        throw ne;                     
+                        throw ne;
                     }
 
                 }

@@ -37,8 +37,8 @@ import org.glassfish.hk2.api.PerLookup;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Node.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="ping-node-ssh", 
+        opType=RestEndpoint.OpType.GET,
+        path="ping-node-ssh",
         description="ping-node-ssh",
         params={
             @RestParam(name="id", value="$parent")

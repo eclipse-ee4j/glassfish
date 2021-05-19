@@ -53,14 +53,14 @@ public class MapComponent extends UICommand {
 
 
 
-    // --------------------------------------------------------------Constructors 
+    // --------------------------------------------------------------Constructors
 
     public MapComponent() {
         super();
         addDefaultActionListener(getFacesContext());
     }
 
-    
+
     // -------------------------------------------------------------- Properties
 
 
@@ -106,7 +106,7 @@ public class MapComponent extends UICommand {
         return ("Map");
 
     }
-   
+
     // ----------------------------------------------------- Event Methods
 
     private static Class signature[] = {AreaSelectedEvent.class};
@@ -209,7 +209,7 @@ public class MapComponent extends UICommand {
         immediateSet = ((Boolean) values[5]).booleanValue();
         addDefaultActionListener(context);
     }
-    
+
     // ----------------------------------------------------- Private Methods
 
     // Add the default action listener

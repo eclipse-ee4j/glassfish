@@ -28,9 +28,8 @@ import org.w3c.dom.Node;
  * This node handles the pm-descriptor runtime xml element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
-
 public class PMDescriptorNode extends RuntimeDescriptorNode<IASPersistenceManagerDescriptor> {
 
     private IASPersistenceManagerDescriptor descriptor;
@@ -43,8 +42,9 @@ public class PMDescriptorNode extends RuntimeDescriptorNode<IASPersistenceManage
         return descriptor;
     }
 
+
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = new HashMap();
         table.put(RuntimeTagNames.PM_IDENTIFIER, "setPersistenceManagerIdentifier");
         table.put(RuntimeTagNames.PM_VERSION, "setPersistenceManagerVersion");
@@ -54,14 +54,15 @@ public class PMDescriptorNode extends RuntimeDescriptorNode<IASPersistenceManage
         return table;
     }
 
+
     @Override
     public Node writeDescriptor(Node parent, String nodeName, IASPersistenceManagerDescriptor descriptor) {
-	Node pd = super.writeDescriptor(parent, nodeName, descriptor);
-	appendTextChild(pd, RuntimeTagNames.PM_IDENTIFIER, descriptor.getPersistenceManagerIdentifier());
-	appendTextChild(pd, RuntimeTagNames.PM_VERSION, descriptor.getPersistenceManagerVersion());
-	appendTextChild(pd, RuntimeTagNames.PM_CONFIG, descriptor.getPersistenceManagerConfig());
-	appendTextChild(pd, RuntimeTagNames.PM_CLASS_GENERATOR, descriptor.getPersistenceManagerClassGenerator());
-	appendTextChild(pd, RuntimeTagNames.PM_MAPPING_FACTORY, descriptor.getPersistenceManagerMappingFactory());
+        Node pd = super.writeDescriptor(parent, nodeName, descriptor);
+        appendTextChild(pd, RuntimeTagNames.PM_IDENTIFIER, descriptor.getPersistenceManagerIdentifier());
+        appendTextChild(pd, RuntimeTagNames.PM_VERSION, descriptor.getPersistenceManagerVersion());
+        appendTextChild(pd, RuntimeTagNames.PM_CONFIG, descriptor.getPersistenceManagerConfig());
+        appendTextChild(pd, RuntimeTagNames.PM_CLASS_GENERATOR, descriptor.getPersistenceManagerClassGenerator());
+        appendTextChild(pd, RuntimeTagNames.PM_MAPPING_FACTORY, descriptor.getPersistenceManagerMappingFactory());
         return pd;
     }
 }

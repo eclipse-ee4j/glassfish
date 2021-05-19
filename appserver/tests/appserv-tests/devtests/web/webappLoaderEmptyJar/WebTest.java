@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4670099 and 4649821");
         WebTest webTest = new WebTest(args);
@@ -50,8 +50,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeJSP();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -71,7 +71,7 @@ public class WebTest {
         int code = conn.getResponseCode();
         if (code != 200) {
             throw new Exception("Unexpected response code: " + code);
-        }         
+        }
     }
 
 }

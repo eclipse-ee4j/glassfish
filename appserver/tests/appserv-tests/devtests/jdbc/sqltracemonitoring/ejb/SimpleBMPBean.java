@@ -27,17 +27,17 @@ public class SimpleBMPBean implements EntityBean{
     protected DataSource ds;
 
     public void setEntityContext(EntityContext entityContext) {
-	Context context = null;
-	try {
-	    context    = new InitialContext();
-	    ds = (DataSource) context.lookup("java:comp/env/jdbc/DataSource");
-	} catch (NamingException e) {
-	    throw new EJBException("cant find datasource");
-	}
+        Context context = null;
+        try {
+            context    = new InitialContext();
+            ds = (DataSource) context.lookup("java:comp/env/jdbc/DataSource");
+        } catch (NamingException e) {
+            throw new EJBException("cant find datasource");
+        }
     }
 
     public Integer ejbCreate() throws CreateException {
-	    return new Integer(1);
+            return new Integer(1);
     }
 
     public boolean preparedStatementTest1(String tableName, String value){

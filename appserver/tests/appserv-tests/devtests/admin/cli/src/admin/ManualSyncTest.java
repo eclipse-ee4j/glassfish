@@ -390,7 +390,7 @@ public class ManualSyncTest extends AdminBaseDevTest {
 
         long dasDomainXmlTS = dasDomainXml.lastModified();
         report("export-sync-bundle-" + testname, asadmin("export-sync-bundle", "--target", testname));
-        
+
         report("check-domainxml-" + testname, instDomainXml.exists());
 
         stopDomain();

@@ -46,7 +46,7 @@ import org.jvnet.hk2.config.*;
 
 
 /**
- * Change the node-agent element to use V3 mechanism 
+ * Change the node-agent element to use V3 mechanism
  * @author Carla Mott
  */
 
@@ -120,7 +120,7 @@ public class NodeAgentConfigUpgrade implements ConfigurationUpgrade, PostConstru
                     d.setNodeAgents(null);
                     return null;
                 }
-        
+
         }, domain);
         } catch (Exception e) {
             Logger.getAnonymousLogger().log(Level.SEVERE,

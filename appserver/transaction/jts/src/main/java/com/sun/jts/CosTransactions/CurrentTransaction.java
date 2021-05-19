@@ -30,21 +30,36 @@
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.util.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
-import com.sun.jts.trace.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
-
 import com.sun.enterprise.transaction.jts.JavaEETransactionManagerJTSDelegate;
+import com.sun.jts.codegen.otsidl.JControlHelper;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+// Import required classes.
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.NO_IMPLEMENT;
+import org.omg.CORBA.ORB;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_REQUIRED;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CORBA.WrongTransaction;
+import org.omg.CosTransactions.Control;
+import org.omg.CosTransactions.Coordinator;
+import org.omg.CosTransactions.Inactive;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.PropagationContextHolder;
+import org.omg.CosTransactions.Status;
+import org.omg.CosTransactions.StatusHolder;
+import org.omg.CosTransactions.TransIdentity;
+import org.omg.CosTransactions.Unavailable;
+import org.omg.CosTransactions.otid_t;
 
 /**This class manages association of transactions with threads in a process,
  * and associated state/operations.
@@ -84,12 +99,12 @@ public class CurrentTransaction {
     //$ This constant is used to represent the empty transaction context.  It
     //$ should not be required when the TRANSACTION_REQUIRED exception is
     //$ supported.
-	/*
-		Logger to log transaction messages
-	*/ 
-	static Logger _logger = LogDomains.getLogger(CurrentTransaction.class, LogDomains.TRANSACTION_LOGGER);
-   
-	private static PropagationContext emptyContext =
+    /*
+        Logger to log transaction messages
+    */
+    static Logger _logger = LogDomains.getLogger(CurrentTransaction.class, LogDomains.TRANSACTION_LOGGER);
+
+    private static PropagationContext emptyContext =
         new PropagationContext(0,new TransIdentity(null,null,new otid_t(-1,0,new byte[0])),
                                new TransIdentity[0],null);
 
@@ -126,9 +141,7 @@ public class CurrentTransaction {
      *
      * @see
      */
-    static boolean setCurrent( ControlImpl control,
-                                            boolean     stack ) {
-
+    static boolean setCurrent(ControlImpl control, boolean stack) {
         boolean result = false;
 
         // Ensure that the current thread association is valid.
@@ -160,24 +173,24 @@ public class CurrentTransaction {
 
                 StatusHolder outStatus = new StatusHolder();
                 control.pushControl(current,outStatus);
-		if(statsOn){
-        		Thread thread = Thread.currentThread();
-                	result = (threadContexts.remove(thread) != null);
-		}
-		else
-			result=true;
-	        m_tid.set(null);
+                if(statsOn){
+                    Thread thread = Thread.currentThread();
+                    result = (threadContexts.remove(thread) != null);
+                }
+                else
+                    result=true;
+                m_tid.set(null);
 
                 // The parent transaction has effectively been suspended - add it to the
                 // set of suspended transactions.
 
-		if(statsOn)
-                	suspended.addElement(current);
+                if(statsOn)
+                    suspended.addElement(current);
             }
         } else
             result = true;
 
-// If there is no current Control, then just make the new one current.
+        // If there is no current Control, then just make the new one current.
 
         if( result ) {
 
@@ -192,16 +205,16 @@ public class CurrentTransaction {
 
             // Update the thread to Control mapping for the new Control.
 
-	    if(statsOn){
-        	Thread thread = Thread.currentThread();
-            	threadContexts.put(thread,control);
-	    }
-	    m_tid.set(control);
+            if(statsOn){
+                Thread thread = Thread.currentThread();
+                threadContexts.put(thread,control);
+            }
+            m_tid.set(control);
 
             // Remove the Control from the set of suspended Control objects.
 
-	    if(statsOn)
-            	suspended.removeElement(control);
+            if(statsOn)
+                suspended.removeElement(control);
 
             // Increment the association count for the control object
 
@@ -245,11 +258,11 @@ public class CurrentTransaction {
         // thread association.
 
         if( result != null ){
-	    if(statsOn){
-        	Thread thread = Thread.currentThread();
-            	threadContexts.remove(thread);
-	    }
-	    m_tid.set(null);
+            if(statsOn){
+                Thread thread = Thread.currentThread();
+                threadContexts.remove(thread);
+            }
+            m_tid.set(null);
 
             // Decrement the count of associations for the Control object.
 
@@ -260,17 +273,17 @@ public class CurrentTransaction {
 
             if( !unstack && statsOn) suspended.addElement(result);
 
-                // XA support: If there was a current Control, inform all registered
-                // StaticResource objects of the end of the thread association.
-                // Allow any exception to percolate to the caller.
+            // XA support: If there was a current Control, inform all registered
+            // StaticResource objects of the end of the thread association.
+            // Allow any exception to percolate to the caller.
 
             if( statics != null )
                 statics.distributeEnd(result,unstack);
 
-                // If we were asked to unstack, get the stacked Control, if any.  If there
-                // is one, set up the thread association.
-                // Now that we have identified the first active ancestor, proceed to unstack
-                // its parent.
+            // If we were asked to unstack, get the stacked Control, if any.  If there
+            // is one, set up the thread association.
+            // Now that we have identified the first active ancestor, proceed to unstack
+            // its parent.
 
             if( unstack ) {
                 StatusHolder outStatus = new StatusHolder();
@@ -290,12 +303,12 @@ public class CurrentTransaction {
                     // The stacked Control is no longer suspended so is removed from the
                     // set of suspended transactions.
 
-		    if(statsOn){
-        		Thread thread = Thread.currentThread();
-                    	threadContexts.put(thread,stacked);
-                    	suspended.removeElement(stacked);
-		    }
-		    m_tid.set(stacked);
+                    if(statsOn){
+                        Thread thread = Thread.currentThread();
+                        threadContexts.put(thread,stacked);
+                        suspended.removeElement(stacked);
+                    }
+                    m_tid.set(stacked);
                 }
             }
         }
@@ -315,7 +328,7 @@ public class CurrentTransaction {
         //Thread thread = Thread.currentThread();
         //ControlImpl result = (ControlImpl) threadContexts.get(thread);
         //return (result != null);
-	return (m_tid.get()!=null);
+        return (m_tid.get()!=null);
     }
 
     /**Ensures that an association with an aborted transaction is dealt with cleanly.
@@ -339,7 +352,7 @@ public class CurrentTransaction {
      * @see
      */
     private static ControlImpl
-        endAborted( boolean[/*1*/] aborted, boolean endAssociation) {
+    endAborted( boolean[/*1*/] aborted, boolean endAssociation) {
 
         // Get the current thread identifier, and the corresponding Control object
         // if there is one.
@@ -357,59 +370,59 @@ public class CurrentTransaction {
             try {
                 completed = (result.getTranState() != Status.StatusActive);
             } catch( Throwable exc ) {
-		_logger.log(Level.FINE,"", exc);
+                _logger.log(Level.FINE,"", exc);
             }
 
         if( result != null && completed ) {
             if (endAssociation) {
-	        synchronized(CurrentTransaction.class){
-			if(statsOn){
-        			Thread thread = Thread.currentThread();
-                		threadContexts.remove(thread);
-			}
-			m_tid.set(null);
+                synchronized(CurrentTransaction.class){
+                    if(statsOn){
+                        Thread thread = Thread.currentThread();
+                        threadContexts.remove(thread);
+                    }
+                    m_tid.set(null);
 
-                	// XA support: If there was a current IControl, inform all registered
-                	// StaticResource objects of the end of the thread association.
-                	// Allow any exception to percolate to the caller.
+                    // XA support: If there was a current IControl, inform all registered
+                    // StaticResource objects of the end of the thread association.
+                    // Allow any exception to percolate to the caller.
 
-                	if( statics != null )
-                    		statics.distributeEnd(result,false);
+                    if( statics != null )
+                        statics.distributeEnd(result,false);
 
-                	// Discard all stacked controls that represent aborted or unrecognised
-                	// transactions.
+                    // Discard all stacked controls that represent aborted or unrecognised
+                    // transactions.
 
-                	result = result.popAborted();
+                    result = result.popAborted();
 
-                	// If there is a valid ancestor, make it the current one.
+                    // If there is a valid ancestor, make it the current one.
 
-                	if( result != null ) {
-				m_tid.set(result);
-				if(statsOn){
-        				Thread thread = Thread.currentThread();
-                    			threadContexts.put(thread,result);
-                    			suspended.removeElement(result);
-				}
-                	}
+                    if( result != null ) {
+                        m_tid.set(result);
+                        if(statsOn){
+                            Thread thread = Thread.currentThread();
+                            threadContexts.put(thread,result);
+                            suspended.removeElement(result);
+                        }
+                    }
 
-                	// XA support: If there is a stacked context, inform all registered
-                	// StaticResource objects of the new thread association.
-                	// Allow any exception to percolate to the caller.
+                    // XA support: If there is a stacked context, inform all registered
+                    // StaticResource objects of the new thread association.
+                    // Allow any exception to percolate to the caller.
 
-                	if( statics != null )
-                    		statics.distributeStart(result,false);
-		}
+                    if( statics != null )
+                        statics.distributeStart(result,false);
+                }
             }
             aborted[0] = true;
         }
 
-		if(_logger.isLoggable(Level.FINEST))
-		{
-			Thread thread = Thread.currentThread();
-			_logger.logp(Level.FINEST,"CurrentTransaction","endAborted()",
-					"threadContexts.get(thread) returned " + 
-					result + " for current thread " + thread);
-		}
+        if(_logger.isLoggable(Level.FINEST))
+        {
+            Thread thread = Thread.currentThread();
+            _logger.logp(Level.FINEST,"CurrentTransaction","endAborted()",
+                "threadContexts.get(thread) returned " +
+                    result + " for current thread " + thread);
+        }
 
         return result;
     }
@@ -424,8 +437,8 @@ public class CurrentTransaction {
      * @see
      */
     static void addSuspended( ControlImpl control ) {
-    	if(statsOn)
-        	suspended.addElement(control);
+        if(statsOn)
+            suspended.addElement(control);
     }
 
     /**Removes the given Control object from the set of those suspended in the
@@ -440,8 +453,8 @@ public class CurrentTransaction {
      */
     static boolean removeSuspended( ControlImpl control ) {
         boolean result = true;
-	if(statsOn)
-		result=suspended.removeElement(control);
+        if(statsOn)
+            result=suspended.removeElement(control);
         return result;
     }
 
@@ -506,13 +519,13 @@ public class CurrentTransaction {
 
         if (control != null) {
 
-          if( Configuration.isLocalFactory()) {
-            result = (Coordinator) ((ControlImpl) control).get_localCoordinator();
-          } else {
-            // this call may throw TRANSACTION_ROLLEDBACK
-            // or INVALID_TRANSACTION
-            result = control.get_coordinator();
-          }
+            if( Configuration.isLocalFactory()) {
+                result = (Coordinator) ((ControlImpl) control).get_localCoordinator();
+            } else {
+                // this call may throw TRANSACTION_ROLLEDBACK
+                // or INVALID_TRANSACTION
+                result = control.get_coordinator();
+            }
         }
 
         return result;
@@ -533,10 +546,10 @@ public class CurrentTransaction {
      * @see
      */
     static int numActive( Long           localTID,
-                                       boolean[/*1*/] outstanding ) {
-	if(!statsOn){
-		throw new NO_IMPLEMENT("statistics not on");
-	}
+        boolean[/*1*/] outstanding ) {
+        if(!statsOn){
+            throw new NO_IMPLEMENT("statistics not on");
+        }
 
         int result = 0;
         outstanding[0] = false;
@@ -561,7 +574,7 @@ public class CurrentTransaction {
                         result++;
                     }
             } catch( Throwable exc ) {
-		_logger.log(Level.FINE,"", exc);
+                _logger.log(Level.FINE,"", exc);
             }
         }
 
@@ -603,9 +616,9 @@ public class CurrentTransaction {
      */
     static Control[] getSuspendedTransactions() {
 
-	if(!statsOn){
-		throw new NO_IMPLEMENT("statistics not on");
-	}
+        if(!statsOn){
+            throw new NO_IMPLEMENT("statistics not on");
+        }
 
         Control[] result = null;
 
@@ -636,9 +649,9 @@ public class CurrentTransaction {
      * @see
      */
     static Control[] getRunningTransactions() {
-	if(!statsOn){
-		throw new NO_IMPLEMENT("statistics not on");
-	}
+        if(!statsOn){
+            throw new NO_IMPLEMENT("statistics not on");
+        }
 
         Control[] result = null;
 
@@ -670,9 +683,9 @@ public class CurrentTransaction {
      */
     static Control[] getAllTransactions() {
 
-	if(!statsOn){
-		throw new NO_IMPLEMENT("statistics not on");
-	}
+        if(!statsOn){
+            throw new NO_IMPLEMENT("statistics not on");
+        }
         Control[] result = null;
 
         int allNum = threadContexts != null ? threadContexts.size()+suspended.size() : 0;
@@ -716,8 +729,8 @@ public class CurrentTransaction {
      * @see
      */
     static void sendingRequest( int id,
-                                             PropagationContextHolder holder )
-        throws TRANSACTION_ROLLEDBACK, TRANSACTION_REQUIRED {
+        PropagationContextHolder holder )
+            throws TRANSACTION_ROLLEDBACK, TRANSACTION_REQUIRED {
 
         // Empty out the context.
         // Ensure that the cached reference to the ORB is set up, and that the Any
@@ -739,7 +752,7 @@ public class CurrentTransaction {
             emptyContext.implementation_specific_data.insert_boolean(false);
         }
         holder.value = emptyContext;
-        */
+         */
 
         // Ensure that the current Control object is valid.  Return immediately if
         // not.
@@ -789,7 +802,7 @@ public class CurrentTransaction {
         // Any other exception is unexpected.  Assume there is no transaction.
 
         catch( Throwable exc ) {
-	    _logger.log(Level.FINE,"", exc);
+            _logger.log(Level.FINE,"", exc);
         }
 
         // Increase the count of outgoing requests for this transaction, if the
@@ -819,9 +832,9 @@ public class CurrentTransaction {
      * @see
      */
     static void receivedReply( int id,
-                                            PropagationContext context,
-                                            org.omg.CORBA.Environment ex )
-        throws org.omg.CORBA.WrongTransaction {
+        PropagationContext context,
+        org.omg.CORBA.Environment ex )
+            throws org.omg.CORBA.WrongTransaction {
 
         // Look up the current Control object.
 
@@ -850,7 +863,7 @@ public class CurrentTransaction {
                     currentCoord = current.get_coordinator();
                 }
             } catch (Unavailable exc) {
-	        _logger.log(Level.FINE,"", exc);
+                _logger.log(Level.FINE,"", exc);
             }
 
             if (currentCoord == null) {
@@ -860,7 +873,7 @@ public class CurrentTransaction {
             try {
                 currentCoord.rollback_only();
             } catch (Inactive exc) {
-	        _logger.log(Level.FINE,"", exc);
+                _logger.log(Level.FINE,"", exc);
             }
 
             // COMMENT (Ram J) (11/24/2000) This has been commented out since
@@ -937,7 +950,7 @@ public class CurrentTransaction {
      * @see
      */
     static void receivedRequest( int id,
-                                              PropagationContext context ) {
+        PropagationContext context ) {
 
         // Return if there is no context on the message.
         // If the transaction identifier in the context is NULL, just return.
@@ -955,7 +968,7 @@ public class CurrentTransaction {
         // Use a local factory to recreate the transaction locally.
 
         //if( localFactory == null )
-            //localFactory = Configuration.getFactory();
+        //localFactory = Configuration.getFactory();
         //Control current = localFactory.recreate(context);
         Control current = Configuration.getFactory().recreate(context);
 
@@ -979,10 +992,10 @@ public class CurrentTransaction {
         // create a subordinate.  Do something drastic.
 
         catch( Throwable exc ) {
-			_logger.log(Level.WARNING,"jts.unable_to_create_subordinate_coordinator", exc);
-			 String msg = LogFormatter.getLocalizedMessage(_logger,
-			 							"jts.unable_to_create_subordinate_coordinator");
-			  throw  new org.omg.CORBA.INTERNAL(msg);
+            _logger.log(Level.WARNING,"jts.unable_to_create_subordinate_coordinator", exc);
+            String msg = LogFormatter.getLocalizedMessage(_logger,
+                "jts.unable_to_create_subordinate_coordinator");
+            throw  new org.omg.CORBA.INTERNAL(msg);
         }
     }
 
@@ -1001,8 +1014,8 @@ public class CurrentTransaction {
      * @see
      */
     static void sendingReply( int id,
-                                           PropagationContextHolder holder )
-        throws INVALID_TRANSACTION, TRANSACTION_ROLLEDBACK {
+        PropagationContextHolder holder )
+            throws INVALID_TRANSACTION, TRANSACTION_ROLLEDBACK {
 
         // Zero out context information.
         // Ensure that the cached reference to the ORB is set up, and that the Any
@@ -1022,7 +1035,7 @@ public class CurrentTransaction {
         // in the reply.
         /*
         holder.value = emptyContext;
-        */
+         */
 
         // Ensure that the current Control object is valid.  Return immediately if not.
 
@@ -1086,13 +1099,13 @@ public class CurrentTransaction {
 
             CoordinatorImpl forgetParent = null;
             int[] outInt = new int[1];
-            //StatusHolder outStatus = new StatusHolder();                                        
+            //StatusHolder outStatus = new StatusHolder();
             try {
                 forgetParent = coord.replyAction(outInt);
             } catch( Throwable exc ) {
                 _logger.log(Level.FINE,"", exc);
             }
-    
+
             int replyAction = outInt[0];
             if( replyAction == CoordinatorImpl.activeChildren ) {
                 try {
@@ -1102,7 +1115,7 @@ public class CurrentTransaction {
                 }
 
                 INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.UnfinishedSubtransactions,
-                                                              CompletionStatus.COMPLETED_YES);
+                    CompletionStatus.COMPLETED_YES);
                 throw exc;
             }
 
@@ -1124,7 +1137,7 @@ public class CurrentTransaction {
 
             else {
                 if( current.isAssociated() ||
-                        current.isOutgoing() ) {
+                    current.isOutgoing() ) {
                     try {
                         coord.rollback_only();
                     } catch( Throwable exc ) {
@@ -1132,7 +1145,7 @@ public class CurrentTransaction {
                     }
 
                     INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.DeferredActivities,
-                                                                  CompletionStatus.COMPLETED_YES);
+                        CompletionStatus.COMPLETED_YES);
                     throw exc;
                 }
 
@@ -1151,41 +1164,41 @@ public class CurrentTransaction {
 
         // Create a context with the necessary information.
         // All we propagate back is the transaction id and implementation specific data.
-    
+
         holder.value = new PropagationContext(0,new TransIdentity(null,null,importedTID.realTID),
-                                              new TransIdentity[0],emptyContext.implementation_specific_data);
+            new TransIdentity[0],emptyContext.implementation_specific_data);
 
     }
 
     /**
-     * Recreates a transaction based on the information contained in the 
+     * Recreates a transaction based on the information contained in the
      * transaction id (tid) and associates the current thread of control with
      * the recreated transaction.
-     * 
+     *
      * @param tid  the transaction id.
      */
-    public static void recreate(GlobalTID tid, int timeout) {              
-        
+    public static void recreate(GlobalTID tid, int timeout) {
+
         // check if there is any concurrent activity
-        if (RecoveryManager.readAndUpdateTxMap(tid) == false) {          
+        if (RecoveryManager.readAndUpdateTxMap(tid) == false) {
             throw new INVALID_TRANSACTION(
                 MinorCode.TX_CONCURRENT_WORK_DISALLOWED,
-                CompletionStatus.COMPLETED_NO);            
+                CompletionStatus.COMPLETED_NO);
         }
 
         // recreate the transaction
-        
-        try {                
-            
+
+        try {
+
             // Use a local factory to recreate the transaction locally.
-            TransactionFactoryImpl factory = 
+            TransactionFactoryImpl factory =
                 (TransactionFactoryImpl) Configuration.getFactory();
             Control current = factory.recreate(tid, timeout);
-            
+
             // Record the imported transaction.
             importedTransactions.put(Thread.currentThread(), tid);
 
-            // Create a new Control and associate it with the thread   
+            // Create a new Control and associate it with the thread
             ControlImpl contImpl = null;
             if (Configuration.isLocalFactory()) {
                 contImpl = (ControlImpl) current;
@@ -1193,40 +1206,40 @@ public class CurrentTransaction {
                 contImpl = ControlImpl.servant(JControlHelper.narrow(current));
             }
             setCurrent(contImpl,false);
-            
+
         } catch (Throwable exc) {
             RecoveryManager.removeFromTxMap(tid); // remove tx id from map
-			_logger.log(Level.WARNING,"jts.unable_to_create_subordinate_coordinator", exc);
-			 String msg = LogFormatter.getLocalizedMessage(_logger,
-			 							"jts.unable_to_create_subordinate_coordinator");
+            _logger.log(Level.WARNING,"jts.unable_to_create_subordinate_coordinator", exc);
+            String msg = LogFormatter.getLocalizedMessage(_logger,
+                "jts.unable_to_create_subordinate_coordinator");
             throw new INVALID_TRANSACTION(msg,
                 MinorCode.TX_RECREATE_FAILED, CompletionStatus.COMPLETED_MAYBE);
         }
     }
-    
+
     /**
-     * Disassociates the current thread of control from the specified 
+     * Disassociates the current thread of control from the specified
      * transaction.
-     * 
+     *
      * @param tid  the transaction id.
      */
-    public static void release(GlobalTID tid) {    
+    public static void release(GlobalTID tid) {
 
         Thread thread = (Thread) RecoveryManager.getThreadFromTxMap(tid);
 
-	if (thread == null || (thread != Thread.currentThread())) {
-	    // the current thread is not in tx, so simply return.
-	    return;
+        if (thread == null || (thread != Thread.currentThread())) {
+            // the current thread is not in tx, so simply return.
+            return;
         } else {
-	    RecoveryManager.removeFromTxMap(tid);
-	}
-        
+            RecoveryManager.removeFromTxMap(tid);
+        }
+
         // Ensure that the current Control object is valid.
         boolean[] outBoolean = new boolean[1];
         ControlImpl control = endAborted(outBoolean, true);  // end association
         if (outBoolean[0]) {
             importedTransactions.remove(Thread.currentThread());
-	    return; // thread is not associated with tx, simply return
+            return; // thread is not associated with tx, simply return
         }
 
         // Get the global identifier of the transaction that was imported into
@@ -1237,18 +1250,18 @@ public class CurrentTransaction {
         StatusHolder outStatus = new StatusHolder();
         try {
             if (importedTID == null || control == null ||
-                    !importedTID.isSameTID(control.getGlobalTID(outStatus)) ||
-                    outStatus.value != Status.StatusActive) {
-                INVALID_TRANSACTION exc = 
+                !importedTID.isSameTID(control.getGlobalTID(outStatus)) ||
+                outStatus.value != Status.StatusActive) {
+                INVALID_TRANSACTION exc =
                     new INVALID_TRANSACTION(MinorCode.WrongContextOnReply,
-                                            CompletionStatus.COMPLETED_YES);
+                        CompletionStatus.COMPLETED_YES);
                 throw exc;
             }
         } catch (SystemException ex) {
             _logger.log(Level.FINE,"", ex);
-            INVALID_TRANSACTION exc = 
+            INVALID_TRANSACTION exc =
                 new INVALID_TRANSACTION(MinorCode.WrongContextOnReply,
-                                        CompletionStatus.COMPLETED_YES);
+                    CompletionStatus.COMPLETED_YES);
             throw exc;
         }
 
@@ -1268,15 +1281,15 @@ public class CurrentTransaction {
      */
     //not used anywhere
     synchronized static void endAll( GlobalTID globalTID,
-                                     boolean   aborted ) {
-	throw new NO_IMPLEMENT("not implemented");
+        boolean   aborted ) {
+        throw new NO_IMPLEMENT("not implemented");
         // Modify any thread associations there may be for the transaction, to
         // indicate that the transaction has ended.
-        /*StatusHolder outStatus = new StatusHolder();                                        
+        /*StatusHolder outStatus = new StatusHolder();
 
         Enumeration controls = threadContexts.elements();
-	      int cz = threadContexts.size();			// Arun 9/27/99
-	      while (cz-- > 0) {
+          int cz = threadContexts.size();            // Arun 9/27/99
+          while (cz-- > 0) {
             ControlImpl control = (ControlImpl)controls.nextElement();
 
             // If the Control object corresponds to the transaction being removed, then
@@ -1294,8 +1307,8 @@ public class CurrentTransaction {
         // indicate that the transaction has ended.
 
         controls = suspended.elements();
-	      cz = suspended.size();			// Arun 9/27/99
-	      while(cz-- > 0) {
+          cz = suspended.size();            // Arun 9/27/99
+          while(cz-- > 0) {
             try {
                 ControlImpl control = (ControlImpl)controls.nextElement();
 
@@ -1358,48 +1371,48 @@ public class CurrentTransaction {
 
       if( threadContexts.size() > 0 )
       {
-	  _logger.log(Level.FINE,"CurrentTransaction.threadContexts non-empty");
+      _logger.log(Level.FINE,"CurrentTransaction.threadContexts non-empty");
       Enumeration keys = threadContexts.keys();
       while( keys.hasMoreElements() )
       {
       Thread thread = (Thread)keys.nextElement();
       ControlImpl contImpl = (ControlImpl)threadContexts.get(thread);
-	  if(_logger.isLoggable(Level.FINE))
-	  _logger.log(Level.FINE,"Thread :"+thread+" -> "+contImpl)
+      if(_logger.isLoggable(Level.FINE))
+      _logger.log(Level.FINE,"Thread :"+thread+" -> "+contImpl)
       }
       }
       else
-	  _logger.log(Level.FINE,"CurrentTransaction.threadContexts empty");
+      _logger.log(Level.FINE,"CurrentTransaction.threadContexts empty");
 
       // Report on importedTransactions.
 
       if( importedTransactions.size() > 0 )
       {
-		  _logger.log(Level.FINE,"CurrentTransaction.importedTransactions non-empty");
+          _logger.log(Level.FINE,"CurrentTransaction.importedTransactions non-empty");
       Enumeration keys = importedTransactions.keys();
       while( keys.hasMoreElements() )
       {
       Thread thread = (Thread)keys.nextElement();
       GlobalTID tid = (GlobalTID)importedTransactions.get(thread);
-	  if(_logger.isLoggable(Level.FINE))
-	  _logger.log(Level.FINE,"Thread :"+thread+" -> "+tid)
+      if(_logger.isLoggable(Level.FINE))
+      _logger.log(Level.FINE,"Thread :"+thread+" -> "+tid)
       }
       }
       else
-		_logger.log(Level.FINE,"CurrentTransaction.importedTransactions empty");
+        _logger.log(Level.FINE,"CurrentTransaction.importedTransactions empty");
       // Report on suspended
 
       if( suspended.size() > 0 )
       {
-	  	 _logger.log(Level.FINE,"CurrentTransaction.suspended non-empty");
+           _logger.log(Level.FINE,"CurrentTransaction.suspended non-empty");
       Enumeration keys = suspended.elements();
       while( keys.hasMoreElements() )
       {
-	      ControlImpl contImpl = (ControlImpl)keys.nextElement();
-		  _logger.log(Level.FINE,"ControlImpl:"+contImpl);
+          ControlImpl contImpl = (ControlImpl)keys.nextElement();
+          _logger.log(Level.FINE,"ControlImpl:"+contImpl);
       }
       }
       else
-	  	_logger.log(Level.FINE,"CurrentTransaction.suspended empty");
+          _logger.log(Level.FINE,"CurrentTransaction.suspended empty");
       } */
 }

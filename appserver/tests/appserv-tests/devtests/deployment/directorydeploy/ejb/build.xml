@@ -22,19 +22,19 @@
 ]>
 
 <!--
-  Test directory deployment for ejb with directory structure such 
+  Test directory deployment for ejb with directory structure such
   as bar
 -->
- 
+
 <project name="directoryDeploy-Ejb" default="all" basedir=".">
 
- 	&commonBuild;
+         &commonBuild;
 
     <property name="testName" value="dirDeployEjb"/>
-    <property name="ejb.build.dir" 
+    <property name="ejb.build.dir"
               value="${build}/${testName}"/>
     <property name="client.build.dir" value="${build}/client"/>
-        
+
     <target name="prepare" depends="init">
        <mkdir dir="${build}" />
        <mkdir dir="${ejb.build.dir}" />
@@ -54,7 +54,7 @@
             </classpath>
           </javac>
     </target>
-                                                                                
+
     <target name="assemble" depends="compile">
              <mkdir dir="${ejb.build.dir}/META-INF"/>
              <copy file="descriptor/ejb-jar.xml"
@@ -77,7 +77,7 @@
                    value="--name ${testName} --retrieve ${client.build.dir} ${build}/${testName}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="undeploy.asadmin">
         <antcall target="common.undeploy.asadmin">
             <param name="arg.list"
@@ -94,7 +94,7 @@
             <param name="tgtPort" value="${depltest.orbport}"/>
         </antcall>
     </target>
-                                                                                
+
     <target name="run.negative" depends="init,setOrbPort">
         <antcall target="runclient">
             <param name="arg.list" value="false"/>
@@ -111,27 +111,27 @@
             classname="standaloneclient.HelloClient"
             output="${build}/${log.id}.output.log"
             resultproperty="result">
-                                                                                
+
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${http.host}"/>
             <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${tgtPort}"/>
-                                                                                
+
             <classpath>
                 <path refid="gfv3.classpath"/>
                 <path location="${ejb.build.dir}"/>
                 <path location="${client.build.dir}"/>
                 <path location="${client.build.dir}/dirDeployEjbClient.jar"/>
             </classpath>
-                                                                                
+
             <arg line="${arg.list}"/>
         </javaWithResult>
-                                                                                
+
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
         </antcall>
         </target>
 
-                                                                                
+
     <target name="private-all">
         <antcall target="assemble"/>
        <antcall target="declare-test">
@@ -161,5 +161,5 @@
         <delete dir="${build}"/>
     </target>
 
-    
+
 </project>

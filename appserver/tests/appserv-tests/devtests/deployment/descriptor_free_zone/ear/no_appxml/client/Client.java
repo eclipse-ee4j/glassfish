@@ -25,8 +25,8 @@ public class Client {
     public static void main (String[] args) {
         Client client = new Client(args);
         client.doTest();
-    }  
-    
+    }
+
     public Client (String[] args) {}
 
     @EJB
@@ -43,21 +43,21 @@ public class Client {
 
             System.err.println("invoking stateless");
             sless.hello();
-        
+
             pass();
         } catch(Exception e) {
             e.printStackTrace();
             fail();
         }
-        
-    	return;
+
+            return;
     }
 
     private void pass() {
         System.err.println("PASSED: descriptor_free_zone/ear/no_appxml");
         System.exit(0);
     }
-                                                                                             
+
     private void fail() {
         System.err.println("FAILED: descriptor_free_zone/ear/no_appxml");
         System.exit(-1);

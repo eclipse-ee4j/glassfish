@@ -19,7 +19,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 public class SimpleServlet extends HttpServlet {
-    
+
     public void doGet(HttpServletRequest req, HttpServletResponse res)
             throws ServletException, IOException {
 

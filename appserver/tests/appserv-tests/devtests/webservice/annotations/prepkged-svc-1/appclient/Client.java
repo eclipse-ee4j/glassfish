@@ -30,10 +30,10 @@ public class Client {
         @WebServiceRef(name="service/MyService") static AddNumbersService service;
 
         public static void main(String[] args) {
-	    stat.addDescription("webservices-simple-annotation");
+            stat.addDescription("webservices-simple-annotation");
             Client client = new Client();
             client.doTest(args);
-	    stat.printSummary("webservices-annotation");
+            stat.printSummary("webservices-annotation");
        }
 
        public void doTest(String[] args) {
@@ -41,7 +41,7 @@ public class Client {
                 AddNumbersPortType port = service.getAddNumbersPortType();
                 ((BindingProvider)port).getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,"http://localhost:8080/prepkged-svc-1/webservice/AddNumbersService?WSDL");
                 int ret = port.addNumbers(100, 200);
-		if(ret != 300) {
+                if(ret != 300) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus("pre-pkged-appclient", stat.FAIL);
                     return;

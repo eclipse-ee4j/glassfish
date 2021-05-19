@@ -35,7 +35,7 @@ public class Rejar {
 
     public Rejar() {
     }
-    
+
     public void rejar(File out, File modules) throws IOException {
 
         Map<String, ByteArrayOutputStream> metadata = new HashMap<String, ByteArrayOutputStream>();
@@ -83,7 +83,7 @@ public class Rejar {
 
     protected Manifest getManifest() throws IOException {
         Manifest m = new Manifest();
-        m.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0"); 
+        m.getMainAttributes().put(Attributes.Name.MANIFEST_VERSION, "1.0");
         m.getMainAttributes().put(Attributes.Name.MAIN_CLASS, "com.sun.enterprise.glassfish.bootstrap.ASMain");
         return m;
     }

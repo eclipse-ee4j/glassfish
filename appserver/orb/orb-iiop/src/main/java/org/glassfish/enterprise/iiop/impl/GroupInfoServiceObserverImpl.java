@@ -35,22 +35,22 @@ import static org.glassfish.enterprise.iiop.impl.NamingClusterInfoImpl.logger;
  * @author Sheetal Vartak
  */
 public class GroupInfoServiceObserverImpl implements GroupInfoServiceObserver {
-    @LogMessageInfo(message = "Problem with membership change notification. Exception occurred : {0}",
-    cause = "check server.log for details",
-    action = "check network configuration and cluster setup")
+
+    @LogMessageInfo(
+        message = "Problem with membership change notification. Exception occurred : {0}",
+        cause = "check server.log for details",
+        action = "check network configuration and cluster setup")
     public static final String GROUPINFOSERVICE_MEMBERSHIP_NOTIFICATION_PROBLEM = "AS-ORB-00003";
 
     private GroupInfoService gis;
     private RoundRobinPolicy rr ;
 
-    public GroupInfoServiceObserverImpl(GroupInfoService gis,
-        RoundRobinPolicy rr ) {
-
-	this.gis = gis;
-        this.rr = rr ;
+    public GroupInfoServiceObserverImpl(GroupInfoService gis, RoundRobinPolicy rr) {
+        this.gis = gis;
+        this.rr = rr;
     }
 
-    // This method is called for internally forced updates: 
+    // This method is called for internally forced updates:
     // see SerialInitContextFactory.getInitialContext.
     public void forceMembershipChange() {
         doMembershipChange();

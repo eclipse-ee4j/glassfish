@@ -33,31 +33,31 @@ public class SlessBean
     }
 
     public long submitJob() {
-	try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
+        try {
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
 
-	  Properties props = new Properties();
-	  for (int i=0; i<9; i++)
-		props.put(i, i);
-	  return  jobOperator.start("simpleBatchletJob", props);
+          Properties props = new Properties();
+          for (int i=0; i<9; i++)
+                props.put(i, i);
+          return  jobOperator.start("simpleBatchletJob", props);
         } catch (Exception ex) {
-	  throw new RuntimeException(ex);
-	}
+          throw new RuntimeException(ex);
+        }
     }
 
     public String getJobExitStatus(long executionId) {
-	try {
-	JobOperator jobOperator = BatchRuntime.getJobOperator();
-	JobExecution jobExecution = jobOperator.getJobExecution(executionId);
-	return jobExecution.getExitStatus();
+        try {
+        JobOperator jobOperator = BatchRuntime.getJobOperator();
+        JobExecution jobExecution = jobOperator.getJobExecution(executionId);
+        return jobExecution.getExitStatus();
         } catch (Exception ex) {}
-	return "-1";
+        return "-1";
     }
 
 
     public boolean wasEjbCreateCalled() {
-	return ejbCreateCalled;
+        return ejbCreateCalled;
     }
 
-														            
+
 }

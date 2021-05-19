@@ -19,7 +19,7 @@ package admin.monitoring;
 import static admin.monitoring.Constants.*;
 
 /**
- * Enable Monitoring 
+ * Enable Monitoring
  * @author Byron Nevins
  */
 public class Enabler extends MonTest {

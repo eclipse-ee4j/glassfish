@@ -40,5 +40,5 @@ public class TestPriceFetcher {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-    }    
+    }
 }

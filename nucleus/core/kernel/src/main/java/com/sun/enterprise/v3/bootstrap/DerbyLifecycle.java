@@ -36,25 +36,25 @@ import java.util.logging.Level;
  * @author dochez
  */
 public class DerbyLifecycle implements LifecyclePolicy {
-    
+
     /** Creates a new instance of DerbyLifecycle */
     public DerbyLifecycle() {
     }
-    
+
     /**
      * Callback when the module enters the {@link ModuleState#READY READY} state.
-     * This is a good time to do any type of one time initialization 
+     * This is a good time to do any type of one time initialization
      * or set up access to resources
      * @param module the module instance
      */
     public void start(HK2Module module) {
-   
+
         try {
             final HK2Module myModule = module;
             Thread thread = new Thread() {
                 public void run() {
                     try {
-                        try {                     
+                        try {
                             Class driverClass = myModule.getClassLoader().loadClass("org.apache.derby.jdbc.EmbeddedDriver");
                             myModule.setSticky(true);
                             driverClass.newInstance();
@@ -64,8 +64,8 @@ public class DerbyLifecycle implements LifecyclePolicy {
                             LogHelper.getDefaultLogger().log(Level.SEVERE, "Cannot instantiate Derby Driver", e);
                         } catch(IllegalAccessException e) {
                             LogHelper.getDefaultLogger().log(Level.SEVERE, "Cannot instantiate Derby Driver", e);
-                        }                   
-                    }   
+                        }
+                    }
                     catch (RuntimeException e) {
                         e.printStackTrace();
                     }
@@ -74,18 +74,18 @@ public class DerbyLifecycle implements LifecyclePolicy {
             thread.start();
         } catch (Throwable t) {
             t.printStackTrace();
-        }        
+        }
 
-        
+
     }
-    
-    /** 
-     * Callback before the module starts being unloaded. The runtime will 
+
+    /**
+     * Callback before the module starts being unloaded. The runtime will
      * free all the module resources and returned to a {@link ModuleState#NEW NEW} state.
      * @param module the module instance
      */
     public void stop(HK2Module module) {
-    
+
     }
-    
+
 }

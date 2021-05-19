@@ -32,7 +32,7 @@ import org.jvnet.hk2.annotations.Service;
 @CommandLock(CommandLock.LockType.NONE)
 @Progress(name="before", totalStepCount=4)
 public class SupplementBefore implements AdminCommand {
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ProgressStatus ps = context.getProgressStatus();
@@ -47,5 +47,5 @@ public class SupplementBefore implements AdminCommand {
         context.getActionReport().setActionExitCode(ActionReport.ExitCode.SUCCESS);
         ps.complete();
     }
-    
+
 }

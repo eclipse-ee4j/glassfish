@@ -60,16 +60,16 @@ public class JmsTagHandler extends TagSupport {
             producer.send(queue, msg);
             context = jmsContext.toString();
             ut.commit();
-            
+
             if(context.indexOf(transactionScope) == -1){
                 throw new JspException("NOT in transaction scope!");
             }
             //Get the writer object for output.
             JspWriter out = pageContext.getOut();
- 
+
             //Perform substr operation on string.
             out.println(text);
- 
+
         } catch (Exception e) {
             throw new JspException(e);
         }

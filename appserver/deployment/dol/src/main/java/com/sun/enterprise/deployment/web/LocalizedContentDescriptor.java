@@ -19,7 +19,7 @@ package com.sun.enterprise.deployment.web;
 public interface LocalizedContentDescriptor {
     public String getLocale();
     public void setLocale(String locale);
-    
+
     public String getUrl();
     public void setUrl(String url);
 }

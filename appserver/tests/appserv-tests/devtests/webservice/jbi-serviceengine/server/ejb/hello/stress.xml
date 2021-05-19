@@ -76,7 +76,7 @@
     </target>
 
     <target name="another_servlet">
-       <ant inheritAll="false" dir="./another_servlet"/> 
+       <ant inheritAll="false" dir="./another_servlet"/>
     </target>
 
 
@@ -91,6 +91,6 @@
 
     <target name="report-failure">
             <echo message="Test failed"/>
-    </target>   	
-    
+    </target>
+
 </project>

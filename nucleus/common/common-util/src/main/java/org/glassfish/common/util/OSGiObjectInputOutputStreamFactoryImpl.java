@@ -56,7 +56,7 @@ public class OSGiObjectInputOutputStreamFactoryImpl
         pkgAdm = PackageAdmin.class.cast(ctx.getService(ref));
 
         BundleTracker bt = new BundleTracker(ctx, Bundle.INSTALLED | Bundle.RESOLVED | Bundle.STARTING | Bundle.ACTIVE, new BundleTrackerCustomizer() {
-            
+
             @Override
             public void modifiedBundle(Bundle bundle, BundleEvent bundleEvent, Object o) {
             }
@@ -91,7 +91,7 @@ public class OSGiObjectInputOutputStreamFactoryImpl
 
             @Override
             public void removedBundle(Bundle bundle, BundleEvent event, Object object) {
-                System.out.println("REMOVING BUNDLE ==> " + bundle.getSymbolicName());                
+                System.out.println("REMOVING BUNDLE ==> " + bundle.getSymbolicName());
                 super.removedBundle(bundle, event, object);    //To change body of overridden methods use File | Settings | File Templates.
             }
             */

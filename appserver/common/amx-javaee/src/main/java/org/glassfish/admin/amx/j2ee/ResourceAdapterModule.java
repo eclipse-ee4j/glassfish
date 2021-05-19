@@ -20,13 +20,13 @@ import org.glassfish.admin.amx.annotation.ManagedAttribute;
 
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
-@AMXMBeanMetadata(type=J2EETypes.RESOURCE_ADAPTER_MODULE)
-public interface ResourceAdapterModule extends J2EEModule
-{
-	/**
-		@return the ObjectNames of the resourceAdapters, as Strings
-	 */
- 	@ManagedAttribute
-	public String[]	getresourceAdapters();
+@AMXMBeanMetadata(type = J2EETypes.RESOURCE_ADAPTER_MODULE)
+public interface ResourceAdapterModule extends J2EEModule {
+
+    /**
+     * @return the ObjectNames of the resourceAdapters, as Strings
+     */
+    @ManagedAttribute
+    String[] getresourceAdapters();
 
 }

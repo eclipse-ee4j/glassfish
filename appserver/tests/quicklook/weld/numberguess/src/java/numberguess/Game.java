@@ -37,21 +37,21 @@ public class Game implements Serializable
    private static final long serialVersionUID = 1L;
 
    private int number;
-   
+
    private int guess;
    private int smallest;
 
-   @Inject 
+   @Inject
    private StatefulBean sb;
 
    @MaxNumber @Inject
    private int maxNumber;
-   
+
    private int biggest;
    private int remainingGuesses;
-   
+
    @Random @Inject Instance<Integer> randomNumber;
-   
+
    public Game()
    {
    }
@@ -60,32 +60,32 @@ public class Game implements Serializable
    {
       return number;
    }
-   
+
    public int getGuess()
    {
       return guess;
    }
-   
+
    public void setGuess(int guess)
    {
       this.guess = guess;
    }
-   
+
    public int getSmallest()
    {
       return smallest;
    }
-   
+
    public int getBiggest()
    {
       return biggest;
    }
-   
+
    public int getRemainingGuesses()
    {
       return remainingGuesses;
    }
-   
+
    public String check() throws InterruptedException
    {
        System.out.println("In Game::check");
@@ -106,7 +106,7 @@ public class Game implements Serializable
       remainingGuesses--;
       return null;
    }
-   
+
    @PostConstruct
    public void reset()
    {
@@ -119,7 +119,7 @@ public class Game implements Serializable
       this.biggest = maxNumber;
       this.number = randomNumber.get();
    }
-   
+
    public void validateNumberRange(FacesContext context,  UIComponent toValidate, Object value)
    {
       if (remainingGuesses <= 0)
@@ -131,8 +131,8 @@ public class Game implements Serializable
       }
       int input = (Integer) value;
 
-      if (input < smallest || input > biggest) 
-	   {
+      if (input < smallest || input > biggest)
+       {
          ((UIInput)toValidate).setValid(false);
 
          FacesMessage message = new FacesMessage("Invalid guess");

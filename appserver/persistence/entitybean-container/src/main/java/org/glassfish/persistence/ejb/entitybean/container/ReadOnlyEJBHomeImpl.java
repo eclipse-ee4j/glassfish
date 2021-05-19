@@ -26,8 +26,8 @@ import com.sun.enterprise.deployment.EjbDescriptor;
  * Implementation of the EJBHome interface for ReadOnly Entity Beans.
  * This class is also the base class for all generated concrete ReadOnly
  * EJBHome implementations.
- * At deployment time, one instance of ReadOnlyEJBHomeImpl is created 
- * for each EJB class in a JAR that has a remote home. 
+ * At deployment time, one instance of ReadOnlyEJBHomeImpl is created
+ * for each EJB class in a JAR that has a remote home.
  *
  * @author Mahesh Kannan
  */
@@ -45,7 +45,7 @@ public final class ReadOnlyEJBHomeImpl
         super(ejbDescriptor, homeIntfClass);
     }
 
-    /** 
+    /**
      * Called from ReadOnlyBeanContainer only.
      */
     final void setReadOnlyBeanContainer(ReadOnlyBeanContainer container) {
@@ -72,7 +72,7 @@ public final class ReadOnlyEJBHomeImpl
         }
     }
 
-    protected boolean invokeSpecialEJBHomeMethod(Method method, Class methodClass, 
+    protected boolean invokeSpecialEJBHomeMethod(Method method, Class methodClass,
             Object[] args) throws Exception {
         if( methodClass == ReadOnlyEJBHome.class ) {
             if( method.getName().equals("_refresh_All") ) {

@@ -126,7 +126,7 @@ public interface Valve {
     public void invoke(Request request, Response response)
         throws IOException, ServletException;
 
-    
+
     /**
      * Process a Comet event.
      *

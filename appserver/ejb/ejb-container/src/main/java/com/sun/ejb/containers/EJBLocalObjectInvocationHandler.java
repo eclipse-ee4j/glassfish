@@ -32,21 +32,21 @@ import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.Utility;
 
-/** 
+/**
  * Handler for EJBLocalObject invocations through EJBLocalObject proxy.
- * 
+ *
  *
  * @author Kenneth Saks
- */    
+ */
 
-public final class EJBLocalObjectInvocationHandler 
+public final class EJBLocalObjectInvocationHandler
     extends EJBLocalObjectImpl implements InvocationHandler {
 
     private static final Logger logger = EjbContainerUtilImpl.getLogger();
 
     private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(EJBLocalObjectInvocationHandler.class);
-    
+
     // Our associated proxy object.  Used when a caller needs EJBLocalObject
     // but only has InvocationHandler.
     private Object proxy_;
@@ -55,7 +55,7 @@ public final class EJBLocalObjectInvocationHandler
     // container.  It's populated during container initialization and
     // passed in when the InvocationHandler is created.  This avoids the
     // overhead of building the method info each time a LocalObject proxy
-    // is created.  
+    // is created.
     private MethodMap invocationInfoMap_;
 
     private Class localIntf_;
@@ -68,28 +68,28 @@ public final class EJBLocalObjectInvocationHandler
         throws Exception {
 
         invocationInfoMap_ = invocationInfoMap;
-        
+
         localIntf_ = localIntf;
         setIsLocalHomeView(true);
 
-        // NOTE : Container is not set on super-class until after 
+        // NOTE : Container is not set on super-class until after
         // constructor is called.
     }
 
     /**
      * Constructor used for Local Business view.
      */
-      
+
     public EJBLocalObjectInvocationHandler(MethodMap invocationInfoMap,
                                            boolean optionalLocalBusinessView)
         throws Exception {
 
         invocationInfoMap_ = invocationInfoMap;
-        
+
         setIsLocalHomeView(false);
         setIsOptionalLocalBusinessView(optionalLocalBusinessView);
 
-        // NOTE : Container is not set on super-class until after 
+        // NOTE : Container is not set on super-class until after
         // constructor is called.
     }
 
@@ -105,13 +105,13 @@ public final class EJBLocalObjectInvocationHandler
     /**
      * This entry point is only used for Local Home view.
      */
-    public Object invoke(Object proxy, Method method, Object[] args) 
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
         return invoke(localIntf_, method, args);
     }
 
-    Object invoke(Class clientInterface, Method method, Object[] args) 
+    Object invoke(Class clientInterface, Method method, Object[] args)
         throws Throwable {
 
         ClassLoader originalClassLoader = null;
@@ -143,7 +143,7 @@ public final class EJBLocalObjectInvocationHandler
         // Use optimized version of get that takes param count as an argument.
         InvocationInfo invInfo = (InvocationInfo)
             invocationInfoMap_.get(method, ((args != null) ? args.length : 0));
-            
+
         if( invInfo == null ) {
             throw new IllegalStateException("Unknown method :" + method);
         }
@@ -152,10 +152,10 @@ public final class EJBLocalObjectInvocationHandler
             invInfo.ejbIntfOverride ) {
             return invokeEJBLocalObjectMethod(method.getName(), args);
         } else if( invInfo.targetMethod1 == null ) {
-            Object [] params = new Object[] 
+            Object [] params = new Object[]
                 { invInfo.ejbName, "Local", invInfo.method.toString() };
             logger.log(Level.SEVERE, "ejb.bean_class_method_not_found",
-                       params);                                   
+                       params);
             String errorMsg = localStrings.getLocalString
                 ("ejb.bean_class_method_not_found", "", params);
             throw new EJBException(errorMsg);
@@ -166,7 +166,7 @@ public final class EJBLocalObjectInvocationHandler
         Object returnValue = null;
 
         EjbInvocation inv = container.createEjbInvocation();
-        
+
         inv.isLocal   = true;
         inv.isBusinessInterface = !isLocalHomeView();
         inv.isHome    = false;
@@ -195,7 +195,7 @@ public final class EJBLocalObjectInvocationHandler
         } finally {
             container.postInvoke(inv);
         }
-            
+
         if (inv.exception != null) {
             InvocationHandlerUtil.throwLocalException
                 (inv.exception, method.getExceptionTypes());
@@ -225,37 +225,37 @@ public final class EJBLocalObjectInvocationHandler
         try {
             switch(methodName.charAt(0)) {
                 case 'r' :
-    
+
                     // void remove();
-    
+
                     methodIndex = container.EJBLocalObject_remove;
                     container.onEjbMethodStart(methodIndex);
                     super.remove();
                     break;
-    
+
                 case 'i' :
-    
+
                     // boolean isIdentical(EJBLocalObject)
-    
-                    // Convert the param into an EJBLocalObjectImpl.  Can't 
+
+                    // Convert the param into an EJBLocalObjectImpl.  Can't
                     // assume it's an EJBLocalObject for an ejb that was deployed
                     // using dynamic proxies.
                     EJBLocalObject other = (EJBLocalObject) args[0];
-                    EJBLocalObjectImpl otherImpl = 
+                    EJBLocalObjectImpl otherImpl =
                         EJBLocalObjectImpl.toEJBLocalObjectImpl(other);
-                        
+
                     methodIndex = container.EJBLocalObject_isIdentical;
                     container.onEjbMethodStart(methodIndex);
                     returnValue = super.isIdentical(otherImpl);
                     break;
-    
+
                 case 'g' :
-    
+
                     if( methodName.charAt(3) == 'E' ) {
                         // EJBLocalHome getEJBLocalHome();
                         methodIndex = container.EJBLocalObject_getEJBLocalHome;
                         container.onEjbMethodStart(methodIndex);
-                        returnValue = super.getEJBLocalHome(); 
+                        returnValue = super.getEJBLocalHome();
                     } else {
                         // Object getPrimaryKey();
                         methodIndex = container.EJBLocalObject_getPrimaryKey;
@@ -263,9 +263,9 @@ public final class EJBLocalObjectInvocationHandler
                         returnValue = super.getPrimaryKey();
                     }
                     break;
-    
+
                 default :
-    
+
                     throw new EJBException("unknown method = " + methodName);
             }
         } catch (Exception ex) {

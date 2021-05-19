@@ -23,18 +23,18 @@ import java.io.Serializable;
  * Http Session. When a container decides to save a session it passes an
  * instance of CompositeMetaData which contains a collection of
  * AttributeMetadata.
- * 
+ *
  * <p>
  * The attribute in question could have been deleted, or modified or could be a
  * new attribute inside the HttpSession. getOperation() tells exactly what
  * operation needs to be performed for this attribute
- * 
+ *
  * <p>
  * The attribute state/data itself can be obtained with getState(). Since an
  * attribute is part of a session, the attributes must be deleted when the
  * session is removed. The CompositeMetadata contains the last access time and
  * inactive timeout for the session.
- * 
+ *
  * @see CompositeMetadata
  */
 public final class SessionAttributeMetadata implements Serializable {
@@ -54,7 +54,7 @@ public final class SessionAttributeMetadata implements Serializable {
 
     /**
      * Construct an AtributeMetadata
-     * 
+     *
      * @param attributeName
      *            the attribute name
      * @param opcode
@@ -70,7 +70,7 @@ public final class SessionAttributeMetadata implements Serializable {
 
     /**
      * Returns name of the attribute
-     * 
+     *
      * @return attribute name
      */
     public String getAttributeName() {
@@ -79,7 +79,7 @@ public final class SessionAttributeMetadata implements Serializable {
 
     /**
      * Get the operation to be performed on the attribute.
-     * 
+     *
      * @return the operation to be performed on this attribute
      */
     public Operation getOperation() {
@@ -88,13 +88,13 @@ public final class SessionAttributeMetadata implements Serializable {
 
     /**
      * Get the attribute data
-     * 
+     *
      * @return the data
      */
     public byte[] getState() {
         return data;
     }
-    
+
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -107,9 +107,9 @@ public final class SessionAttributeMetadata implements Serializable {
             return false;
         }
     }
-    
+
     public int hashCode() {
         return 31 + (attributeName == null ? 0 : attributeName.hashCode());
     }
-    
+
 }

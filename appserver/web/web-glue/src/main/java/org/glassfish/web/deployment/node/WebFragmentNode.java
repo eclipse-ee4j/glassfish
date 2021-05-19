@@ -28,15 +28,15 @@ import java.util.*;
  * This node is responsible for handling the web-fragment xml tree
  *
  * @author  Shing Wai Chan
- * @version 
+ * @version
  */
 @Service
 public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
 
    public final static XMLElement tag = new XMLElement(WebTagNames.WEB_FRAGMENT);
 
-    /** 
-     * The system ID of my documents. 
+    /**
+     * The system ID of my documents.
      */
     public final static String SCHEMA_ID = "web-fragment_3_0.xsd";
     private final static List<String> systemIDs = initSystemIDs();
@@ -46,7 +46,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
         systemIDs.add(SCHEMA_ID);
         return Collections.unmodifiableList(systemIDs);
     }
-    
+
     /**
      * register this node as a root node capable of loading entire DD files
      *
@@ -63,7 +63,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     public Map<String,Class> registerRuntimeBundle(final Map<String,String> publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
         return Collections.emptyMap();
     }
-    
+
     /** Creates new WebBundleNode */
     public WebFragmentNode()  {
         super();
@@ -74,8 +74,8 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -91,7 +91,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     @Override
     protected XMLElement getXMLRootTag() {
         return tag;
-    }       
+    }
 
     /**
      * @return the DOCTYPE of the XML file
@@ -99,7 +99,7 @@ public class WebFragmentNode extends WebCommonNode<WebFragmentDescriptor> {
     public String getDocType() {
         return null;
     }
-    
+
     /**
      * @return the SystemID of the XML file
      */

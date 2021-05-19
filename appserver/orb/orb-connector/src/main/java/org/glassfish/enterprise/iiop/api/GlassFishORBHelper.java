@@ -44,12 +44,12 @@ import jakarta.inject.Provider;
 /**
  * This class exposes any orb/iiop functionality needed by modules in the app server. This prevents modules from needing
  * any direct dependencies on the orb-iiop module.
- * 
+ *
  * @author Mahesh Kannan Date: Jan 17, 2009
  */
 @Service
 public class GlassFishORBHelper implements PostConstruct, ORBLocator {
-    
+
     private static final Logger _logger = LogDomains.getLogger(GlassFishORBHelper.class, CORBA_LOGGER);
 
     @Inject
@@ -120,13 +120,13 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
                         Properties props = new Properties();
                         props.setProperty(GlassFishORBFactory.ENV_IS_SERVER_PROPERTY, Boolean.valueOf(isServer).toString());
 
-                        // Create orb and make it visible. 
+                        // Create orb and make it visible.
                         //
-                        // This will allow loopback calls to getORB() from portable interceptors activated as a 
-                        // side-effect of the remaining initialization. 
+                        // This will allow loopback calls to getORB() from portable interceptors activated as a
+                        // side-effect of the remaining initialization.
                         //
-                        // If it's a server, there's a small time window during which the ProtocolManager won't be available. 
-                        // Any callbacks that result from the protocol manager initialization itself cannot depend on having 
+                        // If it's a server, there's a small time window during which the ProtocolManager won't be available.
+                        // Any callbacks that result from the protocol manager initialization itself cannot depend on having
                         // access to the protocol manager.
                         orb = orbFactory.createORB(props);
 
@@ -135,7 +135,7 @@ public class GlassFishORBHelper implements PostConstruct, ORBLocator {
                                 ProtocolManager tempProtocolManager = protocolManagerProvider.get();
 
                                 tempProtocolManager.initialize(orb);
-                                
+
                                 // Move startup of naming to PEORBConfigurator so it runs before interceptors.
                                 tempProtocolManager.initializePOAs();
 

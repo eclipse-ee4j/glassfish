@@ -33,7 +33,7 @@ public interface GenericContainer extends ConfigBeanProxy {
     public static final int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
     public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
     public static final boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
- 
+
     @Attribute (defaultValue="32")
     String getMaxPoolSize();
 

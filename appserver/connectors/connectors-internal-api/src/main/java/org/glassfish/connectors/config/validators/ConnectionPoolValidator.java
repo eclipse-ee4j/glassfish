@@ -26,17 +26,17 @@ import org.glassfish.config.support.Constants;
 /**
  * Implementation for Connection Pool validation.
  * Following validations are done :
- * - Validation of datasource/driver classnames when resource type is not null 
+ * - Validation of datasource/driver classnames when resource type is not null
  * - Max pool size to be always higher than steady pool size
  * - Check if statement wrapping is on when certain features are enabled.
- * 
+ *
  * @author Shalini M
  */
 public class ConnectionPoolValidator
     implements ConstraintValidator<ConnectionPoolConstraint, ResourcePool> {
-    
+
     protected ConnectionPoolErrorMessages poolFaults;
-    
+
     public void initialize(final ConnectionPoolConstraint constraint) {
         this.poolFaults = constraint.value();
     }
@@ -60,7 +60,7 @@ public class ConnectionPoolValidator
                         (Integer.parseInt(steadyPoolSize))) {
                     //max pool size fault
                     return false;
-                }                
+                }
             }
         }
         return true;

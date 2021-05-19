@@ -45,7 +45,7 @@ public class FieldInfo
      * The corresponding classType object.
      */
     protected ClassType classType;
-    
+
     /**
      * The reflection representation of the field.
      */
@@ -64,7 +64,7 @@ public class FieldInfo
         FieldInfo.class.getClassLoader());
 
     /**
-     * 
+     *
      */
     public FieldInfo (Field field, ClassType classType)
     {
@@ -87,7 +87,7 @@ public class FieldInfo
         }
         return false;
     }
-    
+
     /**
      * Checks whether this field is defined with the public modifier.
      * @return true if the field is defined as public;
@@ -106,7 +106,7 @@ public class FieldInfo
     {
         return (field != null) && Modifier.isStatic(field.getModifiers());
     }
-    
+
     /**
      *
      */
@@ -114,7 +114,7 @@ public class FieldInfo
     {
         return field;
     }
-    
+
     /**
      *
      */
@@ -122,7 +122,7 @@ public class FieldInfo
     {
         return name;
     }
-    
+
     /**
      * Returns the Type representation of the type of the field.
      * @return field type
@@ -131,12 +131,12 @@ public class FieldInfo
     {
         if (field == null)
             return classType.typetab.errorType;
-        
+
         Type ret = classType.typetab.checkType(field.getType());
         if (ret == null)
             ret = classType.typetab.errorType;
         return ret;
-	        
+
     }
 
     /**
@@ -170,7 +170,7 @@ public class FieldInfo
     }
 
     /**
-     * @return the associated class (meaning the "other side") of the relationship; 
+     * @return the associated class (meaning the "other side") of the relationship;
      * or null if this does not denote a relationship field.
      */
     public Type getAssociatedClass()
@@ -183,5 +183,5 @@ public class FieldInfo
         }
         return associatedClass;
     }
-    
+
 }

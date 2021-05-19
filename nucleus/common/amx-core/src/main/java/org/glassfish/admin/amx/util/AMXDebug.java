@@ -31,9 +31,9 @@ facility highly useful.  These include:
 
 <ul>
 <li>The Logging MBean cannot use System.out/err or logging
-mechanisms to emit debugging information because it can 
+mechanisms to emit debugging information because it can
 potentially cause infinite recursion (and thus stack overflow).
-Without anothermechanism, debugging the Logging MBean would 
+Without anothermechanism, debugging the Logging MBean would
 be very difficult
 </li>
 <li>
@@ -258,7 +258,7 @@ public final class AMXDebug
         {
             final String instanceRoot = System.getProperty("com.sun.aas.instanceRoot");
 
-            File parentDir = instanceRoot != null ? 
+            File parentDir = instanceRoot != null ?
                 new File(instanceRoot) : new File(System.getProperty("user.home"));
             debugDir = new File(parentDir, AMX_DEBUG_SUBDIR);
         }

@@ -59,7 +59,7 @@ public class WebTest {
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
-        
+
         int responseCode = conn.getResponseCode();
         if (responseCode != 200) {
             System.err.println("Wrong response code. Expected: 200" + ", received: " + responseCode);

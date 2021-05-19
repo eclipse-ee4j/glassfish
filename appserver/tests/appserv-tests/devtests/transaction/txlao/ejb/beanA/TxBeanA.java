@@ -55,7 +55,7 @@ public class TxBeanA implements SessionBean {
     public void ejbRemove() {
         System.out.println("ejbRemove in BeanA");
     }
-  
+
     public void ejbDestroy() {
         System.out.println("ejbDestroy in BeanA");
     }
@@ -420,7 +420,7 @@ public class TxBeanA implements SessionBean {
             if ( (beanB == null) || (tx == null) ) {
                 throw new NullPointerException();
             }
-     
+
             tx.begin();
             beanB.delete("A1001");
             beanB.insert("A1003", 8000);

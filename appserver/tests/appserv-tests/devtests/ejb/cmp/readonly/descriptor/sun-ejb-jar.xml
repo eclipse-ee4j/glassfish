@@ -21,10 +21,10 @@
 
 <sun-ejb-jar>
   <enterprise-beans>
-    <name>ejb-cmp-readonly-ejb.jar</name>   
+    <name>ejb-cmp-readonly-ejb.jar</name>
     <ejb>
       <ejb-name>ReadOnlyStudentBean</ejb-name>
-      <jndi-name>ejb/ejb_cmp_readonly_ReadOnlyStudent</jndi-name>           
+      <jndi-name>ejb/ejb_cmp_readonly_ReadOnlyStudent</jndi-name>
       <is-read-only-bean>true</is-read-only-bean>
       <refresh-period-in-seconds>60</refresh-period-in-seconds>
     </ejb>
@@ -34,7 +34,7 @@
       <ejb-ref>
         <ejb-ref-name>ejb/ReadOnlyStudent</ejb-ref-name>
         <jndi-name>ejb/ejb_cmp_readonly_ReadOnlyStudent</jndi-name>
-      </ejb-ref>           
+      </ejb-ref>
     </ejb>
     <cmp-resource>
        <jndi-name>jdbc/__default</jndi-name>

@@ -69,7 +69,7 @@ public class InplantedTest {
         server.addContainer(b);
         EmbeddedWebContainer embedded = (EmbeddedWebContainer) b.create(server);
         embedded.bind(http, "http");
-        
+
         DeployCommandParameters dp = new DeployCommandParameters(f);
         String appName = server.getDeployer().deploy(war, dp);
         WebClient webClient = new WebClient();
@@ -91,6 +91,6 @@ public class InplantedTest {
 
     @AfterClass
     public static void shutdownServer() throws Exception {
-        EmbeddedServerUtils.shutdownServer(server);                
+        EmbeddedServerUtils.shutdownServer(server);
     }
 }

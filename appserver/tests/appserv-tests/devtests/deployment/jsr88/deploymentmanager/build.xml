@@ -23,16 +23,16 @@
 
 <project name="deploymentmanager" default="all" basedir=".">
 
-	&commonBuild;    
+        &commonBuild;
     <property name="archivedir" value="${build}/archives"/>
 
-	<target name="private-all">
-		<ant dir="distribute" target="private-all">
-			<property name="build" value="${build}/distribute"/>
-		</ant>
-		<ant dir="getXModules" target="private-all">
-			<property name="build" value="${build}/getXModules"/>
-		</ant>
-	</target>
+        <target name="private-all">
+                <ant dir="distribute" target="private-all">
+                        <property name="build" value="${build}/distribute"/>
+                </ant>
+                <ant dir="getXModules" target="private-all">
+                        <property name="build" value="${build}/getXModules"/>
+                </ant>
+        </target>
 
 </project>

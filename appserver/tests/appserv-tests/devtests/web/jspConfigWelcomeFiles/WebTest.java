@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugzilla 27664");
         WebTest webTest = new WebTest(args);
@@ -48,7 +48,7 @@ public class WebTest {
         ok = ok && webTest.doTest("http://" + webTest.host  + ":" + webTest.port
                        + webTest.contextRoot + "/TestServlet");
         stat.addStatus(TEST_NAME, ((ok)? stat.PASS : stat.FAIL));
-	    stat.printSummary();
+            stat.printSummary();
     }
 
     public boolean doTest(String urlString) {
@@ -56,13 +56,13 @@ public class WebTest {
         InputStream is = null;
         BufferedReader input = null;
         boolean status = false;
-        try { 
+        try {
             URL url = new URL(urlString);
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.err.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 status = false;

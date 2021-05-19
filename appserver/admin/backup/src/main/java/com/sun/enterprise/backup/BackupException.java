@@ -24,7 +24,7 @@
 package com.sun.enterprise.backup;
 
 
-/** 
+/**
  * Backup-Restore <strong>guarantees</strong> that this will be the one and only one kind of
  * Exception that will ever be thrown.  All fatal errors will
  * result in this Exception being thrown.  This is a checked Exception so callers
@@ -38,48 +38,48 @@ package com.sun.enterprise.backup;
 
 public class BackupException extends Exception
 {
-	/**
-	 * Constructs a BackupException with a possibly i18n'd detail message.
-	 * @param s the detail message which is first checked for as a key for an i18n string.  
-	 * If not found it will be used as the message itself.
-	 */	
-	public BackupException(String s)
-	{
-		super(StringHelper.get(s));
-	}
-	
-	/**
-	 * @param s the detail message which is first checked for as a key for an i18n string.  
-	 * If not found it will be used as the message itself.
-	 * @param o the parameter for the recovered i18n string. I.e. "{0}" will be
-	 * replaced with o.toString().  If there is no i18n string located
-	 * o will be ignored.
-	 */	
-	public BackupException(String s, Object o)
-	{
-		super(StringHelper.get(s, o));
-	}
+    /**
+     * Constructs a BackupException with a possibly i18n'd detail message.
+     * @param s the detail message which is first checked for as a key for an i18n string.
+     * If not found it will be used as the message itself.
+     */
+    public BackupException(String s)
+    {
+        super(StringHelper.get(s));
+    }
 
-	/**
-	 * @param s the detail message which is first checked for as a key for an i18n string.  
-	 * If not found it will be used as the message itself.
-	 * @param t the cause.
-	 */	
-	public BackupException(String s, Throwable t)
-	{
-		super(StringHelper.get(s), t);
-	}
+    /**
+     * @param s the detail message which is first checked for as a key for an i18n string.
+     * If not found it will be used as the message itself.
+     * @param o the parameter for the recovered i18n string. I.e. "{0}" will be
+     * replaced with o.toString().  If there is no i18n string located
+     * o will be ignored.
+     */
+    public BackupException(String s, Object o)
+    {
+        super(StringHelper.get(s, o));
+    }
 
-	/**
-	 * @param s the detail message which is first checked for as a key for an i18n string.  
-	 * If not found it will be used as the message itself.
-	 * @param t the cause.
-	 * @param o the parameter for the recovered i18n string. I.e. "{0}" will be
-	 * replaced with o.toString().  If there is no i18n string located
-	 * o will be ignored.
-	 */	
-	public BackupException(String s, Throwable t, Object o)
-	{
-		super(StringHelper.get(s, o), t);
-	}
+    /**
+     * @param s the detail message which is first checked for as a key for an i18n string.
+     * If not found it will be used as the message itself.
+     * @param t the cause.
+     */
+    public BackupException(String s, Throwable t)
+    {
+        super(StringHelper.get(s), t);
+    }
+
+    /**
+     * @param s the detail message which is first checked for as a key for an i18n string.
+     * If not found it will be used as the message itself.
+     * @param t the cause.
+     * @param o the parameter for the recovered i18n string. I.e. "{0}" will be
+     * replaced with o.toString().  If there is no i18n string located
+     * o will be ignored.
+     */
+    public BackupException(String s, Throwable t, Object o)
+    {
+        super(StringHelper.get(s, o), t);
+    }
 }

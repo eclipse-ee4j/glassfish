@@ -28,4 +28,4 @@ public interface CacheListener {
      * @param value value of the cached entity
      */
     public void trimEvent(Object key, Object value);
-}   
+}

@@ -65,7 +65,7 @@ public class TablesUtil {
             }
         }
     }
-        
+
     /**
      * Deletes tables used by JDBC devtests.
      * @param ds1
@@ -114,7 +114,7 @@ public class TablesUtil {
         try {
             con = ds.getConnection();
             stmt = con.createStatement();
-            stmt.executeUpdate("INSERT INTO " + tableName + " VALUES('" + 
+            stmt.executeUpdate("INSERT INTO " + tableName + " VALUES('" +
                 content + "')");
         } catch (SQLException ex) {
             HtmlUtil.printException(ex, out);
@@ -137,7 +137,7 @@ public class TablesUtil {
     }
 
     /**
-     * Verifies table content by getting the number of rows in it, used by the 
+     * Verifies table content by getting the number of rows in it, used by the
      * JDBC devtests. Returns a true if there are any rows in the table.
      * @param ds1
      * @param out

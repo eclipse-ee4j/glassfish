@@ -41,7 +41,7 @@ public class GrizzlyDeployer implements Deployer<GrizzlyContainer, GrizzlyApp> {
 
     @Inject
     RequestDispatcher dispatcher;
-    
+
     public MetaData getMetaData() {
         return new MetaData(false, new Class[] { GrizzlyModuleDescriptor.class}, null);
     }

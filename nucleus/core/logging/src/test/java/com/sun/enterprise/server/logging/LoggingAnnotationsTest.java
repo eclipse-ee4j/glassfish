@@ -49,18 +49,18 @@ public class LoggingAnnotationsTest {
     private static final String TEST_CONF_FILE = "test.conf";
 
     private static final String FILE_SEP = System.getProperty("file.separator");
-    
+
     private static final String USER_DIR = System.getProperty("user.dir");
-    
+
     private static final String BASE_PATH = USER_DIR + FILE_SEP + "target";
-    
+
     private static final String ODL_LOG =  BASE_PATH + FILE_SEP + "odl.log";
 
     private static final String ULF_LOG = BASE_PATH + FILE_SEP + "ulf.log";
 
     @LoggerInfo(subsystem = "Logging", description="Main logger for testing logging annotations.")
     public static final String LOGGER_NAME = "jakarta.enterprise.test.logging.annotations";
-    
+
     @LogMessagesResourceBundle()
     public static final String RB_NAME = "com.sun.enterprise.server.logging.test.LogMessages";
 
@@ -68,7 +68,7 @@ public class LoggingAnnotationsTest {
             cause="An exception has occurred while reading the logging configuration file.",
             action="Take appropriate action based on the exception message.")
     public static final String ERROR_READING_TEST_CONF_FILE_ID = "TEST-LOGGING-00001";
-    
+
     private static final Logger LOGGER = Logger.getLogger(LOGGER_NAME, RB_NAME);
 
     private static final String LINE_SEP = System.getProperty("line.separator");
@@ -79,14 +79,14 @@ public class LoggingAnnotationsTest {
     private static FileHandler uniformFormatHandler;
 
     private static FileHandler odlFormatHandler;
-    
+
     private static ConsoleHandler consoleHandler;
-    
+
     @BeforeClass
     public static void initializeLoggingAnnotationsTest() throws Exception {
         File basePath = new File(BASE_PATH);
         basePath.mkdirs();
-        
+
         // Add a file handler with UniformLogFormatter
         uniformFormatHandler = new FileHandler(ULF_LOG);
         uniformFormatHandler.setLevel(Level.FINE);
@@ -96,7 +96,7 @@ public class LoggingAnnotationsTest {
         odlFormatHandler = new FileHandler(ODL_LOG);
         odlFormatHandler.setLevel(Level.FINE);
         odlFormatHandler.setFormatter(new ODLLogFormatter());
-        
+
         consoleHandler = new ConsoleHandler();
         consoleHandler.setFormatter(new UniformLogFormatter());
 
@@ -104,15 +104,15 @@ public class LoggingAnnotationsTest {
         LOGGER.addHandler(odlFormatHandler);
         Boolean enableConsoleHandler = Boolean.getBoolean(LoggingAnnotationsTest.class.getName() + ".enableConsoleHandler");
         if (enableConsoleHandler) {
-            LOGGER.addHandler(consoleHandler);        
+            LOGGER.addHandler(consoleHandler);
         }
         LOGGER.setUseParentHandlers(false);
         LOGGER.setLevel(Level.FINE);
     }
-    
+
     @Test
     public void testLogMessageWithExceptionArgument() throws IOException {
-        LogHelper.log(LOGGER, Level.SEVERE, ERROR_READING_TEST_CONF_FILE_ID, 
+        LogHelper.log(LOGGER, Level.SEVERE, ERROR_READING_TEST_CONF_FILE_ID,
                 new Exception(TEST_EXCEPTION_MESSAGE), TEST_CONF_FILE);
         String[] expectedContents = new String[] {
                 CANNOT_READ_TEST_CONFIGURATION_FILE_MSG + TEST_CONF_FILE,
@@ -127,7 +127,7 @@ public class LoggingAnnotationsTest {
     public void testFineLevelMessageWithSourceInfo() throws IOException {
         LOGGER.fine(FINE_TEST_MESSAGE_ID);
         String testMessage = "FINE Level test message";
-        String[] ulfContents = new String[] {testMessage, 
+        String[] ulfContents = new String[] {testMessage,
                 "ClassName=com.sun.enterprise.server.logging.LoggingAnnotationsTest;",
                 "MethodName=testFineLevelMessageWithSourceInfo;"};
         validateLogContents(ULF_LOG, ulfContents);
@@ -176,8 +176,8 @@ public class LoggingAnnotationsTest {
             }
             String contents = buf.toString();
             for (String msg : messages) {
-                assertEquals("File " + file + " does not contain expected log message:" + msg, 
-                        true, contents.contains(msg));                
+                assertEquals("File " + file + " does not contain expected log message:" + msg,
+                        true, contents.contains(msg));
             }
             return contents;
         } finally {
@@ -192,7 +192,7 @@ public class LoggingAnnotationsTest {
         LOGGER.removeHandler(consoleHandler);
         LOGGER.removeHandler(uniformFormatHandler);
         LOGGER.removeHandler(odlFormatHandler);
-        
+
         // Flush and Close the handlers
         consoleHandler.flush();
         uniformFormatHandler.flush();
@@ -200,5 +200,5 @@ public class LoggingAnnotationsTest {
         odlFormatHandler.flush();
         odlFormatHandler.close();
     }
-    
+
 }

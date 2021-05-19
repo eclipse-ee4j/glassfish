@@ -22,7 +22,7 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -38,10 +38,10 @@ public class LogViewerTest extends BaseSeleniumTestClass {
         for(String winHandle : driver.getWindowHandles()){
             driver.switchTo().window(winHandle);
         }
-        
+
         assertTrue(driver.findElement(By.className("TtlTxt_sun4")).getText().equals("Log Viewer"));
         driver.close();
-        
+
         driver.switchTo().window(winHandleBefore);
     }
 
@@ -55,10 +55,10 @@ public class LogViewerTest extends BaseSeleniumTestClass {
         for(String winHandle : driver.getWindowHandles()){
             driver.switchTo().window(winHandle);
         }
-        
+
         assertTrue(driver.findElement(By.className("TtlTxt_sun4")).getText().equals("Raw Log Viewer"));
         driver.close();
-        
+
         driver.switchTo().window(winHandleBefore);
 
     }

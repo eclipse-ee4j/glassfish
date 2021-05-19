@@ -21,7 +21,7 @@ import java.util.Map;
 import jakarta.xml.ws.Provider;
 import jakarta.xml.ws.WebServiceProvider;
 import jakarta.xml.ws.ServiceMode;
-import jakarta.xml.ws.Service	;	
+import jakarta.xml.ws.Service        ;
 import jakarta.xml.soap.SOAPMessage;
 import jakarta.ejb.Stateless;
 
@@ -42,11 +42,11 @@ public class HelloImpl implements Provider<Source> {
     private static final JAXBContext jaxbContext = createJAXBContext();
     private int combo;
     private int bodyIndex;
-    
+
     public jakarta.xml.bind.JAXBContext getJAXBContext(){
         return jaxbContext;
     }
-    
+
     private static jakarta.xml.bind.JAXBContext createJAXBContext(){
         try{
             return jakarta.xml.bind.JAXBContext.newInstance(ObjectFactory.class);
@@ -54,28 +54,28 @@ public class HelloImpl implements Provider<Source> {
             throw new WebServiceException(e.getMessage(), e);
         }
     }
-    
-    
+
+
     public Source invoke(Source request) {
         try {
             recvBean(request);
             return sendBean();
         } catch(Exception e) {
             e.printStackTrace();
-            throw new WebServiceException("Provider endpoint failed", e);            
+            throw new WebServiceException("Provider endpoint failed", e);
         }
     }
-    
+
     private void recvBean(Source source) throws Exception {
         System.out.println("**** recvBean ******");
         System.out.println(jaxbContext.createUnmarshaller().unmarshal(source));
         JAXBElement element = (JAXBElement) jaxbContext.createUnmarshaller().unmarshal(source);
-        System.out.println("name="+element.getName()+ " value=" + element.getValue());        
+        System.out.println("name="+element.getName()+ " value=" + element.getValue());
         if (element.getValue() instanceof SayHello) {
-            SayHello hello = (SayHello) element.getValue(); 
+            SayHello hello = (SayHello) element.getValue();
             System.out.println("Say Hello from " + hello.getArg0());
         }
-        
+
     }
 
     private Source sendBean() throws Exception {
@@ -83,9 +83,9 @@ public class HelloImpl implements Provider<Source> {
         SayHelloResponse resp = new SayHelloResponse();
         resp.setReturn("WebSvcTest-Hello");
         ByteArrayOutputStream bout = new ByteArrayOutputStream();
-        ObjectFactory factory = new ObjectFactory(); 
+        ObjectFactory factory = new ObjectFactory();
         jaxbContext.createMarshaller().marshal(factory.createSayHelloResponse(resp), bout);
         return new StreamSource(new ByteArrayInputStream(bout.toByteArray()));
     }
-    
+
 }

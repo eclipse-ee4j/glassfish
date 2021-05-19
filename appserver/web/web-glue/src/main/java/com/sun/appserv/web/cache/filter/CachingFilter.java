@@ -43,7 +43,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
     String filterName;
     String servletName;
     String urlPattern;
-    
+
     // associated cache and the helper
     CacheManager manager;
     CacheHelper helper;
@@ -53,10 +53,10 @@ public class CachingFilter implements Filter, CacheManagerListener {
 
     private static final Logger _logger = LogFacade.getLogger();
 
-    /** 
-     * Called by the web container to indicate to a filter that it is being 
+    /**
+     * Called by the web container to indicate to a filter that it is being
      * placed into service. The servlet container calls the init method exactly
-     * once after instantiating the filter. The init method must complete 
+     * once after instantiating the filter. The init method must complete
      * successfully before the filter is asked to do any filtering work.
      * @param filterConfig filter config
      * @throws ServletException
@@ -84,7 +84,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
             _logger.log(Level.FINE, LogFacade.CACHING_FILTER_READY, new Object[]{filterName, isEnabled, manager});
         }
     }
-    
+
     /**
      * The <code>doFilter</code> method of the Filter is called by the
      * container each time a request/response pair is passed through the
@@ -96,18 +96,18 @@ public class CachingFilter implements Filter, CacheManagerListener {
      * @param sresponse the runtime response
      * @param chain the filter chain to in the request processing
      * @throws IOException, ServletException
-     * 
-     * - First check if this HTTP method permits caching (using helper) 
-     *   if not, call the downstream filter and return. 
-     * - Otherwise, get the key based on the request (using helper). 
-     * - Check if we have a response entry in the cache already. 
+     *
+     * - First check if this HTTP method permits caching (using helper)
+     *   if not, call the downstream filter and return.
+     * - Otherwise, get the key based on the request (using helper).
+     * - Check if we have a response entry in the cache already.
      * - If there is entry and is valid, write out the response from that
-     *   entry. 
-     * - create a CachingResponse and CachingOutputStream wrappers and call 
+     *   entry.
+     * - create a CachingResponse and CachingOutputStream wrappers and call
      *   the downstream filter
      */
     public void doFilter (ServletRequest srequest, ServletResponse sresponse,
-                          FilterChain chain ) 
+                          FilterChain chain )
             throws IOException, ServletException {
 
         if (!(srequest instanceof HttpServletRequest) ||
@@ -119,11 +119,11 @@ public class CachingFilter implements Filter, CacheManagerListener {
         HttpServletRequest request = (HttpServletRequest)srequest;
         HttpServletResponse response = (HttpServletResponse)sresponse;
 
-        request.setAttribute(DefaultCacheHelper.ATTR_CACHING_FILTER_NAME, 
+        request.setAttribute(DefaultCacheHelper.ATTR_CACHING_FILTER_NAME,
                                                             filterName);
-        request.setAttribute(CacheHelper.ATTR_CACHE_MAPPED_SERVLET_NAME, 
+        request.setAttribute(CacheHelper.ATTR_CACHE_MAPPED_SERVLET_NAME,
                                         servletName);
-        request.setAttribute(CacheHelper.ATTR_CACHE_MAPPED_URL_PATTERN, 
+        request.setAttribute(CacheHelper.ATTR_CACHE_MAPPED_URL_PATTERN,
                                         urlPattern);
 
         boolean isFine = _logger.isLoggable(Level.FINE);
@@ -139,7 +139,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
 
             HttpCacheEntry entry = null;
             boolean entryReady = false, waitForRefresh = true;
-            
+
             // if refresh is not needed then check the cache first
             if (!helper.isRefreshNeeded(request)) {
                 do {
@@ -152,7 +152,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
                         break;
                     }
                     else {
-                        /** 
+                        /**
                          *  a cache entry needs to be generated or refreshed.
                          *  if there are more than one thread tries to fill/refresh
                          *  same cache entry, then all but the first thread will block.
@@ -267,7 +267,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
      * @param response response object to write out the response
      * @throws IOException and ServletException.
      */
-    private void sendCachedResponse(HttpCacheEntry entry, 
+    private void sendCachedResponse(HttpCacheEntry entry,
                                     HttpServletResponse response)
             throws IOException {
 
@@ -277,7 +277,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
         }
 
         // set the outbound response headers
-        for (Iterator iter = entry.responseHeaders.keySet().iterator(); 
+        for (Iterator iter = entry.responseHeaders.keySet().iterator();
                                                          iter.hasNext(); ) {
             String name = (String)iter.next();
             ArrayList values = (ArrayList)entry.responseHeaders.get(name);
@@ -288,7 +288,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
         }
 
         // date headers
-        for (Iterator<String> iter = entry.dateHeaders.keySet().iterator(); 
+        for (Iterator<String> iter = entry.dateHeaders.keySet().iterator();
                                                     iter.hasNext(); ) {
             String name = iter.next();
             ArrayList<Long> values = entry.dateHeaders.get(name);
@@ -324,7 +324,7 @@ public class CachingFilter implements Filter, CacheManagerListener {
      * @param response response object to write out the response
      * @throws IOException and ServletException.
      */
-    private void writeBody(HttpCacheEntry entry, 
+    private void writeBody(HttpCacheEntry entry,
                            HttpServletResponse response)
                            throws IOException {
         ServletOutputStream out = response.getOutputStream();
@@ -377,10 +377,10 @@ public class CachingFilter implements Filter, CacheManagerListener {
     }
 
     /**
-     * Called by the web container to indicate to a filter that it is being 
-     * taken out of service. This method is only called once all threads 
-     * within the filter's doFilter method have exited or after a timeout 
-     * period has passed. 
+     * Called by the web container to indicate to a filter that it is being
+     * taken out of service. This method is only called once all threads
+     * within the filter's doFilter method have exited or after a timeout
+     * period has passed.
      * After the web container calls this method, it will not call the
      * doFilter method again on this instance of the filter.
      */

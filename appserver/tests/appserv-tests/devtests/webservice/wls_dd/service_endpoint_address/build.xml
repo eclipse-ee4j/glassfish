@@ -45,7 +45,7 @@
       <antcall target="compile-common">
         <param name="src" value="endpoint"/>
       </antcall>
-      
+
       <antcall target="pkg-ejb-jar">
         <param name="jar.classes" value="endpoint"/>
         <param name="jar.file" value="${assemble.dir}/${appname}-ejb.jar"/>

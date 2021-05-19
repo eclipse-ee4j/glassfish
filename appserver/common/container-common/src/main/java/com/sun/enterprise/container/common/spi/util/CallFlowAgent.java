@@ -32,5 +32,5 @@ public interface CallFlowAgent {
     public void entityManagerQueryStart(EntityManagerQueryMethod val);
 
     public void entityManagerQueryEnd();
-    
+
 }

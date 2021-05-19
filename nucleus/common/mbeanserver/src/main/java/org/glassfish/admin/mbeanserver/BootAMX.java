@@ -36,7 +36,7 @@ Public API is the name of the booter MBean eg {@link BootAMXMBean.OBJECT_NAME}
 final class BootAMX implements BootAMXMBean
 {
     private static final Logger JMX_LOGGER = Util.JMX_LOGGER;
-    
+
     private final MBeanServer mMBeanServer;
     private final ObjectName mObjectName;
     private final ServiceLocator mHabitat;
@@ -68,7 +68,7 @@ final class BootAMX implements BootAMXMBean
     {
         return AMXGlassfish.DEFAULT.getBootAMXMBeanObjectName();
     }
-    
+
 
     /**
     Create an instance of the booter.
@@ -152,13 +152,13 @@ final class BootAMX implements BootAMXMBean
     {
         return JMXStartupService.getJMXServiceURLs(mMBeanServer);
     }
-    
+
     @LogMessageInfo(
             message = "Error while shutting down AMX",
             level = "WARNING")
     static final String errorDuringShutdown = Util.LOG_PREFIX + "-00008";
-    
-    public void shutdown() 
+
+    public void shutdown()
     {
         try
         {

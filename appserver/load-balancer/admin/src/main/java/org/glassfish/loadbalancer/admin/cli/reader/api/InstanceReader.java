@@ -39,7 +39,7 @@ public interface InstanceReader extends BaseReader {
 
     /**
      * This is used in quicescing. Timeouts after this interval and disables the
-     * instance in the load balancer. 
+     * instance in the load balancer.
      *
      * @return String           Disable time out in minutes
      */

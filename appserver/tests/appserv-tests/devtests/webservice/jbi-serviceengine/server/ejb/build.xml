@@ -21,6 +21,6 @@
 ]>
 <project name="jsr108-integration tests" default="all" basedir=".">
     <target name="all">
-	<ant dir="hello" target="all"/>
+        <ant dir="hello" target="all"/>
     </target>
 </project>

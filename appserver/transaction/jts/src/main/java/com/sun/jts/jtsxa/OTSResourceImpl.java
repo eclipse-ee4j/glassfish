@@ -46,9 +46,9 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
     private TransactionState tranState = null;
 
 
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(OTSResourceImpl.class, LogDomains.TRANSACTION_LOGGER);
     /**
      * Construct an XAResource object.
@@ -115,14 +115,15 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
                 hh.initCause(ex);
                 throw hh;
             }
-            if ((e.errorCode == XAException.XA_RETRY) || 
-		(e.errorCode == XAException.XA_RBTRANSIENT) || 
-		(e.errorCode == XAException.XA_RBCOMMFAIL)) 
-		throw new TRANSIENT();
+            if ((e.errorCode == XAException.XA_RETRY) ||
+                (e.errorCode == XAException.XA_RBTRANSIENT) ||
+                (e.errorCode == XAException.XA_RBCOMMFAIL)) {
+                throw new TRANSIENT();
+            }
             if (e.errorCode >= XAException.XA_RBBASE &&
                 e.errorCode <= XAException.XA_RBEND) {
                 throw new HeuristicRollback(ex.getMessage());
-	    }
+            }
             INTERNAL internal =  new INTERNAL(0,CompletionStatus.COMPLETED_MAYBE);
             internal.initCause(ex);
             _logger.log(Level.WARNING, "jts.unexpected_error_occurred_twopc_commit", ex);
@@ -164,31 +165,31 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
             if (e.errorCode == XAException.XA_HEURHAZ)
                 throw new HeuristicHazard(ex.getMessage());
 
-		/** XA_HEURMIX should translate to HeuristicMixedException
+        /** XA_HEURMIX should translate to HeuristicMixedException
             if (e.errorCode == XAException.XA_HEURMIX)
                 throw new HeuristicHazard(ex.getMessage());
-			//IASRI START 4722883
-			/**
+            //IASRI START 4722883
+            /**
             if (e.errorCode >= XAException.XA_RBBASE &&
                 e.errorCode <= XAException.XA_RBEND)
-				return;
+                return;
             if (e.errorCode == XAException.XA_HEURCOM)
-				return;
-			**/
-            if ((e.errorCode == XAException.XA_RETRY) || 
-					(e.errorCode == XAException.XA_RBTRANSIENT) || 
-					(e.errorCode == XAException.XA_RBCOMMFAIL)) 
-				throw new TRANSIENT();
+                return;
+            **/
+            if ((e.errorCode == XAException.XA_RETRY) ||
+                    (e.errorCode == XAException.XA_RBTRANSIENT) ||
+                    (e.errorCode == XAException.XA_RBCOMMFAIL))
+                throw new TRANSIENT();
 
             // Use HeuristicHazard as a temp exception because CosTransactions.idl Resource
-            // has commit_one_phase() defined to throw only HeuristicHazard 
-            if (e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND || 
+            // has commit_one_phase() defined to throw only HeuristicHazard
+            if (e.errorCode >= XAException.XA_RBBASE && e.errorCode <= XAException.XA_RBEND ||
                 e.errorCode == XAException.XA_HEURMIX || e.errorCode == XAException.XA_HEURCOM) {
-				HeuristicHazard hazex = new HeuristicHazard();
-				((Throwable)hazex).initCause((Throwable)ex);
-				throw hazex;
-	    	}
-			//IASRI END 4722883
+                HeuristicHazard hazex = new HeuristicHazard();
+                ((Throwable)hazex).initCause((Throwable)ex);
+                throw hazex;
+            }
+            //IASRI END 4722883
             if (e.errorCode == XAException.XAER_RMERR || e.errorCode == XAException.XAER_NOTA) {
                 _logger.log(Level.WARNING, "jts.unexpected_error_occurred_twopc_commit", ex);
                 throw new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
@@ -326,14 +327,15 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
                 throw new HeuristicHazard(ex.getMessage());
             if (e.errorCode == XAException.XA_HEURMIX)
                 throw new HeuristicMixed(ex.getMessage());
-            if ((e.errorCode == XAException.XA_RETRY) || 
-		(e.errorCode == XAException.XA_RBTRANSIENT) || 
-		(e.errorCode == XAException.XA_RBCOMMFAIL)) 
-		throw new TRANSIENT();
-            if (e.errorCode == XAException.XAER_RMERR || 
-                    e.errorCode == XAException.XA_RBROLLBACK ||
-                    e.errorCode == XAException.XAER_NOTA ||
-                    e.errorCode == XAException.XAER_RMFAIL) {
+            if ((e.errorCode == XAException.XA_RETRY) ||
+                (e.errorCode == XAException.XA_RBTRANSIENT) ||
+                (e.errorCode == XAException.XA_RBCOMMFAIL)) {
+                throw new TRANSIENT();
+            }
+            if (e.errorCode == XAException.XAER_RMERR ||
+                e.errorCode == XAException.XA_RBROLLBACK ||
+                e.errorCode == XAException.XAER_NOTA ||
+                e.errorCode == XAException.XAER_RMFAIL) {
                 _logger.log(Level.WARNING, "jts.unexpected_error_occurred_twopc_rollback", ex);
                 throw new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_MAYBE);
             }
@@ -394,10 +396,10 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
                             narrow(poa.servant_to_reference(this));
                 //thisRef = (com.sun.jts.jtsxa.OTSResource)this;
             } catch (Exception exc) {
-				_logger.log(Level.SEVERE,"jts.create_xaresource_object_error", exc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-							"jts.create_xaresource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,"jts.create_xaresource_object_error", exc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                            "jts.create_xaresource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -422,7 +424,7 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
                 poa.deactivate_object(poa.reference_to_id(thisRef));
                 thisRef = null;
             } catch (Exception exc) {
-				_logger.log(Level.WARNING,"jts.object_destroy_error","OTSResource");
+                _logger.log(Level.WARNING,"jts.object_destroy_error","OTSResource");
             }
         }
     }
@@ -494,18 +496,18 @@ public class OTSResourceImpl extends OTSResourcePOA implements OTSResource {
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result,
-				   ExceptionList exceptions,
-				   ContextList contexts) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result,
+                   ExceptionList exceptions,
+                   ContextList contexts) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 

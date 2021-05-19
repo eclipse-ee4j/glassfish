@@ -21,9 +21,9 @@
 ]>
 
 <project name="Coffee Break Server" default="build" basedir=".">
-  <target name="init"> 
-      <tstamp/> 
-  </target> 
+  <target name="init">
+      <tstamp/>
+  </target>
 
   <property file="../../common/build.properties"/>
   <property file="build.properties"/>
@@ -31,16 +31,16 @@
   &targets;
 
   <target name="prepare" depends="init"
-   	description="Create build directories.">
+           description="Create build directories.">
     <mkdir dir="${build}" />
   </target>
-  
-  <target name="build" depends="prepare" 
+
+  <target name="build" depends="prepare"
      description="Compile CB server Java files and copy DD and static files." >
-    <javac 
-      srcdir="${src}" 
+    <javac
+      srcdir="${src}"
       destdir="${build}">
-    	<include name="**/*.java" />
+            <include name="**/*.java" />
       <classpath refid="classpath" />
       <classpath path="${common}:../jaxrpc/dist/jaxrpc-client.jar:../saaj/dist/saaj-client.jar" />
     </javac>
@@ -52,7 +52,7 @@
       <classpath refid="classpath" />
       <classpath path="${common}" />
       </javac>
-      <copy file="../common/src/com/sun/cb/CoffeeBreak.properties" 
+      <copy file="../common/src/com/sun/cb/CoffeeBreak.properties"
         todir="${build}/com/sun/cb" />
       <copy todir="${build}">
       <fileset dir="web">

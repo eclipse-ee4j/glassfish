@@ -174,7 +174,7 @@ public class JmsTest extends RestTestBase {
         ct.startCluster(clusterName);
         final String endpoint = "/domain/clusters/cluster/" + clusterName;
         try {
-            
+
             createJmsPhysicalDestination(destName, "topic", endpoint);
             final HashMap<String, String> newDest = new HashMap<String, String>() {
                 {

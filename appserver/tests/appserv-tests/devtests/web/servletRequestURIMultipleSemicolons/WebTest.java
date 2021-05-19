@@ -49,7 +49,7 @@ public class WebTest {
 
         expectedResponse = contextRoot + "/test.jsp;jsessionwhatever=456";
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for resource injection into "
@@ -63,11 +63,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
             + contextRoot + "/test.jsp;jsessionid=12;jsessionwhatever=456");
         System.out.println("Connecting to: " + url.toString());
@@ -87,7 +87,7 @@ public class WebTest {
             input = new BufferedReader(new InputStreamReader(is));
             String line = input.readLine();
             if (!expectedResponse.equals(line)) {
-                throw new Exception("Wrong response. Expected: " + 
+                throw new Exception("Wrong response. Expected: " +
                     expectedResponse + ", received: " + line);
             }
         } finally {
@@ -105,6 +105,6 @@ public class WebTest {
             } catch (IOException ioe) {
                 // ignore
             }
-        }    
+        }
     }
 }

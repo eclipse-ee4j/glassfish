@@ -27,7 +27,7 @@ import jakarta.ejb.Stateful;
 @RunAs("j2ee")
 public class SfulEJB implements SfulLocal {
     @EJB private SlessLocal sless;
- 
+
     @RolesAllowed(value={"javaee"})
     public String hello() {
         return "hello from Sful";

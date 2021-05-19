@@ -28,7 +28,7 @@ import jakarta.resource.spi.work.WorkException;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class TestWMWork implements Work {
 
@@ -42,8 +42,8 @@ public class TestWMWork implements Work {
     public TestWMWork(int id, boolean isRogue) {
         this(id, isRogue, false, null);
     }
-    
-    public TestWMWork(int id, boolean isRogue, 
+
+    public TestWMWork(int id, boolean isRogue,
             boolean doNest, ExecutionContext ctx) {
         this.id = id;
         this.isRogue = isRogue;
@@ -77,10 +77,10 @@ public class TestWMWork implements Work {
             } catch (WorkException ex) {
                 if (ex.getErrorCode().equals(
                             WorkException.TX_CONCURRENT_WORK_DISALLOWED)) {
-                    System.out.println("TestWMWork[" + id + "] " + 
+                    System.out.println("TestWMWork[" + id + "] " +
                             "PASS: CAUGHT EXPECTED = " + ex.getErrorCode());
                 } else {
-                    System.out.println("TestWMWork[" + id + "] " + 
+                    System.out.println("TestWMWork[" + id + "] " +
                             "FAIL: CAUGHT UNEXPECTED = " + ex.getErrorCode());
                 }
             }
@@ -92,7 +92,7 @@ public class TestWMWork implements Work {
                 ec.setTransactionTimeout(5*1000); //5 seconds
                 wm.doWork(nestedWork, 1*1000, ec, null);
             } catch (Exception ex) {
-                System.out.println("TestWMWork[" + id + "] " + 
+                System.out.println("TestWMWork[" + id + "] " +
                         "FAIL: CAUGHT UNEXPECTED = " + ex.getMessage());
             }
         }

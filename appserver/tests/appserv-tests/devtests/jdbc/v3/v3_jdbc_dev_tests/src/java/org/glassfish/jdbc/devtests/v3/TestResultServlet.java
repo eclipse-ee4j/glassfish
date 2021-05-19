@@ -124,7 +124,7 @@ public class TestResultServlet extends HttpServlet {
                     buf.append("<td>");
                     buf.append(entry.getValue());
                     buf.append("</td></tr>");
-                } 
+                }
 
                 //Run Application Authentication Test
                 Map<String, Boolean> mapAppAuth =
@@ -172,7 +172,7 @@ public class TestResultServlet extends HttpServlet {
                     buf.append("<td>");
                     buf.append(entry.getValue());
                     buf.append("</td></tr>");
-                } 
+                }
 
 
                 //Run SimpleXADS test
@@ -198,7 +198,7 @@ public class TestResultServlet extends HttpServlet {
                         buf.append(entry.getValue());
                         buf.append("</td></tr>");
                     }
-                } 
+                }
 
                  //Order of test is important : lazy enlist has to be before connection leak tracing
                 Map<String, Boolean> mapDoubleResourceReference =
@@ -363,7 +363,7 @@ public class TestResultServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -373,7 +373,7 @@ public class TestResultServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
      */
     public String getServletInfo() {

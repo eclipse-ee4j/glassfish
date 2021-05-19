@@ -31,8 +31,8 @@ public interface LocalTeam extends EJBLocalObject {
     public void addPlayer(LocalPlayer player);
     public void dropPlayer(LocalPlayer player);
     public double getSalaryOfPlayer(String playerName);
-    public String getTeamNameWithStringfunctionTests1(); 
-    public String getTeamNameWithStringfunctionTests2(); 
-    public String getTeamNameWithStringfunctionTests3(); 
-    
+    public String getTeamNameWithStringfunctionTests1();
+    public String getTeamNameWithStringfunctionTests2();
+    public String getTeamNameWithStringfunctionTests3();
+
 }

@@ -28,21 +28,21 @@ import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
 
 /**
  *
- * @author Jie Leng 
+ * @author Jie Leng
  */
 class LogHelperDatabaseGenerator {
-    
+
     /** The component name for this component */
     private static final String componentName = "databaseGenerator"; // NOI18N
-    
+
     /** The class loader for this component */
-    private static final ClassLoader loader = 
+    private static final ClassLoader loader =
             LogHelperDatabaseGenerator.class.getClassLoader();
-    
+
     /** The bundle name for this component */
-    private static final String bundleName = 
+    private static final String bundleName =
             "com.sun.jdo.spi.persistence.generator.database.Bundle"; // NOI18N
-    
+
     /**
      * @return The logger for the database generator component.
      */

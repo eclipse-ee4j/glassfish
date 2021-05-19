@@ -100,8 +100,8 @@ public class ConnectorResourceManagerLifecycleListener implements org.glassfish.
 
     @Inject
     private ServerEnvironment serverEnvironment;
-    
-    @Inject 
+
+    @Inject
     private InternalSystemAdministrator internalSystemAdministrator;
 
     private static final Logger logger =

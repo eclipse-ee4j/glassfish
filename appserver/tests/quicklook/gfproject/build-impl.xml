@@ -18,7 +18,7 @@
 -->
 
 <project name="common-impl" default="all" basedir=".">
-    
+
     <property file="${ws.root}/build.properties"/>
     <property name="app.file.ext" value="${app.file}.${archive.type}"/>
     <property name="config.dir" value="${ant.file}"/>
@@ -30,7 +30,7 @@
     <!--<property name="test.class.output" value="${ws.root}/classes/${testsuite.name}/test"/>-->
     <property name="test.class.output" value="${ws.root}/classes/test"/>
     <property name="dist.dir" value="${ws.root}/dist/${testsuite.name}"/>
-    
+
     <target name="clean">
         <delete dir="${ws.root}/classes"/>
         <delete dir="${result.output}"/>
@@ -41,7 +41,7 @@
             <fileset dir="." includes="**/*.war"/>
         </delete>
     </target>
-    
+
     <!-- classpath at QL runtime (i.e. not for building of testing apps) -->
     <path id="run.testng.classpath">
         <fileset dir="${glassfish.home}/modules">
@@ -51,9 +51,9 @@
             <include name="**/amx-javaee.jar"/>
             <include name="**/gf-client-module.jar"/>
         </fileset>
-	<fileset dir="${maven.repo.local}/com/beust/jcommander">
-	    <include name="**/1.72/jcommander-1.72.jar"/>
-	</fileset>
+    <fileset dir="${maven.repo.local}/com/beust/jcommander">
+        <include name="**/1.72/jcommander-1.72.jar"/>
+    </fileset>
         <pathelement location="${class.output}"/>
         <pathelement location="${test.class.output}"/>
     </path>
@@ -80,28 +80,28 @@
         <pathelement location="${test.class.output}"/>
         <pathelement path="${plugin_classpath}"/>
     </path>
-    
+
     <!-- TestNG class fileset -->
-    
+
     <path id="path2testng">
-	    <pathelement location="${ws.root}/lib/testng-5.0-jdk15.jar"/>
+        <pathelement location="${ws.root}/lib/testng-5.0-jdk15.jar"/>
     </path>
-    
+
     <taskdef name="testng" classname="org.testng.TestNGAntTask">
         <classpath>
-	    <pathelement path="${plugin_classpath}"/>
+        <pathelement path="${plugin_classpath}"/>
         </classpath>
     </taskdef>
-    
-    
+
+
     <target name="compile-tests" description="compile the test ng example">
         <echo message="compiling test client to ${test.class.output}"/>
 
-        <fileset dir="${basedir}/src/test" id="java.source.id"> 
-            <include name="**/*.java"/> 
+        <fileset dir="${basedir}/src/test" id="java.source.id">
+            <include name="**/*.java"/>
         </fileset>
-        <property name="source.file.list" refid="java.source.id"/> 
-        <echo message="Listing of source files: ${source.file.list}"/> 
+        <property name="source.file.list" refid="java.source.id"/>
+        <echo message="Listing of source files: ${source.file.list}"/>
 
         <mkdir dir="${test.class.output}"/>
         <javac   debug="true"
@@ -111,22 +111,22 @@
                  srcdir="${basedir}/src/test"
                  sourcepath=""
                  destdir="${test.class.output}">
-            <include name="**/*.java"/> 
+            <include name="**/*.java"/>
         </javac>
     </target>
-    
+
     <target name="compile-util"
-	    description="compile the test ng util">
+        description="compile the test ng util">
         <mkdir dir="${test.class.output}"/>
         <javac   debug="true"
                  source="1.8"
-		 target="1.8"
-		 classpathref="class.path"
+         target="1.8"
+         classpathref="class.path"
                  srcdir="${ws.root}/admincli/src/test/admincli/util:${ws.root}/utils"
                  destdir="${test.class.output}">
         </javac>
-    </target>    
-    
+    </target>
+
     <!-- Generate the TestNG report -->
     <target name="report">
         <delete dir="${result.output}"/>
@@ -139,7 +139,7 @@
             <report format="noframes" todir="test-report"/>
         </junitreport>
     </target>
-    
+
     <target name="archive-type">
         <echo message="archive-type is ${archive.type}"/>
         <condition property="archive.war">
@@ -152,31 +152,31 @@
             <equals arg1="appclient_ear" arg2="${archive.type}"/>
         </condition>
         <condition property="archive.jar">
-            <equals arg1="jar" arg2="${archive.type}"/>            
+            <equals arg1="jar" arg2="${archive.type}"/>
         </condition>
     </target>
-    
+
     <target name="build-impl">
         <antcall target="build-war"/>
         <antcall target="build-ear"/>
-	<antcall target="build-appclient-ear"/>
+    <antcall target="build-appclient-ear"/>
         <antcall target="build-jar"/>
     </target>
-    
+
     <target name="compile-single">
-	    <delete dir="$class.output}"/>
-	    <mkdir dir="${class.output}"/>
+        <delete dir="$class.output}"/>
+        <mkdir dir="${class.output}"/>
         <javac   debug="true"
                  source="1.8"
-		 target="1.8"
+         target="1.8"
                  classpathref="class.path"
                  srcdir="src"
                  destdir="${class.output}"/>
-        
-    </target>
-    
 
-<target name="build-war" depends="archive-type" if="archive.war">  
+    </target>
+
+
+<target name="build-war" depends="archive-type" if="archive.war">
     <echo message="Now creating a war file ${dist.dir}/${app.file.ext}"/>
     <delete dir="${class.output}"/>
     <delete dir="${dist.dir}"/>
@@ -193,40 +193,40 @@
     srcdir="src/java"
     failonerror="false"
     destdir="${class.output}"/>
-    
+
     <mkdir dir="${class.output}/META-INF"/>
-    <copy file="metadata/persistence.xml" todir="${class.output}/META-INF" failonerror="false"/> 
-    
+    <copy file="metadata/persistence.xml" todir="${class.output}/META-INF" failonerror="false"/>
+
     <war destfile="${dist.dir}/${app.file.ext}" webxml="metadata/web.xml">
         <fileset dir="web/html"/>
         <fileset dir="web/jsp"/>
-        <classes dir="${class.output}">        
+        <classes dir="${class.output}">
             <include name="**/*.class"/>
-	    <include name="**/persistence.xml"/>
-	    <include name="**/*.properties"/>
+        <include name="**/persistence.xml"/>
+        <include name="**/*.properties"/>
         </classes>
         <!--<zipfileset dir="src/graphics/images/gifs"
         prefix="images"/>-->
-        <webinf dir="metadata">                  
-            <include name="**/*.xml"/>                  
+        <webinf dir="metadata">
+            <include name="**/*.xml"/>
             <exclude name="**/persistence.xml"/>
-        </webinf>        
+        </webinf>
     </war>
     <!-- antcall target="update-war-struts"/ -->
     <!-- copy file="${dist.dir}/${app.file.ext}" tofile="./${app.file.ext}"/ -->
 </target>
 
 <target name="update-war-struts" if="add.struts.jar">
-	<echo message="Adding struts jar to WEB-INF/lib"/>
+    <echo message="Adding struts jar to WEB-INF/lib"/>
 <war destfile="${dist.dir}/${app.file.ext}" update="true">
-	<lib dir="${ws.root}/web/lib/struts-1.2.9">
-		<include name="**/*.jar"/>
-	</lib>
+    <lib dir="${ws.root}/web/lib/struts-1.2.9">
+        <include name="**/*.jar"/>
+    </lib>
 </war>
-	
+
 </target>
 
-<target name="build-jar" depends="archive-type" if="archive.jar">    
+<target name="build-jar" depends="archive-type" if="archive.jar">
     <echo message="Now creating a jar file ${dist.dir}/${app.file.ext}"/>
     <delete dir="${class.output}"/>
     <delete dir="${dist.dir}"/>
@@ -240,11 +240,11 @@
     srcdir="src/java"
     destdir="${class.output}"/>
     <echo message="Now creating a war file ${dist.dir}/${app.file.ext}"/>
-    <jar destfile="${dist.dir}/${app.file.ext}" update="true" 
-	basedir="${class.output}"/>        
+    <jar destfile="${dist.dir}/${app.file.ext}" update="true"
+    basedir="${class.output}"/>
 </target>
 
-<target name="build-ear" depends="archive-type" if="archive.ear">    
+<target name="build-ear" depends="archive-type" if="archive.ear">
     <delete dir="${class.output}"/>
     <delete dir="${dist.dir}"/>
     <delete file="${app.file.ext}"/>
@@ -317,29 +317,29 @@
 
 
 <target name="runtest-impl">
-	<antcall target="runtest-impl-class"/>
-	<antcall target="runtest-impl-xml"/>
+    <antcall target="runtest-impl-class"/>
+    <antcall target="runtest-impl-xml"/>
 </target>
 
 <target name="runtest-impl-class" depends="setOSConditions,asenv-unix,asenv-windows,checkTestNGXML" unless="testng.xml.present">
-	<echo message="=============Starting TestNG test at ${test.class.output}  ============"/>    
-    
+    <echo message="=============Starting TestNG test at ${test.class.output}  ============"/>
+
     <mkdir dir="${result.output}"/>
     <testng outputdir="${result.output}" verbose="2"
-    	suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="run.testng.classpath">
-	    <sysproperty key="glassfish.home" value="${glassfish.home}"/>
-	    <sysproperty key="BASEDIR" value="${ws.root}"/>
+        suitename="${testsuite.name}" testname="${testng.test.name}" classpathref="run.testng.classpath">
+        <sysproperty key="glassfish.home" value="${glassfish.home}"/>
+        <sysproperty key="BASEDIR" value="${ws.root}"/>
         <classfileset dir="${test.class.output}" includes="**/${testng.testclient}.class"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
         <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
-		<jvmarg value="-DASADMIN=${ASADMIN}" />
+        <jvmarg value="-DASADMIN=${ASADMIN}" />
     </testng>
 </target>
 
 <target name="runtest-impl-xml" depends="setOSConditions,asenv-unix,asenv-windows,checkTestNGXML" if="testng.xml.present">
-    <echo message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============"/>    
-    
+    <echo message="=============Starting TestNG test at ${test.class.output} from testng.xml  ============"/>
+
     <mkdir dir="${result.output}"/>
     <testng outputdir="${result.output}"
         suitename="${testsuite.name}"
@@ -348,8 +348,8 @@
         <xmlfileset dir="." includes="testng.xml"/>
         <jvmarg value="-Dhttp.host=${glassfish.http.host}" />
         <jvmarg value="-Dhttp.port=${glassfish.http.port}" />
-	    <jvmarg value="-DASADMIN=${ASADMIN}" />
-	    <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
+        <jvmarg value="-DASADMIN=${ASADMIN}" />
+        <jvmarg value="-DAPPCLIENT=${APPCLIENT}" />
         <jvmarg value="--add-opens=java.base/java.lang=ALL-UNNAMED" />
     </testng>
 </target>
@@ -378,7 +378,7 @@
         <pathelement location="${class.output}"/>
         <pathelement location="${test.class.output}"/>
     </path>
-    
+
 
 <!-- the following targets are for running the wsit tests -->
     <path id="wsit.classpath">

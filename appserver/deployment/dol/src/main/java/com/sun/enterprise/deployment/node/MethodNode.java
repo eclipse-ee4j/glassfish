@@ -24,10 +24,10 @@ import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Node;
 
 /**
- * This class handle the method element 
+ * This class handle the method element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class MethodNode extends DeploymentDescriptorNode<MethodDescriptor> {
 
@@ -45,7 +45,7 @@ public class MethodNode extends DeploymentDescriptorNode<MethodDescriptor> {
         table.put(TagNames.EJB_NAME, "setEjbName");
         table.put(TagNames.METHOD_INTF, "setEjbClassSymbol");
         table.put(TagNames.METHOD_NAME, "setName");
-        table.put(TagNames.METHOD_PARAM, "addParameterClass");        
+        table.put(TagNames.METHOD_PARAM, "addParameterClass");
         return table;
     }
 
@@ -64,42 +64,42 @@ public class MethodNode extends DeploymentDescriptorNode<MethodDescriptor> {
     }
 
 
-    public Node writeDescriptor(Node parent, String nodeName, MethodDescriptor descriptor, String ejbName) {        
-        Node methodNode = super.writeDescriptor(parent, nodeName, descriptor);    
+    public Node writeDescriptor(Node parent, String nodeName, MethodDescriptor descriptor, String ejbName) {
+        Node methodNode = super.writeDescriptor(parent, nodeName, descriptor);
         writeLocalizedDescriptions(methodNode, descriptor);
         if (ejbName != null && ejbName.length() > 0)  {
-            appendTextChild(methodNode, TagNames.EJB_NAME, ejbName);        
+            appendTextChild(methodNode, TagNames.EJB_NAME, ejbName);
         }
         String methodIntfSymbol = descriptor.getEjbClassSymbol();
         if( (methodIntfSymbol != null) &&
             !methodIntfSymbol.equals(MethodDescriptor.EJB_BEAN) ) {
-            appendTextChild(methodNode, TagNames.METHOD_INTF, 
+            appendTextChild(methodNode, TagNames.METHOD_INTF,
                             methodIntfSymbol);
         }
         appendTextChild(methodNode, TagNames.METHOD_NAME, descriptor.getName());
         if (descriptor.getParameterClassNames()!=null) {
-            Node paramsNode = appendChild(methodNode, TagNames.METHOD_PARAMS);            
-            writeMethodParams(paramsNode, descriptor);                
+            Node paramsNode = appendChild(methodNode, TagNames.METHOD_PARAMS);
+            writeMethodParams(paramsNode, descriptor);
         }
         return methodNode;
     }
-    
+
     /**
      * write the method descriptor class to a query-method DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeQueryMethodDescriptor(Node parent, String nodeName, MethodDescriptor descriptor) {        
+    public Node writeQueryMethodDescriptor(Node parent, String nodeName, MethodDescriptor descriptor) {
         Node methodNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(methodNode, TagNames.METHOD_NAME, descriptor.getName());
-        Node paramsNode = appendChild(methodNode, TagNames.METHOD_PARAMS);        
-        writeMethodParams(paramsNode, descriptor);           
+        Node paramsNode = appendChild(methodNode, TagNames.METHOD_PARAMS);
+        writeMethodParams(paramsNode, descriptor);
         return methodNode;
     }
-    
+
     /**
      * write the method descriptor class to a java-method DOM tree and return it
      *
@@ -108,12 +108,12 @@ public class MethodNode extends DeploymentDescriptorNode<MethodDescriptor> {
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeJavaMethodDescriptor(Node parent, String nodeName, 
+    public Node writeJavaMethodDescriptor(Node parent, String nodeName,
         MethodDescriptor descriptor) {
         // Write out the java method description.  In the case of a void
         // method, a <method-params> element will *not* be written out.
         return writeJavaMethodDescriptor(parent, nodeName, descriptor, false);
-    }   
+    }
 
     /**
      * write the method descriptor class to a java-method DOM tree and return it
@@ -123,38 +123,38 @@ public class MethodNode extends DeploymentDescriptorNode<MethodDescriptor> {
      * @param the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeJavaMethodDescriptor(Node parent, String nodeName, 
-        MethodDescriptor descriptor, 
+    public Node writeJavaMethodDescriptor(Node parent, String nodeName,
+        MethodDescriptor descriptor,
         boolean writeEmptyMethodParamsElementForVoidMethods) {
         Node methodNode = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(methodNode, RuntimeTagNames.METHOD_NAME, 
-            descriptor.getName());    
+        appendTextChild(methodNode, RuntimeTagNames.METHOD_NAME,
+            descriptor.getName());
         if (descriptor.getParameterClassNames() != null) {
-            Node paramsNode = 
-                appendChild(methodNode, RuntimeTagNames.METHOD_PARAMS); 
-            writeMethodParams(paramsNode, descriptor);            
+            Node paramsNode =
+                appendChild(methodNode, RuntimeTagNames.METHOD_PARAMS);
+            writeMethodParams(paramsNode, descriptor);
         } else {
             if( writeEmptyMethodParamsElementForVoidMethods ) {
-                appendChild(methodNode, RuntimeTagNames.METHOD_PARAMS); 
+                appendChild(methodNode, RuntimeTagNames.METHOD_PARAMS);
             }
         }
         return methodNode;
-    }   
+    }
 
 
     /**
      * writes the method parameters to the DOM Tree
-     * 
+     *
      * @param the parent node for the parameters
      * @param the method descriptor
      */
     private void writeMethodParams(Node paramsNode, MethodDescriptor descriptor) {
         String[] params = descriptor.getParameterClassNames();
-        if (params==null) 
+        if (params==null)
             return;
         for (int i=0; i<params.length;i++) {
             appendTextChild(paramsNode, RuntimeTagNames.METHOD_PARAM, params[i]);
         }
     }
 }
-   
+

@@ -54,7 +54,7 @@ public class WebEntityResolver implements EntityResolver, PostConstruct {
     /**
      * Known DTDs.
      *
-     * Expose the map so that interested party can introspect the table value and modify them. 
+     * Expose the map so that interested party can introspect the table value and modify them.
      */
     public final Map<String/*public id*/,String/*bare file name*/> knownDTDs = new MapBuilder<String,String>()
             .put(Constants.TldDtdPublicId_11,"web-jsptaglibrary_1_1.dtd")

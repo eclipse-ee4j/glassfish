@@ -81,7 +81,7 @@ public class TestCase {
             ", status='" + status + '\'' +
             '}';
     }
-    
+
     public String toXml() {
         StringBuilder buffer = new StringBuilder();
         buffer.append("<testcase>\n");

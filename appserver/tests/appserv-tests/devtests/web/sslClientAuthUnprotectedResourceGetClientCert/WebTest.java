@@ -33,7 +33,7 @@ import com.sun.ejte.ccl.reporter.*;
 public class WebTest {
 
     private static final String TEST_NAME
-        = "ssl-client-auth-unprotected-resource-get-client-cert";    
+        = "ssl-client-auth-unprotected-resource-get-client-cert";
 
     private static final String EXPECTED_RESPONSE
         = "[Ljava.security.cert.X509Certificate;";
@@ -49,7 +49,7 @@ public class WebTest {
         String contextRoot = args[2];
         String keyStorePath = args[3];
         String trustStorePath = args[4];
-        
+
         try {
             SSLSocketFactory ssf = getSSLSocketFactory(keyStorePath,
                                                        trustStorePath);
@@ -57,9 +57,9 @@ public class WebTest {
                                                     + port + contextRoot
                                                     + "/TestServlet",
                                                     ssf);
-            
+
             parseResponse(connection);
-            
+
         } catch (Throwable t) {
             stat.addStatus(TEST_NAME, stat.FAIL);
             t.printStackTrace();
@@ -76,7 +76,7 @@ public class WebTest {
         try {
             in = new BufferedReader(new InputStreamReader(
                             connection.getInputStream()));
-            
+
             String line = null;
             while ((line = in.readLine()) != null) {
                 if (EXPECTED_RESPONSE.equals(line)) {
@@ -105,7 +105,7 @@ public class WebTest {
 
         SSLContext ctx = SSLContext.getInstance("TLS");
 
-        // Keystore 
+        // Keystore
         KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = "changeit".toCharArray();
         ks.load(new FileInputStream(keyStorePath), passphrase);
@@ -121,7 +121,7 @@ public class WebTest {
         tmf.init(trustStore);
 
         ctx.init(kmf.getKeyManagers(),tmf.getTrustManagers(), null);
-        
+
         return ctx.getSocketFactory();
     }
 

@@ -24,7 +24,7 @@ import javax.naming.*;
 
 public class StandaloneClient2 {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -33,32 +33,32 @@ public class StandaloneClient2 {
         StandaloneClient2 client = new StandaloneClient2(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-sessionstandalone2ID");
-    }  
-    
+    }
+
     public StandaloneClient2 (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
 
             Properties props = new Properties();
-            props.setProperty("java.naming.factory.initial", 
+            props.setProperty("java.naming.factory.initial",
                     "com.sun.enterprise.naming.SerialInitContextFactory");
-            props.setProperty("java.naming.factory.url.pkgs", 
+            props.setProperty("java.naming.factory.url.pkgs",
                               "com.sun.enterprise.naming");
             props.setProperty("java.naming.factory.state",
             "com.sun.corba.ee.impl.presentation.rmi.JNDIStateFactoryImpl");
-            
+
             InitialContext ic = new InitialContext(props);
-            
+
 
             Sful sful1 = (Sful) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
 
             Sful sful2 = (Sful) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
-            
+
             Sful sful3 = (Sful) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sful#com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
 
@@ -67,7 +67,7 @@ public class StandaloneClient2 {
 
             Sless sless2 = (Sless) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sless#com.sun.s1asdev.ejb.ejb30.hello.session.Sless");
-            
+
 
             System.out.println("invoking stateful");
             sful1.hello();
@@ -97,8 +97,8 @@ public class StandaloneClient2 {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
 }

@@ -33,17 +33,17 @@ public class RefValidator
     implements ConstraintValidator<RefConstraint, LbConfig>, Payload {
 
     @Override
-    public void initialize(final RefConstraint constraint) {       
+    public void initialize(final RefConstraint constraint) {
     }
 
     @Override
     public boolean isValid(final LbConfig bean,
         final ConstraintValidatorContext constraintValidatorContext) {
         if (bean == null) return true;
-        
+
         List<ServerRef> sRefs = bean.getRefs(ServerRef.class);
         List<ClusterRef> cRefs = bean.getRefs(ClusterRef.class);
-        
+
         if (sRefs.size() > 0 && cRefs.size() > 0) {
             return false;
         }

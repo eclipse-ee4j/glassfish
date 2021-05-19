@@ -39,8 +39,8 @@ public class Hello1Impl implements Hello1 {
 
     public Hello1Response hello1(Hello1Request req) {
         System.out.println("Hello1, " + req.getString() + "!");
-	Hello1Response resp = new Hello1Response();
-	resp.setString("Hello1, " + req.getString() + "!");
+        Hello1Response resp = new Hello1Response();
+        resp.setString("Hello1, " + req.getString() + "!");
         return resp;
     }
 }

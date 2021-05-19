@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -78,10 +78,10 @@ public class NodeTest extends BaseSeleniumTestClass {
         assertEquals("SSH", getText(prefix + "colType"));
 
         //Verify the node is created with the value specified.
-        
+
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
-        
+
         assertTrue(getText("propertyForm:propertySheet:propertSectionTextField:staticnameProp:IdStatic").equals(nodeName));
 
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:typeProp:type")));
@@ -114,7 +114,7 @@ public class NodeTest extends BaseSeleniumTestClass {
             clickByIdAction(ID_FORCE_FIELD);
         }
         setFieldValue("propertyForm:propertySheet:sshConnectorSection:sshport:sshport", "34");
-        
+
         Select select = new Select(driver.findElement(By.id("propertyForm:propertySheet:sshConnectorSection:psSelected:psSelected")));
         select.selectByVisibleText("Password");
 
@@ -130,7 +130,7 @@ public class NodeTest extends BaseSeleniumTestClass {
         //Verify the node is created with the value specified.
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
-        
+
         assertTrue(getText("propertyForm:propertySheet:propertSectionTextField:staticnameProp:IdStatic").equals(nodeName));
 
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:typeProp:type")));
@@ -288,10 +288,10 @@ public class NodeTest extends BaseSeleniumTestClass {
         assertTrue(select1.getFirstSelectedOption().getAttribute("value").equals("CONFIG"));
         assertEquals("NodeHOSTCC", getValue(ID_NODEHOST_FIELD, "value"));
         setFieldValue(ID_NODEHOST_FIELD, "new-NodeHOSTCC");
-        
+
         assertEquals("NodeDirectoryCC", getValue(ID_NODEDIRECTORY_FIELD, "value"));
         setFieldValue(ID_NODEDIRECTORY_FIELD, "new-NodeDirectoryCC");
-        
+
         assertEquals("/ProductRoot", getValue(ID_CONFIG_INSTALLDIR_FIELD, "value"));
         setFieldValue(ID_CONFIG_INSTALLDIR_FIELD, "/new-ProductRoot");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");

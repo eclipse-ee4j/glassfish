@@ -54,27 +54,27 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
     private final static Level DEBUG_LEVEL = Level.FINER;
     private static final Logger _logger =
         Logger.getLogger(ServiceLogging.SEC_PROV_LOGGER,ServiceLogging.SHARED_LOGMESSAGE_RESOURCE);
-    
-    private AuthorizationProviderConfig cfg; 
+
+    private AuthorizationProviderConfig cfg;
     private boolean deployable;
     private String version;
-    
+
     @Inject
     private ServerEnvironment serverEnv;
-    
+
     @Inject
     private ServiceLocator serviceLocator;
-    
+
     private Domain domain = null;
-    
+
     private SecureAdmin secureAdmin = null;
-    
+
     private Decider decider;
-    
+
     @Override
     public void initialize(SecurityProvider providerConfig) {
-                
-        cfg = (AuthorizationProviderConfig)providerConfig.getSecurityProviderConfig().get(0);        
+
+        cfg = (AuthorizationProviderConfig)providerConfig.getSecurityProviderConfig().get(0);
         deployable = cfg.getSupportPolicyDeploy();
         version = cfg.getVersion();
         domain = serviceLocator.getService(Domain.class);
@@ -84,11 +84,11 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
             _logger.log(DEBUG_LEVEL, "provide version to use: " + version);
         }
     }
-    
+
     protected Decider createDecider() {
         return new Decider();
     }
-    
+
     private synchronized Decider getDecider() {
         if (decider == null) {
             decider = createDecider();
@@ -102,7 +102,7 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
     private boolean isDebug() {
         return _logger.isLoggable(DEBUG_LEVEL);
     }
-    
+
     @Override
     public AzResult getAuthorizationDecision(
         AzSubject subject,
@@ -123,23 +123,23 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
         }
         return getAdminDecision(subject, resource, action, environment);
     }
-    
+
     private boolean isAdminResource(final AzResource resource) {
         final URI resourceURI = resource.getUri();
         return "admin".equals(resourceURI.getScheme());
     }
-    
+
     private AzResult getAdminDecision(
-            final AzSubject subject,
-            final AzResource resource,
-            final AzAction action,
-            final AzEnvironment environment) {
+        final AzSubject subject,
+        final AzResource resource,
+        final AzAction action,
+        final AzEnvironment environment) {
         if (isDebug()) {
             _logger.log(DEBUG_LEVEL, "");
         }
-        AzResult rtn = new AzResultImpl(getDecider().decide(subject, resource, action, environment), 
-                Status.OK, new AzObligationsImpl());
-        
+        AzResult rtn = new AzResultImpl(getDecider().decide(subject, resource, action, environment),
+            Status.OK, new AzObligationsImpl());
+
         return rtn;
     }
 
@@ -148,59 +148,59 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
 
         return null;
     }
-    
+
     /**
      * Chooses what authorization decision to render.
-     * 
-     * We always require that the user be an administrator, established 
+     *
+     * We always require that the user be an administrator, established
      * (for open-source) by having a Principal with name asadmin.
-     * 
+     *
      * Beyond that, there are historical requirements for authenticated admin access:
-     *  
+     *
      * - "External" users (CLI, browser, JMX)
      *   - can perform all actions locally on the DAS
      *   - can perform all actions remotely on the DAS if secure admin has been enabled [1]
      *   - JMX users can perform read-only actions on a non-DAS instance,
      *     remotely if secure admin has been enabled and always locally
-     * 
+     *
      * - Selected local commands can act locally on the local DAS or local instance
      *   using the local password mechanism (stop-local-instance, for example)
-     * 
+     *
      * - A server in the same domain can perform all actions in a local or remote server
-     * 
-     * - A client (typically run in a shell created by the DAS) can perform all actions 
+     *
+     * - A client (typically run in a shell created by the DAS) can perform all actions
      *   on a local or remote DAS if it uses the admin token mechanism to authenticate
-     * 
-     * [1] Note that any attempted remote access that is not permitted has 
+     *
+     * [1] Note that any attempted remote access that is not permitted has
      * already been rejected during authentication.
-     * 
+     *
      * For enforcing read-only access we assume that any action other than the literal "read"
      * makes some change in the system.
      */
     protected class Decider {
-        
+
         protected Decision decide(final AzSubject subject, final AzResource resource,
-                final AzAction action, final AzEnvironment env) {
+            final AzAction action, final AzEnvironment env) {
             /*
              * Basically, if the subject has one of the "special" principals
              * (token, local password, etc.) then we accept it for any action
              * on the DAS and on instances.  Otherwise, it's a person and
              * we allow full access on the DAS but read-only on instances.
              */
-            Decision result = 
-                    isSubjectTrustedForDASAndInstances(subject)
-                   
-                    || // Looks external.  Allow full access on DAS, read-only on instance.
-                   
-                    (isSubjectAnAdministrator(subject)
+            Decision result =
+                isSubjectTrustedForDASAndInstances(subject)
+
+                || // Looks external.  Allow full access on DAS, read-only on instance.
+
+                (isSubjectAnAdministrator(subject)
                     && ( serverEnv.isDas()
                         || isActionRead(action)
-                       )
-                   ) ? Decision.PERMIT : Decision.DENY;
-            
+                        )
+                    ) ? Decision.PERMIT : Decision.DENY;
+
             return result;
         }
-        
+
         protected String getAdminGroupName() {
             return AuthorizationAdminConstants.ADMIN_GROUP;
         }
@@ -212,14 +212,14 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
             principalNames.retainAll(AuthorizationAdminConstants.TRUSTED_FOR_DAS_OR_INSTANCE);
             return ! principalNames.isEmpty();
         }
-        
+
         private boolean isActionRead(final AzAction action) {
             return "read".equals(action.getAction());
         }
 
         private boolean isSubjectAnAdministrator(final AzSubject subject) {
             return isPrincipalType(subject, getAdminGroupName()) ||
-                    hasSecureAdminPrincipal(subject);
+                hasSecureAdminPrincipal(subject);
         }
 
         private boolean isPrincipalType(final AzSubject subject, final String type) {
@@ -230,7 +230,7 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
             }
             return false;
         }
-        
+
         private boolean hasSecureAdminPrincipal(final AzSubject subject) {
             /*
              * If the subject has a principal with a name that matches a
@@ -252,8 +252,8 @@ public class SimpleAuthorizationProviderImpl implements AuthorizationProvider{
         }
     }
 
-	@LogMessageInfo(
-			message = "Authorization Provider supplied an invalid resource: {0}",
-			level = "WARNING")
-	private static final String ATZPROV_BAD_RESOURCE = "SEC-PROV-00100";
+    @LogMessageInfo(
+        message = "Authorization Provider supplied an invalid resource: {0}",
+        level = "WARNING")
+    private static final String ATZPROV_BAD_RESOURCE = "SEC-PROV-00100";
 }

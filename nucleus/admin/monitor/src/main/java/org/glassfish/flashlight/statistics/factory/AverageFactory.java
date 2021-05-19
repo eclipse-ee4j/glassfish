@@ -26,7 +26,7 @@ import org.glassfish.flashlight.statistics.impl.AverageImpl;
 import org.glassfish.flashlight.statistics.Average;
 
 /**
- * 
+ *
  * @author hsingh
  */
 public class AverageFactory {

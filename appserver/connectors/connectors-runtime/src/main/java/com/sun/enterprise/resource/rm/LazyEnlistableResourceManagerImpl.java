@@ -40,7 +40,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
  * @author Aditya Gore
  */
 public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
-    
+
 
     protected void enlist( JavaEETransactionManager tm, Transaction tran,
         ResourceHandle h ){
@@ -61,7 +61,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
      * This is called by the PoolManager (in turn by the LazyEnlistableConnectionManager)
      * when a lazy enlistment is sought.
      * @param mc ManagedConnection
-     * @throws ResourceException 
+     * @throws ResourceException
      */
     public void lazyEnlist( ManagedConnection mc ) throws ResourceException {
         if ( _logger.isLoggable(Level.FINE) ) {
@@ -71,7 +71,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
         //J2EETransactionManager tm = Switch.getSwitch().getTransactionManager();
         JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
         Transaction tran = null;
-        
+
         try {
             tran = tm.getTransaction();
             if ( tran == null ) {
@@ -96,7 +96,7 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
             Object comp = inv.getInstance();
 
             List l = tm.getResourceList( comp, inv );
-            
+
             ListIterator it = l.listIterator();
             while( it.hasNext()) {
                 ResourceHandle hand = (ResourceHandle) it.next();
@@ -107,13 +107,13 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
                 }
             }
         }
-        
+
         //NOTE: Notice that here we are always assuming that the connection we
         //are trying to enlist was acquired in this component only. This
         //might be inadequate in situations where component A acquires a connection
         //and passes it on to a method of component B, and the lazyEnlist is
         //triggered in B
-        //At this point however, we will only support the straight and narrow 
+        //At this point however, we will only support the straight and narrow
         //case where a connection is acquired and then used in the same component.
         //The other case might or might not work
         if( h != null && h.getResourceState().isUnenlisted()) {
@@ -121,23 +121,23 @@ public class LazyEnlistableResourceManagerImpl extends ResourceManagerImpl {
                 //Enable the suspended lazyenlistment so as to enlist the resource.
                     h.setEnlistmentSuspended(false);
                     tm.enlistResource( tran, h );
-                //Suspend it back 
+                //Suspend it back
                     h.setEnlistmentSuspended(true);
             } catch( Exception e ) {
                 //In the rare cases where enlistResource throws exception, we
-    	        //should return the resource to the pool
+                //should return the resource to the pool
                     PoolManager mgr = ConnectorRuntime.getRuntime().getPoolManager();
-    	            mgr.putbackDirectToPool( h, h.getResourceSpec().getPoolInfo());
+                    mgr.putbackDirectToPool( h, h.getResourceSpec().getPoolInfo());
                     _logger.log(Level.WARNING,
                                 "poolmgr.err_enlisting_res_in_getconn", h
                                 .getResourceSpec().getPoolInfo());
-    	        if (_logger.isLoggable(Level.FINE) ) {
-    	            _logger.fine("rm.enlistResource threw Exception. Returning resource to pool");
-    	        }
-    	        //and rethrow the exception
-    	        throw new ResourceException( e );
+                if (_logger.isLoggable(Level.FINE) ) {
+                    _logger.fine("rm.enlistResource threw Exception. Returning resource to pool");
+                }
+                //and rethrow the exception
+                throw new ResourceException( e );
             }
         }
     }
 
-} 
+}

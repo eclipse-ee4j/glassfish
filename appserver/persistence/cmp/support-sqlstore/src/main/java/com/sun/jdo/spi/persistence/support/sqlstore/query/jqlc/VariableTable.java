@@ -31,7 +31,7 @@ import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.api.persistence.support.JDOFatalInternalException;
 
 /**
- * The variable table 
+ * The variable table
  *
  * @author  Michael Bouschen
  * @version 0.1
@@ -41,7 +41,7 @@ public class VariableTable
     /**
      * I18N support
      */
-    protected final static ResourceBundle messages = 
+    protected final static ResourceBundle messages =
         I18NHelper.loadBundle(VariableTable.class);
 
     /**
@@ -62,8 +62,8 @@ public class VariableTable
         Set used;
 
         /**
-         * Dependency for this variable. 
-         * The constraint for this variable may use another variable. 
+         * Dependency for this variable.
+         * The constraint for this variable may use another variable.
          */
         String dependsOn;
 
@@ -97,7 +97,7 @@ public class VariableTable
     private ErrorMsg errorMsg;
 
     /** List of names of declared variables. */
-    private List declaredVars; 
+    private List declaredVars;
 
     /** Map of variable infos. */
     private Map varInfos;
@@ -129,7 +129,7 @@ public class VariableTable
     }
 
     /**
-     * Creates a new entry in the variable table with the specified name as key and 
+     * Creates a new entry in the variable table with the specified name as key and
      * an empty value.
      */
     public void add(String name)
@@ -140,7 +140,7 @@ public class VariableTable
     }
 
     /**
-     * Mark the specified variable as used. 
+     * Mark the specified variable as used.
      * The method sets the info field of the VarInfo object to true.
      */
     public void markUsed(JQLAST variable, String dependendVar)
@@ -193,11 +193,11 @@ public class VariableTable
     public void merge(VariableTable other)
     {
         for (Iterator i = declaredVars.iterator(); i.hasNext();)
-        { 
+        {
             String name = (String)i.next();
             VarInfo info = (VarInfo)varInfos.get(name);
             VarInfo otherInfo = (VarInfo)other.varInfos.get(name);
-            
+
             // copy other info if this info is empty
             if ((info.constraint == null) && (info.used.size() == 0))
             {
@@ -213,7 +213,7 @@ public class VariableTable
             {
                 continue;
             }
-            
+
             // constraint check
             // If both variables tables include constraints they have to be the same
             if ((info.constraint != null) && (otherInfo.constraint != null))
@@ -224,7 +224,7 @@ public class VariableTable
                         I18NHelper.getMessage(messages, "jqlc.variabletable.merge.different", name)); //NOI18N
                 }
             }
-            // If at least one variable table does not define constraint, 
+            // If at least one variable table does not define constraint,
             // nullify the constaint in this variable table
             else
             {
@@ -232,7 +232,7 @@ public class VariableTable
                 info.dependsOn = null;
                 info.status = VarInfo.UNCHECKED;
             }
-            
+
             // copy otherInfo.used to this used list
             info.used.addAll(otherInfo.used);
         }
@@ -269,24 +269,24 @@ public class VariableTable
             // if alreday checked just return
             return;
         }
-        
+
         if (info.dependsOn != null)
         {
             VarInfo dependendVarInfo = (VarInfo)varInfos.get(info.dependsOn);
             checkConstraint(info.dependsOn, dependendVarInfo);
         }
-        
+
         if ((info.constraint != null) && (info.used.size() == 0))
         {
             throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jqlc.variabletable.checkconstraint.unused", //NOI18N
                                       variable));
         }
-        
+
         attachConstraintToUsedAST(info);
         info.status = VarInfo.CHECKED;
     }
-    
+
     /**
      *
      */
@@ -299,5 +299,5 @@ public class VariableTable
                 varNode.setFirstChild(JQLAST.Factory.getInstance().dupTree(info.constraint));
         }
     }
-    
+
 }

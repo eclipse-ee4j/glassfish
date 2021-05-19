@@ -122,7 +122,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
         if (persistenceUnitsDescriptor!=null) {
 
             persistenceUnitsDescriptor.setParent(descriptor);
-            persistenceUnitsDescriptor.setPuRoot(puRoot);            
+            persistenceUnitsDescriptor.setPuRoot(puRoot);
             descriptor.addExtensionDescriptor(PersistenceUnitsDescriptor.class,persistenceUnitsDescriptor, puRoot);
         }
 
@@ -225,7 +225,7 @@ public abstract class PersistenceArchivist extends ExtensionsArchivist {
      */
     @Override
     public void writeDeploymentDescriptors(Archivist main, BundleDescriptor descriptor, ReadableArchive in, WritableArchive out) throws IOException {
-        // we do not write out any persistence deployment descriptors 
+        // we do not write out any persistence deployment descriptors
         // for now
     }
 }

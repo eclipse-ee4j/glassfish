@@ -22,8 +22,8 @@ import org.glassfish.hk2.api.PerLookup;
 import jakarta.inject.Inject;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.external.statistics.CountStatistic; 
-import org.glassfish.external.statistics.RangeStatistic; 
+import org.glassfish.external.statistics.CountStatistic;
+import org.glassfish.external.statistics.RangeStatistic;
 import org.glassfish.admin.monitor.cli.MonitorContract;
 import org.glassfish.flashlight.datatree.TreeNode;
 import org.glassfish.flashlight.MonitoringRuntimeDataRegistry;
@@ -44,10 +44,12 @@ public class AltServletStatsImpl implements MonitorContract {
 
     private final static String displayFormat = "%1$-10s %2$-10s %3$-10s";
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public ActionReport process(final ActionReport report, final String filter) {
 
         if (mrdr == null) {
@@ -63,11 +65,11 @@ public class AltServletStatsImpl implements MonitorContract {
             return report;
         }
 
-        String [] patternArr = new String [] {"server.web.servlet.*"};
-        
-	long activeServletsLoadedCount = 0; 
-	long maxServletsLoadedCount = 0; 
-	long totalServletsLoadedCount = 0;
+        String[] patternArr = new String [] {"server.web.servlet.*"};
+
+        long activeServletsLoadedCount = 0;
+        long maxServletsLoadedCount = 0;
+        long totalServletsLoadedCount = 0;
 
         for (String pattern : patternArr) {
             List<TreeNode> tnL = serverNode.getNodes(pattern);
@@ -75,19 +77,18 @@ public class AltServletStatsImpl implements MonitorContract {
                 if (tn.hasChildNodes()) {
                     continue;
                 }
-                if ("activeservletsloadedcount".equals(tn.getName())) { 
+                if ("activeservletsloadedcount".equals(tn.getName())) {
                     activeServletsLoadedCount = getRangeStatisticValue(tn.getValue());
-                } else if ("maxservletsloadedcount".equals(tn.getName())) { 
+                } else if ("maxservletsloadedcount".equals(tn.getName())) {
                     maxServletsLoadedCount = getCountStatisticValue(tn.getValue());
-                } else if ("totalservletsloadedcount".equals(tn.getName())) { 
+                } else if ("totalservletsloadedcount".equals(tn.getName())) {
                     totalServletsLoadedCount = getCountStatisticValue(tn.getValue());
                 }
             }
         }
 
-        report.setMessage(String.format(displayFormat, 
-                activeServletsLoadedCount, maxServletsLoadedCount,
-                totalServletsLoadedCount));
+        report.setMessage(
+            String.format(displayFormat, activeServletsLoadedCount, maxServletsLoadedCount, totalServletsLoadedCount));
 
         report.setActionExitCode(ExitCode.SUCCESS);
         return report;
@@ -95,7 +96,9 @@ public class AltServletStatsImpl implements MonitorContract {
 
     private long getCountStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof CountStatistic) {
             return ((CountStatistic)obj).getCount();
         }
@@ -104,7 +107,9 @@ public class AltServletStatsImpl implements MonitorContract {
 
     private long getRangeStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof RangeStatistic) {
             return ((RangeStatistic)obj).getCurrent();
         }

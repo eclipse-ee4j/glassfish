@@ -38,18 +38,18 @@ public class AroundInvokeNode extends DeploymentDescriptorNode<LifecycleCallback
     public LifecycleCallbackDescriptor getDescriptor() {
        if (descriptor==null) {
             descriptor = new LifecycleCallbackDescriptor();
-            Descriptor parentDesc = 
+            Descriptor parentDesc =
                 (Descriptor)getParentNode().getDescriptor();
             if (parentDesc instanceof EjbDescriptor) {
                 EjbDescriptor ejbDesc = (EjbDescriptor)parentDesc;
                 descriptor.setDefaultLifecycleCallbackClass(
                     ejbDesc.getEjbClassName());
             } else if (parentDesc instanceof EjbInterceptor) {
-                EjbInterceptor ejbInterceptor = 
+                EjbInterceptor ejbInterceptor =
                     (EjbInterceptor)parentDesc;
                 descriptor.setDefaultLifecycleCallbackClass(
                     ejbInterceptor.getInterceptorClassName());
-            } 
+            }
         }
         return descriptor;
     }
@@ -57,9 +57,9 @@ public class AroundInvokeNode extends DeploymentDescriptorNode<LifecycleCallback
     @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(EjbTagNames.AROUND_INVOKE_CLASS_NAME, 
+        table.put(EjbTagNames.AROUND_INVOKE_CLASS_NAME,
             "setLifecycleCallbackClass");
-        table.put(EjbTagNames.AROUND_INVOKE_METHOD_NAME, 
+        table.put(EjbTagNames.AROUND_INVOKE_METHOD_NAME,
             "setLifecycleCallbackMethod");
         return table;
     }
@@ -67,10 +67,10 @@ public class AroundInvokeNode extends DeploymentDescriptorNode<LifecycleCallback
     @Override
     public Node writeDescriptor(Node parent, String nodeName, LifecycleCallbackDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        appendTextChild(myNode, EjbTagNames.AROUND_INVOKE_CLASS_NAME, 
-            descriptor.getLifecycleCallbackClass());                        
-        appendTextChild(myNode, EjbTagNames.AROUND_INVOKE_METHOD_NAME, 
-            descriptor.getLifecycleCallbackMethod());                        
+        appendTextChild(myNode, EjbTagNames.AROUND_INVOKE_CLASS_NAME,
+            descriptor.getLifecycleCallbackClass());
+        appendTextChild(myNode, EjbTagNames.AROUND_INVOKE_METHOD_NAME,
+            descriptor.getLifecycleCallbackMethod());
         return myNode;
     }
 }

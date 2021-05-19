@@ -33,26 +33,26 @@ import jakarta.inject.Qualifier;
 
 /**
  * A CDI Qualifier that represents a reference to a
- * service in the framework. If this qualifiers annotates an injection point, 
+ * service in the framework. If this qualifiers annotates an injection point,
  * the framework extension discovers and instantiates
  * a service implementing the service interface type of the injection point
  * and makes it available for injection to that injection point.
- */ 
+ */
 public @interface FrameworkService {
     /**
      * Determines if the service reference that is injected
      * refers to a dynamic proxy or the actual service reference obtained
-     * from the framework service registry  
+     * from the framework service registry
      */
    boolean dynamic() default false; //dynamic
-   
+
    /**
     * service discovery criteria
     */
-   String serviceCriteria() default ""; 
-   
+   String serviceCriteria() default "";
+
    /**
     * wait specified in millis. -1 indicates indefinite wait
     */
-   int waitTimeout() default -1; 
+   int waitTimeout() default -1;
 }

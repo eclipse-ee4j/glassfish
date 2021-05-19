@@ -33,7 +33,7 @@ public class XProtocolFinder implements ProtocolFinder {
 
     @Override
     public Result find(PUContext puContext, FilterChainContext ctx) {
-        
+
         final Buffer buffer = ctx.getMessage();
 
         if (buffer.remaining() < signature.length) {

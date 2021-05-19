@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) throws Exception {
 
         stat.addDescription("Unit test for CR 6895187");
@@ -54,11 +54,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port + contextRoot +
             "/TestServlet");
         System.out.println("Connecting to: " + url.toString());
@@ -98,7 +98,7 @@ public class WebTest {
 
         if (!EXPECTED_RESPONSE.equals(line)) {
             throw new Exception("Missing or unexpected response body, " +
-                                "expected: " + EXPECTED_RESPONSE + 
+                                "expected: " + EXPECTED_RESPONSE +
                                 ", received: " + line);
         }
     }

@@ -153,13 +153,13 @@ public final class DomainDirs {
 
         if(files.length > 1) {
             StringBuilder names = new StringBuilder();
-            
+
             for(int i = 0 ; i < files.length; i++) {
                 if(i > 0)
                     names.append(", ");
                 names.append(files[i].getName());
             }
-            
+
             throw new IOException(strings.get("Domain.tooManyDomainDirs", parent, names.toString()));
         }
 

@@ -52,29 +52,29 @@ import com.sun.enterprise.admin.mbeanapi.common.AMXMonitoringTestBase;
  * @version $Revision: 1.1 $
  */
 public class ConnectorMonitoring extends AMXMonitoringTestBase {
-    
+
     private String serverName;
     private static String SERVLETS = " - SERVLETS -";
     private static String VS = "VIRTUAL SERVER";
-    
+
     public ConnectorMonitoring(final String host, final int port, final String serverName,
     final String adminUser, final String adminPassword,
     final boolean useTLS) throws IOException {
         super(host, port, adminUser,adminPassword,useTLS);
         this.serverName = serverName;
     }
-    
-    
+
+
     public void  test() {
         Map connMap =
             getServerRootMonitor(serverName).
                 getConnectorConnectionPoolMonitorMap();
-        assert(connMap.size() > 0) : 
+        assert(connMap.size() > 0) :
             "The connection pool monitor map is " + connMap.size();
         for(Iterator itr = connMap.values().iterator(); itr.hasNext();) {
             ConnectorConnectionPoolMonitor connMonitor =
                 (ConnectorConnectionPoolMonitor) itr.next();
-            System.out.println("\nConnectorConnectionPoolMonitor [" +         
+            System.out.println("\nConnectorConnectionPoolMonitor [" +
                 connMonitor.getName() + "]");
             printStats(connMonitor.getStats().getStatistics());
         }
@@ -96,14 +96,14 @@ public class ConnectorMonitoring extends AMXMonitoringTestBase {
         }
          **/
     }
-    
-    
+
+
     /**
      *
      */
     public static void   main( final String[] args ) {
         new StringifierRegistryIniterImpl( StringifierRegistryImpl.DEFAULT );
-        
+
         try {
             ConnectorMonitoring connMtr = new ConnectorMonitoring(
             System.getProperty("HOST", "hoyas.red.iplanet.com"),
@@ -111,14 +111,14 @@ public class ConnectorMonitoring extends AMXMonitoringTestBase {
             System.getProperty("ADMIN_USER", "admin"),
             System.getProperty("ADMIN_PASSWORD", "adminadmin"),
             Boolean.getBoolean(System.getProperty("USE_TLS", "false")));
-            
+
             ConnectorMonitoring.printArgs(args);
-            
+
             connMtr.test();
-            
+
         } catch( Throwable t ) {
             ExceptionUtil.getRootCause( t ).printStackTrace();
         }
     }
-    
+
 }

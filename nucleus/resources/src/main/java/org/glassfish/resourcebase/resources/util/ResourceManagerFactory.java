@@ -44,11 +44,11 @@ public class ResourceManagerFactory {
         for (ServiceHandle<?> handle : locator.getAllServiceHandles(ResourceDeployerInfo.class)) {
             ActiveDescriptor<?> desc = handle.getActiveDescriptor();
             if (desc == null) continue;
-            
+
             List<String> resourceImpls = desc.getMetadata().get(METADATA_KEY);
             if (resourceImpls == null || resourceImpls.isEmpty()) continue;
             String resourceImpl = resourceImpls.get(0);
-            
+
             if(Proxy.isProxyClass(resource.getClass())){
                 for(Class<?> clz : resource.getClass().getInterfaces()){
                     if(resourceImpl.equals(clz.getName())){
@@ -56,17 +56,17 @@ public class ResourceManagerFactory {
                         break;
                     }
                 }
-                        
+
                 if(deployerHandle != null){
                     break;
                 }
             }
-                
+
             if(resourceImpl.equals(resource.getClass().getName())){
                 deployerHandle = handle;
                 break;
             }
-                
+
             //hack : for JdbcConnectionPool impl used by DataSourceDefinition.
             //check whether the interfaces implemented by the class matches
             for(Class<?> clz : resource.getClass().getInterfaces()){
@@ -75,19 +75,19 @@ public class ResourceManagerFactory {
                     break;
                 }
             }
-                    
+
             if(deployerHandle != null){
                 break;
             }
         }
-        
+
         if (deployerHandle != null){
             Object deployer = deployerHandle.getService();
             if(deployer != null && deployer instanceof ResourceDeployer){
                 return (ResourceDeployer) deployer;
             }
         }
-        
+
         return null;
     }
 

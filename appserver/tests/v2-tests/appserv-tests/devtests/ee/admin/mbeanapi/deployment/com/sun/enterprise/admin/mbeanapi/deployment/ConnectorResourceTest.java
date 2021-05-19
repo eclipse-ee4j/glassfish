@@ -31,8 +31,8 @@ public class ConnectorResourceTest extends BaseTest
     static final String kPoolName       = "mypool";
     static final String kObjectType     = "user";
 
-    public ConnectorResourceTest(final String user, 
-        final String password, final String host, final int port, 
+    public ConnectorResourceTest(final String user,
+        final String password, final String host, final int port,
         final String jndiName, final String poolName)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -40,11 +40,11 @@ public class ConnectorResourceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateConnectorResourceCmd createCmd = 
-                cmdFactory.createCreateConnectorResourceCmd(jndiName, 
+        final CreateConnectorResourceCmd createCmd =
+                cmdFactory.createCreateConnectorResourceCmd(jndiName,
                         poolName, getOptional());
 
-        final DeleteConnectorResourceCmd deleteCmd = 
+        final DeleteConnectorResourceCmd deleteCmd =
                 cmdFactory.createDeleteConnectorResourceCmd(jndiName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -66,14 +66,14 @@ public class ConnectorResourceTest extends BaseTest
 
     public static void main(String[] args) throws Exception
     {
-        new ConnectorResourceTest("admin", "password", "localhost", 8686, 
-                kJNDIName, kPoolName).run(); 
+        new ConnectorResourceTest("admin", "password", "localhost", 8686,
+                kJNDIName, kPoolName).run();
     }
 
     private Map getOptional()
     {
         final Map optional = new HashMap();
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
                 //kObjectType);
         return optional;
     }

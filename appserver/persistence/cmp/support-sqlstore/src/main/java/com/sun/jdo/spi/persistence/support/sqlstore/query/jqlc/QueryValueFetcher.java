@@ -33,7 +33,7 @@ import org.glassfish.persistence.common.I18NHelper;
  * Class wrapping the actual query parameters to make them
  * accessible through the ValueFetcher interface.
  */
-public class QueryValueFetcher implements ValueFetcher 
+public class QueryValueFetcher implements ValueFetcher
 {
     /** I18N support */
     protected final static ResourceBundle messages =
@@ -41,24 +41,24 @@ public class QueryValueFetcher implements ValueFetcher
 
     /** The actual parameter values. */
     private Object[] parameters;
-    
+
     /**
      * Constructor.
      * @param parameters the actual parameter values.
      */
-    public QueryValueFetcher(Object[] parameters) 
+    public QueryValueFetcher(Object[] parameters)
     {
         this.parameters = parameters;
     }
-    
+
     /**
      * Returns the parameter value for the specified parameter index
      * @param whichOne the parameter index
      * @return the parameter value
      */
-    public Object getValue(int whichOne) 
+    public Object getValue(int whichOne)
     {
-        if (parameters == null || whichOne >= parameters.length) 
+        if (parameters == null || whichOne >= parameters.length)
         {
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                 "jqlc.queryvaluefetcher.getvalue.invalidparam", //NOI18N

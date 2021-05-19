@@ -22,7 +22,7 @@ import java.lang.reflect.Constructor;
 import java.security.Principal;
 
 /**
- * This is an in memory representation of the principal-name with its name of 
+ * This is an in memory representation of the principal-name with its name of
  * the implementation class.
  * @author deployment dev team
  */
@@ -65,7 +65,7 @@ public class PrincipalNameDescriptor extends Descriptor {
                 cLoader = Thread.currentThread().getContextClassLoader();
             }
             Class clazz = Class.forName(getClassName(), true, cLoader);
-            Constructor constructor = 
+            Constructor constructor =
                             clazz.getConstructor(new Class[]{String.class});
             Object o = constructor.newInstance(new Object[]{principalName});
             return (Principal) o;

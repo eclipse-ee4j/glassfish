@@ -42,7 +42,7 @@ public class TimerWelcomeServlet extends HttpServlet {
     @EJB
     private transient TimerLocal timer;
 
-    /** 
+    /**
     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
     * @param request servlet request
     * @param response servlet response
@@ -54,7 +54,7 @@ public class TimerWelcomeServlet extends HttpServlet {
         try {
             out.println("<html>");
             out.println("<head>");
-            out.println("<title>Timer Application</title>");  
+            out.println("<title>Timer Application</title>");
             out.println("</head>");
             out.println("<body>");
             out.println("<h3>Welcome to Timer Application</h3>");
@@ -69,12 +69,12 @@ public class TimerWelcomeServlet extends HttpServlet {
             int persistentsize = persistenttimers.size();
             int nonpersistentsize = nonpersistenttimers.size();
 
-            out.println("There " + ((persistentsize == 1)? "is " : "are  ") 
+            out.println("There " + ((persistentsize == 1)? "is " : "are  ")
                     + persistentsize
                     + " active persistent timer" + ((persistentsize == 1)? "" : "s")
                     + " on this container");
             out.println("<br>");
-            out.println("There " + ((nonpersistentsize == 1)? "is " : "are  ") 
+            out.println("There " + ((nonpersistentsize == 1)? "is " : "are  ")
                     + nonpersistentsize
                     + " active non-persistent timer" + ((nonpersistentsize == 1)? "" : "s")
                     + " on this container");
@@ -88,7 +88,7 @@ public class TimerWelcomeServlet extends HttpServlet {
         finally {
             out.println("</body>");
             out.println("</html>");
-            
+
             out.close();
             out.flush();
 
@@ -97,7 +97,7 @@ public class TimerWelcomeServlet extends HttpServlet {
 
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
     * Handles the HTTP <code>GET</code> method.
     * @param request servlet request
     * @param response servlet response
@@ -105,9 +105,9 @@ public class TimerWelcomeServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
     * Handles the HTTP <code>POST</code> method.
     * @param request servlet request
     * @param response servlet response
@@ -117,7 +117,7 @@ public class TimerWelcomeServlet extends HttpServlet {
         processRequest(request, response);
     }
 
-    /** 
+    /**
     * Returns a short description of the servlet.
     */
     public String getServletInfo() {

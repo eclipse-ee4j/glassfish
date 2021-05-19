@@ -26,8 +26,8 @@ import jakarta.inject.Inject;
 public class StatefulBean {
 
     @Inject
-	public StatefulBean(SingletonBean sing) {
-	System.out.println("In StatefulBean ctor sing = " + sing);
+        public StatefulBean(SingletonBean sing) {
+        System.out.println("In StatefulBean ctor sing = " + sing);
     }
 
     @PostConstruct
@@ -36,7 +36,7 @@ public class StatefulBean {
     }
 
     public void hello() {
-	System.out.println("In StatefulBean::hello()");
+        System.out.println("In StatefulBean::hello()");
     }
 
     @PreDestroy

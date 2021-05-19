@@ -24,23 +24,23 @@ public interface SFSB
 {
 
     public String getName()
-	throws RemoteException;
+        throws RemoteException;
 
     public int getActivationCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public int getPassivationCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public void makeStateNonSerializable()
-	throws RemoteException;
+        throws RemoteException;
 
     public void sleepForSeconds(int sec)
-	throws RemoteException;
+        throws RemoteException;
 
     public boolean isOK(String name)
-	throws RemoteException;
+        throws RemoteException;
 
     public void unusedMethod()
-	throws RemoteException;
+        throws RemoteException;
 }

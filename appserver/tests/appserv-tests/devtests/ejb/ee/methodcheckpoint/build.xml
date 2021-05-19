@@ -47,9 +47,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ee tests)
-	</echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ee tests)
+        </echo>
     </target>
 </project>

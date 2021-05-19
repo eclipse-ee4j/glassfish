@@ -32,14 +32,14 @@
     <target name="clean">
         <delete file="WebTest.class" />
     </target>
-       
+
     <target name="compile">
         <javac
             srcdir="."
             classpath="${env.APS_HOME}/lib/reportbuilder.jar;${env.S1AS_HOME}/modules/jakarta.el.jar;${env.S1AS_HOME}/modules/jakarta.el-api.jar"
             includes="WebTest.java"/>
 
-    </target> 
+    </target>
 
     <target name="run" depends="compile">
         <java classname="WebTest">
@@ -51,7 +51,7 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

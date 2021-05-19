@@ -38,7 +38,7 @@ import static org.glassfish.config.support.Constants.*;
  * information about all other servers in its cluster. This makes the parsing with the old method so difficult and
  * complex that I came up with a new plan: ALWAYS parse twice. The first time through should be VERY fast because we are
  * skipping almost everything. I'm just picking out the minimal "look-ahead" info and saving it for the final parse.
- * 
+ *
  * @author Byron Nevins
  */
 class DomainXmlPreParser {
@@ -128,7 +128,7 @@ class DomainXmlPreParser {
                 }
             }
         }
-        // if we get here that means the instance either 
+        // if we get here that means the instance either
         // does not exist or it is stand-alone
         cluster = new ClusterData();
         cluster.configRef = serverConfigRef;

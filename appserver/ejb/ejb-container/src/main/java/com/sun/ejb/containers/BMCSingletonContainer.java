@@ -43,7 +43,7 @@ public class BMCSingletonContainer
             invCount.incrementAndGet();
             ((SingletonContextImpl) singletonCtx).setState(EJBContextImpl.BeanState.INVOKING);
         }
-        
+
         //For now return this as we support only BMC
         return singletonCtx;
     }

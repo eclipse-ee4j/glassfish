@@ -27,7 +27,7 @@
     </parent>
     <artifactId>web-embed</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Web container embedded related modules</name>  
+    <name>GlassFish Web container embedded related modules</name>
     <modules>
         <module>api</module>
     </modules>

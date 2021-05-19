@@ -138,7 +138,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
             try {
                 wm = ConnectorRuntime.getRuntime().getWorkManagerProxy(threadPoolId, moduleName, rarCL);
             } catch(Exception e) {
-           	    logger.log(Level.SEVERE, "workmanager.instantiation_error", e);
+                   logger.log(Level.SEVERE, "workmanager.instantiation_error", e);
             }
         }
     }
@@ -156,7 +156,7 @@ public final class BootstrapContextImpl implements BootstrapContext, Serializabl
      * initializes XATerminator reference
      */
     private void initializeXATerminator() {
-        if (xa == null) {                                   
+        if (xa == null) {
             xa = ConnectorRuntime.getRuntime().getXATerminatorProxy(moduleName);
         }
     }

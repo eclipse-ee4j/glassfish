@@ -26,7 +26,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
     private String authMethod; // Method used for Authentication.
     private String principalName; // String form of the Principal.
     private int status; // Status
-    
+
     /**
      * This constructs a new AuthenticationStatus object.
      * @param The name of the principal
@@ -35,12 +35,12 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @param The status of the authentication
      */
     public AuthenticationStatusImpl(String principalName, String authMethod,
-				    String realm,
-				    int status) {
-	this.principalName = principalName;
-	this.authMethod = authMethod;
-	this.status = status;
-	this.realmName = realm;
+                                    String realm,
+                                    int status) {
+        this.principalName = principalName;
+        this.authMethod = authMethod;
+        this.status = status;
+        this.realmName = realm;
     }
 
     /**
@@ -48,51 +48,51 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      * @return An integer value indicating the status of the authentication
      */
     public int getStatus() {
-	return status;
+        return status;
     }
 
-    /** 
+    /**
      * This method returns a byte array of zero length, since there's
      * no continuation data needed for passphrase based authentication.
      * @return A byte array of zero length.
      */
     public byte[] getContinuationData() {
-	return new byte[0];
+        return new byte[0];
     }
 
-    /** 
+    /**
      * This method returns a byte array of zero length, since there's
      * no auth specific data needed for passphrase based authentication.
      * @return A byte array of zero length.
      */
     public byte[] getAuthSpecificData() {
-	return new byte[0];
+        return new byte[0];
     }
 
-    /** 
+    /**
      * This method returns the name of realm where the authentication was
      * performed.
      * @return A java.lang.String representation of the realm.
      */
     public String getRealmName() {
-	return realmName;
+        return realmName;
     }
-    
-    /** 
-     * This method returns the "method" used to perform authentication 
-     * @return A java.lang.String representation of the method used. In 
+
+    /**
+     * This method returns the "method" used to perform authentication
+     * @return A java.lang.String representation of the method used. In
      * passphrase based authentication it returns the string "password".
      */
     public String getAuthMethod() {
-	return authMethod;
+        return authMethod;
     }
 
-    /** 
+    /**
      * This method returns the string representation of the principal
      * that was authenticated.
-     * @return A java.lang.String representation of the Principal. 
+     * @return A java.lang.String representation of the Principal.
      */
     public String getPrincipalName() {
-	return principalName;
+        return principalName;
     }
 }

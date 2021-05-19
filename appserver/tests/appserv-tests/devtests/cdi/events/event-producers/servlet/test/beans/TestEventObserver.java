@@ -38,12 +38,12 @@ public class TestEventObserver {
         System.out.println("TestEventObserver:afterDocumentUpdate");
         documentUpdatedEvent++;
     }
-    
+
     public void onDocumentUpdatedAndApproved(
             @Observes @Updated @Approved Document d){
         System.out.println("TestEventObserver:updated and approved");
         documentApprovedEvents++;
-        
+
     }
 
 }

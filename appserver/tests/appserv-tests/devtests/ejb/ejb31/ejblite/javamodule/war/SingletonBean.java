@@ -34,7 +34,7 @@ import jakarta.ejb.SessionContext;
 @Singleton
 @LocalBean
 public class SingletonBean implements java.util.Observer {
-  
+
 
     @EJB private  SingletonBean me;
 
@@ -51,71 +51,71 @@ public class SingletonBean implements java.util.Observer {
     private StatelessBean slsb3;
     private StatelessBean slsb4;
     private StatelessBean slsb5;
-	
+
     public void update(java.util.Observable a,java.lang.Object b)  {}
 
     @PostConstruct
     private void init() {
 
-	System.out.println("In SingletonBean:init() me = " + me);
-	
-	if( sessionCtx.getContextData() == null ) {
-	    throw new EJBException("null context data");
-	}
+        System.out.println("In SingletonBean:init() me = " + me);
 
-	try {
-	    InitialContext ic = new InitialContext();
+        if( sessionCtx.getContextData() == null ) {
+            throw new EJBException("null context data");
+        }
 
-	    // Lookup simple form of portable JNDI name 
-	    StatelessBean stateless = (StatelessBean) 
-		ic.lookup("java:module/StatelessBean");
+        try {
+            InitialContext ic = new InitialContext();
 
-	    stateless.hello();
+            // Lookup simple form of portable JNDI name
+            StatelessBean stateless = (StatelessBean)
+                ic.lookup("java:module/StatelessBean");
 
-	    // Lookup fully-qualified form of portable JNDI name
-	    StatelessBean stateless2 = (StatelessBean) 
-		ic.lookup("java:module/StatelessBean!com.acme.StatelessBean");
+            stateless.hello();
 
-	    stateless2.hello();
+            // Lookup fully-qualified form of portable JNDI name
+            StatelessBean stateless2 = (StatelessBean)
+                ic.lookup("java:module/StatelessBean!com.acme.StatelessBean");
 
-	    sb2 = (SingletonBean) ic.lookup("java:module/SingletonBean");
-	    sb3 = (SingletonBean) ic.lookup("java:module/SingletonBean!com.acme.SingletonBean");
+            stateless2.hello();
 
-	    sb4 = (SingletonBean) ic.lookup("java:module/ES1");
-	    sb5 = (SingletonBean) ic.lookup("java:module/env/ES2");
+            sb2 = (SingletonBean) ic.lookup("java:module/SingletonBean");
+            sb3 = (SingletonBean) ic.lookup("java:module/SingletonBean!com.acme.SingletonBean");
 
-	    slsb = (StatelessBean) ic.lookup("java:module/StatelessBean");
-	    slsb2 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean");
-	    slsb3 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean!com.acme.StatelessBean");
+            sb4 = (SingletonBean) ic.lookup("java:module/ES1");
+            sb5 = (SingletonBean) ic.lookup("java:module/env/ES2");
 
-	    slsb4 = (StatelessBean) ic.lookup("java:app/EL1");
-	    slsb5 = (StatelessBean) ic.lookup("java:app/env/EL2");
+            slsb = (StatelessBean) ic.lookup("java:module/StatelessBean");
+            slsb2 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean");
+            slsb3 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean!com.acme.StatelessBean");
 
-	    System.out.println("My AppName = " + 
-			       ic.lookup("java:app/AppName"));
+            slsb4 = (StatelessBean) ic.lookup("java:app/EL1");
+            slsb5 = (StatelessBean) ic.lookup("java:app/env/EL2");
 
-	    System.out.println("My ModuleName = " + 
-			       ic.lookup("java:module/ModuleName"));
+            System.out.println("My AppName = " +
+                               ic.lookup("java:app/AppName"));
 
-	} catch(NamingException ne) {
-	    throw new EJBException(ne);
-	}
+            System.out.println("My ModuleName = " +
+                               ic.lookup("java:module/ModuleName"));
+
+        } catch(NamingException ne) {
+            throw new EJBException(ne);
+        }
     }
 
     public void hello() {
-	System.out.println("In SingletonBean:hello()");
-	if( sessionCtx.getContextData() == null ) {
-	    throw new EJBException("null context data");
-	}
+        System.out.println("In SingletonBean:hello()");
+        if( sessionCtx.getContextData() == null ) {
+            throw new EJBException("null context data");
+        }
 
     }
 
     @PreDestroy
     private void destroy() {
-	System.out.println("In SingletonBean:destroy()");
-	if( sessionCtx.getContextData() == null ) {
-	    throw new EJBException("null context data");
-	}
+        System.out.println("In SingletonBean:destroy()");
+        if( sessionCtx.getContextData() == null ) {
+            throw new EJBException("null context data");
+        }
 
     }
 

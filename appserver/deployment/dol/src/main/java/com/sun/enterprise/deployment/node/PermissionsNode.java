@@ -29,53 +29,53 @@ public class PermissionsNode extends AbstractBundleNode {
 
     public final static String SCHEMA_ID = "permissions_9.xsd";
     public final static String SPEC_VERSION = "9";
-    
+
     private final static List<String> systemIDs = initSystemIDs();
-    
+
     // The XML tag associated with this Node
     public final static XMLElement ROOT_ELEMENT = new XMLElement(
             DeclaredPermissionsTagNames.PERMS_ROOT);
-    
+
     private final static List<String> initSystemIDs() {
-        
+
         List<String> systemIDs = new ArrayList<String>();
         systemIDs.add(SCHEMA_ID);
         return Collections.unmodifiableList(systemIDs);
     }
-    
+
     private PermissionsDescriptor permDescriptor;
-    
-    
+
+
     public PermissionsNode() {
         if (handlers != null) handlers.clear();
 
         permDescriptor = new PermissionsDescriptor();
-        
+
         registerElementHandler(
                 new XMLElement(DeclaredPermissionsTagNames.PERM_ITEM),
                 PermissionItemNode.class);
-        
-        SaxParserHandler.registerBundleNode(this, 
+
+        SaxParserHandler.registerBundleNode(this,
                 DeclaredPermissionsTagNames.PERMS_ROOT);
     }
-    
-    
+
+
     public PermissionsNode(PermissionsDescriptor permDescriptor) {
         this();
         this.permDescriptor = permDescriptor;
     }
-    
-    
+
+
     @Override
     public PermissionsDescriptor getDescriptor() {
         return permDescriptor;
     }
-    
-    
-    
+
+
+
     @Override
     public String registerBundle(Map<String, String> publicIDToSystemIDMapping) {
-        
+
         return ROOT_ELEMENT.getQName();
     }
 
@@ -83,7 +83,7 @@ public class PermissionsNode extends AbstractBundleNode {
     public Map<String, Class> registerRuntimeBundle(
             Map<String, String> publicIDToSystemIDMapping,
             final Map<String, List<Class>> versionUpgrades) {
-        
+
         return Collections.EMPTY_MAP;
     }
 

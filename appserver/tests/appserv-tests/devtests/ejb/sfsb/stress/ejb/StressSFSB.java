@@ -24,7 +24,7 @@ public interface StressSFSB
 {
 
     public String getName()
-	throws RemoteException;
+        throws RemoteException;
 
     public boolean hasSameName(String name)
         throws RemoteException;

@@ -27,17 +27,17 @@ package com.sun.enterprise.util.uuid;
  * @author  lwhite
  */
 public class UuidGeneratorPaddedImpl implements UuidGenerator {
-    
+
     /** Creates a new instance of UuidGeneratorPaddedImpl */
     public UuidGeneratorPaddedImpl() {
     }
-    
+
     public String generateUuid() {
         return UuidUtilPadded.generateUuid();
     }
-    
+
     public String generateUuid(Object obj) {
         return UuidUtilPadded.generateUuid(obj, UuidUtilPadded.DESIRED_UUID_LENGTH);
-    }    
-    
+    }
+
 }

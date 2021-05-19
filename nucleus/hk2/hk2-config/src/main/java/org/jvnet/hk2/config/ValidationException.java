@@ -29,7 +29,7 @@ public class ValidationException extends HK2Exception {
      * For serialization
      */
     private static final long serialVersionUID = -5128377821321122996L;
-    
+
     public ValidationException() {
         super();
     }

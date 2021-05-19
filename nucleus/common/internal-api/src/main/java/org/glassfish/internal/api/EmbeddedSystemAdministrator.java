@@ -22,7 +22,7 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * Implements the internal system administrator contract for embedded
  * internal command submissions.
- * 
+ *
  * @author tjquinn
  */
 @Service(name="embedded")
@@ -34,10 +34,10 @@ public class EmbeddedSystemAdministrator implements InternalSystemAdministrator 
         result.getPrivateCredentials().add(new EmbeddedSystemAdministratorCreds());
         return result;
     }
-    
+
     public boolean matches(final Subject other) {
         return ! other.getPrivateCredentials(EmbeddedSystemAdministratorCreds.class).isEmpty();
     }
-    
-    private static class EmbeddedSystemAdministratorCreds {} 
+
+    private static class EmbeddedSystemAdministratorCreds {}
 }

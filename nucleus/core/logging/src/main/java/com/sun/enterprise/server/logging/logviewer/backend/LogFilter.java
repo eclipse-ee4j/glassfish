@@ -678,9 +678,9 @@ public class LogFilter {
             buf.append(nameValueCheck(entry.getLoggedNameValuePairs(), nameValueMap));
             buf.append(",");
             buf.append(messageDataCheck(entry.getLoggedMessage(), entry.getLoggedNameValuePairs(), anySearch));
-            System.out.println("allChecks="+buf.toString()); 
+            System.out.println("allChecks="+buf.toString());
         }
-        
+
         if ((dateTimeCheck(entry.getLoggedDateTime(), fromDate, toDate))
                 && (levelCheck(entry.getLoggedLevel(), queryLevel, onlyLevel))
                 && (moduleCheck(entry.getLoggedLoggerName(), listOfModules))
@@ -704,8 +704,8 @@ public class LogFilter {
         if (!(loggedDateTime.before(fromDateTime) ||
                 loggedDateTime.after(toDateTime))) {
             return true;
-        } 
-        
+        }
+
         return false;
     }
 
@@ -730,7 +730,7 @@ public class LogFilter {
                 int queryLevelValue = Level.parse(queryLevelIn).intValue();
                 return (loggedLevelValue >= queryLevelValue);
             } catch(Exception e) {
-                return true;                
+                return true;
             }
         }
     }
@@ -739,7 +739,7 @@ public class LogFilter {
         if ((modules == null) || (modules.size() == 0)) {
             return true;
         }
-        loggerName = loggerName.trim();        
+        loggerName = loggerName.trim();
         Iterator iterator = modules.iterator();
         while (iterator.hasNext()) {
             String module = (String) iterator.next();
@@ -771,7 +771,7 @@ public class LogFilter {
             String loggedValue = nvToken.nextToken();
 
             // Reset the iterator to start from the first entry AGAIN
-            // FIXME: Is there any other cleaner way to reset the iterator 
+            // FIXME: Is there any other cleaner way to reset the iterator
             // position to zero than recreating a new iterator everytime
             Iterator queriedNameValueMapIterator =
                     queriedNameValueMap.entrySet().iterator();
@@ -783,7 +783,7 @@ public class LogFilter {
                     Object value = entry.getValue();
                     // We have a key with multiple values to match.
                     // This will happen if the match condition is like
-                    // _ThreadID=10 or _ThreadID=11 
+                    // _ThreadID=10 or _ThreadID=11
                     // _REVISIT_: There is an opportunity to improve performance
                     // for this search.
                     Iterator iterator = ((java.util.List) value).iterator();

@@ -21,36 +21,33 @@ import java.util.Hashtable;
 /**
  * Environment in which to decode the attributes of a CodeAttribute.
  */
-
 class CodeEnv {
-  /* The constant pool */
-  private ConstantPool constantPool;
+    /* The constant pool */
+    private ConstantPool constantPool;
 
-  /* hash table mapping byte code offset to InsnTarget */
-  private Hashtable targets = new Hashtable(7);
+    /* hash table mapping byte code offset to InsnTarget */
+    private Hashtable targets = new Hashtable(7);
 
-  CodeEnv(ConstantPool constantPool) {
-    this.constantPool = constantPool;
-  }
-
-  final InsnTarget getTarget(int offset) {
-    Integer off = new Integer(offset);
-    InsnTarget targ = (InsnTarget)targets.get(off);
-    if (targ == null) {
-      targ = new InsnTarget(offset);
-      targets.put(off, targ);
+    CodeEnv(ConstantPool constantPool) {
+        this.constantPool = constantPool;
     }
-    return targ;
-  }
 
-  final InsnTarget findTarget(int offset) {
-    Integer off = new Integer(offset);
-    return (InsnTarget)targets.get(off);
-  }
+    final InsnTarget getTarget(int offset) {
+        Integer off = new Integer(offset);
+        InsnTarget targ = (InsnTarget)targets.get(off);
+        if (targ == null) {
+            targ = new InsnTarget(offset);
+            targets.put(off, targ);
+        }
+        return targ;
+    }
 
-  final ConstantPool pool() {
-    return constantPool;
-  }
+    final InsnTarget findTarget(int offset) {
+        Integer off = new Integer(offset);
+        return (InsnTarget)targets.get(off);
+    }
 
+    final ConstantPool pool() {
+        return constantPool;
+    }
 }
-

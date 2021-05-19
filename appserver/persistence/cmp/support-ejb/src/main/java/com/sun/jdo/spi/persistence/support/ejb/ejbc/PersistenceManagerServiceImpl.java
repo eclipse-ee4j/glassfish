@@ -42,14 +42,14 @@ public class PersistenceManagerServiceImpl implements CMPService {
         LogHelper.registerLoggerFactory(new LoggerFactoryiAS());
     }
 
-    // Reference and force the initialization of the Sun specific 
+    // Reference and force the initialization of the Sun specific
     // implementation of the TransactionHelper and the ContainerHelper.
     private static final Class helper = forceInit(SunContainerHelper.class);
 
     // Reference and force the initialization of the DeploymentEventListener
     // implementation.
 /**
-    private static final Class listener = 
+    private static final Class listener =
         forceInit("com.sun.jdo.spi.persistence.support.ejb.ejbc.DeploymentEventListenerImpl");
 **/
 

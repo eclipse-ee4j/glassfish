@@ -36,7 +36,7 @@ import java.util.logging.Level;
  * This nodes handles the web-collection xml tag element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class WebResourceCollectionNode extends DeploymentDescriptorNode<WebResourceCollectionImpl>  {
 
@@ -65,18 +65,18 @@ public class WebResourceCollectionNode extends DeploymentDescriptorNode<WebResou
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map<String, String> getDispatchTable() {    
+    protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.WEB_RESOURCE_NAME, "setName");
-        table.put(WebTagNames.HTTP_METHOD, "addHttpMethod");        
-        table.put(WebTagNames.HTTP_METHOD_OMISSION, "addHttpMethodOmission");        
+        table.put(WebTagNames.HTTP_METHOD, "addHttpMethod");
+        table.put(WebTagNames.HTTP_METHOD_OMISSION, "addHttpMethodOmission");
         return table;
-    }    
+    }
 
     /**
      * receives notiification of the value for a particular tag
@@ -120,11 +120,11 @@ public class WebResourceCollectionNode extends DeploymentDescriptorNode<WebResou
             descriptor.addUrlPattern(value);
         } else super.setElementValue(element, value);
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
@@ -134,16 +134,16 @@ public class WebResourceCollectionNode extends DeploymentDescriptorNode<WebResou
         Node myNode = appendChild(parent, nodeName);
         appendTextChild(myNode, WebTagNames.WEB_RESOURCE_NAME, descriptor.getName());
         writeLocalizedDescriptions(myNode, descriptor);
-        
+
         // url-pattern*
         for (String urlPattern: descriptor.getUrlPatterns()) {
             appendTextChild(myNode, WebTagNames.URL_PATTERN, urlPattern);
         }
-                
+
         // http-method*
         for (String httpMethod: descriptor.getHttpMethods()) {
             appendTextChild(myNode, WebTagNames.HTTP_METHOD, httpMethod);
-        }        
+        }
 
         // http-method-omission*
         for (String httpMethodOmission: descriptor.getHttpMethodOmissions()) {

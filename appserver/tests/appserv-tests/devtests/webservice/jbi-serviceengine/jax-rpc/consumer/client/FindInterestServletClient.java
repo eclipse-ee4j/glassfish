@@ -20,12 +20,12 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.Serializable;
 import java.io.PrintWriter;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import javax.naming.*;
 import javax.xml.namespace.QName;
 
 public class FindInterestServletClient extends HttpServlet
-			{
+                        {
     HttpServletResponse resp;
     public FindInterestServletClient() {
         System.out.println("FindInterestServletImpl() instantiated");
@@ -36,7 +36,7 @@ public class FindInterestServletClient extends HttpServlet
            this.resp = resp;
            doPost(req, resp);
     }
-                                                                                
+
     public void doPost(HttpServletRequest req, HttpServletResponse resp)
               throws jakarta.servlet.ServletException {
        try{
@@ -49,9 +49,9 @@ public class FindInterestServletClient extends HttpServlet
     }
 
     public void calculateInterest() throws Exception {
-	System.out.println("calculateInterest invoked from servlet ");
+        System.out.println("calculateInterest invoked from servlet ");
         FindInterestClient client = new FindInterestClient();
-	double interest= client.doTest();
+        double interest= client.doTest();
         PrintWriter out = resp.getWriter();
                 resp.setContentType("text/html");
                 out.println("<html>");

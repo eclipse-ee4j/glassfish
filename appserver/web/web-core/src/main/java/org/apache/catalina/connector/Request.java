@@ -175,7 +175,7 @@ public class Request
         }
     };
     protected SimpleDateFormat formats[];
-    // END OF SJSAS 6231069    
+    // END OF SJSAS 6231069
     /**
      * ThreadLocal object to keep track of the reentrancy status of each thread.
      * It contains a byte[] object whose single element is either 0 (initial
@@ -743,7 +743,7 @@ public class Request
 
     /**
      * Set filter chain associated with the request.
-     * 
+     *
      * @param filterChain new filter chain
      */
     @Override
@@ -784,7 +784,7 @@ public class Request
     @Override
     public HttpServletMapping getHttpServletMapping() {
         HttpServletMapping result;
-        
+
         result = new MappingImpl(mappingData);
         return result;
     }
@@ -948,7 +948,7 @@ public class Request
 
     /**
      * Set the URI converter.
-     * 
+     *
      * @param URIConverter the new URI converter
      */
     protected void setURIConverter(B2CConverter URIConverter) {
@@ -1338,7 +1338,7 @@ public class Request
         getCharacterEncoding();
         if (isMultipartConfigured() && getMethod().equalsIgnoreCase("POST")) {
             String contentType = getContentType();
-            if (contentType != null && 
+            if (contentType != null &&
                         contentType.startsWith("multipart/form-data")) {
                 getMultipart().init();
             }
@@ -1876,7 +1876,7 @@ public class Request
      * This method must be called prior to reading request parameters or
      * reading input using <code>getReader()</code>. Otherwise, it has no
      * effect.
-     * 
+     *
      * @param enc      <code>String</code> containing the name of
      *                 the character encoding.
      * @throws         UnsupportedEncodingException if this
@@ -2000,7 +2000,7 @@ public class Request
             }
 
         } else {
-            //No re-entrancy, so call invokeAuthenticateDelegate to check if 
+            //No re-entrancy, so call invokeAuthenticateDelegate to check if
             //JSR196 module is present
             alreadyCalled[0] = 1;
             try {
@@ -2049,8 +2049,8 @@ public class Request
         if (realm != null && realm.isSecurityExtensionEnabled(getServletContext())) {
             throw new ServletException
                (rb.getString(LogFacade.LOGIN_WITH_AUTH_CONFIG));
- 	}
-        
+     }
+
         if (getAuthType() != null || getRemoteUser() != null ||
                 getUserPrincipal() != null) {
             throw new ServletException(
@@ -2294,7 +2294,7 @@ public class Request
      * Set the unparsed request URI for this Request.  This will normally be
      * called by the HTTP Connector, when it parses the request headers.
      *
-     * Used by FBL when restoring original request after successful 
+     * Used by FBL when restoring original request after successful
      * authentication.
      *
      * @param uri The request URI
@@ -2306,7 +2306,7 @@ public class Request
 
     /**
      * Get the decoded request URI.
-     * 
+     *
      * @return the URL decoded request URI
      */
     @Override
@@ -2600,7 +2600,7 @@ public class Request
 
     /**
      * Get the request path.
-     * 
+     *
      * @return the request path
      */
     @Override
@@ -2925,7 +2925,7 @@ public class Request
 
     /**
      * Change the session id of the current session associated with this
-     * request and return the new session id. 
+     * request and return the new session id.
      *
      * @return the new session id
      *
@@ -3022,7 +3022,7 @@ public class Request
     }
 
     // ------------------------------------------------------ Protected Methods
-    
+
     protected Session doGetSession(boolean create) {
 
         // There cannot be a session if no context has been assigned yet
@@ -3630,7 +3630,7 @@ public class Request
             }
             */
             //END GLASSFISH-15508
-        
+
         // Parse session ID, and extract it from the decoded request URI
         String sessionParam = ";" + sessionParameterName + "=";
         String sessionId =
@@ -3766,12 +3766,12 @@ public class Request
             if (semicolon2 >= 0) {
                 parameterValue = new String(
                     uriCC.getBuffer(),
-                    parameterStart, 
+                    parameterStart,
                     semicolon2 - semicolon - parameter.length());
             } else {
                 parameterValue = new String(
                     uriCC.getBuffer(),
-                    parameterStart, 
+                    parameterStart,
                     end - parameterStart);
             }
 
@@ -3791,7 +3791,7 @@ public class Request
 
         final DataChunk uriBC =
                 coyoteRequest.getRequest().getRequestURIRef().getRequestURIBC();
-        
+
 //        start = uriBC.getStart();
 //        end = uriBC.getEnd();
         semicolon = uriBC.indexOf(parameter, 0);
@@ -3806,7 +3806,7 @@ public class Request
             } else {
                 end = uriBC.getLength();
             }
-            
+
             uriBC.delete(semicolon, end);
 //            uriBC.setEnd(start + semicolon);
 //            byte[] buf = uriBC.getBuffer();
@@ -3824,7 +3824,7 @@ public class Request
     /*
      * Parses the given session version string into its components. Each
      * component is stored as an entry in a HashMap, which maps a context
-     * path to its session version number. The HashMap is stored as a 
+     * path to its session version number. The HashMap is stored as a
      * request attribute, to make it available to any target contexts to which
      * this request may be dispatched.
      *
@@ -3872,7 +3872,7 @@ public class Request
 
     /**
      * Sets the jroute id of this request.
-     * 
+     *
      * @param jrouteId The jroute id
      */
     void setJrouteId(String jrouteId) {
@@ -3880,10 +3880,10 @@ public class Request
     }
 
     /**
-     * Gets the jroute id of this request, which may have been 
+     * Gets the jroute id of this request, which may have been
      * sent as a separate <code>JROUTE</code> cookie or appended to the
      * session identifier encoded in the URI (if cookies have been disabled).
-     * 
+     *
      * @return The jroute id of this request, or null if this request does not
      * carry any jroute id
      */
@@ -3932,7 +3932,7 @@ public class Request
                     parseSessionVersionString(sessionVersionString);
                     setRequestedSessionCookie(true);
                     // TBD: ServerCookie#getSecure currently always returns
-                    // false. 
+                    // false.
                     setRequestedSessionIdFromSecureCookie(scookie.isSecure());
                     setRequestedSessionURL(false);
                 } else {
@@ -4203,7 +4203,7 @@ public class Request
      */
     void asyncComplete() {
         asyncStarted.set(false);
-        
+
         if (asyncStartedThread != Thread.currentThread() ||
                 !asyncContext.isOkToConfigure()) {
             // it's not safe to just mark response as resumed
@@ -4246,7 +4246,7 @@ public class Request
      */
     void onExitService() {
         final AsyncContextImpl ac = asyncContext;
-        
+
         if (ac != null) {
             ac.setOkToConfigure(false);
 
@@ -4280,7 +4280,7 @@ public class Request
         } finally {
             result = asyncContextLocal != null && !asyncContextLocal.getAndResetDispatchInScope();
         }
-        
+
         return result;
     }
 
@@ -4343,7 +4343,7 @@ public class Request
             String msg = MessageFormat.format(rb.getString(LogFacade.REQUEST_CALLED_WITHOUT_MULTIPART_CONFIG_EXCEPTION), name);
             throw new IllegalStateException(msg);
         }
-    } 
+    }
 
     @Override
     public Collection<Part> getParts() throws IOException, ServletException {
@@ -4425,16 +4425,16 @@ public class Request
     }
     // END GlassFish 896
 
-    /** 
+    /**
      * lock the session associated with this request
      * this will be a foreground lock
      * checks for background lock to clear
      * and does a decay poll loop to wait until
-     * it is clear; after 5 times it takes control for 
+     * it is clear; after 5 times it takes control for
      * the foreground
      *
      * @return the session that's been locked
-     */     
+     */
     @Override
     public Session lockSession() {
         Session sess = getSessionInternal(false);
@@ -4464,22 +4464,22 @@ public class Request
                     if (sess instanceof StandardSession) {
                         ((StandardSession)sess).unlockBackground();
                     }
-                }              
+                }
             }
         }
 
         return sess;
-    }    
-    
+    }
+
     private void threadSleep(long sleepTime) {
         try {
             Thread.sleep(sleepTime);
         } catch (InterruptedException e) {
             ;
         }
-    }    
+    }
 
-    /** 
+    /**
      * unlock the session associated with this request
      */
     @Override
@@ -4488,8 +4488,8 @@ public class Request
         // Now unlock the session
         if (sess != null) {
             sess.unlockForeground();
-        }        
-    }     
+        }
+    }
 
     /**
      * Increments the version of the given session, and stores it as a

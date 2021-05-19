@@ -46,7 +46,7 @@ public class Role {
         if (permissions == null) {
             permissions = new Permissions();
         }
-        
+
         permissions.add(permission);
     }
 
@@ -54,7 +54,7 @@ public class Role {
         if (permissions == null) {
             permissions = new Permissions();
         }
-        
+
         for (Enumeration<Permission> e = permissionCollection.elements(); e.hasMoreElements();) {
             permissions.add(e.nextElement());
         }
@@ -74,7 +74,7 @@ public class Role {
         if (permissions == null) {
             return false;
         }
-        
+
         return permissions.implies(permission);
     }
 
@@ -98,7 +98,7 @@ public class Role {
         if (principals == null) {
             return false;
         }
-        
+
         return principals.contains(principal);
     }
 
@@ -106,11 +106,11 @@ public class Role {
         if (subject == null || subject.length == 0) {
             return false;
         }
-        
+
         if (isAnyAuthenticatedUserRole) {
             return true;
         }
-        
+
         if (principals == null || principals.isEmpty()) {
             return false;
         }
@@ -124,7 +124,7 @@ public class Role {
         }
         return rvalue;
     }
-    
+
     /**
      * NB: Class Overrides equals and hashCode Methods such that 2 Roles are equal simply based on having a common name.
      *

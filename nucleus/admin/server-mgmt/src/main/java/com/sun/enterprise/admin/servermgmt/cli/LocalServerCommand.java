@@ -55,7 +55,7 @@ public abstract class LocalServerCommand extends CLICommand {
     /**
      * Override this method and return false to turn-off the file validation. E.g. it demands that config/domain.xml be
      * present. In special cases like Synchronization -- this is how you turn off the testing.
-     * 
+     *
      * @return true - do the checks, false - don't do the checks
      */
     protected boolean checkForSpecialFiles() {
@@ -151,7 +151,7 @@ public abstract class LocalServerCommand extends CLICommand {
     /**
      * Checks if the create-domain was created using --savemasterpassword flag which obtains security by obfuscation!
      * Returns null in case of failure of any kind.
-     * 
+     *
      * @return String representing the password from the JCEKS store named master-password in domain folder
      */
     protected final String readFromMasterPasswordFile() {

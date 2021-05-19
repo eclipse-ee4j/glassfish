@@ -39,14 +39,14 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
     */
 
     public ConnectorConfigProperty() {
-    }  
+    }
 
      /**
     ** Construct an connector config-property of given name value and description.
     */
 
     public ConnectorConfigProperty(String name, String value, String description) {
-	    this(name, value, description, null);
+        this(name, value, description, null);
     }
 
     /**
@@ -56,7 +56,7 @@ public class ConnectorConfigProperty extends EnvironmentProperty {
     */
 
     public ConnectorConfigProperty(String name, String value, String description, String type) {
-    	super(name, value, description, type);
+        super(name, value, description, type);
     }
 
     public boolean isIgnore() {

@@ -31,8 +31,8 @@ public class EjbInitNode extends DeploymentDescriptorNode<EjbInitInfo> {
 
     public EjbInitNode() {
        super();
-       registerElementHandler(new XMLElement(EjbTagNames.INIT_CREATE_METHOD), MethodNode.class, "setCreateMethod");       
-       registerElementHandler(new XMLElement(EjbTagNames.INIT_BEAN_METHOD), MethodNode.class, "setBeanMethod");       
+       registerElementHandler(new XMLElement(EjbTagNames.INIT_CREATE_METHOD), MethodNode.class, "setCreateMethod");
+       registerElementHandler(new XMLElement(EjbTagNames.INIT_BEAN_METHOD), MethodNode.class, "setBeanMethod");
     }
 
     @Override
@@ -50,11 +50,11 @@ public class EjbInitNode extends DeploymentDescriptorNode<EjbInitInfo> {
 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, EjbInitInfo initMethod) {
-        Node initNode = appendChild(parent, nodeName);        
+        Node initNode = appendChild(parent, nodeName);
         MethodNode methodNode = new MethodNode();
 
         methodNode.writeJavaMethodDescriptor
-            (initNode, EjbTagNames.INIT_CREATE_METHOD, 
+            (initNode, EjbTagNames.INIT_CREATE_METHOD,
              initMethod.getCreateMethod());
 
         methodNode.writeJavaMethodDescriptor

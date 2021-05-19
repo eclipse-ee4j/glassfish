@@ -16,12 +16,13 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
-import javax.naming.directory.InvalidAttributeValueException;
-import javax.naming.ldap.*;
-import javax.naming.ldap.BasicControl;
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerEncoder;
+
+import java.io.IOException;
+
+import javax.naming.directory.InvalidAttributeValueException;
+import javax.naming.ldap.BasicControl;
 
 /**
  * This class implements the LDAPv3 Request Control for virtual-list-view
@@ -61,35 +62,35 @@ final public class VirtualListViewControl extends BasicControl {
      */
     public static final String OID = "2.16.840.1.113730.3.4.9";
 
-    /** 
+    /**
      * The number of entries before the target entry in a sublist.
      *
      * @serial
      */
     private int beforeCount;
 
-    /** 
+    /**
      * The number of entries after the target entry in a sublist.
      *
      * @serial
      */
     private int afterCount;
 
-    /** 
+    /**
      * An offset into the list.
      *
      * @serial
      */
     private int targetOffset = -1;
 
-    /** 
+    /**
      * An estimate of the number of entries in the list.
      *
      * @serial
      */
     private int listSize;
 
-    /** 
+    /**
      * Attribute value used to locate the target entry.
      * This value is compared to values of the attribute specified
      * as the primary sort key.
@@ -123,35 +124,33 @@ final public class VirtualListViewControl extends BasicControl {
      * @param viewSize       The number of entries to be returned in this
      *                       view of the list.
      * @param criticality    The control's criticality setting.
-     * @exception 	     IllegalArgumentException if targetPercentage is
+     * @exception          IllegalArgumentException if targetPercentage is
      *                       outside the range 0-100.
      * @exception            IOException If a BER encoding error occurs.
      */
-    public VirtualListViewControl(int targetPercentage, int viewSize,
-	boolean criticality) throws IOException {
-
-	super(OID, criticality, null);
+    public VirtualListViewControl(int targetPercentage, int viewSize, boolean criticality) throws IOException {
+        super(OID, criticality, null);
 
         if ((targetPercentage > 100) ||
-	    (targetPercentage < 0) ||
-	    (viewSize < 0)) {
+            (targetPercentage < 0) ||
+            (viewSize < 0)) {
             throw new IllegalArgumentException();
         }
 
-	targetOffset = targetPercentage;
-	listSize = 100;
+        targetOffset = targetPercentage;
+        listSize = 100;
 
-	// viewSize includes the target entry
-	if (viewSize > 0) {
-	    viewSize -= 1;
-	}
-	beforeCount = afterCount = viewSize / 2;
+        // viewSize includes the target entry
+        if (viewSize > 0) {
+            viewSize -= 1;
+        }
+        beforeCount = afterCount = viewSize / 2;
 
-	// adjust afterCount when viewSize is odd
-	if (viewSize != ((viewSize / 2) * 2)) {
-	    afterCount++;
-	}
-	super.value = setEncodedValue();
+        // adjust afterCount when viewSize is odd
+        if (viewSize != ((viewSize / 2) * 2)) {
+            afterCount++;
+        }
+        super.value = setEncodedValue();
     }
 
     /**
@@ -173,21 +172,20 @@ final public class VirtualListViewControl extends BasicControl {
      *                     beforeCount or afterCount are less than zero.
      * @exception          IOException If a BER encoding error occurs.
      */
-    public VirtualListViewControl(int targetOffset, int listSize,
-	int beforeCount, int afterCount, boolean criticality)
-	throws IOException {
+    public VirtualListViewControl(int targetOffset, int listSize, int beforeCount, int afterCount, boolean criticality)
+        throws IOException {
 
-	super(OID, criticality, null);
+        super(OID, criticality, null);
 
-	if ((targetOffset <0) || (listSize <0) ||(beforeCount <0) || (afterCount <0)){
+        if ((targetOffset <0) || (listSize <0) ||(beforeCount <0) || (afterCount <0)){
             throw new IllegalArgumentException();
         }
-	
-	this.targetOffset = targetOffset;
-	this.listSize = listSize;
-	this.beforeCount = beforeCount;
-	this.afterCount = afterCount;
-	super.value = setEncodedValue();
+
+        this.targetOffset = targetOffset;
+        this.listSize = listSize;
+        this.beforeCount = beforeCount;
+        this.afterCount = afterCount;
+        super.value = setEncodedValue();
     }
 
     /**
@@ -195,7 +193,7 @@ final public class VirtualListViewControl extends BasicControl {
      *
      * Request a view of a portion of the list centered around a given
      * target entry. The target entry is the first entry that is greater
-     * than or equal to the specified attribute value. The value's 
+     * than or equal to the specified attribute value. The value's
      * attribute ID is the primary sort key specified in the server-side
      * sort control.
      *
@@ -206,38 +204,37 @@ final public class VirtualListViewControl extends BasicControl {
      * @param viewSize         The number of entries to be returned in this
      *                         view of the list.
      * @param criticality      The control's criticality setting.
-     * @exception 	       InvalidAttributeValueException if
+     * @exception            InvalidAttributeValueException if
      *                         targetAttrValue is neither a String nor a byte[].
      * @exception              IOException If a BER encoding error occurs.
      */
-    public VirtualListViewControl(Object targetAttrValue, int viewSize,
-	boolean criticality)
-	throws InvalidAttributeValueException, IOException {
+    public VirtualListViewControl(Object targetAttrValue, int viewSize, boolean criticality)
+        throws InvalidAttributeValueException, IOException {
 
-	super(OID, criticality, null);
+        super(OID, criticality, null);
 
-	if ((targetAttrValue == null) ||
-	    (! ((targetAttrValue instanceof String) ||
-	        (targetAttrValue instanceof byte[])))) {
-	    throw new InvalidAttributeValueException();
-	}
-	this.targetAttrValue = targetAttrValue;
+        if ((targetAttrValue == null) ||
+            (! ((targetAttrValue instanceof String) ||
+                (targetAttrValue instanceof byte[])))) {
+            throw new InvalidAttributeValueException();
+        }
+        this.targetAttrValue = targetAttrValue;
 
-	if (viewSize < 0) {
-	    throw new IllegalArgumentException();
-	}
+        if (viewSize < 0) {
+            throw new IllegalArgumentException();
+        }
 
         // viewSize includes the target entry
         if (viewSize > 0) {
             viewSize -= 1;
         }
-	beforeCount = afterCount = viewSize / 2;
+        beforeCount = afterCount = viewSize / 2;
 
-	// adjust afterCount when viewSize is odd
-	if (viewSize != ((viewSize / 2) * 2)) {
-	    afterCount++;
-	}
-	super.value = setEncodedValue();
+        // adjust afterCount when viewSize is odd
+        if (viewSize != ((viewSize / 2) * 2)) {
+            afterCount++;
+        }
+        super.value = setEncodedValue();
     }
 
     /**
@@ -258,32 +255,31 @@ final public class VirtualListViewControl extends BasicControl {
      * @param afterCount      The number of entries to be returned after the
      *                        target entry.
      * @param criticality     The control's criticality setting.
-     * @exception 	      InvalidAttributeValueException if
+     * @exception           InvalidAttributeValueException if
      *                        targetAttrValue is neither a String nor a byte[].
      * @exception             IllegalArgumentException if beforeCount or
      *                        afterCount are less than zero.
      * @exception             IOException If a BER encoding error occurs.
      */
-    public VirtualListViewControl(Object targetAttrValue, int beforeCount,
-	int afterCount, boolean criticality)
-	throws InvalidAttributeValueException, IOException {
+    public VirtualListViewControl(Object targetAttrValue, int beforeCount, int afterCount, boolean criticality)
+        throws InvalidAttributeValueException, IOException {
 
-	super(OID, criticality, null);
+        super(OID, criticality, null);
 
-	if ((targetAttrValue == null) ||
-	    (! ((targetAttrValue instanceof String) ||
-	        (targetAttrValue instanceof byte[])))) {
-	    throw new InvalidAttributeValueException();
-	}
+        if ((targetAttrValue == null) ||
+            (! ((targetAttrValue instanceof String) ||
+                (targetAttrValue instanceof byte[])))) {
+            throw new InvalidAttributeValueException();
+        }
 
-	if ((beforeCount <0) || (afterCount <0)) {
-	    throw new IllegalArgumentException();
-	}
+        if ((beforeCount <0) || (afterCount <0)) {
+            throw new IllegalArgumentException();
+        }
 
-	this.targetAttrValue = targetAttrValue;
-	this.beforeCount = beforeCount;
-	this.afterCount = afterCount;
-	super.value = setEncodedValue();
+        this.targetAttrValue = targetAttrValue;
+        this.beforeCount = beforeCount;
+        this.afterCount = afterCount;
+        super.value = setEncodedValue();
     }
 
     /**
@@ -293,15 +289,15 @@ final public class VirtualListViewControl extends BasicControl {
      * @exception IOException If a BER encoding error occurs.
      */
     public void setContextID(byte[] contextID) throws IOException {
-	if (this.cookie != contextID) {
-	    this.cookie = contextID;
-	    super.value = setEncodedValue(); // re-encode
-	} else {
-	    this.cookie = contextID;
-	}
+        if (this.cookie != contextID) {
+            this.cookie = contextID;
+            super.value = setEncodedValue(); // re-encode
+        } else {
+            this.cookie = contextID;
+        }
     }
 
-    /*
+    /**
      * Sets the ASN.1 BER encoded value of the virtual-list-view control.
      * The result is the raw BER bytes including the tag and length of
      * the control's value. It does not include the controls OID or criticality.
@@ -312,34 +308,34 @@ final public class VirtualListViewControl extends BasicControl {
      */
     private byte[] setEncodedValue() throws IOException {
 
-	// build the ASN.1 encoding
-	BerEncoder ber = new BerEncoder(64);
+        // build the ASN.1 encoding
+        BerEncoder ber = new BerEncoder(64);
 
-	ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
 
-	    ber.encodeInt(beforeCount);
-	    ber.encodeInt(afterCount);
+        ber.encodeInt(beforeCount);
+        ber.encodeInt(afterCount);
 
-	    if (targetOffset >= 0) {
-		ber.beginSeq(Ber.ASN_CONTEXT | Ber.ASN_CONSTRUCTOR | 0);
-		    ber.encodeInt(targetOffset);
-		    ber.encodeInt(listSize);
-		ber.endSeq();
+        if (targetOffset >= 0) {
+            ber.beginSeq(Ber.ASN_CONTEXT | Ber.ASN_CONSTRUCTOR | 0);
+            ber.encodeInt(targetOffset);
+            ber.encodeInt(listSize);
+            ber.endSeq();
 
-	    } else {
-		if (targetAttrValue instanceof String) {
-		    ber.encodeString((String)targetAttrValue,
-				     (Ber.ASN_CONTEXT | 1), true);
-		} else { // byte[]
-		    ber.encodeOctetString((byte[])targetAttrValue,
-					  (Ber.ASN_CONTEXT | 1));
-		}
-	    }
-	    if (cookie != null) {
-		ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
-	    }
-	ber.endSeq();
+        } else {
+            if (targetAttrValue instanceof String) {
+                ber.encodeString((String)targetAttrValue,
+                    (Ber.ASN_CONTEXT | 1), true);
+            } else { // byte[]
+                ber.encodeOctetString((byte[])targetAttrValue,
+                    (Ber.ASN_CONTEXT | 1));
+            }
+        }
+        if (cookie != null) {
+            ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
+        }
+        ber.endSeq();
 
-	return ber.getTrimmedBuf();
+        return ber.getTrimmedBuf();
     }
 }

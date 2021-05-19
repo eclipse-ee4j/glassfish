@@ -44,7 +44,7 @@ import org.glassfish.logging.annotation.LogMessageInfo;
  *@author vikas
  */
 public class AutoDeployDirectoryScanner implements DirectoryScanner{
-    
+
     public static final Logger deplLogger =
         org.glassfish.deployment.autodeploy.AutoDeployer.deplLogger;
 
@@ -52,10 +52,10 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
     private static final String EXCEPTION_OCCURRED = "NCLS-DEPLOYMENT-00040";
 
     private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AutoDeployDirectoryScanner.class);
-    
+
     public AutoDeployDirectoryScanner() {
     }
-    
+
      public void deployedEntity(File autodeployDir, File deployedEntity) {
          try {
          AutoDeployedFilesManager adfm = AutoDeployedFilesManager.loadStatus(autodeployDir);
@@ -67,7 +67,7 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
          }
 
      }
-     
+
      public void undeployedEntity(File autodeployDir, File undeployedEntity) {
          try {
          AutoDeployedFilesManager adfm = AutoDeployedFilesManager.loadStatus(autodeployDir);
@@ -75,10 +75,10 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
          adfm.writeStatus();
          } catch (Exception e) {
              printException(e);
-             // Do nothing 
+             // Do nothing
          }
      }
-     
+
     /**
      * return true if any new deployable entity is  present in autodeployDir
      * @param autodeployDir
@@ -96,9 +96,9 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
                 printException(e);
                 return false;
             }
-        
-        return newFilesExist;        
-        
+
+        return newFilesExist;
+
     }
     // this should never be called from system dir autodeploy code...
     public File[] getAllFilesForUndeployment(File autodeployDir, boolean includeSubdir) {
@@ -110,14 +110,14 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
                 printException(e);
                 return new File[0];
             }
-    }    
-         
+    }
+
     /**
      * Get the list of all deployable files
      * @param autodeployDir
      * @return  */
     public File[] getAllDeployableModules(File autodeployDir, boolean includeSubDir) {
-        
+
         AutoDeployedFilesManager adfm = null;
         try {
         adfm = AutoDeployedFilesManager.loadStatus(autodeployDir);
@@ -125,7 +125,7 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
             printException(e);
             return new File[0];
         }
-        
+
         return adfm.getFilesForDeployment(getListOfFiles(autodeployDir, includeSubDir));
     }
 
@@ -136,17 +136,17 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
         lr.setThrown(e);
         deplLogger.log(lr);
     }
-    
+
     protected File[] getListOfFiles(File dir) {
         return getListOfFiles(dir, false);
     }
-  
+
     protected File[] getListOfFiles(File dir, boolean includeSubDir) {
         final Set<File> fileSet = getListOfFilesAsSet(dir, includeSubDir);
         return fileSet.toArray(new File[fileSet.size()]);
     }
-            
-            
+
+
     static Set<File> getListOfFilesAsSet(File dir, boolean includeSubDir) {
         Set<File> result = new HashSet<File>();
         File[] dirFiles = dir.listFiles();
@@ -170,8 +170,8 @@ public class AutoDeployDirectoryScanner implements DirectoryScanner{
             }
         }
         return result;
-    }    
-    
+    }
+
     private static boolean typeIsMarkerType(String fileType) {
         for (String markerSuffix : AutoDeployConstants.MARKER_FILE_SUFFIXES) {
             if (fileType.endsWith(markerSuffix)) {

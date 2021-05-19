@@ -161,7 +161,7 @@ public class _OTSResourceStub extends org.omg.CORBA.portable.ObjectImpl implemen
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:jtsxa/OTSResource:1.0", 
+    "IDL:jtsxa/OTSResource:1.0",
     "IDL:omg.org/CosTransactions/Resource:1.0"};
 
   public String[] _ids ()

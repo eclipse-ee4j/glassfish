@@ -32,7 +32,7 @@ public abstract class ConfigurationDeploymentDescriptorFile extends DeploymentDe
 
     /**
      * Register the root node for this runtime deployment descriptor file
-     * in the root nodes map, and also in the dtd map which will be used for 
+     * in the root nodes map, and also in the dtd map which will be used for
      * dtd validation.
      *
      * @param rootNodesMap the map for storing all the root nodes

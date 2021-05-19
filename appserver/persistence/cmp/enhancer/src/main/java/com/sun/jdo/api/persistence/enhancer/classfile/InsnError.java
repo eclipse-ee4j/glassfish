@@ -20,9 +20,9 @@ package com.sun.jdo.api.persistence.enhancer.classfile;
  * An exception thrown when an error occurs in encoding or decoding
  * instruction sequences
  */
-
 public class InsnError extends RuntimeException {
-  public InsnError(String s) {
-    super(s);
-  }
+
+    public InsnError(String s) {
+        super(s);
+    }
 }

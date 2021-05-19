@@ -28,7 +28,7 @@
 
     <artifactId>appclient-scripts</artifactId>
     <!--
-        The comments below were copied from the ejb-timer-databases module.  
+        The comments below were copied from the ejb-timer-databases module.
         They are very helpful so it seemed like a good idea to leave them here also.
     -->
     <!--
@@ -58,7 +58,7 @@
     <!--
 
     <packaging>pom</packaging>
--->     
+-->
         <!--
          In this module, all the files are statically stored as-is in the Subversion repository,
          so the simple copying from src/main/resources to target/classes that Maven does by default

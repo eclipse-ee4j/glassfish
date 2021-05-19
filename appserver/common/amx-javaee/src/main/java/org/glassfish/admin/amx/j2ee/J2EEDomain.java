@@ -23,54 +23,51 @@ import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 import org.glassfish.admin.amx.annotation.ManagedAttribute;
 
 /**
-	The discovery and navigation of all managed objects in the J2EE
-	management system begins with the J2EEDomain.
-
-	@see J2EEServer
-	@see J2EECluster
-	@see J2EEApplication
-	@see JVM
-	@see AppClientModule
-	@see EJBModule
-	@see WebModule
-	@see ResourceAdapterModule
-	@see EntityBean
-	@see StatefulSessionBean
-	@see StatelessSessionBean
-	@see MessageDrivenBean
-	@see Servlet
-	@see JavaMailResource
-	@see JCAResource
-	@see JCAConnectionFactory
-	@see JCAManagedConnectionFactory
-	@see JDBCResource
-	@see JDBCDataSource
-	@see JDBCDriver
-	@see JMSResource
-	@see JNDIResource
-	@see JTAResource
-	@see RMIIIOPResource
-	@see URLResource
+ * The discovery and navigation of all managed objects in the J2EE
+ * management system begins with the J2EEDomain.
+ *
+ * @see J2EEServer
+ * @see J2EEApplication
+ * @see JVM
+ * @see AppClientModule
+ * @see EJBModule
+ * @see WebModule
+ * @see ResourceAdapterModule
+ * @see EntityBean
+ * @see StatefulSessionBean
+ * @see StatelessSessionBean
+ * @see MessageDrivenBean
+ * @see Servlet
+ * @see JavaMailResource
+ * @see JCAResource
+ * @see JCAConnectionFactory
+ * @see JCAManagedConnectionFactory
+ * @see JDBCResource
+ * @see JDBCDataSource
+ * @see JDBCDriver
+ * @see JMSResource
+ * @see JNDIResource
+ * @see JTAResource
+ * @see RMI_IIOPResource
+ * @see URLResource
  */
-@AMXMBeanMetadata(type=J2EETypes.J2EE_DOMAIN, singleton=true)
-public interface J2EEDomain
-	extends J2EEManagedObject
-{
-	/**
-		Note that the Attribute name is case-sensitive
-		"servers" as defined by JSR 77.
-		
-		@return the ObjectNames of the J2EEServers, as Strings
-	 */
- 	@ManagedAttribute
-	public String[]	getservers();
+@AMXMBeanMetadata(type = J2EETypes.J2EE_DOMAIN, singleton = true)
+public interface J2EEDomain extends J2EEManagedObject {
 
- 	@ManagedAttribute
-    @Description( "Get the ObjectName of the corresponding config MBean, if any" )
-    public ObjectName getCorrespondingConfig();
+    /**
+     * Note that the Attribute name is case-sensitive
+     * "servers" as defined by JSR 77.
+     *
+     * @return the ObjectNames of the J2EEServers, as Strings
+     */
+    @ManagedAttribute
+    String[] getservers();
+
+
+    @ManagedAttribute
+    @Description("Get the ObjectName of the corresponding config MBean, if any")
+    ObjectName getCorrespondingConfig();
 }
-
-
 
 
 

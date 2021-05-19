@@ -46,7 +46,7 @@
     </target>
 
     <target name="assemble" depends="compile">
-        <jar destfile="${ejb.jar}" basedir="${build}" 
+        <jar destfile="${ejb.jar}" basedir="${build}"
                 excludes="**/ClientSuper.class,**/Client.class">
                 <metainf file="descriptor/sun-ejb-jar.xml"/>
         </jar>
@@ -62,8 +62,8 @@
         <ear destfile="${all.ear}" basedir="${archivedir}"
             appxml="descriptor/application.xml" includes="*.jar, session2appclient.xml, sun-session2appclient.xml">
         </ear>
-    </target> 
-    
+    </target>
+
     <target name="deploy.asadmin" depends="prepare">
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="--retrieve ${archivedir} --name ${testName} ${all.ear}"/>
@@ -85,15 +85,15 @@
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
-        </antcall>    
+        </antcall>
     </target>
- 
+
     <target name="undeploy.asadmin" depends="prepare">
         <antcall target="common.undeploy.asadmin">
             <param name="arg.list" value="${testName}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="private-all">
         <antcall target="assemble"/>

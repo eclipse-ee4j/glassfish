@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * This annotation may be placed on one String method of an annotation marked with
  * {@link GenerateServiceFromMethod} to indicate that this method contains the name
  * the service should take.
- * 
+ *
  * @author jwells
  *
  */

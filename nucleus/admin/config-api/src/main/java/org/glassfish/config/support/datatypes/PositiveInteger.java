@@ -27,7 +27,7 @@ import org.jvnet.hk2.config.ValidationException;
 
 /**
  * Represents an integer from 1 to Integer.MAX_VALUE. It's modeled as a functional class.
- * 
+ *
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  */
 @Service
@@ -35,7 +35,7 @@ public class PositiveInteger implements DataType { //could extend NonNegativeInt
 
     /**
      * Validates the given value as a positive integer.
-     * 
+     *
      * @param value
      * @throws org.jvnet.hk2.config.ValidationException
      */
@@ -43,7 +43,7 @@ public class PositiveInteger implements DataType { //could extend NonNegativeInt
         if (value == null)
             throw new ValidationException("null value is not of type PositiveInteger");
         if (NonNegativeInteger.isTokenized(value))
-            return; //a token is always valid             
+            return; //a token is always valid
         try {
             long number = Long.parseLong(value);
             if (number < 1 || number > Integer.MAX_VALUE) { //taken from ServerSocket.java

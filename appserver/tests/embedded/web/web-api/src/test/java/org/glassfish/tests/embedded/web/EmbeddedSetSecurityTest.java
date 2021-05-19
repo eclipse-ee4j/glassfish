@@ -36,14 +36,14 @@ import org.junit.Test;
 
 /**
  * Tests Context#setSecurity
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedSetSecurityTest {
 
     static GlassFish glassfish;
     static WebContainer embedded;
-    static File root;                
+    static File root;
     static String contextRoot = "security";
 
     @BeforeClass
@@ -63,7 +63,7 @@ public class EmbeddedSetSecurityTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -127,7 +127,7 @@ public class EmbeddedSetSecurityTest {
             //ex.printStackTrace();
         }
 
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -138,5 +138,5 @@ public class EmbeddedSetSecurityTest {
             glassfish = null;
         }
     }
-    
+
 }

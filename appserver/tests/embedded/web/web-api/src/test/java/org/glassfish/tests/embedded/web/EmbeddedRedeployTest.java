@@ -34,14 +34,14 @@ import org.junit.Test;
 
 /**
  * Tests redeploy scenario
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedRedeployTest {
 
     static GlassFish glassfish;
     static WebContainer embedded;
-    static File root;                
+    static File root;
     static String contextRoot = "/embedded-redeploy";
 
     @BeforeClass
@@ -60,7 +60,7 @@ public class EmbeddedRedeployTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -110,5 +110,5 @@ public class EmbeddedRedeployTest {
             glassfish = null;
         }
     }
-    
+
 }

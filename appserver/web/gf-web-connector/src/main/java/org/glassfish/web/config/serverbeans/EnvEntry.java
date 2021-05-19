@@ -24,7 +24,7 @@ import org.jvnet.hk2.config.Element;
 
 /**
  * Represents the env-entry web application configuration customization.
- * 
+ *
  * @author tjquinn
  */
 @Configured
@@ -33,15 +33,15 @@ public interface EnvEntry extends ConfigBeanProxy {
     @Element
     public String getDescription();
     public void setDescription(String value);
-    
+
     @Element(required=true,key=true)
     public String getEnvEntryName();
     public void setEnvEntryName(String value);
-    
+
     @Element(required=true)
     public String getEnvEntryType();
     public void setEnvEntryType(String value);
-    
+
     @Element(required=true)
     public String getEnvEntryValue();
     public void setEnvEntryValue(String value);

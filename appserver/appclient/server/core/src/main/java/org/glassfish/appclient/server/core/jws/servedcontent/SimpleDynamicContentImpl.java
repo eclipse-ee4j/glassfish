@@ -28,13 +28,13 @@ public class SimpleDynamicContentImpl extends Content.Adapter implements Dynamic
     private final String template;
     private final String mimeType;
     private final boolean isMain;
-    
+
     private Instance instance = null;
 
     public SimpleDynamicContentImpl(final String template, final String mimeType) {
         this(template, mimeType, false);
     }
-    
+
     public SimpleDynamicContentImpl(final String template, final String mimeType, final boolean isMain) {
         this.template = template;
         this.mimeType = mimeType;
@@ -61,7 +61,7 @@ public class SimpleDynamicContentImpl extends Content.Adapter implements Dynamic
     public String getMimeType() {
         return mimeType;
     }
-    
+
     @Override
     public boolean isMain() {
         return isMain;

@@ -25,7 +25,7 @@ import java.util.*;
 
 /**
  * Class ASenvPropertyReader
- * 
+ *
  * This class converts the variables stored in asenv.conf (UNIX)
  * or asenv.bat (WINDOWS) into their equivalent system properties.
  * <p>This class <strong>guarantees</strong> that no Exception will get thrown back.
@@ -43,8 +43,8 @@ public class ASenvPropertyReader {
      */
     public ASenvPropertyReader() {
         this(GFLauncherUtils.getInstallDir());
-    }   
-    
+    }
+
     /**
      * Read and process the information in asenv.[bat|conf]
      * This constructor should normally not be called.  It is designed for

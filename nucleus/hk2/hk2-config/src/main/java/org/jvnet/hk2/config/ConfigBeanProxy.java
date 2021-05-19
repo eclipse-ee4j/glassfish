@@ -24,7 +24,7 @@ import org.glassfish.hk2.api.Customizer;
 /**
  * Marker interface that signifies that the interface
  * is meant to be used as a strongly-typed proxy to
- * {@link Dom}. 
+ * {@link Dom}.
  *
  * <p>
  * To obtain the Dom object, use {@link Dom#unwrap(ConfigBeanProxy)}.
@@ -40,7 +40,7 @@ import org.glassfish.hk2.api.Customizer;
 @Customizer(ConfigBeanProxyCustomizer.class)
 public interface ConfigBeanProxy {
 
-    /**                      
+    /**
      * Returns the parent element of this configuration element.
      *
      * It is possible to return a not null parent while the parent knows nothing of this
@@ -70,7 +70,7 @@ public interface ConfigBeanProxy {
      *
      * @param type the child element type
      * @return the newly created child instance
-     * @throws TransactionFailure when called outside the boundaries of a transaction 
+     * @throws TransactionFailure when called outside the boundaries of a transaction
      */
     @DuckTyped @Customize
     public <T extends ConfigBeanProxy> T createChild(Class<T> type) throws TransactionFailure;
@@ -111,7 +111,7 @@ public interface ConfigBeanProxy {
 
         public static <T extends ConfigBeanProxy> T createChild(ConfigBeanProxy self, Class<T> c)
             throws TransactionFailure {
-            
+
              try {
                  WriteableView bean = WriteableView.class.cast(Proxy.getInvocationHandler(Proxy.class.cast(self)));
                  return bean.allocateProxy(c);

@@ -39,7 +39,7 @@ public class SlessEJB3 implements SlessSub
 
     private @Resource SessionContext ejbContext2;
 
-    @Resource(type=jakarta.ejb.SessionContext.class) 
+    @Resource(type=jakarta.ejb.SessionContext.class)
     private EJBContext ejbContext3;
 
     private EJBContext ejbContext4;
@@ -78,7 +78,7 @@ public class SlessEJB3 implements SlessSub
         private void setEJBContext6(EJBContext context) {
         ejbContext6 = context;
     }
-    
+
     @PostConstruct
     public void afterCreate() {
         System.out.println("In SlessEJB3::afterCreate() marked as PostConstruct");
@@ -136,13 +136,13 @@ public class SlessEJB3 implements SlessSub
     }
 
     public Collection roundTrip2(Collection collectionOfSless) {
-        System.out.println("In SlessEJB3::roundTrip2 " + 
+        System.out.println("In SlessEJB3::roundTrip2 " +
                            collectionOfSless);
         if( collectionOfSless.size() > 0 ) {
             Sless sless = (Sless) collectionOfSless.iterator().next();
-            System.out.println("input Sless.getId() = " + sless.getId());  
+            System.out.println("input Sless.getId() = " + sless.getId());
         }
         return collectionOfSless;
-    }    
+    }
 
 }

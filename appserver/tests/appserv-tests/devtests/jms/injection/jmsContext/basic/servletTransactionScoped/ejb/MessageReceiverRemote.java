@@ -25,6 +25,6 @@ import jakarta.ejb.Remote;
 @Remote
 public interface MessageReceiverRemote {
     public static final String RemoteJNDIName =  MessageReceiverBean.class.getSimpleName() + "/remote";
-    
+
     public boolean checkMessage(String[] texts);
 }

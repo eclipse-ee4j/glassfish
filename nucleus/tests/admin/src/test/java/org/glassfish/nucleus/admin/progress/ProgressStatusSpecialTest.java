@@ -28,7 +28,7 @@ import org.testng.annotations.Test;
  */
 @Test(testName="ProgressStatusSpecialTest")
 public class ProgressStatusSpecialTest {
-    
+
     public void stepBackCommand() {
         NadminReturn result = nadminWithOutput("progress-step-back");
         assertTrue(result.returnValue);
@@ -53,12 +53,12 @@ public class ProgressStatusSpecialTest {
         ProgressMessage prg = itr.next();
         assertTrue(prg.getValue() < 80);
     }
-    
+
     public void doubleTotalCommand() {
         NadminReturn result = nadminWithOutput("progress-double-totals");
         assertTrue(result.returnValue);
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
         assertFalse(ProgressMessage.isNonDecreasing(prgs));
     }
-    
+
 }

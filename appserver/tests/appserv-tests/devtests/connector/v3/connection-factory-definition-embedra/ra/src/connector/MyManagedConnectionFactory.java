@@ -43,7 +43,7 @@ public class MyManagedConnectionFactory implements ManagedConnectionFactory, Tra
     private ConnectionManager cm;
     private PrintWriter writer;
     private TransactionSupportLevel transactionSupport = TransactionSupportLevel.LocalTransaction;;
-    
+
     public String getTestName() {
         return testName;
     }
@@ -68,7 +68,7 @@ public class MyManagedConnectionFactory implements ManagedConnectionFactory, Tra
     }
 
     @Override
-    public ManagedConnection createManagedConnection(Subject subject,  ConnectionRequestInfo reqInfo) 
+    public ManagedConnection createManagedConnection(Subject subject,  ConnectionRequestInfo reqInfo)
             throws ResourceException {
         return null;
     }
@@ -79,7 +79,7 @@ public class MyManagedConnectionFactory implements ManagedConnectionFactory, Tra
     }
 
     @Override
-    public ManagedConnection matchManagedConnections(Set candidates, Subject sub,  ConnectionRequestInfo reqInfo) 
+    public ManagedConnection matchManagedConnections(Set candidates, Subject sub,  ConnectionRequestInfo reqInfo)
             throws ResourceException {
         return null;
     }

@@ -58,12 +58,12 @@ public class UtilsTest {
 //
 //  @Test
 //  public void testRegisterContextFactoryForPrefixNamed() {
-//    Utils.registerContextFactoryForPrefixNamed("prefix", 
+//    Utils.registerContextFactoryForPrefixNamed("prefix",
 //        new ContextViewFactory() {
 //           @Override
 //          public EnumSet<PropagationMode> getPropagationModes() {
 //            return PropagationMode.defaultSet();
-//          }        
+//          }
 //          @Override
 //          public ViewCapable createInstance(View view) {
 //            return new ViewCapable() {};
@@ -80,56 +80,56 @@ public class UtilsTest {
 //    @Override
 //    public EnumSet<PropagationMode> getPropagationModes() {
 //      return null;
-//    }    
+//    }
 //  };
-//  
+//
 //  private static MessageID msgID = MessageID.WRITING_KEY; // We need a dummy MessageID
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationArgsNullKey() {
-//    Utils.validateFactoryRegistrationArgs(null, msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs(null, msgID, "context class name",
 //        CONTEXT_VIEW_FACTORY, null);
 //  }
-//  
+//
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationArgsNullContextClassName() {
-//    Utils.validateFactoryRegistrationArgs("key", msgID, null, 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, null,
 //        CONTEXT_VIEW_FACTORY, null);
 //  }
-//  
+//
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationArgsNullFactory() {
-//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name",
 //        null, null);
 //  }
-//  
+//
 //  @Test
 //  public void testValidateFactoryRegistration() {
 //    Map<String, ?> map = Collections.emptyMap();
-//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name",
 //        CONTEXT_VIEW_FACTORY, map);
 //  }
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationNullKey() {
 //    Map<String, ?> map = Collections.emptyMap();
-//    Utils.validateFactoryRegistrationArgs(null, msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs(null, msgID, "context class name",
 //        CONTEXT_VIEW_FACTORY, map);
 //  }
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationNullClassName() {
 //    Map<String, ?> map = Collections.emptyMap();
-//    Utils.validateFactoryRegistrationArgs("key", msgID, null, 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, null,
 //        CONTEXT_VIEW_FACTORY, map);
 //  }
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationNullFactory() {
 //    Map<String, ?> map = Collections.emptyMap();
-//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name",
 //        null, map);
 //  }
 //  @Test(expected=IllegalArgumentException.class)
 //  public void testValidateFactoryRegistrationNullMessageID() {
 //    Map<String, ?> map = Collections.emptyMap();
-//    Utils.validateFactoryRegistrationArgs("key", null, "context class name", 
+//    Utils.validateFactoryRegistrationArgs("key", null, "context class name",
 //        CONTEXT_VIEW_FACTORY, map);
 //  }
 //  @Test
@@ -137,13 +137,13 @@ public class UtilsTest {
 //    RecordingLoggerAdapter logger = new RecordingLoggerAdapter();
 //    Deencapsulation.setField(ContextBootstrap.class, "loggerAdapter", logger);
 //    Map<String, Object> map = new HashMap<String, Object>();
-//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name",
 //        CONTEXT_VIEW_FACTORY, map);
 //    logger.verify(null, null, null, (Object[]) null);
 //    map.put("context class name", "something");
-//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name", 
+//    Utils.validateFactoryRegistrationArgs("key", msgID, "context class name",
 //        CONTEXT_VIEW_FACTORY, map);
-//    logger.verify(Level.WARN, null, msgID, "context class name", 
+//    logger.verify(Level.WARN, null, msgID, "context class name",
 //        "something", CONTEXT_VIEW_FACTORY);
 //  }
 

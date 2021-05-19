@@ -25,7 +25,7 @@ package com.sun.enterprise.security.auth.digest.api;
  */
 public interface Key {
 
-    
+
     public java.lang.String getRealmName();
 
     public java.lang.String getUsername();

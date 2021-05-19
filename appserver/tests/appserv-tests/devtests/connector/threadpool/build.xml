@@ -61,7 +61,7 @@
 
   <target name="run" depends="init-common">
     <antcall target="runclient-common">
-	<param name="appname" value="worktest" />
+        <param name="appname" value="worktest" />
     </antcall>
   </target>
 

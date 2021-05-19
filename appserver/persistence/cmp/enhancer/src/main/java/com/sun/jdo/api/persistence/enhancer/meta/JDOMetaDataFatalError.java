@@ -23,9 +23,9 @@ package com.sun.jdo.api.persistence.enhancer.meta;
  * inconsistent state.
  */
 public class JDOMetaDataFatalError
-    //^olsen: provisional, convert to a checked exception
-    extends RuntimeException
-{
+    // ^olsen: provisional, convert to a checked exception
+    extends RuntimeException {
+
     /**
      * An optional nested exception.
      */
@@ -34,37 +34,36 @@ public class JDOMetaDataFatalError
     /**
      * Constructs an <code>JDOMetaDataFatalError</code> with no detail message.
      */
-    public JDOMetaDataFatalError()
-    {
+    public JDOMetaDataFatalError() {
         this.nested = null;
     }
+
 
     /**
      * Constructs an <code>JDOMetaDataFatalError</code> with the specified
      * detail message.
      */
-    public JDOMetaDataFatalError(String msg)
-    {
+    public JDOMetaDataFatalError(String msg) {
         super(msg);
         this.nested = null;
     }
+
 
     /**
      * Constructs an <code>JDOMetaDataFatalError</code> with an optional
      * nested exception.
      */
-    public JDOMetaDataFatalError(Throwable nested)
-    {
+    public JDOMetaDataFatalError(Throwable nested) {
         super(nested.toString());
         this.nested = nested;
     }
+
 
     /**
      * Constructs an <code>JDOMetaDataFatalError</code> with the specified
      * detail message and an optional nested exception.
      */
-    public JDOMetaDataFatalError(String msg, Throwable nested)
-    {
+    public JDOMetaDataFatalError(String msg, Throwable nested) {
         super(msg);
         this.nested = nested;
     }

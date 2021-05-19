@@ -160,7 +160,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
                                         desc.getServiceName());
                         jaxwsDelegate = new JAXWSServiceDelegate(desc, svc, cl);
                     }
-                
+
 
                 // check if this is a post 1.1 web service
                 if(jakarta.xml.ws.Service.class.isAssignableFrom(serviceInterfaceClass)) {
@@ -543,7 +543,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
         while(it.hasNext()){
             wsFeatures.add(getWebServiceFeatureBean((Annotation)it.next()));
         }
-        
+
         return wsFeatures;
     }
 
@@ -551,7 +551,7 @@ public class WebServiceReferenceManagerImpl implements WebServiceReferenceManage
        if (s != null) {
             return AddressingFeature.Responses.valueOf(AddressingFeature.Responses.class,s);
         } else return AddressingFeature.Responses.ALL;
-        
+
     }
 
     private void resolvePortComponentLinks(ServiceReferenceDescriptor desc)

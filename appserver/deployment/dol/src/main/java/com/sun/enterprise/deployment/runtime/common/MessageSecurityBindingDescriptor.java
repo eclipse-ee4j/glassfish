@@ -32,7 +32,7 @@ public class MessageSecurityBindingDescriptor extends RuntimeDescriptor {
         MessageSecurityDescriptor messageSecDesc) {
         messageSecDescs.add(messageSecDesc);
     }
-    
+
     public ArrayList getMessageSecurityDescriptors() {
         return messageSecDescs;
     }

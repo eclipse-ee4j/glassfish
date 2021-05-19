@@ -56,7 +56,7 @@ import jakarta.validation.constraints.Pattern;
 public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefContainer, Payload {
     /**
      * Sets the node name
-     * 
+     *
      * @param value node name
      * @throws PropertyVetoException if a listener vetoes the change
      */
@@ -163,7 +163,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
      * Sets the value of the freeze
      *
      * @param value "true" to freeze node and not allow instances to be created
-     * 
+     *
      * @throws PropertyVetoException if a listener vetoes the change
      */
     void setFreeze(String value) throws PropertyVetoException;
@@ -194,7 +194,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     /**
      * Returns the node dir as an absolute path. If the node dir path in the Node element is relative this will make it
      * absolute relative to the node's installdir.
-     * 
+     *
      * @return the node's nodedir as an absolute path. Null if no nodedir.
      */
     @DuckTyped
@@ -205,7 +205,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * Is a node being used by any server instance?
-     * 
+     *
      * @return true if node is referenced by any server instance, else false.
      */
     @DuckTyped
@@ -213,7 +213,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * True if this is the default local node. Example: localhost-domain1
-     * 
+     *
      * @return
      */
     @DuckTyped
@@ -221,7 +221,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * True if the node's nodeHost is local to this
-     * 
+     *
      * @return
      */
     @DuckTyped
@@ -229,7 +229,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     /**
      * Does the node allow instance creation?
-     * 
+     *
      * @return true if node allows instance creation, else false
      */
     @DuckTyped

@@ -52,8 +52,8 @@
     </target>
 
     <target name="usage">
-	  <echo>Usage: ant all 
-	  </echo>
+      <echo>Usage: ant all
+      </echo>
     </target>
 
 </project>

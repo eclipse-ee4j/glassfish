@@ -22,7 +22,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Marker interface identifying a PasswordAliasStore implementation as one
  * used for storing domain-scoped password aliases.
- * 
+ *
  * @author tjquinn
  */
 @Contract

@@ -24,6 +24,6 @@ import java.util.*;
  */
 
 public interface A1 extends jakarta.ejb.EJBObject {
- 
+
 }
 

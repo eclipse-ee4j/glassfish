@@ -48,14 +48,14 @@ import org.glassfish.api.admin.AdminCommandSecurity;
 
 /**
  * Delete System Property Command
- * 
- * Removes one system property of the domain, configuration, cluster, or server 
+ *
+ * Removes one system property of the domain, configuration, cluster, or server
  * instance, at a time
- * 
- * Usage: delete-system-property [--terse=false] [--echo=false] [--interactive=true] 
+ *
+ * Usage: delete-system-property [--terse=false] [--echo=false] [--interactive=true]
  * [--host localhost] [--port 4848|4849] [--secure|-s=true] [--user admin_user] [
  * --passwordfile file_name] [--target target(Default server)] property_name
- * 
+ *
  */
 @Service(name="delete-system-property")
 @PerLookup
@@ -65,7 +65,7 @@ CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.STA
 @I18n("delete.system.property")
 public class DeleteSystemProperty implements AdminCommand,
         AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteSystemProperty.class);
 
     @Param(optional=true, defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
@@ -73,7 +73,7 @@ public class DeleteSystemProperty implements AdminCommand,
 
     @Param(name="property_name", primary=true)
     String propName;
-    
+
     @Inject
     Domain domain;
 
@@ -210,7 +210,7 @@ public class DeleteSystemProperty implements AdminCommand,
         SystemPropertyBag bag = domain;
         if (bag.containsProperty(propName))
             defs++;
-        
+
         bag = domain.getServerNamed(target);
         if (bag != null && bag.containsProperty(propName)) {
             defs++;
@@ -221,7 +221,7 @@ public class DeleteSystemProperty implements AdminCommand,
             if (server.getConfig().containsProperty(propName))
                 defs++;
         }
-        
+
         bag = domain.getClusterNamed(target);
         if (bag != null && bag.containsProperty(propName)) {
             defs++;

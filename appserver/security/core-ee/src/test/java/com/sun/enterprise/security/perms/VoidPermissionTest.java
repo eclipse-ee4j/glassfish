@@ -37,40 +37,40 @@ public class VoidPermissionTest {
     public static void tearDownAfterClass() throws Exception {
     }
 
-    
+
     @Test
     public void testImpliedByAllPermission() {
-        
+
         Permission allPerm = new AllPermission();
-        
+
         VoidPermission vPerm = new VoidPermission();
-        
-        
+
+
         Assert.assertTrue(allPerm.implies(vPerm));
-        
+
         Assert.assertTrue(!vPerm.implies(allPerm));
     }
-    
-    
+
+
     @Test
     public void testNotImplied() {
-        
+
         VoidPermission vPerm = new VoidPermission();
         FilePermission fPerm = new FilePermission("/scratch/test/*", "read");
-        
+
         Assert.assertTrue(!vPerm.implies(fPerm));
         Assert.assertTrue(!fPerm.implies(vPerm));
     }
 
-    
+
     @Test
     public void testNoImplySelf() {
         VoidPermission vPerm1 = new VoidPermission();
         VoidPermission vPerm2 = new VoidPermission();
-        
+
         Assert.assertTrue(!vPerm1.implies(vPerm2));
         Assert.assertTrue(!vPerm2.implies(vPerm1));
-        
+
         Assert.assertTrue(!vPerm1.implies(vPerm1));
     }
 }

@@ -24,7 +24,7 @@ import org.glassfish.web.deployment.runtime.SessionProperties;
 /**
  * This node is the superclass for all web related runtime nodes
  *
- * @version 
+ * @version
  */
 public class SessionPropertiesNode extends RuntimeDescriptorNode {
     /**

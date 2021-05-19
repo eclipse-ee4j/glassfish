@@ -20,10 +20,10 @@ import jakarta.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 public interface Product extends EJBObject {
- 
+
    public void setPrice(double price) throws RemoteException;
 
-   public double getPrice() throws RemoteException;  
+   public double getPrice() throws RemoteException;
 
    public String getDescription() throws RemoteException;
 }

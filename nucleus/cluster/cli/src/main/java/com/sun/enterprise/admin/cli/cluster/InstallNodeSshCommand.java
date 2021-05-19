@@ -223,7 +223,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
 
             // unjarring doesn't retain file permissions, hence executables need
             // to be fixed with proper permissions
-            logger.info("Fixing file permissions of all bin files under " + host + ":" + sshInstallDir); 
+            logger.info("Fixing file permissions of all bin files under " + host + ":" + sshInstallDir);
             try {
                 if (binDirFiles.isEmpty()) {
                     //binDirFiles can be empty if the archive isn't a fresh one
@@ -262,7 +262,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
             sftpClient.close();
         }
     }
-    
+
     /**
      * Recursively list install dir and identify "bin" directory. Change permissions
      * of files under "bin" directory.
@@ -280,13 +280,13 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
                     fixAllFiles(subDir, sftpClient);
                 } else {
                     searchAndFixBinDirectoryFiles(subDir, sftpClient);
-                }   
+                }
             }
         }
     }
 
     /**
-     * Set permissions of all files under specified directory. Note that this 
+     * Set permissions of all files under specified directory. Note that this
      * doesn't check the file type before changing the permissions.
      * @param binDir directory where file permissions need to be fixed
      * @param sftpClient ftp client handle
@@ -302,7 +302,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
             }
         }
     }
-    
+
     /**
      * Determines if GlassFish is installed on remote host at specified location.
      * Uses SSH launcher to execute 'asadmin version'
@@ -341,7 +341,7 @@ public class InstallNodeSshCommand extends InstallNodeBaseCommand {
     final void precopy() throws CommandException {
         if (getForce())
             return;
-        
+
         boolean prompt = promptPass;
         for (String host : hosts) {
             sshLauncher.init(getRemoteUser(), host, getRemotePort(), sshpassword, getSshKeyFile(), sshkeypassphrase, logger);

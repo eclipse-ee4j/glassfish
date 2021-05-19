@@ -21,13 +21,13 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
     private static URLConnection conn = null;
     private static URL url;
     private static ObjectOutputStream objectWriter = null;
-    private static ObjectInputStream objectReader = null;  
+    private static ObjectInputStream objectReader = null;
     private static String host;
     private static String contextRoot;
     private static String port;
@@ -51,7 +51,7 @@ public class WebTest {
                HttpURLConnection urlConnection = (HttpURLConnection)conn;
                urlConnection.setDoOutput(true);
                int responseCode=  urlConnection.getResponseCode();
-               System.out.println("Response code: " + responseCode + " Expected code: 200"); 
+               System.out.println("Response code: " + responseCode + " Expected code: 200");
                if (urlConnection.getResponseCode() != 200){
                     stat.addStatus("load-balancer-mod-jk", stat.FAIL);
                } else {

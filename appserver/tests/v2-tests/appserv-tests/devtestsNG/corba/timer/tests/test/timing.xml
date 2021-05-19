@@ -35,34 +35,34 @@
     <timer name="test7" description="A test timer"/>
 
     <timerGroup name="tg1" description="A test timer group">
-	<contains name="test1"/>
-	<contains name="test2"/>
-	<contains name="test3"/>
-	<contains name="tg3"/>
+        <contains name="test1"/>
+        <contains name="test2"/>
+        <contains name="test3"/>
+        <contains name="tg3"/>
     </timerGroup>
 
     <timerGroup name="tg2" description="A test timer group">
-	<contains name="test4"/>
-	<contains name="test5"/>
-	<contains name="tg1"/>
+        <contains name="test4"/>
+        <contains name="test5"/>
+        <contains name="tg1"/>
     </timerGroup>
 
     <timerGroup name="tg3" description="A test timer group">
-	<contains name="test6"/>
-	<contains name="test7"/>
-	<contains name="tg2"/>
+        <contains name="test6"/>
+        <contains name="test7"/>
+        <contains name="tg2"/>
     </timerGroup>
 
     <timerGroup name="transportClient" description="Major events in client side request cycle">
-	<contains name="hasNextNext"/>
-	<contains name="connectionSetup"/>
-	<contains name="clientEncoding"/>
-	<contains name="clientTransportAndWait"/>
-	<contains name="clientDecoding"/>
+        <contains name="hasNextNext"/>
+        <contains name="connectionSetup"/>
+        <contains name="clientEncoding"/>
+        <contains name="clientTransportAndWait"/>
+        <contains name="clientDecoding"/>
     </timerGroup>
 
     <timerGroup name="transport" description="All transport activity">
-	<contains name="transportClient"/>
+        <contains name="transportClient"/>
     </timerGroup>
 </timing>
 

@@ -23,5 +23,5 @@ import javax.security.auth.login.LoginException;
  * @author tjquinn
  */
 public class RemoteAdminAccessException extends LoginException {
-    
+
 }

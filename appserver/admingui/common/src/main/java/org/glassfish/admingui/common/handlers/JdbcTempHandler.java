@@ -51,7 +51,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *	<p> This handler gets the default values and resource type and puts them in session
+     * <p> This handler gets the default values and resource type and puts them in session
      */
     @Handler(id = "setJDBCPoolWizard",
     input = {
@@ -80,7 +80,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *	<p> This handler gets the datasource classname and properties and sets them in session
+     * <p> This handler gets the datasource classname and properties and sets them in session
      */
     @Handler(id = "gf.updateJDBCPoolWizardStep1")
     public static void updateJDBCPoolWizardStep1(HandlerContext handlerCtx) {
@@ -174,7 +174,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *	<p> updates the wizard map properties on step 2
+     * <p> updates the wizard map properties on step 2
      */
     @Handler(id = "gf.updateJdbcConnectionPoolPropertiesTable")
     public static void updateJdbcConnectionPoolPropertiesTable(HandlerContext handlerCtx) {
@@ -200,7 +200,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *	<p> updates the wizard map properties on step 2
+     * <p> updates the wizard map properties on step 2
      */
     @Handler(id = "updateJdbcConnectionPoolWizardStep2")
     public static void updateJdbcConnectionPoolWizardStep2(HandlerContext handlerCtx) {
@@ -232,7 +232,7 @@ public class JdbcTempHandler {
     }
 
     /**
-     *	<p> This handler adds the class name table column depends on the resource type.
+     * <p> This handler adds the class name table column depends on the resource type.
      */
     @Handler(id = "gf.addClassNameColumn",
     input = {
@@ -279,7 +279,7 @@ public class JdbcTempHandler {
             Map<String, Object> extraPropsMap = (Map<String, Object>) ((Map<String, Object>) responseMap.get("data")).get("extraProperties");
             if ( extraPropsMap != null) {
                 jdbcClassNames = (List<String>) extraPropsMap.get("driverClassNames");
-            }            
+            }
         } catch (Exception ex) {
             GuiUtil.getLogger().severe("Error in getJdbcDriverClassNames ; \nendpoint = " + endpoint + "attrs=" + attrs + "method=GET");
             //we don't need to call GuiUtil.handleError() because thats taken care of in restRequest() when we pass in the handler.
@@ -296,7 +296,7 @@ public class JdbcTempHandler {
             Map<String, Object> extraPropsMap = (Map<String, Object>) ((Map<String, Object>) responseMap.get("data")).get("extraProperties");
             if ( extraPropsMap != null) {
                 vendorList = (List<String>) extraPropsMap.get("vendorNames");
-            }            
+            }
         } catch (Exception ex) {
             GuiUtil.getLogger().severe("Error in getDatabaseVendorNames ; \nendpoint = " + endpoint + "attrs=null method=GET");
             //we don't need to call GuiUtil.handleError() because thats taken care of in restRequest() when we pass in the handler.

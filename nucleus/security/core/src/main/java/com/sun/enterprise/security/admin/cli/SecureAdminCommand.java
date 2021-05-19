@@ -55,7 +55,7 @@ import org.jvnet.hk2.config.TransactionFailure;
  * <p>
  * This class, and the concrete subclasses EnableSecureAdminCommand and
  * DisableSecureAdminComment, define what must be done in terms of steps.
- * Each step has enable work and disable work.  This class builds 
+ * Each step has enable work and disable work.  This class builds
  * arrays of steps, one array which operates at the domain level and one which
  * operates at the config level.  The enable work of these steps is run in order through
  * the array to fully
@@ -79,7 +79,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
     public final static String ADMIN_LISTENER_NAME = "admin-listener";
     static final String DAS_CONFIG_NAME = "server-config";
     final static String PORT_UNIF_PROTOCOL_NAME = "pu-protocol";
-    
+
     static final Logger logger = SecurityLoggerInfo.getLogger();
 
 
@@ -158,7 +158,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
     }
 
     /**
-     * Keeps track of whether we've found writable versions of various 
+     * Keeps track of whether we've found writable versions of various
      * ConfigBeans.
      */
     static class TopLevelContext extends AbstractContext {
@@ -218,7 +218,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
         private static final String CLIENT_AUTH_VALUE = "want";
         private static final String SSL3_ENABLED_VALUE = "false";
         private static final String CLASSNAME_VALUE = "com.sun.enterprise.security.ssl.GlassfishSSLImpl";
-        
+
         private final Transaction t;
         private final Config config_w;
         private final TopLevelContext topLevelContext;
@@ -239,13 +239,13 @@ public abstract class SecureAdminCommand implements AdminCommand {
         }
 
         /**
-         * Prepares a given Ssl configuration instance so the connection 
+         * Prepares a given Ssl configuration instance so the connection
          * represented by the Ssl's parent configuration object operates
          * securely, using SSL.
-         * 
+         *
          * @param ssl_w writeable Ssl instance to be modified
          * @param certNickname the cert nickname to be used by the connection to identify itself
-         * @return 
+         * @return
          */
         private static Ssl initSsl(final Ssl ssl_w, final String certNickname) {
             ssl_w.setClientAuth(CLIENT_AUTH_VALUE);
@@ -255,14 +255,14 @@ public abstract class SecureAdminCommand implements AdminCommand {
             ssl_w.setRenegotiateOnClientAuthWant(true);
             return ssl_w;
         }
-        
+
         private static String chooseCertNickname(
                 final String configName,
                 final String dasAlias,
                 final String instanceAlias) throws TransactionFailure {
             return (configName.equals(DAS_CONFIG_NAME) ? dasAlias : instanceAlias);
         }
-        
+
         private JmxConnector writeableJmxConnector() throws TransactionFailure {
             if (jmxConnector_w == null) {
                 final AdminService adminService = config_w.getAdminService();
@@ -277,7 +277,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             }
             return jmxConnector_w;
         }
-        
+
         private Ssl writeableJmxSSL() throws TransactionFailure, PropertyVetoException {
             if (jmxConnectorSsl_w == null) {
                 final JmxConnector jmxC_w = writeableJmxConnector();
@@ -400,7 +400,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
                 return SecureAdminCommand.this.updateSecureAdminSettings(secureAdmin_w);
             }
         }
-        
+
         @Override
         public Work<TopLevelContext> enableWork() {
             return new TopLevelWork(true);
@@ -448,7 +448,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
                         throw new RuntimeException(ex);
                     }
                 }
-                
+
             };
         }
 
@@ -471,11 +471,11 @@ public abstract class SecureAdminCommand implements AdminCommand {
                         throw new RuntimeException(ex);
                     }
                 }
-                
+
             };
         }
     };
-    
+
     /**
      * Manages the sec-admin-listener protocol.
      */
@@ -503,11 +503,11 @@ public abstract class SecureAdminCommand implements AdminCommand {
             }
             http_w.setDefaultVirtualServer(ASADMIN_VIRTUAL_SERVER_NAME);
             http_w.setEncodedSlashEnabled("true");
-            
+
             final FileCache cache = http_w.createChild(FileCache.class);
 //            cache.setEnabled("false");
             http_w.setFileCache(cache);
-                    
+
             return http_w;
         }
 
@@ -524,7 +524,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             }
             return ConfigLevelContext.initSsl(ssl_w, certNickname);
         }
-        
+
         @Override
         public Work<ConfigLevelContext> enableWork() {
             return new Work<ConfigLevelContext>() {
@@ -546,7 +546,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
                     if (secAdminListenerProtocol_w == null) {
                         return false;
                     }
-                    
+
                     /*
                      * Get an existing or create a new writeable http child under the new protocol.
                      */
@@ -555,7 +555,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
                     /*
                      * Get an existing or create a new writeable ssl child under the new protocol.
                      * Which cert nickname we set depends on whether this is the DAS's config
-                     * we're working on or an instance's.  
+                     * we're working on or an instance's.
                      */
                     writeableSsl(context.t, secAdminListenerProtocol_w,
                             ConfigLevelContext.chooseCertNickname(
@@ -678,7 +678,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return nl_w;
         }
 
-        
+
 
         private void assignAdminListenerProtocol(
                 final Transaction t,
@@ -726,7 +726,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
                             context.t, portUnif_w, ProtocolFinderInfo.ADMIN_HTTP_REDIRECT_FINDER);
 
                     assignAdminListenerProtocol(context.t, context.config_w, PORT_UNIF_PROTOCOL_NAME);
-                    
+
                     return true;
                 }
             };
@@ -831,7 +831,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
         perDomainStep
     };
 
-    
+
     /**
      * Tasks executed once per config during an enable or disable.
      */
@@ -874,7 +874,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
      * <p>
      * This is separate from the execute method so it can be invoked during
      * upgrade.
-     * 
+     *
      * @throws TransactionFailure
      */
     public void run() throws TransactionFailure, SecureAdminCommandException {
@@ -884,7 +884,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
                 // get the transaction
                 final Transaction t = Transaction.getTransaction(domain_w);
-                final TopLevelContext topLevelContext = 
+                final TopLevelContext topLevelContext =
                         new TopLevelContext(t, domain_w);
                 if (t!=null) {
 
@@ -903,14 +903,14 @@ public abstract class SecureAdminCommand implements AdminCommand {
                      * Now apply the required changes to the admin listener
                      * in the configurations.  Include all configs, because even
                      * though the non-DAS configs default to use SSL the user
-                     * might have specified a different alias to use and that 
-                     * value must be set in the SSL element for the 
+                     * might have specified a different alias to use and that
+                     * value must be set in the SSL element for the
                      * secure admin listener.
                      */
                     final Configs configs = domain_w.getConfigs();
                     for (Config c : configs.getConfig()) {
                         final Config c_w = t.enroll(c);
-                        ConfigLevelContext configLevelContext = 
+                        ConfigLevelContext configLevelContext =
                                 new ConfigLevelContext(topLevelContext, c_w);
                         for (Iterator<Work<ConfigLevelContext>> it = perConfigSteps(); it.hasNext();) {
                             final Work<ConfigLevelContext> step = it.next();
@@ -944,7 +944,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             report.failure(context.getLogger(), ex.getLocalizedMessage());
         }
     }
-    
+
     /*
      * Executes the command with no action report.  Primarily useful from the
      * upgrade class (which does not have a convenient action report).

@@ -43,37 +43,37 @@ import jakarta.servlet.http.HttpServletRequest;
  * @author anilam
  */
 public class LBConfigContentSource  implements DownloadServlet.ContentSource {
-    
+
      /**
-     *	<p> This method returns a unique string used to identify this
-     *	    {@link DownloadServlet#ContentSource}.  This string must be
-     *	    specified in order to select the appropriate
-     *	    {@link DownloadServlet#ContentSource} when using the
-     *	    {@link DownloadServlet}.</p>
+     * <p> This method returns a unique string used to identify this
+     *     {@link DownloadServlet#ContentSource}.  This string must be
+     *     specified in order to select the appropriate
+     *     {@link DownloadServlet#ContentSource} when using the
+     *     {@link DownloadServlet}.</p>
      */
     public String getId() {
-	return "LBConfig";					// NOI18N
+        return "LBConfig";                                        // NOI18N
     }
 
     /**
      *  <p> This method is responsible for generating the content and
-     *	    returning an InputStream to that content.  It is also
-     *	    responsible for setting any attribute values in the
-     *	    {@link DownloadServlet#Context}, such as {@link DownloadServlet#EXTENSION} or
-     *	    {@link DownloadServlet#CONTENT_TYPE}.</p>
+     *     returning an InputStream to that content.  It is also
+     *     responsible for setting any attribute values in the
+     *     {@link DownloadServlet#Context}, such as {@link DownloadServlet#EXTENSION} or
+     *     {@link DownloadServlet#CONTENT_TYPE}.</p>
      */
     public InputStream getInputStream(DownloadServlet.Context ctx) {
-	// Set the extension so it can be mapped to a MIME type
-	ctx.setAttribute(DownloadServlet.EXTENSION, "xml");
+        // Set the extension so it can be mapped to a MIME type
+        ctx.setAttribute(DownloadServlet.EXTENSION, "xml");
 
-	// Get appName
-	HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
-	String lbName = request.getParameter("lbName");
+        // Get appName
+        HttpServletRequest request = (HttpServletRequest) ctx.getServletRequest();
+        String lbName = request.getParameter("lbName");
         String restUrl = request.getParameter("restUrl");
-        
-	// Create the tmpFile
-	InputStream tmpFile = null;
-	try {
+
+        // Create the tmpFile
+        InputStream tmpFile = null;
+        try {
             String endpoint = restUrl + "/load-balancers/load-balancer/" + lbName + "/export-http-lb-config";
             DateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
             Date date = new Date();
@@ -84,52 +84,52 @@ public class LBConfigContentSource  implements DownloadServlet.ContentSource {
             File lbFile = new File(slbFile);
             attrsMap.put("id", slbFile);
             RestUtil.postRestRequestFromServlet(request, endpoint, attrsMap, true, true);
-	    tmpFile = new FileInputStream(lbFile);
+            tmpFile = new FileInputStream(lbFile);
             boolean success = lbFile.delete();
             if (!success) {
                 throw new Exception("Load Balancer config file delete failed");
             }
-	} catch (Exception ex) {
-	    throw new RuntimeException(ex);
-	}
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
 
-	// Save some important stuff for cleanUp
-	ctx.setAttribute("tmpFile", tmpFile);			// NOI18N
+        // Save some important stuff for cleanUp
+        ctx.setAttribute("tmpFile", tmpFile);                        // NOI18N
 
-	// Return an InputStream to the tmpFile
-	return tmpFile;
+        // Return an InputStream to the tmpFile
+        return tmpFile;
     }
 
     /**
-     *	<p> This method may be used to clean up any temporary resources.  It
-     *	    will be invoked after the <code>InputStream</code> has been
-     *	    completely read.</p>
+     * <p> This method may be used to clean up any temporary resources.  It
+     *     will be invoked after the <code>InputStream</code> has been
+     *     completely read.</p>
      */
     public void cleanUp(DownloadServlet.Context ctx) {
-	// Get the File information
-	InputStream tmpFile =
-	    (InputStream) ctx.getAttribute("tmpFile");		// NOI18N
+        // Get the File information
+        InputStream tmpFile =
+            (InputStream) ctx.getAttribute("tmpFile");                // NOI18N
 
-	// Close the InputStream
-	if (tmpFile != null) {
-	    try {
-		tmpFile.close();
-	    } catch (Exception ex) {
-		// Ignore...
-	    }
-	}
+        // Close the InputStream
+        if (tmpFile != null) {
+            try {
+                tmpFile.close();
+            } catch (Exception ex) {
+                // Ignore...
+            }
+        }
 
-	ctx.removeAttribute("tmpFile");			// NOI18N
+        ctx.removeAttribute("tmpFile");                        // NOI18N
     }
 
     /**
-     *	<p> This method is responsible for returning the last modified date of
-     *	    the content, or -1 if not applicable.  This information will be
-     *	    used for caching.  This implementation always returns -1.</p>
+     * <p> This method is responsible for returning the last modified date of
+     *     the content, or -1 if not applicable.  This information will be
+     *     used for caching.  This implementation always returns -1.</p>
      *
-     *	@return	-1
+     * @return        -1
      */
     public long getLastModified(DownloadServlet.Context context) {
-	return -1;
+        return -1;
     }
 }

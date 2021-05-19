@@ -24,10 +24,10 @@
         <artifactId>web</artifactId>
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
-    </parent>    
+    </parent>
     <artifactId>jsf-connector</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>JSF implementation connector module</name>
 
     <developers>

@@ -264,7 +264,7 @@ public class TransientContext implements Context, Serializable {
      * @throws NamingException          if there is a naming exception
      * @throws java.rmi.RemoteException if there is a RMI exception
      */
-    /* Finds if the name searched for is a type of context or anyother type of 
+    /* Finds if the name searched for is a type of context or anyother type of
      * object.
      */
     private TransientContext resolveContext(String s) throws NamingException {

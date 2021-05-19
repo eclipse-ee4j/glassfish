@@ -15,13 +15,12 @@
  */
 
 package org.glassfish.admin.amx.j2ee;
- 
+
 
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 /**
  */
-@AMXMBeanMetadata(type=J2EETypes.ENTITY_BEAN, leaf=true)
-public interface EntityBean extends EJB
-{	
+@AMXMBeanMetadata(type = J2EETypes.ENTITY_BEAN, leaf = true)
+public interface EntityBean extends EJB {
 }

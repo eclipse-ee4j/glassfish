@@ -49,14 +49,14 @@ public class TypeName
         super(type);
         this.qualifiedName = qualifiedName;
     }
-	
+
     /**
      *
      */
-	public String getName()
-	{
-		return I18NHelper.getMessage(messages, "scope.classname.getname.name"); //NOI18N
-	}
+    public String getName()
+    {
+        return I18NHelper.getMessage(messages, "scope.classname.getname.name"); //NOI18N
+    }
 
     /**
      *

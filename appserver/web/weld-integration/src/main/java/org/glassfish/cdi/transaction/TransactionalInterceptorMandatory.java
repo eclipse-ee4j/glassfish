@@ -52,7 +52,7 @@ public class TransactionalInterceptorMandatory extends TransactionalInterceptorB
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
-        
+
         setTransactionalTransactionOperationsManger(false);
         try {
             if (getTransactionManager().getTransaction() == null) {

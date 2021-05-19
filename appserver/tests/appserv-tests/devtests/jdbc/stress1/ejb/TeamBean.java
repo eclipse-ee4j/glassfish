@@ -30,7 +30,7 @@ public abstract class TeamBean implements EntityBean {
 
     public abstract String getTeamId();
     public abstract void setTeamId(String id);
-    
+
     public abstract String getName();
     public abstract void setName(String name);
 
@@ -95,30 +95,30 @@ public abstract class TeamBean implements EntityBean {
         setCity(city);
         return null;
     }
-         
+
     public void ejbPostCreate (String id, String name, String city)
         throws CreateException { }
 
     public void setEntityContext(EntityContext ctx) {
         context = ctx;
     }
-    
+
     public void unsetEntityContext() {
         context = null;
     }
-    
+
     public void ejbRemove() {
         //Debug.print("TeamBean ejbRemove");
     }
-    
+
     public void ejbLoad() {
         //Debug.print("TeamBean ejbLoad");
     }
-    
+
     public void ejbStore() {
         //Debug.print("TeamBean ejbStore");
     }
-    
+
     public void ejbPassivate() { }
     public void ejbActivate() { }
 }

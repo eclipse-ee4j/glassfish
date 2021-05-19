@@ -50,15 +50,15 @@
 
     <target name="create-user" depends="init-common">
       <antcall target="create-user-common">
-	<param name="user" value="${fileUser}"/>
-	<param name="password" value="${fileUserPassword}"/>
-	<param name="groups" value="${fileUserGroups}"/>
+        <param name="user" value="${fileUser}"/>
+        <param name="password" value="${fileUserPassword}"/>
+        <param name="groups" value="${fileUserGroups}"/>
       </antcall>
     </target>
 
     <target name="delete-user" depends="init-common">
       <antcall target="delete-user-common">
-	<param name="user" value="${fileUser}"/>
+        <param name="user" value="${fileUser}"/>
       </antcall>
     </target>
 
@@ -107,10 +107,10 @@
         <param name="contextroot" value="${appname}"/>
       </antcall>
       <antcall target="set-jbi-enabled">
-	<param name="appName" value="${appname}-ejb"/>
-	<param name="wsName" value="HelloEJB"/>
-	<param name="module" value="ejb-module"/>
-	<param name="flag" value="true"/>
+        <param name="appName" value="${appname}-ejb"/>
+        <param name="wsName" value="HelloEJB"/>
+        <param name="module" value="ejb-module"/>
+        <param name="flag" value="true"/>
       </antcall>
     </target>
 
@@ -118,7 +118,7 @@
         <antcall target="undeploy-app"/>
         <antcall target="undeploy-client"/>
     </target>
-    
+
     <target name="undeploy-client" depends="init-common">
       <echo message="Undeploying client application"/>
       <exec executable="${ASADMIN}">
@@ -145,8 +145,8 @@
 
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">
@@ -154,7 +154,7 @@
           <pathelement path="${build.classes.dir}/client"/>
         </classpath>
         <arg value="http://${http.host}:${http.port}/wsclient/webclient/RequestProcessor"/>
-	<arg value="${fileUser}:${fileUserPassword}"/>
+        <arg value="${fileUser}:${fileUserPassword}"/>
       </java>
     </target>
 

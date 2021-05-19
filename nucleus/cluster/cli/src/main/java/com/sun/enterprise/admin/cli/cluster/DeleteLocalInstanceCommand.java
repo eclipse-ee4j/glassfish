@@ -135,7 +135,7 @@ public class DeleteLocalInstanceCommand extends LocalInstanceCommand {
     }
 
     /**
-     * If the instance is not registered on DAS (server xml entry doesn't exist 
+     * If the instance is not registered on DAS (server xml entry doesn't exist
      * in domain.xml), the get command will throw a CommandException
      */
     private boolean isRegisteredToDas() {

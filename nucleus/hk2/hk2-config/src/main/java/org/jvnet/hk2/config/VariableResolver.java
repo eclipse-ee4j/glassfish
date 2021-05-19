@@ -89,13 +89,13 @@ public abstract class VariableResolver implements Translator {
      * Returns the value of the variable.
      *
      * This class will not try to further expand variables in the returned value.
-     * If the implementation wants to do so, that is the implementation's responsibility. 
+     * If the implementation wants to do so, that is the implementation's responsibility.
      *
      * @return
      *      null if the variable is not found. The caller will report an error.
      *      When the variable is not found, it's also legal to throw {@link TranslationException},
      *      which is an useful technique if the implementation would like to report
-     *      additional errors. 
+     *      additional errors.
      */
     protected abstract String getVariableValue(String varName) throws TranslationException;
 }

@@ -33,13 +33,13 @@ import org.glassfish.deployment.common.DeploymentUtils;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
 /**
- *  Contains the status of list of files that have been autodeployed. 
+ *  Contains the status of list of files that have been autodeployed.
  *
  *  @author Mahesh Rangamani
 */
 
 public class AutoDeployedFilesManager {
-    
+
     public static final Logger deplLogger =
         org.glassfish.deployment.autodeploy.AutoDeployer.deplLogger;
 
@@ -63,15 +63,15 @@ public class AutoDeployedFilesManager {
      * a previously-autodeployed file to the Trash, the system creates and/or updates .DS_Store.
      * Clearly we do not want to try deploying that file.
      */
-    private static final String DS_STORE = ".DS_Store"; 
+    private static final String DS_STORE = ".DS_Store";
 
-    /* 
+    /*
      * We need to exclude the osgi bundles from being processed by AutoDeployer
      * and let FileInstall monitor them.
      */
     private static final String OSGI_AUTODEPLOY_DIR ="bundles";
 
-    private List<String> FILE_NAMES_TO_IGNORE_FOR_AUTODEPLOY = 
+    private List<String> FILE_NAMES_TO_IGNORE_FOR_AUTODEPLOY =
          new ArrayList();
 
     protected  String statDir = null;
@@ -79,13 +79,13 @@ public class AutoDeployedFilesManager {
 
     public AutoDeployedFilesManager() {
     }
-    
+
     protected AutoDeployedFilesManager(String s) {
         statDir = s;
         FILE_NAMES_TO_IGNORE_FOR_AUTODEPLOY.add(DS_STORE);
         FILE_NAMES_TO_IGNORE_FOR_AUTODEPLOY.add(OSGI_AUTODEPLOY_DIR);
     }
-    
+
     /**
      * Create an instance from the persisted file in the specified directory.
      * @param statusDir Directory in which the status file is to read.
@@ -93,23 +93,23 @@ public class AutoDeployedFilesManager {
     public static AutoDeployedFilesManager loadStatus(File statusDir) throws Exception {
         return loadStatus(statusDir.getAbsolutePath());
     }
-    
+
     public static AutoDeployedFilesManager loadStatus(String autoDeploymentDir) throws Exception {
 
         String statusDir = autoDeploymentDir + File.separator + STATUS_DIR_NAME;
-   
+
         AutoDeployedFilesManager adfm = new AutoDeployedFilesManager(statusDir);
         return adfm;
-        
+
     }
-    
+
     public void writeStatus() throws Exception {
-           // Nothing to do 
+           // Nothing to do
     }
-       
+
     /**
-     * Update the status of the file as deployed. 
-     *   
+     * Update the status of the file as deployed.
+     *
      */
     public void setDeployedFileInfo(File f) throws Exception {
       try {
@@ -129,7 +129,7 @@ public class AutoDeployedFilesManager {
 
     /*
      * Delete status info for file
-     */ 
+     */
     public void deleteDeployedFileInfo(File f) throws Exception {
       try {
         File statusFile = getStatusFile(f);
@@ -141,7 +141,7 @@ public class AutoDeployedFilesManager {
       } catch (Exception e) { throw e;}
     }
 
-    // calculate the status file path. 
+    // calculate the status file path.
     private File getStatusFile(File f) {
         File outDir = new File(this.statDir);
         outDir = obtainFileStatusDir(f, outDir, outDir.getParentFile());
@@ -151,7 +151,7 @@ public class AutoDeployedFilesManager {
     static File obtainFileStatusDir(File f, File statDir, File autoDeployDir) {
         File dir = f.getParentFile();
         while (!dir.getAbsolutePath().equals(autoDeployDir.getAbsolutePath())) {
-            statDir = new File(statDir, dir.getName()); 
+            statDir = new File(statDir, dir.getName());
             dir = dir.getParentFile();
         }
         /*
@@ -172,11 +172,11 @@ public class AutoDeployedFilesManager {
         }
         return statDir;
     }
-   
+
     /**
-      * Compare the list of files with the current status info 
-      * and determine the files that need to be deployed 
-      * 
+      * Compare the list of files with the current status info
+      * and determine the files that need to be deployed
+      *
       */
     public File[] getFilesForDeployment(File[] latestFiles) {
 
@@ -203,35 +203,35 @@ public class AutoDeployedFilesManager {
             }
         }
         return arrList.toArray(new File[arrList.size()]);
-        
+
     }
-    
+
     /**
-      * Compare the list of files with the current status info 
-      * and determine the apps that need to be undeployed. 
-      * 
+      * Compare the list of files with the current status info
+      * and determine the apps that need to be undeployed.
+      *
       */
     public File[] getFilesForUndeployment(File[] latestFiles) {
-        
-        File statusDir = new File(statDir);  
-        Set<File> statusFiles = 
+
+        File statusDir = new File(statDir);
+        Set<File> statusFiles =
                 AutoDeployDirectoryScanner.getListOfFilesAsSet(statusDir, true);
-        
+
         // The file might have been deleted. In that case, return null.
         if (statusFiles == null || statusFiles.isEmpty()){
             return null;
         }
-        
-        // now let's get the latestFiles status files names to remove them 
-        // from the list of status files, any remaining ones will need to 
+
+        // now let's get the latestFiles status files names to remove them
+        // from the list of status files, any remaining ones will need to
         // be undeployed
         for (File deployDirFile : latestFiles) {
             statusFiles.remove(getStatusFile(deployDirFile));
         }
         ArrayList<File> appNames = new ArrayList<File>();
-        File autodeployDir = statusDir.getParentFile();        
+        File autodeployDir = statusDir.getParentFile();
         for(File statusDirFile : statusFiles) {
-            
+
             // calculate the original file as it was copied in the autodeploy
             // directory
             File filePath = autodeployDir;
@@ -241,7 +241,7 @@ public class AutoDeployedFilesManager {
                 f = f.getParentFile();
             }
             filePath  = new File(filePath,  statusDirFile.getName());
-            
+
             // Make sure a _deployed marker exists for this file before
             // trying to undeploy it.
             File _deployedMarkerFile = new File(filePath + AutoDeployConstants.DEPLOYED);
@@ -249,14 +249,14 @@ public class AutoDeployedFilesManager {
                 appNames.add(filePath);
             }
         }
-        
+
         // Add to the app names files any entries for which auto-undeployment
         // has been requested by the user's creation of xxx_undeploy_requested.
         appNames.addAll(getFilesToUndeployByRequest(autodeployDir, statusDir));
         return appNames.toArray(new File[appNames.size()]);
-    }    
-    
-    /* 
+    }
+
+    /*
      * Returns files to be undeployed due to the presence of a xxx_undeployRequested
      * file in the autodeploy directory.
      * @param latestFiles the files in the autodeploy directory
@@ -264,7 +264,7 @@ public class AutoDeployedFilesManager {
      */
     private Collection<? extends File> getFilesToUndeployByRequest(File autodeployDir, File statusDir) {
         ArrayList<File> appsRequested = new ArrayList<File>();
-        
+
         for (File f : statusDir.listFiles()) {
             /*
              * See if there is a corresponding _undeployRequested file for this
@@ -283,7 +283,7 @@ public class AutoDeployedFilesManager {
         }
         return appsRequested;
     }
-    
+
     /*
      * Returns whether there is a request to undeploy the specified file.
      * @param f the file to check
@@ -292,7 +292,7 @@ public class AutoDeployedFilesManager {
     private static boolean isUndeployRequested(File autodeployDir, File f) {
         return appToUndeployRequestFile(autodeployDir, f).exists();
     }
-    
+
     /*
      * Returns the File object for the undeployment request for the specified app
      * file or directory.
@@ -303,12 +303,12 @@ public class AutoDeployedFilesManager {
         File undeployRequest = new File(autodeployDir, f.getName() + AutoDeployConstants.UNDEPLOY_REQUESTED);
         return undeployRequest;
     }
-    
+
     protected static File appToUndeployRequestFile(File f) {
         return appToUndeployRequestFile(f.getParentFile(), f);
     }
-    
-    /* 
+
+    /*
      * A marker class to indicate that the file is to be undeployed and then
      * deleted by the autodeployer.
      */
@@ -316,19 +316,19 @@ public class AutoDeployedFilesManager {
         public UndeployRequestedFile(File parent, String child) {
             super(parent, child);
         }
-        
+
         public UndeployRequestedFile(String path) {
             super(path);
         }
-        
+
         public UndeployRequestedFile(String parent, String child) {
             super(parent, child);
         }
-        
+
         public UndeployRequestedFile(URI uri) {
             super(uri);
         }
-        
+
         public UndeployRequestedFile(File f) {
             super(f.getAbsolutePath());
         }

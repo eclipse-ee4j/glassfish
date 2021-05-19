@@ -42,27 +42,27 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for jsp:attribute with omit");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
         webTest.doTest2();
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() {
 
         // An error should be raised with undeclared tag
-     
-        try { 
+
+        try {
             URL url = new URL("http://" + host  + ":" + port
                               + contextRoot + "/jsp/test.jsp");
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 500) { 
+            if (responseCode != 500) {
                 System.err.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 stat.addStatus(TEST_NAME, stat.FAIL);

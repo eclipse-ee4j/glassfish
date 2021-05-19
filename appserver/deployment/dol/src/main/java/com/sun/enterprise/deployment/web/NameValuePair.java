@@ -24,5 +24,5 @@ public interface NameValuePair {
     public void setValue(String value);
     public String getDescription();
     public void setDescription(String description);
-    
+
 }

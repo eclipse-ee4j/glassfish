@@ -91,7 +91,7 @@ public interface CLibrary extends Library {
         }
         public void setPwName(String pw_name) {
             this.pw_name = pw_name;
-        }  
+        }
 
         public void setPwPasswd(String pw_passwd) {
             this.pw_passwd = pw_passwd;

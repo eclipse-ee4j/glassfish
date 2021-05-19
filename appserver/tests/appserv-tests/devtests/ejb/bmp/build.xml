@@ -29,15 +29,15 @@
     &reporting;
 
     <target name="all">
-        <antcall target="finder"/>      
+        <antcall target="finder"/>
         <antcall target="readonly"/>
-        <antcall target="simple"/>      
-        <antcall target="simple_nopackage"/>       
+        <antcall target="simple"/>
+        <antcall target="simple_nopackage"/>
         <antcall target="twolevel"/>
-        <antcall target="txtests"/>       
-        <antcall target="thread_pool_id"/>      
+        <antcall target="txtests"/>
+        <antcall target="thread_pool_id"/>
 <!-- These tests need to be fixed
-        <antcall target="handle"/>       
+        <antcall target="handle"/>
 -->
     </target>
 
@@ -91,19 +91,19 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
+        <echo>
+                Usage:
                      ant all (Executes all the ejb-bmp tests)
 
                      ant finder
-                     ant handle 
-                     ant readonly 
-                     ant simple 
+                     ant handle
+                     ant readonly
+                     ant simple
                      ant simple_nopackage
-                     ant twolevel 
-                     ant txtests 
-                     ant thread_pool_id 
-			
-	</echo>
+                     ant twolevel
+                     ant txtests
+                     ant thread_pool_id
+
+        </echo>
     </target>
 </project>

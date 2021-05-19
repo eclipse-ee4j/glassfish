@@ -21,7 +21,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -35,7 +35,7 @@ public class WebTest {
         String portS = args[1];
         String contextRoot = args[2];
         int port = new Integer(portS).intValue();
-        
+
         try {
             goGet(host, port, "JSP-CONFIG", contextRoot + "/test.jsp" );
             goGet2(host, port, "ELIgnored", contextRoot + "/foo/test.jsp" );
@@ -81,7 +81,7 @@ public class WebTest {
                     if (!status.equalsIgnoreCase("PASS")){
                         throw new Exception("Wrong response");
                     }
-                } 
+                }
             }
         } finally {
             try {
@@ -98,7 +98,7 @@ public class WebTest {
             } catch (IOException ex) {}
         }
    }
-  
+
     private static void goGet2(String host, int port,
                               String result, String contextPath)
          throws Exception
@@ -109,7 +109,7 @@ public class WebTest {
         System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
         os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;

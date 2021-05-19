@@ -104,17 +104,17 @@ public class TopCoordinator extends CoordinatorImpl {
     boolean             temporary = false;
     int                 hash = 0;
 
-	/*
-		Logger to log transaction messages
-	*/ 
-	  static Logger _logger = LogDomains.getLogger(TopCoordinator.class,LogDomains.TRANSACTION_LOGGER);
+    /**
+     *  Logger to log transaction messages
+     */
+    static Logger _logger = LogDomains.getLogger(TopCoordinator.class,LogDomains.TRANSACTION_LOGGER);
     // added (Ram J) for memory Leak fix.
     Vector recoveryCoordinatorList = null;
     CoordinatorSynchronizationImpl coordSyncImpl = null;
 
-   // added (sankar) for delegated recovery support
-   boolean delegated = false;
-   String logPath = null;
+    // added (sankar) for delegated recovery support
+    boolean delegated = false;
+    String logPath = null;
 
     /**
      * Default TopCoordinator constructor.
@@ -152,9 +152,9 @@ public class TopCoordinator extends CoordinatorImpl {
         // to be able to work with or without a CoordinatorLog reference.
 
         if (Configuration.isRecoverable()) {
-	    // get a CoordinatorLog object from the cache
-	    // instead of instantiating a new one    Arun 9/27/99
-	    logRecord = CoordinatorLogPool.getCoordinatorLog();
+            // get a CoordinatorLog object from the cache
+            // instead of instantiating a new one Arun 9/27/99
+            logRecord = CoordinatorLogPool.getCoordinatorLog();
         } else {
             logRecord = null;
         }
@@ -166,8 +166,7 @@ public class TopCoordinator extends CoordinatorImpl {
         // Store information about the superior, ancestors and
         // participants of the new transaction.
 
-        superInfo = new SuperiorInfo(tranState.localTID, tranState.globalTID,
-                                     null, logRecord);
+        superInfo = new SuperiorInfo(tranState.localTID, tranState.globalTID, null, logRecord);
 
         // Cache the name  - create a buffer and print the global XID into it.
 
@@ -200,8 +199,8 @@ public class TopCoordinator extends CoordinatorImpl {
             // it visible to the TransactionManager.
 
             LogicErrorException exc = new LogicErrorException(
-					LogFormatter.getLocalizedMessage(_logger,
-					"jts.invalid_state_change"));
+                    LogFormatter.getLocalizedMessage(_logger,
+                    "jts.invalid_state_change"));
             throw exc;
 
         } else {
@@ -212,8 +211,8 @@ public class TopCoordinator extends CoordinatorImpl {
                                                 this,
                                                 timeOut)) {
                 LogicErrorException exc = new LogicErrorException(
-						LogFormatter.getLocalizedMessage(_logger,
-						"jts.transaction_id_already_in_use"));
+                        LogFormatter.getLocalizedMessage(_logger,
+                        "jts.transaction_id_already_in_use"));
                 throw exc;
             }
         }
@@ -238,18 +237,17 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-    TopCoordinator(int timeOut, GlobalTID globalTID, Coordinator superior,
-            boolean temporary) throws LogicErrorException {
-
+    TopCoordinator(int timeOut, GlobalTID globalTID, Coordinator superior, boolean temporary)
+        throws LogicErrorException {
         // If this execution of the process is recoverable, then create a
         // CoordinatorLog object for the top-level transaction. Each of the
         // implementation classes that use the CoordinatorLog have been written
         // to be able to work with or without a CoordinatorLog reference.
 
         if (Configuration.isRecoverable()) {
-	    // get a CoordinatorLog object from the cache
-	    // instead of instantiating a new one    Arun 9/27/99
-	    logRecord = CoordinatorLogPool.getCoordinatorLog();
+            // get a CoordinatorLog object from the cache
+            // instead of instantiating a new one    Arun 9/27/99
+            logRecord = CoordinatorLogPool.getCoordinatorLog();
         } else {
             logRecord = null;
         }
@@ -258,13 +256,12 @@ public class TopCoordinator extends CoordinatorImpl {
         // If one cannot be allocated, raise an exception as the
         // transaction cannot be started.
 
-        tranState = new TransactionState(globalTID,logRecord);
+        tranState = new TransactionState(globalTID, logRecord);
 
         // Store information about the superior, ancestors and participants
         // of the new subordinate transaction.
 
-        superInfo = new SuperiorInfo(tranState.localTID, tranState.globalTID,
-                                     superior, logRecord);
+        superInfo = new SuperiorInfo(tranState.localTID, tranState.globalTID, superior, logRecord);
 
         // Cache the name  - create a buffer and print the global XID into it.
 
@@ -296,15 +293,14 @@ public class TopCoordinator extends CoordinatorImpl {
 
         if (!tranState.setState(TransactionState.STATE_ACTIVE)) {
             LogicErrorException exc = new LogicErrorException(
-					LogFormatter.getLocalizedMessage(_logger,
-					"jts.invalid_state_change"));
+                    LogFormatter.getLocalizedMessage(_logger,
+                    "jts.invalid_state_change"));
             throw exc;
         } else {
-            if (!RecoveryManager.addCoordinator(globalTID, tranState.localTID,
-                                                this, timeOut)) {
+            if (!RecoveryManager.addCoordinator(globalTID, tranState.localTID, this, timeOut)) {
                 LogicErrorException exc = new LogicErrorException(
-						LogFormatter.getLocalizedMessage(_logger,
-						"jts.transaction_id_already_in_use"));
+                        LogFormatter.getLocalizedMessage(_logger,
+                        "jts.transaction_id_already_in_use"));
                 throw exc;
             }
         }
@@ -335,47 +331,47 @@ public class TopCoordinator extends CoordinatorImpl {
 
         switch (state) {
 
-        // If the transaction is active it should be rolled back.  This
-        // will result in the TopCoordinator self-destructing at the
-        // end of two-phase commit.
+            // If the transaction is active it should be rolled back.  This
+            // will result in the TopCoordinator self-destructing at the
+            // end of two-phase commit.
 
-        case TransactionState.STATE_ACTIVE :
-            try {
-                rollback(true);
-            } catch (Throwable exc) {
-                _logger.log(Level.FINE, "", exc);
-            }
+            case TransactionState.STATE_ACTIVE :
+                try {
+                    rollback(true);
+                } catch (Throwable exc) {
+                    _logger.log(Level.FINE, "", exc);
+                }
 
-            break;
+                break;
 
-        // For committed or rolled-back, we really need to destroy the
-        // object. Also for prepared_readonly.
+                // For committed or rolled-back, we really need to destroy the
+                // object. Also for prepared_readonly.
 
-        case TransactionState.STATE_PREPARED_READONLY :
-        case TransactionState.STATE_COMMITTED :
-        case TransactionState.STATE_ROLLED_BACK :
-        case TransactionState.STATE_COMMITTED_ONE_PHASE_OK :
-        case TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
+            case TransactionState.STATE_PREPARED_READONLY :
+            case TransactionState.STATE_COMMITTED :
+            case TransactionState.STATE_ROLLED_BACK :
+            case TransactionState.STATE_COMMITTED_ONE_PHASE_OK :
+            case TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
 
-            if (superInfo != null) {
-                superInfo.doFinalize();
-            }
+                if (superInfo != null) {
+                    superInfo.doFinalize();
+                }
 
-            tranState = null;
-            superInfo = null;
-            nestingInfo = null;
-            participants = null;
-            synchronizations = null;
-            logRecord = null;
-            terminator = null;
-            name = null;
-            break;
+                tranState = null;
+                superInfo = null;
+                nestingInfo = null;
+                participants = null;
+                synchronizations = null;
+                logRecord = null;
+                terminator = null;
+                name = null;
+                break;
 
-        // For any other state, the transaction is completing, so the
-        // TopCoordinator will eventually self-destruct.  We do nothing here.
+                // For any other state, the transaction is completing, so the
+                // TopCoordinator will eventually self-destruct.  We do nothing here.
 
-        default :
-            break;
+            default :
+                break;
         }
     }
 
@@ -420,10 +416,10 @@ public class TopCoordinator extends CoordinatorImpl {
         tranState = new TransactionState();
         int state = tranState.reconstruct(log);
         if (state == TransactionState.STATE_NONE ||
-                state == TransactionState.STATE_COMMITTED ||
-                // state == TransactionState.STATE_COMMITTED_ONE_PHASE_OK ||
-                // state == TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK ||
-                state == TransactionState.STATE_ROLLED_BACK) {
+            state == TransactionState.STATE_COMMITTED ||
+            // state == TransactionState.STATE_COMMITTED_ONE_PHASE_OK ||
+            // state == TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK ||
+            state == TransactionState.STATE_ROLLED_BACK) {
 
             // If the transaction is discarded, then ensure that
             // the log record is discarded.
@@ -611,52 +607,52 @@ public class TopCoordinator extends CoordinatorImpl {
 
             switch (tranState.state) {
 
-            // GDH Due to the possibility of recovery being attempted
-            // on more than one thread we must cover the case where
-            // the transaction has actually COMMITTED already.
+                // GDH Due to the possibility of recovery being attempted
+                // on more than one thread we must cover the case where
+                // the transaction has actually COMMITTED already.
 
-            case TransactionState.STATE_COMMITTED :
-                // GDH (added)
-            case TransactionState.STATE_COMMITTED_ONE_PHASE_OK :
-                // GDH (added)
-            case TransactionState.STATE_COMMITTING_ONE_PHASE :
-                // GDH (added)
-            case TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
-                // GDH (added)
-            case TransactionState.STATE_COMMITTING :
-                result = Status.StatusCommitted;
-                break;
+                case TransactionState.STATE_COMMITTED :
+                    // GDH (added)
+                case TransactionState.STATE_COMMITTED_ONE_PHASE_OK :
+                    // GDH (added)
+                case TransactionState.STATE_COMMITTING_ONE_PHASE :
+                    // GDH (added)
+                case TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
+                    // GDH (added)
+                case TransactionState.STATE_COMMITTING :
+                    result = Status.StatusCommitted;
+                    break;
 
-            // GDH Due to the possibility of recovery being attempted
-            // on more than one thread we must cover the case where
-            // the transaction has actually ROLLED_BACK already.
+                    // GDH Due to the possibility of recovery being attempted
+                    // on more than one thread we must cover the case where
+                    // the transaction has actually ROLLED_BACK already.
 
-            case TransactionState.STATE_ROLLED_BACK :  // GDH (added)
-            case TransactionState.STATE_ROLLING_BACK :
-                // GDH Note we do not need C-O-P_ROLLED_BACK Here as the actual
-                // resource rolling back will be done already so it's academic.
-                result = Status.StatusRolledBack;
-                break;
+                case TransactionState.STATE_ROLLED_BACK :  // GDH (added)
+                case TransactionState.STATE_ROLLING_BACK :
+                    // GDH Note we do not need C-O-P_ROLLED_BACK Here as the actual
+                    // resource rolling back will be done already so it's academic.
+                    result = Status.StatusRolledBack;
+                    break;
 
-            // For a subordinate, the replay_completion method is invoked on
-            // the superior's RecoveryCoordinator.  We may need to create a
-            // CoordinatorResource object to give to the superior in the case
-            // where we are in recovery. If the number of times
-            // the replay_completion has bee retried is greater than the value
-            // specified by COMMITRETRY, then HEURISTICDIRECTION is used
-            // to determine the transaction outcome.
+                    // For a subordinate, the replay_completion method is invoked on
+                    // the superior's RecoveryCoordinator.  We may need to create a
+                    // CoordinatorResource object to give to the superior in the case
+                    // where we are in recovery. If the number of times
+                    // the replay_completion has bee retried is greater than the value
+                    // specified by COMMITRETRY, then HEURISTICDIRECTION is used
+                    // to determine the transaction outcome.
 
-            default :
+                default :
 
-                boolean attemptRetry = true;
-                // String commitRetryVar;
-                // int commitRetries = 0;
+                    boolean attemptRetry = true;
+                    // String commitRetryVar;
+                    // int commitRetries = 0;
 
-                // If COMMITRETRY is not set, then retry is infinite.
-                // Otherwise check that
-                // the current number of retries is less than the limit.
+                    // If COMMITRETRY is not set, then retry is infinite.
+                    // Otherwise check that
+                    // the current number of retries is less than the limit.
 
-               /**
+                    /**
                 commitRetryVar = Configuration.
                     getPropertyValue(Configuration.COMMIT_RETRY);
                 if (commitRetryVar != null) {
@@ -668,80 +664,80 @@ public class TopCoordinator extends CoordinatorImpl {
                         attemptRetry = false;
                     }
                 }
-                **/
-                int commitRetries = Configuration.getRetries();
-                if (commitRetries >= 0 && (superInfo.resyncRetries() >= commitRetries))
-                    attemptRetry = false;
+                     **/
+                    int commitRetries = Configuration.getRetries();
+                    if (commitRetries >= 0 && (superInfo.resyncRetries() >= commitRetries))
+                        attemptRetry = false;
 
 
-                if (!attemptRetry) {
+                    if (!attemptRetry) {
 
-                    // If we are not to attempt a retry of the
-                    // replay_completion method, then the HEURISTICDIRECTION
-                    // environment variable  is used to get the global outcome.
+                        // If we are not to attempt a retry of the
+                        // replay_completion method, then the HEURISTICDIRECTION
+                        // environment variable  is used to get the global outcome.
 
-                    String heuristicVar;
-                    boolean commitTransaction = false;
-                    result = Status.StatusRolledBack;
+                        String heuristicVar;
+                        boolean commitTransaction = false;
+                        result = Status.StatusRolledBack;
 
-                    heuristicVar =
-                        Configuration.getPropertyValue(
-                            Configuration.HEURISTIC_DIRECTION);
+                        heuristicVar =
+                            Configuration.getPropertyValue(
+                                Configuration.HEURISTIC_DIRECTION);
 
-                    if (heuristicVar != null) {
-                        commitTransaction = (heuristicVar.charAt(0) == '1');
-                    }
-
-                    if (commitTransaction) {
-                        result = Status.StatusCommitted;
-                    }
-
-                } else {
-
-                    // Otherwise, use the RecoveryCoordinator to get
-                    // the global outcome. Get the global outcome
-                    // from the superior's RecoveryCoordinator.
-
-                    try {
-						if(_logger.isLoggable(Level.FINE))
-                    	{
-							_logger.logp(Level.FINE,"TopCoordinator","recover",
-									"Before invoking replay_completion on Superior Coordinator");
-                    	}
-                        if (!delegated) {
-                            result = superInfo.recovery.
-                                        replay_completion(superInfo.resource);
-                        } else {
-                            result = ((RecoveryCoordinatorImpl)(superInfo.recovery)).
-                                        replay_completion(superInfo.resource, logPath);
+                        if (heuristicVar != null) {
+                            commitTransaction = (heuristicVar.charAt(0) == '1');
                         }
 
-                        // GDH
-                        // If the global result is returned as COMMITTING we
-                        // know the outcome of the global transaction
-                        // is COMMITTED.
-
-                        if (result == Status.StatusCommitting) {
+                        if (commitTransaction) {
                             result = Status.StatusCommitted;
                         }
-                    } catch (Throwable exc) {
-                        _logger.log(Level.FINE, "", exc);
-                        // If the exception is neither TRANSIENT or
-                        // COMM_FAILURE, it isunexpected, so display a message
-                        // and assume that the transaction has rolled back.
 
-                        if (!(exc instanceof COMM_FAILURE) &&
+                    } else {
+
+                        // Otherwise, use the RecoveryCoordinator to get
+                        // the global outcome. Get the global outcome
+                        // from the superior's RecoveryCoordinator.
+
+                        try {
+                            if(_logger.isLoggable(Level.FINE))
+                            {
+                                _logger.logp(Level.FINE,"TopCoordinator","recover",
+                                    "Before invoking replay_completion on Superior Coordinator");
+                            }
+                            if (!delegated) {
+                                result = superInfo.recovery.
+                                    replay_completion(superInfo.resource);
+                            } else {
+                                result = ((RecoveryCoordinatorImpl)(superInfo.recovery)).
+                                    replay_completion(superInfo.resource, logPath);
+                            }
+
+                            // GDH
+                            // If the global result is returned as COMMITTING we
+                            // know the outcome of the global transaction
+                            // is COMMITTED.
+
+                            if (result == Status.StatusCommitting) {
+                                result = Status.StatusCommitted;
+                            }
+                        } catch (Throwable exc) {
+                            _logger.log(Level.FINE, "", exc);
+                            // If the exception is neither TRANSIENT or
+                            // COMM_FAILURE, it isunexpected, so display a message
+                            // and assume that the transaction has rolled back.
+
+                            if (!(exc instanceof COMM_FAILURE) &&
                                 !(exc instanceof TRANSIENT)) {
-                            result = Status.StatusRolledBack;
-                        } else {
-                            // For TRANSIENT or COMM_FAILURE, the outcome
-                            // is unknown.
-                            result = Status.StatusUnknown;
+                                result = Status.StatusRolledBack;
+                            } else {
+                                // For TRANSIENT or COMM_FAILURE, the outcome
+                                // is unknown.
+                                result = Status.StatusUnknown;
+                            }
                         }
                     }
-                }
 
-                break;
+                    break;
             }
 
             // Clear the root Coordinator flag to indicate that
@@ -789,64 +785,65 @@ public class TopCoordinator extends CoordinatorImpl {
 
             switch (tranState.state) {
 
-            // If active, return active or marked rollback-only
-            // if the flag is set.
+                // If active, return active or marked rollback-only
+                // if the flag is set.
 
-            case TransactionState.STATE_ACTIVE :
-                if( rollbackOnly )
-                    result = Status.StatusMarkedRollback;
-                else
-                    result = Status.StatusActive;
-                break;
+                case TransactionState.STATE_ACTIVE :
+                    if (rollbackOnly) {
+                        result = Status.StatusMarkedRollback;
+                    } else {
+                        result = Status.StatusActive;
+                    }
+                    break;
 
-            // If prepared, (successfully or otherwise), return prepared.
-            // If committing return prepared (may want to block in this case).
+                    // If prepared, (successfully or otherwise), return prepared.
+                    // If committing return prepared (may want to block in this case).
 
-            case TransactionState.STATE_PREPARED_SUCCESS :
-            case TransactionState.STATE_PREPARED_FAIL :
-            case TransactionState.STATE_PREPARED_READONLY :
-                result = Status.StatusPrepared;
-                break;
+                case TransactionState.STATE_PREPARED_SUCCESS :
+                case TransactionState.STATE_PREPARED_FAIL :
+                case TransactionState.STATE_PREPARED_READONLY :
+                    result = Status.StatusPrepared;
+                    break;
 
-            // If we have no internal state, return that fact.
-            // All of these states map directly to the OMG values.
+                    // If we have no internal state, return that fact.
+                    // All of these states map directly to the OMG values.
 
-            case TransactionState.STATE_NONE :
-                result = Status.StatusNoTransaction;
-                break;
-            case TransactionState.STATE_PREPARING :
-                result = Status.StatusPreparing;
-                break;
-            case TransactionState.STATE_COMMITTING :
-            case TransactionState.STATE_COMMITTING_ONE_PHASE :
-                result = Status.StatusCommitting;
-                break;
-            case TransactionState.STATE_COMMITTED :
-            case TransactionState.STATE_COMMITTED_ONE_PHASE_OK :
-            case TransactionState.STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD :
-            case TransactionState.STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED :
-                result = Status.StatusCommitted;
-                break;
-            case TransactionState.STATE_ROLLING_BACK :
-            case TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
-                result = Status.StatusRollingBack;
-                break;
-            case TransactionState.STATE_ROLLED_BACK :
-                result = Status.StatusRolledBack;
-                break;
+                case TransactionState.STATE_NONE :
+                    result = Status.StatusNoTransaction;
+                    break;
+                case TransactionState.STATE_PREPARING :
+                    result = Status.StatusPreparing;
+                    break;
+                case TransactionState.STATE_COMMITTING :
+                case TransactionState.STATE_COMMITTING_ONE_PHASE :
+                    result = Status.StatusCommitting;
+                    break;
+                case TransactionState.STATE_COMMITTED :
+                case TransactionState.STATE_COMMITTED_ONE_PHASE_OK :
+                case TransactionState.STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD :
+                case TransactionState.STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED :
+                    result = Status.StatusCommitted;
+                    break;
+                case TransactionState.STATE_ROLLING_BACK :
+                case TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK :
+                    result = Status.StatusRollingBack;
+                    break;
+                case TransactionState.STATE_ROLLED_BACK :
+                    result = Status.StatusRolledBack;
+                    break;
 
-            // Any other state, return unknown.
-            // GDH Including c-o-p heuristic states
+                    // Any other state, return unknown.
+                    // GDH Including c-o-p heuristic states
 
-            default :
-                result = Status.StatusUnknown;
-                break;
+                default :
+                    result = Status.StatusUnknown;
+                    break;
             }
         } else {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
-          throw exc;
+                MinorCode.Completed,
+                CompletionStatus.COMPLETED_NO);
+            throw exc;
         }
 
         return result;
@@ -908,25 +905,26 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-/**
-	removed synchronization at method level since only tranState requires
-	locking
-*/
+    /**
+    removed synchronization at method level since only tranState requires
+    locking
+     */
     public boolean is_same_transaction(Coordinator other)
-            throws SystemException {
+        throws SystemException {
 
         boolean result = false;
 
         // Get the names of the two transactions and compare them.
 
         if (tranState != null) {
-            if (name == null)
+            if (name == null) {
                 name = superInfo.globalTID.toString();
+            }
             result = name.equals(other.get_transaction_name());
         } else {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+                MinorCode.Completed,
+                CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -951,16 +949,14 @@ public class TopCoordinator extends CoordinatorImpl {
      * @see
      */
     public boolean is_related_transaction(Coordinator other)
-            throws SystemException {
+        throws SystemException {
 
         boolean result = false;
 
         if (tranState != null) {
             result = other.is_descendant_transaction(this.object());
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -1002,15 +998,13 @@ public class TopCoordinator extends CoordinatorImpl {
      * @see
      */
     public boolean is_ancestor_transaction(Coordinator other)
-            throws SystemException {
+        throws SystemException {
 
         boolean result = false;
         if (tranState != null) {
-          result = other.is_descendant_transaction(this.object());
+            result = other.is_descendant_transaction(this.object());
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -1035,15 +1029,13 @@ public class TopCoordinator extends CoordinatorImpl {
      * @see
      */
     public boolean is_descendant_transaction(Coordinator other)
-            throws SystemException {
+        throws SystemException {
 
         boolean result = false;
         if (tranState != null) {
             result = is_same_transaction(other);
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -1083,18 +1075,16 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-/**
-	removed synchronization at method level since only tranState requires
-	locking
-*/
+    /**
+    removed synchronization at method level since only tranState requires
+    locking
+     */
     public int hash_transaction() {
 
         int result = hash;
 
         if (tranState == null) {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -1118,9 +1108,7 @@ public class TopCoordinator extends CoordinatorImpl {
         int result = hash;
 
         if (tranState == null) {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
 
             throw exc;
         }
@@ -1149,7 +1137,7 @@ public class TopCoordinator extends CoordinatorImpl {
      * @see
      */
     synchronized public RecoveryCoordinator register_resource(Resource res)
-            throws Inactive, TRANSACTION_ROLLEDBACK {
+        throws Inactive, TRANSACTION_ROLLEDBACK {
 
         RecoveryCoordinator result = null;
 
@@ -1157,16 +1145,15 @@ public class TopCoordinator extends CoordinatorImpl {
         // do not allow the registration.
 
         if (tranState == null || tranState.state !=
-                TransactionState.STATE_ACTIVE) {
-          Inactive exc = new Inactive();
-          throw exc;
+            TransactionState.STATE_ACTIVE) {
+            Inactive exc = new Inactive();
+            throw exc;
         }
 
         // Check whether the transaction has been marked rollback-only.
 
         if (rollbackOnly) {
-            TRANSACTION_ROLLEDBACK exc =
-                new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
+            TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -1181,8 +1168,7 @@ public class TopCoordinator extends CoordinatorImpl {
             // our reference, and a flag to indicate that it does not
             // represent a subtransaction.
 
-            CoordinatorResourceImpl cImpl =
-                new CoordinatorResourceImpl(superInfo.globalTID, this, false);
+            CoordinatorResourceImpl cImpl = new CoordinatorResourceImpl(superInfo.globalTID, this, false);
 
             try {
 
@@ -1191,18 +1177,17 @@ public class TopCoordinator extends CoordinatorImpl {
                 // reference.
 
                 CoordinatorResource cRes = cImpl.object();
-                RecoveryCoordinator superRecovery =
-                    superInfo.superior.register_resource(cRes);
-		if (!(superRecovery instanceof TxInflowRecoveryCoordinator))
+                RecoveryCoordinator superRecovery = superInfo.superior.register_resource(cRes);
+                if (!(superRecovery instanceof TxInflowRecoveryCoordinator)) {
                     superInfo.setRecovery(superRecovery);
+                }
                 superInfo.setResource(cRes);
                 registered = true;
-				if(_logger.isLoggable(Level.FINEST))
-                {
+                if (_logger.isLoggable(Level.FINEST)) {
                     _logger.logp(Level.FINEST,"TopCoordinator","register_resource()",
-							"CoordinatorResource " + cImpl + 
-							" has been registered with (Root)TopCoordinator"+
-							superInfo.globalTID.toString());
+                        "CoordinatorResource " + cImpl +
+                        " has been registered with (Root)TopCoordinator"+
+                        superInfo.globalTID.toString());
                 }
 
             } catch (Exception exc) {
@@ -1217,9 +1202,7 @@ public class TopCoordinator extends CoordinatorImpl {
 
                     // If the exception is a system exception, then allow it
                     // to percolate to the caller.
-                    TRANSACTION_ROLLEDBACK ex2 =
-                        new TRANSACTION_ROLLEDBACK(
-                            0, CompletionStatus.COMPLETED_NO);
+                    TRANSACTION_ROLLEDBACK ex2 = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
                     ex2.initCause(exc);
                     throw ex2;
                 }
@@ -1234,8 +1217,7 @@ public class TopCoordinator extends CoordinatorImpl {
 
                 // Otherwise throw an internal exception.
 
-                INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                            CompletionStatus.COMPLETED_NO);
+                INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                 ex2.initCause(exc);
                 throw ex2;
             }
@@ -1258,11 +1240,10 @@ public class TopCoordinator extends CoordinatorImpl {
         int numRes = 0;
         if (res instanceof OTSResourceImpl) {
             numRes = participants.addRes(res);
-		    if(_logger.isLoggable(Level.FINEST))
-            {
-				_logger.logp(Level.FINEST,"TopCoordinator","register_resource()",
-						"OTSResource " + res +" has been registered"+"GTID is:"+
-						superInfo.globalTID.toString());
+            if (_logger.isLoggable(Level.FINEST)) {
+                _logger.logp(Level.FINEST,"TopCoordinator","register_resource()",
+                    "OTSResource " + res +" has been registered"+"GTID is:"+
+                        superInfo.globalTID.toString());
             }
 
         } else {
@@ -1279,16 +1260,14 @@ public class TopCoordinator extends CoordinatorImpl {
         if (!(res instanceof OTSResourceImpl)) {
             RecoveryCoordinatorImpl rcImpl = null;
             try {
-                rcImpl = new RecoveryCoordinatorImpl(
-                                            superInfo.globalTID, numRes);
+                rcImpl = new RecoveryCoordinatorImpl(superInfo.globalTID, numRes);
                 result = rcImpl.object();
             } catch (Exception exc) {
 
                 // If the RecoveryCoordinator could not be created,
                 // report the exception.
 
-                INTERNAL ex2 = new INTERNAL(MinorCode.RecCoordCreateFailed,
-                                            CompletionStatus.COMPLETED_NO);
+                INTERNAL ex2 = new INTERNAL(MinorCode.RecCoordCreateFailed, CompletionStatus.COMPLETED_NO);
                 ex2.initCause(exc);
                 throw ex2;
             }
@@ -1318,9 +1297,7 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-    synchronized public void register_subtran_aware(
-            SubtransactionAwareResource sares) throws NotSubtransaction {
-
+    synchronized public void register_subtran_aware(SubtransactionAwareResource sares) throws NotSubtransaction {
         NotSubtransaction exc = new NotSubtransaction();
         throw exc;
     }
@@ -1337,10 +1314,10 @@ public class TopCoordinator extends CoordinatorImpl {
      *                      transaction.
      * @see
      */
-     public void rollback_only() throws Inactive {
+    public void rollback_only() throws Inactive {
 
         if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
+            tranState.state != TransactionState.STATE_ACTIVE) {
             Inactive exc = new Inactive();
             throw exc;
         } else {
@@ -1360,21 +1337,19 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-/**
-	removed synchronization at method level since only tranState requires
-	locking
-*/
+    /**
+    removed synchronization at method level since only tranState requires
+    locking
+     */
     public String get_transaction_name() {
-
         String result = null;
         if (tranState != null) {
-            if (name == null)
+            if (name == null) {
                 name = superInfo.globalTID.toString();
+            }
             result = name;
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                            MinorCode.Completed,
-                                            CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -1402,7 +1377,7 @@ public class TopCoordinator extends CoordinatorImpl {
         // do not allow the subtransaction to be created.
 
         if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
+            tranState.state != TransactionState.STATE_ACTIVE) {
             Inactive exc = new Inactive();
             throw exc;
         }
@@ -1425,9 +1400,7 @@ public class TopCoordinator extends CoordinatorImpl {
         SubCoordinator child = null;
         TerminatorImpl terminator = null;
         try {
-            child = new SubCoordinator(superInfo.globalTID,
-                                       superInfo.localTID,
-                                       ancestors);
+            child = new SubCoordinator(superInfo.globalTID, superInfo.localTID, ancestors);
 
             // Create a Terminator object, and initialise it with the
             // SubCoordinator reference and a flag to indicate that it
@@ -1439,9 +1412,9 @@ public class TopCoordinator extends CoordinatorImpl {
             // SubCoordinator and global OMGtid.
 
             result = new ControlImpl(terminator, child,
-                                     new GlobalTID(child.getGlobalTID()),
-                                     child.getLocalTID()
-                                    ).object();
+                new GlobalTID(child.getGlobalTID()),
+                child.getLocalTID()
+                ).object();
         } catch (Throwable exc) {
             Inactive ex2 = new Inactive();
             ex2.initCause(exc);
@@ -1492,7 +1465,7 @@ public class TopCoordinator extends CoordinatorImpl {
         }
         return participants.numRegistered();
     }
-    
+
     /**
      * Returns the internal identifier for the transaction.
      * This method is currently not synchronized because that causes a deadlock
@@ -1528,9 +1501,7 @@ public class TopCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-    synchronized CoordinatorImpl replyAction(int[/*1*/] action)
-            throws SystemException {
-
+    synchronized CoordinatorImpl replyAction(int[/* 1 */] action) throws SystemException {
         CoordinatorImpl result = null;
         action[0] = CoordinatorImpl.doNothing;
 
@@ -1553,8 +1524,7 @@ public class TopCoordinator extends CoordinatorImpl {
             if (!registered) {
                 if (participants != null && participants.involved()) {
 
-                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                                CompletionStatus.COMPLETED_NO);
+                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                     throw ex2;
                 } else if (!registeredSync) {
                     action[0] = forgetMe;
@@ -1567,8 +1537,7 @@ public class TopCoordinator extends CoordinatorImpl {
             if (!registeredSync) {
                 if (synchronizations != null && synchronizations.involved()) {
 
-                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                                CompletionStatus.COMPLETED_NO);
+                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                     throw ex2;
                 } else if (action[0] == doNothing && !registered) {
                     // If we are not registered, and have no participants,
@@ -1717,9 +1686,9 @@ public class TopCoordinator extends CoordinatorImpl {
         // clean up the transaction.
 
         if (temporary && !registered &&
-                !(participants != null && participants.involved()) &&
-                !(synchronizations != null && synchronizations.involved()) &&
-                !(nestingInfo != null && nestingInfo.numChildren() > 0)) {
+            !(participants != null && participants.involved()) &&
+            !(synchronizations != null && synchronizations.involved()) &&
+            !(nestingInfo != null && nestingInfo.numChildren() > 0)) {
             cleanUpEmpty(null);
         }
 
@@ -1737,23 +1706,18 @@ public class TopCoordinator extends CoordinatorImpl {
      * Recoverable Server registers the same Resource twice).
      *
      * @param
-     *
-     * @return  The consolidated vote.
-     *
-     * @exception INVALID_TRANSACTION  The transaction is not in a state to
-     *   commit, due to outstanding work.
-     * @exception HeuristicMixed  Indicates that a participant voted
-     *   to roll the transaction back, but one or more others
-     *   have already heuristically committed.
-     * @exception HeuristicHazard  Indicates that a participant voted to roll
-     *   the transaction back, but one or more others may have already
-     *   heuristically committed.
-     *
+     * @return The consolidated vote.
+     * @exception INVALID_TRANSACTION The transaction is not in a state to
+     *                commit, due to outstanding work.
+     * @exception HeuristicMixed Indicates that a participant voted
+     *                to roll the transaction back, but one or more others
+     *                have already heuristically committed.
+     * @exception HeuristicHazard Indicates that a participant voted to roll
+     *                the transaction back, but one or more others may have already
+     *                heuristically committed.
      * @see
      */
-    Vote prepare()
-            throws INVALID_TRANSACTION, HeuristicMixed, HeuristicHazard {
-
+    Vote prepare() throws INVALID_TRANSACTION, HeuristicMixed, HeuristicHazard {
         // Until we actually distribute prepare flows, synchronize the method.
 
         synchronized(this) {
@@ -1763,7 +1727,7 @@ public class TopCoordinator extends CoordinatorImpl {
             // any others it is too late.
 
             if (root && nestingInfo != null &&
-                    nestingInfo.numChildren() != 0) {
+                nestingInfo.numChildren() != 0) {
                 INVALID_TRANSACTION exc =
                     new INVALID_TRANSACTION(
                         MinorCode.UnfinishedSubtransactions,
@@ -1784,11 +1748,11 @@ public class TopCoordinator extends CoordinatorImpl {
                 // Try to set the state to prepared fail.
 
                 if (!tranState.
-                        setState(TransactionState.STATE_PREPARED_FAIL)) {
-		     if(_logger.isLoggable(Level.FINE)) {
-		         _logger.log(Level.FINE,
-                                "TopCoordinator - setState(TransactionState.STATE_PREPARED_FAIL) returned false");
-                     }
+                    setState(TransactionState.STATE_PREPARED_FAIL)) {
+                    if(_logger.isLoggable(Level.FINE)) {
+                        _logger.log(Level.FINE,
+                            "TopCoordinator - setState(TransactionState.STATE_PREPARED_FAIL) returned false");
+                    }
                 }
 
                 return Vote.VoteRollback;
@@ -1813,38 +1777,34 @@ public class TopCoordinator extends CoordinatorImpl {
 
                 overallResult = participants.distributePrepare();
 
-		if (overallResult == Vote.VoteCommit || 
-				overallResult == Vote.VoteReadOnly) {
-		    
-		    //if (participants.getLAOResource() != null) {
-	                if (logRecord == null && Configuration.isDBLoggingEnabled()) {
-                            if (!(LogDBHelper.getInstance().addRecord(
-				  tranState.localTID.longValue(),
-                                  tranState.globalTID.toTidBytes()))) {
-                                overallResult = Vote.VoteRollback;
-                            }
-			}	
-		    if (participants.getLAOResource() != null) {
-			if (overallResult != Vote.VoteRollback) {
+                if (overallResult == Vote.VoteCommit || overallResult == Vote.VoteReadOnly) {
+
+                    // if (participants.getLAOResource() != null) {
+                    if (logRecord == null && Configuration.isDBLoggingEnabled()) {
+                        if (!(LogDBHelper.getInstance().addRecord(tranState.localTID.longValue(),
+                            tranState.globalTID.toTidBytes()))) {
+                            overallResult = Vote.VoteRollback;
+                        }
+                    }
+                    if (participants.getLAOResource() != null) {
+                        if (overallResult != Vote.VoteRollback) {
                             participants.getLAOResource().commit();
-		        }
-		    }
-		}
+                        }
+                    }
+                }
             } catch (Throwable exc) {
 
                 // If a heuristic exception was thrown, change the state of
                 // the Coordinator to rolled back and clean up before throwing
                 // the exception to the caller.
 
-                if (exc instanceof HeuristicMixed ||
-                        exc instanceof HeuristicHazard ||
-                        exc instanceof INTERNAL) {
+                if (exc instanceof HeuristicMixed || exc instanceof HeuristicHazard || exc instanceof INTERNAL) {
 
                     heuristicExc = exc;
                     if (!tranState.
-                            setState(TransactionState.STATE_ROLLED_BACK)) {
-		        if(_logger.isLoggable(Level.FINE)) {
-			    _logger.log(Level.FINE,
+                        setState(TransactionState.STATE_ROLLED_BACK)) {
+                        if(_logger.isLoggable(Level.FINE)) {
+                            _logger.log(Level.FINE,
                                 "TopCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                         }
                     }
@@ -1865,7 +1825,7 @@ public class TopCoordinator extends CoordinatorImpl {
                                                           false);
                         destroy();
                     }
-                    */
+                     */
 
                     // added (Ram J) for memory leak fix
                     // if subordinate, send out afterCompletion. This will
@@ -1919,7 +1879,7 @@ public class TopCoordinator extends CoordinatorImpl {
             if (overallResult == Vote.VoteReadOnly) {
 
                 if (!tranState.
-                        setState(TransactionState.STATE_PREPARED_READONLY)) {
+                    setState(TransactionState.STATE_PREPARED_READONLY)) {
                     overallResult = Vote.VoteRollback;
                 }
 
@@ -1939,7 +1899,7 @@ public class TopCoordinator extends CoordinatorImpl {
                                                       false);
                     destroy();
                 }
-                */
+                 */
 
                 // added (Ram J) for memory leak fix
                 // if subordinate, send out afterCompletion. This will
@@ -1967,7 +1927,7 @@ public class TopCoordinator extends CoordinatorImpl {
                 // Set the state to prepared_success.
 
                 if (!tranState.
-                        setState(TransactionState.STATE_PREPARED_SUCCESS)) {
+                    setState(TransactionState.STATE_PREPARED_SUCCESS)) {
                     overallResult = Vote.VoteRollback;
                 }
             } else {
@@ -1977,7 +1937,7 @@ public class TopCoordinator extends CoordinatorImpl {
                 // if the transaction is subsequently rolled back.
 
                 if (!tranState.
-                        setState(TransactionState.STATE_PREPARED_FAIL)) {
+                    setState(TransactionState.STATE_PREPARED_FAIL)) {
                     overallResult = Vote.VoteRollback;
                 }
             }
@@ -2012,12 +1972,10 @@ public class TopCoordinator extends CoordinatorImpl {
 
 
         synchronized(this) {
-			if(_logger.isLoggable(Level.FINE))
-        	{
-				_logger.logp(Level.FINE,"TopCoordinator","commit()",
-						"Within TopCoordinator.commit()"+"GTID is :"+
-						superInfo.globalTID.toString());
-        	}
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.logp(Level.FINE, "TopCoordinator", "commit()",
+                    "Within TopCoordinator.commit()" + "GTID is :" + superInfo.globalTID.toString());
+            }
 
             // If the TopCoordinator voted readonly,
             // produce a warning and return.
@@ -2043,13 +2001,12 @@ public class TopCoordinator extends CoordinatorImpl {
             // If the TopCoordinator is in the wrong state, return immediately.
 
             if (!tranState.setState(TransactionState.STATE_COMMITTING)) {
-                _logger.log(Level.SEVERE,"jts.transaction_wrong_state","commit");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.transaction_wrong_state",
-										new java.lang.Object[] { "commit"});
-				 throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "commit");
+                String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                    new java.lang.Object[] {"commit"});
+                throw new org.omg.CORBA.INTERNAL(msg);
                 //NotPrepared exc = new NotPrepared();
-				//Commented out as code is never executed
+                //Commented out as code is never executed
                 //throw exc;
             }
 
@@ -2066,8 +2023,7 @@ public class TopCoordinator extends CoordinatorImpl {
             try {
                 participants.distributeCommit();
             } catch (Throwable exc) {
-                if (exc instanceof HeuristicMixed ||
-                        exc instanceof HeuristicHazard) {
+                if (exc instanceof HeuristicMixed || exc instanceof HeuristicHazard) {
                     heuristicExc = exc;
                 } else if (exc instanceof INTERNAL) {
 
@@ -2090,10 +2046,10 @@ public class TopCoordinator extends CoordinatorImpl {
 
             if (!tranState.setState(TransactionState.STATE_COMMITTED)) {
                 _logger.log(Level.SEVERE,"jts.transaction_wrong_state","commit");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.transaction_wrong_state",
-										new java.lang.Object[] { "commit"});
-				 throw  new org.omg.CORBA.INTERNAL(msg);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.transaction_wrong_state",
+                    new java.lang.Object[] { "commit"});
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
 
             // Clean up the TopCoordinator after a commit. In the case where
@@ -2125,14 +2081,14 @@ public class TopCoordinator extends CoordinatorImpl {
                                                   false);
                 destroy();
             }
-            */
+             */
 
-             // added (Ram J) for memory leak fix
-             // if subordinate, send out afterCompletion. This will
-             // destroy the CoordinatorSynchronization and coordinator.
-             if (!root) {
+            // added (Ram J) for memory leak fix
+            // if subordinate, send out afterCompletion. This will
+            // destroy the CoordinatorSynchronization and coordinator.
+            if (!root) {
                 afterCompletion(Status.StatusCommitted);
-             }
+            }
 
 
             /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
@@ -2177,12 +2133,11 @@ public class TopCoordinator extends CoordinatorImpl {
         // Until we actually distribute prepare flows, synchronize the method.
 
         synchronized(this){
-		if(_logger.isLoggable(Level.FINE))
-		{
-			_logger.logp(Level.FINE,"TopCoordinator","rollback()",
-					"Within TopCoordinator.rollback() :"+"GTID is : "+
-					superInfo.globalTID.toString());
-        }
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.logp(Level.FINE, "TopCoordinator", "rollback()",
+                    "Within TopCoordinator.rollback() :"+"GTID is : "+
+                        superInfo.globalTID.toString());
+            }
 
             // If the transaction has already been rolled back, just return.
 
@@ -2218,10 +2173,10 @@ public class TopCoordinator extends CoordinatorImpl {
             // and return FALSE.
 
             if (!force && ((tranState.state ==
-                                TransactionState.STATE_PREPARED_SUCCESS) ||
-                           (!tranState.setState(
-                                TransactionState.STATE_ROLLING_BACK))
-                          )) {
+                TransactionState.STATE_PREPARED_SUCCESS) ||
+                (!tranState.setState(
+                    TransactionState.STATE_ROLLING_BACK))
+                )) {
                 return;
             }
 
@@ -2230,11 +2185,10 @@ public class TopCoordinator extends CoordinatorImpl {
             //  temporary, we do not change state as this would
             // cause a log force in a subordinate, which is not required.
 
-            if( !temporary &&
-                    !tranState.setState(TransactionState.STATE_ROLLING_BACK)) {
-                if(_logger.isLoggable(Level.FINE)) {
-		    _logger.log(Level.FINE,
-                           "TopCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
+            if (!temporary && !tranState.setState(TransactionState.STATE_ROLLING_BACK)) {
+                if (_logger.isLoggable(Level.FINE)) {
+                    _logger.log(Level.FINE,
+                        "TopCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                 }
             }
 
@@ -2258,9 +2212,8 @@ public class TopCoordinator extends CoordinatorImpl {
             try {
                 participants.distributeRollback(false);
             } catch(Throwable exc) {
-
                 if (exc instanceof HeuristicMixed ||
-                        exc instanceof HeuristicHazard) {
+                    exc instanceof HeuristicHazard) {
                     heuristicExc = exc;
                 } else if (exc instanceof INTERNAL) {
                     // ADDED (Ram J) percolate up any system exception.
@@ -2278,11 +2231,10 @@ public class TopCoordinator extends CoordinatorImpl {
             // Set the state.  Only bother doing this if the coordinator
             // is not temporary.
 
-            if (!temporary &&
-                    !tranState.setState(TransactionState.STATE_ROLLED_BACK)) {
-	        if(_logger.isLoggable(Level.FINE)) {
-		    _logger.log(Level.FINE,
-                          "TopCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
+            if (!temporary && !tranState.setState(TransactionState.STATE_ROLLED_BACK)) {
+                if (_logger.isLoggable(Level.FINE)) {
+                    _logger.log(Level.FINE,
+                        "TopCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                 }
             }
 
@@ -2320,7 +2272,7 @@ public class TopCoordinator extends CoordinatorImpl {
                     destroy();
                 }
             }
-            */
+             */
             // added (Ram J) for memory leak fix
             // if subordinate, send out afterCompletion. This will
             // destroy the CoordinatorSynchronization and coordinator.
@@ -2367,15 +2319,15 @@ public class TopCoordinator extends CoordinatorImpl {
      * @see
      */
     synchronized public void register_synchronization(Synchronization sync)
-            throws SystemException, Inactive, SynchronizationUnavailable {
+        throws SystemException, Inactive, SynchronizationUnavailable {
 
         // First check the state of the transaction. If it is not active,
         // do not allow the registration.
 
         if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
-              Inactive exc = new Inactive();
-              throw exc;
+            tranState.state != TransactionState.STATE_ACTIVE) {
+            Inactive exc = new Inactive();
+            throw exc;
         }
 
         // If not previously registered, a CoordinatorSync object must be
@@ -2388,8 +2340,7 @@ public class TopCoordinator extends CoordinatorImpl {
             // Initialise the CoordinatorSync with the local id, our reference,
             // and a flag to indicate that does not represent a subtransaction.
 
-            CoordinatorSynchronizationImpl sImpl =
-                new CoordinatorSynchronizationImpl(this);
+            CoordinatorSynchronizationImpl sImpl = new CoordinatorSynchronizationImpl(this);
 
             // Register the CoordinatorSync with the superior CoordinatorImpl.
 
@@ -2400,13 +2351,12 @@ public class TopCoordinator extends CoordinatorImpl {
 
                 // added (Ram J) for memory leak fix.
                 this.coordSyncImpl = sImpl;
-				if(_logger.isLoggable(Level.FINER))
-                {
-					_logger.logp(Level.FINER,"TopCoordinator",
-							"register_synchronization()", 
-							"CoordinatorSynchronizationImpl :" + sImpl + 
-							" has been registered with (Root)TopCoordinator"+
-							"GTID is: "+ superInfo.globalTID.toString());
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.logp(Level.FINER,"TopCoordinator",
+                        "register_synchronization()",
+                        "CoordinatorSynchronizationImpl :" + sImpl +
+                        " has been registered with (Root)TopCoordinator"+
+                        "GTID is: "+ superInfo.globalTID.toString());
                 }
 
             } catch (Exception exc) {
@@ -2417,9 +2367,7 @@ public class TopCoordinator extends CoordinatorImpl {
                 // to percolate to the caller.
 
                 if (exc instanceof OBJECT_NOT_EXIST) {
-                    TRANSACTION_ROLLEDBACK ex2 =
-                        new TRANSACTION_ROLLEDBACK(
-                            0, CompletionStatus.COMPLETED_NO);
+                    TRANSACTION_ROLLEDBACK ex2 = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
                     ex2.initCause(exc);
                     throw ex2;
                 }
@@ -2434,8 +2382,7 @@ public class TopCoordinator extends CoordinatorImpl {
 
                 // Otherwise throw an internal exception.
 
-                INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                            CompletionStatus.COMPLETED_NO);
+                INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                 ex2.initCause(exc);
                 throw ex2;
             }
@@ -2459,13 +2406,12 @@ public class TopCoordinator extends CoordinatorImpl {
         if (sync instanceof com.sun.jts.jta.SynchronizationImpl) {
             synchronizations.addSync(sync);
 
-		    if(_logger.isLoggable(Level.FINER))
-            {
-				_logger.logp(Level.FINER,"TopCoordinator",
-						"register_synchronization()",
-						"SynchronizationImpl :" + sync +
-						" has been registeredwith TopCoordinator :"+
-						"GTID is : "+ superInfo.globalTID.toString());
+            if (_logger.isLoggable(Level.FINER)) {
+                _logger.logp(Level.FINER, "TopCoordinator",
+                    "register_synchronization()",
+                    "SynchronizationImpl :" + sync +
+                    " has been registeredwith TopCoordinator :"+
+                    "GTID is : "+ superInfo.globalTID.toString());
             }
 
         } else {
@@ -2498,8 +2444,8 @@ public class TopCoordinator extends CoordinatorImpl {
 
         if (root && nestingInfo != null && nestingInfo.numChildren() != 0) {
             INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                        MinorCode.UnfinishedSubtransactions,
-                                        CompletionStatus.COMPLETED_NO);
+                MinorCode.UnfinishedSubtransactions,
+                CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -2564,20 +2510,15 @@ public class TopCoordinator extends CoordinatorImpl {
             aborted = false;
         }
         if (!delegated) {
-            RecoveryManager.removeCoordinator(superInfo.globalTID,
-                                       superInfo.localTID,
-                                       aborted);
+            RecoveryManager.removeCoordinator(superInfo.globalTID, superInfo.localTID, aborted);
         } else {
-            DelegatedRecoveryManager.removeCoordinator(superInfo.globalTID,
-                                       superInfo.localTID,
-                                       aborted, logPath);
+            DelegatedRecoveryManager.removeCoordinator(superInfo.globalTID, superInfo.localTID, aborted, logPath);
         }
 
         // memory leak fix (Ram J) - cleanup the Recovery Coordinator objs.
         if (recoveryCoordinatorList != null) {
             for (int i = 0; i < recoveryCoordinatorList.size(); i++) {
-                RecoveryCoordinatorImpl rcImpl = (RecoveryCoordinatorImpl)
-                    recoveryCoordinatorList.elementAt(i);
+                RecoveryCoordinatorImpl rcImpl = (RecoveryCoordinatorImpl) recoveryCoordinatorList.elementAt(i);
                 rcImpl.destroy();
             }
             recoveryCoordinatorList = null;
@@ -2671,7 +2612,7 @@ public class TopCoordinator extends CoordinatorImpl {
             states.value = new ResourceStatus[0];
         }
     }
-    */
+     */
 
     /**
      * Gets the object normally responsible for terminating this Coordinator.
@@ -2721,10 +2662,10 @@ public class TopCoordinator extends CoordinatorImpl {
         // as this operation should only be called for local Resource objects.
 
         participants.addRes(res);
-		if(_logger.isLoggable(Level.FINE))
+        if(_logger.isLoggable(Level.FINE))
         {
-			_logger.logp(Level.FINE,"TopCoordinator","directRegisterResource()",
-					"Registered resource :" + res );
+            _logger.logp(Level.FINE,"TopCoordinator","directRegisterResource()",
+                "Registered resource :" + res );
         }
 
     }
@@ -2749,9 +2690,7 @@ public class TopCoordinator extends CoordinatorImpl {
         // First check the state of the transaction. If it is not active,
         // do not allow the registration.
 
-        if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE ||
-                rollbackOnly ) {
+        if (tranState == null || tranState.state != TransactionState.STATE_ACTIVE || rollbackOnly) {
             Unavailable exc = new Unavailable();
             throw exc;
         }
@@ -2775,10 +2714,8 @@ public class TopCoordinator extends CoordinatorImpl {
             // but roll the transaction back and
             // throw the TRANSACTION_ROLLEDBACK exception.
 
-            TimeoutManager.timeoutCoordinator(superInfo.localTID,
-                                              TimeoutManager.ACTIVE_TIMEOUT);
-            TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(
-                                            0, CompletionStatus.COMPLETED_NO);
+            TimeoutManager.timeoutCoordinator(superInfo.localTID, TimeoutManager.ACTIVE_TIMEOUT);
+            TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -2786,8 +2723,8 @@ public class TopCoordinator extends CoordinatorImpl {
         // and the ancestor information.
 
         TransIdentity current = new TransIdentity(this.object(),
-                                                  null,
-                                                  superInfo.globalTID.realTID);
+            null,
+            superInfo.globalTID.realTID);
 
         // Ensure that the implementation specific data is filled with a value.
 
@@ -2796,14 +2733,11 @@ public class TopCoordinator extends CoordinatorImpl {
             emptyData.insert_boolean(false);
         }
 
-        PropagationContext result = new PropagationContext(
-                                            timeout, current,
-                                            new TransIdentity[0], emptyData);
-		if(_logger.isLoggable(Level.FINEST))
-        {
-			_logger.logp(Level.FINEST,"TopCoordinator","get_txcontext()", 
-					"Obtained PropagationContext"+"GTID is: "+
-					superInfo.globalTID.toString());
+        PropagationContext result = new PropagationContext(timeout, current, new TransIdentity[0], emptyData);
+        if (_logger.isLoggable(Level.FINEST)) {
+            _logger.logp(Level.FINEST,"TopCoordinator","get_txcontext()",
+                "Obtained PropagationContext"+"GTID is: "+
+                    superInfo.globalTID.toString());
         }
 
         return result;
@@ -2857,7 +2791,7 @@ public class TopCoordinator extends CoordinatorImpl {
             // the root Coordinator as for any others it is too  late.
 
             if (root && nestingInfo != null &&
-                    nestingInfo.numChildren() != 0) {
+                nestingInfo.numChildren() != 0) {
                 INVALID_TRANSACTION exc =
                     new INVALID_TRANSACTION(
                         MinorCode.UnfinishedSubtransactions,
@@ -2897,14 +2831,9 @@ public class TopCoordinator extends CoordinatorImpl {
             // not rolled back. Otherwise set anin-doubt timeout of 60 seconds.
 
             if (root) {
-                TimeoutManager.setTimeout(superInfo.localTID,
-                                          TimeoutManager.NO_TIMEOUT,
-                                          60);
-            }
-            else {
-                TimeoutManager.setTimeout(superInfo.localTID,
-                                          TimeoutManager.IN_DOUBT_TIMEOUT,
-                                          60);
+                TimeoutManager.setTimeout(superInfo.localTID, TimeoutManager.NO_TIMEOUT, 60);
+            } else {
+                TimeoutManager.setTimeout(superInfo.localTID, TimeoutManager.IN_DOUBT_TIMEOUT, 60);
             }
 
 
@@ -2925,39 +2854,32 @@ public class TopCoordinator extends CoordinatorImpl {
             } catch (Throwable exc) {
 
                 if (exc instanceof HeuristicMixed) {
-		    // revert IASRI START 4722886
+                    // revert IASRI START 4722886
                     heuristicExc = exc;
-		    // revert IASRI END 4722886
-                    if (!tranState.setState(TransactionState.
-                                STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED)) {
-			_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-                               "COMMIT_ONE_PHASE (1)");
-			 String msg = LogFormatter.getLocalizedMessage(_logger,
-				"jts.transaction_wrong_state",
-				new java.lang.Object[]
-				{ "COMMIT_ONE_PHASE (1)"});
-			 throw  new org.omg.CORBA.INTERNAL(msg);
+                    // revert IASRI END 4722886
+                    if (!tranState.setState(TransactionState.STATE_COMMIT_ONE_PHASE_HEURISTIC_MIXED)) {
+                        _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "COMMIT_ONE_PHASE (1)");
+                        String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                            new java.lang.Object[] {"COMMIT_ONE_PHASE (1)"});
+                        throw new org.omg.CORBA.INTERNAL(msg);
                     }
-		    // revert IASRI START 4722886
-		    // throw (HeuristicMixed)exc;
-		    // revert IASRI END 4722886
+                    // revert IASRI START 4722886
+                    // throw (HeuristicMixed)exc;
+                    // revert IASRI END 4722886
                 } else if (exc instanceof HeuristicHazard) {
-		    // revert IASRI START 4722886
+                    // revert IASRI START 4722886
                     heuristicExc = exc;
-		    // revert IASRI END 4722886
+                    // revert IASRI END 4722886
                     if (!tranState.setState(TransactionState.
-                             STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD)) {
-			_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-                                 "COMMIT_ONE_PHASE (2)");
-			 String msg = LogFormatter.getLocalizedMessage(_logger,
-			        "jts.transaction_wrong_state",
-			        new java.lang.Object[]
-			        { "COMMIT_ONE_PHASE (2)"});
-		         throw  new org.omg.CORBA.INTERNAL(msg);
+                        STATE_COMMIT_ONE_PHASE_HEURISTIC_HAZARD)) {
+                        _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "COMMIT_ONE_PHASE (2)");
+                        String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                            new java.lang.Object[] {"COMMIT_ONE_PHASE (2)"});
+                        throw new org.omg.CORBA.INTERNAL(msg);
                     }
-		    // revert IASRI START 4722886
-		    // throw (HeuristicHazard)exc;
-		    // revert IASRI END 4722886
+                    // revert IASRI START 4722886
+                    // throw (HeuristicHazard)exc;
+                    // revert IASRI END 4722886
                 } else if (exc instanceof TRANSACTION_ROLLEDBACK) {
                     rolled_back = true;
 
@@ -2989,28 +2911,23 @@ public class TopCoordinator extends CoordinatorImpl {
 
                 // Change state in two steps - this is traced and only the
                 // first change would need a forced log write traditionaly
-                if (!tranState.setState(
-                        TransactionState.
-                            STATE_COMMIT_ONE_PHASE_ROLLED_BACK)) {
-			_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-                            "COMMIT_ONE_PHASE (4)");
-			 String msg = LogFormatter.getLocalizedMessage(_logger,
-				"jts.transaction_wrong_state",
-				new java.lang.Object[]
-				{ "COMMIT_ONE_PHASE (4)"});
-		         throw  new org.omg.CORBA.INTERNAL(msg);
-                    }
-                  /**
+                if (!tranState.setState(TransactionState.STATE_COMMIT_ONE_PHASE_ROLLED_BACK)) {
+                    _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "COMMIT_ONE_PHASE (4)");
+                    String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                        new java.lang.Object[] {"COMMIT_ONE_PHASE (4)"});
+                    throw new org.omg.CORBA.INTERNAL(msg);
+                }
+                /**
 
                 if (!tranState.setState(TransactionState.STATE_ROLLED_BACK)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
+                    _logger.log(Level.SEVERE,"jts.transaction_wrong_state",
                             "COMMIT_ONE_PHASE (5)");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.transaction_wrong_state",
-										new java.lang.Object[] { "COMMIT_ONE_PHASE (5)"});
-					  throw  new org.omg.CORBA.INTERNAL(msg);
+                     String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.transaction_wrong_state",
+                                        new java.lang.Object[] { "COMMIT_ONE_PHASE (5)"});
+                      throw  new org.omg.CORBA.INTERNAL(msg);
                 }
-                   **/
+                 **/
             } else if (heuristicExc == null) { // we commited without a Heuristic exception
 
                 // GDH COPDEF1 Changed state movement to be via COP_OK
@@ -3021,24 +2938,22 @@ public class TopCoordinator extends CoordinatorImpl {
                 // and to log the fact that a COP_OK represents a successful
                 // prepare - only the fist state changed needs a flushed write.
                 if (!tranState.setState(TransactionState.
-                                            STATE_COMMITTED_ONE_PHASE_OK)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-                            "COMMIT_ONE_PHASE (6)");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.transaction_wrong_state",
-										new java.lang.Object[] { "COMMIT_ONE_PHASE (6)"});
-					  throw  new org.omg.CORBA.INTERNAL(msg);
+                    STATE_COMMITTED_ONE_PHASE_OK)) {
+                    _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "COMMIT_ONE_PHASE (6)");
+                    String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                        new java.lang.Object[] {"COMMIT_ONE_PHASE (6)"});
+                    throw new org.omg.CORBA.INTERNAL(msg);
                 }
                 /**
 
                 // Now set this coord to commited finally.
                 if (!tranState.setState(TransactionState.STATE_COMMITTED)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
+                    _logger.log(Level.SEVERE,"jts.transaction_wrong_state",
                             "COMMIT_ONE_PHASE (7)");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.transaction_wrong_state",
-										new java.lang.Object[] { "COMMIT_ONE_PHASE (7)"});
-					  throw  new org.omg.CORBA.INTERNAL(msg);
+                     String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.transaction_wrong_state",
+                                        new java.lang.Object[] { "COMMIT_ONE_PHASE (7)"});
+                      throw  new org.omg.CORBA.INTERNAL(msg);
                 }
                  **/
             }  // else we did not rollback
@@ -3080,7 +2995,7 @@ public class TopCoordinator extends CoordinatorImpl {
                                                       false);
                     destroy();
                 }
-                */
+                 */
 
                 // added (Ram J) for memory leak fix
                 // if subordinate, send out afterCompletion. This will
@@ -3130,26 +3045,24 @@ public class TopCoordinator extends CoordinatorImpl {
             // (Can't turn of NTFS file caching in Java anyway but the
             // intention is in that direction)
             if (!tranState.
-                    setState(TransactionState.STATE_COMMITTED_ONE_PHASE_OK)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-                            "COMMIT_ONE_PHASE (8)");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.transaction_wrong_state",
-										new java.lang.Object[] { "COMMIT_ONE_PHASE (8)"});
-					  throw  new org.omg.CORBA.INTERNAL(msg);
+                setState(TransactionState.STATE_COMMITTED_ONE_PHASE_OK)) {
+                _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "COMMIT_ONE_PHASE (8)");
+                String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                    new java.lang.Object[] {"COMMIT_ONE_PHASE (8)"});
+                throw new org.omg.CORBA.INTERNAL(msg);
             }
 
             // Now set this coord to commited finally.
             /*
             if (!tranState.setState(TransactionState.STATE_COMMITTED)) {
-				_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
+                _logger.log(Level.SEVERE,"jts.transaction_wrong_state",
                         "COMMIT_ONE_PHASE (9)");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-			 						"jts.transaction_wrong_state",
-									new java.lang.Object[] { "COMMIT_ONE_PHASE (9)"});
-				  throw  new org.omg.CORBA.INTERNAL(msg);
+                 String msg = LogFormatter.getLocalizedMessage(_logger,
+                                     "jts.transaction_wrong_state",
+                                    new java.lang.Object[] { "COMMIT_ONE_PHASE (9)"});
+                  throw  new org.omg.CORBA.INTERNAL(msg);
             }
-            */
+             */
         } // end of else clause if no resources
 
         return true;
@@ -3199,8 +3112,7 @@ public class TopCoordinator extends CoordinatorImpl {
 
         if (other instanceof CoordinatorImpl) {
             if (other instanceof TopCoordinator) {
-                otherTID = ((TopCoordinator) other).
-                                superInfo.globalTID.realTID;
+                otherTID = ((TopCoordinator) other).superInfo.globalTID.realTID;
             }
         } else if (other instanceof org.omg.CORBA.Object) {
 
@@ -3208,8 +3120,7 @@ public class TopCoordinator extends CoordinatorImpl {
             // the JCoordinator class, use the getGlobalTID method remotely.
 
             try {
-                JCoordinator jcoord = JCoordinatorHelper.
-                                        narrow((org.omg.CORBA.Object) other);
+                JCoordinator jcoord = JCoordinatorHelper.narrow((org.omg.CORBA.Object) other);
                 otherTID = jcoord.getGlobalTID();
             } catch (BAD_PARAM exc) {
 
@@ -3220,8 +3131,7 @@ public class TopCoordinator extends CoordinatorImpl {
                 // context from the target Coordinator.
 
                 try {
-                    Coordinator coord =
-                        CoordinatorHelper.narrow((org.omg.CORBA.Object) other);
+                    Coordinator coord = CoordinatorHelper.narrow((org.omg.CORBA.Object) other);
                     PropagationContext pc = coord.get_txcontext();
                     otherTID = pc.current.otid;
                 } catch (BAD_PARAM ex2) {
@@ -3233,8 +3143,8 @@ public class TopCoordinator extends CoordinatorImpl {
                     // transaction, so we cannot compare the
                     // Coordinator objects.
                     INVALID_TRANSACTION ex3 = new INVALID_TRANSACTION(
-                                                MinorCode.CompareFailed,
-                                                CompletionStatus.COMPLETED_NO);
+                        MinorCode.CompareFailed,
+                        CompletionStatus.COMPLETED_NO);
                     ex3.initCause(exc);
                     throw ex3;
                 }

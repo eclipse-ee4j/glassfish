@@ -44,7 +44,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
     private static final String ELEMENT_APPLICATION_RESOURCES_TAB = "propertyForm:appGeneralTabs:resourcesTab";
     private static final String ELEMENT_APPLICATION_TARGETS_TAB = "propertyForm:appGeneralTabs:targetTab";
     private static final String ELEMENT_APP_RESOURCES_TABLE = "propertyForm:appScopedResources";
-    
+
     @Test
     public void testAppScopedResApp() {
         final String applicationName = generateRandomString();
@@ -63,7 +63,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
 
         testJDBCResource(applicationName, "jdbcRes", "app");
         testJDBCResource(applicationName, "jdbcRes", "module");
-        
+
         undeployApp(applicationName);
         }catch(Exception e) {
             undeployApp(applicationName);
@@ -99,7 +99,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
     public void testJndiAppScopedresources() {
         final String applicationName = generateRandomString();
         try{
-        deployApp(applicationName);       
+        deployApp(applicationName);
 
         testCustomResource(applicationName, "customRes", "app");
         testCustomResource(applicationName, "customRes", "module");
@@ -156,7 +156,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
             undeployApp(applicationName);
         }
     }
-    
+
     @Test
     public void deployAppWithTargets() {
         final String applicationName = "app" + generateRandomString();
@@ -184,7 +184,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         pressButton(tableSelectMutlipleId);
         selectDropdownOption(dropdownId, "Disable");
         waitForPageLoad(disableMessage, TIMEOUT);
-        
+
         undeployApp(applicationName);
         clearTargets();
     }
@@ -202,7 +202,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
     }
 
     private void deploy(String applicationName) {
-        
+
         clickAndWait("treeForm:tree:applications:applications_link", TRIGGER_APPLICATIONS);
         int preCount = this.getTableRowCount(ELEMENT_DEPLOY_TABLE);
 
@@ -288,7 +288,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -304,7 +304,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -320,7 +320,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("form1:basicTable", count);
-        
+
         clickAndWait("form1:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -336,7 +336,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("form:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("form:basicTable", count);
-        
+
         clickAndWait("form:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -352,7 +352,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -363,7 +363,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         clickAndWait(getLinkIdByLinkText(ELEMENT_APP_RESOURCES_TABLE, resName), WorkSecurityMapTest.TRIGGER_EDIT_WORK_SECURITY_MAP);
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:descriptionProp:descAdaptor", resName+" description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -386,7 +386,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
@@ -402,11 +402,11 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 
-    private void testResourceAdapterConfig(String appName, String resName) {        
+    private void testResourceAdapterConfig(String appName, String resName) {
         java.util.List<String> resAdapterConfigIds = getTableRowsByValue(ELEMENT_APP_RESOURCES_TABLE, resName, "resName");
         //Resource Adapter config Edit Page
         for (String resAdapterConfigId : resAdapterConfigIds) {
@@ -418,7 +418,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
             setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
             clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
             assertTableRowCount("propertyForm:basicTable", count);
-            
+
             clickAndWait("propertyForm:proprtyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
         }
     }
@@ -435,7 +435,7 @@ public class AppScopedResourcesTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton", TRIGGER_RESOURCES_APPLICATION);
     }
 

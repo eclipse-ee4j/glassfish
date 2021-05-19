@@ -22,7 +22,7 @@ import org.glassfish.hk2.api.PerLookup;
 import jakarta.inject.Inject;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
-import org.glassfish.external.statistics.CountStatistic; 
+import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.RangeStatistic;
 import org.glassfish.admin.monitor.cli.MonitorContract;
 import org.glassfish.flashlight.datatree.TreeNode;
@@ -32,25 +32,25 @@ import org.glassfish.api.Param;
 import java.util.List;
 import java.util.ResourceBundle;
 
-/** 
+/**
  *
  * For v3 Prelude, following stats will be available
  *
- * asc activeSessionsCount, 
- * ast activatedSessionsTotal, 
- * rst rejectedSessionsTotal, 
+ * asc activeSessionsCount,
+ * ast activatedSessionsTotal,
+ * rst rejectedSessionsTotal,
  * st  sessionsTotal
- * ajlc activeJspsLoadedCount, 
- * mjlc maxJspsLoadedCount, 
+ * ajlc activeJspsLoadedCount,
+ * mjlc maxJspsLoadedCount,
  * tjlc totalJspsLoadedCount
- * aslc activeServletsLoadedCount, 
- * mslc maxServletsLoadedCount, 
+ * aslc activeServletsLoadedCount,
+ * mslc maxServletsLoadedCount,
  * tslc totalServletsLoadedCount
  *
- * ash activeSessionsHigh, 
- * est expiredSessionsTotal, 
- * pvst passivatedSessionsTotal, 
- * pst persistedSessionsTotal, 
+ * ash activeSessionsHigh,
+ * est expiredSessionsTotal,
+ * pvst passivatedSessionsTotal,
+ * pst persistedSessionsTotal,
  */
 @Service
 @PerLookup
@@ -67,13 +67,15 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
 
     private final static String name = "webmodule";
 
-    private final static String displayFormat = 
-    "%1$-5s %2$-5s %3$-5s %4$-5s %5$-5s %6$-5s %7$-5s %8$-8s %9$-10s %10$-5s";
+    private final static String displayFormat
+        = "%1$-5s %2$-5s %3$-5s %4$-5s %5$-5s %6$-5s %7$-5s %8$-8s %9$-10s %10$-5s";
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public ActionReport process(final ActionReport report, final String filter) {
 
         if (mrdr == null) {
@@ -90,27 +92,27 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
         }
 
         String [] patternArr;
-            
+
         if (appName != null) {
-            // post prelude - need to fix this for virtual server 
+            // post prelude - need to fix this for virtual server
             patternArr = new String [] {"server.applications." + appName + ".*.*"};
         } else {
-            patternArr = new String [] {"server.web.session.*", 
+            patternArr = new String [] {"server.web.session.*",
                     "server.web.servlet.*", "server.web.jsp.*"};
         }
-        
-	long activeSessionsCount = 0; 
-	long sessionsTotal = 0;
-	long rejectedSessionsTotal = 0; 
-	long activatedSessionsTotal = 0; 
 
-	long activeJspsLoadedCount = 0; 
-	long maxJspsLoadedCount = 0; 
-	long totalJspsLoadedCount = 0;
+        long activeSessionsCount = 0;
+        long sessionsTotal = 0;
+        long rejectedSessionsTotal = 0;
+        long activatedSessionsTotal = 0;
 
-	long activeServletsLoadedCount = 0; 
-	long maxServletsLoadedCount = 0; 
-	long totalServletsLoadedCount = 0;
+        long activeJspsLoadedCount = 0;
+        long maxJspsLoadedCount = 0;
+        long totalJspsLoadedCount = 0;
+
+        long activeServletsLoadedCount = 0;
+        long maxServletsLoadedCount = 0;
+        long totalServletsLoadedCount = 0;
 
         long lval = 0;
 
@@ -121,35 +123,35 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
                     continue;
                 }
 
-                if ("activesessionscount".equals(tn.getName())) { 
+                if ("activesessionscount".equals(tn.getName())) {
                     activeSessionsCount = getRangeStatisticValue(tn.getValue());
-                } else if ("activatedsessionstotal".equals(tn.getName())) { 
+                } else if ("activatedsessionstotal".equals(tn.getName())) {
                     activatedSessionsTotal = getCountStatisticValue(tn.getValue());
-                } else if ("rejectedsessionstotal".equals(tn.getName())) { 
+                } else if ("rejectedsessionstotal".equals(tn.getName())) {
                     rejectedSessionsTotal = getCountStatisticValue(tn.getValue());
-                } else if ("sessionstotal".equals(tn.getName())) { 
+                } else if ("sessionstotal".equals(tn.getName())) {
                     sessionsTotal = getCountStatisticValue(tn.getValue());
-                } else if ("activejspsloadedcount".equals(tn.getName())) { 
+                } else if ("activejspsloadedcount".equals(tn.getName())) {
                     activeJspsLoadedCount = getRangeStatisticValue(tn.getValue());
-                } else if ("maxjspsloadedcount".equals(tn.getName())) { 
+                } else if ("maxjspsloadedcount".equals(tn.getName())) {
                     maxJspsLoadedCount = getCountStatisticValue(tn.getValue());
-                } else if ("totaljspsloadedcount".equals(tn.getName())) { 
+                } else if ("totaljspsloadedcount".equals(tn.getName())) {
                     totalJspsLoadedCount = getCountStatisticValue(tn.getValue());
-                } else if ("activeservletsloadedcount".equals(tn.getName())) { 
+                } else if ("activeservletsloadedcount".equals(tn.getName())) {
                     activeServletsLoadedCount = getRangeStatisticValue(tn.getValue());
-                } else if ("maxservletsloadedcount".equals(tn.getName())) { 
+                } else if ("maxservletsloadedcount".equals(tn.getName())) {
                     maxServletsLoadedCount = getCountStatisticValue(tn.getValue());
-                } else if ("totalservletsloadedcount".equals(tn.getName())) { 
+                } else if ("totalservletsloadedcount".equals(tn.getName())) {
                     totalServletsLoadedCount = getCountStatisticValue(tn.getValue());
                 }
             }
 
         }
 
-        report.setMessage(String.format(displayFormat, 
+        report.setMessage(String.format(displayFormat,
                 activeSessionsCount, activatedSessionsTotal,
                 rejectedSessionsTotal, sessionsTotal,
-                activeJspsLoadedCount, maxJspsLoadedCount, 
+                activeJspsLoadedCount, maxJspsLoadedCount,
                 totalJspsLoadedCount,
                 activeServletsLoadedCount, maxServletsLoadedCount,
                 totalServletsLoadedCount));
@@ -160,7 +162,9 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
 
     private long getCountStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof CountStatistic) {
             return ((CountStatistic)obj).getCount();
         }
@@ -169,7 +173,9 @@ public class WebModuleVirtualServerStatsImpl implements MonitorContract {
 
     private long getRangeStatisticValue(Object obj) {
         long l = 0L;
-        if (obj == null) return l;
+        if (obj == null) {
+            return l;
+        }
         if (obj instanceof RangeStatistic) {
             return ((RangeStatistic)obj).getCurrent();
         }

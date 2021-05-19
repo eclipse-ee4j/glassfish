@@ -35,7 +35,7 @@ import static org.glassfish.config.support.Constants.*;
 /**
  * The "pre-parser" goes through the domain.xml and finds all the 'special' elements that should be retained. This
  * filter class just checks the elements against those lists...
- * 
+ *
  * @author Byron Nevins
  */
 class InstanceReaderFilter extends ServerReaderFilter {

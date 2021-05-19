@@ -34,7 +34,7 @@
     &jaxwsTools;
     &jbicommon;
     &jbiproperties;
-    <target name="all" depends="clean, setup, runtest,undeploy"/> 
+    <target name="all" depends="clean, setup, runtest,undeploy"/>
 
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
@@ -85,7 +85,7 @@
       <echo message="Running negative test by setting jbi-enabled flag to false"/>
       <antcall target="runtest-jbi-enabled-false"/>
       <echo message="Running JAXWS client"/>
-      <antcall target="runtest-jaxws"/> 
+      <antcall target="runtest-jaxws"/>
       <echo message="Running positive test by setting jbi-enabled flag to true"/>
       <antcall target="runtest-jbi-enabled-true"/>
 
@@ -101,7 +101,7 @@
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="server.applications.web-module.${appname}-web.web-service-endpoint.Calculator.jbi-enabled=false"/>
-      </antcall> 
+      </antcall>
       <antcall target="run-client">
         <param name="client-class" value="client.SOAPWebConsumerNonHttpBC"/>
         <param name="other-args" value="jbi-enabled-false"/>
@@ -112,14 +112,14 @@
       <antcall target="asadmin-common">
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="server.applications.web-module.${appname}-web.web-service-endpoint.Calculator.jbi-enabled=true"/>
-      </antcall> 
+      </antcall>
       <antcall target="runtest-soap-binding"/>
     </target>
     <target name="configure-webservice-management" depends="init-common">
       <antcall target="asadmin-common">
         <param name="admin.command" value="configure-webservice-management"/>
         <param name="operand.props" value="${appname}-web#Calculator"/>
-      </antcall> 
+      </antcall>
     </target>
 </project>
 

@@ -44,7 +44,7 @@ import java.util.logging.Level;
 @Service
 @AnnotationHandlerFor(AdministeredObjectDefinition.class)
 public class AdministeredObjectDefinitionHandler extends AbstractResourceHandler {
-    
+
     public AdministeredObjectDefinitionHandler() {
     }
 
@@ -56,14 +56,14 @@ public class AdministeredObjectDefinitionHandler extends AbstractResourceHandler
     }
 
     protected HandlerProcessingResult processAnnotation(AdministeredObjectDefinition adminObjectDefnAn, AnnotationInfo aiInfo,
-                                                        ResourceContainerContext[] rcContexts)  
+                                                        ResourceContainerContext[] rcContexts)
               throws AnnotationProcessorException {
-        
+
         Class annotatedClass = (Class)aiInfo.getAnnotatedElement();
         Annotation[] annotations = annotatedClass.getAnnotations();
         boolean warClass = isAWebComponentClass(annotations);
         boolean ejbClass = isAEjbComponentClass(annotations);
-        
+
         for(ResourceContainerContext context : rcContexts){
             if (!canProcessAnnotation(annotatedClass, ejbClass, warClass, context)){
                 return getDefaultProcessedResult();
@@ -173,7 +173,7 @@ public class AdministeredObjectDefinitionHandler extends AbstractResourceHandler
         return true;
     }
 
-    
+
     private boolean isDefinitionAlreadyPresent(Set<ResourceDescriptor> descriptors,
             AdministeredObjectDefinitionDescriptor desc) {
         boolean result = false ;
@@ -209,7 +209,7 @@ public class AdministeredObjectDefinitionHandler extends AbstractResourceHandler
                 if (desc.getResourceAdapter() == null || desc.getResourceAdapter().equals("")) {
                     desc.setResourceAdapter(defn.resourceAdapter());
                 }
-                
+
                 Properties properties = desc.getProperties();
                 String[] defnProperties = defn.properties();
 

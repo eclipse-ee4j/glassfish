@@ -65,7 +65,7 @@ public class OrderedSet<T> extends Vector<T> implements Set<T> { // FIXME by sri
                     setChanged = true;
                 }
             }
-	    }
-	    return setChanged;
-	}	
+        }
+        return setChanged;
+    }
 }

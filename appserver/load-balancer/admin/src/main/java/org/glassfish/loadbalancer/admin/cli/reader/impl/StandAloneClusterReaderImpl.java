@@ -36,7 +36,7 @@ import org.glassfish.internal.data.ApplicationRegistry;
 import org.glassfish.loadbalancer.admin.cli.reader.api.LbReaderException;
 
 /**
- * Impl class for ClusterReader. This provides loadbalancer 
+ * Impl class for ClusterReader. This provides loadbalancer
  * data for a stand alone server (reverse proxy).
  *
  * @author Kshitiz Saxena
@@ -108,10 +108,10 @@ public class StandAloneClusterReaderImpl implements ClusterReader {
 
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof ClusterVisitor) {
-			ClusterVisitor cv = (ClusterVisitor) v;
-			cv.visit(this);
-		}
+        if (v instanceof ClusterVisitor) {
+            ClusterVisitor cv = (ClusterVisitor) v;
+            cv.visit(this);
+        }
     }
     // ---- VARIABLE(S) - PRIVATE --------------------------
     private Domain _domain = null;

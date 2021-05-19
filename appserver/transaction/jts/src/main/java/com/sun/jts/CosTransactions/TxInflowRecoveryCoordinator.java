@@ -20,15 +20,15 @@ import org.omg.CosTransactions.Status;
 import org.omg.CosTransactions.Resource;
 import org.omg.CosTransactions.RecoveryCoordinator;
 
-/** 
+/**
  * This used for mimicking a RecoveryCoordinator behavior.
  *
  * @version 1.0
  * @author  Ram Jeyaraman
  */
 class TxInflowRecoveryCoordinator extends org.omg.CORBA.LocalObject
-        implements RecoveryCoordinator {   
-            
+        implements RecoveryCoordinator {
+
     /**
      * Simply returns unknown status. This forces the subordinate to wait
      * until the superior site completes the pending in-doubt transaction.
@@ -37,7 +37,7 @@ class TxInflowRecoveryCoordinator extends org.omg.CORBA.LocalObject
      *
      * @return unknown status
      */
-    public Status replay_completion(Resource res) {        
+    public Status replay_completion(Resource res) {
         return Status.StatusUnknown;
-    }   
+    }
 }

@@ -20,28 +20,28 @@ import java.io.FileInputStream;
 import java.io.File;
 
 /**
-*This is the main class for Web Test.It takes a text script file as an argument.
-*
-* @author       Deepa Singh (deepa.singh@sun.com)
+ *This is the main class for Web Test.It takes a text script file as an argument.
+ *
+ * @author       Deepa Singh (deepa.singh@sun.com)
  *Company       Sun Microsystems Inc.
-*
-*/
+ *
+ */
 public class WebTest
 {
     private String ws_root="appserv-tests";
     private String testsuite_id="";
 
     WebTest(){}
-    
+
     public void setTestSuiteID(String testsuiteid)
     {
         this.testsuite_id=testsuiteid;
-    }    
+    }
 
     public void setResultFileLocation(String workspace_root)
     {
         this.ws_root=workspace_root;
-    }    
+    }
 
     /**
      *Reads script file and converts into a byte array.Sends byte array to SendRequest class.
@@ -74,7 +74,7 @@ public class WebTest
             fin.close();
             SendRequest sendRequest=new SendRequest(ws_root,testsuite_id);
             int port=new Integer(s_port).intValue();
-	    sendRequest.setServerProperties(s_host,port);
+            sendRequest.setServerProperties(s_host,port);
             sendRequest.processUrl(buffer);
         }
         catch(Exception e)
@@ -84,11 +84,11 @@ public class WebTest
         }
     }
 
-    
-    
+
+
     public static void main(String [] args)
     {
-        
+
         if(args.length<4)
         {
             System.err.println("usage:\t WebTest <<full_file_name>> <<web_server_host_name>> <<web_server_port>> <<outputfile>> <<testsuiteid>>");
@@ -100,12 +100,12 @@ public class WebTest
         String ws_root=args[3];
         String testsuiteid=args[4];
 
-        WebTest webTest=new WebTest();        
+        WebTest webTest=new WebTest();
         webTest.setResultFileLocation(ws_root);
         webTest.setTestSuiteID(testsuiteid);
         webTest.readFile(file,serverhost,serverport);
-        
+
     }
 }
 
-            
+

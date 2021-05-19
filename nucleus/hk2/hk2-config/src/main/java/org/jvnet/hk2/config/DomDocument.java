@@ -54,12 +54,12 @@ public class DomDocument<T extends Dom> {
     private DomDecorator decorator;
 
     private final Map<String, DataType> validators = new HashMap<String, DataType>();
-    
+
     /*package*/ static final List<String> PRIMS = Collections.unmodifiableList(Arrays.asList(
     "boolean", "char", "long", "int", "java.lang.Boolean", "java.lang.Character", "java.lang.Long", "java.lang.Integer"));
-    
+
     private final Map<String, ActiveDescriptor<? extends ConfigInjector<?>>> cache = new HashMap<String, ActiveDescriptor<? extends ConfigInjector<?>>>();
-    
+
     public DomDocument(ServiceLocator habitat) {
         this.habitat = habitat;
         for (String prim : PRIMS) {
@@ -102,22 +102,22 @@ public class DomDocument<T extends Dom> {
      * Obtains a {@link ConfigModel} for the given class (Which should have {@link Configured} annotation on it.)
      */
     public ConfigModel buildModel(String fullyQualifiedClassName) {
-        
+
         ActiveDescriptor<? extends ConfigInjector<?>> desc;
         synchronized (cache) {
             desc = cache.get(fullyQualifiedClassName);
             if (desc == null) {
                 desc = (ActiveDescriptor<? extends ConfigInjector<?>>)
                     habitat.getBestDescriptor(new InjectionTargetFilter(fullyQualifiedClassName));
-                
+
                 if (desc == null) {
                     throw new ConfigurationException("ConfigInjector for %s is not found, is it annotated with @Configured",fullyQualifiedClassName);
                 }
-            
+
                 cache.put(fullyQualifiedClassName, desc);
             }
         }
-        
+
         return buildModel(desc);
     }
 
@@ -126,7 +126,7 @@ public class DomDocument<T extends Dom> {
      *
      * <p>
      * This method uses {@link #buildModel} to lazily build models if necessary.
-     * 
+     *
      * @return
      *      Null if no configurable component is registered under the given global element name.
      */
@@ -153,12 +153,12 @@ public class DomDocument<T extends Dom> {
             if (d.getQualifiers().contains(InjectionTarget.class.getName())) {
                 List<String> list = d.getMetadata().get("target");
                 if (list == null) return false;
-                
+
                 String value = list.get(0) ;
-                
+
                 // No need to synchronize on cache, it is already synchronized
                 cache.put(value, (ActiveDescriptor<? extends ConfigInjector<?>>) habitat.reifyDescriptor(d));
-                
+
                 if (value.equals(targetName)) {
                     return true;
                 }
@@ -189,13 +189,13 @@ public class DomDocument<T extends Dom> {
         if (implementorsOf.size()==0) {
             initXRef();
         }
-        return implementorsOf.getOne(intf);   
+        return implementorsOf.getOne(intf);
     }
 
     /**
      * probably a bit slow, calculates all the @Configured interfaces subclassing, useful
      * to find all possible subclasses of a type.
-     * 
+     *
      * @throws ClassNotFoundException
      */
     private void initXRef() throws ClassNotFoundException {
@@ -253,7 +253,7 @@ public class DomDocument<T extends Dom> {
     public void writeTo(XMLStreamWriter w) throws XMLStreamException {
         root.writeTo(null,w);
     }
-    
+
     /*package*/
     DataType getValidator(String dataType) {
         synchronized(validators) {
@@ -269,5 +269,5 @@ public class DomDocument<T extends Dom> {
             return (validators.get(dataType));
         }
     }
-    
+
 }

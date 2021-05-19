@@ -35,7 +35,7 @@
 
     <target name="all" depends="display-header, clean, build, deploy, run, undeploy"/>
 
-    <target name="run-test" 
+    <target name="run-test"
     depends="clean, build, deploy, run, undeploy"/>
 
     <target name="clean" depends="init-common">
@@ -43,7 +43,7 @@
     </target>
 
     <target name="display-header">
-      <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>          
+      <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>
     </target>
 
     <target name="compile" depends="init-common,clean-common, generate-artifacts">
@@ -142,28 +142,28 @@
      </target>
 
     <target name="build" depends="init-common,compile">
-	<antcall target="ws-package-appclientjar-common">
-            <param name="appclientjar.classes" 
+        <antcall target="ws-package-appclientjar-common">
+            <param name="appclientjar.classes"
               value="com/sun/appserv/sqe/security/wss/servletws/taxcal/client/*.class" />
             <param name="appclientjar.files"
               value="${build.classes.dir}"/>
             <param name="appclient.jar"
               value="${assemble.dir}/${appname}-client.jar"/>
-	</antcall>
-	<!--antcall target="ws-war-common"-->
-	<antcall target="ws-package-war-common">
+        </antcall>
+        <!--antcall target="ws-war-common"-->
+        <antcall target="ws-package-war-common">
             <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
-            <param name="war.classes" 
+            <param name="war.classes"
               value="com/sun/appserv/sqe/security/wss/servletws/taxcal/*.class" />
-            <param name="mappingfile.name" 
+            <param name="mappingfile.name"
               value="${web-mapping.xml}" />
-            <param name="mappingfile.location" 
+            <param name="mappingfile.location"
               value="${build.classes.dir}"/>
-            <param name="webservices.xml" 
+            <param name="webservices.xml"
               value="${web-webservices.xml}" />
-	</antcall>
+        </antcall>
         <antcall target="ear-common"/>
-    </target> 
+    </target>
 
     <target name="deploy"
             depends="init-common">
@@ -171,10 +171,10 @@
     </target>
 
     <target name="run">
-	<antcall target="runclient-ssl-win"/>
-	<antcall target="runclient-ssl-unix"/>
+        <antcall target="runclient-ssl-win"/>
+        <antcall target="runclient-ssl-unix"/>
     </target>
-  
+
     <target name="runclient-ssl-win" depends="set-appserver-version" if="isWindows">
         <antcall target="runclient-ssl-pe-win"/>
         <antcall target="runclient-ssl-ee-win"/>
@@ -292,17 +292,17 @@
       </antcall>
     </target>
 
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
     </target>
 
-  <!-- 
-  ======================================================= 
+  <!--
+  =======================================================
   User Defined specific targets
   =======================================================
   -->

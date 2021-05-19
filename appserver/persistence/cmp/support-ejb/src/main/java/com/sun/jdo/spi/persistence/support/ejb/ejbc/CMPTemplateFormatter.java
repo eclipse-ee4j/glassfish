@@ -101,9 +101,9 @@ public class CMPTemplateFormatter extends JavaClassWriterHelper{
     public final static String ejbException_              = "EJBException"; // NOI18N
     public final static String finderException_           = "jakarta.ejb.FinderException"; // NOI18N
     public final static String assertInTransaction_       = "assertInTransaction"; // NOI18N
-    public final static String assertPersistenceManagerIsNull_       
+    public final static String assertPersistenceManagerIsNull_
                                                           = "assertPersistenceManagerIsNull"; // NOI18N
-    public final static String assertPersistenceManagerIsNullCall_       
+    public final static String assertPersistenceManagerIsNullCall_
                                                           = "assertPersistenceManagerIsNullCall"; // NOI18N
     public final static String setEntityContext_          = "setEntityContext"; // NOI18N
     public final static String EntityContext_             = "jakarta.ejb.EntityContext"; // NOI18N
@@ -140,9 +140,9 @@ public class CMPTemplateFormatter extends JavaClassWriterHelper{
     public final static String jdoGetPersistenceManager_  = "jdoGetPersistenceManager"; // NOI18N
     public final static String jdoGetPersistenceManager0_ = "jdoGetPersistenceManager0"; // NOI18N
     public final static String jdoClosePersistenceManager_= "jdoClosePersistenceManager"; // NOI18N
-    public final static String jdoReleasePersistenceManager_  
+    public final static String jdoReleasePersistenceManager_
                                      = "jdoReleasePersistenceManager"; // NOI18N
-    public final static String jdoReleasePersistenceManager0_  
+    public final static String jdoReleasePersistenceManager0_
                                      = "jdoReleasePersistenceManager0"; // NOI18N
 
     public final static String jdoArrayCopy_              = "jdoArrayCopy"; // NOI18N
@@ -167,7 +167,7 @@ public class CMPTemplateFormatter extends JavaClassWriterHelper{
     public final static String ejb__refresh_              = "ejb__refresh"; // NOI18N
     public final static String ejb__remove_               = "ejb__remove"; // NOI18N
 
-    // property key for the CVS keyword substitution 
+    // property key for the CVS keyword substitution
     public final static String signature_ = "signature"; //NOI18N
 
     public final static String signatureDelimiter_ = " ## "; //NOI18N
@@ -284,7 +284,7 @@ public class CMPTemplateFormatter extends JavaClassWriterHelper{
     /**
      * Loads Properties object from the specified template file.
      */
-    static synchronized void loadProperties(Properties helpers, 
+    static synchronized void loadProperties(Properties helpers,
             final String templateFile) throws IOException {
 
         BufferedInputStream bin = null;

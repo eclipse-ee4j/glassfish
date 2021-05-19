@@ -43,13 +43,13 @@ import org.glassfish.hk2.api.PerLookup;
 
 /**
  * List System Properties Command
- * 
+ *
  * Lists the system properties of the domain, configuration, cluster, or server instance
- * 
+ *
  * Usage: lists-system-properties [--terse={true|false}][ --echo={true|false} ]
- * [ --interactive={true|false} ] [ --host  host] [--port port] [--secure| -s ] 
+ * [ --interactive={true|false} ] [ --host  host] [--port port] [--secure| -s ]
  * [ --user  admin_user] [--passwordfile filename] [--help] [target_name]
- * 
+ *
  */
 @Service(name="list-system-properties")
 @PerLookup
@@ -60,13 +60,13 @@ CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.STA
 @I18n("list.system.properties")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-system-properties", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-system-properties",
         description="list-system-properties")
 })
 public class ListSystemProperties implements AdminCommand, AdminCommandSecurity.Preauthorization,
         AdminCommandSecurity.AccessCheckProvider {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListSystemProperties.class);
 
     @Param(optional=true, primary=true, defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)

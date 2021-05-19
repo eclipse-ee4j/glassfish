@@ -328,7 +328,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 spec.markAsXA();
                 alloc = new ConnectorAllocator(poolmgr, mcf, spec, subject, cxRequestInfo, info, desc, shareable);
                 return poolmgr.getResource(spec, alloc, info);
-            
+
             default:
                 String i18nMsg = getLocalStrings().getString("con_mgr.illegal_tx_level", txLevel + " ");
                 throw new IllegalStateException(i18nMsg);
@@ -348,7 +348,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
     /*
     * This method is called from the ConnectorObjectFactory lookup
     * With this we move all the housekeeping work in allocateConnection
-    * up-front 
+    * up-front
     */
     public void initialize() throws ConnectorRuntimeException {
 

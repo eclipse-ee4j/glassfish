@@ -49,9 +49,9 @@ ping_instances() {
              $1 ~ /servers.server..*.system-property.HTTP_LISTENER_PORT.value/ { port[$1] = $2 }
              $1 ~ /servers\.server\.[^.]*\.name$/ { iname[$2] = $2 }
              $1 ~ /servers\.server\.[^.]*\.config-ref$/ { cname[$1] = $2 }
-             END { 
+             END {
                ck = "configs.config.ch1-config.system-property.HTTP_LISTENER_PORT.value";
-               for (i in iname) { 
+               for (i in iname) {
                  if (i == "server") continue;
                  if (cname["servers.server." i ".config-ref"] != "ch1-config") continue;
                  k = "servers.server." i ".system-property.HTTP_LISTENER_PORT.value";
@@ -61,7 +61,7 @@ ping_instances() {
                  printf "http://%s:%s/%s\n", host[hk], port[k], ENVIRON["url"]
                }
              }' |
-     xargs -t -n 1 -P 0 wget -q --no-proxy -P $TESTHOME/logs/$id -x 
+     xargs -t -n 1 -P 0 wget -q --no-proxy -P $TESTHOME/logs/$id -x
 }
 
 bench() {
@@ -86,7 +86,7 @@ benchmark_commands() {
   bench stop-domain $DOMAIN
   bench start-domain $DOMAIN
   bench restart-domain $DOMAIN
-  grep 'time to parse domain.xml' $GFHOME/glassfish/domains/$DOMAIN/logs/server.log | 
+  grep 'time to parse domain.xml' $GFHOME/glassfish/domains/$DOMAIN/logs/server.log |
     sed -e 's/^.*Total //' -e 's/|#]//' | tail -1
   echo 'size of domain.xml: ' `ls -l $GFHOME/glassfish/domains/$DOMAIN/config/domain.xml | awk '{ print $5 }'`
   PIDFILE=$TESTHOME/glassfish6/glassfish/domains/domain1/config/pid
@@ -102,7 +102,7 @@ benchmark_deploy() {
   time asadmin deploy --target ch1 --name hello1 $TESTHOME/apps/helloworld-${sz}.war
   echo "starting instances"
   time asadmin start-cluster ch1
-  benchmark_commands 
+  benchmark_commands
   echo "undeploying app from running cluster"
   time asadmin undeploy --target ch1 hello1
   echo "deploying $sz app to running cluster"
@@ -132,7 +132,7 @@ create_nodes_and_clusters() {
       echo "create-node-config --nodehost h${c}_${i} n${c}_${i}"
       echo "create-instance --cluster c$c --node n${c}_${i} i${c}_${i}"
     done
-  done | asadmin 
+  done | asadmin
 }
 
 create_hosted_clusters() {
@@ -159,7 +159,7 @@ create_hosted_clusters() {
       done
     done
     #echo "set configs.config.ch$c-config.dynamic-reconfiguration-enabled=true"
-  done | asadmin 
+  done | asadmin
 }
 
 create_local_clusters() {
@@ -192,7 +192,7 @@ create_local_clusters() {
 create_hosted_nodes() {
   echo Creating SSH nodes from the hosted_nodes file for domain $DOMAIN...
   grep -v '^#' $TESTHOME/hosted-nodes |
-    awk '{ printf "create-node-ssh --nodehost %s --installdir '$INSTALL_LOC'/glassfish6 --sshuser %s n-ssh-'$DOMAIN'-%d\n", $2, $1, ++n }' | 
+    awk '{ printf "create-node-ssh --nodehost %s --installdir '$INSTALL_LOC'/glassfish6 --sshuser %s n-ssh-'$DOMAIN'-%d\n", $2, $1, ++n }' |
     asadmin
   asadmin list-nodes
 }
@@ -212,7 +212,7 @@ cmd_on_hosted_nodes() {
 delete_hosted_nodes() {
   echo Deleting SSH nodes...
   asadmin --terse list-nodes | egrep -v '^[ \t]*$' | grep n-ssh- |
-    xargs -n 1 echo delete-node-ssh | 
+    xargs -n 1 echo delete-node-ssh |
     asadmin || return 1
 }
 
@@ -239,7 +239,7 @@ deploy_app_to_clusters() {
   echo Deploying an app to all clusters and instances...
   asadmin deploy --name $name $file
   asadmin --terse list-clusters | egrep -v '^[ \t]*$' | awk '{print $1}' |
-  while read cname 
+  while read cname
   do
     echo "create-application-ref --target $cname $name"
   done | asadmin || return 1

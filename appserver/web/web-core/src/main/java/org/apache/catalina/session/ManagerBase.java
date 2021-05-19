@@ -87,14 +87,14 @@ public abstract class ManagerBase implements Manager {
      * the initialization of our random number generator.
      */
     protected String entropy = null;
-    
+
     //START OF 6364900
     /**
      * A SessionLocker used to lock sessions (curently only
      * in the request dispatcher forward/include use case)
      */
     protected SessionLocker sessionLocker = new BaseSessionLocker();
-    //END OF 6364900    
+    //END OF 6364900
 
     /**
      * The descriptive information string for this implementation.
@@ -125,14 +125,14 @@ public abstract class ManagerBase implements Manager {
      * A random number generator to use when generating session identifiers.
      */
     private Random random = null;
-    
-    
+
+
     /**
      * The Uuid Generator to be used
      * when generating universally unique session identifiers.
      * HERCULES: add
      */
-    protected UuidGenerator uuidGenerator = new UuidGeneratorImpl();     
+    protected UuidGenerator uuidGenerator = new UuidGeneratorImpl();
 
 
     /**
@@ -165,12 +165,12 @@ public abstract class ManagerBase implements Manager {
      * session identifier.
      */
     protected Map<String, Session> sessions = new ConcurrentHashMap<String, Session>();
-    
+
     // Number of sessions created by this manager
     protected int sessionCounter=0;
 
     protected volatile int maxActive=0;
-    
+
     protected final Object maxActiveUpdateLock = new Object();
 
     // number of duplicated session ids - anything >0 means we have problems
@@ -183,7 +183,7 @@ public abstract class ManagerBase implements Manager {
      * The property change support for this component.
      */
     protected PropertyChangeSupport support = new PropertyChangeSupport(this);
-    
+
     /**
      * Number of times a session was not created because the maximum number
      * of active sessions had been reached.
@@ -193,8 +193,8 @@ public abstract class ManagerBase implements Manager {
 
     // ------------------------------------------------------- Security classes
     private class PrivilegedSetRandomFile implements PrivilegedAction<DataInputStream>{
-        
-        public DataInputStream run(){               
+
+        public DataInputStream run(){
             FileInputStream fileInputStream = null;
             try {
                 File f=new File( devRandomSource );
@@ -220,7 +220,7 @@ public abstract class ManagerBase implements Manager {
 
 
     // ------------------------------------------------------------- Properties
-    
+
     /**
      * Return the UuidGenerator for this Manager.
      * HERCULES:added
@@ -228,7 +228,7 @@ public abstract class ManagerBase implements Manager {
     public UuidGenerator getUuidGenerator() {
         return uuidGenerator;
     }
-    
+
     /**
      * Set the UuidGenerator for this Manager.
      * HERCULES:added
@@ -583,12 +583,12 @@ public abstract class ManagerBase implements Manager {
     /**
      * set the pluggable sessionLocker for this manager
      * by default it is pre-set to no-op BaseSessionLocker
-     */    
+     */
     public void setSessionLocker(SessionLocker sessLocker) {
         sessionLocker = sessLocker;
     }
     //END OF 6364900
-    
+
     // --------------------------------------------------------- Public Methods
     public void destroy() {
         if (randomIS!=null) {
@@ -604,11 +604,11 @@ public abstract class ManagerBase implements Manager {
         initialized=false;
         oname = null;
     }
-    
+
     public void init() {
         if( initialized ) return;
-        initialized=true;        
-        
+        initialized=true;
+
         if( oname==null ) {
             try {
                 StandardContext ctx=(StandardContext)this.getContainer();
@@ -618,7 +618,7 @@ public abstract class ManagerBase implements Manager {
                 String path = ctx.getEncodedPath();
                 if (path.equals("")) {
                     path = "/";
-                }   
+                }
                 oname=new ObjectName(domain + ":type=Manager,path="
                 + path + ",host=" + hst.getName());
             } catch (Exception e) {
@@ -647,7 +647,7 @@ public abstract class ManagerBase implements Manager {
             }
         }
     }
-    
+
 
     /**
      * Add a property change listener to this component.
@@ -671,12 +671,12 @@ public abstract class ManagerBase implements Manager {
      *  instantiated for any reason
      */
     public Session createSession() {
-        
+
         // Recycle or create a Session instance
         Session session = null;
         session = createEmptySession();
         //always lock
-        session.lockForeground(); 
+        session.lockForeground();
 
         // Initialize the properties of the new session and return it
         session.setNew(true);
@@ -723,8 +723,8 @@ public abstract class ManagerBase implements Manager {
 
         //START OF 6364900
         //always lock
-        session.lockForeground();        
-        //END OF 6364900        
+        session.lockForeground();
+        //END OF 6364900
 
         session.setId(sessionId);
         sessionCounter++;
@@ -818,7 +818,7 @@ public abstract class ManagerBase implements Manager {
      */
     public void clearSessions() {
         sessions.clear();
-    }    
+    }
 
 
     /**
@@ -849,7 +849,7 @@ public abstract class ManagerBase implements Manager {
     public Cookie toCookie(Session session) throws IOException {
         return null;
     }
-                                 
+
 
     /**
      * Remove a property change listener from this component.
@@ -864,7 +864,7 @@ public abstract class ManagerBase implements Manager {
     /**
      * Change the session ID of the current session to a new randomly generated
      * session ID.
-     * 
+     *
      * @param session   The session to change the session ID for
      */
     public void changeSessionId(Session session) {
@@ -904,23 +904,23 @@ public abstract class ManagerBase implements Manager {
         }
         getRandom().nextBytes(bytes);
     }
-    
-    
+
+
     /**
      * Generate and return a new session identifier.
      * Hercules:added
      */
     protected synchronized String generateSessionId(Object obj) {
         return uuidGenerator.generateUuid(obj);
-    }   
-    
+    }
+
     /**
      * Generate and return a new session identifier.
      * Hercules:modified
      */
     protected synchronized String generateSessionId() {
         return generateSessionId(new Object());
-    }    
+    }
 
 
     // ------------------------------------------------------ Protected Methods
@@ -985,13 +985,13 @@ public abstract class ManagerBase implements Manager {
         setSessionCount(sessionCounter);
     }
 
-   
+
     public void setSessionCount(int sessionCounter) {
         this.sessionCounter = sessionCounter;
     }
 
 
-    /** 
+    /**
      * Same as getSessionCount
      */
     public int getSessionCounter() {
@@ -999,7 +999,7 @@ public abstract class ManagerBase implements Manager {
     }
 
 
-    /** 
+    /**
      * Total sessions created by this manager.
      *
      * @return sessions created
@@ -1009,7 +1009,7 @@ public abstract class ManagerBase implements Manager {
     }
 
 
-    /** 
+    /**
      * Number of duplicated session IDs generated by the random source.
      * Anything bigger than 0 means problems.
      *
@@ -1025,7 +1025,7 @@ public abstract class ManagerBase implements Manager {
     }
 
 
-    /** 
+    /**
      * Returns the number of active sessions
      *
      * @return number of sessions active
@@ -1132,7 +1132,7 @@ public abstract class ManagerBase implements Manager {
     }
 
 
-    /** 
+    /**
      * For debugging: return a list of all session ids currently active
      *
      */
@@ -1146,7 +1146,7 @@ public abstract class ManagerBase implements Manager {
     }
 
 
-    /** 
+    /**
      * For debugging: get a session attribute
      *
      * @param sessionId
@@ -1199,7 +1199,7 @@ public abstract class ManagerBase implements Manager {
         return new Date(s.getLastAccessedTime()).toString();
     }
 
-    
+
     //PWC Extension
     //START OF RIMOD# 4820359 -- Support for iWS6.0 session managers
     /**
@@ -1221,32 +1221,32 @@ public abstract class ManagerBase implements Manager {
     public String getDomain() {
         return domain;
     }
-    
+
     //START OF 6364900
     public void postRequestDispatcherProcess(ServletRequest request, ServletResponse response) {
         //deliberate no-op
         return;
     }
-    
+
     public void preRequestDispatcherProcess(ServletRequest request, ServletResponse response) {
         //deliberate no-op
         return;
-    }    
-    
+    }
+
     public boolean lockSession(ServletRequest request) throws ServletException {
         boolean result = false;
         if(sessionLocker != null) {
             result = sessionLocker.lockSession(request);
-        }        
+        }
         return result;
     }
-    
+
     public void unlockSession(ServletRequest request) {
         if(sessionLocker != null) {
             sessionLocker.unlockSession(request);
         }
     }
-    //END OF 6364900    
+    //END OF 6364900
 
 
     /*

@@ -38,7 +38,7 @@ public interface LocalEntityHome
      * @exception throws FinderException and RemoteException.
      *
      */
- 
-    public LocalEntity findByPrimaryKey(String studentId) 
+
+    public LocalEntity findByPrimaryKey(String studentId)
         throws FinderException;
 }

@@ -63,7 +63,7 @@ public class TabLabelRenderer extends BaseRenderer {
     // Relationship Instance Variables
 
     //
-    // Constructors and Initializers    
+    // Constructors and Initializers
     //
 
     public TabLabelRenderer() {
@@ -148,7 +148,7 @@ public class TabLabelRenderer extends BaseRenderer {
         return result;
     }
 
-    
+
     //
     // Methods From Renderer
     //
@@ -162,7 +162,7 @@ public class TabLabelRenderer extends BaseRenderer {
         // Was our command the one that caused this submission?
         // we don' have to worry about getting the value from request parameter
         // because we just need to know if this command caused the submission. We
-        // can get the command name by calling currentValue. This way we can 
+        // can get the command name by calling currentValue. This way we can
         // get around the IE bug.
         String clientId = component.getClientId(context);
         Map requestParameterMap = (Map) context.getExternalContext().
@@ -177,7 +177,7 @@ public class TabLabelRenderer extends BaseRenderer {
 
         // Search for this component's parent "tab" component..
         UIComponent tabComponent = findParentForRendererType(component, "Tab");
-        
+
         // set the "tab" component's "id" in the event...
 
         tabComponent.queueEvent(new PaneSelectedEvent(component,
@@ -261,8 +261,8 @@ public class TabLabelRenderer extends BaseRenderer {
     private UIComponent findParentForRendererType(UIComponent component, String rendererType) {
         Object facetParent = null;
         UIComponent currentComponent = component;
-        
-        // Search for an ancestor that is the specified renderer type; 
+
+        // Search for an ancestor that is the specified renderer type;
         while (null != (currentComponent = currentComponent.getParent())) {
             if (currentComponent.getRendererType().equals(rendererType)) {
                 break;

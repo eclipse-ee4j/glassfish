@@ -70,7 +70,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
 
     static boolean active = true;
 
-    /*Logger to log transaction messages*/  
+    /*Logger to log transaction messages*/
     static Logger _logger = LogDomains.getLogger(TransactionFactoryImpl.class, LogDomains.TRANSACTION_LOGGER);
     /**
      * Constructor for the TransactionFactoryImpl.  Passes through
@@ -105,7 +105,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
     public Control create(int timeOut) throws SystemException {
 
         Control result = null;
-    
+
         ControlImpl cimpl = localCreate(timeOut);
 
         if (cimpl == null) {
@@ -180,12 +180,12 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
             if(_logger.isLoggable(Level.FINE))
             {
                 _logger.logp(Level.FINE,"TransactionFactoryImpl","localCreate()",
-                        "Control object :" + result + 
+                        "Control object :" + result +
                         " corresponding to this transaction has been created"+
                         "GTID is : "+
                         ((TopCoordinator)coordinator).superInfo.globalTID.toString());
             }
-    
+
         } catch (Throwable exc) {
 
             // If an error occurred, free up the objects.
@@ -472,7 +472,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
                 Status status = subordinate.get_status();
                 if ((status != Status.StatusMarkedRollback) &&
                         (status != Status.StatusActive)) {
-                    throw new INVALID_TRANSACTION("tx completion in-progress");           
+                    throw new INVALID_TRANSACTION("tx completion in-progress");
                 }
                 // If there already is a subordinate, then ensure
                 // that it knows it is not a temporary Coordinator.

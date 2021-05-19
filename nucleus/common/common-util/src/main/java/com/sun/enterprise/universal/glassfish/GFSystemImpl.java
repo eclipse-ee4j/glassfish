@@ -36,7 +36,7 @@ public final class GFSystemImpl {
     {
         return Collections.unmodifiableMap(props);
     }
-    
+
     /**
      * Get a GF System Property
      * @param key the name of the property
@@ -56,10 +56,10 @@ public final class GFSystemImpl {
     {
         props.put(key, value);
     }
-    
+
     public GFSystemImpl() {
     }
-    
+
     // initial props copy java.lang.System Properties
     private final ConcurrentMap<String,String> props = new ConcurrentHashMap<String, String>(
             CollectionUtils.propertiesToStringMap(System.getProperties()));

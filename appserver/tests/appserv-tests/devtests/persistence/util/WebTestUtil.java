@@ -23,7 +23,7 @@ import java.util.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /** WebTestUtil.java
-  * This program opens HttpURLconnection,sends the request to the 
+  * This program opens HttpURLconnection,sends the request to the
   * servlet , & receives the response from the servlet.
   * Using commandline args the user can specify for WebTestUtil
   * 1. test suite name
@@ -57,7 +57,7 @@ public class WebTestUtil {
         this.urlPattern = urlPattern;
         this.stat = stat;
     }
-    
+
 
     public void test( String c) throws Exception {
       this.test( c, "");
@@ -84,21 +84,21 @@ public class WebTestUtil {
         } else {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
-	    String line = null;
-	    while ((line = input.readLine()) != null) {
+            String line = null;
+            while ((line = input.readLine()) != null) {
               // System.out.println("line="+line);
-	      if (line.contains(EXPECTED_RESPONSE)) {
-		stat.addStatus(TEST_CASE, stat.PASS);
-		break;
-	      }
-	    }
-	    
-	    if (line == null) {
-	      System.out.println("Unable to find " + EXPECTED_RESPONSE +
-				  " in the response");
-	    }
-	    stat.addStatus(TEST_CASE, stat.FAIL);
-        }    
+              if (line.contains(EXPECTED_RESPONSE)) {
+                stat.addStatus(TEST_CASE, stat.PASS);
+                break;
+              }
+            }
+
+            if (line == null) {
+              System.out.println("Unable to find " + EXPECTED_RESPONSE +
+                                  " in the response");
+            }
+            stat.addStatus(TEST_CASE, stat.FAIL);
+        }
     }
 
 }

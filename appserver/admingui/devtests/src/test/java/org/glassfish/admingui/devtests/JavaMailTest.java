@@ -36,7 +36,7 @@ public class JavaMailTest extends BaseSeleniumTestClass {
         ClusterTest clusterTest = new ClusterTest();
         standaloneTest.deleteAllStandaloneInstances();
         clusterTest.deleteAllClusters();
-        
+
         clickAndWait("treeForm:tree:resources:mailResources:mailResources_link", TRIGGER_JAVA_MAIL);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_JAVAMAIL_SESSION);
 

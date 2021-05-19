@@ -27,7 +27,7 @@ import test.beans.artifacts.ProducedViaStaticField;
 public class JPAResourceProducerSingletonEJB_BusinessMethodProducer {
     @PersistenceUnit(unitName="pu1")
     EntityManagerFactory customerDatabasePersistenceUnit;
-    
+
     @Produces @ProducedViaProducerMethod
     public EntityManagerFactory createEMF(){
         return customerDatabasePersistenceUnit;

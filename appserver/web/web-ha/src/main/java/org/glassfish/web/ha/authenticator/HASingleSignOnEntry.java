@@ -72,7 +72,7 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
             String username, String realmName,
             long lastAccessTime, long maxIdleTime, long version,
             JavaEEIOUtils ioUtils) {
-        
+
         this(id, principal, authType, username, realmName, lastAccessTime,
             maxIdleTime, version, ioUtils, convertToByteArray(principal, ioUtils));
     }
@@ -81,7 +81,7 @@ public class HASingleSignOnEntry extends SingleSignOnEntry {
             String username, String realmName,
             long lastAccessTime, long maxIdleTime, long version,
             JavaEEIOUtils ioUtils, byte[] principalBytes) {
-        
+
         super(id, version, principal, authType, username, realmName);
         this.lastAccessTime = lastAccessTime;
         this.maxIdleTime = maxIdleTime;

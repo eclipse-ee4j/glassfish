@@ -38,7 +38,7 @@ public interface ContainerUtil {
     public ComponentEnvManager getComponentEnvManager();
 
     public CallFlowAgent getCallFlowAgent();
-    
+
     /**
      * Utility method to return a JDK Timer. Containers must
      *  use this timer instead of creating their own
@@ -55,5 +55,5 @@ public interface ContainerUtil {
      * @param runnable
      */
     public void scheduleTask(Runnable runnable);
-    
+
 }

@@ -72,7 +72,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
                 if ((ar.getThreadId() != Thread.currentThread().getId()) ||
                         ar.hasConnectionErrorOccurred() ||
                         ar.isDirty() || !ar.isAssociated()) {
-                    //we were associated with someone else or resource error 
+                    //we were associated with someone else or resource error
                     //occurred or resource was disassociated and used by some one else. So evict
                     //NOTE: We do not setAssociated to false here since someone
                     //else has associated this resource to themself. Also, if
@@ -121,7 +121,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
                         poolLifeCycleListener.connectionUsed(ar.getId());
                         //Decrement numConnFree
                         poolLifeCycleListener.decrementNumConnFree();
-                        
+
                     }
                     return ar;
                 }
@@ -185,7 +185,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
                     ds.removeResource(result);
                     result = null;
                 }
-            }            
+            }
         }
         //If we came here, that's because free doesn't have anything
         //to offer us. This could be because:
@@ -197,7 +197,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
         //DISASSOCIATE
         if (result == null) {
             synchronized (this) {
-                
+
                 for (ResourceHandle resource : ds.getAllResources()) {
                     synchronized (resource.lock) {
                         //though we are checking resources from within the free list,
@@ -207,7 +207,7 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
                         //so we need to check for isFree also
 
                         if (resource.getResourceState().isUnenlisted() &&
-                                resource.getResourceState().isFree() && 
+                                resource.getResourceState().isFree() &&
                                 !(((AssocWithThreadResourceHandle) resource).isDirty())) {
                             if (!matchConnection(resource, alloc)) {
                                 continue;
@@ -275,9 +275,9 @@ public class AssocWithThreadResourcePool extends ConnectionPool {
             //Note: here we are using the connectionErrorOccurred flag to indicate
             //that this resource is no longer usable. This flag would be checked while
             //getting from ThreadLocal
-            //The main intention of marking this is to handle the case where 
+            //The main intention of marking this is to handle the case where
             //failAllConnections happens
-            //Note that setDirty only happens here - i.e during destroying of a 
+            //Note that setDirty only happens here - i.e during destroying of a
             //resource
 
             if(resourceHandle instanceof AssocWithThreadResourceHandle){

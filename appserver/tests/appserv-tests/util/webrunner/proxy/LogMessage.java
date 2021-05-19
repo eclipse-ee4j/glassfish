@@ -23,5 +23,5 @@ package com.sun.ejte.ccl.webrunner.proxy;
 *
 */
 public interface LogMessage{
-	public void log(String msg);
+        public void log(String msg);
 }

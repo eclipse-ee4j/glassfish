@@ -32,7 +32,7 @@ class JDBCInfo {
     // the fields in instances of JDBCInfo.
     //
     //
-    
+
     /** Indicator that property designates the type of a mapped SQL type. */
     private static final String INDICATOR_TYPE =
         DatabaseGenerationConstants.INDICATOR_JDBC_TYPE;
@@ -62,19 +62,19 @@ class JDBCInfo {
      /** Logger for warning & error messages */
     private static final Logger logger =
             LogHelperDatabaseGenerator.getLogger();
-    
+
     /** Value from java.sql.Types. */
     private int jdbcType;
-    
+
     /** True iff a column of this type is nullable; default is false.  */
     private boolean nullable = false;
-    
+
     /** Indicates precision of a fixed-point number column; default is null. */
     private Integer precision = null;
-    
+
     /** Indicates scale of a fixed-point number column; default is null. */
     private Integer scale = null;
-    
+
     /** Indicates length of a char, etc. column; default is null. */
     private Integer length = null;
 
@@ -82,8 +82,8 @@ class JDBCInfo {
     //
     // Allow determining if which fields have been assigned values.
     //
-    
-    /** Indicates which fields in this instance have been set. */     
+
+    /** Indicates which fields in this instance have been set. */
     private byte fieldsWithValues = 0;
 
     /** Mask to indicate whether or not {@link #jdbcType} has a value. */
@@ -104,7 +104,7 @@ class JDBCInfo {
     /** Mask to access all field flags at once. */
     private static final byte MASK_ALL = MASK_JDBC_TYPE | MASK_NULLABLE
         | MASK_PRECISION | MASK_SCALE | MASK_LENGTH;
-    
+
 
     /**
      * Constructor which initializes all fields.
@@ -114,7 +114,7 @@ class JDBCInfo {
      * @param length See {@link length}.
      * @param nullable See {@link nullable}.
      */
-    JDBCInfo(int jdbcType, Integer precision, Integer scale, 
+    JDBCInfo(int jdbcType, Integer precision, Integer scale,
             Integer length, boolean nullable) {
 
         this.jdbcType = jdbcType;
@@ -132,7 +132,7 @@ class JDBCInfo {
      */
     JDBCInfo() { }
 
-    
+
     /**
      * Sets the value of one field of this JDBCInfo.
      * @param indicator Determines which field is set.
@@ -180,7 +180,7 @@ class JDBCInfo {
                 this.length = getIntegerValue(value);
             }
             this.fieldsWithValues |= MASK_LENGTH;
-        } 
+        }
     }
 
     /**
@@ -213,7 +213,7 @@ class JDBCInfo {
     // See MappingPolicy.JDBCInfo().
     //
 
-    
+
     /**
      * Fill in values for fields based on values in another JDBCInfo
      * instance.  Only those fields for which this instance does not already
@@ -243,7 +243,7 @@ class JDBCInfo {
             if ((fieldsWithValues & MASK_NULLABLE) == 0) {
                 this.nullable = other.nullable;
             }
-            
+
             if ((fieldsWithValues & MASK_PRECISION) == 0) {
                 this.precision = other.precision;
             }

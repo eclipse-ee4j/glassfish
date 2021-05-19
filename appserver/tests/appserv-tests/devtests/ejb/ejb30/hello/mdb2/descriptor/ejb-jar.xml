@@ -83,7 +83,7 @@
       <mapped-name>jms/ejb_ejb30_hello_mdb2_InQueue</mapped-name>
       -->
       <lookup-name>jms/ejb_ejb30_hello_mdb2_InQueue</lookup-name>
-      
+
     </message-destination>
     <message-destination>
       <description>description 1</description>

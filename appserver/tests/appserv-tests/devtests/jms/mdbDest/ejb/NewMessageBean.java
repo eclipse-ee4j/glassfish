@@ -29,9 +29,9 @@ import jakarta.jms.*;
 })
 public class NewMessageBean implements MessageListener {
     private static final Logger logger = Logger.getLogger(NewMessageBean.class.getName());
-    
+
     private static int count;
-    
+
     @Resource
     private MessageDrivenContext mdc;
 
@@ -42,10 +42,10 @@ public class NewMessageBean implements MessageListener {
     @JMSConnectionFactory("jms/jms_unit_test_QCF")
     @JMSSessionMode(JMSContext.AUTO_ACKNOWLEDGE)
     private JMSContext jmsContext;
-    
+
     public NewMessageBean() {
     }
-    
+
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {

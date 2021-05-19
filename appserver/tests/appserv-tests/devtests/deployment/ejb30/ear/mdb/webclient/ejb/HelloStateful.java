@@ -37,7 +37,7 @@ import jakarta.annotation.PreDestroy;
                            msg);
     }
     @PreDestroy public void myPreDestroyMethod() {
-        System.out.println("PRE-DESTROY callback received in " + msg);        
+        System.out.println("PRE-DESTROY callback received in " + msg);
     }
 
 }

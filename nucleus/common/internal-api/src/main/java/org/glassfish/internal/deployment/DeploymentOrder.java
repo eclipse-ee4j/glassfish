@@ -29,7 +29,7 @@ public class DeploymentOrder {
   /**
    * Deployment ordering among different deployment types.
    *
-   * For deployment ordering within a particular type, please refer 
+   * For deployment ordering within a particular type, please refer
    * to <CODE>DeploymentType</CODE>.
    */
   /*
@@ -57,7 +57,7 @@ public class DeploymentOrder {
 
   /**
    * A comparator that imposes deployment ordering as defined by
-   * <CODE>DEPLOYMENT_ORDER</CODE> above (for ordering among deployment 
+   * <CODE>DEPLOYMENT_ORDER</CODE> above (for ordering among deployment
    * types) and by the various DeploymentTypes (for ordering within
    * deployment types).
    */
@@ -81,7 +81,7 @@ public class DeploymentOrder {
     };
   };
 
-  private static final TreeSet application_deployments = 
+  private static final TreeSet application_deployments =
     new TreeSet(APPLICATION_COMPARATOR);
 
   public static void addApplicationDeployment(ApplicationOrderInfo app) {

@@ -29,17 +29,17 @@ import java.lang.reflect.Method;
  * @author Jerome Dochez
  */
 public class InjectionTarget implements Serializable {
-    
+
     private String className=null;
     private String targetName=null;
     private String fieldName=null;
     private String methodName=null;
     private MetadataSource metadataSource = MetadataSource.XML;
-    
+
     // runtime info, not persisted
     private transient Field field=null;
     private transient Method method=null;
-    
+
     public boolean isFieldInjectable() {
         return fieldName!=null;
     }
@@ -47,28 +47,28 @@ public class InjectionTarget implements Serializable {
     public boolean isMethodInjectable() {
         return methodName!=null;
     }
-    
+
     public String getClassName() {
         return className;
     }
-    
+
     public void setClassName(String className) {
         this.className = className;
     }
-    
+
    /**
      * This is the form used by the .xml injection-group elements to
      * represent the target of injection.   It either represents the
      * javabeans property name of the injection method or the name
      * of the injected field.  This value is set on the descriptor
-     * during .xml processing and converted into the appropriate 
+     * during .xml processing and converted into the appropriate
      * field/method name during validation.
      */
 
     public String getTargetName() {
         return targetName;
     }
-    
+
     public void setTargetName(String targetName) {
         this.targetName = targetName;
     }
@@ -76,7 +76,7 @@ public class InjectionTarget implements Serializable {
     public String getFieldName() {
         return fieldName;
     }
-    
+
     public void setFieldName(String fieldName) {
         this.fieldName = fieldName;
         this.targetName = fieldName;
@@ -92,7 +92,7 @@ public class InjectionTarget implements Serializable {
         this.field = field;
     }
 
-    /** 
+    /**
      * Inject method name is the actual java method name of the setter method,
      * not the bean property name.  E.g., for @Resource void setFoo(Bar b)
      * it would be "setFoo", not the property name "foo".

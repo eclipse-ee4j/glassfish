@@ -25,11 +25,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * An object representing an component environment reference 
+ * An object representing an component environment reference
  * to an EntityManager
  *
 */
-public class EntityManagerReferenceDescriptor extends 
+public class EntityManagerReferenceDescriptor extends
     EnvironmentProperty implements EntityManagerReference {
 
     private String unitName = null;
@@ -37,85 +37,99 @@ public class EntityManagerReferenceDescriptor extends
     private SynchronizationType synchronizationType = SynchronizationType.SYNCHRONIZED;
     private BundleDescriptor referringBundle;
 
-    private Map<String, String> properties = new HashMap<String,String>();
+    private final Map<String, String> properties = new HashMap<>();
 
-    public EntityManagerReferenceDescriptor(String name, 
-                                            String unitName,
-                                            PersistenceContextType type) {
+    public EntityManagerReferenceDescriptor(String name, String unitName, PersistenceContextType type) {
         super(name, "", "");
-
         this.unitName = unitName;
         this.contextType = type;
     }
 
-    public EntityManagerReferenceDescriptor() {}
 
+    public EntityManagerReferenceDescriptor() {
+    }
+
+
+    @Override
     public void setUnitName(String unitName) {
-        
         this.unitName = unitName;
     }
 
+
+    @Override
     public String getUnitName() {
-
         return unitName;
-
     }
 
+
+    @Override
     public String getInjectResourceType() {
         return "jakarta.persistence.EntityManager";
     }
 
+
+    @Override
     public void setInjectResourceType(String resourceType) {
     }
 
+
+    @Override
     public void setPersistenceContextType(PersistenceContextType type) {
-
         contextType = type;
-
     }
 
+
+    @Override
     public PersistenceContextType getPersistenceContextType() {
-
         return contextType;
-
     }
 
 
+    @Override
     public SynchronizationType getSynchronizationType() {
         return synchronizationType;
     }
 
 
+    @Override
     public void setSynchronizationType(SynchronizationType synchronizationType) {
         this.synchronizationType = synchronizationType;
     }
+
 
     public void addProperty(String name, String value) {
         properties.put(name, value);
     }
 
-    public Map<String,String> getProperties() {
-        return new HashMap<String,String>(properties);
+
+    @Override
+    public Map<String, String> getProperties() {
+        return new HashMap<>(properties);
     }
 
-    public void setReferringBundleDescriptor(BundleDescriptor referringBundle)
-    {
-	this.referringBundle = referringBundle;
+
+    @Override
+    public void setReferringBundleDescriptor(BundleDescriptor referringBundle) {
+        this.referringBundle = referringBundle;
     }
+
 
     @Override
     public int hashCode() {
         return super.hashCode();
     }
+
+
     @Override
     public boolean equals(Object other) {
         return super.equals(other);
     }
 
-    public BundleDescriptor getReferringBundleDescriptor()
-    {
-	return referringBundle;
-    }  
+
+    @Override
+    public BundleDescriptor getReferringBundleDescriptor() {
+        return referringBundle;
+    }
 
     public boolean isConflict(EntityManagerReferenceDescriptor other) {
         return getName().equals(other.getName()) &&

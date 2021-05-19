@@ -27,15 +27,15 @@ import com.sun.enterprise.util.ObjectAnalyzer;
  * The hierarchy of directories above a running DAS or server instance can get
  * messy to deal with -- thus this class.  This class is a bullet-proof holder of
  * that information.
- * 
+ *
  * Instances and DAS are arranged differently:
- * 
+ *
  * examples:
  * DAS
  * domainDir = getServerDir() == C:/glassfish6/glassfish/domains/domain1
  * domainsDir = getServerParentDir() == C:/glassfish6/glassfish/domains
  * grandparent-dir is meaningless
- * 
+ *
  * Instance
  * instanceDir = getServerDir() == C:/glassfish6/glassfish/nodes/mymachine/instance1
  * agentDir = getServerParentDir() == C:/glassfish6/glassfish/nodes/mymachine

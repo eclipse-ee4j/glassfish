@@ -17,15 +17,15 @@
 package samples.ejb.subclassing.servlet;
 
 import java.io.*;
-import java.util.*; 
-import jakarta.servlet.*; 
-import javax.naming.*; 
-import jakarta.servlet.http.*; 
+import java.util.*;
+import jakarta.servlet.*;
+import javax.naming.*;
+import jakarta.servlet.http.*;
 
-import samples.ejb.subclassing.ejb.*; 
+import samples.ejb.subclassing.ejb.*;
 import com.sun.jdbcra.spi.JdbcSetupAdmin;
 
-public class SimpleBankServlet extends HttpServlet {  
+public class SimpleBankServlet extends HttpServlet {
 
 
   InitialContext initContext = null;
@@ -41,13 +41,13 @@ public class SimpleBankServlet extends HttpServlet {
   {
   }
 
-  public void doGet (HttpServletRequest request,HttpServletResponse response) 
-        throws ServletException, IOException { 
+  public void doGet (HttpServletRequest request,HttpServletResponse response)
+        throws ServletException, IOException {
     doPost(request, response);
-  }  
+  }
 
-  /** handles the HTTP POST operation **/ 
-  public void doPost (HttpServletRequest request,HttpServletResponse response) 
+  /** handles the HTTP POST operation **/
+  public void doPost (HttpServletRequest request,HttpServletResponse response)
         throws ServletException, IOException {
 
 
@@ -57,7 +57,7 @@ public class SimpleBankServlet extends HttpServlet {
       }catch(Exception e){
           e.printStackTrace();
       }
-      
+
     doLookup();
     System.out.println("SimpleBankServlet is executing");
     String SSN = request.getParameter("SSN");
@@ -73,14 +73,14 @@ public class SimpleBankServlet extends HttpServlet {
     String zipCode = "";
     long currentSavingsBalance = 0;
     long currentCheckingBalance = 0;
-     
+
     String action = request.getParameter("action");
     if (action.equals("Create"))
     {
       message = "Add Customer";
       jsp = "/SimpleBankAdd.jsp";
     }
-    else if (action.equals("Add Customer")) 
+    else if (action.equals("Add Customer"))
     {
       System.out.println("Add Customer button pressed");
       SSN = request.getParameter("SSN");
@@ -97,7 +97,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = customerSavingsHome.create(SSN, lastName, firstName, address1, address2, city, state, zipCode);
       } catch (Exception e) {
         System.out.println("Could not create the customer savings remote bean : " + e.toString());
-	throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       message = "Customer Added.";
@@ -110,7 +110,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = customerSavingsHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer remote bean : " + e.toString());
-	throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       jsp = "/SimpleBankEdit.jsp";
@@ -122,7 +122,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = customerSavingsHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer savings remote bean : " + e.toString());
-	throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       message = "Delete Customer";
@@ -134,12 +134,12 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavingsHome.findByPrimaryKey(SSN).remove();
       } catch (Exception e) {
         System.out.println("Could not delete the customer savings bean : " + e.toString());
-	throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
       message = "Customer Deleted.";
       jsp = "/SimpleBankMessage.jsp";
-    }  
+    }
 
 
     else if (action.equals("Update"))
@@ -149,7 +149,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerSavings = (CustomerSavings)customerSavingsHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer savings remote bean : " + e.toString());
-	throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
 
@@ -158,7 +158,7 @@ public class SimpleBankServlet extends HttpServlet {
         customerChecking = (CustomerChecking)customerCheckingHome.findByPrimaryKey(SSN);
       } catch (Exception e) {
         System.out.println("Could not find the customer checking remote bean : " + e.toString());
-	throw new ServletException(e.getMessage());
+        throw new ServletException(e.getMessage());
         //return;
       }
 
@@ -218,9 +218,9 @@ public class SimpleBankServlet extends HttpServlet {
     RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(jsp);
     dispatcher.include(request, response);
     return;
-  } 
+  }
 
-  public void doLookup() 
+  public void doLookup()
   {
     try {
       initContext = new javax.naming.InitialContext();

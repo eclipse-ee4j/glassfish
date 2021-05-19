@@ -22,7 +22,7 @@
                 moduleName="MyModuleName"
                 probeProviderName="MyStatefulProbeProviderName"
                 class="com.sun.enterprise.web.WebModule">
-                       
+
         <!--  Stateful Probes -->
         <probe name="StatefulProbeDefaultsStringParam" stateful="true" >
             <method>MyProbeMethodName</method>

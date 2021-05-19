@@ -19,19 +19,19 @@ package test;
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 public class FilterTest implements Filter{
-    
+
     public void destroy() {
         System.out.println("[Filter.destroy]");
-    }    
-    
+    }
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
         System.out.println("[Filter.doFilter]");
-          
+
         ((HttpServletRequest)request).getSession(true).setAttribute("FILTER", "PASS");
         filterChain.doFilter(request, response);
-        
-    }    
-    
+
+    }
+
     public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");
     }

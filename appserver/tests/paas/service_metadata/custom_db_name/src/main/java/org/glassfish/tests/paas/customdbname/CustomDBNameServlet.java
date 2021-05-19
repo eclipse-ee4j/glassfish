@@ -87,22 +87,22 @@ public final class CustomDBNameServlet extends HttpServlet {
             try {
                 stmt = ds.getConnection().createStatement();
 
-		DatabaseMetaData dbMetadata = stmt.getConnection().getMetaData();
-		String dbUrl = dbMetadata.getURL();
-		writer.println("DB URL : " + dbUrl + "\n");
-		if(dbUrl.indexOf("foobar") == -1) {
-		  throw new Exception("Custom Database [foobar] is not created while provisioning.");
-		}
-		
+        DatabaseMetaData dbMetadata = stmt.getConnection().getMetaData();
+        String dbUrl = dbMetadata.getURL();
+        writer.println("DB URL : " + dbUrl + "\n");
+        if(dbUrl.indexOf("foobar") == -1) {
+          throw new Exception("Custom Database [foobar] is not created while provisioning.");
+        }
+
 
                 ResultSet rs = stmt.executeQuery("SELECT c_id, c_name from customer");
                 writer.println("<table border=\"1\" width=\"100%\">");
                 writer.println("<tr>");
                 writer.println("  <th align=\"left\" colspan=\"2\">" + "Data retrieved from table \"customer\"" + "</th>");
                 writer.println("</tr>");
-		writer.println("<tr>");
-		writer.println("<td>" + "Customer ID" + "</td>");
-		writer.println("<td>" + "Customer Name" + "</td>");
+        writer.println("<tr>");
+        writer.println("<td>" + "Customer ID" + "</td>");
+        writer.println("<td>" + "Customer Name" + "</td>");
                 writer.println("</tr>");
                 while (rs.next()) {
                     writer.println("<tr>");

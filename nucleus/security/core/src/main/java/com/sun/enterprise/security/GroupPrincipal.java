@@ -20,7 +20,7 @@ import java.security.Principal;
 
 /**
  * A group of principals.
- * 
+ *
  * @author Arjan Tijms
  *
  */
@@ -28,7 +28,7 @@ public interface GroupPrincipal extends Principal {
 
     /**
      * Returns true when the given principal is in this group.
-     * 
+     *
      * <p>
      * A recursive search is done, meaning that if a principal is in a group which is itself in this group, the result is
      * true.
@@ -41,7 +41,7 @@ public interface GroupPrincipal extends Principal {
 
     /**
      * Returns an enumeration of all the principals in this group.
-     * 
+     *
      * <p>
      * The returned principals can include principals that are besides instanced of Principal also instances of
      * GroupPrincipal.

@@ -57,7 +57,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      * Gets the value of the enabled property.
      *
      * If false, this transformation rule is disabled
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -103,7 +103,7 @@ public interface TransformationRule extends ConfigBeanProxy  {
      * Default is:
      * ${com.sun.aas.instanceRoot}/generated/xml/<appOrModule>/<xslt-ilename>/
      * Absolute paths can also be specified
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -118,5 +118,5 @@ public interface TransformationRule extends ConfigBeanProxy  {
      *              {@link String }
      */
     public void setRuleFileLocation(String value) throws PropertyVetoException;
-    
+
 }

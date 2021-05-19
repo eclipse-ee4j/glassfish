@@ -40,9 +40,9 @@ import javax.transaction.xa.Xid;
 /**
  * This is a sample resource adapter
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
-public class SimpleResourceAdapterImpl 
+public class SimpleResourceAdapterImpl
 implements ResourceAdapter, java.io.Serializable {
 
     private BootstrapContext ctx;
@@ -58,7 +58,7 @@ implements ResourceAdapter, java.io.Serializable {
 
     public void
     start(BootstrapContext ctx) throws ResourceAdapterInternalException{
-        
+
         debug("001. Simple RA start...");
 
         this.ctx = ctx;
@@ -68,21 +68,21 @@ implements ResourceAdapter, java.io.Serializable {
 
         //testing creat timer
         Timer timer = null;
-	  try{
-	      timer = ctx.createTimer();
-	  } catch(UnavailableException ue) {
-	      System.out.println("Error");
-	      throw new ResourceAdapterInternalException("Error form bootstrap");
-	  }
+          try{
+              timer = ctx.createTimer();
+          } catch(UnavailableException ue) {
+              System.out.println("Error");
+              throw new ResourceAdapterInternalException("Error form bootstrap");
+          }
         debug("004. Simple RA start...");
 
           try {
-          
+
           XATerminator xa = ctx.getXATerminator();
-          
+
           Xid xid1 = new XID();
           System.out.println(" XID1 = " + xid1);
-          
+
           ExecutionContext ec = new ExecutionContext();
           ec.setXid(xid1);
           ec.setTransactionTimeout(5*1000); //5 seconds
@@ -92,14 +92,14 @@ implements ResourceAdapter, java.io.Serializable {
           wm.doWork(outw, 1*1000, ec, null);
           xa.commit(xid1, true);
           } catch (Exception ex) {
-          
+
           System.out.println(" ex = " + ex.getMessage());
           xa.rollback(xid1);
           }
-          
+
           Xid xid2 = new XID();
           System.out.println(" XID2 = " + xid2);
-          
+
           ec = new ExecutionContext();
           ec.setXid(xid2);
           ec.setTransactionTimeout(5*1000); //5 seconds
@@ -116,7 +116,7 @@ implements ResourceAdapter, java.io.Serializable {
           ex.printStackTrace();
           }
 
-        
+
           for (int i = 0 ; i < 3; i++) {
           TestWMWork w = new TestWMWork(i, false);
           try {
@@ -124,7 +124,7 @@ implements ResourceAdapter, java.io.Serializable {
           } catch (Exception ex) {
           System.out.println("FAIL: CAUGHT exception : i = " + i);
           ex.printStackTrace();
-          } 
+          }
           }
 
           for (int i = 3 ; i < 6; i++) {
@@ -172,7 +172,7 @@ implements ResourceAdapter, java.io.Serializable {
           ex.printStackTrace();
           }
           }
-        
+
         debug("005. Simple RA start...");
     }
 
@@ -204,12 +204,12 @@ implements ResourceAdapter, java.io.Serializable {
 
     public void
     endpointDeactivation (
-            MessageEndpointFactory endpointFactory, 
+            MessageEndpointFactory endpointFactory,
             ActivationSpec spec) {
         debug ("endpointDeactivation called...");
         ((WorkDispatcher) work).stop();
     }
-  
+
     public String getTestName() {
         return testName;
     }
@@ -225,7 +225,7 @@ implements ResourceAdapter, java.io.Serializable {
             System.out.println("[SimpleResourceAdapterImpl] ==> " + message);
     }
 
-    public XAResource[] getXAResources(ActivationSpec[] specs) 
+    public XAResource[] getXAResources(ActivationSpec[] specs)
         throws ResourceException {
         throw new UnsupportedOperationException();
     }

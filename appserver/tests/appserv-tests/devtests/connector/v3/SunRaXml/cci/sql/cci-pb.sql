@@ -16,5 +16,5 @@ PARAMETER STYLE JAVA
 LANGUAGE JAVA
 MODIFIES SQL DATA
 EXTERNAL NAME 'SampleExternalMethods.insertCoffee';
-                                                                
+
 

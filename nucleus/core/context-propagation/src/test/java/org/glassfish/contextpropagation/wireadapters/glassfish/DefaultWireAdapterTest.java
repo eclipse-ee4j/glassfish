@@ -82,7 +82,7 @@ public class DefaultWireAdapterTest {
 //      }
 //    }.startJoinAndCheckForFailures();
 //  }
-//  
+//
 //  @Test
 //  public void testPropagateOpaque() throws PropertyReadOnlyException, IOException, InsufficientCredentialException {
 //    BootstrapUtils.reset();
@@ -98,7 +98,7 @@ public class DefaultWireAdapterTest {
 //    propagator.receiveRequest(bais);
 //    ContextMap cm = Utils.getScopeAwareContextMap();
 //    assertNotNull(cm.get("workcontext"));
-//    
+//
 //    // Propagate and receive using Default adaptors, but this time the factory is available. Make sure the object is properly instantiated.
 //    // Propagate to a process where there is no factory for workcontext
 //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -106,9 +106,9 @@ public class DefaultWireAdapterTest {
 //    adapter = new DefaultWireAdapter();
 //    propagator.useWireAdapter(adapter);
 //    propagator.sendRequest(baos, PropagationMode.RMI);
-//    
+//
 //    // Receive on a process where the factory is not registered
-//    Map<String, SerializableContextFactory> contextFactoriesByContextName = 
+//    Map<String, SerializableContextFactory> contextFactoriesByContextName =
 //        Deencapsulation.getField(WireAdapter.HELPER, "contextFactoriesByContextName");
 //    contextFactoriesByContextName.remove("workcontext");
 //    BootstrapUtils.reset();
@@ -139,7 +139,7 @@ public class DefaultWireAdapterTest {
 //  }
 //
 //  private void registerWorkContextFactory() {
-//    WireAdapter.HELPER.registerContextFactoryForContextNamed("workcontext", null, 
+//    WireAdapter.HELPER.registerContextFactoryForContextNamed("workcontext", null,
 //        new SerializableContextFactory() {
 //          @Override
 //          public WLSContext createInstance() {
@@ -147,7 +147,7 @@ public class DefaultWireAdapterTest {
 //          }
 //    });
 //  }
-//  
+//
 //  @Test public void testWithCatalog() throws PropertyReadOnlyException, IOException {
 //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //    ContextMapPropagator propagator = Utils.getScopeAwarePropagator();
@@ -166,7 +166,7 @@ public class DefaultWireAdapterTest {
 //    Catalog newCatalog = Deencapsulation.getField(adapter, "catalog");
 //    assertEquals(catalog, newCatalog);
 //  }
-//  
+//
 //  @Test public void testObjectInputStream() throws IOException {
 //    ByteArrayOutputStream baos = new ByteArrayOutputStream();
 //    ObjectOutputStream oos = new ObjectOutputStream(baos);

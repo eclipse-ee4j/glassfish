@@ -53,11 +53,11 @@ public class ResourceHandler extends AbstractResourceHandler {
     @Inject
     private ServiceLocator habitat;
 
-    @Inject 
+    @Inject
     private Provider<WSDolSupport> wSDolSupportProvider;
 
     // Map of all @Resource types that map to env-entries and their
-    // corresponding types.  
+    // corresponding types.
     // XXX - this needs to be synchronized with the list in
     // com.sun.enterprise.deployment.EnvironmentProperty
     private static final Map<Class, Class> envEntryTypes;
@@ -86,9 +86,9 @@ public class ResourceHandler extends AbstractResourceHandler {
         envEntryTypes.put(Integer.TYPE, Integer.class);
         envEntryTypes.put(int.class, Integer.class);
 
-        envEntryTypes.put(Long.class, Long.class);        
-        envEntryTypes.put(Long.TYPE, Long.class);        
-        envEntryTypes.put(long.class, Long.class);        
+        envEntryTypes.put(Long.class, Long.class);
+        envEntryTypes.put(Long.TYPE, Long.class);
+        envEntryTypes.put(long.class, Long.class);
 
         envEntryTypes.put(Boolean.class, Boolean.class);
         envEntryTypes.put(Boolean.TYPE, Boolean.class);
@@ -104,7 +104,7 @@ public class ResourceHandler extends AbstractResourceHandler {
 
         envEntryTypes.put(Number.class, Number.class);
     }
-        
+
     public ResourceHandler() {
     }
 
@@ -121,7 +121,7 @@ public class ResourceHandler extends AbstractResourceHandler {
     }
 
     protected HandlerProcessingResult processResource(AnnotationInfo ainfo,
-                                   ResourceContainerContext[] rcContexts, 
+                                   ResourceContainerContext[] rcContexts,
                                    Resource resourceAn)
         throws AnnotationProcessorException {
 
@@ -154,7 +154,7 @@ public class ResourceHandler extends AbstractResourceHandler {
             // Derive javabean property name.
             String propertyName = getInjectionMethodPropertyName(m, ainfo);
 
-            // prefixing with fully qualified type name 
+            // prefixing with fully qualified type name
             defaultLogicalName = targetClassName + "/" + propertyName;
 
             defaultResourceType = m.getParameterTypes()[0];
@@ -208,8 +208,8 @@ public class ResourceHandler extends AbstractResourceHandler {
             if (!ok(desc.getName())) { // a new one
                 desc.setName(logicalName);
             }
-            if (!ok(desc.getInjectResourceType())) {              
-                // if the optional resource type is not set, 
+            if (!ok(desc.getInjectResourceType())) {
+                // if the optional resource type is not set,
                 // set it using the resource type of field/method
                 desc.setInjectResourceType(resourceType.getName());
             }
@@ -265,11 +265,11 @@ public class ResourceHandler extends AbstractResourceHandler {
 
     private EnvironmentProperty[] getDescriptors(Class resourceType,
         String logicalName, ResourceContainerContext[] rcContexts, Resource resourceAn) {
-            
+
         Class webServiceContext = null;
         try {
 
-            WSDolSupport support  = wSDolSupportProvider.get(); 
+            WSDolSupport support  = wSDolSupportProvider.get();
             if (support!=null) {
                 webServiceContext = support.getType("jakarta.xml.ws.WebServiceContext");
             }
@@ -289,14 +289,14 @@ public class ResourceHandler extends AbstractResourceHandler {
                 resourceType.getName().equals("jakarta.jms.QueueConnectionFactory") ||
                 resourceType.getName().equals("jakarta.jms.TopicConnectionFactory") ||
                 resourceType == webServiceContext ||
-                resourceType.getName().equals("jakarta.mail.Session") || 
+                resourceType.getName().equals("jakarta.mail.Session") ||
                 resourceType.getName().equals("java.net.URL") ||
                 resourceType.getName().equals("jakarta.resource.cci.ConnectionFactory") ||
-                resourceType == org.omg.CORBA_2_3.ORB.class || 
-                resourceType == org.omg.CORBA.ORB.class || 
+                resourceType == org.omg.CORBA_2_3.ORB.class ||
+                resourceType == org.omg.CORBA.ORB.class ||
                 resourceType.getName().equals("jakarta.jms.XAConnectionFactory") ||
                 resourceType.getName().equals("jakarta.jms.XAQueueConnectionFactory") ||
-                resourceType.getName().equals("jakarta.jms.XATopicConnectionFactory") || 
+                resourceType.getName().equals("jakarta.jms.XATopicConnectionFactory") ||
                 DOLUtils.isRAConnectionFactory(habitat, resourceType.getName(), ((ResourceContainerContextImpl)rcContexts[0]).getAppFromDescriptor()) ) {
             return getResourceReferenceDescriptors(logicalName, rcContexts);
         } else {
@@ -330,16 +330,16 @@ public class ResourceHandler extends AbstractResourceHandler {
     }
 
     /**
-     * Return MessageDestinationReferenceDescriptors with given name 
+     * Return MessageDestinationReferenceDescriptors with given name
      * if exists or a new one without name being set.
      * @param logicName
      * @param rcContexts
      * @return an array of message destination reference descriptors
      */
-    private MessageDestinationReferenceDescriptor[] 
+    private MessageDestinationReferenceDescriptor[]
         getMessageDestinationReferenceDescriptors
         (String logicName, ResourceContainerContext[] rcContexts) {
-            
+
         MessageDestinationReferenceDescriptor msgDestRefs[] =
                 new MessageDestinationReferenceDescriptor[rcContexts.length];
         for (int i = 0; i < rcContexts.length; i++) {
@@ -384,7 +384,7 @@ public class ResourceHandler extends AbstractResourceHandler {
     }
 
     /**
-     * Return EnvironmentProperty descriptors with the given name 
+     * Return EnvironmentProperty descriptors with the given name
      * if it exists or a new one without name being set.
      *
      * @param logicalName       the JNDI name

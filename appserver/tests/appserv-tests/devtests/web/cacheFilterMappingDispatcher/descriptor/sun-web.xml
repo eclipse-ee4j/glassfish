@@ -27,6 +27,6 @@
       <dispatcher>FORWARD</dispatcher>
       <dispatcher>INCLUDE</dispatcher>
     </cache-mapping>
-  </cache> 
+  </cache>
 
 </sun-web-app>

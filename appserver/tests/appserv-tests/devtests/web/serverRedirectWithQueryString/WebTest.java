@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 3085");
         WebTest webTest = new WebTest(args);
@@ -51,8 +51,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeServlet();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -62,7 +62,7 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
-        
+
         String expectedRedirectLocation = "Location: http://" + host + ":"
             + port + contextRoot + "/?" + QUERY_STRING;
 
@@ -78,7 +78,7 @@ public class WebTest {
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;
-        try { 
+        try {
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             while ((line = bis.readLine()) != null) {

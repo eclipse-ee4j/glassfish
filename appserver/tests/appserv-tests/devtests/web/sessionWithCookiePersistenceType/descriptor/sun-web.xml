@@ -25,6 +25,6 @@ td'>
       <store-properties>
         <property name="cookieName" value="ABC"/>
       </store-properties>
-    </session-manager> 
+    </session-manager>
   </session-config>
 </sun-web-app>

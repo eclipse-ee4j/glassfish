@@ -36,11 +36,11 @@ public class RarBundleContext extends AnnotationContext {
         return desc;
     }
     public void setProcessingContext(ProcessingContext processingContext) {
-        super.setProcessingContext(processingContext);  
+        super.setProcessingContext(processingContext);
     }
 
     public ProcessingContext getProcessingContext() {
-        return super.getProcessingContext();    
+        return super.getProcessingContext();
     }
 
     public void startElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
@@ -48,6 +48,6 @@ public class RarBundleContext extends AnnotationContext {
     }
 
     public void endElement(ElementType type, AnnotatedElement element) throws AnnotationProcessorException {
-        getProcessingContext().popHandler();        
+        getProcessingContext().popHandler();
     }
 }

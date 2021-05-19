@@ -29,22 +29,24 @@ import java.util.Map;
 /**
  * This node is responsible for handling the Connector DTD related security-permission XML tag
  *
- * @author  Sheetal Vartak
- * @version 
+ * @author Sheetal Vartak
+ * @version
  */
 public class SecurityPermissionNode extends DeploymentDescriptorNode {
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    @Override
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.SECURITY_PERMISSION_SPEC, "setPermission");
-	return table;
-    }   
+        return table;
+    }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -52,20 +54,19 @@ public class SecurityPermissionNode extends DeploymentDescriptorNode {
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, ConnectorDescriptor descriptor) {
-
-	Iterator secPerms = descriptor.getSecurityPermissions().iterator();
-
-	//auth mechanism info
-	for (;secPerms.hasNext();) {
-
-	    //for (Iterator secPerms = ((OutboundResourceAdapter)descriptor).getSecurityPermissions().iterator(); secPerms.hasNext();) {
-	    SecurityPermission secPerm = (SecurityPermission) secPerms.next();
-	    Node secNode = appendChild(parent, ConnectorTagNames.SECURITY_PERMISSION);
-            writeLocalizedDescriptions(secNode, secPerm);        
-            appendTextChild(secNode, ConnectorTagNames.SECURITY_PERMISSION_SPEC, secPerm.getPermission());  
-	}
-	return null;
+        Iterator secPerms = descriptor.getSecurityPermissions().iterator();
+        // auth mechanism info
+        for (; secPerms.hasNext();) {
+            // for (Iterator secPerms =
+            // ((OutboundResourceAdapter)descriptor).getSecurityPermissions().iterator();
+            // secPerms.hasNext();) {
+            SecurityPermission secPerm = (SecurityPermission) secPerms.next();
+            Node secNode = appendChild(parent, ConnectorTagNames.SECURITY_PERMISSION);
+            writeLocalizedDescriptions(secNode, secPerm);
+            appendTextChild(secNode, ConnectorTagNames.SECURITY_PERMISSION_SPEC, secPerm.getPermission());
+        }
+        return null;
     }
 }

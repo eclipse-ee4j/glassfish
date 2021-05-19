@@ -31,13 +31,13 @@ public class Client {
         System.out.println("deployment-ejb30-ear-security");
         Client client = new Client(args);
         client.doTest();
-    }  
-    
+    }
+
     public Client (String[] args) {
         host = (args.length > 0) ? args[0] : "localhost";
         port = (args.length > 1) ? Integer.parseInt(args[1]) : 8080;
     }
-    
+
     private static @EJB Sless sless;
     private static @EJB Sful sful;
 
@@ -86,7 +86,7 @@ public class Client {
             System.exit(-1);
         }
 
-    	return;
+            return;
     }
 
     private static int goGet(String host, int port, String contextPath)
@@ -109,7 +109,7 @@ public class Client {
             System.out.println(lineNum + ": " + line);
             int index = line.indexOf("=");
             if (index != -1) {
-                String info = line.substring(index + 1);  
+                String info = line.substring(index + 1);
                 if (info.startsWith("hello")) {
                     count++;
                 }

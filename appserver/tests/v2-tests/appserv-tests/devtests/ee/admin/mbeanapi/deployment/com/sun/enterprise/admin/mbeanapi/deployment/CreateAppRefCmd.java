@@ -38,8 +38,8 @@ public class CreateAppRefCmd extends DeployCmd implements SourceCmd
         assert isConnected();
 
         return getDeployedItemRefConfigCR().
-            createDeployedItemRefConfig(getEnabled(), getName(), 
-                getVirtualServers(), getLBEnabled(), 
+            createDeployedItemRefConfig(getEnabled(), getName(),
+                getVirtualServers(), getLBEnabled(),
                 getDisableTimeoutInMinutes());
     }
 

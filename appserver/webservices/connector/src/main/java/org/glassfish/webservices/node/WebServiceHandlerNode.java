@@ -56,11 +56,11 @@ public class WebServiceHandlerNode extends DisplayableComponentNode {
     protected XMLElement getXMLRootTag() {
         return tag;
     }
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     protected Map getDispatchTable() {
@@ -78,7 +78,7 @@ public class WebServiceHandlerNode extends DisplayableComponentNode {
 
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -115,40 +115,40 @@ public class WebServiceHandlerNode extends DisplayableComponentNode {
 
         } else super.setElementValue(element, value);
     }
-    
+
     /**
-     * write the method descriptor class to a query-method DOM tree and 
+     * write the method descriptor class to a query-method DOM tree and
      * return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName name for the root element of this xml fragment
      * @param handler the descriptor to write
      * @return the DOM tree top node
      */
-    public Node writeDescriptor(Node parent, String nodeName, 
-                                WebServiceHandler handler) {        
+    public Node writeDescriptor(Node parent, String nodeName,
+                                WebServiceHandler handler) {
         Node wshNode = super.writeDescriptor(parent, nodeName, handler);
 
         writeDisplayableComponentInfo(wshNode, handler);
-        appendTextChild(wshNode, 
+        appendTextChild(wshNode,
                         WebServicesTagNames.HANDLER_NAME,
                         handler.getHandlerName());
 
-        appendTextChild(wshNode, 
+        appendTextChild(wshNode,
                         WebServicesTagNames.HANDLER_CLASS,
                         handler.getHandlerClass());
-        
+
         for(Iterator iter = handler.getInitParams().iterator();iter.hasNext();){
             NameValuePairDescriptor next = (NameValuePairDescriptor)iter.next();
-            Node initParamNode = 
+            Node initParamNode =
                 appendChild(wshNode, WebServicesTagNames.INIT_PARAM);
             appendTextChild(initParamNode, WebServicesTagNames.INIT_PARAM_NAME,
                             next.getName());
             appendTextChild(initParamNode, WebServicesTagNames.INIT_PARAM_VALUE,
                             next.getValue());
         }
-        
-        for(Iterator iter = handler.getSoapHeaders().iterator(); 
+
+        for(Iterator iter = handler.getSoapHeaders().iterator();
             iter.hasNext();) {
             QName next = (QName) iter.next();
             // Append soap header QName.  NOTE : descriptor does not contain
@@ -164,12 +164,12 @@ public class WebServiceHandlerNode extends DisplayableComponentNode {
 
         for(Iterator iter = handler.getPortNames().iterator(); iter.hasNext();){
             String next = (String) iter.next();
-            appendTextChild(wshNode, WebServicesTagNames.HANDLER_PORT_NAME, 
+            appendTextChild(wshNode, WebServicesTagNames.HANDLER_PORT_NAME,
                             next);
         }
 
         return wshNode;
-    }    
+    }
 
     public void writeWebServiceHandlers(Node parent, List handlerChain) {
         for(Iterator iter = handlerChain.iterator(); iter.hasNext();) {

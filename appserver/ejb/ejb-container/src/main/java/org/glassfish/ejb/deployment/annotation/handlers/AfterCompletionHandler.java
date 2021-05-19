@@ -43,12 +43,12 @@ public class AfterCompletionHandler extends AbstractAttributeHandler {
 
     public AfterCompletionHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
-        
+
         for (EjbContext ejbContext : ejbContexts) {
-            EjbSessionDescriptor ejbDesc = 
+            EjbSessionDescriptor ejbDesc =
                     (EjbSessionDescriptor) ejbContext.getDescriptor();
 
             Method annMethod = (Method) ainfo.getAnnotatedElement();
@@ -64,14 +64,14 @@ public class AfterCompletionHandler extends AbstractAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {
-        
+
         return new Class[] { Stateful.class};
-                
+
     }
 
     protected boolean supportTypeInheritance() {
@@ -83,7 +83,7 @@ public class AfterCompletionHandler extends AbstractAttributeHandler {
      */
     private void checkValid(Method m) throws AnnotationProcessorException {
         if ( !(m.getReturnType().equals(Void.TYPE) &&
-                (m.getParameterTypes().length == 1 && 
+                (m.getParameterTypes().length == 1 &&
                 m.getParameterTypes()[0].equals(Boolean.TYPE))) ) {
             throw new AnnotationProcessorException("Method " + m +
                     "annotated as @AfterCompletion is not valid");

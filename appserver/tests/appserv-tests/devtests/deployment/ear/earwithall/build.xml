@@ -24,68 +24,68 @@
 <project name="HelloServiceWS" default="all" basedir=".">
 
     &commonBuild;
-	
+
     <property name="testName" value="SayHelloWS"/>
     <property name="archivedir" value="${build}/archives"/>
     <target name="prepare" depends="init">
-		<property name="binary" value="${build}/WEB-INF/classes"/>
-		<property name="wsdl" value="${build}/WEB-INF/wsdl"/>
-		<mkdir dir="${binary}" />
-		<mkdir dir="${wsdl}"/>
-		<mkdir dir="${build}/ejb"/>
-		<property name="portable.war" value="${archivedir}/sayhello-portable.war"/>
-		<property name="portable.jar" value="${archivedir}/statelesshello-portable.jar"/>
-		<property name="portable.ear" value="${archivedir}/sayhello-portable.ear"/>
-		<property name="all.war" value="${archivedir}/sayhello.war"/>
-		<property name="all.jar" value="${archivedir}/statelesshello.jar"/>
-		<property name="all.ear" value="${archivedir}/sayhello.ear"/>
-		<property name="deployplan.jar" value="${archivedir}/sayhello-deployplan.jar"/>
+                <property name="binary" value="${build}/WEB-INF/classes"/>
+                <property name="wsdl" value="${build}/WEB-INF/wsdl"/>
+                <mkdir dir="${binary}" />
+                <mkdir dir="${wsdl}"/>
+                <mkdir dir="${build}/ejb"/>
+                <property name="portable.war" value="${archivedir}/sayhello-portable.war"/>
+                <property name="portable.jar" value="${archivedir}/statelesshello-portable.jar"/>
+                <property name="portable.ear" value="${archivedir}/sayhello-portable.ear"/>
+                <property name="all.war" value="${archivedir}/sayhello.war"/>
+                <property name="all.jar" value="${archivedir}/statelesshello.jar"/>
+                <property name="all.ear" value="${archivedir}/sayhello.ear"/>
+                <property name="deployplan.jar" value="${archivedir}/sayhello-deployplan.jar"/>
     </target>
-	
+
     <target name="compile" depends="prepare">
         <javac srcdir="statelesshello" destdir="${build}/ejb">
           <classpath refid="gfv3.classpath"/>
         </javac>
-		<javac srcdir="helloservice" destdir="${binary}">
+                <javac srcdir="helloservice" destdir="${binary}">
                     <classpath refid="gfv3.classpath"/>
                 </javac>
-		<echo message="invoking wscompile to generate wsdl file"/>
-		<exec executable="${WSCOMPILE}">
-			<arg line="-define config-interface.xml  -d ${binary} -nd ${wsdl} -classpath ${binary} -mapping ${build}/mapping.xml"/>
-	 	</exec>					
+                <echo message="invoking wscompile to generate wsdl file"/>
+                <exec executable="${WSCOMPILE}">
+                        <arg line="-define config-interface.xml  -d ${binary} -nd ${wsdl} -classpath ${binary} -mapping ${build}/mapping.xml"/>
+                 </exec>
     </target>
-	
+
     <target name="assemble" depends="compile">
-		<copy file="web.xml" todir="${build}/WEB-INF"/>
-		<copy file="webservices.xml" todir="${build}/WEB-INF"/>
-		<jar destfile="${portable.war}" basedir="${build}"/>
-		<copy file="sun-web.xml" todir="${build}/WEB-INF" failonerror="false"/>
-		<jar destfile="${all.war}" basedir="${build}"/>
+                <copy file="web.xml" todir="${build}/WEB-INF"/>
+                <copy file="webservices.xml" todir="${build}/WEB-INF"/>
+                <jar destfile="${portable.war}" basedir="${build}"/>
+                <copy file="sun-web.xml" todir="${build}/WEB-INF" failonerror="false"/>
+                <jar destfile="${all.war}" basedir="${build}"/>
 
-		<mkdir dir="${build}/ejb/META-INF"/>
-		<copy file="ejb-jar.xml" todir="${build}/ejb/META-INF"/>
-		<jar destfile="${portable.jar}" basedir="${build}/ejb"/>
-		<copy file="sun-ejb-jar.xml" todir="${build}/ejb/META-INF" failonerror="false"/>
-		<jar destfile="${all.jar}" basedir="${build}/ejb"/>
+                <mkdir dir="${build}/ejb/META-INF"/>
+                <copy file="ejb-jar.xml" todir="${build}/ejb/META-INF"/>
+                <jar destfile="${portable.jar}" basedir="${build}/ejb"/>
+                <copy file="sun-ejb-jar.xml" todir="${build}/ejb/META-INF" failonerror="false"/>
+                <jar destfile="${all.jar}" basedir="${build}/ejb"/>
 
-		<mkdir dir="${build}/plan"/>
-		<copy file="sun-ejb-jar.xml" tofile="${build}/plan/statelesshello-portable.jar.sun-ejb-jar.xml"/>
-		<copy file="sun-web.xml" tofile="${build}/plan/sayhello-portable.war.sun-web.xml"/>
-		<jar destfile="${deployplan.jar}" basedir="${build}/plan"/>
+                <mkdir dir="${build}/plan"/>
+                <copy file="sun-ejb-jar.xml" tofile="${build}/plan/statelesshello-portable.jar.sun-ejb-jar.xml"/>
+                <copy file="sun-web.xml" tofile="${build}/plan/sayhello-portable.war.sun-web.xml"/>
+                <jar destfile="${deployplan.jar}" basedir="${build}/plan"/>
 
-		<mkdir dir="${build}/ear"/>
-		<mkdir dir="${build}/ear/META-INF"/>
-		<copy file="application.xml" todir="${build}/ear/META-INF"/>
-		<copy file="${all.war}" todir="${build}/ear"/>
-		<copy file="${all.jar}" todir="${build}/ear"/>
-		<jar destfile="${all.ear}" basedir="${build}/ear"/>
-		<delete file="${build}/ear/sayhello.war"/>
-		<delete file="${build}/ear/statelesshello.jar"/>
-		<delete file="${build}/ear/META-INF/application.xml"/>
-		<copy file="portable-app.xml" tofile="${build}/ear/META-INF/application.xml"/>
-		<copy file="${portable.war}" todir="${build}/ear"/>
-		<copy file="${portable.jar}" todir="${build}/ear"/>
-		<jar destfile="${portable.ear}" basedir="${build}/ear"/>
+                <mkdir dir="${build}/ear"/>
+                <mkdir dir="${build}/ear/META-INF"/>
+                <copy file="application.xml" todir="${build}/ear/META-INF"/>
+                <copy file="${all.war}" todir="${build}/ear"/>
+                <copy file="${all.jar}" todir="${build}/ear"/>
+                <jar destfile="${all.ear}" basedir="${build}/ear"/>
+                <delete file="${build}/ear/sayhello.war"/>
+                <delete file="${build}/ear/statelesshello.jar"/>
+                <delete file="${build}/ear/META-INF/application.xml"/>
+                <copy file="portable-app.xml" tofile="${build}/ear/META-INF/application.xml"/>
+                <copy file="${portable.war}" todir="${build}/ear"/>
+                <copy file="${portable.jar}" todir="${build}/ear"/>
+                <jar destfile="${portable.ear}" basedir="${build}/ear"/>
     </target>
 
     <target name="deploy.asadmin" depends="prepare">
@@ -93,10 +93,10 @@
             <param name="arg.list" value="--name ${testName} ${all.ear}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-	<echo message="Create client webservices artifacts"/>
-	<exec executable="${WSCOMPILE}">
-		<arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
-	</exec>
+        <echo message="Create client webservices artifacts"/>
+        <exec executable="${WSCOMPILE}">
+                <arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
+        </exec>
     </target>
 
     <target name="redeploy.asadmin" depends="prepare">
@@ -104,10 +104,10 @@
             <param name="arg.list" value="--name ${testName} ${all.ear}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-	<echo message="Create client webservices artifacts"/>
-	<exec executable="${WSCOMPILE}">
-		<arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
-	</exec>
+        <echo message="Create client webservices artifacts"/>
+        <exec executable="${WSCOMPILE}">
+                <arg line="-gen:client -keep -d ${binary} -classpath ${binary} config-interface.xml"/>
+        </exec>
     </target>
 
     <target name="undeploy.asadmin">
@@ -176,7 +176,7 @@
         <javaWithResult
             fork="true"
             failonerror="false"
-            jvm="${JAVA}"	
+            jvm="${JAVA}"
             classname="staticstubclient.SayHelloClient"
             output="${build}/${log.id}.output.log"
             resultproperty="result">

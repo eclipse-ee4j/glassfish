@@ -24,29 +24,29 @@ public interface BMTSession
 {
 
     public String getName()
-	throws RemoteException;
+        throws RemoteException;
 
     public int getActivateCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public int getPassivateCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public void startTx()
-	throws RemoteException;
+        throws RemoteException;
 
     public void commitTx()
-	throws RemoteException;
+        throws RemoteException;
 
     public void rollbackTx()
-	throws RemoteException;
+        throws RemoteException;
 
     public void incrementCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public void accessCMTBean()
-	throws RemoteException;
+        throws RemoteException;
 
     public CMTSession getCMTSession()
-	throws RemoteException;
+        throws RemoteException;
 }

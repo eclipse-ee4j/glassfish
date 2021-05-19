@@ -49,19 +49,19 @@ public final class SessionContextImpl
     private boolean isStateless = false;
     private boolean isStateful  = false;
 
-    private boolean existsInSessionStore = false; 
+    private boolean existsInSessionStore = false;
     private transient int refCount = 0;
 
     private boolean txCheckpointDelayed;
     private long    lastPersistedAt;
 
     private long version;
-    
+
     // Do not call Session Synchronization callbacks when in transactional
     // lifecycle callbacks
     private boolean inLifeCycleCallback = false;
 
-    // Map of entity managers with extended persistence context 
+    // Map of entity managers with extended persistence context
     // for this stateful session bean.
     private transient Map<EntityManagerFactory, PhysicalEntityManagerWrapper> extendedEntityManagerMap;
 
@@ -73,7 +73,7 @@ public final class SessionContextImpl
 
     // Used to provide serialized access to an SFSB instance.
     private transient ReentrantReadWriteLock statefulSerializedAccessLock;
-    
+
     SessionContextImpl(Object ejb, BaseContainer container) {
         super(ejb, container);
         EjbSessionDescriptor sessionDesc =
@@ -81,7 +81,7 @@ public final class SessionContextImpl
         isStateless = sessionDesc.isStateless();
         isStateful  = sessionDesc.isStateful();
         if( isStateful ) {
-            initializeStatefulWriteLock();   
+            initializeStatefulWriteLock();
         }
     }
 
@@ -100,11 +100,11 @@ public final class SessionContextImpl
     void setEEMRefInfos(Collection<EEMRefInfo> val) {
         if (val != null) {
             eemRefInfos = val;
-	}
+    }
     }
 
     public void addExtendedEntityManagerMapping(EntityManagerFactory emf,
-		    EEMRefInfo refInfo) {
+            EEMRefInfo refInfo) {
         getExtendedEntityManagerMap().put(emf, new PhysicalEntityManagerWrapper(refInfo.getEntityManager(),
                 refInfo.getSynchronizationType()) );
     }
@@ -172,7 +172,7 @@ public final class SessionContextImpl
     protected void checkAccessToCallerSecurity()
         throws IllegalStateException
     {
-        
+
         if( isStateless ) {
             // This covers constructor, setSessionContext, ejbCreate,
             // and ejbRemove. NOTE : For stateless session beans,
@@ -188,9 +188,9 @@ public final class SessionContextImpl
                 throw new IllegalStateException("Operation not allowed");
             }
         }
-        
+
     }
-    
+
     @Override
     public void checkTimerServiceMethodAccess()
         throws IllegalStateException
@@ -207,50 +207,50 @@ public final class SessionContextImpl
                 " called in this context");
             }
         }
-        
+
         // checks that apply to both stateful AND stateless
         if ( (state == BeanState.CREATED) || inEjbRemove ) {
             throw new IllegalStateException
             ("EJB Timer method calls cannot be called in this context");
         }
     }
-    
+
     boolean getCompletedTxStatus() {
         return completedTxStatus;
     }
-    
+
     void setCompletedTxStatus(boolean s) {
         this.completedTxStatus = s;
     }
-    
+
     boolean isAfterCompletionDelayed() {
         return afterCompletionDelayed;
     }
-    
+
     void setAfterCompletionDelayed(boolean s) {
         this.afterCompletionDelayed = s;
     }
-    
+
     boolean isTxCompleting() {
         return committing;
     }
-    
+
     void setTxCompleting(boolean s) {
         this.committing = s;
     }
-    
+
     void setInAfterCompletion(boolean flag) {
         inAfterCompletion = flag;
     }
-    
+
     void setInLifeCycleCallback(boolean s) {
         inLifeCycleCallback = s;
     }
-    
+
     boolean getInLifeCycleCallback() {
         return inLifeCycleCallback;
     }
-    
+
     // Used to check if stateful session bean is in ejbCreate.
     // Since bean goes to READY state before ejbCreate is called by
     // EJBHomeImpl and EJBLocalHomeImpl, we can't rely on getState()
@@ -267,27 +267,27 @@ public final class SessionContextImpl
         }
         return inEjbCreate;
     }
-    
+
     void setTxCheckpointDelayed(boolean val) {
-	this.txCheckpointDelayed = val;
+        this.txCheckpointDelayed = val;
     }
 
     boolean isTxCheckpointDelayed() {
-	return this.txCheckpointDelayed;
+        return this.txCheckpointDelayed;
     }
 
     long getLastPersistedAt() {
-	return lastPersistedAt;
+        return lastPersistedAt;
     }
 
     void setLastPersistedAt(long val) {
-	this.lastPersistedAt = val;
+        this.lastPersistedAt = val;
     }
 
     public long getVersion() {
         return version;
     }
-    
+
     public long incrementAndGetVersion() {
         return ++version;
     }
@@ -307,7 +307,7 @@ public final class SessionContextImpl
     public boolean canBePassivated() {
         return (state == EJBContextImpl.BeanState.READY);
     }
-    
+
     public boolean hasExtendedPC() {
         return (this.getExtendedEntityManagerMap().size() != 0);
     }
@@ -335,5 +335,5 @@ public final class SessionContextImpl
     public final int getRefCount() {
         return refCount;
     }
-    
+
 }

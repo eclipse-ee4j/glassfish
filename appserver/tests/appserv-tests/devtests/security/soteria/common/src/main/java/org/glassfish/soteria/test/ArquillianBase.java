@@ -37,31 +37,31 @@ import com.gargoylesoftware.htmlunit.WebClient;
 import com.gargoylesoftware.htmlunit.WebResponse;
 
 public class ArquillianBase {
-    
+
     private static final Logger logger = Logger.getLogger(ArquillianBase.class.getName());
-    
+
     private WebClient webClient;
     private String response;
 
-	@ArquillianResource
+        @ArquillianResource
     private URL base;
-	
+
     @Rule
     public TestWatcher ruleExample = new TestWatcher() {
         @Override
         protected void failed(Throwable e, Description description) {
             super.failed(e, description);
-            
-            logger.log(SEVERE, 
-                "\n\nTest failed: " + 
+
+            logger.log(SEVERE,
+                "\n\nTest failed: " +
                 description.getClassName() + "." + description.getMethodName() +
-                
+
                 "\nMessage: " + e.getMessage() +
-                
+
                 "\nLast response: " +
-                
+
                 "\n\n"  + response + "\n\n");
-            
+
         }
     };
 
@@ -69,7 +69,7 @@ public class ArquillianBase {
     public void setUp() {
         response = null;
         webClient = new WebClient() {
-            
+
             private static final long serialVersionUID = 1L;
 
             @Override
@@ -89,21 +89,21 @@ public class ArquillianBase {
         webClient.getCookieManager().clearCookies();
         webClient.close();
     }
-    
+
     protected String readFromServer(String path) {
         response = "";
         WebResponse localResponse = responseFromServer(path);
         if (localResponse != null) {
             response = localResponse.getContentAsString();
         }
-        
-    	return response;
+
+            return response;
     }
-    
+
     protected WebResponse responseFromServer(String path) {
-        
+
         WebResponse webResponse = null;
-        
+
         Page page = pageFromServer(path);
         if (page != null) {
             webResponse = page.getWebResponse();
@@ -111,37 +111,37 @@ public class ArquillianBase {
                 response = webResponse.getContentAsString();
             }
         }
-        
+
         return webResponse;
     }
-    
+
     protected <P extends Page> P pageFromServer(String path) {
-    	
-    	if (base.toString().endsWith("/") && path.startsWith("/")) {
-    		path = path.substring(1);
-    	}
-    	
+
+            if (base.toString().endsWith("/") && path.startsWith("/")) {
+                    path = path.substring(1);
+            }
+
         try {
             response = "";
-            
+
             P page = webClient.getPage(base + path);
-            
+
             if (page != null) {
                 WebResponse localResponse = page.getWebResponse();
                 if (localResponse != null) {
                     response = localResponse.getContentAsString();
                 }
             }
-            
+
             return page;
-            
+
         } catch (FailingHttpStatusCodeException | IOException e) {
             throw new IllegalStateException(e);
         }
     }
-    
+
     protected WebClient getWebClient() {
- 		return webClient;
- 	}
-    
+                 return webClient;
+         }
+
 }

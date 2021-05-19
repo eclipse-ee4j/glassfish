@@ -16,64 +16,63 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 /**
  * Represents the source file attribute in a class file
  */
-
 public class SourceFileAttribute extends ClassAttribute {
-  /* The expected attribute name */
+    /* The expected attribute name */
     public static final String expectedAttrName = "SourceFile";//NOI18N
 
-  /* The source file name */
-  private ConstUtf8 sourceFileName;
+    /* The source file name */
+    private ConstUtf8 sourceFileName;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * Returns the source file name
-   * The file name should not include directories
-   */
-  public ConstUtf8 fileName() {
-    return sourceFileName;
-  }
+    /**
+     * Returns the source file name
+     * The file name should not include directories
+     */
+    public ConstUtf8 fileName() {
+        return sourceFileName;
+    }
 
-  /**
-   * Sets the source file name
-   */
-  public void setFileName(ConstUtf8 name) {
-    sourceFileName = name;
-  }
+    /**
+     * Sets the source file name
+     */
+    public void setFileName(ConstUtf8 name) {
+        sourceFileName = name;
+    }
 
-  /**
-   * Constructor for a source file attribute
-   */
-  public SourceFileAttribute(ConstUtf8 attrName, ConstUtf8 sourceName) {
-    super(attrName);
-    sourceFileName = sourceName;
-  }
+    /**
+     * Constructor for a source file attribute
+     */
+    public SourceFileAttribute(ConstUtf8 attrName, ConstUtf8 sourceName) {
+        super(attrName);
+        sourceFileName = sourceName;
+    }
 
-  /* package local methods */
-  static SourceFileAttribute read(ConstUtf8 attrName,
-				  DataInputStream data, ConstantPool pool)
-    throws IOException {
-    int index = 0;
-    index = data.readUnsignedShort();
+    /* package local methods */
+    static SourceFileAttribute read(ConstUtf8 attrName, DataInputStream data, ConstantPool pool) throws IOException {
+        int index = 0;
+        index = data.readUnsignedShort();
 
-    return new SourceFileAttribute(attrName,
-				   (ConstUtf8) pool.constantAt(index));
-  }
+        return new SourceFileAttribute(attrName, (ConstUtf8) pool.constantAt(index));
+    }
 
-  void write(DataOutputStream out) throws IOException {
-    out.writeShort(attrName().getIndex());
-    out.writeInt(2);
-    out.writeShort(sourceFileName.getIndex());
-  }
+    void write(DataOutputStream out) throws IOException {
+        out.writeShort(attrName().getIndex());
+        out.writeInt(2);
+        out.writeShort(sourceFileName.getIndex());
+    }
 
-  void print(PrintStream out, int indent) {
-    ClassPrint.spaces(out, indent);
-    out.println("SourceFile: " + sourceFileName.asString());//NOI18N
-  }
+    void print(PrintStream out, int indent) {
+        ClassPrint.spaces(out, indent);
+        out.println("SourceFile: " + sourceFileName.asString());//NOI18N
+    }
 }
 

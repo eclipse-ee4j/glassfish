@@ -27,9 +27,9 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 /** Same as {@code ProgressSimpleCommand} but this one has supplements.
- * It also does not specify totalStepCount in annotation but using API. 
+ * It also does not specify totalStepCount in annotation but using API.
  * Percentage can be printed after {@code SupplementBefore} will be done.
- * 
+ *
  * @see SupplementBefore
  * @see SupplementAfter
  * @author mmares
@@ -40,10 +40,10 @@ import org.jvnet.hk2.annotations.Service;
 @I18n("progress")
 @Progress()
 public class ProgressWithSupplementCommand implements AdminCommand {
-    
+
     private static final LocalStringsImpl strings =
             new LocalStringsImpl(ProgressWithSupplementCommand.class);
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ProgressStatus ps = context.getProgressStatus();
@@ -57,12 +57,12 @@ public class ProgressWithSupplementCommand implements AdminCommand {
         }
         ps.complete("Finished");
     }
-    
+
     private void doSomeLogic() {
         try {
             Thread.sleep(300L);
         } catch (Exception ex) {
         }
     }
-    
+
 }

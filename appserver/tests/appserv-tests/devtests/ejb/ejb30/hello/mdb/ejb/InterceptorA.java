@@ -30,5 +30,5 @@ public class InterceptorA {
             bean.mname = m.getName();
         return ctx.proceed();
     }
-   
+
 }

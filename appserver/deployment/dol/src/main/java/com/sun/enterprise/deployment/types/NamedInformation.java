@@ -17,16 +17,17 @@
 package com.sun.enterprise.deployment.types;
 
 /**
- *
- * @author  dochez
- * @version 
+ * @author dochez
+ * @version
  */
 public interface NamedInformation {
 
-        public void setDescription(String description);
-        public String getDescription();
-        
-        public void setName(String name);
-        public String getName();        
+    void setDescription(String description);
+
+    String getDescription();
+
+    void setName(String name);
+
+    String getName();
 }
 

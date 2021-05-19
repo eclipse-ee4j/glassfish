@@ -21,6 +21,7 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.appclient.AppClientNode;
 import com.sun.enterprise.deployment.xml.DTDRegistry;
 import com.sun.enterprise.deployment.xml.RuntimeTagNames;
+import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import org.w3c.dom.Node;
 
@@ -31,102 +32,107 @@ import java.util.Map;
  * This node is responsible for saving all J2EE RI runtime
  * information for app clients
  *
- * @author  Jerome Dochez
- * @version 
+ * @author Jerome Dochez
+ * @version
  */
-public class AppClientRuntimeNode extends 
-        RuntimeBundleNode<ApplicationClientDescriptor> {   
-    
+public class AppClientRuntimeNode extends RuntimeBundleNode<ApplicationClientDescriptor> {
+
     public AppClientRuntimeNode(ApplicationClientDescriptor descriptor) {
         super(descriptor);
-        //trigger registration in standard node, if it hasn't happened
+        // trigger registration in standard node, if it hasn't happened
         habitat.getService(AppClientNode.class);
     }
-    
+
+
     public AppClientRuntimeNode() {
         this(null);
-    }      
-    
+    }
+
+
     /**
      * Initialize the child handlers
      */
+    @Override
     protected void init() {
-        
         // we do not care about our standard DDS handles
-        handlers = null;        
-        
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_REFERENCE), 
-                               ResourceRefNode.class);     
-        registerElementHandler(new XMLElement(RuntimeTagNames.EJB_REFERENCE), 
-                               EjbRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_ENV_REFERENCE), 
-                               ResourceEnvRefNode.class);                     
-        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE),
-                               MessageDestinationRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), 
-             MessageDestinationRuntimeNode.class);
-	registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF),
-                               ServiceRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.JAVA_WEB_START_ACCESS),
-                               JavaWebStartAccessNode.class);
+        handlers = null;
 
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.EJB_REFERENCE), EjbRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
+        registerElementHandler(new XMLElement(TagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), ServiceRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.JAVA_WEB_START_ACCESS), JavaWebStartAccessNode.class);
 
     }
-    
-   /**
-    * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
-    * @return the doctype tag name
-    */
-   public static String registerBundle(Map publicIDToDTD) {    
-       publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_130_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_130_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_140_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_140_DTD_SYSTEM_ID);       
-       publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_141_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_141_DTD_SYSTEM_ID);       
-       publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_500_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_500_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_600_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_600_DTD_SYSTEM_ID);
-       if (!restrictDTDDeclarations()) {           
-           publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_140beta_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_140beta_DTD_SYSTEM_ID);       
-       }
-       return RuntimeTagNames.S1AS_APPCLIENT_RUNTIME_TAG;
-   }    
-    
+
+
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map publicIDToDTD) {
+        publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_130_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_130_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_140_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_140_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_141_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_141_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_500_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_500_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_600_DTD_PUBLIC_ID, DTDRegistry.SUN_APPCLIENT_600_DTD_SYSTEM_ID);
+        if (!restrictDTDDeclarations()) {
+            publicIDToDTD.put(DTDRegistry.SUN_APPCLIENT_140beta_DTD_PUBLIC_ID,
+                DTDRegistry.SUN_APPCLIENT_140beta_DTD_SYSTEM_ID);
+        }
+        return RuntimeTagNames.S1AS_APPCLIENT_RUNTIME_TAG;
+    }
+
+
     /**
      * @return the XML tag associated with this XMLNode
      */
+    @Override
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.S1AS_APPCLIENT_RUNTIME_TAG);
-    } 
-    
-    /** 
+    }
+
+
+    /**
      * @return the DOCTYPE that should be written to the XML file
      */
+    @Override
     public String getDocType() {
-	return DTDRegistry.SUN_APPCLIENT_600_DTD_PUBLIC_ID;
+        return DTDRegistry.SUN_APPCLIENT_600_DTD_PUBLIC_ID;
     }
-    
+
+
     /**
      * @return the SystemID of the XML file
      */
+    @Override
     public String getSystemID() {
-	return DTDRegistry.SUN_APPCLIENT_600_DTD_SYSTEM_ID;
+        return DTDRegistry.SUN_APPCLIENT_600_DTD_SYSTEM_ID;
     }
+
 
     /**
      * @return NULL for all runtime nodes.
      */
+    @Override
     public List<String> getSystemIDs() {
         return null;
     }
-    
+
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
      * @param bundleDescriptor the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, ApplicationClientDescriptor bundleDescriptor) {       
+     */
+    @Override
+    public Node writeDescriptor(Node parent, ApplicationClientDescriptor bundleDescriptor) {
         Node appClient = super.writeDescriptor(parent, bundleDescriptor);
         RuntimeDescriptorNode.writeCommonComponentInfo(appClient, bundleDescriptor);
         RuntimeDescriptorNode.writeMessageDestinationInfo(appClient, bundleDescriptor);
@@ -134,15 +140,16 @@ public class AppClientRuntimeNode extends
         return appClient;
     }
 
-   /**
+
+    /**
      * receives notification of the value for a particular tag
      *
      * @param element the xml element
      * @param value it's associated value
      */
+    @Override
     public void setElementValue(XMLElement element, String value) {
-        if (element.getQName().equals(RuntimeTagNames.VERSION_IDENTIFIER)) {
-        } else {
+        if (!element.getQName().equals(RuntimeTagNames.VERSION_IDENTIFIER)) {
             super.setElementValue(element, value);
         }
     }

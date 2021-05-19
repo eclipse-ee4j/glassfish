@@ -193,8 +193,8 @@ public class GraphMenuBarTag extends UIComponentTag {
             vb =
                 context.getApplication().createValueBinding(
                     "#{sessionScope.graph_menu}");
-            component.setValueBinding("value", vb); 
-           
+            component.setValueBinding("value", vb);
+
             // In the postback case, graph exists already. So make sure
             // it doesn't created again.
             Graph graph = (Graph) ((GraphComponent) component).getValue();

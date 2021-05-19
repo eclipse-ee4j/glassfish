@@ -177,7 +177,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
     /**
      * This method performs the creation or updating of an entity, regardless of the request's mime type. If an error
      * occurs, a <code>WebApplicationException</code> is thrown, so if the method returns, the create/update was successful.
-     * 
+     *
      * @param data
      * @return
      */
@@ -350,7 +350,7 @@ public class TemplateRestResource extends AbstractResource implements OptionsCap
      * particular instance ("server-config"). In building the path, we must identify Named instances and insert the name of
      * the instance rather than the type. We apply this logic as we recurse up to the top of the Dom tree to finish building
      * the path desired.
-     * 
+     *
      * @param node
      * @return
      */

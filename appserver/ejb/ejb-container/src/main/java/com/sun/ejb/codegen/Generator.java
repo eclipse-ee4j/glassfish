@@ -35,9 +35,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 /**
  * The base class for all code generators.
  */
-
 public abstract class Generator {
-
 
     protected static final Logger _logger = LogDomains.getLogger(Generator.class, LogDomains.EJB_LOGGER);
 
@@ -73,8 +71,7 @@ public abstract class Generator {
         }
     }
 
-    protected Method[] removeDups(Method[] orig)
-    {
+    protected Method[] removeDups(Method[] orig) {
         // Remove duplicates from method array.
         // Duplicates will arise if a class/intf and super-class/intf
         // define methods with the same signature. Potentially the
@@ -89,7 +86,7 @@ public abstract class Generator {
                 Method m2 = (Method)e.nextElement();
 
                 // m1 and m2 are duplicates if they have the same signature
-                // (name and same parameters). 
+                // (name and same parameters).
                 if ( !m1.getName().equals(m2.getName()) )
                     continue;
 
@@ -107,7 +104,7 @@ public abstract class Generator {
                 }
                 if ( parmsDup ) {
                     dup = true;
-                    // Select which of the duplicate methods to generate 
+                    // Select which of the duplicate methods to generate
                     // code for: choose the one that is lower in the
                     // inheritance hierarchy: this ensures that the generated
                     // method will compile.
@@ -143,9 +140,8 @@ public abstract class Generator {
                 String ejbIntfClzName  = ejbIntfClz.getName();
                 Class methodToCheckClz = methodToCheck.getDeclaringClass();
                 if( !methodToCheckClz.getName().equals(ejbIntfClzName) ) {
-                    String[] logParams = { next.toString(), 
-                                           methodToCheck.toString() };
-                    _logger.log(Level.WARNING, 
+                    String[] logParams = {next.toString(), methodToCheck.toString()};
+                    _logger.log(Level.WARNING,
                                 "ejb.illegal_ejb_interface_override",
                                 logParams);
                 }
@@ -154,119 +150,113 @@ public abstract class Generator {
             }
         }
 
-	return isEJBIntfMethod;
+        return isEJBIntfMethod;
     }
 
 
     private boolean methodCompare(Method factoryMethod, Method homeMethod) {
 
-	if(! factoryMethod.getName().equals(homeMethod.getName())) {
-	    return false;
+        if (!factoryMethod.getName().equals(homeMethod.getName())) {
+            return false;
         }
 
-	Class[] factoryParamTypes = factoryMethod.getParameterTypes();
-	Class[] beanParamTypes = homeMethod.getParameterTypes();
-	if (factoryParamTypes.length != beanParamTypes.length) {
-	    return false;
+        Class[] factoryParamTypes = factoryMethod.getParameterTypes();
+        Class[] beanParamTypes = homeMethod.getParameterTypes();
+        if (factoryParamTypes.length != beanParamTypes.length) {
+            return false;
         }
-	for(int i = 0; i < factoryParamTypes.length; i++) {
-	    if (factoryParamTypes[i] != beanParamTypes[i]) {
-		return false;
+        for(int i = 0; i < factoryParamTypes.length; i++) {
+            if (factoryParamTypes[i] != beanParamTypes[i]) {
+                return false;
             }
         }
 
-	// NOTE : Exceptions and return types are not part of equality check
-
-	return true;
-
+        // NOTE : Exceptions and return types are not part of equality check
+        return true;
     }
 
-    protected String getUniqueClassName(DeploymentContext context, String origName,
-                                        String origSuffix,
-					Vector existingClassNames)
-    {
-	String newClassName = null;
-	boolean foundUniqueName = false;
-	int count = 0;
-	while ( !foundUniqueName ) {
-	    String suffix = origSuffix;
-	    if ( count > 0 ) {
-		suffix = origSuffix + count;
+
+    protected String getUniqueClassName(DeploymentContext context, String origName, String origSuffix,
+        Vector existingClassNames) {
+        String newClassName = null;
+        boolean foundUniqueName = false;
+        int count = 0;
+        while (!foundUniqueName) {
+            String suffix = origSuffix;
+            if (count > 0) {
+                suffix = origSuffix + count;
             }
-	    newClassName = origName + suffix;
-	    if ( !existingClassNames.contains(newClassName) ) {
-		foundUniqueName = true;
+            newClassName = origName + suffix;
+            if (!existingClassNames.contains(newClassName)) {
+                foundUniqueName = true;
                 existingClassNames.add(newClassName);
+            } else {
+                count++;
             }
-	    else {
-		count++;
-            }
-	}
-	return newClassName;
+        }
+        return newClassName;
     }
 
 
-    protected String getTxAttribute(EjbDescriptor dd, Method method)
-    {
-	// The TX_* strings returned MUST match the TX_* constants in 
-	// com.sun.ejb.Container.
-        if ( dd instanceof EjbSessionDescriptor
-	     && ((EjbSessionDescriptor)dd).getTransactionType().equals("Bean") )
-	    return "TX_BEAN_MANAGED";
+    protected String getTxAttribute(EjbDescriptor dd, Method method) {
+        // The TX_* strings returned MUST match the TX_* constants in
+        // com.sun.ejb.Container.
+        if (dd instanceof EjbSessionDescriptor && ((EjbSessionDescriptor) dd).getTransactionType().equals("Bean")) {
+            return "TX_BEAN_MANAGED";
+        }
 
         String txAttr = null;
-	MethodDescriptor mdesc = new MethodDescriptor(method, ejbClassSymbol);
+        MethodDescriptor mdesc = new MethodDescriptor(method, ejbClassSymbol);
         ContainerTransaction ct = dd.getContainerTransactionFor(mdesc);
-        if ( ct != null ) {
+        if (ct != null) {
             String attr = ct.getTransactionAttribute();
-            if ( attr.equals(ContainerTransaction.NOT_SUPPORTED) )
+            if (attr.equals(ContainerTransaction.NOT_SUPPORTED)) {
                 txAttr = "TX_NOT_SUPPORTED";
-            else if ( attr.equals(ContainerTransaction.SUPPORTS) )
+            } else if (attr.equals(ContainerTransaction.SUPPORTS)) {
                 txAttr = "TX_SUPPORTS";
-            else if ( attr.equals(ContainerTransaction.REQUIRED) )
+            } else if (attr.equals(ContainerTransaction.REQUIRED)) {
                 txAttr = "TX_REQUIRED";
-            else if ( attr.equals(ContainerTransaction.REQUIRES_NEW) )
+            } else if (attr.equals(ContainerTransaction.REQUIRES_NEW)) {
                 txAttr = "TX_REQUIRES_NEW";
-            else if ( attr.equals(ContainerTransaction.MANDATORY) )
+            } else if (attr.equals(ContainerTransaction.MANDATORY)) {
                 txAttr = "TX_MANDATORY";
-            else if ( attr.equals(ContainerTransaction.NEVER) )
+            } else if (attr.equals(ContainerTransaction.NEVER)) {
                 txAttr = "TX_NEVER";
+            }
         }
 
-        if ( txAttr == null ) {
-            throw new RuntimeException("Transaction Attribute not found for method "+method);
+        if (txAttr == null) {
+            throw new RuntimeException("Transaction Attribute not found for method " + method);
         }
-	return txAttr;
-    } 
+        return txAttr;
+    }
 
-    protected String getSecurityAttribute(EjbDescriptor dd, Method m)
-    {
-	// The SEC_* strings returned MUST match the SEC_* constants in 
-	// com.sun.ejb.Container.
+    protected String getSecurityAttribute(EjbDescriptor dd, Method m) {
+        // The SEC_* strings returned MUST match the SEC_* constants in
+        // com.sun.ejb.Container.
+        MethodDescriptor thisMethodDesc = new MethodDescriptor(m, ejbClassSymbol);
+        Set unchecked = dd.getUncheckedMethodDescriptors();
+        if (unchecked != null) {
+            Iterator i = unchecked.iterator();
+            while (i.hasNext()) {
+                MethodDescriptor md = (MethodDescriptor) i.next();
+                if (thisMethodDesc.equals(md)) {
+                    return "SEC_UNCHECKED";
+                }
+            }
+        }
 
-	MethodDescriptor thisMethodDesc = new MethodDescriptor(m, ejbClassSymbol);
+        Set excluded = dd.getExcludedMethodDescriptors();
+        if (excluded != null) {
+            Iterator i = excluded.iterator();
+            while (i.hasNext()) {
+                MethodDescriptor md = (MethodDescriptor) i.next();
+                if (thisMethodDesc.equals(md)) {
+                    return "SEC_EXCLUDED";
+                }
+            }
+        }
 
-	Set unchecked = dd.getUncheckedMethodDescriptors();
-	if ( unchecked != null ) {
-	    Iterator i = unchecked.iterator();
-	    while ( i.hasNext() ) {
-		MethodDescriptor md = (MethodDescriptor)i.next();
-		if ( thisMethodDesc.equals(md) )
-		    return "SEC_UNCHECKED";
-	    }
-	}
-
-	Set excluded = dd.getExcludedMethodDescriptors();
-	if ( excluded != null ) {
-	    Iterator i = excluded.iterator();
-	    while ( i.hasNext() ) {
-		MethodDescriptor md = (MethodDescriptor)i.next();
-		if ( thisMethodDesc.equals(md) )
-		    return "SEC_EXCLUDED";
-	    }
-	}
-
-	return "SEC_CHECKED";
-    } 
-
+        return "SEC_CHECKED";
+    }
 }

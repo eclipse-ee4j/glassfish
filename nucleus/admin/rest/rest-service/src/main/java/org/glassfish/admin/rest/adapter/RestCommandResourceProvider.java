@@ -77,7 +77,7 @@ public class RestCommandResourceProvider extends AbstractRestResourceProvider {
         //Parameters
         r.add(ParameterMapFormReader.class);
         r.add(JsonParameterMapProvider.class);
-        //Multipart 
+        //Multipart
         //r.add(PayloadPartProvider.class);
         r.add(MultipartFDPayloadReader.class);
         r.add(ParamsWithPayloadMultipartWriter.class);

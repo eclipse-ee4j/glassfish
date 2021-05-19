@@ -39,6 +39,6 @@
   <ejb-ref>
     <ejb-ref-name>ejb/customerProgRefresh</ejb-ref-name>
     <jndi-name>ejb/customerProgRefresh</jndi-name>
-  </ejb-ref>  
+  </ejb-ref>
 </sun-application-client>
 

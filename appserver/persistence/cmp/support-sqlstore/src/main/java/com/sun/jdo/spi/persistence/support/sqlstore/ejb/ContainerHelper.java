@@ -27,10 +27,10 @@ import jakarta.ejb.*;
 import com.sun.jdo.api.persistence.support.PersistenceManager;
 import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
-    /** Provide an implementation that supports CMP integration with information 
+    /** Provide an implementation that supports CMP integration with information
      * required for such support.  This is an interface that a helper class
      * implements that is specific to an application server.
-     * <P><B>This interface is subject to change without notice.  In particular, 
+     * <P><B>This interface is subject to change without notice.  In particular,
      * as additional
      * experience is gained with specific application servers, this interface
      * may have methods added and removed, even with patch releases.
@@ -69,24 +69,24 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
     /** Called in a CMP-supported environment to get an EJBObject reference for this
      * primary key instance and Container instance. In a non-managed environment
      * is not called.
-     * 
+     *
      * @see getContainer(Object)
      * @param pk the primary key instance.
      * @param container a Container instance for the request.
-     * @return a corresponding EJBObject instance (as an Object) to be used by 
+     * @return a corresponding EJBObject instance (as an Object) to be used by
      * the client.
-     */   
+     */
     EJBObject getEJBObject(Object pk, Object container);
 
-    /** Called in a CMP-supported environment to get an EJBLocalObject reference for this 
-     * primary key instance and Container instance. In a non-managed environment 
+    /** Called in a CMP-supported environment to get an EJBLocalObject reference for this
+     * primary key instance and Container instance. In a non-managed environment
      * is not called.
      * @see getContainer(Object)
-     * @param pk the primary key instance. 
-     * @param container a Container instance for the request. 
-     * @return a corresponding EJBLocalObject (as an Object) instance to be used 
-     * by the client. 
-     */    
+     * @param pk the primary key instance.
+     * @param container a Container instance for the request.
+     * @return a corresponding EJBLocalObject (as an Object) instance to be used
+     * by the client.
+     */
     EJBLocalObject getEJBLocalObject(Object pk, Object container);
 
     /** Called in a CMP-supported environment to get an EJBLocalObject reference for this
@@ -100,26 +100,26 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * @param context an EJBContext of the calling bean.
      * @return a corresponding EJBLocalObject (as an Object) to be used by
      * the client.
-     */  
+     */
     EJBLocalObject getEJBLocalObject(Object pk, Object container,
         EJBContext context);
 
-    /** Called in a CMP-supported environment to remove a bean for a given 
+    /** Called in a CMP-supported environment to remove a bean for a given
      * EJBLocalObject and Container instance.
-     * 
+     *
      * @see getContainer(Object)
      * @param ejb the EJBLocalObject for the bean to be removed.
-     * @param containerHelper a Container instance for the request. 
-     */ 
+     * @param containerHelper a Container instance for the request.
+     */
     void removeByEJBLocalObject(EJBLocalObject ejb, Object containerHelper);
 
     /** Called in a CMP-supported environment to remove a bean for a given primary key
      * and Container instance.
-     * 
+     *
      * @see getContainer(Object)
      * @param pk the primary key for the bean to be removed.
-     * @param container a Container instance for the request. 
-     */  
+     * @param container a Container instance for the request.
+     */
     void removeByPK(Object pk, Object container);
 
     /** Called in a CMP-supported environment to verify that the specified object
@@ -142,15 +142,15 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
     /** Called in a CMP-supported environment to mark EntityContext as
      * already removed during cascade-delete operation.
-     * Called by the generated ejbRemove method before calling ejbRemove of the 
+     * Called by the generated ejbRemove method before calling ejbRemove of the
      * related beans (via removeByEJBLocalObject) that are to be cascade-deleted.
      *
-     *   
+     *
      * @param context the EntityContext of the bean beeing removed.
-     */  
+     */
     void setCascadeDeleteAfterSuperEJBRemove(EntityContext context);
 
-    /** Called in a CMP supported environment. Notifies the container that 
+    /** Called in a CMP supported environment. Notifies the container that
      * ejbSelect had been called.
      *
      * @see getContainer(Object)
@@ -160,10 +160,10 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
 
     /** Called in a CMP environment to lookup PersistenceManagerFactory
      * referenced by this Container instance as the CMP resource.
-     *   
+     *
      * @see getContainer(Object)
      * @param container a Container instance for the request.
-     */  
+     */
     PersistenceManagerFactory getPersistenceManagerFactory(Object container);
 
     /**
@@ -206,7 +206,7 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * This will guarantee that PersistenceManager is not bound to
      * any transaction.
      *
-     * @return jakarta.transaction.Transaction object representing 
+     * @return jakarta.transaction.Transaction object representing
      * the suspended transaction.
      * Returns null if the calling thread is not associated
      * with a transaction.
@@ -217,7 +217,7 @@ import com.sun.jdo.api.persistence.support.PersistenceManagerFactory;
      * This will guarantee that the transaction continues to run after
      * read-only bean accessed its PersistenceManager.
      *
-     * @param tx - The jakarta.transaction.Transaction object that 
+     * @param tx - The jakarta.transaction.Transaction object that
      * represents the transaction to be resumed.
      */
     void resumeCurrentTransaction(jakarta.transaction.Transaction tx);

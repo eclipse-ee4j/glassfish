@@ -93,7 +93,7 @@ public final class Constants {
         "jsp_2_0.xsd";
     public static final String JspSchemaResourcePath_20 =
         "/javax/servlet/resources/jsp_2_0.xsd";
-    
+
     public static final String JSP_SCHEMA_PUBLIC_ID_21 =
         "jsp_2_1.xsd";
     public static final String JSP_SCHEMA_RESOURCE_PATH_21 =
@@ -101,7 +101,7 @@ public final class Constants {
 
     public static final String J2eeWebServiceSchemaResourcePath_11 =
             "/javax/servlet/resources/j2ee_web_services_1_1.xsd";
-    
+
     public static final String J2eeWebServiceClientSchemaPublicId_11 =
             "j2ee_web_services_client_1_1.xsd";
     public static final String J2eeWebServiceClientSchemaResourcePath_11 =

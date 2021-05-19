@@ -83,7 +83,7 @@ public class CometEchoServlet extends HttpServlet {
         res.setContentType("text/html");
         res.setHeader("Cache-Control", "private");
         res.setHeader("Pragma", "no-cache");
-        
+
         PrintWriter writer = res.getWriter();
         ChatListnerHandler handler = new ChatListnerHandler();
         handler.attach(writer);

@@ -29,88 +29,88 @@ import com.sun.jdo.api.persistence.support.FieldMapping;
 /**
  */
 public class ColumnRef extends Object implements FieldMapping {
-	//
-	// actual ColumnElement from the dbmodel
-	//
+    //
+    // actual ColumnElement from the dbmodel
+    //
     private ColumnElement columnElement;
 
-	//
-	// the table this column belongs to
-	//
+    //
+    // the table this column belongs to
+    //
     private QueryTable table;
 
-	//
-	// input value for this column for update statements.
+    //
+    // input value for this column for update statements.
         // This field contains LocalFieldDesc for the corresponding field when
         // an UpdateStatement using batching uses this field.
-	//
+    //
     private Object value;
 
-	//
-	// the position of this column in the SQL statement
-	//
-	private int index;
+    //
+    // the position of this column in the SQL statement
+    //
+    private int index;
 
-	//
-	// the name of this column
-	//
-	private String name;
+    //
+    // the name of this column
+    //
+    private String name;
 
-	public ColumnRef(ColumnElement columnElement,
-					 QueryTable table) {
-		this.columnElement = columnElement;
-		name = columnElement.getName().getName();
-		this.table = table;
-	}
+    public ColumnRef(ColumnElement columnElement,
+                     QueryTable table) {
+        this.columnElement = columnElement;
+        name = columnElement.getName().getName();
+        this.table = table;
+    }
 
-	public ColumnRef(ColumnElement columnElement,
-					 Object value) {
-		this.columnElement = columnElement;
-		name = columnElement.getName().getName();
-		this.value = value;
-	}
+    public ColumnRef(ColumnElement columnElement,
+                     Object value) {
+        this.columnElement = columnElement;
+        name = columnElement.getName().getName();
+        this.value = value;
+    }
 
-	/** Return the actual ColumnElement associated with this column.
+    /** Return the actual ColumnElement associated with this column.
      *  @return the ColumnElement associated with this
-	 */
-	public ColumnElement getColumnElement() {
-		return columnElement;
-	}
-
-	/** Return the position of this column in the SQL statement.
-	 *  @return the position of this column in the SQL statement
-	 */
-	public int getIndex() {
-		return index;
-	}
-
-	/** Set the position of this column in the SQL statement.
-	 *  @param value - the new position
      */
-	public void setIndex(int value) {
-		this.index = value;
-	}
+    public ColumnElement getColumnElement() {
+        return columnElement;
+    }
 
-	/** Return the input value for this column.
+    /** Return the position of this column in the SQL statement.
+     *  @return the position of this column in the SQL statement
+     */
+    public int getIndex() {
+        return index;
+    }
+
+    /** Set the position of this column in the SQL statement.
+     *  @param value - the new position
+     */
+    public void setIndex(int value) {
+        this.index = value;
+    }
+
+    /** Return the input value for this column.
      *  @return the input value for this column
-	 */
-	public Object getValue() {
-		return value;
-	}
+     */
+    public Object getValue() {
+        return value;
+    }
 
-	/** Return the QueryTable associated with this column. 
-	 *  @return the QueryTable associated with this column. 
-	 */
-	public QueryTable getQueryTable() {
-		return table;
-	}
+    /** Return the QueryTable associated with this column.
+     *  @return the QueryTable associated with this column.
+     */
+    public QueryTable getQueryTable() {
+        return table;
+    }
 
-	/** Return the name of this column.
+    /** Return the name of this column.
      *  @return the name of this column.
-	 */
-	public String getName() {
-		return name;
-	}
+     */
+    public String getName() {
+        return name;
+    }
 
      //---- implementing FieldMapping ------------------------------//
      /**

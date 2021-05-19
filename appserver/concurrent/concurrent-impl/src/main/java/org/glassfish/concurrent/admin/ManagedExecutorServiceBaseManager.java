@@ -45,7 +45,7 @@ import static org.glassfish.resources.admin.cli.ResourceConstants.*;
 
 /**
  *
- * The base managed executor service manager for managed executor service 
+ * The base managed executor service manager for managed executor service
  * and managed scheduled executor service
  */
 public abstract class ManagedExecutorServiceBaseManager implements ResourceManager {
@@ -129,7 +129,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
             clazz = ManagedScheduledExecutorService.class;
         }
         status = resourcesHelper.validateBindableResourceForDuplicates(resources, jndiName, validateResourceRef, target, clazz);
-        
+
         return status;
     }
 
@@ -149,7 +149,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         }else{
             enabled = (String) attributes.get(ENABLED);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED); 
+        enabledValueForTarget = (String) attributes.get(ENABLED);
     }
 
     protected ManagedExecutorServiceBase createResource(Resources param, Properties properties) throws PropertyVetoException, TransactionFailure {
@@ -203,13 +203,13 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
 
     public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
             throws Exception {
-        
+
         if (jndiName == null) {
             String msg = localStrings.getLocalString("managed.executor.service.noJndiName", "No JNDI name defined for managed executor service.");
             if (getResourceType().equals(ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)) {
                 msg = localStrings.getLocalString("managed.scheduled.executor.service.noJndiName", "No JNDI name defined for managed scheduled executor service.");
             }
-            
+
             return new ResourceStatus(ResourceStatus.FAILURE, msg);
         }
 
@@ -266,7 +266,7 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         try {
             // delete resource-ref
             resourceUtil.deleteResourceRef(jndiName, target);
-            
+
             // delete managed executor service
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {

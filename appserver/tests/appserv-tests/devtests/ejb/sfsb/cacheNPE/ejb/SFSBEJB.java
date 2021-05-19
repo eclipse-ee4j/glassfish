@@ -30,7 +30,7 @@ import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 
 public class SFSBEJB
-    implements SessionBean 
+    implements SessionBean
 {
     private Context envCtx;
     private Context envSubCtx;
@@ -64,7 +64,7 @@ public class SFSBEJB
 
             homeHandle = entityHome.getHomeHandle();
             handle = entityRemote.getHandle();
-            
+
             userTransaction1 = sessionCtx.getUserTransaction();
             userTransaction2 = (UserTransaction) new InitialContext().
                 lookup("java:comp/UserTransaction");
@@ -173,7 +173,7 @@ public class SFSBEJB
     public boolean checkUserTransaction() {
         boolean status =
             ((userTransaction1 != null) && (userTransaction2 != null));
-        
+
         try {
             if( status ) {
                 userTransaction1.begin();
@@ -205,7 +205,7 @@ public class SFSBEJB
             }
             if (ok) {
                 fieldName = "java:";
-                ok = ( (javaCtx != null) && 
+                ok = ( (javaCtx != null) &&
                        javaCtx.getNameInNamespace().equals(fieldName) );
             }
             if (ok) {
@@ -217,7 +217,7 @@ public class SFSBEJB
                 fieldName = "java:comp/env";
                 ok = ( (envCtx != null) &&
                        envCtx.getNameInNamespace().equals(fieldName) );
-                
+
             }
             if (ok) {
                 fieldName = "java:comp/env/ejb";
@@ -226,7 +226,7 @@ public class SFSBEJB
             }
             if (ok) {
                 fieldName = "env-entry";
-          
+
                 String value1 = (String)
                     initialCtx.lookup("java:comp/env/TagValue");
                 String value2 = (String) envCtx.lookup("TagValue");
@@ -238,9 +238,9 @@ public class SFSBEJB
             ex.printStackTrace();
             ok = false;
         }
-        
+
         this.message = (ok) ? null : (fieldName + " not restored properly");
-        
+
         return ok;
     }
 
@@ -268,7 +268,7 @@ public class SFSBEJB
     public void ejbRemove() {
         System.out.println ("\n\tIn SFSB.ejbRemove() for name -> " + sfsbName);
         try {
-            entityRemote.remove(); 
+            entityRemote.remove();
         } catch (Exception ex) {
             ex.printStackTrace();
         }

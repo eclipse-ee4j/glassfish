@@ -79,12 +79,12 @@ public class InstalledLibrariesResolver {
         }
 
         deplLogger.log(Level.INFO, PACKAGE_SATISFIED, new Object[]{archiveUri});
-        
+
         return true;
     }
 
     /**
-     * check whether the optional packages have all their 
+     * check whether the optional packages have all their
      * internal dependencies resolved
      * @param libDir libraryDirectory
      */
@@ -122,7 +122,7 @@ public class InstalledLibrariesResolver {
                     try {
                         InputStream libIs = archive.getEntry(libUri);
                         if(libIs == null) {
-                            //libIs can be null if reading an exploded archive where directories are also exploded. See FileArchive.getEntry()  
+                            //libIs can be null if reading an exploded archive where directories are also exploded. See FileArchive.getEntry()
                             continue;
                         }
                         jis = new JarInputStream(libIs);
@@ -254,7 +254,7 @@ public class InstalledLibrariesResolver {
                     }catch(MissingResourceException mre ){
                         deplLogger.log(Level.WARNING, PACKAGE_NOT_FOUND, new Object[] {mre.getClass(), file.getAbsolutePath()});
                     }
-                    
+
                 }
             } catch (IOException ioe) {
               deplLogger.log(Level.WARNING,
@@ -380,7 +380,7 @@ public class InstalledLibrariesResolver {
         public Extension(String name){
             this.extensionName = name;
         }
-        
+
         public String getExtensionName() {
             return extensionName;
         }

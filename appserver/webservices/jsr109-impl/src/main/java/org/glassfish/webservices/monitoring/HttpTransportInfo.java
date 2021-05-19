@@ -16,17 +16,17 @@
 
 package org.glassfish.webservices.monitoring;
 
-/** 
+/**
  * Superclass for all HTTP related transport information.
  *
  * @author dochez
  */
 abstract public class HttpTransportInfo implements TransportInfo {
-    
+
     /** Creates a new instance of HttpTransportInfo */
     public HttpTransportInfo() {
     }
-    
+
     /**
      * @return the transport type
      */

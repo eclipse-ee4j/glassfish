@@ -25,17 +25,17 @@ public class SfulnoiTestNG {
 
     private static final String TEST_NAME =
         "ejb-sfulnoi";
-   
+
     private String strContextRoot="/sfulnoi";
 
 //    static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
 
     @Test(groups = { "init" })
     public void SetName() throws Exception{
-        boolean result=false;       
+        boolean result=false;
         try{
             result = test("SetName");
             Assert.assertEquals(result, true,"Unexpected Results");
@@ -61,7 +61,7 @@ public class SfulnoiTestNG {
         String EXPECTED_RESPONSE = "Test:Pass";
         String TEST_CASE = TEST_NAME + ":" + c;
         boolean result=false;
-        String url = "http://" + host + ":" + port + strContextRoot + 
+        String url = "http://" + host + ":" + port + strContextRoot +
                      "/test?tc=" + c;
         //System.out.println("url="+url);
 
@@ -74,11 +74,11 @@ public class SfulnoiTestNG {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = null;
-	    while ((line = input.readLine()) != null) {
+        while ((line = input.readLine()) != null) {
             if (line.contains(EXPECTED_RESPONSE)) {
                 result = true;
                 break;
-            }	    
+            }
         }  }
         return result;
     }

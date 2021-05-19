@@ -22,7 +22,7 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 /**
  * Interface to override existing security RequestInterceptors.
- * 
+ *
  * @author Sudarsan Sridhar
  */
 public interface AlternateSecurityInterceptorFactory {

@@ -30,7 +30,7 @@ import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 
 public class StressSFSBBean
-    implements SessionBean 
+    implements SessionBean
 {
     private SessionContext              sessionCtx;
     private Context                     initialCtx;
@@ -52,7 +52,7 @@ public class StressSFSBBean
     }
 
     public boolean doWork(long millis) {
-	return true;
+        return true;
     }
 
     public void setSessionContext(SessionContext sc) {

@@ -51,7 +51,7 @@ import test.util.JpaTest;
 public class TestServlet extends HttpServlet {
 
     /* Normal injection of Beans */
-    @Inject 
+    @Inject
     private transient org.jboss.logging.Logger log;
     @Inject BeanManager bm_at_inj;
 
@@ -64,26 +64,26 @@ public class TestServlet extends HttpServlet {
 
     private @Resource
     UserTransaction utx;
-    
+
     @Inject @Preferred
     TestBeanInterface tbi;
-    
+
     /* Injection of Beans from WEB-INF/lib */
-    @Inject TestBeanInWebInfLib tbiwil; 
+    @Inject TestBeanInWebInfLib tbiwil;
     //We are injecting TestBeanInWebInfLib directly above. Since the alternative
-    //TestBean is not enabled in the WAR's BDA(beans.xml), 
-    //TestBeanInWebInfLib must be injected 
-    
-    
+    //TestBean is not enabled in the WAR's BDA(beans.xml),
+    //TestBeanInWebInfLib must be injected
+
+
     @Inject AnotherTestBeanInWebInfLib atbiwil;
     //However in this case, when AnotherTestBeanInWebInfLib tries to inject
     //TestBeanInWebInfLib in its bean, it must inject TestAlternativeBeanInWebInfLib
-    //as the alternative bean is enabled in the WEB-INF/lib's BDA (beans.xml) 
+    //as the alternative bean is enabled in the WEB-INF/lib's BDA (beans.xml)
 
     /* Test lookup of BeanManager*/
     BeanManager bm_lookup;
 
-    
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
@@ -108,7 +108,7 @@ public class TestServlet extends HttpServlet {
         //via BeanManager of WAR
         Set warBeans = bm_at_inj.getBeans(TestBean.class,new AnnotationLiteral<Any>() {});
         if (warBeans.size() != 1) msg += "TestBean in WAR is not available via the WAR BeanManager";
-        
+
         Set webinfLibBeans = bm_at_inj.getBeans(TestBeanInWebInfLib.class,new AnnotationLiteral<Any>() {});
         if (webinfLibBeans.size() != 1) msg += "TestBean in WEB-INF/lib is not available via the WAR BeanManager";
         System.out.println("Test Bean from WEB-INF/lib via BeanManager:" + webinfLibBeans);
@@ -118,20 +118,20 @@ public class TestServlet extends HttpServlet {
         Set webinfLibAltBeans = bm_at_inj.getBeans(TestAlternativeBeanInWebInfLib.class,new AnnotationLiteral<Any>() {});
         if (webinfLibAltBeans.size() != 0) msg += "TestAlternativeBean in WEB-INF/lib is available via the WAR BeanManager";
         System.out.println("Test Bean from WEB-INF/lib via BeanManager:" + webinfLibAltBeans);
-        
+
         //Test injection of a Bean in WEB-INF/lib beans into Servlet
         //and check that the Alternative bean is not called.
         //The alternative bean in web-inf/lib is not enabled in the WAR's beans.xml
         //and hence must not be visible.
         TestAlternativeBeanInWebInfLib.clearStatus(); //clear status
-        
+
         String injectionOfBeanInWebInfLibResult = tbiwil.testInjection();
         System.out.println("injectionWithAlternative returned: " + injectionOfBeanInWebInfLibResult);
         if (injectionOfBeanInWebInfLibResult.equals ("Alternative")) {
             msg += "Expected that the original TestBeanInWebInfLib is called, " +
-            		"but instead got " + injectionOfBeanInWebInfLibResult + " instead";
-        } 
-        
+                            "but instead got " + injectionOfBeanInWebInfLibResult + " instead";
+        }
+
         if(TestAlternativeBeanInWebInfLib.ALTERNATIVE_BEAN_HAS_BEEN_CALLED) {
             msg += "Alternate Bean is called even though it is not enabled in the WAR's beans.xml";
         }
@@ -151,13 +151,13 @@ public class TestServlet extends HttpServlet {
 
         if (!TestAlternativeBeanInWebInfLib.ALTERNATIVE_BEAN_HAS_BEEN_CALLED) {
             msg += "Alternative Bean enabled in WEB-INF/lib was not called " +
-            		"when the injection happened in the context of a " +
-            		"Bean in WEB-INF/lib where the alternative Bean was enabled";
+                            "when the injection happened in the context of a " +
+                            "Bean in WEB-INF/lib where the alternative Bean was enabled";
         }
 
-        
+
         msg += testEMInjection(req);
-        
+
         writer.write(msg + "\n");
     }
 
@@ -180,7 +180,7 @@ public class TestServlet extends HttpServlet {
             } else if ("llquery".equals(testcase)) {
                 status = jt.lazyLoadingByQuery("Carla");
             } else if ("llinj".equals(testcase)){
-                status = ((tbi != null) && 
+                status = ((tbi != null) &&
                         (tbi.testDatasourceInjection().trim().length()==0));
             }
             if (status) {

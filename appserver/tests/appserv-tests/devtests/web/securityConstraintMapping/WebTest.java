@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest
 {
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME = "Security Constraint Mapping test";
@@ -32,7 +32,7 @@ public class WebTest
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Unit test for 4903209");
 
         String host = args[0];
@@ -41,7 +41,7 @@ public class WebTest
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             //Check if it strips out uri parameters (";.*") before mapping to webapps
             goGet(host, port, contextRoot + "/ServletTest;test=aaa" );

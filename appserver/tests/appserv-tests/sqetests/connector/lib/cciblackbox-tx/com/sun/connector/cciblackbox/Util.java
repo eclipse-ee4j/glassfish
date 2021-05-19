@@ -28,8 +28,8 @@ import jakarta.resource.spi.SecurityException;
 import jakarta.resource.spi.security.PasswordCredential;
 import javax.security.auth.Subject;
 
-/** 
- * This is a utility class. 
+/**
+ * This is a utility class.
  */
 
 public class Util {

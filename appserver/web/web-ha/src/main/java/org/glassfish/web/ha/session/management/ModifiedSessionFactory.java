@@ -30,19 +30,19 @@ import org.apache.catalina.Session;
  * @author lwhite
  */
 public class ModifiedSessionFactory implements SessionFactory {
-    
+
     /** Creates a new instance of ModifiedSessionFactory */
     public ModifiedSessionFactory() {
     }
-    
-    /** 
-     * create a new session 
+
+    /**
+     * create a new session
      * @param mgr
-     */     
+     */
     public Session createSession(Manager mgr) {
         return new ModifiedHASession(mgr);
     }
-    
+
 }
 
 

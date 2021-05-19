@@ -77,7 +77,7 @@ public class ContextConfig
      */
     //START SJSAS 6202703
     //private static Properties authenticators = null;
-    
+
     protected static final Properties authenticators = new Properties();
     //END SJSAS 6202703
 
@@ -103,22 +103,22 @@ public class ContextConfig
      */
     protected String defaultContextXml = null;
     // END GlassFish 2439
-    
+
 
     /**
      * The default web application's deployment descriptor location.
      */
-    // BEGIN OF SJSAS 8.1 6172288  
+    // BEGIN OF SJSAS 8.1 6172288
     // private String defaultWebXml = null;
     protected String defaultWebXml = null;
-    
-    
+
+
     /**
      * Track any fatal errors during startup configuration processing.
      */
     // private boolean ok = false;
     protected boolean ok = false;
-    // END OF SJSAS 8.1 6172288 
+    // END OF SJSAS 8.1 6172288
 
 
     // START GlassFish 2439
@@ -126,7 +126,7 @@ public class ContextConfig
      * Any parse error which occurred while parsing XML descriptors.
      */
     protected SAXParseException parseException = null;
-    // END GlassFish 2439 
+    // END GlassFish 2439
 
 
     // START GlassFish 2439
@@ -143,20 +143,20 @@ public class ContextConfig
      * The <code>Digester</code> we will use to process web application
      * deployment descriptor files.
      */
-    // BEGIN OF SJSAS 8.1 6172288  
+    // BEGIN OF SJSAS 8.1 6172288
     // private static Digester webDigester = null;
     protected static final Digester webDigester =
         createWebDigester();
-    // END OF SJSAS 8.1 6172288  
-    
-    
+    // END OF SJSAS 8.1 6172288
+
+
     /**
      * The <code>Rule</code> used to parse the web.xml
      */
-    // BEGIN OF SJSAS 8.1 6172288  
+    // BEGIN OF SJSAS 8.1 6172288
     // private static WebRuleSet webRuleSet = new WebRuleSet();
     protected static final WebRuleSet webRuleSet = new WebRuleSet();
-    // END OF SJSAS 8.1 6172288  
+    // END OF SJSAS 8.1 6172288
 
     /**
      * Attribute value used to turn on/off XML validation
@@ -169,7 +169,7 @@ public class ContextConfig
      */
     private static boolean xmlNamespaceAware = false;
 
-        
+
     /**
      * Static initializer
      */
@@ -213,8 +213,8 @@ public class ContextConfig
     public void setDebug(int debug) {
         this.debug = debug;
     }
-    
-    
+
+
     // START GlassFish 2439
     /**
      * Return the location of the default deployment descriptor
@@ -345,7 +345,7 @@ public class ContextConfig
             // END PWC 6296257
             return;
         }
-        
+
         long t1=System.currentTimeMillis();
 
         URL url=null;
@@ -556,10 +556,10 @@ public class ContextConfig
      * Create and return a Digester configured to process the
      * web application deployment descriptor (web.xml).
      */
-    // BEGIN OF SJSAS 8.1 6172288  
+    // BEGIN OF SJSAS 8.1 6172288
     // private static Digester createWebDigester() {
     public static Digester createWebDigester() {
-    // END OF SJSAS 8.1 6172288  
+    // END OF SJSAS 8.1 6172288
         return createWebXmlDigester(xmlNamespaceAware, xmlValidation);
     }
 
@@ -579,7 +579,7 @@ public class ContextConfig
     }
 
 
-    // START GlassFish 2439 
+    // START GlassFish 2439
     /**
      * Create and return a Digester configured to process the
      * context configuration descriptor for an application.
@@ -624,7 +624,7 @@ public class ContextConfig
         if (!file.isAbsolute()) {
             file = new File(getBaseDir(), this.defaultWebXml);
         }
-        
+
         InputStream stream = null;
         InputSource source = null;
 
@@ -637,9 +637,9 @@ public class ContextConfig
                     source = new InputSource
                             (getClass().getClassLoader()
                             .getResource(defaultWebXml).toString());
-                } 
+                }
 
-                if (stream == null) { 
+                if (stream == null) {
                     // maybe embedded
                     stream = getClass().getClassLoader()
                         .getResourceAsStream("web-embed.xml");
@@ -647,7 +647,7 @@ public class ContextConfig
                         source = new InputSource
                         (getClass().getClassLoader()
                                 .getResource("web-embed.xml").toString());
-                    }                                         
+                    }
                 }
 
                 if( stream== null ) {
@@ -698,7 +698,7 @@ public class ContextConfig
             }
         }
         webRuleSet.recycle();
-        
+
         long t2=System.currentTimeMillis();
         if( (t2-t1) > 200 && log.isLoggable(Level.FINE) )
             log.log(Level.FINE, "Processed default web.xml " + file + " "  + ( t2-t1));
@@ -817,19 +817,19 @@ public class ContextConfig
     }
     // END GlassFish 2439
 
-        
+
     /**
      * Adjust docBase.
      */
     protected void fixDocBase()
         throws IOException {
-        
+
         Host host = (Host) context.getParent();
         String appBase = host.getAppBase();
-        
+
         boolean unpackWARs = true;
         if (host instanceof StandardHost) {
-            unpackWARs = ((StandardHost) host).isUnpackWARs() 
+            unpackWARs = ((StandardHost) host).isUnpackWARs()
                 && ((StandardContext) context).getUnpackWAR();
         }
 
@@ -839,7 +839,7 @@ public class ContextConfig
             if (canonicalAppBase.isAbsolute()) {
                 canonicalAppBase = canonicalAppBase.getCanonicalFile();
             } else {
-                canonicalAppBase = 
+                canonicalAppBase =
                     new File(System.getProperty("catalina.base"), appBase)
                     .getCanonicalFile();
             }
@@ -871,7 +871,7 @@ public class ContextConfig
         }
         file = new File(docBase);
         String origDocBase = docBase;
-        
+
         String pathName = context.getPath();
         if (pathName.equals("")) {
             pathName = "ROOT";
@@ -968,7 +968,7 @@ public class ContextConfig
     */
 
 
-    
+
     // START GlassFish 2439
     /**
      * Process a "init" event for this Context.
@@ -982,7 +982,7 @@ public class ContextConfig
         ok = true;
 
         contextConfig();
-        
+
         try {
             fixDocBase();
         } catch (IOException e) {
@@ -1008,17 +1008,17 @@ public class ContextConfig
         Container container = context.getParent();
         if( !context.getOverride() ) {
             if( container instanceof Host ) {
-             
+
                 // Reset the value only if the attribute wasn't
                 // set on the context.
                 xmlValidation = context.getXmlValidation();
                 if (!xmlValidation) {
                     xmlValidation = ((Host)container).getXmlValidation();
                 }
-                
+
                 xmlNamespaceAware = context.getXmlNamespaceAware();
                 if (!xmlNamespaceAware){
-                    xmlNamespaceAware 
+                    xmlNamespaceAware
                                 = ((Host)container).getXmlNamespaceAware();
                 }
 
@@ -1193,7 +1193,7 @@ public class ContextConfig
 
         // Check role names used in <security-constraint> elements
         Iterator<SecurityConstraint> iter =
-            context.getConstraints().iterator(); 
+            context.getConstraints().iterator();
         while (iter.hasNext()) {
             for (String role : iter.next().findAuthRoles()) {
                 if (!"*".equals(role) &&

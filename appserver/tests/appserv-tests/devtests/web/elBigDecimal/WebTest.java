@@ -37,9 +37,9 @@ public class WebTest {
                                    java.math.BigDecimal.class);
         System.out.println("Result: " + o);
         if ("1234567890123456789".equals(o.toString()))
-            stat.addStatus(testName, stat.PASS);                
+            stat.addStatus(testName, stat.PASS);
         else
-            stat.addStatus(testName, stat.FAIL);                
+            stat.addStatus(testName, stat.FAIL);
 
         stat.printSummary();
     }

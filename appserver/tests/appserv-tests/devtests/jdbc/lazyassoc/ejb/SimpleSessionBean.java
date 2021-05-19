@@ -27,54 +27,54 @@ public class SimpleSessionBean implements SessionBean
 {
 
     private SessionContext ctxt_;
-    private InitialContext ic_; 
+    private InitialContext ic_;
     private DataSource ds;
     public void setSessionContext(SessionContext context) {
         ctxt_ = context;
-	try {
-	    ic_ = new InitialContext();
-	    ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
-	} catch( NamingException ne ) {
-	    ne.printStackTrace();
-	}
+        try {
+            ic_ = new InitialContext();
+            ds = (DataSource)ic_.lookup("java:comp/env/DataSource");
+        } catch( NamingException ne ) {
+            ne.printStackTrace();
+        }
     }
 
     public void ejbCreate() throws CreateException {
     }
 
     public boolean test1() throws Exception {
-	Connection conn1 = null;
-	boolean passed = false;
-	//clean the database
-	try {
-	    conn1 = ds.getConnection();
-	} catch( Exception e) {
-	    e.printStackTrace();
-	    return false;
+        Connection conn1 = null;
+        boolean passed = false;
+        //clean the database
+        try {
+            conn1 = ds.getConnection();
+        } catch( Exception e) {
+            e.printStackTrace();
+            return false;
         }
-	
-	return true;
+
+        return true;
     }
 
     public boolean test2() throws Exception {
-	Connection conn1 = null;
+        Connection conn1 = null;
         Statement stmt = null;
-	boolean passed = false;
-	//clean the database
-	try {
-	    conn1 = ds.getConnection();
+        boolean passed = false;
+        //clean the database
+        try {
+            conn1 = ds.getConnection();
             stmt = conn1.createStatement();
             stmt.executeQuery( "SELECT * FROM TXLEVELSWITCH");
-	} catch( Exception e) {
-	    e.printStackTrace();
-	    return false;
-	} finally {
+        } catch( Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
             if (stmt != null ) {
                 try { stmt.close(); }catch( Exception e ) {}
             }
         }
-	
-	return true;
+
+        return true;
     }
 
 

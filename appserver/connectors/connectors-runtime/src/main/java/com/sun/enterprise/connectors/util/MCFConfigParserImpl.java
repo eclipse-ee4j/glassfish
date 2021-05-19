@@ -25,8 +25,8 @@ import java.util.*;
 import java.lang.*;
 
 /**
- *  This is managed connection factory configuration parser. It parses the 
- *  ra.xml file for the managed connection factory specific configurations 
+ *  This is managed connection factory configuration parser. It parses the
+ *  ra.xml file for the managed connection factory specific configurations
  *  like managed connection factory javabean  properties .
  *
  *  @author      Srikanth P
@@ -36,7 +36,7 @@ import java.lang.*;
 public class MCFConfigParserImpl implements MCFConfigParser {
 
     private final static Logger _logger = LogDomains.getLogger(MCFConfigParserImpl.class, LogDomains.RSR_LOGGER);
-   
+
     /**
      *  Default constructor.
      *
@@ -46,15 +46,15 @@ public class MCFConfigParserImpl implements MCFConfigParser {
 
     }
 
-    /* Parses the ra.xml and returns all the connection definition names. 
-     * Since there is no specific connection definition attribute in the 
-     * <connection-definition element>, connection factory interface is 
-     * taken as the connection definition name. 
+    /* Parses the ra.xml and returns all the connection definition names.
+     * Since there is no specific connection definition attribute in the
+     * <connection-definition element>, connection factory interface is
+     * taken as the connection definition name.
      *
      * @param desc ConnectorDescriptor pertaining to rar.
      * @return Array of Connection definition names.
      * @throws  ConnectorRuntimeException If moduleDir is null.
-     *          If corresponding rar is not deployed. 
+     *          If corresponding rar is not deployed.
      *
      */
 
@@ -75,9 +75,9 @@ public class MCFConfigParserImpl implements MCFConfigParser {
         return connDefNames;
     }
 
-    /** Parses the ra.xml for the managed connection factory javabean 
-     *  properties. The managed connection factory to be parsed is 
-     *  identified by the moduleDir where ra.xml is present and the 
+    /** Parses the ra.xml for the managed connection factory javabean
+     *  properties. The managed connection factory to be parsed is
+     *  identified by the moduleDir where ra.xml is present and the
      *  connection definition name .
      *
      *  Connection definition name  will be unique in a given ra.xml.
@@ -86,7 +86,7 @@ public class MCFConfigParserImpl implements MCFConfigParser {
      *  parameters are null, if corresponding rar is not deployed,
      *  if no connection definition name is found in ra.xml. If rar is deployed
      *  and connection definition name is present but no properties are
-     *  present for the corresponding connection definition name, 
+     *  present for the corresponding connection definition name,
      *  null is returned.
      *
      *  @param  desc ConnectorDescriptor pertaining to rar.
@@ -99,12 +99,12 @@ public class MCFConfigParserImpl implements MCFConfigParser {
      *          In both the case if no value is present, empty String is
      *          returned as the value.
      *  @throws  ConnectorRuntimeException if either of the parameters are null.
-     *           If corresponding rar is not deployed i.e moduleDir is invalid. 
+     *           If corresponding rar is not deployed i.e moduleDir is invalid.
      *           If no connection definition name is found in ra.xml
      */
 
-    public Properties getJavaBeanProps(ConnectorDescriptor desc, 
-               String connectionDefName, String rarName) throws ConnectorRuntimeException 
+    public Properties getJavaBeanProps(ConnectorDescriptor desc,
+               String connectionDefName, String rarName) throws ConnectorRuntimeException
     {
 
         ConnectionDefDescriptor cdd = getConnectionDefinition(desc, connectionDefName);

@@ -19,7 +19,7 @@ import java.util.List;
 @jakarta.inject.Named("SimpleItemWriter")
 public class SimpleItemWriter
     extends jakarta.batch.api.AbstractItemWriter<String> {
-    
+
     @Override
     public void open(Externalizable e) throws Exception {
     }
@@ -41,5 +41,5 @@ public class SimpleItemWriter
     public Externalizable checkpointInfo() throws Exception {
         return null;
     }
-    
+
 }

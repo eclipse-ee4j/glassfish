@@ -32,13 +32,13 @@ import org.jvnet.hk2.annotations.ContractsProvided;
 @Service
 @ContractsProvided({TransactionSynchronizationRegistryImpl.class,
                     TransactionSynchronizationRegistry.class}) // Needed because we can't change spec provided class
-public class TransactionSynchronizationRegistryImpl 
+public class TransactionSynchronizationRegistryImpl
              implements TransactionSynchronizationRegistry {
 
     @Inject
     private transient TransactionManager transactionManager;
 
-    private static StringManager sm = 
+    private static StringManager sm =
                    StringManager.getManager(TransactionSynchronizationRegistryImpl.class);
 
     public TransactionSynchronizationRegistryImpl() {
@@ -80,7 +80,7 @@ public class TransactionSynchronizationRegistryImpl
             return null;
         }
     }
-    
+
     /**
      * Add an object to the map of resources being managed for
      * the current transaction. The supplied key must be of a caller-
@@ -98,8 +98,8 @@ public class TransactionSynchronizationRegistryImpl
      */
     public void putResource(Object key, Object value) {
         try {
-            JavaEETransactionImpl tran = 
-                    (JavaEETransactionImpl)transactionManager.getTransaction();    
+            JavaEETransactionImpl tran =
+                    (JavaEETransactionImpl)transactionManager.getTransaction();
             if (tran == null)
                 throw new IllegalStateException(
                       sm.getString("enterprise_distributedtx.no_transaction"));
@@ -109,11 +109,11 @@ public class TransactionSynchronizationRegistryImpl
                       sm.getString("enterprise_distributedtx.no_transaction"));
         }
     }
-    
+
     /**
      * Get an object from the map of resources being managed for
      * the current transaction. The key must have been supplied earlier
-     * by a call to <code>putResouce</code> in the same transaction. If the key 
+     * by a call to <code>putResouce</code> in the same transaction. If the key
      * cannot be found in the current resource map, null is returned.
      *
      * @param    key  The key for looking up the associated value object.
@@ -125,8 +125,8 @@ public class TransactionSynchronizationRegistryImpl
      */
     public Object getResource(Object key){
         try {
-            JavaEETransactionImpl tran = 
-                    (JavaEETransactionImpl)transactionManager.getTransaction();    
+            JavaEETransactionImpl tran =
+                    (JavaEETransactionImpl)transactionManager.getTransaction();
             if (tran == null)
                 throw new IllegalStateException(
                       sm.getString("enterprise_distributedtx.no_transaction"));
@@ -154,9 +154,9 @@ public class TransactionSynchronizationRegistryImpl
      * transaction context of the current transaction bound to the thread
      * of the caller of this method, which is the same transaction context
      * active at the time this method is called. Allowable methods include
-     * access to resources, for example, Connectors. No access is allowed to 
+     * access to resources, for example, Connectors. No access is allowed to
      * user components, for example, timer services or bean methods,
-     * as these might change the state of POJOs, or plain old Java objects, 
+     * as these might change the state of POJOs, or plain old Java objects,
      * being managed by the caching manager.
      *
      * <P>The <code>afterCompletion</code> callback will be invoked in an
@@ -174,8 +174,8 @@ public class TransactionSynchronizationRegistryImpl
      */
     public void registerInterposedSynchronization(Synchronization sync) {
         try {
-            JavaEETransactionImpl tran = 
-                    (JavaEETransactionImpl)transactionManager.getTransaction();    
+            JavaEETransactionImpl tran =
+                    (JavaEETransactionImpl)transactionManager.getTransaction();
             if (tran == null)
                 throw new IllegalStateException(
                       sm.getString("enterprise_distributedtx.no_transaction"));
@@ -198,7 +198,7 @@ public class TransactionSynchronizationRegistryImpl
      */
     public int getTransactionStatus() {
         try {
-            return transactionManager.getStatus();    
+            return transactionManager.getStatus();
         } catch (SystemException ex) {
            return Status.STATUS_NO_TRANSACTION;
         }
@@ -213,7 +213,7 @@ public class TransactionSynchronizationRegistryImpl
      */
     public void setRollbackOnly() {
         try {
-            transactionManager.setRollbackOnly();    
+            transactionManager.setRollbackOnly();
         } catch (SystemException ex) {
             throw new IllegalStateException(
                       sm.getString("enterprise_distributedtx.no_transaction"));

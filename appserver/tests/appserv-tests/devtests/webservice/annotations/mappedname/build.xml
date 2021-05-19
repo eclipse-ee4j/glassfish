@@ -47,7 +47,7 @@
         <param name="src" value="endpoint"/>
       </antcall>
     </target>
-    
+
     <target name="deploy-app">
       <antcall target="deploy-war-common">
         <param name="contextroot" value="${appname}"/>
@@ -106,7 +106,7 @@
     </target>
 
 
-    
+
     <target name="runclient" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
       <javac srcdir="." destdir="${build.classes.dir}/client"
@@ -120,7 +120,7 @@
         <arg value="http://${http.host}:${http.port}/endpointaddress/HelloService"/>
       </java>
 
- <!--restore the tokens back in file--> 
+ <!--restore the tokens back in file-->
          <replace file="webclient/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="webclient/Client.java" token="${http.port}" value="HTTP_PORT"/>
          <replace file="client/Client.java" token="${http.host}" value="HTTP_HOST"/>
@@ -168,7 +168,7 @@
 
     <target name="report-failure">
             <echo message="Test FAILED"/>
-    </target>   	
+    </target>
 
-    
+
 </project>

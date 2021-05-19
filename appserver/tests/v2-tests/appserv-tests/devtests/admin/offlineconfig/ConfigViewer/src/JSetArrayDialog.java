@@ -36,8 +36,8 @@ public class JSetArrayDialog extends javax.swing.JDialog {
     NameHelper _nameHelper;
     DottedNameInfo _dottedNameInfo;
     /** Creates new form JSetArrayDialog */
-    public JSetArrayDialog(java.awt.Frame parent, boolean modal, 
-            NameHelper nameHelper, DottedNameInfo dottedNameInfo, 
+    public JSetArrayDialog(java.awt.Frame parent, boolean modal,
+            NameHelper nameHelper, DottedNameInfo dottedNameInfo,
             String attrName, Object[] values) {
         super(parent, modal);
         initComponents();
@@ -52,7 +52,7 @@ public class JSetArrayDialog extends javax.swing.JDialog {
         }
         fillArrayTable();
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -153,12 +153,12 @@ public class JSetArrayDialog extends javax.swing.JDialog {
 
     private void jOkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jOkButtonActionPerformed
         if(jArrayTable.isEditing()) {
-            JOptionPane.showMessageDialog(this, 
+            JOptionPane.showMessageDialog(this,
                 "Please complete table editing before submit", "",
                     JOptionPane.INFORMATION_MESSAGE);
             return;
         }
-            
+
         DefaultTableModel model = ((DefaultTableModel)jArrayTable.getModel());
         Vector<Vector> vectors = model.getDataVector();
         String[] strs = new String[vectors.size()];
@@ -167,9 +167,9 @@ public class JSetArrayDialog extends javax.swing.JDialog {
             strs[i] = (String)(vectors.elementAt(i).elementAt(0));
         }
         try {
-            _nameHelper.setValue(_dottedNameInfo, 
-                    (String)_attrName, 
-                    (Object)strs, 
+            _nameHelper.setValue(_dottedNameInfo,
+                    (String)_attrName,
+                    (Object)strs,
                     false);
         } catch (Exception e) {
             e.printStackTrace();
@@ -207,14 +207,14 @@ public class JSetArrayDialog extends javax.swing.JDialog {
 //jArrayTable.getSelectionModel().setSelectionInterval(iSelected,iSelected);
         jArrayTable.changeSelection(nRows, nRows, false, false);
     }//GEN-LAST:event_jAddButtonActionPerformed
-    
+
     /**
      * @param args the command line arguments
      */
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new JSetArrayDialog(new javax.swing.JFrame(), 
+                new JSetArrayDialog(new javax.swing.JFrame(),
                         true,
                         null, null,
                         "test",null).setVisible(true);
@@ -226,7 +226,7 @@ public class JSetArrayDialog extends javax.swing.JDialog {
     {
         fillArrayTable(jArrayTable, _attrName, _values);
     }
-    
+
     private void fillArrayTable(JTable table, String header, ArrayList lines)
     {
         table.removeAll();
@@ -243,9 +243,9 @@ public class JSetArrayDialog extends javax.swing.JDialog {
         table.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
     }
 
-    
 
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jAddButton;
     private javax.swing.JTable jArrayTable;
@@ -254,5 +254,5 @@ public class JSetArrayDialog extends javax.swing.JDialog {
     private javax.swing.JButton jRemoveButton;
     private javax.swing.JScrollPane jScrollPane2;
     // End of variables declaration//GEN-END:variables
-    
+
 }

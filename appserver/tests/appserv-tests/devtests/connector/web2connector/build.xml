@@ -31,7 +31,7 @@
     &commonBuild;
     &commonRun;
     &testproperties;
-    
+
     <target name="all" depends="build, setup, deploy-ear, run-ear,  undeploy-ear, unsetup"/>
 
 
@@ -39,14 +39,14 @@
       <antcall target="clean-common"/>
       <ant dir="ra" target="clean"/>
     </target>
-    
+
     <target name="setup">
             <antcall target="execute-sql-connector">
                 <param name="sql.file" value="sql/simpleBank.sql"/>
             </antcall>
-        
+
             <antcall target="create-ra-config"/>
-        
+
             <antcall target="deploy-rar-common">
                 <param name="rarfile" value="ra/publish/lib/jdbcra.rar"/>
             </antcall>
@@ -80,18 +80,18 @@
      <target name="create-admin-object" depends="init-common">
          <antcall target="asadmin-common">
             <param name="admin.command" value="create-admin-object --target ${appserver.instance.name} --restype com.sun.jdbcra.spi.JdbcSetupAdmin --raname jdbcra --property TableName=customer2:JndiName=jdbc/ejb-subclassing:SchemaName=DBUSER:NoOfRows=1"/>
-	    <param name="operand.props" value="eis/jdbcAdmin"/>
+            <param name="operand.props" value="eis/jdbcAdmin"/>
          </antcall>
      </target>
 
      <target name="delete-admin-object" depends="init-common">
          <antcall target="asadmin-common">
-	    <param name="admin.command" value="delete-admin-object"/>
-	    <param name="operand.props" value="--target ${appserver.instance.name} eis/jdbcAdmin"/>
-	 </antcall>
-	 <!--<antcall target="reconfig-common"/>-->
+            <param name="admin.command" value="delete-admin-object"/>
+            <param name="operand.props" value="--target ${appserver.instance.name} eis/jdbcAdmin"/>
+         </antcall>
+         <!--<antcall target="reconfig-common"/>-->
      </target>
-    
+
     <target name="restart">
     <antcall target="restart-server-instance-common"/>
     </target>
@@ -99,31 +99,31 @@
      <target name="create-ra-config" depends="init-common">
          <antcall target="asadmin-common">
             <param name="admin.command" value="create-resource-adapter-config  --property RAProperty=VALID"/>
-	    <param name="operand.props" value="jdbcra"/>
+            <param name="operand.props" value="jdbcra"/>
          </antcall>
      </target>
 
      <target name="delete-ra-config" depends="init-common">
          <antcall target="asadmin-common">
-	    <param name="admin.command" value="delete-resource-adapter-config"/>
-	    <param name="operand.props" value="jdbcra"/>
-	 </antcall>
-	 <!--<antcall target="reconfig-common"/>-->
+            <param name="admin.command" value="delete-resource-adapter-config"/>
+            <param name="operand.props" value="jdbcra"/>
+         </antcall>
+         <!--<antcall target="reconfig-common"/>-->
      </target>
 
     <target name="unsetup">
-	    <antcall target="execute-sql-connector">
-        	<param name="sql.file" value="sql/dropBankTables.sql"/>
-	      </antcall>
-	
-	    <antcall target="delete-resource"/>
-	    <antcall target="delete-pool"/>
-	    <antcall target="delete-admin-object"/>
-	    <antcall target="undeploy-rar-common">
-	    	<param name="undeployrar" value="jdbcra"/>
-	    </antcall>
+            <antcall target="execute-sql-connector">
+                <param name="sql.file" value="sql/dropBankTables.sql"/>
+              </antcall>
+
+            <antcall target="delete-resource"/>
+            <antcall target="delete-pool"/>
+            <antcall target="delete-admin-object"/>
+            <antcall target="undeploy-rar-common">
+                    <param name="undeployrar" value="jdbcra"/>
+            </antcall>
     </target>
- 
+
     <target name="delete-pool">
                 <antcall target="delete-connector-connpool-common">
                 <param name="connector.conpool.name" value="standalone-ra-pool"/>
@@ -133,7 +133,7 @@
      <target name="delete-resource">
                 <antcall target="delete-connector-resource-common">
                 <param name="connector.jndi.name" value="jdbc/ejb-subclassing"/>
-		</antcall>
+                </antcall>
     </target>
 
     <target name="compile" depends="clean">
@@ -149,9 +149,9 @@
       <echo message="common.xml: Compiling test source files" level="verbose"/>
       <javac srcdir="servlet"
          destdir="${build.classes.dir}"
-	 classpath="${s1astest.classpath}:ra/publish/internal/classes"
+         classpath="${s1astest.classpath}:ra/publish/internal/classes"
          debug="on"
-	 failonerror="true"/>
+         failonerror="true"/>
      </target>
 
 
@@ -160,31 +160,31 @@
     </target>
 
     <target name="build" depends="compile">
-    <property name="hasWebclient" value="yes"/> 
+    <property name="hasWebclient" value="yes"/>
     <ant dir="ra" target="assemble"/>
     <antcall target="webclient-war-common">
     <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="**/*.class"/> 
+    <param name="webclient.war.classes" value="**/*.class"/>
     </antcall>
-       
+
     <antcall target="ejb-jar-common">
     <param name="ejbjar.classes" value="**/*.class"/>
     </antcall>
 
-    
+
     <delete file="${assemble.dir}/${appname}.ear"/>
     <mkdir dir="${assemble.dir}"/>
-    <mkdir dir="${build.classes.dir}/META-INF"/>    
-    <ear earfile="${assemble.dir}/${appname}App.ear" 
+    <mkdir dir="${build.classes.dir}/META-INF"/>
+    <ear earfile="${assemble.dir}/${appname}App.ear"
      appxml="${application.xml}">
-    	<fileset dir="${assemble.dir}">
- 	     <include name="*.jar"/>
-	      <include name="*.war"/>
-	    </fileset>
+            <fileset dir="${assemble.dir}">
+              <include name="*.jar"/>
+              <include name="*.war"/>
+            </fileset>
     </ear>
-    </target> 
+    </target>
 
-    
+
     <target name="deploy-ear" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -192,27 +192,27 @@
     <target name="deploy-war" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run-war" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="web-to-connector (stand-alone war and rar based)"/>
-	</antcall>
+        <param name="testsuite.id" value="web-to-connector (stand-alone war and rar based)"/>
+        </antcall>
     </target>
 
     <target name="run-ear" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="web-to-connector (ear based)"/>
-	</antcall>
+        <param name="testsuite.id" value="web-to-connector (ear based)"/>
+        </antcall>
     </target>
- 
+
     <target name="undeploy-ear" depends="init-common">
 <antcall target="delete-ra-config"/>
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
     <target name="undeploy-war" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

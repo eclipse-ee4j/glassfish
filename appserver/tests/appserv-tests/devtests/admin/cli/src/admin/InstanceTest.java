@@ -95,10 +95,10 @@ public class InstanceTest extends AdminBaseDevTest {
         testRendezvous();
         testUpgrade();
         testNode();
-	testCreateInstanceConfigNode();
+        testCreateInstanceConfigNode();
         testPortBase();
         invalidConfigRef();
-        
+
         if(!isHadas())
             deleteDirectory(nodeDir);
 
@@ -268,7 +268,7 @@ public class InstanceTest extends AdminBaseDevTest {
         ret = asadminWithOutput("get", "servers.server." + iname + ".system-property.prop1.value");
         success = ret.outAndErr.indexOf("servers.server." + iname + ".system-property.prop1.value=valA") >= 0;
         report("create-instance-prop1value", success);
-        
+
         ret = asadminWithOutput("get", "servers.server." + iname + ".system-property.prop3.name");
         success = ret.outAndErr.indexOf("servers.server." + iname + ".system-property.prop3.name=prop3") >= 0;
         report("create-instance-prop3name", success);
@@ -304,7 +304,7 @@ public class InstanceTest extends AdminBaseDevTest {
         report("delete-instance-regdas", !asadmin("get", "servers.server." + iname));
         report("delete-instance-config", !asadmin("get", "configs.config." + iname + "-config"));
     }
-    
+
     private void createAdminCommandFail() {
         printf("Call remote AdminCommand create-instance with bad params");
         String iname = "badapple";
@@ -362,7 +362,7 @@ public class InstanceTest extends AdminBaseDevTest {
         String nodedir = installdir + File.separator + "mynodes";
         String node = "n1";
         String instance = "i1";
-        
+
         report("create-local-instance-nosuchnode", !asadmin("create-local-instance",
             "--node", "bogus", "bogusinstance"));
 
@@ -443,18 +443,18 @@ public class InstanceTest extends AdminBaseDevTest {
         // see JIRA issue 16579
         String node = "test-node";
         String instance = "test-instance";
-	String testName = "create-node-config-offline";
+        String testName = "create-node-config-offline";
 
-	// Creates config node without the installdir
+        // Creates config node without the installdir
         report(testName + "0", asadmin("create-node-config",
-		"--nodehost", "localhost",node));
-	report(testName+"1", asadmin("create-instance", "--node", node, instance));
-	// check that installdir was set 
+                "--nodehost", "localhost",node));
+        report(testName+"1", asadmin("create-instance", "--node", node, instance));
+        // check that installdir was set
         report(testName+"2",asadmin("get", "nodes.node." + node + ".install-dir"));
-	
-	//cleanup
-	report(testName +"3", asadmin("delete-instance", instance ));
-	report(testName +"4", asadmin("delete-node-config", node ));
+
+        //cleanup
+        report(testName +"3", asadmin("delete-instance", instance ));
+        report(testName +"4", asadmin("delete-node-config", node ));
 
     }
 

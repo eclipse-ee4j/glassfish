@@ -18,30 +18,30 @@ package org.glassfish.contextpropagation;
 
 
 /**
- * Work contexts that implements this interface will be notified of 
+ * Work contexts that implements this interface will be notified of
  * context propagation lifecycle events when a context is changed, added,
  * removed, or propagated.
  */
 public interface ContextLifecycle extends ViewCapable {
   /**
-   * Informs the receiver that a new context is taking its place in the 
+   * Informs the receiver that a new context is taking its place in the
    * ContextMap
    * @param replacementContext The replacement context.
    */
   void contextChanged(Object replacementContext);
-  
+
   /**
-   * Informs this Context that it was added to the ContextMap. This 
-   * notification is particularly valuable when this Context was 
+   * Informs this Context that it was added to the ContextMap. This
+   * notification is particularly valuable when this Context was
    * automatically added to a ContextMap during deserialization.
    */
   void contextAdded();
-  
+
   /**
    * Informs this Context that it was removed from the ContextMap
    */
   void contextRemoved();
-  
+
   /**
    * Sent to a Context just before it is propagated.
    * @return The context to propagate. It could be this, another context, or

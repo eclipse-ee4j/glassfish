@@ -33,21 +33,21 @@ public interface TreeNode extends TreeElement {
 
     public String getCategory ();
     public void setCategory (String category);
-    
+
     public boolean isEnabled ();
     public void setEnabled (boolean enabled);
 
     public void setDescription (String description);
     public String getDescription ();
-    
+
     // Children utility methods
     public TreeNode addChild (TreeNode newChild);
     public void removeChild(TreeNode oldChild);
     public void setParent (TreeNode parent);
     public TreeNode getParent ();
-    
+
     /**
-     * 
+     *
      * @return complete dotted name to this node
      */
     public String getCompletePathName ();
@@ -55,11 +55,11 @@ public interface TreeNode extends TreeElement {
     public boolean hasChildNodes ();
 
     /**
-     * 
+     *
      * @return Collection<TreeNode> collection of children
      */
     public Collection<TreeNode> getChildNodes ();
-    
+
     /**
      *
      * @return Collection<TreeNode> collection of children
@@ -67,23 +67,23 @@ public interface TreeNode extends TreeElement {
     public Collection<TreeNode> getEnabledChildNodes ();
 
     /**
-     * 
+     *
      * @param completeName dotted name to the node
      * @return TreeNode uniquely identified tree node. Null if no matching tree node.
      */
-    
+
     public TreeNode getNode (String completeName);
-      
+
     /**
      * Performs a depth first traversal of the tree. Returns all the nodes in the
      * tree unless ignoreDisabled flag is turned on.
-     * @param ignoreDisabled will ignore a disabled node and its children 
+     * @param ignoreDisabled will ignore a disabled node and its children
      * @return List<TreeNode> lists all nodes under the current sub tree.
      */
 
     public List<TreeNode> traverse (boolean ignoreDisabled);
     /**
-     * 
+     *
      * Returns all nodes that match the given Regex pattern as specified by the
      * <a href="http://java.sun.com/j2se/1.4.2/docs/api/java/util/regex/Pattern.html"> Pattern</a>  class.
      * Admin CLI in GlassFish v2 did not use Pattern's specified in java.util.Pattern. It had

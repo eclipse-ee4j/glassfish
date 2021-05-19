@@ -49,6 +49,6 @@ public class GenericDeployer<T extends Container> implements Deployer<T, Generic
     public void unload(GenericApplicationContainer appContainer, DeploymentContext context) {
     }
 
-    public void clean(DeploymentContext context) {        
+    public void clean(DeploymentContext context) {
     }
 }

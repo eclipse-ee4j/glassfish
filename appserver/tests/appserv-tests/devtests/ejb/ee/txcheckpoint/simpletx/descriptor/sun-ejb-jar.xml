@@ -25,8 +25,8 @@
         <jndi-name>ejb/ejb_ee_txcheckpoint_simpletx_SFSB</jndi-name>
         <bean-cache>
             <max-cache-size>8</max-cache-size>
-	    <resize-quantity>4</resize-quantity>
-	    <removal-timeout-in-seconds>60</removal-timeout-in-seconds>
+            <resize-quantity>4</resize-quantity>
+            <removal-timeout-in-seconds>60</removal-timeout-in-seconds>
         </bean-cache>
      </ejb>
    </enterprise-beans>

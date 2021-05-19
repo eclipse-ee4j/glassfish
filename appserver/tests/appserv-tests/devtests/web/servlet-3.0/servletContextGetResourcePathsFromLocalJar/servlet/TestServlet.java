@@ -31,7 +31,7 @@ public class TestServlet extends HttpServlet {
         if (resPaths == null) {
             throw new ServletException("No resource paths");
         }
-   
+
         if (!resPaths.contains(CATALOG_OFFERS)) {
             throw new ServletException(CATALOG_OFFERS +
                 " missing from resource paths");

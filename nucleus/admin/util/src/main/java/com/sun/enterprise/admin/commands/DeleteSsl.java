@@ -42,7 +42,7 @@ import java.beans.PropertyVetoException;
 
 /**
  * Delete Ssl command
- * 
+ *
  * Usage: delete-ssl --type [http-listener|iiop-listener|iiop-service|protocol] [--terse=false] [--echo=false]
  * [--interactive=true] [--host localhost] [--port 4848|4849] [--secure | -s] [--user admin_user] [--passwordfile
  * file_name] [--target target(Default server)] [listener_id|protocol_id]

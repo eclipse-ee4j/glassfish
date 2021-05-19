@@ -20,17 +20,17 @@ import java.util.*;
 import jakarta.ejb.*;
 
 public interface LocalLeagueHome extends EJBLocalHome {
-    
+
     public LocalLeague create (String id, String name, String sport)
         throws CreateException;
-    
+
     public LocalLeague findByPrimaryKey (String id)
         throws FinderException;
 
-    public Collection findAll() 
+    public Collection findAll()
         throws FinderException;
 
     public LocalLeague findByName(String name)
-        throws FinderException;					
-        
+        throws FinderException;
+
 }

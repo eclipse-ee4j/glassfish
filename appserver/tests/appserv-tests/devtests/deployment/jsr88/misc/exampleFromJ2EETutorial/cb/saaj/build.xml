@@ -21,15 +21,15 @@
 ]>
 
 <project name="SAAJ Tutorial, Coffee Break" default="build" basedir=".">
-  <target name="init"> 
-      <tstamp/> 
-  </target> 
+  <target name="init">
+      <tstamp/>
+  </target>
 
   <property file="../../common/build.properties"/>
   <property file="build.properties"/>
 
   &targets;
-  
+
   <path id="run.classpath">
     <fileset dir="${j2ee.home}/lib">
       <include name="*.jar"/>
@@ -39,7 +39,7 @@
     </fileset>
   </path>
 
-  <target name="prepare" 
+  <target name="prepare"
      description="Creates the build and dist directories" >
      <echo message="Creating the required directories...." />
      <mkdir dir="${build}/client" />
@@ -77,11 +77,11 @@
       <classpath refid="classpath" />
       <classpath path="${common}" />
       </javac>
-      <copy file="../common/src/com/sun/cb/CoffeeBreak.properties" 
+      <copy file="../common/src/com/sun/cb/CoffeeBreak.properties"
         todir="${build}/client/com/sun/cb" />
   </target>
 
-  <target name="package-client" depends="compile-client" 
+  <target name="package-client" depends="compile-client"
       description="Builds the JAR file that contains the SAAJ client routines">
       <echo message="Building the ${client-jar} file...."/>
       <delete file="dist/${client-jar}" />
@@ -92,24 +92,24 @@
       </jar>
   </target>
 
-  <target name="run-test-order"> 
+  <target name="run-test-order">
      <antcall target="run-test-client">
        <param name="client-class" value="com.sun.cb.TestOrderRequest"/>
      </antcall>
   </target>
 
-  <target name="run-test-price"> 
+  <target name="run-test-price">
      <antcall target="run-test-client">
        <param name="client-class" value="com.sun.cb.TestPriceListRequest"/>
      </antcall>
   </target>
 
-  <target name="run-test-client" 
+  <target name="run-test-client"
      description="Runs a test client">
      <echo message="Running the ${client-class} program:" />
      <echo message=" " />
-      <java 
-            fork="on" 
+      <java
+            fork="on"
             classname="${client-class}">
       <classpath refid="run.classpath" />
       <classpath path="${build}/client" />

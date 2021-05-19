@@ -25,12 +25,12 @@ import jakarta.ejb.*;
  */
 
 public interface LocalSuppliersHome extends jakarta.ejb.EJBLocalHome {
-    
+
     public Data.LocalSuppliers findByPrimaryKey(Data.SuppliersKey aKey)
     throws jakarta.ejb.FinderException;
-    
+
     public LocalSuppliers create(java.lang.Integer partid, java.lang.Integer supplierid, java.lang.String name, int status, java.lang.String city) throws jakarta.ejb.CreateException;
-    
+
     public java.util.Collection findAll() throws jakarta.ejb.FinderException;
-    
+
 }

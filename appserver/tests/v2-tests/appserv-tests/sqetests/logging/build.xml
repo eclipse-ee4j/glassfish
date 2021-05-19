@@ -30,14 +30,14 @@
     &commonBuild;
     &commonRun;
     &testproperties;
-    
+
     <target name="all" depends="build,setup,restart,unsetup"/>
 
     <target name="run-test" depends="build,setup,restart"/>
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-    
+
     <target name="setup">
         <antcall target="create-lifecycle"/>
         <antcall target="set-lifecycle-classpath"/>
@@ -91,7 +91,7 @@
     <target name="unsetup">
       <antcall target="delete-lifecycle"/>
     </target>
- 
+
     <target name="delete-lifecycle" depends="init-common">
        <echo message="Deleting Life Cycle Module ${modulename}"/>
        <exec executable="${ASADMIN}" failonerror="false">
@@ -108,8 +108,8 @@
     </target>
 
     <target name="build" depends="compile">
-    </target> 
-    
+    </target>
+
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

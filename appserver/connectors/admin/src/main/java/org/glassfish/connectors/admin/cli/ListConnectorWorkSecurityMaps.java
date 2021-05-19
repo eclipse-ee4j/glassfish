@@ -47,8 +47,8 @@ import jakarta.inject.Inject;
 @I18n("list.connector.work.security.maps")
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-connector-work-security-maps", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-connector-work-security-maps",
         description="List Connector Work Security Maps")
 })
 public class ListConnectorWorkSecurityMaps implements AdminCommand {

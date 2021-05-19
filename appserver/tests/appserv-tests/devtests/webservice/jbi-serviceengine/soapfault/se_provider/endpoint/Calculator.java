@@ -28,7 +28,7 @@ import jakarta.jws.WebMethod;
 public class Calculator {
     public Calculator() {}
 
-    
+
     @WebMethod(operationName="throwRuntimeException", action="urn:ThrowRuntimeException")
     public String throwRuntimeException(String name) {
         String exceptionMsg = "Calculator :: Threw Runtime Exception";

@@ -32,15 +32,15 @@ public class Client {
     public Client() {
     }
 
-    public static void main(String[] args) { 
-        System.out.println("\nStarting Txglobal Test Suite");  
-        Client client = new Client(); 
+    public static void main(String[] args) {
+        System.out.println("\nStarting Txglobal Test Suite");
+        Client client = new Client();
 
         // initialize the context and home object
         client.setup();
 
         // run the tests
-        client.runTestClient();   
+        client.runTestClient();
     }
 
     public void setup() {
@@ -73,7 +73,7 @@ public class Client {
     }
 
     public void test1() {
-        try {  
+        try {
             System.out.println("Execute BeanB::test1");
 
             TxRemoteB beanB = home.create();
@@ -82,7 +82,7 @@ public class Client {
 
             if (result == 0) {
                 status.addStatus("txglobal test1: ", status.PASS);
-            } else {	 
+            } else {
                 status.addStatus("txglobal test1: ", status.FAIL);
             }
 
@@ -96,7 +96,7 @@ public class Client {
 
     public void test2() {
         TxRemoteB beanB = null;
-        try {  
+        try {
             System.out.println("Execute BeanB::test2");
 
             beanB = home.create();
@@ -105,7 +105,7 @@ public class Client {
 
             if (result == 1) {
                 status.addStatus("txglobal test2: ", status.PASS);
-            } else {	 
+            } else {
                 status.addStatus("txglobal test2: ", status.FAIL);
             }
             beanB.remove();

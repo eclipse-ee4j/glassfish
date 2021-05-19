@@ -31,6 +31,6 @@ public class JVMReportTest extends BaseSeleniumTestClass {
         isTextPresent("JVM Report");
         clickAndWait("propertyForm:propertySheet:serverGeneralPropSheet:jvmProp:jvmlink", TRIGGER_JVM);
         isTextPresent("Operating System Information");
-    }        
+    }
 }
 

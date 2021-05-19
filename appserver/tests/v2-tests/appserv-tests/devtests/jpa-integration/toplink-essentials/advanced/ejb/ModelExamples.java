@@ -43,7 +43,7 @@ public class ModelExamples  {
         emp.setSalary(1000);
         return emp;
     }
-    
+
     public static Employee employeeExample3(){
         Employee emp = new Employee();
         emp.setFirstName("Lacy");
@@ -54,7 +54,7 @@ public class ModelExamples  {
         emp.setSalary(2);
         return emp;
     }
-    
+
     public static Employee employeeExample4(){
         Employee emp = new Employee();
         emp.setFirstName("Ralf");
@@ -65,14 +65,14 @@ public class ModelExamples  {
         emp.setSalary(100);
         return emp;
     }
-    
+
     public static Project projectExample1(){
         Project project = new Project();
         project.setDescription("To undertake and evaluate the effecency of the companies farmers.");
         project.setName("Farmer effecency evaluations");
         return project;
     }
-    
+
     public static Project projectExample2(){
         LargeProject project = new LargeProject();
         project.setDescription("To assess the changing demographics of the feline world");
@@ -125,7 +125,7 @@ public class ModelExamples  {
         address.setStreet("324 Bay Street");
         return address;
     }
-    
+
     public static Address addressExample5(){
         Address address = new Address();
         address.setCity("Goose Bay");
@@ -135,7 +135,7 @@ public class ModelExamples  {
         address.setStreet("360 Hamilton Rd");
         return address;
     }
-    
+
     public static PhoneNumber phoneExample1(){
         return new PhoneNumber("Work", "613", "6544545");
     }

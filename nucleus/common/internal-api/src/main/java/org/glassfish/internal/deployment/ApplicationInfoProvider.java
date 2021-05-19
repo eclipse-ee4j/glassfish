@@ -20,7 +20,7 @@ import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.DeploymentContext;
 
-import java.net.URL; 
+import java.net.URL;
 import java.util.List;
 
 @Contract
@@ -29,7 +29,7 @@ public interface ApplicationInfoProvider {
     /**
      * return the name for the given application
      */
-    public String getNameFor(ReadableArchive archive, 
+    public String getNameFor(ReadableArchive archive,
         DeploymentContext context);
 
 }

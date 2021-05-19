@@ -30,7 +30,7 @@
 <project name="jdbc" default="usage" basedir=".">
     &commonSetup;
     &commonBuild;
-    
+
     &jdbcCommon;
     &jdbcCommonProperties;
     <!--&eeCommon;
@@ -43,94 +43,94 @@
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
         </delete>
         <delete>
-	    <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
+            <fileset dir="${env.APS_HOME}" includes="JDBCtest_results.html"/>
         </delete>
         <delete>
             <fileset dir="." includes="*.output"/>
         </delete>
-	<record name="jdbc.output" action="start"/>
-	<antcall target="run-tests"/>
-	<antcall target="report">
-	    <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
-	</antcall>
-	<record name="jdbc.output" action="stop"/>
-	
+        <record name="jdbc.output" action="start"/>
+        <antcall target="run-tests"/>
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/test_results.html"/>
+        </antcall>
+        <record name="jdbc.output" action="stop"/>
+
     </target>
-	
+
     <target name="jdbc-all-security">
         <delete>
             <fileset dir="${env.APS_HOME}" includes="test_results*"/>
         </delete>
         <delete>
-	    <fileset dir="${env.APS_HOME}" includes="JDBCSecuritytest_results.html"/>
+            <fileset dir="${env.APS_HOME}" includes="JDBCSecuritytest_results.html"/>
         </delete>
         <delete>
             <fileset dir="." includes="*.output"/>
         </delete>
-	<record name="jdbc.secman.output" action="start"/>
-	<antcall target="run-tests"/>
-	<antcall target="report">
-	    <param name="htmlfile" value="${env.APS_HOME}/JDBCSecuritytest_results.html"/>
-	</antcall>
-	<record name="jdbc.secman.output" action="stop"/>
+        <record name="jdbc.secman.output" action="start"/>
+        <antcall target="run-tests"/>
+        <antcall target="report">
+            <param name="htmlfile" value="${env.APS_HOME}/JDBCSecuritytest_results.html"/>
+        </antcall>
+        <record name="jdbc.secman.output" action="stop"/>
     </target>
-	
+
     <target name="run-tests">
-	<ant dir="appauth" target="all"/>
-	<ant dir="appauthtx" target="all"/>
-	<ant dir="contauth" target="all"/>
-	<ant dir="contauthtx" target="all"/>
-	<ant dir="contauth1" target="all"/>
-	<ant dir="contauth1tx" target="all"/>
-	<ant dir="reconfig" target="all"/>
-	<ant dir="autocommit" target="all"/>
-	<ant dir="jdbcjmsauth" target="all"/>
-	<ant dir="nopasswdfordb" target="all"/>
+        <ant dir="appauth" target="all"/>
+        <ant dir="appauthtx" target="all"/>
+        <ant dir="contauth" target="all"/>
+        <ant dir="contauthtx" target="all"/>
+        <ant dir="contauth1" target="all"/>
+        <ant dir="contauth1tx" target="all"/>
+        <ant dir="reconfig" target="all"/>
+        <ant dir="autocommit" target="all"/>
+        <ant dir="jdbcjmsauth" target="all"/>
+        <ant dir="nopasswdfordb" target="all"/>
         <ant dir="txpassthrough" target="all"/>
         <ant dir="txafternontx" target="all"/>
         <ant dir="txafternontxjndi" target="all"/>
-	<ant dir="notxops" target="all"/>
-	<ant dir="nonacc" target="all"/>
-	<ant dir="lazyassoc" target="all"/>
-	<ant dir="markconnectionasbad.local" target="all"/>
-	<ant dir="markconnectionasbad.xa" target="all"/>
-	<ant dir="statementwrapper" target="all"/>
-	<ant dir="maxconnectionusage" target="all"/>
-	<ant dir="switchoffACCconnpooling" target="all"/>
-	<ant dir="multipleusercredentials" target="all"/>
+        <ant dir="notxops" target="all"/>
+        <ant dir="nonacc" target="all"/>
+        <ant dir="lazyassoc" target="all"/>
+        <ant dir="markconnectionasbad.local" target="all"/>
+        <ant dir="markconnectionasbad.xa" target="all"/>
+        <ant dir="statementwrapper" target="all"/>
+        <ant dir="maxconnectionusage" target="all"/>
+        <ant dir="switchoffACCconnpooling" target="all"/>
+        <ant dir="multipleusercredentials" target="all"/>
         <ant dir="multiplecloseconnection" target="all"/>
-	<ant dir="statementtimeout" target="all"/>
-	<ant dir="conval" target="all"/>
-	<ant dir="conval" target="all-assoc-with-thread"/>
-	<ant dir="connleaktracing" target="all"/>
-	<ant dir="conncreationretry" target="all"/>
-	<ant dir="validateatmostonceperiod" target="all"/>
-	<ant dir="connsharing" target="nonxa"/>
-	<ant dir="connsharing/nonxa" target="all-assoc-with-thread"/>
-	<ant dir="cpds" target="all"/>
-	<ant dir="txisolation" target="all"/>
-	<ant dir="stmtCaching_hit_miss" target="all"/>
-	<ant dir="pooling" target="all"/>
-	<ant dir="dmmcf" target="all"/>
-	<ant dir="dmmcf.markconnectionasbad.xa" target="all"/>
-	<ant dir="dmmcf.appclient" target="all"/>
+        <ant dir="statementtimeout" target="all"/>
+        <ant dir="conval" target="all"/>
+        <ant dir="conval" target="all-assoc-with-thread"/>
+        <ant dir="connleaktracing" target="all"/>
+        <ant dir="conncreationretry" target="all"/>
+        <ant dir="validateatmostonceperiod" target="all"/>
+        <ant dir="connsharing" target="nonxa"/>
+        <ant dir="connsharing/nonxa" target="all-assoc-with-thread"/>
+        <ant dir="cpds" target="all"/>
+        <ant dir="txisolation" target="all"/>
+        <ant dir="stmtCaching_hit_miss" target="all"/>
+        <ant dir="pooling" target="all"/>
+        <ant dir="dmmcf" target="all"/>
+        <ant dir="dmmcf.markconnectionasbad.xa" target="all"/>
+        <ant dir="dmmcf.appclient" target="all"/>
         <ant dir="tracingsql" target="all"/>
-	<ant dir="datasource40" target="all"/>
-	<ant dir="custom-validation" target="all"/>
-	<ant dir="custom-validation-1" target="all"/>
-	<ant dir="flushconnectionpool" target="all"/>
-	<ant dir="connleakreclaimnotify" target="all"/>
-	<ant dir="stmtCaching_hit_miss.monitoring" target="all"/>
-	<!--ant dir="transparent-pool-reconfig" target="all"/-->
-	<!--ant dir="transparent-pool-reconfig-resources-xml" target="all"/-->
-	<!--ant dir="sqltracemonitoring" target="all"/-->
-	<!--ant dir="statementleakdetection" target="all"/-->
-	<!--ant dir="appbasedMonitoring" target="all"/-->
-	<ant dir="jpa-dsd" target="all" />
-	<ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
-	<ant dir="stmtCaching_hit_miss.fixed" target="all"/>
+        <ant dir="datasource40" target="all"/>
+        <ant dir="custom-validation" target="all"/>
+        <ant dir="custom-validation-1" target="all"/>
+        <ant dir="flushconnectionpool" target="all"/>
+        <ant dir="connleakreclaimnotify" target="all"/>
+        <ant dir="stmtCaching_hit_miss.monitoring" target="all"/>
+        <!--ant dir="transparent-pool-reconfig" target="all"/-->
+        <!--ant dir="transparent-pool-reconfig-resources-xml" target="all"/-->
+        <!--ant dir="sqltracemonitoring" target="all"/-->
+        <!--ant dir="statementleakdetection" target="all"/-->
+        <!--ant dir="appbasedMonitoring" target="all"/-->
+        <ant dir="jpa-dsd" target="all" />
+        <ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
+        <ant dir="stmtCaching_hit_miss.fixed" target="all"/>
 
-	<!--<antcall target="all-oracle"/>-->
+        <!--<antcall target="all-oracle"/>-->
     </target>
 
     <target name="ee-all">
@@ -171,41 +171,41 @@
         <ant dir="validateatmostonceperiod" target="all"/>
         <ant dir="cpds" target="all"/>
         <ant dir="txisolation" target="all"/>
-	<ant dir="stmtCaching_hit_miss" target="all"/>
-	<ant dir="pooling" target="all"/>
-	<ant dir="transparent-pool-reconfig" target="all"/>
-	<ant dir="transparent-pool-reconfig-resources-xml" target="all"/>
-	<ant dir="jpa-dsd" target="all" />
-	<ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
+        <ant dir="stmtCaching_hit_miss" target="all"/>
+        <ant dir="pooling" target="all"/>
+        <ant dir="transparent-pool-reconfig" target="all"/>
+        <ant dir="transparent-pool-reconfig-resources-xml" target="all"/>
+        <ant dir="jpa-dsd" target="all" />
+        <ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
         <record name="jdbc.output" action="stop"/>
     </target>
 
     <target name="all">
-	<antcall target="jdbc-all"/>
+        <antcall target="jdbc-all"/>
     </target>
 
     <target name="all-oracle">
-	<record name="jdbc-oracle.output" action="start"/>
-	<ant dir="connsharing" target="xa"/>
-	<ant dir="simpleoradd" target="all"/>
-	<ant dir="dmmcf.notxconn" target="all"/>
-	<ant dir="notxconn" target="all"/>
-	<ant dir="reconfig" target="userpass"/>
-	<ant dir="simpleora" target="all"/>
-	<ant dir="init-sql" target="all"/>
-	<record name="jdbc-oracle.output" action="stop"/>
+        <record name="jdbc-oracle.output" action="start"/>
+        <ant dir="connsharing" target="xa"/>
+        <ant dir="simpleoradd" target="all"/>
+        <ant dir="dmmcf.notxconn" target="all"/>
+        <ant dir="notxconn" target="all"/>
+        <ant dir="reconfig" target="userpass"/>
+        <ant dir="simpleora" target="all"/>
+        <ant dir="init-sql" target="all"/>
+        <record name="jdbc-oracle.output" action="stop"/>
     </target>
 
     <target name="all-with-security-manager">
-	<antcall target="create-jvm-options">
+        <antcall target="create-jvm-options">
             <param name="option" value="-Djava.security.manager"/>
         </antcall>
-	<antcall target="restart-server"/>
-	<antcall target="jdbc-all-security"/>
-	<antcall target="delete-jvm-options">
+        <antcall target="restart-server"/>
+        <antcall target="jdbc-all-security"/>
+        <antcall target="delete-jvm-options">
             <param name="option" value="-Djava.security.manager"/>
         </antcall>
-	<antcall target="restart-server"/>
+        <antcall target="restart-server"/>
     </target>
 
     <target name="appauth">
@@ -333,7 +333,7 @@
         <ant dir="maxconnectionusage" target="all"/>
         <record name="maxconnectionusage.output" action="stop"/>
     </target>
-                                   
+
     <target name="statementwrapper">
         <record name="statementwrapper.output" action="start"/>
         <ant dir="statementwrapper" target="all"/>
@@ -383,79 +383,79 @@
     </target>
 
     <target name="stmtCaching_hit_miss">
-	<record name="stmtCaching_hit_miss.output" action="start"/>
-	<ant dir="stmtCaching_hit_miss" target="all"/>
-	<record name="stmtCaching_hit_miss.output" action="stop"/>
+        <record name="stmtCaching_hit_miss.output" action="start"/>
+        <ant dir="stmtCaching_hit_miss" target="all"/>
+        <record name="stmtCaching_hit_miss.output" action="stop"/>
     </target>
 
     <target name="pooling">
-	<record name="pooling.output" action="start"/>
-	<ant dir="pooling" target="all"/>
+        <record name="pooling.output" action="start"/>
+        <ant dir="pooling" target="all"/>
     </target>
 
     <target name="dmmcf">
-	<record name="dmmcf.output" action="start"/>
-	<ant dir="dmmcf" target="all"/>
-	<record name="dmmcf.output" action="stop"/>
+        <record name="dmmcf.output" action="start"/>
+        <ant dir="dmmcf" target="all"/>
+        <record name="dmmcf.output" action="stop"/>
     </target>
 
     <target name="dmmcf.appclient">
-	<record name="dmmcf.appclient.output" action="start"/>
-	<ant dir="dmmcf.appclient" target="all"/>
-	<record name="dmmcf.appclient.output" action="stop"/>
+        <record name="dmmcf.appclient.output" action="start"/>
+        <ant dir="dmmcf.appclient" target="all"/>
+        <record name="dmmcf.appclient.output" action="stop"/>
     </target>
 
     <target name="tracingsql">
-	<record name="tracingsql.output" action="start"/>
-	<ant dir="tracingsql" target="all"/>
-	<record name="tracingsql.output" action="stop"/>
+        <record name="tracingsql.output" action="start"/>
+        <ant dir="tracingsql" target="all"/>
+        <record name="tracingsql.output" action="stop"/>
     </target>
 
     <target name="datasource40">
-	<record name="datasource40.output" action="start"/>
-	<ant dir="datasource40" target="all"/>
-	<record name="datasource40.output" action="stop"/>
+        <record name="datasource40.output" action="start"/>
+        <ant dir="datasource40" target="all"/>
+        <record name="datasource40.output" action="stop"/>
     </target>
 
     <target name="flushconnectionpool">
-	<record name="flushconnectionpool.output" action="start"/>
-	<ant dir="flushconnectionpool" target="all"/>
-	<record name="flushconnectionpool.output" action="stop"/>
+        <record name="flushconnectionpool.output" action="start"/>
+        <ant dir="flushconnectionpool" target="all"/>
+        <record name="flushconnectionpool.output" action="stop"/>
     </target>
 
     <target name="init-sql">
-	<record name="init-sql.output" action="start"/>
-	<ant dir="init-sql" target="all"/>
-	<record name="init-sql.output" action="stop"/>
+        <record name="init-sql.output" action="start"/>
+        <ant dir="init-sql" target="all"/>
+        <record name="init-sql.output" action="stop"/>
     </target>
 
     <target name="connleakreclaimnotify">
-	<record name="connleakreclaimnotify.output" action="start"/>
-	<ant dir="connleakreclaimnotify" target="all"/>
-	<record name="connleakreclaimnotify.output" action="stop"/>
+        <record name="connleakreclaimnotify.output" action="start"/>
+        <ant dir="connleakreclaimnotify" target="all"/>
+        <record name="connleakreclaimnotify.output" action="stop"/>
     </target>
-  
+
     <target name="transparent-pool-reconfig">
-	<record name="transparent-pool-reconfig.output" action="start"/>
-	<ant dir="transparent-pool-reconfig" target="all"/>
-	<record name="transparent-pool-reconfig.output" action="stop"/>
+        <record name="transparent-pool-reconfig.output" action="start"/>
+        <ant dir="transparent-pool-reconfig" target="all"/>
+        <record name="transparent-pool-reconfig.output" action="stop"/>
     </target>
     <target name="transparent-pool-reconfig-resources-xml">
-	<record name="transparent-pool-reconfig-resources-xml.output" action="start"/>
-	<ant dir="transparent-pool-reconfig-resources-xml" target="all"/>
-	<record name="transparent-pool-reconfig-resources-xml.output" action="stop"/>
+        <record name="transparent-pool-reconfig-resources-xml.output" action="start"/>
+        <ant dir="transparent-pool-reconfig-resources-xml" target="all"/>
+        <record name="transparent-pool-reconfig-resources-xml.output" action="stop"/>
     </target>
 
     <target name="jpa-dsd">
-	<record name="jpa-dsd.output" action="start"/>
-	<ant dir="jpa-dsd" target="all"/>
-	<record name="jpa-dsd.output" action="stop"/>
+        <record name="jpa-dsd.output" action="start"/>
+        <ant dir="jpa-dsd" target="all"/>
+        <record name="jpa-dsd.output" action="stop"/>
     </target>
 
     <target name="jpa-dsd.appclient-exposed-dsd">
-	<record name="jpa-dsd.appclient-exposed-dsd.output" action="start"/>
-	<ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
-	<record name="jpa-dsd.appclient-exposed-dsd.output" action="stop"/>
+        <record name="jpa-dsd.appclient-exposed-dsd.output" action="start"/>
+        <ant dir="jpa-dsd" target="all-appclient-exposed-dsd"/>
+        <record name="jpa-dsd.appclient-exposed-dsd.output" action="stop"/>
     </target>
 
     <target name="usage">

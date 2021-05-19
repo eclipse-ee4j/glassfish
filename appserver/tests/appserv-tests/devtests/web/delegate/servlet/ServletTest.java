@@ -25,11 +25,11 @@ import jakarta.servlet.http.*;
 public class ServletTest extends HttpServlet{
 
     private String status = "DelegateTest::FAIL";
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("[Servlet.init]");        
-        
+        System.out.println("[Servlet.init]");
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -37,11 +37,11 @@ public class ServletTest extends HttpServlet{
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         response.setContentType("text/html");
-        
+
         DelegateTest delegate = null;
         try{
             Class clazz = Class.forName("test.DelegateTest");
@@ -54,7 +54,7 @@ public class ServletTest extends HttpServlet{
 
         if (delegate != null){
             try{
-                System.out.println("Delegate: " + delegate.getChildName());       
+                System.out.println("Delegate: " + delegate.getChildName());
                 status = "DelegateTest::PASS";
             } catch (Exception ex){
                 status = "DelegateTest::FAIL";
@@ -72,13 +72,13 @@ public class ServletTest extends HttpServlet{
             } else {
                 status = "OverridableJavax::PASS";
             }
-            
+
         } catch (Exception ex){
             status = "OverridableJavax::FAIL";
             ex.printStackTrace();
         }
         out.println(status);
-        
+
     }
 
 }

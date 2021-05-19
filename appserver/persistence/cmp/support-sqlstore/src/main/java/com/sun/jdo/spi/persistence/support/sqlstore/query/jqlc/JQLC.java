@@ -41,14 +41,14 @@ import com.sun.jdo.spi.persistence.utility.logging.Logger;
 
 import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.TypeTable;
 
-/** 
+/**
  *
  * @author  Michael Bouschen
  * @version 0.1
- * 
+ *
  * Note: this class allows to override its fields even after all the processing
  * is done via the corresponding setXXX methods. This is not expected behavior.
- * A better solution would be to change all setters to be private and have use 
+ * A better solution would be to change all setters to be private and have use
  * a constructor to populate all the values. The constructor will call private
  * setters to process the arguments.
  */
@@ -58,23 +58,23 @@ public class JQLC
     protected TypeTable typetab;
 
     /** */
-    protected ErrorMsg errorMsg;    
-    
+    protected ErrorMsg errorMsg;
+
     /** */
     protected Class candidateClass;
-    
+
     /** */
     protected JQLAST filterAST = null;
-    
+
     /** */
     protected JQLAST importsAST = null;
-    
+
     /** */
     protected JQLAST varsAST = null;
-    
+
     /** */
     protected JQLAST paramsAST = null;
-    
+
     /** */
     protected JQLAST orderingAST = null;
 
@@ -83,20 +83,20 @@ public class JQLC
 
     /** */
     protected JQLAST queryAST = null;
-    
+
     /** */
     private boolean prefetchEnabled;
-    
-    /** 
-     * RD cache, key is a string build from actual param values 
+
+    /**
+     * RD cache, key is a string build from actual param values
      * (see ParameterTable.getKeyForRetrieveDescCache).
-     * It's ok to use WeakHashMap from java.util, because the key is a string 
+     * It's ok to use WeakHashMap from java.util, because the key is a string
      * which is not referenced by the RD.
      */
     protected Map retrieveDescCache = new HashMap();
 
     /** I18N support */
-    protected final static ResourceBundle messages = 
+    protected final static ResourceBundle messages =
         I18NHelper.loadBundle(JQLC.class);
 
     /** The logger */
@@ -109,7 +109,7 @@ public class JQLC
     {
         this.errorMsg = new ErrorMsg();
     }
-    
+
     /**
      *
      */
@@ -141,37 +141,37 @@ public class JQLC
         {
             JQLParser parser = createStringParser(imports);
             parser.parseImports();
-            importsAST = (JQLAST)parser.getAST();        
+            importsAST = (JQLAST)parser.getAST();
         }
         catch (ANTLRException ex)
         {
             JQLParser.handleANTLRException(ex, errorMsg);
         }
     }
-    
+
     /**
      *
      */
     public void declareParameters(String parameters)
     {
         if (parameters == null)
-        { 
+        {
             paramsAST = null;
             return;
         }
-        
+
         try
         {
             JQLParser parser = createStringParser(parameters);
             parser.parseParameters();
-            paramsAST = (JQLAST)parser.getAST();        
+            paramsAST = (JQLAST)parser.getAST();
         }
         catch (ANTLRException ex)
         {
             JQLParser.handleANTLRException(ex, errorMsg);
         }
     }
-    
+
     /**
      *
      */
@@ -182,19 +182,19 @@ public class JQLC
             varsAST = null;
             return;
         }
-        
+
         try
         {
             JQLParser parser = createStringParser(variables);
             parser.parseVariables();
-            varsAST = (JQLAST)parser.getAST();        
+            varsAST = (JQLAST)parser.getAST();
         }
         catch (ANTLRException ex)
         {
             JQLParser.handleANTLRException(ex, errorMsg);
         }
     }
-    
+
     /**
      *
      */
@@ -205,19 +205,19 @@ public class JQLC
             orderingAST = null;
             return;
         }
-        
+
         try
         {
             JQLParser parser = createStringParser(ordering);
             parser.parseOrdering();
-            orderingAST = (JQLAST)parser.getAST();        
+            orderingAST = (JQLAST)parser.getAST();
         }
         catch (ANTLRException ex)
         {
             JQLParser.handleANTLRException(ex, errorMsg);
         }
     }
-    
+
     /**
      *
      */
@@ -228,19 +228,19 @@ public class JQLC
             resultAST = null;
             return;
         }
-        
+
         try
         {
             JQLParser parser = createStringParser(result);
             parser.parseResult();
-            resultAST = (JQLAST)parser.getAST();        
+            resultAST = (JQLAST)parser.getAST();
         }
         catch (ANTLRException ex)
         {
             JQLParser.handleANTLRException(ex, errorMsg);
         }
     }
-    
+
     /**
      *
      */
@@ -249,26 +249,26 @@ public class JQLC
         if (StringHelper.isEmpty(filter))
         {
             // If there is no filter specified use "true" as filter.
-            // This is the case if 
+            // This is the case if
             // - setFilter is not called at all (filter == null)
             // - the filter is empty or contians whitespecace only.
-            // Internally the filter has to be specified, 
+            // Internally the filter has to be specified,
             // otherwise semantic analysis has problems with empty AST.
             filter = "true"; //NOI18N
         }
-        
+
         try
         {
             JQLParser parser = createStringParser(filter);
             parser.parseFilter();
-            filterAST = (JQLAST)parser.getAST();        
+            filterAST = (JQLAST)parser.getAST();
         }
         catch (ANTLRException ex)
         {
             JQLParser.handleANTLRException(ex, errorMsg);
         }
      }
-    
+
     /**
      *
      */
@@ -289,12 +289,12 @@ public class JQLC
         Semantic semantic = new Semantic();
         semantic.init(typetab, paramtab, errorMsg);
         semantic.setASTFactory(JQLAST.Factory.getInstance());
-        
+
         // create complete tree representation
         JQLAST classAST = semantic.checkCandidateClass(candidateClass);
-        queryAST = semantic.createQueryAST(classAST, importsAST, paramsAST, varsAST, 
+        queryAST = semantic.createQueryAST(classAST, importsAST, paramsAST, varsAST,
                                            orderingAST, resultAST, filterAST);
-        
+
         if (finest) logger.finest("LOG_JQLCDumpTree", queryAST.getTreeRepr("(AST)")); //NOI18N
 
         // start semantic check
@@ -319,7 +319,7 @@ public class JQLC
         boolean finer = logger.isLoggable(Logger.FINER);
         boolean finest = logger.isLoggable(Logger.FINEST);
         RetrieveDesc rd = null;
-        
+
         // check if a RetrieveDescriptor for the actual parameter constellation
         // is already available in the cache
         String key = paramtab.getKeyForRetrieveDescCache();
@@ -328,36 +328,36 @@ public class JQLC
         {
             if (key != null)
                 rd = (RetrieveDesc)retrieveDescCache.get(key);
-            
+
             if (rd == null) {
                 Optimizer optimizer = new Optimizer();
                 optimizer.init(typetab, paramtab, errorMsg);
                 optimizer.setASTFactory(JQLAST.Factory.getInstance());
-                
+
                 CodeGeneration codeGen = new CodeGeneration();
                 codeGen.init(pm, typetab, paramtab, errorMsg, prefetchEnabled);
                 codeGen.setASTFactory(JQLAST.Factory.getInstance());
-                
+
                 try
                 {
                     JQLAST ast = queryAST;
-                    
+
                     // The optimizer should treat query parameters as constant values,
-                    // so I cannot call the optimzer before the query parameter values 
-                    // are known. That's why optimization is part of codeGen which is 
+                    // so I cannot call the optimzer before the query parameter values
+                    // are known. That's why optimization is part of codeGen which is
                     // called by Query.execute and not called by Query.compile.
                     if (finer) logger.finer("LOG_JQLCStartPass", "optimizer"); //NOI18N
                     optimizer.query(ast);
-                    // Do not store the optimizer result in the instance variable queryAST, 
-                    // it cannot be reused by the next execution of this query. The next execute 
-                    // might have different query parameter values, so the optimized AST is different. 
+                    // Do not store the optimizer result in the instance variable queryAST,
+                    // it cannot be reused by the next execution of this query. The next execute
+                    // might have different query parameter values, so the optimized AST is different.
                     ast = (JQLAST)optimizer.getAST();
                     if (finest) logger.finest("LOG_JQLCDumpTree", ast.getTreeRepr("(optimized AST)")); //NOI18N
-                    
+
                     if (finer) logger.finer("LOG_JQLCStartPass", "code generation"); //NOI18N
                     codeGen.query(ast);
                     rd = codeGen.getRetrieveDesc();
-                    // add the current RetrieveDescriptor to the cache, 
+                    // add the current RetrieveDescriptor to the cache,
                     // if the key is not null
                     if (key != null)
                         retrieveDescCache.put(key, rd);
@@ -371,7 +371,7 @@ public class JQLC
                 if (finer) logger.finest("LOG_JQLCReuseRetrieveDesc"); //NOI18N
             }
         }
-        
+
         return rd;
     }
 
@@ -386,12 +386,12 @@ public class JQLC
         if (!(candidateCollection instanceof ExtentCollection))
             throw new JDOUnsupportedOptionException(
                 I18NHelper.getMessage(messages, "jqlc.jqlc.checkcandidates.memorycollection")); //NOI18N
-        
+
         Class candidatePCClass = ((ExtentCollection)candidateCollection).getPersistenceCapableClass();
         if (candidatePCClass == null)
             throw new JDOFatalInternalException(
                 I18NHelper.getMessage(messages, "jqlc.jqlc.checkcandidates.nullpc")); //NOI18N
-        
+
         if (!candidateClass.getName().equals(candidatePCClass.getName()))
             throw new JDOQueryException(
                 I18NHelper.getMessage(messages, "jqlc.jqlc.checkcandidates.mismatch", candidateClass.getName())); //NOI18N
@@ -417,5 +417,5 @@ public class JQLC
         parser.setASTFactory(JQLAST.Factory.getInstance());
         return parser;
     }
-    
+
 }

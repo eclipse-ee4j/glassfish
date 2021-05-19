@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -48,47 +48,47 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
-      
+
       <!-- set up non xa pools -->
       <antcall target="deploy-jdbc-common"/>
-      
+
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB1"/>
       </antcall>
-      
+
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-pool"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-nopasswdfordb-pool.property.Password="/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-nopasswdfordb-pool.property.Password="/>
       </antcall>
       <antcall target="create-jdbc-resource-common">
-	<param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-pool"/>
+        <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-pool"/>
         <param name="jdbc.resource.name" value="jdbc/s1qeDB2"/>
       </antcall>
-      
+
       <!-- Set up XA pools -->
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-1"/>
-	<param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
-	<param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
+        <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
+        <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
       </antcall>
-      
+
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB-xa"/>
         <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-1"/>
       </antcall>
-      
+
       <antcall target="create-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB1-xa"/>
         <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-1"/>
@@ -96,30 +96,30 @@
 
       <antcall target="create-jdbc-connpool-common">
         <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-2"/>
-	<param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
-	<param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
+        <param name="jdbc.resource.type" value="javax.sql.XADataSource"/>
+        <param name="db.class" value="org.apache.derby.jdbc.ClientXADataSource"/>
       </antcall>
       <antcall target="asadmin-common-ignore-fail">
         <param name="admin.command" value="set"/>
-	<param name="operand.props"
-	  value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-nopasswdfordb-xa-pool-2.property.Password="/>
+        <param name="operand.props"
+          value="${resources.dottedname.prefix}.jdbc-connection-pool.jdbc-nopasswdfordb-xa-pool-2.property.Password="/>
       </antcall>
       <antcall target="create-jdbc-resource-common">
-	<param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-2"/>
+        <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-2"/>
         <param name="jdbc.resource.name" value="jdbc/s1qeDB2-xa"/>
       </antcall>
 
-      
+
       <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
       <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
@@ -128,27 +128,27 @@
       <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB1"/>
       </antcall>
-      
+
       <antcall target="undeploy-jdbc-common">
-	<param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-pool"/>
+        <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-pool"/>
         <param name="jdbc.resource.name" value="jdbc/s1qeDB2"/>
       </antcall>
-      
+
       <antcall target="undeploy-jdbc-common"/>
 
       <antcall target="delete-jdbc-resource-common">
         <param name="jdbc.resource.name" value="jdbc/s1qeDB1-xa"/>
       </antcall>
       <antcall target="undeploy-jdbc-common">
-	<param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-1"/>
+        <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-1"/>
         <param name="jdbc.resource.name" value="jdbc/s1qeDB-xa"/>
       </antcall>
       <antcall target="undeploy-jdbc-common">
-	<param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-2"/>
+        <param name="jdbc.conpool.name" value="jdbc-nopasswdfordb-xa-pool-2"/>
         <param name="jdbc.resource.name" value="jdbc/s1qeDB2-xa"/>
       </antcall>
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

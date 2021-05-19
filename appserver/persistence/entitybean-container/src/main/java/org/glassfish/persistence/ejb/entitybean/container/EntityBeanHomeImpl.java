@@ -47,8 +47,8 @@ public class EntityBeanHomeImpl extends EJBHomeInvocationHandler {
     }
 
     @Override
-    protected void postCreate(Container container, EjbInvocation inv, 
-            InvocationInfo invInfo, Object primaryKey, Object[] args) 
+    protected void postCreate(Container container, EjbInvocation inv,
+            InvocationInfo invInfo, Object primaryKey, Object[] args)
             throws Throwable {
         container.postCreate(inv, primaryKey);
         invokeTargetBeanMethod((BaseContainer)container, invInfo.targetMethod2,

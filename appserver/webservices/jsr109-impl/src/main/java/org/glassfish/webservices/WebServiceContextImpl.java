@@ -35,9 +35,9 @@ import org.glassfish.internal.api.Globals;
  * <p><b>NOT THREAD SAFE: mutable instance variables</b>
  */
 public final class WebServiceContextImpl implements WSWebServiceContext {
-    
+
     public static final ThreadLocal msgContext = new ThreadLocal();
-    
+
     public static final ThreadLocal principal = new ThreadLocal();
 
     private WSWebServiceContext jaxwsContextDelegate;
@@ -57,7 +57,7 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
     public void setContextDelegate(WSWebServiceContext wsc) {
         this.jaxwsContextDelegate = wsc;
     }
-    
+
     public MessageContext getMessageContext() {
         return this.jaxwsContextDelegate.getMessageContext();
     }
@@ -77,7 +77,7 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
     public void setUserPrincipal(Principal p) {
         principal.set(p);
     }
-    
+
     public Principal getUserPrincipal() {
         // This could be an EJB endpoint; check the threadlocal variable
         Principal p = (Principal) principal.get();
@@ -123,16 +123,16 @@ public final class WebServiceContextImpl implements WSWebServiceContext {
         }
         return ret;
     }
-    
+
     // TODO BM need to fix this after checking with JAXWS spec
     public EndpointReference getEndpointReference(Class clazz, org.w3c.dom.Element... params) {
         return this.jaxwsContextDelegate.getEndpointReference(clazz, params);
     }
-    
+
     public EndpointReference getEndpointReference(org.w3c.dom.Element... params) {
         return this.jaxwsContextDelegate.getEndpointReference(params);
     }
-    
+
     public Packet getRequestPacket() {
         return this.jaxwsContextDelegate.getRequestPacket();
     }

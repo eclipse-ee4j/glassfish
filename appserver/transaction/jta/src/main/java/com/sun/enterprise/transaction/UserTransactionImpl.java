@@ -40,14 +40,14 @@ import org.jvnet.hk2.annotations.ContractsProvided;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.hk2.api.ServiceLocator;
 
-/** 
+/**
  * This class implements jakarta.transaction.UserTransaction .
  * Its methods are called from TX_BEAN_MANAGED EJB code.
  * Most of its methods just delegate to the TransactionManager
  * after doing some EJB Container-related steps.
  *
- * Note: EJB1.1 Section 6.4.1 requires that the Container must be able to 
- * preserve an object reference of the UserTransaction interface across 
+ * Note: EJB1.1 Section 6.4.1 requires that the Container must be able to
+ * preserve an object reference of the UserTransaction interface across
  * passivation, so we make this Serializable.
  *
  * @author Tony Ng
@@ -64,10 +64,10 @@ public class UserTransactionImpl implements UserTransaction, Serializable
     // Sting Manager for Localization
     private static StringManager sm = StringManager.getManager(UserTransactionImpl.class);
 
-    @Inject 
+    @Inject
     private transient JavaEETransactionManager transactionManager;
 
-    @Inject 
+    @Inject
     private transient InvocationManager invocationManager;
 
     private static final boolean debug = false;
@@ -81,7 +81,7 @@ public class UserTransactionImpl implements UserTransaction, Serializable
 
     // true if ejb access checks should be performed.  Default is
     // true.  All instances of UserTransaction exposed to applications
-    // will have checking turned on.   
+    // will have checking turned on.
     private boolean checkEjbAccess;
 
 
@@ -95,7 +95,7 @@ public class UserTransactionImpl implements UserTransaction, Serializable
 
     /**
      * Alternate version of constructor that allows control over whether
-     * ejb access checks are performed.  
+     * ejb access checks are performed.
      */
     public UserTransactionImpl(boolean doEjbAccessChecks) {
         init();
@@ -113,9 +113,9 @@ public class UserTransactionImpl implements UserTransaction, Serializable
         //  userTx = new com.sun.jts.jta.UserTransactionImpl();
     }
 
-    private void checkUserTransactionMethodAccess(ComponentInvocation inv) 
+    private void checkUserTransactionMethodAccess(ComponentInvocation inv)
         throws IllegalStateException, SystemException {
-        TransactionOperationsManager toMgr = 
+        TransactionOperationsManager toMgr =
                 (TransactionOperationsManager)inv.getTransactionOperationsManager();
 
         if ( toMgr != null && checkEjbAccess ) {
@@ -141,7 +141,7 @@ public class UserTransactionImpl implements UserTransaction, Serializable
 
         transactionManager.begin();
             /** V2 **
-        if ( transactionTimeout > 0 ) 
+        if ( transactionTimeout > 0 )
             transactionManager.begin(transactionTimeout);
         else
             transactionManager.begin();
@@ -149,9 +149,9 @@ public class UserTransactionImpl implements UserTransaction, Serializable
 
         try {
             if (inv != null) {
-                TransactionOperationsManager toMgr = 
+                TransactionOperationsManager toMgr =
                         (TransactionOperationsManager)inv.getTransactionOperationsManager();
-                if ( toMgr != null) 
+                if ( toMgr != null)
                     toMgr.doAfterUtxBegin();
 
                 inv.setTransaction(transactionManager.getTransaction());
@@ -261,7 +261,7 @@ public class UserTransactionImpl implements UserTransaction, Serializable
         if (inv != null) {
             checkUserTransactionMethodAccess(inv);
         }
-        
+
         transactionManager.setTransactionTimeout(seconds);
     }
 
@@ -271,7 +271,7 @@ public class UserTransactionImpl implements UserTransaction, Serializable
         ((JavaEETransactionManagerSimplified)transactionManager).invMgr = im;
     }
 
-    /** 
+    /**
      * Return instance with all injected values from deserialization if possible
      */
     Object readResolve() throws ObjectStreamException {

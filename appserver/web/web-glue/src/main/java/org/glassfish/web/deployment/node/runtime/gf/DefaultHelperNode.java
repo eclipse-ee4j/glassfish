@@ -31,11 +31,11 @@ import org.w3c.dom.Node;
 * @author Amy Roh
 */
 public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
-    
+
     public DefaultHelperNode() {
-	
-        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY), 
-                               WebPropertyNode.class, "addWebProperty"); 			       
+
+        registerElementHandler(new XMLElement(RuntimeTagNames.PROPERTY),
+                               WebPropertyNode.class, "addWebProperty");
     }
 
     protected DefaultHelper descriptor = null;
@@ -68,7 +68,7 @@ public class DefaultHelperNode extends RuntimeDescriptorNode<DefaultHelper> {
         }
         return false;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *

@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.ejbc.equals;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -33,11 +33,11 @@ public class FooBean implements SessionBean {
     public FooBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In FooBean::ejbCreate !!");
+        System.out.println("In FooBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public void louie() { System.out.println("luigi luigi"); }
@@ -69,22 +69,22 @@ public class FooBean implements SessionBean {
             FooLocalHome fooLocalHome = (FooLocalHome)
                 ic.lookup("java:comp/env/ejb/melocal");
             FooLocal meLocal = fooLocalHome.create();
-                
+
             System.out.println("Looking up ejb ref hello ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             Object objref = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
-                
+
             HelloHome  home = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
             Hello hr = home.create();
 
 
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello ejb");
 
             hr.sayHello();
@@ -98,10 +98,10 @@ public class FooBean implements SessionBean {
             HelloLocalHome  localHome = (HelloLocalHome)
                 ic.lookup("java:comp/env/ejb/hellolocal");
             System.err.println("Looked up home!!");
-                
+
             HelloLocal hl = localHome.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello ejb");
 
             hl.sayHello();
@@ -112,7 +112,7 @@ public class FooBean implements SessionBean {
             //
 
             System.out.println("Looking up ejb ref hello ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             objref = ic.lookup("java:comp/env/ejb/hello2");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
@@ -120,12 +120,12 @@ public class FooBean implements SessionBean {
 
             HelloHome  home2 = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
-                
+
             Hello hr2 = home2.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello ejb");
 
             String said = hr2.sayHello();
@@ -137,10 +137,10 @@ public class FooBean implements SessionBean {
             HelloLocalHome  localHome2 = (HelloLocalHome)
                 ic.lookup("java:comp/env/ejb/hellolocal2");
             System.err.println("Looked up home!!");
-                
+
             HelloLocal hl2 = localHome2.create();
             System.err.println("Got the EJB!!");
-                
+
             System.out.println("invoking hello2 ejb");
 
             String saidLocal = hl2.sayHello();
@@ -155,7 +155,7 @@ public class FooBean implements SessionBean {
             }
 
 
-            com.sun.ejb.Container cont = 
+            com.sun.ejb.Container cont =
                 ((com.sun.ejb.containers.EJBContextImpl) sc).getContainer();
 
             //
@@ -281,22 +281,22 @@ public class FooBean implements SessionBean {
             Context ic = new InitialContext();
 
             System.out.println("Looking up ejb ref hello ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             Object objref = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
-                
+
             HelloHome  home = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
             Hello hr = home.create();
 
-	    return (hr.assertValidRemoteObject() == null)
-		? true: false;
-	} catch (Exception ex) {
-	    throw new EJBException(ex);
-	}
+            return (hr.assertValidRemoteObject() == null)
+                ? true: false;
+        } catch (Exception ex) {
+            throw new EJBException(ex);
+        }
     }
 
     public String assertValidRemoteObject()  {
@@ -306,10 +306,10 @@ public class FooBean implements SessionBean {
             Context ic = new InitialContext();
 
             Object objref = ic.lookup("java:comp/env/ejb/hello2");
-                
+
             HelloHome  home = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             Hello hr2 = home.create();
 
             hr2.sayHello();
@@ -317,7 +317,7 @@ public class FooBean implements SessionBean {
             System.out.println("successfully invoked sayHello() ejb2");
 
             //
-            com.sun.ejb.Container cont = 
+            com.sun.ejb.Container cont =
                 ((com.sun.ejb.containers.EJBContextImpl) sc).getContainer();
 
             //
@@ -336,8 +336,8 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(home);
                 String str = "Comparison of (ejbo and home) should have failed";
-		System.out.println(str);
-		return str;
+                System.out.println(str);
+                return str;
             } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
@@ -345,8 +345,8 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(null);
                 String str = "Comparison of (ejbo and null) should have failed";
-		System.out.println(str);
-		return str;
+                System.out.println(str);
+                return str;
             } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
@@ -354,8 +354,8 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(this);
                 String str = "Comparison of (ejbo and bean) should have failed";
-		System.out.println(str);
-		return str;
+                System.out.println(str);
+                return str;
             } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
@@ -363,18 +363,18 @@ public class FooBean implements SessionBean {
             try {
                 cont.assertValidRemoteObject(hr2);
                 String str = "Comparison of (ejbo and ejbo_from_diff_container) should have failed";
-		System.out.println(str);
-		return str;
+                System.out.println(str);
+                return str;
             } catch(jakarta.ejb.EJBException e) {
                 System.out.println("assertValidRemoteObject: Successfully caught expected exception:" + e.getMessage());
             }
 
 
-	    return null;
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	    return "Caught unexpected exception: " + ex.toString();
-	}
+            return null;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return "Caught unexpected exception: " + ex.toString();
+        }
     }
 
     public void ejbRemove() throws RemoteException {}

@@ -27,7 +27,7 @@ public class HelloEjb2 {
     public String rolesAllowed1(String who) {
         return "Hello, " + who;
     }
-    
+
     @RolesAllowed(value={"webuser"})
     public String rolesAllowed2(String who) {
         return "Hello, " + who;

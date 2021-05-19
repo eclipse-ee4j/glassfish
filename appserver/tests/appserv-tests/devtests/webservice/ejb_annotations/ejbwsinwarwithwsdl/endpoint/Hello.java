@@ -30,9 +30,9 @@ public class Hello {
 @Resource
    private SessionContext sc;
 
-	public Hello() {}
+        public Hello() {}
 
-	public String sayHello(String who) {
-		return "WebSvcTest-Hello " + who;
-	}
+        public String sayHello(String who) {
+                return "WebSvcTest-Hello " + who;
+        }
 }

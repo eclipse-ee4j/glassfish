@@ -43,7 +43,7 @@ public class EmbeddedServerUtils {
     public static File getDomainLocation(File serverLocation) {
         return getDomainLocation(serverLocation, "domain1");
     }
-    
+
     public static File getDomainLocation(File serverLocation, String domainName) {
 
        // find the domain root.

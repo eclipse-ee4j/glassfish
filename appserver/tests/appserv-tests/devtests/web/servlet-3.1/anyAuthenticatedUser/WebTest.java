@@ -38,7 +38,7 @@ public class WebTest {
         port = Integer.parseInt(args[1]);
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for deny-uncovered-http-methods");
@@ -53,7 +53,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-    	stat.printSummary();
+            stat.printSummary();
     }
 
     private boolean run(boolean auth,
@@ -89,7 +89,7 @@ public class WebTest {
                 ok = ok && EXPECTED_RESPONSE.equals(line);
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         } finally {
             try {

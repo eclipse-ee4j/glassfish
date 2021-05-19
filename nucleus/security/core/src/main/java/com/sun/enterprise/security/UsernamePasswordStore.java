@@ -26,19 +26,19 @@ import java.util.Arrays;
  * This class is used to share information between either of the following scenarios
  * 1. Different points of execution of a single thread
  * 2. Different threads that wish to share the username and password information
- * 
+ *
  * Which of the above two condition is applicable depends upon the system property key
  *        "com.sun.appserv.iiopclient.perthreadauth";
- * When set to true, scenario #1 above applies and the username/password 
+ * When set to true, scenario #1 above applies and the username/password
  * information is not shared between threads.
  * When set to false, scenario #2 above applies and the username/password
  * information stored by one thread is global and visible to all threads.
  */
 public final class UsernamePasswordStore {
-    
+
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    private static final boolean isPerThreadAuth = 
+    private static final boolean isPerThreadAuth =
             Boolean.getBoolean(ClientSecurityContext.IIOP_CLIENT_PER_THREAD_FLAG);
 
     private static ThreadLocal localUpc =
@@ -59,15 +59,15 @@ public final class UsernamePasswordStore {
         //Copy the password to another reference before storing it to the
         //instance field.
         char[] passwordCopy = (password == null) ? null : Arrays.copyOf(password, password.length);
-	this.password = passwordCopy;
+        this.password = passwordCopy;
         this.username = username;
-        
+
     }
 
     /**
      * This method returns a UsernamePasswordStore, that is
      * either thread-local or global depending on the system property
-     * IIOP_PER_THREAD_CLIENT_FLAG. 
+     * IIOP_PER_THREAD_CLIENT_FLAG.
      * This method is marked as private.
      *
      * @return The current UsernamePasswordStore
@@ -85,7 +85,7 @@ public final class UsernamePasswordStore {
     /**
      * This method sets the username and password as thread-local or global variable
      *
-     * @param username 
+     * @param username
      * @param password
      */
     public static void set(String username, char[] password) {
@@ -96,7 +96,7 @@ public final class UsernamePasswordStore {
                 sharedUpc = new UsernamePasswordStore(username, password);
             }
         }
-    } 
+    }
 
     /**
      * Clears the username and password, that might have been previously stored,
@@ -111,7 +111,7 @@ public final class UsernamePasswordStore {
             }
         }
     }
-    
+
     /**
      * Clears the username and password only is they were stored locally
      * to each thread
@@ -131,11 +131,11 @@ public final class UsernamePasswordStore {
         UsernamePasswordStore ups = UsernamePasswordStore.get();
         if( ups != null )
             return ups.username;
-        else 
+        else
             return null;
     }
 
-    
+
     /**
      * Returns the password, that was previously stored.
      *
@@ -148,7 +148,7 @@ public final class UsernamePasswordStore {
             char[] passwordCopy = (ups.password == null) ? null : Arrays.copyOf(ups.password, ups.password.length);
             return passwordCopy;
         }
-        else 
+        else
             return null;
     }
 

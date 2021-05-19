@@ -24,7 +24,7 @@
 
   <target name="clean" >
     <delete dir="${build}" />
-    <delete dir="${dist}" />    
+    <delete dir="${dist}" />
   </target>
 
   <path id="db.classpath">
@@ -44,19 +44,19 @@
 
   <target name="admin_command_common">
     <echo message="Doing admin task ${admin.command}"/>
-    <sun-appserv-admin 
+    <sun-appserv-admin
       command="${admin.command}"
-      user="${admin.user}" 
-      password="${admin.password}" 
-      host="${admin.host}" 
-      port="${admin.port}" 
+      user="${admin.user}"
+      password="${admin.password}"
+      host="${admin.host}"
+      port="${admin.port}"
       sunonehome="${j2ee.home}" />
   </target>
 
   <target name="create-jdbc-resource_common">
     <antcall target="admin_command_common">
       <param name="admin.command"
-        value="create-jdbc-resource 
+        value="create-jdbc-resource
          --connectionpoolid ${conpool.name} ${jdbc.resource.name}" />
     </antcall>
   </target>

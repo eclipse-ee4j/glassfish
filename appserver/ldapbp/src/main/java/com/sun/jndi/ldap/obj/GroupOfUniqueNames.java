@@ -16,32 +16,36 @@
 
 package com.sun.jndi.ldap.obj;
 
-import java.security.Principal;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Set;
-import javax.naming.*;
-import javax.naming.directory.*;
+
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.DirContext;
 
 /**
  * A representation of the LDAP groupOfUniqueNames object class.
  * This is a static group: its members are listed in the group's
  * uniqueMember LDAP attribute.
  * <p>
- * Note that when a <tt>GroupOfUniqueNames</tt> object is created by the 
- * application program then most of its methods throw 
+ * Note that when a <tt>GroupOfUniqueNames</tt> object is created by the
+ * application program then most of its methods throw
  * {@link IllegalStateException}
- * until the program binds the object in the directory. However, when a 
- * <tt>GroupOfUniqueNames</tt> object is returned to the application program 
- * then the object is already bound in the directory and its methods function 
+ * until the program binds the object in the directory. However, when a
+ * <tt>GroupOfUniqueNames</tt> object is returned to the application program
+ * then the object is already bound in the directory and its methods function
  * normally.
  * <p>
  * A <tt>GroupOfUniqueNames</tt> instance is not synchronized against concurrent
  * multithreaded access. Multiple threads trying to access and modify a
  * <tt>GroupOfUniqueNames</tt> should lock the object.
  * <p>
- * In order to bind a <tt>GroupOfUniqueNames</tt> object in the directory, the 
- * following LDAP object class definition (RFC 2256) must be supported in the 
+ * In order to bind a <tt>GroupOfUniqueNames</tt> object in the directory, the
+ * following LDAP object class definition (RFC 2256) must be supported in the
  * directory schema:
  * <pre>
  *     ( 2.5.6.17 NAME 'groupOfUniqueNames'
@@ -57,7 +61,7 @@ import javax.naming.directory.*;
  *              description ) )
  * </pre>
  * See
- * {@link javax.naming.directory.DirContext#bind(javax.naming.Name, 
+ * {@link javax.naming.directory.DirContext#bind(javax.naming.Name,
  * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}
  * for details on binding an object in the directory.
  * <p>
@@ -73,45 +77,43 @@ public class GroupOfUniqueNames extends GroupOfNames {
     private static final String MEMBER_FILTER_EXPR = "(uniquemember={0})";
     private static final Attribute OBJECT_CLASS_ATTR;
     static {
-	OBJECT_CLASS_ATTR = new BasicAttribute("objectClass", "top");
-	OBJECT_CLASS_ATTR.add(OBJECT_CLASS);
+        OBJECT_CLASS_ATTR = new BasicAttribute("objectClass", "top");
+        OBJECT_CLASS_ATTR.add(OBJECT_CLASS);
     }
 
     /**
      * Create an empty group object.
      * <p>
-     * Note that the newly constructed object does not represent a group in 
-     * the directory until it is bound by using 
-     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name, 
+     * Note that the newly constructed object does not represent a group in
+     * the directory until it is bound by using
+     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name,
      * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}.
      */
     public GroupOfUniqueNames() {
-	super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null);
+        super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null);
     }
 
     /**
      * Create a group object with an initial set of members.
      * <p>
-     * Note that the newly constructed object does not represent a group in 
-     * the directory until it is bound by using 
-     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name, 
+     * Note that the newly constructed object does not represent a group in
+     * the directory until it is bound by using
+     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name,
      * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}.
      *
-     * @param members The set of initial members. It may be null. 
+     * @param members The set of initial members. It may be null.
      *                Each element is of class {@link String} or
      *                {@link java.security.Principal}
      */
     public GroupOfUniqueNames(Set members) {
-	super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, members);
+        super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, members);
     }
 
-    /*
+    /**
      * Create a group object from its entry in the directory.
      */
-    private GroupOfUniqueNames(String groupDN, DirContext ctx, Name name,
-	    Hashtable env, Attributes attributes) {
-	super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null,
-	    groupDN, ctx, name, env, attributes);
+    private GroupOfUniqueNames(String groupDN, DirContext ctx, Name name, Hashtable env, Attributes attributes) {
+        super(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null, groupDN, ctx, name, env, attributes);
     }
 
     /**
@@ -127,16 +129,16 @@ public class GroupOfUniqueNames extends GroupOfNames {
      */
     // package private (used by LdapGroupFactory)
     static Object getObjectInstance(String groupDN, DirContext ctx, Name name,
-	    Hashtable env, Attributes attributes) {
-	if (debug) {
-	    System.out.println("[debug] creating a group named: " + name);
-	}
-	return new GroupOfUniqueNames(groupDN, ctx, name, env, attributes);
+        Hashtable env, Attributes attributes) {
+        if (debug) {
+            System.out.println("[debug] creating a group named: " + name);
+        }
+        return new GroupOfUniqueNames(groupDN, ctx, name, env, attributes);
     }
 
     /**
-     * Determines whether the supplied LDAP objectClass attribute matches that 
-     * of the group. A match occurs if the argument contains the value 
+     * Determines whether the supplied LDAP objectClass attribute matches that
+     * of the group. A match occurs if the argument contains the value
      * "GroupOfUniqueNames".
      *
      * @param objectClass The non-null objectClass attribute to check against.
@@ -144,20 +146,19 @@ public class GroupOfUniqueNames extends GroupOfNames {
      */
     // package private (used by LdapGroupFactory)
     static boolean matches(Attribute objectClass) {
-
-	try {
-	    for (Enumeration values = objectClass.getAll();
-		values.hasMoreElements(); ) {
-		if (OBJECT_CLASS.equalsIgnoreCase(
-		    (String)values.nextElement())) {
-		    return true;
-		}
-	    }
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error matching objectClass: " + e);
-	    }
-	}
-	return false;
+        try {
+            for (Enumeration values = objectClass.getAll();
+                values.hasMoreElements(); ) {
+                if (OBJECT_CLASS.equalsIgnoreCase(
+                    (String)values.nextElement())) {
+                    return true;
+                }
+            }
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error matching objectClass: " + e);
+            }
+        }
+        return false;
     }
 }

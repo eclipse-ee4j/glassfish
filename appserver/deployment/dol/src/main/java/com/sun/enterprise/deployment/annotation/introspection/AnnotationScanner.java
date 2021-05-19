@@ -32,7 +32,7 @@ public interface AnnotationScanner {
      * Test if the passed constant pool string is a reference to
      * a Type.TYPE annotation of a component defined in this scanner
      *
-     * @String the constant pool info string 
+     * @String the constant pool info string
      * @return true if it is an annotation reference
      */
     public boolean isAnnotation(String value);

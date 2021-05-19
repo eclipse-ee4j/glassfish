@@ -17,10 +17,7 @@
 package org.glassfish.jms.admin.cli;
 
 
-/**
- */
-public class JMSAdminException extends Exception
-{
+public class JMSAdminException extends Exception {
 
     /**
      * Exception reference
@@ -31,22 +28,23 @@ public class JMSAdminException extends Exception
     /**
      * Constructs an JMSAdminException object
      */
-    public JMSAdminException()
-    {
+    public JMSAdminException() {
         super();
         linkedException = null;
     }
 
+
     /**
      * Constructs an JMSAdminException object
+     *
      * @param message Exception message
      */
-    public JMSAdminException(String message)
-    {
+    public JMSAdminException(String message) {
         super(message);
-	_message = message;
+        _message = message;
         linkedException = null;
     }
+
 
     /**
      * Gets the exception linked to this one
@@ -57,39 +55,39 @@ public class JMSAdminException extends Exception
         return (linkedException);
     }
 
+
     /**
      * Adds a linked Exception
      *
-     * @param ex       the linked Exception
+     * @param ex the linked Exception
      **/
     public void setLinkedException(Exception ex) {
         linkedException = ex;
     }
 
+
     /**
      * Returns the message along with the message from any linked exception.
-     *
      **/
+    @Override
     public String getMessage() {
-	String retString = null;
+        String retString = null;
 
-	// Return the message of this exception.
-	if (_message != null) {
-	   retString = _message;
-	}
+        // Return the message of this exception.
+        if (_message != null) {
+            retString = _message;
+        }
 
-	// Append any message from the linked exception.
-	Exception localLinkedException = linkedException;
-	if (localLinkedException != null && localLinkedException.getMessage() != null) {
-	    if (retString != null) {
-	        retString += retString + "\n" + localLinkedException.getMessage();
-	    } else {
-	        retString = localLinkedException.getMessage();
-	    }
-	}
-
-	return retString;
-
+        // Append any message from the linked exception.
+        Exception localLinkedException = linkedException;
+        if (localLinkedException != null && localLinkedException.getMessage() != null) {
+            if (retString != null) {
+                retString += retString + "\n" + localLinkedException.getMessage();
+            } else {
+                retString = localLinkedException.getMessage();
+            }
+        }
+        return retString;
     }
 
 }

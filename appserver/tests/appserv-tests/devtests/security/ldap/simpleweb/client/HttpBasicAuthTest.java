@@ -59,7 +59,7 @@ public class HttpBasicAuthTest implements Runnable {
 
         Thread tarray[] = new Thread[threadCount];
 
-        for(int i=0; i<threadCount; i++) 
+        for(int i=0; i<threadCount; i++)
             tarray[i] = new Thread(this, "Http-request-thread-" + i);
 
         for(int i=0; i<threadCount; i++)
@@ -83,11 +83,11 @@ public class HttpBasicAuthTest implements Runnable {
 
         stdDev = Math.pow(stdDev, 0.5);
 
-        System.out.println("Total requests: " + (suxesCount+failureCount) + 
-                           ", success count: " + suxesCount + 
+        System.out.println("Total requests: " + (suxesCount+failureCount) +
+                           ", success count: " + suxesCount +
                            ", failure count: " + failureCount);
-        System.out.println("Min/Max/Avg/StdDev: (milliseconds) " + 
-                           minTime + "/" + 
+        System.out.println("Min/Max/Avg/StdDev: (milliseconds) " +
+                           minTime + "/" +
                            maxTime + "/" + avgTime + "/" + stdDev);
 
         String testId = "Sec::LDAP BasicAuth";

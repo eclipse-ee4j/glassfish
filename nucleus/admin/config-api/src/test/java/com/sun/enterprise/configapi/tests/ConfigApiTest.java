@@ -35,7 +35,7 @@ import org.glassfish.api.admin.ServerEnvironment;
  * Time: 12:38:30 PM
  */
 public abstract class ConfigApiTest extends org.glassfish.tests.utils.ConfigApiTest {
-	
+
     @Override
     public DomDocument getDocument(ServiceLocator habitat) {
         DomDocument doc = habitat.getService(GlassFishDocument.class);
@@ -52,7 +52,7 @@ public abstract class ConfigApiTest extends org.glassfish.tests.utils.ConfigApiT
         }
         return doc;
     }
-    
+
     @Override
     public void decorate(ServiceLocator habitat) {
         Server server = habitat.getService(Server.class, "server");
@@ -62,7 +62,7 @@ public abstract class ConfigApiTest extends org.glassfish.tests.utils.ConfigApiT
             ServiceLocatorUtilities.addOneDescriptor(habitat, serverDescriptor);
 
             server.getConfig().addIndex(habitat, ServerEnvironment.DEFAULT_INSTANCE_NAME);
-        
+
             Cluster c = server.getCluster();
             if (c != null) {
                 ActiveDescriptor<Cluster> clusterDescriptor = BuilderHelper.createConstantDescriptor(c,

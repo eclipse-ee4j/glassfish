@@ -40,15 +40,15 @@ import java.net.URL;
  * @author tjquinn
  */
 public class Client {
-    
+
     private Vector<String> otherArgs = new Vector<String>();
-    
+
     private Map<String,String> optionValues = new HashMap<String,String>();
-    
+
     /** Creates a new instance of ShowArgsClient */
     public Client() {
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -61,9 +61,9 @@ public class Client {
             status = 1;
             throw new RuntimeException("Client detected the following error", thr);
         }
-        
+
     }
-    
+
     private void run(String[] args) throws FileNotFoundException, IOException {
         System.err.println("In Client");
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
@@ -84,16 +84,16 @@ public class Client {
         }
         System.out.println();
         prepareArguments(args);
-        
+
         System.out.println("Command line arguments:");
         for (String arg : args) {
             System.out.println(arg);
         }
-        
+
         System.out.flush();
     }
 
-    
+
     private void prepareArguments(String[] args) throws IllegalArgumentException, FileNotFoundException {
         for (int i = 0; i < args.length; i++) {
             if (args[i].charAt(0) == '-') {
@@ -104,6 +104,6 @@ public class Client {
         }
 
         System.out.println("Other arguments: " + otherArgs);
-        
+
     }
 }

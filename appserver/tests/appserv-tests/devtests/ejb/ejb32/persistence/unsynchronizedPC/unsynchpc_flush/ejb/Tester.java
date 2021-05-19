@@ -21,10 +21,10 @@ import jakarta.ejb.Remote;
 @Remote
 public interface Tester {
     public boolean flushBeforeJoin();
-    
+
     public boolean flushAfterJoin();
-    
+
     public void autoFlushByProvider(String name);
-    
+
     public boolean isPersonFound(String name);
 }

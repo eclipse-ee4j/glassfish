@@ -32,22 +32,22 @@ import com.sun.logging.LogDomains;
 
 class DistributedReadOnlyBeanServiceImpl
     implements DistributedReadOnlyBeanService {
-    
-	private Logger _logger = LogDomains.getLogger(DistributedReadOnlyBeanServiceImpl.class, LogDomains.EJB_LOGGER);
-    
+
+    private Logger _logger = LogDomains.getLogger(DistributedReadOnlyBeanServiceImpl.class, LogDomains.EJB_LOGGER);
+
     private ConcurrentHashMap<Long, ReadOnlyBeanRefreshHandlerInfo> refreshHandlers
         = new ConcurrentHashMap<Long, ReadOnlyBeanRefreshHandlerInfo>();
-    
-    
+
+
     private DistributedReadOnlyBeanNotifier robNotifier;
-    
+
     public void setDistributedReadOnlyBeanNotifier(
             DistributedReadOnlyBeanNotifier notifier) {
         this.robNotifier = notifier;
         _logger.log(Level.INFO, "Registered ReadOnlyBeanNotifier: "
                 + notifier);
     }
-    
+
     public void addReadOnlyBeanRefreshEventHandler(
             long ejbID, ClassLoader loader,
             ReadOnlyBeanRefreshEventHandler handler) {
@@ -64,13 +64,13 @@ class DistributedReadOnlyBeanServiceImpl
     public void notifyRefresh(long ejbID, Object pk) {
         if (robNotifier != null) {
             byte[] pkData = null;
-            
+
             ByteArrayOutputStream bos = null;
             ObjectOutputStream oos = null;
             try {
                 bos = new ByteArrayOutputStream();
                 oos = new ObjectOutputStream(bos);
-                
+
                 oos.writeObject(pk);
                 oos.flush();
                 bos.flush();
@@ -106,15 +106,15 @@ class DistributedReadOnlyBeanServiceImpl
             }
         }
     }
-    
+
     public void handleRefreshRequest(long ejbID, byte[] pkData) {
         refreshRequestReceived(false, ejbID, pkData);
     }
-    
+
     public void handleRefreshAllRequest(long ejbID) {
         refreshRequestReceived(true, ejbID, null);
     }
-    
+
     private void refreshRequestReceived(boolean refreshAll,
             long ejbID, byte[] pkData) {
 
@@ -123,10 +123,10 @@ class DistributedReadOnlyBeanServiceImpl
             //TODO: Log something
             return;
         }
-        
+
         final Thread currentThread = Thread.currentThread();
         final ClassLoader prevClassLoader = currentThread.getContextClassLoader();
-        
+
         try {
             if(System.getSecurityManager() == null) {
                 currentThread.setContextClassLoader(info.loader);
@@ -139,7 +139,7 @@ class DistributedReadOnlyBeanServiceImpl
                     }
                 });
             }
-            
+
             if (! refreshAll) {
                 ByteArrayInputStream bis = null;
                 ObjectInputStream ois = null;
@@ -147,7 +147,7 @@ class DistributedReadOnlyBeanServiceImpl
                 try {
                     bis = new ByteArrayInputStream(pkData);
                     ois = new ObjectInputStream(bis);
-                    
+
                     pk = (Serializable) ois.readObject();
                 } catch (IOException ioEx) {
                     _logger.log(Level.WARNING, "Error during refresh", ioEx);
@@ -158,7 +158,7 @@ class DistributedReadOnlyBeanServiceImpl
                         try {
                             ois.close();
                         } catch(IOException ioEx) {
-                            _logger.log(Level.WARNING, 
+                            _logger.log(Level.WARNING,
                                     "Error while closing object stream", ioEx);
                         };
                     }
@@ -166,7 +166,7 @@ class DistributedReadOnlyBeanServiceImpl
                         try {
                             bis.close();
                         } catch(IOException ioEx) {
-                            _logger.log(Level.WARNING, 
+                            _logger.log(Level.WARNING,
                                     "Error while closing byte stream", ioEx);
                         };
                     }
@@ -191,13 +191,13 @@ class DistributedReadOnlyBeanServiceImpl
                     }
                 });
             }
-        }        
+        }
     }
-    
+
     private static class ReadOnlyBeanRefreshHandlerInfo {
         public  ClassLoader                     loader;
         public  ReadOnlyBeanRefreshEventHandler handler;
-        
+
         public ReadOnlyBeanRefreshHandlerInfo(
                 ClassLoader loader, ReadOnlyBeanRefreshEventHandler handler) {
             this.loader = loader;

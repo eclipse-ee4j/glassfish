@@ -31,7 +31,7 @@ public class GrizzlyConfig {
 
     @LoggerInfo(subsystem = "NETCONFIG", description = "Network config", publish = false)
     private static final String LOGGER_NAME = "jakarta.enterprise.network.config";
-    
+
     private static final Logger LOGGER = Logger.getLogger(LOGGER_NAME);
     private final NetworkConfig config;
     private final ServiceLocator serviceLocator;
@@ -40,7 +40,7 @@ public class GrizzlyConfig {
     public static Logger logger() {
         return LOGGER;
     }
-    
+
     public GrizzlyConfig(String file) {
         serviceLocator = Utils.getServiceLocator(file);
         config = serviceLocator.getService(NetworkConfig.class);
@@ -61,7 +61,7 @@ public class GrizzlyConfig {
                 final GenericGrizzlyListener grizzlyListener = new GenericGrizzlyListener();
                 grizzlyListener.configure(serviceLocator, listener);
                 listeners.add(grizzlyListener);
-                
+
                 try {
                     grizzlyListener.start();
                 } catch (IOException e) {

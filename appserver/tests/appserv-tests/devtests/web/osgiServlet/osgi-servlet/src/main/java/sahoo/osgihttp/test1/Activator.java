@@ -30,43 +30,43 @@ import org.osgi.util.tracker.ServiceTracker;
 
 public class Activator implements BundleActivator {
 
-	private ServiceTracker httpServiceTracker;
-	
-	public void start(BundleContext context) throws Exception {
-		httpServiceTracker = new HttpServiceTracker(context);
-		httpServiceTracker.open();
-	}
+        private ServiceTracker httpServiceTracker;
 
-	public void stop(BundleContext context) throws Exception {
-		httpServiceTracker.close();
-		httpServiceTracker = null;
-	}
+        public void start(BundleContext context) throws Exception {
+                httpServiceTracker = new HttpServiceTracker(context);
+                httpServiceTracker.open();
+        }
 
-	private class HttpServiceTracker extends ServiceTracker {
+        public void stop(BundleContext context) throws Exception {
+                httpServiceTracker.close();
+                httpServiceTracker = null;
+        }
 
-		public HttpServiceTracker(BundleContext context) throws Exception {
-			super(context, context.createFilter("(&(objectClass=" + 
-                                                                org.osgi.service.http.HttpService.class.getName() + 
+        private class HttpServiceTracker extends ServiceTracker {
+
+                public HttpServiceTracker(BundleContext context) throws Exception {
+                        super(context, context.createFilter("(&(objectClass=" +
+                                                                org.osgi.service.http.HttpService.class.getName() +
                                                                 ")(VirtualServer=server))"), null);
-		}
+                }
 
-		public Object addingService(ServiceReference reference) {
-			HttpService httpService = (HttpService) context.getService(reference);
-			try {			
-				httpService.registerServlet("/aa/bb", new HelloWorldServlet1(), null, null);
-				httpService.registerServlet("/aa", new HelloWorldServlet2(), null, null);
+                public Object addingService(ServiceReference reference) {
+                        HttpService httpService = (HttpService) context.getService(reference);
+                        try {
+                                httpService.registerServlet("/aa/bb", new HelloWorldServlet1(), null, null);
+                                httpService.registerServlet("/aa", new HelloWorldServlet2(), null, null);
                                 System.out.println("Registered servlet1 with mapping /aa/bb and servlet2 with mapping /aa");
                                 test();
                                 httpService.unregister("/aa/bb");
                                 System.out.println("Unregistered servlet1");
                                 test();
-                                
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return httpService;
-		}		
-	}
+
+                        } catch (Exception e) {
+                                e.printStackTrace();
+                        }
+                        return httpService;
+                }
+        }
 
         void test() {
             try {

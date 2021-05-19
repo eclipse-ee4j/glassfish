@@ -70,7 +70,7 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
     private boolean needScanAnnotation = false;
 
     private static ExecutorService executorService = null;
-    
+
     protected Set<String> entries = new HashSet<String>();
 
     public static final Logger deplLogger = com.sun.enterprise.deployment.util.DOLUtils.deplLogger;
@@ -238,7 +238,7 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
                                           jarFile.getPath() });
         }
     }
-    
+
     /**
      * This add all classes in given jarFile to be scanned.
      * @param jarURI
@@ -256,8 +256,8 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
         if (needScanAnnotation) {
             classParser.parse(directory, null);
         }
-    } 
-    
+    }
+
     public ClassLoader getClassLoader() {
         return classLoader;
     }
@@ -268,13 +268,13 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
             deplLogger.log(Level.SEVERE,
                            NO_CLASSLOADER);
             return elements;
-        }        
+        }
 
         for (String className : entries) {
             if (deplLogger.isLoggable(Level.FINE)) {
                 deplLogger.fine("Getting " + className);
             }
-            try {                
+            try {
                 elements.add(classLoader.loadClass(className));
             } catch (NoClassDefFoundError err) {
                 deplLogger.log(Level.WARNING,
@@ -292,9 +292,9 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
         return elements;
     }
 
-    protected void addLibraryJars(T bundleDesc, 
+    protected void addLibraryJars(T bundleDesc,
         ReadableArchive moduleArchive) {
-        List<URI> libraryURIs = new ArrayList<URI>(); 
+        List<URI> libraryURIs = new ArrayList<URI>();
         try {
             if (bundleDesc instanceof BundleDescriptor) {
                 libraryURIs = DOLUtils.getLibraryJarURIs((BundleDescriptor)bundleDesc, moduleArchive);
@@ -309,12 +309,12 @@ public abstract class ModuleScanner<T> extends JavaEEScanner implements Scanner<
                 }
             }
         } catch (Exception ex) {
-            // we log a warning and proceed for any problems in 
+            // we log a warning and proceed for any problems in
             // adding library jars to the scan list
             deplLogger.log(Level.WARNING,
                            LIBRARY_JAR_ERROR,
                            ex.getMessage());
-        }       
+        }
     }
 
     @Override

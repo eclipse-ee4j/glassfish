@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4894654");
         WebTest webTest = new WebTest(args);
@@ -48,8 +48,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeJSP();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -65,14 +65,14 @@ public class WebTest {
     }
 
     private void invokeJSP() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/main.jsp" + " HTTP/1.0\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -93,7 +93,7 @@ public class WebTest {
             int i = line.indexOf("/jsp/first.jsp");
             line = line.substring(i);
             System.out.println(line);
-        
+
             Socket sock2 = new Socket(host, new Integer(port).intValue());
             os = sock2.getOutputStream();
             get = "GET "+ contextRoot + line + " HTTP/1.0\n";
@@ -105,7 +105,7 @@ public class WebTest {
 
             while ((line = bis.readLine()) != null) {
                i = line.indexOf("iPlanetDirectoryPro=");
-               if (i > 0) { 
+               if (i > 0) {
                    param1 = line.substring(i);
                    System.out.println("First param is " + param1);
                    if ((line = bis.readLine()) != null) {
@@ -113,7 +113,7 @@ public class WebTest {
                        if (i > 0) {
                            param2 = line.substring(i);
                            System.out.println("Second param is " + param2);
-                       } 
+                       }
                    }
                }
             }
@@ -128,7 +128,7 @@ public class WebTest {
             fail = false;
         } else {
            stat.addStatus("Parameters encoding/decoding is not consistent",
-                           stat.FAIL); 
+                           stat.FAIL);
            fail = true;
         }
     }

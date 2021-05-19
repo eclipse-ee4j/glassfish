@@ -38,8 +38,8 @@ public class HelloImpl implements Hello {
 
     public HelloResponse hello(HelloRequest req) {
         System.out.println("Hello, " + req.getString() + "!");
-	HelloResponse resp = new HelloResponse();
-	resp.setString("Hello, " + req.getString() + "!");
+        HelloResponse resp = new HelloResponse();
+        resp.setString("Hello, " + req.getString() + "!");
         return resp;
     }
 }

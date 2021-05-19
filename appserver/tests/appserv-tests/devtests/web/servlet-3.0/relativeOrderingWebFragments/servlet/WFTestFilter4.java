@@ -31,7 +31,7 @@ import jakarta.servlet.annotation.WebFilter;
 public class WFTestFilter4 implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         System.out.println(">>> WFTestFilter4.init");
-    }   
+    }
 
     public void doFilter(ServletRequest req, ServletResponse res,
             FilterChain chain) throws IOException, ServletException {

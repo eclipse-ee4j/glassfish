@@ -23,6 +23,6 @@ public class HelloNoInterfaceLocalViewSlessEJB {
     public void method1(String msg) {
         System.out.println("Hello" + msg);
     }
-    
+
 
 }

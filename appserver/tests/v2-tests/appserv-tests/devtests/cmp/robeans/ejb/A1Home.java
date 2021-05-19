@@ -25,10 +25,10 @@ import java.rmi.*;
 
 public interface A1Home extends jakarta.ejb.EJBHome {
 
-    public A1 findByPrimaryKey(java.lang.String pk)  
+    public A1 findByPrimaryKey(java.lang.String pk)
             throws FinderException, RemoteException;
-    
-    public java.util.Collection findByShortName(java.lang.String shortName)  
+
+    public java.util.Collection findByShortName(java.lang.String shortName)
             throws FinderException, RemoteException;
-    
+
 }

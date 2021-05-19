@@ -38,53 +38,53 @@ public class SfulDriverEJB
     }
 
     public boolean initialize() {
-	boolean result = false;
+        boolean result = false;
 
-	ref1 = ref2 = createSful();
+        ref1 = ref2 = createSful();
 
         ref1.setSfulRef(ref2);
-	return (ref1 != null);
+        return (ref1 != null);
     }
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public boolean doRefAliasingTest() {
-	boolean result = false;
-	for (int i=0; i<10; i++) {
-	    ref1.incrementCounter();
-	}
+        boolean result = false;
+        for (int i=0; i<10; i++) {
+            ref1.incrementCounter();
+        }
 
-	return (ref1.getCounter() == ref2.getCounter());
+        return (ref1.getCounter() == ref2.getCounter());
     }
 
     public void doCheckpoint() {
     }
 
     public void checkGetRef() {
-	Sful ref = ref1.getSfulRef();
+        Sful ref = ref1.getSfulRef();
         ref.getCounter();
     }
 
     public void createManySfulEJBs(int count) {
 /*
-	while (count-- > 0) {
-	    Sful sf = (Sful) createSful();
-	}
+        while (count-- > 0) {
+            Sful sf = (Sful) createSful();
+        }
 */
     }
 
     private Sful createSful() {
-	Sful sful = null;
+        Sful sful = null;
         try {
-	    InitialContext ctx = new InitialContext();
-	    sful = (Sful) ctx.lookup("java:comp/env/ejb/Sful");
+            InitialContext ctx = new InitialContext();
+            sful = (Sful) ctx.lookup("java:comp/env/ejb/Sful");
         } catch (Exception ex) {
-	    ex.printStackTrace();
+            ex.printStackTrace();
         }
 
-	return sful;
+        return sful;
     }
 
     public boolean useSfulGreeter() {
-	return (sfulGreeter.getCounter() == ref1.getCounter());
+        return (sfulGreeter.getCounter() == ref1.getCounter());
     }
 }

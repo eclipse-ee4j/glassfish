@@ -28,8 +28,8 @@ import java.util.List;
  * The mapping file classes use an object that
  * implements this interface to assist in the conversion
  * from the sun-cmp-mapping file, into a TP dot-mapping file.
- * The APIs to the deployment descriptors differ at deployment time 
- * and at development time.  This interface provides a level of abstraction 
+ * The APIs to the deployment descriptors differ at deployment time
+ * and at development time.  This interface provides a level of abstraction
  * for the needed information.
  *
  * @author vkraemer
@@ -44,7 +44,7 @@ public interface ConversionHelper {
     * @param beanName The value of the ejb-name element for a bean.
     * @return The full name of the TP class that implements
     * the fields and relationships of an EJB.
-    */    
+    */
     public String getMappedClassName(String beanName);
 
     /**
@@ -57,7 +57,7 @@ public interface ConversionHelper {
     /**
     */
     public Object[] getFields(String beanName);
-    
+
     /** Compute the keyness of a field.
     * The value returned is the keyness of the field, if it is
     * computable. If it is not, the candidate value is returned.
@@ -68,32 +68,32 @@ public interface ConversionHelper {
     * This may be different than the candidate value,
     * if the correct values of a fields keyness can
     * be computed from available data.
-    */    
+    */
     public boolean isKey(String beanName, String fieldName, boolean candidate);
-    
+
     /** Return the name of the opposite roles ejb-name
     * @param ejbName The value of the ejb-name element for a bean.
     * @param fieldName The name of a container managed field in the named bean.
     * @return The ejb-name of the bean that is referenced by a
     * relationship field.  This is the ejb-name of the
     * "other" roles relationship-role-source.
-    */    
+    */
     public String getRelationshipFieldContent(String ejbName, String fieldName);
-    
+
     /**
     * @param ejbName The ejb-name element for the bean
     * @param fieldName The name of a container managed field in the named bean.
     * @return The String values "One" or "Many".
-    */    
+    */
     public String getMultiplicity(String ejbName, String fieldName);
-       
+
     /**
     * @param ejbName The value of the ejb-name element for a bean.
     * @param fieldName The name of a container managed field in the named bean.
     * @return The String values "One" or "Many".
     */
     public String getRelationshipFieldType(String ejbName, String fieldName);
-    
+
     /**
     * @param ejbName The value of the ejb-name element for a bean.
     * @param fieldName The name of a container managed field in the named bean.
@@ -101,9 +101,9 @@ public interface ConversionHelper {
     */
     public String getInverseFieldName(String ejbName, String fieldName);
 
-    /** 
-     * Returns flag whether the mapping conversion should apply the default 
-     * strategy for dealing with unknown primary key classes. This method will 
+    /**
+     * Returns flag whether the mapping conversion should apply the default
+     * strategy for dealing with unknown primary key classes. This method will
      * only be called when {@link #generateFields} returns <code>true</code>.
      * @param ejbName The value of the ejb-name element for a bean.
      * @return <code>true</code> to apply the default unknown PK Class Strategy,
@@ -122,7 +122,7 @@ public interface ConversionHelper {
      * @return a string for version field name prefix
      */
     public String getGeneratedVersionFieldNamePrefix();
-    
+
     /**
     * @param ejbName The ejb-name element for the bean
     * @param fieldName The name of a container managed field in the named bean.
@@ -130,18 +130,18 @@ public interface ConversionHelper {
     *   be deleted when this field' owning object is deleted.
     */
     public boolean relatedObjectsAreDeleted(String ejbName, String fieldName);
-        
-    /** 
-     * Returns the flag whether the mapping conversion should generate 
+
+    /**
+     * Returns the flag whether the mapping conversion should generate
      * relationship fields and primary key fields to support run-time.
-     * The version field is always created even {@link #generateFields} is 
+     * The version field is always created even {@link #generateFields} is
      * <code>false</code> because it holds version column information.
-     * @return <code>true</code> to generate fields in the dot-mapping file 
+     * @return <code>true</code> to generate fields in the dot-mapping file
      * (if they are not present).
      */
     public boolean generateFields();
 
-    /** 
+    /**
      * Sets the flag whether the mapping conversion should generate relationship
      * fields, primary key fields, and version fields to support run-time.
      * @param generateFields a flag which indicates whether fields should be
@@ -149,15 +149,15 @@ public interface ConversionHelper {
      */
     public void setGenerateFields(boolean generateFields);
 
-    /** Returns the flag whether the mapping conversion should validate 
+    /** Returns the flag whether the mapping conversion should validate
      * all fields against schema columns.
-     * @return <code>true</code> to validate all the fields in the dot-mapping 
+     * @return <code>true</code> to validate all the fields in the dot-mapping
      * file.
      */
     public boolean ensureValidation();
 
-    /** 
-     * Sets the flag whether the mapping conversion should validate all fields 
+    /**
+     * Sets the flag whether the mapping conversion should validate all fields
      * against schema columns.
      * @param isValidating a boolean of indicating validating fields or not
      */
@@ -165,19 +165,19 @@ public interface ConversionHelper {
 
     /**
      * Returns <code>true</code> if the field is generated. There are three
-     * types of generated fields: generated relationships, unknown primary key 
+     * types of generated fields: generated relationships, unknown primary key
      * fields, and version consistency fields.
      * @param ejbName The ejb-name element for the bean
-     * @param fieldName The name of a container managed field in the named bean 
+     * @param fieldName The name of a container managed field in the named bean
      * @return <code>true</code> if the field is generated; <code>false</code>
      * otherwise.
      */
     public boolean isGeneratedField(String ejbName, String fieldName);
 
-    /** Flag whether the conversion helper generated the relationship field 
+    /** Flag whether the conversion helper generated the relationship field
     * @param ejbName The ejb-name element for the bean
     * @param fieldName The name of a container managed field in the named bean.
-    * @return <code>true</code> if the field was created by the conversion 
+    * @return <code>true</code> if the field was created by the conversion
     * helper.
     */
     public boolean isGeneratedRelationship(String ejbName, String fieldName);

@@ -53,16 +53,16 @@ public class PrimitiveStandard implements PrimitiveStandardMBean
 
     /** Attribute : Temperature */
     private double temperature = 0.0;
-    
+
     /** Attribute: Name */
     private String name = null;
-    
+
     /** Attribute: StartDate */
     private Date sd = null;
-    
+
     /** Attribute ResourceObjectName */
    private ObjectName ron = null;
-   
+
    /* Creates a new instance of PrimitiveStandard */
     public PrimitiveStandard()
     {

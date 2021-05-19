@@ -78,7 +78,7 @@ public class EchoHttpUpgradeHandler implements HttpUpgradeHandler {
                 System.out.println("Correct ClassLoader");
             } else {
                 System.out.println("ERROR Wrong ClassLoader!!!");
-                sb.append("WrongClassLoader"); 
+                sb.append("WrongClassLoader");
             }
 
             int len = -1;

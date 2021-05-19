@@ -93,7 +93,7 @@ public class LoginConfig {
      * method is form based authentication
      *
      * @see FormLoginConfig
-     * 
+     *
      * @param flc form login configuration
      */
     public void setFormLoginConfig(FormLoginConfig flc) {
@@ -105,7 +105,7 @@ public class LoginConfig {
      * the authentication scheme is not form based login.
      *
      * @see FormLoginConfig
-     * 
+     *
      * @return form login configuration
      */
     public FormLoginConfig getFormLoginConfig() {

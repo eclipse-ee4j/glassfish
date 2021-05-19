@@ -39,8 +39,8 @@ public class ModifiedHASession extends BaseHASession {
      * and update the dirty flag to true
      * @param name
      * @param value
-     */     
-    public void setAttribute(String name, Object value) { 
+     */
+    public void setAttribute(String name, Object value) {
         super.setAttribute(name, value);
         this.setDirty(true);
     }
@@ -49,7 +49,7 @@ public class ModifiedHASession extends BaseHASession {
      * remove the attribute name
      * and update the dirty flag to true
      * @param name
-     */     
+     */
     public void removeAttribute(String name) {
         super.removeAttribute(name);
         this.setDirty(true);
@@ -57,15 +57,15 @@ public class ModifiedHASession extends BaseHASession {
 
     /**
      * return isDirty
-     */     
+     */
     public boolean isDirty() {
         return dirtyFlag;
     }
-    
+
     /**
      * set isDirty
      * @param isDirty
-     */      
+     */
     public void setDirty(boolean isDirty) {
         dirtyFlag = isDirty;
     }

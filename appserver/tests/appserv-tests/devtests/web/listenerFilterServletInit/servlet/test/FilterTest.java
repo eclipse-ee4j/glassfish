@@ -30,14 +30,14 @@ public class FilterTest implements Filter {
         System.out.println("[Filter.init]");
         Record.addData("Fi");
     }
-    
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
         System.out.println("[Filter.doFilter]");
         filterChain.doFilter(request, response);
-        
-    }    
-    
+
+    }
+
     public void destroy() {
         System.out.println("[Filter.destroy]");
-    }    
+    }
 }

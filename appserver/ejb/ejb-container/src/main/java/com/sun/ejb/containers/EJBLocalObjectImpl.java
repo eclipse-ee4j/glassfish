@@ -50,12 +50,12 @@ public abstract class EJBLocalObjectImpl
     private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(EJBLocalObjectImpl.class);
 
-    private static Class[] NO_PARAMS = new Class[] {};    
+    private static Class[] NO_PARAMS = new Class[] {};
     private static Method REMOVE_METHOD = null;
 
     static {
         try {
-            REMOVE_METHOD = 
+            REMOVE_METHOD =
                 EJBLocalObject.class.getMethod("remove", NO_PARAMS);
         } catch ( NoSuchMethodException e ) {
             _logger.log(Level.FINE, "Exception retrieving remove method", e);
@@ -81,20 +81,20 @@ public abstract class EJBLocalObjectImpl
      * Get the client object corresponding to an EJBLocalObjectImpl.
      * Users of this class cannot
      * assume they can cast an EJBLocalObjectImpl to the object that
-     * the client uses,  and vice-versa.  This is overridden in the 
-     * InvocationHandler.  Only applicable for local home view. 
+     * the client uses,  and vice-versa.  This is overridden in the
+     * InvocationHandler.  Only applicable for local home view.
      */
     public Object getClientObject() {
         return this;
     }
-    
+
     void mapClientObject(String intfClassName, Object obj) {
         clientObjectMap.put(intfClassName, obj);
         if( isOptionalLocalBusinessView ) {
             optionalLocalBusinessClientObject = obj;
         }
     }
-    
+
     Object getClientObject(String intfClassName) {
         return clientObjectMap.get(intfClassName);
     }
@@ -124,13 +124,13 @@ public abstract class EJBLocalObjectImpl
      * Since EJBLocalObject might be a dynamic proxy, the container can't assume
      * it can cast from EJBLocalObject to EJBLocalObjectImpl.  This convenience
      * method is used to hide the logic behind the translation from an
-     * client-side EJBLocalObject to the corresponding EJBLocalObjectImpl.  
-     * 
-     * In the case of a proxy, the invocation handler is the 
+     * client-side EJBLocalObject to the corresponding EJBLocalObjectImpl.
+     *
+     * In the case of a proxy, the invocation handler is the
      * EJBLocalObjectImpl.  Otherwise, the argument is returned as is.
-     * NOTE : To translate in the other direction, use 
+     * NOTE : To translate in the other direction, use
      *   EJBLocalObjectImpl.getEJBLocalObject()
-     * 
+     *
      */
     public static EJBLocalObjectImpl toEJBLocalObjectImpl(EJBLocalObject localObj) {
         EJBLocalObjectImpl localObjectImpl;
@@ -138,25 +138,25 @@ public abstract class EJBLocalObjectImpl
         if( localObj instanceof EJBLocalObjectImpl ) {
             localObjectImpl = (EJBLocalObjectImpl) localObj;
         } else {
-            localObjectImpl = (EJBLocalObjectImpl) 
+            localObjectImpl = (EJBLocalObjectImpl)
                 Proxy.getInvocationHandler(localObj);
-        } 
+        }
 
         return localObjectImpl;
-    }    
-    
+    }
+
     public EJBLocalHome getEJBLocalHome() throws EJBException {
         container.authorizeLocalMethod(
             BaseContainer.EJBLocalObject_getEJBLocalHome);
         container.checkExists(this);
-        
+
         return container.getEJBLocalHome();
     }
-    
+
     public void remove() throws RemoveException, EJBException {
 
         // authorization is performed within container
-        
+
         try {
             container.removeBean(this, REMOVE_METHOD, true);
         }  catch(java.rmi.RemoteException re) {
@@ -168,21 +168,21 @@ public abstract class EJBLocalObjectImpl
             throw ejbEx;
         }
     }
-    
+
     public Object getPrimaryKey()
         throws EJBException
     {
             container.authorizeLocalGetPrimaryKey(this);
             return primaryKey;
     }
-    
+
     public boolean isIdentical(EJBLocalObject other)
         throws EJBException
     {
         container.authorizeLocalMethod(
             BaseContainer.EJBLocalObject_isIdentical);
         container.checkExists(this);
-        
+
         // For all types of beans (entity, stful/stless session),
         // there is exactly one EJBLocalObject instance per bean identity.
         if ( this == other )
@@ -190,19 +190,19 @@ public abstract class EJBLocalObjectImpl
         else
             return false;
     }
-    
+
     /**
      * Called from EJBUtils.EJBObjectOutputStream.replaceObject
      */
     public SerializableObjectFactory getSerializableObjectFactory() {
         // Note: for stateful SessionBeans, the EJBLocalObjectImpl contains
         // a pointer to the EJBContext. We should not serialize it here.
-        
+
         return new SerializableLocalObject
             (container.getEjbDescriptor().getUniqueId(), isLocalHomeView,
              isOptionalLocalBusinessView, primaryKey, getSfsbClientVersion());
     }
-    
+
     private static final class SerializableLocalObject
         implements SerializableObjectFactory
     {
@@ -212,12 +212,12 @@ public abstract class EJBLocalObjectImpl
         private Object primaryKey;
         private long version;   //Used only for SFSBs
         private transient static Logger _logger;
-        
+
         static {
             _logger=LogDomains.getLogger(SerializableLocalObject.class, LogDomains.EJB_LOGGER);
         }
-        
-        SerializableLocalObject(long containerId, 
+
+        SerializableLocalObject(long containerId,
                                 boolean localHomeView,
                                 boolean optionalLocalBusinessView,
                                 Object primaryKey, long version) {
@@ -227,28 +227,28 @@ public abstract class EJBLocalObjectImpl
             this.primaryKey = primaryKey;
             this.version = version;
         }
-        
+
         long getVersion() {
             return version;
         }
-        
+
         public Object createObject()
             throws IOException
         {
             BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(containerId);
-                
+
             if( localHomeView ) {
-                EJBLocalObjectImpl ejbLocalObjectImpl = 
+                EJBLocalObjectImpl ejbLocalObjectImpl =
                     container.getEJBLocalObjectImpl(primaryKey);
                 ejbLocalObjectImpl.setSfsbClientVersion(version);
-                // Return the client EJBLocalObject. 
+                // Return the client EJBLocalObject.
                 return ejbLocalObjectImpl.getClientObject();
             } else {
                 EJBLocalObjectImpl ejbLocalBusinessObjectImpl = optionalLocalBusView ?
                     container.getOptionalEJBLocalBusinessObjectImpl(primaryKey) :
                     container.getEJBLocalBusinessObjectImpl(primaryKey);
                 ejbLocalBusinessObjectImpl.setSfsbClientVersion(version);
-                // Return the client EJBLocalObject.  
+                // Return the client EJBLocalObject.
                 return ejbLocalBusinessObjectImpl.getClientObject();
             }
         }

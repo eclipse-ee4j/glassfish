@@ -47,7 +47,7 @@ public interface ContainerBuilder<T extends EmbeddedContainer> {
          */
         jruby,
         /**
-         * persistence container type 
+         * persistence container type
          */
         jpa,
         /**
@@ -58,7 +58,7 @@ public interface ContainerBuilder<T extends EmbeddedContainer> {
          * all installed containers
          */
         all }
-    
+
     /**
      * Creates a embedded container
      *

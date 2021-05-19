@@ -43,8 +43,8 @@ import org.glassfish.config.support.TargetType;
 
 /**
  * List Audit Modules Command
- * Usage: list-audit-modules [--terse=false] [--echo=false] [--interactive=true] 
- *        [--host localhost] [--port 4848|4849] [--secure | -s] 
+ * Usage: list-audit-modules [--terse=false] [--echo=false] [--interactive=true]
+ *        [--host localhost] [--port 4848|4849] [--secure | -s]
  *        [--user admin_user] [--passwordfile file_name] [target(Default server)]
  *
  * @author Nandini Ektare
@@ -59,14 +59,14 @@ import org.glassfish.config.support.TargetType;
 CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-audit-modules", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-audit-modules",
         description="List Audit Modules")
 })
 public class ListAuditModule implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(ListAuditModule.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(ListAuditModule.class);
 
     @Param(name = "target", primary=true, optional = true, defaultValue =
         SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
@@ -77,7 +77,7 @@ public class ListAuditModule implements AdminCommand, AdminCommandSecurity.Preau
 
     @Inject
     private Domain domain;
-    
+
     @AccessRequired.To(value="read")
     private SecurityService securityService = null;
 
@@ -87,7 +87,7 @@ public class ListAuditModule implements AdminCommand, AdminCommandSecurity.Preau
         return true;
     }
 
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -104,7 +104,7 @@ public class ListAuditModule implements AdminCommand, AdminCommandSecurity.Preau
             part.setMessage(am.getName());
         }
     }
-    
+
     private SecurityService chooseSecurityService(final ActionReport report) {
         config = CLIUtil.chooseConfig(domain, target, report);
         if (config == null) {

@@ -25,10 +25,10 @@ import java.util.EnumSet;
  */
 public interface View {
   /**
-   * 
+   *
    * @param name The name of the context sought.
    * @return The context associated to the specified name.
-   * @throws InsufficientCredentialException If the user has insufficient 
+   * @throws InsufficientCredentialException If the user has insufficient
    * privileges to access that context.
    */
   <T> T get(String name);
@@ -37,10 +37,10 @@ public interface View {
    * Stores the specified context under the specified name into the in-scope ContextMap.
    * @param name The name to associate to the specified context
    * @param context a String context.
-   * @param propagationModes A set of propagation modes that control over 
+   * @param propagationModes A set of propagation modes that control over
    * which protocol this context will be propagated.
    * @return The context being replaced.
-   * @throws InsufficientCredentialException If the user has insufficient 
+   * @throws InsufficientCredentialException If the user has insufficient
    * privileges to access that context.
    */
   <T> T put(String name, String context, EnumSet<PropagationMode> propagationModes);
@@ -49,10 +49,10 @@ public interface View {
    * Stores the specified context under the specified name into the in-scope ContextMap.
    * @param name The name to associate to the specified context
    * @param context a Number context.
-   * @param propagationModes A set of propagation modes that control over 
+   * @param propagationModes A set of propagation modes that control over
    * which protocol this context will be propagated.
    * @return The context being replaced.
-   * @throws InsufficientCredentialException If the user has insufficient 
+   * @throws InsufficientCredentialException If the user has insufficient
    * privileges to access that context.
    */
   <T, U extends Number> T put(String name, U context, EnumSet<PropagationMode> propagationModes);
@@ -61,31 +61,31 @@ public interface View {
    * Stores the specified context under the specified name into the in-scope ContextMap.
    * @param name The name to associate to the specified context
    * @param context an boolean String context.
-   * @param propagationModes A set of propagation modes that control over 
+   * @param propagationModes A set of propagation modes that control over
    * which protocol this context will be propagated.
    * @return The context being replaced.
-   * @throws InsufficientCredentialException If the user has insufficient 
+   * @throws InsufficientCredentialException If the user has insufficient
    * privileges to access that context.
-   */  
+   */
   <T> T put(String name, Boolean context, EnumSet<PropagationMode> propagationModes);
 
   /**
    * Stores the specified context under the specified name into the in-scope ContextMap.
    * @param name The name to associate to the specified context
    * @param context an char String context.
-   * @param propagationModes A set of propagation modes that control over 
+   * @param propagationModes A set of propagation modes that control over
    * which protocol this context will be propagated.
    * @return The context being replaced.
-   * @throws InsufficientCredentialException If the user has insufficient 
+   * @throws InsufficientCredentialException If the user has insufficient
    * privileges to access that context.
-   */  
+   */
   <T> T put(String name, Character context, EnumSet<PropagationMode> propagationModes);
 
    /**
     * Removes the specified context under the specified name from the in-scope ContextMap.
     * @param name The name to associate to the specified context
     * @return The context being replaced.
-    * @throws InsufficientCredentialException If the user has insufficient 
+    * @throws InsufficientCredentialException If the user has insufficient
     * privileges to access that context.
     */
    <T> T remove(String name);

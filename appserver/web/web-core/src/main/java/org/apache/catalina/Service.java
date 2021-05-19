@@ -104,7 +104,7 @@ public interface Service {
      */
     public void setBroadcaster(NotificationBroadcasterSupport broadcaster);
 
-    
+
     // --------------------------------------------------------- Public Methods
 
 

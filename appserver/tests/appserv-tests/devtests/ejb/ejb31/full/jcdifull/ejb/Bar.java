@@ -29,7 +29,7 @@ public class Bar {
     @Resource(name="jdbc/__default") javax.sql.DataSource ds;
 
     public Bar() {
-	System.out.println("Constructed::Bar");
+        System.out.println("Constructed::Bar");
     }
 
     @PostConstruct
@@ -46,7 +46,7 @@ public class Bar {
     }
 
     public String toString() {
-	return "Bar";
+        return "Bar";
     }
 
 }

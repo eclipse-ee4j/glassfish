@@ -43,16 +43,16 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @PerLookup
 public class WebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
-   
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     @Override
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.S1AS_WEB_JAR_ENTRY;        
+        return DescriptorConstants.S1AS_WEB_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -61,7 +61,7 @@ public class WebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      */
     @Override
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-   
+
         if (descriptor instanceof WebBundleDescriptorImpl) {
             return new WebBundleRuntimeNode((WebBundleDescriptorImpl) descriptor);
         }

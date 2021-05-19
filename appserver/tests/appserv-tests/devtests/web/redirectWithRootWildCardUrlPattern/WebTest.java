@@ -41,7 +41,7 @@ public class WebTest {
         contextRoot = args[2];
         expected = "uri = " + contextRoot + "/, pathInfo = /";
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Issue 5141");
         WebTest webTest = new WebTest(args);

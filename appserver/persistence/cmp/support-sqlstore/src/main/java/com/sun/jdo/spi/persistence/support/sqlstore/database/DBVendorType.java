@@ -247,7 +247,7 @@ public class DBVendorType  {
             if (debug) {
                 logger.fine("sqlstore.database.dbvendor.overrideproperties"); // NOI18N
             }
-            return; 	// nothing to override
+            return;     // nothing to override
         }
 
         //Prepare a clean vendor name by replacing all ' '  and '/' with underscores.
@@ -1002,8 +1002,8 @@ public class DBVendorType  {
 
         return s;
     }
-    
-    
+
+
 
     /**
      * Returns database vendor type

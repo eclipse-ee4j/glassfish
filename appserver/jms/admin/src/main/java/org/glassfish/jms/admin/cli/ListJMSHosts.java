@@ -52,8 +52,8 @@ import org.glassfish.api.admin.*;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=JmsService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jms-hosts", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jms-hosts",
         description="list-jms-hosts")
 })
 public class ListJMSHosts implements AdminCommand {
@@ -79,7 +79,7 @@ public class ListJMSHosts implements AdminCommand {
         Config targetConfig = domain.getConfigNamed(target);
                 if (targetConfig != null)
                     config = targetConfig;
-                
+
         Server targetServer = domain.getServerNamed(target);
         //String configRef = targetServer.getConfigRef();
         if (targetServer!=null) {

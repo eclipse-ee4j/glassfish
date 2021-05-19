@@ -32,7 +32,7 @@ import javax.transaction.xa.XAResource;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class WorkDispatcher implements Work {
 
@@ -43,11 +43,11 @@ public class WorkDispatcher implements Work {
     protected ActivationSpec spec;
     protected WorkManager wm;
     protected XATerminator xa;
-    
+
     public WorkDispatcher(
             String id,
             BootstrapContext ctx,
-            MessageEndpointFactory factory, 
+            MessageEndpointFactory factory,
             ActivationSpec spec) {
         this.id      = id;
         this.ctx     = ctx;
@@ -60,7 +60,7 @@ public class WorkDispatcher implements Work {
     public void run() {
 
         debug("ENTER...");
-        
+
         try {
             synchronized (Controls.readyLock) {
                 debug("WAIT...");
@@ -82,26 +82,26 @@ public class WorkDispatcher implements Work {
             try {
 
                 Method onMessage = getOnMessageMethod();
-                System.out.println("isDeliveryTransacted = " + 
+                System.out.println("isDeliveryTransacted = " +
                         factory.isDeliveryTransacted(onMessage));
 
                 if (!factory.isDeliveryTransacted(onMessage)) {
                     //MessageEndpoint ep = factory.createEndpoint(null);
-                    //DeliveryWork d = new DeliveryWork("NO_TX", ep); 
+                    //DeliveryWork d = new DeliveryWork("NO_TX", ep);
                     //wm.doWork(d, 0, null, null);
                 } else {
-                    
+
                     //MessageEndpoint ep = factory.createEndpoint(null);
                     MessageEndpoint ep = factory.createEndpoint(new FakeXAResource());
                     int numOfMessages = 5;
-                    
+
                     //importing transaction
 
                     //write/commit
                     ExecutionContext ec = startTx();
                     debug("Start TX - " + ec.getXid());
 
-                    DeliveryWork w = 
+                    DeliveryWork w =
                         new DeliveryWork(ep, numOfMessages, "WRITE");
                     wm.doWork(w, 0, ec, null);
                     xa.commit(ec.getXid(), true);
@@ -109,7 +109,7 @@ public class WorkDispatcher implements Work {
                     debug("DONE WRITE TO DB");
                     Controls.expectedResults = numOfMessages;
                     notifyAndWait();
-                    
+
                     //delete/rollback
                     ec = startTx();
                     debug("Start TX - " + ec.getXid());
@@ -125,7 +125,7 @@ public class WorkDispatcher implements Work {
                     //delete/commit
                     ec = startTx();
                     debug("Start TX - " + ec.getXid());
-                    
+
                     w = new DeliveryWork(ep, numOfMessages, "DELETE");
                     wm.doWork(w, 0, ec, null);
                     xa.commit(ec.getXid(), true);
@@ -149,7 +149,7 @@ public class WorkDispatcher implements Work {
                     //delete/commit
                     ec = startTx();
                     debug("Start TX - " + ec.getXid());
-                    
+
                     w = new DeliveryWork(ep, numOfMessages, "DELETE");
                     wm.doWork(w, 0, ec, null);
                     xa.commit(ec.getXid(), true);
@@ -194,7 +194,7 @@ public class WorkDispatcher implements Work {
                     wm.doWork(w, 0, ec, null);
                     wm.doWork(w, 0, ec, null);
                     wm.doWork(w, 0, ec, null);
-                    
+
                     if (XAResource.XA_OK == xa.prepare(ec.getXid())) {
                         xa.commit(ec.getXid(), false);
                         debug("XA PREPARE/COMMIT. DONE WRITE TO DB ");
@@ -206,19 +206,19 @@ public class WorkDispatcher implements Work {
                         Controls.expectedResults = 3;
                         notifyAndWait();
                     }
-                    
+
                     //delete all.
                     ec = startTx();
                     debug("Start TX - " + ec.getXid());
-                    
+
                     w = new DeliveryWork(ep, 1, "DELETE_ALL");
                     wm.doWork(w, 0, ec, null);
                     xa.commit(ec.getXid(), true);
-                    
+
                     debug("DONE DELETE ALL FROM DB");
                     Controls.expectedResults = 0;
                     notifyAndWait();
-                    
+
                     done();
                 }
 
@@ -245,7 +245,7 @@ public class WorkDispatcher implements Work {
                 done();
             }
         }
-        
+
         debug("LEAVE...");
     }
 
@@ -260,14 +260,14 @@ public class WorkDispatcher implements Work {
     }
 
     public Method getOnMessageMethod() {
-        
+
         Method onMessageMethod = null;
         try {
             Class msgListenerClass = connector.MyMessageListener.class;
             Class[] paramTypes = { java.lang.String.class };
-            onMessageMethod = 
+            onMessageMethod =
                 msgListenerClass.getMethod("onMessage", paramTypes);
-            
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }
@@ -290,13 +290,13 @@ public class WorkDispatcher implements Work {
         try {
             //Sleep for 5 seconds
             //Thread.currentThread().sleep(5*1000);
-            
+
             synchronized(Controls.readyLock) {
                 //Notify the client to check the results
-                Controls.readyLock.notifyAll(); 
+                Controls.readyLock.notifyAll();
 
                 //Wait until results are verified by the client
-                Controls.readyLock.wait(); 
+                Controls.readyLock.wait();
 
                 if (stop) {
                     return;

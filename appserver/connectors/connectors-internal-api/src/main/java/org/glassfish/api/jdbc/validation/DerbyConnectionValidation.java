@@ -23,16 +23,16 @@ import java.sql.Statement;
 
 /**
  * Provide custom implementation of connection validation for Derby dbvendor
- * 
- * Provides a custom connection validation 
- * mechanism for derby dbVendor if custom-validation is chosen as the 
+ *
+ * Provides a custom connection validation
+ * mechanism for derby dbVendor if custom-validation is chosen as the
  * connection-validation-method.
- * 
+ *
  * @author Shalini M
  */
 public class DerbyConnectionValidation implements ConnectionValidation {
     private static final String SQL = "VALUES(1)";
-    
+
     /**
      * Check for validity of <code>java.sql.Connection</code>
      *

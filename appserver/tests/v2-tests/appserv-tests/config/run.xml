@@ -33,10 +33,10 @@
                 </or>
             </waitfor>
             <antcall target="${target-to-run}"/>
-	    <antcall target="report"/>
-	    <antcall target="mail"/>
+            <antcall target="report"/>
+            <antcall target="mail"/>
 <!--
-	    <antcall target="stopAS"/>
+            <antcall target="stopAS"/>
 -->
         </sequential>
     </parallel>
@@ -96,7 +96,7 @@
         <filterchain>
             <linecontains>
               <contains value="ASMain"/>
-	      <contains value="${env.S1AS_HOME}"/>
+              <contains value="${env.S1AS_HOME}"/>
             </linecontains>
             <tokenfilter>
                 <replaceregex pattern="^(\d+) ASMain (.*)" replace="\1"/>
@@ -157,17 +157,17 @@
 
 <target name="restart-instance-common">
 <echo message="Restarting remote server instance,until this gets fixed"/>
-	<exec executable="${ASADMIN}" failonerror="false">
-	<arg line="stop-instance"/>
-	<arg line="${as.props}"/>
-	<arg line="${appserver.instance.name}"/>
+    <exec executable="${ASADMIN}" failonerror="false">
+    <arg line="stop-instance"/>
+    <arg line="${as.props}"/>
+    <arg line="${appserver.instance.name}"/>
 </exec>
 
 <sleep seconds="30"/>
-	<exec executable="${ASADMIN}" failonerror="false">
-	<arg line="start-instance"/>
-	<arg line="${as.props}"/>
-	<arg line="${appserver.instance.name}"/>
+    <exec executable="${ASADMIN}" failonerror="false">
+    <arg line="start-instance"/>
+    <arg line="${as.props}"/>
+    <arg line="${appserver.instance.name}"/>
 </exec>
 
 </target>

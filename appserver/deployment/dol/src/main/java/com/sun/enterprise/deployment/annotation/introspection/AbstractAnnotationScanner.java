@@ -25,29 +25,29 @@ import java.util.Set;
  * @author tjquinn
  */
 public abstract class AbstractAnnotationScanner implements AnnotationScanner {
-    
+
     /** holds the annotations of interest to the specific type of scanner */
     protected volatile Set<String> annotations=null;
-    
+
     /** Creates a new instance of AbstractAnnotationScanner */
     public AbstractAnnotationScanner() {
     }
-  
+
     /**
      * Invoked so the concrete subclass can populate the annotations set.
      * <p>
-     * Concrete implementations of this method should add to the set one or more Strings 
-     * corresponding to the annotations of interest.  
+     * Concrete implementations of this method should add to the set one or more Strings
+     * corresponding to the annotations of interest.
      *
      * @param annotationsSet the Set object to be populated
      */
     protected abstract void init(Set<String> annotationsSet);
 
     /**
-     * Test if the passed constant pool string is a reference to 
+     * Test if the passed constant pool string is a reference to
      * a Type.TYPE annotation of a J2EE component
      *
-     * @String the constant pool info string 
+     * @String the constant pool info string
      * @return true if it is an annotation reference of interest to this scanner
      */
     public boolean isAnnotation(String value) {

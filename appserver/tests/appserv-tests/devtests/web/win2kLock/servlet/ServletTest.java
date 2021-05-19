@@ -34,7 +34,7 @@ public class ServletTest extends HttpServlet {
 
     private ServletContext context;
     private static String status = "Win2kLock:PASS";
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         System.out.println("[Servlet.init]");
@@ -45,14 +45,14 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
 
         request.getSession().setAttribute("test","Win2kLock:PASS");
         request.getSession().invalidate();
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        
+
         out.println(status);
     }
 

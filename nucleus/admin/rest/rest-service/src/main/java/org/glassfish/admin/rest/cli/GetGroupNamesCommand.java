@@ -138,7 +138,7 @@ public class GetGroupNamesCommand implements AdminCommand {
 
     private String[] getGroupNames(String realmName, String userName)
             throws NoSuchRealmException, BadRealmException, InvalidOperationException, NoSuchUserException {
-        //account for updates to file-realm contents from outside this config 
+        //account for updates to file-realm contents from outside this config
         //which are sharing the same keyfile
         realmsManager.refreshRealm(config.getName(), realmName);
         Realm r = realmsManager.getFromLoadedRealms(config.getName(), realmName);

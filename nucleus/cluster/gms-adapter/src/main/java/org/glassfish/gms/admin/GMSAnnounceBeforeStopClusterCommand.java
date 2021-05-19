@@ -54,8 +54,8 @@ import java.util.logging.Logger;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_gms-announce-before-stop-cluster-command", 
+        opType=RestEndpoint.OpType.POST,
+        path="_gms-announce-before-stop-cluster-command",
         description="_gms-announce-before-stop-cluster-command")
 })
 public class GMSAnnounceBeforeStopClusterCommand implements AdminCommand {

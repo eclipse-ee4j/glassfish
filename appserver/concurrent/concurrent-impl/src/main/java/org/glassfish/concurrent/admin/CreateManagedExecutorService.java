@@ -59,7 +59,7 @@ public class CreateManagedExecutorService extends CreateManagedExecutorServiceBa
     private ManagedExecutorServiceManager managedExecutorServiceMgr;
 
     protected void setAttributeList(HashMap attrList) {
-        super.setAttributeList(attrList); 
+        super.setAttributeList(attrList);
         attrList.put(ResourceConstants.MAXIMUM_POOL_SIZE,
             maximumpoolsize.toString());
         attrList.put(ResourceConstants.TASK_QUEUE_CAPACITY,

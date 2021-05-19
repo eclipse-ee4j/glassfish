@@ -38,6 +38,6 @@ public class EjbIiopServiceImpl implements EjbService {
                 EjbContainerUtilImpl.getInstance().getDescriptor(ejbId) : null;
 
     }
-    
+
 
 }

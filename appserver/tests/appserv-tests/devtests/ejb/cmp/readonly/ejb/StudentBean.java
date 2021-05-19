@@ -53,10 +53,10 @@ public abstract class StudentBean implements EntityBean {
             try {
                 System.out.println("Notifying read-only bean of update to " +
                                    "read-mostly Student " + name);
-                ReadOnlyBeanNotifier studentNotifier = 
+                ReadOnlyBeanNotifier studentNotifier =
                     ReadOnlyBeanHelper.getReadOnlyBeanNotifier
                     ("java:comp/env/ejb/ReadOnlyStudent");
-                
+
                 // Update read-only version
                 studentNotifier.refresh(getStudentId());
             } catch(Exception e) {
@@ -121,12 +121,12 @@ public abstract class StudentBean implements EntityBean {
 
             System.out.println("2nd query of " + pk + " took " +
                                (after2 - after) + " nano secs");
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
-        
+
     }
 
     public void ejbHomeTestLocalFind(String pk) {
@@ -149,17 +149,17 @@ public abstract class StudentBean implements EntityBean {
 
             System.out.println("2nd query of " + pk + " took " +
                                (after2 - after) + " nano secs");
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
-        
+
     }
 
     public void ejbHomeTestLocalRemove(String pk) {
-        
-        
+
+
         StudentLocalHome localHome = (StudentLocalHome)
             context.getEJBLocalHome();
 
@@ -180,7 +180,7 @@ public abstract class StudentBean implements EntityBean {
             System.out.println("Successfully caught exception while trying " +
                                " to do a remove on a read-only cmp Home");
         }
-        
+
         boolean removeSucceeded = false;
         try {
             StudentLocal student = localHome.findByPrimaryKey(pk);
@@ -202,34 +202,34 @@ public abstract class StudentBean implements EntityBean {
                                " to do a remove on a read-only cmp ");
         }
 
-        
+
     }
-    
+
 
     public void ejbRemove() {
         System.out.println("StudentBean.ejbRemove called");
     }
 
     public void setEntityContext(EntityContext context) {
-        this.context = context;       
+        this.context = context;
     }
 
-    public void unsetEntityContext() {     
+    public void unsetEntityContext() {
         this.context = null;
     }
 
-    public void ejbActivate() {     
+    public void ejbActivate() {
     }
 
-    public void ejbPassivate() {      
+    public void ejbPassivate() {
     }
 
-    public void ejbLoad() {        
+    public void ejbLoad() {
     }
 
-    public void ejbStore() {        
+    public void ejbStore() {
     }
-  
 
-    
+
+
 }

@@ -24,11 +24,11 @@ import com.sun.ejte.ccl.reporter.*;
  * prior to V3), which has been renamed to
  * org.glassfish.web.valve.GlassFishValve in V3, continue to work in V3
  * (in a binary-compatible way).
- * 
+ *
  * This test deploys a webapp that specifies a GlassFish-style valve
  * (compiled against the "old" Valve interface) in its sun-web.xml.
  * The valve adds an attribute to the request.
- * 
+ *
  * When the test accesses the webapp's servlet, the servlet checks for the
  * presence of this attribute in the request, and will cause the test to fail
  * if the attribute is missing.
@@ -51,7 +51,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for ensuring binary compatibility " +
@@ -67,11 +67,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/test");
         System.out.println("Connecting to: " + url.toString());
@@ -91,7 +91,7 @@ public class WebTest {
             input = new BufferedReader(new InputStreamReader(is));
             String line = input.readLine();
             if (!EXPECTED_RESPONSE.equals(line)) {
-                throw new Exception("Wrong response. Expected: " + 
+                throw new Exception("Wrong response. Expected: " +
                                     EXPECTED_RESPONSE + ", received: " +
                                     line);
             }
@@ -110,6 +110,6 @@ public class WebTest {
             } catch (IOException ioe) {
                 // ignore
             }
-        }    
+        }
     }
 }

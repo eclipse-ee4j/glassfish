@@ -16,46 +16,50 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.PrintStream;
 
 //@olsen: fix 4467428, added class for synthetic attribute to be added
 // to generated jdo fields and methods
 
 /**
- * SyntheticAttribute represents a constant value attribute 
+ * SyntheticAttribute represents a constant value attribute
  * in a class file.  These attributes are used as initialization
  * values for static fields.
  */
-
 public class SyntheticAttribute extends ClassAttribute {
-  /* The expected name of this attribute */
-  public static final String expectedAttrName = "Synthetic";//NOI18N
+    /* The expected name of this attribute */
+    public static final String expectedAttrName = "Synthetic";//NOI18N
 
-  /** 
-   * Construct a constant value attribute
-   */
-  public SyntheticAttribute(ConstUtf8 attrName) {
-    super(attrName);
-    //System.out.println("new SyntheticAttribute()");
-  }
+    /**
+     * Construct a constant value attribute
+     */
+    public SyntheticAttribute(ConstUtf8 attrName) {
+        super(attrName);
+        //System.out.println("new SyntheticAttribute()");
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  static SyntheticAttribute read (ConstUtf8 attrName,
-                                  DataInputStream data,
-                                  ConstantPool pool)
-    throws IOException {
-    return new SyntheticAttribute(attrName);
-  }
+    static SyntheticAttribute read (ConstUtf8 attrName,
+        DataInputStream data,
+        ConstantPool pool)
+            throws IOException {
+        return new SyntheticAttribute(attrName);
+    }
 
-  void write(DataOutputStream out) throws IOException {
-    out.writeShort(attrName().getIndex());
-    final int attributeBytesLength = 0;
-    out.writeInt(attributeBytesLength);
-  }
+    @Override
+    void write(DataOutputStream out) throws IOException {
+        out.writeShort(attrName().getIndex());
+        final int attributeBytesLength = 0;
+        out.writeInt(attributeBytesLength);
+    }
 
-  void print(PrintStream out, int indent) {
-    ClassPrint.spaces(out, indent);
-    out.println(expectedAttrName);
-  }
+    @Override
+    void print(PrintStream out, int indent) {
+        ClassPrint.spaces(out, indent);
+        out.println(expectedAttrName);
+    }
 }

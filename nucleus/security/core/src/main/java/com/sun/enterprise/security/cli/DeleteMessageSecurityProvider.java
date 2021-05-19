@@ -51,10 +51,10 @@ import org.jvnet.hk2.config.ConfigListener;
 
 /**
  * Delete Message Security Provider Command
- * 
- * Usage: delete-message-security-provider --layer message_layer [--terse=false] 
- *        [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849] 
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name] 
+ *
+ * Usage: delete-message-security-provider --layer message_layer [--terse=false]
+ *        [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849]
+ *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
  *        [--target target(Defaultserver)] provider_name
  *
  * @author Nandini Ektare
@@ -65,17 +65,17 @@ import org.jvnet.hk2.config.ConfigListener;
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
+
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(DeleteMessageSecurityProvider.class);
 
     @Param(name="providername", primary=true)
     String providerId;
- 
+
     // auth-layer can only be SOAP | HttpServlet
     @Param(name="layer",defaultValue="SOAP")
     String authLayer;
-    
+
     @Param(name = "target", optional = true, defaultValue =
         SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
@@ -90,7 +90,7 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
 
     @AccessRequired.To("delete")
     private MessageSecurityConfig msgSecCfg = null;
-    
+
     private SecurityService secService;
 
     @Override
@@ -104,15 +104,15 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
         if (msgSecCfg == null) {
             final ActionReport report = context.getActionReport();
             report.setMessage(localStrings.getLocalString(
-                "delete.message.security.provider.confignotfound", 
-                "A Message security config does not exist for the layer {0}", 
+                "delete.message.security.provider.confignotfound",
+                "A Message security config does not exist for the layer {0}",
                 authLayer));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;            
+            return false;
         }
         return true;
     }
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -120,18 +120,18 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         ActionReport report = context.getActionReport();
-        
+
         List<ProviderConfig> pcs = msgSecCfg.getProviderConfig();
         for (ProviderConfig pc : pcs) {
-            if (pc.getProviderId().equals(providerId)) { 
+            if (pc.getProviderId().equals(providerId)) {
                 thePC = pc;
                 try {
                     ConfigSupport.apply(
                         new SingleConfigCode<MessageSecurityConfig>() {
-                        
-                        public Object run(MessageSecurityConfig param) 
+
+                        public Object run(MessageSecurityConfig param)
                         throws PropertyVetoException, TransactionFailure {
 
                             if ((param.getDefaultProvider() != null) &&
@@ -139,33 +139,33 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
                                     thePC.getProviderId())) {
                                 param.setDefaultProvider(null);
                             }
-                                
+
                             if ((param.getDefaultClientProvider() != null) &&
                                  param.getDefaultClientProvider().equals(
                                     thePC.getProviderId())) {
                                 param.setDefaultClientProvider(null);
                             }
-                            
-                            param.getProviderConfig().remove(thePC);                                                                                       
+
+                            param.getProviderConfig().remove(thePC);
                             return null;
                         }
                     }, msgSecCfg);
                 } catch(TransactionFailure e) {
                     e.printStackTrace();
                     report.setMessage(localStrings.getLocalString(
-                        "delete.message.security.provider.fail", 
-                        "Deletion of message security provider named {0} failed", 
+                        "delete.message.security.provider.fail",
+                        "Deletion of message security provider named {0} failed",
                         providerId));
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setFailureCause(e);
                     return;
                 }
                 /*report.setMessage(localStrings.getLocalString(
-                    "delete.message.security.provider.success", 
+                    "delete.message.security.provider.success",
                     "Deletion of message security provider {0} completed " +
                     "successfully", providerId));*/
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-                return;                
+                return;
             }
         }
     }

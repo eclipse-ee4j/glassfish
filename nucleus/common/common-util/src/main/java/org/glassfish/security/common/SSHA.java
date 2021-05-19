@@ -44,9 +44,9 @@ public class SSHA
 
     //TODO V3 need to check if second arg is correct
     private static StringManager sm =
-        StringManager.getManager(SSHA.class);   
+        StringManager.getManager(SSHA.class);
 
-    
+
     /**
      * Compute a salted SHA hash.
      *
@@ -59,7 +59,7 @@ public class SSHA
     public static byte[] compute(byte[] salt, byte[] password, String algo)
         throws IllegalArgumentException
     {
-        
+
         byte[] buff = new byte[password.length + salt.length];
         System.arraycopy(password, 0, buff, 0, password.length);
         System.arraycopy(salt, 0, buff, password.length, salt.length);
@@ -70,7 +70,7 @@ public class SSHA
         if(algoSHA.equals(algo)) {
             isSHA = true;
         }
-        
+
         MessageDigest md = null;
         try {
             md = MessageDigest.getInstance(algo);
@@ -88,7 +88,7 @@ public class SSHA
                 md.update(hash);
                 hash = md.digest();
             }
-        }    
+        }
         if (isSHA) {
             assert (hash.length == 20); // SHA output is 20 bytes
         }
@@ -121,7 +121,7 @@ public class SSHA
         return compute(salt, password);
     }*/
 
-    
+
     /**
      * Perform encoding of salt and computed hash.
      *
@@ -131,7 +131,7 @@ public class SSHA
      *
      */
     public static String encode(byte[] salt, byte[] hash, String algo)
-    {       
+    {
         boolean isSHA = false;
 
         if (algoSHA.equals(algo)) {
@@ -160,7 +160,7 @@ public class SSHA
         if(isSHA) {
             out = SSHA_TAG + encoded;
         }
-       
+
         return out;
     }
 
@@ -291,10 +291,10 @@ public class SSHA
         if (isSHA) {
             ssha = encoded.substring(SSHA_TAG.length());
         }
-               
+
         GFBase64Decoder decoder = new GFBase64Decoder();
         byte[] result = null;
-      
+
         try {
             result = decoder.decodeBuffer(ssha);
         } catch (IOException e) {
@@ -306,7 +306,7 @@ public class SSHA
             resultLength = 20;
         }
         assert (result.length > resultLength);
-        
+
         byte[] salt = new byte[result.length - resultLength];
 
         System.arraycopy(result, 0, hashResult, 0, resultLength);

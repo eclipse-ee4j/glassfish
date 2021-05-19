@@ -44,94 +44,94 @@ public class NamedBaseSuite {
     private NamedTest nb2 ;
 
     private static class NamedTest extends NamedBase {
-	public NamedTest( TimerFactory factory, String name ) {
-	    super( factory, name ) ;
-	}
+        public NamedTest( TimerFactory factory, String name ) {
+            super( factory, name ) ;
+        }
 
-	public void finish( TimerFactory factory ) {
-	    setFactory( factory ) ;
-	}
+        public void finish( TimerFactory factory ) {
+            setFactory( factory ) ;
+        }
     }
 
     @Configuration( beforeTest = true )
     public void setUp() {
-	factory = TimerFactoryBuilder.make( "NTF", "No description" ) ;
-	nb1 = new NamedTest( factory, name ) ;
-	nb2 = new NamedTest( null, name ) ;
+        factory = TimerFactoryBuilder.make( "NTF", "No description" ) ;
+        nb1 = new NamedTest( factory, name ) ;
+        nb2 = new NamedTest( null, name ) ;
     }
 
-    @Configuration( afterTest = true ) 
+    @Configuration( afterTest = true )
     public void tearDown() {
-	TimerFactoryBuilder.destroy( factory ) ;
+        TimerFactoryBuilder.destroy( factory ) ;
     }
 
-    @Test() 
+    @Test()
     public void name1() {
-	Assert.assertEquals( name, nb1.name() ) ;
+        Assert.assertEquals( name, nb1.name() ) ;
     }
 
-    @Test() 
+    @Test()
     public void name2() {
-	Assert.assertEquals( name, nb2.name() ) ;
+        Assert.assertEquals( name, nb2.name() ) ;
     }
 
     @Test()
     public void factory1() {
-	Assert.assertEquals( factory, nb1.factory() ) ;
+        Assert.assertEquals( factory, nb1.factory() ) ;
     }
 
     @Test()
-    @ExpectedExceptions( { IllegalStateException.class } ) 
+    @ExpectedExceptions( { IllegalStateException.class } )
     public void factory2() {
-	TimerFactory tf = nb2.factory() ;
+        TimerFactory tf = nb2.factory() ;
     }
 
     @Test()
     public void equals() {
-	Assert.assertEquals( nb1, nb2 ) ;
+        Assert.assertEquals( nb1, nb2 ) ;
     }
 
     @Test()
     public void hashCode1() {
-	Assert.assertEquals( nb1.hashCode(), name.hashCode() ) ;
+        Assert.assertEquals( nb1.hashCode(), name.hashCode() ) ;
     }
 
     @Test()
     public void hashCode2() {
-	Assert.assertEquals( nb2.hashCode(), name.hashCode() ) ;
+        Assert.assertEquals( nb2.hashCode(), name.hashCode() ) ;
     }
 
     @Test()
     public void toString1() {
-	Assert.assertEquals( factory.name() + ":" + 
-	    name, nb1.toString() ) ;
+        Assert.assertEquals( factory.name() + ":" +
+            name, nb1.toString() ) ;
     }
 
     @Test()
-    @ExpectedExceptions( { IllegalStateException.class } ) 
+    @ExpectedExceptions( { IllegalStateException.class } )
     public void toString2() {
-	String ts = nb2.toString() ;
+        String ts = nb2.toString() ;
     }
 
     @Test()
-    @ExpectedExceptions( { IllegalStateException.class } ) 
+    @ExpectedExceptions( { IllegalStateException.class } )
     public void setFactory1() {
-	nb1.finish( factory ) ;
+        nb1.finish( factory ) ;
     }
 
-    @Test( dependsOnMethods = { "toString2", "factory2" } ) 
+    @Test( dependsOnMethods = { "toString2", "factory2" } )
     public void setFactory2() {
-	nb2.finish( factory ) ;
+        nb2.finish( factory ) ;
     }
 
     @Test( dependsOnMethods = { "setFactory2" } )
-    public void factory2Post() {	
-	Assert.assertEquals( factory, nb2.factory() ) ;	
+    public void factory2Post() {
+        Assert.assertEquals( factory, nb2.factory() ) ;
     }
 
     @Test( dependsOnMethods = { "setFactory2" } )
-    public void toString2Post() {	
-	Assert.assertEquals( factory.name() + ":" + 
-	    name, nb2.toString() ) ;
+    public void toString2Post() {
+        Assert.assertEquals( factory.name() + ":" +
+            name, nb2.toString() ) ;
     }
 }

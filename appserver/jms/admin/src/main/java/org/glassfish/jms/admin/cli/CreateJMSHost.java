@@ -49,7 +49,6 @@ import jakarta.inject.Named;
 
 /**
  * Create Admin Object Command
- *
  */
 @Service(name="create-jms-host")
 @PerLookup
@@ -106,9 +105,10 @@ public class CreateJMSHost implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         Config targetConfig = domain.getConfigNamed(target);
-        if (targetConfig != null)
+        if (targetConfig != null) {
             config = targetConfig;
-        
+        }
+
         Server targetServer = domain.getServerNamed(target);
         //String configRef = targetServer.getConfigRef();
         if (targetServer!=null) {
@@ -134,26 +134,26 @@ public class CreateJMSHost implements AdminCommand {
 
         // ensure we don't already have one of this name before creating it.
         for (JmsHost jmsHost : jmsservice.getJmsHost()) {
-                if (jmsHostName.equals(jmsHost.getName())) {
-                    if (force) {
-                        ActionReport deleteReport = report.addSubActionsReport();
-                        ParameterMap parameters = new ParameterMap();
-                         parameters.set("DEFAULT", jmsHostName);
-                         parameters.set("target", target);
-                        commandRunner.getCommandInvocation("delete-jms-host", deleteReport, context.getSubject()).parameters(parameters).execute();
-                        if (ActionReport.ExitCode.FAILURE.equals(deleteReport.getActionExitCode())) {
-                            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                            return;
-                        }
-                        break;
-                    } else {
-                        report.setMessage(localStrings.getLocalString("create.jms.host.duplicate",
-                                "A JMS Host named {0} already exists.", jmsHostName));
+            if (jmsHostName.equals(jmsHost.getName())) {
+                if (force) {
+                    ActionReport deleteReport = report.addSubActionsReport();
+                    ParameterMap parameters = new ParameterMap();
+                    parameters.set("DEFAULT", jmsHostName);
+                    parameters.set("target", target);
+                    commandRunner.getCommandInvocation("delete-jms-host", deleteReport, context.getSubject()).parameters(parameters).execute();
+                    if (ActionReport.ExitCode.FAILURE.equals(deleteReport.getActionExitCode())) {
                         report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                         return;
                     }
+                    break;
+                } else {
+                    report.setMessage(localStrings.getLocalString("create.jms.host.duplicate",
+                        "A JMS Host named {0} already exists.", jmsHostName));
+                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                    return;
                 }
             }
+        }
 
         try {
             ConfigSupport.apply(new SingleConfigCode<JmsService>() {
@@ -165,15 +165,14 @@ public class CreateJMSHost implements AdminCommand {
                     jmsHost.setName(jmsHostName);
                     jmsHost.setHost(mqhost);
                     jmsHost.setPort(mqport);
-		    if(props != null)
-		    {
-		    	for (Map.Entry e: props.entrySet()){
-				Property prop = jmsHost.createChild(Property.class);
-				prop.setName((String)e.getKey());
-				prop.setValue((String)e.getValue());
-				jmsHost.getProperty().add(prop);
-			}
-		    }
+                    if (props != null) {
+                        for (Map.Entry e : props.entrySet()) {
+                            Property prop = jmsHost.createChild(Property.class);
+                            prop.setName((String) e.getKey());
+                            prop.setValue((String) e.getValue());
+                            jmsHost.getProperty().add(prop);
+                        }
+                    }
                     param.getJmsHost().add(jmsHost);
 
                     return jmsHost;

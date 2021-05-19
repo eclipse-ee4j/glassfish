@@ -24,28 +24,28 @@ import java.util.Collection;
 
 @NamedQueries({
 @NamedQuery( name="findAllCustomersWithLike",
-	query="SELECT OBJECT(thecust) FROM CustomerEntity thecust where thecust.name LIKE :name and thecust.city LIKE :city"),
+    query="SELECT OBJECT(thecust) FROM CustomerEntity thecust where thecust.name LIKE :name and thecust.city LIKE :city"),
 @NamedQuery( name="findAllCustomers",
-	query="SELECT OBJECT(thecust) FROM CustomerEntity thecust")
+    query="SELECT OBJECT(thecust) FROM CustomerEntity thecust")
 })
 public class CustomerEntity implements java.io.Serializable{
 
-	private Integer customerId;
-	private int version;
-	private String city;
-	private String name;
-	private Collection<OrderEntity> orders;
+    private Integer customerId;
+    private int version;
+    private String city;
+    private String name;
+    private Collection<OrderEntity> orders;
 
     public CustomerEntity(){}
 
-	public CustomerEntity(int id,String name,String city) {
+    public CustomerEntity(int id,String name,String city) {
         this.setCustomerId(new Integer(id));
         this.setName(name);
         this.setCity(city);
-	}
+    }
 
-	@Id
-	@Column(name="CUST_ID")
+    @Id
+    @Column(name="CUST_ID")
     public Integer getCustomerId() {
         return customerId;
     }
@@ -54,18 +54,18 @@ public class CustomerEntity implements java.io.Serializable{
         this.customerId = id;
     }
 
-	@Version
-	@Column(name="CUST_VERSION")
-	public int getVersion() {
+    @Version
+    @Column(name="CUST_VERSION")
+    public int getVersion() {
         return version;
     }
 
-	protected void setVersion(int version) {
-		this.version = version;
-	}
+    protected void setVersion(int version) {
+        this.version = version;
+    }
 
-	@Column(name="CITY")
-	public String getCity() {
+    @Column(name="CITY")
+    public String getCity() {
         return city;
     }
 
@@ -74,7 +74,7 @@ public class CustomerEntity implements java.io.Serializable{
     }
 
 
-	@Column(name="NAME")
+    @Column(name="NAME")
     public String getName() {
         return name;
     }
@@ -83,8 +83,8 @@ public class CustomerEntity implements java.io.Serializable{
         this.name = aName;
     }
 
-	@OneToMany(cascade=CascadeType.ALL,mappedBy="customer")
-//	@JoinColumn(name="CUST_ID", referencedColumnName="CUST_ID")
+    @OneToMany(cascade=CascadeType.ALL,mappedBy="customer")
+//    @JoinColumn(name="CUST_ID", referencedColumnName="CUST_ID")
     public Collection<OrderEntity> getOrders() {
         System.out.println("CustomerEntity:getOrders");
         return orders;
@@ -98,7 +98,7 @@ public class CustomerEntity implements java.io.Serializable{
     public void addOrder(OrderEntity anOrder) {
         System.out.println("CustomerEntity: adding order");
         getOrders().add(anOrder);
-		anOrder.setCustomer(this);
+        anOrder.setCustomer(this);
     }
 
     public void removeOrder(OrderEntity anOrder) {

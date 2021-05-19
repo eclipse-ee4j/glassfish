@@ -81,7 +81,7 @@ public class CreateConnectorWorkSecurityMap implements AdminCommand {
 
     @Inject
     private Applications applications;
-    
+
 
     //TODO common code replicated in ConnectorWorkSecurityMapManager
     /**
@@ -192,7 +192,7 @@ public class CreateConnectorWorkSecurityMap implements AdminCommand {
                     return workSecurityMap;
                 }
             }, domain.getResources());
-            
+
         } catch (TransactionFailure tfe) {
             Logger.getLogger(CreateConnectorWorkSecurityMap.class.getName()).log(Level.SEVERE,
                     "create-connector-work-security-map failed", tfe);
@@ -204,7 +204,7 @@ public class CreateConnectorWorkSecurityMap implements AdminCommand {
             report.setFailureCause(tfe);
             return;
         }
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 

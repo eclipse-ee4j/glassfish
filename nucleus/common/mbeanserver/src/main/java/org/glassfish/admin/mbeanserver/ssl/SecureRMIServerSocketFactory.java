@@ -60,19 +60,19 @@ public class SecureRMIServerSocketFactory
 
     @LogMessageInfo(level="INFO", message="Creating a SecureRMIServerSocketFactory @ {0} with ssl config = {1}")
     private final static String creatingServerSocketFactory = Util.LOG_PREFIX + "00024";
-    
+
     @LogMessageInfo(level="INFO", message="SSLServerSocket {0} and {1} created")
     private final static String createdServerSocket = Util.LOG_PREFIX + "00025";
-    
+
     public SecureRMIServerSocketFactory(final ServiceLocator habitat,
             final Ssl sslConfig,
             final InetAddress addr) {
         mAddress = addr;
         this.habitat = habitat;
         ssl = sslConfig;
-    
-        Util.getLogger().log(Level.INFO, 
-                creatingServerSocketFactory, 
+
+        Util.getLogger().log(Level.INFO,
+                creatingServerSocketFactory,
                 new Object[] {addr.getHostAddress(), ssl.toString()});
     }
 
@@ -142,8 +142,8 @@ public class SecureRMIServerSocketFactory
             throw new IllegalStateException("ServerSocketFactory returned non-secure server socket.");
         }
         configureSSLSocket((SSLServerSocket) sslSocket, sslConfigHolder);
-    
-        Util.getLogger().log(Level.INFO, createdServerSocket, 
+
+        Util.getLogger().log(Level.INFO, createdServerSocket,
                 new Object[] {sslSocket.getLocalSocketAddress(), sslSocket.toString()});
         //sslSocket.startHandshake();
         //debug( "MyRMIServerSocketFactory.createServerSocket(): " + mAddress + " : " + port );

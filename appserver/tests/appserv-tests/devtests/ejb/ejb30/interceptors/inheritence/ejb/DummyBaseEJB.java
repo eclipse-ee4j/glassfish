@@ -34,22 +34,22 @@ public abstract class DummyBaseEJB
     protected int dummyBaseAICount = 0;
     protected int dummyBaseEJBPostConstructCount = 0;
 
-	@AroundInvoke
-	private Object dummyBaseAroundInvoke(InvocationContext ctx)
-		throws Exception {
-			aroundInvokeList = new ArrayList<String>();
-			aroundInvokeList.add("DummyBaseEJB");
-			dummyBaseAICount++;
-			return ctx.proceed();
-	}
+        @AroundInvoke
+        private Object dummyBaseAroundInvoke(InvocationContext ctx)
+                throws Exception {
+                        aroundInvokeList = new ArrayList<String>();
+                        aroundInvokeList.add("DummyBaseEJB");
+                        dummyBaseAICount++;
+                        return ctx.proceed();
+        }
 
 
-	@PostConstruct
+        @PostConstruct
     private void dummyBasePostConstruct() {
-		postConstructList = new ArrayList<String>();
-		postConstructList.add("DummyBaseEJB");
-		dummyBaseEJBPostConstructCount++;
-		System.out.println("GGGG: DummyLevel2EJB.postConstruct ");
-	}
+                postConstructList = new ArrayList<String>();
+                postConstructList.add("DummyBaseEJB");
+                dummyBaseEJBPostConstructCount++;
+                System.out.println("GGGG: DummyLevel2EJB.postConstruct ");
+        }
 
 }

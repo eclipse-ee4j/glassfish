@@ -254,7 +254,7 @@ public final class StatefulSessionContainer
         message = "Exception in backingStore.size()",
         level   = "WARNING")
     private static final String ERROR_WHILE_BACKSTORE_SIZE_ACCESS = "AS-EJB-00063";
-    
+
     // We do not want too many ORB task for passivation
     public static final int MIN_PASSIVATION_BATCH_COUNT = 8;
 
@@ -302,7 +302,7 @@ public final class StatefulSessionContainer
     private Method beforeCompletionMethod;
     private Method afterCompletionMethod;
     private boolean isPassivationCapable;
-    
+
     /*
      * Cache for keeping ref count for shared extended entity manager.
      * The key in this map is the physical entity manager
@@ -347,13 +347,13 @@ public final class StatefulSessionContainer
     public boolean isPassivationCapable() {
         return isPassivationCapable;
     }
-    
+
     private InvocationInfo getLifecycleCallbackInvInfo(
             Set<LifecycleCallbackDescriptor> lifecycleCallbackDescriptors) throws Exception {
         InvocationInfo inv = new InvocationInfo();
         inv.ejbName = ejbDescriptor.getName();
         inv.methodIntf = MethodDescriptor.LIFECYCLE_CALLBACK;
-        inv.txAttr = getTxAttrForLifecycleCallback(lifecycleCallbackDescriptors, 
+        inv.txAttr = getTxAttrForLifecycleCallback(lifecycleCallbackDescriptors,
                 -1, Container.TX_NOT_SUPPORTED, Container.TX_REQUIRES_NEW);
 
         return inv;
@@ -363,7 +363,7 @@ public final class StatefulSessionContainer
             throws Exception {
         super.initializeHome();
 
-	    initSessionSyncMethods();
+        initSessionSyncMethods();
 
         loadCheckpointInfo();
 
@@ -373,34 +373,34 @@ public final class StatefulSessionContainer
 
     private void initSessionSyncMethods() throws Exception {
 
-	    if( SessionSynchronization.class.isAssignableFrom(ejbClass) ) {
+        if( SessionSynchronization.class.isAssignableFrom(ejbClass) ) {
 
-	        try {
-		        afterBeginMethod = ejbClass.getMethod("afterBegin", null);
-		        beforeCompletionMethod = ejbClass.getMethod("beforeCompletion", null);
-		        afterCompletionMethod = ejbClass.getMethod("afterCompletion", Boolean.TYPE);
-	        } catch(Exception e) {
-		        _logger.log(Level.WARNING, EXCEPTION_WHILE_INITIALIZING_SESSION_SYNCHRONIZATION, e);
-	        }
-	    } else {
+            try {
+                afterBeginMethod = ejbClass.getMethod("afterBegin", null);
+                beforeCompletionMethod = ejbClass.getMethod("beforeCompletion", null);
+                afterCompletionMethod = ejbClass.getMethod("afterCompletion", Boolean.TYPE);
+            } catch(Exception e) {
+                _logger.log(Level.WARNING, EXCEPTION_WHILE_INITIALIZING_SESSION_SYNCHRONIZATION, e);
+            }
+        } else {
 
             EjbSessionDescriptor sessionDesc = (EjbSessionDescriptor) ejbDescriptor;
 
-	        MethodDescriptor afterBeginMethodDesc = sessionDesc.getAfterBeginMethod();
+            MethodDescriptor afterBeginMethodDesc = sessionDesc.getAfterBeginMethod();
             if( afterBeginMethodDesc != null ) {
                 afterBeginMethod = afterBeginMethodDesc.getDeclaredMethod(sessionDesc);
 
                 processSessionSynchMethod(afterBeginMethod);
             }
 
-	        MethodDescriptor beforeCompletionMethodDesc = sessionDesc.getBeforeCompletionMethod();
+            MethodDescriptor beforeCompletionMethodDesc = sessionDesc.getBeforeCompletionMethod();
             if( beforeCompletionMethodDesc != null ) {
                 beforeCompletionMethod = beforeCompletionMethodDesc.getDeclaredMethod(sessionDesc);
 
                 processSessionSynchMethod(beforeCompletionMethod);
             }
-            
-	        MethodDescriptor afterCompletionMethodDesc = sessionDesc.getAfterCompletionMethod();
+
+            MethodDescriptor afterCompletionMethodDesc = sessionDesc.getAfterCompletionMethod();
             if( afterCompletionMethodDesc != null ) {
                 afterCompletionMethod = afterCompletionMethodDesc.getDeclaredMethod(sessionDesc);
                 if( afterCompletionMethod == null ) {
@@ -410,7 +410,7 @@ public final class StatefulSessionContainer
                 processSessionSynchMethod(afterCompletionMethod);
             }
 
-	    }
+        }
 
     }
 
@@ -432,7 +432,7 @@ public final class StatefulSessionContainer
                     return null;
                 }
          });
-      
+
     }
 
     // Called before invoking a bean with no Tx or with a new Tx.
@@ -709,7 +709,7 @@ public final class StatefulSessionContainer
             throws CreateException {
         try {
 
-            
+
             SessionContextImpl context = createBeanInstance();
 
             EJBLocalObjectImpl localBusinessObjImpl = localBeanView ?
@@ -724,9 +724,9 @@ public final class StatefulSessionContainer
 
             _logger.log(Level.WARNING, CREATE_EJBLOCALOBJECT_EXCEPTION, new Object[]{ejbDescriptor.getName(), ex});
 
-            if (ex instanceof EJBException)
+            if (ex instanceof EJBException) {
                 throw (EJBException) ex;
-            else {
+            } else {
                 CreateException ce =
                         new CreateException("ERROR creating stateful SessionBean");
                 ce.initCause(ex);
@@ -735,15 +735,15 @@ public final class StatefulSessionContainer
         }
     }
 
-   @Override
-   protected EJBContextImpl _constructEJBContextImpl(Object instance) {
-	return new SessionContextImpl(instance, this);
+    @Override
+    protected EJBContextImpl _constructEJBContextImpl(Object instance) {
+        return new SessionContextImpl(instance, this);
     }
 
     @Override
     protected Object _constructEJBInstance() throws Exception {
-	return  (sfsbSerializedClass != null) ?
-	    sfsbSerializedClass.newInstance() : ejbClass.newInstance();
+        return  (sfsbSerializedClass != null) ?
+            sfsbSerializedClass.newInstance() : ejbClass.newInstance();
     }
 
     @Override
@@ -766,8 +766,8 @@ public final class StatefulSessionContainer
         EjbInvocation ejbInv = null;
         try {
 
-	    SessionContextImpl context = (SessionContextImpl) 
-		createEjbInstanceAndContext();
+        SessionContextImpl context = (SessionContextImpl)
+        createEjbInstanceAndContext();
 
             Object ejb = context.getEJB();
 
@@ -792,7 +792,7 @@ public final class StatefulSessionContainer
             // have the same "operations allowed" permissions as
             // setSessionContext.
             injectEjbInstance(context);
-            
+
             // Set the timestamp before inserting into bean store, else
             // Recycler might go crazy and remove this bean!
             context.touch();
@@ -1049,7 +1049,7 @@ public final class StatefulSessionContainer
         if (hasLocalBusinessView) {
             createEJBLocalBusinessObjectImpl(context);
         }
-        
+
         if (hasLocalHomeView) {
             createEJBLocalObjectImpl(context);
         }
@@ -1225,7 +1225,7 @@ public final class StatefulSessionContainer
             SessionContextImpl sc = (SessionContextImpl) inv.context;
 
             Transaction tc = sc.getTransaction();
-		
+
             if (tc != null && tc.getStatus() !=
                     Status.STATUS_NO_TRANSACTION) {
                 // EJB2.0 section 7.6.4: remove must always be called without
@@ -1282,7 +1282,7 @@ public final class StatefulSessionContainer
             sc.setState(BeanState.DESTROYED);
 
             cleanupInstance(ctx);
-            
+
             if (_logger.isLoggable(TRACE_LEVEL)) {
                 _logger.log(TRACE_LEVEL, "[SFSBContainer] (Force)Destroying "
                         + "session: " + sc.getInstanceKey());
@@ -1344,7 +1344,7 @@ public final class StatefulSessionContainer
 
             if (isLocal) {
                 if (hasLocalHomeView) {
-                    // disconnect the EJBLocalObject from the context 
+                    // disconnect the EJBLocalObject from the context
                     // and vice versa
                     EJBLocalObjectImpl localObjImpl =
                             (EJBLocalObjectImpl) sc.getEJBLocalObjectImpl();
@@ -1353,7 +1353,7 @@ public final class StatefulSessionContainer
                     sc.setEJBLocalObjectImpl(null);
                 }
                 if (hasLocalBusinessView) {
-                    // disconnect the EJBLocalObject from the context 
+                    // disconnect the EJBLocalObject from the context
                     // and vice versa
                     EJBLocalObjectImpl localBusinessObjImpl =
                             (EJBLocalObjectImpl) sc.getEJBLocalBusinessObjectImpl();
@@ -1635,7 +1635,7 @@ public final class StatefulSessionContainer
         }
 
         MethodLockInfo lockInfo = inv.invocationInfo.methodLockInfo;
-        boolean allowSerializedAccess = 
+        boolean allowSerializedAccess =
                 (lockInfo == null) || (lockInfo.getTimeout() != CONCURRENCY_NOT_ALLOWED);
 
         if( allowSerializedAccess ) {
@@ -1670,7 +1670,7 @@ public final class StatefulSessionContainer
             // No matter what we need to ensure that the lock is released.   In some
             // cases releaseContext() isn't called so for safety we'll have more than one
             // place that can potentially release the lock.  The invocation state will ensure
-            // we don't accidently unlock too many times. 
+            // we don't accidently unlock too many times.
             inv.setHoldingSFSBSerializedLock(true);
         }
 
@@ -1746,7 +1746,7 @@ public final class StatefulSessionContainer
 
             // releaseContext isn't called if this method throws an exception,
             // so make sure to release any sfsb lock
-            releaseSFSBSerializedLock(inv, sc);    
+            releaseSFSBSerializedLock(inv, sc);
 
             throw t;
         }
@@ -1827,7 +1827,7 @@ public final class StatefulSessionContainer
 
         // Intercept postInvokeTx call to perform any @Remove logic
         // before tx commits.  super.postInvokeTx() must *always*
-        // be called. 
+        // be called.
 
         // If this was an invocation of a remove-method
         if (inv.invocationInfo.removalInfo != null) {
@@ -1839,11 +1839,11 @@ public final class StatefulSessionContainer
                 // Do nothing
             } else {
 
-                // If there is a tx, remove bean from ContainerSynch so it 
+                // If there is a tx, remove bean from ContainerSynch so it
                 // won't receive any SessionSynchronization callbacks.
                 // We delay the PreDestroy callback and instance destruction
                 // until releaseContext so that PreDestroy won't run within
-                // the business method's tx.  
+                // the business method's tx.
 
                 SessionContextImpl sc = (SessionContextImpl) inv.context;
                 Transaction tx = sc.getTransaction();
@@ -1994,14 +1994,14 @@ public final class StatefulSessionContainer
         Object ejb = context.getEJB();
         if (afterBeginMethod != null ) {
             try {
-		        afterBeginMethod.invoke(ejb, null);
+                afterBeginMethod.invoke(ejb, null);
             } catch (Exception ex) {
-           
+
                 // Error during afterBegin, so discard bean: EJB2.0 18.3.3
                 forceDestroyBean(context);
                 throw new EJBException("Error during SessionSynchronization." +
                         ".afterBegin(), EJB instance discarded", ex);
-                       
+
             }
         }
 
@@ -2027,10 +2027,10 @@ public final class StatefulSessionContainer
         // SessionSync calls on TX_BEAN_MANAGED SessionBeans
         // are not allowed
         // Do not call beforeCompletion if it is a transactional lifecycle callback
-        if( isBeanManagedTran || beforeCompletionMethod == null || 
+        if( isBeanManagedTran || beforeCompletionMethod == null ||
                 ((SessionContextImpl) context).getInLifeCycleCallback() ) {
             return;
-	}
+    }
 
         Object ejb = context.getEJB();
 
@@ -2042,8 +2042,8 @@ public final class StatefulSessionContainer
         invocationManager.preInvoke(inv);
         try {
             transactionManager.enlistComponentResources();
-	   
-	    beforeCompletionMethod.invoke(ejb, null);
+
+        beforeCompletionMethod.invoke(ejb, null);
 
         } catch (Exception ex) {
 
@@ -2147,7 +2147,7 @@ public final class StatefulSessionContainer
 
             synchronized (sc) {
                 try {
-                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                             prePassivateInvInfo, CallbackType.PRE_PASSIVATE);
                     sc.setLastPersistedAt(System.currentTimeMillis());
                     long newCtxVersion = sc.incrementAndGetVersion();
@@ -2156,7 +2156,7 @@ public final class StatefulSessionContainer
                             System.currentTimeMillis(),
                             removalGracePeriodInSeconds*1000L, serializedState);
                     simpleMetadata.setVersion(newCtxVersion);
-                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                             postActivateInvInfo, CallbackType.POST_ACTIVATE);
                     //Do not set sc.setExistsInStore() here
                 } catch (java.io.NotSerializableException serEx) {
@@ -2198,43 +2198,41 @@ public final class StatefulSessionContainer
         }
     }
 
-    private void callEjbAfterCompletion(SessionContextImpl context,
-                                        boolean status) {
-	if( afterCompletionMethod != null ) {
-	    Object ejb = context.getEJB();
-	    EjbInvocation ejbInv = createEjbInvocation(ejb, context);
-	    invocationManager.preInvoke(ejbInv);
-	    try {
-		context.setInAfterCompletion(true);
-		afterCompletionMethod.invoke(ejb, status);
 
-		// reset flags
-		context.setAfterCompletionDelayed(false);
-		context.setTxCompleting(false);
-	    }
-	    catch (Exception ex) {
-		    Throwable realException = ex;
-		    if( ex instanceof InvocationTargetException ) {
-		        realException = ((InvocationTargetException)ex).getTargetException();
-		    }
-		// Error during afterCompletion, so discard bean: EJB2.0 18.3.3
+    private void callEjbAfterCompletion(SessionContextImpl context, boolean status) {
+        if (afterCompletionMethod != null) {
+            Object ejb = context.getEJB();
+            EjbInvocation ejbInv = createEjbInvocation(ejb, context);
+            invocationManager.preInvoke(ejbInv);
+            try {
+                context.setInAfterCompletion(true);
+                afterCompletionMethod.invoke(ejb, status);
+
+                // reset flags
+                context.setAfterCompletionDelayed(false);
+                context.setTxCompleting(false);
+            } catch (Exception ex) {
+                Throwable realException = ex;
+                if( ex instanceof InvocationTargetException ) {
+                    realException = ((InvocationTargetException)ex).getTargetException();
+                }
+                // Error during afterCompletion, so discard bean: EJB2.0 18.3.3
                 try {
                     forceDestroyBean(context);
                 } catch (Exception e) {
                     _logger.log(Level.FINE, "error destroying bean", e);
                 }
-		
-		_logger.log(Level.INFO, AFTER_COMPLETION_EXCEPTION, realException);
-		
-		// No use throwing an exception here, since the tx has already
-		// completed, and afterCompletion may be called asynchronously
-		// when there is no client to receive the exception.
-	    }
-	    finally {
-		context.setInAfterCompletion(false);
-		invocationManager.postInvoke(ejbInv);
-	    }
-	}
+
+                _logger.log(Level.INFO, AFTER_COMPLETION_EXCEPTION, realException);
+
+                // No use throwing an exception here, since the tx has already
+                // completed, and afterCompletion may be called asynchronously
+                // when there is no client to receive the exception.
+            } finally {
+                context.setInAfterCompletion(false);
+                invocationManager.postInvoke(ejbInv);
+            }
+        }
     }
 
     public final boolean canPassivateEJB(ComponentContext context) {
@@ -2271,7 +2269,7 @@ public final class StatefulSessionContainer
 
 
             long passStartTime = -1;
-            /* TODO 
+            /* TODO
             if (sfsbStoreMonitor.isMonitoringOn()) {
                 passStartTime = System.currentTimeMillis();
             }
@@ -2292,19 +2290,19 @@ public final class StatefulSessionContainer
                     if (!sc.canBePassivated()) {
                         return false;
                     }
-                    
+
                     Serializable instanceKey = (Serializable) sc.getInstanceKey();
                     if (sessionBeanCache.eligibleForRemovalFromCache(sc, instanceKey)) {
                         // remove the EJB since removal-timeout has elapsed
                         sc.setState(BeanState.DESTROYED);
-                        needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                        needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                                 preDestroyInvInfo, CallbackType.PRE_DESTROY);
                         sessionBeanCache.remove(instanceKey, sc.existsInStore());
                     } else {
                         // passivate the EJB
                         sc.setState(BeanState.PASSIVATED);
                         decrementMethodReadyStat();
-                        needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                        needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                                 prePassivateInvInfo, CallbackType.PRE_PASSIVATE);
                         sc.setLastPersistedAt(System.currentTimeMillis());
                         boolean saved = false;
@@ -2320,14 +2318,14 @@ public final class StatefulSessionContainer
                             // Complete previous tx
                             completeLifecycleCallbackTxIfUsed(ejbInv, sc, needToDoPostInvokeTx);
 
-                            needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                            needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                                     postActivateInvInfo, CallbackType.POST_ACTIVATE);
                             sc.setState(BeanState.READY);
                             incrementMethodReadyStat();
                             return false;
                         }
                     }
-                    
+
                     // V2: sfsbStoreMonitor.incrementPassivationCount(true);
                     cacheProbeNotifier.ejbBeanPassivatedEvent(getContainerId(),
                             containerInfo.appName, containerInfo.modName,
@@ -2463,10 +2461,8 @@ public final class StatefulSessionContainer
     }
 
     // called from StatefulSessionStore
-    public void activateEJB(Object sessionKey, StatefulEJBContext sfsbCtx,
-                            Object cookie) {
-        SessionContextImpl context = (SessionContextImpl)
-                sfsbCtx.getSessionContext();
+    public void activateEJB(Object sessionKey, StatefulEJBContext sfsbCtx, Object cookie) {
+        SessionContextImpl context = (SessionContextImpl) sfsbCtx.getSessionContext();
 
         if (_logger.isLoggable(TRACE_LEVEL)) {
             logTraceInfo(context, "Attempting to activate");
@@ -2602,7 +2598,7 @@ public final class StatefulSessionContainer
             repopulateEEMMapsInContext(sessionKey, context);
 
             try {
-                needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, context, 
+                needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, context,
                         postActivateInvInfo, CallbackType.POST_ACTIVATE);
             } catch (Throwable th) {
                 EJBException ejbEx = new EJBException("Error during activation"
@@ -2679,7 +2675,7 @@ public final class StatefulSessionContainer
 
     private byte[] serializeContext(SessionContextImpl ctx) throws IOException {
         Object ejb = ctx.getEJB();
-        if (!(ejb instanceof Serializable || 
+        if (!(ejb instanceof Serializable ||
                 ejb.getClass().getName().equals(EJBUtils.getGeneratedSerializableClassName(ejbName)))) {
 
             ctx.setEJB(null);
@@ -2759,7 +2755,7 @@ public final class StatefulSessionContainer
     }
 
     @Override
-    protected void validateEMForClientTx(EjbInvocation inv, JavaEETransaction clientJ2EETx) 
+    protected void validateEMForClientTx(EjbInvocation inv, JavaEETransaction clientJ2EETx)
             throws EJBException {
         SessionContextImpl sessionCtx = (SessionContextImpl) inv.context;
         Map<EntityManagerFactory, PhysicalEntityManagerWrapper> entityManagerMap =
@@ -2889,7 +2885,7 @@ public final class StatefulSessionContainer
             if (!isPassivationCapable() && _logger.isLoggable(Level.INFO)) {
                 _logger.log(Level.INFO, SFSB_NOT_RESTORED_AFTER_RESTART);
             }
-            
+
             sessionBeanCache.shutdown();
 
             while (true) {
@@ -2962,7 +2958,7 @@ public final class StatefulSessionContainer
             }
 
             sessionBeanCache.destroy();
-            
+
             try {
                 // backingStore will be null when passivation-capable is false
                 if (backingStore != null) {
@@ -3040,7 +3036,7 @@ public final class StatefulSessionContainer
     /**
      * Start transaction if necessary and invoke lifecycle callback
      */
-    private boolean callLifecycleCallbackInTxIfUsed(EjbInvocation ejbInv, EJBContextImpl ctx, 
+    private boolean callLifecycleCallbackInTxIfUsed(EjbInvocation ejbInv, EJBContextImpl ctx,
             InvocationInfo invInfo, CallbackType callbackType)  throws Throwable {
         boolean inTx = (invInfo.txAttr != -1 && invInfo.txAttr != Container.TX_BEAN_MANAGED);
         if (inTx) {
@@ -3099,7 +3095,7 @@ public final class StatefulSessionContainer
                     }
                 }
             }
-            
+
             sessionBeanCache.remove(ctx.getInstanceKey(), ctx.existsInStore());
             destroyExtendedEMsForContext(ctx);
             transactionManager.componentDestroyed(ctx);
@@ -3355,7 +3351,7 @@ public final class StatefulSessionContainer
                     // passivate the EJB
                     sc.setState(BeanState.PASSIVATED);
                     decrementMethodReadyStat();
-                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                             prePassivateInvInfo, CallbackType.PRE_PASSIVATE);
                     sc.setLastPersistedAt(System.currentTimeMillis());
                     byte[] serializedState = null;
@@ -3386,7 +3382,7 @@ public final class StatefulSessionContainer
                     // Complete previous tx
                     completeLifecycleCallbackTxIfUsed(ejbInv, sc, needToDoPostInvokeTx);
 
-                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc, 
+                    needToDoPostInvokeTx = callLifecycleCallbackInTxIfUsed(ejbInv, sc,
                             postActivateInvInfo, CallbackType.POST_ACTIVATE);
                     sc.setState(BeanState.READY);
                     incrementMethodReadyStat();

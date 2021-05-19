@@ -72,9 +72,9 @@ public class HttpClient {
                 System.out.println("Connecting for the " + i + " time....");
                 u = new URL(url);
                 uc = u.openConnection();
-		for (String cookie : responseCookies) {
-                	uc.setRequestProperty("Cookie", cookie);
-		}
+                for (String cookie : responseCookies) {
+                        uc.setRequestProperty("Cookie", cookie);
+                }
                 uc.connect();
                 SessionStateInfo info = extractSessionStates(uc);
                 info.setAccessCount(2+i);
@@ -105,9 +105,9 @@ public class HttpClient {
                 System.out.println("Connecting for the " + i + " time....");
                 u = new URL(url);
                 uc = u.openConnection();
-		for (String cookie : responseCookies) {
-                	uc.setRequestProperty("Cookie", cookie);
-		}
+                for (String cookie : responseCookies) {
+                        uc.setRequestProperty("Cookie", cookie);
+                }
                 uc.connect();
                 SessionStateInfo info = extractSessionStates(uc);
                 info.setAccessCount(5+i);
@@ -120,7 +120,7 @@ public class HttpClient {
                     System.out.println("Failed " + info);
                 }
             }
-            
+
 /*
             System.out.println("Restarting inst1...");
             proc = Runtime.getRuntime().exec(ASADMIN + "  start-instance inst1");
@@ -144,14 +144,14 @@ public class HttpClient {
                 responseCookies.add(cookie);
                 System.out.println("JUST READ COOKIE: " + cookie);
                 if (cookie.startsWith("JSESSIONID=")) {
-		    jsessionIDCookie = cookie;
+                    jsessionIDCookie = cookie;
                 }
             }
         }
 
         if (tmpSessState.getJsessionCookie() == null) {
-            tmpSessState.setJsessionCookie(jsessionIDCookie);    
-            responseCookies.add(jsessionIDCookie);    
+            tmpSessState.setJsessionCookie(jsessionIDCookie);
+            responseCookies.add(jsessionIDCookie);
         }
         int code = ((HttpURLConnection) uc).getResponseCode();
         InputStream is = uc.getInputStream();
@@ -172,21 +172,21 @@ System.out.println();
                 if (! "null".equals(val.trim())) {
                     tmpSessState.setHttpCounter(Integer.valueOf(val.trim()));
                 }
-	    } else if (tokens[0].startsWith("<h1>From")) {
+            } else if (tokens[0].startsWith("<h1>From")) {
                 if (tokens[2].startsWith("SFSB[1]")) {
-                	Boolean retrieved = Boolean.valueOf(tokens[tokens.length - 2]);
-                	tmpSessState.setEjb1StateNew(! retrieved);
+                        Boolean retrieved = Boolean.valueOf(tokens[tokens.length - 2]);
+                        tmpSessState.setEjb1StateNew(! retrieved);
                 } else if (tokens[2].startsWith("SFSB[2]")) {
-                	Boolean retrieved = Boolean.valueOf(tokens[tokens.length - 2]);
-                	tmpSessState.setEjb2StateNew(! retrieved);
+                        Boolean retrieved = Boolean.valueOf(tokens[tokens.length - 2]);
+                        tmpSessState.setEjb2StateNew(! retrieved);
                 }
             } else if (tokens[0].startsWith("<h1>Retrieved")) {
                 if (tokens[1].startsWith("SFSB[1]")) {
-                	int state1 = Integer.valueOf(tokens[tokens.length - 2]);
-                	tmpSessState.setEjb1Counter(state1);
+                        int state1 = Integer.valueOf(tokens[tokens.length - 2]);
+                        tmpSessState.setEjb1Counter(state1);
                 } else if (tokens[2].startsWith("SFSB[2]")) {
-                	int state2 = Integer.valueOf(tokens[tokens.length - 2]);
-                	tmpSessState.setEjb2Counter(state2);
+                        int state2 = Integer.valueOf(tokens[tokens.length - 2]);
+                        tmpSessState.setEjb2Counter(state2);
                 }
             }
         }
@@ -213,11 +213,11 @@ System.out.println();
 
             result = result && prev.getHttpCounter() < current.getHttpCounter();
             result = result && prev.getEjb1Counter() < current.getEjb1Counter();
-	    if (isFirstAccessAfterFailover) {
+            if (isFirstAccessAfterFailover) {
                 result = result && current.getEjb2Counter() == 3;
-	    } else {
+            } else {
                 result = result && prev.getEjb2Counter() < current.getEjb2Counter();
-	    }
+            }
         }
         return result;
     }

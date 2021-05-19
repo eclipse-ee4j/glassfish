@@ -29,7 +29,7 @@ import org.apache.catalina.LifecycleException;
  * @author  lwhite
  */
 public interface HealthChecker {
-    
+
     public void start() throws LifecycleException;
     public void stop() throws LifecycleException;
 }

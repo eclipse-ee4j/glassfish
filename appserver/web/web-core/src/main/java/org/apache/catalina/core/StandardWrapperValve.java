@@ -87,7 +87,7 @@ final class StandardWrapperValve extends ValveBase {
          * at the root context, and the root context is mapped to a
          * default-web-module, the default-web-module mapping is masked from
          * the application code to which the request facade is being passed.
-         * For example, the request.facade's getContextPath() method will 
+         * For example, the request.facade's getContextPath() method will
          * return "/", rather than the context root of the default-web-module,
          * in this case.
          */
@@ -202,7 +202,7 @@ final class StandardWrapperValve extends ValveBase {
             String jspFile = wrapper.getJspFile();
             if (jspFile != null) {
                 hreq.setAttribute(Globals.JSP_FILE_ATTR, jspFile);
-            } 
+            }
             /* IASRI 4665318
             if ((servlet != null) && (filterChain != null)) {
                 filterChain.doFilter(hreq, hres);
@@ -388,7 +388,7 @@ final class StandardWrapperValve extends ValveBase {
         sreq.setAttribute(RequestDispatcher.ERROR_EXCEPTION, exception);
 
         ServletResponse sresponse = response.getResponse();
-        
+
         /* GlassFish 6386229
         if (sresponse instanceof HttpServletResponse)
             ((HttpServletResponse) sresponse).setStatus

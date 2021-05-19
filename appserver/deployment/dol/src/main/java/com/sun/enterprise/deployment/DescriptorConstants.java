@@ -26,55 +26,55 @@ public interface DescriptorConstants {
 
     /**
      * Bean Pool - maximum size, a pool of slsb can grow to.
-     */ 
+     */
     int MAX_POOL_SIZE_DEFAULT = -1;
-    
+
     /**
-     * Bean Pool - maximum time a caller will have to wait when pool 
-     * has reached maximum configured size and an instance is not 
+     * Bean Pool - maximum time a caller will have to wait when pool
+     * has reached maximum configured size and an instance is not
      * available to process the incoming request.
-     */ 
+     */
     int MAX_WAIT_TIME_DEFAULT = -1;
-    
+
     /**
-     * Bean Pool - size of slsb pool grows in increments specified by 
-     * resize-quantity, within the configured upper limit max-pool-size. 
+     * Bean Pool - size of slsb pool grows in increments specified by
+     * resize-quantity, within the configured upper limit max-pool-size.
      */
     int POOL_RESIZE_QTY_DEFAULT = -1;
-    
+
     /**
      * Bean Pool - minimum number of slsb instances maintained in a pool.
-     */ 
-    int STEADY_POOL_SIZE_DEFAULT = -1;   
-    
+     */
+    int STEADY_POOL_SIZE_DEFAULT = -1;
+
     /**
-     * Bean Pool - idle bean instance in a pool becomes a candidate for 
+     * Bean Pool - idle bean instance in a pool becomes a candidate for
      * passivation (sfsb/eb) or deletion (slsb), when this timeout expires.
-     */ 
+     */
     int POOL_IDLE_TIMEOUT_DEFAULT = -1;
-    
+
     /**
      * Bean Cache - sfsb and eb are created and cached, on demand.
-     */     
+     */
     int MAX_CACHE_SIZE_DEFAULT = -1;
-    
+
     /**
      * Bean Cache - resize quantity
-     */     
+     */
     int RESIZE_QUANTITY_DEFAULT = -1;
-    
+
     /**
-     * Bean Cache - Passivated bean (sfsb/eb) instance is removed if it 
+     * Bean Cache - Passivated bean (sfsb/eb) instance is removed if it
      * is not accesed within  this time, after passivation
      */
-    int REMOVAL_TIMEOUT_DEFAULT = -1;   
-    
+    int REMOVAL_TIMEOUT_DEFAULT = -1;
+
     /**
-     * Bean Cache - idle bean instance in a pool becomes a candidate for 
+     * Bean Cache - idle bean instance in a pool becomes a candidate for
      * passivation (sfsb/eb) or deletion (slsb), when this timeout expires.
      */
     int CACHE_IDLE_TIMEOUT_DEFAULT = -1;
-    
+
     /**
      * ejb - refresh period in seconds
      */

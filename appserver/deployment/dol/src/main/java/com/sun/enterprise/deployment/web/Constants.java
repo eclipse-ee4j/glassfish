@@ -24,11 +24,11 @@ package com.sun.enterprise.deployment.web;
 
 public final class Constants {
     private Constants() { /* disallow instantiation */ }
-    
+
     public static final String ConfigFile = "web.xml";
 
     public static final String WebApp = "web-app";
-    public static final String Servlet = "servlet";    
+    public static final String Servlet = "servlet";
     public static final String ServletName = "servlet-name";
     public static final String ServletClass = "servlet-class";
     public static final String JSP_FILENAME = "jsp-file";
@@ -51,19 +51,19 @@ public final class Constants {
     public static final String SessionTimeOut = "session-timeout";
     public static final String WelcomeFileList = "welcome-file-list";
     public static final String WelcomeFile = "welcome-file";
-    
+
     public static final String DISPLAY_NAME = "display-name";
     public static final String DESCRIPTION = "description";
     public static final String ICON = "icon";
     public static final String LARGE_ICON = "large-icon";
     public static final String SMALL_ICON = "small-icon";
     public static final String DISTRIBUTABLE = "distributable";
-    
+
     public static final String ERROR_PAGE = "error-page";
     public static final String ERROR_CODE = "error-code";
     public static final String EXCEPTION_TYPE = "exception-type";
     public static final String LOCATION = "location";
-    
+
     public static final String LISTENER = "listener";
     public static final String LISTENER_CLASS = "listener-class";
 
@@ -71,13 +71,13 @@ public final class Constants {
     public static final String ENVIRONMENT_NAME = "env-entry-name";
     public static final String ENVIRONMENT_VALUE = "env-entry-value";
     public static final String ENVIRONMENT_TYPE = "env-entry-type";
-    
-    
+
+
     public static final String RESOURCE_REFERENCE = "resource-ref";
     public static final String RESOURCE_REFERENCE_NAME = "res-ref-name";
     public static final String RESOURCE_TYPE = "res-type";
     public static final String RESOURCE_AUTHORIZATION = "res-auth";
-    
+
 
     public static final String RESOURCE_ENV_REFERENCE = "resource-env-ref";
     public static final String RESOURCE_ENV_REFERENCE_NAME = "resource-env-ref-name";
@@ -86,7 +86,7 @@ public final class Constants {
     public static final String SECURITY_ROLE = "security-role";
     public static final String ROLE_NAME = "role-name";
     public static final String NAME = "name";
-    
+
     public static final String SECURITY_CONSTRAINT = "security-constraint";
     public static final String WEB_RESOURCE_COLLECTION = "web-resource-collection";
     public static final String AUTH_CONSTRAINT = "auth-constraint";
@@ -95,11 +95,11 @@ public final class Constants {
     public static final String WEB_RESOURCE_NAME = "web-resource-name";
     public static final String URL_PATTERN = "url-pattern";
     public static final String HTTP_METHOD = "http-method";
-    
+
     public static final String SECURITY_ROLE_REFERENCE = "security-role-ref";
     public static final String ROLE_LINK = "role-link";
-    
-    
+
+
     public static final String EJB_REFERENCE = "ejb-ref";
     public static final String EJB_LOCAL_REFERENCE = "ejb-local-ref";
     public static final String EJB_NAME = "ejb-ref-name";
@@ -110,9 +110,9 @@ public final class Constants {
     public static final String EJB_LOCAL = "local";
     public static final String EJB_LINK = "ejb-link";
     public static final String RUN_AS = "run-as";
-        
+
     public static final String SESSION_CONFIG = "session-config";
-    
+
     public static final String LOGIN_CONFIG = "login-config";
     public static final String AUTH_METHOD = "auth-method";
     public static final String REALM_NAME = "realm-name";
@@ -164,7 +164,7 @@ public final class Constants {
     public static final String TagLib12_LISTENER        = LISTENER;
     public static final String TagLib12_TAGS            = TagLib_TAGS;
 
-    public static final String TagList12_CLASS		= LISTENER_CLASS;
+    public static final String TagList12_CLASS        = LISTENER_CLASS;
 
     public static final String TagVal12_CLASS           = "validator-class";
     public static final String TagVal12_INIT_PARMS      = Parameter;

@@ -31,12 +31,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class WebTest {
-        
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
 
     private String contextPath = "test";
-    
+
     @BeforeClass
     public static void setup() throws IOException {
     }
@@ -53,7 +53,7 @@ public class WebTest {
             URLConnection yc = servlet.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
-            String line = null;            
+            String line = null;
             int index=0, lineNum=0;
             String cookies = "";
             while ((line = in.readLine()) != null) {

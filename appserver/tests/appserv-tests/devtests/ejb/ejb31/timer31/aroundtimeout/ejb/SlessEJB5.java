@@ -40,18 +40,18 @@ public class SlessEJB5 implements Sless5
 
     private final static int EXPECTED = 3;
 
-    // Called as a timeout and through interface. InderceptorD will 
+    // Called as a timeout and through interface. InderceptorD will
     // set aroundAllCalled to true either way.
     @Schedule(second="*", minute="*", hour="*", info="SlessEJB5-abdc")
     public void abdc() {
-        System.out.println("in SlessEJB5:abdc().  aroundTimeoutCalled = " + 
+        System.out.println("in SlessEJB5:abdc().  aroundTimeoutCalled = " +
                            aroundTimeoutCalled);
 
         // a little extra checking to make sure AroundTimeout is invoked...
         if( !aroundTimeoutCalled ) {
             throw new EJBException("bean class aroundTimeout not called");
         }
-        // Enough if it is set once to true. Otherwise a timer can be executed 
+        // Enough if it is set once to true. Otherwise a timer can be executed
         // between verify() and direct call to this method through the interface
         // aroundTimeoutCalled = false;
 
@@ -84,11 +84,11 @@ public class SlessEJB5 implements Sless5
             throw new EJBException(e);
         }
     }
-    
+
     public void verify() {
         Common.checkResults("SlessEJB5", EXPECTED);
         aroundTimeoutCalled = true;
     }
 }
-    
+
 

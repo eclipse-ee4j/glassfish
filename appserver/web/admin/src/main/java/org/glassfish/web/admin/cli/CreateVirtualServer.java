@@ -135,7 +135,7 @@ public class CreateVirtualServer implements AdminCommand {
                     newVirtualServer.setLogFile(logFile);
                     // 1. add properties
                     // 2. check if the access-log and docroot properties have
-                    //    been specified. We will use with default 
+                    //    been specified. We will use with default
                     //    values if the properties have not been specified.
                     if (properties != null) {
                         for (Map.Entry entry : properties.entrySet()) {

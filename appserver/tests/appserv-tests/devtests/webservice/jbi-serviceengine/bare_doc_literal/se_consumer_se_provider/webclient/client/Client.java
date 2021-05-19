@@ -30,38 +30,38 @@ public class Client extends HttpServlet {
 
        @WebServiceRef(name="sun-web.serviceref/calculator") CalculatorService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
               throws jakarta.servlet.ServletException {
-	    PrintWriter out=null;
+            PrintWriter out=null;
             try {
                 System.out.println(" Service is :" + service);
                 resp.setContentType("text/html");
-            	out = resp.getWriter();
+                    out = resp.getWriter();
                 Calculator port = service.getCalculatorPort();
 
-		int k = port.add(505);
-		printSuccess("SUCCESS :: Sum of 505 and 50 is : ", out,k);
+                int k = port.add(505);
+                printSuccess("SUCCESS :: Sum of 505 and 50 is : ", out,k);
 
 
             } catch(java.lang.Exception e) {
-		//e.printStackTrace();
-	    	printFailure(out, e.getMessage());
+                //e.printStackTrace();
+                    printFailure(out, e.getMessage());
             } finally {
-		if(out != null) {
+                if(out != null) {
                     out.flush();
                     out.close();
-		}
-	    }
+                }
+            }
        }
 
        public void printFailure(PrintWriter out, String errMsg) {
-		if(out == null) return;
-		out.println("<html>");
+                if(out == null) return;
+                out.println("<html>");
                 out.println("<head>");
                 out.println("<title>TestServlet</title>");
                 out.println("</head>");
@@ -74,13 +74,13 @@ public class Client extends HttpServlet {
        }
 
        public void printSuccess(String message, PrintWriter out, long result) {
-		if(out == null) return;
+                if(out == null) return;
                 out.println("\n\n");
                 out.println(message + result);
        }
 
        public void printSuccess(String message, PrintWriter out, String result) {
-		if(out == null) return;
+                if(out == null) return;
                 out.println("\n\n");
                 out.println(message + result);
        }

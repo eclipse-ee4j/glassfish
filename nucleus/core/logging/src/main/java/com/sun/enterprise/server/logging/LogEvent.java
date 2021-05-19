@@ -40,7 +40,7 @@ public interface LogEvent {
     public abstract String getMessage();
 
     /**
-     * The name of the Level for this event. 
+     * The name of the Level for this event.
      * @return
      */
     public abstract String getLevel();
@@ -52,7 +52,7 @@ public interface LogEvent {
     public abstract String getLogger();
 
     /**
-     * 
+     *
      * @return
      */
     public abstract int getLevelValue();

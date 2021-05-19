@@ -28,9 +28,9 @@ import javax.management.MBeanServerBuilder;
 public class AppServerMBeanServerBuilder extends javax.management.MBeanServerBuilder {
     private static final MBeanServerBuilder defaultBuilder = new MBeanServerBuilder();
     private static MBeanServer _defaultMBeanServer = null;
-    
+
      public MBeanServer newMBeanServer(String defaultDomain,
-                                    MBeanServer outer, 
+                                    MBeanServer outer,
                                     MBeanServerDelegate delegate) {
          MBeanServer mbeanServer;
          synchronized (AppServerMBeanServerBuilder.class) {
@@ -45,17 +45,17 @@ public class AppServerMBeanServerBuilder extends javax.management.MBeanServerBui
          }
          return mbeanServer;
      }
-    
+
      protected MBeanServer newAppServerMBeanServer(String defaultDomain,
                                                 MBeanServerDelegate delegate) {
         final DynamicInterceptor result = new DynamicInterceptor();
         final MBeanServer jmxMBS = defaultBuilder.newMBeanServer(
             defaultDomain, result, delegate);
         result.setDelegateMBeanServer( jmxMBS );
-               
+
         return result;
      }
-          
+
     public MBeanServerDelegate newMBeanServerDelegate()  {
         return defaultBuilder.newMBeanServerDelegate();
      }

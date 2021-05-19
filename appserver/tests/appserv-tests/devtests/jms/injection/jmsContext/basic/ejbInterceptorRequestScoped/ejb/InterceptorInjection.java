@@ -29,7 +29,7 @@ import jakarta.jms.*;
 @Stateless(mappedName="InterceptorInjection/remote")
 public class InterceptorInjection implements InterceptorInjectionRemote {
     private static String requestScope = "around RequestScoped";
-	
+
     @Resource(mappedName = "jms/jms_unit_test_Queue")
     private Queue queue;
 
@@ -40,7 +40,7 @@ public class InterceptorInjection implements InterceptorInjectionRemote {
 
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     @Override
-    @Interceptors(MyInterceptor.class) 
+    @Interceptors(MyInterceptor.class)
     public void sendMessage(String text) {
     }
 

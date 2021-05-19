@@ -34,7 +34,7 @@ import java.util.Map;
  * if the input matched items are valid.  Otherwise, these methods should
  * return null.
  * @author  Gerald Ingalls
- * @version 
+ * @version
  */
 public interface VersionUpgrade {
   public enum UpgradeType {

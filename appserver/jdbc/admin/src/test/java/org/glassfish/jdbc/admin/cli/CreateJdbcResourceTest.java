@@ -55,12 +55,12 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
     private ParameterMap parameters = new ParameterMap();
     private AdminCommandContext context = null;
     private CommandRunner cr = null;
-    
+
     @Override
     public DomDocument getDocument(ServiceLocator habitat) {
 
         return new TestDocument(habitat);
-    }    
+    }
 
     /**
      * Returns the DomainTest file name without the .xml extension to load the test configuration
@@ -70,26 +70,26 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
      */
     public String getFileName() {
         return "DomainTest";
-    }    
-    
+    }
+
     @Before
     public void setUp() {
         assertTrue(resources!=null);
-        
+
         // Get an instance of the CreateJdbcResource command
         command = habitat.getService(CreateJdbcResource.class);
         assertTrue(command!=null);
-        
+
         // Set the options and operand to pass to the command
         parameters.set("connectionpoolid", "DerbyPool");
         parameters.set("enabled", "true");
         parameters.set("description", "my resource");
         parameters.set("DEFAULT", "jdbc/foo");
-        
+
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(CreateJdbcResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         cr = habitat.getService(CommandRunner.class);
     }
 
@@ -119,12 +119,12 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     param.getResources().remove(target);
                 }
                 return null;
-            }                        
+            }
         }, resources);
 
         parameters = new ParameterMap();
     }
-    
+
     /**
      * Test of execute method, of class CreateJdbcResource.
      * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=true
@@ -137,10 +137,10 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource was created
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -155,11 +155,11 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     continue;
                 }
             }
-        }       
+        }
         assertTrue(isCreated);
-       
-        logger.fine("msg: " + context.getActionReport().getMessage());       
-        
+
+        logger.fine("msg: " + context.getActionReport().getMessage());
+
         // Check resource-ref created
         Servers servers = habitat.getService(Servers.class);
         boolean isRefCreated = false;
@@ -176,7 +176,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         }
         assertTrue(isRefCreated);
     }
-    
+
     /**
      * Test of execute method, of class CreateJdbcResource.
      * asadmin create-jdbc-resource --connectionpoolid DerbyPool jdbc/alldefaults
@@ -187,14 +187,14 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         parameters = new ParameterMap();
         parameters.set("connectionpoolid", "DerbyPool");
         parameters.set("DEFAULT", "jdbc/alldefaults");
-        
+
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource was created
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -209,17 +209,17 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     continue;
                 }
             }
-        }       
+        }
         assertTrue(isCreated);
-        
-        logger.fine("msg: " + context.getActionReport().getMessage());    
+
+        logger.fine("msg: " + context.getActionReport().getMessage());
     }
 
     /**
      * Test of execute method, of class CreateJdbcResource.
-     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=true 
+     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=true
      *         --description "my resource" dupRes
-     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=true 
+     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=true
      *         --description "my resource" dupRes
      */
     @Test
@@ -232,7 +232,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource was created
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -244,16 +244,16 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     continue;
                 }
             }
-        }       
+        }
         assertTrue(isCreated);
-        
+
         //Try to create a duplicate resource dupRes. Get a new instance of the command.
         CreateJdbcResource command2 = habitat.getService(CreateJdbcResource.class);
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command2);
-        
+
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-        
+
         //Check that the 2nd resource was NOT created
         int numDupRes = 0;
         for (Resource resource : resources.getResources()) {
@@ -263,19 +263,19 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     numDupRes = numDupRes + 1;
                 }
             }
-        }       
+        }
         assertEquals(1, numDupRes);
-        
+
         // Check the error message
         assertEquals("A JdbcResource by name dupRes already exists with resource-ref in target server.", context.getActionReport().getMessage());
         logger.fine("msg: " + context.getActionReport().getMessage());
     }
-    
-    
+
+
     /**
      * Test of execute method, of class CreateJdbcResource when specified
      * connectionpoolid does not exist.
-     * asadmin create-jdbc-resource --connectionpoolid xxxxxx --enabled=true 
+     * asadmin create-jdbc-resource --connectionpoolid xxxxxx --enabled=true
      *         --description "my resource" jdbc/nopool
      */
     @Test
@@ -283,13 +283,13 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         // Set invalid connectionpoolid
         parameters.set("connectionpoolid", "xxxxxx");
         parameters.set("DEFAULT", "jdbc/nopool");
-        
+
         // Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-        
+
         // Check the exit code is Failure
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource was NOT created
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -300,17 +300,17 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     logger.fine("JdbcResource config bean jdbc/nopool is created.");
                 }
             }
-        }       
+        }
         assertFalse(isCreated);
 
         // Check the error message
         assertEquals("Attribute value (pool-name = xxxxxx) is not found in list of jdbc connection pools.",
         context.getActionReport().getMessage());
     }
-    
+
     /**
      * Test of execute method, of class CreateJdbcResource when enabled set to junk
-     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=junk 
+     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=junk
      *         --description "my resource" jdbc/junk
      */
     @Ignore
@@ -319,19 +319,19 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         // Set invalid enabled option value: --enabled junk
         parameters.set("enabled", "junk");
         parameters.set("DEFAULT", "jdbc/junk");
-        
+
         // Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-        
+
         // Check the exit code is Failure
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
 
         // Don't check error message.  Error message being set by CommandRunnerImpl.
     }
-    
+
     /**
      * Test of execute method, of class CreateJdbcResource when enabled has no value
-     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled 
+     * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled
      *         --description "my resource" jdbc/sun
      */
     @Test
@@ -339,13 +339,13 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         // Set enabled without a value:  --enabled
         parameters.set("enabled", "");
         parameters.set("DEFAULT", "jdbc/sun");
-        
+
         // Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         // Check that the resource was created with enabled set to true
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -359,9 +359,9 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                     continue;
                 }
             }
-        }       
+        }
         assertTrue(isCreated);
-        
+
         logger.fine("msg: " + context.getActionReport().getMessage());
     }
 }

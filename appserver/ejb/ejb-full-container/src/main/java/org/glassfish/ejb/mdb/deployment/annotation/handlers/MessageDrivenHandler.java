@@ -42,11 +42,11 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(MessageDriven.class)
 public class MessageDrivenHandler extends AbstractEjbHandler {
-    
+
     /** Creates a new instance of MessageDrivenHandler */
     public MessageDrivenHandler() {
     }
-    
+
     /**
      * Return the name attribute of given annotation.
      * @param annotation
@@ -101,8 +101,8 @@ public class MessageDrivenHandler extends AbstractEjbHandler {
         Class ejbClass = (Class)ainfo.getAnnotatedElement();
         EjbMessageBeanDescriptor ejbMsgBeanDesc =
                 (EjbMessageBeanDescriptor)ejbDesc;
-   
-        HandlerProcessingResult procResult = 
+
+        HandlerProcessingResult procResult =
             setMessageListenerInterface(
                     mdAn, ejbMsgBeanDesc, ejbClass, ainfo);
 
@@ -131,7 +131,7 @@ public class MessageDrivenHandler extends AbstractEjbHandler {
 
         // If @MessageDriven contains message listener interface, that takes
         // precedence.  Otherwise, the message listener interface is derived
-        // from the implements clause.  
+        // from the implements clause.
 
         if( mdAn.messageListenerInterface() != Object.class ) {
             intfName = mdAn.messageListenerInterface().getName();
@@ -143,7 +143,7 @@ public class MessageDrivenHandler extends AbstractEjbHandler {
                     } else {
                         EjbBundleDescriptorImpl currentBundle = (EjbBundleDescriptorImpl)
                         ((EjbBundleContext)ainfo.getProcessingContext().getHandler()).getDescriptor();
-                        log(Level.SEVERE, ainfo, 
+                        log(Level.SEVERE, ainfo,
                             localStrings.getLocalString(
                             "enterprise.deployment.annotation.handlers.ambiguousimplementsclausemdb",
                             "Implements clause for 3.x message driven bean class {0} in {1} declares more than one potential message-listener interface.  In this case, the @MessageDriven.messageListenerInterface() attribute must be used to specify the message listener interface.",
@@ -157,7 +157,7 @@ public class MessageDrivenHandler extends AbstractEjbHandler {
 
         // if it's still null, check whether it's defined through
         // deployment descriptor
-        // note: the descriptor class has a default value 
+        // note: the descriptor class has a default value
         // for the interface: jakarta.jms.MessageListener
         // so intfName after this set, will never be null
         if (intfName == null) {

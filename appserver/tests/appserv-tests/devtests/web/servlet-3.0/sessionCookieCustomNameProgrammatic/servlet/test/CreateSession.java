@@ -30,8 +30,8 @@ public class CreateSession extends HttpServlet {
         HttpSession session = req.getSession(true);
 
         HashMap map = new HashMap();
-        map.put("name1", "value1");   
-        map.put("name2", "value2");   
+        map.put("name1", "value1");
+        map.put("name2", "value2");
         session.setAttribute("map", map);
 
         InitialContext ic = null;

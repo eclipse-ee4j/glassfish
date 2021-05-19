@@ -19,30 +19,30 @@ import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
 /**
- * A Stats interface, to expose the monitoring information 
+ * A Stats interface, to expose the monitoring information
  * about the JVM Classloading subsystem
  * @since 8.1
  */
 public interface JVMClassLoadingStats extends Stats {
-    
+
     /**
-     * Returns the number of classes that are currently loaded 
+     * Returns the number of classes that are currently loaded
      * in the JVM
      * @return CountStatistic   The total number of classes currently loaded
      */
-    public CountStatistic getLoadedClassCount();
-    
+    CountStatistic getLoadedClassCount();
+
     /**
-     * Returns the total number of classes that have been loaded, 
+     * Returns the total number of classes that have been loaded,
      * since the JVM began execution
      * @return CountStatistic   The total number of classes loaded
      */
-    public CountStatistic getTotalLoadedClassCount();
-    
+    CountStatistic getTotalLoadedClassCount();
+
     /**
      * Returns the number of classes that have been unloaded from the JVM
      * @return CountStatistic   number of unloaded classes
      */
-    public CountStatistic getUnloadedClassCount();
-    
+    CountStatistic getUnloadedClassCount();
+
 }

@@ -53,8 +53,8 @@ import org.glassfish.hk2.api.PerLookup;
 CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jacc-providers", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jacc-providers",
         description="list-jacc-providers")
 })
 public class ListJaccProviders implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -88,13 +88,13 @@ public class ListJaccProviders implements AdminCommand, AdminCommandSecurity.Pre
         securityService = config.getSecurityService();
         return true;
     }
-    
-    
-    
+
+
+
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        
+
         List<JaccProvider> jaccProviders = securityService.getJaccProvider();
         JaccProvider jprov = null;
         for (JaccProvider jaccProv : jaccProviders) {

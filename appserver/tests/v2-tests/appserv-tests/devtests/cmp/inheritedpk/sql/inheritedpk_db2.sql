@@ -17,13 +17,13 @@ CREATE TABLE A
 CREATE TABLE B
 (
     id DATE          PRIMARY KEY NOT NULL,
-    name   VARCHAR(32) 
+    name   VARCHAR(32)
 );
 
 CREATE TABLE C
 (
     id INT          PRIMARY KEY NOT NULL,
-    name   VARCHAR(32) 
+    name   VARCHAR(32)
 );
 
 commit;

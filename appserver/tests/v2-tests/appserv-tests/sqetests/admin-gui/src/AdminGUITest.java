@@ -22,7 +22,7 @@ import java.net.URL;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class AdminGUITest {
-    
+
     private final String host = Util.getAdminHost();
     private final String port = Util.getAdminPort();
     private final String user = Util.getAdminUser();
@@ -39,7 +39,7 @@ public class AdminGUITest {
     {"Home Page Test         : ", ""},
     {"PropertySheet Page Test: ", ""},
     {"TablePage Test         : ", ""}};
-    
+
     public static void main( String args[] ) {
         try {
             AdminGUITest test = new AdminGUITest();
@@ -48,7 +48,7 @@ public class AdminGUITest {
             ex.printStackTrace();
         }
     }
-    
+
     public AdminGUITest() throws Exception {
         if(host == null || port == null) {
             URL = "http://localhost:4848";
@@ -67,9 +67,9 @@ public class AdminGUITest {
         sr = new WebConversation( );
         status = new SimpleReporterAdapter("appserv-tests");
         status.addDescription("Testing adminGUI..");
-        
+
     }
-    
+
     private void runTest() {
         HttpUnitOptions.setScriptingEnabled(false);
         testLoginPage();
@@ -78,17 +78,17 @@ public class AdminGUITest {
         testPropertySheetPage();
         testTablePage();
         printSummary();
-        
+
     }
-    
+
     private void testLoginPage()  {
         String loginPage = "/index.jsf";
-        
+
         try {
             WebResponse client = sr.getResponse(URL+loginPage);
             client = sr.getResponse(URL+loginPage);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("Copyright") >= 0) && (s.indexOf("j_username") >= 0)) {
                     status.addStatus("admin-gui loginPage:", status.PASS);
@@ -110,15 +110,15 @@ public class AdminGUITest {
             fail++;
             ex.printStackTrace();
         }
-        
+
     }
-    
+
     private void testHomePage() {
         String homePage = "/commonTask.jsf";
         try {
             WebResponse client = sr.getResponse(URL+homePage);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("Deployment") >= 0) && (s.indexOf("Monitoring") >= 0)) {
                     status.addStatus("admin-gui homePage:", status.PASS);
@@ -141,7 +141,7 @@ public class AdminGUITest {
             ex.printStackTrace();
         }
     }
-    
+
     private void authorize()  {
         String loginPage = "/index.jsf";
         try {
@@ -155,14 +155,14 @@ public class AdminGUITest {
             ex.printStackTrace();
         }
     }
-    
+
     private void testPropertySheetPage()  {
         String propertyPage = "/configuration/transactionService.jsf?configName=server-config";
-        
+
         try {
             WebResponse client = sr.getResponse(URL+propertyPage);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("transaction service settings") >= 0) && (s.indexOf("Heuristic") >= 0)) {
                     status.addStatus("admin-gui propertysheetPage:", status.PASS);
@@ -185,14 +185,14 @@ public class AdminGUITest {
             ex.printStackTrace();
         }
     }
-    
+
     private void testTablePage() {
         String tablePage = "/applications/webApplications.jsf";
-        
+
         try {
             WebResponse client = sr.getResponse(URL+tablePage);
             String s = client != null ? client.getText() : null;
-            
+
             if(s != null) {
                 if((s.indexOf("deployButton") >= 0) && (s.indexOf("Deployed") >= 0)) {
                     status.addStatus("admin-gui tablePage:", status.PASS);
@@ -228,5 +228,5 @@ public class AdminGUITest {
         }
         status.printSummary("admin-guiID");
     }
-    
+
 }

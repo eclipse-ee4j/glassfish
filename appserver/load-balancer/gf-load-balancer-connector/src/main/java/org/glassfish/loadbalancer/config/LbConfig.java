@@ -76,7 +76,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      * Gets the value of the name property.
      *
      * Name of the load balancer configuration
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -101,7 +101,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      * be considered unhealthy. Default value is 60 seconds. Must be greater
      * than or equal to 0. A value of 0 effectively turns off this check
      * functionality, meaning the server will always be considered healthy
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -126,7 +126,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      * https request to the server; if false then https requests to the
      * load-balancer result in http requests to the server.
      * Default is to use http (i.e. value of false)
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -149,7 +149,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      * configuration file takes before it is detected by the load balancer and
      * the file reloaded. A value of 0 indicates that reloading is disabled.
      * Default period is 1 minute (60 sec)
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -169,8 +169,8 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      * Gets the value of the monitoringEnabled property.
      *
      * Boolean flag that determines whether monitoring is switched on or not.
-     * Default is that monitoring is switched off (false) 
-     * 
+     * Default is that monitoring is switched off (false)
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -191,7 +191,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
      *
      * Boolean flag that determines whether a route cookie is or is not enabled.
      * Default is enabled (true).
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -232,7 +232,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
     List<Ref> getClusterRefOrServerRef();
 
     /**
-    	Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}
      */
     @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
@@ -244,7 +244,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
     <T> List<T> getRefs(Class<T> type);
 
     @DuckTyped
-    <T> T getRefByRef(Class<T> type, String ref);   
+    <T> T getRefByRef(Class<T> type, String ref);
 
     @DuckTyped
     Date getLastExported();
@@ -344,7 +344,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
         }
 
     }
-    
+
     @Service
     @PerLookup
     class Decorator implements CreationDecorator<LbConfig> {
@@ -353,7 +353,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
         String config_name;
 
         @Param(optional=true)
-        String target;        
+        String target;
 
         @Param (optional=true, defaultValue="60")
         String responsetimeout;
@@ -390,7 +390,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
         @Override
         public void decorate(AdminCommandContext context, final LbConfig instance) throws TransactionFailure, PropertyVetoException {
             Logger logger = LogDomains.getLogger(LbConfig.class, LogDomains.ADMIN_LOGGER);
-            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);            
+            LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LbConfig.class);
 
             if (config_name == null && target == null) {
                 String msg = localStrings.getLocalString("RequiredTargetOrConfig", "Neither LB config name nor target specified");
@@ -401,7 +401,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
             if (config_name == null) {
                 config_name = target + "_LB_CONFIG";
             }
-            
+
             LbConfigs lbconfigs = domain.getExtensionByType(LbConfigs.class);
             //create load-balancers parent element if it does not exist
             if (lbconfigs == null) {
@@ -435,7 +435,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
             instance.setHttpsRouting(httpsrouting==null ? null : httpsrouting.toString());
 
             // creates a reference to the target
-            if (target != null) {                
+            if (target != null) {
                 if (domain.getClusterNamed(target) != null) {
                    ClusterRef cRef = instance.createChild(ClusterRef.class);
                    cRef.setRef(target);
@@ -479,7 +479,7 @@ public interface LbConfig extends ConfigBeanProxy, PropertyBag, Payload {
             String lbConfigName = child.getName();
             LbConfig lbConfig = domain.getExtensionByType(LbConfigs.class).getLbConfig(lbConfigName);
 
-            //Ensure there are no refs 
+            //Ensure there are no refs
             if ( (lbConfig.getClusterRefOrServerRef().size() != 0 ) ) {
                 String msg = localStrings.getLocalString("LbConfigNotEmpty", lbConfigName);
                 throw new TransactionFailure(msg);

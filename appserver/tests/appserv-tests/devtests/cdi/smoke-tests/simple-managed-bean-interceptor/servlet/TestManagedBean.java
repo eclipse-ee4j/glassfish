@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-//Simple TestBean to test CDI. 
+//Simple TestBean to test CDI.
 //This bean implements Serializable as it needs to be placed into a Stateful Bean
 @jakarta.annotation.ManagedBean
 public class TestManagedBean {

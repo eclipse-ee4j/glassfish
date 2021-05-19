@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Functional test for @TransactionScoped");
         WebTest webTest = new WebTest(args);
@@ -48,7 +48,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invoke();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");
@@ -58,7 +58,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         String url = "http://" + host + ":" + port + contextRoot + "/TransactionScopedTestServlet";
         System.out.println("opening connection to " + url);
         HttpURLConnection conn = (HttpURLConnection) (new URL(url)).openConnection();
@@ -98,6 +98,6 @@ public class WebTest {
                 System.out.println("Wrong response. Expected: " + EXPECTED_RESPONSE + ", received: " + line);
                 stat.addStatus(TEST_NAME, stat.FAIL);
             }
-        }    
+        }
     }
 }

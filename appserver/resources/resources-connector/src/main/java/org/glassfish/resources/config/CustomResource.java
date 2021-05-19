@@ -19,21 +19,27 @@ package org.glassfish.resources.config;
 import com.sun.enterprise.config.serverbeans.BindableResource;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
+
+import java.beans.PropertyVetoException;
+import java.util.List;
+
 import org.glassfish.admin.cli.resources.ResourceConfigCreator;
+import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.api.admin.RestRedirect;
 import org.glassfish.api.admin.RestRedirects;
 import org.glassfish.api.admin.config.PropertiesDesc;
 import org.glassfish.quality.ToDo;
-import org.glassfish.admin.cli.resources.UniqueResourceNameConstraint;
 import org.glassfish.resourcebase.resources.ResourceDeploymentOrder;
 import org.glassfish.resourcebase.resources.ResourceTypeOrder;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.DuckTyped;
+import org.jvnet.hk2.config.Element;
 import org.jvnet.hk2.config.types.Property;
 import org.jvnet.hk2.config.types.PropertyBag;
 
 import jakarta.validation.constraints.NotNull;
-import java.beans.PropertyVetoException;
-import java.util.List;
 /**
  * Custom (or generic) resource managed by a user-written factory class.
  */
@@ -97,6 +103,7 @@ public interface CustomResource extends ConfigBeanProxy, Resource,
      * @return possible object is
      *         {@link String }
      */
+    @Override
     @Attribute (defaultValue="true",dataType=Boolean.class)
     String getEnabled();
 
@@ -106,6 +113,7 @@ public interface CustomResource extends ConfigBeanProxy, Resource,
      * @param value allowed object is
      *              {@link String }
      */
+    @Override
     void setEnabled(String value) throws PropertyVetoException;
 
     /**
@@ -124,15 +132,17 @@ public interface CustomResource extends ConfigBeanProxy, Resource,
      *              {@link String }
      */
     void setDescription(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})
     @Element
     List<Property> getProperty();
 
+    @Override
     @DuckTyped
     String getIdentity();
 

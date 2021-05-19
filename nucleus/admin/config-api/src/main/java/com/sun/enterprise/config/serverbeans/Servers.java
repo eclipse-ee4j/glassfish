@@ -39,7 +39,7 @@ public interface Servers extends ConfigBeanProxy {
     /**
      * Return the list of currently configured server. Servers can be added or removed by using the returned
      * {@link java.util.List} instance
-     * 
+     *
      * @return the list of configured {@link Server}
      */
     @Element

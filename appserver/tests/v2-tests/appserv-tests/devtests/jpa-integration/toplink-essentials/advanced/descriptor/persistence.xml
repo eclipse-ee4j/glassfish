@@ -24,8 +24,8 @@
         <class>oracle.toplink.essentials.testing.models.cmp3.advanced.EmploymentPeriod</class>
         <class>oracle.toplink.essentials.testing.models.cmp3.advanced.LargeProject</class>
         <class>oracle.toplink.essentials.testing.models.cmp3.advanced.PhoneNumber</class>
-        <class>oracle.toplink.essentials.testing.models.cmp3.advanced.Project</class> 
-        <class>oracle.toplink.essentials.testing.models.cmp3.advanced.SmallProject</class> 
+        <class>oracle.toplink.essentials.testing.models.cmp3.advanced.Project</class>
+        <class>oracle.toplink.essentials.testing.models.cmp3.advanced.SmallProject</class>
         <properties>
             <property name="toplink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
             <property name="toplink.jdbc.url" value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage=true;"/>

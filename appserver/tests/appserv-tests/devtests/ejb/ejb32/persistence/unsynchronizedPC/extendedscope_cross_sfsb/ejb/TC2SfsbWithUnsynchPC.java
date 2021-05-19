@@ -31,16 +31,16 @@ public class TC2SfsbWithUnsynchPC{
             synchronization = SynchronizationType.UNSYNCHRONIZED,
             type = PersistenceContextType.EXTENDED)
     EntityManager em;
-    
+
     //@Override
     public Person findPerson(String name) {
         Person p = em.find(Person.class, name);
         System.out.print("Find persion " + p);
         return p;
     }
-    
+
     @Init
     public void createFinder() {
-        
+
     }
 }

@@ -191,7 +191,7 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * @throws IllegalArgumentException if validate is true and at least one instance does
      * not exist in the database or is deleted.
      */
-    public Collection convertCollectionEJBObjectToPC (Collection coll, PersistenceManager pm, 
+    public Collection convertCollectionEJBObjectToPC (Collection coll, PersistenceManager pm,
                                                       boolean validate) {
         Collection rc = new java.util.ArrayList();
 
@@ -399,14 +399,14 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
 
    /**
      * Validates that this instance is of the correct implementation class
-     * of bean remote interface. 
+     * of bean remote interface.
      * Throws IllegalArgumentException if the argument is of a wrong type.
      *
      * @param o the instance to validate.
      * @param beanName as String.
      * @throws IllegalArgumentException if validation fails.
      */
-    protected void assertInstanceOfRemoteInterfaceImpl(Object o, 
+    protected void assertInstanceOfRemoteInterfaceImpl(Object o,
         String beanName) {
 
         // We can't check if null is the correct type or not. So
@@ -419,10 +419,10 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
 
         } catch (EJBException ex) {
             String msg = I18NHelper.getMessage(messages, "EXC_WrongRemoteInstance", // NOI18N
-                new Object[] {o.getClass().getName(), beanName, 
+                new Object[] {o.getClass().getName(), beanName,
                     ex.getMessage()});
             logger.log(Logger.WARNING, msg);
-            throw new IllegalArgumentException(msg); 
+            throw new IllegalArgumentException(msg);
         }
     }
 
@@ -431,13 +431,13 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
      * Throws IllegalArgumentException otherwise.
      * @param pk the primary key instance to validate.
      * @throws IllegalArgumentException if validation fails.
-     */  
+     */
     protected void assertPrimaryKeyNotNull(Object pk) {
         if (pk == null) {
             throw new IllegalArgumentException(I18NHelper.getMessage(
                 messages, "EXC_pknull_exception")); // NOI18N
         }
-    } 
+    }
 
    /**
      * Validates that the primary key field of an Object type  is not null.
@@ -458,13 +458,13 @@ abstract public class JDOEJB11HelperImpl implements JDOEJB11Helper {
     }
 
 
-   /**   
-     * Validates that the object id instance is not null.  
-     * Throws JDOFatalInternalException otherwise. 
-     * @param oid the object id instance to validate. 
-     * @throws JDOFatalInternalException if validation fails. 
-     */   
-    protected void assertObjectIdNotNull(Object oid) { 
+   /**
+     * Validates that the object id instance is not null.
+     * Throws JDOFatalInternalException otherwise.
+     * @param oid the object id instance to validate.
+     * @throws JDOFatalInternalException if validation fails.
+     */
+    protected void assertObjectIdNotNull(Object oid) {
         if (oid == null) {
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages, "EXC_oidnull_exception")); // NOI18N

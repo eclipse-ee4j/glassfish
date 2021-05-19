@@ -110,7 +110,7 @@ import org.glassfish.deployment.common.DeploymentUtils;
  * the user downloads multiple clients into the same local directory.
  *
  * @author tjquinn
- * 
+ *
  */
 @Service
 @Singleton
@@ -120,7 +120,7 @@ public class AppClientDeployer
 
     private Logger logger;
 
-    public static final String APPCLIENT_FACADE_CLASS_FILE = 
+    public static final String APPCLIENT_FACADE_CLASS_FILE =
             "org/glassfish/appclient/client/AppClientFacade.class";
     public static final String APPCLIENT_AGENT_MAIN_CLASS_FILE =
             "org/glassfish/appclient/client/JWSAppClientContainerMain.class";
@@ -185,7 +185,7 @@ public class AppClientDeployer
 
     @Override
     public void postConstruct() {
-        logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+        logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
         for (HK2Module module : modulesRegistry.getModules(GF_CLIENT_MODULE_NAME)) {
             gfClientModuleClassLoader = module.getClassLoader();
@@ -199,12 +199,12 @@ public class AppClientDeployer
 
     @Override
     public AppClientServerApplication load(AppClientContainerStarter containerStarter, DeploymentContext dc) {
-        // if the populated DOL object does not container appclient 
+        // if the populated DOL object does not container appclient
         // descriptor, this is an indication that appclient deployer
         // should not handle this module
-        ApplicationClientDescriptor appclientDesc = 
+        ApplicationClientDescriptor appclientDesc =
             dc.getModuleMetaData(ApplicationClientDescriptor.class);
-        if (appclientDesc == null) { 
+        if (appclientDesc == null) {
             return null;
         }
         appclientDesc.setClassLoader(dc.getClassLoader());
@@ -224,7 +224,7 @@ public class AppClientDeployer
     public Set<AppClientServerApplication> appClientApps() {
         return appClientApps;
     }
-    
+
     private AppClientServerApplication newACServerApp(
             final DeploymentContext dc, final AppClientDeployerHelper helper) {
         final AppClientServerApplication result = habitat.getService(AppClientServerApplication.class);
@@ -256,10 +256,10 @@ public class AppClientDeployer
 
     @Override
     protected void generateArtifacts(DeploymentContext dc) throws DeploymentException {
-        // if the populated DOL object does not container appclient 
+        // if the populated DOL object does not container appclient
         // descriptor, this is an indication that appclient deployer
         // should not handle this module
-        if (dc.getModuleMetaData(ApplicationClientDescriptor.class) == null) { 
+        if (dc.getModuleMetaData(ApplicationClientDescriptor.class) == null) {
             return;
         }
 
@@ -278,7 +278,7 @@ public class AppClientDeployer
     /**
      * Records the user-friendly path as a property for the app client module.
      * This is primarily for ease-of-lookup from GetRelativeJWSURICommand.
-     * 
+     *
      * @param helper
      * @param dc
      */
@@ -361,7 +361,7 @@ public class AppClientDeployer
             appAndClientNameToUserFriendlyContextRoot.remove(
                 keyToAppAndClientNameMap(appName, clientURIWithinEAR));
     }
-    
+
     /**
      * Returns the user-friendly context root for the specified app client.
      * <p>

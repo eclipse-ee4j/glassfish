@@ -34,12 +34,12 @@ import org.glassfish.contextpropagation.internal.SimpleMap.Filter;
  */
 public class AccessControlledMap {
   private static final boolean IS_ORIGINATOR = true;
-  protected SimpleMap simpleMap = new SimpleMap(); 
-  private final ContextAccessController contextAccessController = 
+  protected SimpleMap simpleMap = new SimpleMap();
+  private final ContextAccessController contextAccessController =
       ContextBootstrap.getContextAccessController();
 
   public <T> T get(String key) throws InsufficientCredentialException {
-    Entry entry = simpleMap.getEntry(key); 
+    Entry entry = simpleMap.getEntry(key);
     if (entry == null) {
       if (contextAccessController.isAccessAllowed(key, ContextAccessLevel.READ)) {
         return null;
@@ -49,17 +49,17 @@ public class AccessControlledMap {
           contextAccessController.isAccessAllowed(key, ContextAccessLevel.READ)) {
         return (T) entry.getValue();
       }
-    } 
+    }
     throw new InsufficientCredentialException();
   }
 
   @SuppressWarnings("unchecked")
-  public <T> T put(String key, Entry entry) throws InsufficientCredentialException {   
+  public <T> T put(String key, Entry entry) throws InsufficientCredentialException {
     Entry oldEntry = simpleMap.getEntry(key);
-    contextAccessController.checkAccessAllowed(key, 
+    contextAccessController.checkAccessAllowed(key,
         oldEntry == null ? ContextAccessLevel.CREATE : ContextAccessLevel.UPDATE);
 
-    simpleMap.put(key, entry.init(IS_ORIGINATOR, 
+    simpleMap.put(key, entry.init(IS_ORIGINATOR,
         contextAccessController.isEveryoneAllowedToRead(key)));
     return (T) (oldEntry == null ? null : oldEntry.getValue());
   }
@@ -76,9 +76,9 @@ public class AccessControlledMap {
         return null;
       }
     } else {
-      if (entry.allowAllToRead || 
+      if (entry.allowAllToRead ||
           contextAccessController.isAccessAllowed(key, ContextAccessLevel.READ)) {
-        return entry.propagationModes;      
+        return entry.propagationModes;
       }}
     throw new InsufficientCredentialException();
   }
@@ -97,11 +97,11 @@ public class AccessControlledMap {
       return contextAccessController.isAccessAllowed(mapEntry.getKey(), ContextAccessLevel.READ);
     }
   };
-  
+
   public Iterator<Map.Entry<String, Entry>> entryIterator() {
     return simpleMap.iterator(AccessCheckerFilter, null);
   }
-  
+
   public Entry getEntry(String key) {
     return simpleMap.getEntry(key);
   }
@@ -117,7 +117,7 @@ public class AccessControlledMap {
       }
       @Override public void remove() {
         iter.remove();
-      }      
+      }
     };
   }
 

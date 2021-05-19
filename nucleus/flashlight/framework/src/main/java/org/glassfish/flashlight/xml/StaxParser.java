@@ -43,7 +43,7 @@ public abstract class StaxParser {
             throw new XMLStreamException(ioe);
         }
     }
-    
+
     public StaxParser(String resource, ClassLoader cl) throws XMLStreamException {
         xmlStream = cl.getResourceAsStream(resource);
         createParser();

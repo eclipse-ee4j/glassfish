@@ -24,7 +24,7 @@ import org.apache.catalina.valves.*;
 public class TomcatValveBase_2 extends ValveBase {
 
     public String getInfo() {
-	return getClass().getName();
+        return getClass().getName();
     }
 
     public void invoke(Request request, Response response)

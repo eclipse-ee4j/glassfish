@@ -27,6 +27,6 @@ public interface SessionBeanInjectionRemote {
     public static final String RemoteJNDIName =  SessionBeanInjection.class.getSimpleName() + "/remote";
 
     public String sendMessage1(String text);
-    
+
     public String sendMessage2(String text);
 }

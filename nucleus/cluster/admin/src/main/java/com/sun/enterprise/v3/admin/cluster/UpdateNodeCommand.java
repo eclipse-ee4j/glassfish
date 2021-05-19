@@ -55,8 +55,8 @@ import java.util.logging.Logger;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Node.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="_update-node", 
+        opType=RestEndpoint.OpType.POST,
+        path="_update-node",
         description="Update Node",
         params={
             @RestParam(name="name", value="$parent")

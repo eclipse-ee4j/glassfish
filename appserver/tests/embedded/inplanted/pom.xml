@@ -60,7 +60,7 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.4.2</version>
         <configuration>
-          <forkCount>1</forkCount> 
+          <forkCount>1</forkCount>
           <reuseForks>false</reuseForks>
         </configuration>
       </plugin>
@@ -77,7 +77,7 @@
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-all</artifactId>
                     <version>6.1.1-SNAPSHOT</version>
-                </dependency>                
+                </dependency>
             </dependencies>
         </profile>
         <profile>
@@ -88,7 +88,7 @@
                     <value>static-shell</value>
                 </property>
             </activation>
-            <dependencies>                
+            <dependencies>
                 <dependency>
                     <groupId>org.glassfish.main.extras</groupId>
                     <artifactId>glassfish-embedded-static-shell</artifactId>
@@ -99,13 +99,13 @@
                 </dependency>
             </dependencies>
         </profile>
-    </profiles>    
+    </profiles>
     <dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.2</version>
-		</dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.2</version>
+        </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
             <artifactId>web-embed-api</artifactId>

@@ -49,7 +49,7 @@ import org.jvnet.hk2.annotations.Service;
  * just like WEB-INF/classes is searched first before WEB-INF/lib/*.jar.
  * DERBY_DRIVERS are added to this class loader, because GlassFish ships with Derby database by default
  * and it makes them available to users by default. Earlier, they used to be available to applications via
- * launcher classloader, but now they are available via this class loader (see issue 13612 for more details on this). 
+ * launcher classloader, but now they are available via this class loader (see issue 13612 for more details on this).
  *
  * It applies a special rule while handling jars in install_root/lib.
  * In order to maintain file layout compatibility (see  issue #9526),
@@ -80,6 +80,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
 
     private static final String SERVER_EXCLUDED_ATTR_NAME = "GlassFish-ServerExcluded";
 
+    @Override
     public void postConstruct() {
         APIClassLoader = acls.getAPIClassLoader();
         assert (APIClassLoader != null);
@@ -87,12 +88,12 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     }
 
     private void createCommonClassLoader() {
-        List<File> cpElements = new ArrayList<File>();
+        List<File> cpElements = new ArrayList<>();
         File domainDir = env.getDomainRoot();
         // I am forced to use System.getProperty, as there is no API that makes
         // the installRoot available. Sad, but true. Check dev forum on this.
         final String installRoot = System.getProperty(
-                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+            SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
 
         // See https://glassfish.dev.java.net/issues/show_bug.cgi?id=5872
         // In case of embedded GF, we may not have an installRoot.
@@ -101,13 +102,13 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
             File installLibPath = new File(installDir, "lib");
             if (installLibPath.isDirectory()) {
                 Collections.addAll(cpElements,
-                        installLibPath.listFiles(new CompiletimeJarFileFilter()));
+                    installLibPath.listFiles(new CompiletimeJarFileFilter()));
             }
         } else {
             logger.logp(Level.WARNING, "CommonClassLoaderServiceImpl",
-                    "createCommonClassLoader",
-                    KernelLoggerInfo.systemPropertyNull,
-                    SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+                "createCommonClassLoader",
+                KernelLoggerInfo.systemPropertyNull,
+                SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
         }
         File domainClassesDir = new File(domainDir, "lib/classes/"); // NOI18N
         if (domainClassesDir.exists()) {
@@ -116,12 +117,12 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         final File domainLib = new File(domainDir, "lib/"); // NOI18N
         if (domainLib.isDirectory()) {
             Collections.addAll(cpElements,
-                    domainLib.listFiles(new JarFileFilter()));
+                domainLib.listFiles(new JarFileFilter()));
         }
         // See issue https://glassfish.dev.java.net/issues/show_bug.cgi?id=13612
         // We no longer add derby jars to launcher class loader, we add them to common class loader instead.
         cpElements.addAll(findDerbyClient());
-        List<URL> urls = new ArrayList<URL>();
+        List<URL> urls = new ArrayList<>();
         StringBuilder cp = new StringBuilder();
         for (File f : cpElements) {
             try {
@@ -131,8 +132,8 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
                 }
                 cp.append(f.getAbsolutePath());
             } catch (MalformedURLException e) {
-                logger.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry, 
-                        new Object[] {f, e});
+                logger.log(Level.WARNING, KernelLoggerInfo.invalidClassPathEntry,
+                    new Object[] {f, e});
             }
         }
         commonClassPath = cp.toString();
@@ -140,11 +141,11 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
             // Skip creation of an unnecessary classloader in the hierarchy,
             // when all it would have done was to delegate up.
             commonClassLoader = new URLClassLoader(
-                    urls.toArray(new URL[urls.size()]), APIClassLoader);
+                urls.toArray(new URL[urls.size()]), APIClassLoader);
         } else {
             logger.logp(Level.FINE, "CommonClassLoaderManager",
-                    "Skipping creation of CommonClassLoader " +
-                            "as there are no libraries available",
+                "Skipping creation of CommonClassLoader " +
+                    "as there are no libraries available",
                     "urls = {0}", new Object[]{urls});
         }
     }
@@ -160,19 +161,19 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     private List<File> findDerbyClient() {
         final String DERBY_HOME_PROP = "AS_DERBY_INSTALL";
         StartupContext startupContext = env.getStartupContext();
-		Properties arguments = null;
-		
-		if (startupContext != null) {
-		  arguments = startupContext.getArguments();
-		}
-		
-		String derbyHome = null;
-		
-		if (arguments != null) {
-		   derbyHome = arguments.getProperty(DERBY_HOME_PROP,
+        Properties arguments = null;
+
+        if (startupContext != null) {
+            arguments = startupContext.getArguments();
+        }
+
+        String derbyHome = null;
+
+        if (arguments != null) {
+            derbyHome = arguments.getProperty(DERBY_HOME_PROP,
                 System.getProperty(DERBY_HOME_PROP));
-		}
-		
+        }
+
         File derbyLib = null;
         if (derbyHome != null) {
             derbyLib = new File(derbyHome, "lib");
@@ -190,6 +191,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
         }
 
         return Arrays.asList(derbyLib.listFiles(new FilenameFilter(){
+            @Override
             public boolean accept(File dir, String name) {
                 // Include only files having .jar extn and exclude all localisation jars, because they are
                 // already mentioned in the Class-Path header of the main jars
@@ -201,6 +203,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
     private static class JarFileFilter implements FilenameFilter {
         private final String JAR_EXT = ".jar"; // NOI18N
 
+        @Override
         public boolean accept(File dir, String name) {
             return name.endsWith(JAR_EXT);
         }
@@ -222,7 +225,7 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
                     Manifest manifest = jar.getManifest();
                     if (manifest != null) {
                         String exclude = manifest.getMainAttributes().
-                                getValue(SERVER_EXCLUDED_ATTR_NAME);
+                            getValue(SERVER_EXCLUDED_ATTR_NAME);
                         if (exclude != null && exclude.equalsIgnoreCase("true")) {
                             return false;
                         }
@@ -231,11 +234,13 @@ public class CommonClassLoaderServiceImpl implements PostConstruct {
                 catch (IOException e)
                 {
                     logger.log(Level.WARNING, KernelLoggerInfo.exceptionProcessingJAR,
-                            new Object[] {file.getAbsolutePath(), e});
+                        new Object[] {file.getAbsolutePath(), e});
                 } finally {
                     try
                     {
-                        if (jar != null) jar.close();
+                        if (jar != null) {
+                            jar.close();
+                        }
                     }
                     catch (IOException e)
                     {

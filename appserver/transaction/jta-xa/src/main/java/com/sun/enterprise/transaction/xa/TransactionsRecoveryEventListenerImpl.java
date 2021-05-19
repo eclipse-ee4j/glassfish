@@ -25,7 +25,7 @@ package com.sun.enterprise.transaction.xa;
 import com.sun.enterprise.util.i18n.StringManager;
 
 public class TransactionsRecoveryEventListenerImpl /** implements  TransactionsRecoveryEventListener **/ {
- 
+
         // Sting Manager for Localization
     private static StringManager sm = StringManager.getManager(TransactionsRecoveryEventListenerImpl.class);
 

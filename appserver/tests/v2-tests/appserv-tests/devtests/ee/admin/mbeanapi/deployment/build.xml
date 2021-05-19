@@ -69,9 +69,9 @@
 
     <!-- copysamples-->
     <target name="copyuisamples" depends="compile">
-	<copy todir="${samples.dest}">
-	    <fileset dir="${samples.src}"/>
-	</copy>
+        <copy todir="${samples.dest}">
+            <fileset dir="${samples.src}"/>
+        </copy>
     </target>
 
     <!-- clean -->
@@ -88,23 +88,23 @@
 
     <!-- runtests -->
     <target name="runtests" depends="compile,copyautosamples">
-	<java classname="com.sun.enterprise.admin.mbeanapi.deployment.DeploymentTestsAuto" fork="true">
-	    <jvmarg value="-ea"/>
-	    <arg value="ant"/>
-        <classpath refid="run.classpath"/>
-	</java>
+        <java classname="com.sun.enterprise.admin.mbeanapi.deployment.DeploymentTestsAuto" fork="true">
+            <jvmarg value="-ea"/>
+            <arg value="ant"/>
+            <classpath refid="run.classpath"/>
+        </java>
     </target>
-    
+
     <!-- runtestsdebug -->
     <target name="runtestsdebug" depends="compile,copyautosamples">
-	<echo message="Running tests with debugging on Port 3333.  Suspended -- go attach now."/>
-	<java classname="com.sun.enterprise.admin.mbeanapi.deployment.DeploymentTestsAuto" fork="true">
-	    <jvmarg value="-ea"/>
-	    <jvmarg value="-Xdebug"/>
-	    <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=3333"/>
-	    <arg value="ant"/>
-        <classpath refid="run.classpath"/>
-	</java>
+        <echo message="Running tests with debugging on Port 3333.  Suspended -- go attach now."/>
+        <java classname="com.sun.enterprise.admin.mbeanapi.deployment.DeploymentTestsAuto" fork="true">
+            <jvmarg value="-ea"/>
+            <jvmarg value="-Xdebug"/>
+            <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=3333"/>
+            <arg value="ant"/>
+            <classpath refid="run.classpath"/>
+        </java>
     </target>
-    
+
 </project>

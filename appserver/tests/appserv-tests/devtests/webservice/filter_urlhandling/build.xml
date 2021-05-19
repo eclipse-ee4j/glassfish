@@ -18,7 +18,7 @@
 
 <!DOCTYPE project [
 <!ENTITY commonSetup SYSTEM "file:./../../../config/properties.xml">
-<!ENTITY commonBuild SYSTEM "file:./../../../config/common.xml"> 
+<!ENTITY commonBuild SYSTEM "file:./../../../config/common.xml">
 ]>
 
 <project name="Filter URL handling test" default="all" basedir=".">
@@ -34,7 +34,7 @@
       <param name="src" value="client"/>
     </antcall>
   </target>
-  
+
   <target name="run" depends="init-common">
     <java classname="client.Client">
         <arg value="http://${http.host}:${http.port}/"/>
@@ -42,11 +42,11 @@
             <pathelement path="${build.classes.dir}"/>
             <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
         </classpath>
-    </java>    
+    </java>
   </target>
-  
+
   <target name="clean">
     <antcall target="clean-common"/>
   </target>
 </project>
-  
+

@@ -28,7 +28,7 @@ import java.util.logging.LoggingMXBean;
  * @since GlassFish v3
  */
 public class LogReporter {
-    
+
     private final StringManager sm    = StringManager.getManager(LogReporter.class);
     private final String ROOT_LOGGER  = "root";
     private final String ANON_LOGGER  = "anonymous";

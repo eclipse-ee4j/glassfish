@@ -82,11 +82,11 @@ public class TransactionState {
 
     private GlobalTID gtid;
     private TransactionImpl tran;
-	/*
-		Logger to log transaction messages
-	*/  
-    
-	static Logger _logger = LogDomains.getLogger(TransactionState.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+
+    static Logger _logger = LogDomains.getLogger(TransactionState.class, LogDomains.TRANSACTION_LOGGER);
 
     // private static TransactionManagerImpl tm = TransactionManagerImpl.getTransactionManagerImpl();
 
@@ -249,13 +249,13 @@ public class TransactionState {
         }
         factories.add(res);
 
-	    byte [] branchid = parseSize(size);
-	    byte [] sname    = Configuration.getServerNameByteArray();
-	    byte [] branch = new byte[sname.length+1+branchid.length];
+        byte[] branchid = parseSize(size);
+        byte[] sname = Configuration.getServerNameByteArray();
+        byte[] branch = new byte[sname.length + 1 + branchid.length];
 
-	    System.arraycopy(sname, 0, branch, 0, sname.length);
-	    branch[sname.length] = (byte) ',';
-	    System.arraycopy(branchid, 0, branch, sname.length+1, branchid.length);
+        System.arraycopy(sname, 0, branch, 0, sname.length);
+        branch[sname.length] = (byte) ',';
+        System.arraycopy(branchid, 0, branch, sname.length+1, branchid.length);
 
         xid.setBranchQualifier(branch);
 
@@ -344,7 +344,7 @@ public class TransactionState {
                 case FAILED:
                 case ROLLING_BACK:
                 default:
-                    throw new IllegalStateException("Wrong XAState: " + 
+                    throw new IllegalStateException("Wrong XAState: " +
                                                     XAState/*#Frozen*/);
                 }
             }
@@ -361,10 +361,10 @@ public class TransactionState {
             setXAState(res, FAILED);
             throw ex;
         } catch (Inactive ex) {
-			_logger.log(Level.WARNING,"jts.transaction_inactive",ex);
+            _logger.log(Level.WARNING,"jts.transaction_inactive",ex);
             throw new SystemException();
         } catch (Unavailable ex) {
-			_logger.log(Level.WARNING,"jts.object_unavailable",ex);
+            _logger.log(Level.WARNING,"jts.object_unavailable",ex);
             throw new SystemException();
         }
     }
@@ -405,7 +405,7 @@ public class TransactionState {
                 xares.end(xid, XAResource.TMSUCCESS);
                 setXAState(xares, NOT_ASSOCIATED);
                 xares.rollback(xid);
-                
+
                 break;
             case ASSOCIATION_SUSPENDED:
                 if ((flags & XAResource.TMSUCCESS) != 0) {
@@ -450,7 +450,7 @@ public class TransactionState {
     synchronized
     public void registerSynchronization(Synchronization sync,
                                         Control control,
-                                        boolean interposed) 
+                                        boolean interposed)
         throws RollbackException, IllegalStateException,
         SystemException {
 
@@ -518,32 +518,32 @@ public class TransactionState {
     static private void assert_prejdk14(boolean value) {
         if (!value) {
             Exception e = new Exception();
-			_logger.log(Level.WARNING,"jts.assert",e);
+            _logger.log(Level.WARNING,"jts.assert",e);
         }
     }
 
     private static byte[] parseSize(int size) {
 
           switch(size) {
-            case 0: 
+            case 0:
                return new byte[]{0};
-            case 1: 
+            case 1:
                return new byte[]{1};
-            case 2: 
+            case 2:
                return new byte[]{2};
-            case 3: 
+            case 3:
                return new byte[]{3};
-            case 4: 
+            case 4:
                return new byte[]{4};
-            case 5: 
+            case 5:
                return new byte[]{5};
-            case 6: 
+            case 6:
                return new byte[]{6};
-            case 7: 
+            case 7:
                return new byte[]{7};
-            case 8: 
+            case 8:
                return new byte[]{8};
-            case 9: 
+            case 9:
                return new byte[]{9};
         }
         int j = 9;

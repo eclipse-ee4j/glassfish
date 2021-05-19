@@ -35,7 +35,7 @@
       </resource-ref>
       <resource-ref>
         <res-ref-name>TracingDataSource</res-ref-name>
-	<jndi-name>jdbc/tracingsql-res</jndi-name>
+        <jndi-name>jdbc/tracingsql-res</jndi-name>
         <default-resource-principal>
             <name>DBUSER</name>
             <password>DBPASSWORD</password>

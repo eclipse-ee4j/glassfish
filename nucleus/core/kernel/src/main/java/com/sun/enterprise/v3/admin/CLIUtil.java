@@ -27,8 +27,8 @@ import org.jvnet.hk2.config.types.Property;
  * @author tjquinn
  */
 public class CLIUtil {
-    
-    static Config chooseConfig(final Target targetService, 
+
+    static Config chooseConfig(final Target targetService,
             Config config,
             final String target) {
         Config targetConfig = targetService.getConfig(target);
@@ -37,7 +37,7 @@ public class CLIUtil {
         }
         return config;
     }
-    
+
     static SystemPropertyBag chooseTarget(final Domain domain, final String target) {
         SystemPropertyBag spb = null;
         Property domainProp = domain.getProperty("administrative.domain.name");
@@ -55,5 +55,5 @@ public class CLIUtil {
         }
         return spb;
     }
-    
+
 }

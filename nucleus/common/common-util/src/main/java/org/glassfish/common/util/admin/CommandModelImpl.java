@@ -147,16 +147,16 @@ public class CommandModelImpl extends CommandModel {
     public ExecuteOn getClusteringAttributes() {
         return execOn;
     }
-    
+
     @Override
     public boolean isManagedJob() {
         return managedJob;
     }
-    
+
     public void setManagedJob(boolean value) {
         this.managedJob = value;
     }
-            
+
 
     /**
      * Should an unknown option be considered an operand by asadmin?
@@ -165,7 +165,7 @@ public class CommandModelImpl extends CommandModel {
     public boolean unknownOptionsAreOperands() {
         return dashOk;
     }
-    
+
     public void addParam(String name, CommandModel.ParamModel param) {
         params.put(name, param);
     }
@@ -270,7 +270,7 @@ public class CommandModelImpl extends CommandModel {
                 public String defaultValue() {
                     return defaultValue;
                 }
-                
+
                 @Override
                 public Class<? extends ParamDefaultCalculator> defaultCalculator() {
                     return param.defaultCalculator();
@@ -326,7 +326,7 @@ public class CommandModelImpl extends CommandModel {
         public String getLocalizedDescription() {
             return getLocalizedString("");
         }
-        
+
         @Override
         public String getLocalizedPrompt() {
             return getLocalizedString(".prompt");
@@ -344,6 +344,6 @@ public class CommandModelImpl extends CommandModel {
         @Override
         public Class getType() {
             return type;
-        }      
+        }
     }
 }

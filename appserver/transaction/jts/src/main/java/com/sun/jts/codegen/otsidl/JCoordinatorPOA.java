@@ -313,7 +313,7 @@ public abstract class JCoordinatorPOA extends org.omg.PortableServer.Servant
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:otsidl/JCoordinator:1.0", 
+    "IDL:otsidl/JCoordinator:1.0",
     "IDL:omg.org/CosTransactions/Coordinator:1.0"};
 
   public String[] _all_interfaces (org.omg.PortableServer.POA poa, byte[] objectId)
@@ -321,13 +321,13 @@ public abstract class JCoordinatorPOA extends org.omg.PortableServer.Servant
     return (String[])__ids.clone ();
   }
 
-  public JCoordinator _this() 
+  public JCoordinator _this()
   {
     return JCoordinatorHelper.narrow(
     super._this_object());
   }
 
-  public JCoordinator _this(org.omg.CORBA.ORB orb) 
+  public JCoordinator _this(org.omg.CORBA.ORB orb)
   {
     return JCoordinatorHelper.narrow(
     super._this_object(orb));

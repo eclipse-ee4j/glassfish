@@ -47,7 +47,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
  * hosts EJB instances.
  * <p>
  * There is one instance of the Container for each EJB type (deployment desc).
- * When a JAR is deployed on the EJB server, a Container instance is created 
+ * When a JAR is deployed on the EJB server, a Container instance is created
  * for each EJB declared in the ejb-jar.xml for the EJB JAR.
  * <p>
  * The Container interface provides methods called from other parts of
@@ -56,7 +56,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
  */
 public interface Container {
 
-    // These values are for the transaction attribute of a bean method    
+    // These values are for the transaction attribute of a bean method
     public int TX_NOT_INITIALIZED = 0; // default
     public int TX_NOT_SUPPORTED = 1;
     public int TX_BEAN_MANAGED = 2;
@@ -76,19 +76,19 @@ public interface Container {
                                       "TX_MANDATORY",
                                       "TX_NEVER" };
 
-    // These values are for the security attribute of a bean method    
+    // These values are for the security attribute of a bean method
     public int SEC_NOT_INITIALIZED = 0; // default
     public int SEC_UNCHECKED = 1;
     public int SEC_EXCLUDED = 2;
     public int SEC_CHECKED = 3;
 
     public String[] secAttrStrings = { "SEC_NOT_INITIALIZED",
-                                       "SEC_UNCHECKED", 
-                                       "SEC_EXCLUDED", 
+                                       "SEC_UNCHECKED",
+                                       "SEC_EXCLUDED",
                                        "SEC_CHECKED" };
 
 
-    
+
     /**
      * Return the EJBObject/EJBHome for the given instanceKey.
      * @param remoteBusinessIntf True if this invocation is for the RemoteHome
@@ -102,9 +102,9 @@ public interface Container {
      * Called from the ProtocolManager after a remote invocation completes.
      */
     void releaseTargetObject(Remote remoteObj);
-   
+
     /**
-     * Performs pre external invocation setup such as setting application 
+     * Performs pre external invocation setup such as setting application
      * context class loader.  Called by getTargetObject() and web service inv
      */
     public void externalPreInvoke();
@@ -170,7 +170,7 @@ public interface Container {
      *
      * @exception jakarta.ejb.EJBException  Thrown if an error occurs
      *          during the preSelect actions performed by the container.
-     *          If thrown, the remaining select query steps should be 
+     *          If thrown, the remaining select query steps should be
      *          aborted and an EJBException should be propagated
      *          back to the application code.
      */
@@ -178,13 +178,13 @@ public interface Container {
 
 
     /**
-     * Called by the EJB(Local)Object/EJB(Local)Home before an invocation 
+     * Called by the EJB(Local)Object/EJB(Local)Home before an invocation
      * on a bean.
      */
     void preInvoke(EjbInvocation inv);
 
     /**
-     * Called by the EJB(Local)Object/EJB(Local)Home after an invocation 
+     * Called by the EJB(Local)Object/EJB(Local)Home after an invocation
      * on a bean.
      */
     void postInvoke(EjbInvocation inv);
@@ -201,20 +201,20 @@ public interface Container {
      * @param primaryKey the value returned from ejbCreate.
      */
     void postCreate(EjbInvocation inv, Object primaryKey)
-	throws CreateException;
+    throws CreateException;
 
     /**
      * Called by the EJB(Local)Home after invoking ejbFind* on an EntityBean.
-     * @param primaryKeys the primaryKey or collection of primaryKeys 
+     * @param primaryKeys the primaryKey or collection of primaryKeys
      *        (Collection/Enumeration) returned from ejbFind.
      * @param findParams the parameters to the ejbFind method.
      * @return an EJBObject reference or Collection/Enumeration of EJBObjects.
      */
     Object postFind(EjbInvocation inv, Object primaryKeys, Object[] findParams)
-	throws FinderException;
-   
+    throws FinderException;
+
     /**
-     * @return the EjbDescriptor containing deployment information 
+     * @return the EjbDescriptor containing deployment information
      * for the EJB type corresponding to this Container instance.
      */
     EjbDescriptor getEjbDescriptor();
@@ -235,7 +235,7 @@ public interface Container {
     EJBHome getEJBHome();
 
     /**
-     * @return A SecurityManager object for this container. 
+     * @return A SecurityManager object for this container.
      */
     com.sun.enterprise.security.SecurityManager getSecurityManager();
 
@@ -264,28 +264,28 @@ public interface Container {
      */
     void startApplication(boolean deploy);
 
-    /** 
+    /**
      * Called from EJB JarManager when an application is undeployed.
      */
     void undeploy();
 
-    /**  
+    /**
      * Called when server instance is Ready
      */
     void onReady();
 
-    /** 
+    /**
      * Called when server instance is shuting down
      */
     void onShutdown();
 
-    /** 
+    /**
      * Called when server instance is terminating. This method is the last
      * one called during server shutdown.
      */
     void onTermination();
 
-    /** 
+    /**
      * Called from NamingManagerImpl during java:comp/env lookup.
      */
     String getComponentId();
@@ -304,7 +304,7 @@ public interface Container {
      void setStoppedState();
 
     /**
-     * Stop servicing invocations for EJB instances in this Container as the 
+     * Stop servicing invocations for EJB instances in this Container as the
      * container is being undeployed.
      * No new EJB invocations will be accepted from now on.
      * Invocations already in progress will be allowed to complete eventually.
@@ -313,7 +313,7 @@ public interface Container {
 
     /**
      * Used by EjbInvocation during JACC EnterpriseBean policy handler request
-     * for target EnterpriseBean instance.  
+     * for target EnterpriseBean instance.
      *
      * @return EnterpriseBean instance or null if not applicable for this
      *         invocation.

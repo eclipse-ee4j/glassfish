@@ -23,11 +23,11 @@ package test.beans;
 //into session scoped or conversation scoped bean
 public class TestDependentScopedBean {
     private static int instantiationCounter = 0;
-    
+
     public TestDependentScopedBean(){
         instantiationCounter++;
     }
-    
+
     public int getInstancesCount(){
         return this.instantiationCounter;
     }

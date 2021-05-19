@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6057385");
 
@@ -57,7 +57,7 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         String url = "http://" + host + ":" + port + contextRoot
                     + "/TestServlet?param1=value1&param2=value2&param3=value3";
         HttpURLConnection conn = (HttpURLConnection)
@@ -66,7 +66,7 @@ public class WebTest {
         int code = conn.getResponseCode();
         if (code != 200) {
             throw new Exception("Unexpected return code: " + code);
-        } 
+        }
 
         InputStream is = null;
         BufferedReader input = null;
@@ -93,6 +93,6 @@ public class WebTest {
             } catch (IOException ioe) {
                 // ignore
             }
-        }    
+        }
     }
 }

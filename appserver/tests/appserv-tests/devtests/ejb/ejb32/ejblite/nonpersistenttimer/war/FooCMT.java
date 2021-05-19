@@ -30,7 +30,7 @@ public class FooCMT extends TimerStuffImpl implements Foo {
         try {
             System.out.println("In FooCMT::Timeout --> " + t.getInfo());
             if (t.isPersistent())
-                throw new RuntimeException("FooCMT::Timeout -> " 
+                throw new RuntimeException("FooCMT::Timeout -> "
                        + t.getInfo() + " is PERSISTENT!!!");
         } catch(RuntimeException e) {
             System.out.println("got exception while calling getInfo");
@@ -50,7 +50,7 @@ public class FooCMT extends TimerStuffImpl implements Foo {
 
     @PostConstruct
     private void init() throws EJBException {
-	System.out.println("In ejblite.timer.Foo::init !!");
+        System.out.println("In ejblite.timer.Foo::init !!");
         setContext(sc);
         getTimerService("init", true);
         doTimerStuff("init", false);

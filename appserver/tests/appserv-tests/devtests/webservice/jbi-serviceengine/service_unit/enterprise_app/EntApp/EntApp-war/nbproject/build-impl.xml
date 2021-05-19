@@ -662,7 +662,7 @@
     </target>
     <target name="javadoc" depends="init,javadoc-build,javadoc-browse" description="Build Javadoc."/>
     <!--
-                
+
                 JUNIT COMPILATION SECTION
             -->
     <target name="-pre-pre-compile-test" if="have.tests" depends="init,compile">
@@ -704,7 +704,7 @@
     </target>
     <target name="compile-test-single" depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single,-do-compile-test-single,-post-compile-test-single"/>
     <!--
-                
+
                 JUNIT EXECUTION SECTION
             -->
     <target name="-pre-test-run" if="have.tests" depends="init">
@@ -731,7 +731,7 @@
     </target>
     <target name="test-single" depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single,-post-test-run-single" description="Run single unit test."/>
     <!--
-                
+
                 JUNIT DEBUGGING SECTION
             -->
     <target name="-debug-start-debuggee-test" if="have.tests" depends="init,compile-test">
@@ -747,7 +747,7 @@
     </target>
     <target name="debug-fix-test" if="netbeans.home" depends="init,-pre-debug-fix,-do-debug-fix-test"/>
     <!--
-                
+
                 CLEANUP SECTION
             -->
     <target name="deps-clean" depends="init" if="no.dist.ear.dir" unless="no.deps">

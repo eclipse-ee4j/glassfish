@@ -120,7 +120,7 @@
 </target>
 
 <target name="deleteCluster">
-    <!-- stop-cluster does not work so use stop-instance to make sure 
+    <!-- stop-cluster does not work so use stop-instance to make sure
          instance is stopped before deleting it -->
     <echo message="Running... asadmin stop-instance"/>
     <exec executable="${ASADMIN}">
@@ -163,8 +163,8 @@
 <!--
   On Windows, ant hangs when it runs an asadmin command that starts a process.
   To work around that, this task distinguishes between Windows and non-Windows
-  systems and uses a custom ant task for Windows. 
-  
+  systems and uses a custom ant task for Windows.
+
   Any test that needs to start a process should NOT use ${ASADMIN} directly
   but should call this start-process target instead.  Pass the command line
   to be run as <param name="line" value="..."/>.
@@ -182,7 +182,7 @@
       <isset property="start-target"/>
     </not>
   </condition>
-  
+
   <!--
     Invoke the target just chosen.
   -->
@@ -209,7 +209,7 @@
 </target>
 
 <!--
-  For non-Windows systems, ant works fine when invoking asadmin to start a 
+  For non-Windows systems, ant works fine when invoking asadmin to start a
   process, so do it that way for those systems.
 -->
 <target name="start-process-non-windows" depends="init-common">

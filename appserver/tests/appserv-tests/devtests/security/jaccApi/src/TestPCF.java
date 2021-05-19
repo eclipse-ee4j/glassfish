@@ -32,17 +32,17 @@ public class TestPCF {
         stat.addDescription(testSuite);
         String description = null;
         boolean expectACException =
-            (args != null && args.length > 0) ? 
+            (args != null && args.length > 0) ?
             Boolean.parseBoolean(args[0]) : true;
-        String expectedException = 
+        String expectedException =
             (args != null && args.length > 1) ? args[1] : null;
         System.out.println("expect AccessControlException: " + expectACException);
         System.out.println("expected Exception: " + expectedException);
-        
+
         description = testSuite + "-" + expectACException + "-" +
             expectedException + " without SecurityManager";
         try {
-            PolicyConfigurationFactory f = 
+            PolicyConfigurationFactory f =
                 PolicyConfigurationFactory.getPolicyConfigurationFactory();
             stat.addStatus(description, stat.PASS);
         } catch(Exception ex) {
@@ -64,7 +64,7 @@ public class TestPCF {
         description = testSuite + "-" + expectACException + "-" +
             expectedException + " with SecurityManager";
         try {
-            PolicyConfigurationFactory f = 
+            PolicyConfigurationFactory f =
                 PolicyConfigurationFactory.getPolicyConfigurationFactory();
             stat.addStatus(description, stat.PASS);
         } catch(AccessControlException ace) {

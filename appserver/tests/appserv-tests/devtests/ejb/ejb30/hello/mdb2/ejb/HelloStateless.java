@@ -38,9 +38,9 @@ import jakarta.ejb.EJBException;
         if( !initialized ) {
             throw new EJBException("not initialized");
         }
-        
+
         System.out.println("HelloStateless: " + s);
-        timerSvc.createTimer(1, "quick timer"); 
+        timerSvc.createTimer(1, "quick timer");
         System.out.println("Created quick timer");
     }
 

@@ -597,7 +597,7 @@ public class ClusterHandler {
             }
         }
      }
-    
+
     @Handler(id="gf.getClusterForConfig",
             input={
                 @HandlerInput(name="configName", type=String.class, required=true)
@@ -609,14 +609,14 @@ public class ClusterHandler {
         String configName = (String)handlerCtx.getInputValue("configName");
         String clusterName = null;
         Domain domain = GuiUtil.getHabitat().getService(Domain.class);
-        
+
         for (Cluster cluster: domain.getClusters().getCluster()) {
             if (cluster.getConfigRef().equals(configName)) {
                 clusterName = cluster.getName();
                 break;
             }
         }
-        
+
         if (clusterName != null) {
             handlerCtx.setOutputValue("cluster", clusterName);
         } else {

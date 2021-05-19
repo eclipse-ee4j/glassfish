@@ -39,7 +39,7 @@ import jakarta.inject.Inject;
 
 /**
  * List Connector Connection Pools command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @Service(name="list-connector-connection-pools")
@@ -49,20 +49,20 @@ import jakarta.inject.Inject;
 @I18n("list.connector.connection.pools")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-connector-connection-pools", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-connector-connection-pools",
         description="list-admin-objects")
 })
 public class ListConnectorConnectionPools implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListConnectorConnectionPools.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListConnectorConnectionPools.class);
 
     @Inject
     private Domain domain;
 
     @Param(primary = true, optional = true, alias = "targetName", obsolete = true)
     private String target ;
-    
+
 
     /**
      * Executes the command with the command parameters passed as Properties

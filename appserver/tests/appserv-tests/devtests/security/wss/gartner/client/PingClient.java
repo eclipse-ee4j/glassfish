@@ -41,7 +41,7 @@ public class PingClient {
 
             ((BindingProvider)pingEjbPort).getRequestContext().put(
                 BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://" + host + ":" + port + 
+                "http://" + host + ":" + port +
                 "/PingEjbService/PingEjb?WSDL");
 
             String result = pingEjbPort.ping("Hello");
@@ -60,7 +60,7 @@ public class PingClient {
 
             ((BindingProvider)pingServletPort).getRequestContext().put(
                 BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-                "http://" + host + ":" + port + 
+                "http://" + host + ":" + port +
                 "/security-wss-gartner-web/PingServletService?WSDL");
 
             String result = pingServletPort.ping("Hello");

@@ -19,5 +19,5 @@ package org.glassfish.persistence.ejb.entitybean.container.distributed;
 public interface DistributedEJBService {
 
     public DistributedReadOnlyBeanService getDistributedReadOnlyBeanService();
-    
-} //DistributedEJBService.java 
+
+} //DistributedEJBService.java

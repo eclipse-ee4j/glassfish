@@ -34,7 +34,7 @@ public class NamingEntry {
     public static final int ENTRY = 0;
     public static final int LINK_REF = 1;
     public static final int REFERENCE = 2;
-    
+
     public static final int CONTEXT = 10;
 
 

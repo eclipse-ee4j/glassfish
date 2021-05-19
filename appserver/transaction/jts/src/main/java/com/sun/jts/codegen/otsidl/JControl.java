@@ -26,6 +26,6 @@ package com.sun.jts.codegen.otsidl;
 
 
 //#-----------------------------------------------------------------------------
-public interface JControl extends JControlOperations, org.omg.CosTransactions.Control, org.omg.CORBA.portable.IDLEntity 
+public interface JControl extends JControlOperations, org.omg.CosTransactions.Control, org.omg.CORBA.portable.IDLEntity
 {
 } // interface JControl

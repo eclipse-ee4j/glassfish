@@ -33,7 +33,7 @@ import java.util.logging.Level;
  * to the sniffer, the container itself and the list of applications deployed in
  * that container.
  *
- * @author Jerome Dochez 
+ * @author Jerome Dochez
  */
 public class EngineInfo<T extends Container, U extends ApplicationContainer> {
 
@@ -81,7 +81,7 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer> {
 
     /**
      * Sets the deployer associated with this container
-     * 
+     *
      * @param deployer
      */
     public void setDeployer(Deployer<T, U> deployer) {
@@ -115,14 +115,14 @@ public class EngineInfo<T extends Container, U extends ApplicationContainer> {
                 i.destroy();
             }
         }
-        
+
         if (container != null && container.isActive()) {
             container.destroy();
         }
-        
+
         registry.removeContainer(this);
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Container " + getContainer().getName() + " stopped");
         }
-    }    
+    }
 }

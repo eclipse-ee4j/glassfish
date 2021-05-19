@@ -135,8 +135,8 @@ public class ReplicationStore extends HAStoreBase {
         BackingStore<String, SimpleMetadata> replicator = getSimpleMetadataBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
             _logger.fine("ReplicationStore>>doValveSave replicator: " + replicator);
-            _logger.fine("ReplicationStore>>doValveSave version:" + session.getVersion());                       
-        }        
+            _logger.fine("ReplicationStore>>doValveSave version:" + session.getVersion());
+        }
         SimpleMetadata simpleMetadata =
             SimpleMetadataFactory.createSimpleMetadata(session.getVersion(),  //version
                 session.getLastAccessedTime(), //lastaccesstime
@@ -183,7 +183,7 @@ public class ReplicationStore extends HAStoreBase {
         } catch (BackingStoreException e) {
 
         } catch (LifecycleException le) {
-         
+
         }
 
     }
@@ -275,15 +275,15 @@ public class ReplicationStore extends HAStoreBase {
         }
         BackingStore<String, ? extends Storeable> replicator = getStoreableBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationStore>>doRemove: replicator: " + replicator);                       
-        }        
+            _logger.fine("ReplicationStore>>doRemove: replicator: " + replicator);
+        }
         try {
             replicator.remove(id);
         } catch (BackingStoreException ex) {
             _logger.log(Level.WARNING, LogFacade.EXCEPTION_REMOVING_SYNCHRONIZED, ex);
         }
-    }     
-    
+    }
+
     /**
     * Remove the Session with the specified session identifier from
     * this Store, if present.  If no such Session is present, this method
@@ -295,19 +295,19 @@ public class ReplicationStore extends HAStoreBase {
     */
     public synchronized void removeSynchronized(String id) throws IOException  {
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationStore>>removeSynchronized");                       
+            _logger.fine("ReplicationStore>>removeSynchronized");
         }
         BackingStore<String, ? extends Storeable> replicator = getStoreableBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationStore>>removeSynchronized: replicator: " + replicator);                       
-        }        
+            _logger.fine("ReplicationStore>>removeSynchronized: replicator: " + replicator);
+        }
         try {
             replicator.remove(id);
         } catch (BackingStoreException ex) {
             _logger.log(Level.WARNING, LogFacade.EXCEPTION_REMOVING_SYNCHRONIZED, ex);
         }
     }
-    
+
 
     /**
      * Called by our background reaper thread to remove expired
@@ -315,14 +315,14 @@ public class ReplicationStore extends HAStoreBase {
      * instance - i.e. each instance will do its own
      *
      */
-    public void processExpires() {        
+    public void processExpires() {
         removeExpiredSessions();
     }
-    
+
     /** This method deletes all the sessions corresponding to the "appId"
      * that should be expired
      * @return number of removed sessions
-     */    
+     */
     public int removeExpiredSessions() {
         if(_logger.isLoggable(Level.FINE)) {
             _logger.fine("IN ReplicationStore>>removeExpiredSessions");
@@ -345,8 +345,8 @@ public class ReplicationStore extends HAStoreBase {
         }
         return result;
 
-    }       
-    
+    }
+
 
     /**
     * Load and return the Session associated with the specified session
@@ -360,8 +360,8 @@ public class ReplicationStore extends HAStoreBase {
     */
     public Session load(String id) throws ClassNotFoundException, IOException {
         return load(id, null);
-    }    
-    
+    }
+
     public Session load(String id, String version) throws ClassNotFoundException, IOException {
         try {
                 return loadFromBackingStore(id, version);
@@ -413,7 +413,7 @@ public class ReplicationStore extends HAStoreBase {
      * @param session Session to be saved
      *
      * @exception IOException if an input/output error occurs
-     */    
+     */
     public void updateLastAccessTime(Session session) throws IOException {
 
         if (!(session instanceof BaseHASession)) {
@@ -421,45 +421,45 @@ public class ReplicationStore extends HAStoreBase {
         }
         BackingStore<String, ? extends Storeable> backingStore = getStoreableBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationStore>>updateLastAccessTime: replicator: " + backingStore);                       
-        }         
+            _logger.fine("ReplicationStore>>updateLastAccessTime: replicator: " + backingStore);
+        }
         try {
             String time = backingStore.updateTimestamp(session.getIdInternal(), ""+session.getVersion(),
                     ((BaseHASession)session).getLastAccessedTimeInternal());
         } catch (BackingStoreException ex) {
             //FIXME
         }
-    }        
-    
+    }
+
     /**
     * Return an array containing the session identifiers of all Sessions
     * currently saved in this Store.  If there are no such Sessions, a
     * zero-length array is returned.
     *
     * @exception IOException if an input/output error occurred
-    */  
+    */
     public String[] keys() throws IOException  {
         //FIXME
         return new String[0];
     }
-    
+
     public int getSize() throws IOException {
         int result = 0;
         BackingStore<String, ? extends Storeable> replicator = getStoreableBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationStore>>getSize: replicator: " + replicator);                       
-        }         
+            _logger.fine("ReplicationStore>>getSize: replicator: " + replicator);
+        }
         try {
             result = replicator.size();
         } catch (BackingStoreException ex) {
             if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Exception is getSize",ex);    
+                _logger.log(Level.FINE, "Exception is getSize",ex);
             }
 
         }
         return result;
-    }    
-    
+    }
+
     // Store methods end
 
     private Session getSession(SimpleMetadata metaData) throws IOException {
@@ -476,7 +476,7 @@ public class ReplicationStore extends HAStoreBase {
         Session _session = null;
         InputStream is;
         BufferedInputStream bis;
-        ByteArrayInputStream bais;    
+        ByteArrayInputStream bais;
         ObjectInputStream ois = null;
         Loader loader = null;
         ClassLoader classLoader = null;
@@ -490,8 +490,8 @@ public class ReplicationStore extends HAStoreBase {
                 is = new GZIPInputStream(bis);
             } else {
                 is = bis;
-            }            
-            
+            }
+
 
             if(_logger.isLoggable(Level.FINEST)) {
                 _logger.finest("loaded session from replicationstore, length = "+state.length);
@@ -499,7 +499,7 @@ public class ReplicationStore extends HAStoreBase {
 
             loader = container.getLoader();
             if (loader !=null) {
-                classLoader = loader.getClassLoader(); 
+                classLoader = loader.getClassLoader();
             }
 
             if (classLoader != null) {
@@ -509,14 +509,14 @@ public class ReplicationStore extends HAStoreBase {
                     _logger.log(Level.WARNING, LogFacade.ERROR_CREATING_INPUT_STREAM, ex);
                 }
             }
-            
+
 
             if (ois == null) {
                 ois = new ObjectInputStream(is);
             }
             try {
                 _session = readSession(manager, ois);
-            } 
+            }
             finally {
                 if (ois != null) {
                     try {
@@ -541,33 +541,33 @@ public class ReplicationStore extends HAStoreBase {
         }
         String username = ((HASession)_session).getUserName();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationStore>>getSession: username=" + username + " principal=" + _session.getPrincipal());                                  
-        }        
+            _logger.fine("ReplicationStore>>getSession: username=" + username + " principal=" + _session.getPrincipal());
+        }
         if((username !=null) && (!username.equals("")) && _session.getPrincipal() == null) {
             if (_debug > 0) {
                 debug("Username retrieved is "+username);
             }
             pal = ((com.sun.web.security.RealmAdapter)container.getRealm()).createFailOveredPrincipal(username);
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.fine("ReplicationStore>>getSession:created pal=" + pal);                                  
-            }             
+                _logger.fine("ReplicationStore>>getSession:created pal=" + pal);
+            }
             if (_debug > 0) {
                 debug("principal created using username  "+pal);
             }
             if(pal != null) {
                 _session.setPrincipal(pal);
                 if (_debug > 0) {
-                    debug("getSession principal="+pal+" was added to session="+_session); 
-                }                
+                    debug("getSession principal="+pal+" was added to session="+_session);
+                }
             }
         }
-        //--SRI        
-        
+        //--SRI
+
         _session.setNew(false);
 
         ((HASession)_session).setVersion(version);
         ((HASession)_session).setDirty(false);
-        ((HASession)_session).setPersistent(false);        
+        ((HASession)_session).setPersistent(false);
         return _session;
-    }    
+    }
 }

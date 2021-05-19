@@ -90,7 +90,7 @@ public class SecureAdminClientManager {
     /**
      * Returns KeyManagers which access the SSL key store for use in performing client cert authentication. The returned
      * KeyManagers will most likely be passed to {@link SSLContext.init }.
-     * 
+     *
      * @return KeyManagers
      */
     public static KeyManager[] getKeyManagers() {

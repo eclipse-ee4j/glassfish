@@ -23,28 +23,26 @@
 //
 // Product:     com.sun.jts.CosTransactions
 //
-// Author: Simon Holdsworth 
+// Author: Simon Holdsworth
 //
-// Date:        March, 1997 
+// Date:        March, 1997
 //----------------------------------------------------------------------------
 
 package com.sun.jts.CosTransactions;
 
-// Import required classes.
-
-import java.io.*;
-import java.util.*;
-
-import org.omg.CosTransactions.*;
-import org.omg.PortableServer.*;
-
-import com.sun.jts.trace.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
-
 import com.sun.enterprise.transaction.api.TransactionConstants;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+// Import required classes.
+import java.io.File;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CosTransactions.TransactionFactory;
+import org.omg.PortableServer.POA;
 
 /**Provides interaction with the execution environment.
  *
@@ -89,13 +87,13 @@ public class Configuration extends Object {
    (Related class: com.sun.jts.trace.TraceUtil)
    - kannan.srinivasan@Sun.COM 27Nov2001
 */
-	
-	/*
-		Logger to log transaction messages
-	*/
-	static Logger _logger = LogDomains.getLogger(Configuration.class, LogDomains.TRANSACTION_LOGGER);
 
-   private static boolean traceOn = false;
+    /*
+        Logger to log transaction messages
+     */
+    static Logger _logger = LogDomains.getLogger(Configuration.class, LogDomains.TRANSACTION_LOGGER);
+
+    private static boolean traceOn = false;
 
    /**The property key used to specify the directory to which trace files and the
      * error log should be written.
@@ -233,7 +231,6 @@ public class Configuration extends Object {
      *
      * @return  The directory name.
      *
-     * @see
      */
     public static String getDirectory( String envDir,
                                        String defaultSubdirectory,
@@ -250,8 +247,8 @@ public class Configuration extends Object {
 
         result[0] = DIRECTORY_OK;
 
-        if( envValue == null || envValue.length() == 0 ||
-            (new File(envValue).exists() && !new File(envValue).isDirectory()) ) {
+        if (envValue == null || envValue.length() == 0
+            || (new File(envValue).exists() && !new File(envValue).isDirectory())) {
             result[0] = DEFAULT_USED;
 
             // If the default subdirectory is not valid, then use the current directory.
@@ -261,68 +258,63 @@ public class Configuration extends Object {
                 result[0] = DEFAULT_INVALID;
             }
         }
-	if(_logger.isLoggable(Level.FINE))
-	{
-		String dirType="";
-		switch(result[0]){
-		case DEFAULT_INVALID:
-			dirType="used default, but is invalid";
-			break;
-		case DEFAULT_USED :
-			dirType="used default";
-			break;
-		case DIRECTORY_OK:
-			dirType="provided in configuration";
-			break;
-		default:
-			dirType="invalid type";
-			break;
-		}
-		_logger.logp(Level.FINE,"Configuration","getDirectory()",
-				"Using directory = " + envValue + " : "+dirType);
-	}
+        if (_logger.isLoggable(Level.FINE)) {
+            String dirType = "";
+            switch (result[0]) {
+                case DEFAULT_INVALID:
+                    dirType = "used default, but is invalid";
+                    break;
+                case DEFAULT_USED:
+                    dirType = "used default";
+                    break;
+                case DIRECTORY_OK:
+                    dirType = "provided in configuration";
+                    break;
+                default:
+                    dirType = "invalid type";
+                    break;
+            }
+            _logger.logp(Level.FINE, "Configuration", "getDirectory()",
+                "Using directory = " + envValue + " : " + dirType);
+        }
 
         return envValue;
     }
 
-    /**Sets the name of the server.
+
+    /**
+     * Sets the name of the server.
      *
-     * @param name  The server name.  Non-recoverable servers have null.
-     *
-     * @return
-     *
-     * @see
+     * @param name The server name. Non-recoverable servers have null.
      */
     public static final void setServerName( String name, boolean recoverableServer ) {
 
         // Store the server name.
 
         serverName = name;
-	      serverNameByteArray = (name == null) ? null : serverName.getBytes();
+          serverNameByteArray = (name == null) ? null : serverName.getBytes();
         recoverable = recoverableServer;
         if(recoverable) {
             RecoveryManager.createRecoveryFile(serverName);
         }
 
         if(_logger.isLoggable(Level.FINE)) {
-	    _logger.logp(Level.FINE,"Configuration" ,"setServerName()",
-		    " serverName = " + serverName + "; isRecoverable = " + recoverable);
+        _logger.logp(Level.FINE,"Configuration" ,"setServerName()",
+            " serverName = " + serverName + "; isRecoverable = " + recoverable);
         }
     }
 
-    /**Returns the name of the server.
+
+    /**
+     * Returns the name of the server.
      * <p>
      * Non-recoverable servers may not have a name, in which case the method returns
      * null.
      *
      * @param
-     *
-     * @return  The server name.
-     *
-     * @see
+     * @return The server name.
      */
     public static final String getServerName() {
-
         // Determine the server name.
 
         String result = serverName;
@@ -330,128 +322,109 @@ public class Configuration extends Object {
         return result;
     }
 
-    /**Sets the name of the server for the given log path. Added for delegated
+
+    /**
+     * Sets the name of the server for the given log path. Added for delegated
      * recovery support.
      *
-     * @param logPath  Location, where the logs are stored.
-     *
-     * @param name  The server name.
-     *
-     * @return
-     *
-     * @see
+     * @param logPath Location, where the logs are stored.
+     * @param name The server name.
      */
     public static final void setServerName(String logPath, String name) {
         logPathToServernametable.put(logPath, name);
     }
 
-    /**Returns the name of the server for the given log path. Added for delegated
-     *recovery support.
+
+    /**
+     * Returns the name of the server for the given log path. Added for delegated
+     * recovery support.
      *
      * @param logPath location of the log files.
-     *
-     * @return  The server name.
-     *
-     * @see
+     * @return The server name.
      */
     public static final String getServerName(String logPath) {
-        return (String)logPathToServernametable.get(logPath);
+        return (String) logPathToServernametable.get(logPath);
     }
 
-    /**Returns a byte array with the name of the server.
+
+    /**
+     * Returns a byte array with the name of the server.
      * <p>
      * Non-recoverable servers may not have a name, in which case the method returns
      * null.
      *
      * @param
-     *
-     * @return  The server name (byte array).
-     *
-     * @see
+     * @return The server name (byte array).
      */
-    public static final byte [] getServerNameByteArray() {
-
+    public static final byte[] getServerNameByteArray() {
         // Determine the server name.
-
-        byte [] result = serverNameByteArray;
-
+        byte[] result = serverNameByteArray;
         return result;
     }
 
-    /**Sets the Properties object to be used for this JTS instance.
+
+    /**
+     * Sets the Properties object to be used for this JTS instance.
      *
-     * @param prop  The Properties.
-     *
-     * @return
-     *
-     * @see
+     * @param prop The Properties.
      */
-    public static final void setProperties( Properties newProp ) {
-
+    public static final void setProperties(Properties newProp) {
         // Store the Properties object.
-        if (prop == null)
+        if (prop == null) {
             prop = newProp;
-        else if (newProp != null)
+        } else if (newProp != null) {
             prop.putAll(newProp);
+        }
 
-	if(_logger.isLoggable(Level.FINE)) {
-	      String propertiesList = LogFormatter.convertPropsToString(prop);			   
-         _logger.logp(Level.FINE,"Configuration","setProperties()",
-		 		" Properties set are :"+ propertiesList);
+        if (_logger.isLoggable(Level.FINE)) {
+            String propertiesList = LogFormatter.convertPropsToString(prop);
+            _logger.logp(Level.FINE, "Configuration", "setProperties()", " Properties set are :" + propertiesList);
         }
         if (prop != null) {
             dbLogResource = prop.getProperty(DB_LOG_RESOURCE);
             String retryLimit = prop.getProperty(COMMIT_RETRY);
             int retriesInMinutes;
             if (retryLimit != null) {
-               retriesInMinutes = Integer.parseInt(retryLimit,10);
-               if ((retriesInMinutes % (COMMIT_RETRY_WAIT / 1000)) == 0)
-                   retries = (int)(retriesInMinutes / (COMMIT_RETRY_WAIT / 1000));
-               else
-                   retries = ((int)((retriesInMinutes / (COMMIT_RETRY_WAIT / 1000)))) + 1;
+                retriesInMinutes = Integer.parseInt(retryLimit, 10);
+                if ((retriesInMinutes % (COMMIT_RETRY_WAIT / 1000)) == 0) {
+                    retries = (int) (retriesInMinutes / (COMMIT_RETRY_WAIT / 1000));
+                } else {
+                    retries = ((int) ((retriesInMinutes / (COMMIT_RETRY_WAIT / 1000)))) + 1;
+                }
             }
         }
 
     }
 
-    /**Returns the value of the given variable.
-     *
-     * @param envValue  The environment variable required.
-     *
-     * @return  The value.
-     *
-     * @see
-     */
-    public static final String getPropertyValue( String envValue ) {
 
+    /**
+     * Returns the value of the given variable.
+     *
+     * @param envValue The environment variable required.
+     * @return The value.
+     */
+    public static final String getPropertyValue(String envValue) {
         // Get the environment variable value.
 
         String result = null;
-        if( prop != null )
-		{
+        if (prop != null) {
             result = prop.getProperty(envValue);
-		    if(_logger.isLoggable(Level.FINE))
-            {
-				_logger.log(Level.FINE,"Property :"+ envValue +
-						" has the value : " + result);
+            if (_logger.isLoggable(Level.FINE)) {
+                _logger.log(Level.FINE, "Property :" + envValue + " has the value : " + result);
 
             }
-		}
+        }
 
         return result;
     }
 
 
-    /**Sets the identity of the ORB.
+    /**
+     * Sets the identity of the ORB.
      *
-     * @param newORB  The ORB.
-     *
-     * @return
-     *
-     * @see
+     * @param newORB The ORB.
      */
-    public static final void setORB( org.omg.CORBA.ORB newORB ) {
-
+    public static final void setORB(org.omg.CORBA.ORB newORB) {
         // Store the ORB identity.
 
         orb = newORB;
@@ -459,38 +432,27 @@ public class Configuration extends Object {
     }
 
 
-    /**Returns the identity of the ORB.
+    /**
+     * Returns the identity of the ORB.
      *
      * @param
-     *
-     * @return  The ORB.
-     *
-     * @see
+     * @return The ORB.
      */
     public static final org.omg.CORBA.ORB getORB() {
-
-
         // Return the ORB identity.
-
 
         return orb;
     }
 
 
-    /**Sets the identity of the TransactionFactory and indicates if it is local
+    /**
+     * Sets the identity of the TransactionFactory and indicates if it is local
      * or remote.
      *
-     * @param newFactory  The TransactionFactory.
-     *
+     * @param newFactory The TransactionFactory.
      * @param localFactory Indicates if the factory is local or remote.
-     *
-     * @return
-     *
-     * @see
      */
-    public static final void setFactory( TransactionFactory newFactory,
-                                              boolean localTxFactory ) {
-
+    public static final void setFactory(TransactionFactory newFactory, boolean localTxFactory) {
         // Store the factory identity and if it is local or not.
 
         factory = newFactory;
@@ -498,31 +460,26 @@ public class Configuration extends Object {
     }
 
 
-    /**Returns the identity of the TransactionFactory.
+    /**
+     * Returns the identity of the TransactionFactory.
      *
      * @param
-     *
-     * @return  The TransactionFactory.
-     *
-     * @see
+     * @return The TransactionFactory.
      */
     public static final TransactionFactory getFactory() {
-
         // Return the TransactionFactory identity.
 
         return factory;
     }
 
-    /**Determines whether we hava a local factory or a remote factory.
+
+    /**
+     * Determines whether we hava a local factory or a remote factory.
      *
      * @param
-     *
-     * @return  Indicates whether we have a local factory.
-     *
-     * @see
+     * @return Indicates whether we have a local factory.
      */
     public static final boolean isLocalFactory() {
-
         // This is a local factory if localFactory is TRUE
 
         boolean result = localFactory;
@@ -530,63 +487,52 @@ public class Configuration extends Object {
         return result;
     }
 
-     /**Determines whether the JTS instance is recoverable.
+
+    /**
+     * Determines whether the JTS instance is recoverable.
      *
      * @param
-     *
-     * @return  Indicates whether the JTS is recoverable.
-     *
-     * @see
+     * @return Indicates whether the JTS is recoverable.
      */
     public static final boolean isRecoverable() {
-
         // This JTS is recoverable if recoverable is set to TRUE.
 
         boolean result = recoverable;
 
         return result;
     }
-    /**Sets the identity of the ProxyChecker.
+
+
+    /**
+     * Sets the identity of the ProxyChecker.
      *
-     * @param newChecker  The new ProxyChecker.
-     *
-     * @return
-     *
-     * @see
+     * @param newChecker The new ProxyChecker.
      */
-    public static final void setProxyChecker( ProxyChecker newChecker ) {
-
-
+    public static final void setProxyChecker(ProxyChecker newChecker) {
         // Store the checker identity.
 
         checker = newChecker;
 
     }
 
-    /**Returns the identity of the ProxyChecker.
+
+    /**
+     * Returns the identity of the ProxyChecker.
      *
      * @param
-     *
-     * @return  The ProxyChecker.
-     *
-     * @see
+     * @return The ProxyChecker.
      */
     public static final ProxyChecker getProxyChecker() {
         return checker;
     }
 
 
-    /**Sets the identity of the log file for the process.
+    /**
+     * Sets the identity of the log file for the process.
      *
-     * @param logFile  The new LogFile object.
-     *
-     * @return
-     *
-     * @see
+     * @param newLogFile The new LogFile object.
      */
-    public static final void setLogFile( LogFile newLogFile ) {
-
-
+    public static final void setLogFile(LogFile newLogFile) {
         // Store the logFile identity.
 
         logFile = newLogFile;
@@ -594,73 +540,63 @@ public class Configuration extends Object {
     }
 
 
-    /**Returns the identity of the LogFile for the process.
+    /**
+     * Returns the identity of the LogFile for the process.
      *
      * @param
-     *
-     * @return  The LogFile.
-     *
-     * @see
+     * @return The LogFile.
      */
     public static final LogFile getLogFile() {
         return logFile;
     }
 
-    /**Sets the log file for the given log path. For delegated recovery support.
+
+    /**
+     * Sets the log file for the given log path. For delegated recovery support.
      *
-     * @param logPath  The new LogFile object.
-     *
-     * @param newLogFile  The new LogFile object.
-     *
-     * @return
-     *
-     * @see
+     * @param logPath The new LogFile object.
+     * @param newLogFile The new LogFile object.
      */
     public static final void setLogFile(String logPath, LogFile newLogFile) {
         logPathToFiletable.put(logPath, newLogFile);
     }
-    /**Returns the LogFile for the given log path. For delegated recovery support.
+
+
+    /**
+     * Returns the LogFile for the given log path. For delegated recovery support.
      *
      * @param logPath log location.
-     *
-     * @return  The LogFile.
-     *
-     * @see
+     * @return The LogFile.
      */
     public static final LogFile getLogFile(String logPath) {
-        if (logPath == null) return null;
-        return (LogFile)logPathToFiletable.get(logPath);
+        if (logPath == null)
+            return null;
+        return (LogFile) logPathToFiletable.get(logPath);
     }
 
 
-    /**Sets the identity of the POA to be used for the given types of object.
+    /**
+     * Sets the identity of the POA to be used for the given types of object.
      *
-     * @param type  The type of objects to use the POA.
-     * @param POA   The POA object.
-     *
-     * @return
-     *
-     * @see
+     * @param type The type of objects to use the POA.
+     * @param poa The POA object.
      */
-    public static final void setPOA( String type, POA poa ) {
+    public static final void setPOA(String type, POA poa) {
         // Store the mapping.
 
-        poas.put(type,poa);
+        poas.put(type, poa);
 
     }
 
 
-    /**Returns the identity of the POA to be used for the given type of objects.
+    /**
+     * Returns the identity of the POA to be used for the given type of objects.
      *
-     * @param type  The type of objects
-     *
-     * @return  The POA.
-     *
-     * @see
+     * @param type The type of objects
+     * @return The POA.
      */
-    public static final POA getPOA( String type ) {
-
-        POA result = (POA)poas.get(type);
+    public static final POA getPOA(String type) {
+        POA result = (POA) poas.get(type);
 
         return result;
     }
@@ -673,36 +609,38 @@ public class Configuration extends Object {
 
     public static final void enableTrace() {
 
-	traceOn = true;
+        traceOn = true;
 
     }
 
     public static final void disableTrace() {
 
-	traceOn = false;
+        traceOn = false;
 
     }
+
 
     // START IASRI 4662745
-    public static void setKeypointTrigger(int keypoint)
-    {
+    public static void setKeypointTrigger(int keypoint) {
         CoordinatorLogPool.getCoordinatorLog().setKeypointTrigger(keypoint);
     }
-    public static void setCommitRetryVar(String commitRetryString)
-    {
+
+
+    public static void setCommitRetryVar(String commitRetryString) {
         // RegisteredResources.setCommitRetryVar(commitRetryString);
         if (commitRetryString != null) {
             int retriesInMinutes = Integer.parseInt(commitRetryString,10);
-            if ((retriesInMinutes % (COMMIT_RETRY_WAIT / 1000)) == 0)
-                   retries = (int)(retriesInMinutes / (COMMIT_RETRY_WAIT / 1000));
-            else
+            if ((retriesInMinutes % (COMMIT_RETRY_WAIT / 1000)) == 0) {
+                retries = (int)(retriesInMinutes / (COMMIT_RETRY_WAIT / 1000));
+            } else {
                 retries = ((int)(retriesInMinutes / (COMMIT_RETRY_WAIT / 1000))) + 1;
+            }
 
         }
     }
     // END IASRI 4662745
     public static int getRetries() {
-       return retries;
+        return retries;
     }
 
     public static void setAsAppClientConatiner(boolean value) {
@@ -713,16 +651,16 @@ public class Configuration extends Object {
         return isAppClient;
     }
 
-   public static boolean isDBLoggingEnabled() {
-       return (dbLogResource != null);
-   }
-   
-   public static void disableFileLogging() {
-       disableFileLogging = true;
-   }
- 
-   public static boolean isFileLoggingDisabled() {
-       return disableFileLogging;
-   }
+    public static boolean isDBLoggingEnabled() {
+        return (dbLogResource != null);
+    }
+
+    public static void disableFileLogging() {
+        disableFileLogging = true;
+    }
+
+    public static boolean isFileLoggingDisabled() {
+        return disableFileLogging;
+    }
 
 }

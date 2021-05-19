@@ -30,8 +30,8 @@ public class Client extends HttpServlet {
  @WebServiceRef(name="ignoredName", mappedName="MyMappedName", wsdlLocation="http://HTTP_HOST:HTTP_PORT/mappedname/HelloService?WSDL")
         HelloService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

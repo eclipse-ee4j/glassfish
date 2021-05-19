@@ -18,22 +18,22 @@ package com.sun.enterprise.universal.i18n;
 
 /**
  * This class makes getting localized strings super-simple.  All methods are static.
- * The reason is that that makes it much simpler to use -- you never need to create an 
- * instance and store it.  You simply call one of the 2 methods directly.  However, 
+ * The reason is that that makes it much simpler to use -- you never need to create an
+ * instance and store it.  You simply call one of the 2 methods directly.  However,
  * there is a performance penalty for this convenience.  This class has to figure out
  * what package your calling code is in (every time).  My reasoning is that the emitting
  * of log messages tends to be much less frequent than other normal processing steps.
  * If performance is an issue -- use an instance of LocalStringsImpl.
  * <p>Specifics:
  * <ul>
- *    <li>Your calling code should have a file named LocalStrings.properties in its 
+ *    <li>Your calling code should have a file named LocalStrings.properties in its
  * package directory.
  *    <li>If your localized string has no arguments call get(String) to get the localized
  *    String value.
  *    <li>If you have a parameterized string, call get(String, Object...)
  * </ul>
  * <p>Note: <b>You can not get an Exception out of calling this code!</b>  If the String
- * or the properties file does not exist, it will return the String that you gave 
+ * or the properties file does not exist, it will return the String that you gave
  * in the first place as the argument.
  * <p>Examples:
  * <ul>
@@ -41,9 +41,9 @@ package com.sun.enterprise.universal.i18n;
  * <li>String s = LocalStrings.get("xyz", new Date(), 500, "something", 2.00003);
  * <li>String s = LocalStrings.get("xyz", "something", "foo", "whatever");
  * </ul>
- * 
- * 
- * 
+ *
+ *
+ *
  * @author bnevins
  */
 public class LocalStrings {
@@ -83,7 +83,7 @@ public class LocalStrings {
     /**
      * Get an integer from the caller's package's LocalStrings.properties
      * @param indexString The string index into the localized string file
-     * @return the integer value from LocalStrings or the supplied default if 
+     * @return the integer value from LocalStrings or the supplied default if
      * it doesn't exist or is bad.
      */
     public static int getInt(String indexString, int defaultValue) {
@@ -93,7 +93,7 @@ public class LocalStrings {
     /**
      * Get a boolean from the caller's package's LocalStrings.properties
      * @param indexString The string index into the localized string file
-     * @return the integer value from LocalStrings or the supplied default if 
+     * @return the integer value from LocalStrings or the supplied default if
      * it doesn't exist or is bad.
      */
     public boolean getBoolean(String indexString, boolean defaultValue) {

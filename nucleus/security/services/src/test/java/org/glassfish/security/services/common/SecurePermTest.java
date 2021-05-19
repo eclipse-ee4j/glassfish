@@ -26,86 +26,86 @@ import org.junit.Test;
 
 public class SecurePermTest {
 
-	@Before
-	public void setUp() throws Exception {
-	}
+    @Before
+    public void setUp() throws Exception {
+    }
 
-	@After
-	public void tearDown() throws Exception {
-	}
+    @After
+    public void tearDown() throws Exception {
+    }
 
-	@Test
-	public void testEqualsObject() {
-		
+    @Test
+    public void testEqualsObject() {
 
-		Permission perm1 = new SecureServiceAccessPermission("a/b/c", "read,write");
-		
-		Permission perm2 = new SecureServiceAccessPermission("a/b/c/d", "read,write");
-		Assert.assertFalse(perm1.equals(perm2));
-		
-		Permission p3 = null;
-		Assert.assertFalse(perm1.equals(p3));
-		
 
-		Permission p5 = new SecureServiceAccessPermission("a/b/c");
-		Assert.assertFalse(perm1.equals(p5));
-	}
+        Permission perm1 = new SecureServiceAccessPermission("a/b/c", "read,write");
 
-	@Test
-	public void testEquals1() {
-		Permission p1 = new SecureServiceAccessPermission("a/b/c", "read,write");
-		Permission p2 = new SecureServiceAccessPermission("a/b/c/", "read,write");
-		Assert.assertFalse(p1.equals(p2));
-		Assert.assertFalse(p1.implies(p2));
-		
-	}
-	
-	@Test
-	public void testImpliesPermission() {
-		Permission p1 = new SecureServiceAccessPermission("a", "read");
-		Permission p2 = new SecureServiceAccessPermission("b", "read");
-		Assert.assertFalse(p1.implies(p2));
-		
-		Permission p3 = new SecureServiceAccessPermission("a", "read,write");
-		Assert.assertTrue(p3.implies(p1));
-	}
+        Permission perm2 = new SecureServiceAccessPermission("a/b/c/d", "read,write");
+        Assert.assertFalse(perm1.equals(perm2));
 
-	@Test
-	public void testImpliesWild() {
-		Permission p1 = new SecureServiceAccessPermission("a/*", "read");
-		
-		Permission p2 = new SecureServiceAccessPermission("a/b", "read");
-		Assert.assertTrue(p1.implies(p2));
-		
-		Permission p3 = new SecureServiceAccessPermission("a/b/c", "read");
-		Assert.assertTrue(p1.implies(p3));
-		
-		
-		Permission p11 = new SecureServiceAccessPermission("a/b/*", "read");
-		Assert.assertTrue(p11.implies(p3));
-		
-		Assert.assertFalse(p11.implies(p1));
-		Assert.assertFalse(p11.implies(p2));
-		
-		Assert.assertTrue(p11.implies(p11));
-	}
+        Permission p3 = null;
+        Assert.assertFalse(perm1.equals(p3));
 
-   @Test
+
+        Permission p5 = new SecureServiceAccessPermission("a/b/c");
+        Assert.assertFalse(perm1.equals(p5));
+    }
+
+    @Test
+    public void testEquals1() {
+        Permission p1 = new SecureServiceAccessPermission("a/b/c", "read,write");
+        Permission p2 = new SecureServiceAccessPermission("a/b/c/", "read,write");
+        Assert.assertFalse(p1.equals(p2));
+        Assert.assertFalse(p1.implies(p2));
+
+    }
+
+    @Test
+    public void testImpliesPermission() {
+        Permission p1 = new SecureServiceAccessPermission("a", "read");
+        Permission p2 = new SecureServiceAccessPermission("b", "read");
+        Assert.assertFalse(p1.implies(p2));
+
+        Permission p3 = new SecureServiceAccessPermission("a", "read,write");
+        Assert.assertTrue(p3.implies(p1));
+    }
+
+    @Test
+    public void testImpliesWild() {
+        Permission p1 = new SecureServiceAccessPermission("a/*", "read");
+
+        Permission p2 = new SecureServiceAccessPermission("a/b", "read");
+        Assert.assertTrue(p1.implies(p2));
+
+        Permission p3 = new SecureServiceAccessPermission("a/b/c", "read");
+        Assert.assertTrue(p1.implies(p3));
+
+
+        Permission p11 = new SecureServiceAccessPermission("a/b/*", "read");
+        Assert.assertTrue(p11.implies(p3));
+
+        Assert.assertFalse(p11.implies(p1));
+        Assert.assertFalse(p11.implies(p2));
+
+        Assert.assertTrue(p11.implies(p11));
+    }
+
+    @Test
     public void testImpliesWild1() {
         Permission p1 = new SecureServiceAccessPermission("a/*", null);
         Permission p2 = new SecureServiceAccessPermission("a/default", null);
         Assert.assertTrue(p1.implies(p2));
-   }
-	
-	@Test
-	public void testImpliesActions() {
-		Permission p1 = new SecureServiceAccessPermission("a", "read,write");
-		Permission p2 = new SecureServiceAccessPermission("a", "read");
-		Assert.assertTrue(p1.implies(p2));
-		
-		Permission p3 = new SecureServiceAccessPermission("a", "write");
-		Assert.assertTrue(p1.implies(p3));
-	}
+    }
+
+    @Test
+    public void testImpliesActions() {
+        Permission p1 = new SecureServiceAccessPermission("a", "read,write");
+        Permission p2 = new SecureServiceAccessPermission("a", "read");
+        Assert.assertTrue(p1.implies(p2));
+
+        Permission p3 = new SecureServiceAccessPermission("a", "write");
+        Assert.assertTrue(p1.implies(p3));
+    }
 
 
 }

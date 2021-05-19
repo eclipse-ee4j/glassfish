@@ -46,10 +46,10 @@ public class PortableExtensionBeanManagerTestServlet extends HttpServlet {
     @Inject
     @Preferred
     TestBean tb;
-    
+
     @Inject
     BeanManager bm;
-    
+
     String msg = "";
 
 
@@ -73,34 +73,34 @@ public class PortableExtensionBeanManagerTestServlet extends HttpServlet {
                     + TransactionInterceptor.aroundInvokeInvocationCount;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
-        
+
         //check if our portable extension was called
         if (!MyExtension.beforeBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-            		"beforeBeanDiscovery not called";
+                            "beforeBeanDiscovery not called";
 
         if (!MyExtension.afterBeanDiscoveryCalled)
             msg += "Portable Extension lifecycle observer method: " +
-            		"afterBeanDiscovery not called or injection of BeanManager " +
-            		"in an observer method failed";
-        
+                            "afterBeanDiscovery not called or injection of BeanManager " +
+                            "in an observer method failed";
+
         if (!MyExtension.processAnnotatedTypeCalled)
             msg += "Portable Extension lifecycle observer method: process " +
-            		"annotated type not called";
+                            "annotated type not called";
 
         //BeanManager lookup
         if (bm == null)
             msg += "Injection of BeanManager into servlet failed";
-        
+
         try {
             BeanManager bm1 = (BeanManager) (new InitialContext()).lookup("java:comp/BeanManager");
-            if (bm1 == null) 
+            if (bm1 == null)
                 msg += "lookup of BeanManager via component context failed";
         } catch (NamingException e) {
             e.printStackTrace();
             msg += "NamingException during lookup of BeanManager via component context";
         }
-        
+
         //Using BeanManager
         check((bm.getBeans("test_named_bean").size() == 1), "Invalid number of Named Beans");
         check((bm.getBeans("duplicate_test_bean").size() == 0), "Invalid number of Duplicate Test Beans");

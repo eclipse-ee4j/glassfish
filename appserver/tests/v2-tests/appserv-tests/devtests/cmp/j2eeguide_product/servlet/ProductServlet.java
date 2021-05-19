@@ -40,15 +40,15 @@ public class ProductServlet extends HttpServlet {
       out.println("<body>");
 
        try {
-					
-	   InitialContext ic = new InitialContext();
 
-	   System.out.println("looking up java:comp/env/ejb/MyProduct");
+           InitialContext ic = new InitialContext();
+
+           System.out.println("looking up java:comp/env/ejb/MyProduct");
            Object objref = ic.lookup("java:comp/env/ejb/MyProduct");
            System.out.println("lookup ok");
 
-           ProductHome home = 
-               (ProductHome)PortableRemoteObject.narrow(objref, 
+           ProductHome home =
+               (ProductHome)PortableRemoteObject.narrow(objref,
                                             ProductHome.class);
 
            Product duke = home.create("123", "Ceramic Dog", 10.00);
@@ -71,7 +71,7 @@ public class ProductServlet extends HttpServlet {
               Product product = (Product)i.next();
               String productId = (String)product.getPrimaryKey();
               String description = product.getDescription();
-              double price = product.getPrice(); 
+              double price = product.getPrice();
               out.println("<BR>" + productId + ": " + description + " " + price);
            }
 
@@ -81,7 +81,7 @@ public class ProductServlet extends HttpServlet {
            while (i.hasNext()) {
               Product product = (Product)i.next();
               String productId = (String)product.getPrimaryKey();
-              double price = product.getPrice(); 
+              double price = product.getPrice();
               out.println("<BR>" + productId + ": " + price);
            }
 
@@ -94,4 +94,4 @@ public class ProductServlet extends HttpServlet {
       out.println("</html>");
    }
 
-} 
+}

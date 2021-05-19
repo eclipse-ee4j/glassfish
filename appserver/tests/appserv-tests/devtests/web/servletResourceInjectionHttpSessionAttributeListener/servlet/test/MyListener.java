@@ -51,7 +51,7 @@ public class MyListener implements HttpSessionAttributeListener {
 
         HttpSession session = hsbe.getSession();
         ServletContext sc = session.getServletContext();
-    
+
         try {
 
             int loginTimeout = ds1.getLoginTimeout();

@@ -10,6 +10,7 @@ target/
 nbactions.xml
 nb-configuration.xml
 .classpath
+.checkstyle
 .DS_Store
 .project
 .settings/

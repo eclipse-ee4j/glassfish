@@ -18,7 +18,6 @@ package com.sun.jndi.ldap.ctl;
 
 import java.io.IOException;
 import javax.naming.ldap.BasicControl;
-import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerEncoder;
 
 /**
@@ -77,7 +76,6 @@ import com.sun.jndi.ldap.BerEncoder;
  * @see AuthorizationIDControl
  * @see com.sun.jndi.ldap.ext.WhoAmIRequest
  */
-
 public class ProxiedAuthorizationControl extends BasicControl {
 
     private static final long serialVersionUID = 552016610613918389L;
@@ -89,27 +87,27 @@ public class ProxiedAuthorizationControl extends BasicControl {
     public static final String OID = "2.16.840.1.113730.3.4.18";
 
     /**
-     * Constructs a control to perform an operation using the supplied 
+     * Constructs a control to perform an operation using the supplied
      * authorization identity. The control is always marked critical.
      *
      * @param authzId A non null authorization identity to use. authzId
-     *		      must be set to an empty string if anonymous identity
-     *		      is to be used.
+     *              must be set to an empty string if anonymous identity
+     *              is to be used.
      * @exception IOException If a BER encoding error occurs.
      */
     public ProxiedAuthorizationControl(String authzId) throws IOException {
-	super(OID, true, null);  
-	value = setEncodedValue(authzId);
+        super(OID, true, null);
+        value = setEncodedValue(authzId);
     }
 
-    /*
+    /**
      * Encodes the control's value using ASN.1 BER.
-     * The result includes the BER tag and length for the control's value but 
+     * The result includes the BER tag and length for the control's value but
      * does not include the control's object identifer and criticality setting.
      *
      * @param authzId The authorization identity to use.
      * @return A byte array representing the ASN.1 BER encoded value of the
-     *	       LDAP control.
+     *           LDAP control.
      * @exception IOException If a BER encoding error occurs.
      */
     private static byte[] setEncodedValue(String authzId) throws IOException {

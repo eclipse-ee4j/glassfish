@@ -29,10 +29,10 @@ import org.apache.catalina.LifecycleException;
  *
  * @author Larry White
  */
-public interface ReplicationReceiver { 
-    
+public interface ReplicationReceiver {
+
     public void init();
 
     public void stop() throws LifecycleException;
-    
+
 }

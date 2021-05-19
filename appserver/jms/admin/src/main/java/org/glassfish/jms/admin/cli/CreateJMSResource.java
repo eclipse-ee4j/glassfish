@@ -42,7 +42,6 @@ import java.util.Properties;
 
 /**
  * Create JMS Resource Command
- *
  */
 @Service(name="create-jms-resource")
 @PerLookup
@@ -51,8 +50,8 @@ import java.util.Properties;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.DOMAIN})
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-jms-resource", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-jms-resource",
         description="create-jms-resource")
 })
 public class CreateJMSResource implements AdminCommand {
@@ -112,11 +111,12 @@ public class CreateJMSResource implements AdminCommand {
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         //Collection connPools = domain.getResources().getResources(ConnectorConnectionPool.class);
-         if (resourceType == null) {
+        if (resourceType == null) {
             report.setMessage(localStrings.getLocalString("create.jms.resource.noResourceType",
                             "No Resoruce Type specified for JMS Resource."));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -130,7 +130,8 @@ public class CreateJMSResource implements AdminCommand {
             return;
         }
 
-        if (!(resourceType.equals(TOPIC_CF) || resourceType.equals(QUEUE_CF) || resourceType.equals(UNIFIED_CF) || resourceType.equals(TOPIC)  || resourceType.equals(QUEUE))) {
+        if (!(resourceType.equals(TOPIC_CF) || resourceType.equals(QUEUE_CF) || resourceType.equals(UNIFIED_CF)
+            || resourceType.equals(TOPIC) || resourceType.equals(QUEUE))) {
              report.setMessage(localStrings.getLocalString("create.jms.resource.InvalidResourceType",
                             "Invalid Resource Type specified for JMS Resource."));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -142,10 +143,11 @@ public class CreateJMSResource implements AdminCommand {
 
         if (force) {
             Resource res = null;
-            if (resourceType.equals(TOPIC) || resourceType.equals(QUEUE))
+            if (resourceType.equals(TOPIC) || resourceType.equals(QUEUE)) {
                 res = ConnectorsUtil.getResourceByName(domain.getResources(), AdminObjectResource.class, jndiName);
-            else
+            } else {
                 res = ConnectorsUtil.getResourceByName(domain.getResources(), ConnectorResource.class, jndiName);
+            }
 
             if (res != null) {
                 ActionReport deleteReport = report.addSubActionsReport();
@@ -170,122 +172,120 @@ public class CreateJMSResource implements AdminCommand {
             while (en.hasMoreElements()) {
                 String key = (String) en.nextElement();
                 String raKey = getMappedName(key);
-                if (raKey == null) raKey = key;
-                props.put(raKey, (String) props.get(key));
-                if(! raKey.equals(key))
+                if (raKey == null) {
+                    raKey = key;
+                }
+                props.put(raKey, props.get(key));
+                if (!raKey.equals(key)) {
                     props.remove(key);
+                }
             }
-         }
+        }
 
         ActionReport subReport = report.addSubActionsReport();
 
-      if (resourceType.equals(TOPIC_CF) || resourceType.equals(QUEUE_CF) || resourceType.equals(UNIFIED_CF)) {
-          ConnectorConnectionPool cpool = (ConnectorConnectionPool) ConnectorsUtil.getResourceByName(
-                  domain.getResources(), ConnectorConnectionPool.class, jndiNameForConnectionPool);
+        if (resourceType.equals(TOPIC_CF) || resourceType.equals(QUEUE_CF) || resourceType.equals(UNIFIED_CF)) {
+            ConnectorConnectionPool cpool = (ConnectorConnectionPool) ConnectorsUtil
+                .getResourceByName(domain.getResources(), ConnectorConnectionPool.class, jndiNameForConnectionPool);
 
-          boolean createdPool = false;
-           // If pool is already existing, do not try to create it again
-          if (cpool == null || ! filterForTarget (jndiNameForConnectionPool)) {
+            boolean createdPool = false;
+            // If pool is already existing, do not try to create it again
+            if (cpool == null || ! filterForTarget (jndiNameForConnectionPool)) {
                 // Add connector-connection-pool.
-              ParameterMap parameters = populateConnectionPoolParameters();
-	          commandRunner.getCommandInvocation("create-connector-connection-pool", subReport, context.getSubject()).parameters(parameters).execute();
-              createdPool= true;
-              if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
+                ParameterMap parameters = populateConnectionPoolParameters();
+                commandRunner.getCommandInvocation("create-connector-connection-pool", subReport, context.getSubject()).parameters(parameters).execute();
+                createdPool= true;
+                if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())) {
                     report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateConnectionPool",
-                            "Unable to create connection pool."));
+                        "Unable to create connection pool."));
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     return;
-              }
-          }
-              ParameterMap params = populateConnectionResourceParameters();
-	          commandRunner.getCommandInvocation("create-connector-resource", subReport, context.getSubject()).parameters(params).execute();
+                }
+            }
+            ParameterMap params = populateConnectionResourceParameters();
+            commandRunner.getCommandInvocation("create-connector-resource", subReport, context.getSubject()).parameters(params).execute();
 
-              if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
-                    report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateConnectorResource",
-                            "Unable to create connection resource."));
-                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())) {
+                report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateConnectorResource",
+                    "Unable to create connection resource."));
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
 
                 //rollback the connection pool ONLY if we created it...
-                  if (createdPool) {
-                      ParameterMap paramsForRollback = new ParameterMap();
-                      paramsForRollback.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
-                      commandRunner.getCommandInvocation("delete-connector-connection-pool", subReport, context.getSubject())
-                              .parameters(paramsForRollback)
-                              .execute();   
-                  }
-                  return;
-              }
-      } else if (resourceType.equals(TOPIC) ||
-                    resourceType.equals(QUEUE))
-            {
-                ParameterMap aoAttrList = new ParameterMap();
-                try{
-                 //validate the provided properties and modify it if required.
-                    Properties properties =  validateDestinationResourceProps(props, jndiName);
-                    //aoAttrList.put("property", properties);
-                    StringBuilder builder = new StringBuilder();
-                    for (java.util.Map.Entry<Object, Object>prop : properties.entrySet()) {
-                        builder.append(prop.getKey()).append("=").append(prop.getValue()).append(":");
-                    }
-                    String propString = builder.toString();
-                    int lastColonIndex = propString.lastIndexOf(":");
-                    if (lastColonIndex >= 0) {
-                        propString = propString.substring(0, lastColonIndex);
-                    }
-                    aoAttrList.set("property", propString);
-                }catch (Exception e)
-                {
-                    report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateAdminObjectWithRootCause",
-                            "Unable to create admin object. Reason: " + e.getMessage(), e.getMessage()));
-                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    return;
+                if (createdPool) {
+                    ParameterMap paramsForRollback = new ParameterMap();
+                    paramsForRollback.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
+                    commandRunner.getCommandInvocation("delete-connector-connection-pool", subReport, context.getSubject())
+                    .parameters(paramsForRollback)
+                    .execute();
                 }
-                // create admin object
-                aoAttrList.set(DEFAULT_OPERAND,  jndiName);
-                aoAttrList.set("restype",  resourceType);
-                aoAttrList.set("raname",  DEFAULT_JMS_ADAPTER);
-                aoAttrList.set("target", target);
-                if(enabled!=null)
-                    aoAttrList.set("enabled", Boolean.toString(enabled));
-
-	            commandRunner.getCommandInvocation("create-admin-object", subReport, context.getSubject()).parameters(aoAttrList).execute();
-
-                if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
-                    report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateAdminObject",
-                            "Unable to create admin object."));
-                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    return;
+                return;
+            }
+        } else if (resourceType.equals(TOPIC) || resourceType.equals(QUEUE)) {
+            ParameterMap aoAttrList = new ParameterMap();
+            try {
+                //validate the provided properties and modify it if required.
+                Properties properties =  validateDestinationResourceProps(props, jndiName);
+                //aoAttrList.put("property", properties);
+                StringBuilder builder = new StringBuilder();
+                for (java.util.Map.Entry<Object, Object>prop : properties.entrySet()) {
+                    builder.append(prop.getKey()).append("=").append(prop.getValue()).append(":");
                 }
-
+                String propString = builder.toString();
+                int lastColonIndex = propString.lastIndexOf(":");
+                if (lastColonIndex >= 0) {
+                    propString = propString.substring(0, lastColonIndex);
+                }
+                aoAttrList.set("property", propString);
+            } catch (Exception e) {
+                report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateAdminObjectWithRootCause",
+                    "Unable to create admin object. Reason: " + e.getMessage(), e.getMessage()));
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                return;
+            }
+            // create admin object
+            aoAttrList.set(DEFAULT_OPERAND,  jndiName);
+            aoAttrList.set("restype",  resourceType);
+            aoAttrList.set("raname",  DEFAULT_JMS_ADAPTER);
+            aoAttrList.set("target", target);
+            if (enabled != null) {
+                aoAttrList.set("enabled", Boolean.toString(enabled));
             }
 
-        ActionReport.ExitCode ec = ActionReport.ExitCode.SUCCESS;
+            commandRunner.getCommandInvocation("create-admin-object", subReport, context.getSubject()).parameters(aoAttrList).execute();
 
+            if (ActionReport.ExitCode.FAILURE.equals(subReport.getActionExitCode())){
+                report.setMessage(localStrings.getLocalString("create.jms.resource.cannotCreateAdminObject",
+                    "Unable to create admin object."));
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                return;
+            }
+        }
+
+        ActionReport.ExitCode ec = ActionReport.ExitCode.SUCCESS;
         report.setActionExitCode(ec);
     }
 
     private boolean filterForTarget(String jndiName){
-        //List<String> resourceList = new ArrayList();
-         if (target != null){
-             List<ResourceRef> resourceRefs = null;
-             Cluster cluster = domain.getClusterNamed(target);
-             if (cluster != null)
-                      resourceRefs=  cluster.getResourceRef();
-
-             else {
-                  Server server = domain.getServerNamed(target);
-                  if (server != null)
-                      resourceRefs = server.getResourceRef();
-
-             }
-             if (resourceRefs != null && resourceRefs.size() != 0){
-
-                  for (ResourceRef resource : resourceRefs)
-                     if(jndiName.equalsIgnoreCase(resource.getRef()))
-                           return true;
-                  }
-
+        // List<String> resourceList = new ArrayList();
+        if (target != null) {
+            List<ResourceRef> resourceRefs = null;
+            Cluster cluster = domain.getClusterNamed(target);
+            if (cluster != null) {
+                resourceRefs = cluster.getResourceRef();
+            } else {
+                Server server = domain.getServerNamed(target);
+                if (server != null) {
+                    resourceRefs = server.getResourceRef();
+                }
             }
+            if (resourceRefs != null && resourceRefs.size() != 0) {
+                for (ResourceRef resource : resourceRefs) {
+                    if (jndiName.equalsIgnoreCase(resource.getRef())) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 
@@ -308,73 +308,71 @@ public class CreateJMSResource implements AdminCommand {
 
     private ParameterMap populateConnectionPoolParameters(){
 
-            String steadyPoolSize = null;
-            String maxPoolSize = null;
-            String poolResizeQuantity = null;
-            String idleTimeoutInSecs = null;
-            String maxWaitTimeInMillis = null;
-	        String failAllConnections = null;
-	        String transactionSupport = null;
-            ParameterMap parameters = new ParameterMap();
+        String steadyPoolSize = null;
+        String maxPoolSize = null;
+        String poolResizeQuantity = null;
+        String idleTimeoutInSecs = null;
+        String maxWaitTimeInMillis = null;
+        String failAllConnections = null;
+        String transactionSupport = null;
+        ParameterMap parameters = new ParameterMap();
 
-            if(props != null){
+        if (props != null) {
             Enumeration keys =  props.keys();
             Properties tmpProps = new Properties();
 
-            while(keys.hasMoreElements())
-            {
+            while (keys.hasMoreElements()) {
                 String propKey = (String) keys.nextElement();
 
-                if ("steady-pool-size".equals(propKey))
+                if ("steady-pool-size".equals(propKey)) {
                     steadyPoolSize = props.getProperty(propKey);
-                else if ("max-pool-size".equals(propKey))
+                } else if ("max-pool-size".equals(propKey)) {
                     maxPoolSize = props.getProperty(propKey);
-                else if ("pool-resize-quantity".equals(propKey))
+                } else if ("pool-resize-quantity".equals(propKey)) {
                     poolResizeQuantity = props.getProperty(propKey);
-                else if ("idle-timeout-in-seconds".equals(propKey))
+                } else if ("idle-timeout-in-seconds".equals(propKey)) {
                     idleTimeoutInSecs = props.getProperty(propKey);
-                else if ("max-wait-time-in-millis".equals(propKey))
+                } else if ("max-wait-time-in-millis".equals(propKey)) {
                     maxWaitTimeInMillis = props.getProperty(propKey);
-		        else if ("transaction-support".equals(propKey))
-		            transactionSupport = props.getProperty(propKey);
-		        else if("fail-all-connections".equals(propKey))
-		            failAllConnections = props.getProperty(propKey);
-                else{
-                    if ("AddressList".equals(propKey)){
+                } else if ("transaction-support".equals(propKey)) {
+                    transactionSupport = props.getProperty(propKey);
+                } else if("fail-all-connections".equals(propKey)) {
+                    failAllConnections = props.getProperty(propKey);
+                } else{
+                    if ("AddressList".equals(propKey)) {
                         String addressListProp = props.getProperty(propKey);
-                        props.setProperty(propKey, "\""+ addressListProp + "\"");
-                    }
-
-                    else if ("Password".equals(propKey)){
+                        props.setProperty(propKey, "\"" + addressListProp + "\"");
+                    } else if ("Password".equals(propKey)){
                         String password = props.getProperty(propKey);
-                        if (isPasswordAlias(password))
+                        if (isPasswordAlias(password)) {
                             //If the string is a password alias, it needs to be escapted with another pair of quotes...
                             props.setProperty(propKey, "\"" + password + "\"");
+                        }
                     }
 
                     tmpProps.setProperty(propKey, props.getProperty(propKey));
                 }
             }
-               if (tmpProps.size() >0)
-               {
-                    StringBuilder builder = new StringBuilder();
-                    for (java.util.Map.Entry<Object, Object>prop : tmpProps.entrySet()) {
-                        builder.append(prop.getKey()).append("=").append(prop.getValue()).append(":");
-                    }
-                    String propString = builder.toString();
-                    int lastColonIndex = propString.lastIndexOf(":");
-                    if (lastColonIndex >= 0) {
-                        propString = propString.substring(0, lastColonIndex);
-                    }
-                    parameters.set("property", propString);
-               }
-         }
+            if (tmpProps.size() > 0) {
+                StringBuilder builder = new StringBuilder();
+                for (java.util.Map.Entry<Object, Object>prop : tmpProps.entrySet()) {
+                    builder.append(prop.getKey()).append("=").append(prop.getValue()).append(":");
+                }
+                String propString = builder.toString();
+                int lastColonIndex = propString.lastIndexOf(":");
+                if (lastColonIndex >= 0) {
+                    propString = propString.substring(0, lastColonIndex);
+                }
+                parameters.set("property", propString);
+            }
+        }
         //parameters.set("restype", resourceType);
-		parameters.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
+        parameters.set(DEFAULT_OPERAND, jndiNameForConnectionPool);
         parameters.set("poolname", jndiName);
 
-        if(description != null)
+        if (description != null) {
             parameters.set("description", description);
+        }
 
         // Get the default res adapter name from Connector-runtime
         String raName = DEFAULT_JMS_ADAPTER;
@@ -384,14 +382,14 @@ public class CreateJMSResource implements AdminCommand {
         parameters.set("maxpoolsize",  (maxPoolSize == null) ? "250" : maxPoolSize);
         parameters.set("steadypoolsize", (steadyPoolSize == null) ? "1" : steadyPoolSize);
         if (poolResizeQuantity != null) {
-             parameters.set("poolresize", poolResizeQuantity);
+            parameters.set("poolresize", poolResizeQuantity);
         }
-         if (idleTimeoutInSecs != null) {
-             parameters.set("idletimeout", idleTimeoutInSecs);
+        if (idleTimeoutInSecs != null) {
+            parameters.set("idletimeout", idleTimeoutInSecs);
         }
 
         if (maxWaitTimeInMillis != null) {
-             parameters.set("maxwait", maxWaitTimeInMillis);
+            parameters.set("maxwait", maxWaitTimeInMillis);
         }
 
         if (failAllConnections != null) {
@@ -403,59 +401,61 @@ public class CreateJMSResource implements AdminCommand {
 
         return parameters;
     }
+
     private boolean isPasswordAlias(String password){
-        if (password != null && password.startsWith("${ALIAS="))
+        if (password != null && password.startsWith("${ALIAS=")) {
             return true;
+        }
 
         return false;
     }
 
-    private ParameterMap populateConnectionResourceParameters()
-    {
+    private ParameterMap populateConnectionResourceParameters() {
         ParameterMap parameters = new ParameterMap();
         parameters.set("jndi_name", jndiName);
         parameters.set(DEFAULT_OPERAND, jndiName);
         parameters.set("enabled", Boolean.toString(enabled));
         parameters.set("poolname", jndiNameForConnectionPool);
         parameters.set("target", target);
-        if(description != null)
+        if (description != null) {
             parameters.set("description", description);
+        }
 
         return parameters;
     }
 
-       /**
+   /**
      * Validates the properties specified for a Destination Resource
      * and returns a validated Properties list.
      *
      * NOTE: When "Name" property has not been specified by the user,
      * the properties object is updated with a computed Name.
      */
-    private Properties validateDestinationResourceProps(Properties props,
-    		String jndiName) throws Exception {
+   private Properties validateDestinationResourceProps(Properties props, String jndiName) throws Exception {
         String providedDestinationName = null;
-        if(props != null)
-             providedDestinationName = getProvidedDestinationName(props);
-        else
+        if (props != null) {
+            providedDestinationName = getProvidedDestinationName(props);
+        } else {
             props = new Properties();
-        //sLogger.fine("provided destination name =  "	+ providedDestinationName);
+        }
+        //sLogger.fine("provided destination name =  "    + providedDestinationName);
         if (providedDestinationName != null) {
-        	//check validity of provided JMS destination name
+            //check validity of provided JMS destination name
             if (!isSyntaxValid(providedDestinationName)) {
                 throw new Exception(localStrings.getLocalString(
                       "admin.mbeans.rmb.destination_name_invalid",
-                      "Destination Resource " + jndiName + 
+                      "Destination Resource " + jndiName +
                       " has an invalid destination name " + providedDestinationName,
                       jndiName, providedDestinationName));
             }
-	} else {
+        } else {
             //compute a valid destination name from the JNDI name.
             String newDestName = computeDestinationName(jndiName);
             //sLogger.log(Level.WARNING, "admin.mbeans.rmb.destination_name_missing",new Object[]{jndiName, newDestName});
             props.put(NAME, newDestName);
             //sLogger.fine("Computed destination name" + newDestName  + " and updated props");
         }
-    	return props;
+        return props;
     }
 
     /**
@@ -468,12 +468,15 @@ public class CreateJMSResource implements AdminCommand {
             String key = (String)e.nextElement();
             String value = (String)props.get(key);
             if(NAME.equals(key) || IMQ_DESTINATION_NAME.equals(key)){
-                if (value != null && value.length() != 0) return value;
+                if (value != null && value.length() != 0) {
+                    return value;
+                }
             }
         }
         return null;
     }
-  //Modified this method to support wildcards in MQ destinations...
+
+    //Modified this method to support wildcards in MQ destinations...
     private boolean isSyntaxValid(String name) {
         if (name.startsWith("mq.")) {
             return false;
@@ -481,15 +484,16 @@ public class CreateJMSResource implements AdminCommand {
 
         try {
             CharsetEncoder asciiEncoder = Charset.forName("US-ASCII").newEncoder();
-            if (!asciiEncoder.canEncode(name))
+            if (!asciiEncoder.canEncode(name)) {
                 return false;
+            }
         } catch (Exception e) {
             // skip detecting non ASCII charactors if error occurs
         }
 
         char[] namechars = name.toCharArray();
         if (Character.isJavaIdentifierStart(namechars[0]) || namechars[0] == '*' || namechars[0] == '>') {
-            for (int i = 1; i<namechars.length; i++) {
+            for (int i = 1; i < namechars.length; i++) {
                 if (!Character.isJavaIdentifierPart(namechars[i]) && ! (namechars[i] == '.' || namechars[i] == '*' || namechars[i] == '>')) {
                     return false;
                 }
@@ -508,33 +512,12 @@ public class CreateJMSResource implements AdminCommand {
      * an 'underscore'.
      */
     private String computeDestinationName(String providedJndiName) {
-    	char[] jndiName = providedJndiName.toCharArray();
+        char[] jndiName = providedJndiName.toCharArray();
         char[] finalName = new char[jndiName.length];
         finalName[0] = Character.isJavaIdentifierStart(jndiName[0]) ? jndiName[0] : '_';
         for (int i = 1; i < jndiName.length; i++) {
-        	finalName[i] = Character.isJavaIdentifierPart(jndiName[i])? jndiName[i] : '_';
+            finalName[i] = Character.isJavaIdentifierPart(jndiName[i])? jndiName[i] : '_';
         }
         return new String(finalName);
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

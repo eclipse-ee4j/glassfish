@@ -24,8 +24,8 @@ public class ModifyReport{
         if(args.length != 1){
             mf.usage();
             System.exit(0);
-        }            
-        String tobeAdded = 
+        }
+        String tobeAdded =
         "<tr> \n"+
         "<td colspan=3 align=center> <font color=RED> <b> Expected Results </b> </font> </td> \n"+
          "</tr>\n"+
@@ -88,14 +88,14 @@ public class ModifyReport{
          "<tr> \n"+
          "<td>  sqetests/transaction/txglobal </td> \n"+
          "<td> </td> \n"+
-         "<td> [Total :1]</td>\n"+         
+         "<td> [Total :1]</td>\n"+
          "</tr>\n"+
          "<tr> \n"+
          "<td>  sqetests/security </td>\n"+
          "<td> </td> \n"+
          "<td> [Total :1]</td>\n"+
          "</tr>\n"+
- */         
+ */
         mf.modifyFile(args[0], tobeAdded);
     }
 
@@ -106,25 +106,25 @@ public class ModifyReport{
         String tag = "</TABLE>";
         int breakPoint = -1 ;
         int c;
-        try{       
+        try{
             File inputfile = new File(filename);
             BufferedReader in = new BufferedReader(new FileReader(inputfile));
-	    //System.out.println("Reading original file...");
-            while ((fileline = in.readLine()) != null){            
+            //System.out.println("Reading original file...");
+            while ((fileline = in.readLine()) != null){
                 filedata.append(fileline);
-            }            
-	    //System.out.println("Finished Reading file. ");
-	    //System.out.println("Closing input stream...");
+            }
+            //System.out.println("Finished Reading file. ");
+            //System.out.println("Closing input stream...");
             in.close();
-	    //System.out.println("filedata:\n\n"+filedata);
+            //System.out.println("filedata:\n\n"+filedata);
             // find index of first </TABLE> tag
             // insert new string at the index.
-	    //System.out.println("breakPoint:"+breakPoint);
+            //System.out.println("breakPoint:"+breakPoint);
             breakPoint=filedata.indexOf(tag);
             if(breakPoint != -1){
                 filedata.insert(breakPoint, tobeAdded);
                 fileContent = filedata.toString();
-		//System.out.println("string inserted");
+                //System.out.println("string inserted");
             } else {
                 System.out.println("specified tag: "+tag+" was not found in the report");
             }
@@ -138,7 +138,7 @@ public class ModifyReport{
                                "Please check the file name and try again");
         } catch(Exception ex){
             ex.printStackTrace();
-        }        
+        }
         //System.out.println("============================================");
     }
     public void usage(){

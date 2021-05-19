@@ -32,8 +32,8 @@ public class CustomResourceTest extends BaseTest
     static final String kFactoryClass   = "a.b.c";
     static final String kObjectType     = "user";
 
-    public CustomResourceTest(final String user, 
-        final String password, final String host, final int port, 
+    public CustomResourceTest(final String user,
+        final String password, final String host, final int port,
         final String jndiName, final String resType, final String factoryClass)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -41,11 +41,11 @@ public class CustomResourceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateCustomResourceCmd createCmd = 
-                cmdFactory.createCreateCustomResourceCmd(jndiName, 
+        final CreateCustomResourceCmd createCmd =
+                cmdFactory.createCreateCustomResourceCmd(jndiName,
                         resType, factoryClass, getOptional());
 
-        final DeleteCustomResourceCmd deleteCmd = 
+        final DeleteCustomResourceCmd deleteCmd =
                 cmdFactory.createDeleteCustomResourceCmd(jndiName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -67,14 +67,14 @@ public class CustomResourceTest extends BaseTest
 
     public static void main(String[] args) throws Exception
     {
-        new CustomResourceTest("admin", "password", "localhost", 8686, 
-                kJNDIName, kResType, kFactoryClass).run(); 
+        new CustomResourceTest("admin", "password", "localhost", 8686,
+                kJNDIName, kResType, kFactoryClass).run();
     }
 
     private Map getOptional()
     {
         final Map optional = new HashMap();
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
                 //kObjectType);
         return optional;
     }

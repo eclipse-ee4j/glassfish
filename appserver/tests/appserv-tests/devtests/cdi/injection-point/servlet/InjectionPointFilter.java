@@ -30,19 +30,19 @@ import test.artifacts.HttpParams;
 //A web filter to set ServletRequest in the thread local context.
 @WebFilter(urlPatterns="/*")
 public class InjectionPointFilter implements Filter{
-    
+
     @Override
     public void destroy() {
         System.out.println("InjectionPointFilter::destroy");
-        
+
     }
 
     public void doFilter(ServletRequest req, ServletResponse res,
             FilterChain arg2) throws IOException, ServletException {
         System.out.println("InjectionPointFilter::doFilter");
-        //setting the ServletRequest in the thread-local 
+        //setting the ServletRequest in the thread-local
         //variable so that it could be used in HttpParams
-        HttpParams.sr.set(req); 
+        HttpParams.sr.set(req);
         arg2.doFilter(req, res);
     }
 

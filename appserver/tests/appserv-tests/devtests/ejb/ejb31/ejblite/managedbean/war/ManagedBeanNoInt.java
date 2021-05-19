@@ -25,12 +25,12 @@ public class ManagedBeanNoInt extends ManagedBeanSuper {
     static private int numInstances = 0;
 
     public int getNumInstances() {
-	return numInstances;
+        return numInstances;
     }
 
     @PostConstruct
     private void init() {
-	numInstances++;
+        numInstances++;
     }
 
     @PreDestroy

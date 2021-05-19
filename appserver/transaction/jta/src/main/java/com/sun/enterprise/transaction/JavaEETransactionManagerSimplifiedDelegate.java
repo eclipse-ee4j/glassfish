@@ -47,10 +47,10 @@ import org.glassfish.hk2.api.PostConstruct;
  * @author Marina Vatkina
  */
 @Service
-public class JavaEETransactionManagerSimplifiedDelegate 
+public class JavaEETransactionManagerSimplifiedDelegate
             implements JavaEETransactionManagerDelegate, PostConstruct {
 
-    // @Inject 
+    // @Inject
     private JavaEETransactionManager tm;
 
     // Sting Manager for Localization
@@ -61,7 +61,7 @@ public class JavaEETransactionManagerSimplifiedDelegate
 
     private boolean lao = false;
 
-    private static final ReentrantReadWriteLock.ReadLock readLock = 
+    private static final ReentrantReadWriteLock.ReadLock readLock =
             new ReentrantReadWriteLock().readLock();
 
     private final Semaphore writeLock = new Semaphore(1, true);
@@ -84,24 +84,24 @@ public class JavaEETransactionManagerSimplifiedDelegate
     /** Throws an exception if called as it means that there is
      *  no active local transaction to commit.
      */
-    public void commitDistributedTransaction() throws 
-            RollbackException, HeuristicMixedException, 
-            HeuristicRollbackException, SecurityException, 
+    public void commitDistributedTransaction() throws
+            RollbackException, HeuristicMixedException,
+            HeuristicRollbackException, SecurityException,
             IllegalStateException, SystemException {
 
         throw new IllegalStateException(sm.getString(
                 "enterprise_distributedtx.transaction_notactive"));
-    } 
+    }
 
     /** Throws an exception if called as it means that there is
      *  no active local transaction to rollback.
      */
-    public void rollbackDistributedTransaction() throws IllegalStateException, 
+    public void rollbackDistributedTransaction() throws IllegalStateException,
             SecurityException, SystemException {
 
         throw new IllegalStateException(sm.getString(
                 "enterprise_distributedtx.transaction_notactive"));
-    } 
+    }
 
     public int getStatus() throws SystemException {
         JavaEETransaction tx = tm.getCurrentTransaction();
@@ -121,7 +121,7 @@ public class JavaEETransactionManagerSimplifiedDelegate
         }
 
         throw new IllegalStateException(sm.getString("enterprise_distributedtx.nonxa_usein_jts"));
-        
+
     }
 
     public boolean enlistDistributedNonXAResource(Transaction tran, TransactionalResource h)
@@ -170,7 +170,7 @@ public class JavaEETransactionManagerSimplifiedDelegate
         _logger = ((JavaEETransactionManagerSimplified)tm).getLogger();
     }
 
-    public TransactionInternal startJTSTx(JavaEETransaction t, boolean isAssociatedTimeout) 
+    public TransactionInternal startJTSTx(JavaEETransaction t, boolean isAssociatedTimeout)
             throws RollbackException, IllegalStateException, SystemException {
         throw new UnsupportedOperationException("startJTSTx");
     }
@@ -199,7 +199,7 @@ public class JavaEETransactionManagerSimplifiedDelegate
         throw new UnsupportedOperationException("recreate");
     }
 
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, 
+    public boolean recoverIncompleteTx(boolean delegated, String logPath,
             XAResource[] xaresArray) throws Exception {
         throw new UnsupportedOperationException("recoverIncompleteTx");
     }
@@ -238,7 +238,7 @@ public class JavaEETransactionManagerSimplifiedDelegate
         return false;
     }
 
-    public TransactionAdminBean getTransactionAdminBean(Transaction tran) 
+    public TransactionAdminBean getTransactionAdminBean(Transaction tran)
             throws jakarta.transaction.SystemException {
         return ((JavaEETransactionManagerSimplified)tm).getTransactionAdminBean(tran);
     }

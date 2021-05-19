@@ -66,7 +66,7 @@ public class WebAppHandlers {
         String vsName = (String) handlerCtx.getInputValue("vsName");
         String encodedName = URLEncoder.encode(vsName, "UTF-8");
         List<String> instanceList = (List) handlerCtx.getInputValue("instanceList");
-        
+
         Map vsAttrs = RestUtil.getAttributesMap(endpoint + "/" + encodedName);
         String webModule= (String) vsAttrs.get("defaultWebModule");
         if (GuiUtil.isEmpty(webModule))
@@ -107,7 +107,7 @@ public class WebAppHandlers {
         }
    }
 
-   
+
 
    //This handler is called after user deleted one more more VS from the VS table.
    //We need to go through all the application-ref to see if the VS specified still exist.  If it doesn't, we need to

@@ -84,7 +84,7 @@ public class DeploymentHandler {
         }catch(Exception ex){
             //ignore
         }
-        
+
 
         /* Take care some special properties, such as VS  */
         //do not send VS if user didn't specify, refer to bug#6542276
@@ -177,8 +177,8 @@ public class DeploymentHandler {
                 List clusters = TargetUtil.getClusters();
                 List standalone = TargetUtil.getStandaloneInstances();
                 for(int i=0; i< appRefs.size(); i++){
-                    AppUtil.manageAppTarget((String)attrMap.get("name"), 
-                            appRefs.get(i), true, (String)attrMap.get("enabled"), 
+                    AppUtil.manageAppTarget((String)attrMap.get("name"),
+                            appRefs.get(i), true, (String)attrMap.get("enabled"),
                             clusters, standalone, handlerCtx);
                 }
             }
@@ -257,7 +257,7 @@ public class DeploymentHandler {
                 payload.put("target", "domain");
              }else{
                 payload.put("target",  targetList.get(0));
-	     }
+             }
              String prefix = (String) GuiUtil.getSessionValue("REST_URL");
              RestUtil.restRequest(prefix +  "/applications/application", payload, "POST", null, true);
          } catch (Exception ex) {
@@ -266,10 +266,10 @@ public class DeploymentHandler {
     }
 
     /**
-     *	<p> This handler takes in selected rows, and do the undeployment
+     * <p> This handler takes in selected rows, and do the undeployment
      *  <p> Input  value: "selectedRows" -- Type: <code>java.util.List</code></p>
      *  <p> Input  value: "appType" -- Type: <code>String</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="gf.undeploy",
     input={
@@ -308,7 +308,7 @@ public class DeploymentHandler {
                 GuiUtil.prepareAlert("error", GuiUtil.getMessage("msg.Error"), ex.getMessage());
                 return;
             }
-            
+
         }
         if (warningList.size() > 0){
             GuiUtil.prepareAlert("warning", GuiUtil.getCommonMessage("msg.Undeployment.warning"),  GuiUtil.getCommonMessage("msg.referToApp") + warningList );
@@ -356,14 +356,14 @@ public class DeploymentHandler {
             }
         }
     }
-     
+
     /**
-     *	<p> This method returns the deployment descriptors for a given app. </p>
+     * <p> This method returns the deployment descriptors for a given app. </p>
      *
      *  <p> Output value: "descriptors" -- Type: <code>java.util.List</code>/</p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
-            
+
     @Handler(id = "gf.getDeploymentDescriptorList",
     input = {
         @HandlerInput(name = "data", type = List.class, required = true)},
@@ -417,24 +417,24 @@ public class DeploymentHandler {
     }
 
     private static String getEncoding(String xmlDoc) {
-	String encoding = null;
-	TemplateParser parser = new TemplateParser(new ByteArrayInputStream(xmlDoc.getBytes()));
-	try {
-	    parser.open();
-	    encoding = parser.readUntil("encoding", false);
-	    if (encoding.endsWith("encoding")) {
-		// Read encoding="..."
-		parser.readUntil('=', false);
-		encoding = (String) parser.getNVP("encoding").getValue();
-	    } else {
-		// Not found...
-		encoding = null;
-	    }
-	} catch (SyntaxException ex) {
-	    encoding = null;
-	} catch (IOException ex) {
-	    encoding = null;
-	}
+        String encoding = null;
+        TemplateParser parser = new TemplateParser(new ByteArrayInputStream(xmlDoc.getBytes()));
+        try {
+            parser.open();
+            encoding = parser.readUntil("encoding", false);
+            if (encoding.endsWith("encoding")) {
+                // Read encoding="..."
+                parser.readUntil('=', false);
+                encoding = (String) parser.getNVP("encoding").getValue();
+            } else {
+                // Not found...
+                encoding = null;
+            }
+        } catch (SyntaxException ex) {
+            encoding = null;
+        } catch (IOException ex) {
+            encoding = null;
+        }
 
         if (encoding == null) {
             encoding = "UTF-8";

@@ -31,12 +31,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class WebTest {
-        
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
 
     private String contextPath = "test";
-    
+
     @BeforeClass
     public static void setup() throws IOException {
     }

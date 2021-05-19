@@ -331,7 +331,7 @@ public class EjbRuntimeEndpointInfo {
         } finally {
             if (aInfo != null) {
                 releaseImplementor(aInfo.getInv());
-            }    
+            }
         }
 
     }

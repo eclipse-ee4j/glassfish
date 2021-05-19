@@ -28,9 +28,9 @@
         <ejb>jdbc-multipleusercredentials-ejb.jar</ejb>
     </module>
     <module>
-	<web>
-	    <web-uri>jdbc-multipleusercredentials-web.war</web-uri>
-	    <context-root>jdbc-multipleusercredentials</context-root>
+        <web>
+            <web-uri>jdbc-multipleusercredentials-web.war</web-uri>
+            <context-root>jdbc-multipleusercredentials</context-root>
         </web>
     </module>
 </application>

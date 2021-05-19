@@ -63,7 +63,7 @@ public abstract class BasePersistenceStrategyBuilder
     protected boolean relaxCacheVersionSemantics;
 
     // Special constant for Java Server Faces
-    protected static final String JSF_HA_ENABLED = "com.sun.appserver.enableHighAvailability";    
+    protected static final String JSF_HA_ENABLED = "com.sun.appserver.enableHighAvailability";
 
     public void initializePersistenceStrategy(
             Context ctx,
@@ -85,7 +85,7 @@ public abstract class BasePersistenceStrategyBuilder
          * their own inst vars for additional params.
          */
         readInstanceLevelParams(serverConfigLookup);
-        
+
         /*
          * This method reads web app parameter values from sun-web.xml.
          * Any values found here will over-ride defaults & instance-level
@@ -93,16 +93,16 @@ public abstract class BasePersistenceStrategyBuilder
          * This method may be extended in builder subclasses which will have
          * their own inst vars for additional params.
          */
-        readWebAppParams(ctx, smBean);        
+        readWebAppParams(ctx, smBean);
 
         ctx.setBackgroundProcessorDelay(reapInterval);
 
         StandardContext sctx = (StandardContext)ctx;
         sctx.restrictedSetPipeline(new WebPipeline(sctx));
     }
-    
+
     public void setDefaultParams(Context ctx, SessionManager smBean) {
-        
+
         reapInterval = DEFAULT_REAP_INTERVAL;
 
         maxSessions = -1;
@@ -113,19 +113,19 @@ public abstract class BasePersistenceStrategyBuilder
         // Default settings for persistence-type = 'file'
         storeReapInterval = DEFAULT_REAP_INTERVAL;
 
-        directory = ((StandardContext) ctx).getWorkDir(); 
+        directory = ((StandardContext) ctx).getWorkDir();
     }
-    
-    
+
+
     public void readInstanceLevelParams(ServerConfigLookup serverConfigLookup) {
 
         org.glassfish.web.config.serverbeans.SessionManager smBean =
             serverConfigLookup.getInstanceSessionManager();
-     
+
         if (smBean != null) {
-            // The persistence-type controls what properties of the 
+            // The persistence-type controls what properties of the
             // session manager can be configured
-            
+
             org.glassfish.web.config.serverbeans.ManagerProperties mgrBean =
                 smBean.getManagerProperties();
             if (mgrBean != null) {
@@ -139,12 +139,12 @@ public abstract class BasePersistenceStrategyBuilder
                         }
                     } catch (NumberFormatException e) {
                         // XXX need error message
-                    }                        
+                    }
                 } else {
                     if (_logger.isLoggable(Level.FINEST)) {
                         _logger.log(Level.FINEST, LogFacade.NO_INSTANCE_LEVEL_VALUE_SET_MGR_REAP_INTERVAL);
                     }
-                }                               
+                }
                 //max-sessions
                 String maxSessionsString = mgrBean.getMaxSessions();
                 if (maxSessionsString != null) {
@@ -155,12 +155,12 @@ public abstract class BasePersistenceStrategyBuilder
                         }
                     } catch (NumberFormatException e) {
                         // XXX need error message
-                    }                        
+                    }
                 } else {
                     if (_logger.isLoggable(Level.FINEST)) {
                         _logger.log(Level.FINEST, LogFacade.NO_INSTANCE_LEVEL_VALUE_SET_MAX_SESSIONS);
                     }
-                } 
+                }
 
                 //session-file-name
                 String sessionFilenameString = mgrBean.getSessionFileName();
@@ -198,10 +198,10 @@ public abstract class BasePersistenceStrategyBuilder
                     }
                 }*/
             }
-            
+
             org.glassfish.web.config.serverbeans.StoreProperties storeBean =
                 smBean.getStoreProperties();
-            
+
             if (storeBean != null) {
                 // Store reap-interval-in-seconds
                 String reapIntervalInSecondsString = storeBean.getReapIntervalInSeconds();
@@ -222,10 +222,10 @@ public abstract class BasePersistenceStrategyBuilder
                     if (_logger.isLoggable(Level.FINEST)) {
                         _logger.log(Level.FINEST, LogFacade.DIRECTORY_SET, directoryString);
                     }
-                }                                                     
-            }                     
+                }
+            }
         }
-      
+
         SessionProperties spBean =
             serverConfigLookup.getInstanceSessionProperties();
         if (spBean != null) {
@@ -239,20 +239,20 @@ public abstract class BasePersistenceStrategyBuilder
                     }
                 } catch (NumberFormatException e) {
                     // XXX need error message
-                }                        
+                }
             } else {
                 if (_logger.isLoggable(Level.FINEST)) {
                     _logger.log(Level.FINEST, LogFacade.NO_INSTANCE_LEVEL_VALUE_SET_SESSION_MAX_INACTIVE_INTERVAL);
-                }                
-            }            
+                }
+            }
         }
     }
-    
-    public void readWebAppParams(Context ctx, SessionManager smBean ) {    
-    
+
+    public void readWebAppParams(Context ctx, SessionManager smBean ) {
+
         if (smBean != null) {
-            // The persistence-type controls what properties of the 
-            // session manager can be configured            
+            // The persistence-type controls what properties of the
+            // session manager can be configured
             ManagerProperties mgrBean = smBean.getManagerProperties();
             if ((mgrBean != null) && (mgrBean.sizeWebProperty() > 0)) {
                 for (WebProperty prop : mgrBean.getWebProperty()) {
@@ -275,11 +275,11 @@ public abstract class BasePersistenceStrategyBuilder
                             maxIdleBackup = Integer.parseInt(value);
                         } catch (NumberFormatException e) {
                             // XXX need error message
-                        }                        
+                        }
                     } */else if (name.equalsIgnoreCase("relaxCacheVersionSemantics")) {
                         relaxCacheVersionSemantics = Boolean.parseBoolean(value);
                     } else if (name.equalsIgnoreCase("sessionFilename")) {
-                        sessionFilename = value;                        
+                        sessionFilename = value;
                     } else if (name.equalsIgnoreCase("persistenceFrequency")) {
                         _persistenceFrequency = value;
                     } else {
@@ -295,7 +295,7 @@ public abstract class BasePersistenceStrategyBuilder
             if ((storeBean != null) && (storeBean.sizeWebProperty() > 0)) {
                 for (WebProperty prop : storeBean.getWebProperty()) {
                     String name = prop.getAttributeValue(WebProperty.NAME);
-                    String value = prop.getAttributeValue(WebProperty.VALUE);  
+                    String value = prop.getAttributeValue(WebProperty.VALUE);
                     if (name.equalsIgnoreCase("reapIntervalSeconds")) {
                         try {
                             storeReapInterval = Integer.parseInt(value);
@@ -307,7 +307,7 @@ public abstract class BasePersistenceStrategyBuilder
                     } else if (name.equalsIgnoreCase("persistenceScope")) {
                         _persistenceScope = value;
                     } else if (name.equalsIgnoreCase("cookieName")) {
-                        persistentCookieName = value;                     
+                        persistentCookieName = value;
                     } else {
                         if (_logger.isLoggable(Level.INFO)) {
                             Object[] params = { name };
@@ -318,7 +318,7 @@ public abstract class BasePersistenceStrategyBuilder
             }
         }
     }
-    
+
     protected String prependContextPathTo(String str, Context ctx) {
         if (str == null) {
             return str;
@@ -344,7 +344,7 @@ public abstract class BasePersistenceStrategyBuilder
         }
         return result;
     }
-    
+
     protected String getFilePartOf(String str) {
         if (str == null) {
             return str;
@@ -358,7 +358,7 @@ public abstract class BasePersistenceStrategyBuilder
         }
         return result;
     }
-    
+
     private String cleanFileParts(String fileString) {
         String fileMainPart = getFileMainPart(fileString);
         String fileSuffixPart = getFileSuffixPart(fileString);
@@ -371,7 +371,7 @@ public abstract class BasePersistenceStrategyBuilder
             return fileMainPart + "." + fileSuffixPart;
         }
     }
-    
+
     private String getFileMainPart(String fileString) {
         ArrayList<String> results = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(fileString, ".");
@@ -384,7 +384,7 @@ public abstract class BasePersistenceStrategyBuilder
             return null;
         }
     }
-    
+
     private String getFileSuffixPart(String fileString) {
         ArrayList<String> results = new ArrayList<String>();
         StringTokenizer st = new StringTokenizer(fileString, ".");
@@ -396,13 +396,13 @@ public abstract class BasePersistenceStrategyBuilder
         } else {
             return null;
         }
-    }    
-    
+    }
+
     /**
      * this method strips out all non-alpha characters
      *
      * @param inputString
-     */     
+     */
     protected String stripNonAlphas(String inputString) {
         StringBuilder sb = new StringBuilder(50);
         for (int i=0; i<inputString.length(); i++) {
@@ -412,13 +412,13 @@ public abstract class BasePersistenceStrategyBuilder
             }
         }
         return sb.toString();
-    } 
-    
+    }
+
     /**
      * this method strips out all non-alphanumeric characters
      *
      * @param inputString
-     */     
+     */
     protected String stripNonAlphaNumericsExceptUnderscore(String inputString) {
         StringBuilder sb = new StringBuilder(50);
         for (int i=0; i<inputString.length(); i++) {
@@ -429,12 +429,12 @@ public abstract class BasePersistenceStrategyBuilder
         }
         return sb.toString();
     }
-    
+
     /**
      * this method strips out all non-alphanumeric characters
      *
      * @param inputString
-     */     
+     */
     protected String stripNonAlphaNumerics(String inputString) {
         StringBuilder sb = new StringBuilder(50);
         for (int i=0; i<inputString.length(); i++) {
@@ -444,29 +444,29 @@ public abstract class BasePersistenceStrategyBuilder
             }
         }
         return sb.toString();
-    }     
-    
+    }
+
     public String getPersistenceFrequency() {
         return _persistenceFrequency;
     }
-    
+
     public void setPersistenceFrequency(String persistenceFrequency) {
         _persistenceFrequency = persistenceFrequency;
     }
-    
+
     public String getPersistenceScope() {
         return _persistenceScope;
     }
-    
+
     public void setPersistenceScope(String persistenceScope) {
         _persistenceScope = persistenceScope;
     }
-    
+
     public String getPassedInPersistenceType() {
         return _passedInPersistenceType;
-    }    
-    
+    }
+
     public void setPassedInPersistenceType(String persistenceType) {
         _passedInPersistenceType = persistenceType;
-    }    
+    }
 }

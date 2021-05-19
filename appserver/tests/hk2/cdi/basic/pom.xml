@@ -30,7 +30,7 @@
     <artifactId>basic</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish HK2 Basic CDI test</name>  
+    <name>GlassFish HK2 Basic CDI test</name>
     <modules>
         <module>ejb1</module>
         <module>runner</module>

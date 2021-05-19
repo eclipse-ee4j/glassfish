@@ -78,7 +78,7 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
         return new MetaData(false, null, null);
     }
 
-     
+
     /**
      * Returns the classpath associated with this module
      * Can be used to compile generated cmp classes,
@@ -102,20 +102,20 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
             classpath.append(File.pathSeparator);
 
             // add the ear lib libraries if it's ear
-            Application app = ctx.getModuleMetaData(Application.class); 
+            Application app = ctx.getModuleMetaData(Application.class);
             if (!app.isVirtual()) {
-                ReadableArchive parentArchive = 
+                ReadableArchive parentArchive =
                     ctx.getSource().getParentArchive();
 
                 String compatProp = ctx.getAppProps().getProperty(
                     DeploymentProperties.COMPATIBILITY);
 
-                List<URL> earLibURLs = 
+                List<URL> earLibURLs =
                     ASClassLoaderUtil.getAppLibDirLibrariesAsList(new File(
-                        parentArchive.getURI()), app.getLibraryDirectory(), 
-                        compatProp);  
+                        parentArchive.getURI()), app.getLibraryDirectory(),
+                        compatProp);
 
-                for (URL url : earLibURLs) { 
+                for (URL url : earLibURLs) {
                     classpath.append(url.toURI().getPath());
                     classpath.append(File.pathSeparator);
                 }
@@ -186,7 +186,7 @@ public abstract class   JavaEEDeployer<T extends Container, U extends Applicatio
              //In jaxrpc it was required to run
              //Wscompile to generate the artifacts for clients too.
              //service-ref element can be in client in web.xml,  application-client.xml, sun-ejb-jar.xml
-             //Fix for issue 16015 
+             //Fix for issue 16015
             BundleDescriptor bundleDesc = dc.getModuleMetaData(BundleDescriptor.class);
             if (bundleDesc.hasWebServiceClients())     {
                 JAXRPCCodeGenFacade jaxrpcCodeGenFacade = jaxrpcCodeGenFacadeProvider.get();

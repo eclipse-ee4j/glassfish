@@ -97,7 +97,7 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("EJB embedded module 1", stat.FAIL);
         } finally {
-            if (c != null) 
+            if (c != null)
                 c.close();
         }
         stat.addStatus("EJB embedded module 1", stat.PASS);

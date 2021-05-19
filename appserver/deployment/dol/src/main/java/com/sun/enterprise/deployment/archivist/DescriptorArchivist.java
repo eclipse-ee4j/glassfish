@@ -31,7 +31,7 @@ import java.io.OutputStream;
 import java.util.Collection;
 
 /**
- * This class is responsible for writing deployment descriptors 
+ * This class is responsible for writing deployment descriptors
  * after a deployment action has occured to a abstract archive instance.
  *
  * @author  Jerome Dochez
@@ -64,14 +64,14 @@ public class DescriptorArchivist {
                 ReadableArchive moduleArchive2 = in.getSubArchive(aModule.getArchiveUri());
                 write((BundleDescriptor)aModule.getDescriptor(),  moduleArchivist, moduleArchive2, moduleArchive);
             }
-            
+
             // now let's write the application descriptor
             ApplicationArchivist archivist = archivistProvider.get();
             archivist.setDescriptor(application);
-            archivist.writeDeploymentDescriptors(in, out); 
+            archivist.writeDeploymentDescriptors(in, out);
         }
     }
-    
+
     /**
      * writes a bundle descriptor
      * @param the bundle descriptor

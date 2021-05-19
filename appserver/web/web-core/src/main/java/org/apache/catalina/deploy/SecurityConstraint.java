@@ -298,7 +298,7 @@ public class SecurityConstraint implements Serializable {
     public boolean included(String uri, String method) {
     */
     // START SJSWS 6324431
-    public boolean included(String uri, String method, 
+    public boolean included(String uri, String method,
                             boolean caseSensitiveMapping) {
     // END SJSWS 6324431
 
@@ -316,7 +316,7 @@ public class SecurityConstraint implements Serializable {
                 if (matchPattern(uri, patterns[j]))
                 */
                 // START SJSWS 6324431
-                if (matchPattern(uri, patterns[j], 
+                if (matchPattern(uri, patterns[j],
                                  caseSensitiveMapping))
                 // END SJSWS 6324431
                     return (true);
@@ -426,7 +426,7 @@ public class SecurityConstraint implements Serializable {
     // START SJSWS 6324431
     private boolean matchPattern(String path, String pattern,
                                  boolean caseSensitiveMapping) {
-    // END SJSWS 6324431        
+    // END SJSWS 6324431
 
         // Normalize the argument strings
         if ((path == null) || (path.length() == 0))

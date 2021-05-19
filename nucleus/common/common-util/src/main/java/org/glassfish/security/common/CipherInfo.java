@@ -59,11 +59,11 @@ public class CipherInfo {
         for(int i=0; i<len; i++) {
             String nonStdName = OLD_CIPHER_MAPPING[i][0];
             String stdName    = OLD_CIPHER_MAPPING[i][1];
-            ciphers.put(nonStdName, 
+            ciphers.put(nonStdName,
                 new CipherInfo(nonStdName, stdName, (short)(SSL3|TLS)) );
         }
 
-        SSLServerSocketFactory factory = 
+        SSLServerSocketFactory factory =
                 (SSLServerSocketFactory)SSLServerSocketFactory.getDefault();
         String[] supportedCiphers = factory.getDefaultCipherSuites();
         len = supportedCiphers.length;
@@ -78,7 +78,7 @@ public class CipherInfo {
      * @param cipherName  name that may depends on backend
      * @param protocolVersion
      */
-    private CipherInfo(String configName, String cipherName, 
+    private CipherInfo(String configName, String cipherName,
             short protocolVersion) {
         this.configName = configName;
         this.cipherName = cipherName;
@@ -99,13 +99,13 @@ public class CipherInfo {
 
     public boolean isSSL2() {
         return (protocolVersion & SSL2) == SSL2;
-    } 
+    }
 
     public boolean isSSL3() {
         return (protocolVersion & SSL3) == SSL3;
-    } 
+    }
 
     public boolean isTLS() {
         return (protocolVersion & TLS) == TLS;
-    } 
+    }
 }

@@ -64,8 +64,8 @@ import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-runtime-info", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-runtime-info",
         description="Get Runtime Info")
 })
 @AccessRequired(resource="domain", action="read")

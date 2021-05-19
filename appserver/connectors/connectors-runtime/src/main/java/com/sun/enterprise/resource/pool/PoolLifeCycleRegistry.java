@@ -25,22 +25,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implementation of PoolLifeCycle to listen to events related to a 
- * connection pool creation or destroy. The registry allows multiple listeners 
+ * Implementation of PoolLifeCycle to listen to events related to a
+ * connection pool creation or destroy. The registry allows multiple listeners
  * (ex: pool monitoring or self management)
  * to listen to the pool's lifecyle. Maintains a list of listeners for this pool
  * identified by poolName.
- * 
+ *
  * @author Shalini M
  */
 @Singleton
 public class PoolLifeCycleRegistry implements PoolLifeCycle {
 
-    //List of listeners 
+    //List of listeners
     protected List<PoolLifeCycle> lifeCycleListeners = new ArrayList<PoolLifeCycle>();
-    private static PoolLifeCycleRegistry __poolLifeCycleRegistry = 
+    private static PoolLifeCycleRegistry __poolLifeCycleRegistry =
             new PoolLifeCycleRegistry();
-    
+
     public PoolLifeCycleRegistry() {
     }
 
@@ -51,14 +51,14 @@ public class PoolLifeCycleRegistry implements PoolLifeCycle {
         return __poolLifeCycleRegistry;
     }
     /**
-     * Add a listener to the list of pool life cycle listeners maintained by 
+     * Add a listener to the list of pool life cycle listeners maintained by
      * this registry for the <code>poolName</code>.
      * @param poolName
      * @param listener
      */
     public void registerPoolLifeCycle(PoolLifeCycle listener) {
         lifeCycleListeners.add(listener);
-        
+
         //Check if lifecycleListeners has already been set to this. There
         //could be multiple listeners.
         if(!(lifeCycleListeners.size() > 1)) {
@@ -70,7 +70,7 @@ public class PoolLifeCycleRegistry implements PoolLifeCycle {
 
     /**
      * Clear the list of pool lifecycle listeners maintained by the registry.
-     * This happens when a pool is destroyed so the information about its 
+     * This happens when a pool is destroyed so the information about its
      * listeners need not be stored.
      */
     public void unRegisterPoolLifeCycle(PoolLifeCycle listener) {
@@ -82,7 +82,7 @@ public class PoolLifeCycleRegistry implements PoolLifeCycle {
             }
         }
     }
-    
+
     /**
      * Invoke poolCreated for all listeners of this pool.
      * @param poolInfo

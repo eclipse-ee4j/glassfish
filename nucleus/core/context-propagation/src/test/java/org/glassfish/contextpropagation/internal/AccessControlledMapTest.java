@@ -52,8 +52,8 @@ public class AccessControlledMapTest {
 //  @BeforeClass
 //  public static void setupClass() {
 //    BootstrapUtils.reset();
-//    ContextBootstrap.configure(new MockLoggerAdapter(), 
-//        new DefaultWireAdapter(), new MockThreadLocalAccessor(), 
+//    ContextBootstrap.configure(new MockLoggerAdapter(),
+//        new DefaultWireAdapter(), new MockThreadLocalAccessor(),
 //        new ContextAccessController() {
 //      @Override
 //      public boolean isAccessAllowed(String key, ContextAccessLevel type) {
@@ -176,7 +176,7 @@ public class AccessControlledMapTest {
 //    sm.map.clear();
 //    assertFalse(acm.names().hasNext());
 //  }
-//  
+//
 //  @Test
 //  public void testNamesAllUnaccessible() {
 //    sm.map.clear();
@@ -184,7 +184,7 @@ public class AccessControlledMapTest {
 //    sm.put("hidden1", DUMMY_ENTRY);
 //    assertFalse(acm.names().hasNext());
 //  }
-//  
+//
 //  @Test
 //  public void testNamesSomeVisible() {
 //    sm.map.clear();

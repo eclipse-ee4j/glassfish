@@ -32,61 +32,61 @@ import com.sun.enterprise.ee.synchronization.api.SynchronizationFactory;
 import com.sun.enterprise.ee.synchronization.SynchronizationException;
 
 public class SynchronizationEJB
-    implements SessionBean 
+    implements SessionBean
 {
-	private SessionContext context;
+    private SessionContext context;
     private Context initialCtx;
 
-	public void ejbCreate() {
+    public void ejbCreate() {
     }
 
-    public boolean getFile(String instanceName, String sourceFile, 
-	String destLoc) {
-	try {
-            SynchronizationClient sc = 
+    public boolean getFile(String instanceName, String sourceFile,
+    String destLoc) {
+    try {
+            SynchronizationClient sc =
               SynchronizationFactory.createSynchronizationClient( instanceName);
             sc.connect();
             sc.get(sourceFile, destLoc);
             sc.disconnect();
             return true;
-	} catch(Exception e) {
-		e.printStackTrace();
-		return false;
-	}
+    } catch(Exception e) {
+        e.printStackTrace();
+        return false;
+    }
     }
 
-    public boolean putFile(String instanceName, String sourceFile, 
-	String destDir)  {
-	try {
-            SynchronizationClient sc = 
+    public boolean putFile(String instanceName, String sourceFile,
+    String destDir)  {
+    try {
+            SynchronizationClient sc =
               SynchronizationFactory.createSynchronizationClient( instanceName);
             sc.connect();
             String s = sc.put(sourceFile, destDir);
             sc.disconnect();
             System.out.println("Upload file at " + s);
             return true;
-	} catch(Exception e) {
-		e.printStackTrace();
-		return false;
-	}
+    } catch(Exception e) {
+        e.printStackTrace();
+        return false;
+    }
     }
 
-	public void setSessionContext(SessionContext sc) {
-		this.context = sc;
+    public void setSessionContext(SessionContext sc) {
+        this.context = sc;
         try {
             this.initialCtx = new InitialContext();
         } catch (Throwable th) {
             th.printStackTrace();
         }
-	}
+    }
 
-	public void ejbRemove() {}
+    public void ejbRemove() {}
 
-	public void ejbActivate() {
+    public void ejbActivate() {
         System.out.println ("In SFSB.ejbActivate() " );
     }
 
-	public void ejbPassivate() {
+    public void ejbPassivate() {
         System.out.println ("In SFSB.ejbPassivate() ");
     }
 }

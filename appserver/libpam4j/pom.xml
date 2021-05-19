@@ -54,10 +54,10 @@
                         <Embed-Dependency>
                             *;scope=compile;inline=true
                         </Embed-Dependency>
-                        
+
                         <!-- Export everything from the embedded jar except the folder with so libs in the final bundle -->
                         <Export-Package>!*-*,*;version=${project.version}</Export-Package>
-                        
+
                         <!-- Exclude unnecessary imports -->
                         <Import-Package />
                     </instructions>

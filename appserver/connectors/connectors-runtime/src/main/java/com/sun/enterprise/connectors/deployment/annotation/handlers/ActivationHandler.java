@@ -41,7 +41,7 @@ public class ActivationHandler extends AbstractHandler {
 
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(ActivationHandler.class);
-    
+
     public HandlerProcessingResult processAnnotation(AnnotationInfo element) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = element.getProcessingContext().getHandler();
         Activation activation = (Activation) element.getAnnotation();
@@ -57,7 +57,7 @@ public class ActivationHandler extends AbstractHandler {
                 }
 
                 InboundResourceAdapter ira = desc.getInboundResourceAdapter();
-                
+
                 //get the activation-spec implementation class-name
                 Class c = (Class) element.getAnnotatedElement();
                 String activationSpecClass = c.getName();

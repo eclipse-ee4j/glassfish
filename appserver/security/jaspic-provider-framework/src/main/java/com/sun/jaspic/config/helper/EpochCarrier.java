@@ -67,5 +67,5 @@ public class EpochCarrier {
             instanceReadLock.unlock();
         }
     }
-    
+
 }

@@ -30,32 +30,32 @@ import java.util.Iterator;
  * @author Kenneth Saks
  */
 public class WebServiceHandler extends Descriptor {
-    
+
     private String handlerName = null;
 
     private String handlerClass = null;
 
     private Collection initParams = new HashSet();
-    
+
     private Collection soapHeaders = new HashSet();
-    
+
     private Collection soapRoles = new HashSet();
 
     private Collection portNames = new HashSet();
-    
+
     /**
     * copy constructor.
     */
     public WebServiceHandler(WebServiceHandler other) {
-	super(other);
-	handlerName = other.handlerName; // String
-	handlerClass = other.handlerClass; // String
-	portNames.addAll(other.portNames); // Set of String
-	soapRoles.addAll(other.soapRoles); // Set of String
-	soapHeaders.addAll(other.soapHeaders); // Set of QName (immutable)
-	for (Iterator i = other.initParams.iterator(); i.hasNext();) {
-	    initParams.add(new NameValuePairDescriptor((NameValuePairDescriptor)i.next()));
-	}
+        super(other);
+        handlerName = other.handlerName; // String
+        handlerClass = other.handlerClass; // String
+        portNames.addAll(other.portNames); // Set of String
+        soapRoles.addAll(other.soapRoles); // Set of String
+        soapHeaders.addAll(other.soapHeaders); // Set of QName (immutable)
+        for (Iterator i = other.initParams.iterator(); i.hasNext();) {
+            initParams.add(new NameValuePairDescriptor((NameValuePairDescriptor) i.next()));
+        }
     }
 
     public WebServiceHandler() {
@@ -67,16 +67,15 @@ public class WebServiceHandler extends Descriptor {
      */
     public void setHandlerClass(String className) {
         handlerClass = className;
-
     }
-    
+
     /**
      * @return the class name for this handler
      */
     public String getHandlerClass() {
         return handlerClass;
-    }   
-    
+    }
+
     public void setHandlerName(String name) {
         handlerName = name;
 
@@ -85,7 +84,7 @@ public class WebServiceHandler extends Descriptor {
     public String getHandlerName() {
         return handlerName;
     }
-  
+
     /**
      * add an init param to this handler
      * @param the init param
@@ -94,7 +93,7 @@ public class WebServiceHandler extends Descriptor {
         initParams.add(newInitParam);
 
     }
-  
+
     /**
      * remove an init param from this handler
      * @param the init param
@@ -110,7 +109,7 @@ public class WebServiceHandler extends Descriptor {
     public Collection getInitParams() {
         return initParams;
     }
-    
+
     public void addSoapHeader(QName soapHeader) {
         soapHeaders.add(soapHeader);
 
@@ -154,12 +153,12 @@ public class WebServiceHandler extends Descriptor {
     public Collection getPortNames() {
         return portNames;
     }
-    
+
     /**
-     * @return a string describing the values I hold
+     * Appends a string describing the values I hold
      */
     public void print(StringBuffer toStringBuffer) {
-        toStringBuffer.append("\nHandler name = ").append(handlerName).append( 
+        toStringBuffer.append("\nHandler name = ").append(handlerName).append(
             "Handler class name = ").append(handlerClass);
         for (Iterator i=getInitParams().iterator(); i.hasNext(); ) {
             toStringBuffer.append("\n").append(i.next().toString());

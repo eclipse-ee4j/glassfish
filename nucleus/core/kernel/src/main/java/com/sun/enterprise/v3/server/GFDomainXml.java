@@ -52,5 +52,5 @@ public class GFDomainXml extends DomainXml {
                         }
 
                     }));
-    }    
+    }
 }

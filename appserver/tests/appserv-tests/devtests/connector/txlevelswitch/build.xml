@@ -38,9 +38,9 @@
 
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
-	<ant dir="ra" target="clean"/>
+        <ant dir="ra" target="clean"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -54,25 +54,25 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/*.class" />
       </antcall>
     <antcall target="build-ra"/>
-	<ant dir="ra" target="assemble"/>
-    </target> 
-    
+        <ant dir="ra" target="assemble"/>
+    </target>
+
     <target name="deploy" depends="init-common">
-	<antcall target="create-ra-config"/>
+        <antcall target="create-ra-config"/>
       <antcall target="deploy-rar-common">
-		<param name="rarfile" value="ra/publish/lib/jdbc-ra-xa.rar"/>
+                <param name="rarfile" value="ra/publish/lib/jdbc-ra-xa.rar"/>
       </antcall>
       <antcall target="create-connector-connpool-common">
         <param name="ra.name" value="jdbc-ra-xa"/>
-	<param name="connection.defname" value="javax.sql.XADataSource"/>
-	<param name="extra-params" value="--matchconnections=false"/>
-	<param name="connector.conpool.name" value="txlevelswitch-pool-1"/>
+        <param name="connection.defname" value="javax.sql.XADataSource"/>
+        <param name="extra-params" value="--matchconnections=false"/>
+        <param name="connector.conpool.name" value="txlevelswitch-pool-1"/>
       </antcall>
       <antcall target="set-oracle-props">
         <param name="pool.type" value="connector"/>
@@ -81,9 +81,9 @@
 
       <antcall target="create-connector-connpool-common">
         <param name="ra.name" value="jdbc-ra-xa"/>
-	<param name="connection.defname" value="javax.sql.XADataSource"/>
-	<param name="extra-params" value="--matchconnections=false"/>
-	<param name="connector.conpool.name" value="txlevelswitch-pool-2"/>
+        <param name="connection.defname" value="javax.sql.XADataSource"/>
+        <param name="extra-params" value="--matchconnections=false"/>
+        <param name="connector.conpool.name" value="txlevelswitch-pool-2"/>
       </antcall>
       <antcall target="set-oracle-props">
         <param name="pool.type" value="connector"/>
@@ -92,28 +92,28 @@
 
       <antcall target="create-connector-resource-common">
         <param name="connector.conpool.name" value="txlevelswitch-pool-1"/>
-	<param name="connector.jndi.name" value="test-res-1"/>
+        <param name="connector.jndi.name" value="test-res-1"/>
       </antcall>
       <antcall target="create-connector-resource-common">
         <param name="connector.conpool.name" value="txlevelswitch-pool-2"/>
-	<param name="connector.jndi.name" value="test-res-2"/>
+        <param name="connector.jndi.name" value="test-res-2"/>
       </antcall>
       <antcall target="deploy-common"/>
     </target>
-    
+
      <target name="create-ra-config" depends="init-common">
          <antcall target="asadmin-common">
             <param name="admin.command" value="create-resource-adapter-config  --property RAProperty=VALID"/>
-	    <param name="operand.props" value="jdbc-ra-xa"/>
+            <param name="operand.props" value="jdbc-ra-xa"/>
          </antcall>
      </target>
 
      <target name="delete-ra-config" depends="init-common">
          <antcall target="asadmin-common">
-	    <param name="admin.command" value="delete-resource-adapter-config"/>
-	    <param name="operand.props" value="jdbc-ra-xa"/>
-	 </antcall>
-	 <!--<antcall target="reconfig-common"/>-->
+            <param name="admin.command" value="delete-resource-adapter-config"/>
+            <param name="operand.props" value="jdbc-ra-xa"/>
+         </antcall>
+         <!--<antcall target="reconfig-common"/>-->
      </target>
 
     <target name="run" depends="init-common">
@@ -124,7 +124,7 @@
       <antcall target="run-test-3"/>
       <antcall target="run-test-2"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="execute-sql-connector">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
@@ -144,8 +144,8 @@
       </antcall>
       <antcall target="undeploy-common"/>
       <antcall target="undeploy-rar-common"/>
-	<antcall target="delete-ra-config"/>
-    </target>   
+        <antcall target="delete-ra-config"/>
+    </target>
     <target name="build-ra">
        <ant dir="ra" target="build"/>
     </target>
@@ -153,15 +153,15 @@
     <target name="usage">
         <antcall target="usage-common"/>
     </target>
-    
+
     <target name="run-test-1" depends="init-common">
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="XATransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-1"/>
+        <param name="tx-support" value="XATransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-1"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="XATransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-2"/>
+        <param name="tx-support" value="XATransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-2"/>
       </antcall>
       <antcall target="runclient-common">
         <param name="appclient.application.args" value="1"/>
@@ -170,16 +170,16 @@
 
     <target name="run-test-2" depends="init-common">
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-1"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-1"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-2"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-2"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-1"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-1"/>
       </antcall>
       <antcall target="runclient-common">
         <param name="appclient.application.args" value="2"/>
@@ -188,12 +188,12 @@
 
     <target name="run-test-3" depends="init-common">
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-1"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-1"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="XATransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-2"/>
+        <param name="tx-support" value="XATransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-2"/>
       </antcall>
       <antcall target="runclient-common">
         <param name="appclient.application.args" value="1"/>
@@ -214,13 +214,13 @@
       <antcall target="deploy-rar-common"/>
       <antcall target="create-connector-connpool-common">
         <param name="ra.name" value="jdbc-ra-xa"/>
-	<param name="connection.defname" value="javax.sql.XADataSource"/>
-	<param name="extra-params" value="--matchconnections=false"/>
-	<param name="connector.conpool.name" value="txlevelswitch-pool-3"/>
+        <param name="connection.defname" value="javax.sql.XADataSource"/>
+        <param name="extra-params" value="--matchconnections=false"/>
+        <param name="connector.conpool.name" value="txlevelswitch-pool-3"/>
       </antcall>
       <antcall target="create-connector-resource-common">
         <param name="connector.conpool.name" value="txlevelswitch-pool-3"/>
-	<param name="connector.jndi.name" value="test-res-3"/>
+        <param name="connector.jndi.name" value="test-res-3"/>
       </antcall>
       <!--
       <antcall target="deploy-jms-common">
@@ -229,20 +229,20 @@
       -->
       <antcall target="create-connector-connpool-common">
         <param name="ra.name" value="jmsra"/>
-	<param name="connection.defname" value="jakarta.jms.QueueConnectionFactory"/>
-	<param name="extra-params" value="--matchconnections=false"/>
-	<param name="connector.conpool.name" value="jms-jdbc-res-1"/>
-	<param name="operand.props" value="--transactionsupport LocalTransaction"/>
+        <param name="connection.defname" value="jakarta.jms.QueueConnectionFactory"/>
+        <param name="extra-params" value="--matchconnections=false"/>
+        <param name="connector.conpool.name" value="jms-jdbc-res-1"/>
+        <param name="operand.props" value="--transactionsupport LocalTransaction"/>
       </antcall>
       <antcall target="create-connector-resource-common">
         <param name="connector.conpool.name" value="jms-jdbc-res-1"/>
-	<param name="connector.jndi.name" value="jms/jms-jdbc-res-1"/>
+        <param name="connector.jndi.name" value="jms/jms-jdbc-res-1"/>
       </antcall>
       <exec executable="${ASADMIN}" failonerror="false">
         <arg line="create-admin-object"/>
-	<arg line="--target ${appserver.instance.name}"/>
+        <arg line="--target ${appserver.instance.name}"/>
         <arg line="--restype jakarta.jms.Queue"/>
-	<arg line="--raname jmsra"/>
+        <arg line="--raname jmsra"/>
         <arg line="${as.props}"/>
         <arg line="--property maxNumActiveConsumers=${activeconsumer.maxnum}"/>
         <arg line="jms/SampleQueue"/>
@@ -250,7 +250,7 @@
 
       <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run-for-jms" depends="init-common">
       <antcall target="execute-sql-connector">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
@@ -264,7 +264,7 @@
       <!-- negative test : JMS=JDBC=non-xa -->
       <antcall target="run-test-3-for-jms"/>
     </target>
- 
+
     <target name="undeploy-for-jms" depends="init-common">
       <antcall target="execute-sql-connector">
         <param name="sql.file" value="sql/drop_pointbase.sql"/>
@@ -285,25 +285,25 @@
       </antcall>
       <exec executable="${ASADMIN}" failonerror="false">
         <arg line="delete-admin-object"/>
-	<arg line="--target ${appserver.instance.name}"/>
+        <arg line="--target ${appserver.instance.name}"/>
         <arg line="${as.props}"/>
         <arg line="jms/SampleQueue"/>
       </exec>
- 
+
       <antcall target="undeploy-common"/>
       <antcall target="undeploy-rar-common"/>
-    </target>   
+    </target>
 
 
     <target name="run-test-1-for-jms" depends="init-common">
       <!--
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-3"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-3"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="XATransaction"/>  
-	<param name="poolName" value="jms-jdbc-res-1"/>
+        <param name="tx-support" value="XATransaction"/>
+        <param name="poolName" value="jms-jdbc-res-1"/>
       </antcall>
       -->
       <antcall target="runclient-common">
@@ -313,12 +313,12 @@
 
     <target name="run-test-2-for-jms" depends="init-common">
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="XATransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-3"/>
+        <param name="tx-support" value="XATransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-3"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="jms-jdbc-res-1"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="jms-jdbc-res-1"/>
       </antcall>
       <antcall target="runclient-common">
         <param name="appclient.application.args" value="jms-jdbc-2"/>
@@ -327,12 +327,12 @@
 
     <target name="run-test-3-for-jms" depends="init-common">
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="txlevelswitch-pool-3"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="txlevelswitch-pool-3"/>
       </antcall>
       <antcall target="set-pool-tx-support">
-        <param name="tx-support" value="LocalTransaction"/>  
-	<param name="poolName" value="jms-jdbc-res-1"/>
+        <param name="tx-support" value="LocalTransaction"/>
+        <param name="poolName" value="jms-jdbc-res-1"/>
       </antcall>
       <antcall target="runclient-common">
         <param name="appclient.application.args" value="jms-jdbc-3"/>
@@ -344,8 +344,8 @@
         <param name="sql.file" value="sql/create_pointbase.sql"/>
       </antcall>
     </target>
-    
+
     <target name="drop-sql">
-      
+
     </target>
 </project>

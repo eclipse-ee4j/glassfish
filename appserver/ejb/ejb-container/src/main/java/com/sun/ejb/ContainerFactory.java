@@ -22,7 +22,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * ContainerFactory creates the appropriate Container instance
- * (StatefulSessionContainer, StatelessSessionContainer, EntityContainer, 
+ * (StatefulSessionContainer, StatelessSessionContainer, EntityContainer,
  * MessageBeanContainer) and initializes it.
  *
  * It is also a factory for EJBObject/Home instances which are needed
@@ -35,12 +35,12 @@ public interface ContainerFactory {
     /**
      * Create the appropriate Container instance and initialize it.
      * @param ejbDescriptor the deployment descriptor of the EJB
-			    for which a container is to be created.
+                for which a container is to be created.
      */
-    Container createContainer(EjbDescriptor ejbDescriptor, 
-			      ClassLoader loader, 
-			      DeploymentContext deployContext)
-  	throws Exception;
+    Container createContainer(EjbDescriptor ejbDescriptor,
+                  ClassLoader loader,
+                  DeploymentContext deployContext)
+      throws Exception;
 
 
 }

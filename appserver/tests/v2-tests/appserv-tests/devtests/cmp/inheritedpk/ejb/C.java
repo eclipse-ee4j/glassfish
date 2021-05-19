@@ -24,7 +24,7 @@ import java.util.*;
  */
 
 public interface C extends jakarta.ejb.EJBObject {
- 
+
     public String getName() throws java.rmi.RemoteException;
 
 }

@@ -30,15 +30,15 @@ public class MonitoringTest extends BaseSeleniumTestClass {
     private static final String MONITOR_LEVEL_OFF = "OFF";
     private static final String MONITOR_LEVEL_LOW = "LOW";
     private static final String MONITOR_LEVEL_HIGH = "HIGH";
-    
+
     private static final String MONITOR_LEVEL_COL_ID = "col3";
     private static final String MONITOR_COMP_COL_ID = "col2";
     private static final String MONITOR_COMP_SELECT_ID = "col1";
-    
+
     public static final String TARGET_SERVER_TYPE = "server";
     public static final String TARGET_STANDALONE_TYPE = "standalone";
     public static final String TARGET_CLUSTER_TYPE = "cluster";
-    
+
     private static final String TRIGGER_STANDALONE_PAGE = "Create and manage standalone instances for a node agent.";
     private static final String TRIGGER_STANDALONE_GENERAL_PAGE = "General Information";
     private static final String TRIGGER_MONITORING_SERVER_GENERAL = "General Information";
@@ -292,7 +292,7 @@ public class MonitoringTest extends BaseSeleniumTestClass {
         setMonitorLevel(null, MONITOR_LEVEL_HIGH, true, target, targetType);
         goToMonitoringApplicationsPage(target, targetType);
 
-        selectDropdownOption(MONITORING_APPLICATIONS_APPLICATION_DROPDOWN_ID, "JavaEEApp-war.war");        
+        selectDropdownOption(MONITORING_APPLICATIONS_APPLICATION_DROPDOWN_ID, "JavaEEApp-war.war");
         selectDropdownOption(MONITORING_APPLICATIONS_COMPONENT_DROPDOWN_ID, resName);
         waitForPageLoad(statsHeader, 10000);
         assertTrue(isTextPresent(statsHeader));

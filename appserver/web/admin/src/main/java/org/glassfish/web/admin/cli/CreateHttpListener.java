@@ -62,7 +62,7 @@ import org.jvnet.hk2.config.Transactions;
 @Service(name = "create-http-listener")
 @PerLookup
 @I18n("create.http.listener")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})  
+@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 public class CreateHttpListener implements AdminCommand {
 

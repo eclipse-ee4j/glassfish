@@ -24,11 +24,11 @@ import com.sun.ejte.ccl.reporter.*;
  * Test login change session id in Servlet 3.0
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "servlet-3.0-login-change-session-id";
     private static final String JSESSIONID = "JSESSIONID";
     private static final String EXPECTED_RESPONSE = "one";
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -41,7 +41,7 @@ public class WebTest {
         String contextRoot = args[2];
 
         int port = new Integer(portS).intValue();
-        
+
         try {
             List<String> result = goGet(host, port, contextRoot + "/test?run=first",
                    null);
@@ -49,12 +49,12 @@ public class WebTest {
             if (result.size() > 0) {
                 result2 = goGet(host, port, contextRoot + "/test?run=second",
                         result.get(0));
-            } 
-                
+            }
+
             stat.addStatus(TEST_NAME,
                     (result.size() > 1 && result2.size() > 1
                     && !result.get(0).equals(result2.get(0))
-                    && EXPECTED_RESPONSE.equals(result2.get(1))) ? 
+                    && EXPECTED_RESPONSE.equals(result2.get(1))) ?
                     stat.PASS : stat.FAIL);
         } catch (Throwable t) {
             System.out.println(t.getMessage());
@@ -99,7 +99,7 @@ public class WebTest {
                 lineNum++;
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
          } finally {
             try {
@@ -138,5 +138,5 @@ public class WebTest {
 
         return ret;
     }
-  
+
 }

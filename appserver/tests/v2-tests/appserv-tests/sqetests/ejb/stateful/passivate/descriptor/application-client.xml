@@ -25,5 +25,5 @@
     <ejb-ref-type>Session</ejb-ref-type>
       <home>sqetests.ejb.stateful.passivate.ejb.stateful.SessionRemoteHome</home>
       <remote>sqetests.ejb.stateful.passivate.ejb.stateful.SessionRemote</remote>
-  </ejb-ref>  
+  </ejb-ref>
 </application-client>

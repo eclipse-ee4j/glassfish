@@ -21,7 +21,7 @@ import com.sun.ejte.ccl.reporter.*;
 /**
  * Unit test for:
  *
- *   https://bug.oraclecorp.com/pls/bug/webbug_print.show?c_rptno=12303232 
+ *   https://bug.oraclecorp.com/pls/bug/webbug_print.show?c_rptno=12303232
  *   ("ACCESS LOG DOES NOT RECORD REQUESTS THAT FAIL WITH AN HTTP 400 ERROR")
  */
 public class WebTest {
@@ -37,14 +37,14 @@ public class WebTest {
         contextRoot = args[2];
         location = args[3];
     }
-    
+
     public static void main(String[] args) {
         WebTest webTest = new WebTest(args);
         webTest.doTest();
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -85,6 +85,6 @@ public class WebTest {
                 // ignore
             }
         }
-        
+
     }
 }

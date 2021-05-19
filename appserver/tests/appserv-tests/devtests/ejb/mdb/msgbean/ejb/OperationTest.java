@@ -23,7 +23,7 @@ import jakarta.transaction.UserTransaction;
 
 /**
  * Tests matrix of operations callable from the different
- * methods in a message-driven bean.  
+ * methods in a message-driven bean.
  */
 public class OperationTest {
 
@@ -38,18 +38,18 @@ public class OperationTest {
     public static final int IS_CALLER_IN_ROLE = 5;
     public static final int GET_EJB_HOME = 6;
     public static final int USER_TX_BEGIN = 7;
-    public static final int USER_TX_COMMIT = 8; 
+    public static final int USER_TX_COMMIT = 8;
     public static final int USER_TX_ROLLBACK = 9;
     public static final int NUM_OPERATIONS = 10;
-    
+
     // OPERATION SETS (Table 9, Section 13.5.1 EJB 2.0)
-    private static boolean[][] OPERATION_SETS = 
+    private static boolean[][] OPERATION_SETS =
     {
-        { false, false, false, false, false,  false,  false, false, false, false }, 
+        { false, false, false, false, false,  false,  false, false, false, false },
         { true,  false, false, false, false,  false,  false, false, false, false },
         { true,  true,  false, false, false,  false,  false, true,  true,  true  },
         { true,  false, false, true,  true,   false,  false, false, false, false },
-        { true,  true,  false, false, false,  false,  false, true,  true,  true  } 
+        { true,  true,  false, false, false,  false,  false, true,  true,  true  }
     };
 
     // Transaction types
@@ -62,8 +62,8 @@ public class OperationTest {
     public static final int EJB_CREATE  = 2;
     public static final int EJB_REMOVE = 3;
     public static final int ON_MESSAGE = 4;
-   
-    // 
+
+    //
     private static final int OPERATION_SET_MATRIX[][] =
     {
         { 0, 1, 1, 1, 3 },
@@ -82,11 +82,11 @@ public class OperationTest {
 
         boolean[] testResults = new boolean[NUM_OPERATIONS];
 
-        for(int operation = 0; operation < NUM_OPERATIONS; operation++) {            
+        for(int operation = 0; operation < NUM_OPERATIONS; operation++) {
             boolean result = false;
             try {
                 switch(operation) {
-                    case ENV_ACCESS : 
+                    case ENV_ACCESS :
                         result = doEnvAccess(); break;
                     case USER_TX_ACCESS :
                         result = doUserTxAccess(); break;
@@ -127,7 +127,7 @@ public class OperationTest {
                     System.out.println("Actual result   : " + result);
 
             }
-        }        
+        }
     }
 
     private boolean doEnvAccess() throws Throwable {
@@ -135,7 +135,7 @@ public class OperationTest {
         Context env = (Context) context.lookup("java:comp/env");
         String  envVar = (String) context.lookup("java:comp/env/EnvVar");
         return true;
-    }    
+    }
 
     private boolean doUserTxAccess() throws Throwable {
         UserTransaction userTx = mdc.getUserTransaction();
@@ -146,7 +146,7 @@ public class OperationTest {
         mdc.getCallerPrincipal();
         return true;
     }
- 
+
     private boolean doGetRollbackOnly() throws Throwable {
         mdc.getRollbackOnly();
         return true;
@@ -187,6 +187,6 @@ public class OperationTest {
         userTx.begin();
         userTx.rollback();
         return true;
-    }    
+    }
 
 }

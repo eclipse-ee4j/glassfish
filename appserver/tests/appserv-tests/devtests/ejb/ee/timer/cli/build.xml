@@ -28,7 +28,7 @@
 
 <project name="devtests.ejb.ee.timer" default="usage" basedir=".">
     <property file="build.properties"/>
-    
+
     &commonSetup;
     &commonBuild;
     &eecommonBuild;
@@ -148,12 +148,12 @@
 
     <target name="compile" depends="init-common">
         <mkdir dir="${build.classes.dir}"/>
-        <javac fork="true" includeAntRuntime="false" destdir="${build.classes.dir}" debug="true" 
+        <javac fork="true" includeAntRuntime="false" destdir="${build.classes.dir}" debug="true"
                classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/javaee.jar:${env.APS_HOME}/lib/reportbuilder.jar:${env.APS_HOME}/lib/reporter.jar"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/AdminBaseDevTest.java">
         </javac>
 
-        <javac fork="true" includeAntRuntime="false" 
+        <javac fork="true" includeAntRuntime="false"
                classpath="${build.classes.dir}:${env.S1AS_HOME}/lib/javaee.jar:${env.APS_HOME}/lib/reportbuilder.jar:${env.APS_HOME}/lib/reporter.jar"
                destdir="${build.classes.dir}" debug="true" srcdir="src" includes="**/*.java">
         </javac>

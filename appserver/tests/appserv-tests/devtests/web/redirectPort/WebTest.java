@@ -41,7 +41,7 @@ public class WebTest {
         contextRoot = args[2];
         trustStorePath = args[3];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4946739");
         WebTest webTest = new WebTest(args);
@@ -69,7 +69,7 @@ public class WebTest {
             } else {
                 url = new URL(conn.getHeaderField("Location"));
                 System.out.println("Redirected to: " + url.toString());
-                SSLContext ctx = SSLContext.getInstance("TLS"); 
+                SSLContext ctx = SSLContext.getInstance("TLS");
                 ctx.init(null, getTrustManagers(trustStorePath), null);
                 HttpsURLConnection httpsConn = (HttpsURLConnection) url.openConnection();
                 httpsConn.setSSLSocketFactory(ctx.getSocketFactory());
@@ -128,6 +128,6 @@ public class WebTest {
 
         public boolean verify(String hostname, SSLSession session) {
             return true;
-	}
+        }
     }
 }

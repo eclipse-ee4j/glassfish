@@ -24,7 +24,7 @@ import java.util.Map;
  * convenience class to cause an element name to be removed.
  *
  * @author  Gerald Ingalls
- * @version 
+ * @version
  */
 public abstract class RemoveVersionUpgrade implements VersionUpgrade {
   protected Map<String,String> matches;

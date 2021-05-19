@@ -94,11 +94,11 @@ public final class LibrariesTest
             }
             finally {
                 l.setLibraries( saveLibs );
-		    }
-		    
-		}
-	}
- 
+            }
+
+        }
+    }
+
 }
 
 

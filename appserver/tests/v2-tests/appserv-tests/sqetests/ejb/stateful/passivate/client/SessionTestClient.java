@@ -39,25 +39,25 @@ import java.text.*;
 public class SessionTestClient {
     private String testSuiteID="";
     private SimpleReporterAdapter stat;
-    
+
     public Context initial;
     public Object objref;
     SessionRemoteHome home=null;
-    SessionRemote remote=null;    
-    
+    SessionRemote remote=null;
+
     boolean beanLocated=false;
     String m_action="all";
     int m_clients=1;
-    
+
     /** Creates a new instance of SessionTestClient */
     public SessionTestClient(String ts_id,String numClients,String action) {
         stat =new SimpleReporterAdapter("appserv-tests");
-        stat.addDescription("This testsuites tests lifecycle of sfsb");    
-        testSuiteID=ts_id;       
+        stat.addDescription("This testsuites tests lifecycle of sfsb");
+        testSuiteID=ts_id;
         m_clients=new Integer(numClients).intValue();
         m_action=action;
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -71,9 +71,9 @@ public class SessionTestClient {
         Client.runStatefulTest();
         }
         else
-            System.err.println("Test didn't run");        
+            System.err.println("Test didn't run");
     }
-    
+
     public boolean runSetup() {
         System.out.println("Test Execution Starts---------->");
         try{
@@ -89,26 +89,26 @@ public class SessionTestClient {
             beanLocated=false;
         }
         return beanLocated;
-        
+
     }
-    
-    public void runStatefulTest(){   
+
+    public void runStatefulTest(){
          SessionRemote[] remote=new SessionRemote[10];
         /*
-         *Due to performance reasons, beans are not immediately 
+         *Due to performance reasons, beans are not immediately
          passivated after they are identified as candidates for passivation.
-         The container performs passivations in batches 
+         The container performs passivations in batches
          (that is after it accumulates some number of beans - which is set to 8 internally)
-         *This is the reason why you do not see a passivation. 
-         If you had created more than 8 sessions then you would see the expected behaviour. 
+         *This is the reason why you do not see a passivation.
+         If you had created more than 8 sessions then you would see the expected behaviour.
          *hence number 10 is chosen.
          *
          **/
         try {
             for(int i=0;i<10;i++){
         remote[i]=home.create("<"+i+">");
-        }                   
-            
+        }
+
             System.out.println("Started transaction on Stateful Bean 5,\n shouldn't get passivated");
             System.out.println(remote[5].txMethod());
             System.out.println("Now going to sleep for 40 secs to passivate beans");
@@ -118,7 +118,7 @@ public class SessionTestClient {
         }catch(jakarta.ejb.CreateException e){
             System.out.println("Error while creating beans");
             e.printStackTrace();
-            stat.addStatus(testSuiteID+" "+"10 SFSB Creation",stat.FAIL);            
+            stat.addStatus(testSuiteID+" "+"10 SFSB Creation",stat.FAIL);
         }catch(java.lang.InterruptedException e){
             System.out.println("Error while sleeping");
             e.printStackTrace();
@@ -127,16 +127,16 @@ public class SessionTestClient {
             e.printStackTrace();
             stat.addStatus(testSuiteID+" "+"10 SFSB Creation",stat.FAIL);
         }
-         try{             
+         try{
              for(int i=0;i<10;i++){
                  System.out.println("......"+remote[i].getMessage());
                  remote[i].afterActivationBusinessMethod();
             }
-        
+
          }catch(java.rmi.NoSuchObjectException e){
              System.out.println("java.rmi.NoSuchObjectException");
              System.out.println("Bean 9 removed");
-             
+
              e.getMessage();
          }catch(java.rmi.RemoteException e){
              System.out.println("unforseen circumstances");
@@ -144,10 +144,10 @@ public class SessionTestClient {
          }catch(Throwable e){
              e.printStackTrace();
          }
-         
+
          try{
              HashMap finalResult=new HashMap();
-             finalResult=remote[9].getEJBRecorder();             
+             finalResult=remote[9].getEJBRecorder();
              System.out.println("Result Map====="+finalResult.toString());
              //i <9 instead of 10 as 9th bean is removed
              for(int i=0;i<10;i++){
@@ -161,17 +161,17 @@ public class SessionTestClient {
                  if(i==5){
                      if(activateresult.equalsIgnoreCase("false")){
                          System.out.println("Bean 5 expectedly fails activation");
-                         
+
                      }
                  }
              }
-   
+
             // Test run is over,remove all SFSB after this(productization of test,returns server to clean state
             //close all resources in SFSB remove methods
             for(int i=0;i<10;i++){
                 try{
                     remote[i].remove();
-                    
+
                 }catch(jakarta.ejb.RemoveException e){
                     System.out.println("Error while removing  :"+i+"SFSB");
                     if(i==5)
@@ -191,6 +191,6 @@ public class SessionTestClient {
             stat.addStatus(testSuiteID+" "+"SFSB_removal",stat.FAIL);
         }
         stat.printSummary();
-    }     
-    
+    }
+
 }

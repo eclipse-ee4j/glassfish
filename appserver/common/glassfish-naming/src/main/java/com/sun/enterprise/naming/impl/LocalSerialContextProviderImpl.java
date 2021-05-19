@@ -88,7 +88,7 @@ public class LocalSerialContextProviderImpl extends SerialContextProviderImpl {
     public Object lookup(String name)
             throws NamingException, RemoteException {
         Object obj = super.lookup(name);
-        
+
         try {
             if (obj instanceof Reference) {
                 Reference ref = (Reference) obj;
@@ -113,7 +113,7 @@ public class LocalSerialContextProviderImpl extends SerialContextProviderImpl {
                 }
 
             }
-       
+
         } catch (Exception e) {
             RemoteException re = new RemoteException("", e);
             throw re;

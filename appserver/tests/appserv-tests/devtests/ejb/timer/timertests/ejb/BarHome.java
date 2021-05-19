@@ -21,12 +21,12 @@ import jakarta.ejb.*;
 
 public interface BarHome extends EJBHome {
 
-    Bar create(Long value1, String value2) 
+    Bar create(Long value1, String value2)
         throws CreateException, RemoteException;
-    Bar createWithTimer(Long value1, String value2) 
+    Bar createWithTimer(Long value1, String value2)
         throws CreateException, RemoteException;
     Bar findByPrimaryKey(BarPrimaryKey bpk) throws FinderException, RemoteException;
-    
+
     void newTimerAndRemoveBean(Long value1, String value2) throws RemoteException;
     void newTimerAndRemoveBeanAndRollback(Long value1, String value2) throws RemoteException;
     void nixBeanAndRollback(Bar b) throws RemoteException;

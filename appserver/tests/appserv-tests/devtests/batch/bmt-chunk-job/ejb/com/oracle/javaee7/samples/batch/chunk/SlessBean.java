@@ -36,32 +36,32 @@ public class SlessBean
     }
 
     public long submitJob() {
-	try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
+        try {
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
 
-	  Properties props = new Properties();
-	  for (int i=0; i<9; i++)
-		props.put("Chunk-Key-"+ i, "Chunk-Value-" + i);
-	  return  jobOperator.start("ChunkJob", props);
+          Properties props = new Properties();
+          for (int i=0; i<9; i++)
+                props.put("Chunk-Key-"+ i, "Chunk-Value-" + i);
+          return  jobOperator.start("ChunkJob", props);
         } catch (Exception ex) {
-	  throw new RuntimeException(ex);
-	}
+          throw new RuntimeException(ex);
+        }
     }
 
     public String getJobExitStatus(long executionId) {
-	try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
-	  JobExecution je =  jobOperator.getJobExecution(executionId);
-	  return je.getExitStatus();
-	} catch (Exception ex) {
-	  throw new RuntimeException(ex);
-	}
+        try {
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
+          JobExecution je =  jobOperator.getJobExecution(executionId);
+          return je.getExitStatus();
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
+        }
 
     }
 
     public boolean wasEjbCreateCalled() {
-	return ejbCreateCalled;
+        return ejbCreateCalled;
     }
 
-														            
+
 }

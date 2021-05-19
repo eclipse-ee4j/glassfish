@@ -19,49 +19,42 @@ package org.glassfish.admin.amx.util.stringifier;
 import java.util.Collection;
 import java.util.Iterator;
 
-
 /**
-	Registers all standard Stringifiers.
+ * Registers all standard Stringifiers.
  */
-public class StringifierRegistryIniterImpl implements StringifierRegistryIniter
-{
-	private final StringifierRegistry	mRegistry;
-	
-		public
-	StringifierRegistryIniterImpl( StringifierRegistry registry )
-	{
-		mRegistry			= registry;
-		
-		registerTypes();
-	}
-	
-		void
-	registerTypes()
-	{
-		if ( mRegistry.lookup( Iterator.class ) == null )
-		{
-			add( Iterator.class, IteratorStringifier.DEFAULT );
-			add( Collection.class, CollectionStringifier.DEFAULT );
-			add( Object.class, SmartStringifier.DEFAULT );
-		
-			add( java.security.Provider.class, ProviderStringifier.DEFAULT );
-		}
-	}
+public class StringifierRegistryIniterImpl implements StringifierRegistryIniter {
 
-	
-		public void
-	add( Class theClass, Stringifier theStringifier )
-	{
-		mRegistry.add( theClass, theStringifier );
-	}
-	
-		public StringifierRegistry
-	getRegistry()
-	{
-		return( mRegistry );
-	}
-	
+    private final StringifierRegistry mRegistry;
+
+    public StringifierRegistryIniterImpl(StringifierRegistry registry) {
+        mRegistry = registry;
+
+        registerTypes();
+    }
+
+
+    void registerTypes() {
+        if (mRegistry.lookup(Iterator.class) == null) {
+            add(Iterator.class, IteratorStringifier.DEFAULT);
+            add(Collection.class, CollectionStringifier.DEFAULT);
+            add(Object.class, SmartStringifier.DEFAULT);
+
+            add(java.security.Provider.class, ProviderStringifier.DEFAULT);
+        }
+    }
+
+
+    @Override
+    public void add(Class theClass, Stringifier theStringifier) {
+        mRegistry.add(theClass, theStringifier);
+    }
+
+
+    @Override
+    public StringifierRegistry getRegistry() {
+        return (mRegistry);
+    }
+
 }
-
 
 

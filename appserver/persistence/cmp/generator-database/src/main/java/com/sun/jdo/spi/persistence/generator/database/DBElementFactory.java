@@ -57,7 +57,7 @@ class DBElementFactory {
     private DBElementFactory() {
     }
 
-    /** 
+    /**
      * Creates and returns a schema from give schema name
      * @param schemaName A name for schema.
      * @return Newly created schema element.
@@ -99,10 +99,10 @@ class DBElementFactory {
      * @return ColumnElement that represents the newly-added column.
      * @throws DBException
      */
-    static ColumnElement createAndAttachColumn(String columnName, 
+    static ColumnElement createAndAttachColumn(String columnName,
             TableElement table, JDBCInfo ji) throws DBException {
 
-        // Create column id 
+        // Create column id
         String fullName = NameUtil.getAbsoluteMemberName(
                 table.getName().getName(), columnName);
         DBIdentifier columnId = DBIdentifier.create(columnName);
@@ -206,9 +206,9 @@ class DBElementFactory {
 
                 // create column to ref primary key of ref table
                 JDBCInfo ji = new JDBCInfo(
-                        refColumn.getType(), 
+                        refColumn.getType(),
                         refColumn.getPrecision(),
-                        refColumn.getScale(), 
+                        refColumn.getScale(),
                         refColumn.getLength(),
                         true);
 
@@ -249,7 +249,7 @@ class DBElementFactory {
         JDBCInfo rc = mappingPolicy.getJDBCInfo(fieldName, fieldType);
 
         // We won't find a JDBCInfo for user-defined types.  Treat them as
-        // Object. 
+        // Object.
         if (null == rc) {
             // Treat as user-defined object type.
             rc = mappingPolicy.getJDBCInfo(null, DEFAULT_FIELD_TYPE); // NOI18N

@@ -121,7 +121,7 @@ public class TxBeanB implements SessionBean {
                                 "', " + bal + ")");
         System.out.println("Account added Successfully in DB2...");
         stmt1.close();
-	    con1.close();
+            con1.close();
         stmt2.close();
         con2.close();
         tx.commit();
@@ -133,7 +133,7 @@ public class TxBeanB implements SessionBean {
                                "', " + bal + ")");
         System.out.println("Account added Successfully in DB1...");
         stmt2.close();
-	    con2.close();
+            con2.close();
         tx.commit();
         tx.begin();
         con1 = getConnection(dbURL1,user1,password1);
@@ -177,7 +177,7 @@ public class TxBeanB implements SessionBean {
             System.out.println("Got DB Connection Successfully...");
         } catch (Exception ex) {
             System.out.println("Exception in getConnection: " + ex.toString());
-	    ex.printStackTrace();
+            ex.printStackTrace();
         }
         return con;
     }

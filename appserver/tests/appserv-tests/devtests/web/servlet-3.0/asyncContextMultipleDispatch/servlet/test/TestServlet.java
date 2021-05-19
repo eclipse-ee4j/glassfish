@@ -36,7 +36,7 @@ public class TestServlet extends HttpServlet implements AsyncListener {
         if (!req.isAsyncSupported()) {
             throw new ServletException("Async not supported when it should");
         }
-   
+
         if (req.getDispatcherType() == DispatcherType.REQUEST) {
             // Container-initiated dispatch
             req.setAttribute("ABC", "DEF");
@@ -80,7 +80,7 @@ public class TestServlet extends HttpServlet implements AsyncListener {
         /*
          * ServletRequest#startAsync clears the list of AsyncListener
          * instances registered with the AsyncContext - after calling
-         * each AsyncListener at its onStartAsync method, which is the 
+         * each AsyncListener at its onStartAsync method, which is the
          * method we're in.
          * Register ourselves again, so we continue to get notified
          */

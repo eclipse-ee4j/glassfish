@@ -22,6 +22,6 @@ import jakarta.ejb.EJBHome;
 
 public interface TraderHome extends EJBHome {
 
-  
+
   TraderRemote create() throws CreateException, RemoteException;
 }

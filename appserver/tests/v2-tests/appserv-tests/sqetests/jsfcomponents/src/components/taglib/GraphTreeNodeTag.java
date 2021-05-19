@@ -62,11 +62,11 @@ public class GraphTreeNodeTag extends UIComponentBodyTag {
     private String action = null;
     private boolean expanded;
     private boolean enabled = true;
-   
+
     // Relationship Instance Variables
 
     //
-    // Constructors and Initializers    
+    // Constructors and Initializers
     //
 
     public GraphTreeNodeTag() {
@@ -159,7 +159,7 @@ public class GraphTreeNodeTag extends UIComponentBodyTag {
             return BodyTag.EVAL_BODY_BUFFERED;
         }
         Node node = new Node(name, label, action, icon, enabled, expanded);
-        
+
         // get the immediate ancestor/parent tag of this tag.
         GraphTreeNodeTag parentNode = null;
         try {
@@ -169,7 +169,7 @@ public class GraphTreeNodeTag extends UIComponentBodyTag {
         } catch (Exception e) {
             System.out.println(
                 "Exception while locating GraphTreeNodeTag.class");
-        }    
+        }
         // if this tag has no parent that is a node tag,
         if (parentNode == null) {
             // then this should be root
@@ -192,5 +192,5 @@ public class GraphTreeNodeTag extends UIComponentBodyTag {
     }
 
 }
-    
+
 

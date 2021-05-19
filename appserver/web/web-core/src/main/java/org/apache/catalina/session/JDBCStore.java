@@ -440,7 +440,7 @@ public class JDBCStore extends StoreBase {
      */
     public int getSize() throws IOException {
         int size = 0;
-        String sizeSql = 
+        String sizeSql =
             "SELECT COUNT(" + sessionIdCol + ") FROM " + sessionTable +
             " WHERE " + sessionAppCol + " = ?";
         ResultSet rst = null;
@@ -809,7 +809,7 @@ public class JDBCStore extends StoreBase {
                 }
             }
 
-            if( preparedKeysSql != null ) { 
+            if( preparedKeysSql != null ) {
                 try {
                     preparedKeysSql.close();
                 } catch (SQLException e) {
@@ -817,7 +817,7 @@ public class JDBCStore extends StoreBase {
                 }
             }
 
-            if( preparedSaveSql != null ) { 
+            if( preparedSaveSql != null ) {
                 try {
                     preparedSaveSql.close();
                 } catch (SQLException e) {
@@ -825,7 +825,7 @@ public class JDBCStore extends StoreBase {
                 }
             }
 
-            if( preparedClearSql != null ) { 
+            if( preparedClearSql != null ) {
                 try {
                     preparedClearSql.close();
                 } catch (SQLException e) {
@@ -833,7 +833,7 @@ public class JDBCStore extends StoreBase {
                 }
             }
 
-            if( preparedRemoveSql != null ) { 
+            if( preparedRemoveSql != null ) {
                 try {
                     preparedRemoveSql.close();
                 } catch (SQLException e) {
@@ -841,7 +841,7 @@ public class JDBCStore extends StoreBase {
                 }
             }
 
-            if( preparedLoadSql != null ) { 
+            if( preparedLoadSql != null ) {
                 try {
                     preparedLoadSql.close();
                 } catch (SQLException e) {

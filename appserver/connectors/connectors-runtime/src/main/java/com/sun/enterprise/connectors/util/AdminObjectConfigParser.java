@@ -21,7 +21,7 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 
 import java.util.Properties;
 
-/** Interface class of admin object interface parser methods. 
+/** Interface class of admin object interface parser methods.
  *  @author Srikanth P
  */
 public interface AdminObjectConfigParser extends ConnectorConfigParser {
@@ -30,8 +30,8 @@ public interface AdminObjectConfigParser extends ConnectorConfigParser {
      *  Obtains the admin object intercface names of a given rar.
      *  @param desc ConnectorDescriptor pertaining to rar.
      *  @return Array of admin object interface names as strings
-     *  @throws ConnectorRuntimeException If rar is not exploded or 
-     *                                    incorrect ra.xml 
+     *  @throws ConnectorRuntimeException If rar is not exploded or
+     *                                    incorrect ra.xml
      */
     public String[] getAdminObjectInterfaceNames(ConnectorDescriptor desc)
                       throws ConnectorRuntimeException;

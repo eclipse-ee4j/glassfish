@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * Provides {@link Configured} bean integration with
  * external configuration systems and providers.
- * 
+ *
  * @author Jeff Trent
  */
 @Contract
@@ -30,12 +30,12 @@ public interface ConfigTransactionFactory {
   /**
    * Gets the active transaction, optionally creating
    * a new transaction if no transaction is active.
-   * 
+   *
    * @param create
    *    indicates that a new transaction should be
    *    started if no active transaction open yet
    * @return the ConfigTransaction
    */
   ConfigTransaction getActiveTransaction(boolean create);
-  
+
 }

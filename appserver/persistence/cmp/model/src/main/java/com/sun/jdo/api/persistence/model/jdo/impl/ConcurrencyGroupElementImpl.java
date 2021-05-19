@@ -24,27 +24,27 @@ package com.sun.jdo.api.persistence.model.jdo.impl;
 
 import com.sun.jdo.api.persistence.model.jdo.ConcurrencyGroupElement;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
-public class ConcurrencyGroupElementImpl extends FieldGroupElementImpl 
-	implements ConcurrencyGroupElement.Impl
+public class ConcurrencyGroupElementImpl extends FieldGroupElementImpl
+    implements ConcurrencyGroupElement.Impl
 {
-	/** Create new ConcurrencyGroupElementImpl with no corresponding name.  
-	 * This constructor should only be used for cloning and archiving.
-	 */
-	public ConcurrencyGroupElementImpl ()
-	{
-		this(null);
-	}
+    /** Create new ConcurrencyGroupElementImpl with no corresponding name.
+     * This constructor should only be used for cloning and archiving.
+     */
+    public ConcurrencyGroupElementImpl ()
+    {
+        this(null);
+    }
 
-	/** Creates new ConcurrencyGroupElementImpl with the corresponding name 
-	 * @param name the name of the element
-	 */
-	public ConcurrencyGroupElementImpl (String name)
-	{
-		super(name);
-	}
+    /** Creates new ConcurrencyGroupElementImpl with the corresponding name
+     * @param name the name of the element
+     */
+    public ConcurrencyGroupElementImpl (String name)
+    {
+        super(name);
+    }
 }

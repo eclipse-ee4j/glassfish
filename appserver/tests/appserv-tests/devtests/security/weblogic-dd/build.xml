@@ -46,7 +46,7 @@
     <target name="display-header">
         <echo message="-->Running ${ant.project.name} tests from ${basedir} ..."/>
     </target>
-   
+
     <target name="setup" depends="init-common">
         <antcall target="create-user-common">
             <param name="user" value="wlUser"/>
@@ -76,7 +76,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>
-    
+
     <target name="clean" depends="init-common">
         <antcall target="clean-common"/>
     </target>
@@ -114,7 +114,7 @@
         </jar>
     </target>
 
-    <!-- variables needed by custom-build 
+    <!-- variables needed by custom-build
          1. wlpass
          2. wluser
          3. wlrole
@@ -178,7 +178,7 @@
             <param name="wlrole" value="weblogic-app-xml"/>
         </antcall>
     </target>
-    
+
     <target name="run-negative" depends="init-common">
         <antcall target="custom-neg-run">
             <param name="wluser" value="wlUser"/>
@@ -193,7 +193,7 @@
             <param name="wlrole" value="weblogic-app-xml"/>
         </antcall>
     </target>
-    
+
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

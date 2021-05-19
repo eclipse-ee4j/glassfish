@@ -20,7 +20,7 @@ import jakarta.ejb.*;
 import jakarta.annotation.Resource;
 
 @Stateful
-public class CommitStatefulBean 
+public class CommitStatefulBean
     implements CommitStatefulLocal, SessionSynchronization {
 
 

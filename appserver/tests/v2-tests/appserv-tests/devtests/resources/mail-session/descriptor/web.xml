@@ -33,59 +33,59 @@
         <servlet-name>Servlet</servlet-name>
         <url-pattern>/servlet</url-pattern>
     </servlet-mapping>
-	<mail-session>
-		<description>Sample Mail Session definition web1</description>
-		<name>java:global/mail/Servlet_MS_MailSession</name>
-		<store-protocol>IMAP</store-protocol>
-		<transport-protocol>SMTP</transport-protocol>
-		<host>somewhere.myco.com</host>
-		<user>linda</user>
-		<password>secret</password>
-		<from>some.body@myco.com</from>
-		<property>
-			<name>Property1</name>
-			<value>10</value>
-		</property>
-		<property>
-			<name>Property2</name>
-			<value>20</value>
-		</property>
-	</mail-session>
-	<mail-session>
-		<description>Sample Mail Session definition web2</description>
-		<name>java:comp/mail/Servlet_MS_MailSession</name>
-		<store-protocol>IMAP</store-protocol>
-		<transport-protocol>SMTP</transport-protocol>
-		<host>somewhere.myco.com</host>
-		<user>linda</user>
-		<password>secret</password>
-		<from>some.body@myco.com</from>
-		<property>
-			<name>Property1</name>
-			<value>10</value>
-		</property>
-		<property>
-			<name>Property2</name>
-			<value>20</value>
-		</property>
-	</mail-session>
-	<mail-session>
-		<description>Sample Mail Session definition web2</description>
-		<name>java:global/env/Servlet_MS_MailSession</name>
-		<store-protocol>IMAP</store-protocol>
-		<transport-protocol>SMTP</transport-protocol>
-		<host>somewhere.myco.com</host>
-		<user>linda</user>
-		<password>secret</password>
-		<from>some.body@myco.com</from>
-		<property>
-			<name>Property1</name>
-			<value>10</value>
-		</property>
-		<property>
-			<name>Property2</name>
-			<value>20</value>
-		</property>
-	</mail-session>
+    <mail-session>
+        <description>Sample Mail Session definition web1</description>
+        <name>java:global/mail/Servlet_MS_MailSession</name>
+        <store-protocol>IMAP</store-protocol>
+        <transport-protocol>SMTP</transport-protocol>
+        <host>somewhere.myco.com</host>
+        <user>linda</user>
+        <password>secret</password>
+        <from>some.body@myco.com</from>
+        <property>
+            <name>Property1</name>
+            <value>10</value>
+        </property>
+        <property>
+            <name>Property2</name>
+            <value>20</value>
+        </property>
+    </mail-session>
+    <mail-session>
+        <description>Sample Mail Session definition web2</description>
+        <name>java:comp/mail/Servlet_MS_MailSession</name>
+        <store-protocol>IMAP</store-protocol>
+        <transport-protocol>SMTP</transport-protocol>
+        <host>somewhere.myco.com</host>
+        <user>linda</user>
+        <password>secret</password>
+        <from>some.body@myco.com</from>
+        <property>
+            <name>Property1</name>
+            <value>10</value>
+        </property>
+        <property>
+            <name>Property2</name>
+            <value>20</value>
+        </property>
+    </mail-session>
+    <mail-session>
+        <description>Sample Mail Session definition web2</description>
+        <name>java:global/env/Servlet_MS_MailSession</name>
+        <store-protocol>IMAP</store-protocol>
+        <transport-protocol>SMTP</transport-protocol>
+        <host>somewhere.myco.com</host>
+        <user>linda</user>
+        <password>secret</password>
+        <from>some.body@myco.com</from>
+        <property>
+            <name>Property1</name>
+            <value>10</value>
+        </property>
+        <property>
+            <name>Property2</name>
+            <value>20</value>
+        </property>
+    </mail-session>
 </web-app>
 

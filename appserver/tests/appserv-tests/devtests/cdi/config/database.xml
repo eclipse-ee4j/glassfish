@@ -28,16 +28,16 @@
 <!--
 <project name="oracle-db-settings" default="create-jdbc-conpool-connector" basedir=".">
 
-&common; 
+&common;
 &testcommon;
 -->
 
 <target name="create-jdbc-conpool-connector" depends="default-jdbc-conpool, oracle-jdbc-conpool"/>
 
 <target name="default-jdbc-conpool" depends="init-common" unless="oracle">
-	<antcall target="create-jdbc-connpool-common"/>
+        <antcall target="create-jdbc-connpool-common"/>
 </target>
-	   
+
 <target name="oracle-jdbc-conpool" depends="init-common" if="oracle">
 <echo message="creating jdbc connection pool ${jdbc.conpool.name}"
     level="verbose"/>
@@ -50,12 +50,12 @@
         <arg line="${jdbc.conpool.name}"/>
     </exec>
     <antcall target="set-oracle-props">
-	<param name="pool.type" value="jdbc"/>
-	<param name="conpool.name" value="${jdbc.conpool.name}"/>
+        <param name="pool.type" value="jdbc"/>
+        <param name="conpool.name" value="${jdbc.conpool.name}"/>
     </antcall>
 </target>
 
-<target name="set-oracle-props" depends="init-common" if="oracle"> 
+<target name="set-oracle-props" depends="init-common" if="oracle">
   <property file="${env.APS_HOME}/devtests/connector/config/oracle.properties"/>
   <antcall target="asadmin-common-ignore-fail">
     <param name="admin.command" value="set" />
@@ -97,15 +97,15 @@
 
 <target name="execute-sql-connector" depends="init-common, default-sql, sql-oracle"/>
 
-<target name="default-sql" depends="init-common" unless="oracle" > 
-	<antcall target="execute-sql-common"/>
+<target name="default-sql" depends="init-common" unless="oracle" >
+        <antcall target="execute-sql-common"/>
 </target>
 
 <target name="sql-oracle" depends="init-common" if="oracle">
-	<property file="${env.APS_HOME}/devtests/connector/config/oracle.properties"/>
-	<property name="domain.lib.ext" value="${env.S1AS_HOME}/domains/domain1/lib/ext"/>
-	<property name="oracle.driver.path" value="${domain.lib.ext}/smoracle.jar:${domain.lib.ext}/smbase.jar:${domain.lib.ext}/smresource.jar:${domain.lib.ext}/smutil.jar:${domain.lib.ext}/smspy.jar:${domain.lib.ext}/Oranxo.jar"/>
-	<echo message="${oracleForConnector.driver}"/>
+        <property file="${env.APS_HOME}/devtests/connector/config/oracle.properties"/>
+        <property name="domain.lib.ext" value="${env.S1AS_HOME}/domains/domain1/lib/ext"/>
+        <property name="oracle.driver.path" value="${domain.lib.ext}/smoracle.jar:${domain.lib.ext}/smbase.jar:${domain.lib.ext}/smresource.jar:${domain.lib.ext}/smutil.jar:${domain.lib.ext}/smspy.jar:${domain.lib.ext}/Oranxo.jar"/>
+        <echo message="${oracleForConnector.driver}"/>
 <echo message="Executing sql statement at ${basedir} from ${sql.file}"
     level="verbose"/>
   <sql

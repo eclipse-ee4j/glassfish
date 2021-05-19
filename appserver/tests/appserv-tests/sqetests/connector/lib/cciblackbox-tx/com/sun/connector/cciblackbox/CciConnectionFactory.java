@@ -30,7 +30,7 @@ import jakarta.resource.spi.ConnectionRequestInfo;
 import jakarta.resource.spi.ManagedConnectionFactory;
 
 /**
- * This implementation class provides provides an inteface for getting 
+ * This implementation class provides provides an inteface for getting
  * connection to an EIS instance.
  * @author Sheetal Vartak
  *

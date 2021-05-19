@@ -32,7 +32,7 @@ public class TestPKSuper implements java.io.Serializable {
     /** Creates a new instance of TestPKSuper */
     public TestPKSuper() {
     }
-    
+
     public boolean equals(java.lang.Object obj) {
         if( obj==null ||
             !this.getClass().equals(obj.getClass()) ) return( false );
@@ -40,7 +40,7 @@ public class TestPKSuper implements java.io.Serializable {
         TestPKSuper o=(TestPKSuper) obj;
         return ( this.id == o.id );
     }
-        
+
     public int hashCode() {
         int hashCode=0;
         hashCode += id;

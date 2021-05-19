@@ -61,7 +61,7 @@ public class DeleteThreadpool implements AdminCommand, AdminCommandSecurity.Prea
 
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     String target;
-    
+
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
@@ -72,13 +72,13 @@ public class DeleteThreadpool implements AdminCommand, AdminCommandSecurity.Prea
     Domain domain;
 
     @Inject
-    ServiceLocator habitat;    
+    ServiceLocator habitat;
 
     private ThreadPools threadPools;
-    
+
     @AccessRequired.To("delete")
     private ThreadPool pool;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
@@ -110,8 +110,8 @@ public class DeleteThreadpool implements AdminCommand, AdminCommandSecurity.Prea
         }
         return true;
     }
-    
-    
+
+
 
     /**
      * Executes the command with the command parameters passed as Properties
@@ -122,7 +122,7 @@ public class DeleteThreadpool implements AdminCommand, AdminCommandSecurity.Prea
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
 
-        
+
 
         try {
             ConfigSupport.apply(new SingleConfigCode<ThreadPools>() {

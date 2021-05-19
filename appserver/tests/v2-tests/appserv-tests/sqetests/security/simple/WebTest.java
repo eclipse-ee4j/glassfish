@@ -47,14 +47,14 @@ public class WebTest
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Basic Web Authentication/Authorization Test");
 
         String host = args[0];
         String portS = args[1];
         int port = new Integer(portS).intValue();
         String name;
-        
+
         System.out.println("Host ["+host+"] port ("+port+")");
 
         // GET with a user who maps directly to role
@@ -69,7 +69,7 @@ public class WebTest
             System.out.println(t.getMessage());
             stat.addStatus(name, stat.FAIL);
         }
-        
+
         // GET with a user who maps through group
         name="simpleauth: BASIC/access control: testuser42";
         try {
@@ -128,7 +128,7 @@ public class WebTest
         os.write("GET /simpleauth/Test.jsp HTTP/1.0\n".getBytes());
         os.write(auth.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = s.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
         String line = null;
@@ -144,5 +144,5 @@ public class WebTest
         s.close();
         throw new Exception("String not found: "+result);
     }
-  
+
 }

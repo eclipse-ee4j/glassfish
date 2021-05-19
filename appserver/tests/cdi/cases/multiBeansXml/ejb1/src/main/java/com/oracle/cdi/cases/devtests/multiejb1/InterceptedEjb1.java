@@ -24,7 +24,7 @@ import jakarta.enterprise.inject.spi.BeanManager;
 import jakarta.inject.Inject;
 
 /**
- * 
+ *
  * @author jwells
  *
  */

@@ -58,7 +58,7 @@ public class ParameterTable
 
     /** Query Parameter values */
     transient List values = null;
-    
+
     /** null key */
     private static final String NULL_ = "null"; //NOI18N
 
@@ -73,7 +73,7 @@ public class ParameterTable
 
     /** noparams key */
     private static final String NOPARAMS_ = "noparams"; //NOI18N
-    
+
     /** key parameter separator */
     private static final char PARAMKEY_SEPARATOR = '/';
 
@@ -109,8 +109,8 @@ public class ParameterTable
     }
 
     /**
-     * Adds a new query parameter with the specified type to the query 
-     * parameter table. 
+     * Adds a new query parameter with the specified type to the query
+     * parameter table.
      */
     public void add(String name, Type type)
     {
@@ -119,7 +119,7 @@ public class ParameterTable
     }
 
     /**
-     * Initializes the parameter declarations (names and types list). 
+     * Initializes the parameter declarations (names and types list).
      * Needs to be called prior to any add call.
      */
     public void init()
@@ -129,7 +129,7 @@ public class ParameterTable
     }
 
     /**
-     * Initializes the parameter values. This methods sets the values for all 
+     * Initializes the parameter values. This methods sets the values for all
      * declared parameters to unbound.
      */
     public void initValueHandling()
@@ -140,7 +140,7 @@ public class ParameterTable
             values.add(unbound);
         }
     }
-    
+
     /**
      * Check actual query parameters specified as array and return the
      * ValueFetcher for the inputparameters.
@@ -242,7 +242,7 @@ public class ParameterTable
      * Calculates and returns the key for the RetrieveDesc cache based,
      * on the actual parameter values.
      * A <code>null</code> return means, the RetrieveDesc should not be
-     * cached. 
+     * cached.
      * Note, this method needs to be in sync with method inline.
      */
     public String getKeyForRetrieveDescCache()
@@ -285,7 +285,7 @@ public class ParameterTable
      * Returns true if the parameter with the specified index should be inlined
      * by the optimizer.
      * Note, this method needs to be in sync with method
-     * getKeyForRetrieveDescCache. 
+     * getKeyForRetrieveDescCache.
      * @param paramName the parameter
      * @return true if the specified parameter should be inlined.
      */
@@ -305,11 +305,11 @@ public class ParameterTable
 
     /**
      * Returns <code>true</code> if the specified parameter denotes a type
-     * whose values should be inlined by the query optimizer if a query 
+     * whose values should be inlined by the query optimizer if a query
      * parameter s is declared with such a type.
      */
     private boolean isInlineType(Object type)
-    { 
+    {
         // Check for types that are supported by JDBC, such that the
         // parameter can be mapped to a JDBC parameter, these are:
         // - String
@@ -386,7 +386,7 @@ public class ParameterTable
             throw new JDOFatalInternalException(I18NHelper.getMessage(
                 messages,
                 "jqlc.parametertable.definevaluebyindex.wrongindex", //NOI18N
-                String.valueOf(index)));          
+                String.valueOf(index)));
 
         // index > type.size => too many actual parameters
         if (index >= types.size())

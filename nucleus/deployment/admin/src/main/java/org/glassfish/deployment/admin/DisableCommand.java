@@ -82,11 +82,11 @@ import org.glassfish.deployment.versioning.VersioningUtils;
     @RestEndpoint(configBean=Application.class,opType=RestEndpoint.OpType.POST, path="disable", description="Disable",
         params={@RestParam(name="id", value="$parent")})
 })
-public class DisableCommand extends UndeployCommandParameters implements AdminCommand, 
+public class DisableCommand extends UndeployCommandParameters implements AdminCommand,
         DeploymentTargetResolver, AdminCommandSecurity.Preauthorization, AdminCommandSecurity.AccessCheckProvider {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DisableCommand.class);
-    
+
     final static String DISABLE_ACTION = "disable";
 
     @Param(optional=true, defaultValue="false")
@@ -115,7 +115,7 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
 
     @Inject
     ServiceLocator habitat;
-    
+
     private ActionReport report;
     private Logger logger;
     private String appName;
@@ -124,7 +124,7 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
     private Set<String> enabledVersionsToDisable = Collections.EMPTY_SET;
     private List<String> matchedVersions;
     private final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
-        
+
     public DisableCommand() {
         origin = Origin.unload;
         command = Command.disable;
@@ -134,9 +134,9 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
     public boolean preAuthorization(AdminCommandContext context) {
         report = context.getActionReport();
         logger = context.getLogger();
-        
+
         appName = name();
-        
+
         if (isundeploy) {
             origin = Origin.undeploy;
         }
@@ -191,11 +191,11 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
             }
         }
         return true;
-    } 
+    }
 
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
-        
+
         if (env.isDas() && DeploymentUtils.isDomainTarget(target)) {
             for (Map.Entry<String,Set<String>> entry : enabledVersionsInTargets.entrySet()) {
                 for (String t : entry.getValue()) {
@@ -211,7 +211,7 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
                 accessChecks.add(new AccessCheck(resourceForApp, DISABLE_ACTION));
             }
         } else if (target == null) {
-            final String resourceForApp = DeploymentCommandUtils.getTargetResourceNameForExistingAppRef(domain, 
+            final String resourceForApp = DeploymentCommandUtils.getTargetResourceNameForExistingAppRef(domain,
                         deployment.getDefaultTarget(appName, origin, _classicstyle), appName);
             if (resourceForApp != null) {
                 accessChecks.add(new AccessCheck(resourceForApp, DISABLE_ACTION));
@@ -226,11 +226,11 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
         if (resourceForApp != null) {
             accessChecks.add(new AccessCheck(resourceForApp, DISABLE_ACTION));
         }
-        
+
         return accessChecks;
     }
 
-    
+
     /**
      * Entry point from the framework into the command execution
      * @param context context for the command.
@@ -263,7 +263,7 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
                     ParameterMap paramMap = extractor.extract(Collections.EMPTY_LIST);
                     paramMap.set("DEFAULT", appName);
                     notifier.ensureBeforeReported(ExtendedDeploymentContext.Phase.REPLICATION);
-                    ClusterOperationUtil.replicateCommand("disable", FailurePolicy.Error, FailurePolicy.Warn, 
+                    ClusterOperationUtil.replicateCommand("disable", FailurePolicy.Error, FailurePolicy.Warn,
                             FailurePolicy.Ignore, targets, context, paramMap, habitat);
                 } catch (Exception e) {
                     report.failure(logger, e.getMessage());
@@ -346,13 +346,13 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
         }
 
         ApplicationInfo appInfo = deployment.get(appName);
-        
+
         try {
             Application app = applications.getApplication(appName);
             this.name = appName;
 
             final DeploymentContext basicDC = deployment.disable(this, app, appInfo, report, logger);
-            
+
             suppInfo.setDeploymentContext((ExtendedDeploymentContext)basicDC);
 
         } catch (Exception e) {
@@ -383,7 +383,7 @@ public class DisableCommand extends UndeployCommandParameters implements AdminCo
                 }
             }
         }
-    }        
+    }
 
     public String getTarget(ParameterMap parameters) {
         return DeploymentCommandUtils.getTarget(parameters, origin, deployment);

@@ -22,28 +22,31 @@ import org.glassfish.security.services.api.authorization.AzResult;
 import java.text.MessageFormat;
 
 public final class AzResultImpl implements AzResult {
-	
-	private final Decision decision;
-	private final Status status;
-	private final AzObligations obligations;
-	
-	public AzResultImpl(Decision d, Status s, AzObligations o) {
-		decision = d;
-		status = s;
-		obligations = o;
-	}
 
-	public Decision getDecision() {
-		return decision;
-	}
+    private final Decision decision;
+    private final Status status;
+    private final AzObligations obligations;
 
-	public Status getStatus() {
-		return status;
-	}
+    public AzResultImpl(Decision d, Status s, AzObligations o) {
+        decision = d;
+        status = s;
+        obligations = o;
+    }
 
-	public AzObligations getObligations() {
-		return obligations;
-	}
+    @Override
+    public Decision getDecision() {
+        return decision;
+    }
+
+    @Override
+    public Status getStatus() {
+        return status;
+    }
+
+    @Override
+    public AzObligations getObligations() {
+        return obligations;
+    }
 
 
     @Override

@@ -38,7 +38,7 @@ public interface DeletionDecorator<T extends ConfigBeanProxy, U extends ConfigBe
 
     /**
      * notification of a configuration element of type U deletion.
-     * 
+     *
      * Note that this notification is called within the boundaries of the configuration transaction, therefore the parent
      * instance is a writable copy and further changes to the parent can be made without enrolling it inside a transaction.
      *

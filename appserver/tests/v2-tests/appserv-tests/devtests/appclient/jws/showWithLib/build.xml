@@ -38,7 +38,7 @@
     <property name="lib.jar.path" value="lib.jar"/>
 
     <target name="build" depends="build.ear"/>
-    
+
     <target name="sign.jar" depends="build.lib">
         <signjar verbose="true" jar="${assemble.dir}/lib/lib.jar" alias="s1as" storepass="changeit"
                  keypass="changeit" keystore="${env.S1AS_HOME}/domains/domain1/config/keystore.jks"
@@ -61,8 +61,8 @@
                 <include name="META-INF/application.xml"/>
             </fileset>
         </jar>
-    </target> 
-   
+    </target>
+
     <target name="build.lib" depends="compile">
         <mkdir dir="${assemble.dir}"/>
         <mkdir dir="${assemble.dir}/lib"/>
@@ -71,8 +71,8 @@
                 <include name="**/lib/*.class"/>
             </fileset>
         </jar>
-    </target> 
-    
+    </target>
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="."/>
@@ -98,10 +98,10 @@
         <antcall target="undeploy-common"/>
     </target>
 -->
-    
+
     <target name="run" depends="init-common,test.embedded.client"/>
 
-    
+
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

@@ -50,7 +50,7 @@ public class TransactionalInterceptorSupports extends TransactionalInterceptorBa
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
-        
+
         setTransactionalTransactionOperationsManger(false);
         try {
             return proceed(ctx);

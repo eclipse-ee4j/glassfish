@@ -77,7 +77,7 @@ public class GMSCallBack implements CallBack {
                 if (!Configuration.isDBLoggingEnabled()) {
                     if (Configuration.getORB() == null) {
                         // IIOP listeners are not setup yet,
-                        // Create recoveryfile file so that automatic recovery will find it even 
+                        // Create recoveryfile file so that automatic recovery will find it even
                         // if no XA transaction is envolved.
                         fence = RecoveryLockFile.getDelegatedTransactionRecoveryFence(this);
                     }
@@ -129,7 +129,7 @@ public class GMSCallBack implements CallBack {
             }
 
             synchronized(lock) {
-                _logger.log(Level.INFO, "[GMSCallBack] Recovering for instance: " + instance + 
+                _logger.log(Level.INFO, "[GMSCallBack] Recovering for instance: " + instance +
                         " logdir: " + logdir);
                 doRecovery(logdir, instance, timestamp);
 
@@ -169,7 +169,7 @@ public class GMSCallBack implements CallBack {
         if (instance != null) {
             DistributedStateCache dsc=gms.getGroupHandle().getDistributedStateCache();
             Map<Serializable, Serializable> memberDetails = dsc.getFromCacheForPattern(MEMBER_DETAILS, instance );
-            delegatedLogDir = (String)memberDetails.get(TXLOGLOCATION); 
+            delegatedLogDir = (String)memberDetails.get(TXLOGLOCATION);
             if (_logger.isLoggable(Level.INFO)) {
                 _logger.log(Level.INFO, "[GMSCallBack] Tx log dir for instance " + instance + " is " + delegatedLogDir);
             }

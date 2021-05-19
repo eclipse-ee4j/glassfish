@@ -28,7 +28,7 @@ public interface PoolLifeCycleListener {
      * @param stackTrace
      */
     void toString(StringBuffer stackTrace);
-    
+
     /**
      * indicates that a connection is acquired by application
      */
@@ -100,20 +100,20 @@ public interface PoolLifeCycleListener {
     /**
      * indicates that free connections count in the pool has to be decremented.
      */
-    void decrementNumConnFree();    
-    
+    void decrementNumConnFree();
+
     /**
      * indicates that a connection is freed and the count is to be incremented.
      * @param beingDestroyed in case of an error.
      * @param steadyPoolSize
      */
     void incrementNumConnFree(boolean beingDestroyed, int steadyPoolSize);
-    
+
     /**
      * indicates that the wait queue length has increased.
      */
     void connectionRequestQueued();
-    
+
     /**
      * indicates that the wait queue length has decreased.
      */

@@ -36,14 +36,14 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="WebTest.java"/>
     </target>
 
     <target name="build" depends="compile"/>
-    
+
     <target name="setup" depends="init-common">
         <antcall target="asadmin-common-ignore-fail">
             <param name="admin.command" value="set" />
@@ -54,12 +54,12 @@
             <param name="admin.command" value="set" />
             <param name="operand.props"
                    value="${appserver.instance.name}.http-service.virtual-server.server.property.alternatedocroot_2=&quot;from=*.policy dir=${env.S1AS_HOME}/domains/${admin.domain}/config&quot;"/>
-        </antcall> 
+        </antcall>
         <antcall target="asadmin-common-ignore-fail">
             <param name="admin.command" value="set" />
             <param name="operand.props"
                    value="${appserver.instance.name}.http-service.virtual-server.server.property.alternatedocroot_3=&quot;from=/config/* dir=${env.S1AS_HOME}/domains/${admin.domain}&quot;"/>
-        </antcall> 
+        </antcall>
     </target>
 
     <target name="run" depends="init-common">
@@ -72,7 +72,7 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="restore" depends="init-common">
         <antcall target="asadmin-common-ignore-fail">
             <param name="admin.command" value="set" />

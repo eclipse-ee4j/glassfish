@@ -69,7 +69,7 @@ public class LocationTest {
 //
 //  @Test
 //  public void testMultiplePropagations() throws Exception {
-//    ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();    
+//    ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();
 //    Location location = wcMap.getLocation();
 //    assertEquals("guid", location.getOrigin());
 //    assertEquals("[0]", location.getLocationId());
@@ -85,16 +85,16 @@ public class LocationTest {
 //    ContextMapHelper.getScopeAwarePropagator().sendRequest(bos, PropagationMode.SOAP);
 //
 //    final ByteArrayInputStream bis = new ByteArrayInputStream(bos.toByteArray());
-//    new TestableThread() {     
+//    new TestableThread() {
 //      @Override
 //      protected void runTest() throws Exception {
 //        ContextMapHelper.getScopeAwarePropagator().receiveRequest(bis);
 //
 //        ContextMap wcMap = ContextMapHelper.getScopeAwareContextMap();
 //        Location location = wcMap.getLocation();
-//        MockLoggerAdapter.debug(location.getLocationId());       
+//        MockLoggerAdapter.debug(location.getLocationId());
 //        assertEquals(expectedLocationId, location.getLocationId());
 //      }
 //    }.startJoinAndCheckForFailures();
-//  }  
+//  }
 }

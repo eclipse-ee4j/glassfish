@@ -35,7 +35,7 @@ sunone/appserver/dtds/sun-application-client_1_4-0.dtd'>
             <message/>
             <request-protection
               auth-source="content" auth-recipient="after-content"/>
-            <response-protection 
+            <response-protection
               auth-source="content" auth-recipient="after-content"/>
           </message-security>
         </message-security-binding>
@@ -55,7 +55,7 @@ sunone/appserver/dtds/sun-application-client_1_4-0.dtd'>
             <message/>
             <request-protection
               auth-source="content" auth-recipient="after-content"/>
-            <response-protection 
+            <response-protection
               auth-source="content" auth-recipient="after-content"/>
           </message-security>
         </message-security-binding>

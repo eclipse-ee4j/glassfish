@@ -46,9 +46,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes set of ejb-ejb32-get_method_lc tests)
-	</echo>
+        <echo>
+                Usage:
+                        ant all (Executes set of ejb-ejb32-get_method_lc tests)
+        </echo>
     </target>
 </project>

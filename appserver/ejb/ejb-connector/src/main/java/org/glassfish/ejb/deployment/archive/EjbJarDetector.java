@@ -52,7 +52,7 @@ public class EjbJarDetector implements ArchiveDetector {
     private EjbType archiveType;
     @Inject
     private ServiceLocator baseServiceLocator;
-    
+
     private ArchiveHandler archiveHandler; // lazy initialisation
     private Logger logger = Logger.getLogger(getClass().getPackage().getName());
 

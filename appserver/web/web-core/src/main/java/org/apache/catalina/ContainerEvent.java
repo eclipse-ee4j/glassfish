@@ -43,7 +43,7 @@ public final class ContainerEvent extends EventObject {
 
     public static final String AFTER_CONTEXT_INITIALIZED
         = "afterContextInitialized";
-    
+
     public static final String BEFORE_CONTEXT_DESTROYED
         = "beforeContextDestroyed";
 

@@ -21,9 +21,9 @@ package com.sun.s1asdev.appclient.appcpath.lib;
  * @author tjquinn
  */
 public class LibUtil {
-    
+
     /** Creates a new instance of LibUtil */
     public LibUtil() {
     }
-    
+
 }

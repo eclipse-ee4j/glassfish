@@ -66,7 +66,7 @@ public abstract class AbstractArchiveHandler extends GenericHandler {
                 }
             });
     }
-    
+
     public List<URL> getManifestLibraries(DeploymentContext context) {
         try {
             Manifest manifest = getManifest(context.getSource());

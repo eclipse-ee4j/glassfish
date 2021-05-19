@@ -29,16 +29,16 @@ public class Common {
 
     static void aroundInvokeCalled(InvocationContext ctx, String id) {
 
-        List<String> interceptors = (List<String>) 
+        List<String> interceptors = (List<String>)
             ctx.getContextData().get(INTERCEPTORS_PROP);
-        
+
         if( interceptors == null ) {
             interceptors = new LinkedList<String>();
             ctx.getContextData().put(INTERCEPTORS_PROP, interceptors);
         }
 
         interceptors.add(id);
-        
+
     }
 
     static void checkResults(InvocationContext ctx) {
@@ -56,9 +56,9 @@ public class Common {
             for( char nextChar : methodNameUpper.toCharArray() ) {
                 expected.add(nextChar + "");
             }
-        } 
+        }
 
-        List<String> actual = (List<String>) 
+        List<String> actual = (List<String>)
             ctx.getContextData().get(INTERCEPTORS_PROP);
 
         String msg = "Expected " + expected + " for method " +
@@ -74,5 +74,5 @@ public class Common {
             System.out.println("Successful interceptor chain : " + msg);
         }
     }
-   
+
 }

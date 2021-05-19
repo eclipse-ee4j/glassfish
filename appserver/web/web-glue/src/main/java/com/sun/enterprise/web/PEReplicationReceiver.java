@@ -30,17 +30,17 @@ import org.apache.catalina.LifecycleException;
  * @author Larry White
  */
 public class PEReplicationReceiver implements ReplicationReceiver {
-    
+
     /** Creates a new instance of PEReplicationReceiver */
     public PEReplicationReceiver(EmbeddedWebContainer embedded) {
     }
-    
+
     public void init() {
         //no-op
     }
-    
+
     public void stop() throws LifecycleException {
         //no-op
     }
-    
+
 }

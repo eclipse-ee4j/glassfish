@@ -32,7 +32,7 @@ public class WebTest {
     private static SimpleReporterAdapter stat
         = new SimpleReporterAdapter("appserv-tests");
 
-    private static final String EXPECTED_RESPONSE = 
+    private static final String EXPECTED_RESPONSE =
         "RemoteAddress=123.456.789";
 
     private static final String TEST_NAME =
@@ -48,7 +48,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6347215");
         WebTest test = new WebTest(args);
@@ -72,7 +72,7 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    private void doTest() throws Exception {         
+    private void doTest() throws Exception {
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/remoteAddress.jsp "
@@ -81,7 +81,7 @@ public class WebTest {
         os.write(get.getBytes());
         os.write("Proxy-ip: 123.456.789\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;

@@ -103,7 +103,7 @@ public class JmxBaseCache implements JmxBaseCacheMBean {
     }
 
     /**
-     * Returns the number of values that have been refreshed 
+     * Returns the number of values that have been refreshed
      * (replaced with a new value in an existing extry)
      */
     public Integer getRefreshCount() {

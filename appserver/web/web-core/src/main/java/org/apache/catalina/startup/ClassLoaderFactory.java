@@ -95,10 +95,10 @@ public final class ClassLoaderFactory {
      * defaults and the specified directory paths:
      *
      * @param unpacked Array of pathnames to unpacked directories that should
-     *  be added to the repositories of the class loader, or <code>null</code> 
+     *  be added to the repositories of the class loader, or <code>null</code>
      * for no unpacked directories to be considered
      * @param packed Array of pathnames to directories containing JAR files
-     *  that should be added to the repositories of the class loader, 
+     *  that should be added to the repositories of the class loader,
      * or <code>null</code> for no directories of JAR files to be considered
      * @param parent Parent class loader for the new class loader, or
      *  <code>null</code> for the system class loader.
@@ -118,14 +118,14 @@ public final class ClassLoaderFactory {
      * defaults and the specified directory paths:
      *
      * @param unpacked Array of pathnames to unpacked directories that should
-     *  be added to the repositories of the class loader, or <code>null</code> 
+     *  be added to the repositories of the class loader, or <code>null</code>
      * for no unpacked directories to be considered
      * @param packed Array of pathnames to directories containing JAR files
-     *  that should be added to the repositories of the class loader, 
+     *  that should be added to the repositories of the class loader,
      * or <code>null</code> for no directories of JAR files to be considered
-     * @param urls Array of URLs to remote repositories, designing either JAR 
-     *  resources or uncompressed directories that should be added to 
-     *  the repositories of the class loader, or <code>null</code> for no 
+     * @param urls Array of URLs to remote repositories, designing either JAR
+     *  resources or uncompressed directories that should be added to
+     *  the repositories of the class loader, or <code>null</code> for no
      *  directories of JAR files to be considered
      * @param parent Parent class loader for the new class loader, or
      *  <code>null</code> for the system class loader.

@@ -56,7 +56,7 @@ public class HTTPInputArchive extends AbstractReadableArchive {
 
     private URI archiveURI = null;
     private URL archiveURL = null;
-    
+
     /** caches the manifest so we read if from the JAR at most once */
     private Manifest cachedManifest = null;
 
@@ -77,9 +77,9 @@ public class HTTPInputArchive extends AbstractReadableArchive {
         } catch (FileNotFoundException e) {
             return null;
         }
-        
+
     }
-    
+
     private URL entryURL(String name) throws MalformedURLException {
         if (! (name.charAt(0) == '/')) {
             name = "/" + name;

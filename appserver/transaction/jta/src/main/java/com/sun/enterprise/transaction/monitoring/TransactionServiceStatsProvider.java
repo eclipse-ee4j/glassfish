@@ -45,21 +45,21 @@ public class TransactionServiceStatsProvider {
     private static final int COLUMN_LENGTH = 25;
     private static final String LINE_BREAK = "%%%EOL%%%";
 
-    private CountStatisticImpl activeCount = new CountStatisticImpl("ActiveCount", "count", 
+    private CountStatisticImpl activeCount = new CountStatisticImpl("ActiveCount", "count",
             "Provides the number of transactions that are currently active.");
 
-    private CountStatisticImpl committedCount = new CountStatisticImpl("CommittedCount", "count", 
+    private CountStatisticImpl committedCount = new CountStatisticImpl("CommittedCount", "count",
             "Provides the number of transactions that have been committed.");
 
-    private CountStatisticImpl rolledbackCount = new CountStatisticImpl("RolledbackCount", "count", 
+    private CountStatisticImpl rolledbackCount = new CountStatisticImpl("RolledbackCount", "count",
             "Provides the number of transactions that have been rolled back.");
 
-    private StringStatisticImpl inflightTransactions = new StringStatisticImpl("ActiveIds", "List", 
-                "Provides the IDs of the transactions that are currently active a.k.a. in-flight " 
-                + "transactions. Every such transaction can be rolled back after freezing the transaction " 
+    private StringStatisticImpl inflightTransactions = new StringStatisticImpl("ActiveIds", "List",
+                "Provides the IDs of the transactions that are currently active a.k.a. in-flight "
+                + "transactions. Every such transaction can be rolled back after freezing the transaction "
                 + "service." );
 
-    private StringStatisticImpl state = new StringStatisticImpl("State", "String", 
+    private StringStatisticImpl state = new StringStatisticImpl("State", "String",
                 "Indicates if the transaction service has been frozen.");
 
     private boolean isFrozen = false;
@@ -90,14 +90,14 @@ public class TransactionServiceStatsProvider {
     public CountStatistic getRolledbackCount() {
         return rolledbackCount;
     }
-    
+
     @ManagedAttribute(id="state")
     @Description( "Indicates if the transaction service has been frozen." )
     public StringStatistic getState() {
         state.setCurrent((isFrozen)? "True": "False");
         return state;
     }
-    
+
     @ManagedAttribute(id="activeids")
     @Description( "List of inflight transactions." )
     public StringStatistic getActiveIds() {
@@ -126,7 +126,7 @@ public class TransactionServiceStatsProvider {
                 }
             }
             if (aList.size() > 0) {
-                
+
                 strBuf.append(LINE_BREAK).append(LINE_BREAK);
                 appendColumn(strBuf, "Transaction Id", txIdLength);
                 appendColumn(strBuf, "Status", COLUMN_LENGTH);
@@ -161,7 +161,7 @@ public class TransactionServiceStatsProvider {
         inflightTransactions.setCurrent(strBuf.toString());
         return inflightTransactions;
     }
-    
+
     @ProbeListener("glassfish:transaction:transaction-service:activated")
     public void transactionActivatedEvent() {
         _logger.fine("=== transaction-service active ++");

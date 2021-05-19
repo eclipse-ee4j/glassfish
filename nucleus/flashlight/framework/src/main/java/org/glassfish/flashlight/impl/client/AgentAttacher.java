@@ -24,7 +24,7 @@ public final class AgentAttacher {
     public synchronized static boolean canAttach() {
         return canAttach;
     }
-    
+
     public synchronized static boolean isAttached() {
         try {
             if (!canAttach)

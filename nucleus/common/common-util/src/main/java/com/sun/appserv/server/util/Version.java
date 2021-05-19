@@ -32,7 +32,7 @@ import java.util.Properties;
  *
  * This class provides static methods to make accessible the version as well as
  * the individual parts that make up the version
- * 
+ *
 */
 public class Version {
 
@@ -256,7 +256,7 @@ public class Version {
     public static String getInitialAdminGroups() {
         return getProperty(INITIAL_ADMIN_GROUPS_KEY, "asadmin");
     }
-    
+
     /*
      * Fetch the value for the property identified by key
      * from the first Properties object in the list. If it doesn't exist

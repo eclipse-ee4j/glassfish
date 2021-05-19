@@ -19,7 +19,7 @@
 
 <project name="ejb30-session-hello" default="default" basedir=".">
     <property file="build.properties"/>
-    
+
  <description>Builds, tests, and runs the project Hello JSP Application</description>
 <!-- <import file="nbproject/build-impl.xml"/>-->
 
@@ -44,13 +44,13 @@
 <path id="path2testng">
     <pathelement location="testng-5.0-jdk15.jar"/>
 </path>
-      
-    
+
+
 
 <path id="class.path">
     <fileset dir="${install.dir}/lib">
         <include name="**/*.jar"/>
-    </fileset>      
+    </fileset>
     <pathelement location="classes"/>
 </path>
 
@@ -67,7 +67,7 @@
 
 <!-- TestNG class fileset -->
 
-<target name="build">    
+<target name="build">
     <delete dir="classes"/>
     <mkdir dir="classes/app"/>
     <javac   debug="true"
@@ -76,20 +76,20 @@
     classpathref="class.path"
     srcdir="src/ejb"
     destdir="classes/app"/>
-    
+
     <delete dir="dist" failonerror="false"/>
-    
+
     <mkdir dir="dist"/>
-    
-    
-    <jar destfile="dist/${ejbjar.file}">        
+
+
+    <jar destfile="dist/${ejbjar.file}">
         <fileset  dir="classes/app">
             <include name="**/*.class"/>
         </fileset>
-       <metainf dir="descriptor">            
-                <include name="*.xml"/>            
+       <metainf dir="descriptor">
+                <include name="*.xml"/>
         </metainf>
-    </jar>    
+    </jar>
     <echo message="======================================================="/>
     <echo message="Packaged Archive at ./dist/${ejbjar.file}"/>
     <echo message="======================================================="/>
@@ -98,7 +98,7 @@
 <taskdef name="testng"
          classpathref="path2testng"
          classname="org.testng.TestNGAntTask"/>
-         
+
 
 <!-- Generate the TestNG report -->
 <target name="report">
@@ -125,9 +125,9 @@
        />
 </target>
 
-<target  name="run">    
-    
-    <echo message="=============Starting TestNG test at \n ${basedir}  ============"/>    
+<target  name="run">
+
+    <echo message="=============Starting TestNG test at \n ${basedir}  ============"/>
     <mkdir dir="../../test-output"/>
     <testng outputdir="../../../test-output"
             classpathref="test.classpath" groups="">
@@ -135,7 +135,7 @@
         <!--<xmlfileset dir="../../../" includes="testng.xml"/>-->
     </testng>
 </target>
-    
+
 <target name="deploy" depends="sun-taskdef">
       <echo message="${sun.appserver.antjar}"/>
 
@@ -149,7 +149,7 @@
     passwordfile="${install.dir}/pass.txt"
     host="${admin.host}"
     port="${admin.port}"
-    asinstalldir="${install.dir}" />            
+    asinstalldir="${install.dir}" />
 </target>
 
 <target name="dist">
@@ -159,13 +159,13 @@
 <target name="_start-selenium">
  <java jar="../lib/selenium/${selenium-srvr-jar}" fork="true" spawn="true" />
  <antcall target="_run-ua-tests" />
- <get dest="${testreportdir}/results.txt" 
+ <get dest="${testreportdir}/results.txt"
         src="${selenium-srvr-loc}/selenium-server/driver/?cmd=shutDown" />
 </target>
 
 <target name="run">
  <taskdef classpathref="build.classpath" resource="testngtasks" />
- <testng outputDir="${testreportdir}" 
+ <testng outputDir="${testreportdir}"
          classpath="${testclassesdir};${classesdir}" haltonfailure="true">
   <xmlfileset dir="." includes="testng.xml" />
   <classpath>
@@ -173,7 +173,7 @@
   </classpath>
  </testng>
 </target>
-    
-    
+
+
 
 </project>

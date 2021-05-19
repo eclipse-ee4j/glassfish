@@ -81,8 +81,8 @@
         <pm-version>1.0</pm-version>
       </pm-inuse>
     </pm-descriptors>
-    <cmp-resource> 
-      <jndi-name>jdo/pmf</jndi-name> 
+    <cmp-resource>
+      <jndi-name>jdo/pmf</jndi-name>
       <default-resource-principal>
         <name>mv</name>
         <password>mv</password>

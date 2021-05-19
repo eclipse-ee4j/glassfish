@@ -28,73 +28,43 @@ import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 /**
  *
  */
-final class ImplHelper extends Assertion
-{
+final class ImplHelper extends Assertion {
+
     // string constants
-    static final String[] COMMENT_ENHANCER_ADDED
-    = null; //{ "added by enhancer" };
-    static final String[] COMMENT_NOT_ENHANCER_ADDED
-    = null; //{ "not added by enhancer" };
+    static final String[] COMMENT_ENHANCER_ADDED = null; // { "added by enhancer" };
+    static final String[] COMMENT_NOT_ENHANCER_ADDED = null; // { "not added by enhancer" };
 
-    static final String CLASSNAME_JDO_PERSISTENCE_CAPABLE
-    = "com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable";
-    static final String CLASSNAME_JDO_PERSISTENCE_MANAGER
-    = "com.sun.jdo.api.persistence.support.PersistenceManager";
-    static final String CLASSNAME_JDO_STATE_MANAGER
-    = "com.sun.jdo.spi.persistence.support.sqlstore.StateManager";
-    static final String CLASSNAME_JDO_SCO
-    = "com.sun.jdo.spi.persistence.support.sqlstore.SCO";
-    static final String CLASSNAME_JDO_FATAL_EXCEPTION
-    = "com.sun.jdo.api.persistence.support.JDOFatalException";
+    static final String CLASSNAME_JDO_PERSISTENCE_CAPABLE = "com.sun.jdo.spi.persistence.support.sqlstore.PersistenceCapable";
+    static final String CLASSNAME_JDO_PERSISTENCE_MANAGER = "com.sun.jdo.api.persistence.support.PersistenceManager";
+    static final String CLASSNAME_JDO_STATE_MANAGER = "com.sun.jdo.spi.persistence.support.sqlstore.StateManager";
+    static final String CLASSNAME_JDO_SCO = "com.sun.jdo.spi.persistence.support.sqlstore.SCO";
+    static final String CLASSNAME_JDO_FATAL_EXCEPTION = "com.sun.jdo.api.persistence.support.JDOFatalException";
 
-    static final String FIELDNAME_JDO_FLAGS
-    = "jdoFlags";
-    static final String FIELDNAME_JDO_STATE_MANAGER
-    = "jdoStateManager";
-    static final String FIELDNAME_JDO_INHERITED_FIELD_COUNT
-    = "jdoInheritedFieldCount";
-    static final String FIELDNAME_JDO_FIELD_NAMES
-    = "jdoFieldNames";
-    static final String FIELDNAME_JDO_FIELD_TYPES
-    = "jdoFieldTypes";
-    static final String FIELDNAME_JDO_FIELD_FLAGS
-    = "jdoFieldFlags";
-    static final String METHODNAME_JDO_NEW_INSTANCE
-    = "jdoNewInstance";
-    static final String METHODNAME_JDO_SET_FIELD
-    = "jdoSetField";
-    static final String METHODNAME_JDO_GET_FIELD
-    = "jdoGetField";
-    static final String METHODNAME_JDO_GET_STATE_MANAGER
-    = "jdoGetStateManager";
-    static final String METHODNAME_JDO_SET_STATE_MANAGER
-    = "jdoSetStateManager";
-    static final String METHODNAME_JDO_GET_FLAGS
-    = "jdoGetFlags";
-    static final String METHODNAME_JDO_SET_FLAGS
-    = "jdoSetFlags";
-    static final String METHODNAME_JDO_GET_PERSISTENCE_MANAGER
-    = "jdoGetPersistenceManager";
-    static final String METHODNAME_JDO_CLEAR
-    = "jdoClear";
-    static final String METHODNAME_JDO_MAKE_DIRTY
-    = "jdoMakeDirty";
-    static final String METHODNAME_JDO_GET_OBJECT_ID
-    = "jdoGetObjectId";
-    static final String METHODNAME_JDO_IS_PERSISTENT
-    = "jdoIsPersistent";
-    static final String METHODNAME_JDO_IS_TRANSACTIONAL
-    = "jdoIsTransactional";
-    static final String METHODNAME_JDO_IS_NEW
-    = "jdoIsNew";
-    static final String METHODNAME_JDO_IS_DIRTY
-    = "jdoIsDirty";
-    static final String METHODNAME_JDO_IS_DELETED
-    = "jdoIsDeleted";
+    static final String FIELDNAME_JDO_FLAGS = "jdoFlags";
+    static final String FIELDNAME_JDO_STATE_MANAGER = "jdoStateManager";
+    static final String FIELDNAME_JDO_INHERITED_FIELD_COUNT = "jdoInheritedFieldCount";
+    static final String FIELDNAME_JDO_FIELD_NAMES = "jdoFieldNames";
+    static final String FIELDNAME_JDO_FIELD_TYPES = "jdoFieldTypes";
+    static final String FIELDNAME_JDO_FIELD_FLAGS = "jdoFieldFlags";
+    static final String METHODNAME_JDO_NEW_INSTANCE = "jdoNewInstance";
+    static final String METHODNAME_JDO_SET_FIELD = "jdoSetField";
+    static final String METHODNAME_JDO_GET_FIELD = "jdoGetField";
+    static final String METHODNAME_JDO_GET_STATE_MANAGER = "jdoGetStateManager";
+    static final String METHODNAME_JDO_SET_STATE_MANAGER = "jdoSetStateManager";
+    static final String METHODNAME_JDO_GET_FLAGS = "jdoGetFlags";
+    static final String METHODNAME_JDO_SET_FLAGS = "jdoSetFlags";
+    static final String METHODNAME_JDO_GET_PERSISTENCE_MANAGER = "jdoGetPersistenceManager";
+    static final String METHODNAME_JDO_CLEAR = "jdoClear";
+    static final String METHODNAME_JDO_MAKE_DIRTY = "jdoMakeDirty";
+    static final String METHODNAME_JDO_GET_OBJECT_ID = "jdoGetObjectId";
+    static final String METHODNAME_JDO_IS_PERSISTENT = "jdoIsPersistent";
+    static final String METHODNAME_JDO_IS_TRANSACTIONAL = "jdoIsTransactional";
+    static final String METHODNAME_JDO_IS_NEW = "jdoIsNew";
+    static final String METHODNAME_JDO_IS_DIRTY = "jdoIsDirty";
+    static final String METHODNAME_JDO_IS_DELETED = "jdoIsDeleted";
 
     static private final HashMap typeNameConversion = new HashMap();
-    static
-    {
+    static {
         typeNameConversion.put(int.class.getName(), "Int");
         typeNameConversion.put(long.class.getName(), "Long");
         typeNameConversion.put(byte.class.getName(), "Byte");
@@ -106,93 +76,76 @@ final class ImplHelper extends Assertion
         typeNameConversion.put("String", "String");
     }
 
-    static private boolean isPrimitiveClass(String className)
-    {
-        affirm(!className.equals("void"));      // NOI18N
+    static private boolean isPrimitiveClass(String className) {
+        affirm(!className.equals("void")); // NOI18N
 
         return JavaTypeHelper.getWrapperName(className) != null;
     }
 
-    static private String getConvertedTypeName(String fieldType)
-    {
-        final String name = (String)typeNameConversion.get(fieldType);
+
+    static private String getConvertedTypeName(String fieldType) {
+        final String name = (String) typeNameConversion.get(fieldType);
         return (name != null ? name : JavaClassWriterHelper.Object_);
     }
 
-    static private String getMethodNameGetField(String fieldType)
-    {
-        return JavaClassWriterHelper.get_ +
-               getConvertedTypeName(fieldType) + "Field";
+
+    static private String getMethodNameGetField(String fieldType) {
+        return JavaClassWriterHelper.get_ + getConvertedTypeName(fieldType) + "Field";
     }
 
-    static private String getMethodNameSetField(String fieldType)
-    {
-        return JavaClassWriterHelper.set_ +
-               getConvertedTypeName(fieldType) + "Field";
-    }
 
+    static private String getMethodNameSetField(String fieldType) {
+        return JavaClassWriterHelper.set_ + getConvertedTypeName(fieldType) + "Field";
+    }
 
     // Create bodies of methods.
 
-    static String[] getJDOManagedFieldCountImpl(int fieldcount)
-    {
-        return new String[] {
-            FIELDNAME_JDO_INHERITED_FIELD_COUNT + " + " + fieldcount + JavaClassWriterHelper.delim_
-        };
+
+    static String[] getJDOManagedFieldCountImpl(int fieldcount) {
+        return new String[] {FIELDNAME_JDO_INHERITED_FIELD_COUNT + " + " + fieldcount + JavaClassWriterHelper.delim_};
     }
 
-    static String[] getDefaultConstructorImpl()
-    {
+
+    static String[] getDefaultConstructorImpl() {
         return JavaClassWriterHelper.super_;
     }
 
-    static String[] getCloneImpl(String className)
-    {
+
+    static String[] getCloneImpl(String className) {
         className = normalizeClassName(className);
         String[] bodies = new String[4];
         int i = 0;
-        bodies[i++] = (new StringBuffer(className)).append(" clone = (")
-                 .append(className).append(")super.clone();").toString();
+        bodies[i++] = new StringBuffer(className).append(" clone = (").append(className).append(")super.clone();").toString();
         bodies[i++] = "clone.jdoFlags = (byte)0;";
         bodies[i++] = "clone.jdoStateManager = null;";
         bodies[i++] = "return clone;";
         return bodies;
     }
 
-    static String[] getJDOConstructorSMImpl(String statemanager)
-    {
+
+    static String[] getJDOConstructorSMImpl(String statemanager) {
         String[] bodies = new String[2];
         int i = 0;
         bodies[i++] = FIELDNAME_JDO_FLAGS + " = (byte)1; // == LOAD_REQUIRED";
-        bodies[i++] = "this." + FIELDNAME_JDO_STATE_MANAGER
-                 + " = " + statemanager + JavaClassWriterHelper.delim_;
+        bodies[i++] = "this." + FIELDNAME_JDO_STATE_MANAGER + " = " + statemanager + JavaClassWriterHelper.delim_;
         return bodies;
     }
 
-    static String[] getJDONewInstanceImpl(String className,
-                                      String statemanager)
-    {
+
+    static String[] getJDONewInstanceImpl(String className, String statemanager) {
         className = getClassName(className);
-        return new String[] { (new StringBuffer("return new "))
-                  .append(className).append("(").append(statemanager)
-                  .append(");").toString() };
+        return new String[] {new StringBuffer("return new ").append(className).append("(").append(statemanager).append(");").toString()};
     }
 
-    static String[] getFieldDirectReadImpl(String fieldName,
-                                       String fieldType,
-                                       int fieldNumber)
-    {
+
+    static String[] getFieldDirectReadImpl(String fieldName, String fieldType, int fieldNumber) {
         normalizeClassName(fieldType);
-        return new String[] {
-            "// annotation: grant direct read access",
-            "return " + fieldName + JavaClassWriterHelper.delim_
-        };
+        return new String[] {"// annotation: grant direct read access",
+            "return " + fieldName + JavaClassWriterHelper.delim_};
     }
 
-    static String[] getFieldMediateReadImpl(String fieldName,
-                                        String fieldType,
-                                        int fieldNumber)
-    {
+
+    static String[] getFieldMediateReadImpl(String fieldName, String fieldType, int fieldNumber) {
         normalizeClassName(fieldType);
         String[] bodies = new String[6];
         int i = 0;
@@ -211,10 +164,8 @@ final class ImplHelper extends Assertion
         return bodies;
     }
 
-    static String[] getFieldCheckReadImpl(String fieldName,
-                                      String fieldType,
-                                      int fieldNumber)
-    {
+
+    static String[] getFieldCheckReadImpl(String fieldName, String fieldType, int fieldNumber) {
         String[] bodies = new String[5];
         int i = 0;
         normalizeClassName(fieldType);
@@ -227,11 +178,8 @@ final class ImplHelper extends Assertion
         return bodies;
     }
 
-    static String[] getFieldDirectWriteImpl(String fieldName,
-                                           String fieldType,
-                                           int fieldNumber,
-                                           String newvalue)
-    {
+
+    static String[] getFieldDirectWriteImpl(String fieldName, String fieldType, int fieldNumber, String newvalue) {
         normalizeClassName(fieldType);
         return new String[] {
             "// annotation: grant direct write access",
@@ -241,11 +189,8 @@ final class ImplHelper extends Assertion
         };
     }
 
-    static String[] getFieldMediateWriteImpl(String fieldName,
-                                         String fieldType,
-                                         int fieldNumber,
-                                         String newvalue)
-    {
+
+    static String[] getFieldMediateWriteImpl(String fieldName, String fieldType, int fieldNumber, String newvalue) {
         String[] bodies = new String[7];
         int i = 0;
         fieldType = normalizeClassName(fieldType);
@@ -269,11 +214,8 @@ final class ImplHelper extends Assertion
         return bodies;
     }
 
-    static String[] getFieldCheckWriteImpl(String fieldName,
-                                       String fieldType,
-                                       int fieldNumber,
-                                       String newvalue)
-    {
+
+    static String[] getFieldCheckWriteImpl(String fieldName, String fieldType, int fieldNumber, String newvalue) {
         String[] bodies = new String[5];
         int i = 0;
         normalizeClassName(fieldType);
@@ -287,8 +229,8 @@ final class ImplHelper extends Assertion
         return bodies;
     }
 
-    static String[] getJDOClearImpl(String className, ExtendedJDOMetaData meta,
-            String[] fieldNames, String[] fieldTypes) {
+
+    static String[] getJDOClearImpl(String className, ExtendedJDOMetaData meta, String[] fieldNames, String[] fieldTypes) {
         final List impl = new ArrayList(20);
         for (int i = 0; i < fieldNames.length; i++) {
             String fieldTypeClassPath = fieldTypes[i];
@@ -321,10 +263,8 @@ final class ImplHelper extends Assertion
         return (String[])impl.toArray(strArr);
     }
 
-    static String[] getJDOGetFieldImpl(String fieldNumber,
-                                   String[] fieldNames,
-                                   String[] fieldTypes)
-    {
+
+    static String[] getJDOGetFieldImpl(String fieldNumber, String[] fieldNames, String[] fieldTypes) {
         final List impl = new ArrayList(20);
         impl.add("switch (" + fieldNumber + ") {");
         for (int i = 0; i < fieldNames.length; i++) {
@@ -346,10 +286,8 @@ final class ImplHelper extends Assertion
         return (String[])impl.toArray(strArr);
     }
 
-    static String[] getJDOSetFieldImpl(String fieldNumber, String objName,
-                                       String[] fieldNames,
-                                       String[] fieldTypes)
-    {
+
+    static String[] getJDOSetFieldImpl(String fieldNumber, String objName, String[] fieldNames, String[] fieldTypes) {
         final List impl = new ArrayList(20);
         impl.add("switch (" + fieldNumber + ") {");
         for (int i = 0; i < fieldNames.length; i++) {
@@ -380,8 +318,7 @@ final class ImplHelper extends Assertion
     }
 
     // returnType = null means void
-    private static String[] getJDOStateManagerDelegationImpl(
-            String delegation, String returnType) {
+    private static String[] getJDOStateManagerDelegationImpl(String delegation, String returnType) {
         final List impl = new ArrayList(7);
         impl.add((new StringBuffer("final "))
                  .append(CLASSNAME_JDO_STATE_MANAGER)
@@ -405,27 +342,23 @@ final class ImplHelper extends Assertion
         return (String[])impl.toArray(strArr);
     }
 
-    static String[] getJDOStateManagerVoidDelegationImpl(String delegation)
-    {
+
+    static String[] getJDOStateManagerVoidDelegationImpl(String delegation) {
         return getJDOStateManagerDelegationImpl(delegation, null);
     }
 
-    static String[] getJDOStateManagerObjectDelegationImpl(String delegation)
-    {
-        return getJDOStateManagerDelegationImpl(delegation,
-                JavaClassWriterHelper.null_);
+
+    static String[] getJDOStateManagerObjectDelegationImpl(String delegation) {
+        return getJDOStateManagerDelegationImpl(delegation, JavaClassWriterHelper.null_);
     }
 
-    static String[] getJDOStateManagerBooleanDelegationImpl(String delegation)
-    {
-        return getJDOStateManagerDelegationImpl(delegation,
-                JavaClassWriterHelper.false_);
+
+    static String[] getJDOStateManagerBooleanDelegationImpl(String delegation) {
+        return getJDOStateManagerDelegationImpl(delegation, JavaClassWriterHelper.false_);
     }
 
-    static String[] getOidHashCodeImpl(String[] pknames,
-                                   String[] pktypes,
-                                   boolean  isRoot)
-    {
+
+    static String[] getOidHashCodeImpl(String[] pknames, String[] pktypes, boolean isRoot) {
         final List impl = new ArrayList(3);
         if (isRoot) {
             impl.add("int hash = 0;");
@@ -451,12 +384,9 @@ final class ImplHelper extends Assertion
         return (String[])impl.toArray(strArr);
     }
 
-    static String[] getOidEqualsImpl(String   oidClassName,
-                                 String[] pknames,
-                                 String[] pktypes,
-                                 String   pk,
-                                 boolean  isRoot)
-    {
+
+    static String[] getOidEqualsImpl(String oidClassName, String[] pknames, String[] pktypes, String pk,
+        boolean isRoot) {
         final List impl = new ArrayList(31);
         if (isRoot) {
             impl.add("if (" + pk + " == null || !this.getClass().equals("
@@ -492,25 +422,25 @@ final class ImplHelper extends Assertion
      * The input parameter can be a classPath with "/" or a valid
      * full className with package name.
      */
-    static String normalizeClassName(String className)
-    {
+    static String normalizeClassName(String className) {
         if (className == null) {
             return null;
         }
         return className.replace('/', '.').replace('$', '.');
     }
 
+
     /**
      * The inner class must be represented by $ in className.
      * The input className can be a classPath with "/".
      */
-    static String getPackageName(String className)
-    {
+    static String getPackageName(String className) {
         if (className == null) {
             return null;
         }
         return JavaTypeHelper.getPackageName(className.replace('/', '.'));
     }
+
 
     /**
      * The input parameter can be a classPath with "/" or a valid

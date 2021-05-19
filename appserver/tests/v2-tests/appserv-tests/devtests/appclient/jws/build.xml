@@ -39,7 +39,7 @@
         <ant dir="${subtest.name}" target="all"/>
         <record name="${subtest.name}.output" action="stop"/>
     </target>
-    
+
     <target name="showArgs">
         <antcall target="runsubtest">
             <param name="subtest.name" value="showArgs"/>
@@ -57,12 +57,12 @@
             <param name="subtest.name" value="showArgsWithSignedLib"/>
         </antcall>
     </target>
-   
+
     <target name="usage">
-	<echo>
-		Usage:
-			ant showArgs (Executes simple argument-passing tests)
-			ant all (Executes all the jws tests)
-	</echo>
+    <echo>
+        Usage:
+            ant showArgs (Executes simple argument-passing tests)
+            ant all (Executes all the jws tests)
+    </echo>
     </target>
 </project>

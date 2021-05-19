@@ -33,7 +33,7 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer#createContext
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedCreateContextTest {
@@ -51,10 +51,10 @@ public class EmbeddedCreateContextTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
     }
-    
+
     @Test
     public void test() throws Exception {
-        
+
         HttpListener listener = new HttpListener();
         listener.setPort(8080);
         listener.setId("embedded-listener-1");
@@ -75,7 +75,7 @@ public class EmbeddedCreateContextTest {
             sb.append(inputLine);
         }
         in.close();
-    } 
+    }
 
     @AfterClass
     public static void shutdownServer() throws GlassFishException {
@@ -86,5 +86,5 @@ public class EmbeddedCreateContextTest {
             glassfish = null;
         }
     }
-    
+
 }

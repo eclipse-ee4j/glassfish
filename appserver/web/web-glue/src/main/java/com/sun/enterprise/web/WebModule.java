@@ -495,7 +495,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         DeploymentContext dc = getWebModuleConfig().getDeploymentContext();
         if (dc != null) {
-            directoryDeployed = 
+            directoryDeployed =
                     Boolean.valueOf(dc.getAppProps().getProperty(ServerTags.DIRECTORY_DEPLOYED));
         }
         if (webBundleDescriptor != null) {
@@ -589,7 +589,7 @@ public class WebModule extends PwcWebModule implements Context {
             throws LifecycleException {
         super.callServletContainerInitializers();
         if (!isJsfApplication() && !contextListeners.isEmpty()) {
-            /* 
+            /*
              * Remove any JSF related ServletContextListeners from
              * non-JSF apps.
              * This can be done reliably only after all
@@ -1424,8 +1424,8 @@ public class WebModule extends PwcWebModule implements Context {
         altDDName = altDDName.trim();
         if (altDDName.startsWith("/")) {
             altDDName = altDDName.substring(1);
-        } 
-      
+        }
+
         String appLoc = dc.getSource().getParentArchive().getURI().getPath();
         altDDName = appLoc + altDDName;
 
@@ -2239,7 +2239,7 @@ public class WebModule extends PwcWebModule implements Context {
         }
 
     }
-    
+
 }
 
 class V3WebappLoader extends WebappLoader {
@@ -2282,7 +2282,7 @@ class WebServletRegistrationImpl extends ServletRegistrationImpl {
         if (conflicts.isEmpty() && urlPatterns != null &&
                 urlPatterns.length > 0) {
             /*
-             * Propagate the new mappings to the underlying 
+             * Propagate the new mappings to the underlying
              * WebBundleDescriptor provided by the deployment backend,
              * so that corresponding security constraints may be calculated
              * by the security subsystem, which uses the
@@ -2321,7 +2321,7 @@ class DynamicWebServletRegistrationImpl
     private String runAsRoleName = null;
     private ServletSecurityElement servletSecurityElement = null;
 
-    public DynamicWebServletRegistrationImpl(StandardWrapper wrapper, 
+    public DynamicWebServletRegistrationImpl(StandardWrapper wrapper,
                                              WebModule webModule) {
         super(wrapper, webModule);
         this.webModule = webModule;
@@ -2356,7 +2356,7 @@ class DynamicWebServletRegistrationImpl
                 if (clazz == null) {
                     if (wrapper.getServlet() != null) {
                         clazz = wrapper.getServlet().getClass();
-                    } else {                  
+                    } else {
                         try {
                             clazz = loadServletClass(servletClassName);
                         } catch(Exception ex) {
@@ -2381,7 +2381,7 @@ class DynamicWebServletRegistrationImpl
         if (conflicts.isEmpty() && urlPatterns != null &&
                 urlPatterns.length > 0) {
             /*
-             * Propagate the new mappings to the underlying 
+             * Propagate the new mappings to the underlying
              * WebBundleDescriptor provided by the deployment backend,
              * so that corresponding security constraints may be calculated
              * by the security subsystem, which uses the

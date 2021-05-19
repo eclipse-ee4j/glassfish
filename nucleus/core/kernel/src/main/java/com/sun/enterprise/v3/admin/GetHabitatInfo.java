@@ -69,8 +69,8 @@ import org.glassfish.api.admin.AccessRequired;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_get-habitat-info", 
+        opType=RestEndpoint.OpType.GET,
+        path="_get-habitat-info",
         description="_get-habitat-info")
 })
 @GetHabitatInfo.Constraint
@@ -78,14 +78,14 @@ import org.glassfish.api.admin.AccessRequired;
 public class GetHabitatInfo implements AdminCommand {
     @Inject
     ServiceLocator serviceLocator;
-    
+
     @Inject
     ModulesRegistry modulesRegistry;
-    
+
     @JavaClassName
     @Param(primary = true, optional = true)
     String contract;
-    
+
     @Pattern(regexp="true|false")
     @Param(optional = true)
     String started = "false";
@@ -119,7 +119,7 @@ public class GetHabitatInfo implements AdminCommand {
 
         sb.append("\n*********** Sorted List of all Registered Contracts in the Habitat **************\n");
         List<ActiveDescriptor<?>> allDescriptors = serviceLocator.getDescriptors(BuilderHelper.allFilter());
-        
+
         SortedSet<String> allContracts = new TreeSet<String>();
         for (ActiveDescriptor<?> aDescriptor : allDescriptors) {
             allContracts.addAll(aDescriptor.getAdvertisedContracts());
@@ -140,7 +140,7 @@ public class GetHabitatInfo implements AdminCommand {
         for (ActiveDescriptor<?> aDescriptor : allDescriptors) {
             allContracts.addAll(aDescriptor.getAdvertisedContracts());
         }
-        
+
         Iterator<String> it = allContracts.iterator();
         while (it.hasNext()) {
             String cn = it.next();
@@ -152,8 +152,8 @@ public class GetHabitatInfo implements AdminCommand {
                 sb.append("\n");
                 boolean isStarted = Boolean.parseBoolean(started);
                 if (isStarted) {
-                	ServiceHandle<?> handle = serviceLocator.getServiceHandle(descriptor);
-                    
+                        ServiceHandle<?> handle = serviceLocator.getServiceHandle(descriptor);
+
                     sb.append((handle.isActive() ? " started" : " not started"));
                 }
             }
@@ -167,7 +167,7 @@ public class GetHabitatInfo implements AdminCommand {
         for (ActiveDescriptor<?> aDescriptor : allDescriptors) {
             allTypes.add(aDescriptor.getImplementation());
         }
-        
+
         Iterator<String> it = allTypes.iterator();
 
         if (it == null)  //PP (paranoid programmer)
@@ -195,7 +195,7 @@ public class GetHabitatInfo implements AdminCommand {
         sb.append(baos.toString());
     }
     /*
-     * NOTE: this valdation is here just to test the AdminCommand validation 
+     * NOTE: this valdation is here just to test the AdminCommand validation
      * implementation.
      */
     @Retention(RUNTIME)
@@ -204,10 +204,10 @@ public class GetHabitatInfo implements AdminCommand {
     public static @interface Constraint {
         String message() default "The contract argument is test but started is true.";
         Class<?>[] groups() default {};
-        Class<? extends Payload>[] payload() default {}; 
+        Class<? extends Payload>[] payload() default {};
     }
-    
-    public static class Validator 
+
+    public static class Validator
         implements ConstraintValidator<GetHabitatInfo.Constraint, GetHabitatInfo>, Payload {
 
         @Override

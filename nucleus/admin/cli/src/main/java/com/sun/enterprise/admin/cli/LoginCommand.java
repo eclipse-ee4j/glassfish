@@ -81,7 +81,7 @@ public class LoginCommand extends CLICommand {
             }
         } while (tryAgain);
 
-        // Step 3: Save in <userhomedir>/.asadminpass the string 
+        // Step 3: Save in <userhomedir>/.asadminpass the string
         // asadmin://<adminuser>@<adminhost>:<adminport><encrypted adminpassword>
         saveLogin(programOpts.getHost(), programOpts.getPort(), adminUser, adminPassword);
         return 0;
@@ -129,12 +129,12 @@ public class LoginCommand extends CLICommand {
         // to avoid putting commas in the port number (e.g., "4,848")...
         String sport = Integer.toString(port);
         try {
-            // By definition, the host name will default to "localhost" and 
+            // By definition, the host name will default to "localhost" and
             // entry is overwritten
             final LoginInfoStore store = LoginInfoStoreFactory.getStore(null);
             final LoginInfo login = new LoginInfo(host, port, user, passwd);
             if (store.exists(login.getHost(), login.getPort())) {
-                // Let the user know that the user has chosen to overwrite the 
+                // Let the user know that the user has chosen to overwrite the
                 // login information. This is non-interactive, on purpose
                 logger.info(strings.get("OverwriteLoginMsgCreateDomain", login.getHost(), "" + login.getPort()));
             }

@@ -32,7 +32,7 @@
     <packaging>pom</packaging>
     <version>6.1.1-SNAPSHOT</version>
 
-    <name>GlassFish HK2 Isolation WebApps</name>  
+    <name>GlassFish HK2 Isolation WebApps</name>
     <modules>
         <module>iso1</module>
         <module>iso2</module>

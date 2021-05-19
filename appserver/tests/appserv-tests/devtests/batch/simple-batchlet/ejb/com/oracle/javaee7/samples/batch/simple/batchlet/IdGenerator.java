@@ -21,5 +21,5 @@ package com.oracle.javaee7.samples.batch.simple.batchlet;
 public interface IdGenerator {
 
     public String nextId();
-    
+
 }

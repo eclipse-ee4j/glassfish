@@ -23,7 +23,7 @@ import static org.junit.Assert.assertTrue;
  * Tests for JavaVersion class's methods.
  * @author Yamini K B
  */
-public class JavaVersionTest {    
+public class JavaVersionTest {
     private static final String[] JAVA_VERSIONS = new String[] {
         "1.5.1-beta",
         "1.6.0",
@@ -37,8 +37,8 @@ public class JavaVersionTest {
         "a.b.c",
         "1.7beta",
     };
-    
-    
+
+
     @Test
     public void testMatchRegex() {
         for (String st: JAVA_VERSIONS) {
@@ -47,21 +47,21 @@ public class JavaVersionTest {
             assertTrue(jv != null);
             System.out.println("Java Version = " + jv.toJdkStyle());
         }
-        
+
         for (String st: INVALID_JAVA_VERSIONS) {
             System.out.println("Test Invalid Java Version String " + st);
             JavaVersion jv = JavaVersion.getVersion(st);
             assertTrue(jv == null);
         }
     }
-    
+
     @Test
     public void testNewerThan() {
         JavaVersion jv1 = JavaVersion.getVersion("1.7.0_10-ea");
         JavaVersion jv2 = JavaVersion.getVersion("1.7.0_11");
         assertTrue(jv2.newerThan(jv1));
     }
-    
+
     @Test
     public void testNewerOrEQuals() {
         JavaVersion jv1 = JavaVersion.getVersion("1.7.0_11");
@@ -70,7 +70,7 @@ public class JavaVersionTest {
         JavaVersion jv3 = JavaVersion.getVersion("1.7.0_11-ea");
         assertTrue(jv2.newerOrEquals(jv3));
     }
-    
+
     @Test
     public void testOlderThan() {
         JavaVersion jv1 = JavaVersion.getVersion("1.3.0");
@@ -79,7 +79,7 @@ public class JavaVersionTest {
         JavaVersion jv3 = JavaVersion.getVersion("1.3.1");
         assertTrue(jv1.olderThan(jv3));
     }
-    
+
     @Test
     public void testOlderOrEquals() {
         JavaVersion jv1 = JavaVersion.getVersion("1.6.0_31");

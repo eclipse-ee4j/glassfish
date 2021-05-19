@@ -28,7 +28,7 @@ public class BootstrapHolder {
     private WorkManager wm;
 
     public BootstrapHolder(BootstrapContext context) {
-        this.context = context;    
+        this.context = context;
         this.wm = (WorkManager) makeCopyOfObject(context.getWorkManager());
         checkEquality(wm, context.getWorkManager());
         this.xat = (XATerminator) makeCopyOfObject(context.getXATerminator());

@@ -22,7 +22,7 @@ import jakarta.ejb.EJBException;
 
 public class MyCallbackHandler {
 
-    @PreDestroy 
+    @PreDestroy
     public void myPreDestMethod(InvocationContext invCtx) {
         System.out.println("In MyCallbackHandler::myPreDestMethod ");
 
@@ -44,7 +44,7 @@ public class MyCallbackHandler {
                                "callback handler");
         }
 
-        
+
         try {
             invCtx.proceed();
         } catch(Exception e) {

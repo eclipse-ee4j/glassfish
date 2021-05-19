@@ -220,14 +220,14 @@ final class StandardHostValve
         Context context = request.getContext();
         if (context == null)
             return;
-        
+
         Throwable realError = throwable;
         if (realError instanceof ServletException) {
             realError = ((ServletException) realError).getRootCause();
             if (realError == null) {
                 realError = throwable;
             }
-        } 
+        }
 
         // If this is an aborted request from a client just log it and return
         if (realError instanceof ClientAbortException ) {
@@ -247,11 +247,11 @@ final class StandardHostValve
                                 realError, 0);
         } else if (context.getDefaultErrorPage() != null) {
             dispatchToErrorPage(request, response,
-                context.getDefaultErrorPage(), throwable, realError, 0);  
+                context.getDefaultErrorPage(), throwable, realError, 0);
         } else {
             // A custom error-page has not been defined for the exception
             // that was thrown during request processing. Check if an
-            // error-page for error code 500 was specified and if so, 
+            // error-page for error code 500 was specified and if so,
             // send that page back as the response.
             ServletResponse sresp = (ServletResponse) response;
 
@@ -274,7 +274,7 @@ final class StandardHostValve
             status(request, response);
             // END GlassFish 6386229
         }
-            
+
 
     }
 
@@ -330,7 +330,7 @@ final class StandardHostValve
             if (errorPage != null) {
                 if (errorPage.getLocation() != null) {
                     File file = new File(context.getDocBase(), errorPage.getLocation());
-                    if (!file.exists()) { 
+                    if (!file.exists()) {
                         File file2 = new File(errorPage.getLocation());
                         if (!file2.exists()) {
                             log.log(Level.WARNING, LogFacade.ERROR_PAGE_NOT_EXIST,
@@ -436,7 +436,7 @@ final class StandardHostValve
 
             if (hres.isCommitted()) {
                 // Response is committed - including the error page is the
-                // best we can do 
+                // best we can do
                 dispatcher.include(hreq, hres);
             } else {
                 // Reset the response (keeping the real error code and message)
@@ -521,7 +521,7 @@ final class StandardHostValve
         if (message != null) {
             ((HttpResponse) response).reset(statusCode, message);
         }
-         
+
         try {
             ostream = response.getResponse().getOutputStream();
         } catch (IllegalStateException e) {
@@ -585,7 +585,7 @@ final class StandardHostValve
             Thread.currentThread().setContextClassLoader
                     (context.getLoader().getClassLoader());
         }
-                 
+
         // START GlassFish Issue 1057
         // Update the session last access time for our session (if any)
         HttpServletRequest hreq = (HttpServletRequest) request.getRequest();

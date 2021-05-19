@@ -23,7 +23,7 @@ import java.util.Set;
 /**
  * Representation of a filter mapping for a web application, as represented
  * in a <code>&lt;filter-mapping&gt;</code> element in the deployment
- * descriptor.  Each filter mapping must contain a filter name and any 
+ * descriptor.  Each filter mapping must contain a filter name and any
  * number of URL patterns and servlet names.
  *
  */
@@ -36,7 +36,7 @@ public class FilterMaps {
     private Set<DispatcherType> dispatcherTypes;
 
     // ------------------------------------------------------------ Properties
-    
+
     public void setFilterName(String filterName) {
         this.filterName = filterName;
     }
@@ -66,7 +66,7 @@ public class FilterMaps {
     public String[] getURLPatterns() {
         return urlPatterns;
     }
-    
+
     public void setDispatcherTypes(Set<DispatcherType> dispatcherTypes) {
         this.dispatcherTypes = dispatcherTypes;
     }

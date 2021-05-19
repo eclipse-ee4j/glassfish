@@ -23,14 +23,14 @@
 
 <project name="ejb" default="all" basedir=".">
 
-	&commonBuild;
+        &commonBuild;
 
-	<target name="private-all">
-		<ant dir="statelesshello" target="private-all">
-			<property name="build" value="${build}/statelesshello"/>
-		</ant>
-		<!--ant dir="webservice" target="private-all">
-			<property name="build" value="${build}/webservice"/>
-		</ant-->
-	</target>
+        <target name="private-all">
+                <ant dir="statelesshello" target="private-all">
+                        <property name="build" value="${build}/statelesshello"/>
+                </ant>
+                <!--ant dir="webservice" target="private-all">
+                        <property name="build" value="${build}/webservice"/>
+                </ant-->
+        </target>
 </project>

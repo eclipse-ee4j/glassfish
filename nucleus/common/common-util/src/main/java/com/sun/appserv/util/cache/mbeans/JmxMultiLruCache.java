@@ -29,7 +29,7 @@ import com.sun.appserv.util.cache.Constants;
  * @author Krishnamohan Meduri (Krishna.Meduri@Sun.com)
  *
  */
-public class JmxMultiLruCache extends JmxBaseCache 
+public class JmxMultiLruCache extends JmxBaseCache
                               implements JmxMultiLruCacheMBean {
 
     private MultiLruCache multiLruCache;

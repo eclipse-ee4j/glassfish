@@ -74,7 +74,7 @@ final class AgentAttacherInternal {
             logger.log(Level.WARNING, ATTACH_AGENT_EXCEPTION, t.getMessage());
             isAttached = false;
         }
-        
+
         return isAttached;
     }
     private static final Object syncOnMe = new Object();

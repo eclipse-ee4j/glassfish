@@ -165,7 +165,7 @@ public interface JDOEJB11Helper {
     /**
      * Returns Container object associated with the corresponding concrete bean class.
      * @return a Container object.
-     */  
+     */
     Object getContainer();
 
     /**

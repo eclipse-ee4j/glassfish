@@ -17,7 +17,7 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies statistics provided by entity beans. 
+ * Specifies statistics provided by entity beans.
  */
 public interface EntityBeanStats extends EJBStats {
     /**

@@ -86,7 +86,7 @@ public class WorkDispatcher implements Work {
 
                 if (!factory.isDeliveryTransacted(onMessage)) {
                     //MessageEndpoint ep = factory.createEndpoint(null);
-                    //DeliveryWork d = new DeliveryWork("NO_TX", ep); 
+                    //DeliveryWork d = new DeliveryWork("NO_TX", ep);
                     //wm.doWork(d, 0, null, null);
                 } else {
 

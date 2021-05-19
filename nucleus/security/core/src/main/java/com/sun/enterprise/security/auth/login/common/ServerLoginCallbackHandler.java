@@ -25,11 +25,11 @@ import javax.security.auth.callback.*;
 
 /**
  * This is the default callback handler provided by the application
- * client container. The container tries to use the application specified 
+ * client container. The container tries to use the application specified
  * callback handler (if provided). If there is no callback handler or if
  * the handler cannot be instantiated then this default handler is used.
  */
-public class ServerLoginCallbackHandler implements CallbackHandler 
+public class ServerLoginCallbackHandler implements CallbackHandler
 {
     private static final String GP_CB="jakarta.security.auth.message.callback.GroupPrincipalCallback";
     private static final String GPCBH_UTIL = "com.sun.enterprise.security.jmac.callback.ServerLoginCBHUtil";
@@ -39,32 +39,32 @@ public class ServerLoginCallbackHandler implements CallbackHandler
     private String moduleID = null;
 
     public ServerLoginCallbackHandler(String username, char[] password) {
-	this.username = username;
-	this.password = password;
+        this.username = username;
+        this.password = password;
     }
 
     public ServerLoginCallbackHandler(String username, char[] password, String moduleID) {
-	this.username = username;
-	this.password = password;
+        this.username = username;
+        this.password = password;
         this.moduleID = moduleID;
     }
-    
+
     public ServerLoginCallbackHandler(){
     }
-    
+
     public void setUsername(String user){
-	username = user;
+        username = user;
     }
-    
+
     public void setPassword(char[] pass){
-	password = pass;
+        password = pass;
     }
 
     public void setModuleID(String moduleID) {
         this.moduleID = moduleID;
     }
 
-    
+
     /**
      * This is the callback method called when authentication data is
      * required. It either pops up a dialog box to request authentication
@@ -72,23 +72,23 @@ public class ServerLoginCallbackHandler implements CallbackHandler
      * @param the callback object instances supported by the login module.
      */
     public void handle(Callback[] callbacks) throws IOException,
-					UnsupportedCallbackException
+                                        UnsupportedCallbackException
     {
-	for (int i = 0; i < callbacks.length; i++) {
+        for (int i = 0; i < callbacks.length; i++) {
             if (callbacks[i] instanceof NameCallback){
-		NameCallback nme = (NameCallback)callbacks[i];
-		nme.setName(username);
-	    } else if (callbacks[i] instanceof PasswordCallback){
-		PasswordCallback pswd = (PasswordCallback)callbacks[i];
-		pswd.setPassword(password);
-	    } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback){
+                NameCallback nme = (NameCallback)callbacks[i];
+                nme.setName(username);
+            } else if (callbacks[i] instanceof PasswordCallback){
+                PasswordCallback pswd = (PasswordCallback)callbacks[i];
+                pswd.setPassword(password);
+            } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback){
                 ((CertificateRealm.AppContextCallback) callbacks[i]).setModuleID(moduleID);
             } else if (GP_CB.equals(callbacks[i].getClass().getName())){
                 processGroupPrincipal(callbacks[i]);
             } else {
                 throw new UnsupportedCallbackException(callbacks[i]);
             }
-	}
+        }
     }
 
     private static void processGroupPrincipal(Callback callback) throws UnsupportedCallbackException {
@@ -113,6 +113,6 @@ public class ServerLoginCallbackHandler implements CallbackHandler
 
     }
 
-    
+
 }
 

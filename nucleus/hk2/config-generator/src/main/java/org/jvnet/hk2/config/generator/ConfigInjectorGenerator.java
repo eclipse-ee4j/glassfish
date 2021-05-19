@@ -46,7 +46,7 @@ import static javax.tools.StandardLocation.SOURCE_PATH;
 /**
  * Generates {@link ConfigInjector} implementations for {@link Configured} objects
  * and {@link ConfigBeanProxy} subtypes.
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 
@@ -142,18 +142,18 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
         Types types = processingEnv.getTypeUtils();
         return types.isSubtype(types.getDeclaredType(subType), types.getDeclaredType(baseType));
     }
-    
+
     private static void addToMetadata(TreeMap<String,List<String>> metadata, String key, String value) {
         List<String> inner = metadata.get(key);
         if (inner == null) {
             inner = new LinkedList<String>();
-            
+
             metadata.put(key, inner);
         }
-        
+
         inner.add(value);
     }
-    
+
     /**
      * @return the map as "key=value1,key=value2,...."
      */
@@ -189,7 +189,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
          * If false, generate a real {@link ConfigInjector}.
          *
          * <p>
-         * See the test-config test module for this difference in action. 
+         * See the test-config test module for this difference in action.
          */
         private final boolean generateNoopConfigInjector;
 
@@ -463,7 +463,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                 if(packer!=null)    methodName+='s';
                 return $dom.invoke(methodName);
             }
-            
+
             private void handleMultiValue(JVar values) {
                 // [RESULT]
                 // List<S> values = dom.leafElements("...");
@@ -692,7 +692,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                  * as opposed to node (an XML fragment.)
                  */
                 abstract boolean isLeaf();
-                
+
                 abstract void addMetadata(String key,TypeMirror itemType);
 
                 protected final String makeCollectionIfNecessary(String s) {
@@ -813,7 +813,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
             }
 
             protected boolean hasDefault() {
-                boolean noDefaultValue = 
+                boolean noDefaultValue =
                     a.defaultValue().length() == 1 && a.defaultValue().charAt(0) == '\u0000';
                 return (!noDefaultValue);
             }
@@ -827,7 +827,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                     if (a.defaultValue().indexOf(',')!=-1) {
                         addToMetadata(metadata, xmlTokenName(), '"' + "default:" + a.defaultValue() + '"');
                     } else {
-                        addToMetadata(metadata, xmlTokenName(), "default:" + a.defaultValue());                        
+                        addToMetadata(metadata, xmlTokenName(), "default:" + a.defaultValue());
                     }
                 }
                 String ant = "";
@@ -853,7 +853,7 @@ public class ConfigInjectorGenerator extends AbstractProcessor {
                 return invokeDom(isVariableExpansion()?"attribute":"rawAttribute").arg(xmlName);
             }
         }
-        
+
         private final class ElementMethodGenerator extends MethodGenerator {
             private final Element e;
             private ElementMethodGenerator(Property p, Element e) {

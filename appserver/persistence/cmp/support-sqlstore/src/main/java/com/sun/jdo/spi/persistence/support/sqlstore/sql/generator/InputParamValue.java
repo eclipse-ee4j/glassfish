@@ -27,10 +27,10 @@ import org.netbeans.modules.dbschema.ColumnElement;
 /**
  * An extended InputValue which represents a query input parameter value.
  * This class holds the index of the parameter, which is used
- * to get the real value for binding the input parameter. 
+ * to get the real value for binding the input parameter.
  */
-public class InputParamValue extends InputValue 
-{    
+public class InputParamValue extends InputValue
+{
     /**
      * Constructor.
      * @param index parameter index

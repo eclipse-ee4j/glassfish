@@ -25,7 +25,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 
 
 /**
- * This node is responsible for handling all runtime information for 
+ * This node is responsible for handling all runtime information for
  * ejb.
  */
 public class GFEjbBundleRuntimeNode extends EjbBundleRuntimeNode {
@@ -55,12 +55,12 @@ public class GFEjbBundleRuntimeNode extends EjbBundleRuntimeNode {
 
    /**
     * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
+    *
+    * @param publicIDToDTD is a mapping between xml Public-ID to DTD
     * @return the doctype tag name
     */
-   public static String registerBundle(Map publicIDToDTD) {    
+   public static String registerBundle(Map publicIDToDTD) {
        publicIDToDTD.put(DTDRegistry.GF_EJBJAR_311_DTD_PUBLIC_ID, DTDRegistry.GF_EJBJAR_311_DTD_SYSTEM_ID);
-       return RuntimeTagNames.GF_EJB_RUNTIME_TAG;       
+       return RuntimeTagNames.GF_EJB_RUNTIME_TAG;
    }
 }

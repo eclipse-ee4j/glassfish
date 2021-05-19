@@ -22,6 +22,6 @@ import jakarta.ejb.CreateException;
 public interface TimerSLSBHome
     extends EJBLocalHome
 {
-	TimerSLSB create()
+        TimerSLSB create()
         throws CreateException;
 }

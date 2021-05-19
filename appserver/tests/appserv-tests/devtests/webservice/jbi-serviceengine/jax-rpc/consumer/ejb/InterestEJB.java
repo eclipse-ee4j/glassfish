@@ -17,7 +17,7 @@
 package myejb;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -26,11 +26,11 @@ import javax.naming.*;
 public class InterestEJB implements SessionBean {
 
     private SessionContext sc;
-    
+
     public InterestEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In InterestEJB::ejbCreate !!");
+        System.out.println("In InterestEJB::ejbCreate !!");
     }
 
     public double calculateInterest(double balance, double period) {
@@ -39,13 +39,13 @@ public class InterestEJB implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

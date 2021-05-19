@@ -92,7 +92,7 @@ public class RosterServlet extends HttpServlet{
 //System.err.println("XXXX-1");
            Roster myRoster = home.create();
 //System.err.println("XXXX-2");
-            
+
            // deleting all exisiting DB-entries
            myRoster.cleanUp();
 //System.err.println("XXXX-3");

@@ -33,5 +33,5 @@
     <group-name>eng</group-name>
     <group-name>mgr</group-name>
     <group-name>guest</group-name>
-  </security-role-mapping>	
+  </security-role-mapping>
 </sun-application>

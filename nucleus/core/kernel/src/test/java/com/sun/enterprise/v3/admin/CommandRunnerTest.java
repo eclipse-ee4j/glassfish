@@ -65,9 +65,9 @@ public class CommandRunnerTest {
         DummyAdminCommand dac = new DummyAdminCommand();
         assertFalse(cr.skipValidation(dac));
         SkipValidationCommand svc = new SkipValidationCommand();
-        assertTrue(cr.skipValidation(svc));        
+        assertTrue(cr.skipValidation(svc));
     }
-    
+
     @Before
     public void setup() {
         cr = new CommandRunnerImpl();
@@ -87,7 +87,7 @@ public class CommandRunnerTest {
 
         @Param(optional=false, primary=true)
         String world;
-            
+
         @Override
         public void execute(AdminCommandContext context) {}
     }
@@ -96,8 +96,8 @@ public class CommandRunnerTest {
     public class SkipValidationCommand implements AdminCommand {
         boolean skipParamValidation=true;
         @Override
-        public void execute(AdminCommandContext context) {}        
+        public void execute(AdminCommandContext context) {}
     }
-    
+
 
 }

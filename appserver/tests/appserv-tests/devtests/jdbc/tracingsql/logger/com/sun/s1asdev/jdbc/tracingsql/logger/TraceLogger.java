@@ -27,13 +27,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class TraceLogger implements SQLTraceListener {
-   
-    DataSource ds;	
-    public TraceLogger() { 
-	try {
+
+    DataSource ds;
+    public TraceLogger() {
+        try {
         InitialContext ic = new InitialContext();
-	ds = (DataSource) ic.lookup("jdbc/tracingsql-res");
-	} catch(NamingException ex) {}
+        ds = (DataSource) ic.lookup("jdbc/tracingsql-res");
+        } catch(NamingException ex) {}
     }
 
     /**
@@ -66,23 +66,23 @@ public class TraceLogger implements SQLTraceListener {
 
     public void writeRecord(DataSource ds, String classname, String methodname, String args) {
         Connection conFromDS = null;
-	PreparedStatement stmt = null;
+        PreparedStatement stmt = null;
         try{
             conFromDS = ds.getConnection();
-	    //System.out.println("###con=" + conFromDS);
+            //System.out.println("###con=" + conFromDS);
             stmt = conFromDS.prepareStatement(
-	        "insert into sql_trace values (?, ?, ?)" );
+                "insert into sql_trace values (?, ?, ?)" );
 
             System.out.println("### stmt=" + stmt);
-	    stmt.setString(1, classname);
-	    stmt.setString(2, methodname);
-	    stmt.setString(3, args);
+            stmt.setString(1, classname);
+            stmt.setString(2, methodname);
+            stmt.setString(3, args);
 
-	    int count = stmt.executeUpdate();
-	    //System.out.println("### inserted " + count + " rows");
+            int count = stmt.executeUpdate();
+            //System.out.println("### inserted " + count + " rows");
 
         }catch(SQLException sqe){
-	}finally{
+        }finally{
 
             try{
                 if(stmt != null){

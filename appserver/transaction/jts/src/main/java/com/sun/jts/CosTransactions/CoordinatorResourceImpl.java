@@ -83,11 +83,11 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
     private boolean   completed = false;
     private boolean   setAsTerminator = false;
 
-	/*
-		Logger to log transaction messages
-	*/
-	
-	static Logger _logger = LogDomains.getLogger(CoordinatorResourceImpl.class, LogDomains.TRANSACTION_LOGGER);
+    /*
+        Logger to log transaction messages
+    */
+
+    static Logger _logger = LogDomains.getLogger(CoordinatorResourceImpl.class, LogDomains.TRANSACTION_LOGGER);
     /**Normal constructor.
      * <p>
      * Sets up the CoordinatorResourceImpl with the Coordinator reference and the
@@ -301,13 +301,13 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
             // Look up the Coordinator for the transaction.
 
             // GDH: First of all make sure it has been recovered if necessary
-	    if(_logger.isLoggable(Level.FINE))
-	    {
-			_logger.logp(Level.FINE,"CoordinatorResourceImpl","commit()",
-					"Before invoking RecoveryManager.waitForRecovery():"+
-					"GTID is: "+ globalTID.toString());
+        if(_logger.isLoggable(Level.FINE))
+        {
+            _logger.logp(Level.FINE,"CoordinatorResourceImpl","commit()",
+                    "Before invoking RecoveryManager.waitForRecovery():"+
+                    "GTID is: "+ globalTID.toString());
 
-	    }
+        }
             RecoveryManager.waitForRecovery();
 
             TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
@@ -406,12 +406,12 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
             // Look up the Coordinator for the transaction.
 
             // GDH: First of all make sure it has been recovered if necessary
-	    if(_logger.isLoggable(Level.FINE))
-	    {
-			_logger.logp(Level.FINE,"CoordinatorResourceImpl","commit_one_phase()",
-					"Before invoking RecoveryManager.waitForRecovery(): "+
-					"GTID is: " + globalTID.toString());
-	    }
+        if(_logger.isLoggable(Level.FINE))
+        {
+            _logger.logp(Level.FINE,"CoordinatorResourceImpl","commit_one_phase()",
+                    "Before invoking RecoveryManager.waitForRecovery(): "+
+                    "GTID is: " + globalTID.toString());
+        }
             RecoveryManager.waitForRecovery();
 
             TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
@@ -525,85 +525,85 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
      *
      * @see Resource
      *///----------------------------------------------------------------------------
-         public void rollback()
-             throws HeuristicCommit, HeuristicMixed,
-             HeuristicHazard, SystemException {
+    public void rollback()
+        throws HeuristicCommit, HeuristicMixed,
+        HeuristicHazard, SystemException {
 
-             // If no global identifier has been set up, we can do nothing.
+        // If no global identifier has been set up, we can do nothing.
 
-             if( globalTID == null ) {
-                 INTERNAL exc = new INTERNAL(MinorCode.NoGlobalTID,
-                                             CompletionStatus.COMPLETED_NO);
-                 throw exc;
-             }
+        if( globalTID == null ) {
+            INTERNAL exc = new INTERNAL(MinorCode.NoGlobalTID,
+                CompletionStatus.COMPLETED_NO);
+            throw exc;
+        }
 
-             // Rollback operations should only come in for top-level transactions.
+        // Rollback operations should only come in for top-level transactions.
 
-             if( subtransaction ) {
-                 INTERNAL exc = new INTERNAL(MinorCode.TopForSub,
-                                             CompletionStatus.COMPLETED_NO);
-                 throw exc;
-             }
+        if( subtransaction ) {
+            INTERNAL exc = new INTERNAL(MinorCode.TopForSub,
+                CompletionStatus.COMPLETED_NO);
+            throw exc;
+        }
 
-             // If the transaction that this object represents has already been completed,
-             // raise a heuristic exception if necessary.  This object must wait for a
-             // forget before destroying itself if it returns a heuristic exception.
+        // If the transaction that this object represents has already been completed,
+        // raise a heuristic exception if necessary.  This object must wait for a
+        // forget before destroying itself if it returns a heuristic exception.
 
-             if( completed ) {
-                 if( !aborted ) {
-                     heuristicDamage = true;
-                     HeuristicCommit exc = new HeuristicCommit();
-                     throw exc;
-                 }
-                 else if( heuristicDamage ) {
-                     HeuristicMixed exc = new HeuristicMixed();
-                     throw exc;
-                 }
-             } else {
+        if( completed ) {
+            if( !aborted ) {
+                heuristicDamage = true;
+                HeuristicCommit exc = new HeuristicCommit();
+                throw exc;
+            }
+            else if( heuristicDamage ) {
+                HeuristicMixed exc = new HeuristicMixed();
+                throw exc;
+            }
+        } else {
 
-                 // Look up the Coordinator for the transaction.
+            // Look up the Coordinator for the transaction.
 
-                 // GDH: First of all make sure it has been recovered if necessary
-	    	if(_logger.isLoggable(Level.FINE))
-	    	{
-				_logger.logp(Level.FINE,"CoordinatorResourceImpl","rollback()",
-						"Before invoking RecoveryManager.waitForRecovery(): "+
-						"GTID is : "+ globalTID.toString()); 
-			
-	    	}
-                 RecoveryManager.waitForRecovery();
+            // GDH: First of all make sure it has been recovered if necessary
+            if(_logger.isLoggable(Level.FINE))
+            {
+                _logger.logp(Level.FINE,"CoordinatorResourceImpl","rollback()",
+                    "Before invoking RecoveryManager.waitForRecovery(): "+
+                        "GTID is : "+ globalTID.toString());
 
-                 TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
+            }
+            RecoveryManager.waitForRecovery();
 
-                 // If there is a Coordinator, lock it for the duration of this operation.
-                 // Tell the Coordinator to rollback.
-                 // If the Coordinator throws HeuristicMixed or HeuristicHazard,
-                 // allow them to percolate to the caller.
+            TopCoordinator coord = (TopCoordinator)RecoveryManager.getCoordinator(globalTID);
 
-                 if( coord != null )
-                     synchronized( coord ) {
+            // If there is a Coordinator, lock it for the duration of this operation.
+            // Tell the Coordinator to rollback.
+            // If the Coordinator throws HeuristicMixed or HeuristicHazard,
+            // allow them to percolate to the caller.
 
-                         // GDH:
-                         // Make sure the coordinator knows we are it's terminator
-                         // (this is done here in case we are in a recovery situation)
-                         // (the operation has been moved from the constructor of the
-                         // this object to here as the constructor is now called
-                         // to early to ensure the coordinator is present in all
-                         // cases
-                         makeSureSetAsTerminator();
-                         coord.rollback(true);
-                     }
-             }
+            if( coord != null )
+                synchronized( coord ) {
 
-             // If we are not being forced, we can destroy ourselves before returning.
-             // Otherwise, the TopCoordinator will have called set_completed to set up
-             // the information we need should a subsequent commit or rollback request
-             // arrive.
+                    // GDH:
+                    // Make sure the coordinator knows we are it's terminator
+                    // (this is done here in case we are in a recovery situation)
+                    // (the operation has been moved from the constructor of the
+                    // this object to here as the constructor is now called
+                    // to early to ensure the coordinator is present in all
+                    // cases
+                    makeSureSetAsTerminator();
+                    coord.rollback(true);
+                }
+        }
 
-             if( !beingForced )
-                 destroy();
+        // If we are not being forced, we can destroy ourselves before returning.
+        // Otherwise, the TopCoordinator will have called set_completed to set up
+        // the information we need should a subsequent commit or rollback request
+        // arrive.
 
-         }
+        if( !beingForced )
+            destroy();
+
+    }
 
     /**Informs the object that the transaction is to be forgotten.
      * <p>
@@ -858,26 +858,26 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
                     //thisRef = (CoordinatorResource) this;
                 }
             } catch( ServantAlreadyActive saexc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorResource_object_error",saexc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_CoordinatorResource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
-						
+                _logger.log(Level.SEVERE,
+                    "jts.create_CoordinatorResource_object_error",saexc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.create_CoordinatorResource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
+
             } catch( ServantNotActive snexc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorResource_object_error",snexc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_CoordinatorResource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
-						
+                _logger.log(Level.SEVERE,
+                    "jts.create_CoordinatorResource_object_error",snexc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.create_CoordinatorResource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
+
             } catch( Exception exc ) {
-				_logger.log(Level.SEVERE,
-						"jts.create_CoordinatorResource_object_error",exc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_CoordinatorResource_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
-						
+                _logger.log(Level.SEVERE,
+                    "jts.create_CoordinatorResource_object_error",exc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                    "jts.create_CoordinatorResource_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
+
             }
         }
 
@@ -919,8 +919,8 @@ class CoordinatorResourceImpl extends CoordinatorResourcePOA
                 }
             }
         } catch( Exception exc ) {
-			 _logger.log(Level.WARNING,"jts.object_destroy_error","CoordinatorResource");
-				
+             _logger.log(Level.WARNING,"jts.object_destroy_error","CoordinatorResource");
+
         }
 
         globalTID = null;

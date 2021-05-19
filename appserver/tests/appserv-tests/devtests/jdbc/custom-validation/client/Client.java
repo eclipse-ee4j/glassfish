@@ -38,7 +38,7 @@ public class Client {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP convalBMP = convalBMPHome.create();
-	stat.addDescription("Custom Validation Tests");
+        stat.addDescription("Custom Validation Tests");
 
         if (args != null && args.length > 0) {
             String param = args[0];

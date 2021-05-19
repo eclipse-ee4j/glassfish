@@ -27,7 +27,7 @@ public interface UserDataConstraint {
     public static String CLEAR = "CLEAR";
     public String getDescription();
     public void setDescription(String description);
-    
+
     public String getTransportGuarantee();
     public String[] getUnacceptableTransportGuarantees();
     public void setTransportGuarantee(String transportGuarantee);

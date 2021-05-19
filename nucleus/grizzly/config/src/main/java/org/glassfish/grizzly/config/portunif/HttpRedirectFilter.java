@@ -55,7 +55,7 @@ public class HttpRedirectFilter extends BaseFilter implements
     @Override
     public void configure(ServiceLocator habitat, NetworkListener networkListener,
             ConfigBeanProxy configuration) {
-        
+
         if (configuration instanceof HttpRedirect) {
             final HttpRedirect httpRedirectConfig = (HttpRedirect) configuration;
             int port = Integer.parseInt(httpRedirectConfig.getPort());
@@ -133,7 +133,7 @@ public class HttpRedirectFilter extends BaseFilter implements
 
         if (hostPort.length() > 0) {
             String path = requestURI.toString();
-            
+
             assert path != null;
 
             final StringBuilder sb = new StringBuilder();
@@ -151,7 +151,7 @@ public class HttpRedirectFilter extends BaseFilter implements
         } else {
             connection.closeSilently();
         }
-        
+
         return ctx.getStopAction();
     }
 }

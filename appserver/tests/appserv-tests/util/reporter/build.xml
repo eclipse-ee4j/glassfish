@@ -25,28 +25,28 @@
 &setup-props;
 
   <target name="all" depends="clean,init,jar"/>
-        
+
   <target name="init">
     <tstamp/>
      <mkdir dir="${build.dest}"/>
-    
+
   </target>
-  
-   
+
+
   <target name="build" depends="init">
   <javac
-		destdir="${build.dest}"
-		classpath="${classpath}"
+                destdir="${build.dest}"
+                classpath="${classpath}"
                 srcdir="${basedir}"
                 debug="on"
     />
-    
+
   </target>
-  
-   
+
+
   <target name="jar" depends="build">
   <jar destfile="${reporter.jar}">
-	<fileset dir="${build.dest}"/>
+        <fileset dir="${build.dest}"/>
   </jar>
   </target>
 
@@ -55,7 +55,7 @@
    <arg line="cvf ${reporter.jar} -C ${build.dest} ." />
    </exec>
 -->
-  
+
   <target name="clean">
     <delete dir="${build.dest}"/>
   </target>
@@ -66,6 +66,6 @@
   <echo message="ant jar      will compile and put reporter.jar at $APS_HOME/lib"/>
   </target>
 
-      
+
 </project>
 

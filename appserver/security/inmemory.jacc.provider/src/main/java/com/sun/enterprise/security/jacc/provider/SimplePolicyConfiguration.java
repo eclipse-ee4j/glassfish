@@ -45,7 +45,7 @@ import jakarta.security.jacc.WebUserDataPermission;
 
 /**
  * The methods of this interface are used by containers to create policy statements in a Policy provider.
- * 
+ *
  * <p>
  * An object that implements the PolicyConfiguration interface provides the policy statement configuration interface for
  * a corresponding policy context within the corresponding Policy provider.
@@ -620,7 +620,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
         if (simplePolicyConfiguration == null) {
             return false;
         }
-        
+
         return simplePolicyConfiguration.inService();
     }
 
@@ -656,7 +656,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
         if (uncheckedPermissions == null) {
             uncheckedPermissions = new Permissions();
         }
-        
+
         return uncheckedPermissions;
     }
 
@@ -664,7 +664,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
         if (excludedPermissions == null) {
             excludedPermissions = new Permissions();
         }
-        
+
         return excludedPermissions;
     }
 
@@ -715,7 +715,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
             if (t instanceof PolicyContextException) {
                 throw (PolicyContextException) t;
             }
-            
+
             throw new PolicyContextException(t);
         }
 
@@ -725,7 +725,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
                 for (Role role : roleTable) {
                     role.setPrincipals(roleMapper.getPrincipalsInRole(contextId, role.getName()));
                 }
-                
+
                 /**
                  * JACC MR8 add handling for the any authenticated user role '**'
                  */
@@ -741,10 +741,10 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
         }
     }
 
-    
+
     // ### Public Policy Enforcement Interfaces Start here ###
-    
-    
+
+
     /**
      * Evaluates the global policy and returns a PermissionCollection object specifying the set of permissions allowed for
      * code from the specified code source.
@@ -793,14 +793,14 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
         return policyConfiguration == null ? 0 : policyConfiguration.doImplies(domain, p);
     }
 
-    
-    
+
+
     // ###  Internal Policy Enforcement Interfaces Start here ###
-    
-    
+
+
     private boolean permissionIsExcluded(Permission testedPermission) {
         boolean isExcluded = false;
-        
+
         if (hasExcludedPermissions()) {
             if (!getExcludedPermissions().implies(testedPermission)) {
                 /*
@@ -820,7 +820,7 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
             }
 
         }
-        
+
         return isExcluded;
     }
 
@@ -1009,11 +1009,11 @@ public class SimplePolicyConfiguration implements PolicyConfiguration {
     }
 
     private static boolean permissionShouldBeLogged(Permission p) {
-        return 
-            !(p instanceof WebResourcePermission) && 
-            !(p instanceof WebUserDataPermission) && 
-            !(p instanceof MBeanPermission) && 
-            !(p instanceof WebRoleRefPermission) && 
+        return
+            !(p instanceof WebResourcePermission) &&
+            !(p instanceof WebUserDataPermission) &&
+            !(p instanceof MBeanPermission) &&
+            !(p instanceof WebRoleRefPermission) &&
             !(p instanceof EJBRoleRefPermission);
     }
 

@@ -36,8 +36,8 @@ public interface StudentHome extends EJBHome {
      * @exception throws FinderException and RemoteException.
      *
      */
- 
-    public Student findByPrimaryKey(String studentId) 
+
+    public Student findByPrimaryKey(String studentId)
         throws FinderException, RemoteException;
 
     public java.util.Collection findFoo() throws FinderException, RemoteException;

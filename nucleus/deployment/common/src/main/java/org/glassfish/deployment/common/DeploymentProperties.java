@@ -46,22 +46,22 @@ public class DeploymentProperties extends Properties {
         super();
     }
 
-    // construct a DeploymentProperties using the props 
+    // construct a DeploymentProperties using the props
     // passe from client
     public DeploymentProperties(Properties props) {
         super();
-	putAll(props);
+        putAll(props);
     }
-    
-    // construct a DeploymentProperties using the map 
-    // passed from client  
+
+    // construct a DeploymentProperties using the map
+    // passed from client
     // 1. For keys defined before AMX time, since different
     //    keys were defined in the DeploymentMgrMBean,
     //    we need to do conversion between the keys
     //    to keep backward compatibilities
-    // 2. For internal keys and the new keys defined after AMX 
+    // 2. For internal keys and the new keys defined after AMX
     //    time, we don't need to do any conversion
-    // 
+    //
     public DeploymentProperties(Map map) {
         super();
         if (map == null) {
@@ -78,7 +78,7 @@ public class DeploymentProperties extends Properties {
                 if (propsKey != null) {
                     props.put(propsKey, mapValue);
                 }
-                // for internal keys and new keys, we just add it 
+                // for internal keys and new keys, we just add it
                 // without conversion
                 else {
                     props.put(mapKey, mapValue);
@@ -89,7 +89,7 @@ public class DeploymentProperties extends Properties {
     }
 
     // Construct a map with the keys defined in DeploymentMgrMBean
-    // this is used when the ASAPI client convert the props 
+    // this is used when the ASAPI client convert the props
     // from the client to a map to invoke DeploymentMgrMBean API
     // 1. For keys defined before AMX time, since different
     //    keys were defined in the DeploymentMgrMBean,
@@ -97,7 +97,7 @@ public class DeploymentProperties extends Properties {
     //    to keep backward compatibilities
     // 2. For internal keys and the new keys defined after AMX
     //    time, we don't need to do any conversion
-    //    
+    //
     public static Map propsToMap(Properties dProps) {
         Map map = new HashMap();
         if (dProps == null) {
@@ -112,7 +112,7 @@ public class DeploymentProperties extends Properties {
                 // for public keys, we need to convert
                 if (mapKey != null) {
                     map.put(mapKey, propsValue);
-                // for internal keys and new keys, we just add it 
+                // for internal keys and new keys, we just add it
                 // without conversion
                 } else {
                     map.put(propsKey, propsValue);
@@ -127,26 +127,26 @@ public class DeploymentProperties extends Properties {
      * actual server target in case only one target has been specified by the client; Refer to bug ID 6157923 for more
      * details
      */
-    
+
     public String getWsdlTargetHint() throws IllegalArgumentException {
         return getProperty(WSDL_TARGET_HINT, null);
     }
-    
+
     public void setWsdlTargetHint(String target) {
         if(target != null) {
             setProperty(WSDL_TARGET_HINT, target);
         }
     }
-    
+
     public String getTarget() throws IllegalArgumentException {
         return getProperty(TARGET, null);
     }
-    
+
     public void setTarget(String target) {
         if (target != null)
             setProperty(TARGET, target);
     }
-    
+
     public boolean getRedeploy() {
         return Boolean.valueOf(getProperty(REDEPLOY, DEFAULT_REDEPLOY)).booleanValue();
     }
@@ -158,16 +158,16 @@ public class DeploymentProperties extends Properties {
     public String getArchiveName() throws IllegalArgumentException{
         return getProperty(ARCHIVE_NAME, null);
     }
-    
+
     public void setArchiveName(String archiveName) {
         if(archiveName != null)
             setProperty(ARCHIVE_NAME, archiveName);
     }
-        
+
     public boolean getForce() {
         return Boolean.valueOf(getProperty(FORCE,DEFAULT_FORCE)).booleanValue();
     }
-    
+
     public void setForce(boolean force) {
         setProperty(FORCE, Boolean.valueOf(force).toString());
     }
@@ -183,62 +183,62 @@ public class DeploymentProperties extends Properties {
     public boolean getCascade() {
         return Boolean.valueOf(getProperty(CASCADE,DEFAULT_CASCADE)).booleanValue();
     }
-    
+
     public void setCascade(boolean cascade) {
         setProperty(CASCADE, Boolean.valueOf(cascade).toString());
     }
-    
+
     public boolean getPrecompileJSP() {
         return Boolean.valueOf(getProperty(PRECOMPILE_JSP,DEFAULT_PRECOMPILE_JSP)).booleanValue();
     }
-    
+
     public void setPrecompileJSP(boolean precompileJSP) {
         setProperty(PRECOMPILE_JSP, Boolean.valueOf(precompileJSP).toString());
     }
-    
+
     public boolean getVerify() {
         return Boolean.valueOf(getProperty(VERIFY,DEFAULT_VERIFY)).booleanValue();
     }
-    
+
     public void setVerify(boolean verify) {
         setProperty(VERIFY, Boolean.valueOf(verify).toString());
     }
-    
+
     public String getVirtualServers() {
         return getProperty(VIRTUAL_SERVERS , DEFAULT_VIRTUAL_SERVERS);
     }
-    
+
     public void setVirtualServers(String virtualServers) {
-        if(virtualServers != null)
-	        setProperty(VIRTUAL_SERVERS, virtualServers);
+        if (virtualServers != null)
+            setProperty(VIRTUAL_SERVERS, virtualServers);
     }
-    
+
     public boolean getEnabled() {
         return Boolean.valueOf(getProperty(ENABLED,DEFAULT_ENABLED)).booleanValue();
     }
-    
+
     public void setEnabled(boolean enabled) {
         setProperty(ENABLED, Boolean.valueOf(enabled).toString());
     }
-    
+
     public String getContextRoot() {
         return getProperty(CONTEXT_ROOT, null);
     }
-    
+
     public void setContextRoot(String contextRoot) {
         if(contextRoot != null)
             setProperty(CONTEXT_ROOT, contextRoot);
     }
-    
+
     public String getName(String filePath) {
         return getProperty(NAME, getDefaultComponentName(filePath));
     }
-    
+
     public void setName(String name) {
         if(name != null)
             setProperty(NAME, name);
     }
-    
+
     public String getDescription() {
         return getProperty(DESCRIPTION, "");
     }
@@ -269,16 +269,16 @@ public class DeploymentProperties extends Properties {
     public boolean getJavaWebStartEnabled() {
         return Boolean.valueOf(getProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY, DEFAULT_JAVA_WEB_START_ENABLED)).booleanValue();
     }
-    
+
     public void setJavaWebStartEnabled(boolean javaWebStartEnabled) {
         setProperty(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY,
-                    Boolean.valueOf(javaWebStartEnabled).toString()); 
+                    Boolean.valueOf(javaWebStartEnabled).toString());
     }
 
     public String getLibraries() {
         return getProperty(DEPLOY_OPTION_LIBRARIES_KEY, null );
     }
-        
+
     public void setLibraries(String libraries) {
         if(libraries != null) {
             setProperty(DEPLOY_OPTION_LIBRARIES_KEY, libraries);
@@ -308,7 +308,7 @@ public class DeploymentProperties extends Properties {
     public void setUpload(boolean uploadEnabled) {
         setProperty(UPLOAD, Boolean.toString(uploadEnabled));
     }
-    
+
     public boolean getUpload() {
         return Boolean.valueOf(getProperty(UPLOAD, DEFAULT_UPLOAD)).booleanValue();
     }
@@ -316,11 +316,11 @@ public class DeploymentProperties extends Properties {
     public void setExternallyManaged(boolean isExternallyManaged) {
         setProperty(EXTERNALLY_MANAGED, Boolean.toString(isExternallyManaged));
     }
-              
+
     public void setPath(String path) {
         setProperty(PATH, path);
     }
-    
+
     public String getPath() {
         return getProperty(PATH);
     }
@@ -331,7 +331,7 @@ public class DeploymentProperties extends Properties {
     public Properties getPropertiesForInvoke(){
         return (Properties)this;
     }
-    
+
     public Properties prune() {
         /*Properties propsCopy = props.clone();*/
         remove(FORCE);
@@ -348,7 +348,7 @@ public class DeploymentProperties extends Properties {
         remove(REDEPLOY);
         remove(GENERATE_RMI_STUBS);
         remove(AVAILABILITY_ENABLED);
-        remove(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY);  
+        remove(DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY);
         remove(DEPLOY_OPTION_LIBRARIES_KEY);
         remove(RESOURCE_ACTION);
         remove(RESOURCE_TARGET_LIST);
@@ -356,12 +356,12 @@ public class DeploymentProperties extends Properties {
         remove(EXTERNALLY_MANAGED);
         return this;
     }
-    
+
     /////////////////////////////////////////////////////////////////////////
     public String getDefaultContextRoot(String filePath) {
         return getDefaultComponentName(filePath);
     }
-    
+
     private String getDefaultComponentName(String filePath) {
         final String fileName = new File(filePath).getName();
         int toIndex = fileName.lastIndexOf('.');
@@ -374,13 +374,13 @@ public class DeploymentProperties extends Properties {
     }
 
     // This map is only used for public keys before AMX time,
-    // for keys after AMX time, no need to put in the table and 
+    // for keys after AMX time, no need to put in the table and
     // do conversion.
-    // Initialize a key map which contains mapping for the keys 
+    // Initialize a key map which contains mapping for the keys
     // defined in this file and DeploymentMgrMBean
     // the mapping for both directions are contained
-    // for example for key A in DeploymentProperties and 
-    // corresponding key B in DeploymentMgrMBean, 
+    // for example for key A in DeploymentProperties and
+    // corresponding key B in DeploymentMgrMBean,
     // the map contains both A->B and B->A
     // will only work if A not equals to B
     private static void initializeKeyMap() {
@@ -413,7 +413,7 @@ public class DeploymentProperties extends Properties {
 
     ////////////////////////////////////////////////
     // list of properties from client to server
-    ////////////////////////////////////////////////    
+    ////////////////////////////////////////////////
     public static final String WSDL_TARGET_HINT = "wsdlTargetHint";
     public static final String TARGET = "target";
     public static final String REDEPLOY = "redeploy";
@@ -447,7 +447,7 @@ public class DeploymentProperties extends Properties {
     public static final String PATH = "path";
     public static final String COMPATIBILITY = "compatibility";
     public static final String DEFAULT_APP_NAME = "defaultAppName";
-    
+
     ////////////////////////////////////////////////
     // list of properties from server to client
     ////////////////////////////////////////////////
@@ -456,36 +456,36 @@ public class DeploymentProperties extends Properties {
 
     // list of keys defined in DeploymentMgrMBean
     public static final String KEY_PREFIX = "X-DeploymentMgr.";
-//    public static final String DEPLOY_OPTION_REDEPLOY_KEY = 
+//    public static final String DEPLOY_OPTION_REDEPLOY_KEY =
 //        KEY_PREFIX + "Redeploy";
     public static final String DEPLOY_OPTION_FORCE_KEY = KEY_PREFIX + "Force";
     public static final String DEPLOY_OPTION_CASCADE_KEY = KEY_PREFIX + "Cascade";
-    public static final String DEPLOY_OPTION_VERIFY_KEY = KEY_PREFIX + "Verify"; 
-    public static final String DEPLOY_OPTION_VIRTUAL_SERVERS_KEY = 
-        KEY_PREFIX + "VirtualServers"; 
-    public static final String DEPLOY_OPTION_PRECOMPILE_JSP_KEY = 
+    public static final String DEPLOY_OPTION_VERIFY_KEY = KEY_PREFIX + "Verify";
+    public static final String DEPLOY_OPTION_VIRTUAL_SERVERS_KEY =
+        KEY_PREFIX + "VirtualServers";
+    public static final String DEPLOY_OPTION_PRECOMPILE_JSP_KEY =
         KEY_PREFIX + "PrecompileJSP";
     public static final String DEPLOY_OPTION_ENABLED_KEY = KEY_PREFIX + "Enable";
-    public static final String DEPLOY_OPTION_CONTEXT_ROOT_KEY = 
-        KEY_PREFIX + "ContextRoot"; 
+    public static final String DEPLOY_OPTION_CONTEXT_ROOT_KEY =
+        KEY_PREFIX + "ContextRoot";
     public static final String DEPLOY_OPTION_NAME_KEY = KEY_PREFIX + "Name";
-    public static final String DEPLOY_OPTION_DESCRIPTION_KEY = 
+    public static final String DEPLOY_OPTION_DESCRIPTION_KEY =
         KEY_PREFIX + "Description";
-    public static final String DEPLOY_OPTION_GENERATE_RMI_STUBS_KEY = 
+    public static final String DEPLOY_OPTION_GENERATE_RMI_STUBS_KEY =
         KEY_PREFIX + "GenerateRMIStubs";
-    public static final String DEPLOY_OPTION_AVAILABILITY_ENABLED_KEY = 
+    public static final String DEPLOY_OPTION_AVAILABILITY_ENABLED_KEY =
         KEY_PREFIX + "AvailabilityEnabled";
     public static final String DEPLOYMENT_PLAN = "deploymentplan";
 
 
-    // here are the new keys after AMX time, no conversions needed 
+    // here are the new keys after AMX time, no conversions needed
     // for these keys
     public static final String DEPLOY_OPTION_JAVA_WEB_START_ENABLED_KEY =
         KEY_PREFIX + "JavaWebStartEnabled";
     public static final String DEPLOY_OPTION_LIBRARIES_KEY =
         KEY_PREFIX + "Libraries";
     public static final String DEFAULT_JAVA_WEB_START_ENABLED = "true";
-    
+
     public static final String DEFAULT_UPLOAD = "true";
     public static final String DEFAULT_EXTERNALLY_MANAGED = "false";
 
@@ -510,11 +510,11 @@ public class DeploymentProperties extends Properties {
 
     public static final String SYSTEM_ADMIN = "system-admin";
     public static final String SYSTEM_ALL = "system-all";
-    
+
     public static final String PREVIOUS_TARGETS = "previousTargets";
-    public static final String PREVIOUS_VIRTUAL_SERVERS = 
+    public static final String PREVIOUS_VIRTUAL_SERVERS =
         "previousVirtualServers";
-    public static final String PREVIOUS_ENABLED_ATTRIBUTES = 
+    public static final String PREVIOUS_ENABLED_ATTRIBUTES =
         "previousEnabledAttributes";
     public static final String PRESERVED_CONTEXT_ROOT = "preservedcontextroot";
     public static final String APP_PROPS = "appprops";
@@ -549,7 +549,7 @@ public class DeploymentProperties extends Properties {
 
     public static final String SKIP_SCAN_EXTERNAL_LIB = "skipScanExternalLib";
 
-    public static final String SNIFFERS = "sniffers"; 
+    public static final String SNIFFERS = "sniffers";
 
     static Map keyMap;
 

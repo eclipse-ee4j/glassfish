@@ -141,7 +141,7 @@ public class DOMWriter {
             // print element with attributes
          case Node.ELEMENT_NODE: {
                out.print('<');
-               if (this.qualifiedNames) { 
+               if (this.qualifiedNames) {
                   out.print(node.getNodeName());
                } else {
                   out.print(node.getLocalName());
@@ -155,7 +155,7 @@ public class DOMWriter {
                   } else {
                      out.print(attr.getLocalName());
                   }
-                  
+
                   out.print("=\"");
                   out.print(normalize(attr.getNodeValue()));
                   out.print('"');
@@ -219,7 +219,7 @@ public class DOMWriter {
                } else {
                   out.print(node.getLocalName());
                }
-               
+
                String data = node.getNodeValue();
                if ( data != null && data.length() > 0 ) {
                   out.print(' ');

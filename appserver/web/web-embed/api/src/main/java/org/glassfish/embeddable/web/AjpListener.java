@@ -42,5 +42,5 @@ public class AjpListener extends WebListenerBase  {
         super(id, port);
         this.setProtocol("AJP/1.3");
     }
-    
+
 }

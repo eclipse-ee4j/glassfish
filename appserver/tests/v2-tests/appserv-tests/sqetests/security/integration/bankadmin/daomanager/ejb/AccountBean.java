@@ -23,19 +23,19 @@ import com.sun.ejte.ccl.reporter.*;
 
 public abstract class AccountBean extends EnterpriseBeanLogger implements jakarta.ejb.EntityBean
 {
-    
+
     private static Logger logger = Logger.getLogger("bank.admin");
     private static ConsoleHandler ch = new ConsoleHandler();
-    
+
     public abstract String getAccountID();
     public abstract void setAccountID(String id);
-    
+
     public abstract Double getAmount();
     public abstract void setAmount(Double amt);
-    
+
     public abstract HashMap getPrivileges();
     public abstract void setPrivileges(HashMap privileges);
-    
+
 
         //Business methods
 
@@ -74,7 +74,7 @@ public abstract class AccountBean extends EnterpriseBeanLogger implements jakart
         toXML("ejbLoad","CMP Account");
     }
 
-    
+
     public void ejbStore() {
         toXML("ejbStore","CMP Account");
     }

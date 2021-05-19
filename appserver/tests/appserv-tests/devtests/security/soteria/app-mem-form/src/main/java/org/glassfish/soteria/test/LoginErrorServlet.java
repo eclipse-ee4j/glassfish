@@ -26,7 +26,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Servlet that is invoked when the caller did not authenticate correctly
- * 
+ *
  *
  */
 @WebServlet({"/login-error-servlet"})

@@ -21,7 +21,7 @@ import jakarta.inject.Singleton;
 /**
  * This is a service that has fields indicating whether or not
  * the various CDI extension points were properly reached
- * 
+ *
  * @author jwells
  *
  */
@@ -37,84 +37,84 @@ public class HK2ExtensionVerifier {
     private boolean processProducerMethodCalled = false;
     private boolean processProducerFieldCalled = false;
     private boolean processObserverMethodCalled = false;
-    
+
     public void afterBeanDiscoveryCalled() {
         afterBeanDiscoveryCalled = true;
     }
-    
+
     public void afterDeploymentValidationCalled() {
         afterDeploymentValidationCalled = true;
     }
-    
+
     public void processAnnotatedTypeCalled() {
         processAnnotatedTypeCalled = true;
     }
-    
+
     public void processInjectionTargetCalled() {
         processInjectionTargetCalled = true;
     }
-    
+
     public void processProducerCalled() {
         processProducerCalled = true;
     }
-    
+
     public void processManagedBeanCalled() {
         processManagedBeanCalled = true;
     }
-    
+
     public void processSessionBeanCalled() {
         processSessionBeanCalled = true;
     }
-    
+
     public void processProducerMethodCalled() {
         processProducerMethodCalled = true;
     }
-    
+
     public void processProducerFieldCalled() {
         processProducerFieldCalled = true;
     }
-    
+
     public void processObserverMethodCalled() {
         processObserverMethodCalled = true;
     }
-    
+
     public void validate() {
         if (!afterBeanDiscoveryCalled) {
             throw new AssertionError("AfterBeanDiscovery was not able to get the ServiceLocator");
         }
-        
+
         if (!afterDeploymentValidationCalled) {
             throw new AssertionError("AfterDeploymentValidation was not able to get the ServiceLocator");
         }
-        
+
         if (!processAnnotatedTypeCalled) {
             throw new AssertionError("ProcessAnnotatedType was not able to get the ServiceLocator");
         }
-        
+
         if (!processInjectionTargetCalled) {
             throw new AssertionError("ProcessInjectionTarget was not able to get the ServiceLocator");
         }
-        
+
         if (!processProducerCalled) {
             throw new AssertionError("ProcessProducer was not able to get the ServiceLocator");
         }
-        
+
         if (!processManagedBeanCalled) {
             throw new AssertionError("ProcessManagedBean was not able to get the ServiceLocator");
         }
-        
+
         if (!processSessionBeanCalled) {
             throw new AssertionError("ProcessSessionBean was not able to get the ServiceLocator");
         }
-        
+
         if (!processProducerMethodCalled) {
             throw new AssertionError("ProcessProducerMethod was not able to get the ServiceLocator");
         }
-        
+
         if (!processProducerFieldCalled) {
             throw new AssertionError("ProcessProducerField was not able to get the ServiceLocator");
         }
-        
+
         if (!processObserverMethodCalled) {
             throw new AssertionError("ProcessObserverMethod was not able to get the ServiceLocator");
         }

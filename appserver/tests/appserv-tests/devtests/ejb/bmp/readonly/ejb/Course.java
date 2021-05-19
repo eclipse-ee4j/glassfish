@@ -22,24 +22,24 @@ import java.rmi.RemoteException;
 
 
 public interface Course extends EJBObject {
- 
+
     /**
      * Returns an arraylist of StudentIds taking the course.
-     * @exception RemoteException 
+     * @exception RemoteException
      */
     public ArrayList getStudentIds() throws RemoteException;
 
     /**
      * Returns the name of the course.
-     * @exception RemoteException 
-     * 
+     * @exception RemoteException
+     *
      */
     public String getName() throws RemoteException;
 
     /**
      * Sets the name of the course.
-     * @exception RemoteException 
-     * 
+     * @exception RemoteException
+     *
      */
     public void setName(String name) throws RemoteException;
 

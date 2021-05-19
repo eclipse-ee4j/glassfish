@@ -40,7 +40,7 @@ public class Client {
 
     public void doTest() {
         System.out.println("I am in client");
-        
+
         try {
             Map<String, Boolean> resultMap = slessBean.doTest();
             for (Entry<String, Boolean> entry : resultMap.entrySet()) {

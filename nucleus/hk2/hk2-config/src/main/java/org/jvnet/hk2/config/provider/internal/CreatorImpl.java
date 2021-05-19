@@ -25,9 +25,9 @@ import org.glassfish.hk2.api.ServiceLocator;
 public class CreatorImpl<T> implements Creator<T> {
     private final Class<?> c;
     private final ServiceLocator locator;
-    
+
     /**
-     * 
+     *
      * @param c
      * @param locator
      * @param metadata
@@ -45,5 +45,5 @@ public class CreatorImpl<T> implements Creator<T> {
     @Override
     public T create() {
         return (T) locator.createAndInitialize(c);
-    }    
+    }
 }

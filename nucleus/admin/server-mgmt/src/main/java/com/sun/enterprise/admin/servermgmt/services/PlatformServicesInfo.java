@@ -27,7 +27,7 @@ import static com.sun.enterprise.admin.servermgmt.services.Constants.*;
 
 /**
  * A place to keep platform services info...
- * 
+ *
  * @author Byron Nevins
  */
 public class PlatformServicesInfo {

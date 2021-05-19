@@ -52,7 +52,7 @@ public class Client {
             try {
                 hello.testError();
                 addStatus("Expected EJBException from Singleton.testError()", false);
-                
+
                 throw new RuntimeException("Expected EJBException");
             } catch (EJBException e) {
                 addStatus("Expected EJBException from Singleton.testError()", true);

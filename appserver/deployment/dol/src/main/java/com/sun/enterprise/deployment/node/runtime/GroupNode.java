@@ -29,45 +29,47 @@ import org.xml.sax.Attributes;
  * This node handles the group definition in the runtime DDs
  *
  * @author Jerome Dochez
- * @version 
+ * @version
  */
 public class GroupNode extends DeploymentDescriptorNode {
 
-    Group group=null;
-        
-   /**
-    * @return the descriptor instance to associate with this XMLNode
-    */    
+    Group group = null;
+
+    /**
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         return group;
     }
-    
+
+
     /**
      * SAX Parser API implementation, we don't really care for now.
      */
+    @Override
     public void startElement(XMLElement element, Attributes attributes) {
-
         if (RuntimeTagNames.GROUP.equals(element.getQName())) {
-            for (int i=0; i<attributes.getLength();i++) {
+            for (int i = 0; i < attributes.getLength(); i++) {
                 if (RuntimeTagNames.NAME.equals(attributes.getQName(i))) {
                     group = new Group(attributes.getValue(i));
                 }
             }
         }
     }
-    
-   /**
+
+
+    /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
-     * @param node name 
+     * @param node name
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, Group descriptor) {      
-        Element principal = appendChild(parent, nodeName);     
-	setAttribute(principal, RuntimeTagNames.NAME, descriptor.getName());
+     */
+    public Node writeDescriptor(Node parent, String nodeName, Group descriptor) {
+        Element principal = appendChild(parent, nodeName);
+        setAttribute(principal, RuntimeTagNames.NAME, descriptor.getName());
         return principal;
-        
-    }    
+    }
 }

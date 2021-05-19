@@ -47,7 +47,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for customizing name of session " +
@@ -62,7 +62,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public String firstRun() throws Exception {
@@ -80,7 +80,7 @@ public class WebTest {
             System.out.println(get);
             os.write(get.getBytes());
             os.write("\r\n".getBytes());
-        
+
             // Get the MYJSESSIONID from the response
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
@@ -149,7 +149,7 @@ public class WebTest {
             System.out.println(cookie);
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 

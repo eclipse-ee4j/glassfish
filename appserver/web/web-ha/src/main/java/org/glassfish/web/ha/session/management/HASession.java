@@ -24,44 +24,44 @@ import org.apache.catalina.Session;
  * @author Rajiv Mordani
  */
 public interface HASession extends Session {
-    
-    /** 
+
+    /**
      * this returns the dirty flag
      */
     public boolean isDirty();
-    
-    /** 
+
+    /**
      * this sets the dirty flag
      * @param value
-     */     
+     */
     public void setDirty(boolean value);
 
-    /** 
+    /**
      * this sets the ssoId
      * @param ssoId
-     */     
+     */
     public void setSsoId(String ssoId);
-    
-    /** 
+
+    /**
      * this returns the ssoId
      */
     public String getSsoId();
-    
-    /** 
+
+    /**
      * this returns the user name
-     */    
+     */
     public String getUserName();
-    
-    /** 
+
+    /**
      * this sets the user name
      * @param userName
-     */    
+     */
     public void setUserName(String userName);
-    
-    public void sync();   
-    public long incrementVersion();    
-    public void setVersion(long value); 
+
+    public void sync();
+    public long incrementVersion();
+    public void setVersion(long value);
     public boolean isPersistent();
     public void setPersistent(boolean value);
-    
+
 }

@@ -26,7 +26,7 @@ import jakarta.annotation.Resource;
 public class InterceptorA {
 
     @Resource SessionContext sessionCtx;
-    
+
     @PostConstruct
     private void postConstruct(InvocationContext ctx) {
         try {
@@ -38,7 +38,7 @@ public class InterceptorA {
 
     @AroundInvoke
     Object aroundInvoke(InvocationContext ctx)
-	        throws Exception {
+                throws Exception {
 
         // access injected environment dependency
         System.out.println("invoked business interface = " +
@@ -47,10 +47,10 @@ public class InterceptorA {
         // look up ejb-ref defined within default interceptor in ejb-jar.xml
         InitialContext ic = new InitialContext();
         Sless3 sless3 = (Sless3) ic.lookup("java:comp/env/ejb/Sless3");
-        
-        
+
+
         Common.aroundInvokeCalled(ctx, "A");
         return ctx.proceed();
     }
-   
+
 }

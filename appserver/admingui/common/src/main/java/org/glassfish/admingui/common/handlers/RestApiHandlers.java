@@ -78,9 +78,9 @@ public class RestApiHandlers {
     }
 
     /**
-     *        <p> For the given REST endpoint, retrieve the values of the entity and
-     *            return those as a Map.  If the entity is not found, an Exception is
-     *            thrown.  This is the REST-based alternative to getProxyAttrs.</p>
+     * <p> For the given REST endpoint, retrieve the values of the entity and
+     *     return those as a Map.  If the entity is not found, an Exception is
+     *     thrown.  This is the REST-based alternative to getProxyAttrs.</p>
      */
     @Handler(id = "gf.getEntityAttrs",
             input = {
@@ -201,10 +201,10 @@ public class RestApiHandlers {
     }
 
     /**
-     *        <p> This handler can be used to execute a generic REST request.  It
-     *            will return a Java data structure based on the response of the
-     *            REST request.  'data' and 'attrs' are mutually exclusive.  'data'
-     *            is used to pass RAW data to the endpoint (such as JSON).</p>
+     * <p> This handler can be used to execute a generic REST request.  It
+     *     will return a Java data structure based on the response of the
+     *     REST request.  'data' and 'attrs' are mutually exclusive.  'data'
+     *     is used to pass RAW data to the endpoint (such as JSON).</p>
      */
     @Handler(id = "gf.restRequest",
             input = {

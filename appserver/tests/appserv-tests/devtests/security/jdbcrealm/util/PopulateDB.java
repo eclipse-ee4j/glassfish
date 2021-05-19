@@ -24,41 +24,41 @@ import sun.misc.BASE64Encoder;
 public class PopulateDB {
 
     // username/passwords
-    private static final String[][] users= { {"xyz", "xyz"}, 
+    private static final String[][] users= { {"xyz", "xyz"},
                                              {"abc", "abc"},
                                              {"qwert", "qwert"},
-                                             {"testy", "testy"} }; 
+                                             {"testy", "testy"} };
 
-    private static final String[][] users_BASE64= 
-                                    { {"qwertBASE64", "qwertBASE64"} }; 
-    private static final String[][] users_HEX= 
-                                    { {"qwertHEX", "qwertHEX"} }; 
+    private static final String[][] users_BASE64=
+                                    { {"qwertBASE64", "qwertBASE64"} };
+    private static final String[][] users_HEX=
+                                    { {"qwertHEX", "qwertHEX"} };
 
-    private static final String[][] users_MD2_BASE64= 
-                          { {"qwertMD2BASE64", "qwertMD2BASE64"} }; 
-    private static final String[][] users_MD5_BASE64= 
-                          { {"qwertMD5BASE64", "qwertMD5BASE64"} }; 
-    private static final String[][] users_SHA_BASE64= 
-                          { {"qwertSHABASE64", "qwertSHABASE64"} }; 
-    private static final String[][] users_SHA256_BASE64= 
-                          { {"qwertSHA256BASE64", "qwertSHA256BASE64"} }; 
-    private static final String[][] users_SHA384_BASE64= 
-                          { {"qwertSHA384BASE64", "qwertSHA384BASE64"} }; 
-    private static final String[][] users_SHA512_BASE64= 
-                          { {"qwertSHA512BASE64", "qwertSHA512BASE64"} }; 
+    private static final String[][] users_MD2_BASE64=
+                          { {"qwertMD2BASE64", "qwertMD2BASE64"} };
+    private static final String[][] users_MD5_BASE64=
+                          { {"qwertMD5BASE64", "qwertMD5BASE64"} };
+    private static final String[][] users_SHA_BASE64=
+                          { {"qwertSHABASE64", "qwertSHABASE64"} };
+    private static final String[][] users_SHA256_BASE64=
+                          { {"qwertSHA256BASE64", "qwertSHA256BASE64"} };
+    private static final String[][] users_SHA384_BASE64=
+                          { {"qwertSHA384BASE64", "qwertSHA384BASE64"} };
+    private static final String[][] users_SHA512_BASE64=
+                          { {"qwertSHA512BASE64", "qwertSHA512BASE64"} };
 
-    private static final String[][] users_MD2_HEX= 
-                          { {"qwertMD2HEX", "qwertMD2HEX"} }; 
-    private static final String[][] users_MD5_HEX= 
-                          { {"qwertMD5HEX", "qwertMD5HEX"} }; 
-    private static final String[][] users_SHA_HEX= 
-                          { {"qwertSHAHEX", "qwertSHAHEX"} }; 
-    private static final String[][] users_SHA256_HEX= 
-                          { {"qwertSHA256HEX", "qwertSHA256HEX"} }; 
-    private static final String[][] users_SHA384_HEX= 
-                          { {"qwertSHA384HEX", "qwertSHA384HEX"} }; 
-    private static final String[][] users_SHA512_HEX= 
-                          { {"qwertSHA512HEX", "qwertSHA512HEX"} }; 
+    private static final String[][] users_MD2_HEX=
+                          { {"qwertMD2HEX", "qwertMD2HEX"} };
+    private static final String[][] users_MD5_HEX=
+                          { {"qwertMD5HEX", "qwertMD5HEX"} };
+    private static final String[][] users_SHA_HEX=
+                          { {"qwertSHAHEX", "qwertSHAHEX"} };
+    private static final String[][] users_SHA256_HEX=
+                          { {"qwertSHA256HEX", "qwertSHA256HEX"} };
+    private static final String[][] users_SHA384_HEX=
+                          { {"qwertSHA384HEX", "qwertSHA384HEX"} };
+    private static final String[][] users_SHA512_HEX=
+                          { {"qwertSHA512HEX", "qwertSHA512HEX"} };
 
     // username/groupname
     private static final String[][] groups= { {"xyz", "staff"},
@@ -83,7 +83,7 @@ public class PopulateDB {
 //                                               {"qwertSHA384HEX", "staff"},
 //                                               {"qwertSHA512HEX", "staff"},
 
-                                              {"testy", "staff"} }; 
+                                              {"testy", "staff"} };
 
     private static final String URL_OPTION       = "-url";
     private static final String VERBOSE_OPTION   = "-verbose";
@@ -93,40 +93,40 @@ public class PopulateDB {
 
     private static boolean verbose = false;
 
-    private static String INSERT_USER_STMT_CLEAR = 
+    private static String INSERT_USER_STMT_CLEAR =
         "insert into USER_TABLE values (?, ?)";
-    private static String INSERT_USER_STMT_BASE64 = 
+    private static String INSERT_USER_STMT_BASE64 =
         "insert into USER_TABLE_BASE64 values (?, ?)";
-    private static String INSERT_USER_STMT_HEX = 
+    private static String INSERT_USER_STMT_HEX =
         "insert into USER_TABLE_HEX values (?, ?)";
 
-    private static String INSERT_USER_STMT_MD2_BASE64 = 
+    private static String INSERT_USER_STMT_MD2_BASE64 =
         "insert into USER_TABLE_MD2_BASE64 values (?, ?)";
-    private static String INSERT_USER_STMT_MD5_BASE64 = 
+    private static String INSERT_USER_STMT_MD5_BASE64 =
         "insert into USER_TABLE_MD5_BASE64 values (?, ?)";
-    private static String INSERT_USER_STMT_SHA_BASE64 = 
+    private static String INSERT_USER_STMT_SHA_BASE64 =
         "insert into USER_TABLE_SHA_BASE64 values (?, ?)";
-    private static String INSERT_USER_STMT_SHA256_BASE64 = 
+    private static String INSERT_USER_STMT_SHA256_BASE64 =
         "insert into USER_TABLE_SHA256_BASE64 values (?, ?)";
-    private static String INSERT_USER_STMT_SHA384_BASE64 = 
+    private static String INSERT_USER_STMT_SHA384_BASE64 =
         "insert into USER_TABLE_SHA384_BASE64 values (?, ?)";
-    private static String INSERT_USER_STMT_SHA512_BASE64 = 
+    private static String INSERT_USER_STMT_SHA512_BASE64 =
         "insert into USER_TABLE_SHA512_BASE64 values (?, ?)";
 
-    private static String INSERT_USER_STMT_MD2_HEX = 
+    private static String INSERT_USER_STMT_MD2_HEX =
         "insert into USER_TABLE_MD2_HEX values (?, ?)";
-    private static String INSERT_USER_STMT_MD5_HEX = 
+    private static String INSERT_USER_STMT_MD5_HEX =
         "insert into USER_TABLE_MD5_HEX values (?, ?)";
-    private static String INSERT_USER_STMT_SHA_HEX = 
+    private static String INSERT_USER_STMT_SHA_HEX =
         "insert into USER_TABLE_SHA_HEX values (?, ?)";
-    private static String INSERT_USER_STMT_SHA256_HEX = 
+    private static String INSERT_USER_STMT_SHA256_HEX =
         "insert into USER_TABLE_SHA256_HEX values (?, ?)";
-    private static String INSERT_USER_STMT_SHA384_HEX = 
+    private static String INSERT_USER_STMT_SHA384_HEX =
         "insert into USER_TABLE_SHA384_HEX values (?, ?)";
-    private static String INSERT_USER_STMT_SHA512_HEX = 
+    private static String INSERT_USER_STMT_SHA512_HEX =
         "insert into USER_TABLE_SHA512_HEX values (?, ?)";
 
-    private static String INSERT_GROUP_STMT = 
+    private static String INSERT_GROUP_STMT =
         "insert into GROUP_TABLE values (?, ?)";
 
     private static void verbose(String msg) {

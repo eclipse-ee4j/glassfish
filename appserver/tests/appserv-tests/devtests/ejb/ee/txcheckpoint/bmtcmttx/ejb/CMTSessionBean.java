@@ -30,7 +30,7 @@ import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 
 public class CMTSessionBean
-    implements SessionBean 
+    implements SessionBean
 {
 
     private static final String LOCAL_CHILD_SUFFIX = "_childLocal";
@@ -39,7 +39,7 @@ public class CMTSessionBean
 
     private int activateCount;
     private int passivateCount;
-    private int	count;
+    private int        count;
 
     private SessionContext              sessionCtx;
     private String                      sfsbName;
@@ -59,25 +59,25 @@ public class CMTSessionBean
     }
 
     public void incrementCount() {
-	count++;
+        count++;
     }
 
     public int getActivateCount() {
-	return activateCount;
+        return activateCount;
     }
 
     public int getPassivateCount() {
-	return passivateCount;
+        return passivateCount;
     }
 
     public void ejbRemove() {}
 
     public void ejbActivate() {
-	activateCount++;
+        activateCount++;
     }
 
     public void ejbPassivate() {
-	passivateCount++;
+        passivateCount++;
     }
 
 }

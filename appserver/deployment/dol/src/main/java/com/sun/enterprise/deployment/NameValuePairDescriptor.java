@@ -19,27 +19,27 @@ package com.sun.enterprise.deployment;
 import org.glassfish.deployment.common.Descriptor;
 
 /**
- * This descriptor describes a name value pair association 
+ * This descriptor describes a name value pair association
  *
  * @author Jerome Dochez
  */
 public class NameValuePairDescriptor extends Descriptor {
-    
+
     private String value=null;
-    
+
     /**
-    * copy constructor.
-    */
+     * copy constructor.
+     */
     public NameValuePairDescriptor(NameValuePairDescriptor other) {
-	super(other);
-	value = other.value;
+        super(other);
+        value = other.value;
     }
 
     /**
-    * standard constructor.
-    */
+     * standard constructor.
+     */
     public NameValuePairDescriptor() {
-	super();
+        super();
     }
 
     /**
@@ -48,17 +48,18 @@ public class NameValuePairDescriptor extends Descriptor {
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
      * @return the value
      */
     public String getValue() {
-        return value;        
+        return value;
     }
-    
+
     /**
-     * @return a string describing the values I hold
+     * Appends a string describing the values I hold
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\nProp : ").append(getName()).append("->").append(value);
     }

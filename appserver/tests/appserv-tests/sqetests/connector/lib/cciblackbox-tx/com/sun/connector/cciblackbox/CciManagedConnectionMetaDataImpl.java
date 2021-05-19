@@ -25,7 +25,7 @@ import jakarta.resource.spi.IllegalStateException;
 import jakarta.resource.spi.ManagedConnectionMetaData;
 
 /**
- * This class gives info about a ManagedConnection and the connected EIS 
+ * This class gives info about a ManagedConnection and the connected EIS
  * instance.
  * @author Sheetal Vartak
  */

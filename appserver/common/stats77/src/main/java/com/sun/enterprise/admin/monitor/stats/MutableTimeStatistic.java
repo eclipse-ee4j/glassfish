@@ -23,18 +23,19 @@ package com.sun.enterprise.admin.monitor.stats;
  * there is some consideration of a sequence. Once an instance of this interface
  * is created, subsequent call to {@link #incrementCount} has a twofold effect:
  * <ul>
- *   <li> Increments the count for number of times the operation is executed by 1 </li>
- *   <li> Keeps a count of maximum/minimum/total execution time </li>
+ * <li>Increments the count for number of times the operation is executed by 1</li>
+ * <li>Keeps a count of maximum/minimum/total execution time</li>
  * <ul>
- * @author  <a href="mailto:Kedar.Mhaswade@sun.com">Kedar Mhaswade</a>
+ *
+ * @author <a href="mailto:Kedar.Mhaswade@sun.com">Kedar Mhaswade</a>
  * @since S1AS8.0
  * @version $Revision: 1.2 $
  */
 public interface MutableTimeStatistic extends MutableStatistic {
-    
+
     /**
-     * Increments the count for number of times an operation is called by 1 and 
-     * processes the given parameter in a certain manner. 
+     * Increments the count for number of times an operation is called by 1 and
+     * processes the given parameter in a certain manner.
      */
-    public void incrementCount(long currentExecutionTimeMillis);
+    void incrementCount(long currentExecutionTimeMillis);
 }

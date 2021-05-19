@@ -26,11 +26,10 @@ import java.util.Locale;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.ejb.deployment.BeanMethodCalculatorImpl;
 
-/** 
+/**
  * This class contains information about EJB1.1 and EJB2.0 CMP EntityBeans.
  * @author Sanjeev Krishnan
  */
-
 public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
 
     private static final String FIELD_ACCESS_METHOD_PREFIX   = "get"; // NOI18N
@@ -47,41 +46,40 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
     private String stateImplClassName=null;
     private String ejbImplementationImplClassName=null;
 
-    private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(EjbCMPEntityDescriptor.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(EjbCMPEntityDescriptor.class);
 
     public EjbCMPEntityDescriptor() {
-	this.setPersistenceType(CONTAINER_PERSISTENCE);
+        this.setPersistenceType(CONTAINER_PERSISTENCE);
     }
-    
-    /** 
+
+    /**
      * The copy constructor.
      */
     public EjbCMPEntityDescriptor(EjbDescriptor other) {
-	super(other);
+        super(other);
 
-	this.setPersistenceType(CONTAINER_PERSISTENCE);
+        this.setPersistenceType(CONTAINER_PERSISTENCE);
 
-	if ( other instanceof EjbCMPEntityDescriptor ) {
-	    EjbCMPEntityDescriptor entity = (EjbCMPEntityDescriptor)other;
-	    this.pers = entity.pers;
-	    this.cmpVersion = entity.cmpVersion;
-	    this.abstractSchemaName = entity.abstractSchemaName;
-	}
+        if ( other instanceof EjbCMPEntityDescriptor ) {
+            EjbCMPEntityDescriptor entity = (EjbCMPEntityDescriptor)other;
+            this.pers = entity.pers;
+            this.cmpVersion = entity.cmpVersion;
+            this.abstractSchemaName = entity.abstractSchemaName;
+        }
     }
- 
+
     /**
-     * Sets the State class implementation classname. 
+     * Sets the State class implementation classname.
      */
     public void setStateImplClassName(String name) {
-	this.stateImplClassName = name;
+        this.stateImplClassName = name;
     }
-    
+
     /**
-     * Returns the classname of the State class impl. 
+     * Returns the classname of the State class impl.
      */
     public String getStateImplClassName() {
-	return this.stateImplClassName;
+        return this.stateImplClassName;
     }
 
     @Override
@@ -93,7 +91,7 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
             // getFieldDescriptors() instead.
         } else {
             fields = super.getFields();
-        } 
+        }
         return fields;
     }
 
@@ -143,23 +141,23 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
      * Set the CMP version
      */
     public void setCMPVersion(int version) {
-	if (version==CMP_1_1 || version == CMP_2_x) {
+        if (version==CMP_1_1 || version == CMP_2_x) {
             cmpVersion = version;
         } else {
-	    throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.invalidcmpversion",
-                                         "Invalid CMP version: {0}.",
-                                         new Object[]{Integer.valueOf(version)})); // NOI18N
+            throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.invalidcmpversion",
+                "Invalid CMP version: {0}.",
+                new Object[]{Integer.valueOf(version)})); // NOI18N
         }
     }
-    
+
     /**
      * return true if this is an EJB2.0 CMP Entitybean
      * DEPRECATED
      */
     public boolean isEJB20() {
-	return getCMPVersion()==CMP_2_x;
-    }    
-    
+        return getCMPVersion()==CMP_2_x;
+    }
+
     @Override
     public void setEjbBundleDescriptor(EjbBundleDescriptorImpl bundleDescriptor) {
         super.setEjbBundleDescriptor(bundleDescriptor);
@@ -185,50 +183,48 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
         }
         return txAttributes;
     }
- 
-    public void setPersistenceDescriptor(PersistenceDescriptor pd)
-    {
-	this.pers = pd;
-	pd.setParentDescriptor(this);
+
+
+    public void setPersistenceDescriptor(PersistenceDescriptor pd) {
+        this.pers = pd;
+        pd.setParentDescriptor(this);
     }
 
-    public PersistenceDescriptor getPersistenceDescriptor()
-    {
-	if (pers==null) {
-	    pers = new PersistenceDescriptor();
-	    this.setPersistenceDescriptor(pers);
+
+    public PersistenceDescriptor getPersistenceDescriptor() {
+        if (pers == null) {
+            pers = new PersistenceDescriptor();
+            this.setPersistenceDescriptor(pers);
         }
-	return pers;
+        return pers;
     }
+
 
     private void invalidatePersistenceInfo() {
-        if( pers != null ) {
+        if (pers != null) {
             pers.invalidate();
         }
     }
 
-    public void setPrimaryKeyFieldDesc(FieldDescriptor pkf)
-    {
-	this.primaryKeyFieldDesc = pkf;
+
+    public void setPrimaryKeyFieldDesc(FieldDescriptor pkf) {
+        this.primaryKeyFieldDesc = pkf;
         invalidatePersistenceInfo();
     }
 
-    public FieldDescriptor getPrimaryKeyFieldDesc()
-    {
-	return primaryKeyFieldDesc;
+
+    public FieldDescriptor getPrimaryKeyFieldDesc() {
+        return primaryKeyFieldDesc;
     }
 
 
-
-
-    public void setAbstractSchemaName(String abstractSchemaName)
-    {
-	this.abstractSchemaName = abstractSchemaName;
+    public void setAbstractSchemaName(String abstractSchemaName) {
+        this.abstractSchemaName = abstractSchemaName;
     }
 
-    public String getAbstractSchemaName()
-    {
-	return abstractSchemaName;
+
+    public String getAbstractSchemaName() {
+        return abstractSchemaName;
     }
 
     /**
@@ -238,25 +234,23 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
     public void setEjbImplementationImplClassName(String className) {
         ejbImplementationImplClassName = className;
     }
-    
+
     /**
-     * @return the generated implementation class 
+     * @return the generated implementation class
      */
     public String getEjbImplementationImplClassName() {
         return ejbImplementationImplClassName;
-    }  
-    
-    public static Vector getPossibleCmpCmrFields(ClassLoader cl,
-                                                 String className) 
-        throws Exception {
+    }
 
+
+    public static Vector getPossibleCmpCmrFields(ClassLoader cl, String className) throws Exception {
         Vector fieldDescriptors = new Vector();
         Class theClass = cl.loadClass(className);
 
         // Start with all *public* methods
         Method[] methods = theClass.getMethods();
 
-        // Find all accessors that could be cmp fields. This list 
+        // Find all accessors that could be cmp fields. This list
         // will contain all cmr field accessors as well, since there
         // is no good way to distinguish between the two purely based
         // on method signature.
@@ -264,32 +258,30 @@ public class EjbCMPEntityDescriptor extends EjbEntityDescriptor {
             Method next = methods[mIndex];
             String nextName = next.getName();
             int nextModifiers = next.getModifiers();
-            if( Modifier.isAbstract(nextModifiers) ) {
-                if( nextName.startsWith(FIELD_ACCESS_METHOD_PREFIX) &&
-                    nextName.length() > 3 ) {
-                    String field = 
-                        nextName.substring(3,4).toLowerCase(Locale.US) + 
-                        nextName.substring(4);
+            if (Modifier.isAbstract(nextModifiers)) {
+                if (nextName.startsWith(FIELD_ACCESS_METHOD_PREFIX) && nextName.length() > 3) {
+                    String field = nextName.substring(3, 4).toLowerCase(Locale.US) + nextName.substring(4);
                     fieldDescriptors.add(new FieldDescriptor(field));
                 }
             }
         }
         return fieldDescriptors;
-    }    
-  
+    }
+
     /**
     * Return my formatted string representation.
     */
     @Override
     public void print(StringBuffer toStringBuffer) {
-	super.print(toStringBuffer);
-	toStringBuffer.append("\n cmpVersion ").append(cmpVersion).
-            append("\n primKeyField ");
+        super.print(toStringBuffer);
+        toStringBuffer.append("\n cmpVersion ").append(cmpVersion).append("\n primKeyField ");
 
-        if(getPrimaryKeyFieldDesc() != null)
-            ((Descriptor)getPrimaryKeyFieldDesc()).print(toStringBuffer); 
+        if (getPrimaryKeyFieldDesc() != null) {
+            ((Descriptor) getPrimaryKeyFieldDesc()).print(toStringBuffer);
+        }
 
-        if(pers != null)
-            ((Descriptor)pers).print(toStringBuffer);
-    }        
+        if (pers != null) {
+            ((Descriptor) pers).print(toStringBuffer);
+        }
+    }
 }

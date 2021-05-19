@@ -49,7 +49,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for 6535898");
@@ -62,7 +62,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
@@ -75,7 +75,7 @@ public class WebTest {
 
         if ("SUCCESS".equals(line)) {
             stat.addStatus(TEST_NAME, stat.PASS);
-	} else {
+        } else {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
     }

@@ -39,7 +39,7 @@ public class HealthCheckerReaderImpl implements HealthCheckerReader {
     }
 
     /**
-     * Constructor 
+     * Constructor
      */
     public HealthCheckerReaderImpl(HealthChecker hc) {
         if (hc == null) {
@@ -93,10 +93,10 @@ public class HealthCheckerReaderImpl implements HealthCheckerReader {
     // --- VISITOR IMPLEMENTATION ---
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof HealthCheckerVisitor) {
-			HealthCheckerVisitor pv = (HealthCheckerVisitor) v;
-			pv.visit(this);
-		}
+        if (v instanceof HealthCheckerVisitor) {
+            HealthCheckerVisitor pv = (HealthCheckerVisitor) v;
+            pv.visit(this);
+        }
     }
     //--- PRIVATE VARIABLES ------
     HealthChecker _hc = null;

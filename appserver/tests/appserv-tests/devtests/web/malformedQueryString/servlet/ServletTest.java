@@ -24,7 +24,7 @@ import jakarta.servlet.http.*;
 public class ServletTest extends HttpServlet {
 
     private ServletContext context;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         context = config.getServletContext();
@@ -34,18 +34,18 @@ public class ServletTest extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        	
+
         RequestDispatcher rd = context.getRequestDispatcher("/ServletTest2?Quebec;libre");
         if ( rd == null ){
             out.println("TEST::FAIL");
             out.flush();
-        } else {    
-            rd.forward(request, response);       
+        } else {
+            rd.forward(request, response);
         }
     }
 }

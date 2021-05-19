@@ -152,8 +152,8 @@ public class SetLogAttributes implements AdminCommand {
                         m.put(att_name, att_value);
                         vlAttribute = true;
                         sbfSuccessMsg.append(localStrings.getLocalString(
-                                "set.log.attribute.properties", 
-                                "{0} logging attribute set with value {1}.", 
+                                "set.log.attribute.properties",
+                                "{0} logging attribute set with value {1}.",
                                 att_name, att_value)).append(LINE_SEP);
                     }
                 }
@@ -170,23 +170,23 @@ public class SetLogAttributes implements AdminCommand {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
-            
+
             TargetInfo targetInfo = new TargetInfo(domain, target);
             String targetConfigName = targetInfo.getConfigName();
             boolean isDas = targetInfo.isDas();
-            
+
             if (targetConfigName != null && !targetConfigName.isEmpty()) {
                 loggingConfig.updateLoggingProperties(m, targetConfigName);
                 success = true;
             } else if (isDas) {
                 loggingConfig.updateLoggingProperties(m);
                 success = true;
-            } 
+            }
 
             if (success) {
                 String effectiveTarget = (isDas ? SystemPropertyConstants.DAS_SERVER_NAME : targetConfigName);
                 sbfSuccessMsg.append(localStrings.getLocalString(
-                        "set.log.attribute.success", 
+                        "set.log.attribute.success",
                         "These logging attributes are set for {0}.", effectiveTarget )).append(LINE_SEP);
                 report.setMessage(sbfSuccessMsg.toString());
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
@@ -197,7 +197,7 @@ public class SetLogAttributes implements AdminCommand {
                 report.setMessage(msg);
                 return;
             }
-            
+
         } catch (IOException e) {
             report.setMessage(localStrings.getLocalString("set.log.attribute.failed",
                     "Could not set logging attributes for {0}.", target));
@@ -218,5 +218,5 @@ public class SetLogAttributes implements AdminCommand {
             }
         }
     }
-    
+
 }

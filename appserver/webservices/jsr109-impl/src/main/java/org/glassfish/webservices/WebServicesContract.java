@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 
 /**
  * This is the interface which will define the contract
- * to obtain ComponentInvocationManger etc 
+ * to obtain ComponentInvocationManger etc
  */
 @Contract
 public interface WebServicesContract {
@@ -34,5 +34,5 @@ public interface WebServicesContract {
     public ComponentEnvManager getComponentEnvManager();
 
     public Logger getLogger();
-    
+
 }

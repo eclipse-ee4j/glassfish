@@ -27,6 +27,6 @@
     <wsdl-file>META-INF/wsdl/SignatureTestService.wsdl</wsdl-file>
     <jaxrpc-mapping-file>SignatureMapping_appclient.xml</jaxrpc-mapping-file>
     <service-qname xmlns:servicens="http://signature.org/wsdl">servicens:SignatureTestService
-    </service-qname>               
+    </service-qname>
   </service-ref>
 </application-client>

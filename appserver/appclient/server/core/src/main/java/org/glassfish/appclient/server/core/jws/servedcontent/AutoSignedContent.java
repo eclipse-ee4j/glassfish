@@ -37,29 +37,29 @@ import java.util.logging.Logger;
  */
 public class AutoSignedContent extends FixedContent {
 
-    private static final String JWS_PERMISSIONS_NAME = "Permissions"; 
+    private static final String JWS_PERMISSIONS_NAME = "Permissions";
     private static final String JWS_PERMISSIONS_VALUE = "all-permissions";
     private static final String JWS_CODEBASE_NAME = "Codebase";
     private static final String JWS_TRUSTED_NAME = "Trusted-Library";
     private static final String JWS_TRUSTED_VALUE = "true";
     private static final String JWS_APP_NAME = "Application-Name";
-    
+
     static Attributes createJWSAttrs(final URI requestURI, final String appName) {
         final Attributes attrs = new Attributes(3);
         attrs.putValue(JWS_PERMISSIONS_NAME, JWS_PERMISSIONS_VALUE);
         attrs.putValue(JWS_APP_NAME, appName);
         try {
-            final URI trimmedURI = new URI(requestURI.getScheme(), null /* userInfo */, requestURI.getHost(), requestURI.getPort(), 
+            final URI trimmedURI = new URI(requestURI.getScheme(), null /* userInfo */, requestURI.getHost(), requestURI.getPort(),
                     null /* path */, null /* query */, null /* fragment */);
             attrs.putValue(JWS_CODEBASE_NAME, trimmedURI.toASCIIString());
         } catch (URISyntaxException ex) {
             throw new RuntimeException(ex);
         }
-            
+
         attrs.putValue(JWS_TRUSTED_NAME, JWS_TRUSTED_VALUE);
         return attrs;
     }
-    
+
     private final File unsignedFile;
     private final File signedFile;
     private final String userProvidedAlias;
@@ -68,7 +68,7 @@ public class AutoSignedContent extends FixedContent {
     private final String appName;
 
     public AutoSignedContent(final File unsignedFile,
-            final File signedFile, 
+            final File signedFile,
             final String userProvidedAlias,
             final ASJarSigner jarSigner,
             final String relativeURI,
@@ -96,11 +96,11 @@ public class AutoSignedContent extends FixedContent {
     public File file() throws IOException {
         return signedFile;
     }
-    
+
     File unsignedFile() {
         return unsignedFile;
     }
-    
+
     String appName() {
         return appName;
     }
@@ -126,12 +126,12 @@ public class AutoSignedContent extends FixedContent {
     ASJarSigner jarSigner() {
         return jarSigner;
     }
-    
+
     String userProvidedAlias() {
         return userProvidedAlias;
     }
-    
-        
+
+
     private boolean isSignedFileReady() {
         return signedFile.exists() &&
                 (signedFile.lastModified() >= unsignedFile.lastModified());

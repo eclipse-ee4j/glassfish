@@ -48,8 +48,8 @@ import org.jvnet.hk2.annotations.Service;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jvm-options", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jvm-options",
         description="list-jvm-options")
 })
 public final class ListJvmOptions implements AdminCommand, AdminCommandSecurity.Preauthorization {
@@ -59,25 +59,25 @@ public final class ListJvmOptions implements AdminCommand, AdminCommandSecurity.
 
     @Param(name="profiler", optional=true)
     Boolean profiler=false;
-    
+
     @Inject
     Target targetService;
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
-    private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class); 
-    
+    private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class);
+
     @AccessRequired.To("read")
     private JavaConfig jc;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         config = CLIUtil.updateConfigIfNeeded(config, targetService, target);
         jc = config.getJavaConfig();
         return true;
     }
-    
+
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         List<String> opts;
@@ -103,6 +103,6 @@ public final class ListJvmOptions implements AdminCommand, AdminCommandSecurity.
             report.setFailureCause(e);
             return;
         }
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);        
+        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 }

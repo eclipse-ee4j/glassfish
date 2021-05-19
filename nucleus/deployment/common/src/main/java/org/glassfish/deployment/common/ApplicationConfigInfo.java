@@ -29,10 +29,10 @@ import java.util.Set;
  * During redeployment we preserve the application config information, if any,
  * that the administrator has defined for the application.  Then, during the
  * deploy part of redeployment we restore it.
- * 
- * This class encapsulates the dependencies on exactly how we store that 
+ *
+ * This class encapsulates the dependencies on exactly how we store that
  * information in the application properties in the deployment context.
- * 
+ *
  * @author tjquinn
  */
 public class ApplicationConfigInfo {
@@ -44,7 +44,7 @@ public class ApplicationConfigInfo {
     }
 
     public ApplicationConfigInfo(final Properties appProperties) {
-        Object map =  
+        Object map =
                 appProperties.get(DeploymentProperties.APP_CONFIG);
         if (map == null) {
             moduleToEngineToAppConfig = createNewMap();
@@ -68,7 +68,7 @@ public class ApplicationConfigInfo {
     private Map<String,Map<String,ApplicationConfig>> createNewMap() {
         return new HashMap<String,Map<String,ApplicationConfig>>();
     }
-    
+
     public <T extends ApplicationConfig> T get(final String moduleName,
             final String engineName) {
         T result = null;

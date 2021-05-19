@@ -36,7 +36,7 @@ public class TestServlet extends HttpServlet {
     public void init() throws ServletException {
         try {
             InitialContext ic = new InitialContext();
-            queue = (Queue)ic.lookup("java:comp/env/jms/QueueName");   
+            queue = (Queue)ic.lookup("java:comp/env/jms/QueueName");
         } catch(Exception ex) {
             throw new ServletException(ex);
         }

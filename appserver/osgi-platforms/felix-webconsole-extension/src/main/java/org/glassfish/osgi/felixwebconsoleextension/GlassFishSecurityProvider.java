@@ -35,46 +35,46 @@ import java.security.PrivilegedExceptionAction;
  * @author sanjeeb.sahoo@oracle.com
  */
 public class GlassFishSecurityProvider implements WebConsoleSecurityProvider {
-	
-	private BundleContext ctx;
-	private GlassFish gf;
-	
-	public void setBundleContext(BundleContext context){
-		ctx = context;
-	}
-	
-	 private GlassFish getGlassFish() {
-         GlassFish gf = (GlassFish) ctx.getService(ctx.getServiceReference(GlassFish.class.getName()));
-         try {
-             assert(gf.getStatus() == GlassFish.Status.STARTED);
-         } catch (GlassFishException e) {
-             throw new RuntimeException(e);
-         }
-         return gf;
-     }
 
-	@Override
-	public Object authenticate(String username, String password) {
-		gf = getGlassFish();
-		AuthenticationService authService = null;
-		try{
+    private BundleContext ctx;
+    private GlassFish gf;
+
+    public void setBundleContext(BundleContext context){
+        ctx = context;
+    }
+
+    private GlassFish getGlassFish() {
+        GlassFish gf = (GlassFish) ctx.getService(ctx.getServiceReference(GlassFish.class.getName()));
+        try {
+            assert(gf.getStatus() == GlassFish.Status.STARTED);
+        } catch (GlassFishException e) {
+            throw new RuntimeException(e);
+        }
+        return gf;
+    }
+
+    @Override
+    public Object authenticate(String username, String password) {
+        gf = getGlassFish();
+        AuthenticationService authService = null;
+        try {
             authService = getAuthService();
-		}catch(GlassFishException gfe){
-			gfe.printStackTrace();
-			return null;
-		}
+        } catch (GlassFishException gfe) {
+            gfe.printStackTrace();
+            return null;
+        }
 
         Subject fs = null;
 
        try {
-    	   fs = authService.login(username, password.toCharArray(), fs);
-        } catch (LoginException e) {			
+           fs = authService.login(username, password.toCharArray(), fs);
+        } catch (LoginException e) {
           e.printStackTrace();
           return null;
         }
 
-          return fs;		
-	}
+          return fs;
+    }
 
     private AuthenticationService getAuthService() throws GlassFishException {
         // Authentication Service is protected, so we need to access within doPrivileged
@@ -94,8 +94,8 @@ public class GlassFishSecurityProvider implements WebConsoleSecurityProvider {
     }
 
     @Override
-	public boolean authorize(Object user, String role) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+    public boolean authorize(Object user, String role) {
+        // TODO Auto-generated method stub
+        return false;
+    }
 }

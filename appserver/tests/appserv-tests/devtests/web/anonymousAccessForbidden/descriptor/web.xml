@@ -35,7 +35,7 @@
   <security-role>
     <description>test role</description>
     <role-name>testrole</role-name>
-  </security-role> 
+  </security-role>
 
 </web-app>
 

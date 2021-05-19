@@ -34,8 +34,8 @@ public class PropagationModeTest {
 
   @Test
   public void testDefaultSet() {
-    assertEquals(EnumSet.of(PropagationMode.THREAD, PropagationMode.RMI, 
-        PropagationMode.SOAP, PropagationMode.JMS_QUEUE, 
+    assertEquals(EnumSet.of(PropagationMode.THREAD, PropagationMode.RMI,
+        PropagationMode.SOAP, PropagationMode.JMS_QUEUE,
         PropagationMode.MIME_HEADER), PropagationMode.defaultSet());
   }
 

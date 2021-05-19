@@ -66,17 +66,17 @@ public class DynamicResourceReconfigurator implements InvocationHandler, Dynamic
                 && args.length == 0) {
             setInvalid();
         } else {
-        	long version = ConnectorRegistry.getInstance().getResourceInfoVersion(resourceInfo);
-        	if (version == -1L) {
-        		// since we're not keeping the list of proxies, we need to invalidate as soon we are aware of the fact
-        		setInvalid();
-        		invoke(proxy,method,args); // just to trigger the exception
-        	}
-        	            
-        	boolean status = resourceInfoVersion >= version;
-        	resourceInfoVersion = version;
-        	if (!status) {
-        		debug("status is outdated: " + this);                
+            long version = ConnectorRegistry.getInstance().getResourceInfoVersion(resourceInfo);
+            if (version == -1L) {
+                // since we're not keeping the list of proxies, we need to invalidate as soon we are aware of the fact
+                setInvalid();
+                invoke(proxy,method,args); // just to trigger the exception
+            }
+
+            boolean status = resourceInfoVersion >= version;
+            resourceInfoVersion = version;
+            if (!status) {
+                debug("status is outdated: " + this);
                 Hashtable env = new Hashtable();
                 env.put(ConnectorConstants.DYNAMIC_RECONFIGURATION_PROXY_CALL, "TRUE");
                 //TODO ASR : resource-naming-service need to support "env" for module/app scope also

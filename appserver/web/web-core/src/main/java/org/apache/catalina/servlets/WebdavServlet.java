@@ -461,18 +461,18 @@ public class WebdavServlet
         }
 
         Node propNode = null;
-        
+
         if (req.getInputStream().available() > 0) {
             DocumentBuilder documentBuilder = getDocumentBuilder();
-    
+
             try {
                 Document document = documentBuilder.parse
                     (new InputSource(req.getInputStream()));
-    
+
                 // Get the root element of the document
                 Element rootElement = document.getDocumentElement();
                 NodeList childList = rootElement.getChildNodes();
-    
+
                 for (int i=0; i < childList.getLength(); i++) {
                     Node currentNode = childList.item(i);
                     switch (currentNode.getNodeType()) {
@@ -1102,7 +1102,7 @@ public class WebdavServlet
                 + lock.depth + "-" + lock.owner + "-" + lock.tokens + "-"
                 + lock.expiresAt + "-" + System.currentTimeMillis() + "-"
                 + secret;
-            
+
             byte[] digestBytes = null;
             synchronized(sha256Helper) {
                 digestBytes = sha256Helper.digest(lockTokenStr.getBytes(
@@ -1686,7 +1686,7 @@ public class WebdavServlet
 
         // Copy was successful
         resp.setStatus(WebdavStatus.SC_CREATED);
-        
+
         // Removing any lock-null resource which would be present at
         // the destination path
         lockNullResources.remove(destinationPath);
@@ -2791,11 +2791,11 @@ public class WebdavServlet
      */
     private static class WebdavResolver implements EntityResolver {
         private ServletContext context;
-        
+
         public WebdavResolver(ServletContext theContext) {
             context = theContext;
         }
-     
+
         public InputSource resolveEntity (String publicId, String systemId) {
             String msg = MessageFormat.format(rb.getString(LogFacade.IGNORED_EXTERNAL_ENTITY_INFO),
                                               new Object[] {publicId, systemId});

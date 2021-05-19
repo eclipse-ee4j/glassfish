@@ -21,16 +21,16 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
     private static URLConnection conn = null;
     private static URL url;
     private static ObjectOutputStream objectWriter = null;
-    private static ObjectInputStream objectReader = null;  
+    private static ObjectInputStream objectReader = null;
 
     public static void main(String args[]) {
 
@@ -51,7 +51,7 @@ public class WebTest {
                HttpURLConnection urlConnection = (HttpURLConnection)conn;
                urlConnection.setDoOutput(true);
                int responseCode=  urlConnection.getResponseCode();
-               System.out.println("Response code: " + responseCode + " Expected code: 200"); 
+               System.out.println("Response code: " + responseCode + " Expected code: 200");
                if (responseCode == 200){
                     stat.addStatus("httpListenerDynamicConfig", stat.FAIL);
                } else {

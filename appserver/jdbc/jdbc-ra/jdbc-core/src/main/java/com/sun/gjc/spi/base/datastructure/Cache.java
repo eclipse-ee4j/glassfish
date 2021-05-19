@@ -27,7 +27,7 @@ public interface Cache {
     /**
      * Check if an entry is found for this key object. If found, the entry is
      * put in the result object and back into the list.
-     * 
+     *
      * @param key whose mapping entry is to be checked.
      * @return result object that contains the key with the entry if not busy
      * or null when
@@ -35,16 +35,16 @@ public interface Cache {
      * (2) object found but is busy
      */
     public Object checkAndUpdateCache(CacheObjectKey key);
-    
+
     /**
      * Add key and entry value into the cache.
      * @param key that contains the sql string and its type (PS/CS)
-     * @param entry that is the wrapper of PreparedStatement or 
+     * @param entry that is the wrapper of PreparedStatement or
      * CallableStatement
      * @param force If existing key is to be overwritten
      */
     public void addToCache(CacheObjectKey key, Object entry, boolean force);
-    
+
     /**
      * Clear statement cache
      */
@@ -52,14 +52,14 @@ public interface Cache {
 
     /**
      * Remove all statements stored in the statement cache after closing
-     * the statement objects. Used when the statement cache size exceeds 
+     * the statement objects. Used when the statement cache size exceeds
      * user defined maximum cache size.
      */
     public void purge();
-    
+
     /**
      * Closing all statements in statement cache and flush the statement cache
-     * of all the statements. Used when a physical connection to the underlying 
+     * of all the statements. Used when a physical connection to the underlying
      * resource manager is destroyed.
      */
     public void flushCache();
@@ -69,11 +69,11 @@ public interface Cache {
      * @return int statement cache size
      */
     public int getSize();
- 
+
     /**
      * Check if the statement cache is synchronized.
      * @return boolean synchronized flag.
-     */   
+     */
     public boolean isSynchronized();
 
     /**
@@ -82,7 +82,7 @@ public interface Cache {
      * being reclaimed and is being used for the subsequent requests from the
      * application.
      *
-     * @param entry 
+     * @param entry
      */
     public void purge(Object entry);
 }

@@ -41,11 +41,11 @@ public class UnsatisfiedDependencyException extends ConfigurationException {
     public UnsatisfiedDependencyException(AnnotatedElement target) {
         this(target, null, null);
     }
-    
+
     public UnsatisfiedDependencyException(AnnotatedElement target, Annotation inject) {
       this(target, inject, null);
   }
-    
+
     public UnsatisfiedDependencyException(AnnotatedElement target, Annotation inject, Throwable cause) {
         super(injection_failed_msg(target, inject, cause), cause);
         this.member = target;
@@ -62,7 +62,7 @@ public class UnsatisfiedDependencyException extends ConfigurationException {
       String msg;
       if (Field.class.isInstance(t)) {
         Field target = Field.class.cast(t);
-        msg = "injection failed on " + target.getDeclaringClass().getName() + "." + 
+        msg = "injection failed on " + target.getDeclaringClass().getName() + "." +
             target.getName() + " with " + target.getGenericType() + "";
       } else {
         msg = "injection failed on " + t + "";

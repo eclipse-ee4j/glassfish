@@ -27,62 +27,63 @@ import java.util.Set;
  * @author Sheetal Vartak
  */
 public class AdminObject extends Descriptor {
-    
+
     private String theInterface;
     private String theClass;
     private Set configProperties;
 
-    public AdminObject () {
+    public AdminObject() {
         this.configProperties = new OrderedSet();
     }
-    
-    public AdminObject (String theInterface, String theClass)
-    {
+
+
+    public AdminObject(String theInterface, String theClass) {
         this.theInterface = theInterface;
         this.theClass = theClass;
         this.configProperties = new OrderedSet();
     }
-    
-    public String getAdminObjectInterface() 
-    {
+
+
+    public String getAdminObjectInterface() {
         return this.theInterface;
     }
 
-    public void setAdminObjectInterface (String intf) {
-	this.theInterface = intf;
+
+    public void setAdminObjectInterface(String intf) {
+        this.theInterface = intf;
     }
 
-    public String getAdminObjectClass()
-    {
+
+    public String getAdminObjectClass() {
         return this.theClass;
     }
 
-    public void setAdminObjectClass (String cl) {
-	this.theClass = cl;
+
+    public void setAdminObjectClass(String cl) {
+        this.theClass = cl;
     }
 
-    /** 
-     * Set of EnvironmentProperty 
+
+    /**
+     * Set of EnvironmentProperty
      */
-    public Set getConfigProperties() 
-    {
+    public Set getConfigProperties() {
         return configProperties;
     }
-      
-    /** 
+
+
+    /**
      * Add a configProperty to the set
      */
-    public void addConfigProperty(ConnectorConfigProperty configProperty)
-    {
-	configProperties.add(configProperty);
+    public void addConfigProperty(ConnectorConfigProperty configProperty) {
+        configProperties.add(configProperty);
     }
 
-    /** 
+
+    /**
      * Add a configProperty to the set
-     */ 
-    public void removeConfigProperty(ConnectorConfigProperty configProperty)
-    {
-	configProperties.remove(configProperty);
+     */
+    public void removeConfigProperty(ConnectorConfigProperty configProperty) {
+        configProperties.remove(configProperty);
     }
-     
 }

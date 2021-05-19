@@ -32,5 +32,5 @@ import jakarta.inject.Singleton;
 @Service
 @Singleton
 public class AppCNonceCacheMap extends HashMap<String,CNonceCache> {
-    
+
 }

@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("defaultResponseType");
         WebTest webTest = new WebTest(args);
@@ -45,8 +45,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -57,7 +57,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-         
+
         URL url = new URL("http://" + host  + ":" + port + "/test.xyz");
         System.out.println("Connecting to: " + url.toString());
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

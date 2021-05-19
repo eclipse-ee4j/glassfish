@@ -21,8 +21,8 @@ import com.sun.ejte.ccl.reporter.*;
 /*
  * Unit test for glassfish/domains/domain1/config/web-context-path-xml-config.xml
  *
- * This unit test ensures webapp context_path.xml packaged outside of the archive.  Needs to be a separate test from contextXmlConfig since contextXmlConfig tests webapp/META-INF/context.xml packaged inside the WAR 
- * 
+ * This unit test ensures webapp context_path.xml packaged outside of the archive.  Needs to be a separate test from contextXmlConfig since contextXmlConfig tests webapp/META-INF/context.xml packaged inside the WAR
+ *
  */
 public class WebTest {
 
@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for context_path.xml");
@@ -54,7 +54,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
 
     }
 

@@ -46,8 +46,8 @@ import jakarta.inject.Inject;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Nodes.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-node-config", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-node-config",
         description="Create Node Config")
 })
 public class CreateNodeConfigCommand implements AdminCommand {

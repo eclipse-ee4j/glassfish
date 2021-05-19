@@ -222,7 +222,7 @@ public class DatabaseOperations {
             stmt = con.createStatement();
             String query = "SELECT * from BOOKS_TABLE";
             ResultSet rs = stmt.executeQuery(query);
-            
+
             boolean printHeaders = true;
 
             while(rs.next()) {
@@ -239,7 +239,7 @@ public class DatabaseOperations {
                 }
                 out.println("</tr>");
             }
-            
+
             if(!printHeaders) { // atleast one row was there.
                 out.println("</table>");
             } else {
@@ -262,7 +262,7 @@ public class DatabaseOperations {
             }
         }
     }
-    
+
     private boolean execute(DataSource ds1, String sql) {
         Connection con = null;
         Statement stmt = null;

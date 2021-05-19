@@ -52,7 +52,7 @@ public interface AdminAccessController {
         READONLY,
         FORBIDDEN,
         NONE;
-        
+
         public boolean isOK() {
             return this == FULL || this == READONLY;
         }
@@ -93,7 +93,7 @@ public interface AdminAccessController {
      */
     Subject loginAsAdmin(
             Request request) throws LoginException;
-    
+
     /** Authenticates the admin user by delegating to the underlying realm. The implementing classes
      *  should use the GlassFish security infrastructure constructs like LoginContextDriver. This method assumes that
      *  the realm infrastructure is available in both the configuration and runtime of the server.

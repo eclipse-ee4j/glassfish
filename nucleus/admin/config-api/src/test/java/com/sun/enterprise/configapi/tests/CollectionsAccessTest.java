@@ -79,6 +79,6 @@ public class CollectionsAccessTest extends ConfigApiTest  {
                 return m;
             }
         }, apps);
-    }    
+    }
 }
 

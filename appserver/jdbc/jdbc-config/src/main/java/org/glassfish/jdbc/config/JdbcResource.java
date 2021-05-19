@@ -65,13 +65,14 @@ public interface JdbcResource extends ConfigBeanProxy, Resource,
      * @return possible object is
      *         {@link String }
      */
+    @Override
     @Attribute
     @NotNull
     @Param(name=name)
     @ReferenceConstraint.RemoteKey(message="{resourceref.invalid.poolname}", type=JdbcConnectionPool.class)
     String getPoolName();
 
-    public String name = "connectionpoolid";
+    String name = "connectionpoolid";
 
     /**
      * Gets the value of the enabled property.
@@ -79,6 +80,7 @@ public interface JdbcResource extends ConfigBeanProxy, Resource,
      * @return possible object is
      *         {@link String }
      */
+    @Override
     @Attribute (defaultValue="true",dataType=Boolean.class)
     @Param
     String getEnabled();
@@ -89,6 +91,7 @@ public interface JdbcResource extends ConfigBeanProxy, Resource,
      * @param value allowed object is
      *              {@link String }
      */
+    @Override
     void setEnabled(String value) throws PropertyVetoException;
 
     /**
@@ -108,16 +111,18 @@ public interface JdbcResource extends ConfigBeanProxy, Resource,
      *              {@link String }
      */
     void setDescription(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})
     @Element
     List<Property> getProperty();
 
 
+    @Override
     @DuckTyped
     String getIdentity();
 

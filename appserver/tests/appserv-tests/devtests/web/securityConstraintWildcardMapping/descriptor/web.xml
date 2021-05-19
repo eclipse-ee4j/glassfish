@@ -28,7 +28,7 @@
     <servlet-name>MyProtectedServlet</servlet-name>
     <url-pattern>/application/*</url-pattern>
   </servlet-mapping>
-  
+
   <servlet-mapping>
     <servlet-name>MyProtectedServlet</servlet-name>
     <url-pattern>/login</url-pattern>
@@ -38,18 +38,18 @@
     <servlet-name>MyProtectedServlet</servlet-name>
     <url-pattern>/redirect</url-pattern>
   </servlet-mapping>
-      
+
   <session-config>
     <session-timeout>
             30
         </session-timeout>
   </session-config>
-  
+
   <security-constraint>
     <web-resource-collection>
       <web-resource-name>Protected Area</web-resource-name>
       <url-pattern>/application/redirect/*</url-pattern>
-      <url-pattern>/redirect</url-pattern>      
+      <url-pattern>/redirect</url-pattern>
       <url-pattern>/content.jsp</url-pattern>
       <http-method>GET</http-method>
       <http-method>POST</http-method>
@@ -58,12 +58,12 @@
       <role-name>user</role-name>
     </auth-constraint>
   </security-constraint>
-  
+
   <login-config>
     <auth-method>BASIC</auth-method>
     <realm-name>file</realm-name>
   </login-config>
-  
+
   <security-role>
     <role-name>user</role-name>
   </security-role>

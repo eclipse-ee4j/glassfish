@@ -35,7 +35,7 @@ public class ConstraintValue extends ConstraintNode {
      * that we have this information only for constraints that corresponds to simple
      * expressions ( like <field> <op> <value | param> ) in query filter.
      * Do not rely on this information to be always present for any optimizations.
-     */    
+     */
     private LocalFieldDesc localField;
 
     public ConstraintValue(Object value, LocalFieldDesc localField) {
@@ -44,11 +44,11 @@ public class ConstraintValue extends ConstraintNode {
         this.value = value;
         this.localField = localField;
     }
-    
+
     public Object getValue() {
         return value;
     }
-    
+
     public LocalFieldDesc getLocalField() {
         return localField;
     }

@@ -28,13 +28,13 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface TransactionOperationsManager {
     /**
-     * Called by the UserTransaction implementation to verify 
+     * Called by the UserTransaction implementation to verify
      * access to the UserTransaction methods.
      */
     boolean userTransactionMethodsAllowed();
 
     /**
-     * Called by the UserTransaction lookup to verify 
+     * Called by the UserTransaction lookup to verify
      * access to the UserTransaction itself.
      */
     void userTransactionLookupAllowed() throws NameNotFoundException;

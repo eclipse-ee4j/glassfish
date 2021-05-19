@@ -53,15 +53,15 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="enable-http-lb-server", 
+        opType=RestEndpoint.OpType.POST,
+        path="enable-http-lb-server",
         description="enable-http-lb-server",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="enable-http-lb-server", 
+        opType=RestEndpoint.OpType.POST,
+        path="enable-http-lb-server",
         description="enable-http-lb-server",
         params={
             @RestParam(name="id", value="$parent")
@@ -84,7 +84,7 @@ public final class EnableHTTPLBServerCommand extends LBCommandsBase
         ActionReport report = context.getActionReport();
 
         Logger logger = context.getLogger();
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
         LbConfigs lbconfigs = domain.getExtensionByType(LbConfigs.class);
@@ -95,7 +95,7 @@ public final class EnableHTTPLBServerCommand extends LBCommandsBase
             report.setMessage(msg);
             return;
         }
-        
+
         if (tgt.isCluster(target)) {
             //enable all servers in cluster
             updateLBForCluster(report, target, "true", null);

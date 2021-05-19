@@ -59,7 +59,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     @SuppressWarnings("unchecked")
     public SSLConfigurator(final ServiceLocator habitat, final Ssl ssl) {
         this.ssl = ssl;
-        
+
         Provider<SSLImplementation> sslImplementationLocal;
         final ServiceHandle<SSLImplementation> handle = habitat.getServiceHandle(SSLImplementation.class, ssl.getClassname());
         if (handle != null) {
@@ -96,7 +96,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
     public SSLImplementation getSslImplementation() {
         return sslImplementation.get();
     }
-    
+
     /**
      * Configures the SSL properties on the given PECoyoteConnector from the SSL config of the given HTTP listener.
      */
@@ -176,13 +176,13 @@ public class SSLConfigurator extends SSLEngineConfigurator {
                     enabledCipherSuites = ciphers;
                 }
             }
-            
+
             if (LOGGER.isLoggable(Level.FINE)) {
                 LOGGER.log(Level.FINE, "Enabled secure protocols={0}"
                         + "" + " ciphers={1}", new Object[]
                         {Arrays.toString(enabledProtocols), Arrays.toString(enabledCipherSuites)});
             }
-            
+
             return newSslContext;
         } catch (Exception e) {
             if (LOGGER.isLoggable(Level.WARNING)) {
@@ -470,7 +470,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         try {
             final SecurePasswordProvider provider =
                     (SecurePasswordProvider) Utils.newInstance(storePasswordProvider);
-            
+
             assert provider != null;
             return provider.getPassword();
         } catch (Exception e) {
@@ -542,7 +542,7 @@ public class SSLConfigurator extends SSLEngineConfigurator {
         public static void updateCiphers(final SSLContext sslContext) {
             SSLServerSocketFactory factory = sslContext.getServerSocketFactory();
             String[] supportedCiphers = factory.getDefaultCipherSuites();
-            
+
             ciphersLock.writeLock().lock();
             try {
                 for (int i = 0, len = supportedCiphers.length; i < len; i++) {

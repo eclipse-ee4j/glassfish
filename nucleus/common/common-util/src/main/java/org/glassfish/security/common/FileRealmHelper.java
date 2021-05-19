@@ -39,8 +39,8 @@ import java.util.StringTokenizer;
  *
  * <P>This class provides administration methods for the file realm. It is
  * used by the FileRealm class to provide the FileRealm functionality.  But
- * some administration classes that need direct access to the File without 
- * using the security module use this class directly. 
+ * some administration classes that need direct access to the File without
+ * using the security module use this class directly.
  *
  * <P>Format of the keyfile used by this class is one line per user
  * containing <code>username;password;groups</code> where:
@@ -74,10 +74,10 @@ public final class FileRealmHelper
 
     // Valid non-alphanumeric/whitespace chars in user/group name
     public static final String MISC_VALID_CHARS="_-.";
-    
+
     // Number of bytes of salt for SSHA
     private static final int SALT_SIZE=8;
-    
+
     // Contains cache of keyfile data
     private final HashMap<String,User> userTable = new HashMap<String, User>();  // user=>FileRealmUser
     private final HashMap<String,Integer> groupSizeMap = new HashMap<String, Integer>(); // maps of groups with value cardinality of group
@@ -121,14 +121,14 @@ public final class FileRealmHelper
         }
         loadKeyFile();
     }
-    
+
     /**
      * Returns names of all the users in this particular realm.
      *
      * @return enumeration of user names (strings)
      */
     public Set<String> getUserNames()
-    {  
+    {
         return userTable.keySet();
     }
 
@@ -142,7 +142,7 @@ public final class FileRealmHelper
     {
         return userTable.get(name);
     }
-    
+
 
     /**
      * Returns names of all the groups in this particular realm.
@@ -155,7 +155,7 @@ public final class FileRealmHelper
         return groupSizeMap.keySet();
     }
 
-    
+
     /**
      * Returns the name of all the groups that this user belongs to.
      * @param username Name of the user in this realm whose group listing
@@ -171,7 +171,7 @@ public final class FileRealmHelper
         }
         return ud.getGroups();
     }
-    
+
 
     /**
      * Authenticates a user.
@@ -199,9 +199,9 @@ public final class FileRealmHelper
 
         boolean ok = false;
 
-        try {           
-            ok = SSHA.verify(ud.getSalt(), ud.getHash(), 
-                    Utility.convertCharArrayToByteArray(password, Charset.defaultCharset().displayName()), 
+        try {
+            ok = SSHA.verify(ud.getSalt(), ud.getHash(),
+                    Utility.convertCharArrayToByteArray(password, Charset.defaultCharset().displayName()),
                     ud.getAlgo());
 
         } catch (Exception e) {
@@ -211,15 +211,15 @@ public final class FileRealmHelper
         if (!ok) {
             return null;
         }
-        
+
         return ud.getGroups();
     }
 
     /*
-     * Test whether their is a user in the FileRealm that has a password that 
+     * Test whether their is a user in the FileRealm that has a password that
      * has been set, i.e., something other than the resetKey.
      */
-    public boolean hasAuthenticatableUser() 
+    public boolean hasAuthenticatableUser()
     {
         for (User ud : userTable.values()) {
             if (!resetKey.equals(ud.getAlgo())) {
@@ -237,11 +237,11 @@ public final class FileRealmHelper
      * Return false if any char of the string is not alphanumeric or space
      * or other permitted character.
      * For a username it will allow an @ symbol. To allow for the case of type
-     * <i>username@foo.com</i>. It will not allow the same symbol for a group name 
+     * <i>username@foo.com</i>. It will not allow the same symbol for a group name
      * @param String the name to be validated
-     * @param boolean true if the string is a username, false if it is 
+     * @param boolean true if the string is a username, false if it is
      * a group name
-     * 
+     *
      */
     private static boolean isValid(String s, boolean userName)
     {
@@ -259,7 +259,7 @@ public final class FileRealmHelper
         return true;
     }
 
-    
+
     /**
      * Validates syntax of a user name.
      *
@@ -356,14 +356,14 @@ public final class FileRealmHelper
             String msg = sm.getString("filerealm.badchars", group);
             throw new IllegalArgumentException(msg);
         }
-        
+
         if (!group.equals(group.trim())) {
             String msg = sm.getString("filerealm.badspaces", group);
             throw new IllegalArgumentException(msg);
         }
     }
 
-    
+
     /**
      * Validates syntax of a list of group names.
      *
@@ -372,7 +372,7 @@ public final class FileRealmHelper
      *
      * @param groupList Array of group names to validate.
      * @throws IASSecurityException Thrown if the value is not valid.
-     *     
+     *
      *
      */
     public static void validateGroupList(String[] groupList)
@@ -385,10 +385,10 @@ public final class FileRealmHelper
         for (int i=0; i<groupList.length; i++) {
             validateGroupName(groupList[i]);
         }
-        
+
     }
 
-    
+
     /**
      * Adds new user to file realm. User cannot exist already.
      *
@@ -405,17 +405,17 @@ public final class FileRealmHelper
         validateUserName(name);
         validatePassword(password);
         validateGroupList(groupList);
-        
+
         if (userTable.containsKey(name)) {
             String msg = sm.getString("filerealm.dupuser", name);
             throw new IllegalArgumentException(msg);
         }
 
-        addGroupNames(groupList);        
+        addGroupNames(groupList);
         User ud = createNewUser(name, password, groupList);
         userTable.put(name, ud);
     }
-      
+
 
     /**
      * Remove user from file realm. User must exist.
@@ -435,7 +435,7 @@ public final class FileRealmHelper
         User oldUser = (User)userTable.get(name);
         userTable.remove(name);
         reduceGroups(oldUser.getGroups());
-    }    
+    }
 
     /**
      * Update data for an existing user. User must exist.
@@ -467,20 +467,20 @@ public final class FileRealmHelper
         if (password != null) { // null here means re-use previous so is ok
             validatePassword(password);
         }
-        
+
                                 // can't duplicate unless modifying itself
         if (!name.equals(newName) && userTable.containsKey(newName)) {
             String msg = sm.getString("filerealm.dupuser", name);
             throw new IllegalArgumentException(msg);
         }
 
-        
+
         User oldUser = userTable.get(name);
         assert (oldUser != null);
-        
+
                                 // create user using new name
         User newUser = new User(newName);
-        
+
         // set groups as provided by parameter
         // use old groups if no new groups given
         if (groups != null) {
@@ -489,7 +489,7 @@ public final class FileRealmHelper
         } else {
             newUser.setGroups(oldUser.getGroups());
         }
-        
+
         // use old password if no new pwd given
         if (password==null) {
             newUser.setSalt(oldUser.getSalt());
@@ -502,20 +502,20 @@ public final class FileRealmHelper
             else {
                 newUser.setAlgo(oldUser.getAlgo());
             }
-            
+
         } else {
             setPassword(newUser, password);
             //ALways update passwords with SHA-256 algo
             newUser.setAlgo(algoSHA256);
-        }        
+        }
         userTable.remove(name);
         userTable.put(newName, newUser);
     }
-        
+
     /**
      * Write keyfile data out to disk. The file generation is sychronized
      * within this class only, caller is responsible for any other
-     * file locking or revision management as deemed necessary. 
+     * file locking or revision management as deemed necessary.
      * @throws IOException if there is a failure
      */
     public void persist() throws IOException {
@@ -543,11 +543,11 @@ public final class FileRealmHelper
         }
     }
 
-    
+
     //---------------------------------------------------------------------
     // Private methods.
 
-    
+
     /**
      * Add group names to the groups table. It is assumed all entries are
      * valid group names.
@@ -590,8 +590,8 @@ public final class FileRealmHelper
         addGroupNames(newGroupList);
         reduceGroups(oldGroupList);
     }
-    
-    
+
+
     /**
      * Load keyfile from config and populate internal cache.
      *
@@ -599,11 +599,11 @@ public final class FileRealmHelper
     private void loadKeyFile() throws IOException
     {
         BufferedReader input = null;
-        
+
         try {
             input = new BufferedReader(new FileReader(keyfile));
             while (input.ready()) {
-                
+
                 String line = input.readLine();
                 if (line != null &&
                         !line.startsWith(COMMENT) &&
@@ -612,7 +612,7 @@ public final class FileRealmHelper
                     userTable.put(ud.getName(), ud);
                 }
             }
-        } catch (Exception e) {  
+        } catch (Exception e) {
             throw new IOException(e.toString());
         } finally {
             if (input != null) {
@@ -623,8 +623,8 @@ public final class FileRealmHelper
             }
         }
     }
-    
-    
+
+
     /**
      * Encodes one user entry containing info stored in FileRealmUser object.
      *
@@ -690,7 +690,7 @@ public final class FileRealmHelper
             String msg = sm.getString("filerealm.syntaxerror", encodedLine);
             throw new IllegalArgumentException(msg);
         }
-        
+
         if (st.hasMoreTokens()) { // groups are optional
             groupList = st.nextToken();
         }
@@ -716,7 +716,7 @@ public final class FileRealmHelper
             ud.setSalt(salt);
             ud.setAlgo(algo);
         }
-        
+
         List<String> membership = new ArrayList<String>();
 
         if (groupList != null) {
@@ -731,11 +731,11 @@ public final class FileRealmHelper
             }
         }
         ud.setGroups(membership.toArray(new String[membership.size()]));
-        
+
         return ud;
     }
 
-    
+
     /**
      * Produce a user with given data.
      *
@@ -759,7 +759,7 @@ public final class FileRealmHelper
         ud.setAlgo(algoSHA256);
 
         setPassword(ud, pwd);
-     
+
         return ud;
     }
 
@@ -777,13 +777,13 @@ public final class FileRealmHelper
         //Copy the password to another reference before storing it to the
         //instance field.
         byte[] pwdBytes = null;
-        
+
         try {
             pwdBytes = Utility.convertCharArrayToByteArray(pwd, Charset.defaultCharset().displayName());
         } catch(Exception ex) {
             throw new IllegalArgumentException(ex);
         }
-        
+
         SecureRandom rng = SharedSecureRandomImpl.get();
         byte[] salt=new byte[SALT_SIZE];
         rng.nextBytes(salt);

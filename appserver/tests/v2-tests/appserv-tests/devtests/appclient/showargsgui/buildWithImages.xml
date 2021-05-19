@@ -46,30 +46,30 @@
 
         <!-- Build the app client. -->
         <antcall target="package-appclientjar-common">
-            <param name="appclientjar.files" value="${build.classes.dir}"/> 
+            <param name="appclientjar.files" value="${build.classes.dir}"/>
             <param name="appclientjar.classes" value="**/client/*.class **/reporter/*.class"/>
             <param name="appclient.jar" value="${appclient.jar.path}"/>
         </antcall>
 
         <!-- add the images -->
-        <jar jarfile="${appclient.jar.path}" basedir="." 
+        <jar jarfile="${appclient.jar.path}" basedir="."
              update="true" includes="**/*.jpg **/*.gif"/>
 
-        <!-- Build the library jar. -->        
-        <jar jarfile="${lib.jar.file}" 
-            basedir="${build.classes.dir}" 
-            update="true" includes ="**/lib/*.class" 
+        <!-- Build the library jar. -->
+        <jar jarfile="${lib.jar.file}"
+            basedir="${build.classes.dir}"
+            update="true" includes ="**/lib/*.class"
             />
-    </target> 
-    
+    </target>
 
-    
+
+
     <target name="run" depends="init-common">
         <echo>Testing stand-alone client...</echo>
         <antcall target="test.standalone.client"/>
     </target>
 
-    
+
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

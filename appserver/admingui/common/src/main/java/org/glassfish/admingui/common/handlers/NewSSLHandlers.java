@@ -26,7 +26,7 @@ package org.glassfish.admingui.common.handlers;
 import java.util.Arrays;
 import java.util.Vector;
 
-import com.sun.jsftemplating.annotation.Handler; 
+import com.sun.jsftemplating.annotation.Handler;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.layout.descriptors.handler.HandlerContext;
@@ -38,17 +38,17 @@ import org.glassfish.admingui.common.util.GuiUtil;
  *
  */
 public class NewSSLHandlers {
-    
+
     static String[] COMMON_CIPHERS = {"SSL_RSA_WITH_RC4_128_MD5", "SSL_RSA_WITH_RC4_128_SHA",
         "TLS_RSA_WITH_AES_128_CBC_SHA", "TLS_RSA_WITH_AES_256_CBC_SHA", "SSL_RSA_WITH_3DES_EDE_CBC_SHA"};
-    
+
     static String[] BIT_CIPHERS = {"SSL_RSA_WITH_DES_CBC_SHA", "SSL_DHE_RSA_WITH_DES_CBC_SHA", "SSL_DHE_DSS_WITH_DES_CBC_SHA",
         "SSL_RSA_EXPORT_WITH_RC4_40_MD5", "SSL_RSA_EXPORT_WITH_DES40_CBC_SHA", "SSL_DHE_RSA_EXPORT_WITH_DES40_CBC_SHA",
         "SSL_DHE_DSS_EXPORT_WITH_DES40_CBC_SHA"};
-    
+
     public NewSSLHandlers() {
     }
-    
+
     @Handler(id="convertToDifferentCiphersGroup",
     input={
         @HandlerInput(name="ciphers",   type=Object.class)},
@@ -102,7 +102,7 @@ public class NewSSLHandlers {
     }
 
 
-        
+
         private static String[] getSelectedCiphersList(String selectedCiphers){
             Vector selItems = new Vector();
             if(selectedCiphers != null){
@@ -113,11 +113,11 @@ public class NewSSLHandlers {
                         cName = cName.substring(1, cName.length());
                         selItems.add(cName);
                     }
-                }    
+                }
             }
             return (String[])selItems.toArray(new String[selItems.size()]);
         }
-        
+
         private static String processSelectedCiphers(String[] selectedCiphers, String ciphers){
             StringBuilder sb = new StringBuilder();
             String sep = "";
@@ -143,33 +143,33 @@ public class NewSSLHandlers {
             }
             return ciphers;
         }
-        
+
         private static String[] getCommonCiphers(Vector ciphers){
             Vector commonCiphers = filterCiphers(ciphers, COMMON_CIPHERS);
             String[] ciphersList = (String[])commonCiphers.toArray(new String[commonCiphers.size()]);
             return ciphersList;
         }
-        
+
         private static String[] getEccCiphers(Vector ciphers){
             Vector eccCiphers = breakUpCiphers(new Vector(), ciphers, "_ECDH_"); //NOI18N
             eccCiphers = breakUpCiphers(eccCiphers, ciphers, "_ECDHE_"); //NOI18N
             String[] ciphersList = (String[])eccCiphers.toArray(new String[eccCiphers.size()]);
             return ciphersList;
-        }    
-        
+        }
+
         private static String[] getEphemeralCiphers(Vector ciphers){
             Vector ephmCiphers = breakUpCiphers(new Vector(), ciphers, "_DHE_RSA_"); //NOI18N
             ephmCiphers = breakUpCiphers(ephmCiphers, ciphers, "_DHE_DSS_"); //NOI18N
             String[] ciphersList = (String[])ephmCiphers.toArray(new String[ephmCiphers.size()]);
             return ciphersList;
         }
-        
+
         private static String[] getOtherCiphers(Vector ciphers){
             Vector bitCiphers = filterCiphers(ciphers, BIT_CIPHERS);
             String[] ciphersList = (String[])bitCiphers.toArray(new String[bitCiphers.size()]);
             return ciphersList;
         }
-        
+
         private static Vector filterCiphers(Vector ciphers, String[] filterList){
             Vector listCiphers = new Vector();
             if (ciphers != null){
@@ -197,5 +197,5 @@ public class NewSSLHandlers {
             }
             return cipherSubset;
         }
-     
+
 }

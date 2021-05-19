@@ -40,12 +40,12 @@ import com.sun.ejb.ComponentContext;
  * of a timer.  Note that this class is not Serializable.
  * Timer instances are not intended to be directly persisted
  * by the application.  TimerHandle should be used instead.
- * 
+ *
  * @author Kenneth Saks
  */
 public class TimerWrapper
     implements Timer, IndirectlySerializable {
-    
+
     private TimerPrimaryKey timerId_;
     private EJBTimerService timerService_;
 
@@ -57,7 +57,7 @@ public class TimerWrapper
     /*
      * Implementations of jakarta.ejb.Timer methods
      */
-    public void cancel() 
+    public void cancel()
         throws IllegalStateException, NoSuchObjectLocalException, EJBException {
 
         checkCallPermission();
@@ -71,8 +71,8 @@ public class TimerWrapper
         }
 
     }
-    
-    public long getTimeRemaining() 
+
+    public long getTimeRemaining()
         throws IllegalStateException, NoMoreTimeoutsException, NoSuchObjectLocalException {
 
         Date nextTimeout = getNextTimeout();
@@ -82,8 +82,8 @@ public class TimerWrapper
 
         return (timeRemaining > 0) ? timeRemaining : 0;
     }
-    
-    public Date getNextTimeout() 
+
+    public Date getNextTimeout()
         throws IllegalStateException, NoMoreTimeoutsException, NoSuchObjectLocalException {
 
         checkCallPermission();
@@ -94,7 +94,7 @@ public class TimerWrapper
             nextTimeout = timerService_.getNextTimeout(timerId_);
         } catch(FinderException fe) {
             throw new NoSuchObjectLocalException("timer no longer exists", fe);
-        } 
+        }
 
         if (nextTimeout == null) {
             throw new NoMoreTimeoutsException();
@@ -102,8 +102,8 @@ public class TimerWrapper
 
         return nextTimeout;
     }
-    
-    public Serializable getInfo() 
+
+    public Serializable getInfo()
         throws IllegalStateException, NoSuchObjectLocalException {
 
         checkCallPermission();
@@ -114,12 +114,12 @@ public class TimerWrapper
             info = timerService_.getInfo(timerId_);
         } catch(FinderException fe) {
             throw new NoSuchObjectLocalException("timer no longer exists", fe);
-        } 
+        }
 
         return info;
     }
-    
-    public TimerHandle getHandle() 
+
+    public TimerHandle getHandle()
         throws IllegalStateException, NoSuchObjectLocalException {
 
         checkCallPermission();
@@ -130,12 +130,12 @@ public class TimerWrapper
 
         if( !timerService_.timerExists(timerId_) ) {
             throw new NoSuchObjectLocalException("timer no longer exists");
-        } 
+        }
 
         return new TimerHandleImpl(timerId_);
     }
 
-    public ScheduleExpression getSchedule() throws java.lang.IllegalStateException, 
+    public ScheduleExpression getSchedule() throws java.lang.IllegalStateException,
             jakarta.ejb.NoSuchObjectLocalException, jakarta.ejb.EJBException {
 
         checkCallPermission();
@@ -149,7 +149,7 @@ public class TimerWrapper
             schedule = timerService_.getScheduleExpression(timerId_);
         } catch(FinderException fe) {
             throw new NoSuchObjectLocalException("timer no longer exists", fe);
-        } 
+        }
 
         return schedule;
     }
@@ -167,7 +167,7 @@ public class TimerWrapper
     }
 
 
-    public boolean isPersistent() throws java.lang.IllegalStateException, 
+    public boolean isPersistent() throws java.lang.IllegalStateException,
             jakarta.ejb.NoSuchObjectLocalException, jakarta.ejb.EJBException {
 
         checkCallPermission();
@@ -175,7 +175,7 @@ public class TimerWrapper
             return timerService_.isPersistent(timerId_);
         } catch(FinderException fe) {
             throw new NoSuchObjectLocalException("timer no longer exists", fe);
-        } 
+        }
     }
 
     public boolean equals(Object o) {
@@ -207,7 +207,7 @@ public class TimerWrapper
         EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
         EJBTimerService timerService = EJBTimerService.getEJBTimerService();
         if( timerService == null ) {
-            throw new IllegalStateException 
+            throw new IllegalStateException
                 ("EJBTimerService is not available");
         }
 
@@ -252,7 +252,7 @@ public class TimerWrapper
          * Check if the record is valid only when making calls on the object.
          */
         public Object createObject() throws EJBException {
-            // Can't store a static ref because in embedded container it can be 
+            // Can't store a static ref because in embedded container it can be
             // changed by server restart
             EJBTimerService timerService = EJBTimerService.getEJBTimerService();
             TimerWrapper timer = new TimerWrapper(timerId_, timerService);
@@ -264,25 +264,25 @@ public class TimerWrapper
     private static class TimerHandleImpl implements TimerHandle {
 
         private TimerPrimaryKey timerId_;
-        
+
         public TimerHandleImpl(TimerPrimaryKey timerId) {
             timerId_ = timerId;
         }
 
         /**
          * Materialize Timer from handle.  This must be coded
-         * very defensively, since handle use might be attempted from 
-         * outside of EJB container.  
+         * very defensively, since handle use might be attempted from
+         * outside of EJB container.
          */
-        public Timer getTimer() throws IllegalStateException, 
+        public Timer getTimer() throws IllegalStateException,
             NoSuchObjectLocalException, EJBException {
             TimerWrapper timer = null;
 
-            // Can't store a static ref because in embedded container it can be 
+            // Can't store a static ref because in embedded container it can be
             // changed by server restart
             EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
             if( ejbContainerUtil != null ) {
-                
+
                 // Make sure use of timer service methods are allowed
                 checkCallPermission();
 
@@ -296,11 +296,11 @@ public class TimerWrapper
             return timer;
         }
 
-        private TimerWrapper getTimerInternal(TimerPrimaryKey timerId) 
+        private TimerWrapper getTimerInternal(TimerPrimaryKey timerId)
             throws NoSuchObjectLocalException, EJBException {
 
             TimerWrapper timer = null;
-            // Can't store a static ref because in embedded container it can be 
+            // Can't store a static ref because in embedded container it can be
             // changed by server restart
             EJBTimerService timerService = EJBTimerService.getEJBTimerService();
 
@@ -314,7 +314,7 @@ public class TimerWrapper
             } else {
                 throw new EJBException("EJB Timer Service not available");
             }
-            
+
             return timer;
         }
     }

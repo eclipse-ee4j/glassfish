@@ -48,7 +48,7 @@ public class AppDBIT extends ArquillianBase {
     public static void printSummary(){
         stat.printSummary();
     }
-    
+
 
     @Deployment(testable = false)
     public static Archive<?> createDeployment() {
@@ -60,19 +60,19 @@ public class AppDBIT extends ArquillianBase {
         assertDefaultAuthenticated(
             readFromServer("/servlet?name=reza&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongName() {
         assertDefaultNotAuthenticated(
             readFromServer("/servlet?name=romo&password=secret1"));
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongPassword() {
         assertDefaultNotAuthenticated(

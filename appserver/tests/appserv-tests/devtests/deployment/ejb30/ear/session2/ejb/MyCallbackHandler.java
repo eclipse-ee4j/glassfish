@@ -21,10 +21,10 @@ import jakarta.interceptor.InvocationContext;
 
 public class MyCallbackHandler {
 
-    @PreDestroy 
+    @PreDestroy
     public void myPreDestMethod(InvocationContext invCtx) {
         System.out.println("In MyCallbackHandler::myPreDestMethod ");
-        
+
         try {
             invCtx.proceed();
         } catch(Exception e) {

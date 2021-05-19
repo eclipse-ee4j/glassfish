@@ -65,13 +65,13 @@ public class GFLauncherUtils {
             try {
                 JarURLConnection c = (JarURLConnection) resource.openConnection();
                 URL jarFile = c.getJarFileURL();
-                
+
                 // important to sanitize it!
                 // unreported bug:
                 // JDK does this:
                 // the parent of "/foo/." is "/foo", not "/" !
-               
-                
+
+
                 File f = SmartFile.sanitize(new File(jarFile.toURI()));
 
                 f = f.getParentFile();  // <install>/modules
@@ -114,11 +114,11 @@ public class GFLauncherUtils {
 
     /**
      * This method returns the fully qualified name of the host.  If
-     * the name can't be resolved (on windows if there isn't a domain specified), just 
+     * the name can't be resolved (on windows if there isn't a domain specified), just
      * host name is returned
      *
      * @deprecated
-     * @return 
+     * @return
      * @throws UnknownHostException so it can be handled on a case by case basis
      */
     @Deprecated
@@ -187,10 +187,10 @@ public class GFLauncherUtils {
             for(String s : ss)
                 list.add(new File(s));
         }
-        
+
         return list;
     }
-    
+
     public static String fileListToPathString(List<File> files) {
         StringBuilder sb = new StringBuilder();
         boolean firstFile = true;

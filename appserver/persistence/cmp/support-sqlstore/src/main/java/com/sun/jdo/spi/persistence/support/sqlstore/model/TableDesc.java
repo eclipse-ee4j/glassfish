@@ -156,7 +156,7 @@ public class TableDesc {
      * Returns the field representing the version column for this
      * table. The version column is used for verification with version
      * consistency. Each table can have only one version column.
-     * 
+     *
      * @return Version field.
      */
     public LocalFieldDesc getVersionField() {

@@ -34,11 +34,11 @@
     &jaxwsTools;
     &jbicommon;
     &jbiproperties;
-    <target name="all" depends="clean, setup, runtest,undeploy"/> 
+    <target name="all" depends="clean, setup, runtest,undeploy"/>
 
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
-	  <delete dir="common:endpoint"/>
+          <delete dir="common:endpoint"/>
     </target>
 
     <target name="setup" depends="assemble-web, deploy-app, assemble-client"/>
@@ -54,16 +54,16 @@
         <param name="war.classes" value="${build.classes.dir}"/>
         <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
        </antcall>
-	   <!-- Add the WSDL -->
-	   <mkdir dir="${build.classes.dir}/tmp/WEB-INF/wsdl"/>
-	   <copy file="${basedir}/wsdl/CalculatorService_schema1.xsd" todir="${build.classes.dir}/tmp/WEB-INF/wsdl"/>
-	   <copy file="${basedir}/wsdl/CalculatorService.wsdl" todir="${build.classes.dir}/tmp/WEB-INF/wsdl"/>
-	   <jar jarfile="${assemble.dir}/${appname}-web.war" update="true">
-	   		<fileset dir="${build.classes.dir}/tmp">
-				<include name="WEB-INF/wsdl/CalculatorService_schema1.xsd"/>
-				<include name="WEB-INF/wsdl/CalculatorService.wsdl"/>
-			</fileset>
-	   </jar>
+           <!-- Add the WSDL -->
+           <mkdir dir="${build.classes.dir}/tmp/WEB-INF/wsdl"/>
+           <copy file="${basedir}/wsdl/CalculatorService_schema1.xsd" todir="${build.classes.dir}/tmp/WEB-INF/wsdl"/>
+           <copy file="${basedir}/wsdl/CalculatorService.wsdl" todir="${build.classes.dir}/tmp/WEB-INF/wsdl"/>
+           <jar jarfile="${assemble.dir}/${appname}-web.war" update="true">
+                           <fileset dir="${build.classes.dir}/tmp">
+                                <include name="WEB-INF/wsdl/CalculatorService_schema1.xsd"/>
+                                <include name="WEB-INF/wsdl/CalculatorService.wsdl"/>
+                        </fileset>
+           </jar>
     </target>
 
     <target name="assemble-client" depends="init-common">

@@ -30,12 +30,12 @@ public interface CourseHome extends EJBHome {
      */
     public Course create(String courseId, String name)
         throws RemoteException, CreateException;
-    
+
     /**
      * Gets a reference to the remote interface to the CourseBean object by Primary Key.
      * @exception throws FinderException and RemoteException.
      *
      */
-    public Course findByPrimaryKey(String courseId) 
+    public Course findByPrimaryKey(String courseId)
         throws FinderException, RemoteException;
 }

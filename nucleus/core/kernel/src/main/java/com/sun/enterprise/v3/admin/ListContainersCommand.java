@@ -46,8 +46,8 @@ import jakarta.inject.Singleton;
 @I18n("list.containers.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-containers", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-containers",
         description="list-containers")
 })
 @AccessRequired(resource="domain", action="read")
@@ -114,7 +114,7 @@ public class ListContainersCommand implements AdminCommand {
                             }
                         }
 
-                        
+
                     }
                     if (!atLeastOne) {
                        container.addProperty("Status", "Not Started");

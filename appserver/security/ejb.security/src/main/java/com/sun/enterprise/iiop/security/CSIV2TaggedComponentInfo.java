@@ -77,7 +77,7 @@ import org.glassfish.enterprise.iiop.impl.CSIv2Policy;
 /**
  * This is the class that manages the CSIV2 tagged component information in the IORs. Note: For supporting FLOB in a
  * cluster/EE mode we need to register the CSIV2TaggedComponentHandlerImpl with the GlassFishORBManager.
- * 
+ *
  * @author Vivek Nagar
  * @author Harpreet Singh
  * @author Ken Cavanaugh
@@ -667,7 +667,7 @@ public final class CSIV2TaggedComponentInfo {
 
     /**
      * Get the Compound security mechanism list from the given IOR.
-     * 
+     *
      * @param the IOR.
      * @return the array of compound security mechanisms.
      */

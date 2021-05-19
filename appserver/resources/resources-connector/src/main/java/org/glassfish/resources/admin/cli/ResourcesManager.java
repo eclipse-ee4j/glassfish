@@ -28,15 +28,15 @@ import java.util.Properties;
 import java.io.File;
 
 /**
- * This class serves as the API to creating new resources when an xml file 
+ * This class serves as the API to creating new resources when an xml file
  * is supplied containing the resource definitions
- * 
+ *
  * @author PRASHANTH ABBAGANI
  */
 public class ResourcesManager {
 
      /**
-     * Creating resources from sun-resources.xml file. This method is used by 
+     * Creating resources from sun-resources.xml file. This method is used by
      * the admin framework when the add-resources command is used to create
      * resources
      */

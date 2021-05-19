@@ -32,7 +32,7 @@ import java.util.Scanner;
 
 /**
  *Provides a way to test autodeployer's behavior when an autodeployed file is
- *copied into the autodeploy directory slowly. 
+ *copied into the autodeploy directory slowly.
  *
  *Usage:
  *
@@ -49,17 +49,17 @@ import java.util.Scanner;
  * @author  tjquinn
  */
 public class SlowCopy {
-    
+
     /** Creates a new instance of SlowCopy */
     public SlowCopy() {
     }
-  
+
     /** default delay between successive writes of data to the output file */
     private static final long DEFAULT_DELAY = 200; // milliseconds
-    
+
     /** size of read and write buffer */
     private static final int BUFFER_SIZE = 1024;
-    
+
     public static void main(String[] args) {
         try {
             new SlowCopy().run(args);
@@ -69,22 +69,22 @@ public class SlowCopy {
             System.exit(1);
         }
     }
-    
+
     private void run(String [] args) throws FileNotFoundException, IOException, InterruptedException {
         System.out.println(Arrays.toString(args));
         if (args.length < 3) {
             throw new IllegalArgumentException("Command line args must specify prompt/timed, the original file, and the target file");
         }
-        
+
         /*
-         *Get delay from default and override the default if the delay is 
+         *Get delay from default and override the default if the delay is
          *specified on the command line.
          */
         long delay = DEFAULT_DELAY;
         if (args.length > 3) {
             delay = Integer.decode(args[3]);
         }
-        
+
         /*
          *For interactive use, the tool would like to let the user press a
          *key each time a read/write is to occur.  This doesn't yet work and
@@ -93,7 +93,7 @@ public class SlowCopy {
         boolean usePromptDelay = args[0].equalsIgnoreCase("prompt");
         File oldF = new File(args[1]);
         File newF = new File(args[2]);
-        
+
         System.out.println("Slow copy starting\n" +
                 "  mode: " + args[0] + "\n" +
                 "  input file: " + oldF.getAbsolutePath() + "\n" +
@@ -106,15 +106,15 @@ public class SlowCopy {
         FileInputStream fis = new FileInputStream(oldF);
         byte [] data = new byte [BUFFER_SIZE];
         int bytesRead;
-        
+
         Scanner scanner = null;
         boolean continuePrompting = usePromptDelay;
         String lineSep = System.getProperty("line.separator");
-        
+
         if (usePromptDelay) {
             scanner = new Scanner(System.in);
         }
-        
+
         int totalBytesRead = 0;
         /*
          *Repeat the cycle of reading from the input file and writing to the
@@ -140,13 +140,13 @@ public class SlowCopy {
                 }
             }
             System.out.println("Finished copying " + totalBytesRead + " bytes at " + new Date().toString());
-            
+
         } finally {
             if (fos != null) {
                 fos.close();
                 fos = null;
             }
-            if (fis != null) { 
+            if (fis != null) {
                 fis.close();
                 fis = null;
             }

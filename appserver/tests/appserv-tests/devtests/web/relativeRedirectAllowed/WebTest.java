@@ -20,9 +20,9 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  * This unit test expects only the relative path when redirect
- * as the following is specified in sun-web.xml. 
+ * as the following is specified in sun-web.xml.
  *
- * <property name="relativeRedirectAllowed" value="true"/> 
+ * <property name="relativeRedirectAllowed" value="true"/>
  *
  */
 public class WebTest {
@@ -32,7 +32,7 @@ public class WebTest {
     private static final String TEST_NAME = "web-relativeRedirectAllowed";
 
     /*
-     * The relative path that is expected. 
+     * The relative path that is expected.
      */
     private static final String PATH = "/web-relativeRedirectAllowed/jsp/test2.jsp";
 
@@ -46,7 +46,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for Bugtraq 4642650");
         WebTest webTest = new WebTest(args);
@@ -55,8 +55,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeJsp();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -71,14 +71,14 @@ public class WebTest {
     }
 
     private void invokeJsp() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/test1.jsp" + " HTTP/1.0\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -97,7 +97,7 @@ public class WebTest {
               fail = false;
             } else {
                 System.err.println("Wrong path: " + line
-                                   + ", expected: " + PATH); 
+                                   + ", expected: " + PATH);
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;
             }

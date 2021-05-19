@@ -22,9 +22,9 @@ import com.sun.enterprise.deployment.MethodDescriptor;
 
 /**
  * Contains information about a stateful session bean init method.
- */ 
+ */
 
-public class EjbInitInfo implements Serializable 
+public class EjbInitInfo implements Serializable
 {
     private MethodDescriptor beanMethod;
     private MethodDescriptor createMethod;

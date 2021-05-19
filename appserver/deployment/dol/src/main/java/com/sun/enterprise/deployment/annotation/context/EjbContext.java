@@ -72,14 +72,14 @@ public class EjbContext extends ResourceContainerContextImpl {
     public void setEndpoint(WebServiceEndpoint endpoint) {
         this.endpoint = endpoint;
     }
-    
+
     public WebServiceEndpoint getEndpoint() {
         return endpoint;
     }
 
-    public void endElement(ElementType type, AnnotatedElement element) 
+    public void endElement(ElementType type, AnnotatedElement element)
             throws AnnotationProcessorException {
-        
+
         if (ElementType.TYPE.equals(type)) {
             for (PostProcessInfo ppInfo : postProcessInfos) {
                  ppInfo.postProcessor.postProcessAnnotation(
@@ -121,12 +121,12 @@ public class EjbContext extends ResourceContainerContextImpl {
         public AnnotationInfo ainfo;
         public PostProcessor postProcessor;
     }
-    
+
     public ServiceReferenceContainer[] getServiceRefContainers(String implName) {
         return getDescriptor().getEjbBundleDescriptor().getEjbByClassName(implName);
-    }    
+    }
 
-    public HandlerChainContainer[] 
+    public HandlerChainContainer[]
             getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
         if(serviceSideHandlerChain) {
             EjbDescriptor[] ejbs = getDescriptor().getEjbBundleDescriptor().getEjbByClassName(declaringClass.getName());
@@ -140,5 +140,5 @@ public class EjbContext extends ResourceContainerContextImpl {
             result.addAll(getDescriptor().getEjbBundleDescriptor().getEjbServiceReferenceDescriptors());
             return(result.toArray(new HandlerChainContainer[result.size()]));
         }
-    }    
+    }
 }

@@ -86,7 +86,7 @@
       <javac srcdir="." destdir="${build.classes.dir}/webclient/WEB-INF/classes"
             includes="webclient/**">
          <classpath refid="classpath"/>
- 
+
       </javac>
       <copy file="client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
@@ -127,11 +127,11 @@
         <antcall target="undeploy-war-common"/>
         <antcall target="undeploy-client"/>
     </target>
-    
+
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">
@@ -141,7 +141,7 @@
         <arg value="http://${http.host}:${http.port}/wsclient/RequestProcessor"/>
       </java>
 
-<!--restore the tokens back in file--> 
+<!--restore the tokens back in file-->
          <replace file="webclient/Client.java" token="${http.host}" value="HTTP_HOST"/>
          <replace file="webclient/Client.java" token="${http.port}" value="HTTP_PORT"/>
     </target>

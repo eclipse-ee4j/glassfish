@@ -22,12 +22,12 @@ import java.util.*;
 import java.math.BigDecimal;
 
 public class Dispatcher extends HttpServlet {
-  public void doGet(HttpServletRequest request, HttpServletResponse response) {   
+  public void doGet(HttpServletRequest request, HttpServletResponse response) {
     HttpSession session = request.getSession();
     ResourceBundle messages = (ResourceBundle)session.getAttribute("messages");
     if (messages == null) {
         Locale locale=request.getLocale();
-        messages = ResourceBundle.getBundle("com.sun.cb.messages.CBMessages", locale); 
+        messages = ResourceBundle.getBundle("com.sun.cb.messages.CBMessages", locale);
         session.setAttribute("messages", messages);
     }
 
@@ -95,7 +95,7 @@ public class Dispatcher extends HttpServlet {
         cart = new ShoppingCart(rpl);
         session.setAttribute("cart", cart);
     }
- 
+
     if (selectedScreen.equals("/orderForm")) {
       cart.clear();
       for(Iterator i = rpl.getItems().iterator(); i.hasNext(); ) {

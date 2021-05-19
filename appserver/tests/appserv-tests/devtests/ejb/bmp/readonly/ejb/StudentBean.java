@@ -69,10 +69,10 @@ public class StudentBean implements EntityBean {
             try {
                 System.out.println("Notifying read-only bean of update to " +
                                    "read-mostly Student " + name);
-                ReadOnlyBeanNotifier studentNotifier = 
+                ReadOnlyBeanNotifier studentNotifier =
                     ReadOnlyBeanHelper.getReadOnlyBeanNotifier
                     ("java:comp/env/ejb/ReadOnlyStudent");
-                
+
                 // Update read-only version
                 studentNotifier.refresh(studentId);
             } catch(Exception e) {
@@ -123,7 +123,7 @@ public class StudentBean implements EntityBean {
         courseIds = new ArrayList();
         try {
             InitialContext ic = new InitialContext();
-            dataSource = 
+            dataSource =
                 (DataSource) ic.lookup("java:comp/env/jdbc/bmp-readonlyDB");
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/Enroller");

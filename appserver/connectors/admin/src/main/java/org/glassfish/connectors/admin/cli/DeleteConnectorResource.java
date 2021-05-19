@@ -43,7 +43,7 @@ import java.beans.PropertyVetoException;
  * Delete Connector Resource command
  *
  * @author Jennifer Chou, Jagadish Ramu
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @RestEndpoints({
@@ -58,18 +58,18 @@ import java.beans.PropertyVetoException;
 @PerLookup
 @I18n("delete.connector.resource")
 public class DeleteConnectorResource implements AdminCommand {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteConnectorResource.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-    
+
     @Param(name="connector_resource_name", primary=true)
     private String jndiName;
 
     @Inject
     private ResourceUtil resourceUtil;
-    
+
     @Inject
     private Domain domain;
 
@@ -102,13 +102,13 @@ public class DeleteConnectorResource implements AdminCommand {
             return;
         }
         if ("system-all-req".equals(r.getObjectType())) {
-            report.setMessage(localStrings.getLocalString("delete.connector.resource.notAllowed", 
-                    "The {0} resource cannot be deleted as it is required to be configured in the system.", 
+            report.setMessage(localStrings.getLocalString("delete.connector.resource.notAllowed",
+                    "The {0} resource cannot be deleted as it is required to be configured in the system.",
                     jndiName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
         if (environment.isDas()) {
 
             if ("domain".equals(target)) {

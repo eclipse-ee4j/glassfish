@@ -29,7 +29,7 @@ import java.util.logging.*;
 /**
  * A simple class to get the properties of a ConnectionDefinition class , that
  * could be overridden by the administrator during deployment.
- * 
+ *
  * @author Sivakumar Thyagarjan
  */
 public class ConnectionDefinitionUtils {
@@ -38,15 +38,15 @@ public class ConnectionDefinitionUtils {
     private final static Locale locale = Locale.getDefault();
 
     /**
-	 * Gets the properties of the Java bean connection definition class that
-	 * have setter methods defined
-	 * 
-	 * @param connectionDefinitionClassName
-	 *                     The Connection Definition Java bean class for which
-	 *                     overrideable properties are required.
-	 * @return A Set of properties that have a setter method defined in the
-	 *                Connection Definition class
-	 */
+     * Gets the properties of the Java bean connection definition class that
+     * have setter methods defined
+     *
+     * @param connectionDefinitionClassName
+     *                     The Connection Definition Java bean class for which
+     *                     overrideable properties are required.
+     * @return A Set of properties that have a setter method defined in the
+     *                Connection Definition class
+     */
     public static Set getConnectionDefinitionProperties(String connectionDefinitionClassName) {
         TreeMap propertySet= new TreeMap();
         try {
@@ -134,22 +134,22 @@ public class ConnectionDefinitionUtils {
     }
 
     /**
-	 * Gets the properties of the Java bean connection definition class that
-	 * have setter methods defined and the default values as provided by the
-	 * Connection Definition java bean developer.<br>
+     * Gets the properties of the Java bean connection definition class that
+     * have setter methods defined and the default values as provided by the
+     * Connection Definition java bean developer.<br>
          * This util method is used to get properties of jdbc-data-source<br>
          * To get Connection definition properties for Connector Connection Pool,
          * use ConnectorRuntime.getMCFConfigProperties()<br>
          * When the connection definition class is not found, standard JDBC
          * properties (of JDBC 3.0 Specification) will be returned.<br>
-	 * 
-	 * @param connectionDefinitionClassName
-	 *                     The Connection Definition Java bean class for which
-	 *                     overrideable properties are required.
-	 * @return Map<String, Object> String represents property name
+     *
+     * @param connectionDefinitionClassName
+     *                     The Connection Definition Java bean class for which
+     *                     overrideable properties are required.
+     * @return Map<String, Object> String represents property name
          * and Object is the defaultValue that is a primitive type or String
-	 */
-    public static Map<String, Object> getConnectionDefinitionPropertiesAndDefaults(String connectionDefinitionClassName, 
+     */
+    public static Map<String, Object> getConnectionDefinitionPropertiesAndDefaults(String connectionDefinitionClassName,
             String resType) {
         TreeMap hm= new TreeMap();
         if(connectionDefinitionClassName == null || ("").equals(connectionDefinitionClassName)) {
@@ -158,10 +158,10 @@ public class ConnectionDefinitionUtils {
             } else {
                 addDefaultJDBCProperties(hm);
             }
-            return hm;            
+            return hm;
         }
         Set s= getConnectionDefinitionProperties(connectionDefinitionClassName);
-	Class connectionDefinitionClass;
+    Class connectionDefinitionClass;
         try {
             connectionDefinitionClass=
                 ConnectorRuntime.getRuntime().getConnectorClassLoader().loadClass(connectionDefinitionClassName);
@@ -194,7 +194,7 @@ public class ConnectionDefinitionUtils {
             }
         } catch (ClassNotFoundException e) {
             handleException(e, connectionDefinitionClassName);
-            //since the specified connectionDefinitionClassName is not found, 
+            //since the specified connectionDefinitionClassName is not found,
             //return the standard JDBC properties
             if(resType != null && resType.equals("java.sql.Driver")) {
                 addDefaultJDBCDriverProperties(hm);
@@ -210,7 +210,7 @@ public class ConnectionDefinitionUtils {
         }
         return hm;
     }
-    
+
     private static void addDefaultJDBCProperties(Map map){
         String[] defaultProperties = {
              "databaseName", "serverName", "portNumber", "networkProtocol",
@@ -244,7 +244,7 @@ public class ConnectionDefinitionUtils {
         }
         return propFound;
     }
-    
+
     private static void handleException(Exception ex, String className) {
         if(_logger.isLoggable(Level.FINE)){
             _logger.log(Level.FINE, "Exception while trying to find properties of class [ "+className+" ]", ex);

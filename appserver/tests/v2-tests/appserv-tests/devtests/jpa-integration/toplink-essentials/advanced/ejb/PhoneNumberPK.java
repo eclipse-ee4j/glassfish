@@ -18,26 +18,26 @@ package oracle.toplink.essentials.testing.models.cmp3.advanced;
 
 public class PhoneNumberPK  {
     public Integer id;
-	public String type;
+    public String type;
 
     public PhoneNumberPK() {}
 
-	public Integer getId() { 
-        return id; 
+    public Integer getId() {
+        return id;
     }
-    
-	public void setId(Integer id) {
-		this.id = id;
-	}
 
-	public String getType() { 
-        return type; 
+    public void setId(Integer id) {
+        this.id = id;
     }
-    
-	public void setType(String type) {
-		this.type = type;
-	}
-    
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
     /**
      * equals: Answer true if the ids are equal
      */

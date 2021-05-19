@@ -16,16 +16,17 @@
 
 package com.sun.jndi.ldap.ext;
 
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
-
 import java.io.IOException;
 
+import javax.naming.ConfigurationException;
+import javax.naming.NamingException;
+import javax.naming.ldap.ExtendedRequest;
+import javax.naming.ldap.ExtendedResponse;
+
 /**
- * This class implements the LDAPv3 Extended Request for WhoAmI. The 
+ * This class implements the LDAPv3 Extended Request for WhoAmI. The
  * <tt>WhoAmIRequest</tt> and <tt>WhoAmIResponse</tt> are used to
- * obtain the current authorization identity of the user.   
+ * obtain the current authorization identity of the user.
  * WhoAmI extended operation allows users to get authorization identity
  * seperately from LDAP bind operation, unlike {@link com.sun.jndi.ldap.ctl.AuthorizationIDControl <tt>AuthorizationIDControl</tt>}
  * which has to be used with LDAP bind operation.
@@ -50,7 +51,7 @@ import java.io.IOException;
  * </pre>
  *
  * @see WhoAmIResponse
- * @see com.sun.jndi.ldap.ctl.AuthorizationIDControl 
+ * @see com.sun.jndi.ldap.ctl.AuthorizationIDControl
  * @author Vincent Ryan
  */
 
@@ -75,6 +76,7 @@ public class WhoAmIRequest implements ExtendedRequest {
      *
      * @return The non-null object identifier string.
      */
+    @Override
     public String getID() {
         return OID;
     }
@@ -86,36 +88,36 @@ public class WhoAmIRequest implements ExtendedRequest {
      *
      * @return The null value.
      */
+    @Override
     public byte[] getEncodedValue() {
         return null;
     }
 
     /**
-     * Creates an extended response object that corresponds to the 
+     * Creates an extended response object that corresponds to the
      * LDAP WhoAmI extended request.
      *
      * @throws NamingException if cannot create extended response due
      * to an error
      * <p>
      */
+    @Override
     public ExtendedResponse createExtendedResponse(String id, byte[] berValue,
         int offset, int length) throws NamingException {
 
         // Confirm that the object identifier is correct
         if ((id != null) && (!id.equals(OID))) {
             throw new ConfigurationException(
-                "WhoAmI received the following response instead of " +
-                OID + ": " + id);
+                "WhoAmI received the following response instead of " + OID + ": " + id);
         }
-	try {
+        try {
             return new WhoAmIResponse(id, berValue, offset, length);
-	} catch (IOException e) { 
+        } catch (IOException e) {
 
-	    // Error occured in parsing the response value
-	    NamingException ne = new NamingException(
-			"Could not parse the response value");
-	    ne.setRootCause(e);
-	    throw ne;
-	}
+            // Error occured in parsing the response value
+            NamingException ne = new NamingException("Could not parse the response value");
+            ne.setRootCause(e);
+            throw ne;
+        }
     }
 }

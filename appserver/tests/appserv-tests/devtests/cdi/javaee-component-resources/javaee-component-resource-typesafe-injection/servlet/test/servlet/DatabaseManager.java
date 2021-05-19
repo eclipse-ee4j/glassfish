@@ -23,9 +23,9 @@ import javax.sql.DataSource;
 import test.beans.artifacts.TestDatabase;
 
 public class DatabaseManager {
-    @Produces 
+    @Produces
     @TestDatabase
-    @Resource(name = "jdbc/jdbc-dev-test-resource", 
+    @Resource(name = "jdbc/jdbc-dev-test-resource",
             mappedName = "jdbc/jdbc-dev-test-resource")
     DataSource ds;
 

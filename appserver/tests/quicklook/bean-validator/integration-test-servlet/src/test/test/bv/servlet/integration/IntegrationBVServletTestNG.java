@@ -26,7 +26,7 @@ public class IntegrationBVServletTestNG {
 
     private static final String TEST_NAME =
         "bv-servlet-integration";
-   
+
     private String strContextRoot="integration-test-servlet";
 
     static String result = "";
@@ -36,9 +36,9 @@ public class IntegrationBVServletTestNG {
     public IntegrationBVServletTestNG() {
         result = null;
     }
-    
-    
-           
+
+
+
     /*
      *If two asserts are mentioned in one method, then last assert is taken in
      *to account.
@@ -50,7 +50,7 @@ public class IntegrationBVServletTestNG {
     @Test(groups ={ "pulse"} ) // test method
     //public void webtest(String host, String port, String contextroot) throws Exception{
     public void executeServlet() throws Exception{
-        
+
         try{
 
             String testurl = "http://" + host + ":" + port + "/" + strContextRoot + "/test";
@@ -81,7 +81,7 @@ public class IntegrationBVServletTestNG {
             Boolean regexesFound[] = new Boolean[len];
 
             while ((line = input.readLine()) != null) {
-                // for each line in the input, loop through each of the 
+                // for each line in the input, loop through each of the
                 // elements of regexesToFind.  At least one must match.
                 boolean found = false;
                 for (i = 0; i < len; i++) {
@@ -90,19 +90,19 @@ public class IntegrationBVServletTestNG {
                     }
                 }
             }
-            
+
             boolean foundMissingRegexMatch = false;
             String errorMessage = null;
             for (i = 0; i < len; i++) {
                 if (null == regexesFound[i] ||
                     Boolean.FALSE == regexesFound[i]) {
                     foundMissingRegexMatch = true;
-                    errorMessage = "Unable to find match for regex " + 
+                    errorMessage = "Unable to find match for regex " +
                             regexesToFind[i] + " in output from request to " + testurl;
                     break;
                 }
             }
-            
+
             Assert.assertTrue(!foundMissingRegexMatch, errorMessage);
 
         } catch (Exception e) {

@@ -32,5 +32,5 @@ public interface EjbNamingReferenceManager {
     public boolean isEjbReferenceCacheable(EjbReferenceDescriptor ejbRefDesc);
 
     public Object getEJBContextObject(String contextType);
-    
+
 }

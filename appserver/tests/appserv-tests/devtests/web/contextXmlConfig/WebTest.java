@@ -23,18 +23,18 @@ import com.sun.ejte.ccl.reporter.*;
  * ("Add support for context.xml"):
  *
  * This unit test ensures the following context.xml configuration.
- * 
- * 1. default virtual-server context.xml using virtual-server property 
- * "contextXmlDefault" 
- * 
+ *
+ * 1. default virtual-server context.xml using virtual-server property
+ * "contextXmlDefault"
+ *
  * 2. deployed webapps's context.xml (META-INF/context.xml)
  *
  * The global context.xml and virtual-server context.xml will be copied to config
  * and removed after this unit test.
- * 
+ *
  * The "contextXml" property of the virtual-server "server" is added (before
  * the webapp's deployment) and removed (after the webapp's undeployment)
- * 
+ *
  */
 public class WebTest {
 
@@ -53,7 +53,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 2439");
@@ -66,7 +66,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
 
     }
 
@@ -93,7 +93,7 @@ public class WebTest {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 

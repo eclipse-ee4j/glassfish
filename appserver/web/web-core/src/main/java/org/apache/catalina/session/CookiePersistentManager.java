@@ -132,7 +132,7 @@ public class CookiePersistentManager extends StandardManager {
 
     /*
      * Parses the given string into a session, and returns it.
-     * 
+     *
      * The given string is supposed to contain a session encoded using toCookie().
      */
     private Session parseSession(String value, String sessionId) throws IOException {

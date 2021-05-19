@@ -32,10 +32,10 @@ import java.util.Properties;
  * @author tjquinn
  */
 public class ResourceHelper {
-    
+
     private static final String NO_RESOURCE = "NO_RESOURCE";
     private static final String NO_PROPERTY = "NO_PROPERTY";
-    
+
     public static String find(String resourceName, String propertyName) throws IOException {
         String result;
         URL url = ResourceHelper.class.getResource(resourceName);
@@ -50,7 +50,7 @@ public class ResourceHelper {
             try {
                 URLConnection cnx = url.openConnection();
                 cnx.setUseCaches(false);
-                
+
                 is = cnx.getInputStream();
                 Properties props = new Properties();
                 props.load(is);
@@ -68,14 +68,14 @@ public class ResourceHelper {
         }
         return result;
     }
-    
+
     /**
      * Makes sure that each test of the form <resourceName>:<propertyName>=<expectedValue>
-     * passes; that is, that the resource is found, that the property is 
+     * passes; that is, that the resource is found, that the property is
      * set by the properties file represented by that resource, and that the
      * property value is the same as the expected value.
      *@param tests 0 or more expressions <resourceName>:<propertyName>=<expectedValue>
-     *@return Results object describing the results of the tests 
+     *@return Results object describing the results of the tests
      */
     public static Result checkAll(String[] tests, TestType callerTestType) throws IOException {
         Result result = new Result();
@@ -93,7 +93,7 @@ public class ResourceHelper {
                 }
                 continue;
             }
-            
+
             if ( ! callerTestType.runs(currentArgumentTestType)) {
                 continue;
             }
@@ -117,39 +117,39 @@ public class ResourceHelper {
         }
         return result;
     }
-    
+
     public static class Result implements Serializable {
         private boolean result = true;
         private StringBuilder results = new StringBuilder();
-        
+
         private void recordResult(boolean result, String note) {
             this.result &= result;
             results.append(note).append("@");
         }
-        
+
         public boolean getResult() {
             return result;
         }
-        
+
         public StringBuilder getResults() {
             return results;
         }
     }
-    
+
     public static enum TestType {
         CLIENT("clientonly"),
         SERVER("serveronly"),
         BOTH("both");
-        
+
         private String name;
         TestType(String name) {
             this.name = name;
         }
-        
+
         public String toString() {
             return name;
         }
-        
+
         public static TestType find(String type) {
             for (TestType tt : values()) {
                 if (tt.toString().equals(type)) {
@@ -158,7 +158,7 @@ public class ResourceHelper {
             }
             return null;
         }
-        
+
         boolean runs(TestType argumentTestType) {
             return argumentTestType.equals(BOTH) || (this.equals(argumentTestType));
         }

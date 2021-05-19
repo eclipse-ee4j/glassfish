@@ -36,7 +36,7 @@ public interface StudentHome extends EJBHome {
      * @exception throws FinderException and RemoteException.
      *
      */
- 
-    public Student findByPrimaryKey(String studentId) 
+
+    public Student findByPrimaryKey(String studentId)
         throws FinderException, RemoteException;
 }

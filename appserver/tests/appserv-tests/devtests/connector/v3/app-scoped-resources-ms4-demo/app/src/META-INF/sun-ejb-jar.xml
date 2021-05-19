@@ -32,7 +32,7 @@
             TestIntegerProp
           </activation-config-property-name>
           <activation-config-property-value>
-            2 
+            2
           </activation-config-property-value>
         </activation-config-property>
         </activation-config>
@@ -84,7 +84,7 @@
       </resource-ref>
       <resource-env-ref>
         <resource-env-ref-name>eis/testAdmin</resource-env-ref-name>
-	<jndi-name>java:module/eis/testAdmin</jndi-name>
+        <jndi-name>java:module/eis/testAdmin</jndi-name>
       </resource-env-ref>
       <gen-classes/>
     </ejb>

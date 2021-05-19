@@ -42,7 +42,7 @@ public abstract class EJBHomeImpl
 {
 
     protected static final Logger _logger = EjbContainerUtilImpl.getLogger();
-    
+
     private BaseContainer container;
 
     /**
@@ -52,15 +52,15 @@ public abstract class EJBHomeImpl
         throws RemoteException
     {
     }
-    
+
     /**
      * Called from EJBHome implementation.
      */
     protected final Container getContainer() {
         return container;
     }
-    
-    
+
+
     /**
      * Called from BaseContainer only.
      */
@@ -73,13 +73,13 @@ public abstract class EJBHomeImpl
      * These objects are one and the same when the home is generated,
      * but distinct in the case of dynamic proxies.  Therefore, code can't
      * assume it can cast an EJBHomeImpl to the EJBHome that
-     * the client uses,  and vice-versa.  This is overridden in the 
+     * the client uses,  and vice-versa.  This is overridden in the
      * InvocationHandler.
      */
     protected EJBHome getEJBHome() {
         return this;
     }
-    
+
     /**
      * Create a new EJBObject and new EJB if necessary.
      * This is called from the generated "HelloEJBHomeImpl" create method.
@@ -91,18 +91,18 @@ public abstract class EJBHomeImpl
         return container.createEJBObjectImpl();
     }
 
-    public EJBObjectImpl createRemoteBusinessObjectImpl() 
+    public EJBObjectImpl createRemoteBusinessObjectImpl()
         throws RemoteException, CreateException
     {
         return container.createRemoteBusinessObjectImpl();
     }
-    
-    
+
+
     /***************************************
 ***********************************
     The following are implementations of jakarta.ejb.EJBHome methods.
      **************************************************************************/
-    
+
     /**
      * This is the implementation of the jakarta.ejb.EJBHome remove method.
      * @exception RemoveException on error during removal
@@ -111,21 +111,21 @@ public abstract class EJBHomeImpl
         throws RemoteException, RemoveException
     {
         container.authorizeRemoteMethod(BaseContainer.EJBHome_remove_Handle);
-        
+
         EJBObject ejbo;
         try {
             ejbo = handle.getEJBObject();
         } catch ( RemoteException ex ) {
             _logger.log(Level.FINE, "Exception in method remove()", ex);
-            NoSuchObjectException nsoe = 
+            NoSuchObjectException nsoe =
                 new NoSuchObjectException(ex.toString());
             nsoe.initCause(ex);
             throw nsoe;
         }
         ejbo.remove();
     }
-    
-    
+
+
     /**
      * This is the implementation of the jakarta.ejb.EJBHome remove method.
      * @exception RemoveException on error during removal
@@ -137,9 +137,9 @@ public abstract class EJBHomeImpl
             // Session beans dont have primary keys. EJB2.0 Section 6.6
             throw new RemoveException("Invalid remove operation.");
         }
-        
+
         container.authorizeRemoteMethod(BaseContainer.EJBHome_remove_Pkey);
-        
+
         Method method=null;
         try {
             method = EJBHome.class.getMethod("remove",
@@ -147,11 +147,11 @@ public abstract class EJBHomeImpl
         } catch ( NoSuchMethodException e ) {
             _logger.log(Level.FINE, "Exception in method remove()", e);
         }
-        
+
         container.doEJBHomeRemove(primaryKey, method, false);
     }
-    
-    
+
+
     /**
      * This is the implementation of the jakarta.ejb.EJBHome method.
      */
@@ -159,10 +159,10 @@ public abstract class EJBHomeImpl
         throws RemoteException
     {
         container.authorizeRemoteMethod(BaseContainer.EJBHome_getEJBMetaData);
-        
+
         return container.getEJBMetaData();
     }
-    
+
     /**
      * This is the implementation of the jakarta.ejb.EJBHome getHomeHandle
      * method.
@@ -171,7 +171,7 @@ public abstract class EJBHomeImpl
         throws RemoteException
     {
         container.authorizeRemoteMethod(BaseContainer.EJBHome_getHomeHandle);
-        
+
         return new HomeHandleImpl(container.getEJBHomeStub());
     }
 }

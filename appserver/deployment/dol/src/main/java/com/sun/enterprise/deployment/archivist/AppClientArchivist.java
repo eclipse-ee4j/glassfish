@@ -65,7 +65,7 @@ public class AppClientArchivist extends Archivist<ApplicationClientDescriptor> {
 
     public static final Attributes.Name GLASSFISH_ANCHOR_DIR =
             new Attributes.Name("GlassFish-Anchor");
-    
+
     private String mainClassNameToRun = null;
 
     /**

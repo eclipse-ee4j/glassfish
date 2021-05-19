@@ -40,298 +40,298 @@ import org.glassfish.persistence.common.I18NHelper;
 
 public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
 {
-	/**
-	 * PersistenceManagerFactory properties
-	 */
-	private String URL = null;
-	private String userName = null;
-	private char[] password = null;
-	private String driverName = null;
-	private ConnectionFactory connectionFactory = null;
-	private Object dataSource = null;
-	private String connectionFactoryName = null;
-	private String identifier = null;
-	private int connectionMaxPool = 0;
-	private int connectionMinPool = 0;
-	private int connectionMsInterval = 0;
-	private int connectionLoginTimeout = 0;
-	private int connectionMsWait = 0;
-	private int txIsolation = -1;
-	private transient PrintWriter connectionLogWriter; //We do not expect instance of this class to be serialized. Marking a non serializable member as transient to make findbugs happy.
-	private boolean optimistic = true;
-	private boolean retainValues = true;
-	private boolean nontransactionalRead = true;
-	private boolean ignoreCache = false;
-	private int queryTimeout = 0;
-	private int updateTimeout = 0;
-	private int maxPool = 0;
-	private int minPool = 0;
-	private boolean supersedeDeletedInstance = true;
-	private boolean requireCopyObjectId = true;
-	private boolean requireTrackedSCO = true;
+    /**
+     * PersistenceManagerFactory properties
+     */
+    private String URL = null;
+    private String userName = null;
+    private char[] password = null;
+    private String driverName = null;
+    private ConnectionFactory connectionFactory = null;
+    private Object dataSource = null;
+    private String connectionFactoryName = null;
+    private String identifier = null;
+    private int connectionMaxPool = 0;
+    private int connectionMinPool = 0;
+    private int connectionMsInterval = 0;
+    private int connectionLoginTimeout = 0;
+    private int connectionMsWait = 0;
+    private int txIsolation = -1;
+    private transient PrintWriter connectionLogWriter; //We do not expect instance of this class to be serialized. Marking a non serializable member as transient to make findbugs happy.
+    private boolean optimistic = true;
+    private boolean retainValues = true;
+    private boolean nontransactionalRead = true;
+    private boolean ignoreCache = false;
+    private int queryTimeout = 0;
+    private int updateTimeout = 0;
+    private int maxPool = 0;
+    private int minPool = 0;
+    private boolean supersedeDeletedInstance = true;
+    private boolean requireCopyObjectId = true;
+    private boolean requireTrackedSCO = true;
 
-	private static final int NOT_SET = 0;
-	private static final int SET_AS_CONNECTIONFACTORY = 1;
-	private static final int SET_AS_DATASOURCE = 2;
+    private static final int NOT_SET = 0;
+    private static final int SET_AS_CONNECTIONFACTORY = 1;
+    private static final int SET_AS_DATASOURCE = 2;
 
-	/** flag for ConnectionFactory setup
-	 */
-	private int providedConnectionFactory = 0;
+    /** flag for ConnectionFactory setup
+     */
+    private int providedConnectionFactory = 0;
 
 
-	/**
-	 * Reference to the internal PersistenceManagerFactory implementation
-	 * to deligate actual stuff
-	 */
-	private transient SQLPersistenceManagerFactory pmFactory = null;
+    /**
+     * Reference to the internal PersistenceManagerFactory implementation
+     * to deligate actual stuff
+     */
+    private transient SQLPersistenceManagerFactory pmFactory = null;
 
-	/**
-     	 * I18N message handler
-     	 */
-	private final static ResourceBundle messages = I18NHelper.loadBundle(
+    /**
+          * I18N message handler
+          */
+    private final static ResourceBundle messages = I18NHelper.loadBundle(
                                 PersistenceManagerFactoryImpl.class);
 
-	/**
-	 * Creates new <code>PersistenceManagerFactoryImpl</code> without any user info
-	 */
-	public PersistenceManagerFactoryImpl() {
+    /**
+     * Creates new <code>PersistenceManagerFactoryImpl</code> without any user info
+     */
+    public PersistenceManagerFactoryImpl() {
             EJBHelper.setPersistenceManagerFactoryDefaults(this);
-	}
+    }
 
-	/**
-	 * Creates new <code>PersistenceManagerFactoryImpl</code> with user info
-	 * @param URL		connection URL
-	 * @param userName	database user
-	 * @param password	database user password
-	 * @param driverName	driver name
-	 */
-	public PersistenceManagerFactoryImpl(
-			String URL,
-			String userName,
-			char[] password,
-			String driverName)
-	{
+    /**
+     * Creates new <code>PersistenceManagerFactoryImpl</code> with user info
+     * @param URL        connection URL
+     * @param userName    database user
+     * @param password    database user password
+     * @param driverName    driver name
+     */
+    public PersistenceManagerFactoryImpl(
+            String URL,
+            String userName,
+            char[] password,
+            String driverName)
+    {
             EJBHelper.setPersistenceManagerFactoryDefaults(this);
 
-		this.URL = URL;
-		this.userName = userName;
-		this.password = password;
-		this.driverName = driverName;
+        this.URL = URL;
+        this.userName = userName;
+        this.password = password;
+        this.driverName = driverName;
 
-	}
+    }
 
-	/**
-	 * Sets database user
-	 * @param userName      database user
-	 */
-	public void setConnectionUserName (String userName) {
-		assertNotConfigured();
-		this.userName = userName;
-	}
+    /**
+     * Sets database user
+     * @param userName      database user
+     */
+    public void setConnectionUserName (String userName) {
+        assertNotConfigured();
+        this.userName = userName;
+    }
 
-	/**
-	 * Returns database user name
-	 * @return	current database user name
-	 */
-	public String getConnectionUserName()
-	{
-		if (connectionFactory != null)
-			return connectionFactory.getUserName();
+    /**
+     * Returns database user name
+     * @return    current database user name
+     */
+    public String getConnectionUserName()
+    {
+        if (connectionFactory != null)
+            return connectionFactory.getUserName();
 
-		return userName;
+        return userName;
 
-	}
+    }
 
-	/**
-	 * Sets database user password
-	 * @param password      database user password
-	 */
-	public void setConnectionPassword (char[] password) {
-		assertNotConfigured();
-		this.password = password;
-	}
+    /**
+     * Sets database user password
+     * @param password      database user password
+     */
+    public void setConnectionPassword (char[] password) {
+        assertNotConfigured();
+        this.password = password;
+    }
 
 
-	/**
-	 * Sets JDBC connection URL
-	 * @param URL	connection URL
-	 */
-	public void setConnectionURL (String URL) {
-		assertNotConfigured();
-		this.URL = URL;
-	}
+    /**
+     * Sets JDBC connection URL
+     * @param URL    connection URL
+     */
+    public void setConnectionURL (String URL) {
+        assertNotConfigured();
+        this.URL = URL;
+    }
 
-	/**
-	 * Returns connection URL
-	 * @return	connection URL
-	 */
-	public String getConnectionURL()
-	{
-		if (connectionFactory != null)
+    /**
+     * Returns connection URL
+     * @return    connection URL
+     */
+    public String getConnectionURL()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getURL();
 
-		return URL;
+        return URL;
 
-	}
+    }
 
-	/**
-	 * Sets JDBC driver name
-	 * @param driverName	JDBC driver name
-	 */
-	public void setConnectionDriverName (String driverName) {
-		assertNotConfigured();
-		this.driverName = driverName;
-	}
+    /**
+     * Sets JDBC driver name
+     * @param driverName    JDBC driver name
+     */
+    public void setConnectionDriverName (String driverName) {
+        assertNotConfigured();
+        this.driverName = driverName;
+    }
 
-	/**
-	 * Returns JDBC driver name
-	 * @return	driver name
-	 */
-	public String getConnectionDriverName()
-	{
-		if (connectionFactory != null)
+    /**
+     * Returns JDBC driver name
+     * @return    driver name
+     */
+    public String getConnectionDriverName()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getDriverName();
-		return driverName;
+        return driverName;
 
-	}
+    }
 
-	/**
-	 * Sets ConnectionFactory that can be one of two types:
-	 * <a href="ConnectionFactory.html">ConnectionFactory</a> or javax.sql.DataSource
-	 * @param connectionFactory	as java.lang.Object
-	 */
-	public void setConnectionFactory (Object connectionFactory) {
-		assertNotConfigured();
-		if (connectionFactory == null) {
-			this.connectionFactory = null;
-			this.dataSource = null;
-			providedConnectionFactory = NOT_SET;
+    /**
+     * Sets ConnectionFactory that can be one of two types:
+     * <a href="ConnectionFactory.html">ConnectionFactory</a> or javax.sql.DataSource
+     * @param connectionFactory    as java.lang.Object
+     */
+    public void setConnectionFactory (Object connectionFactory) {
+        assertNotConfigured();
+        if (connectionFactory == null) {
+            this.connectionFactory = null;
+            this.dataSource = null;
+            providedConnectionFactory = NOT_SET;
 
-		} else {
-			if (EJBHelper.isManaged() || (connectionFactory instanceof DataSource)) {
-				this.dataSource = connectionFactory;
-				providedConnectionFactory = SET_AS_DATASOURCE;
-			} else if (connectionFactory instanceof ConnectionFactory) {
-				this.connectionFactory = (ConnectionFactory)connectionFactory;
-				providedConnectionFactory = SET_AS_CONNECTIONFACTORY;
-			} else {
-				throw new JDOUserException(I18NHelper.getMessage( messages,
-                                	"persistencemanagerfactoryimpl.wrongtype")); //NOI18N
-			}
-		}
-	}
+        } else {
+            if (EJBHelper.isManaged() || (connectionFactory instanceof DataSource)) {
+                this.dataSource = connectionFactory;
+                providedConnectionFactory = SET_AS_DATASOURCE;
+            } else if (connectionFactory instanceof ConnectionFactory) {
+                this.connectionFactory = (ConnectionFactory)connectionFactory;
+                providedConnectionFactory = SET_AS_CONNECTIONFACTORY;
+            } else {
+                throw new JDOUserException(I18NHelper.getMessage( messages,
+                                    "persistencemanagerfactoryimpl.wrongtype")); //NOI18N
+            }
+        }
+    }
 
-	/**
-	 * Returns ConnectionFactory
-	 * @return	ConnectionFactory
-	 */
-	public Object getConnectionFactory() {
-		if (dataSource != null)
-			return dataSource;
+    /**
+     * Returns ConnectionFactory
+     * @return    ConnectionFactory
+     */
+    public Object getConnectionFactory() {
+        if (dataSource != null)
+            return dataSource;
 
-		return connectionFactory;
-	}
+        return connectionFactory;
+    }
 
         /**
          * Sets ConnectionFactory name
          * @param connectionFactoryName     ConnectionFactory name
          */
         public void setConnectionFactoryName (String connectionFactoryName)
-	{
-		assertNotConfigured();
-		this.connectionFactoryName = connectionFactoryName;
-	}
+    {
+        assertNotConfigured();
+        this.connectionFactoryName = connectionFactoryName;
+    }
 
-	/**
+    /**
          * Returns ConnectionFactory name
          * @return      ConnectionFactoryName
          */
         public String getConnectionFactoryName ()
-	{
-		return connectionFactoryName;
-	}
+    {
+        return connectionFactoryName;
+    }
 
-	/**
-	 * Sets Identifier. An identifier is a string that user can use to identify
-	 * the PersistenceManagerFactory in a given environment. Identifier can be
-	 * particularly useful in an environment where multiple 
-	 * PersistenceManagerFactories are initialized in a system.
-	 * @param identifier
-	 */
-	public void setIdentifier(String identifier) {
-		assertNotConfigured();
-		this.identifier = identifier;
-	}
+    /**
+     * Sets Identifier. An identifier is a string that user can use to identify
+     * the PersistenceManagerFactory in a given environment. Identifier can be
+     * particularly useful in an environment where multiple
+     * PersistenceManagerFactories are initialized in a system.
+     * @param identifier
+     */
+    public void setIdentifier(String identifier) {
+        assertNotConfigured();
+        this.identifier = identifier;
+    }
 
-	/**
-	 * Gets Identifier. An identifier is a string that user can use to identify
-	 * the PersistenceManagerFactory in a given environment. Identifier can be
-	 * particularly useful in an environment where multiple 
-	 * PersistenceManagerFactories are initialized in a system.
-	 * @return identifier
-	 */
-	public String getIdentifier() {
-		return identifier;
-	}
+    /**
+     * Gets Identifier. An identifier is a string that user can use to identify
+     * the PersistenceManagerFactory in a given environment. Identifier can be
+     * particularly useful in an environment where multiple
+     * PersistenceManagerFactories are initialized in a system.
+     * @return identifier
+     */
+    public String getIdentifier() {
+        return identifier;
+    }
 
     /**
          * Sets maximum number of connections in the connection pool
-         * @param MaxPool	maximum number of connections
+         * @param MaxPool    maximum number of connections
          */
-	public  void setConnectionMaxPool (int MaxPool)
-	{
-		assertNotConfigured();
-		this.connectionMaxPool = MaxPool;
-	}
+    public  void setConnectionMaxPool (int MaxPool)
+    {
+        assertNotConfigured();
+        this.connectionMaxPool = MaxPool;
+    }
 
 
         /**
          * Returns maximum number of connections in the connection pool
          * @return      connectionMaxPool
          */
-  	public int getConnectionMaxPool ()
-	{
-		if (connectionFactory != null)
+      public int getConnectionMaxPool ()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getMaxPool();
 
-		return connectionMaxPool;
-	}
+        return connectionMaxPool;
+    }
 
         /**
          * Sets minimum number of connections in the connection pool
-         * @param MinPool	minimum number of connections
+         * @param MinPool    minimum number of connections
          */
 
-	public  void setConnectionMinPool (int MinPool)
-	{
-		assertNotConfigured();
-		this.connectionMinPool = MinPool;
-	}
+    public  void setConnectionMinPool (int MinPool)
+    {
+        assertNotConfigured();
+        this.connectionMinPool = MinPool;
+    }
 
 
         /**
          * Returns minimum number of connections in the connection pool
          * @return      connectionMinPool
          */
-  	public int getConnectionMinPool ()
-	{
-		if (connectionFactory != null)
+      public int getConnectionMinPool ()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getMinPool();
-		return connectionMinPool;
-	}
+        return connectionMinPool;
+    }
 
 
         /**
          * Sets the number of milliseconds to wait for an available connection
-	 * from the connection pool before throwing an exception
-         * @param MsWait	number in milliseconds
+     * from the connection pool before throwing an exception
+         * @param MsWait    number in milliseconds
          */
 
-  	public void setConnectionMsWait (int MsWait)
-	{
-		assertNotConfigured();
-		this.connectionMsWait = MsWait;
-	}
+      public void setConnectionMsWait (int MsWait)
+    {
+        assertNotConfigured();
+        this.connectionMsWait = MsWait;
+    }
 
 
         /**
@@ -339,64 +339,64 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
          * from the connection pool before throwing an exception
          * @return      number in milliseconds
          */
-  	public int getConnectionMsWait ()
-	{
-		if (connectionFactory != null)
+      public int getConnectionMsWait ()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getMsWait();
 
-		return connectionMsWait;
-	}
+        return connectionMsWait;
+    }
 
         /**
          * Returns maximum number of PersistenceManager instances in the pool
          * @return maxPool
          */
-	public  int getMaxPool () {
-		return maxPool;
-	}
+    public  int getMaxPool () {
+        return maxPool;
+    }
 
 
         /**
          * Sets maximum number of PersistenceManager instances in the pool
-         * @param MaxPool	maximum number of PersistenceManager instances
+         * @param MaxPool    maximum number of PersistenceManager instances
          */
-	public  void setMaxPool (int MaxPool) {
-		assertNotConfigured();
-		this.maxPool = MaxPool;
-	}
+    public  void setMaxPool (int MaxPool) {
+        assertNotConfigured();
+        this.maxPool = MaxPool;
+    }
 
         /**
          * Returns minimum number of PersistenceManager instances in the pool
          * @return minPool
          */
-	public  int getMinPool () {
-		return minPool;
-	}
+    public  int getMinPool () {
+        return minPool;
+    }
 
 
         /**
          * Sets minimum number of PersistenceManager instances in the pool
-         * @param MinPool	minimum number of PersistenceManager instances
+         * @param MinPool    minimum number of PersistenceManager instances
          */
-	public  void setMinPool (int MinPool) {
-		assertNotConfigured();
-		this.minPool = MinPool;
-	}
+    public  void setMinPool (int MinPool) {
+        assertNotConfigured();
+        this.minPool = MinPool;
+    }
 
 
 
         /**
          * Sets the amount of time, in milliseconds, between the connection
          * manager's attempts to get a pooled connection.
-         * @param MsInterval	the interval between attempts to get a database
-	 *			connection, in milliseconds.
+         * @param MsInterval    the interval between attempts to get a database
+     *            connection, in milliseconds.
 
          */
-  	public void setConnectionMsInterval (int MsInterval)
-	{
-		assertNotConfigured();
-		this.connectionMsInterval = MsInterval;
-	}
+      public void setConnectionMsInterval (int MsInterval)
+    {
+        assertNotConfigured();
+        this.connectionMsInterval = MsInterval;
+    }
 
 
         /**
@@ -404,26 +404,26 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
          * manager's attempts to get a pooled connection.
          * @return      the length of the interval between tries in milliseconds
          */
-  	public int getConnectionMsInterval ()
-	{
-		if (connectionFactory != null)
+      public int getConnectionMsInterval ()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getMsInterval();
 
-		return connectionMsInterval;
-	}
+        return connectionMsInterval;
+    }
 
 
         /**
          * Sets the number of seconds to wait for a new connection to be
-	 * established to the data source
-         * @param LoginTimeout		 wait time in seconds
+     * established to the data source
+         * @param LoginTimeout         wait time in seconds
          */
 
-  	public void setConnectionLoginTimeout (int LoginTimeout)
-	{
-		assertNotConfigured();
-		this.connectionLoginTimeout = LoginTimeout;
-	}
+      public void setConnectionLoginTimeout (int LoginTimeout)
+    {
+        assertNotConfigured();
+        this.connectionLoginTimeout = LoginTimeout;
+    }
 
 
         /**
@@ -431,38 +431,38 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
          * established to the data source
          * @return      wait time in seconds
          */
-  	public int getConnectionLoginTimeout ()
-	{
-		if (connectionFactory != null) {
+      public int getConnectionLoginTimeout ()
+    {
+        if (connectionFactory != null) {
                         return connectionFactory.getLoginTimeout();
 /*
-		} else if (dataSource != null) {
+        } else if (dataSource != null) {
                         return dataSource.getLoginTimeout();
 */
-		} else {
-			return connectionLoginTimeout;
-		}
-	}
+        } else {
+            return connectionLoginTimeout;
+        }
+    }
 
 
-	/**
+    /**
          * Sets the LogWriter to which messages should be sent
-	 * @param pw 		LogWriter
-	 */
-	public  void setConnectionLogWriter(PrintWriter pw)
-	{
-		assertNotConfigured();
-		this.connectionLogWriter = pw;
-	}
+     * @param pw         LogWriter
+     */
+    public  void setConnectionLogWriter(PrintWriter pw)
+    {
+        assertNotConfigured();
+        this.connectionLogWriter = pw;
+    }
 
-	/**
+    /**
          * Returns the LogWriter to which messages should be sent
-	 * @return      LogWriter
-	 */
+     * @return      LogWriter
+     */
         public PrintWriter getConnectionLogWriter ()
-	{
-		return connectionLogWriter;
-	}
+    {
+        return connectionLogWriter;
+    }
 
     /**
      * Sets the queryTimeout for all PersistenceManagers
@@ -473,26 +473,26 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
         setQueryTimeout(Integer.parseInt(timeout));
     }
 
-	/**
-   	 * Sets the number of seconds to wait for a query statement
-   	 * to execute in the datastore associated with this PersistenceManagerFactory.
-   	 * @param timeout          new timout value in seconds; zero means unlimited
-   	 */
-  	public void setQueryTimeout (int timeout)
-	{
-		assertNotConfigured();
-		this.queryTimeout = timeout;
-	}
+    /**
+        * Sets the number of seconds to wait for a query statement
+        * to execute in the datastore associated with this PersistenceManagerFactory.
+        * @param timeout          new timout value in seconds; zero means unlimited
+        */
+      public void setQueryTimeout (int timeout)
+    {
+        assertNotConfigured();
+        this.queryTimeout = timeout;
+    }
 
-  	/**
-   	 * Gets the number of seconds to wait for a query statement
-   	 * to execute in the datastore associated with this PersistenceManagerFactory.
-   	 * @return      timout value in seconds; zero means unlimited
-   	 */
-  	public int getQueryTimeout ()
-	{
-		return queryTimeout;
-	}
+      /**
+        * Gets the number of seconds to wait for a query statement
+        * to execute in the datastore associated with this PersistenceManagerFactory.
+        * @return      timout value in seconds; zero means unlimited
+        */
+      public int getQueryTimeout ()
+    {
+        return queryTimeout;
+    }
 
     /**
      * Sets the updateTimeout for all PersistenceManagers
@@ -503,7 +503,7 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
         setUpdateTimeout(Integer.parseInt(timeout));
     }
 
-	/**
+    /**
          * Sets the number of seconds to wait for an update statement
          * to execute in the datastore associated with this PersistenceManagerFactory.
          * @param timeout          new timout value in seconds; zero means unlimited
@@ -525,65 +525,65 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
         }
 
 
-	/**
-   	 * Sets transaction isolation level for all connections of this PersistenceManagerFactory.
-   	 * All validation is done by java.sql.Connection itself, so e.g. while Oracle
-   	 * will not allow to set solation level to TRANSACTION_REPEATABLE_READ, this method
-   	 * does not have any explicit restrictions
-   	 *
-   	 * @param level - one of the java.sql.Connection.TRANSACTION_* isolation values
-   	 */
-  	public void setConnectionTransactionIsolation (int level)
-	{
-		assertNotConfigured();
-		txIsolation = level;
-	}
+    /**
+        * Sets transaction isolation level for all connections of this PersistenceManagerFactory.
+        * All validation is done by java.sql.Connection itself, so e.g. while Oracle
+        * will not allow to set solation level to TRANSACTION_REPEATABLE_READ, this method
+        * does not have any explicit restrictions
+        *
+        * @param level - one of the java.sql.Connection.TRANSACTION_* isolation values
+        */
+      public void setConnectionTransactionIsolation (int level)
+    {
+        assertNotConfigured();
+        txIsolation = level;
+    }
 
-  	/**
-	 * Returns current transaction isolation level for connections of this PersistenceManagerFactory.
-   	 * @return      the current transaction isolation mode value as java.sql.Connection.TRANSACTION_*
-   	 */
-  	public int getConnectionTransactionIsolation ()
-	{
-		if (connectionFactory != null)
+      /**
+     * Returns current transaction isolation level for connections of this PersistenceManagerFactory.
+        * @return      the current transaction isolation mode value as java.sql.Connection.TRANSACTION_*
+        */
+      public int getConnectionTransactionIsolation ()
+    {
+        if (connectionFactory != null)
                         return connectionFactory.getTransactionIsolation();
 
-		return txIsolation;
-	}
+        return txIsolation;
+    }
 
         /**
          * Sets the optimistic flag for all PersistenceManagers
-	 * @param flag		String optimistic flag
-	 */
-	public void setOptimistic (String flag)
-	{
-		setOptimistic(Boolean.parseBoolean(flag));
-	}
+     * @param flag        String optimistic flag
+     */
+    public void setOptimistic (String flag)
+    {
+        setOptimistic(Boolean.parseBoolean(flag));
+    }
 
         /**
          * Sets the optimistic flag for all PersistenceManagers
-	 * @param flag		boolean optimistic flag
-	 */
-	public void setOptimistic (boolean flag)
-	{
-		assertNotConfigured();
-		optimistic = flag;
+     * @param flag        boolean optimistic flag
+     */
+    public void setOptimistic (boolean flag)
+    {
+        assertNotConfigured();
+        optimistic = flag;
 
-		// Adjust depending flags
-		if (flag)
-			 nontransactionalRead = flag;
-	}
+        // Adjust depending flags
+        if (flag)
+             nontransactionalRead = flag;
+    }
 
-	/**
+    /**
          * Returns the boolean value of the optimistic flag for all PersistenceManagers
-	 * @return      boolean optimistic flag
-	 */
-  	public boolean getOptimistic ()
-	{
-		return optimistic;
-	}
+     * @return      boolean optimistic flag
+     */
+      public boolean getOptimistic ()
+    {
+        return optimistic;
+    }
 
-	/**
+    /**
          * Sets the RetainValues flag for all PersistenceManagers
          * @param flag          String RetainValues flag
          */
@@ -592,30 +592,30 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
                 setRetainValues(Boolean.parseBoolean(flag));
         }
 
-	/**
+    /**
          * Sets flag that will not cause the eviction of persistent instances after transaction completion.
-	 * @param flag          boolean flag passed
+     * @param flag          boolean flag passed
          */
-  	public void setRetainValues (boolean flag)
-	{
-		assertNotConfigured();
-		retainValues = flag;
+      public void setRetainValues (boolean flag)
+    {
+        assertNotConfigured();
+        retainValues = flag;
 
-		// Adjust depending flags
-		if (flag) {
+        // Adjust depending flags
+        if (flag) {
                         nontransactionalRead = flag;
-		}
-	}
+        }
+    }
 
         /**
          * Returns the boolean value for the flag that will not cause the eviction of persistent
-	 * instances after transaction completion.
+     * instances after transaction completion.
          * @return      boolean setting for the flag
          */
-  	public boolean getRetainValues ()
-	{
-		return retainValues;
-	}
+      public boolean getRetainValues ()
+    {
+        return retainValues;
+    }
 
         /**
          * Sets the NontransactionalRead flag for all PersistenceManagers
@@ -630,28 +630,28 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
          * Sets the flag that allows non-transactional instances to be managed in the cache.
          * @param flag          boolean flag passed
          */
-  	public void setNontransactionalRead (boolean flag)
-	{
-		assertNotConfigured();
-		nontransactionalRead = flag;
+      public void setNontransactionalRead (boolean flag)
+    {
+        assertNotConfigured();
+        nontransactionalRead = flag;
 
-		// Adjust depending flags
-		if (flag == false)
-		{
-			retainValues = flag;
-			optimistic = flag;
-		}
-	}
+        // Adjust depending flags
+        if (flag == false)
+        {
+            retainValues = flag;
+            optimistic = flag;
+        }
+    }
 
         /**
          * Returns the boolean value for the flag that allows non-transactional instances
-	 * to be managed in the cache.
+     * to be managed in the cache.
          * @return      boolean setting for the flag
          */
-  	public boolean getNontransactionalRead ()
-	{
-		return nontransactionalRead;
-	}
+      public boolean getNontransactionalRead ()
+    {
+        return nontransactionalRead;
+    }
 
         /**
          * Sets the IgnoreCache flag for all PersistenceManagers
@@ -662,53 +662,53 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
                 setIgnoreCache(Boolean.parseBoolean(flag));
         }
 
-	/**
+    /**
          * Sets the flag that allows the user to request that queries be optimized to return
-	 * approximate results by ignoring changed values in the cache.
+     * approximate results by ignoring changed values in the cache.
          * @param flag          boolean flag passed
          */
-  	public void setIgnoreCache (boolean flag)
-	{
-		assertNotConfigured();
-		throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
+      public void setIgnoreCache (boolean flag)
+    {
+        assertNotConfigured();
+        throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
                             "persistencemanagerfactoryimpl.notsupported")); //NOI18N
-		//ignoreCache = flag;
-	}
+        //ignoreCache = flag;
+    }
 
-	/**
+    /**
          * Returns the boolean value for the flag that allows the user to request that queries
-	 * be optimized to return approximate results by ignoring changed values in the cache.
-	 * @return      boolean setting for the flag
+     * be optimized to return approximate results by ignoring changed values in the cache.
+     * @return      boolean setting for the flag
          */
-  	public boolean getIgnoreCache ()
-	{
-		return ignoreCache;
-	}
+      public boolean getIgnoreCache ()
+    {
+        return ignoreCache;
+    }
 
 
         /**
          * Returns non-operational properties to be available to the application via a Properties instance.
          * @return      Properties object
          */
-  	public Properties getProperties ()
-	{
-		if (pmFactory != null)
-		{
-			return pmFactory.getProperties();
-		}
-		return RuntimeVersion.getVendorProperties(
-			"/com/sun/jdo/spi/persistence/support/sqlstore/sys.properties"); //NOI18N
-	}
+      public Properties getProperties ()
+    {
+        if (pmFactory != null)
+        {
+            return pmFactory.getProperties();
+        }
+        return RuntimeVersion.getVendorProperties(
+            "/com/sun/jdo/spi/persistence/support/sqlstore/sys.properties"); //NOI18N
+    }
 
 
 
-	/**
-	 * Creates new <a href="PersistenceManager.html">PersistenceManager</a> without extra info
-	 * @return	the persistence manager
-	 */
-	public PersistenceManager getPersistenceManager() {
-		return getPersistenceManager(null, null);
-	}
+    /**
+     * Creates new <a href="PersistenceManager.html">PersistenceManager</a> without extra info
+     * @return    the persistence manager
+     */
+    public PersistenceManager getPersistenceManager() {
+        return getPersistenceManager(null, null);
+    }
 
     /**
      * Returns the boolean value of the supersedeDeletedInstance flag
@@ -795,95 +795,95 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
    * @return      the persistence manager
    */
   public PersistenceManager getPersistenceManager (String username, char[] passwd){
-	    synchronized (this) {
+        synchronized (this) {
 
-		if (pmFactory == null) {
-		    // Nothing there yet. Check and create
-			if (providedConnectionFactory == NOT_SET) {
+        if (pmFactory == null) {
+            // Nothing there yet. Check and create
+            if (providedConnectionFactory == NOT_SET) {
 
-			    if (connectionFactoryName == null) {
+                if (connectionFactoryName == null) {
 
-				// Validate that MsWait/MsInterval are correct
-				assertConnectionWait();
+                // Validate that MsWait/MsInterval are correct
+                assertConnectionWait();
 
-				// only PMFactory was configured
-				// Create a default ConnectionFactoryImpl and
-				// set all the parameters. With 1st connection
-				// which happens during configuration od SqlStore
-				// the actaul connectionManager will be created
-				connectionFactory = new ConnectionFactoryImpl();
+                // only PMFactory was configured
+                // Create a default ConnectionFactoryImpl and
+                // set all the parameters. With 1st connection
+                // which happens during configuration od SqlStore
+                // the actaul connectionManager will be created
+                connectionFactory = new ConnectionFactoryImpl();
 
-				connectionFactory.setURL(URL);
-				connectionFactory.setUserName(userName);
-				connectionFactory.setPassword(password);
+                connectionFactory.setURL(URL);
+                connectionFactory.setUserName(userName);
+                connectionFactory.setPassword(password);
                                 connectionFactory.setDriverName(driverName);
                                 connectionFactory.setMinPool(connectionMinPool);
                                 connectionFactory.setMaxPool(connectionMaxPool);
 
-				// MsWait MUST be set BEFORE MsInterval
-				connectionFactory.setMsWait(this.connectionMsWait);
-				connectionFactory.setMsInterval(this.connectionMsInterval);
-				connectionFactory.setLogWriter(this.connectionLogWriter);
-				connectionFactory.setLoginTimeout(this.connectionLoginTimeout);
-				if (txIsolation > 0)
-					connectionFactory.setTransactionIsolation(txIsolation);
-			    } else {
-				// Do JNDI lookup
-				try {
-					javax.naming.InitialContext ctx =
-						(javax.naming.InitialContext) Class.forName("javax.naming.InitialContext").newInstance(); //NOI18N
-                                	Object o = ctx.lookup(connectionFactoryName);
-					if (EJBHelper.isManaged() || (o instanceof DataSource))
-                                		dataSource = o;
-					else if (o instanceof ConnectionFactory)
-                                		connectionFactory = (ConnectionFactory) o;
-					else
-						throw new JDOUserException(I18NHelper.getMessage(
-							messages,
+                // MsWait MUST be set BEFORE MsInterval
+                connectionFactory.setMsWait(this.connectionMsWait);
+                connectionFactory.setMsInterval(this.connectionMsInterval);
+                connectionFactory.setLogWriter(this.connectionLogWriter);
+                connectionFactory.setLoginTimeout(this.connectionLoginTimeout);
+                if (txIsolation > 0)
+                    connectionFactory.setTransactionIsolation(txIsolation);
+                } else {
+                // Do JNDI lookup
+                try {
+                    javax.naming.InitialContext ctx =
+                        (javax.naming.InitialContext) Class.forName("javax.naming.InitialContext").newInstance(); //NOI18N
+                                    Object o = ctx.lookup(connectionFactoryName);
+                    if (EJBHelper.isManaged() || (o instanceof DataSource))
+                                        dataSource = o;
+                    else if (o instanceof ConnectionFactory)
+                                        connectionFactory = (ConnectionFactory) o;
+                    else
+                        throw new JDOUserException(I18NHelper.getMessage(
+                            messages,
                                                 "persistencemanagerfactoryimpl.wrongtype")); //NOI18N
 
-				} catch (JDOException e) {
-					throw e; 	// rethrow it.
+                } catch (JDOException e) {
+                    throw e;     // rethrow it.
 
-				} catch (ClassNotFoundException e) {
-					throw new JDOUserException(I18NHelper.getMessage(messages,
+                } catch (ClassNotFoundException e) {
+                    throw new JDOUserException(I18NHelper.getMessage(messages,
                                                 "persistencemanagerfactoryimpl.initialcontext")); //NOI18N
 
-				} catch (Exception e) {
-					throw new JDOUserException(I18NHelper.getMessage(messages,
-                                		"persistencemanagerfactoryimpl.lookup"), e); //NOI18N
-				}
-			    }
-			}
+                } catch (Exception e) {
+                    throw new JDOUserException(I18NHelper.getMessage(messages,
+                                        "persistencemanagerfactoryimpl.lookup"), e); //NOI18N
+                }
+                }
+            }
 
-			//If identifier is not yet set, set it to name of connection factory
-			if(getIdentifier() == null) {
-				setIdentifier(getConnectionFactoryName());
-			}
-			// create new
-			pmFactory = new SQLPersistenceManagerFactory(this);
-	    		// Check EJBHelper
-			pmFactory =
+            //If identifier is not yet set, set it to name of connection factory
+            if(getIdentifier() == null) {
+                setIdentifier(getConnectionFactoryName());
+            }
+            // create new
+            pmFactory = new SQLPersistenceManagerFactory(this);
+                // Check EJBHelper
+            pmFactory =
                             (SQLPersistenceManagerFactory)EJBHelper.replaceInternalPersistenceManagerFactory(pmFactory);
 
-		    }
-		} // end synchronized (this)
+            }
+        } // end synchronized (this)
 
-		// Should not be called
-		if (username != null && connectionFactory != null) {
-			throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
-				"persistencemanagerfactoryimpl.notsupported")); //NOI18N
-		}
+        // Should not be called
+        if (username != null && connectionFactory != null) {
+            throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
+                "persistencemanagerfactoryimpl.notsupported")); //NOI18N
+        }
 
-		return pmFactory.getPersistenceManager(username, passwd);
+        return pmFactory.getPersistenceManager(username, passwd);
 
-	}
+    }
 
-    	/**
-      	 * Sets default value of a known boolean property.
+        /**
+           * Sets default value of a known boolean property.
          *
-      	 * @param name the name of the property to be set.
-      	 * @param value the default boolean value.
+           * @param name the name of the property to be set.
+           * @param value the default boolean value.
          */
         public void setBooleanProperty(String name, boolean value) {
            // These if-else statements will be replaced by the JDO implementation...
@@ -910,88 +910,88 @@ public class PersistenceManagerFactoryImpl implements PersistenceManagerFactory
 
            } // else ignore it.
 
-	}
+    }
 
-    	/**
-      	 * Determines whether obj is a PersistenceManagerFactoryImpl with the same configuration
-      	 *
-      	 * @param obj The possibly null object to check.
-      	 * @return true if obj is equal to this PersistenceManagerFactoryImpl; false otherwise.
-      	 */
-	public boolean equals(Object obj) {
-       		if ((obj == null) || !(obj instanceof PersistenceManagerFactoryImpl)) {
-			return false;
-		}
-       		PersistenceManagerFactoryImpl pmf = (PersistenceManagerFactoryImpl)obj;
+        /**
+           * Determines whether obj is a PersistenceManagerFactoryImpl with the same configuration
+           *
+           * @param obj The possibly null object to check.
+           * @return true if obj is equal to this PersistenceManagerFactoryImpl; false otherwise.
+           */
+    public boolean equals(Object obj) {
+               if ((obj == null) || !(obj instanceof PersistenceManagerFactoryImpl)) {
+            return false;
+        }
+               PersistenceManagerFactoryImpl pmf = (PersistenceManagerFactoryImpl)obj;
 
-		if (pmf.providedConnectionFactory == this.providedConnectionFactory) {
-			if (pmf.providedConnectionFactory == SET_AS_CONNECTIONFACTORY) {
-	  	 		return (pmf.connectionFactory.equals(this.connectionFactory) &&
+        if (pmf.providedConnectionFactory == this.providedConnectionFactory) {
+            if (pmf.providedConnectionFactory == SET_AS_CONNECTIONFACTORY) {
+                   return (pmf.connectionFactory.equals(this.connectionFactory) &&
                                        equalBooleanProperties(pmf));
 
-			} else if (pmf.providedConnectionFactory == SET_AS_DATASOURCE) {
-				return (pmf.dataSource.equals(this.dataSource) &&
+            } else if (pmf.providedConnectionFactory == SET_AS_DATASOURCE) {
+                return (pmf.dataSource.equals(this.dataSource) &&
                                        equalBooleanProperties(pmf));
 
-			} else if (pmf.connectionFactoryName != null) {
-				return (pmf.connectionFactoryName.equals(this.connectionFactoryName) &&
+            } else if (pmf.connectionFactoryName != null) {
+                return (pmf.connectionFactoryName.equals(this.connectionFactoryName) &&
                                        equalBooleanProperties(pmf));
 
-			}
-			return (pmf.URL.equals(this.URL) && pmf.userName.equals(this.userName) &&
-				pmf.password.equals(this.password) &&
-				pmf.driverName.equals(this.driverName) &&
+            }
+            return (pmf.URL.equals(this.URL) && pmf.userName.equals(this.userName) &&
+                pmf.password.equals(this.password) &&
+                pmf.driverName.equals(this.driverName) &&
                                        equalBooleanProperties(pmf));
-		}
-		return false;
-    	}
+        }
+        return false;
+        }
 
-    	/**
+        /**
          * Computes the hash code of this PersistenceManagerFactory.
          *
          * @return A hash code of the owning PersistenceManagerFactory as an int.
          */
         public int hashCode() {
                 if (providedConnectionFactory == SET_AS_CONNECTIONFACTORY) {
-			return connectionFactory.hashCode();
+            return connectionFactory.hashCode();
                 } else if (providedConnectionFactory == SET_AS_DATASOURCE) {
-			return dataSource.hashCode();
-		} else if (connectionFactoryName != null) {
-			return connectionFactoryName.hashCode();
+            return dataSource.hashCode();
+        } else if (connectionFactoryName != null) {
+            return connectionFactoryName.hashCode();
                 }
-		return URL.hashCode() + userName.hashCode() + password.hashCode() + driverName.hashCode();
+        return URL.hashCode() + userName.hashCode() + password.hashCode() + driverName.hashCode();
         }
 
-	/**
-	 * INTERNAL
-	 * Asserts that change to the property is allowed
-	 */
-	private void assertNotConfigured() {
-		if ( pmFactory != null) {
-			throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
+    /**
+     * INTERNAL
+     * Asserts that change to the property is allowed
+     */
+    private void assertNotConfigured() {
+        if ( pmFactory != null) {
+            throw new JDOUnsupportedOptionException(I18NHelper.getMessage(messages,
                                 "persistencemanagerfactoryimpl.configured")); //NOI18N
-		}
-	}
+        }
+    }
 
 
-	/**
-	 * INTERNAL
-	 * Asserts that MsWait and MsInterval are properly configured
-	 */
-	private void assertConnectionWait() {
-		if ( connectionMsWait < 0 )
-		{
-			throw new JDOUserException(I18NHelper.getMessage(messages,
+    /**
+     * INTERNAL
+     * Asserts that MsWait and MsInterval are properly configured
+     */
+    private void assertConnectionWait() {
+        if ( connectionMsWait < 0 )
+        {
+            throw new JDOUserException(I18NHelper.getMessage(messages,
                                              "connection.connectionmanager.mswaitvalue")); // NOI18N
-		}
-		else if ( connectionMsInterval < 0 ||
-			connectionMsInterval > connectionMsWait ||
-			(connectionMsWait > 0 && connectionMsInterval == 0) )
-		{
-				throw new JDOUserException(I18NHelper.getMessage(messages,
+        }
+        else if ( connectionMsInterval < 0 ||
+            connectionMsInterval > connectionMsWait ||
+            (connectionMsWait > 0 && connectionMsInterval == 0) )
+        {
+                throw new JDOUserException(I18NHelper.getMessage(messages,
                                              "connection.connectionmanager.msintervalvalue")); // NOI18N
-		}
-	}
+        }
+    }
 
         /**
          * Compares boolean setting on 2 PersistenceManagerFactory instances.

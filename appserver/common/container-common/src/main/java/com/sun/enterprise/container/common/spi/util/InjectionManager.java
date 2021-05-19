@@ -21,10 +21,10 @@ import com.sun.enterprise.deployment.JndiNameEnvironment;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * InjectionManager provides runtime resource injection(@Resource, @EJB, etc.) 
- * and generic callback(PostConstruct/PreDestroy) services  It performs 
+ * InjectionManager provides runtime resource injection(@Resource, @EJB, etc.)
+ * and generic callback(PostConstruct/PreDestroy) services  It performs
  * the actual injection into the fields and methods of designated
- * J2EE 5 component instances and managed class instances.  The decision 
+ * J2EE 5 component instances and managed class instances.  The decision
  * as to when injection takes place is determined by the caller.
  *
  * @author Kenneth Saks
@@ -39,10 +39,10 @@ public interface InjectionManager {
      * information will be retrieved from the current invocation context.
      *
      * Any @PostConstruct methods on the instance's class(and super-classes)
-     * will be invoked after injection.  
+     * will be invoked after injection.
      *
      * @exception InjectionException Thrown if an error occurs during injection
-     * 
+     *
      */
     public void injectInstance(Object instance)
         throws InjectionException;
@@ -53,7 +53,7 @@ public interface InjectionManager {
      * information will be retrieved from the current invocation context.
      *
      * If invokePostConstruct is true, any @PostConstruct methods on the
-     * instance's class(and super-classes) will be invoked after injection.  
+     * instance's class(and super-classes) will be invoked after injection.
      *
      * @exception InjectionException Thrown if an error occurs during injection
      *
@@ -70,13 +70,13 @@ public interface InjectionManager {
      * invocation stack at the time this method is invoked.
      *
      * Any @PostConstruct methods on the instance's class(and super-classes)
-     * will be invoked after injection.  
+     * will be invoked after injection.
      *
      *
      * @exception InjectionException Thrown if an error occurs during injection
-     * 
+     *
      */
-    public void injectInstance(Object instance, 
+    public void injectInstance(Object instance,
                                JndiNameEnvironment componentEnv)
         throws InjectionException;
 
@@ -90,9 +90,9 @@ public interface InjectionManager {
      * on the instance's class(and super-classes) after injection.
      *
      * @exception InjectionException Thrown if an error occurs during injection
-     * 
+     *
      */
-    public void injectInstance(Object instance, 
+    public void injectInstance(Object instance,
                                JndiNameEnvironment componentEnv,
                                boolean invokePostConstruct)
         throws InjectionException;
@@ -134,31 +134,31 @@ public interface InjectionManager {
 
     /**
      * Inject the injectable resources from the given component environment
-     * into a Class instance.  Only class-level(static) fields/methods are 
-     * supported.  E.g., this injection operation would be used for the 
-     * Application Client Container main class. 
+     * into a Class instance.  Only class-level(static) fields/methods are
+     * supported.  E.g., this injection operation would be used for the
+     * Application Client Container main class.
      *
      * Any @PostConstruct methods on the class(and super-classes)
-     * will be invoked after injection.  
+     * will be invoked after injection.
      *
      * @exception InjectionException Thrown if an error occurs during injection
      */
-    public void injectClass(Class clazz, 
+    public void injectClass(Class clazz,
                             JndiNameEnvironment componentEnv)
         throws InjectionException;
 
     /**
      * Inject the injectable resources from the given component environment
-     * into a Class instance.  Only class-level(static) fields/methods are 
-     * supported.  E.g., this injection operation would be used for the 
-     * Application Client Container main class. 
+     * into a Class instance.  Only class-level(static) fields/methods are
+     * supported.  E.g., this injection operation would be used for the
+     * Application Client Container main class.
      *
      * @param invokePostConstruct if true, invoke any @PostConstruct methods
      * on the class(and super-classes) after injection.
      *
      * @exception InjectionException Thrown if an error occurs during injection
      */
-    public void injectClass(Class clazz, 
+    public void injectClass(Class clazz,
                             JndiNameEnvironment componentEnv,
                             boolean invokePostConstruct)
         throws InjectionException;
@@ -168,23 +168,23 @@ public interface InjectionManager {
      * Invoke any @PreDestroy methods defined on the instance's class
      * (and super-classes).  Invocation information will be retrieved from
      * the current component invocation context.
-     * 
+     *
      * @exception InjectionException Thrown if an error occurs
-     * 
+     *
      */
     public void invokeInstancePreDestroy(Object instance)
             throws InjectionException;
-    
+
     /**
      *
      * Invoke any @PreDestroy methods defined on the instance's class
      * (and super-classes).  Invocation information will be retrieved from
      * the current component invocation context.
-     * 
+     *
      * @param validate if false, do nothing if the instance is not registered
      *
      * @exception InjectionException Thrown if an error occurs
-     * 
+     *
      */
     public void invokeInstancePreDestroy(Object instance, boolean validate)
         throws InjectionException;
@@ -198,7 +198,7 @@ public interface InjectionManager {
      * invocation stack at the time this method is invoked.
      *
      * @exception InjectionException Thrown if an error occurs
-     * 
+     *
      */
     public void invokeInstancePreDestroy(Object instance,
                                          JndiNameEnvironment componentEnv)
@@ -213,7 +213,7 @@ public interface InjectionManager {
      * invocation stack at the time this method is invoked.
      *
      * @exception InjectionException Thrown if an error occurs
-     * 
+     *
      */
     public void invokeInstancePostConstruct(Object instance,
                                             JndiNameEnvironment componentEnv)
@@ -228,7 +228,7 @@ public interface InjectionManager {
      * invocation stack at the time this method is invoked.
      *
      * @exception InjectionException Thrown if an error occurs
-     * 
+     *
      */
     public void invokeClassPreDestroy(Class clazz,
                                       JndiNameEnvironment componentEnv)
@@ -254,8 +254,8 @@ public interface InjectionManager {
 
     /**
      * Create a managed object for the given class.  The object will be
-     * injected and if invokePostConstruct is true, any @PostConstruct 
-     * methods on the instance's class(and super-classes) will be invoked 
+     * injected and if invokePostConstruct is true, any @PostConstruct
+     * methods on the instance's class(and super-classes) will be invoked
      * after injection.  The returned
      * object can be cast to the clazz type but is not necessarily a direct
      * reference to the managed instance.  All invocations on the returned
@@ -275,7 +275,7 @@ public interface InjectionManager {
 
     /**
      * Destroy a managed object that was created via createManagedObject.  Any
-     * PreDestroy methods will be called.  
+     * PreDestroy methods will be called.
      *
      * @param managedObject
      * @throws InjectionException
@@ -286,7 +286,7 @@ public interface InjectionManager {
 
     /**
      * Destroy a managed object that may have been created via createManagedObject.  Any
-     * PreDestroy methods will be called.  
+     * PreDestroy methods will be called.
      *
      * @param managedObject
      * @param validate if false the object might not been created by createManagedObject() call

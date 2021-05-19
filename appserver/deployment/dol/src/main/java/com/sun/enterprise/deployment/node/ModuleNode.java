@@ -24,11 +24,11 @@ import org.w3c.dom.Node;
 import java.util.Map;
 
 /**
- * This node is responsible for handling the module xml fragment from 
+ * This node is responsible for handling the module xml fragment from
  * application.xml files
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ModuleNode extends DeploymentDescriptorNode {
 
@@ -36,32 +36,32 @@ public class ModuleNode extends DeploymentDescriptorNode {
     protected Object createDescriptor() {
         return new ModuleDescriptor();
     }
-    
-    
+
+
    /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ApplicationTagNames.ALTERNATIVE_DD, "setAlternateDescriptor");
         table.put(ApplicationTagNames.CONTEXT_ROOT, "setContextRoot");
         return table;
-    }     
-        
+    }
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
-     */    
+     */
     public void setElementValue(XMLElement element, String value) {
         ModuleDescriptor descriptor = (ModuleDescriptor) getDescriptor();
-         if (element.getQName().equals(ApplicationTagNames.WEB_URI)) {            
+         if (element.getQName().equals(ApplicationTagNames.WEB_URI)) {
             descriptor.setModuleType(DOLUtils.warType());
-            descriptor.setArchiveUri(value);                
+            descriptor.setArchiveUri(value);
         } else if (element.getQName().equals(ApplicationTagNames.EJB)) {
             descriptor.setModuleType(DOLUtils.ejbType());
             descriptor.setArchiveUri(value);
@@ -74,18 +74,18 @@ public class ModuleNode extends DeploymentDescriptorNode {
         } else if (element.getQName().equals(ApplicationTagNames.WEB)) {
             descriptor.setModuleType(DOLUtils.warType());
         } else super.setElementValue(element, value);
-    }    
-        
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
     public Node writeDescriptor(Node parent, String nodeName, ModuleDescriptor descriptor) {
-        
+
         Node module = appendChild(parent, nodeName);
         if (DOLUtils.warType().equals(descriptor.getModuleType())) {
             Node modType = appendChild(module, ApplicationTagNames.WEB);

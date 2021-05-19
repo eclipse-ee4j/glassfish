@@ -23,7 +23,7 @@ import org.xml.sax.Attributes;
 
 /**
  * Rule that uses the introspection utils to set properties.
- * 
+ *
  * @author Remy Maucherat
  */
 public class SetAllPropertiesRule extends Rule {

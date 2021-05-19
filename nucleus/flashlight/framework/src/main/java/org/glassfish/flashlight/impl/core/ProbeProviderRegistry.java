@@ -42,7 +42,7 @@ public class ProbeProviderRegistry {
     }
 
     public static void cleanup() {
-        _me = new ProbeProviderRegistry();    
+        _me = new ProbeProviderRegistry();
     }
 
     public Collection<FlashlightProbeProvider> getAllProbeProviders() {
@@ -59,7 +59,7 @@ public class ProbeProviderRegistry {
     public FlashlightProbeProvider getProbeProvider(Class clz) {
         return classProviderMap.get(clz);
     }
-    
+
     public FlashlightProbeProvider getProbeProvider(FlashlightProbeProvider fpp) {
         return providerMap.get(FlashlightUtils.makeName(fpp));
     }

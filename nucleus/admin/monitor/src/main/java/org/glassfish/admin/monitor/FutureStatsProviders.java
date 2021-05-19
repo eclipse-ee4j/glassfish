@@ -22,7 +22,7 @@ import org.glassfish.external.probe.provider.StatsProviderInfo;
 
 /**
  * Note that this class is not public... THREAD SAFE CLASS!
- * 
+ *
  * @author bnevins
  */
 class FutureStatsProviders {

@@ -24,7 +24,7 @@ import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletRequestEvent;
 import jakarta.servlet.ServletRequestListener;
 
-/** 
+/**
  * ServletRequestListener which creates a cache for JSP tag body invocations
  * and adds it as a request attribute in response to requestInitialized
  * events, and clears the cache in response to requestDestroyed events.
@@ -37,7 +37,7 @@ public class CacheRequestListener implements ServletRequestListener {
     public CacheRequestListener() {}
 
 
-    /** 
+    /**
      * Receives notification that the request is about to enter the scope
      * of the web application, and adds newly created cache for JSP tag
      * body invocations as a request attribute.

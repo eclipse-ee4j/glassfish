@@ -26,9 +26,9 @@ import javax.naming.InitialContext;
 
 /**
  * Collection of getConnection tests using a servlet
- * 
+ *
  * @author aditya.gore@sun.com
- */ 
+ */
 
 public class OnlyGetConnectionServlet extends HttpServlet {
 
@@ -36,10 +36,10 @@ public class OnlyGetConnectionServlet extends HttpServlet {
     private PrintWriter out;
     private UserTransaction utx;
 
-    public void doGet( HttpServletRequest req, HttpServletResponse resp ) 
+    public void doGet( HttpServletRequest req, HttpServletResponse resp )
             throws IOException, ServletException
     {
-System.out.println(" @@@@ in doGet");    
+System.out.println(" @@@@ in doGet");
         out = resp.getWriter();
         writeHeader();
 
@@ -72,9 +72,9 @@ System.out.println(" @@@@ in doGet");
             con = ds.getConnection();
             stmt = con.createStatement();
             rs = stmt.executeQuery("SELECT * FROM ONLYGETCONNECTION");
-            out.println("test1 :: PASSED"); 
+            out.println("test1 :: PASSED");
         } catch(Exception e) {
-            e.printStackTrace( out ); 
+            e.printStackTrace( out );
             return;
         } finally {
             if ( rs != null ) { try { rs.close(); }catch( Exception e) {} }
@@ -92,15 +92,15 @@ System.out.println(" @@@@ in doGet");
             utx.begin();
             con = ds.getConnection();
             try {
-                Thread.sleep( 5000 );    
+                Thread.sleep( 5000 );
             } catch(Exception e) {
             }
             stmt = con.createStatement();
             rs = stmt.executeQuery("SELECT * FROM ONLYGETCONNECTION");
             utx.commit();
-            out.println("test2 :: PASSED"); 
+            out.println("test2 :: PASSED");
         } catch(Exception e) {
-            e.printStackTrace( out ); 
+            e.printStackTrace( out );
             return;
         } finally {
             if ( rs != null ) { try { rs.close(); }catch( Exception e) {} }

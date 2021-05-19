@@ -20,6 +20,6 @@ import org.jvnet.hk2.annotations.Contract;
 import org.glassfish.api.admin.ParameterMap;
 
 @Contract
-public interface DeploymentTargetResolver { 
+public interface DeploymentTargetResolver {
     public String getTarget(ParameterMap parameters);
 }

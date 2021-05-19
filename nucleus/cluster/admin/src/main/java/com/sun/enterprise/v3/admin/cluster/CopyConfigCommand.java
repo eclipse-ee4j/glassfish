@@ -38,8 +38,8 @@ import org.glassfish.api.admin.RestEndpoints;
 /**
  *  This is a remote command that copies a config to a destination config.
  * Usage: copy-config
- 	[--systemproperties  (name=value)[:name=value]*]
-	source_configuration_name destination_configuration_name
+         [--systemproperties  (name=value)[:name=value]*]
+        source_configuration_name destination_configuration_name
  * @author Bhakti Mehta
  */
 @Service(name = "copy-config")

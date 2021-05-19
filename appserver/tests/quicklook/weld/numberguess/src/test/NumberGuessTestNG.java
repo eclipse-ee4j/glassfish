@@ -28,7 +28,7 @@ import java.net.*;
 import java.util.*;
 
 /**
- * Simple TestNG client for basic WAR 
+ * Simple TestNG client for basic WAR
  *
  */
 public class NumberGuessTestNG {
@@ -51,7 +51,7 @@ public class NumberGuessTestNG {
         try{
             String testurl = "http://" + m_host  + ":" + m_port +
                     "/"+ strContextRoot+"/home.jsf";
-            URL url = new URL(testurl); 
+            URL url = new URL(testurl);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
@@ -61,13 +61,13 @@ public class NumberGuessTestNG {
 
             String line = null;
             boolean result = false;
-            String testLine = null; 
+            String testLine = null;
             while ((line = input.readLine()) != null) {
                 if(line.indexOf("thinking of a number between")!=-1){
-                    result = true;            
+                    result = true;
                     testLine = line;
                 }
-            }     
+            }
             Assert.assertEquals(result, true,"Unexpected HTML");
         }catch(Exception e){
             e.printStackTrace();

@@ -43,7 +43,7 @@ import org.glassfish.hk2.api.PerLookup;
 public class DeployDirCommand extends DeployCommand {
 
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeployDirCommand.class);
-    
+
     /**
      * Executes the command.
      *

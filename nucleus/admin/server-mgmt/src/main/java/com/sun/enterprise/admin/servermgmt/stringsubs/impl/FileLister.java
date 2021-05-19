@@ -40,7 +40,7 @@ final class FileLister {
 
     /**
      * Recursively find all files represented by path with wild-card character
-     * 
+     *
      * @param pathPattern path with wild-card character ASTERISK
      * @return List<File> all files whose paths match the pattern
      */
@@ -54,7 +54,7 @@ final class FileLister {
         List<File> retrievedFiles = new LinkedList<File>();
 
         // try twice to handle '/' in windows
-        // if the first try of parsing pathWithPattern fails, then replace all '/' 
+        // if the first try of parsing pathWithPattern fails, then replace all '/'
         // with '\' and try again
         int numTries = 0;
         while (numTries < 2) {
@@ -62,7 +62,7 @@ final class FileLister {
             String head = pathPattern.substring(0, asteriskIndex);
             // path substring after the wild-card character
             String tail = (asteriskIndex < pathPattern.length() - 1 ? pathPattern.substring(asteriskIndex + 1) : "");
-            // get parent file of the head, add "temp" to handle input like /path/to/parent/* 
+            // get parent file of the head, add "temp" to handle input like /path/to/parent/*
             File parent = (new File(head + "temp")).getParentFile();
             if (parent == null) {
                 if (_log.isLoggable(Level.FINEST)) {
@@ -77,13 +77,13 @@ final class FileLister {
             if (tail.length() > 0) {
                 nextSeparator = pathPattern.indexOf(File.separator, asteriskIndex + 1);
             }
-            // for input like /temp/bar*/var, create a filter with /temp/bar* 
+            // for input like /temp/bar*/var, create a filter with /temp/bar*
             if (nextSeparator > asteriskIndex) {
                 pattern = pathPattern.substring(0, nextSeparator);
             }
             WildCardFilenameFilter filter = new WildCardFilenameFilter(pattern);
 
-            // get a filtered list of children 
+            // get a filtered list of children
             String childFileNames[] = parent.list(filter);
             if (childFileNames != null) {
                 for (String childName : childFileNames) {
@@ -116,7 +116,7 @@ final class FileLister {
                                 retrievedFiles.addAll(getFiles(newpattern));
                             }
                         }
-                        // do nothing if child is not a directory, which is impossible            
+                        // do nothing if child is not a directory, which is impossible
                     }
                 }
             }
@@ -141,7 +141,7 @@ final class FileLister {
     /**
      * Gets the list of child files. If the given file is a directory then all the files under directory and sub-directories
      * will be retrieved recursively.
-     * 
+     *
      * @param rootfile
      * @return List<File>
      */

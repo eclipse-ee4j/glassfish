@@ -17,14 +17,14 @@
 package org.glassfish.tests.ejb.sample;
 
 import jakarta.ejb.Singleton;
-import jakarta.ejb.Startup; 
+import jakarta.ejb.Startup;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.PostConstruct;
 
 /**
  * @author Marina Vatkina
  */
-@Singleton 
+@Singleton
 @Startup
 public class SingletonBean {
 
@@ -32,7 +32,7 @@ public class SingletonBean {
 
     @PostConstruct
     private void init() {
-	System.out.println("ds = " + ds);
+        System.out.println("ds = " + ds);
     }
 
     public String foo() {

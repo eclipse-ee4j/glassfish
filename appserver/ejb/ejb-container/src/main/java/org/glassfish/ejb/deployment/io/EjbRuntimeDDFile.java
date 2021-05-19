@@ -48,7 +48,7 @@ public class EjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
      */
     public String getDeploymentDescriptorPath() {
         return DOLUtils.warType().equals(getArchiveType()) ?
-        		DescriptorConstants.S1AS_EJB_IN_WAR_ENTRY : DescriptorConstants.S1AS_EJB_JAR_ENTRY;
+                DescriptorConstants.S1AS_EJB_IN_WAR_ENTRY : DescriptorConstants.S1AS_EJB_JAR_ENTRY;
     }
 
     /**

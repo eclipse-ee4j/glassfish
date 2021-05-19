@@ -47,28 +47,28 @@ import org.jvnet.hk2.config.ConfigListener;
 @Service
 @Singleton
 public class SecurityLifecycle implements  PostConstruct, PreDestroy {
-    
+
     @Inject
     private ServerContext sc;
-    
-    //@Inject 
+
+    //@Inject
     //private RealmConfig realmConfig;
-    
-    @Inject 
+
+    @Inject
     private PolicyLoader policyLoader;
-    
+
     @Inject
     private SecurityServicesUtil secServUtil;
-    
-    @Inject 
+
+    @Inject
     private Util util;
-    
+
     @Inject
     private SSLUtils sslUtils;
-    
+
     @Inject
     private SecurityConfigListener configListener;
-    
+
     @Inject
     private ServiceLocator habitat;
 
@@ -82,11 +82,11 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
 
     private static final String SYS_PROP_LOGIN_CONF = "java.security.auth.login.config";
     private static final String SYS_PROP_JAVA_SEC_POLICY =  "java.security.policy";
- 
+
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     public SecurityLifecycle() {
-	try {
+        try {
 
             if (Util.isEmbeddedServer()) {
                 //If the user-defined login.conf/server.policy are set as system properties, then they are given priority
@@ -97,7 +97,7 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
                     System.setProperty(SYS_PROP_JAVA_SEC_POLICY, Util.writeConfigFileToTempDir("server.policy").getAbsolutePath());
                 }
             }
-            
+
             // security manager is set here so that it can be accessed from
             // other lifecycles, like PEWebContainer
             java.lang.SecurityManager secMgr = System.getSecurityManager();
@@ -108,11 +108,11 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
                     _logger.info(SecurityLoggerInfo.secMgrDisabled);
                 }
             }
-	} catch(Exception ex) {
+        } catch(Exception ex) {
             _logger.log(Level.SEVERE, "java_security.init_securitylifecycle_fail", ex);
             throw new RuntimeException(ex.toString(), ex);
-	}
-    }   
+        }
+    }
 
     // override default
     public void onInitialization() {
@@ -122,7 +122,7 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
                  _logger.log(Level.INFO, SecurityLoggerInfo.secServiceStartupEnter);
              }
 
-             
+
 
             //TODO:V3 LoginContextDriver has a static variable dependency on BaseAuditManager
             //And since LoginContextDriver has too many static methods that use BaseAuditManager
@@ -145,13 +145,13 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
 
             //Audit the server started event
             auditManager.serverStarted();
-            
+
             // initRoleMapperFactory is in J2EEServer.java and not moved to here
             // this is because a DummyRoleMapperFactory is register due
             // to invocation of ConnectorRuntime.createActiveResourceAdapter
             // initRoleMapperFactory is called after it
             //initRoleMapperFactory();
-           
+
            if (_logger.isLoggable(Level.INFO)) {
                  _logger.log(Level.INFO, SecurityLoggerInfo.secServiceStartupExit);
              }
@@ -161,7 +161,7 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
         }
     }
 
-    
+
 
 /*    private void registerPolicyHandlers()
             throws jakarta.security.jacc.PolicyContextException {
@@ -192,9 +192,9 @@ public class SecurityLifecycle implements  PostConstruct, PreDestroy {
     public void preDestroy() {
         //DO Nothing ?
         //TODO:V3 need to see if something needs cleanup
-       
+
     }
-    
+
     //To audit the server shutdown event
     public class AuditServerShutdownListener implements EventListener {
         @Override

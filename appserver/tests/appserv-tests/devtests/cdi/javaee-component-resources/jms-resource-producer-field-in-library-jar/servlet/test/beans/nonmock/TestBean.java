@@ -28,8 +28,8 @@ import test.beans.artifacts.Preferred;
 @Preferred
 public class TestBean implements TestBeanInterface{
     public static boolean testBeanInvoked = false;
-    
-    @Inject 
+
+    @Inject
     Queue ds;
 
     @Override

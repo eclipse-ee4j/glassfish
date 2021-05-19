@@ -72,16 +72,16 @@ import com.sun.enterprise.v3.logging.AgentFormatterDelegate;
  */
 @Service
 @Singleton
-@ContractsProvided({GFFileHandler.class, java.util.logging.Handler.class, 
+@ContractsProvided({GFFileHandler.class, java.util.logging.Handler.class,
     LogEventBroadcaster.class, LoggingRuntime.class})
-public class GFFileHandler extends StreamHandler implements 
+public class GFFileHandler extends StreamHandler implements
 PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
 
     private static final int DEFAULT_ROTATION_LIMIT_BYTES = 2000000;
 
-    private final static LocalStringManagerImpl LOCAL_STRINGS = 
+    private final static LocalStringManagerImpl LOCAL_STRINGS =
         new LocalStringManagerImpl(GFFileHandler.class);
-    
+
     @Inject
     ServerContext serverContext;
 
@@ -90,17 +90,17 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
 
     @Inject @Optional
     Agent agent;
-    
+
     @Inject
     private ServiceLocator habitat;
-    
+
     // This is a OutputStream to keep track of number of bytes
     // written out to the stream
     private MeteredStream meter;
 
     private static final String LOGS_DIR = "logs";
     private static final String LOG_FILE_NAME = "server.log";
-    
+
     private String absoluteServerLogName = null;
 
     private File absoluteFile = null;
@@ -119,14 +119,14 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
     private BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<LogRecord>(5000);
 
     // Rotation can be done in 3 ways
-    // 1. Based on the Size: Rotate when some Threshold number of bytes are 
+    // 1. Based on the Size: Rotate when some Threshold number of bytes are
     //    written to server.log
     // 2. Based on the Time: Rotate ever 'n' minutes, mostly 24 hrs
     // 3. Rotate now
     // For mechanisms 2 and 3 we will use this flag. The rotate() will always
     // be fired from the publish( ) method for consistency
     private AtomicBoolean rotationRequested = new AtomicBoolean(false);
-    
+
     private Object rotationLock = new Object();
 
     private static final String LOG_ROTATE_DATE_FORMAT =
@@ -148,7 +148,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
     private String RECORD_END_MARKER = "|#]";
     private String RECORD_FIELD_SEPARATOR = "|";
     private String RECORD_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSZ";
-    
+
     private List<LogEventListener> logEventListeners = new ArrayList<LogEventListener>();
 
     String recordBeginMarker;
@@ -186,15 +186,15 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         int uniformLogFormatter = 0;
         int otherFormatter = 0;
         boolean mustRotate = false;
-        
+
         try {
-            br = new BufferedReader(new FileReader(serverLog));            
+            br = new BufferedReader(new FileReader(serverLog));
             while ((strLine = br.readLine()) != null) {
                 strLine = strLine.trim();
                 if (!strLine.equals("")) {
                     if (LogFormatHelper.isUniformFormatLogHeader(strLine)) {  // for ufl formatter
                         uniformLogFormatter++;
-                    } else if (LogFormatHelper.isODLFormatLogHeader(strLine)) { 
+                    } else if (LogFormatHelper.isODLFormatLogHeader(strLine)) {
                         // for ODL formatter
                         odlFormatter++;
                     } else {
@@ -230,9 +230,9 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
 
         // start the Queue consumer thread.
         initializePump();
-        
+
         LogRecord lr = new LogRecord(Level.INFO, LogFacade.GF_VERSION_INFO);
-        lr.setParameters(new Object[]{ Version.getFullVersion()});        
+        lr.setParameters(new Object[]{ Version.getFullVersion()});
         lr.setResourceBundle(ResourceBundle.getBundle(LogFacade.LOGGING_RB_NAME));
         lr.setThreadID((int) Thread.currentThread().getId());
         lr.setLoggerName(LogFacade.LOGGING_LOGGER_NAME);
@@ -289,7 +289,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
             try {
                 propValue = manager.getProperty(cname + ".rotationTimelimitInMinutes");
                 if (propValue != null) {
-                    rotationTimeLimitValue = Long.parseLong(propValue);                    
+                    rotationTimeLimitValue = Long.parseLong(propValue);
                 }
             } catch (NumberFormatException e) {
                 lr = new LogRecord(Level.WARNING, LogFacade.INVALID_ATTRIBUTE_VALUE);
@@ -312,7 +312,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
                 LogRotationTimer.getInstance().startTimer(
                         new LogRotationTimerTask(rotationTask,
                                 rotationTimeLimitValue));
-            } 
+            }
         }
 
         // Also honor the size based rotation if configured.
@@ -334,7 +334,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         // Threshold for the number of bytes in the log file after which
         // it will be rotated.
         if (rotationLimitAttrValue >= MINIMUM_ROTATION_LIMIT_VALUE ) {
-            setLimitForRotation(rotationLimitAttrValue);        
+            setLimitForRotation(rotationLimitAttrValue);
         }
 
         //setLevel(Level.ALL);
@@ -355,22 +355,22 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
             flushFrequency = 1;
 
         String formatterName = manager.getProperty(cname + ".formatter");
-        formatterName = (formatterName == null) ? DEFAULT_LOG_FILE_FORMATTER_CLASS_NAME : formatterName; 
-        
+        formatterName = (formatterName == null) ? DEFAULT_LOG_FILE_FORMATTER_CLASS_NAME : formatterName;
+
         // Below snapshot of the code is used to rotate server.log file on startup. It is used to avoid different format
         // log messages logged under same server.log file.
         gffileHandlerFormatter = formatterName;
         if (mustRotate) {
             rotate();
-        } else if (gffileHandlerFormatter != null 
+        } else if (gffileHandlerFormatter != null
                 && !gffileHandlerFormatter
                         .equals(currentgffileHandlerFormatter)) {
             rotate();
         }
-        
+
         String excludeFields = manager.getProperty(LogManagerService.EXCLUDE_FIELDS_PROPERTY);
         boolean multiLineMode = Boolean.parseBoolean(manager.getProperty(LogManagerService.MULTI_LINE_MODE_PROPERTY));
-                
+
         if (UniformLogFormatter.class.getName().equals(formatterName)) {
             configureUniformLogFormatter(excludeFields, multiLineMode);
         } else if (ODLLogFormatter.class.getName().equals(formatterName)) {
@@ -390,21 +390,21 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
                     lr.setLoggerName(LogFacade.LOGGING_LOGGER_NAME);
                     EarlyLogHandler.earlyMessages.add(lr);
                     // Fall back to the GlassFish default
-                    configureDefaultFormatter(excludeFields, multiLineMode);                                    
+                    configureDefaultFormatter(excludeFields, multiLineMode);
                 } else {
                     setFormatter(formatter);
                 }
             }
         }
-        
+
         formatterName = this.getFormatter().getClass().getName();
-        lr = new LogRecord(Level.INFO, LogFacade.LOG_FORMATTER_INFO);        
+        lr = new LogRecord(Level.INFO, LogFacade.LOG_FORMATTER_INFO);
         lr .setParameters(new Object[] {formatterName});
         lr.setResourceBundle(ResourceBundle.getBundle(LogFacade.LOGGING_RB_NAME));
         lr.setThreadID((int) Thread.currentThread().getId());
         lr.setLoggerName(LogFacade.LOGGING_LOGGER_NAME);
         EarlyLogHandler.earlyMessages.add(lr);
-        
+
         propValue = manager.getProperty(cname + ".maxHistoryFiles");
         try {
             if (propValue != null) {
@@ -418,7 +418,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
             lr.setLoggerName(LogFacade.LOGGING_LOGGER_NAME);
             EarlyLogHandler.earlyMessages.add(lr);
         }
-        
+
         if (maxHistoryFiles < 0)
             maxHistoryFiles = 10;
 
@@ -452,7 +452,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         }
         formatterClass.setExcludeFields(excludeFields);
         formatterClass.setMultiLineMode(multiLineMode);
-        formatterClass.setLogEventBroadcaster(this);        
+        formatterClass.setLogEventBroadcaster(this);
     }
 
     private void configureUniformLogFormatter(String excludeFields, boolean multiLineMode) {
@@ -505,9 +505,9 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
             formatterClass.setRecordEndMarker(recordEndMarker);
             formatterClass.setRecordDateFormat(recordDateFormat);
             formatterClass.setRecordFieldSeparator(recordFieldSeparator);
-        }        
+        }
     }
-    
+
     void initializePump() {
         pump = new Thread() {
             public void run() {
@@ -522,13 +522,13 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
             }
         };
         pump.setDaemon(true);
-        pump.start();        
+        pump.start();
     }
 
     public void preDestroy() {
         // stop the Queue consummer thread.
         if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
-            LogFacade.LOGGING_LOGGER.fine("Logger handler killed");            
+            LogFacade.LOGGING_LOGGER.fine("Logger handler killed");
         }
         done.tryReleaseShared(1);
         pump.interrupt();
@@ -587,7 +587,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
     public File getCurrentLogFile() {
         return absoluteFile;
     }
-    
+
     /**
      * A package private method to set the limit for File Rotation.
      */
@@ -650,13 +650,13 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         // check that the parent directory exists.
         File parent = file.getParentFile();
         if (!parent.exists() && !parent.mkdirs()) {
-            throw new IOException(LOCAL_STRINGS.getLocalString("parent.dir.create.failed", 
+            throw new IOException(LOCAL_STRINGS.getLocalString("parent.dir.create.failed",
                     "Failed to create the parent dir {0}", parent.getAbsolutePath()));
         }
         FileOutputStream fout = new FileOutputStream(file, true);
         BufferedOutputStream bout = new BufferedOutputStream(fout);
         meter = new MeteredStream(bout, file.length());
-        setOutputStream(meter);        
+        setOutputStream(meter);
     }
 
     /**
@@ -676,7 +676,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
     public void cleanUpHistoryLogFiles() {
         if (maxHistoryFiles == 0)
             return;
-        
+
         synchronized (rotationLock) {
             File dir = absoluteFile.getParentFile();
             if (dir == null)
@@ -731,9 +731,9 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
                                 if (!absoluteFile.exists()) {
                                     File creatingDeletedLogFile = new File(
                                             absoluteFile.getAbsolutePath());
-                                    if (creatingDeletedLogFile.createNewFile()) { 
+                                    if (creatingDeletedLogFile.createNewFile()) {
                                         absoluteFile = creatingDeletedLogFile;
-                                    } 
+                                    }
                                 } else {
                                     File oldFile = absoluteFile;
                                     StringBuffer renamedFileName = new StringBuffer(
@@ -775,7 +775,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
                                                 .restartTimer();
                                     }
 
-                                    cleanUpHistoryLogFiles();                                    
+                                    cleanUpHistoryLogFiles();
                                 }
                             } catch (IOException ix) {
                                 new ErrorManager().error("Error, could not rotate log file", ix, ErrorManager.GENERIC_FAILURE);
@@ -795,7 +795,7 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
     public void log() {
 
         LogRecord record;
-        
+
         // take is blocking so we take one record off the queue
         try {
             record = pendingRecords.take();
@@ -835,10 +835,10 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         if (done.isSignalled()) {
             return;
         }
-        
+
         // JUL LogRecord does not capture thread-name. Create a wrapper to
         // capture the name of the logging thread so that a formatter can
-        // output correct thread-name if done asynchronously. Note that 
+        // output correct thread-name if done asynchronously. Note that
         // this fix is limited to records published through this handler only.
         GFLogRecord recordWrapper = new GFLogRecord(record);
         recordWrapper.setThreadName(Thread.currentThread().getName());
@@ -855,13 +855,13 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
                 // too bad, record is lost...
             }
         }
-        
+
         Formatter formatter = this.getFormatter();
         if (!(formatter instanceof LogEventBroadcaster)) {
             LogEvent logEvent = new LogEventImpl(record);
             informLogEventListeners(logEvent);
         }
-        
+
     }
 
     protected File getLogFileName() {
@@ -876,12 +876,12 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         }
         return logEventListeners.add(listener);
     }
-    
+
     public boolean removeLogEventListener(LogEventListener listener) {
         return logEventListeners.remove(listener);
     }
-    
-    
+
+
     public void informLogEventListeners(LogEvent logEvent) {
         for (LogEventListener listener : logEventListeners) {
             listener.messageLogged(logEvent);

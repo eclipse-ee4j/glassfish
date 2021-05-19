@@ -79,20 +79,20 @@ public class SerialInitContextFactory implements InitialContextFactory {
         final StringBuilder sb = new StringBuilder() ;
         boolean first = true ;
         for (String str : list) {
-	    if (first) {
+        if (first) {
                 first = false ;
                 sb.append( CORBALOC ) ;
-	    } else {
+        } else {
                 sb.append( ',' ) ;
-	    }
+        }
 
             sb.append( IIOP_URL ) ;
             sb.append( str.trim() ) ;
-	}
+    }
 
-	// fineLog( "corbaloc url ==> {0}", sb.toString() );
+    // fineLog( "corbaloc url ==> {0}", sb.toString() );
 
-	return sb.toString() ;
+    return sb.toString() ;
     }
 
     public SerialInitContextFactory() {
@@ -137,7 +137,7 @@ public class SerialInitContextFactory implements InitialContextFactory {
 
 
         if (useLB)  {
-        	 if (!initialized) {
+             if (!initialized) {
                  synchronized( SerialInitContextFactory.class ) {
                      if (!initialized) {
                          namingClusterInfo = services.getService(NamingClusterInfo.class);

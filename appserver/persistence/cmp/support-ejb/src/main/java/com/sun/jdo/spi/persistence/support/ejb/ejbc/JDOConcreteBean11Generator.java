@@ -37,7 +37,7 @@ import com.sun.jdo.spi.persistence.support.ejb.ejbqlc.JDOQLElements;
 import org.glassfish.persistence.common.I18NHelper;
 import com.sun.jdo.spi.persistence.utility.generator.*;
 import com.sun.jdo.spi.persistence.utility.logging.Logger;
- 
+
 /*
  * This is the JDO specific generator for the concrete CMP beans for EJB1.1.
  *
@@ -49,7 +49,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
      * Signature with CVS keyword substitution for identifying the generated code
      */
     static final String SIGNATURE = "$RCSfile: JDOConcreteBean11Generator.java,v $ $Revision: 1.2 $"; //NOI18N
-    
+
     JDOConcreteBean11Generator(ClassLoader loader,
                              Model model,
                              NameMapper nameMapper)
@@ -58,7 +58,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
         super (loader, model, nameMapper);
         CMP11TemplateFormatter.initHelpers();
 
-        // Add the code generation signature of the generic and 1.1-specific 
+        // Add the code generation signature of the generic and 1.1-specific
         // generator classes.
         addCodeGeneratorClassSignature(getSignaturesOfGeneratorClasses());
     }
@@ -144,7 +144,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
                 } else if( fieldInfo.isSerializable ) {
                     // A special case for a Serializable CMP field (but not byte[]) -
                     // it should be serialized to/from a byte[] in PC instance.
-                        
+
                     fourParams[0] = fieldInfo.name;
                     fourParams[1] = fieldInfo.getter;
                     fourParams[2] = fieldInfo.type;
@@ -230,7 +230,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
      */
     JDOQLElements getJDOQLElements(Method m,
             AbstractMethodHelper methodHelper) throws IOException{
-      
+
         // CMP11 : get JDO query settings from DD
         return getJDOQLElementsForCMP11(m, methodHelper);
     }
@@ -267,7 +267,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
                 sixParams[1] = parametersList;
                 sixParams[2] = pkClass;
                 sixParams[3] = concreteImplName;
-                String s = getException(exc, CMP11TemplateFormatter.DuplicateKeyException_, 
+                String s = getException(exc, CMP11TemplateFormatter.DuplicateKeyException_,
                         CMP11TemplateFormatter.CreateException_);
                 int l = s.lastIndexOf(CMP11TemplateFormatter.dot_);
                 sixParams[4] = (l > 0)? s.substring(l + 1) : s;
@@ -292,7 +292,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
         // For read-only beans it will be a no-op. For updateable
         // beans it will be generated.
         String body = CMPTemplateFormatter.none_;
- 
+
         if (isUpdateable) {
             twoParams[0] = parametersList;
             twoParams[1] = parametersListWithSeparator;
@@ -307,10 +307,10 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
      */
     String getEJBRemoveMethodBody() {
 
-        // For read-only beans it will throw an exception on access. 
+        // For read-only beans it will throw an exception on access.
         // For updateable beans it will be generated.
         String body = CMPROTemplateFormatter.updateNotAllowedTemplate;
- 
+
         if (isUpdateable) {
             // CMP1.1 does not need any variables to substitute.
             body = CMP11TemplateFormatter.ejbRemove1_1Template;
@@ -365,7 +365,7 @@ class JDOConcreteBean11Generator extends JDOConcreteBeanGenerator {
     }
 
     /**
-     * Generates a setIgnoreCache(true) call for a JDOQL query, 
+     * Generates a setIgnoreCache(true) call for a JDOQL query,
      * in the case of a EJB 1.1 finder.
      * @return the codefragment to set the ignoreCache flag of a JDOQL query.
      */

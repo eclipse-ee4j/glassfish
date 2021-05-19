@@ -31,8 +31,8 @@ import helloservice.*;
 public class Client extends HttpServlet {
 
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

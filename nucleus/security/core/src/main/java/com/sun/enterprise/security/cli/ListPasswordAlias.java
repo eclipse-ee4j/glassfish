@@ -66,8 +66,8 @@ import jakarta.inject.Inject;
 @TargetType({CommandTarget.DAS,CommandTarget.DOMAIN})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-password-aliases", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-password-aliases",
         description="list-password-aliases")
 })
 @AccessRequired(resource="domain/passwordAliases", action="read")
@@ -98,13 +98,13 @@ public class ListPasswordAlias implements AdminCommand {
                     "list.password.alias.nothingtolist",
                     "Nothing to list"));
             }
-            
+
             while (it.hasNext()) {
                 ActionReport.MessagePart part =
                     report.getTopMessagePart().addChild();
                 part.setMessage(it.next());
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace();
             report.setMessage(localStrings.getLocalString(

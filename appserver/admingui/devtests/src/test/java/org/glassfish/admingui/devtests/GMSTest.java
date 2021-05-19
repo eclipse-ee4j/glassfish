@@ -32,7 +32,7 @@ public class GMSTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:fdMax:fdMax", protocolMaxTrial);
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_NEW_VALUES_SAVED);
         assertEquals(protocolMaxTrial, getFieldValue("propertyForm:propertySheet:propertSectionTextField:fdMax:fdMax"));
-        
+
         int count = addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col2:col1St", "a");
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col3:col1St", "b");

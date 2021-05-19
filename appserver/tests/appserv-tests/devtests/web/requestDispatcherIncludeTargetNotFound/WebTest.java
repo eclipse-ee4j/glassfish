@@ -39,7 +39,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6182984");
         WebTest webTest = new WebTest(args);
@@ -54,7 +54,7 @@ public class WebTest {
     }
 
     public void doTest() throws Exception {
-     
+
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/jsp/include.jsp");
         System.out.println("Connecting to: " + url.toString());
@@ -67,6 +67,6 @@ public class WebTest {
             System.err.println("Wrong response code. Expected: 500"
                                + ", received: " + responseCode);
             stat.addStatus(TEST_NAME, stat.FAIL);
-        } 
+        }
     }
 }

@@ -33,10 +33,10 @@ public class Client {
         static MyService service;
 
         public static void main(String[] args) {
-	    stat.addDescription("webservices-fault");
+            stat.addDescription("webservices-fault");
             Client client = new Client();
             client.doTest(args);
-	    stat.printSummary("webservices-fault");
+            stat.printSummary("webservices-fault");
        }
 
        public void doTest(String[] args) {
@@ -62,16 +62,16 @@ System.out.println("Service" + service);
             }
             try {
                 String ret = port.sayHello("Appserver Tester !" + args[0]);
-		if(ret.indexOf("WebSvcTest-Hello") == -1) {
+                if(ret.indexOf("WebSvcTest-Hello") == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(args[0], stat.FAIL);
                     return;
-		}
-		if(ret.indexOf(args[0]) == -1) {
+                }
+                if(ret.indexOf(args[0]) == -1) {
                     System.out.println("Unexpected greeting " + ret);
                     stat.addStatus(args[0], stat.FAIL);
                     return;
-		}
+                }
                 System.out.println(ret);
                 stat.addStatus(args[0], stat.PASS);
             } catch(Exception e) {

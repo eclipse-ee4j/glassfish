@@ -23,9 +23,9 @@ import jakarta.servlet.annotation.*;
 @HandlesTypes(WebFilter.class)
 public class ServCont2Init implements ServletContainerInitializer {
     public ServCont2Init() {
-	System.out.println("APP LIB 2 CONST");
+        System.out.println("APP LIB 2 CONST");
     }
     public void onStartup(Set<Class<?>> c, ServletContext ctx) {
-	ctx.setAttribute("APPLIB-2", "CALLED APPLIB-2");
+        ctx.setAttribute("APPLIB-2", "CALLED APPLIB-2");
     }
 }

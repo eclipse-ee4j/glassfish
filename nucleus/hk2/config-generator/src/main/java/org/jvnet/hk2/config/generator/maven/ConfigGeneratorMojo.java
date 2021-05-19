@@ -20,16 +20,16 @@ import java.io.File;
 
 /**
  * @goal generate-injectors
- * @phase generate-sources 
+ * @phase generate-sources
  * @requiresDependencyResolution test
  */
 public class ConfigGeneratorMojo extends AbstractConfigGeneratorMojo {
-    
+
     /**
      * @parameter expression="${project.build.outputDirectory}"
      */
     private File outputDirectory;
-    
+
     /**
      * @parameter expression="${project.build.sourceDirectory}"
      */
@@ -41,11 +41,11 @@ public class ConfigGeneratorMojo extends AbstractConfigGeneratorMojo {
         sb.append(GENERATED_SOURCES).append(File.separatorChar).append(MAIN_NAME).append(File.separatorChar).append(JAVA_NAME);
         generatedDirectory = sb.toString();
     }
-    
+
     @Override
     protected File getSourceDirectory() {
         return sourceDirectory;
-    }    
+    }
 
     @Override
     protected File getGeneratedDirectory() {

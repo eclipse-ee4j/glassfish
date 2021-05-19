@@ -101,7 +101,7 @@ public class AppServerStartupTest {
      * services during progression to the start up run level.
      */
     private static List<TestFuture> listFutures = null;
-    
+
     private ServiceLocator testLocator;
 
 
@@ -112,7 +112,7 @@ public class AppServerStartupTest {
         DynamicConfiguration config = dcs.createDynamicConfiguration();
 
         config.addActiveDescriptor(BuilderHelper.createConstantDescriptor(new TestSystemTasks()));
-        
+
         // These are services that would normally be started by hk2 core
         config.addActiveDescriptor(AppServerStartup.AppInstanceListener.class);
 
@@ -133,7 +133,7 @@ public class AppServerStartupTest {
 
         config.addUnbindFilter(BuilderHelper.createContractFilter(RunLevelContext.class.getName()));
         config.bind(BuilderHelper.link(RunLevelContext.class).to(Context.class).in(Singleton.class).build());
-        
+
         config.addUnbindFilter(BuilderHelper.createContractFilter(AsyncRunLevelContext.class.getName()));
         config.bind(BuilderHelper.link(AsyncRunLevelContext.class).in(Singleton.class).build());
 
@@ -219,7 +219,7 @@ public class AppServerStartupTest {
         results = null;
         listFutures = null;
         mapPostConstructExceptions = null;
-        
+
         ServiceLocatorFactory.getInstance().destroy(testLocator);
         testLocator = null;
     }

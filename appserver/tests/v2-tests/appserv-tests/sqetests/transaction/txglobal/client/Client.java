@@ -32,15 +32,15 @@ public class Client {
     public Client() {
     }
 
-    public static void main(String[] args) { 
-        System.out.println("\nStarting Txglobal Test Suite");  
-        Client client = new Client(); 
+    public static void main(String[] args) {
+        System.out.println("\nStarting Txglobal Test Suite");
+        Client client = new Client();
 
         // initialize the context and home object
         client.setup();
 
         // run the tests
-        client.runTestClient();   
+        client.runTestClient();
     }
 
     public void setup() {
@@ -73,7 +73,7 @@ public class Client {
     }
 
     public void testTxCommit() {
-        try {  
+        try {
             System.out.println("Execute BeanA::testTxCommit");
 
             TxRemoteA beanA = home.create();
@@ -81,7 +81,7 @@ public class Client {
 
             if (result) {
                 status.addStatus("txglobal testTxCommit: ", status.PASS);
-            } else {	 
+            } else {
                 status.addStatus("txglobal testTxCommit: ", status.FAIL);
             }
 
@@ -94,7 +94,7 @@ public class Client {
     }
 
     public void testTxRollback() {
-        try {  
+        try {
             System.out.println("Execute BeanA::testTxRollback");
 
             TxRemoteA beanA = home.create();
@@ -102,7 +102,7 @@ public class Client {
 
             if (result) {
                 status.addStatus("txglobal testTxRollback: ", status.PASS);
-            } else {	 
+            } else {
                 status.addStatus("txglobal testTxRollback: ", status.FAIL);
             }
 

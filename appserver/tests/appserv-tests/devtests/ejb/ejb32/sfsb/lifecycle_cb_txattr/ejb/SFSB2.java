@@ -33,9 +33,9 @@ public class SFSB2 implements Hello2 {
     public void init() {
         System.out.println("In SFSB2::init()");
     }
-    
+
     public String test() throws EJBException {
-	System.out.println("In SFSB2::test()");
+        System.out.println("In SFSB2::test()");
         return "SFSB2";
     }
 

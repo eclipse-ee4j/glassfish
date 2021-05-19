@@ -91,7 +91,7 @@ public class ListIiopListenersTest extends org.glassfish.tests.utils.ConfigApiTe
     public void testExecuteSuccessValidTargetOperand() {
         ListIiopListeners listCommand = services.getService(ListIiopListeners.class);
         parameters.set("DEFAULT", "server");
-        cr.getCommandInvocation("list-iiop-listeners", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);               
+        cr.getCommandInvocation("list-iiop-listeners", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum, list.size());
         CreateIiopListenerTest.checkActionReport(context.getActionReport());
@@ -114,7 +114,7 @@ public class ListIiopListenersTest extends org.glassfish.tests.utils.ConfigApiTe
         CreateIiopListenerTest.checkActionReport(context.getActionReport());
         parameters = new ParameterMap();
         ListIiopListeners listCommand = services.getService(ListIiopListeners.class);
-        cr.getCommandInvocation("list-iiop-listeners", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);               
+        cr.getCommandInvocation("list-iiop-listeners", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum + 1, list.size());
         List<String> listStr = new ArrayList<String>();
@@ -126,7 +126,7 @@ public class ListIiopListenersTest extends org.glassfish.tests.utils.ConfigApiTe
         parameters = new ParameterMap();
         parameters.set("listener_id", "listener");
         DeleteIiopListener deleteCommand = services.getService(DeleteIiopListener.class);
-        cr.getCommandInvocation("delete-iiop-listener", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);               
+        cr.getCommandInvocation("delete-iiop-listener", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
         CreateIiopListenerTest.checkActionReport(context.getActionReport());
     }
 
@@ -135,10 +135,10 @@ public class ListIiopListenersTest extends org.glassfish.tests.utils.ConfigApiTe
      * list-iiop-listeners
      */
     @Test
-    public void testExecuteSuccessListNoListener() {       
+    public void testExecuteSuccessListNoListener() {
         parameters = new ParameterMap();
         ListIiopListeners listCommand = services.getService(ListIiopListeners.class);
-        cr.getCommandInvocation("list-iiop-listeners", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);    
+        cr.getCommandInvocation("list-iiop-listeners", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
         CreateIiopListenerTest.checkActionReport(context.getActionReport());
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum, list.size());

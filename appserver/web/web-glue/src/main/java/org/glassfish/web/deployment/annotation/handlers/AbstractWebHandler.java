@@ -72,7 +72,7 @@ abstract class AbstractWebHandler extends AbstractHandler {
      * @param ainfo the annotation information
      */
     @Override
-    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo) 
+    public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
             throws AnnotationProcessorException {
 
         AnnotatedElementHandler aeHandler = ainfo.getProcessingContext().getHandler();

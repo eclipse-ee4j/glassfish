@@ -57,7 +57,7 @@ public class WebTestNG {
         while ((line = input.readLine()) != null) {
              lastLine = line;
         }
-        
+
         Assert.assertEquals(lastLine, EXPECTED_RESPONSE);
 
     }

@@ -58,7 +58,7 @@ public class ConnectorObjectFactory implements ObjectFactory {
 
     public ConnectorObjectFactory() {
     }
-    
+
     public Object getObjectInstance(Object obj, Name name, Context nameCtx, Hashtable env) throws Exception {
 
         Reference ref = (Reference) obj;
@@ -125,7 +125,7 @@ public class ConnectorObjectFactory implements ObjectFactory {
             if(logicalName != null){
                 mgr.setLogicalName(logicalName);
             }
-            
+
             mgr.initialize();
 
             cf = mcf.createConnectionFactory(mgr);

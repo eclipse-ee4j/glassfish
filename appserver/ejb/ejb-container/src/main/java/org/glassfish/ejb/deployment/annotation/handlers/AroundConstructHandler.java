@@ -39,7 +39,7 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(AroundConstruct.class)
 public class AroundConstructHandler extends AbstractAttributeHandler {
-    
+
     public AroundConstructHandler() {
     }
 
@@ -47,7 +47,7 @@ public class AroundConstructHandler extends AbstractAttributeHandler {
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         logger.log(Level.WARNING, "Bean class should not define AroundConstruct interceptor method");
-        return getDefaultProcessedResult();        
+        return getDefaultProcessedResult();
     }
 
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
@@ -57,13 +57,13 @@ public class AroundConstructHandler extends AbstractAttributeHandler {
         EjbInterceptor ejbInterceptor =  ejbInterceptorContext.getDescriptor();
         ejbInterceptor.addAroundConstructDescriptor(
             getAroundConstructDescriptor(ainfo));
-        return getDefaultProcessedResult();        
+        return getDefaultProcessedResult();
     }
 
     private LifecycleCallbackDescriptor getAroundConstructDescriptor(
             AnnotationInfo ainfo) {
         Method annotatedMethod = (Method) ainfo.getAnnotatedElement();
-        LifecycleCallbackDescriptor aroundConstruct = 
+        LifecycleCallbackDescriptor aroundConstruct =
                 new LifecycleCallbackDescriptor();
         aroundConstruct.setLifecycleCallbackClass(annotatedMethod.getDeclaringClass().getName());
         aroundConstruct.setLifecycleCallbackMethod(annotatedMethod.getName());
@@ -71,8 +71,8 @@ public class AroundConstructHandler extends AbstractAttributeHandler {
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

@@ -76,16 +76,16 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant enroller (Executes the enroller tests)
-		ant all (Executes all the ejb bmp tests)
-		ant clean (cleans all the ejb bmp tests)
-		ant build (builds all the ejb bmp tests)
-		ant setup (sets up all resources for bmp tests)
-		ant deploy (deploys all the ejb bmp apps)
-		ant run (Executes all the ejb bmp tests)
-		ant undeploy (undeploys all the bmp apps)
-		ant unsetup (unsets all resources for bmp tests)
-	</echo>
+    <echo> Usage:
+        ant enroller (Executes the enroller tests)
+        ant all (Executes all the ejb bmp tests)
+        ant clean (cleans all the ejb bmp tests)
+        ant build (builds all the ejb bmp tests)
+        ant setup (sets up all resources for bmp tests)
+        ant deploy (deploys all the ejb bmp apps)
+        ant run (Executes all the ejb bmp tests)
+        ant undeploy (undeploys all the bmp apps)
+        ant unsetup (unsets all resources for bmp tests)
+    </echo>
     </target>
 </project>

@@ -36,7 +36,7 @@ public class WebTest {
         = new SimpleReporterAdapter("appserv-tests");
     private static final String TEST_NAME = "headerBufferSize";
 
-	// Request keys
+        // Request keys
     /** Hashtable key for headers property (type of corresponding value = Hashtable). */
     public static final String HEADERS = "headers";
 
@@ -46,7 +46,7 @@ public class WebTest {
     /** Hashtable key for request parameters property (type of corresponding value = Hashtable). */
     public static final String REQUEST_PARAMS = "request_params";
 
-	// Response keys
+        // Response keys
     /** Hashtable key for response code property (type of corresponding value = Integer). */
     public static final String RESPONSE_CODE = "response_code";
 
@@ -56,18 +56,18 @@ public class WebTest {
     /** Hashtable key for response content property (type of corresponding value = String). */
     public static final String RESPONSE_CONTENT = "response_content";
 
-	// Request and response keys
+        // Request and response keys
     /** Hashtable key for cookies property (type of corresponding value = String[]). */
     public static final String COOKIES = "cookies";
 
-	// Values
+        // Values
     /** GET value for property method. */
     public static final String GET_METHOD = "GET";
 
     /** POST value for property method. */
     public static final String POST_METHOD = "POST";
 
-	// Default values
+        // Default values
     /** Default value for property method. */
     private static final String DEFAULT_METHOD = GET_METHOD;
 
@@ -77,7 +77,7 @@ public class WebTest {
     /** Default value for user-agent header. */
     private static final String DEFAULT_CONNECTION_HEADER = "close";
 
-	// Static methods
+        // Static methods
 
     /**
      ** Main method for testing purposes.
@@ -89,62 +89,62 @@ public class WebTest {
         String host = args[0];
         String port = args[1];
         String contextRoot = args[2];
-        
-    	try {
-	    	String[] testUrls = new String[1];
-	    	testUrls[0] = "http://" + host  + ":" + port + contextRoot
+
+            try {
+                    String[] testUrls = new String[1];
+                    testUrls[0] = "http://" + host  + ":" + port + contextRoot
                 + "/jsp/test.jsp";
-	    	String[] methods = new String[2];
-	    	methods[0] = "GET";
-	    	methods[1] = "GET";
-	    	Hashtable[] paramsTables = new Hashtable[4];
-	    	Hashtable params1 = new Hashtable();
-	    	params1.put("test", "on");
-	    	params1.put("num_tel", "065216464");
-	    	Hashtable params2 = new Hashtable();
-	    	params2.put("test", "on");
-	    	params2.put("num_tel", "0577749059");
-	    	Hashtable params3 = new Hashtable();
-	    	params3.put("num_tel", "0652361456");
-	    	Hashtable params4 = new Hashtable();
-	    	String[] multipleParam = new String[3];
-	    	multipleParam[0] = "1";
-	    	multipleParam[1] = "2";
-	    	multipleParam[2] = "3";
-	    	params4.put("a", multipleParam);
-	    	params4.put("b", "2");
-	    	params4.put("c", "3");
-	    	paramsTables[0] = params1;
-	    	paramsTables[1] = params2;
-	    	paramsTables[2] = params3;
-	    	paramsTables[3] = params4;
-	    	for(int i = 0; i < 1; i++) {
-	    		Hashtable reqProperties = new Hashtable();
-	    		reqProperties.put(METHOD, methods[i]);
-	    		reqProperties.put(REQUEST_PARAMS, paramsTables[i]);
-	    		System.out.println("TEST " + (i + 1) + ": " + testUrls[i] + " (" + methods[i] + ")");
-	    		System.out.println("Parameters:");
-		        for(Enumeration keys = (paramsTables[i]).keys(); keys.hasMoreElements(); ) {
-		            String paramName = (String) keys.nextElement();
-		            Object paramValues = (paramsTables[i]).get(paramName);
-		            if(paramValues instanceof String[]) {
-		            	// Multiple parameter values
-		            	String[] paramValueList = (String[]) paramValues;
-		            	for(int j = 0; j < paramValueList.length; j++) {
-		            		String paramValue = paramValueList[j];
-			            	if(j == 0)
-			            		System.out.print(paramName + " = " + paramValue);
-			            	else
-			            		System.out.print(", " + paramValue);
-			            }
-			            System.out.println();
-		            }
-		            else {
-		            	// Single parameter value
-		            	String paramValue = (String) paramValues;
-			            System.out.println(paramName + " = " + paramValue);
-		            }
-		        }
+                    String[] methods = new String[2];
+                    methods[0] = "GET";
+                    methods[1] = "GET";
+                    Hashtable[] paramsTables = new Hashtable[4];
+                    Hashtable params1 = new Hashtable();
+                    params1.put("test", "on");
+                    params1.put("num_tel", "065216464");
+                    Hashtable params2 = new Hashtable();
+                    params2.put("test", "on");
+                    params2.put("num_tel", "0577749059");
+                    Hashtable params3 = new Hashtable();
+                    params3.put("num_tel", "0652361456");
+                    Hashtable params4 = new Hashtable();
+                    String[] multipleParam = new String[3];
+                    multipleParam[0] = "1";
+                    multipleParam[1] = "2";
+                    multipleParam[2] = "3";
+                    params4.put("a", multipleParam);
+                    params4.put("b", "2");
+                    params4.put("c", "3");
+                    paramsTables[0] = params1;
+                    paramsTables[1] = params2;
+                    paramsTables[2] = params3;
+                    paramsTables[3] = params4;
+                    for(int i = 0; i < 1; i++) {
+                            Hashtable reqProperties = new Hashtable();
+                            reqProperties.put(METHOD, methods[i]);
+                            reqProperties.put(REQUEST_PARAMS, paramsTables[i]);
+                            System.out.println("TEST " + (i + 1) + ": " + testUrls[i] + " (" + methods[i] + ")");
+                            System.out.println("Parameters:");
+                        for(Enumeration keys = (paramsTables[i]).keys(); keys.hasMoreElements(); ) {
+                            String paramName = (String) keys.nextElement();
+                            Object paramValues = (paramsTables[i]).get(paramName);
+                            if(paramValues instanceof String[]) {
+                                    // Multiple parameter values
+                                    String[] paramValueList = (String[]) paramValues;
+                                    for(int j = 0; j < paramValueList.length; j++) {
+                                            String paramValue = paramValueList[j];
+                                            if(j == 0)
+                                                    System.out.print(paramName + " = " + paramValue);
+                                            else
+                                                    System.out.print(", " + paramValue);
+                                    }
+                                    System.out.println();
+                            }
+                            else {
+                                    // Single parameter value
+                                    String paramValue = (String) paramValues;
+                                    System.out.println(paramName + " = " + paramValue);
+                            }
+                        }
 
 
                 String[] cookieList = new String[9];
@@ -180,35 +180,35 @@ public class WebTest {
 
                 reqProperties.put(COOKIES, cookieList);
 
-	    		Hashtable result = call(testUrls[i], reqProperties);
-	    		System.out.println("Result:");
-	    		System.out.println( "Response Code = " + ( (Integer) result.get(RESPONSE_CODE) ).toString() );
-	    		System.out.println( "Response Message = " + (String) result.get(RESPONSE_MESSAGE) );
-	    		System.out.println("Response Content:");
-	    		System.out.println( (String) result.get(RESPONSE_CONTENT) );
-	    		String[] setCookies = (String[]) result.get(COOKIES);
-	    		if( (setCookies != null) && (setCookies.length > 0) ) {
-	    			System.out.println("Cookies set by Server:");
-	    			for(int j = 0; j < setCookies.length; j++) {
-	    				System.out.println("Cookie " + (j + 1) + " = " + setCookies[j]);
-	    			}
-	    		}
-	    		System.out.println();
-	    		System.out.println("-------------------------------------------");
-	    		System.out.println();
-	    		System.out.println();
+                            Hashtable result = call(testUrls[i], reqProperties);
+                            System.out.println("Result:");
+                            System.out.println( "Response Code = " + ( (Integer) result.get(RESPONSE_CODE) ).toString() );
+                            System.out.println( "Response Message = " + (String) result.get(RESPONSE_MESSAGE) );
+                            System.out.println("Response Content:");
+                            System.out.println( (String) result.get(RESPONSE_CONTENT) );
+                            String[] setCookies = (String[]) result.get(COOKIES);
+                            if( (setCookies != null) && (setCookies.length > 0) ) {
+                                    System.out.println("Cookies set by Server:");
+                                    for(int j = 0; j < setCookies.length; j++) {
+                                            System.out.println("Cookie " + (j + 1) + " = " + setCookies[j]);
+                                    }
+                            }
+                            System.out.println();
+                            System.out.println("-------------------------------------------");
+                            System.out.println();
+                            System.out.println();
 
                 if ( ((Integer)result.get(RESPONSE_CODE)) == 200){
                     stat.addStatus(TEST_NAME, stat.PASS);
                 } else {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                 }
-	    	}
-	    } catch(Exception exc) {
-	    	System.err.println( "Exception occurred: " + exc.getMessage() );
-	    	exc.printStackTrace(System.err);
+                    }
+            } catch(Exception exc) {
+                    System.err.println( "Exception occurred: " + exc.getMessage() );
+                    exc.printStackTrace(System.err);
             stat.addStatus(TEST_NAME, stat.FAIL);
-	    }
+            }
         stat.printSummary(TEST_NAME);
     }
 
@@ -252,33 +252,33 @@ public class WebTest {
      ** @throws IOException if an I/O exception occurs during the HTTP request
      **/
     public static Hashtable call(String url, Hashtable requestProperties)
-    		throws MalformedURLException, IOException {
-		if(url == null)
-			throw new MalformedURLException("URL address cannot be null!");
-		if(requestProperties == null)
-			throw new MalformedURLException("URL request properties cannot be null!");
-		// else
-		Hashtable headers = (Hashtable) requestProperties.get(HEADERS);
-		if(headers == null)
-			headers = new Hashtable();
-		if( ( ( (String) headers.get("User-Agent") ) == null ) || ( ( (String) headers.get("User-Agent") ).equals("") ) )
-			headers.put("User-Agent", DEFAULT_USER_AGENT_HEADER);
-		if( ( ( (String) headers.get("Connection") ) == null ) || ( ( (String) headers.get("Connection") ).equals("") ) )
-			headers.put("Connection", DEFAULT_CONNECTION_HEADER);
-		String method = (String) requestProperties.get(METHOD);
-		if( (method == null) || !( method.equalsIgnoreCase(GET_METHOD) || method.equalsIgnoreCase(POST_METHOD) ) )
-			method = DEFAULT_METHOD;
-		Hashtable requestParams = (Hashtable) requestProperties.get(REQUEST_PARAMS);
-		if(requestParams == null)
-			requestParams = new Hashtable();
-		String[] cookies = (String[]) requestProperties.get(COOKIES);
-		if(cookies == null)
-			cookies = new String[0];
-		if( method.equalsIgnoreCase(GET_METHOD) )
-			return( doGetCall(url, headers, cookies, requestParams) );
-		else
-			return( doPostCall(url, headers, cookies, requestParams) );
-	}
+                    throws MalformedURLException, IOException {
+                if(url == null)
+                        throw new MalformedURLException("URL address cannot be null!");
+                if(requestProperties == null)
+                        throw new MalformedURLException("URL request properties cannot be null!");
+                // else
+                Hashtable headers = (Hashtable) requestProperties.get(HEADERS);
+                if(headers == null)
+                        headers = new Hashtable();
+                if( ( ( (String) headers.get("User-Agent") ) == null ) || ( ( (String) headers.get("User-Agent") ).equals("") ) )
+                        headers.put("User-Agent", DEFAULT_USER_AGENT_HEADER);
+                if( ( ( (String) headers.get("Connection") ) == null ) || ( ( (String) headers.get("Connection") ).equals("") ) )
+                        headers.put("Connection", DEFAULT_CONNECTION_HEADER);
+                String method = (String) requestProperties.get(METHOD);
+                if( (method == null) || !( method.equalsIgnoreCase(GET_METHOD) || method.equalsIgnoreCase(POST_METHOD) ) )
+                        method = DEFAULT_METHOD;
+                Hashtable requestParams = (Hashtable) requestProperties.get(REQUEST_PARAMS);
+                if(requestParams == null)
+                        requestParams = new Hashtable();
+                String[] cookies = (String[]) requestProperties.get(COOKIES);
+                if(cookies == null)
+                        cookies = new String[0];
+                if( method.equalsIgnoreCase(GET_METHOD) )
+                        return( doGetCall(url, headers, cookies, requestParams) );
+                else
+                        return( doPostCall(url, headers, cookies, requestParams) );
+        }
 
     /**
      ** Static protected method for performing GET HTTP request to the specified URL.<br>
@@ -293,7 +293,7 @@ public class WebTest {
      ** @throws IOException if an I/O exception occurs during the HTTP request
      **/
     protected static Hashtable doGetCall(String url, Hashtable headers, String[] cookies, Hashtable requestParams)
-			throws MalformedURLException, IOException {
+                        throws MalformedURLException, IOException {
         // Set parameters
 
         StringBuffer queryString = new StringBuffer();
@@ -301,25 +301,25 @@ public class WebTest {
             String paramName = (String) keys.nextElement();
             Object paramValues = requestParams.get(paramName);
             if(paramValues instanceof String[]) {
-            	// Multiple parameter values
-            	String[] paramValueList = (String[]) paramValues;
-            	for(int i = 0; i < paramValueList.length; i++) {
-            		String paramValue = paramValueList[i];
-	            	if(queryString.length() == 0)
-	            		queryString.append("?");
-	            	else
-	            		queryString.append("&");
-	            	queryString.append( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
-	            }
+                    // Multiple parameter values
+                    String[] paramValueList = (String[]) paramValues;
+                    for(int i = 0; i < paramValueList.length; i++) {
+                            String paramValue = paramValueList[i];
+                            if(queryString.length() == 0)
+                                    queryString.append("?");
+                            else
+                                    queryString.append("&");
+                            queryString.append( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
+                    }
             }
             else {
-            	// Single parameter value
-            	String paramValue = (String) paramValues;
-            	if(queryString.length() == 0)
-            		queryString.append("?");
-            	else
-            		queryString.append("&");
-            	queryString.append( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
+                    // Single parameter value
+                    String paramValue = (String) paramValues;
+                    if(queryString.length() == 0)
+                            queryString.append("?");
+                    else
+                            queryString.append("&");
+                    queryString.append( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
             }
         }
         URL urlToCall = new URL( url + queryString.toString() );
@@ -332,16 +332,16 @@ public class WebTest {
             String headerName = (String) keys.nextElement();
             String headerValue = (String) headers.get(headerName);
             if( headerName.equalsIgnoreCase("Cookie") )
-            	cookiesList.append(headerValue);
+                    cookiesList.append(headerValue);
             else
-        		urlConnection.setRequestProperty(headerName, headerValue);
+                        urlConnection.setRequestProperty(headerName, headerValue);
         }
         // Set cookies
         for(int i = 0; i < cookies.length; i++) {
-        	if(cookiesList.length() > 0)
-        		cookiesList.append("," + cookies[i]);
-        	else
-        		cookiesList.append(cookies[i]);
+                if(cookiesList.length() > 0)
+                        cookiesList.append("," + cookies[i]);
+                else
+                        cookiesList.append(cookies[i]);
         }
         urlConnection.setRequestProperty( "Cookie", cookiesList.toString() );
         // Setting GET method
@@ -365,21 +365,21 @@ public class WebTest {
         // Get response message
         String responseMessage = urlConnection.getResponseMessage();
         if(responseMessage != null)
-        	result.put(RESPONSE_MESSAGE, responseMessage);
+                result.put(RESPONSE_MESSAGE, responseMessage);
         // Receive cookies
         String returnedCookiesStr = urlConnection.getHeaderField("Set-Cookie");
         if(returnedCookiesStr != null) {
-        	StringTokenizer commaTokenizer = new StringTokenizer(returnedCookiesStr, ",", false);
-        	int tokens = commaTokenizer.countTokens();
-        	if(tokens > 0) {
-	        	String[] returnedCookies = new String[tokens];
-	        	int z = 0;
-	        	while( commaTokenizer.hasMoreTokens() ) {
-	        		returnedCookies[z] = commaTokenizer.nextToken();
-	        		z++;
-				}
-	        	result.put(COOKIES, returnedCookies);
-	        }
+                StringTokenizer commaTokenizer = new StringTokenizer(returnedCookiesStr, ",", false);
+                int tokens = commaTokenizer.countTokens();
+                if(tokens > 0) {
+                        String[] returnedCookies = new String[tokens];
+                        int z = 0;
+                        while( commaTokenizer.hasMoreTokens() ) {
+                                returnedCookies[z] = commaTokenizer.nextToken();
+                                z++;
+                                }
+                        result.put(COOKIES, returnedCookies);
+                }
         }
         responseReader.close();
         return(result);
@@ -398,7 +398,7 @@ public class WebTest {
      ** @throws IOException if an I/O exception occurs during the HTTP request
      **/
     protected static Hashtable doPostCall(String url, Hashtable headers, String[] cookies, Hashtable requestParams)
-			throws MalformedURLException, IOException {
+                        throws MalformedURLException, IOException {
         URL urlToCall = new URL(url);
         HttpURLConnection urlConnection = (HttpURLConnection) urlToCall.openConnection();
         urlConnection.setInstanceFollowRedirects(true);
@@ -409,16 +409,16 @@ public class WebTest {
             String headerName = (String) keys.nextElement();
             String headerValue = (String) headers.get(headerName);
             if( headerName.equalsIgnoreCase("Cookie") )
-            	cookiesList.append(headerValue);
+                    cookiesList.append(headerValue);
             else
-        		urlConnection.setRequestProperty(headerName, headerValue);
+                        urlConnection.setRequestProperty(headerName, headerValue);
         }
         // Set cookies
         for(int i = 0; i < cookies.length; i++) {
-        	if(cookiesList.length() > 0)
-        		cookiesList.append("," + cookies[i]);
-        	else
-        		cookiesList.append(cookies[i]);
+                if(cookiesList.length() > 0)
+                        cookiesList.append("," + cookies[i]);
+                else
+                        cookiesList.append(cookies[i]);
         }
         urlConnection.setRequestProperty( "Cookie", cookiesList.toString() );
         // Setting POST method
@@ -433,29 +433,29 @@ public class WebTest {
             String paramName = (String) keys.nextElement();
             Object paramValues = requestParams.get(paramName);
             if(paramValues instanceof String[]) {
-            	// Multiple parameter values
-            	String[] paramValueList = (String[]) paramValues;
-            	for(int i = 0; i < paramValueList.length; i++) {
-            		String paramValue = paramValueList[i];
-		            if(writtenParams > 0) {
-		            	out.print( "&" + URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
-		            }
-		            else {
-		            	out.print( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
-		            }
-            		writtenParams++;
-	            }
+                    // Multiple parameter values
+                    String[] paramValueList = (String[]) paramValues;
+                    for(int i = 0; i < paramValueList.length; i++) {
+                            String paramValue = paramValueList[i];
+                            if(writtenParams > 0) {
+                                    out.print( "&" + URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
+                            }
+                            else {
+                                    out.print( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
+                            }
+                            writtenParams++;
+                    }
             }
             else {
-            	// Single parameter value
-            	String paramValue = (String) paramValues;
-	            if(writtenParams > 0) {
-	            	out.print( "&" + URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
-	            }
-	            else {
-	            	out.print( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
-	            }
-        		writtenParams++;
+                    // Single parameter value
+                    String paramValue = (String) paramValues;
+                    if(writtenParams > 0) {
+                            out.print( "&" + URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
+                    }
+                    else {
+                            out.print( URLEncoder.encode(paramName,"ISO8859-1") + "=" + URLEncoder.encode(paramValue,"ISO8859-1") );
+                    }
+                        writtenParams++;
             }
         }
         out.close();
@@ -475,21 +475,21 @@ public class WebTest {
         // Get response message
         String responseMessage = urlConnection.getResponseMessage();
         if(responseMessage != null)
-        	result.put(RESPONSE_MESSAGE, responseMessage);
+                result.put(RESPONSE_MESSAGE, responseMessage);
         // Receive cookies
         String returnedCookiesStr = urlConnection.getHeaderField("Set-Cookie");
         if(returnedCookiesStr != null) {
-        	StringTokenizer commaTokenizer = new StringTokenizer(returnedCookiesStr, ",", false);
-        	int tokens = commaTokenizer.countTokens();
-        	if(tokens > 0) {
-	        	String[] returnedCookies = new String[tokens];
-	        	int z = 0;
-	        	while( commaTokenizer.hasMoreTokens() ) {
-	        		returnedCookies[z] = commaTokenizer.nextToken();
-	        		z++;
-				}
-	        	result.put(COOKIES, returnedCookies);
-	        }
+                StringTokenizer commaTokenizer = new StringTokenizer(returnedCookiesStr, ",", false);
+                int tokens = commaTokenizer.countTokens();
+                if(tokens > 0) {
+                        String[] returnedCookies = new String[tokens];
+                        int z = 0;
+                        while( commaTokenizer.hasMoreTokens() ) {
+                                returnedCookies[z] = commaTokenizer.nextToken();
+                                z++;
+                                }
+                        result.put(COOKIES, returnedCookies);
+                }
         }
         responseReader.close();
         return(result);

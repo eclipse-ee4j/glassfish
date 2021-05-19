@@ -17,7 +17,7 @@
 package Data;
 
 import jakarta.ejb.*;
-import javax.naming.*; 
+import javax.naming.*;
 
 
 /**
@@ -31,40 +31,40 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
     private jakarta.ejb.SessionContext context;
     private LocalSuppliersHome suppliersHome = null;
     private LocalPartsHome partsHome = null;
-    
-    
+
+
     /**
      * @see jakarta.ejb.SessionBean#setSessionContext(jakarta.ejb.SessionContext)
      */
     public void setSessionContext(jakarta.ejb.SessionContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.SessionBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.SessionBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.SessionBean#ejbRemove()
      */
     public void ejbRemove() {
-        
+
     }
-    
-    
+
+
     /**
      * See section 7.10.3 of the EJB 2.0 specification
      */
@@ -77,21 +77,21 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
             throw new CreateException(ex.getMessage());
         }
     }
-    
+
     private LocalSuppliersHome lookupSuppliers() throws NamingException {
         System.out.println("Debug: SPSession lookupSuppliers");
         Context initial = new InitialContext();
         Object objref = initial.lookup("java:comp/env/ejb/SimpleSuppliers");
         return (LocalSuppliersHome) objref;
     }
-    
+
     private LocalPartsHome lookupParts() throws NamingException {
         System.out.println("Debug: SPSession lookupParts");
         Context initial = new InitialContext();
         Object objref = initial.lookup("java:comp/env/ejb/SimpleParts");
         return (LocalPartsHome) objref;
     }
-    
+
     public int checkAllParts() {
         System.out.println("Debug: SPSessionBean getAllParts");
         java.util.Collection parts = null;
@@ -103,7 +103,7 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
         }
         return parts.size();
     }
-    
+
     public int checkAllSuppliers() {
         System.out.println("Debug: SPSessionBean getAllSuppliers");
         java.util.Collection suppliers = null;
@@ -115,7 +115,7 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
         }
         return suppliers.size();
     }
-    
+
     public void createPartsAndSuppliers() {
        try {
             System.out.println("InsertData");
@@ -125,7 +125,7 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
             java.lang.Integer supplierid1= new java.lang.Integer(103);
             java.lang.Integer supplierid2= new java.lang.Integer(145);
             java.lang.Integer supplierid3= new java.lang.Integer(122);
-            
+
             partsHome.create(partid1,"partname1","red", new java.math.BigDecimal(45), new java.lang.Double(99));
             partsHome.create(partid2,"partname2","blue", new java.math.BigDecimal(37), new java.lang.Double(50));
             partsHome.create(partid3,"partname3","green", new java.math.BigDecimal(222), new java.lang.Double(65));
@@ -140,7 +140,7 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
             ex.printStackTrace();
         }
     }
-    
+
     public void removePart(java.lang.Integer partid) {
         System.out.println("Debug: SPSession removePart");
         try {
@@ -152,7 +152,7 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
             throw new EJBException(ex.getMessage());
         }
     }
-    
+
     public void removeSupplier(java.lang.Integer partid, java.lang.Integer supplierid) {
         System.out.println("Debug: SPSession removeSupplier");
         try {
@@ -167,5 +167,5 @@ public class SPSessionBean implements jakarta.ejb.SessionBean {
             throw new EJBException(ex.getMessage());
         }
     }
-    
+
 }

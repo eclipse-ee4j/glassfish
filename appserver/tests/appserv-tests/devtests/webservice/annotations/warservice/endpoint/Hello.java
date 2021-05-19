@@ -25,10 +25,10 @@ import jakarta.jws.WebMethod;
     targetNamespace="http://example.com/Hello"
 )
 public class Hello {
-	public Hello() {}
+        public Hello() {}
 
-	@WebMethod(operationName="sayHello", action="urn:SayHello")
-	public String sayHello(String who) {
-		return "WebSvcTest-Hello " + who;
-	}
+        @WebMethod(operationName="sayHello", action="urn:SayHello")
+        public String sayHello(String who) {
+                return "WebSvcTest-Hello " + who;
+        }
 }

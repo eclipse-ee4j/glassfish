@@ -23,9 +23,9 @@ import org.glassfish.jaccApi.common.BaseServletContextListener;
 import org.glassfish.jaccApi.common.JaspicUtils;
 
 /**
- * 
+ *
  * @author Arjan Tijms
- * 
+ *
  */
 @WebListener
 public class SamAutoRegistrationListener extends BaseServletContextListener {

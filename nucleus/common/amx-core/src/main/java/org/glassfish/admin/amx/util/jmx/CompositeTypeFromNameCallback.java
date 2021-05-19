@@ -19,7 +19,7 @@ package org.glassfish.admin.amx.util.jmx;
 import javax.management.openmbean.OpenType;
 
 /**
-In some cases, such as null values, a CompositeType cannot be 
+In some cases, such as null values, a CompositeType cannot be
 determined.  This callback is invoked to get a CompositeType
 given a name.
  */

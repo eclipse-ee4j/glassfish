@@ -18,7 +18,7 @@ package jakarta.security.jacc;
 
 import java.lang.reflect.*;
 import java.util.Enumeration;
-import java.security.*; 
+import java.security.*;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
 import jakarta.security.jacc.WebRoleRefPermission;
@@ -35,7 +35,7 @@ import java.io.ObjectOutputStream;
 import java.io.FileOutputStream;
 
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
- 
+
 public class TestWebPerms {
     private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
@@ -54,14 +54,14 @@ public class TestWebPerms {
 
         Permission p2 = p1;
         try {
-            FileOutputStream fout = new 
+            FileOutputStream fout = new
                 FileOutputStream("serial-test-file.tmp");
             ObjectOutputStream sout = new ObjectOutputStream(fout);
             sout.writeObject(p1);
             sout.flush();
             sout.close();
             fout.close();
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             t.printStackTrace();
             debug( "-- Serialization Test Failed(write)-" + p1.getName() + "," + p1.getActions())
 ;
@@ -72,17 +72,17 @@ public class TestWebPerms {
             ObjectInputStream sin = new ObjectInputStream(fin);
             p2 = (Permission) sin.readObject();
             sin.close();
-            fin.close(); 
-        } catch( Throwable t ) { 
+            fin.close();
+        } catch( Throwable t ) {
             t.printStackTrace();
             debug( "-- Serialization Test Failed(read)-" + p1.getName() + "," + p1.getActions());
             result = false;
         }
 
         if (result == true) {
-            if (p2.equals(p1)) { 
+            if (p2.equals(p1)) {
                 debug( "-- Serialization Test Succeeded -----------" + p2.getName() + "," + p2.getActions());
-            } else { 
+            } else {
                 debug( "-- Serialization Test Failed-" + p1.getName() + "," + p1.getActions());
             }
         } else {
@@ -124,7 +124,7 @@ public class TestWebPerms {
 
             if (expectedToSucceed) {
 
-                p2 = new WebResourcePermission(p1.getName(),p1.getActions()); 
+                p2 = new WebResourcePermission(p1.getName(),p1.getActions());
 
                 if (!p1.equals(p2)) {
                     result = false;
@@ -142,7 +142,7 @@ public class TestWebPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -165,7 +165,7 @@ public class TestWebPerms {
             debug( "-- Construct Test --");
             p1 = new WebResourcePermission(URLPattern,methods);
             if (expectedToSucceed) {
-                p2 = new WebResourcePermission(p1.getName(),p1.getActions()); 
+                p2 = new WebResourcePermission(p1.getName(),p1.getActions());
                 if (!p1.equals(p2)) {
                     result = false;
                     debug("p != p\n\t" + p1 + "\n\t" + p2);
@@ -178,7 +178,7 @@ public class TestWebPerms {
                 debug("unexpected success\t" + p1);
                 result = false;
             }
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             if (expectedToSucceed) {
                 t.printStackTrace();
             }
@@ -203,7 +203,7 @@ public class TestWebPerms {
 
             if (expectedToSucceed) {
 
-                p2 = new WebResourcePermission(p1.getName(),p1.getActions()); 
+                p2 = new WebResourcePermission(p1.getName(),p1.getActions());
 
                 if (!p1.equals(p2)) {
                     result = false;
@@ -221,7 +221,7 @@ public class TestWebPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -250,7 +250,7 @@ public class TestWebPerms {
 
             if (expectedToSucceed) {
 
-                p2 = new WebRoleRefPermission(p1.getName(),p1.getActions()); 
+                p2 = new WebRoleRefPermission(p1.getName(),p1.getActions());
 
                 if (!p1.equals(p2)) {
                     result = false;
@@ -268,7 +268,7 @@ public class TestWebPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -295,7 +295,7 @@ public class TestWebPerms {
 
             if (expectedToSucceed) {
 
-                p2 = new WebUserDataPermission(p1.getName(),p1.getActions()); 
+                p2 = new WebUserDataPermission(p1.getName(),p1.getActions());
 
                 if (!p1.equals(p2)) {
                     result = false;
@@ -313,7 +313,7 @@ public class TestWebPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -338,7 +338,7 @@ public class TestWebPerms {
                 (URLPattern,makeWUDActions(methods,transportType));
 
             if (expectedToSucceed) {
-                p2 = new WebUserDataPermission(p1.getName(),p1.getActions()); 
+                p2 = new WebUserDataPermission(p1.getName(),p1.getActions());
                 if (!p1.equals(p2)) {
                     result = false;
                     debug("p != p\n\t" + p1 + "\n\t" + p2);
@@ -351,7 +351,7 @@ public class TestWebPerms {
                 debug("unexpected success\t" + p1);
                 result = false;
             }
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             if (expectedToSucceed) {
                 t.printStackTrace();
             }
@@ -366,7 +366,7 @@ public class TestWebPerms {
     }
 
     private static boolean doPermissionImplies (boolean expectedResult,
-            Permission thisP, Permission p) { 
+            Permission thisP, Permission p) {
         boolean result = true;
         String description = "doPermissionImplies:" +
             expectedResult + "-" + thisP + "-" + p;
@@ -377,18 +377,18 @@ public class TestWebPerms {
             if (thisP.implies(p) != expectedResult) {
                 debug(
                     (expectedResult ? "unexpected failure:" :"unexpected success:")
-                     + printP(p) + (expectedResult ?" not implied by:":" implied by:") + 
+                     + printP(p) + (expectedResult ?" not implied by:":" implied by:") +
                      printP(thisP));
                 debug( "-- Permission implies Test failed(not implied)----------------------------");
                 result = false;
             } else {
-                debug(printP(p) + 
-                    (expectedResult ? " implied by:":" not implied by:") + 
+                debug(printP(p) +
+                    (expectedResult ? " implied by:":" not implied by:") +
                     printP(thisP));
                 debug( "-- Permission implies Test Succeeded -------------------------------------");
                 result = true;
             }
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             debug("unexpected exception");
             t.printStackTrace();
             debug( "-- Permission implies Test failed(exception)---------------------------------");
@@ -412,25 +412,25 @@ public class TestWebPerms {
                 debug( "-- HttpMethodSpec implies Test failed(not implied)----------------------------");
                 result = false;
             } else {
-                debug(thatS + 
+                debug(thatS +
                     (expectedResult ? " implied by:":" not implied by:") + thisS);
                 result = true;
             }
 
             if (!thisS.implies(thisS)) {
-                debug( "unexpected failure:" 
+                debug( "unexpected failure:"
                     + thisS + " not implied by: " +  thisS);
                 debug( "-- HttpMethodSpec implies Test failed(not implied)----------------------------");
                 result = false;
             }
 
             if (!thatS.implies(thatS)) {
-                debug( "unexpected failure:" 
+                debug( "unexpected failure:"
                     + thatS + " not implied by: " + thatS);
                 debug( "-- HttpMethodSpec implies Test failed(not implied)----------------------------");
                 result = false;
             }
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             debug("unexpected exception");
             t.printStackTrace();
             debug( "-- HttpMethodSpec implies Test failed(exception)---------------------------------");
@@ -441,11 +441,11 @@ public class TestWebPerms {
     public static void main( String[] args ) {
         boolean result = true;
 
-        String tArray[] = { 
-            null, 
-            ":NONE", 
-            ":INTEGRAL", 
-            ":CONFIDENTIAL" 
+        String tArray[] = {
+            null,
+            ":NONE",
+            ":INTEGRAL",
+            ":CONFIDENTIAL"
         };
 
         String mArray[] = {
@@ -491,13 +491,13 @@ public class TestWebPerms {
             "/a/c",
             "/a/b/c.jsp",
             "/a/c/*:/a/c",
-            "/a/*:/a/c:/a/b/c.jsp", 
+            "/a/*:/a/c:/a/b/c.jsp",
             "/*:/a/c:/a/b/c.jsp:/a/c/*:/a/*",
             "*.jsp:/a/c/*:/a/*:/a/b/c.jsp",
             "*.asp:/a/c/*:/a/*",
             "/:/a/c:/a/b/c.jsp:/a/c/*:/a/*:*.jsp:*.asp"
         };
- 
+
         for (int i=0; i<msArray.length; i++) {
 
             HttpMethodSpec s = HttpMethodSpec.getSpec(msArray[i]);
@@ -506,8 +506,8 @@ public class TestWebPerms {
 
             String actions = s.getActions();
 
-            debug("input actions: " + msArray[i] + 
-                 " hashCode: " + hCode + 
+            debug("input actions: " + msArray[i] +
+                 " hashCode: " + hCode +
                  " actions:" + actions);
         }
 

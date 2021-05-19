@@ -457,10 +457,10 @@ public class ContextFacade extends WebModule {
         return context.getFilterRegistrations();
     }
 
-    public SessionCookieConfig getSessionCookieConfig() {        
+    public SessionCookieConfig getSessionCookieConfig() {
         return context.getSessionCookieConfig();
     }
-    
+
     public void setSessionTrackingModes(Set<SessionTrackingMode> sessionTrackingModes) {
         context.setSessionTrackingModes(sessionTrackingModes);
     }

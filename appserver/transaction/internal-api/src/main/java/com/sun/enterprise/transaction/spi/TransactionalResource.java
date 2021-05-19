@@ -20,7 +20,7 @@ import jakarta.transaction.Transaction;
 import javax.transaction.xa.XAResource;
 
 /**
- * TransactionalResource interface to be implemented by the resource handlers 
+ * TransactionalResource interface to be implemented by the resource handlers
  * to be able to communicate with used the transaction manager components
  *
  * @author Marina Vatkina

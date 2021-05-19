@@ -186,15 +186,15 @@ public class GraphMenuTreeTag extends UIComponentBodyTag {
                 component.setValueBinding("value", vb);
             }
         }
-        
+
         // if there is no valueRef attribute set on this tag, then
         // we need to build the graph.
         if (value == null) {
             vb =
                 context.getApplication().createValueBinding(
                     "#{sessionScope.graph_tree}");
-            component.setValueBinding("value", vb); 
-           
+            component.setValueBinding("value", vb);
+
             // In the postback case, graph exists already. So make sure
             // it doesn't created again.
             Graph graph = (Graph) ((GraphComponent) component).getValue();

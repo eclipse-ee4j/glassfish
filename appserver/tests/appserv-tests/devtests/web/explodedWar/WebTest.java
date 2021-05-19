@@ -26,7 +26,7 @@ public class WebTest {
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String args[]) {
-      
+
         stat.addDescription("IT 11802: exploded war support");
 
         String host = args[0];
@@ -35,7 +35,7 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             goGet(host, port, contextRoot + "/ServletTest" );
         } catch (Throwable t) {
@@ -60,7 +60,7 @@ public class WebTest {
             System.out.println(getString);
             os.write(getString.getBytes());
             os.write("\n".getBytes());
-            
+
             is = s.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
             String line = null;
@@ -90,5 +90,5 @@ public class WebTest {
             }
         }
    }
-  
+
 }

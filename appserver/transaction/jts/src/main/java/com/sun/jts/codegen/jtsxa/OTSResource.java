@@ -26,6 +26,6 @@ package com.sun.jts.codegen.jtsxa;
 
 
 //#-----------------------------------------------------------------------------
-public interface OTSResource extends OTSResourceOperations, org.omg.CosTransactions.Resource, org.omg.CORBA.portable.IDLEntity 
+public interface OTSResource extends OTSResourceOperations, org.omg.CosTransactions.Resource, org.omg.CORBA.portable.IDLEntity
 {
 } // interface OTSResource

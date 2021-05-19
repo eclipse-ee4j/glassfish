@@ -46,9 +46,9 @@
         </developer>
     </developers>
 
-    <!-- 
-        This module contains classes for the app client configuration XML, 
-        generated using JAXB from sun-application-client-container_x_y.dtd. 
+    <!--
+        This module contains classes for the app client configuration XML,
+        generated using JAXB from sun-application-client-container_x_y.dtd.
     -->
     <properties>
         <extracted-dtd-root>temp</extracted-dtd-root>
@@ -61,14 +61,14 @@
     </properties>
 
     <dependencies>
-        <!-- 
-            We depend on the deployment/dtds module which contains the sun-application-client-container_1_2.dtd 
-            and glassfish-application-client-container_1_3.dtd. 
-            
-            We use that for generating JAXB classes but we do not want to package the DTD with the ACC module, nor 
+        <!--
+            We depend on the deployment/dtds module which contains the sun-application-client-container_1_2.dtd
+            and glassfish-application-client-container_1_3.dtd.
+
+            We use that for generating JAXB classes but we do not want to package the DTD with the ACC module, nor
             do we want the ACC module depending on the deploymenet/dtds module at runtime.
-             
-            Note the scope is "provided" to indicate this. 
+
+            Note the scope is "provided" to indicate this.
         -->
         <dependency>
             <groupId>org.glassfish.main.deployment</groupId>
@@ -77,7 +77,7 @@
             <type>zip</type>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
@@ -98,8 +98,8 @@
             </resource>
         </resources>
         <plugins>
-            <!-- Extracts the DTD(s) from the deployment/dtds module into 
-                a temp file. The "generate" phase will use it to create JAXB classes. Unit 
+            <!-- Extracts the DTD(s) from the deployment/dtds module into
+                a temp file. The "generate" phase will use it to create JAXB classes. Unit
                 tests use both DTDs for parse testing. -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -128,7 +128,7 @@
                 </executions>
             </plugin>
 
-            <!-- Generates JAXB classes based on the ACC configuration file 
+            <!-- Generates JAXB classes based on the ACC configuration file
                 DTD. -->
             <!--
                 XXX: no maven plugin for jakarta xml binding impl exists,
@@ -188,7 +188,7 @@
                 </executions>
             </plugin>
 
-            <!-- Adds the temp directory (which holds the extracted DTD) 
+            <!-- Adds the temp directory (which holds the extracted DTD)
                 to the directories cleaned by the 'clean' phase. -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>

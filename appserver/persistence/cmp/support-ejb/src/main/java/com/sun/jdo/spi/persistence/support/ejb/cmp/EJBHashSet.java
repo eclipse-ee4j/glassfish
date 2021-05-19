@@ -38,7 +38,7 @@ import com.sun.jdo.spi.persistence.support.sqlstore.LogHelperSQLStore;
  * @author Marina Vatkina
  */
 public class EJBHashSet extends HashSet {
-    // Reference to the PersistenceManager and Transaction that were active 
+    // Reference to the PersistenceManager and Transaction that were active
     // at the time of this Set creation.
     private PersistenceManager pm = null;
     private Transaction tx = null;
@@ -52,7 +52,7 @@ public class EJBHashSet extends HashSet {
 
     // Flag that indicates invalid state of this Set.
     private boolean valid = false;
-    
+
     //The logger
     private static Logger logger = LogHelperSQLStore.getLogger();
 
@@ -78,12 +78,12 @@ public class EJBHashSet extends HashSet {
     /**
      * Adds the specified element to this set if it is not already
      * present.
-     *   
+     *
      * @param o element to be added to this set.
      * @return <tt>true</tt> if the set did not already contain the specified
      * element.
      * @see java.util.HashSet
-     */  
+     */
     public boolean add(Object o) {
         logger.finest("---EJBHashSet.add---"); // NOI18N
         assertIsValid();
@@ -96,7 +96,7 @@ public class EJBHashSet extends HashSet {
 
     /**
      * Adds all of the elements in the specified collection to this collection
-     *   
+     *
      * @param c collection whose elements are to be added to this collection.
      * @return <tt>true</tt> if this collection changed as a result of the
      * call.
@@ -110,17 +110,17 @@ public class EJBHashSet extends HashSet {
         logger.finest("---EJBHashSet.addAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
-        assertInstancesOfLocalInterfaceImpl(c); 
+        assertInstancesOfLocalInterfaceImpl(c);
         return pcSet.addAll(helper.convertCollectionEJBLocalObjectToPC(c, pm, true));
     }
 
     /**
      * Removes the given element from this set if it is present.
-     *   
+     *
      * @param o object to be removed from this set, if present.
      * @return <tt>true</tt> if the set contained the specified element.
      * @see java.util.HashSet
-     */  
+     */
     public boolean remove(Object o) {
         logger.finest("---EJBHashSet.remove---"); // NOI18N
         assertIsValid();
@@ -135,43 +135,43 @@ public class EJBHashSet extends HashSet {
      * the specified collection (optional operation). <p>
      * Processes each element remove internally not to have call backs
      * into #remove(Object).
-     *   
+     *
      * @param c elements to be removed from this collection.
      * @return <tt>true</tt> if this collection changed as a result of the
      * call.
-     *   
+     *
      * @throws    UnsupportedOperationException removeAll is not supported
      *            by this collection.
-     *   
+     *
      * @see java.util.HashSet
      * @see java.util.AbstractCollection
-     */  
+     */
     public boolean removeAll(Collection c) {
         logger.finest("---EJBHashSet.removeAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
-        assertInstancesOfLocalInterfaceImpl(c); 
+        assertInstancesOfLocalInterfaceImpl(c);
         return pcSet.removeAll(helper.convertCollectionEJBLocalObjectToPC(c, pm, true));
     }
 
     /**
      * Retains only the elements in this collection that are contained in the
      * specified collection (optional operation).
-     *   
+     *
      * @return <tt>true</tt> if this collection changed as a result of the
      *         call.
-     *   
+     *
      * @throws UnsupportedOperationException if the <tt>retainAll</tt> method
      *            is not supported by this collection.
-     *   
+     *
      * @see java.util.HashSet
      * @see java.util.AbstractCollection
-     */  
+     */
     public boolean retainAll(Collection c) {
         logger.finest("---EJBHashSet.retainAll---"); // NOI18N
         assertIsValid();
         assertInTransaction();
-        assertInstancesOfLocalInterfaceImpl(c); 
+        assertInstancesOfLocalInterfaceImpl(c);
         return pcSet.retainAll(helper.convertCollectionEJBLocalObjectToPC(c, pm, true));
     }
 
@@ -179,7 +179,7 @@ public class EJBHashSet extends HashSet {
     /**
      * Removes all of the elements from this set.
      * @see java.util.HashSet
-     */  
+     */
     public void clear() {
         logger.finest("---EJBHashSet.clear---"); // NOI18N
         assertIsValid();
@@ -189,7 +189,7 @@ public class EJBHashSet extends HashSet {
 
     /**
      * Returns the number of elements in this set (its cardinality).
-     * 
+     *
      * @return the number of elements in this set (its cardinality).
      */
     public int size() {
@@ -201,7 +201,7 @@ public class EJBHashSet extends HashSet {
 
     /**
      * Returns <tt>true</tt> if this set contains no elements.
-     * 
+     *
      * @return <tt>true</tt> if this set contains no elements.
      */
     public boolean isEmpty() {
@@ -213,7 +213,7 @@ public class EJBHashSet extends HashSet {
 
     /**
      * Returns <tt>true</tt> if this set contains the specified element.
-     * 
+     *
      * @param o element whose presence in this set is to be tested.
      * @return <tt>true</tt> if this set contains the specified element.
      */
@@ -229,18 +229,18 @@ public class EJBHashSet extends HashSet {
     /**
      * Returns <tt>true</tt> if this collection contains all of the elements
      * in the specified collection. <p>
-     *   
+     *
      * This implementation iterates over the specified collection, checking
      * each element returned by the iterator in turn to see if it's
      * contained in this collection.  If all elements are so contained
      * <tt>true</tt> is returned, otherwise <tt>false</tt>.
-     *   
+     *
      * @param c collection to be checked for containment in this collection.
      * @return <tt>true</tt> if this collection contains all of the elements
      *         in the specified collection.
-     *   
+     *
      * @see #contains(Object)
-     */  
+     */
     public boolean containsAll(Collection c) {
         logger.finest("---EJBHashSet.containsAll---"); // NOI18N
         assertIsValid();
@@ -252,9 +252,9 @@ public class EJBHashSet extends HashSet {
     /**
      * Returns a shallow copy of this <tt>HashSet</tt> instance: the elements
      * themselves are not cloned.
-     *   
+     *
      * @return a shallow copy of this set.
-     */  
+     */
     public Object clone() {
         logger.finest("---EJBHashSet.clone---"); // NOI18N
         EJBHashSet newSet = (EJBHashSet)super.clone();
@@ -262,7 +262,7 @@ public class EJBHashSet extends HashSet {
         return newSet;
     }
 
-    /** 
+    /**
      * Returns set of the persistence-capable instances associated
      * with this Set.
      * @return Set of the persistence-capable instances.
@@ -273,7 +273,7 @@ public class EJBHashSet extends HashSet {
         return (pcSet != null) ? (HashSet)pcSet.clone() : null;
     }
 
-    /** 
+    /**
      * Replace the set of the persistence-capable instances associated
      * with this EJBHashSet.
      * There is no need to check transaction as it has already been checked

@@ -142,7 +142,7 @@ public interface HttpRequest extends Request {
 
     /**
      * Get the request path.
-     * 
+     *
      * @return the request path
      */
     DataChunk getRequestPathMB();
@@ -188,7 +188,7 @@ public interface HttpRequest extends Request {
 
     /**
      * Get the decoded request URI.
-     * 
+     *
      * @return the URL decoded request URI
      */
     String getDecodedRequestURI();

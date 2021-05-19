@@ -33,7 +33,7 @@ import java.util.concurrent.Semaphore;
 public class ListDataStructure implements DataStructure {
     private final ArrayList<ResourceHandle> free;
     private final ArrayList<ResourceHandle> resources;
-    //Max Size of the datastructure.Depends mostly on the max-pool-size of 
+    //Max Size of the datastructure.Depends mostly on the max-pool-size of
     // the connection pool.
     private int maxSize;
     private final DynamicSemaphore dynSemaphore;
@@ -50,20 +50,20 @@ public class ListDataStructure implements DataStructure {
         setMaxSize(maxSize);
     }
 
-    
+
     /**
-     * Set maxSize based on the new max pool size set on the connection pool 
-     * during a reconfiguration. 
+     * Set maxSize based on the new max pool size set on the connection pool
+     * during a reconfiguration.
      * 1. When permits contained within the dynamic semaphore are greater than 0,
      * maxSize is increased and hence so many permits are released.
-     * 2. When permits contained within the dynamic semaphore are less than 0, 
-     * maxSize has reduced to a smaller value. Hence so many permits are reduced 
-     * from the semaphore's available limit for the subsequent resource requests 
+     * 2. When permits contained within the dynamic semaphore are less than 0,
+     * maxSize has reduced to a smaller value. Hence so many permits are reduced
+     * from the semaphore's available limit for the subsequent resource requests
      * to act based on the new configuration.
      * @param newMaxSize
      */
     public synchronized void setMaxSize(int newMaxSize) {
-            
+
         //Find currently open with the current maxsize
         int permits = newMaxSize - this.maxSize;
 
@@ -81,7 +81,7 @@ public class ListDataStructure implements DataStructure {
         }
         this.maxSize = newMaxSize;
     }
-    
+
     private void initializeStrategy(String strategyClass) {
         //TODO
     }
@@ -212,16 +212,16 @@ public class ListDataStructure implements DataStructure {
     }
 
     /**
-     * Semaphore whose available permits change according to the 
+     * Semaphore whose available permits change according to the
      * changes in max-pool-size via a reconfiguration.
      */
     private static final class DynamicSemaphore extends Semaphore {
-        
+
         DynamicSemaphore() {
             //Default is 0
             super(0);
         }
-        
+
         @Override
         protected void reducePermits(int size) {
             super.reducePermits(size);

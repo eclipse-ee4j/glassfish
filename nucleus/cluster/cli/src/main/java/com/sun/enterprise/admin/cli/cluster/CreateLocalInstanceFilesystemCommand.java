@@ -116,7 +116,7 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
         // bake the DAS host and port into das.properties if it does not
         // appear to be valid. So we check it. See IT bug 12943
         checkDASCoordinates();
-        
+
         return createDirectories();
     }
 
@@ -162,7 +162,7 @@ public class CreateLocalInstanceFilesystemCommand extends LocalInstanceCommand {
                 fos = new FileOutputStream(dasPropsFile);
                 dasProperties.store(fos, Strings.get("Instance.dasPropertyComment"));
             } finally {
-                if (fos != null) { 
+                if (fos != null) {
                     fos.close();
                 }
             }

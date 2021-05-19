@@ -27,7 +27,7 @@ public class WebTest{
 
     static SimpleReporterAdapter stat=
            new SimpleReporterAdapter("appserv-tests");
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 3;
 
@@ -43,12 +43,12 @@ public class WebTest{
             SSLSocketFactory ssf = getSSLSocketFactory(trustStorePath);
             HttpsURLConnection connection = doSSLHandshake(
                             "https://" + host  + ":" + port + "/", ssf);
-            checkStatus(connection); 
+            checkStatus(connection);
 
             connection = doSSLHandshake(
-                "https://" + host  + ":" + port + "/" + contextRoot 
+                "https://" + host  + ":" + port + "/" + contextRoot
                 + "/ServletTest", ssf);
-            
+
             parseResponse(connection);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -56,7 +56,7 @@ public class WebTest{
 
         if (count != EXPECTED_COUNT){
             stat.addStatus("multiSelector-ssl", stat.FAIL);
-        }           
+        }
 
         stat.printSummary("sslMultiSelector");
     }
@@ -89,7 +89,7 @@ public class WebTest{
                     throws Exception{
 
         int responseCode=  connection.getResponseCode();
-        System.out.println("Response code: " + responseCode + " Expected code: 200"); 
+        System.out.println("Response code: " + responseCode + " Expected code: 200");
         if (connection.getResponseCode() != 200){
             stat.addStatus("multiSelector-responseCode", stat.FAIL);
         } else {
@@ -102,7 +102,7 @@ public class WebTest{
 
        BufferedReader in = new BufferedReader(
                 new InputStreamReader(connection.getInputStream()));
-            
+
         String line = "";
         int index;
         while ((line = in.readLine()) != null) {
@@ -111,15 +111,15 @@ public class WebTest{
             if (index != -1) {
                 index = line.indexOf(":");
                 String status = line.substring(index+1);
-                    
+
                 if (status.equalsIgnoreCase("PASS")){
                     stat.addStatus("multiSelector-" + line.substring(0,index),
                                    stat.PASS);
                 } else {
-                    stat.addStatus("multiSelector-filter", stat.FAIL);                       
+                    stat.addStatus("multiSelector-filter", stat.FAIL);
                 }
                 count++;
-            } 
+            }
         }
 
         in.close();

@@ -24,10 +24,10 @@
     <ejb>
       <ejb-name>MyJaxr</ejb-name>
       <jndi-name>jaxrra</jndi-name>
-          <resource-ref>
-	    <res-ref-name>S1asJaxrFactory</res-ref-name>
-	    <jndi-name>eis/SOAR</jndi-name>
-    </resource-ref>
+      <resource-ref>
+        <res-ref-name>S1asJaxrFactory</res-ref-name>
+        <jndi-name>eis/SOAR</jndi-name>
+      </resource-ref>
     </ejb>
 
   </enterprise-beans>

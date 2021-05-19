@@ -44,7 +44,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -56,14 +56,14 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/**.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/**.class"/>
         </antcall>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-pe"/>
         <antcall target="deploy-ee"/>
@@ -72,7 +72,7 @@
     <target name="deploy-pe" depends="init-common" unless="ee">
 
         <antcall target="deploy-common"/>
-<!--	<echo message="Restarting domain on PE/EE DAS after deployment"/>
+<!--    <echo message="Restarting domain on PE/EE DAS after deployment"/>
         <antcall target="restart-server-instance-common"/> -->
     </target>
 
@@ -88,10 +88,10 @@
     </target>
 
     <target name="run-test" depends="build,deploy,run,undeploy"/>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

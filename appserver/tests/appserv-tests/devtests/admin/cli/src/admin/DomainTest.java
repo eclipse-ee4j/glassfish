@@ -46,7 +46,7 @@ public class DomainTest extends AdminBaseDevTest {
                 _brandingProperties.load(new FileInputStream(brandingFile));
             } catch (IOException e) {
                 System.out.println("Not able to load branding file.");
-            } 
+            }
         }
     }
 
@@ -99,7 +99,7 @@ public class DomainTest extends AdminBaseDevTest {
      *
      * @param name Domain name.
      * @param templatePath absolute template path.
-     * @return true if the given template is used for domain creation. 
+     * @return true if the given template is used for domain creation.
      */
     boolean checkDomain(String name, String templatePath) {
         File domInfoXml = TestEnv.getDomainInfoXml(name);

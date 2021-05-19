@@ -27,7 +27,7 @@
         <display-name>HelloJapan</display-name>
         <servlet-name>HelloJapan</servlet-name>
         <servlet-class>test.HelloJapan</servlet-class>
-    </servlet>  
+    </servlet>
 
    <servlet-mapping>
         <servlet-name>HelloJapan</servlet-name>

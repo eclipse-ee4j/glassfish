@@ -312,7 +312,7 @@ public class JDBCConnectionPoolManager implements ResourceManager {
 
         try {
 
-            // if cascade=true delete all the resources associated with this pool 
+            // if cascade=true delete all the resources associated with this pool
             // if cascade=false don't delete this connection pool if a resource is referencing it
             Object obj = deleteAssociatedResources(servers, clusters, resources,
                     Boolean.parseBoolean(cascade), poolName);

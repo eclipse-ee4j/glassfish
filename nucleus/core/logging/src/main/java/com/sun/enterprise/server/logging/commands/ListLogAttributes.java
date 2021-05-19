@@ -65,8 +65,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 @I18n("list.log.attributes")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-log-attributes", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-log-attributes",
         description="list-log-attributes")
 })
 public class ListLogAttributes implements AdminCommand {
@@ -91,14 +91,14 @@ public class ListLogAttributes implements AdminCommand {
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
-        
+
         try {
             HashMap<String, String> props = null;
-            
+
             TargetInfo targetInfo = new TargetInfo(domain, target);
             String targetConfigName = targetInfo.getConfigName();
             boolean isDas = targetInfo.isDas();
-            
+
             if (targetConfigName != null && !targetConfigName.isEmpty()) {
                 props = (HashMap<String, String>) loggingConfig.getLoggingProperties(targetConfigName);
             } else if (isDas) {

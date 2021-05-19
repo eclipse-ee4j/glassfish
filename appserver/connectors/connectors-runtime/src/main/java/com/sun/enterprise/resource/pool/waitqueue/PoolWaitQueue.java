@@ -37,7 +37,7 @@ public interface PoolWaitQueue {
     /**
      * resource requesting thread will be added to queue<br>
      * and the object on which it is made to wait is returned
-     * @param o Object 
+     * @param o Object
      */
     void addToQueue(Object o);
 

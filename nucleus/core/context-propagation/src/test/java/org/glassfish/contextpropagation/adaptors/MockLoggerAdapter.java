@@ -21,7 +21,7 @@ import org.junit.Test;
 
 public class MockLoggerAdapter implements LoggerAdapter {
   // TODO TIP: Change the Level constant to control what is logged, use null to reduce output to a minimum
-  static final Level LOGGING_LEVEL = null; // Level.WARN; 
+  static final Level LOGGING_LEVEL = null; // Level.WARN;
 
   @Override
   public boolean isLoggable(Level level) {
@@ -44,16 +44,16 @@ public class MockLoggerAdapter implements LoggerAdapter {
     log(level, messageID, args);
     t.printStackTrace();
   }
-  
+
   @Test
   public void testFormat() {
     debug(format("arg 1:%1, arg2: %2", "one", "two"));
   }
-  
+
   private static boolean _isLoggable(Level level) {
     return LOGGING_LEVEL != null && level.ordinal() <= LOGGING_LEVEL.ordinal();
   }
-  
+
   public static void debug(String s) {
     if (_isLoggable(Level.DEBUG)) System.out.println(s);
   }

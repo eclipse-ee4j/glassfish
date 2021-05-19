@@ -30,7 +30,7 @@ public class ConfigurationException extends HK2RuntimeException {
      * For serialization
      */
     private static final long serialVersionUID = -5739251253923553480L;
-    
+
     private transient Location location = null;
 
     public ConfigurationException(String message) {
@@ -40,7 +40,7 @@ public class ConfigurationException extends HK2RuntimeException {
     public ConfigurationException(String message, Throwable origin) {
         super(message, origin);
     }
-    
+
     public ConfigurationException(String format, Object... args) {
         super(String.format(format,args));
     }

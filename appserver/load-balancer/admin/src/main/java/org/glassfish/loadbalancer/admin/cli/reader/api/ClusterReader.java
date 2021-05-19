@@ -54,14 +54,14 @@ public interface ClusterReader extends BaseReader {
     /**
      * Returns the lb policy
      *
-     * @return LbPolicy    String 
+     * @return LbPolicy    String
      */
     public String getLbPolicy() throws LbReaderException;
 
     /**
      * Returns the lb policy module
      *
-     * @return LbPolicyModule    String 
+     * @return LbPolicyModule    String
      */
     public String getLbPolicyModule() throws LbReaderException;
 }

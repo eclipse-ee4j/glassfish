@@ -41,7 +41,7 @@ public class SfulEJB implements Sful
 
     @ExcludeDefaultInterceptors
     public void cd() {
-        System.out.println("in SfulEJB:cd().  postConstruct = " + 
+        System.out.println("in SfulEJB:cd().  postConstruct = " +
                            postConstructCalled);
 
         if( !postConstructCalled ) {
@@ -82,16 +82,16 @@ public class SfulEJB implements Sful
     @ExcludeDefaultInterceptors
     @Interceptors({InterceptorE.class, InterceptorF.class})
     public void cdef() {}
-    
+
     @ExcludeDefaultInterceptors
     @ExcludeClassInterceptors
     public void nothing() {}
 
-    @Interceptors({InterceptorE.class, InterceptorF.class})    
+    @Interceptors({InterceptorE.class, InterceptorF.class})
     public void abcdef() {}
 
     // total ordering overridden in deployment descriptor
-    @Interceptors({InterceptorE.class, InterceptorF.class})    
+    @Interceptors({InterceptorE.class, InterceptorF.class})
     public void acbdfe() {}
 
     // declared in ejb-jar.xml
@@ -106,5 +106,5 @@ public class SfulEJB implements Sful
             throw new EJBException(e);
         }
     }
-    
+
 }

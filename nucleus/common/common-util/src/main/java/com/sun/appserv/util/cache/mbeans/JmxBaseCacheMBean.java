@@ -70,7 +70,7 @@ public interface JmxBaseCacheMBean {
     public Integer getRemovalCount();
 
     /**
-     * Returns the number of values that have been refreshed 
+     * Returns the number of values that have been refreshed
      * (replaced with a new value in an existing extry)
      */
     public Integer getRefreshCount();

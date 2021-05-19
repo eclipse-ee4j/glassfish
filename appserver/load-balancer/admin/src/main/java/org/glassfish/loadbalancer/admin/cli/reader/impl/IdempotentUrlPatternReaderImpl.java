@@ -61,10 +61,10 @@ public class IdempotentUrlPatternReaderImpl
 
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof IdempotentUrlPatternVisitor) {
-			IdempotentUrlPatternVisitor iv = (IdempotentUrlPatternVisitor) v;
-			iv.visit(this);
-		}
+        if (v instanceof IdempotentUrlPatternVisitor) {
+            IdempotentUrlPatternVisitor iv = (IdempotentUrlPatternVisitor) v;
+            iv.visit(this);
+        }
     }
     //---- PRIVATE VARS ------
     int _idx = 0;

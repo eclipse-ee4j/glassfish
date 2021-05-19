@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.deployment.xml;
 
-/** 
+/**
  * This interface holds all the XML tag names for a J2EE application
  * deployment descriptor.
  * @author Danny Coward

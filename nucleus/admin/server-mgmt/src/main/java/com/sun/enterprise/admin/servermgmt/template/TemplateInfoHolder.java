@@ -37,7 +37,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 public class TemplateInfoHolder {
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(TemplateInfoHolder.class);
-    //Path where schema resides. 
+    //Path where schema resides.
     private final static String TEMPLATE_INFO_SCHEMA_PATH = "xsd/schema/template-info.xsd";
     private TemplateInfo _templateInfo;
     private String _location;

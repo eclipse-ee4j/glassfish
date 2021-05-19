@@ -66,7 +66,7 @@ public interface ServerRef extends ConfigBeanProxy, Ref, Payload {
      * Gets the value of the disableTimeoutInMinutes property.
      *
      * The time, in minutes, that it takes this server to reach a quiescent state after having been disabled
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "30")

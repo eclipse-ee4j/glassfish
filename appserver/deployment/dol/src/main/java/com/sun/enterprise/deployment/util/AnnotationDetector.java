@@ -47,7 +47,7 @@ import java.net.URL;
  * @author Jerome Dochez
  */
 public class AnnotationDetector {
-    
+
     protected final ClassFile classFile;
     protected final AnnotationScanner scanner;
 
@@ -56,7 +56,7 @@ public class AnnotationDetector {
         ConstantPoolInfo poolInfo = new ConstantPoolInfo(scanner);
         classFile = new ClassFile(poolInfo);
     }
-    
+
     public boolean hasAnnotationInArchiveWithNoScanning(ReadableArchive archive) throws IOException {
         Types types = null;
         if (archive.getParentArchive() != null) {
@@ -113,16 +113,16 @@ public class AnnotationDetector {
                 if (containsAnnotation(archive, entryName)) {
                     return true;
                 }
-            } 
+            }
         }
         return false;
     }
 
     public boolean containsAnnotation(ReadableArchive archive, String entryName) throws IOException {
-        return containsAnnotation(archive.getEntry(entryName), archive.getEntrySize(entryName));    
+        return containsAnnotation(archive.getEntry(entryName), archive.getEntrySize(entryName));
     }
 
-    protected boolean containsAnnotation(InputStream is, long size) 
+    protected boolean containsAnnotation(InputStream is, long size)
         throws IOException {
         boolean result = false;
         // check if it contains top level annotations...

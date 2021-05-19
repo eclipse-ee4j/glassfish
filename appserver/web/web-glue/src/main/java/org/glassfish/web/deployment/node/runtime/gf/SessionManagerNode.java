@@ -25,7 +25,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 /**
-* superclass node for WebProperty container 
+* superclass node for WebProperty container
 *
 * @author Jerome Dochez
 */
@@ -56,17 +56,17 @@ public class SessionManagerNode extends RuntimeDescriptorNode<SessionManager> {
 
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
-	RuntimeDescriptor descriptor = getDescriptor();
-	if (element.getQName().equals(RuntimeTagNames.PERSISTENCE_TYPE)) {
-	    descriptor.setAttributeValue(SessionManager.PERSISTENCE_TYPE, value);
-	}
-    }   
+        RuntimeDescriptor descriptor = getDescriptor();
+        if (element.getQName().equals(RuntimeTagNames.PERSISTENCE_TYPE)) {
+            descriptor.setAttributeValue(SessionManager.PERSISTENCE_TYPE, value);
+        }
+    }
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -78,27 +78,27 @@ public class SessionManagerNode extends RuntimeDescriptorNode<SessionManager> {
      */
     @Override
     public Node writeDescriptor(Node parent, String nodeName, SessionManager descriptor) {
-	
-	Element sessionMgr = (Element) super.writeDescriptor(parent, nodeName, descriptor);
-	
-	// manager-properties?
-	if (descriptor.getManagerProperties()!=null) {
-	    WebPropertyNode wpn = new WebPropertyNode();
-	    Node mgrProps = appendChild(sessionMgr, RuntimeTagNames.MANAGER_PROPERTIES);
-	    wpn.writeDescriptor(mgrProps, RuntimeTagNames.PROPERTY, descriptor.getManagerProperties().getWebProperty());
-	}
-	
-	// store-properties?
-	if (descriptor.getStoreProperties()!=null) {
-	    WebPropertyNode wpn = new WebPropertyNode();
-	    Node storeProps = appendChild(sessionMgr, RuntimeTagNames.STORE_PROPERTIES);
-	    wpn.writeDescriptor(storeProps, RuntimeTagNames.PROPERTY, descriptor.getStoreProperties().getWebProperty());
-	}
-	
-	// persistence-type?
-	setAttribute(sessionMgr, RuntimeTagNames.PERSISTENCE_TYPE, (String) descriptor.getAttributeValue(SessionManager.PERSISTENCE_TYPE));
-	
-	return sessionMgr;
+        Element sessionMgr = (Element) super.writeDescriptor(parent, nodeName, descriptor);
+
+        // manager-properties?
+        if (descriptor.getManagerProperties() != null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node mgrProps = appendChild(sessionMgr, RuntimeTagNames.MANAGER_PROPERTIES);
+            wpn.writeDescriptor(mgrProps, RuntimeTagNames.PROPERTY, descriptor.getManagerProperties().getWebProperty());
+        }
+
+        // store-properties?
+        if (descriptor.getStoreProperties() != null) {
+            WebPropertyNode wpn = new WebPropertyNode();
+            Node storeProps = appendChild(sessionMgr, RuntimeTagNames.STORE_PROPERTIES);
+            wpn.writeDescriptor(storeProps, RuntimeTagNames.PROPERTY, descriptor.getStoreProperties().getWebProperty());
+        }
+
+        // persistence-type?
+        setAttribute(sessionMgr, RuntimeTagNames.PERSISTENCE_TYPE,
+            descriptor.getAttributeValue(SessionManager.PERSISTENCE_TYPE));
+
+        return sessionMgr;
     }
-	
+
 }

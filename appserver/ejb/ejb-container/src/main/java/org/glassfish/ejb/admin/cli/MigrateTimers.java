@@ -57,8 +57,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 @TargetType(value = {CommandTarget.DAS, CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="migrate-timers", 
+        opType=RestEndpoint.OpType.POST,
+        path="migrate-timers",
         description="Migrate Timers")
 })
 public class MigrateTimers implements AdminCommand {
@@ -112,15 +112,15 @@ public class MigrateTimers implements AdminCommand {
                 logger.info(localStrings.getString("migrate.timers.redirect",
                         target, params.toCommaSeparatedString()));
 
-                ClusterOperationUtil.replicateCommand("migrate-timers", 
+                ClusterOperationUtil.replicateCommand("migrate-timers",
                         FailurePolicy.Error, FailurePolicy.Error, FailurePolicy.Error,
                         Arrays.asList(new String[]{target}),
                         context, params, habitat);
                 return;
             }
-            
+
             int totalTimersMigrated = migrateTimers(fromServer);
-            report.setMessage(localStrings.getString("migrate.timers.count", 
+            report.setMessage(localStrings.getString("migrate.timers.count",
                     totalTimersMigrated, fromServer, target));
             report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         } catch (Exception e) {
@@ -141,7 +141,7 @@ public class MigrateTimers implements AdminCommand {
             return localStrings.getString(
                     "migrate.timers.migrateFromServerStillRunning", fromServer);
         }
-        
+
         //if destinationServer is not set, or set to DAS, pick a running instance
         //in the same cluster as fromServer
         if(target.equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -170,7 +170,7 @@ public class MigrateTimers implements AdminCommand {
                 return localStrings.getString("migrate.timers.destinationServerIsNotAlive", target);
             }
         }
-        
+
         return null;
     }
 

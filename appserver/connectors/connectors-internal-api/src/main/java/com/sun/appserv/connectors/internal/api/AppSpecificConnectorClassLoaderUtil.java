@@ -310,7 +310,7 @@ public class AppSpecificConnectorClassLoaderUtil {
         if(appInfo != null){
 
             com.sun.enterprise.config.serverbeans.Application app =
-                    appInfo.getTransientAppMetaData(com.sun.enterprise.config.serverbeans.ServerTags.APPLICATION, 
+                    appInfo.getTransientAppMetaData(com.sun.enterprise.config.serverbeans.ServerTags.APPLICATION,
                     com.sun.enterprise.config.serverbeans.Application.class);
             Resources resources = null;
             if(app != null){

@@ -36,7 +36,7 @@ final class ParentChildren implements Comparable<ParentChildren> {
     public void sortChildren() {
         Collections.sort(mChildren);
     }
-    
+
     @Override
     public boolean equals(final Object rhs) {
         return rhs instanceof ParentChildren ? compareTo((ParentChildren)rhs) == 0 : false;

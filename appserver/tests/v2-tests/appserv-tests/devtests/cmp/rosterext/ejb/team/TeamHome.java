@@ -25,14 +25,14 @@ public interface TeamHome extends  jakarta.ejb.EJBHome   {
 
     public Team create (String id, String name, String city)
         throws CreateException, RemoteException;
-    
+
     public Team findByPrimaryKey (String id)
         throws FinderException, RemoteException;
 
-    public Collection findAll() 
+    public Collection findAll()
         throws FinderException, RemoteException;
-    
-    public Collection findByPlayerAndLeagueViaRemote(Player player, 
+
+    public Collection findByPlayerAndLeagueViaRemote(Player player,
                                             League league)
                                             throws FinderException, RemoteException;
 

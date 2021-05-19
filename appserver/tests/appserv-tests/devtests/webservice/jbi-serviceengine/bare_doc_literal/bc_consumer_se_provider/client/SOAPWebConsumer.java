@@ -28,41 +28,41 @@ public class SOAPWebConsumer {
     static CalculatorService service;
     private static SimpleReporterAdapter stat =
                 new SimpleReporterAdapter("appserv-tests");
-	private static String testId = "jbi-serviceengine/bare_doc_literal/bc_consumer_se_provider";
+        private static String testId = "jbi-serviceengine/bare_doc_literal/bc_consumer_se_provider";
     public static void main (String[] args) {
         stat.addDescription(testId);
-	SOAPWebConsumer client = new SOAPWebConsumer();
-	client.addUsingSOAPConsumer();
+        SOAPWebConsumer client = new SOAPWebConsumer();
+        client.addUsingSOAPConsumer();
         stat.printSummary(testId);
     }
 
     private void addUsingSOAPConsumer() {
-	com.example.calculator.Calculator port= null;
-	try {
+        com.example.calculator.Calculator port= null;
+        try {
 
-		System.out.println(" After creating CalculatorService");
+                System.out.println(" After creating CalculatorService");
 
                 port = service.getCalculatorPort();
-		System.out.println(" After getting port");
+                System.out.println(" After getting port");
 
-		// Get Stub
-		BindingProvider stub = (BindingProvider)port;
-		String endpointURI ="http://localhost:12011/calculatorendpoint";
-		stub.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
-		      endpointURI);
-		System.out.println(" After setting endpoint address URI");
-	        System.out.println(" Using SOAP binding's consumer to add 500 + 50 = " + port.add(50));
-	        stat.addStatus(testId, stat.PASS);
-		System.out.println(" No Exception thrown");
+                // Get Stub
+                BindingProvider stub = (BindingProvider)port;
+                String endpointURI ="http://localhost:12011/calculatorendpoint";
+                stub.getRequestContext().put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY,
+                      endpointURI);
+                System.out.println(" After setting endpoint address URI");
+                System.out.println(" Using SOAP binding's consumer to add 500 + 50 = " + port.add(50));
+                stat.addStatus(testId, stat.PASS);
+                System.out.println(" No Exception thrown");
 
-	} catch(Exception e) {
-		//e.printStackTrace();
-		if(e instanceof jakarta.xml.ws.soap.SOAPFaultException) 
-                	stat.addStatus(testId, stat.FAIL);
-		else {
-	        	stat.addStatus(testId, stat.FAIL);
-			System.out.println(" SOAPFaultException Not thrown");
-		}
-	}
+        } catch(Exception e) {
+                //e.printStackTrace();
+                if(e instanceof jakarta.xml.ws.soap.SOAPFaultException)
+                        stat.addStatus(testId, stat.FAIL);
+                else {
+                        stat.addStatus(testId, stat.FAIL);
+                        System.out.println(" SOAPFaultException Not thrown");
+                }
+        }
     }
 }

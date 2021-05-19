@@ -94,7 +94,7 @@ public class WrongTransport extends BaseDevTest {
         report("delete-http-redirect", asadmin("delete-protocol",
             "http-redirect"));
     }
-    
+
     private void checkStatus(HttpURLConnection connection)
         throws Exception {
         int responseCode = connection.getResponseCode();

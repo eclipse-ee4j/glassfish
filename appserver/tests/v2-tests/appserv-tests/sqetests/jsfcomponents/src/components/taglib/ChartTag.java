@@ -25,7 +25,7 @@ import jakarta.faces.webapp.UIComponentTag;
 
 
 /**
- * <p><strong>ChartTag</strong> is the tag handler that processes the 
+ * <p><strong>ChartTag</strong> is the tag handler that processes the
  * <code>chart</code> custom tag.</p>
  */
 
@@ -65,12 +65,12 @@ public class ChartTag extends UIComponentTag {
     public void setOrientation(String orientation) {
         this.orientation = orientation;
     }
-    
+
     private String value = null;
     public void setValue(String value) {
         this.value = value;
     }
-    
+
     /**
      * <p>The type of chart.  Values can be "bar" or "pie".
      */
@@ -152,7 +152,7 @@ public class ChartTag extends UIComponentTag {
     protected void setProperties(UIComponent component) {
         super.setProperties(component);
         ChartComponent chart = (ChartComponent) component;
-       
+
         if (width != null) {
             if (isValueReference(width)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -162,7 +162,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setWidth(width);
             }
         }
-        
+
         if (height != null) {
             if (isValueReference(height)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -172,7 +172,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setHeight(height);
             }
         }
-        
+
         if (orientation != null) {
             if (isValueReference(orientation)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -182,7 +182,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setOrientation(orientation);
             }
         }
-        
+
         if (type != null) {
             if (isValueReference(type)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -192,7 +192,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setType(type);
             }
         }
-        
+
         if (value != null) {
             if (isValueReference(value)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -202,7 +202,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setValue(value);
             }
         }
-        
+
         if (title != null) {
             if (isValueReference(title)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -212,7 +212,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setTitle(title);
             }
         }
-        
+
         if (xlabel != null) {
             if (isValueReference(xlabel)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()
@@ -222,7 +222,7 @@ public class ChartTag extends UIComponentTag {
                 chart.setXlabel(xlabel);
             }
         }
-        
+
         if (ylabel != null) {
             if (isValueReference(ylabel)) {
                 ValueBinding vb = FacesContext.getCurrentInstance()

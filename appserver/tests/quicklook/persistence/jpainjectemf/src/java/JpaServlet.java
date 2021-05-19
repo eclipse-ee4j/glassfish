@@ -30,7 +30,7 @@ public class JpaServlet extends HttpServlet {
     private EntityManagerFactory emf;
     private EntityManager em;
     private @Resource UserTransaction utx;
-    
+
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/plain");
         PrintWriter out = response.getWriter();
@@ -47,25 +47,25 @@ public class JpaServlet extends HttpServlet {
         if (testcase != null) {
           JpaTest jt = new JpaTest(emf, em, utx, out);
 
-	  try {
+      try {
 
-	    if ("llinit".equals(testcase)) {
+        if ("llinit".equals(testcase)) {
                  status = jt.lazyLoadingInit();
-	    } else if ("llfind".equals(testcase)) {
+        } else if ("llfind".equals(testcase)) {
                  status = jt.lazyLoadingByFind(1);
-	    } else if ("llquery".equals(testcase)) {
+        } else if ("llquery".equals(testcase)) {
                  status = jt.lazyLoadingByQuery("Carla");
-	    } 
+        }
             if (status) {
-	      out.println(testcase+":pass");
-	    } else {
-	      out.println(testcase+":fail");
-	    }
-	  } catch (Exception ex) {
+          out.println(testcase+":pass");
+        } else {
+          out.println(testcase+":fail");
+        }
+      } catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("servlet test failed");
             throw new ServletException(ex);
-	  } 
-	}
+      }
+    }
     }
 }

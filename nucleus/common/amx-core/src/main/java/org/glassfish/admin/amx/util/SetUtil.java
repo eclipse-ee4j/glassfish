@@ -50,13 +50,13 @@ public final class SetUtil
             set.add(item);
         }
     }
-    
-    
+
+
     public static <T> Set<T> newSet()
     {
         return new HashSet<T>();
     }
-    
+
 
     public static <T> Set<T> newSet(final Collection<T> c)
     {
@@ -110,7 +110,7 @@ public final class SetUtil
     final T m2,
     final T m3 )
     {
-    final HashSet<T>	set	= new HashSet<T>();
+    final HashSet<T>        set        = new HashSet<T>();
 
     set.add( m1 );
     set.add( m2 );

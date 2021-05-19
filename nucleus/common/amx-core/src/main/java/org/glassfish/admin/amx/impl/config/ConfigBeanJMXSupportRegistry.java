@@ -37,13 +37,13 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 final class ConfigBeanJMXSupportRegistry
 {
     private ConfigBeanJMXSupportRegistry() {}
-    
+
     /**
         Map an interface to its helper.
      */
     private static final ConcurrentMap<Class<? extends ConfigBeanProxy>,ConfigBeanJMXSupport>  INSTANCES =
         new ConcurrentHashMap<Class<? extends ConfigBeanProxy>,ConfigBeanJMXSupport>();
-    
+
     /**
      */
         public static ConfigBeanJMXSupport
@@ -53,7 +53,7 @@ final class ConfigBeanJMXSupportRegistry
         {
             throw new IllegalArgumentException("null ConfigBeanProxy interface passed in" );
         }
-        
+
         ConfigBeanJMXSupport helper = INSTANCES.get(intf);
         if ( helper == null )
         {
@@ -62,13 +62,13 @@ final class ConfigBeanJMXSupportRegistry
         }
         return helper;
     }
-    
-    
+
+
     public static synchronized  List<Class<? extends ConfigBeanProxy>> getConfiguredClasses()
     {
         return new ArrayList<Class<? extends ConfigBeanProxy>>( INSTANCES.keySet() );
     }
-    
+
         public static ConfigBeanJMXSupport
     getInstance( final ConfigBean configBean )
     {
@@ -79,7 +79,7 @@ final class ConfigBeanJMXSupportRegistry
         }
         return helper;
     }
-    
+
         private static synchronized ConfigBeanJMXSupport
     addInstance( final ConfigBean configBean )
     {
@@ -92,7 +92,7 @@ final class ConfigBeanJMXSupportRegistry
         }
         return helper;
     }
-    
+
     /** Find all  ConfigBeanProxy interfaces  reachable from specified item, including the item itself */
         public static Set<Class<? extends ConfigBeanProxy>>
     getAllConfigBeanProxyInterfaces( final ConfigBeanJMXSupport top) {

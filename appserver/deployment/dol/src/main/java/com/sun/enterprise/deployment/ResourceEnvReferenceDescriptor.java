@@ -23,7 +23,7 @@ import com.sun.enterprise.deployment.util.DOLUtils;
  * @author Kenneth Saks
  */
 
-public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implements NamedDescriptor, ResourceEnvReference { 
+public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implements NamedDescriptor, ResourceEnvReference {
 
     static private final int NULL_HASH_CODE = Integer.valueOf(1).hashCode();
 
@@ -44,7 +44,7 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implemen
 
     public ResourceEnvReferenceDescriptor() {
     }
-    
+
     public ResourceEnvReferenceDescriptor(String name, String description, String refType) {
         super(name, "", description);
         this.refType = refType;
@@ -82,7 +82,7 @@ public class ResourceEnvReferenceDescriptor extends EnvironmentProperty implemen
     public ManagedBeanDescriptor getManagedBeanDescriptor() {
         return managedBeanDesc;
     }
-    
+
    /**
     * Return the jndi name of the destination to which I refer.
     */

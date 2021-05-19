@@ -60,12 +60,12 @@ public class DirectCreationTest extends ConfigPersistence {
     public ServiceLocator getBaseServiceLocator() {
         return habitat;
     }
-    
+
     @Override
     public ServiceLocator getHabitat() {
-    	return getBaseServiceLocator();
+            return getBaseServiceLocator();
     }
-    
+
     public void doTest() throws TransactionFailure {
 
         AdminService service = habitat.getService(AdminService.class);
@@ -82,9 +82,9 @@ public class DirectCreationTest extends ConfigPersistence {
         ConfigSupport support = getBaseServiceLocator().getService(ConfigSupport.class);
 
         assertNotNull("ConfigSupport not found", support);
-        
+
         for (Class<?> subType : subTypes) {
-        	
+
             // TODO:  JL force compilation error to mark this probably edit point for grizzly config
             if (subType.getName().endsWith("DasConfig")) {
                 Map<String, String> configChanges = new HashMap<String, String>();

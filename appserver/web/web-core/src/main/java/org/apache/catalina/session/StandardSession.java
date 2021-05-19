@@ -109,7 +109,7 @@ public class StandardSession
     /**
      * The string used in the name for setAttribute and removeAttribute
      * to signify on-demand sync
-     */    
+     */
     protected static final String SYNC_STRING = "com.sun.sync";
     //end HERCULES:add
 
@@ -168,7 +168,7 @@ public class StandardSession
     /**
      * The collection of user data attributes associated with this Session.
      */
-    protected Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();    
+    protected Map<String, Object> attributes = new ConcurrentHashMap<String, Object>();
 
     /**
      * The authentication type used to authenticate our cached Principal,
@@ -370,7 +370,7 @@ public class StandardSession
         if (manager != null)
             manager.add(this);
 
-        
+
         // Notify interested session event listeners
         if (oldId == null) { // the session is just created
             tellNew();
@@ -519,11 +519,11 @@ public class StandardSession
         return (this.lastAccessedTime);
 
     }
-    
+
 
     // START SJSAS 6470831
     /**
-     * Same as getLastAccessedTime(), except that there is no call to 
+     * Same as getLastAccessedTime(), except that there is no call to
      * isValid(), which may expire the session and cause any subsequent
      * session access to throw an IllegalStateException.
      */
@@ -532,17 +532,17 @@ public class StandardSession
     }
     // END SJSAS 6470831
 
-    
+
     /**
      * Set the last time the client sent a request associated with this
      * session, as the number of milliseconds since midnight, January 1, 1970
      * GMT.  Actions that your application takes, such as getting or setting
      * a value associated with the session, do not affect the access time.
      * HERCULES: added method
-     */	
+     */
     public void setLastAccessedTime(long lastAcessedTime) {
         this.lastAccessedTime = lastAcessedTime;
-    }    
+    }
 
 
     /**
@@ -677,7 +677,7 @@ public class StandardSession
         }
 
         /* SJSAS 6329289
-        if (maxInactiveInterval >= 0) { 
+        if (maxInactiveInterval >= 0) {
             long timeNow = System.currentTimeMillis();
             int timeIdle = (int) ((timeNow - thisAccessedTime) / 1000L);
             if (timeIdle >= maxInactiveInterval) {
@@ -696,9 +696,9 @@ public class StandardSession
 
     // START CR 6363689
     public boolean getIsValid() {
-        return this.isValid; 
-    }    
-    // END CR 6363689    
+        return this.isValid;
+    }
+    // END CR 6363689
 
     /**
      * Set the <code>isValid</code> flag for this session.
@@ -710,9 +710,9 @@ public class StandardSession
         this.isValid = isValid;
         //SJSAS 6406580 START
         if (!isValid && (getManager() instanceof PersistentManagerBase)) {
-            ((PersistentManagerBase) getManager()).addToInvalidatedSessions(this.id);            
+            ((PersistentManagerBase) getManager()).addToInvalidatedSessions(this.id);
         }
-        //SJSAS 6406580 END        
+        //SJSAS 6406580 END
     }
 
 
@@ -761,7 +761,7 @@ public class StandardSession
         expire(true);
 
     }
-    
+
     /**
      * Perform the internal processing required to invalidate this session,
      * without triggering an exception if the session has already expired.
@@ -772,7 +772,7 @@ public class StandardSession
     public void expire(boolean notify) {
         expire(notify, true);
     }
-    
+
     /**
      * Perform the internal processing required to invalidate this session,
      * without triggering an exception if the session has already expired.
@@ -794,7 +794,7 @@ public class StandardSession
                 return;
 
             expiring = true;
-        
+
             // Notify interested application event listeners
             // FIXME - Assumes we call listeners in reverse order
 
@@ -874,7 +874,7 @@ public class StandardSession
                 average = ((average * (numExpired-1)) + timeAlive)/numExpired;
                 manager.setSessionAverageAliveTimeSeconds(average);
             }
-            
+
             // Remove this session from our manager's active sessions
             if(persistentRemove) {
                 manager.remove(this);
@@ -882,14 +882,14 @@ public class StandardSession
                 if(manager instanceof PersistentManagerBase) {
                     ((PersistentManagerBase)manager).remove(this, false);
                 }
-            }            
+            }
 
             /*
              * Mark session as expired *before* removing its attributes, so
              * that its HttpSessionBindingListener objects will get an
              * IllegalStateException when accessing the session attributes
              * from within their valueUnbound() method
-             */ 
+             */
             expiring = false;
 
             // Unbind any objects associated with this session
@@ -905,8 +905,8 @@ public class StandardSession
 
         }
 
-    }    
-    
+    }
+
     /**
      * Perform the internal processing required to passivate
      * this session.
@@ -1061,28 +1061,28 @@ public class StandardSession
     // END SJSAS 6329289
 
 
-    /** 
+    /**
      * Increments the version number
      */
     public long incrementVersion() {
         return version.incrementAndGet();
-    } 
+    }
 
-    
-    /** 
+
+    /**
      * Gets the version number
-     */    
+     */
     public long getVersion() {
         return version.get();
     }
-    
 
-    /** 
+
+    /**
      * Sets the version number
-     */    
+     */
     public void setVersion(long value) {
         version.set(value);
-    }    
+    }
 
 
     /**
@@ -1144,7 +1144,7 @@ public class StandardSession
         sb.append("StandardSession[");
         sb.append(id);
         sb.append("]");
-        
+
         if (this.isValid) {
             Enumeration<String> attrNamesEnum = getAttributeNames();
             while(attrNamesEnum.hasMoreElements()) {
@@ -1341,10 +1341,10 @@ public class StandardSession
         return (keys());
 
     }
-    
-    
+
+
 // ------------------------session locking --HERCULES:add-------------------
-    
+
     /**
      * get this session locked for foreground
      * if the session is found to be presently background
@@ -1352,12 +1352,12 @@ public class StandardSession
      * waits for background lock to clear
      * after 6 attempts (12.6 seconds) it unlocks the
      * session and acquires the foreground lock
-     */         
+     */
     protected boolean getSessionLockForForeground() {
         boolean result = false;
-        StandardSession sess = (StandardSession) this;       
+        StandardSession sess = (StandardSession) this;
         //now lock the session
-        //System.out.println("IN LOCK_SESSION_FOR_FOREGROUND: sess =" + sess);        
+        //System.out.println("IN LOCK_SESSION_FOR_FOREGROUND: sess =" + sess);
         long pollTime = 200L;
         int tryNumber = 0;
         int numTries = 7;
@@ -1380,30 +1380,30 @@ public class StandardSession
                 //unlock the background so we can take over
                 //FIXME: need to log warning for this situation
                 sess.unlockBackground();
-            }              
+            }
         }
         //System.out.println("finished locking session: sess =" + sess);
         //System.out.println("LOCK = " + sess.getSessionLock());
         return result;
-    } 
-     
+    }
+
     /**
      * return whether this session is currently foreground locked
-     */    
+     */
     public boolean isForegroundLocked() {
         //in this case we are not using locks
         //so just return false
         if(_sessionLock == null)
-            return false;        
+            return false;
         synchronized(sessionLockMonitor) {
             return _sessionLock.isForegroundLocked();
-        } 
-    }    
-    
+        }
+    }
+
     /**
      * lock the session for foreground
      * returns true if successful; false if unsuccessful
-     */       
+     */
     public boolean lockBackground() {
         //in this case we are not using locks
         //so just return true
@@ -1413,11 +1413,11 @@ public class StandardSession
             return _sessionLock.lockBackground();
         }
     }
-    
+
     /**
      * lock the session for background
      * returns true if successful; false if unsuccessful
-     */     
+     */
     public boolean lockForeground() {
         //in this case we are not using locks
         //so just return true
@@ -1427,11 +1427,11 @@ public class StandardSession
             return _sessionLock.lockForeground();
         }
     }
-    
+
     /**
      * unlock the session completely
      * irregardless of whether it was foreground or background locked
-     */     
+     */
     public void unlockForegroundCompletely() {
         //in this case we are not using locks
         //so just return true
@@ -1441,10 +1441,10 @@ public class StandardSession
             _sessionLock.unlockForegroundCompletely();
         }
     }
-    
+
     /**
      * unlock the session from foreground
-     */      
+     */
     public void unlockForeground() {
         //in this case we are not using locks
         //so just return true
@@ -1453,11 +1453,11 @@ public class StandardSession
         synchronized(sessionLockMonitor) {
             _sessionLock.unlockForeground();
         }
-    } 
-    
+    }
+
     /**
      * unlock the session from background
-     */     
+     */
     public void unlockBackground() {
         //in this case we are not using locks
         //so just return true
@@ -1466,27 +1466,27 @@ public class StandardSession
         synchronized(sessionLockMonitor) {
             _sessionLock.unlockBackground();
         }
-    }    
+    }
 
     /**
      * return the Session lock
-     */     
+     */
     public SessionLock getSessionLock() {
         return _sessionLock;
-    }    
-    
+    }
+
     /**
      * set the Session lock
      * @param sessionLock
-     */     
+     */
     public void setSessionLock(SessionLock sessionLock) {
         _sessionLock = sessionLock;
     }
-    
+
     /**
      * @return true if this session has been locked by any
      * out-of-band (i.e., non-http) request, false otherwise
-     */      
+     */
     public boolean hasNonHttpLockOccurred() {
         //in this case we are not using locks
         //so just return false
@@ -1501,8 +1501,8 @@ public class StandardSession
 
     protected final Object sessionLockMonitor = new Object();
 
-// ------------------------end session locking ---HERCULES:add--------        
-    
+// ------------------------end session locking ---HERCULES:add--------
+
 
 
     /**
@@ -1528,7 +1528,7 @@ public class StandardSession
             this.unlockForeground();
         }
 
-    } 
+    }
 
 
     /**
@@ -1611,12 +1611,12 @@ public class StandardSession
      * @param notify Should we notify interested listeners that this
      *  attribute is being removed?
      * @param checkValid Indicates whether IllegalStateException must be
-     * thrown if session has already been invalidated 
+     * thrown if session has already been invalidated
      *
      * @exception IllegalStateException if this method is called on an
      *  invalidated session
      */
-    public void removeAttribute(String name, boolean notify, 
+    public void removeAttribute(String name, boolean notify,
                                 boolean checkValid) {
 
         if (name == null) return;
@@ -1650,16 +1650,16 @@ public class StandardSession
                     ContainerEvent.AFTER_SESSION_VALUE_UNBOUND, null);
             }
         }
-        
+
         // Notify special event listeners on removeAttribute
         //HERCULES:add
-        // fire container event        
+        // fire container event
         context.fireContainerEvent("sessionRemoveAttributeCalled", event);
         // fire sync container event if name equals SYNC_STRING
         if (SYNC_STRING.equals(name)) {
             context.fireContainerEvent("sessionSync",  (new HttpSessionBindingEvent(getSession(), name)));
-        }         
-        //END HERCULES:add         
+        }
+        //END HERCULES:add
 
         // Notify interested application event listeners
         List<EventListener> listeners = context.getApplicationEventListeners();
@@ -1796,7 +1796,7 @@ public class StandardSession
                 log(rb.getString(LogFacade.SESSION_BINDING_EVENT_LISTENER_EXCEPTION), t);
             }
         }
-        
+
         //HERCULES:add
         // fire sync container event if name equals SYNC_STRING
         if (SYNC_STRING.equals(name)) {
@@ -2067,7 +2067,7 @@ public class StandardSession
         for (int i = 0; i < keys.length; i++) {
             Object value = attributes.get(keys[i]);
             if (value == null) {
-                continue;            
+                continue;
 
             //HERCULES:mod
             /* original PE code next 4 lines
@@ -2075,16 +2075,16 @@ public class StandardSession
                 saveNames.add(keys[i]);
                 saveValues.add(value);
             }
-             */ 
+             */
             //original Hercules code was next line
             //else if (value instanceof Serializable || value instanceof jakarta.ejb.EJBLocalObject || value instanceof javax.naming.Context || value instanceof jakarta.ejb.EJBLocalHome ) { //Bug 4853798
             //FIXME: IndirectlySerializable includes more than 3 classes in Hercules code
             //need to explore implications of this
 
-            } else if (isSerializable(value)) {    
+            } else if (isSerializable(value)) {
                 saveNames.add(keys[i]);
                 saveValues.add(value);
-            //end HERCULES:mod             
+            //end HERCULES:mod
             } else {
                 removeAttribute(keys[i], true, true);
             }
@@ -2096,7 +2096,7 @@ public class StandardSession
         for (int i = 0; i < n; i++) {
             stream.writeObject(saveNames.get(i));
             //HERCULES:mod
-            /* orignal PE code            
+            /* orignal PE code
             try {
                 stream.writeObject(saveValues.get(i));
                 if (debug >= 2)
@@ -2112,35 +2112,36 @@ public class StandardSession
                         "' with value NOT_SERIALIZED");
             }
              *end original PE code
-             */ 
-            
+             */
+
             //following is replacement code from Hercules
             try {
                 stream.writeObject(saveValues.get(i));
-                if (debug >= 2)
-                    log("  storing attribute '" + saveNames.get(i) +
-                        "' with value '" + saveValues.get(i) + "'");
+                if (debug >= 2) {
+                    log("  storing attribute '" + saveNames.get(i) + "' with value '" + saveValues.get(i) + "'");
+                }
             } catch (NotSerializableException e) {
                 String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_SERIALIZE_SESSION_EXCEPTION),
-                                                  new Object[] {saveNames.get(i), id});
+                    new Object[] {saveNames.get(i), id});
                 log(msg, e);
                 stream.writeObject(NOT_SERIALIZED);
-                if (debug >= 2)
-                    log("  storing attribute '" + saveNames.get(i) +
-                        "' with value NOT_SERIALIZED");
+                if (debug >= 2) {
+                    log("  storing attribute '" + saveNames.get(i) + "' with value NOT_SERIALIZED");
+                }
             } catch (IOException ioe) {
-		if ( ioe.getCause() instanceof NotSerializableException ) {
-                String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_SERIALIZE_SESSION_EXCEPTION),
-                                                  new Object[] {saveNames.get(i), id});
-                	log(msg, ioe);
-                	stream.writeObject(NOT_SERIALIZED);
-                	if (debug >= 2)
-                    		log("  storing attribute '" + saveNames.get(i) +
-                        	"' with value NOT_SERIALIZED");
-		} else 
-			throw ioe;
-	    }
-            //end HERCULES:mod
+                if (ioe.getCause() instanceof NotSerializableException) {
+                    String msg = MessageFormat.format(rb.getString(LogFacade.CANNOT_SERIALIZE_SESSION_EXCEPTION),
+                        new Object[] {saveNames.get(i), id});
+                    log(msg, ioe);
+                    stream.writeObject(NOT_SERIALIZED);
+                    if (debug >= 2) {
+                        log("  storing attribute '" + saveNames.get(i) + "' with value NOT_SERIALIZED");
+                    }
+                } else {
+                    throw ioe;
+                }
+            }
+            // end HERCULES:mod
         }
 
         stream.writeObject(sipAppSessionId);
@@ -2167,9 +2168,9 @@ public class StandardSession
 
     protected void evaluateIfValid() {
         /*
-	 * If this session has expired or is in the process of expiring or
-	 * will never expire, return
-	 */
+         * If this session has expired or is in the process of expiring or
+         * will never expire, return
+         */
         if (!this.isValid || expiring || maxInactiveInterval < 0)
             return;
 
@@ -2209,7 +2210,7 @@ public class StandardSession
         containerEventMethod.invoke(context, containerEventParams);
 
     }
-                                      
+
 
 
     /**
@@ -2313,7 +2314,7 @@ public class StandardSession
      * corresponding instances of SerializableJNDIContext during serialization
      * (this is done by the specialized object outputstream returned by
      * the JavaEEObjectStreamFactory mechanism).
-     * 
+     *
      * @return true if the given value may be serialized, false otherwise
      */
     static boolean isSerializable(Object value) {

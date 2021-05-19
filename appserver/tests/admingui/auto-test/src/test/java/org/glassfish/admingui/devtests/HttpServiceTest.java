@@ -22,12 +22,12 @@ import org.openqa.selenium.By;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
 public class HttpServiceTest extends BaseSeleniumTestClass {
-    
+
     @Test
     public void testHttpService() {
         gotoDasPage();
@@ -39,10 +39,10 @@ public class HttpServiceTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:configurations:server-config:httpService:httpService_link");
         if(!driver.findElement(By.id("form1:propertySheet:http:acLog:ssoEnabled")).isSelected())
             clickByIdAction("form1:propertySheet:http:acLog:ssoEnabled");
-        
+
         if(!driver.findElement(By.id("form1:propertySheet:accessLog:acLog:accessLoggingEnabled")).isSelected())
             clickByIdAction("form1:propertySheet:accessLog:acLog:accessLoggingEnabled");
-        
+
         setFieldValue("form1:propertySheet:accessLog:intervalProp:Interval", interval);
         setFieldValue("form1:propertySheet:accessLog:MaxHistoryFiles:MaxHistoryFiles", maxFiles);
         setFieldValue("form1:propertySheet:accessLog:accessLogBufferSize:accessLogBufferSize", bufferSize);
@@ -56,7 +56,7 @@ public class HttpServiceTest extends BaseSeleniumTestClass {
         setFieldValue("form1:basicTable:rowGroup1:0:col4:col1St", "description");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:httpService:httpService_link");
         assertEquals(true, driver.findElement(By.id("form1:propertySheet:http:acLog:ssoEnabled")).isSelected());
@@ -65,7 +65,7 @@ public class HttpServiceTest extends BaseSeleniumTestClass {
         assertEquals(bufferSize, getValue("form1:propertySheet:accessLog:accessLogBufferSize:accessLogBufferSize", "value"));
         assertEquals(logWriteInterval, getValue("form1:propertySheet:accessLog:accessLogWriteInterval:accessLogWriteInterval", "value"));
         assertTableRowCount("form1:basicTable", count);
-        
+
         //delete the property used to test
         clickByIdAction("form1:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("form1:basicTable:topActionsGroup1:button1");

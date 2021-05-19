@@ -27,10 +27,10 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
 
 public interface SCODate extends SCO
 {
-	/**
-	 * Sets initial date value without notifying the owner object
-	 *
-	 * @param time in milliseconds
-	 */
-	void setTimeInternal(long time);
+    /**
+     * Sets initial date value without notifying the owner object
+     *
+     * @param time in milliseconds
+     */
+    void setTimeInternal(long time);
 }

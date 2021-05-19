@@ -69,8 +69,8 @@ public class ContextManagerImplUnitTest {
     new Expectations(){
 
       // We expect ContextManagerImpl to call getScopeAwareContextMap, but
-      // we also need that method to return a ContextMap instance so 
-      // we tell the mocking framework to return an instance. 
+      // we also need that method to return a ContextMap instance so
+      // we tell the mocking framework to return an instance.
       ContextMapHelper expectationsRefContextMapHelper;
       {
         expectationsRefContextMapHelper.getScopeAwareContextMap(); returns(mockedContextMap,null,null);

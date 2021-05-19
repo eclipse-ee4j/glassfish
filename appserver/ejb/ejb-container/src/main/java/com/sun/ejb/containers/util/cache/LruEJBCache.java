@@ -58,7 +58,7 @@ public class LruEJBCache extends LruCache {
         } else {
             tail = head = null;
         }
-        
+
         if (trimItem != null) {
             trimItem.setTrimmed(true);
             trimItem.setLPrev(null);

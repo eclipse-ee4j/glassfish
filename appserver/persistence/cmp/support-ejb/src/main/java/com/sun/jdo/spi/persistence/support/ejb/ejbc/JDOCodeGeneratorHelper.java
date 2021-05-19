@@ -32,7 +32,7 @@ import com.sun.enterprise.deployment.EjbBundleDescriptor;
 import org.glassfish.persistence.common.I18NHelper;
 
 /*
- * This is the helper class for JDO code generation 
+ * This is the helper class for JDO code generation
  *
  */
 public class JDOCodeGeneratorHelper {
@@ -80,7 +80,7 @@ public class JDOCodeGeneratorHelper {
             getModuleName(bundle)));
     }
 
-    /** 
+    /**
      * Create GeneratorException for this message key.
      * @param key the message key in the bundle.
      * @param bundle the ejb bundle.
@@ -93,11 +93,11 @@ public class JDOCodeGeneratorHelper {
         return new GeneratorException(I18NHelper.getMessage(
             messages, key,
             bundle.getApplication().getRegistrationName(),
-            getModuleName(bundle), 
+            getModuleName(bundle),
             e.getMessage()));
     }
 
-    /** 
+    /**
      * Create GeneratorException for this message key and bean name.
      * @param key the message key in the bundle.
      * @param bundle the ejb bundle.
@@ -121,7 +121,7 @@ public class JDOCodeGeneratorHelper {
      * @return GeneratorException.
      */
     public static GeneratorException createGeneratorException(
-            String key, String beanName, EjbBundleDescriptor bundle, 
+            String key, String beanName, EjbBundleDescriptor bundle,
             Exception e) {
 
         return createGeneratorException(key, beanName, bundle, e.getMessage());
@@ -138,7 +138,7 @@ public class JDOCodeGeneratorHelper {
      * @return GeneratorException.
      */
     public static GeneratorException createGeneratorException(
-            String key, String beanName, EjbBundleDescriptor bundle,  
+            String key, String beanName, EjbBundleDescriptor bundle,
             Exception e, StringBuffer buf) {
 
         String msg = (buf == null) ?
@@ -156,13 +156,13 @@ public class JDOCodeGeneratorHelper {
      * @return GeneratorException.
      */
     public static GeneratorException createGeneratorException(
-            String key, String beanName, EjbBundleDescriptor bundle, 
+            String key, String beanName, EjbBundleDescriptor bundle,
             String msg) {
 
         return new GeneratorException(I18NHelper.getMessage(
             messages, key,
             new Object[] {
-                beanName, 
+                beanName,
                 bundle.getApplication().getRegistrationName(),
                 getModuleName(bundle),
                 msg}

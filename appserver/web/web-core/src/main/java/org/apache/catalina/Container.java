@@ -206,10 +206,10 @@ public interface Container {
     /**
      * Get the delay between the invocation of the backgroundProcess method on
      * this container and its children. Child containers will not be invoked
-     * if their delay value is not negative (which would mean they are using 
-     * their own thread). Setting this to a positive value will cause 
-     * a thread to be spawn. After waiting the specified amount of time, 
-     * the thread will invoke the executePeriodic method on this container 
+     * if their delay value is not negative (which would mean they are using
+     * their own thread). Setting this to a positive value will cause
+     * a thread to be spawn. After waiting the specified amount of time,
+     * the thread will invoke the executePeriodic method on this container
      * and all its children.
      */
     int getBackgroundProcessorDelay();
@@ -218,8 +218,8 @@ public interface Container {
     /**
      * Set the delay between the invocation of the execute method on this
      * container and its children.
-     * 
-     * @param delay The delay in seconds between the invocation of 
+     *
+     * @param delay The delay in seconds between the invocation of
      *              backgroundProcess methods
      */
     void setBackgroundProcessorDelay(int delay);

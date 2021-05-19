@@ -27,14 +27,14 @@ import jakarta.ejb.TransactionAttributeType;
     targetNamespace="http://example.web.service/Calculator"
 )
 public class Calculator {
-	public Calculator() {}
+        public Calculator() {}
 
-	@TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
-	@WebMethod(operationName="add", action="urn:Add")
-	public int add(int i, int j) {
+        @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
+        @WebMethod(operationName="add", action="urn:Add")
+        public int add(int i, int j) {
                 int k = i +j ;
                 System.out.println(i + "+" + j +" = " + k);
- 
-		return k;
-	}
+
+                return k;
+        }
 }

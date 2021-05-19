@@ -25,7 +25,7 @@ import java.util.*;
 * @author       Deepa Singh(deepa.singh@sun.com)
  *Company: Sun Microsystems Inc
  *@see com.sun.ejte.ccl.webrunner.proxy.MimeHeader
-* 
+*
 */
 
 public class MimeHeader extends Hashtable
@@ -35,8 +35,8 @@ public class MimeHeader extends Hashtable
     private boolean requestPOST=false;
     private boolean cookieSet=false;
     private String postdata=new String();
-    
-    
+
+
     /**
      * Takes a String as a parameter and parses it.Takes a raw MIME-formatted String and enter its key/value pairs into a given instance of MimeHeader.Uses
      *StringTokenizer to split the input data into individual lines marked by CRLF(\r\n) sequence.
@@ -44,16 +44,16 @@ public class MimeHeader extends Hashtable
      *If it is POST then stores the post data to be sent to external web server.
      * @author       Deepa Singh(deepa.singh@sun.com)
      * @return       void
-     * @param		data	The string to be parsed
+     * @param                data        The string to be parsed
      **@see com.sun.ejte.ccl.webrunner.proxy.MimeHeader
     */
     void parse(String data)
     {
-	StringTokenizer st=new StringTokenizer(data,"\r\n");
-	while(st.hasMoreTokens())
-	{
+        StringTokenizer st=new StringTokenizer(data,"\r\n");
+        while(st.hasMoreTokens())
+        {
             String s=st.nextToken();
-            
+
             //first check for Cookie as they are contained in script file.This needs to be stripped from the new request string sent to server
             if(s.startsWith("Cookie"))
             {
@@ -92,10 +92,10 @@ public class MimeHeader extends Hashtable
                 else if((RequestHeader.indexOf("POST"))!=-1)
                     requestPOST=true;
             }
-	}
+        }
     }
 
-	MimeHeader(){}
+        MimeHeader(){}
         public boolean ifGETRequest()
         {
             return this.requestGET;
@@ -108,78 +108,78 @@ public class MimeHeader extends Hashtable
         {
             return this.RequestHeader;
         }
-	MimeHeader(String d)
-	{
-		parse(d);
-	}
+        MimeHeader(String d)
+        {
+                parse(d);
+        }
 
-	public String toString()
-	{
-		String ret="";
-		Enumeration e=keys();
-		while(e.hasMoreElements())
-		{
-		String key=(String)e.nextElement();
-		String val=(String)get(key);
-		ret+=key + ": " + val + "\r\n";
-		}
-	return ret;
-	}
-        
+        public String toString()
+        {
+                String ret="";
+                Enumeration e=keys();
+                while(e.hasMoreElements())
+                {
+                String key=(String)e.nextElement();
+                String val=(String)get(key);
+                ret+=key + ": " + val + "\r\n";
+                }
+        return ret;
+        }
+
         public String getPostData()
         {
                 return postdata.trim();
-                        
+
         }
-        
 
 
-	/**
-	*To remove the discrepancy in MIME specification for "Content-Type" and "content-type" and "Content-Length" to "content-length"
-         *To avoid problems, all incoming and outgoing MimeHeader keys are converted to canonical form. 
-	* @author       Deepa Singh(deepa.singh@sun.com)
-	* @return       String
-	* @param		ms	String to be operated upon
-	*/
+
+        /**
+        *To remove the discrepancy in MIME specification for "Content-Type" and "content-type" and "Content-Length" to "content-length"
+         *To avoid problems, all incoming and outgoing MimeHeader keys are converted to canonical form.
+        * @author       Deepa Singh(deepa.singh@sun.com)
+        * @return       String
+        * @param                ms        String to be operated upon
+        */
         private String fix(String ms)
-	{
-	char chars[]=ms.toLowerCase().toCharArray();
-	boolean upcaseNext=true;
-	for(int i=0;i<chars.length-1;i++)
-	{
-		char ch=chars[i];
-		if(upcaseNext && 'a' <=ch && ch <='z')
-		{
-			chars[i]=(char)(ch-('a'-'A'));
-		}
-		upcaseNext=ch=='-';
-	}
-	return new String(chars);
-	}
+        {
+        char chars[]=ms.toLowerCase().toCharArray();
+        boolean upcaseNext=true;
+        for(int i=0;i<chars.length-1;i++)
+        {
+                char ch=chars[i];
+                if(upcaseNext && 'a' <=ch && ch <='z')
+                {
+                        chars[i]=(char)(ch-('a'-'A'));
+                }
+                upcaseNext=ch=='-';
+        }
+        return new String(chars);
+        }
 
 
-	/*
+        /*
         * @author       Deepa Singh(deepa.singh@sun.com)
        * @return        String
-       * @param		String key MIME header e.g Content-Type
-        
+       * @param                String key MIME header e.g Content-Type
+
        **@see com.sun.ejte.ccl.webrunner.proxy.MimeHeader
        */
         public String get(String key)
-	{
-	return (String)super.get(fix(key));
-	}
+        {
+        return (String)super.get(fix(key));
+        }
 
-     
+
        /*
         * @author       Deepa Singh(deepa.singh@sun.com)
        * @return       void
-       * @param		String key MIME header e.g Content-Type
+       * @param                String key MIME header e.g Content-Type
         *@param         String value value of MIME header
        **@see com.sun.ejte.ccl.webrunner.proxy.MimeHeader
        */
         public void put(String key,String val)
-	{
-	super.put(fix(key),val);
-	}
+        {
+        super.put(fix(key),val);
+        }
 }

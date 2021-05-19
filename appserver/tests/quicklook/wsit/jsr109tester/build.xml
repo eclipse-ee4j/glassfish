@@ -102,12 +102,12 @@
 
 
     <target name="runtest">
-	<record name="${basedir}/wsit2run.output" action="start"/>
+    <record name="${basedir}/wsit2run.output" action="start"/>
         <antcall target="runtest-impl">
             <param name="testng.test.name" value="${testng.test.name}"/>
             <param name="testng.testclient" value="jsr109tester"/>
         </antcall>
-	<record name="${basedir}/wsit2run.output" action="stop"/>
+    <record name="${basedir}/wsit2run.output" action="stop"/>
     </target>
 
     <target name="deploy">

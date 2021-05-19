@@ -27,25 +27,25 @@ import jakarta.resource.spi.XATerminator;
 public interface TransactionImport {
   /**
      * Recreate a transaction based on the Xid. This call causes the calling
-     * thread to be associated with the specified transaction. 
-     * 
+     * thread to be associated with the specified transaction.
+     *
      * <p>
      * This method imports a transactional context controlled by an external transaction manager.
      *
      * @param xid the Xid object representing a transaction.
      */
-    public void recreate(Xid xid, long timeout); 
+    public void recreate(Xid xid, long timeout);
 
     /**
      * Release a transaction. This call causes the calling thread to be
-     * dissociated from the specified transaction. 
-     * 
+     * dissociated from the specified transaction.
+     *
      * <p>
      * This call releases transactional context imported by recreate method.
      *
      * @param xid the Xid object representing a transaction.
      */
-    public void release(Xid xid); 
+    public void release(Xid xid);
 
     /**
      * Provides a handle to a <code>XATerminator</code> instance.
@@ -55,13 +55,13 @@ public interface TransactionImport {
      * @return a <code>XATerminator</code> instance.
      */
     public XATerminator getXATerminator();
-    
+
     /**
      * Return duration before current transaction would timeout.
      *
      * @return Returns the duration in seconds before current transaction would
      *         timeout.
-     *         Returns zero if transaction has no timeout set and returns 
+     *         Returns zero if transaction has no timeout set and returns
      *         negative value if transaction already timed out.
      *
      * @exception IllegalStateException Thrown if the current thread is

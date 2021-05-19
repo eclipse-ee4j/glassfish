@@ -34,12 +34,12 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean,precompile">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
         </antcall>
-        <javac fork="true" includeAntRuntime="false" 
+        <javac fork="true" includeAntRuntime="false"
                classpath="${env.APS_HOME}/lib/reportbuilder.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${s1as.classpath}"
                destdir="${build.classes.dir}" debug="true" srcdir="client" includes="**/*.java">
             <classpath path="${classpath}"/>
@@ -73,7 +73,7 @@
         </antcall>
     </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -85,7 +85,7 @@
         </antcall>
         <antcall target="run">
             <param name="client.type" value="deploy-fail" />
-						<param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
+                                                <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
             <param name="index" value="1" />
         </antcall>
         <antcall target="build-neg">
@@ -94,7 +94,7 @@
         </antcall>
         <antcall target="run">
             <param name="client.type" value="deploy-fail" />
-						<param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
+                                                <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
             <param name="index" value="2" />
         </antcall>
     </target>
@@ -110,10 +110,10 @@
            <sysproperty key="org.omg.CORBA.ORBInitialPort" value="${orb.port}"/>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

@@ -34,13 +34,13 @@ public class JSFInjectionTestNG {
 
     private static final String TEST_NAME =
         "simple-webapp-jsf-injection";
-   
+
     private String strContextRoot="jsfinjection";
 
     static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
     /*
      *If two asserts are mentioned in one method, then last assert is taken in
      *to account.
@@ -51,7 +51,7 @@ public class JSFInjectionTestNG {
     //@Parameters({ "host", "port", "contextroot" })
     @Test(groups ={ "pulse"} ) // test method
     public void injectedValuesTestPage() throws Exception {
-        
+
       try {
 
         String errorText = "";
@@ -77,8 +77,8 @@ public class JSFInjectionTestNG {
         String line = null;
         String line2 = null;
         boolean result=false;
-	String EXPECTED_RESPONSE = "Injected entry";
-	String DIVIDER = "===";
+    String EXPECTED_RESPONSE = "Injected entry";
+    String DIVIDER = "===";
         while ((line = input.readLine()) != null) {
           //echo (line);
           if (line.indexOf(EXPECTED_RESPONSE)!= -1) {
@@ -101,7 +101,7 @@ public class JSFInjectionTestNG {
           String injectedNumber = injection2Array[1].trim();
           echo("injectedNumber = " + injectedNumber);
           int num = Integer.parseInt(injectedNumber);
-  
+
           if ( num < 0 ) {
             echo("ERROR: injection 2 is less than zero.");
             errorText = errorText + "ERROR: injection 2 is less than zero";
@@ -116,7 +116,7 @@ public class JSFInjectionTestNG {
         }
 
         Assert.assertEquals(testPass, true, errorText);
-        
+
       }catch(Exception e){
         echo("ERROR: caught exception!");
         e.printStackTrace();

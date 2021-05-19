@@ -25,7 +25,7 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface PropertyBagCustomizer {
     public static final String DEFAULT_IMPLEMENTATION = "system default";
-    
+
     public Property getProperty(PropertyBag me, String name);
 
     /**

@@ -20,9 +20,9 @@ import java.io.Serializable;
 
 /**
  * Contains information about an ejb application exception.
- */ 
+ */
 
-public class EjbApplicationExceptionInfo implements Serializable 
+public class EjbApplicationExceptionInfo implements Serializable
 {
     private String exceptionClassName;
     private boolean rollback;

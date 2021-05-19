@@ -170,7 +170,7 @@ public class ApplicationFactory {
     }
 
     /**
-     * This method creates an Application object from reading the 
+     * This method creates an Application object from reading the
      * standard deployment descriptor.
      * @param archive the archive for the application
      */
@@ -195,13 +195,13 @@ public class ApplicationFactory {
         return application;
     }
 
-     
+
     /**
      * This method populates the rest of the Application object from the
-     * previous standard deployment descriptor reading 
+     * previous standard deployment descriptor reading
      * @param archive the archive for the application
      */
-    public Application openWith(Application application, 
+    public Application openWith(Application application,
         ReadableArchive archive, Archivist archivist)
         throws IOException, SAXException {
         archivist.openWith(application, archive);
@@ -213,7 +213,7 @@ public class ApplicationFactory {
         return application;
     }
 
-    
+
     /**
      * Open a jar file with the default Archivists and return an application
      * object for the modules contained in the archive.
@@ -256,7 +256,7 @@ public class ApplicationFactory {
                     Application application = (Application) node.read(jar.getInputStream(deploymentEntry));
                     return application.getDisplayName();
                 } catch (Exception pe) {
-                    logger.log(Level.WARNING, "Error occurred", pe);  
+                    logger.log(Level.WARNING, "Error occurred", pe);
                 }
             }
         } finally {

@@ -25,8 +25,8 @@ import org.jvnet.hk2.annotations.Contract;
 @Contract
 public interface ConfigBeanProxyCustomizer {
     public static final String DEFAULT_IMPLEMENTATION = "system default";
-    
-    /**                      
+
+    /**
      * Returns the parent element of this configuration element.
      *
      * It is possible to return a not null parent while the parent knows nothing of this
@@ -54,7 +54,7 @@ public interface ConfigBeanProxyCustomizer {
      *
      * @param type the child element type
      * @return the newly created child instance
-     * @throws TransactionFailure when called outside the boundaries of a transaction 
+     * @throws TransactionFailure when called outside the boundaries of a transaction
      */
     public ConfigBeanProxy createChild(ConfigBeanProxy me, Class<?> type);
 

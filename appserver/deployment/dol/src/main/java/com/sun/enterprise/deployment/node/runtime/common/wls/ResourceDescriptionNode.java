@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public class ResourceDescriptionNode extends RuntimeDescriptorNode<ResourceReferenceDescriptor> {
     private ResourceReferenceDescriptor descriptor;
-    
+
     public ResourceDescriptionNode() {
     }
 
@@ -50,17 +50,17 @@ public class ResourceDescriptionNode extends RuntimeDescriptorNode<ResourceRefer
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
-    
+
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (TagNames.RESOURCE_REFERENCE_NAME.equals(element.getQName())) {
@@ -76,7 +76,7 @@ public class ResourceDescriptionNode extends RuntimeDescriptorNode<ResourceRefer
             super.setElementValue(element, value);
         }
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -91,7 +91,7 @@ public class ResourceDescriptionNode extends RuntimeDescriptorNode<ResourceRefer
         appendTextChild(refNode, TagNames.RESOURCE_REFERENCE_NAME, descriptor.getName());
         appendTextChild(refNode, RuntimeTagNames.JNDI_NAME, descriptor.getJndiName());
         return refNode;
-    }    
+    }
 
     /**
      * write all occurrences of the descriptor corresponding to the current

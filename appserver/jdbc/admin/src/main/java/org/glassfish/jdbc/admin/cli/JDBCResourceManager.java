@@ -128,7 +128,7 @@ public class JDBCResourceManager implements ResourceManager {
         if(status.getStatus() == ResourceStatus.FAILURE){
             return status;
         }
-        
+
         if(ConnectorsUtil.getResourceByName(resources, ResourcePool.class, poolName) == null){
             String msg = localStrings.getLocalString("create.jdbc.resource.connPoolNotFound",
                 "Attribute value (pool-name = {0}) is not found in list of jdbc connection pools.", poolName);
@@ -146,7 +146,7 @@ public class JDBCResourceManager implements ResourceManager {
         }else{
             enabled = (String) attributes.get(ENABLED);
         }
-        enabledValueForTarget = (String) attributes.get(ENABLED); 
+        enabledValueForTarget = (String) attributes.get(ENABLED);
     }
 
     private JdbcResource createResource(Resources param, Properties properties) throws PropertyVetoException,
@@ -194,7 +194,7 @@ public class JDBCResourceManager implements ResourceManager {
 
     public ResourceStatus delete (final Resources resources, final String jndiName, final String target)
             throws Exception {
-        
+
         if (jndiName == null) {
             String msg = localStrings.getLocalString("jdbc.resource.noJndiName",
                             "No JNDI name defined for JDBC resource.");
@@ -249,7 +249,7 @@ public class JDBCResourceManager implements ResourceManager {
 
             // delete resource-ref
             resourceUtil.deleteResourceRef(jndiName, target);
-            
+
             // delete jdbc-resource
             if (ConfigSupport.apply(new SingleConfigCode<Resources>() {
                 public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
@@ -257,12 +257,12 @@ public class JDBCResourceManager implements ResourceManager {
                     return param.getResources().remove(resource);
                 }
             }, resources) == null) {
-                String msg = localStrings.getLocalString("jdbc.resource.deletionFailed", 
+                String msg = localStrings.getLocalString("jdbc.resource.deletionFailed",
                                 "JDBC resource {0} delete failed ", jndiName);
                 return new ResourceStatus(ResourceStatus.FAILURE, msg);
             }
         } catch(TransactionFailure tfe) {
-            String msg = localStrings.getLocalString("jdbc.resource.deletionFailed", 
+            String msg = localStrings.getLocalString("jdbc.resource.deletionFailed",
                             "JDBC resource {0} delete failed ", jndiName);
             ResourceStatus status = new ResourceStatus(ResourceStatus.FAILURE, msg);
             status.setException(tfe);

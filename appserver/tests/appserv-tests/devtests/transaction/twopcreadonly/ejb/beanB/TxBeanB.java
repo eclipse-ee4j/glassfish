@@ -36,14 +36,14 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
     private String dbURL1 = null;
     private String dbURL2 = null;
     private String password = null;
-    private SessionContext ctx = null;   
+    private SessionContext ctx = null;
     private int commitStatus = 2; // 0 - commit, 1 - rollback, 2 - don't know
 
     // ------------------------------------------------------------------------
     // Container Required Methods
     // ------------------------------------------------------------------------
     public void setSessionContext(SessionContext sc) {
-        System.out.println("setSessionContext in BeanB");  
+        System.out.println("setSessionContext in BeanB");
         try {
             ctx = sc;
             Context ic = new InitialContext();
@@ -59,23 +59,23 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
     }
 
     public void ejbCreate() {
-        System.out.println("ejbCreate in BeanB");  
-    } 
+        System.out.println("ejbCreate in BeanB");
+    }
 
     public void ejbDestroy() {
-        System.out.println("ejbDestroy in BeanB");  
+        System.out.println("ejbDestroy in BeanB");
     }
 
     public void ejbActivate() {
-        System.out.println("ejbActivate in BeanB");  
+        System.out.println("ejbActivate in BeanB");
     }
-  
+
     public void ejbPassivate() {
-        System.out.println("ejbPassivate in BeanB");  
+        System.out.println("ejbPassivate in BeanB");
     }
 
     public void ejbRemove() {
-        System.out.println("ejbRemove in BeanB");  
+        System.out.println("ejbRemove in BeanB");
     }
 
     // ------------------------------------------------------------------------
@@ -88,7 +88,7 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
         Statement stmt2 = null;
         ResultSet rs1 = null;
         ResultSet rs2 = null;
-        System.out.println("test1 in BeanB");  
+        System.out.println("test1 in BeanB");
         try {
             con1 = getConnection(dbURL1);
             stmt1 = con1.createStatement();
@@ -131,7 +131,7 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
         Statement stmt2 = null;
         ResultSet rs1 = null;
         ResultSet rs2 = null;
-        System.out.println("test2 in BeanB");  
+        System.out.println("test2 in BeanB");
         try {
             con1 = getConnection(dbURL1);
             stmt1 = con1.createStatement();
@@ -194,7 +194,7 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
 
     private Connection getConnection(String dbURL) {
         Connection con = null;
-        System.out.println("getConnection in BeanB");  
+        System.out.println("getConnection in BeanB");
         try{
             Context context = new InitialContext();
             DataSource ds = (DataSource) context.lookup(dbURL);
@@ -203,7 +203,7 @@ public class TxBeanB implements SessionBean, SessionSynchronization {
             System.out.println("Got DB Connection Successfully...");
         } catch (Exception ex) {
             System.out.println("Exception in getConnection: " + ex.toString());
-	    ex.printStackTrace();
+            ex.printStackTrace();
         }
         return con;
     }

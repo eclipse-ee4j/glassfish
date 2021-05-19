@@ -39,13 +39,13 @@ public class MyAdminObject extends AbstractAdminObject implements java.io.Serial
     }
 
     public void initialize() {
-	System.out.println("[MyAdminObject] Initializing the Controls to false:"+getResetControl());
+        System.out.println("[MyAdminObject] Initializing the Controls to false:"+getResetControl());
         if (getResetControl().equals("BEGINNING")) {
             synchronized (Controls.readyLock){
                 Controls.done=false;
             }
-	   System.out.println("[MyAdminObject] Initialized the Controls to false");
-	}
+           System.out.println("[MyAdminObject] Initialized the Controls to false");
+        }
     }
 
     public boolean done() {

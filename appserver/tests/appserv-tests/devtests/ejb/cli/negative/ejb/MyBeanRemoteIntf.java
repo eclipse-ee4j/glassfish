@@ -21,4 +21,4 @@ import jakarta.ejb.*;
 @Remote
 public interface MyBeanRemoteIntf {
     public int getCount(int i);
-} 
+}

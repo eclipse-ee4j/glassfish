@@ -113,7 +113,7 @@ public class AppTest {
                 nm.unpublishObject("foo");
                 nm.unpublishObject("bar");
             } catch (Exception ex) {
-		//ignore
+        //ignore
             }
         }
     }
@@ -139,7 +139,7 @@ public class AppTest {
         public Object getValue() {
             return value;
         }
-   } 
+   }
 
     @Test public void testEmptyJavaCompEnv() {
         GlassfishNamingManagerImpl nm = null;
@@ -203,7 +203,7 @@ public class AppTest {
                     ComponentInvocation.ComponentInvocationType.EJB_INVOCATION,
                     null, null, null);
             im.preInvoke(inv);
-           
+
             System.out.println("**lookup(java:comp/env/conf/area) ==> " + ic.lookup("java:comp/env/conf/area"));
             System.out.println("**lookup(java:comp/env/conf/location) ==> " + ic.lookup("java:comp/env/conf/location"));
 
@@ -248,7 +248,7 @@ public class AppTest {
                 im.postInvoke(inv);
                 nm.unbindComponentObjects("comp1");
             } catch (InvocationException inEx) {
-                
+
             } catch (Exception ex) {
 
             }
@@ -257,13 +257,13 @@ public class AppTest {
 
     /**
      * Performs an ignored test lookup to trigger the initial loading of named proxies.
-     * See NamedNamingObjectManager.checkAndLoadProxies, which creates a default 
+     * See NamedNamingObjectManager.checkAndLoadProxies, which creates a default
      * GlassFishNamingManagerImpl.  This is not what we want in this test class; we
      * want our own instance of GlassFishNamingManagerImpl that takes our own
-     * InvocationManagerImpl. 
+     * InvocationManagerImpl.
      * GlassFishNamingManagerImpl(InitialContext) calls JavaURLContext.setNamingManager(this)
      * to save the GlassFishNamingManagerImpl into JavaURLContext, so the last call wins.
-     * We want to make sure our test GlassFishNamingManagerImpl is instantiated after the 
+     * We want to make sure our test GlassFishNamingManagerImpl is instantiated after the
      * default one.
      */
     private void triggerLoadingNamedProxies(InitialContext ic) {
@@ -275,16 +275,16 @@ public class AppTest {
 
     private InitialContext newInitialContext() throws NamingException {
 
-	// Create a special InitialContext for test purposes
-	// Can't just do a new no-arg InitialContext() since
-	// this code runs outside a managed environment and the
-	// normal behavior would be to try to contact a server.
-	// Instead, create an initialcontext with a special
-	// property to tell InitialContext to act as if it's
-	// running in the server.
-	Properties props = new Properties();
-	props.setProperty( SerialContext.INITIAL_CONTEXT_TEST_MODE, "true");
-	
-	return new InitialContext( props );
+    // Create a special InitialContext for test purposes
+    // Can't just do a new no-arg InitialContext() since
+    // this code runs outside a managed environment and the
+    // normal behavior would be to try to contact a server.
+    // Instead, create an initialcontext with a special
+    // property to tell InitialContext to act as if it's
+    // running in the server.
+    Properties props = new Properties();
+    props.setProperty( SerialContext.INITIAL_CONTEXT_TEST_MODE, "true");
+
+    return new InitialContext( props );
     }
 }

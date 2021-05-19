@@ -30,7 +30,7 @@ import jakarta.jms.*;
 })
 public class NewMessageBean2 implements MessageListener {
     private static final Logger logger = Logger.getLogger(NewMessageBean2.class.getName());
-    
+
     @Resource
     private MessageDrivenContext mdc;
 
@@ -41,16 +41,16 @@ public class NewMessageBean2 implements MessageListener {
     @JMSConnectionFactory("jms/jms_unit_test_QCF")
     @JMSSessionMode(JMSContext.AUTO_ACKNOWLEDGE)
     private JMSContext jmsContext;
-    
+
     public NewMessageBean2() {
     }
-    
+
     @Override
     @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
     public void onMessage(Message message) {
         sendMsg(message);
     }
-    
+
     private void sendMsg(Message msg) {
         JMSProducer producer = jmsContext.createProducer();
         producer.send(resultQueue, msg);

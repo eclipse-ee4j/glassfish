@@ -121,7 +121,7 @@ setup_kvm ()
                          ;;
                      *) err "Ignoring unknown service $s"
                          ;;
-        esac 
+        esac
     done
     IFS=$IFS_TMP
 
@@ -142,7 +142,7 @@ setup_init ()
     [ -z "$SUBNET" ] && echo "Please specify subnet using -n <subnet> option." && exit 1;
 
     # Parse the old style connection string into variables we can use with the
-    # new commands. At some point we should probably allow these to be 
+    # new commands. At some point we should probably allow these to be
     # specified via CLI options, but for now this keeps us compatible with
     # current uses of this script.
 

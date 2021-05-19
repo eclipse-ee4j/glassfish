@@ -20,13 +20,13 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 
 /**
- * This class is used as a "proxy" or adapter between the remote business 
- * interface proxy and the EJBObjectInvocationHandler. An instance of this 
- * class is created for each remote business interface of a bean. All 
- * java.lang.Object methods are handled by this InvocationHandler itself 
- * while the business interface methods are delegated to the delegate 
- * (which is the EJBObjectInvocaionHandler). 
- *   
+ * This class is used as a "proxy" or adapter between the remote business
+ * interface proxy and the EJBObjectInvocationHandler. An instance of this
+ * class is created for each remote business interface of a bean. All
+ * java.lang.Object methods are handled by this InvocationHandler itself
+ * while the business interface methods are delegated to the delegate
+ * (which is the EJBObjectInvocaionHandler).
+ *
  * @author Kenneth Saks
  *
  */
@@ -35,16 +35,16 @@ public class EJBObjectInvocationHandlerDelegate
 
     private Class remoteBusinessIntfClass;
     private EJBObjectInvocationHandler delegate;
-    
-    EJBObjectInvocationHandlerDelegate(Class intfClass, 
+
+    EJBObjectInvocationHandlerDelegate(Class intfClass,
                                        EJBObjectInvocationHandler delegate) {
         this.remoteBusinessIntfClass = intfClass;
         this.delegate = delegate;
     }
-    
-    public Object invoke(Object proxy, Method method, Object[] args) 
+
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
-        
+
         Class methodClass = method.getDeclaringClass();
         Object result = null;
         if( methodClass == java.lang.Object.class ) {
@@ -53,10 +53,10 @@ public class EJBObjectInvocationHandlerDelegate
         } else {
             result = delegate.invoke(remoteBusinessIntfClass, method, args);
         }
-        
+
         return result;
     }
-    
-    
+
+
 
 }

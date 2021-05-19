@@ -37,7 +37,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class Server {
 
     private static SimpleReporterAdapter status =
-		 new SimpleReporterAdapter("appserv-tests");
+         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
         final String suiteId = "CORBA";
@@ -80,7 +80,7 @@ public class Server {
 
             NameComponent[] names = { new NameComponent("RemoteTest", "") };
             namingContext.rebind(names, ref);
-	    System.out.println("rebind nameservice");
+            System.out.println("rebind nameservice");
 
             ORB clientORB = ORB.init(args, System.getProperties());
             System.out.println(args[0]);
@@ -98,10 +98,10 @@ public class Server {
                                "Include /usr/lib/mps in the LD_LIBRARY_PATH "+
                                "for solaris");
             e.printStackTrace();
-        } 
-          status.printSummary("corbaID");
-          System.out.println("Test done. exiting");
-          System.exit(0);
+        }
+        status.printSummary("corbaID");
+        System.out.println("Test done. exiting");
+        System.exit(0);
     }
 
     public static Servant getServant() {

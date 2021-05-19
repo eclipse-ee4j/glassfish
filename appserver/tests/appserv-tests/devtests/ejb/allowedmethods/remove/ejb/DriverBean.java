@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.allowedmethods.remove;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -63,11 +63,11 @@ public class DriverBean
 
         return false;
     }
-        
+
     public void ejbRemove() throws RemoteException {}
 
     public void ejbActivate() {}
 
     public void ejbPassivate() {}
-    
+
 }

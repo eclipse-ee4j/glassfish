@@ -35,14 +35,14 @@ public class StatefulBean implements RemoteAsync {
 
     @Asynchronous
     public Future<String> helloAsync() {
-	return new AsyncResult<String>("hello, world\n");
+        return new AsyncResult<String>("hello, world\n");
     }
 
     @Asynchronous
     @Remove
     public Future<String> removeAfterCalling() {
-	System.out.println("In StatefulBean::removeAfterCalling()");
-	return new AsyncResult<String>("removed");
+        System.out.println("In StatefulBean::removeAfterCalling()");
+        return new AsyncResult<String>("removed");
     }
 
     @PreDestroy

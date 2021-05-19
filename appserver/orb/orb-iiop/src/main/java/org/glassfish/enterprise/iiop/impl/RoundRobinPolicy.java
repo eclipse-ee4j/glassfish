@@ -43,45 +43,45 @@ import com.sun.corba.ee.spi.folb.SocketInfo;
  * The list of endpoints are randomized the very first time.
  * This happens only once( when called from the static block
  * of SerialInitContextFactory class).
- * 
+ *
  * <p>
  * Simple RoundRobin is a special case of Weighted Round Robin where the
- * weight per endpoint is equal.With the dynamic reconfiguration 
+ * weight per endpoint is equal.With the dynamic reconfiguration
  * implementation, the endpoints list will have the following structure:
- * 
+ *
  * <pre>
  * {@code
  * - server_identifier (a stringified name for the machine)
- * - weight- list of SocketInfo {type (type = CLEAR_TEXT or SSL) + 
+ * - weight- list of SocketInfo {type (type = CLEAR_TEXT or SSL) +
  *         IP address + port }
  * }
  * </pre>
- * 
+ *
  * <p>
- * The above structure supports multi-homed machines 
+ * The above structure supports multi-homed machines
  * i.e. one machine hosting multiple IP addresses.
  * The <code>RoundRobinPolicy</code> class can be the class that is also implementing
  * the Listener interface for listening to events generated whenever there
  * is a change in the cluster shape. The listener/event design is still
- * under construction.This list of endpoints will have to be created during 
+ * under construction.This list of endpoints will have to be created during
  * bootstrapping(i.e. when the client first starts up.) This list will comprise
  * of the endpoints specified by the user in "com.sun.appserv.iiop.endpoints"
  * property. We can assume a default weight for these endpoints (e.g 10).
- * 
+ *
  * <p>
- * This list will be used to make the first lookup call. During the first 
- * lookup call, the actual list of endpoints will be provided back. 
- * Then on, whenever there is any change in the clustershape, 
+ * This list will be used to make the first lookup call. During the first
+ * lookup call, the actual list of endpoints will be provided back.
+ * Then on, whenever there is any change in the clustershape,
  * the listener will get the updated list of endpoints from the server.
  * The implementation for choosing the endpoint from the list of endpoints
- * is as follows: Let's assume 4 endpoints: <code>A(wt=10)</code>, <code>B(wt=30)</code>, <code>C(wt=40)</code>, 
- * <code>D(wt=20)</code>. 
- * 
+ * is as follows: Let's assume 4 endpoints: <code>A(wt=10)</code>, <code>B(wt=30)</code>, <code>C(wt=40)</code>,
+ * <code>D(wt=20)</code>.
+ *
  * <p>
  * Using the Random API, generate a random number between 1 and10+30+40+20.
  * Let's assume that the above list is randomized. Based on the weights, we
  * have intervals as follows:
- * 
+ *
  * <pre>
  * {@code
  * 1-----10 (A's weight)
@@ -90,9 +90,9 @@ import com.sun.corba.ee.spi.folb.SocketInfo;
  * 81----100(A's weight + B's weight + C's weight + C's weight)
  * }
  * </pre>
- * 
+ *
  * Here's the psuedo code for deciding where to send the request:
- * 
+ *
  * <pre>
  * {@code
  *    if (random_number between 1 & 10) {send request to A;}
@@ -101,15 +101,15 @@ import com.sun.corba.ee.spi.folb.SocketInfo;
  *    else if (random_number between 81 & 100) {send request to D;}
  * }
  * </pre>
- * 
+ *
  * <p>
- * For simple Round Robin, we can assume the same weight for all endpoints and 
+ * For simple Round Robin, we can assume the same weight for all endpoints and
  * perform the above.
- * 
+ *
  * @author Sheetal Vartak
  **/
 public class RoundRobinPolicy {
-    
+
     @LogMessageInfo(message = "Could not find an endpoint to send request to.")
     public static final String COULD_NOT_FIND_ENDPOINT = "AS-ORB-00004";
 

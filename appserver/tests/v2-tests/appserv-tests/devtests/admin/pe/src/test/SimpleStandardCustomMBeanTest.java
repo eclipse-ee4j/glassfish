@@ -33,13 +33,13 @@ import javax.management.ObjectName;
 public class SimpleStandardCustomMBeanTest implements RemoteAdminQuicklookTest {
 
     private MBeanServerConnection mbsc;
-    
+
     private static final String BACKEND_MBEAN_ON = "com.sun.appserv:category=config,type=applications";
     private static final String SS_CUSTOM_MBEAN_CLASS = "testmbeans.SimpleStandard";
     private long start, end;
-    
+
     /**
-     * Creates a new instance of SimpleStandardCustomMBeanTest 
+     * Creates a new instance of SimpleStandardCustomMBeanTest
      */
     public SimpleStandardCustomMBeanTest() {
     }
@@ -70,7 +70,7 @@ public class SimpleStandardCustomMBeanTest implements RemoteAdminQuicklookTest {
             end = System.currentTimeMillis();
         }
     }
-    
+
     private void testCreateDeleteListBasic() throws Exception {
         final String target = null;
         final Map<String, String> params = new HashMap<String, String> ();
@@ -98,7 +98,7 @@ public class SimpleStandardCustomMBeanTest implements RemoteAdminQuicklookTest {
         }
     }
     ///// Private /////
-    
+
     private String invokeCustomMBeanCreationMethod(final String target, final Map<String, String> params, final Map<String, String> attributes) throws Exception {
         final ObjectName on         = new ObjectName(BACKEND_MBEAN_ON);
         final String oper           = "createMBean";
@@ -119,7 +119,7 @@ public class SimpleStandardCustomMBeanTest implements RemoteAdminQuicklookTest {
         final Object[] operParams   = new Object[]{ target, name };
         final String[] operSign     = new String[]{ String.class.getName(), String.class.getName() };
         return ( (String) mbsc.invoke(on, oper, operParams, operSign) );
-        
+
     }
     ///// Private /////
 }

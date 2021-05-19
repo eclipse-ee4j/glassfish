@@ -27,10 +27,10 @@ import org.apache.catalina.deploy.ContextLocalEjb;
  */
 
 public class ContextLocalEjbDecorator extends ContextLocalEjb{
-                                          
-     
+
+
     private EjbReferenceDescriptor decoree;
-    
+
     public ContextLocalEjbDecorator(EjbReferenceDescriptor decoree){
         this.decoree = decoree;
     }
@@ -47,17 +47,17 @@ public class ContextLocalEjbDecorator extends ContextLocalEjb{
         return decoree.getEjbHomeInterface();
     }
 
-  
+
     public String getLink() {
         return decoree.getLinkName();
     }
 
- 
+
     public String getLocal() {
         return decoree.getEjbInterface();
     }
 
- 
+
     public String getName() {
         return decoree.getName();
     }
@@ -67,7 +67,7 @@ public class ContextLocalEjbDecorator extends ContextLocalEjb{
         return decoree.getType();
     }
 
- 
+
 
 
 

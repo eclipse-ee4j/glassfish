@@ -23,10 +23,10 @@
         <groupId>org.glassfish.main.connectors</groupId>
         <artifactId>connectors</artifactId>
         <version>6.1.1-SNAPSHOT</version>
-    </parent>    
+    </parent>
     <artifactId>connectors-admin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Connectors admin</name>
 
     <developers>
@@ -41,7 +41,7 @@
         </developer>
     </developers>
     <build>
-	<resources>
+        <resources>
             <resource>
                 <directory>src/main/java</directory>
                 <includes>
@@ -55,9 +55,9 @@
                     <include>**/*.1</include>
                 </includes>
             </resource>
-          </resources>
+        </resources>
     </build>
-    
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

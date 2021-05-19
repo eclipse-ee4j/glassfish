@@ -49,7 +49,7 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the name property. Defines the name of this realm
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(key = true)
@@ -66,7 +66,7 @@ public interface AuthRealm extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the classname property. Defines the java class which implements this realm
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute

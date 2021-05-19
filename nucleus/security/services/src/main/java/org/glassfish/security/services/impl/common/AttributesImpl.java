@@ -26,10 +26,10 @@ import org.glassfish.security.services.api.common.Attributes;
 
 public class AttributesImpl implements Attributes {
 
-	private final TreeMap<String, Attribute> attributes;
+    private final TreeMap<String, Attribute> attributes;
 
     public AttributesImpl() {
-        attributes = new TreeMap<String, Attribute>();
+        attributes = new TreeMap<>();
     }
 
     /**
@@ -39,110 +39,125 @@ public class AttributesImpl implements Attributes {
         if ( null == other ) {
             throw new NullPointerException( "Given illegal null AttributesImpl." );
         }
-        attributes = new TreeMap<String, Attribute>( other.attributes );
+        attributes = new TreeMap<>( other.attributes );
     }
 
+    @Override
     public int getAttributeCount() {
-		return attributes.size();
-	}
+        return attributes.size();
+    }
 
-	public Set<String> getAttributeNames() {
-		return attributes.keySet();
-	}
+    @Override
+    public Set<String> getAttributeNames() {
+        return attributes.keySet();
+    }
 
-	public Attribute getAttribute(String name) {
-		return attributes.get(name);
-	}
+    @Override
+    public Attribute getAttribute(String name) {
+        return attributes.get(name);
+    }
 
-	public String getAttributeValue(String name) {
-		Attribute a = attributes.get(name);
-		if(a != null) {
-			return a.getValue();
-		}
-		return null;
-	}
+    @Override
+    public String getAttributeValue(String name) {
+        Attribute a = attributes.get(name);
+        if(a != null) {
+            return a.getValue();
+        }
+        return null;
+    }
 
-	public Set<String> getAttributeValues(String name) {
-		Attribute a = attributes.get(name);
-		if(a != null) {
-			return a.getValues();
-		}
-		return null;
-	}
+    @Override
+    public Set<String> getAttributeValues(String name) {
+        Attribute a = attributes.get(name);
+        if(a != null) {
+            return a.getValues();
+        }
+        return null;
+    }
 
-	public String[] getAttributeValuesAsArray(String name) {
-		Attribute a = attributes.get(name);
-		if(a != null) {
-			return a.getValuesAsArray();
-		}
-		return null;
-	}
+    @Override
+    public String[] getAttributeValuesAsArray(String name) {
+        Attribute a = attributes.get(name);
+        if(a != null) {
+            return a.getValuesAsArray();
+        }
+        return null;
+    }
 
-	public void addAttribute(String name, String value, boolean replace) {
-		Attribute a = attributes.get(name);
-		if(a != null && !replace) {
-			a.addValue(value);
-		}
-		else {
-			attributes.put(name, new AttributeImpl(name, value));
-		}
-	}
+    @Override
+    public void addAttribute(String name, String value, boolean replace) {
+        Attribute a = attributes.get(name);
+        if(a != null && !replace) {
+            a.addValue(value);
+        }
+        else {
+            attributes.put(name, new AttributeImpl(name, value));
+        }
+    }
 
-	public void addAttribute(String name, Set<String> values, boolean replace) {
-		Attribute a = attributes.get(name);
-		if(a != null && !replace) {
-			a.addValues(values);
-		}
-		else {
-			attributes.put(name, new AttributeImpl(name, values));
-		}
-	}
+    @Override
+    public void addAttribute(String name, Set<String> values, boolean replace) {
+        Attribute a = attributes.get(name);
+        if(a != null && !replace) {
+            a.addValues(values);
+        }
+        else {
+            attributes.put(name, new AttributeImpl(name, values));
+        }
+    }
 
-	public void addAttribute(String name, String[] values, boolean replace) {
-		Attribute a = attributes.get(name);
-		if(a != null && !replace) {
-			a.addValues(values);
-		}
-		else {
-			attributes.put(name, new AttributeImpl(name, values));
-		}
-	}
+    @Override
+    public void addAttribute(String name, String[] values, boolean replace) {
+        Attribute a = attributes.get(name);
+        if(a != null && !replace) {
+            a.addValues(values);
+        }
+        else {
+            attributes.put(name, new AttributeImpl(name, values));
+        }
+    }
 
-	public void removeAttribute(String name) {
-		attributes.remove(name);
-	}
+    @Override
+    public void removeAttribute(String name) {
+        attributes.remove(name);
+    }
 
-	public void removeAttributeValue(String name, String value) {
-		Attribute a = attributes.get(name);
-		if (a != null) {
-			a.removeValue(value);
-		}
-	}
+    @Override
+    public void removeAttributeValue(String name, String value) {
+        Attribute a = attributes.get(name);
+        if (a != null) {
+            a.removeValue(value);
+        }
+    }
 
-	public void removeAttributeValues(String name, Set<String> values) {
-		Attribute a = attributes.get(name);
-		if (a != null) {
-			a.removeValues(values);
-		}
-	}
+    @Override
+    public void removeAttributeValues(String name, Set<String> values) {
+        Attribute a = attributes.get(name);
+        if (a != null) {
+            a.removeValues(values);
+        }
+    }
 
-	public void removeAttributeValues(String name, String[] values) {
-		Attribute a = attributes.get(name);
-		if (a != null) {
-			a.removeValues(values);
-		}
-	}
+    @Override
+    public void removeAttributeValues(String name, String[] values) {
+        Attribute a = attributes.get(name);
+        if (a != null) {
+            a.removeValues(values);
+        }
+    }
 
-	public void removeAllAttributeValues(String name) {
-		Attribute a = attributes.get(name);
-		if (a != null) {
-			a.clear();
-		}
-	}
+    @Override
+    public void removeAllAttributeValues(String name) {
+        Attribute a = attributes.get(name);
+        if (a != null) {
+            a.clear();
+        }
+    }
 
-	public void clear() {
-		attributes.clear();
+    @Override
+    public void clear() {
+        attributes.clear();
 
-	}
+    }
 
 }

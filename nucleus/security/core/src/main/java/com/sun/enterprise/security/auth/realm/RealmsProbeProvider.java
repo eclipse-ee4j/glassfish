@@ -25,13 +25,13 @@ import org.glassfish.external.probe.provider.annotations.ProbeParam;
  */
 @ProbeProvider(moduleProviderName="glassfish",moduleName="security",probeProviderName="realm")
 public class RealmsProbeProvider {
-    
+
     @Probe(name="realmAddedEvent")
     public void realmAddedEvent(
             @ProbeParam("realmName") String realmName
             )
     {}
-    
+
     @Probe(name="realmRemovedEvent")
     public void realmRemovedEvent(
             @ProbeParam("realmName") String realmName

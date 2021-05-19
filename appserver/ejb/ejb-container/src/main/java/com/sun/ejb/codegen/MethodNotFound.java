@@ -17,11 +17,11 @@
 package com.sun.ejb.codegen;
 
 public class MethodNotFound extends GeneratorException {
+
     /**
      * Constructs the MethodNotFound exception with the specified string.
      */
-
     public MethodNotFound(String s) {
-	super(s);
+        super(s);
     }
 }

@@ -74,7 +74,7 @@ public class Client {
         } else {
             stat.addStatus(testSuite + " test6 : ", stat.FAIL);
         }
-     
+
         stat.printSummary();
     }
 }

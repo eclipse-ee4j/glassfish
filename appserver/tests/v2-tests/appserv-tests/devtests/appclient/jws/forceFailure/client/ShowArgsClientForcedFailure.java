@@ -28,12 +28,12 @@ import java.util.Vector;
  * @author tjquinn
  */
 public class ShowArgsClientForcedFailure {
-    
-    
+
+
     /** Creates a new instance of ShowArgsClient */
     public ShowArgsClientForcedFailure() {
     }
-    
+
     /**
      * @param args the command line arguments
      */

@@ -42,22 +42,22 @@
     <target name="all-ext" depends="clean, disable-resource-validation, build-ra-with-extension, build, deploy-ear, setup, run-ear, unsetup, undeploy-ear, enable-resource-validation"/>
 
 <!--
-	<antcall target="build"/>
-	<antcall target="setup"/>
-	<antcall target="deploy-war"/>
-	<antcall target="run-war"/>
-	<antcall target="undeploy-war"/>
-	<antcall target="deploy-ear"/>
-	<antcall target="run-ear"/>
-	<antcall target="undeploy-ear"/>
-	<antcall target="unsetup"/>
+        <antcall target="build"/>
+        <antcall target="setup"/>
+        <antcall target="deploy-war"/>
+        <antcall target="run-war"/>
+        <antcall target="undeploy-war"/>
+        <antcall target="deploy-ear"/>
+        <antcall target="run-ear"/>
+        <antcall target="undeploy-ear"/>
+        <antcall target="unsetup"/>
     </target>
 -->
 
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-    
+
     <target name="setup">
     <antcall target="execute-sql-connector">
         <param name="sql.file" value="sql/simpleBank.sql"/>
@@ -71,13 +71,13 @@
                 <antcall target="create-connector-connpool-common">
                 <param name="ra.name" value="${appname}App#jdbcra"/>
                 <param name="connection.defname" value="javax.sql.DataSource"/>
-		    <param name="extra-params" value="--matchconnections=false"/>
+                    <param name="extra-params" value="--matchconnections=false"/>
                 <param name="connector.conpool.name" value="embedded-ra-pool"/>
                 </antcall>
                 <antcall target="set-oracle-props">
-		<param name="pool.type" value="connector"/>
-		<param name="conpool.name" value="embedded-ra-pool"/>
-		</antcall>
+                <param name="pool.type" value="connector"/>
+                <param name="conpool.name" value="embedded-ra-pool"/>
+                </antcall>
     </target>
     <target name="create-resource">
                 <antcall target="create-connector-resource-common">
@@ -86,53 +86,53 @@
                 </antcall>
      </target>
 
-	<target name="disable-resource-validation">
-		<antcall target="create-jvm-options">
-			<param name="option" value="-Ddeployment.resource.validation=false"/>
-		</antcall>
-		<antcall target="restart-server"/>
-	</target>
+        <target name="disable-resource-validation">
+                <antcall target="create-jvm-options">
+                        <param name="option" value="-Ddeployment.resource.validation=false"/>
+                </antcall>
+                <antcall target="restart-server"/>
+        </target>
 
-	<target name="enable-resource-validation">
-		<antcall target="delete-jvm-options">
-			<param name="option" value="-Ddeployment.resource.validation=false"/>
-		</antcall>
-		<antcall target="restart-server"/>
-	</target>
+        <target name="enable-resource-validation">
+                <antcall target="delete-jvm-options">
+                        <param name="option" value="-Ddeployment.resource.validation=false"/>
+                </antcall>
+                <antcall target="restart-server"/>
+        </target>
 
 
      <target name="create-admin-object" depends="init-common">
          <antcall target="asadmin-common">
             <param name="admin.command" value="create-admin-object --target ${appserver.instance.name} --restype com.sun.jdbcra.spi.JdbcSetupAdmin --raname ${appname}App#jdbcra --property TableName=customer2:JndiName=jdbc/ejb-installed-libraries-embedded:SchemaName=DBUSER:NoOfRows=1"/>
-	    <param name="operand.props" value="eis/jdbcAdmin"/>
+            <param name="operand.props" value="eis/jdbcAdmin"/>
          </antcall>
      </target>
 
      <target name="delete-admin-object" depends="init-common">
          <antcall target="asadmin-common">
-	    <param name="admin.command" value="delete-admin-object"/>
-	    <param name="operand.props" value="--target ${appserver.instance.name} eis/jdbcAdmin"/>
-	 </antcall>
-	 <!--<antcall target="reconfig-common"/>-->
+            <param name="admin.command" value="delete-admin-object"/>
+            <param name="operand.props" value="--target ${appserver.instance.name} eis/jdbcAdmin"/>
+         </antcall>
+         <!--<antcall target="reconfig-common"/>-->
      </target>
-    
+
     <target name="restart">
     <antcall target="restart-server-instance-common"/>
     </target>
-   
+
      <target name="create-ra-config" depends="init-common">
          <antcall target="asadmin-common">
             <param name="admin.command" value="create-resource-adapter-config  --property RAProperty=VALID"/>
-	    <param name="operand.props" value="${appname}App#jdbcra"/>
+            <param name="operand.props" value="${appname}App#jdbcra"/>
          </antcall>
      </target>
 
      <target name="delete-ra-config" depends="init-common">
          <antcall target="asadmin-common">
-	    <param name="admin.command" value="delete-resource-adapter-config"/>
-	    <param name="operand.props" value="${appname}App#jdbcra"/>
-	 </antcall>
-	 <!--<antcall target="reconfig-common"/>-->
+            <param name="admin.command" value="delete-resource-adapter-config"/>
+            <param name="operand.props" value="${appname}App#jdbcra"/>
+         </antcall>
+         <!--<antcall target="reconfig-common"/>-->
      </target>
 
     <target name="unsetup">
@@ -144,7 +144,7 @@
     <antcall target="delete-pool"/>
     <antcall target="delete-admin-object"/>
     </target>
- 
+
     <target name="delete-pool">
                 <antcall target="delete-connector-connpool-common">
                 <param name="connector.conpool.name" value="embedded-ra-pool"/>
@@ -154,7 +154,7 @@
      <target name="delete-resource">
                 <antcall target="delete-connector-resource-common">
                 <param name="connector.jndi.name" value="jdbc/ejb-installed-libraries-embedded"/>
-		</antcall>
+                </antcall>
     </target>
 
     <target name="compile" depends="clean">
@@ -169,9 +169,9 @@
       <echo message="common.xml: Compiling test source files" level="verbose"/>
       <javac srcdir="servlet"
          destdir="${build.classes.dir}"
-	 classpath="${s1astest.classpath}:ra/publish/internal/classes"
+         classpath="${s1astest.classpath}:ra/publish/internal/classes"
          debug="on"
-	 failonerror="true"/>
+         failonerror="true"/>
      </target>
 
     <target  name="build-ra-with-extension">
@@ -189,27 +189,27 @@
     </target>
 
     <target name="build" depends="compile">
-    <property name="hasWebclient" value="yes"/> 
+    <property name="hasWebclient" value="yes"/>
 
     <antcall target="webclient-war-common">
     <param name="hasWebclient" value="yes"/>
-    <param name="webclient.war.classes" value="**/*.class"/> 
+    <param name="webclient.war.classes" value="**/*.class"/>
     </antcall>
-       
+
     <antcall target="ejb-jar-common">
     <param name="ejbjar.classes" value="**/*.class"/>
     </antcall>
 
-    
+
     <delete file="${assemble.dir}/${appname}.ear"/>
     <mkdir dir="${assemble.dir}"/>
-    <mkdir dir="${build.classes.dir}/META-INF"/>    
-    <ear earfile="${assemble.dir}/${appname}App.ear" 
+    <mkdir dir="${build.classes.dir}/META-INF"/>
+    <ear earfile="${assemble.dir}/${appname}App.ear"
      appxml="${application.xml}">
     <fileset dir="${assemble.dir}">
       <include name="*.jar"/>
       <include name="*.war"/>
-    </fileset>  
+    </fileset>
     <fileset dir="ra/publish/lib">
       <include name="*.rar"/>
     </fileset>
@@ -245,28 +245,28 @@
     <target name="deploy-war" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run-war" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="installed-libraries-embedded (stand-alone war based)"/>
-	</antcall>
+        <param name="testsuite.id" value="installed-libraries-embedded (stand-alone war based)"/>
+        </antcall>
     </target>
 
     <target name="run-ear" depends="init-common">
         <antcall target="runwebclient-common">
-	<param name="testsuite.id" value="installed-libraries-embedded (ear based)"/>
-	</antcall>
+        <param name="testsuite.id" value="installed-libraries-embedded (ear based)"/>
+        </antcall>
     </target>
- 
+
     <target name="undeploy-ear" depends="init-common">
         <antcall target="delete-ra-config"/>
         <antcall target="undeploy-common"/>
         <antcall target="uninstall-library"/>
-    </target>  
+    </target>
 
     <target name="undeploy-war" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

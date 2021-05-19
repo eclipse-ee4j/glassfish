@@ -25,18 +25,18 @@
 ]>
 
 <project name="security-multimapping" default="usage" basedir=".">
-  
+
   &commonSetup;
   &commonBuild;
   &testproperties;
   &commonSecurity;
-  
+
   <target name="all" depends="clean, setup, build, deploy, run, undeploy, unsetup"/>
-  
+
   <target name="clean" depends="init-common">
     <antcall target="clean-common"/>
   </target>
-  
+
   <target name="setup" depends="init-common">
     <antcall target="create-user-common">
       <param name="user" value="webuser"/>
@@ -50,7 +50,7 @@
     </antcall>
   <!--  <antcall target="reconfig-common"/>-->
   </target>
-  
+
   <target name="unsetup" depends="init-common">
     <antcall target="delete-user-common">
       <param name="user" value="webuser"/>
@@ -59,7 +59,7 @@
       <param name="user" value="bobby"/>
     </antcall>
   </target>
-  
+
   <target name="compile" depends="clean">
     <antcall target="compile-common">
       <param name="src" value="ejb"/>
@@ -81,11 +81,11 @@
         </antcall>
         -->
   </target>
-  
+
   <target name="build" depends="compile">
     <mkdir dir="${assemble.dir}"/>
-    <mkdir dir="${build.classes.dir}/META-INF"/> 
-    
+    <mkdir dir="${build.classes.dir}/META-INF"/>
+
     <antcall target="package-ejbjar-common">
       <param name="ejbjar.files" value="${build.classes.dir}/nonweb"/>
       <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
@@ -97,20 +97,20 @@
       <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
       <param name="sun-web.xml" value="descriptor/sun-web.xml"/>
     </antcall>
-    
+
     <!--
     <antcall target="package-appclientjar-common">
       <param name="appclientjar.files" value="${build.classes.dir}/nonweb"/>
-      <param name="appclient.jar" 
+      <param name="appclient.jar"
              value="${assemble.dir}/${appname}-client.jar"/>
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="com/sun/**/client/*.class,com/sun/**/ejb/Hello.class"/>
     </antcall>
     -->
-    
-    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/> 
-    <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/> 
-    <jar jarfile="${assemble.dir}/${appname}App.ear"> 
+
+    <copy file="${application.xml}" tofile="${build.classes.dir}/META-INF/application.xml" failonerror="false"/>
+    <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+    <jar jarfile="${assemble.dir}/${appname}App.ear">
       <fileset dir="${assemble.dir}">
         <include name="*.jar"/>
         <include name="*.war"/>
@@ -120,9 +120,9 @@
         <include name="META-INF/sun-application.xml"/>
       </fileset>
       <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
-    </jar>   
-    
-    <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/> 
+    </jar>
+
+    <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
     <jar jarfile="${assemble.dir}/${appname}App.ear">
       <fileset dir="${assemble.dir}">
         <include name="*.jar"/>
@@ -131,13 +131,13 @@
       <fileset dir="${build.classes.dir}">
         <include name="META-INF/sun-application.xml"/>
       </fileset>
-    </jar>   
+    </jar>
   </target>
-  
+
   <target name="deploy" depends="init-common">
     <antcall target="deploy-common"/>
   </target>
-  
+
   <target name="run" depends="init-common">
     <!--
     <exec executable="${APPCLIENT}">
@@ -168,7 +168,7 @@
       <param name="testcaseid" value="user-auth-ejbrole"/>
     </antcall>
   </target>
-  
+
   <target name="runweb" depends="init-common">
     <taskdef name="webtest" classname="${webtest.classname}"
              classpath="${webtest.classpath}" />
@@ -198,11 +198,11 @@
              testCaseDescription="Testing role mapping"
              testStrategy="Testing role mapping"/>
   </target>
-  
+
   <target name="undeploy" depends="init-common">
     <antcall target="undeploy-common"/>
   </target>
-  
+
   <target name="usage">
     <antcall target="usage-common"/>
   </target>

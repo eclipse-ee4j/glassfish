@@ -56,7 +56,7 @@ public class ServletStatsProvider {
     private RangeStatisticImpl activeServletsLoadedCount;
     private CountStatisticImpl totalServletsLoadedCount;
     private CountStatisticImpl servletProcessingTimes;
-    
+
     public ServletStatsProvider(String moduleName, String vsName) {
         this.moduleName = moduleName;
         this.vsName = vsName;
@@ -89,7 +89,7 @@ public class ServletStatsProvider {
     public CountStatistic getServletProcessingTimes() {
         return servletProcessingTimes;
     }
-    
+
     @ProbeListener("glassfish:web:servlet:servletInitializedEvent")
     public void servletInitializedEvent(
                     @ProbeParam("servletName") String servletName,
@@ -107,7 +107,7 @@ public class ServletStatsProvider {
                     activeServletsLoadedCount.getCurrent() + 1);
             }
             totalServletsLoadedCount.increment();
-        }   
+        }
     }
 
     @ProbeListener("glassfish:web:servlet:servletDestroyedEvent")
@@ -128,7 +128,7 @@ public class ServletStatsProvider {
             }
         }
     }
-    
+
     private boolean isValidEvent(String mName, String hostName) {
         //Temp fix, get the appname from the context root
         if ((moduleName == null) || (vsName == null)) {
@@ -137,14 +137,14 @@ public class ServletStatsProvider {
         if ((moduleName.equals(mName)) && (vsName.equals(hostName))) {
             return true;
         }
-        
+
         return false;
     }
 
     public String getModuleName() {
         return moduleName;
     }
-    
+
     public String getVSName() {
         return vsName;
     }

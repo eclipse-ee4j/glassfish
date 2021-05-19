@@ -200,7 +200,7 @@ public final class PathnamesImpl extends AMXImplBase // implements Pathnames  (c
         } catch (final Exception e) {
             if (!isInstanceNotFound(e)) {
                 AMXLoggerInfo.getLogger().log(Level.WARNING,
-                        AMXLoggerInfo.cantGetChildren, 
+                        AMXLoggerInfo.cantGetChildren,
                         new Object[] {top.objectName(), ExceptionUtil.getRootCause(e).getLocalizedMessage()});
                 // just return, nothing we can do.  Typically it could be InstanceNotFoundException
             }

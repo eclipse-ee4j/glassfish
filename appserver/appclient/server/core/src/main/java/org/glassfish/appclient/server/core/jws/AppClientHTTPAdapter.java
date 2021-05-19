@@ -51,7 +51,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
 
     public final static String GF_JWS_SESSION_CACHED_JNLP_NAME = "org.glassfish.jws.mainJNLP";
     public final static String GF_JWS_SESSION_IS_MAIN_PROCESSED_NAME = "org.glassfish.jws.isMainProcessed";
-        
+
     private final static String IF_UNMODIFIED_SINCE = "If-Unmodified-Since";
 
     private static final String ARG_QUERY_PARAM_NAME = "arg";
@@ -75,21 +75,21 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
 
     /**
      * Prepares a full URI from the request.
-     * 
+     *
      * @param gReq the request
      * @return URI for the request
-     * @throws URISyntaxException 
+     * @throws URISyntaxException
      */
     public static URI requestURI(final Request gReq) throws URISyntaxException {
-        return new URI(gReq.getScheme(), 
-                null /* userInfo */, 
-                gReq.getLocalName(), 
-                gReq.getLocalPort(), 
-                gReq.getPathInfo(), 
-                gReq.getQueryString(), 
+        return new URI(gReq.getScheme(),
+                null /* userInfo */,
+                gReq.getLocalName(),
+                gReq.getLocalPort(),
+                gReq.getPathInfo(),
+                gReq.getQueryString(),
                 null /* fragment */);
     }
-    
+
     public AppClientHTTPAdapter(
             final String contextRoot,
             final Properties tokens,
@@ -106,7 +106,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
                 iiopService,
                 orbFactory);
     }
-    
+
     public AppClientHTTPAdapter(
             final String contextRoot,
             final Map<String,StaticContent> staticContent,
@@ -186,7 +186,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
             logger.log(Level.FINER, sb.toString());
         }
     }
-    
+
     private void dumpHeaders(final Request gReq) {
         final StringBuilder sb = new StringBuilder();
         sb.append("JWS request: method=").append(gReq.getMethod().toString()).append(", URI=").append(gReq.getRequestURI()).append(LINE_SEP);
@@ -196,7 +196,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         }
         logger.log(Level.FINER, sb.toString());
     }
-    
+
     public void addContentIfAbsent(final Map<String,StaticContent> staticAdditions,
             final Map<String,DynamicContent> dynamicAdditions) throws IOException {
         addContentIfAbsent(staticAdditions);
@@ -264,11 +264,11 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         gResp.setContentType(dc.getMimeType());
         gResp.setStatus(HttpServletResponse.SC_OK);
         String text = instance.getText();
-        
+
         if (dc.isMain()) {
             saveJNLPWithSession(gReq, text, requestURI);
         }
-        
+
         /*
          * Only for GET should the response actually contain the content.
          * Java Web Start uses HEAD to find out when the target was last
@@ -292,24 +292,24 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
          * generated JNLP content as a session attribute.
          */
         final Session session = gReq.getSession();
-        
-        
+
+
         final Boolean isMainJNLPProcessed = booleanAttr(session.getAttribute(GF_JWS_SESSION_IS_MAIN_PROCESSED_NAME));
         if ( ! isMainJNLPProcessed) {
             byte[] jnlp;
             jnlp = text.getBytes();
             session.setAttribute(GF_JWS_SESSION_IS_MAIN_PROCESSED_NAME, Boolean.TRUE);
             session.setAttribute(GF_JWS_SESSION_CACHED_JNLP_NAME, jnlp);
-            logger.log(Level.FINE, "Session {1} contains no GF/JWS attr; caching {0} and setting attr to main JNLP content", 
+            logger.log(Level.FINE, "Session {1} contains no GF/JWS attr; caching {0} and setting attr to main JNLP content",
                     new Object[] {requestURI, session.getIdInternal()});
         } else {
             logger.log(Level.FINE, "Session {0} already contains cached JNLP", session.getIdInternal());
         }
     }
-    
+
     /**
      * Converts an Object to a Boolean.
-     * 
+     *
      * @param attrValue Object (preferably a Boolean) to convert
      * @return if the argument is a Boolean, its value; false otherwise
      */
@@ -322,7 +322,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         }
         return (Boolean) attrValue;
     }
-    
+
     /**
      * Initializes a Properties object with the token names and values for
      * substitution in the dynamic content template.
@@ -340,9 +340,9 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         answer.setProperty("request.host", request.getServerName());
         answer.setProperty("request.port", Integer.toString(request.getServerPort()));
         answer.setProperty("request.adapter.context.root", contextRoot());
-        
-        
-        answer.setProperty("request.glassfish-acc.xml.content", 
+
+
+        answer.setProperty("request.glassfish-acc.xml.content",
                 Util.toXMLEscaped(accConfigContent.sunACC()));
         answer.setProperty("request.appclient.login.conf.content",
                 Util.toXMLEscaped(accConfigContent.appClientLogin()));
@@ -365,7 +365,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
          * Need to escape the query string which might contain arguments to the
          * acc or the jwsacc.
          */
-        answer.setProperty("request.quoted.query.string", 
+        answer.setProperty("request.quoted.query.string",
                 Util.toXMLEscapedInclAmp(queryStringPropValue.toString()));
 
         processQueryParameters(queryString, answer);
@@ -420,7 +420,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         QueryParams vmArguments = new VMArgQueryParams();
         QueryParams accArguments = new ACCArgQueryParams(targetServerSetting(answer));
         QueryParams jwsaccArguments = new JWSACCArgQueryParams();
-        QueryParams [] paramTypes = new QueryParams[] {arguments, properties, 
+        QueryParams [] paramTypes = new QueryParams[] {arguments, properties,
             vmArguments, accArguments, jwsaccArguments};
 
         for (String param : queryParams) {
@@ -466,7 +466,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
             return;
         }
     }
-    
+
     private String commaIfNeeded(final int origLength) {
         return origLength > 0 ? "," : "";
     }
@@ -607,7 +607,7 @@ public class AppClientHTTPAdapter extends RestrictedContentAdapter {
         public String toString() {
             /*
              * Return zero or more JNLP property settings like this:
-             * 
+             *
              * <property name="javaws.acc.i" value="argName[=argValue]"/>
              *
              * where i goes from 0 upwards.

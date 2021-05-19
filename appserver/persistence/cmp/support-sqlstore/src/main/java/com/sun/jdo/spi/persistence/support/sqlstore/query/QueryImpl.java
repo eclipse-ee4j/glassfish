@@ -190,7 +190,7 @@ public class QueryImpl
             this.jqlc = other.jqlc;
             this.paramtab = new ParameterTable(other.paramtab);
             this.compiled = other.compiled;
-        } 
+        }
         else
         {
             // other.paramtab == null means deserialized query =>
@@ -425,7 +425,7 @@ public class QueryImpl
     }
 
     /** Sets the prefetchEnabled option.
-     *   
+     *
      * The prefetchEnabled option specifies whether prefetch of relationship
      * fields should be enabled for this query. The prefetch is enabled by
      * default if such fields are part of DFG. A user needs to explicitely
@@ -433,8 +433,8 @@ public class QueryImpl
      * will not be used in this transaction.
      *
      * @param prefetchEnabled the setting of the prefetchEnabled option.
-     */  
-    public void setPrefetchEnabled(boolean prefetchEnabled) 
+     */
+    public void setPrefetchEnabled(boolean prefetchEnabled)
     {
         synchronized (this.paramtab)
         {
@@ -599,14 +599,14 @@ public class QueryImpl
     {
         return (pm == null)? null : pm.getCurrentWrapper();
     }
-    
+
     /**
-     * This method clears the PersistenceManager and the candidateCollection fields. 
-     * Then this query instance cannot be executed anymore, but it might be used to 
-     * create a new equivalent query instance by passing this query instance to 
-     * PersistenceManager newQuery method taking a compiled query.  
+     * This method clears the PersistenceManager and the candidateCollection fields.
+     * Then this query instance cannot be executed anymore, but it might be used to
+     * create a new equivalent query instance by passing this query instance to
+     * PersistenceManager newQuery method taking a compiled query.
      * <p>
-     * This method effectively disconnects the PersistenceManager allowing it to be 
+     * This method effectively disconnects the PersistenceManager allowing it to be
      * garbage collected.
      */
     public void clearPersistenceManager()
@@ -614,7 +614,7 @@ public class QueryImpl
         this.pm = null;
         this.candidateCollection = null;
     }
-    
+
     /**
      * Internal method called by execute, executeWithArray, executeWithMap.
      * - calls the code generation of the query compiler
@@ -634,18 +634,18 @@ public class QueryImpl
             // not allow to promote a shared lock into a exclusive lock. Thus
             // we need to get an exclusive lock here. Otherwise pm.internalFlush
             // runs into a deadlock, because it tries to get a exclusive lock.
-            // This code need to be changed to get a ahared lock as soon as 
+            // This code need to be changed to get a ahared lock as soon as
 
             // The next line might result in a NPE, if pm is closed or if the
             // query instance was deserialized. Please note, I cannot check the
-            // pm and then get the lock, because the pm might be closed in 
+            // pm and then get the lock, because the pm might be closed in
             // parallel. Then subsequent uses of pm in doexecute would fail.
             pm.acquireExclusiveLock();
         }
         catch (NullPointerException npe)
         {
             // NPE means pm is closed or query instance was serialized.
-            String key = (createdBySerialization ? 
+            String key = (createdBySerialization ?
                           "query.queryimpl.doexecute.notboundtopm" : //NOI18N
                           "query.queryimpl.doexecute.pmclosed"); //NOI18N
             JDOException ex = new JDOQueryException(
@@ -670,8 +670,8 @@ public class QueryImpl
         }
         finally
         {
-            // Note, the following stmt needs to be replaced by 
-            // pm.releaseSharedLock, as soon as the pm supports promoting a 
+            // Note, the following stmt needs to be replaced by
+            // pm.releaseSharedLock, as soon as the pm supports promoting a
             // shared lock into an exclusive lock.
             pm.releaseExclusiveLock();
         }
@@ -680,15 +680,15 @@ public class QueryImpl
     }
 
     /**
-     * This method checks a valid candidates setting for this query. 
+     * This method checks a valid candidates setting for this query.
      */
     private void checkCandidates()
     {
-        if ((candidateCollection == null) && (candidateClass != null)) 
+        if ((candidateCollection == null) && (candidateClass != null))
         {
             // Set candidateCollection to the extent of the candidate class, if
-            // candidateCollection is not specified. Note, the JDO spec defines 
-            // subclasses=true as the default, but since this is not supported 
+            // candidateCollection is not specified. Note, the JDO spec defines
+            // subclasses=true as the default, but since this is not supported
             // right now, I set it to subclasses=false.
             candidateCollection = pm.getExtent(candidateClass, false);
         }
@@ -707,7 +707,7 @@ public class QueryImpl
         // - if the is a transaction active and
         // - if transaction is not optimistic
         // - if ignoreCache is false
-        if ((tx != null) && tx.isActive() && 
+        if ((tx != null) && tx.isActive() &&
             !tx.getOptimistic() && !this.ignoreCache)
         {
             pm.internalFlush();
@@ -724,7 +724,7 @@ public class QueryImpl
         if (importDeclarations != null) {
             repr.append(", imports: "); //NOI18N
             repr.append(importDeclarations);
-        } 
+        }
         if (parameterDeclarations != null) {
             repr.append(", parameters: "); //NOI18N
             repr.append(parameterDeclarations);
@@ -758,7 +758,7 @@ public class QueryImpl
     {
         return "QueryImpl@" + System.identityHashCode(this); //NOI18N
     }
-    
+
 
     /**
      * Define readObject to initialize the transient field paramtab after deserialization.

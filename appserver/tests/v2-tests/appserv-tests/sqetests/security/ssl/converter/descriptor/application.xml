@@ -23,7 +23,7 @@
     <small-icon></small-icon>
     <large-icon></large-icon>
   </icon>
-  <display-name>SSLConverterApp</display-name>  
+  <display-name>SSLConverterApp</display-name>
   <module>
     <java>sec-ssl-converter-client.jar</java>
   </module>

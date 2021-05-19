@@ -35,7 +35,7 @@
     <target name="run-test" depends="clean,compile,build,deploy,run,undeploy"/>
 
     <target name="clean" depends="init-common">
-        <antcall target="clean-common" /> 
+        <antcall target="clean-common" />
     </target>
 
     <target name="compile" depends="clean">
@@ -47,28 +47,28 @@
         </antcall>
         <antcall target="compile-common">
             <param name="src" value="client"/>
-        </antcall>  
+        </antcall>
     </target>
 
     <target name="build-ejb-jar" depends="init-common" >
         <antcall target="ejb-jar-common" >
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
                 value="**/*Local*.class,**/*Remote*.class,**/*Home*.class,**/*Bean*.class,**/*.dbschema,**/*EJB*.class,**/TradeResult.class,**/ProcessingErrorException.class" />
         </antcall>
     </target>
 
     <target name="build-appclient-ear" depends="init-common">
         <antcall target="appclient-jar-common" >
-            <param name="appclientjar.classes" 
-                value="**/*Local*.class,**/*Remote*.class,**/*Home*.class,**/*Client*.class,**/TradeResult.class,**/ProcessingErrorException.class" />		
+            <param name="appclientjar.classes"
+                value="**/*Local*.class,**/*Remote*.class,**/*Home*.class,**/*Client*.class,**/TradeResult.class,**/ProcessingErrorException.class" />
         </antcall>
         <antcall target="ear-common" />
     </target>
 
-<!-- 
-    Note: The order in which the build targets are called must be so 
+<!--
+    Note: The order in which the build targets are called must be so
     that the ear is created before the ejb jar.....
-    else the ear will package the ejb jar with it 
+    else the ear will package the ejb jar with it
 -->
 
     <target name="setup"/>
@@ -78,8 +78,8 @@
 <!--
         <antcall target="build-appclient-ear" />
 -->
-        <antcall target="build-ejb-jar"/>  
-    </target> 
+        <antcall target="build-ejb-jar"/>
+    </target>
 
     <target name="deploy-ejb-jar" depends="init-common">
     <antcall target="deploy-common">
@@ -93,22 +93,22 @@
     </target>
 
     <target name="copy-clientjar-restart-server" depends="init-common">
-        <copy file="${assemble.dir}/${appname}AppClient.jar" 
+        <copy file="${assemble.dir}/${appname}AppClient.jar"
             todir="${env.S1AS_HOME}/domains/domain1/server/lib" />
         <antcall target="restart-server-instance-common" />
     </target>
 
 
     <target name="deploy" depends="init-common">
-        <antcall target="deploy-ejb-jar" /> 
+        <antcall target="deploy-ejb-jar" />
 <!--
-        <antcall target="deploy-appclient-ear" /> 
+        <antcall target="deploy-appclient-ear" />
         <antcall target="copy-clientjar-restart-server"/>
 -->
     </target>
 
     <target name="run-acc" depends="init-common" >
-        <antcall target="runclient-common"/>  
+        <antcall target="runclient-common"/>
     </target>
 
     <target name="run-standalone" depends="init-common">
@@ -130,10 +130,10 @@
     </target>
 
     <target name="undeploy" depends="init-common">
-        <antcall target="undeploy-common"> 
-	<param name="deployedapp.name" value="${appname}-ejb"/>
-	</antcall>
-    </target>   
+        <antcall target="undeploy-common">
+            <param name="deployedapp.name" value="${appname}-ejb"/>
+        </antcall>
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

@@ -94,7 +94,7 @@ public abstract class AbstractSubstitutionAlgo
         createTextFile();
         Substitutable resolver = null;
         try {
-            resolver = new SmallFileSubstitutionHandler(_testFile); 
+            resolver = new SmallFileSubstitutionHandler(_testFile);
             _algorithm.substitute(resolver);
             resolver.finish();
         } catch (Exception e) {
@@ -132,9 +132,9 @@ public abstract class AbstractSubstitutionAlgo
     public void testSmallXMLFileSubstitution() {
         String fileName = _testFileName.replace(".txt", ".xml");
         createXMLFile(fileName);
-        Substitutable resolver = null; 
+        Substitutable resolver = null;
         try {
-            resolver = new SmallFileSubstitutionHandler(new File(fileName)); 
+            resolver = new SmallFileSubstitutionHandler(new File(fileName));
             _algorithm.substitute(resolver);
             resolver.finish();
         } catch (Exception e) {
@@ -148,11 +148,11 @@ public abstract class AbstractSubstitutionAlgo
                 switch (i++)
                 {
                     case 1:
-                        Assert.assertEquals(afterSubstitutionLine, 
+                        Assert.assertEquals(afterSubstitutionLine,
                                 "<port name=\"http\" value=\"8080\"></port>");
                         break;
                     case 2:
-                        Assert.assertEquals(afterSubstitutionLine, 
+                        Assert.assertEquals(afterSubstitutionLine,
                                 "<port name=\"https\" value=\"8443\"></port>");
                         break;
                     default:
@@ -175,9 +175,9 @@ public abstract class AbstractSubstitutionAlgo
     // to perform substitution.
     public void testLargeTextFileSubstitution() {
         createTextFile();
-        Substitutable resolver = null; 
+        Substitutable resolver = null;
         try {
-            resolver = new LargeFileSubstitutionHandler(_testFile); 
+            resolver = new LargeFileSubstitutionHandler(_testFile);
             _algorithm.substitute(resolver);
             resolver.finish();
         } catch (Exception e) {
@@ -224,7 +224,7 @@ public abstract class AbstractSubstitutionAlgo
     public void testLargeXMLFileSubstitution() {
         String fileName = _testFileName.replace(".txt", ".xml");
         createXMLFile(fileName);
-        Substitutable resolver = null; 
+        Substitutable resolver = null;
         try {
             resolver = new LargeFileSubstitutionHandler(_testFile);
             _algorithm.substitute(resolver);

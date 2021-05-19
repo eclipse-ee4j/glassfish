@@ -44,78 +44,76 @@ import java.util.Map;
  * for saving its runtime-info at his level.
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
-    
-    private String currentWebUri=null;
-    
+
+    private String currentWebUri = null;
+
     public ApplicationRuntimeNode(Application descriptor) {
         super(descriptor);
         //trigger registration in standard node, if it hasn't happened
         habitat.getService(ApplicationNode.class);
-    }   
-    
+    }
+
     /**
      * Initialize the child handlers
-     */    
-    protected void init() {     
-        super.init();                          
-        registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING), 
-                               SecurityRoleMappingNode.class);              
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_REFERENCE),
-                               ResourceRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.EJB_REFERENCE),
-                               EjbRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_ENV_REFERENCE),
-                               ResourceEnvRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE),
-                               MessageDestinationRefNode.class);
-        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION),
-             MessageDestinationRuntimeNode.class);
-        registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF),
-                               ServiceRefNode.class);
+     */
+    protected void init() {
+        super.init();
+        registerElementHandler(new XMLElement(RuntimeTagNames.SECURITY_ROLE_MAPPING), SecurityRoleMappingNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_REFERENCE), ResourceRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.EJB_REFERENCE), EjbRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_ENV_REFERENCE), ResourceEnvRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION_REFERENCE), MessageDestinationRefNode.class);
+        registerElementHandler(new XMLElement(RuntimeTagNames.MESSAGE_DESTINATION), MessageDestinationRuntimeNode.class);
+        registerElementHandler(new XMLElement(WebServicesTagNames.SERVICE_REF), ServiceRefNode.class);
     }
-        
-   /**
-    * register this node as a root node capable of loading entire DD files
-    * 
-    * @param publicIDToDTD is a mapping between xml Public-ID to DTD 
-    * @return the doctype tag name
-    */
-  public static String registerBundle(Map publicIDToDTD,
-                                      Map<String, List<Class>> versionUpgrades) {    
-       publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_130_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_130_DTD_SYSTEM_ID);
-       publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_140_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_140_DTD_SYSTEM_ID);       
-       publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_141_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_141_DTD_SYSTEM_ID);       
-       publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_500_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_500_DTD_SYSTEM_ID);       
-       publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_600_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_600_DTD_SYSTEM_ID);       
-       if (!restrictDTDDeclarations()) {
-           publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_140beta_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_140beta_DTD_SYSTEM_ID);       
-       }
-       return RuntimeTagNames.S1AS_APPLICATION_RUNTIME_TAG;
-   }   
-    
+
+
+    /**
+     * register this node as a root node capable of loading entire DD files
+     *
+     * @param publicIDToDTD is a mapping between xml Public-ID to DTD
+     * @return the doctype tag name
+     */
+    public static String registerBundle(Map publicIDToDTD, Map<String, List<Class>> versionUpgrades) {
+        publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_130_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_130_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_140_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_140_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_141_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_141_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_500_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_500_DTD_SYSTEM_ID);
+        publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_600_DTD_PUBLIC_ID, DTDRegistry.SUN_APPLICATION_600_DTD_SYSTEM_ID);
+        if (!restrictDTDDeclarations()) {
+            publicIDToDTD.put(DTDRegistry.SUN_APPLICATION_140beta_DTD_PUBLIC_ID,
+                DTDRegistry.SUN_APPLICATION_140beta_DTD_SYSTEM_ID);
+        }
+        return RuntimeTagNames.S1AS_APPLICATION_RUNTIME_TAG;
+    }
+
+
     /**
      * @return the XML tag associated with this XMLNode
      */
     protected XMLElement getXMLRootTag() {
         return new XMLElement(RuntimeTagNames.S1AS_APPLICATION_RUNTIME_TAG);
-    } 
-    
-    /** 
+    }
+
+
+    /**
      * @return the DOCTYPE that should be written to the XML file
      */
     public String getDocType() {
-	return DTDRegistry.SUN_APPLICATION_600_DTD_PUBLIC_ID;
+        return DTDRegistry.SUN_APPLICATION_600_DTD_PUBLIC_ID;
     }
-    
+
+
     /**
      * @return the SystemID of the XML file
      */
     public String getSystemID() {
-	return DTDRegistry.SUN_APPLICATION_600_DTD_SYSTEM_ID;
+        return DTDRegistry.SUN_APPLICATION_600_DTD_SYSTEM_ID;
     }
+
 
     /**
      * @return NULL for all runtime nodes.
@@ -123,65 +121,65 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     public List<String> getSystemIDs() {
         return null;
     }
-    
+
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.REALM, "setRealm");
         return table;
     }
-    
+
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     public void setElementValue(XMLElement element, String value) {
-	if (element.getQName().equals(RuntimeTagNames.PASS_BY_REFERENCE)) {
-	    descriptor.setPassByReference("true".equalsIgnoreCase(value));
-	} else
-        if (element.getQName().equals(RuntimeTagNames.UNIQUE_ID)) {
+        if (element.getQName().equals(RuntimeTagNames.PASS_BY_REFERENCE)) {
+            descriptor.setPassByReference("true".equalsIgnoreCase(value));
+        } else if (element.getQName().equals(RuntimeTagNames.UNIQUE_ID)) {
             DOLUtils.getDefaultLogger().finer("Ignoring unique id");
             return;
-        } else
-	if (element.getQName().equals(RuntimeTagNames.ARCHIVE_NAME)) {
-	    descriptor.setArchiveName(value);
-	} else
-	if (element.getQName().equals(RuntimeTagNames.COMPATIBILITY)) {
-	    descriptor.setCompatibility(value);
-	} else
-	if (element.getQName().equals(RuntimeTagNames.WEB_URI)) {
-	    currentWebUri=value;
-	} else 
-	if (element.getQName().equals(RuntimeTagNames.CONTEXT_ROOT)) {
-	    if (currentWebUri!=null) {
-		ModuleDescriptor md = descriptor.getModuleDescriptorByUri(currentWebUri);
-                if (md==null) {
+        } else if (element.getQName().equals(RuntimeTagNames.ARCHIVE_NAME)) {
+            descriptor.setArchiveName(value);
+        } else if (element.getQName().equals(RuntimeTagNames.COMPATIBILITY)) {
+            descriptor.setCompatibility(value);
+        } else if (element.getQName().equals(RuntimeTagNames.WEB_URI)) {
+            currentWebUri = value;
+        } else if (element.getQName().equals(RuntimeTagNames.CONTEXT_ROOT)) {
+            if (currentWebUri != null) {
+                ModuleDescriptor md = descriptor.getModuleDescriptorByUri(currentWebUri);
+                if (md == null) {
                     throw new RuntimeException("No bundle in application with uri " + currentWebUri);
                 }
-		currentWebUri=null;
-		if (md.getModuleType().equals(DOLUtils.warType())) {
-		    md.setContextRoot(value);
-		} else {
-		    throw new RuntimeException(currentWebUri + " uri does not point to a web bundle");
-		} 
-	    } else {
-		throw new RuntimeException("No uri provided for this context-root " + value);
-	    }
+                currentWebUri = null;
+                if (md.getModuleType().equals(DOLUtils.warType())) {
+                    md.setContextRoot(value);
+                } else {
+                    throw new RuntimeException(currentWebUri + " uri does not point to a web bundle");
+                }
+            } else {
+                throw new RuntimeException("No uri provided for this context-root " + value);
+            }
         } else if (element.getQName().equals(RuntimeTagNames.KEEP_STATE)) {
             descriptor.setKeepState(value);
         } else if (element.getQName().equals(RuntimeTagNames.VERSION_IDENTIFIER)) {
-	} else super.setElementValue(element, value);
+        } else {
+            super.setElementValue(element, value);
+        }
     }
 
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param newDescriptor the new descriptor
@@ -189,26 +187,25 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
     public void addDescriptor(Object newDescriptor) {
         if (newDescriptor instanceof SecurityRoleMapping) {
             SecurityRoleMapping roleMap = (SecurityRoleMapping) newDescriptor;
-            if (descriptor!=null && !descriptor.isVirtual()) {
+            if (descriptor != null && !descriptor.isVirtual()) {
                 descriptor.addSecurityRoleMapping(roleMap);
                 Role role = new Role(roleMap.getRoleName());
                 SecurityRoleMapper rm = descriptor.getRoleMapper();
                 if (rm != null) {
                     List<PrincipalNameDescriptor> principals = roleMap.getPrincipalNames();
                     for (int i = 0; i < principals.size(); i++) {
-                        rm.assignRole(principals.get(i).getPrincipal(),
-                            role, descriptor);
+                        rm.assignRole(principals.get(i).getPrincipal(), role, descriptor);
                     }
                     List<String> groups = roleMap.getGroupNames();
                     for (int i = 0; i < groups.size(); i++) {
-                        rm.assignRole(new Group(groups.get(i)),
-                            role, descriptor);
+                        rm.assignRole(new Group(groups.get(i)), role, descriptor);
                     }
                 }
             }
-        } 
-    } 
-    
+        }
+    }
+
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -216,34 +213,35 @@ public class ApplicationRuntimeNode extends RuntimeBundleNode<Application> {
      * @param nodeName the node name
      * @param application the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, Application application) {    
+     */
+    public Node writeDescriptor(Node parent, String nodeName, Application application) {
         Node appNode = super.writeDescriptor(parent, nodeName, application);
-	
-        // web*
-	for (ModuleDescriptor module : application.getModules()) {
-	    if (module.getModuleType().equals(DOLUtils.warType())) {
-		Node web = appendChild(appNode, RuntimeTagNames.WEB);
-		appendTextChild(web, RuntimeTagNames.WEB_URI, module.getArchiveUri());
-		appendTextChild(web, RuntimeTagNames.CONTEXT_ROOT, module.getContextRoot());
-	    }
-	}
-	
-	// pass-by-reference ?
-	if (application.isPassByReferenceDefined()) {
-	    appendTextChild(appNode, RuntimeTagNames.PASS_BY_REFERENCE, String.valueOf(application.getPassByReference()));
-	}
 
-        // NOTE : unique-id is no longer written out to sun-ejb-jar.xml.  It is persisted via
+        // web*
+        for (ModuleDescriptor module : application.getModules()) {
+            if (module.getModuleType().equals(DOLUtils.warType())) {
+                Node web = appendChild(appNode, RuntimeTagNames.WEB);
+                appendTextChild(web, RuntimeTagNames.WEB_URI, module.getArchiveUri());
+                appendTextChild(web, RuntimeTagNames.CONTEXT_ROOT, module.getContextRoot());
+            }
+        }
+
+        // pass-by-reference ?
+        if (application.isPassByReferenceDefined()) {
+            appendTextChild(appNode, RuntimeTagNames.PASS_BY_REFERENCE,
+                String.valueOf(application.getPassByReference()));
+        }
+
+        // NOTE : unique-id is no longer written out to sun-ejb-jar.xml. It is persisted via
         // domain.xml deployment context properties instead.
-	
+
         // security-role-mapping*
         List<SecurityRoleMapping> roleMappings = application.getSecurityRoleMappings();
-        for (int i = 0; i < roleMappings.size(); i++) { 
+        for (int i = 0; i < roleMappings.size(); i++) {
             SecurityRoleMappingNode srmn = new SecurityRoleMappingNode();
             srmn.writeDescriptor(appNode, RuntimeTagNames.SECURITY_ROLE_MAPPING, roleMappings.get(i));
         }
-        
+
         // realm?
         appendTextChild(appNode, RuntimeTagNames.REALM, application.getRealm());
 

@@ -51,10 +51,10 @@ public class SpecificTestRule implements MethodRule {
                 if(BaseSeleniumTestClass.IS_SECURE_ADMIN_ENABLED) {
                     String className = frameworkMethod.getMethod().getDeclaringClass().getName();
                     if (className.contains(".SecurityTest") ||
-                       (className.contains(".AdminServiceTest") && 
+                       (className.contains(".AdminServiceTest") &&
                         frameworkMethod.getName().equals("testSsl"))) {
                         skipTest = true;
-                    }  
+                    }
                 }
                 Set<String> methods = new HashSet<String>();
                 if (method != null) {

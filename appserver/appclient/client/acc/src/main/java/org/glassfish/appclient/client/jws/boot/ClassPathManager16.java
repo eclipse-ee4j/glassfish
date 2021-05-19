@@ -31,7 +31,7 @@ import java.util.jar.JarFile;
  * @author tjquinn
  */
 public class ClassPathManager16 extends ClassPathManager {
-    
+
     /** Class object for the JNLPClassLoader class */
     private Class jnlpClassLoaderClass;
 
@@ -52,7 +52,7 @@ public class ClassPathManager16 extends ClassPathManager {
     }
 
     /**
-     *Prepares the reflection-related private variables for later use in 
+     *Prepares the reflection-related private variables for later use in
      *locating classes in JARs.
      *@throws ClassNotFoundException if the JNLPClassLoader class cannot be found
      *@throws NoSuchMethodException if the getJarFile method cannot be found

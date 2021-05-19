@@ -18,8 +18,8 @@
 -->
 
 <web-app xmlns="http://xmlns.jcp.org/xml/ns/javaee"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"    
-         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee web-app_3_1.xsd"    
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee web-app_3_1.xsd"
          version="3.1">
 
     <display-name>connection-factory-definition</display-name>
@@ -61,7 +61,7 @@
          <value>foo</value>
        </property>
      </connection-factory>
-    
+
      <connection-factory>
        <description>module-scope resource defined in Web DD</description>
        <name>java:module/env/ConnectionFactory</name>
@@ -72,6 +72,6 @@
          <value>foo</value>
        </property>
      </connection-factory>
-    
+
 </web-app>
 

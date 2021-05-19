@@ -26,7 +26,7 @@ import jakarta.inject.Inject;
 public class TestSessionScopedBean implements Serializable{
     @Inject
     Instance<TestSingletonScopedBean> tssInstance;
-    
+
     public TestSingletonScopedBean getSingletonScopedBean(){
         return tssInstance.get();
     }

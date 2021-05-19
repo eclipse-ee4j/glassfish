@@ -30,18 +30,18 @@ import org.glassfish.contextpropagation.internal.Utils;
 /**
  * Concrete WireAdapter instances define the methods for transforming
  * Entry's into serialized wire data and vice versa.
- * 
+ *
  * WireAdapters should thrive to:
  *  - encode data efficiently and compactly
- *  - be resilient to errors -- a problem decoding an entry should not cause the 
+ *  - be resilient to errors -- a problem decoding an entry should not cause the
  *    decoding of subsequent entries to fail.
  */
 public interface WireAdapter {
   static interface WireAdapterHelper {
     SerializableContextFactory findContextFactory(String contextName, String wireClassName);
-    public void registerContextFactoryForContextNamed(String contextName, 
+    public void registerContextFactoryForContextNamed(String contextName,
         String wireClassName, SerializableContextFactory factory);
-    public void registerContextFactoryForClass(Class<?> contextClass, 
+    public void registerContextFactoryForClass(Class<?> contextClass,
         String wireClassName, SerializableContextFactory factory);
   }
   public void prepareToWriteTo(OutputStream out) throws IOException;
@@ -50,14 +50,14 @@ public interface WireAdapter {
   public void prepareToReadFrom(InputStream is) throws IOException;
   public String readKey() throws IOException;
   public Entry readEntry() throws IOException, ClassNotFoundException;
-  
-  public static final WireAdapterHelper HELPER = new WireAdapterHelper() {   
+
+  public static final WireAdapterHelper HELPER = new WireAdapterHelper() {
     Map<String, SerializableContextFactory> contextFactoriesByContextName = new HashMap<String, SerializableContextFactory>();
     Map<String, String> wireClassNameByContextName = new HashMap<String, String>();
-    public void registerContextFactoryForContextNamed(String contextName, 
+    public void registerContextFactoryForContextNamed(String contextName,
         String wireClassName, SerializableContextFactory factory) {
-      Utils.validateFactoryRegistrationArgs("contextName", 
-          MessageID.WARN_FACTORY_ALREADY_REGISTERED_FOR_NAME, contextName, 
+      Utils.validateFactoryRegistrationArgs("contextName",
+          MessageID.WARN_FACTORY_ALREADY_REGISTERED_FOR_NAME, contextName,
           factory, contextFactoriesByContextName);
       contextFactoriesByContextName.put(contextName, factory);
       wireClassNameByContextName.put(contextName, wireClassName);
@@ -65,10 +65,10 @@ public interface WireAdapter {
 
     Map<String, SerializableContextFactory> contextFactoriesByClassName = new HashMap<String, SerializableContextFactory>();
     Map<String, String> wireClassNameByClassName = new HashMap<String, String>();
-    public void registerContextFactoryForClass(Class<?> contextClass, 
+    public void registerContextFactoryForClass(Class<?> contextClass,
         String wireClassName, SerializableContextFactory factory) {
-      Utils.validateFactoryRegistrationArgs("Context class name", 
-          MessageID.WARN_FACTORY_ALREADY_REGISTERED_FOR_CLASS, 
+      Utils.validateFactoryRegistrationArgs("Context class name",
+          MessageID.WARN_FACTORY_ALREADY_REGISTERED_FOR_CLASS,
           contextClass.getName(), factory, contextFactoriesByClassName);
       contextFactoriesByClassName.put(wireClassName, factory);
       wireClassNameByClassName.put(contextClass.getName(), wireClassName);

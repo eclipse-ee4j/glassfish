@@ -33,22 +33,22 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(Timeout.class)
 public class TimeoutHandler extends AbstractAttributeHandler {
-    
+
     public TimeoutHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         // No-op.  @Timeout processing is performed during initial EJB 3.0
         // bean processing in AbstractEjbHandler.
-        
+
         return getDefaultProcessedResult();
     }
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

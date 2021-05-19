@@ -17,7 +17,7 @@
 
 -->
 
-<project name="Admin Framework Devtests" default="all" basedir=".">  
+<project name="Admin Framework Devtests" default="all" basedir=".">
 
 <!-- ========== Initialize Properties =================================== -->
 
@@ -29,7 +29,7 @@
         <pathelement location="${appserv-admin.jar}"/>
         <pathelement location="${j2ee.jar}"/>
         <pathelement location="${junit.jar}"/>
-    </path> 
+    </path>
     <path id="test.run.classpath">
        <pathelement location="${tests.workfiles.dir}/testserverbeans.jar"/>
        <pathelement location="${component.tests.classes.dir}"/>
@@ -39,11 +39,11 @@
 
 
     <!-- init. Initialization involves creating publishing directories and
-         OS specific targets. --> 
+         OS specific targets. -->
     <target name="init-tests" description="${component.name} initialization">
         <tstamp>
             <format property="start.time" pattern="MM/dd/yyyy hh:mm aa"/>
-        </tstamp>    
+        </tstamp>
         <echo message="Building component ${component.name}"/>
         <mkdir dir="${component.tests.classes.dir}"/>
         <delete dir="${tests.workfiles.dir}"/>
@@ -68,11 +68,11 @@
 
 <target name="compile-tests">
   <echo message="Compiling {component.name}"/>
-  <javac srcdir="${testsrc.dir}" 
+  <javac srcdir="${testsrc.dir}"
          destdir="${component.tests.classes.dir}"
-         debug="${javac.debug}" 
+         debug="${javac.debug}"
          optimize="${javac.optimize}"
-         source="${javac.source}" 
+         source="${javac.source}"
          deprecation="${javac.deprecation}"
          failonerror="true"
          classpathref="test.compile.classpath">
@@ -80,14 +80,14 @@
   <!--   <include name="**/*Test.java"/>
      <include name="**/*Tests.java"/>            -->
   </javac>
-	
+
 </target>
 
 
 <target name="run-tests" depends="init-tests,compile-tests">
-  <java fork="true" failonerror="true" 
+  <java fork="true" failonerror="true"
       classname="com.sun.enterprise.admin.AdminInfraTest" >
-<!--	<jvmarg value="-Djcov.file=${jcov.file}"/> 
+<!--    <jvmarg value="-Djcov.file=${jcov.file}"/>
 -->
       <arg line="-testpath ${tests.workfiles.dir}" />
       <classpath refid="test.run.classpath"/>
@@ -99,17 +99,17 @@
             <fileset dir="${tests.workfiles.dir}/samples" includes="*"/>
             <fileset dir="${testfiles.dir}/samples" includes="*"/>
   </delete>
-  <java fork="true" failonerror="true" 
+  <java fork="true" failonerror="true"
       classname="com.sun.enterprise.admin.AdminInfraTest" >
 
 <!--
-	<jvmarg value="-Xdebug"/>
-	<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9009"/>
+    <jvmarg value="-Xdebug"/>
+    <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=9009"/>
       <jvmarg value="-Djcov.server_port=3330"/>
       <jvmarg value="-Xbootclasspath/p:/export/ias/sqe-pe/codecoverage/jcov/lib/jcov.jar"/>
 -->
       <arg line="-testpath ${tests.workfiles.dir} create" />
-	<classpath refid="test.run.classpath"/>
+    <classpath refid="test.run.classpath"/>
   </java>
     <copy  todir="${testfiles.dir}">
         <fileset dir="${tests.workfiles.dir}" includes="samples/*"/>
@@ -117,14 +117,14 @@
 </target>
 
 <target name="run-tests-print" depends="init-tests,compile-tests">
-  <java fork="true" failonerror="true" 	
+  <java fork="true" failonerror="true"
       classname="com.sun.enterprise.admin.AdminInfraTest" >
       <arg line="-testpath ${tests.workfiles.dir} print" />
 <!--
-	<jvmarg value="-Xdebug"/>
-	<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1044"/>
+    <jvmarg value="-Xdebug"/>
+    <jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1044"/>
 -->
-	<classpath refid="test.run.classpath"/>
+    <classpath refid="test.run.classpath"/>
   </java>
 </target>
 
@@ -146,4 +146,4 @@
 </target>
 
 </project>
-	
+

@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 
 
-/** 
+/**
  * This class stores information about CMP and Foreign Key fields.
  * Note: the "field" variable is only available at runtime.
  *
@@ -43,9 +43,9 @@ public final class PersistentFieldInfo implements Serializable {
     public String name;
     public transient Class type;
 
-    // For fkey fields (including fields in Join objects) 
-    // these two fields are the corresponding pkey field and related object, 
+    // For fkey fields (including fields in Join objects)
+    // these two fields are the corresponding pkey field and related object,
     // For CMP fields these are null.
-    public String relatedName; 
-    public PersistenceDescriptor relatedObj; 
+    public String relatedName;
+    public PersistenceDescriptor relatedObj;
 }

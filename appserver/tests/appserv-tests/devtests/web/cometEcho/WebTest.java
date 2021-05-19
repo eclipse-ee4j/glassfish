@@ -53,7 +53,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for comet: echo");
@@ -126,7 +126,7 @@ public class WebTest {
             int statusCode = urlConnection.getResponseCode();
             if (HttpURLConnection.HTTP_OK != statusCode) {
                 throw new IllegalStateException("Incorrect return code: " + statusCode);
-            } 
+            }
         } finally {
             try {
                 if (os != null) {
@@ -178,7 +178,7 @@ public class WebTest {
                 listenMessage = br.readLine();
                 endSignal.countDown();
             } catch( Exception ex){
-                ex.printStackTrace();   
+                ex.printStackTrace();
                 throw new IllegalStateException("Test UNPREDICTED-FAILURE");
             } finally {
                 try {

@@ -19,31 +19,29 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Statistic;
 import org.glassfish.j2ee.statistics.BoundedRangeStatistic;
 
-/** An implementation of AverageRangeStatistic that provides ways to change the state externally through mutators.
+/**
+ * An implementation of AverageRangeStatistic that provides ways to change the state externally
+ * through mutators.
  * Convenience class that is useful for components that gather the statistical data.
  * By merely changing the count (which is a mandatory measurement), rest of the statistical
  * information could be deduced.
+ *
  * @author Larry White
  * @author Kedar Mhaswade
  * @see AverageRangeStatisticImpl for an immutable implementation
  * @since S1AS8.1
  * @version 1.0
  */
-
-/**
- *
- * @author  lwhite
- */
 public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, MutableCountStatistic {
 
     /** DEFAULT_UPPER_BOUND is maximum value Long can attain */
     public static final long DEFAULT_MAX_BOUND = java.lang.Long.MAX_VALUE;
-        
+
     private MutableBoundedRangeStatisticImpl    mutableBoundedRangeStat = null;
     private long                                numberOfSamples;
     private long                                runningTotal;
     private String                              description = null;
-    
+
     /** Constructs an instance of MutableAverageRangeStatisticImpl that encapsulates the given Statistic.
      * The only parameter denotes the initial state of this statistic. It is
      * guaranteed that the initial state is preserved internally, so that one
@@ -54,14 +52,16 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
         mutableBoundedRangeStat = new MutableBoundedRangeStatisticImpl(initial);
         numberOfSamples = 0L;
         runningTotal = 0L;
-        description = initial.getDescription();        
+        description = initial.getDescription();
     }
-    
-    public Statistic modifiableView() {        
+
+    @Override
+    public Statistic modifiableView() {
         return this;
     }
-    
-    public Statistic unmodifiableView() {        
+
+    @Override
+    public Statistic unmodifiableView() {
         return ( new AverageRangeStatisticImpl(
             this.getCurrent(),               // this is the actual changing statistic
             this.getHighWaterMark(),         // highWaterMark may change per current
@@ -75,19 +75,21 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
             this.getStartTime(),             // changes if reset is called earlier
             this.numberOfSamples,       // this is the current number of samples
             this.runningTotal           // this is the current running total
-        ));        
-    }    
+        ));
+    }
 
+    @Override
     public void reset() {
         mutableBoundedRangeStat.reset();
         this.resetAverageStats();
     }
-    
+
     private void resetAverageStats() {
         numberOfSamples = 0L;
         runningTotal = 0L;
-    }    
-    
+    }
+
+    @Override
     public void setCount(long current) {
         mutableBoundedRangeStat.setCount(current);
         if(DEFAULT_MAX_BOUND - runningTotal < current) {
@@ -96,7 +98,8 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
         numberOfSamples++;
         runningTotal += current;
     }
-    
+
+    @Override
     public long getAverage() {
         if(numberOfSamples == 0) {
             return -1;
@@ -104,24 +107,29 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
             return runningTotal / numberOfSamples;
         }
     }
-    
+
+    @Override
     public long getCurrent() {
         return mutableBoundedRangeStat.getCurrent();
     }
-    
+
+    @Override
     public String getDescription() {
         return description;
         //return mutableBoundedRangeStat.getDescription();
     }
-    
+
+    @Override
     public long getHighWaterMark() {
         return mutableBoundedRangeStat.getHighWaterMark();
     }
-    
+
+    @Override
     public long getLastSampleTime() {
         return mutableBoundedRangeStat.getLastSampleTime();
     }
-    
+
+    @Override
     public long getLowWaterMark() {
         long result = mutableBoundedRangeStat.getLowWaterMark();
         if(result == DEFAULT_MAX_BOUND) {
@@ -129,17 +137,20 @@ public class MutableAverageRangeStatisticImpl implements AverageRangeStatistic, 
         }
         return result;
     }
-    
+
+    @Override
     public String getName() {
         return mutableBoundedRangeStat.getName();
     }
-    
+
+    @Override
     public long getStartTime() {
         return mutableBoundedRangeStat.getStartTime();
     }
-    
+
+    @Override
     public String getUnit() {
         return mutableBoundedRangeStat.getUnit();
     }
-    
+
 }

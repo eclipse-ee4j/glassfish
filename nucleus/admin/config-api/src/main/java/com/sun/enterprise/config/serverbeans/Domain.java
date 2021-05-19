@@ -116,7 +116,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
 
     /**
      * Gets the SecureAdmin value defined in the domain.
-     * 
+     *
      * @return {@link SecureAdmin }
      */
     @Element
@@ -124,7 +124,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
 
     /**
      * Sets the SecureAdmin value.
-     * 
+     *
      * @param secureAdmin
      */
     void setSecureAdmin(SecureAdmin secureAdmin);
@@ -260,7 +260,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
@@ -703,7 +703,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
 
             Cluster containingCluster = getClusterForInstance(me, target);
             if (containingCluster != null) {
-                // if this is a clustered instance, check the enable 
+                // if this is a clustered instance, check the enable
                 // attribute of its enclosing cluster first
                 // and return false if the cluster level enable attribute
                 // is false
@@ -749,7 +749,7 @@ public interface Domain extends ConfigBeanProxy, PropertyBag, SystemPropertyBag,
 
         public static List<String> getAllTargets(Domain d) {
             List<String> targets = new ArrayList<String>();
-            // only add non-clustered servers as the cluster 
+            // only add non-clustered servers as the cluster
             // targets will be separately added
             for (Server server : d.getServers().getServer()) {
                 if (server.getCluster() == null) {

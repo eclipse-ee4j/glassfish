@@ -29,7 +29,7 @@ public class AppClientSSL {
     private boolean ssl2Enabled = false;
     private String ssl2Ciphers;
     private boolean clientAuthEnabled = false;
-    
+
     /**
      * Gets the value of the certNickname property.
      *
@@ -113,17 +113,17 @@ public class AppClientSSL {
     public void setSsl3Enabled(String value) {
         this.ssl3Enabled = Boolean.parseBoolean(value);
     }
-    
+
     public void setSsl3Enabled(boolean value) {
         this.ssl3Enabled = value;
     }
 
     /**
-     A comma-separated list of the SSL3 ciphers used, with the prefix + to enable or - to 
-        disable, for example +SSL_RSA_WITH_RC4_128_MD5 . Allowed values are 
-        SSL_RSA_WITH_RC4_128_MD5, SSL_RSA_WITH_3DES_EDE_CBC_SHA, SSL_RSA_WITH_DES_CBC_SHA, 
-        SSL_RSA_EXPORT_WITH_RC4_40_MD5, SSL_RSA_WITH_NULL_MD5, SSL_RSA_WITH_RC4_128_SHA, and 
-        SSL_RSA_WITH_NULL_SHA. Values available in previous releases are supported for backward 
+     A comma-separated list of the SSL3 ciphers used, with the prefix + to enable or - to
+        disable, for example +SSL_RSA_WITH_RC4_128_MD5 . Allowed values are
+        SSL_RSA_WITH_RC4_128_MD5, SSL_RSA_WITH_3DES_EDE_CBC_SHA, SSL_RSA_WITH_DES_CBC_SHA,
+        SSL_RSA_EXPORT_WITH_RC4_40_MD5, SSL_RSA_WITH_NULL_MD5, SSL_RSA_WITH_RC4_128_SHA, and
+        SSL_RSA_WITH_NULL_SHA. Values available in previous releases are supported for backward
         compatibility.
      */
     public String getSsl3TlsCiphers() {
@@ -159,7 +159,7 @@ public class AppClientSSL {
     public void setTlsEnabled(String value) {
         this.tlsEnabled = Boolean.parseBoolean(value);
     }
-    
+
     public void setTlsEnabled(boolean value) {
         this.tlsEnabled = value;
     }

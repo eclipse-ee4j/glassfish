@@ -29,14 +29,14 @@ public class ServletTest extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
 
@@ -51,7 +51,7 @@ public class ServletTest extends HttpServlet {
             HttpURLConnection urlConnection = (HttpURLConnection)conn;
             urlConnection.setDoOutput(true);
 
-            DataOutputStream dout = 
+            DataOutputStream dout =
                new DataOutputStream(urlConnection.getOutputStream());
                                     dout.writeByte(1);
 

@@ -25,7 +25,7 @@ import java.util.function.Supplier;
 import java.util.stream.Stream;
 
 public class ClassLoaderWrapper extends ClassLoader implements Supplier<ClassLoader>, Consumer<ClassLoader> {
-    
+
     private ClassLoader wrapped;
 
     public ClassLoaderWrapper(ClassLoader wrapped) {
@@ -65,7 +65,7 @@ public class ClassLoaderWrapper extends ClassLoader implements Supplier<ClassLoa
         if (this.wrapped == null) {
             return super.getName();
         }
-        
+
         return this.wrapped.getName();
     }
 

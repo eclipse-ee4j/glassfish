@@ -17,7 +17,7 @@
 package faultcodeejb;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -28,25 +28,25 @@ public class FaultCodeEJB implements SessionBean {
     private SessionContext sc;
 
     public FaultCodeEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In FaultCodeEJB::ejbCreate !!");
+        System.out.println("In FaultCodeEJB::ejbCreate !!");
     }
 
     public String echoString(String body) {
-	System.out.println("In FaultCodeEJB::  echoString = " + body);
+        System.out.println("In FaultCodeEJB::  echoString = " + body);
         return body;
     }
-        
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 
 }

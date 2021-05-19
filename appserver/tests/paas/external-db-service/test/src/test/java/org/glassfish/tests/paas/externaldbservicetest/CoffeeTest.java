@@ -80,14 +80,14 @@ public class CoffeeTest {
             System.out.println("\ncreate-derby-vm command output [ " +
                     createDerbyVMResult.getOutput() + "]");
 
-	    String derbyIP = (createDerbyVMResult.getOutput().split("\n"))[1];
+        String derbyIP = (createDerbyVMResult.getOutput().split("\n"))[1];
 
             System.out.println("Derby IP = " + derbyIP);
 
             //2.2. Create the shared DB service
             CommandResult createExternalServiceResult = commandRunner.run(
                     "create-external-service", "--configuration", "ip-address=" + derbyIP + ":databasename=foo:connectionAttributes=;'create=true':port=1527:user=APP:password=APP:host=" + derbyIP + ":classname=org.apache.derby.jdbc.ClientXADataSource:resourcetype=javax.sql.XADataSource",
-		    "--servicetype",
+            "--servicetype",
                     "Database", "coffee-service");
             System.out.println("\ncreate-external-service command output [ " +
                     createExternalServiceResult.getOutput() + "]");

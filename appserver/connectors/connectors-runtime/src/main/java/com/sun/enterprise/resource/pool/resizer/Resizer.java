@@ -156,7 +156,7 @@ public class
         long currentTime = System.currentTimeMillis();
         int validConnectionsCounter = 0;
         int idleConnKeptInSteadyCounter = 0;
-        
+
         //iterate through all thre active resources to find idle-time lapsed ones.
         ResourceHandle h;
         Set<ResourceHandle> activeResources = new HashSet<ResourceHandle>();
@@ -170,7 +170,7 @@ public class
                     resourcesToValidate.add(h.toString());
                     activeResources.add(h);
                 } else {
-                    boolean isResourceEligibleForRemoval = 
+                    boolean isResourceEligibleForRemoval =
                             isResourceEligibleForRemoval(h, validConnectionsCounter);
                     if(!isResourceEligibleForRemoval) {
                         //preferValidateOverrecreate true and connection is valid within SPS

@@ -59,8 +59,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 //@TargetType({CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="configure-jms-cluster", 
+        opType=RestEndpoint.OpType.POST,
+        path="configure-jms-cluster",
         description="configure-jms-cluster",
         params={
             @RestParam(name="id", value="$parent")

@@ -40,11 +40,11 @@ import org.glassfish.persistence.common.DatabaseConstants;
 import org.glassfish.persistence.common.I18NHelper;
 import org.glassfish.persistence.common.Java2DBProcessorHelper;
 
-/** 
+/**
  * This class is used for static method invocations to avoid unnecessary
- * registration requirements to use EJBHelper and/or CMPHelper from 
+ * registration requirements to use EJBHelper and/or CMPHelper from
  * deploytool, verifier, or any other stand-alone client.
- * 
+ *
  */
 public class DeploymentHelper
     {
@@ -57,14 +57,14 @@ public class DeploymentHelper
     /** The logger */
     private static Logger logger = LogHelperPersistenceManager.getLogger();
 
-    /** 
+    /**
      * Returns name prefix for DDL files extracted from the info instance by the
      * Sun-specific code.
-     *   
+     *
      * @param info the instance to use for the name generation.
-     * @return name prefix as String. 
-     */   
-    public static String getDDLNamePrefix(Object info) { 
+     * @return name prefix as String.
+     */
+    public static String getDDLNamePrefix(Object info) {
         return Java2DBProcessorHelper.getDDLNamePrefix(info);
     }
 
@@ -75,7 +75,7 @@ public class DeploymentHelper
      * @return true if there is a property value that contains "true" as
      * the value for the <code>DatabaseConstants.JAVA_TO_DB_FLAG</code>
      * key.
-     */  
+     */
     public static boolean isJavaToDatabase(Properties prop) {
         if (prop != null) {
             String value = prop.getProperty(DatabaseConstants.JAVA_TO_DB_FLAG);
@@ -88,9 +88,9 @@ public class DeploymentHelper
         return false;
     }
 
-    /** Get a Connection from the resource specified by the JNDI name 
+    /** Get a Connection from the resource specified by the JNDI name
      * of a CMP resource.
-     * This connection is aquired from a non-transactional resource which does not 
+     * This connection is aquired from a non-transactional resource which does not
      * go through transaction enlistment/delistment.
      * The deployment processing is required to use only those connections.
      *
@@ -99,7 +99,7 @@ public class DeploymentHelper
      * @throws JDOFatalUserException if name cannot be looked up, or we
      * cannot get a connection based on the name.
      * @throws SQLException if can not get a Connection.
-     */  
+     */
     public static Connection getConnection(String name) throws SQLException {
         if (logger.isLoggable(logger.FINE)) {
             logger.fine("ejb.DeploymentHelper.getconnection", name); //NOI18N
@@ -112,13 +112,13 @@ public class DeploymentHelper
         try {
             ConnectorRuntime connectorRuntime = habitat.getService(ConnectorRuntime.class);
             ds = DataSource.class.cast(connectorRuntime.lookupNonTxResource(name, true));
-        } catch (Exception e) { 
+        } catch (Exception e) {
             throw new JDOFatalUserException(
                 I18NHelper.getMessage(messages,
                         "ejb.jndi.lookupfailed", name)); //NOI18N
         }
         return ds.getConnection();
-    }    
+    }
 
     /** Create a RuntimeException for unexpected instance returned
      * from JNDI lookup.
@@ -133,8 +133,8 @@ public class DeploymentHelper
                         "ejb.jndi.unexpectedinstance", //NOI18N
                         name, value.getClass().getName()));
         logger.severe(e.toString());
- 
+
         throw e;
- 
+
     }
 }

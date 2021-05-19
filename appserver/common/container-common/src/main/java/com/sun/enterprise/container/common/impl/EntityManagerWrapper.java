@@ -230,7 +230,7 @@ public class EntityManagerWrapper implements EntityManager, Serializable {
     private EntityManager getNonTxEMFromCurrentInvocation() {
         // We store nonTxEM as a payload in a map from EMF to EM inside current invocation.
         // It will be closed during  NonTxEntityManagerCleaner.beforePostInvoke() below
-        
+
         ComponentInvocation currentInvocation = invMgr.getCurrentInvocation();
         Map<EntityManagerFactory, EntityManager> nonTxEMs = getNonTxEMsFromCurrentInvocation(currentInvocation);
         if(nonTxEMs == null) {

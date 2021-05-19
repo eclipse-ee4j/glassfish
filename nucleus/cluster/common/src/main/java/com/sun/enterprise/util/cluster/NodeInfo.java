@@ -60,7 +60,7 @@ public final class NodeInfo {
     public final String getInstancesList() {
         return instancesList;
     }
-    
+
     public static String format(List<NodeInfo> infos) {
         int longestName = NAME.length();
         int longestType = TYPE.length();

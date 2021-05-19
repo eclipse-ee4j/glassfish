@@ -18,7 +18,7 @@ package com.sun.enterprise.admin.servermgmt.services;
 
 /**
  * A place for everything. Everything in its place
- * 
+ *
  * @author bnevins
  */
 class Constants {

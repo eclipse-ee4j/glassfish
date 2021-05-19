@@ -19,11 +19,11 @@ package com.sun.enterprise.deployment.util;
 import com.sun.enterprise.deployment.EjbBundleDescriptor;
 
 /**
- * This class defines a Visitor API for the DOL Ejb bundle related 
- * descriptors. 
+ * This class defines a Visitor API for the DOL Ejb bundle related
+ * descriptors.
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface EjbBundleVisitor extends ComponentVisitor {
 
@@ -31,7 +31,7 @@ public interface EjbBundleVisitor extends ComponentVisitor {
      * visits an ejb bundle descriptor
      * @param bundleDescriptor ejb bundle descriptor
      */
-    public void accept(EjbBundleDescriptor bundleDescriptor);    
+    public void accept(EjbBundleDescriptor bundleDescriptor);
 
 }
 

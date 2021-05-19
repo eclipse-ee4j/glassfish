@@ -91,7 +91,7 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
     @Inject
     private RecoveryResourceRegistry recoveryRegistry;
     @Inject
-    JavaEETransactionManager txManager;    
+    JavaEETransactionManager txManager;
     @Inject
     GMSAdapterService gmsAdapterService;
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME) @Optional
@@ -260,23 +260,23 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
      * Initialization of WS-TX runtime configuration
      */
     private void initializeWsTxRuntime() {
-        final String serverName = serverContext.getInstanceName();            
+        final String serverName = serverContext.getInstanceName();
         final Config config  = serverContext.getConfigBean().getConfig();
-        
+
         final WSATRuntimeConfig.TxlogLocationProvider txlogLocationProvider = new WSATRuntimeConfig.TxlogLocationProvider() {
             @Override
             public String getTxLogLocation() {
                 return txManager.getTxLogLocation();
-            }                    
+            }
         };
-                        
+
         WSATRuntimeConfig.initializer()
                 .hostName(getHostName())
                 .httpPort(getHttpPort(false, serverName, config))
                 .httpsPort(getHttpPort(true, serverName, config))
                 .txLogLocation(txlogLocationProvider)
                 .done();
-        
+
         final WSATRuntimeConfig.RecoveryEventListener metroListener = WSATRuntimeConfig.getInstance().new WSATRecoveryEventListener();
         recoveryRegistry.addEventListener(new RecoveryEventListener() {
 
@@ -291,7 +291,7 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
             }
         });
     }
-    
+
     /**
      * Lookup the canonical host name of the system this server instance is running on.
      *
@@ -302,7 +302,7 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
         // installed.  asadmin then passes this value as a system property when the server
         // is started.
         return System.getProperty(SystemPropertyConstants.HOST_NAME_PROPERTY);
-    }    
+    }
 
     /**
      * Get the http/https port number for the default virtual server of this server instance.
@@ -319,7 +319,7 @@ public class MetroContainer implements PostConstruct, Container, WebServiceDeplo
             if (networkListeners == null || networkListeners.isEmpty()) {
                 return null;
             }
-            
+
             final String[] networkListenerNames = networkListeners.split(",");
 
             for (String listenerName : networkListenerNames) {

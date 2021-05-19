@@ -104,7 +104,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
 
     //ee permissions for all types
     private Map<SMGlobalPolicyUtil.CommponentType, PermissionCollection> eeGarntsMap;
-    
+
     public String getArchiveType() {
         return EarDetector.ARCHIVE_TYPE;
     }
@@ -142,7 +142,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             ApplicationHolder holder =
                 getApplicationHolder(source2, context, false);
 
-            // now start to expand the sub modules 
+            // now start to expand the sub modules
             for (ModuleDescriptor md : holder.app.getModules()) {
                 String moduleUri = md.getArchiveUri();
                 ReadableArchive subArchive = null;
@@ -245,7 +245,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
          *
          * Yet, on Windows, it is possible that the xxx_jar directory is left
          * over from a previous expansion from xxx.jar to xxx_jar, in which case
-         * we DO want to expand xxx.jar into xxx_jar.  
+         * we DO want to expand xxx.jar into xxx_jar.
          */
         if (! subTarget.getURI().equals(subArchive.getURI())) {
             /*
@@ -280,12 +280,12 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
 
     public ClassLoader getClassLoader(final ClassLoader parent, DeploymentContext context) {
         final ReadableArchive archive  = context.getSource();
-        
+
         ApplicationHolder holder =
             getApplicationHolder(archive, context, true);
 
-        // the ear classloader hierachy will be 
-        // ear lib classloader <- embedded rar classloader <- 
+        // the ear classloader hierachy will be
+        // ear lib classloader <- embedded rar classloader <-
         // ear classloader <- various module classloaders
         final DelegatingClassLoader embeddedConnCl;
         final EarClassLoader cl;
@@ -315,17 +315,17 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                         DeploymentProperties.COMPATIBILITY, compatProp);
                 }
             }
-            
+
             if (System.getSecurityManager() != null) {
                 //procee declared permissions
-                earDeclaredPC = 
+                earDeclaredPC =
                     PermsArchiveDelegate.getDeclaredPermissions(
                             SMGlobalPolicyUtil.CommponentType.ear, context);
-                
+
                 //process ee permissions
                 processEEPermissions(context);
             }
-            
+
             final URL[] earLibURLs = ASClassLoaderUtil.getAppLibDirLibraries(context.getSourceDir(), holder.app.getLibraryDirectory(), compatProp);
             final EarLibClassLoader earLibCl = AccessController.doPrivileged(new PrivilegedAction<EarLibClassLoader>() {
                 @Override
@@ -335,14 +335,14 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             });
 
             if (System.getSecurityManager() != null) {
-                addEEOrDeclaredPermissions(earLibCl, earDeclaredPC, false);   
+                addEEOrDeclaredPermissions(earLibCl, earDeclaredPC, false);
                 if(_logger.isLoggable(Level.FINE))
                     _logger.fine("added declaredPermissions to earlib: " + earDeclaredPC );
-                addEEOrDeclaredPermissions(earLibCl, 
+                addEEOrDeclaredPermissions(earLibCl,
                         eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ear),
                                 true);
                 if(_logger.isLoggable(Level.FINE))
-                    _logger.fine("added all ee permissions to earlib: " + 
+                    _logger.fine("added all ee permissions to earlib: " +
                         eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ear) );
             }
 
@@ -360,17 +360,17 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                 }
             });
 
-            // add ear lib to module classloader list so we can 
+            // add ear lib to module classloader list so we can
             // clean it up later
             cl.addModuleClassLoader(EAR_LIB, earLibCl);
-            
+
             if(System.getSecurityManager() != null) {
                 //push declared permissions to ear classloader
                 addEEOrDeclaredPermissions(cl, earDeclaredPC, false);
                 if(_logger.isLoggable(Level.FINE))
                     _logger.fine("declaredPermissions added: " + earDeclaredPC );
                 //push ejb permissions to ear classloader
-                addEEOrDeclaredPermissions(cl, 
+                addEEOrDeclaredPermissions(cl,
                         eeGarntsMap.get(SMGlobalPolicyUtil.CommponentType.ejb),
                                 true);
                 if(_logger.isLoggable(Level.FINE))
@@ -411,7 +411,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                     if (handler!=null) {
                         ActionReport subReport =
                             context.getActionReport().addSubActionsReport();
-                        // todo : this is a hack, once again, 
+                        // todo : this is a hack, once again,
                         // the handler is assuming a file:// url
                         ExtendedDeploymentContext subContext =
                             new DeploymentContextImpl(subReport,
@@ -428,7 +428,7 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                             }
                         };
 
-                        // sub context will store the root archive handler also 
+                        // sub context will store the root archive handler also
                         // so we can figure out the enclosing archive type
                         subContext.setArchiveHandler
                             (context.getArchiveHandler());
@@ -439,15 +439,15 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
 
                         ClassLoader subCl = handler.getClassLoader(cl, subContext);
 
-                        if ((System.getSecurityManager() != null) && (subCl instanceof DDPermissionsLoader)) {                           
+                        if ((System.getSecurityManager() != null) && (subCl instanceof DDPermissionsLoader)) {
                            addEEOrDeclaredPermissions(subCl, earDeclaredPC, false);
                            if(_logger.isLoggable(Level.FINE))
                                _logger.fine("added declared permissions to sub module of " + subCl );
                         }
-                        
+
                         if (md.getModuleType().equals(DOLUtils.ejbType())) {
-                            // for ejb module, we just add the ejb urls 
-                            // to EarClassLoader and use that to load 
+                            // for ejb module, we just add the ejb urls
+                            // to EarClassLoader and use that to load
                             // ejb module
                             URL[] moduleURLs =
                                 ((URLClassLoader)subCl).getURLs();
@@ -483,23 +483,23 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         }
         return cl;
     }
-    
-    
+
+
     protected void processEEPermissions(DeploymentContext dc) {
-        
-        EarEEPermissionsProcessor eePp = 
+
+        EarEEPermissionsProcessor eePp =
             new EarEEPermissionsProcessor(dc);
-        
+
         eeGarntsMap = eePp.getAllAdjustedEEPermission();
-        
+
     }
 
     //set ee or declared permissions
     private void addEEOrDeclaredPermissions(ClassLoader cloader, final PermissionCollection pc, final boolean isEEPermission) {
-        
+
         if(!(cloader instanceof DDPermissionsLoader))
             return;
-        
+
         final DDPermissionsLoader ddpl = (DDPermissionsLoader)cloader;
         try {
             AccessController.doPrivileged(
@@ -509,16 +509,16 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
                             ddpl.addEEPermissions(pc);
                         else
                             ddpl.addDeclaredPermissions(pc);
-                        
+
                         return null;
                     }
                 });
             } catch (PrivilegedActionException e) {
                 throw new SecurityException(e.getException());
-            }        
+            }
     }
-    
-    
+
+
     public boolean accept(ReadableArchive source, String entryName) {
         // I am hiding everything but the metadata.
         return entryName.startsWith("META-INF");
@@ -536,9 +536,9 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
         ApplicationHolder holder = context.getModuleMetaData(ApplicationHolder.class);
         if (holder==null || holder.app==null) {
             try {
-                DeployCommandParameters params = context.getCommandParameters(DeployCommandParameters.class); 
+                DeployCommandParameters params = context.getCommandParameters(DeployCommandParameters.class);
                 if (params != null && params.altdd != null) {
-                    source.addArchiveMetaData(DeploymentProperties.ALT_DD, 
+                    source.addArchiveMetaData(DeploymentProperties.ALT_DD,
                         params.altdd);
                 }
                 long start = System.currentTimeMillis();
@@ -800,4 +800,4 @@ public class EarHandler extends AbstractArchiveHandler implements CompositeHandl
             return compatValue;
         }
     }
-} 
+}

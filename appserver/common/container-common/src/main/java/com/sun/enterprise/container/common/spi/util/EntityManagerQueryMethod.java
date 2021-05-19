@@ -24,31 +24,31 @@
 package com.sun.enterprise.container.common.spi.util;
 
 public enum EntityManagerQueryMethod {
-    
+
     GET_RESULT_LIST {
         public String toString() {
             return "getResultList()";
         }
     },
-    
+
     GET_SINGLE_RESULT {
         public String toString() {
             return "getSingleResult()";
         }
     },
-    
+
     EXECUTE_UPDATE {
         public String toString() {
             return "executeUpdate()";
         }
     },
-    
+
     SET_MAX_RESULTS {
         public String toString() {
             return "setMaxResults(int maxResult)";
         }
     },
-    
+
     GET_MAX_RESULTS {
         public String toString() {
             return "getMaxResults()";
@@ -72,7 +72,7 @@ public enum EntityManagerQueryMethod {
             return "setHint(String hintName, Object value)";
         }
     },
-    
+
     GET_HINTS {
         public String toString() {
             return "getHints()";
@@ -102,37 +102,37 @@ public enum EntityManagerQueryMethod {
             return "setParameter(String name, Object value)";
         }
     },
-    
+
     SET_PARAMETER_STRING_DATE_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(String name, Date value, TemporalType temporalType)";
         }
     },
-    
+
     SET_PARAMETER_STRING_CALENDAR_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(String name, Calendar value, TemporalType temporalType)";
         }
     },
-    
+
     SET_PARAMETER_INT_OBJECT {
         public String toString() {
             return "setParameter(int position, Object value)";
         }
     },
-    
+
     SET_PARAMETER_INT_DATE_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(int position, Date value, TemporalType temporalType)";
         }
     },
-    
+
     SET_PARAMETER_INT_CALENDAR_TEMPORAL_TYPE {
         public String toString() {
             return "setParameter(int position, Calendar value, TemporalType temporalType)";
         }
     },
-    
+
     GET_PARAMETERS {
         public String toString() {
             return "getParameter()";

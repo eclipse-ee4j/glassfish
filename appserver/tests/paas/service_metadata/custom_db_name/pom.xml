@@ -50,12 +50,12 @@
                         </goals>
                         <configuration>
                             <skip>false</skip>
-			    <enableAssertions>false</enableAssertions>
+                <enableAssertions>false</enableAssertions>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-	   <plugin>
+       <plugin>
            <artifactId>maven-antrun-plugin</artifactId>
            <executions>
              <execution>

@@ -34,17 +34,17 @@ public class TC1SfsbWithSynchPC {
             synchronization = SynchronizationType.SYNCHRONIZED,
             type = PersistenceContextType.EXTENDED)
     EntityManager em;
-    
+
     //@Override
     public Person findPerson(String name) {
         Person p = em.find(Person.class, name);
         System.out.print("Find persion " + p);
         return p;
     }
-    
+
     @Init
     public void createFinder() {
-        
+
     }
-    
+
 }

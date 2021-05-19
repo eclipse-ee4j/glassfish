@@ -19,19 +19,19 @@ package test.beans;
 import jakarta.inject.Singleton;
 
 
-//Simple TestBean to test CDI. 
+//Simple TestBean to test CDI.
 
 @Singleton
 public class BeanToTestTimerUse implements java.io.Serializable{
     private boolean testToCheckIfTimerInvoked = false;
-    
+
     public void setResult(boolean val) {
         this.testToCheckIfTimerInvoked = val;
     }
-    
+
     public boolean getResult() {
         return this.testToCheckIfTimerInvoked;
     }
-  
+
 
 }

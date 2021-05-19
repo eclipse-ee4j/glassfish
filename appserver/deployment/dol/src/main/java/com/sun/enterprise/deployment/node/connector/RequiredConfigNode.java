@@ -31,33 +31,37 @@ import java.util.Map;
  * This node is responsible for handling the Connector DTD related required-config-property XML tag
  *
  * @author  Sheetal Vartak
- * @version 
+ * @version
  */
 public class RequiredConfigNode extends DeploymentDescriptorNode {
 
     private EnvironmentProperty config = null;
 
-   /**
+    /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    @Override
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.CONFIG_PROPERTY_NAME, "setName");
-	return table;
-    }    
+        return table;
+    }
+
 
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */    
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         if (config == null) {
             config = (EnvironmentProperty) DescriptorFactory.getDescriptor(getXMLPath());
-        } 
+        }
         return config;
-    } 
+    }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -65,24 +69,24 @@ public class RequiredConfigNode extends DeploymentDescriptorNode {
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
-
-        if (! (descriptor instanceof MessageListener)) {
-            throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
+        if (!(descriptor instanceof MessageListener)) {
+            throw new IllegalArgumentException(
+                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
-	Iterator configProps = null;
-        configProps = ((MessageListener)descriptor).getRequiredConfigProperties().iterator();
+        Iterator configProps = null;
+        configProps = ((MessageListener) descriptor).getRequiredConfigProperties().iterator();
 
-	//config property info
+        // config property info
         if (configProps != null) {
-          for (;configProps.hasNext();) {
-	    EnvironmentProperty config = (EnvironmentProperty) configProps.next();
-	    Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
-            writeLocalizedDescriptions(configNode, config);
-	    appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, config.getName());  
-          }
+            for (; configProps.hasNext();) {
+                EnvironmentProperty config = (EnvironmentProperty) configProps.next();
+                Node configNode = appendChild(parent, ConnectorTagNames.REQUIRED_CONFIG_PROP);
+                writeLocalizedDescriptions(configNode, config);
+                appendTextChild(configNode, ConnectorTagNames.CONFIG_PROPERTY_NAME, config.getName());
+            }
         }
-	return parent;
+        return parent;
     }
 }

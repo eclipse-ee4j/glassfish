@@ -39,7 +39,7 @@ public class HAUtilImpl implements HAUtil {
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
-    
+
     @Inject @Optional
     private GMSAdapterService gmsAdapterService;
 

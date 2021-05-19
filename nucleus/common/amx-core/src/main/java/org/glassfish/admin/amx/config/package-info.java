@@ -14,10 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- /**
-    Generic AMX config MBean interfaces.  All specific types are located in
-    the amx-config module and other modules.
-  */
+/**
+ * Generic AMX config MBean interfaces. All specific types are located in
+ * the amx-config module and other modules.
+ */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 package org.glassfish.admin.amx.config;
 

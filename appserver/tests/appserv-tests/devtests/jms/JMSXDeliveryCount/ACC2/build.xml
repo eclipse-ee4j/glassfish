@@ -34,12 +34,12 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile"  depends="clean">
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-    </target> 
+    </target>
 
     <target name="build" depends="init-common">
          <antcall target="package-client"/>
@@ -47,14 +47,14 @@
 
     <target name="package-client" depends="compile">
       <delete file="${appclient.jar}"/>
-      <echo message="common.xml: Generating appclient-jar inside build directory" 
+      <echo message="common.xml: Generating appclient-jar inside build directory"
           level="verbose"/>
       <mkdir dir="${assemble.dir}"/>
       <mkdir dir="${build.classes.dir}/META-INF"/>
       <copy file="${application-client.xml}" tofile="${build.classes.dir}/META-INF/application-client.xml"/>
       <copy file="${sun-application-client.xml}" tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
-      <jar jarfile="${build.base.dir}/archive/${appname}AppClient.jar" basedir="${build.classes.dir}" 
-        update="true" includes ="**/*Client.class">         
+      <jar jarfile="${build.base.dir}/archive/${appname}AppClient.jar" basedir="${build.classes.dir}"
+        update="true" includes ="**/*Client.class">
         <manifest>
            <attribute name="Main-Class" value="org.glassfish.test.jms.jmsxdeliverycount.client.Client"/>
         </manifest>
@@ -70,7 +70,7 @@
           <param name="asadmin.file" value="create_resources.asadmin"/>
         </antcall>
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="delete_resources.asadmin"/>
@@ -83,14 +83,14 @@
             <env key="APPCPATH" value="${env.APS_HOME}/lib/reporter.jar"/>
         </exec>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant create-resources Create all destinations and connection factories
           ant delete-resources Delete all destinations and connection factories
         </echo>

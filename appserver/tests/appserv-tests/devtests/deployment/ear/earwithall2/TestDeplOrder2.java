@@ -28,7 +28,7 @@ public class TestDeplOrder2 {
         TestDeplOrder2 client = new TestDeplOrder2();
         client.doTest(args);
     }
-    
+
     public void doTest(String[] args) {
 
         String path = args[0];
@@ -41,7 +41,7 @@ public class TestDeplOrder2 {
             } else {
               fail();
             }
-	} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }

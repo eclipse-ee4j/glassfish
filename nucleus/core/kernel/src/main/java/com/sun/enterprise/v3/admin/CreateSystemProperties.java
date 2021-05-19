@@ -47,28 +47,28 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Create System Properties Command
- * 
- * Adds or updates one or more system properties of the domain, configuration, 
+ *
+ * Adds or updates one or more system properties of the domain, configuration,
  * cluster, or server instance
- * 
- * Usage: create-system-properties [--terse=false] [--echo=false] [--interactive=true] 
- * [--host localhost] [--port 4848|4849] [--secure|-s=true] [--user admin_user] 
- * [--passwordfile file_name] [--target target(Default server)] (name=value)[:name=value]*                                                                       
+ *
+ * Usage: create-system-properties [--terse=false] [--echo=false] [--interactive=true]
+ * [--host localhost] [--port 4848|4849] [--secure|-s=true] [--user admin_user]
+ * [--passwordfile file_name] [--target target(Default server)] (name=value)[:name=value]*
  *
  * @author Jennifer Chou
- * 
+ *
  */
 @Service(name="create-system-properties")
 @PerLookup
 @ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType(value={CommandTarget.CLUSTER, 
+@TargetType(value={CommandTarget.CLUSTER,
 CommandTarget.CONFIG, CommandTarget.DAS, CommandTarget.DOMAIN, CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTERED_INSTANCE})
 @I18n("create.system.properties")
 public class CreateSystemProperties implements AdminCommand, AdminCommandSecurity.Preauthorization,
         AdminCommandSecurity.AccessCheckProvider {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateSystemProperties.class);
-    
+
     @Param(optional=true, defaultValue=SystemPropertyConstants.DAS_SERVER_NAME)
     String target;
 
@@ -112,14 +112,14 @@ public class CreateSystemProperties implements AdminCommand, AdminCommandSecurit
         final ActionReport report = context.getActionReport();
 
         String sysPropName = "";
-        try {            
+        try {
             for (final Object key : properties.keySet()) {
                 final String propName = (String) key;
                 sysPropName = propName;
-                    
+
                 // skip create-system property requests that do not change the
                 // value of an existing property
-                if (spb.containsProperty(sysPropName) && 
+                if (spb.containsProperty(sysPropName) &&
                     spb.getSystemProperty(sysPropName).getValue().equals(properties.getProperty(propName))) {
                     continue;
                 }
@@ -127,8 +127,8 @@ public class CreateSystemProperties implements AdminCommand, AdminCommandSecurit
 
                     @Override
                     public Object run(SystemPropertyBag param) throws PropertyVetoException, TransactionFailure {
-                       
-                        // update existing system property                        
+
+                        // update existing system property
                         for (SystemProperty sysProperty : param.getSystemProperty()) {
                             if (sysProperty.getName().equals(propName)) {
                                 Transaction t = Transaction.getTransaction(param);
@@ -137,12 +137,12 @@ public class CreateSystemProperties implements AdminCommand, AdminCommandSecurit
                                 return sysProperty;
                             }
                         }
-                        
+
                         // create system-property
                         SystemProperty newSysProp = param.createChild(SystemProperty.class);
                         newSysProp.setName(propName);
                         newSysProp.setValue(properties.getProperty(propName));
-                        param.getSystemProperty().add(newSysProp);                    
+                        param.getSystemProperty().add(newSysProp);
                         return newSysProp;
                     }
                 }, spb);

@@ -79,7 +79,7 @@ public class TokenResolverTest {
         assertEquals(map2.get("qqqvalue2qqq"), "value4");
 
         assertEquals(map2.get("zzzvalue3zzz"), "zzz");
-        
+
         instance.resolve(map2);
     }
     /**

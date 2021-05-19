@@ -18,7 +18,7 @@ package test.beans;
 
 import jakarta.enterprise.context.ApplicationScoped;
 
-//Simple TestBean to test CDI. 
+//Simple TestBean to test CDI.
 @ApplicationScoped
 public class TestApplicationScopedBean
 {}

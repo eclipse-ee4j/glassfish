@@ -31,9 +31,9 @@ import com.sun.xml.ws.api.BindingID;
  * This implements the HandlerResolver interface introduced in JAXWS
  */
 public class HandlerResolverImpl implements HandlerResolver {
-    
+
     private Map<PortInfo, List<Handler>> chainMap;
-    
+
     public HandlerResolverImpl() {
         chainMap = new HashMap<PortInfo, List<Handler>>();
     }
@@ -43,7 +43,7 @@ public class HandlerResolverImpl implements HandlerResolver {
         List<Handler> chain = null;
         while(piSet.hasNext()) {
             PortInfo next = piSet.next();
-            PortInfoImpl tmp = 
+            PortInfoImpl tmp =
                 new PortInfoImpl(BindingID.parse(info.getBindingID()),
                 info.getPortName(), info.getServiceName());
             if(tmp.equals(next)) {
@@ -56,7 +56,7 @@ public class HandlerResolverImpl implements HandlerResolver {
         }
         return chain;
     }
-    
+
     public void setHandlerChain(PortInfo info, List<Handler> chain) {
         List<Handler> currentList = chainMap.get(info);
         if(currentList==null) {

@@ -21,4 +21,4 @@ $GF_HOME/bin/asadmin create-ims-config-native
 $GF_HOME/bin/asadmin create-template --indexes ServiceType=LB,VirtualizationType=Native LBNative
 $GF_HOME/bin/asadmin create-template --indexes ServiceType=MQ,VirtualizationType=Native MQNative
 $GF_HOME/bin/asadmin stop-domain
- 
+

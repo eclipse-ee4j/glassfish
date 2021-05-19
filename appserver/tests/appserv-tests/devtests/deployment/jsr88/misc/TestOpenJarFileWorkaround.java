@@ -33,9 +33,9 @@ import java.io.File;
  * @author  tjquinn
  */
 public class TestOpenJarFileWorkaround {
-    
+
     private static final String here = "devtests/deployment/jsr88/misc";
-    
+
     /**
      Values taken from command-line arguments
      */
@@ -44,13 +44,13 @@ public class TestOpenJarFileWorkaround {
     private String user = null;
     private String password = null;
     private String warFileToDeploy = null;
-    
+
     private JSR88Deployer depl = null;
-    
+
     /** Creates a new instance of TestOpenJarFileWorkaround */
     public TestOpenJarFileWorkaround() {
     }
-    
+
     private void initDeployer(String host, String port, String user, String password) throws Exception {
         log("Getting access to JSR88 deployer");
         depl = new JSR88Deployer(host, port, user, password);
@@ -69,7 +69,7 @@ public class TestOpenJarFileWorkaround {
             test.fail();
         }
     }
-    
+
     private void log(String message) {
         System.out.println("[TestProgressObjectImpl]:: " + message);
     }
@@ -83,27 +83,27 @@ public class TestOpenJarFileWorkaround {
         log("FAILED: " + here);
         System.exit(-1);
     }
-    
+
     private void prepareArgs(String[] args) {
         if (args.length < 5) {
             log("Expected 5 arguments (host, port, user, password, war) but found " + args.length);
             fail();
         }
-        
+
         this.host = args[0];
         this.port = args[1];
         this.user = args[2];
         this.password = args[3];
         this.warFileToDeploy = args[4];
     }
-    
+
     public void run(String[] args) throws Throwable {
-        
+
         /*
          *Prepare instance variables from the command-line arguments for convenience.
          */
         prepareArgs(args);
-        
+
         /*
          *Locate the web archive to deploy.
          */
@@ -117,23 +117,23 @@ public class TestOpenJarFileWorkaround {
          *Initialize the deployer for use during the test.
          */
         initDeployer(host, port, user, password);
-        
+
         /*
          *Start by deploying the web app.
          */
         int firstDeployResult = depl.deploy(warFile, /*deploymentPlan */ null, /* startByDefault */ true);
-        
+
         if (firstDeployResult != 0) {
             log("Failed to deploy war file " + warFile.getAbsolutePath() + " the first time.");
             fail();
         }
-        
+
         /*
          *Next, undeploy the same web app.
-         *Get the list of modules acted upon so we can specify the correct module ID to undeploy. 
+         *Get the list of modules acted upon so we can specify the correct module ID to undeploy.
          */
         TargetModuleID [] firstListOfApps = depl.getMostRecentTargetModuleIDs();
-        
+
         if (firstListOfApps.length != 1) {
             log("Expected exactly one result module from the deployer but found " + firstListOfApps.length);
             for (int i = 0; i < firstListOfApps.length; i++) {
@@ -141,29 +141,29 @@ public class TestOpenJarFileWorkaround {
             }
             fail();
         }
-            
+
         int firstUndeployResult = depl.undeploy(firstListOfApps[0].getModuleID());
-        
+
         if (firstUndeployResult != 0) {
             log("Error undeploying the web application the first time.");
             fail();
         }
-        
+
         /*
          *Now, try to deploy the app again.
          */
         int secondDeployResult = depl.deploy(warFile, /*deploymentPlan */ null, /* startByDefault */ true);
-        
+
         if (secondDeployResult != 0) {
             log("Failed to deploy war file " + warFile.getAbsolutePath() + " the second time.");
             fail();
         }
-        
+
         /*
          *Undeploy the web app one last time.
          */
         TargetModuleID [] secondListOfApps = depl.getMostRecentTargetModuleIDs();
-        
+
         if (secondListOfApps.length != 1) {
             log("Expected exactly one application from the deployer but found " + secondListOfApps.length);
             for (int i = 0; i < secondListOfApps.length; i++) {
@@ -171,9 +171,9 @@ public class TestOpenJarFileWorkaround {
             }
             fail();
         }
-            
+
         int secondUndeployResult = depl.undeploy(secondListOfApps[0].getModuleID());
-        
+
         if (secondUndeployResult != 0) {
             log("Error undeploying the web application the second time.");
             fail();

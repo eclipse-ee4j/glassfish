@@ -92,7 +92,7 @@ public class J2EEServerImpl extends J2EELogicalServerImplBase
     protected void registerChildren()
     {
         super.registerChildren();
-        
+
         final J2EEServer selfProxy = getSelf(J2EEServer.class);
         mRegistrationSupport = new RegistrationSupport( selfProxy );
         mRegistrationSupport.start();

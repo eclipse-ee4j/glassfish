@@ -29,8 +29,8 @@ public class WebTest{
     private static URLConnection conn = null;
     private static URL url;
     private static ObjectOutputStream objectWriter = null;
-    private static ObjectInputStream objectReader = null;  
-    
+    private static ObjectInputStream objectReader = null;
+
     public static void main(String args[]) throws Exception{
         String host = args[0];
         String port = args[1];
@@ -47,12 +47,12 @@ public class WebTest{
                 HttpURLConnection urlConnection = (HttpURLConnection)conn;
                 urlConnection.setDoOutput(true);
 
-                DataOutputStream out = 
+                DataOutputStream out =
                    new DataOutputStream(urlConnection.getOutputStream());
                                     out.writeByte(1);
 
                int responseCode=  urlConnection.getResponseCode();
-               System.out.println("virtual-server-send-error-property-broken-webapp: " + responseCode + " Expected code: 404"); 
+               System.out.println("virtual-server-send-error-property-broken-webapp: " + responseCode + " Expected code: 404");
                if (urlConnection.getResponseCode() != 404){
                     stat.addStatus("Test virtual-server-send-error-property-broken-webapp", stat.FAIL);
                } else {

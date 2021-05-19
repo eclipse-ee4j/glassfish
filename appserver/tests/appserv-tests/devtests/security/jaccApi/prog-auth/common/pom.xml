@@ -25,9 +25,9 @@
         <artifactId>prog-auth</artifactId>
         <version>6.1.1-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>jaccApi-common</artifactId>
-    
+
     <packaging>jar</packaging>
     <name>Java EE 7 Sample: jaccApi- common</name>
 
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.jsoup</groupId>
             <artifactId>jsoup</artifactId>
-            <version>1.11.2</version>            
+            <version>1.11.2</version>
         </dependency>
 
         <dependency>

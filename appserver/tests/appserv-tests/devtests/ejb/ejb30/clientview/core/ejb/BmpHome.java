@@ -21,5 +21,5 @@ import jakarta.ejb.*;
 
 public interface BmpHome extends BmpHomeSuper
 {
-    Bmp findByPrimaryKey(String s) throws CreateException;    
+    Bmp findByPrimaryKey(String s) throws CreateException;
 }

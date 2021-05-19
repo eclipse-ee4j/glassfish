@@ -122,7 +122,7 @@ public class ServletSecurityHandler extends AbstractWebHandler {
             }
             HttpConstraint httpConstraint = servletSecurityAn.value();
             boolean isDefault = isDefaultHttpConstraint(httpConstraint);
-            if (isDefault && (httpMethodConstraints.length > 0)) { 
+            if (isDefault && (httpMethodConstraints.length > 0)) {
                 if (logger.isLoggable(Level.FINER)) {
                     StringBuilder methodString = new StringBuilder();
                     for (HttpMethodConstraint httpMethodConstraint : httpMethodConstraints) {
@@ -131,8 +131,8 @@ public class ServletSecurityHandler extends AbstractWebHandler {
                     }
                     for (String pattern : urlPatterns) {
                         logger.finer(
-                                "Pattern: " + pattern + 
-                                " assumes default unprotected configuration for all methods except:" 
+                                "Pattern: " + pattern +
+                                " assumes default unprotected configuration for all methods except:"
                                 + methodString);
                     }
                 }
@@ -150,7 +150,7 @@ public class ServletSecurityHandler extends AbstractWebHandler {
                         securityConstraint.getWebResourceCollections().iterator().next();
                 for (HttpMethodConstraint httpMethodConstraint : httpMethodConstraints) {
                     //exclude constrained httpMethod from the top level constraint
-                    webResColl.addHttpMethodOmission(httpMethodConstraint.value());                
+                    webResColl.addHttpMethodOmission(httpMethodConstraint.value());
                 }
             }
         }

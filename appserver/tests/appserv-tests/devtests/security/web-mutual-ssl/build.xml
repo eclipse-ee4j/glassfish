@@ -33,7 +33,7 @@
     &commonRun;
     &commonSecurity;
     &testProperties;
-    
+
     <target name="all" depends="build, setup, deploy, run, undeploy, unsetup"/>
     <target name="clean" depends="init-common">
         <delete dir="${build.classes.dir}"/>
@@ -50,10 +50,10 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes" />
-            <param name="webclient.war.classes" value="**/*.class"/>  
+            <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
     </target>
 
@@ -100,7 +100,7 @@
         <antcall target="generate-ca-client-certs-ee" />
         <antcall target="restart-server-instance-common"/>
     </target>
- 
+
     <target name="unsetup">
         <antcall target="restore"/>
     </target>
@@ -148,11 +148,11 @@
     </exec>
 </target>
 
-<!-- 
+<!--
    generate selfsigned CA cert testca, and testcert1(issued by/signed by testca) in ${nss.db.dir};
    export testca    to testca.rfc and then import to ${mytruststore.db.file};
    export testcert1 to testcert.p12 and then import it to ${mykeystore.db.file}.
--->   
+-->
 <target name="generate-ca-client-certs-ee" depends="init-common" if="isNSS">
     <mkdir dir="build"/>
     <echo message="${ssl.password}"   file="build/passfile"/>
@@ -204,7 +204,7 @@
         <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
         <arg line="-D -n testcert1  -d ${nss.db.dir}"/>
     </exec>
-    
+
 </target>
 
 </project>

@@ -35,18 +35,18 @@ public class SunCmpMappingsUtils {
     private static ResourceBundle bundle =
         ResourceBundle.getBundle("com.sun.jdo.api.persistence.mapping.ejb.Bundle"); //NOI18N
 
-    
+
     /** Creates a new instance of SunCmpMappingsUtils */
     private SunCmpMappingsUtils() {
     }
-    
+
     /** Return the first SunCmpMapping element from the graph.
      * @param scms The root of a SunCmpMappings object graph
      * @param addEmpty flag to add an empty version of the SunCmpMapping element to the graph if one is
      * not found.
      * @return The first SunCmpMapping element in the graph or null if it doesn't exists and
      * addEmpty is false.
-     */    
+     */
     public static SunCmpMapping getFirstSunCmpMapping(SunCmpMappings scms, boolean addEmpty) {
         SunCmpMapping retVal = null;
         if (0 < scms.sizeSunCmpMapping())
@@ -57,8 +57,8 @@ public class SunCmpMappingsUtils {
         }
         return retVal;
     }
-        
-    
+
+
     /** Find the EntityMapping element that correspond to a bean.
      * @return the EntityMapping element, or null if addEmpty is false and the EntityMapping is not
      * found.
@@ -68,7 +68,7 @@ public class SunCmpMappingsUtils {
      * not found.
      * @throws IllegalArgumentException if more than one EntityMapping element has an ejb-name element with the matching
      * value
-     */    
+     */
     public static EntityMapping findEntityMapping(SunCmpMappings scms, String bname, boolean addEmpty) throws IllegalArgumentException {
         EntityMapping retVal = (EntityMapping) findSingleCompatibleBean(
                 "scms", scms, "bname", bname, "ejb-name", EntityMapping.class); // NOI18N
@@ -80,7 +80,7 @@ public class SunCmpMappingsUtils {
         }
         return retVal;
     }
-    
+
     /** Find the cmr-field-mapping element for a field in an EntityMapping object
      * @return the CmrFieldMapping element or null if addEmpty is false and the field is not
      * found.
@@ -90,7 +90,7 @@ public class SunCmpMappingsUtils {
      * not found.
      * @throws IllegalArgumentException If there is more than one cmr-field with a matching cmr-field-name element in
      * the EntityMapping graph.
-     */    
+     */
     public static CmrFieldMapping findCmrFieldMapping(EntityMapping em, String fname, boolean addEmpty) throws IllegalArgumentException {
         CmrFieldMapping retVal = (CmrFieldMapping) findSingleCompatibleBean(
                 "em", em, "fname", fname, "cmr-field-name", CmrFieldMapping.class); // NOI18N
@@ -101,7 +101,7 @@ public class SunCmpMappingsUtils {
         }
         return retVal;
     }
-    
+
     /** Find the CmpFieldMapping element with a matching field-name element value
      * @return The CmpFieldMapping element or null if addEmpty is false and the field is not
      * found.
@@ -111,7 +111,7 @@ public class SunCmpMappingsUtils {
      * not found.
      * @throws IllegalArgumentException If there is more than one cmp-field with a matching field-name element in
      * the EntityMapping graph.
-     */    
+     */
     public static CmpFieldMapping findCmpFieldMapping(EntityMapping em, String fname, boolean addEmpty) throws IllegalArgumentException {
         CmpFieldMapping retVal = (CmpFieldMapping) findSingleCompatibleBean(
                 "em", em, "fname", fname, "field-name", CmpFieldMapping.class); // NOI18N
@@ -122,15 +122,15 @@ public class SunCmpMappingsUtils {
         }
         return retVal;
     }
-    
+
     /** helper method */
     private static BaseBean findSingleCompatibleBean(String argOneName, BaseBean argOne, String argTwoName,
             String argTwo, String propName, Class type) {
         BaseBean retVal = null;
         if (null == argTwo || argTwo.length() < 1)
             throw new IllegalArgumentException(argTwoName);
-        
-        List l = findCompatibleBeansWithValue(argOne, propName, argTwo, 
+
+        List l = findCompatibleBeansWithValue(argOne, propName, argTwo,
             type);
         if (null != l) {
             if (l.size() == 1)
@@ -152,11 +152,11 @@ public class SunCmpMappingsUtils {
      * @param propVal the value of the element
      * @param type The expected type of the value to be returned.
      * @throws IllegalArgumentException If the bean is not part of a complete bean graph.
-     */    
+     */
     protected static List findCompatibleBeansWithValue(BaseBean root, String propName, String propVal, Class type) throws IllegalArgumentException {
-        List retVal = null; 
+        List retVal = null;
         GraphManager gm = root.graphManager();
-        if (null == gm) 
+        if (null == gm)
             throw new IllegalArgumentException(
                     bundle.getString("ERR_DISCONNECTED_NOT_SUPPORTED"));
         String[] props = root.findPropertyValue(propName, propVal);
@@ -164,10 +164,10 @@ public class SunCmpMappingsUtils {
         if (null != props)
             len = props.length;
         if (len > 0)
-            retVal = new ArrayList(); 
+            retVal = new ArrayList();
         for (int i = 0; i < len; i++) {
             // get the bean that is the property's parent.
-            BaseBean candidate = gm.getPropertyParent(props[i]); 
+            BaseBean candidate = gm.getPropertyParent(props[i]);
             if (type.isInstance(candidate))
                 retVal.add(candidate);
         }

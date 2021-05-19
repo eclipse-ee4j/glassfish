@@ -44,12 +44,12 @@ public class RemoteViewTestNG {
             String result = future.get();
             //System.out.println("helloAsync() says : " + result);
             test_result = true;
-	    } catch(ExecutionException e) {
+        } catch(ExecutionException e) {
             test_result = false;
             System.out.println("Got async ExecutionException. Cause is " +
                 e.getCause().getMessage());
                 e.getCause().printStackTrace();
-	    }
+        }
         Assert.assertEquals(test_result, true,"Unexpected Results");
     }
 
@@ -94,7 +94,7 @@ public class RemoteViewTestNG {
         //System.out.println("2.x HelloRemote.hello() says " + hr.hello());
     }
     private static void callBusHome(Hello h) {
-	String hret = h.hello();
+    String hret = h.hello();
         //System.out.println("Hello.hello() says " + h.hello());
     }
 }

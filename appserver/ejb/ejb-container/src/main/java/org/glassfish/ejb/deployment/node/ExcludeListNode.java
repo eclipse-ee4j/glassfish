@@ -27,14 +27,14 @@ import org.glassfish.ejb.deployment.EjbTagNames;
  * This class is responsible for handling the exclude-list DD tag
  *
  * @author  Jeromeochez
- * @version 
+ * @version
  */
 public class ExcludeListNode extends DeploymentDescriptorNode<MethodPermissionDescriptor> {
 
     private MethodPermissionDescriptor descriptor;
 
     public ExcludeListNode() {
-       registerElementHandler(new XMLElement(EjbTagNames.METHOD), 
+       registerElementHandler(new XMLElement(EjbTagNames.METHOD),
                                                             MethodNode.class, "addMethod");
     }
 

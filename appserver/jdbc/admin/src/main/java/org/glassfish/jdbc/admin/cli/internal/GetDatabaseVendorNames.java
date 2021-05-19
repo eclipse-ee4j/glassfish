@@ -42,8 +42,8 @@ import jakarta.inject.Inject;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-database-vendor-names", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-database-vendor-names",
         description="Get Database Vendor Names")
 })
 public class GetDatabaseVendorNames implements AdminCommand {

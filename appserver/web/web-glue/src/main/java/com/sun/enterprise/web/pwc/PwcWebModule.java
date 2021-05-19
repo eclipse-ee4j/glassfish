@@ -52,7 +52,7 @@ public abstract class PwcWebModule extends StandardContext {
     // START OF IASRI 4731830
     /**
      * Maximum number of SingleThreadModel instances for each wrapper
-     * in this context. 
+     * in this context.
      */
     private int stmPoolSize = 5;
     // END OF IASRI 4731830
@@ -66,7 +66,7 @@ public abstract class PwcWebModule extends StandardContext {
 
     /**
      * Rave required attribute
-     * An array of URL addresses defined in this web-module to invoke 
+     * An array of URL addresses defined in this web-module to invoke
      * web services endpoints implementations.
      */
     private String[] endpointAddresses = null;
@@ -162,10 +162,10 @@ public abstract class PwcWebModule extends StandardContext {
 
     /**
      * sets _useResponseCTForHeaders property value. When
-     * _useResponseCTForHeaders is set to true, it means that 
-     * we send the response header in the same encoding of the 
+     * _useResponseCTForHeaders is set to true, it means that
+     * we send the response header in the same encoding of the
      * response charset instead of UTF-8, (see the method sendHeaders
-     * in com.sun.enterprise.web.connector.nsapi.nsapiNSAPIResponse) 
+     * in com.sun.enterprise.web.connector.nsapi.nsapiNSAPIResponse)
      */
     public void setResponseCTForHeaders() {
         _useResponseCTForHeaders = true;
@@ -208,7 +208,7 @@ public abstract class PwcWebModule extends StandardContext {
         return (this.stmPoolSize);
     }
 
-     
+
     /**
      * Set the maximum number of instances that will be allocated when a single
      * thread model servlet is used in this web module.
@@ -216,14 +216,14 @@ public abstract class PwcWebModule extends StandardContext {
      * @param newPoolSize New value of SingleThreadModel servlet pool size
      */
     public void setSTMPoolSize(int newPoolSize) {
-     
+
         int oldPoolSize = this.stmPoolSize;
         this.stmPoolSize = newPoolSize;
         support.firePropertyChange("stmPoolSize", Integer.valueOf(oldPoolSize),
                                    Integer.valueOf(this.stmPoolSize));
     }
 
-         
+
     /**
      * Factory method to create and return a new Wrapper instance, of
      * the Java implementation class appropriate for this Context
@@ -280,7 +280,7 @@ public abstract class PwcWebModule extends StandardContext {
         this.endpointAddresses = (String[])endpointAddresses.clone();
     }
     // END S1AS8PE 4920021
-    
+
 
     /**
      * Gets this web module's context root.
@@ -299,9 +299,9 @@ public abstract class PwcWebModule extends StandardContext {
      */
     public void setContextRoot(String contextRoot){
         this.contextRoot = contextRoot;
-    }  
+    }
 
-    
+
     /*
      * @param hasWebXml true if this WebModule has a web.xml deployment
      * descriptor, false otherwise
@@ -324,7 +324,7 @@ public abstract class PwcWebModule extends StandardContext {
      * Sets this web module's name.
      *
      * @param moduleName Web module name
-     */ 
+     */
     public void setModuleName(String moduleName) {
         this.moduleName = moduleName;
     }
@@ -334,7 +334,7 @@ public abstract class PwcWebModule extends StandardContext {
      * Gets this web module's name.
      *
      * @return Web module name
-     */ 
+     */
     public String getModuleName() {
         return this.moduleName;
     }

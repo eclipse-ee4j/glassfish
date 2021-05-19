@@ -17,7 +17,7 @@
 package com.sun.enterprise.security.auth.digest.api;
 
 /**
- * 
+ *
  * @author K.Venugopal@sun.com
  */
 public final class Constants {

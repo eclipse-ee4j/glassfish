@@ -31,7 +31,7 @@
     <packaging>war</packaging>
 
     <name>HK2 CDI EAR Test War2</name>
-    
+
     <build>
       <plugins>
           <plugin>

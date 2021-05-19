@@ -70,7 +70,7 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * Sets the value of heartbeatFrequencyInMillis property.
      * <p/>
-     * 
+     *
      * @param value allowed is {@link String }
      */
     void setHeartbeatFrequencyInMillis(String value) throws PropertyVetoException;
@@ -97,7 +97,7 @@ public interface FailureDetection extends ConfigBeanProxy {
     /**
      * sets the value of the verifyFailureConnectTimeoutInMillis.
      * <p/>
-     * 
+     *
      * @param value allowed object is {@link String}
      * @since glassfish v3.1
      */
@@ -105,7 +105,7 @@ public interface FailureDetection extends ConfigBeanProxy {
 
     /**
      * Gets the value of the verifyFailureConnectTimeoutInMillis.
-     * 
+     *
      * @since glassfish v3.1
      */
     @Attribute(defaultValue = "10000")

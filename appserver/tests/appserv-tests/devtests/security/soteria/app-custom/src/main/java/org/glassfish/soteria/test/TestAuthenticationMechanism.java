@@ -33,20 +33,20 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @RequestScoped
 public class TestAuthenticationMechanism implements HttpAuthenticationMechanism {
-    
+
     @Inject
     private IdentityStoreHandler identityStoreHandler;
 
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
 
-    	// Get the (caller) name and password from the request
+            // Get the (caller) name and password from the request
         // NOTE: This is for the smallest possible example only. In practice
         // putting the password in a request query parameter is highly
         // insecure
         String name = request.getParameter("name");
         String password = request.getParameter("password");
-    	
+
         if (name != null && password != null) {
 
             // Delegate the {credentials in -> identity data out} function to
@@ -56,17 +56,17 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
 
             if (result.getStatus() == VALID) {
                 // Communicate the details of the authenticated user to the
-                // container. In many cases the underlying handler will just store the details 
-                // and the container will actually handle the login after we return from 
+                // container. In many cases the underlying handler will just store the details
+                // and the container will actually handle the login after we return from
                 // this method.
                 return httpMessageContext.notifyContainerAboutLogin(
                     result.getCallerPrincipal(), result.getCallerGroups());
             } else {
                 return httpMessageContext.responseUnauthorized();
             }
-        } 
+        }
 
         return httpMessageContext.doNothing();
     }
-    
+
 }

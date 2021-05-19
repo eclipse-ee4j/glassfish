@@ -16,17 +16,18 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.BasicControl;
 import com.sun.jndi.ldap.Ber;
 import com.sun.jndi.ldap.BerDecoder;
 import com.sun.jndi.ldap.LdapCtx;
 
+import java.io.IOException;
+
+import javax.naming.NamingException;
+import javax.naming.ldap.BasicControl;
+
 /**
  * This class implements the LDAPv3 Response Control for server-side sorting
- * of search results as defined in 
+ * of search results as defined in
  * <a href="http://www.ietf.org/rfc/rfc2891.txt">RFC-2891</a>.
  *
  * The control's value has the following ASN.1 definition:
@@ -69,14 +70,14 @@ final public class SortResponseControl extends BasicControl {
      */
     public static final String OID = "1.2.840.113556.1.4.474";
 
-    /** 
+    /**
      * The sort result code.
      *
      * @serial
      */
     private int resultCode = 0;
 
-    /** 
+    /**
      * The ID of the attribute that caused the sort to fail.
      *
      * @serial
@@ -96,20 +97,20 @@ final public class SortResponseControl extends BasicControl {
      *                          while decoding the control's value.
      */
     public SortResponseControl(String id, boolean criticality, byte[] value)
-	throws IOException {
+        throws IOException {
 
-	super(id, criticality, value);
+        super(id, criticality, value);
 
-	// decode value
-	if ((value != null) && (value.length > 0)) {
-	    BerDecoder ber = new BerDecoder(value, 0, value.length);
+        // decode value
+        if ((value != null) && (value.length > 0)) {
+            BerDecoder ber = new BerDecoder(value, 0, value.length);
 
-	    ber.parseSeq(null);
-	    resultCode = ber.parseEnumeration();
-	    if ((ber.bytesLeft() > 0) && (ber.peekByte() == Ber.ASN_CONTEXT)) {
-		badAttrId = ber.parseStringWithTag(Ber.ASN_CONTEXT, true, null);
-	    }
-	}
+            ber.parseSeq(null);
+            resultCode = ber.parseEnumeration();
+            if ((ber.bytesLeft() > 0) && (ber.peekByte() == Ber.ASN_CONTEXT)) {
+                badAttrId = ber.parseStringWithTag(Ber.ASN_CONTEXT, true, null);
+            }
+        }
     }
 
     /**
@@ -119,7 +120,7 @@ final public class SortResponseControl extends BasicControl {
      * @return    true if the search results have been sorted.
      */
     public boolean isSorted() {
-	return (resultCode == 0); // a result code of zero indicates success
+        return (resultCode == 0); // a result code of zero indicates success
     }
 
     /**
@@ -128,7 +129,7 @@ final public class SortResponseControl extends BasicControl {
      * @return    The result code. A zero value indicates success.
      */
     public int getResultCode() {
-	return resultCode;
+        return resultCode;
     }
 
     /**
@@ -138,7 +139,7 @@ final public class SortResponseControl extends BasicControl {
      * @return The possibly null ID of the bad attribute.
      */
     public String getAttributeID() {
-	return badAttrId;
+        return badAttrId;
     }
 
     /**
@@ -149,6 +150,6 @@ final public class SortResponseControl extends BasicControl {
      */
     public NamingException getException() {
 
-	return LdapCtx.mapErrorCode(resultCode, null);
+        return LdapCtx.mapErrorCode(resultCode, null);
     }
 }

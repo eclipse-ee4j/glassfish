@@ -33,12 +33,12 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * @version
  */
 public class Client {
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
             stat.addDescription("fieldtest");
@@ -77,12 +77,12 @@ public class Client {
                 throw new RuntimeException("Wrong result after UPDATE 2.x");
 
             System.out.println("UPDATED 2.x: " + a2bean.getSqlDate());
-            if(a2bean.getSqlDate().getYear() != new java.util.Date().getYear()) 
+            if(a2bean.getSqlDate().getYear() != new java.util.Date().getYear())
                 throw new RuntimeException("Wrong result after UPDATE 2.x");
 
             System.out.println("UPDATED 2.x: " + a2bean.getBlb()[0] + " " + a2bean.getBlb()[1]);
             if(a2bean.getBlb().length != 2) throw new RuntimeException("Wrong result after UPDATE 2.x");
- 
+
             System.out.println("UPDATED 2.x: " + a2bean.getList());
             if(a2bean.getList().size() != 1 || !a2bean.getList().get(0).equals("A2"))
                 throw new RuntimeException("Wrong result after UPDATE 2.x");
@@ -119,12 +119,12 @@ public class Client {
                 throw new RuntimeException("Wrong result after UPDATE 1.x");
 
             System.out.println("UPDATED 1.1: " + a1bean.getSqlDate());
-            if(a1bean.getSqlDate().getYear() != new java.util.Date().getYear()) 
+            if(a1bean.getSqlDate().getYear() != new java.util.Date().getYear())
                 throw new RuntimeException("Wrong result after UPDATE 1.x");
 
             System.out.println("UPDATED 1.1: " + a1bean.getBlb()[0] + " " + a1bean.getBlb()[1]);
             if(a1bean.getBlb().length != 2) throw new RuntimeException("Wrong result after UPDATE 1.x");
- 
+
             System.out.println("UPDATED 1.1: " + a1bean.getList());
             if(a1bean.getList().size() != 1 || !a1bean.getList().get(0).equals("A1"))
                 throw new RuntimeException("Wrong result after UPDATE 1.x");
@@ -132,16 +132,16 @@ public class Client {
             a1bean = a1home.findByPrimaryKey(pk1);
             System.out.println("FOUND 1.1: " + a1bean.getName());
 
-	    stat.addStatus("ejbclient fieldtest", stat.PASS);
+        stat.addStatus("ejbclient fieldtest", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient fieldtest", stat.FAIL);
+        stat.addStatus("ejbclient fieldtest", stat.FAIL);
 
         }
           stat.printSummary("fieldtest");
     }
-    
+
 }

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -51,8 +51,8 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:webContainer:webContainer_link");
         assertTableRowCount("form1:basicTable", count);
-        
-        
+
+
         //Delete all of the property after the tests finished
         if (count != 0){
             gotoDasPage();
@@ -71,7 +71,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:configurations:server-config:webContainer:webContainer_link");
         clickAndWait("form1:webContainerTabs:sessionTab");
         waitForElementPresent("TtlTxt_sun4", "Session Properties");
-        
+
         int count = addTableRow("form1:basicTable", "form1:basicTable:topActionsGroup1:addSharedTableButton");
 
         sleep(500);
@@ -95,7 +95,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:sessionPropSheet:sessionPropSheetSection:SessionTimeoutProp:SessionTimeout", "1800");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         //Delete all of the property after the tests finished
         if (count != 0){
             gotoDasPage();
@@ -144,7 +144,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         assertEquals(maxSessions, getValue("form1:managerPropSheet:managerPropSheetSection:MaxSessionsProp:MaxSessions", "value"));
         assertEquals(sessFileName, getValue("form1:managerPropSheet:managerPropSheetSection:SessFileNameProp:SessFileName", "value"));
         assertTableRowCount("form1:basicTable", count);
-        
+
         //Delete all of the property after the tests finished
         if (count != 0){
             gotoDasPage();
@@ -191,7 +191,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         setFieldValue("form1:storePropSheet:storePropSheetSection:DirectoryProp:Directory", "");
         clickAndWait("form1:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         //Delete all of the property after the tests finished
         if (count != 0){
             gotoDasPage();
@@ -212,14 +212,14 @@ public class WebContainerTest extends BaseSeleniumTestClass {
      */
     @Test
     public void testWebContainerPropertyTable() {
-        
+
         final String property1 = "property1" + generateRandomString();
         final String value1 = "value"+generateRandomString();
         final String description1 = "Description for " + property1;
         final String property2 = "property2" + generateRandomString();
         final String value2 = "";
         final String description2 = "Description for " + property2;
-        
+
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:server-config:webContainer:webContainer_link");
 
@@ -247,7 +247,7 @@ public class WebContainerTest extends BaseSeleniumTestClass {
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
 
         assertTableRowCount("form1:basicTable", count-1);
-        
+
         //Delete all of the property after the tests finished
         if (count != 0){
             gotoDasPage();

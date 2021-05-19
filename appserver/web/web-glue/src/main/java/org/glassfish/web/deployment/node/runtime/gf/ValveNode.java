@@ -45,7 +45,7 @@ public class ValveNode extends RuntimeDescriptorNode<Valve> {
         }
         return descriptor;
     }
-    
+
     @Override
     protected boolean setAttributeValue(XMLElement elementName,
                                         XMLElement attributeName,
@@ -86,10 +86,8 @@ public class ValveNode extends RuntimeDescriptorNode<Valve> {
                             descriptor.getWebProperty());
 
         // attributes classname and name
-        setAttribute(valve, RuntimeTagNames.NAME,
-            (String) descriptor.getAttributeValue(Valve.NAME));
-        setAttribute(valve, RuntimeTagNames.CLASS_NAME,
-            (String) descriptor.getAttributeValue(Valve.CLASS_NAME));
+        setAttribute(valve, RuntimeTagNames.NAME, descriptor.getAttributeValue(Valve.NAME));
+        setAttribute(valve, RuntimeTagNames.CLASS_NAME, descriptor.getAttributeValue(Valve.CLASS_NAME));
 
         return valve;
     }

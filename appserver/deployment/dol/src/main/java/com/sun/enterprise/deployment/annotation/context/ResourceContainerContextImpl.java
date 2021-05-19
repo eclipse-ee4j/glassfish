@@ -30,19 +30,19 @@ import java.util.Set;
  * @Author Shing Wai Chan
  */
 public class ResourceContainerContextImpl extends AnnotationContext
-        implements ResourceContainerContext, ComponentContext, 
+        implements ResourceContainerContext, ComponentContext,
                    ServiceReferenceContainerContext, HandlerContext {
 
     protected Descriptor descriptor = null;
     protected String componentClassName = null;
 
-    public ResourceContainerContextImpl() { 
-    } 
+    public ResourceContainerContextImpl() {
+    }
 
     public ResourceContainerContextImpl(Descriptor descriptor) {
-        this.descriptor = descriptor;         
-    } 
-    
+        this.descriptor = descriptor;
+    }
+
     /**
      * Add a reference to an ejb.
      *
@@ -51,7 +51,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
     public void addEjbReferenceDescriptor(EjbReference ejbReference) {
         getEjbReferenceContainer().addEjbReferenceDescriptor(ejbReference);
     }
-                                                                               
+
     /**
      * Looks up an ejb reference with the given name.
      * Return null if it is not found.
@@ -67,9 +67,9 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
-            // DOL API is (unfortunately) defined to return 
+            // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
@@ -90,12 +90,12 @@ public class ResourceContainerContextImpl extends AnnotationContext
         return (EjbReferenceContainer)descriptor;
     }
 
-    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor 
+    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor
                                                resReference) {
         getResourceReferenceContainer().addResourceReferenceDescriptor
             (resReference);
     }
-                                                                               
+
     /**
      * Looks up an resource reference with the given name.
      * Return null if it is not found.
@@ -112,9 +112,9 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
-            // DOL API is (unfortunately) defined to return 
+            // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
@@ -141,8 +141,8 @@ public class ResourceContainerContextImpl extends AnnotationContext
         getMessageDestinationReferenceContainer(
         ).addMessageDestinationReferenceDescriptor(msgDestReference);
     }
-                                               
-                                                                               
+
+
     public MessageDestinationReferenceDescriptor getMessageDestinationReference
         (String name) {
         MessageDestinationReferenceDescriptor msgDestRef = null;
@@ -154,15 +154,15 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
-            // DOL API is (unfortunately) defined to return 
+            // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
         }
         return msgDestRef;
     }
 
-    protected MessageDestinationReferenceContainer 
+    protected MessageDestinationReferenceContainer
         getMessageDestinationReferenceContainer()
     {
         return (MessageDestinationReferenceContainer)descriptor;
@@ -173,7 +173,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
         getResourceEnvReferenceContainer(
         ).addResourceEnvReferenceDescriptor(resourceEnvReference);
     }
-                                               
+
     public ResourceEnvReferenceDescriptor getResourceEnvReference
         (String name) {
         ResourceEnvReferenceDescriptor resourceEnvRef = null;
@@ -185,7 +185,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
             // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
@@ -204,7 +204,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
         return resourceEnvRef;
     }
 
-    protected WritableJndiNameEnvironment 
+    protected WritableJndiNameEnvironment
         getResourceEnvReferenceContainer()
     {
         return (WritableJndiNameEnvironment)descriptor;
@@ -215,7 +215,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
         getEnvEntryContainer().addEnvironmentProperty(envEntry);
 
     }
-                                               
+
     public EnvironmentProperty getEnvEntry(String name) {
         EnvironmentProperty envEntry = null;
         try {
@@ -226,10 +226,10 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
-            // DOL API is (unfortunately) defined to return 
-            // IllegalStateException if name doesn't exist.           
+            // DOL API is (unfortunately) defined to return
+            // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
 
@@ -246,7 +246,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
         return envEntry;
 
     }
-    
+
     protected WritableJndiNameEnvironment getEnvEntryContainer()
     {
         return (WritableJndiNameEnvironment)descriptor;
@@ -259,8 +259,8 @@ public class ResourceContainerContextImpl extends AnnotationContext
             (emfRefDesc);
 
     }
-                                               
-    public EntityManagerFactoryReferenceDescriptor 
+
+    public EntityManagerFactoryReferenceDescriptor
         getEntityManagerFactoryReference(String name) {
 
         EntityManagerFactoryReferenceDescriptor emfRefDesc = null;
@@ -273,9 +273,9 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
-            // DOL API is (unfortunately) defined to return 
+            // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
@@ -293,7 +293,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
         return emfRefDesc;
 
     }
-    
+
     protected WritableJndiNameEnvironment getEmfRefContainer()
     {
         return (WritableJndiNameEnvironment)descriptor;
@@ -307,8 +307,8 @@ public class ResourceContainerContextImpl extends AnnotationContext
             (emRefDesc);
 
     }
-                                               
-    public EntityManagerReferenceDescriptor 
+
+    public EntityManagerReferenceDescriptor
         getEntityManagerReference(String name) {
 
         EntityManagerReferenceDescriptor emRefDesc = null;
@@ -321,9 +321,9 @@ public class ResourceContainerContextImpl extends AnnotationContext
             // This logic might change depending on overriding rules
             // and order in which annotations are read w.r.t. to xml.
             // E.g. sparse overriding in xml or loading annotations
-            // first.  
+            // first.
         } catch(IllegalArgumentException e) {
-            // DOL API is (unfortunately) defined to return 
+            // DOL API is (unfortunately) defined to return
             // IllegalStateException if name doesn't exist.
 
             Application app = getAppFromDescriptor();
@@ -341,7 +341,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
         return emRefDesc;
 
     }
-    
+
     protected WritableJndiNameEnvironment getEmRefContainer()
     {
         return (WritableJndiNameEnvironment)descriptor;
@@ -361,7 +361,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
      * @param className
      */
     public LifecycleCallbackDescriptor getPostConstruct(String className) {
-        LifecycleCallbackDescriptor postConstructDesc = 
+        LifecycleCallbackDescriptor postConstructDesc =
             getPostConstructContainer().getPostConstructDescriptorByClass(className);
         return postConstructDesc;
     }
@@ -384,7 +384,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
      * @param className
      */
     public LifecycleCallbackDescriptor getPreDestroy(String className) {
-        LifecycleCallbackDescriptor preDestroyDesc = 
+        LifecycleCallbackDescriptor preDestroyDesc =
             getPreDestroyContainer().getPreDestroyDescriptorByClass(className);
         return preDestroyDesc;
     }
@@ -437,13 +437,13 @@ public class ResourceContainerContextImpl extends AnnotationContext
     public String getComponentClassName() {
         return componentClassName;
     }
-    
-    public HandlerChainContainer[] 
+
+    public HandlerChainContainer[]
             getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
         // by default return null; appropriate contextx should override this
         return null;
     }
-    
+
     public ServiceReferenceContainer[] getServiceRefContainers() {
         // by default we return our descriptor;
         ServiceReferenceContainer[] containers = new ServiceReferenceContainer[1];
@@ -455,7 +455,7 @@ public class ResourceContainerContextImpl extends AnnotationContext
 
         BundleDescriptor bundleDesc = (BundleDescriptor)
                 ((BundleDescriptor) descriptor).getModuleDescriptor().getDescriptor();
-        bundleDesc.addManagedBean(managedBeanDesc);             
+        bundleDesc.addManagedBean(managedBeanDesc);
     }
 
     public Application getAppFromDescriptor() {

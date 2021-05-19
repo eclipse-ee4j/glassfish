@@ -35,7 +35,7 @@
         </ant>
         <ant dir="ear" target="private-all">
             <property name="build" value="${build}/ear"/>
-        </ant>                
+        </ant>
         <ant dir="jsr88" target="private-all">
             <property name="build" value="${build}/jsr88"/>
         </ant>

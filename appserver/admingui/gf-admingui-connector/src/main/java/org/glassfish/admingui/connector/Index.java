@@ -24,33 +24,33 @@ import java.util.List;
 
 
 /**
- *  <p>	This class is configured via XML (i.e. a console-config.xml file).
- *  	This is done via the HK2 <code>ConfigParser</code>.</p>
+ *  <p>        This class is configured via XML (i.e. a console-config.xml file).
+ *   This is done via the HK2 <code>ConfigParser</code>.</p>
  *
- *  @author Ken Paulsen	(ken.paulsen@sun.com)
+ *  @author Ken Paulsen        (ken.paulsen@sun.com)
  */
 @Configured(name="index")
 public class Index {
     /**
-     *	<p> Accessor for child {@link TOCItem}s.</p>
+     * <p> Accessor for child {@link TOCItem}s.</p>
      */
     public List<IndexItem> getIndexItems() {
-	return this.indexItems;
+        return this.indexItems;
     }
 
     /**
-     *	<p> {@link IntegrationPoint}s setter.</p>
+     * <p> {@link IntegrationPoint}s setter.</p>
      */
     @Element("indexitem")
     public void setIndexItems(List<IndexItem> indexItems) {
-	this.indexItems = indexItems;
+        this.indexItems = indexItems;
     }
 
     /**
      *
      */
     public String getVersion() {
-	return this.version;
+        return this.version;
     }
 
     /**
@@ -58,7 +58,7 @@ public class Index {
      */
     @Attribute(required=true)
     public void setVersion(String version) {
-	this.version = version;
+        this.version = version;
     }
 
 

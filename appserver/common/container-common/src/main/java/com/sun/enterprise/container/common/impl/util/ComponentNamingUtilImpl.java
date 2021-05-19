@@ -30,6 +30,6 @@ public class ComponentNamingUtilImpl
                 appName + "__" + origJavaAppName;
 
         return internalGlobalJavaAppName;
-        
+
     }
 }

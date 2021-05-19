@@ -105,15 +105,15 @@ public final class LBTest
             MBeanInfo minfo = getConnection().getMBeanInfo(objName);
             MBeanAttributeInfo[] mattrsinfo = minfo.getAttributes();
             /*
-            for (MBeanAttributeInfo mattrinfo : mattrsinfo) 
+            for (MBeanAttributeInfo mattrinfo : mattrsinfo)
             {
                 System.out.println("Attribute Name is : " + mattrinfo.getName());
             }
             */
 
             String[] attrsNames = (String[]) getConnection().getAttribute(objName, "AttributeNames");
-            /*for (String attrName : attrsNames) 
-                System.out.println("Actual Attribute Name is : " + attrName);            
+            /*for (String attrName : attrsNames)
+                System.out.println("Actual Attribute Name is : " + attrName);
             System.out.println("AttributeNames are : " + attrsNames);
             System.out.println("MBeanInfo is \n"+minfo);*/
 

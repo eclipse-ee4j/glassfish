@@ -46,4 +46,4 @@ public interface Customer extends jakarta.ejb.EJBObject
 
 }
 
-  
+

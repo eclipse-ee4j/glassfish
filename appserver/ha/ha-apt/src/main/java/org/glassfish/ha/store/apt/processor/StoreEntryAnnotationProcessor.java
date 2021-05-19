@@ -96,7 +96,7 @@ public class StoreEntryAnnotationProcessor
                         //TODO Warning??
                         continue;
                     }
-                    
+
                     if (attributeName == null || attributeName.length() == 0) {
                         attributeName = simpleName;
                         attributeName = Character.toLowerCase(attributeName.charAt(3)) + attributeName.substring(4);

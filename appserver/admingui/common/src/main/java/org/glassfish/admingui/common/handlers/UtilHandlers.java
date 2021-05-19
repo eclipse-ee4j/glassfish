@@ -65,29 +65,26 @@ import jakarta.faces.component.UIViewRoot;
  * @author Jennifer Chou
  */
 public class UtilHandlers {
-    
+
     /** Creates a new instance of UtilHandlers */
     public UtilHandlers() {
     }
-    
 
-    
-    
     /**
-     *	<p> Adds the specified (signed) amount of time to the given calendar 
+     * <p> Adds the specified (signed) amount of time to the given calendar
      *      field, based on the calendar's rules and returns the resulting Date.
      *      See <code>java.util.GregorianCalendar</code> add(int field, int amount). </p>
      *
-     *  <p> Input value: "Field" -- Type: <code>Integer</code> 
-     *          - <code>java.util.Calendar</code> field</p>
+     *  <p> Input value: "Field" -- Type: <code>Integer</code>
+     *   - <code>java.util.Calendar</code> field</p>
      *  <p> Input value: "Amount" -- Type: <code>Integer</code>
-     *          - the amount of date or time to be added to the field.</p>
+     *   - the amount of date or time to be added to the field.</p>
      *  <p> Output value: "Date" -- Type: <code>java.util.Date</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="calendarAdd",
-    	input={
-	    @HandlerInput(name="Field", type=Integer.class, required=true),
+        input={
+            @HandlerInput(name="Field", type=Integer.class, required=true),
             @HandlerInput(name="Amount", type=Integer.class, required=true)},
         output={
             @HandlerOutput(name="Date", type=java.util.Date.class)})
@@ -96,104 +93,104 @@ public class UtilHandlers {
         int amount = ((Integer) handlerCtx.getInputValue("Amount")).intValue();
         GregorianCalendar cal = new GregorianCalendar();
         cal.add(field, amount);
-        handlerCtx.setOutputValue("Date", cal.getTime());        
+        handlerCtx.setOutputValue("Date", cal.getTime());
     }
-    
+
     /**
-     *	<p> Creates a new File instance by converting the given pathname string 
-     *      into an abstract pathname. If the given string is the empty string, 
+     * <p> Creates a new File instance by converting the given pathname string
+     *      into an abstract pathname. If the given string is the empty string,
      *      then the result is the empty abstract pathname. </p>
      *
-     *  <p> Input value: "Pathname" -- Type: <code>String</code> 
+     *  <p> Input value: "Pathname" -- Type: <code>String</code>
      *  <p> Output value: "File" -- Type: <code>java.io.File</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="getFile",
-    	input={
-	    @HandlerInput(name="Pathname", type=String.class, required=true)},
+        input={
+            @HandlerInput(name="Pathname", type=String.class, required=true)},
         output={
             @HandlerOutput(name="File", type=File.class)})
     public static void getFile(HandlerContext handlerCtx) {
         String pathname = (String) handlerCtx.getInputValue("Pathname");
-        handlerCtx.setOutputValue("File", pathname != null ? new File(pathname) : null);        
+        handlerCtx.setOutputValue("File", pathname != null ? new File(pathname) : null);
     }
 
     /**
-     *	<p> This handler serves a resource via JSFTemplating's FileStreamer.</p>
+     * <p> This handler serves a resource via JSFTemplating's FileStreamer.</p>
      */
     @Handler(id="gf.serveResource",
-    	input={
-	    @HandlerInput(name="path", type=String.class, required=true)},
-	output={
-	    @HandlerOutput(name="content", type=String.class)})
+        input={
+            @HandlerInput(name="path", type=String.class, required=true)},
+        output={
+            @HandlerOutput(name="content", type=String.class)})
     public static void serveResource(HandlerContext ctx) throws java.io.IOException {
-	/*
-	  JSF 2.0 impl used to set the writer before the render response phase
-	  (in apply request values).  So we couldn't control the output of an
-	  Ajax request. :(  Therefor the following is commented out.  On
-	  10/6/2009 rlubke fixed this, we need to adjust the JS to handle a
-	  direct response then this can be enabled.
-	 
-	    FacesContext facesCtx = ctx.getFacesContext();
-	    UIViewRoot root = new UIViewRoot();
-	    root.setRenderKitId("dummy");
-	    facesCtx.setViewRoot(root);
+        /*
+          JSF 2.0 impl used to set the writer before the render response phase
+          (in apply request values).  So we couldn't control the output of an
+          Ajax request. :(  Therefor the following is commented out.  On
+          10/6/2009 rlubke fixed this, we need to adjust the JS to handle a
+          direct response then this can be enabled.
 
-	    LayoutViewHandler.serveResource(facesCtx,
-		(String) ctx.getInputValue("path"));
-	 */
-	String path = (String) ctx.getInputValue("path");
-	int idx = path.lastIndexOf("://");
-	String port = null;
-	if (idx != -1) {
-	    // Strip off protocol
-	    path = path.substring(idx + 3);
+            FacesContext facesCtx = ctx.getFacesContext();
+            UIViewRoot root = new UIViewRoot();
+            root.setRenderKitId("dummy");
+            facesCtx.setViewRoot(root);
 
-	    // Now looks like: host.domain:port/resource
+            LayoutViewHandler.serveResource(facesCtx,
+                (String) ctx.getInputValue("path"));
+         */
+        String path = (String) ctx.getInputValue("path");
+        int idx = path.lastIndexOf("://");
+        String port = null;
+        if (idx != -1) {
+            // Strip off protocol
+            path = path.substring(idx + 3);
+
+            // Now looks like: host.domain:port/resource
 // FIXME: port 80 may be omitted (or 443 for https)
-	    if ((idx = path.indexOf(':')) != -1) {
-		path = path.substring(idx + 1);
-		if ((idx = path.indexOf('/')) != -1) {
-		    port = path.substring(0, idx);
-		    path = path.substring(idx);
-		}
-	    }
-	}
-	URL url = FileUtil.searchForFile(path, null);
-	if ((url == null) && (port != null)) {
-	    // Attempt to read from localhost
-	    path = "http://localhost:" + port + path;
-	    try {
-		url = new URL(path);
-	    } catch (MalformedURLException ex) {
-		url = null;
-	    }
-	}
-	String content = "";
-	if (url != null) {
+            if ((idx = path.indexOf(':')) != -1) {
+                path = path.substring(idx + 1);
+                if ((idx = path.indexOf('/')) != -1) {
+                    port = path.substring(0, idx);
+                    path = path.substring(idx);
+                }
+            }
+        }
+        URL url = FileUtil.searchForFile(path, null);
+        if ((url == null) && (port != null)) {
+            // Attempt to read from localhost
+            path = "http://localhost:" + port + path;
+            try {
+                url = new URL(path);
+            } catch (MalformedURLException ex) {
+                url = null;
+            }
+        }
+        String content = "";
+        if (url != null) {
             try{
                 content = new String(FileUtil.readFromURL(url));
             } catch (FileNotFoundException fnfe) {
                 //
             }
-	}
+        }
 
-	// Set the output
-	ctx.setOutputValue("content", content);
+        // Set the output
+        ctx.setOutputValue("content", content);
     }
-    
+
     /**
-     *	<p> Returns the name of the file or directory denoted by this abstract 
-     *      pathname. This is just the last name in the pathname's name sequence. 
+     * <p> Returns the name of the file or directory denoted by this abstract
+     *      pathname. This is just the last name in the pathname's name sequence.
      *      If the pathname's name sequence is empty, then the empty string is returned. </p>
      *
-     *  <p> Input value: "File" -- Type: <code>java.io.File</code> 
+     *  <p> Input value: "File" -- Type: <code>java.io.File</code>
      *  <p> Output value: "Name" -- Type: <code>String</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="fileGetName",
-    	input={
-	    @HandlerInput(name="File", type=File.class, required=true)},
+        input={
+            @HandlerInput(name="File", type=File.class, required=true)},
         output={
             @HandlerOutput(name="Name", type=String.class)})
     public static void fileGetName(HandlerContext handlerCtx) {
@@ -202,39 +199,39 @@ public class UtilHandlers {
     }
 
     /**
-     *	<p> Returns a duplicate copy of the source Map
+     * <p> Returns a duplicate copy of the source Map
      *
      *  <p> Input value: "source" -- Type: <code>java.util.Map</code>
      *  <p> Output value: "dest" -- Type: <code>java.util.Map</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="mapCopy",
-            input={
-                    @HandlerInput(name="source", type=Map.class, required=true)},
-            output={
-                    @HandlerOutput(name="dest", type=Map.class)})
+        input={
+                @HandlerInput(name="source", type=Map.class, required=true)},
+        output={
+                @HandlerOutput(name="dest", type=Map.class)})
     public static void mapCopy(HandlerContext handlerCtx) {
         Map source = (Map) handlerCtx.getInputValue("source");
         handlerCtx.setOutputValue("dest",  new HashMap(source));
     }
     /**
-     *	<p> Returns the value to which the input map maps the input key. </p>
+     * <p> Returns the value to which the input map maps the input key. </p>
      *
-     *  <p> Input value: "Map" -- Type: <code>java.util.Map</code> 
+     *  <p> Input value: "Map" -- Type: <code>java.util.Map</code>
      *  <p> Input value: "Key" -- Type: <code>Object</code>
      *  <p> Output value: "Value" -- Type: <code>Object</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="mapGet",
-    	input={
-	    @HandlerInput(name="Map", type=Map.class, required=true),
+        input={
+            @HandlerInput(name="Map", type=Map.class, required=true),
             @HandlerInput(name="Key", type=Object.class, required=true)},
         output={
             @HandlerOutput(name="Value", type=Object.class)})
     public static void mapGet(HandlerContext handlerCtx) {
         Map map = (Map) handlerCtx.getInputValue("Map");
         Object key = (Object) handlerCtx.getInputValue("Key");
-        handlerCtx.setOutputValue("Value", (Object) map.get(key));        
+        handlerCtx.setOutputValue("Value", (Object) map.get(key));
     }
 
     @Handler(id="mapJoin",
@@ -271,11 +268,11 @@ public class UtilHandlers {
      * This handler goes through all the Map entries, if the value is null, it will convert that to "false"
      * This is used usually to take care of un-checked checkbox which is set to 'null',  but needs to be set to false when
      * the map is passed in as attrsMap for request.
-     *	<p> Returns the map  </p>
+     * <p> Returns the map  </p>
      *
      *  <p> Input value: "map" -- Type: <code>java.util.Map</code>
      * <p> Input value: "key" -- Type: <code>java.util.List</code>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="gf.mapValueNullToFalse",
         input={
@@ -296,15 +293,15 @@ public class UtilHandlers {
     }
 
     /**
-     *	<p> Returns the keys  </p>
+     * <p> Returns the keys  </p>
      *
      *  <p> Input value: "Map" -- Type: <code>java.util.Map</code>
      *  <p> Output value: "Keys" -- Type: <code>Object</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="gf.getMapKeys",
-    	input={
-	    @HandlerInput(name="Map", type=Map.class, required=true)},
+        input={
+            @HandlerInput(name="Map", type=Map.class, required=true)},
         output={
             @HandlerOutput(name="Keys", type=List.class)})
     public static void getMapKeys(HandlerContext handlerCtx) {
@@ -323,11 +320,11 @@ public class UtilHandlers {
      * <p> Input list: "list" -- Type: <code>java.util.List</code>
      * <p> Input value: "value" -- Type: <code>java.lang.Object</code>
      * <p> Input value: "index" -- Type: <code>Integer</code>
-     * 
+     *
      * @param handlerCtx The HandlerContext
      */
     @Handler(id="listAdd",
-    	input={
+        input={
             @HandlerInput(name="list", type=List.class),
             @HandlerInput(name="value", type=Object.class, required=true),
             @HandlerInput(name="index", type=Integer.class),
@@ -363,7 +360,7 @@ public class UtilHandlers {
      * @param handlerCtx The HandlerContext
      */
     @Handler(id="listRemove",
-    	input={
+        input={
             @HandlerInput(name="list", type=List.class),
             @HandlerInput(name="value", type=Object.class, required=true)
         },
@@ -387,7 +384,7 @@ public class UtilHandlers {
      * @param handlerCtx The HandlerContext
      */
     @Handler(id="gf.listSort",
-    	input={
+        input={
             @HandlerInput(name="list", type=List.class, required=true)}
     )
     public static void listSort(HandlerContext handlerCtx) {
@@ -404,7 +401,7 @@ public class UtilHandlers {
      */
 
     @Handler(id="gf.listCombine",
-    	input={
+        input={
             @HandlerInput(name="list", type=List.class, required=true),
             @HandlerInput(name="list2", type=List.class, required=true)
         },
@@ -415,7 +412,7 @@ public class UtilHandlers {
         List list = (List)handlerCtx.getInputValue("list");
         List list2 = (List)handlerCtx.getInputValue("list2");
         if (list == null) {
-            list = new ArrayList();            
+            list = new ArrayList();
         }
         if (list2 != null) {
             for(Object one : list2) {
@@ -432,11 +429,11 @@ public class UtilHandlers {
      * <p> Output value: "contain" -- Type: <code>Boolean</code>
      */
     @Handler(id="gf.containedIn",
-    	input={
+        input={
             @HandlerInput(name="list", type=List.class, required=true),
             @HandlerInput(name="testStr", type=String.class, required=true)},
         output={
-        @HandlerOutput(name="contain", type=Boolean.class)})
+            @HandlerOutput(name="contain", type=Boolean.class)})
     public static void containedIn(HandlerContext handlerCtx) {
         List list = (List)handlerCtx.getInputValue("list");
 
@@ -446,16 +443,16 @@ public class UtilHandlers {
 
 
     /**
-     *	<p> Compare if 2 objects is equal </p>
+     * <p> Compare if 2 objects is equal </p>
      *
-     *  <p> Input value: "obj1" -- Type: <code>Object</code> 
+     *  <p> Input value: "obj1" -- Type: <code>Object</code>
      *  <p> Input value: "obj2" -- Type: <code>Object</code>
      *  <p> Output value: "equal" -- Type: <code>Object</code></p>
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="compare",
-    	input={
-	    @HandlerInput(name="obj1", type=Object.class, required=true),
+        input={
+            @HandlerInput(name="obj1", type=Object.class, required=true),
             @HandlerInput(name="obj2", type=Object.class, required=true)},
         output={
             @HandlerOutput(name="objEqual", type=Boolean.class)})
@@ -469,9 +466,9 @@ public class UtilHandlers {
             if (obj2 == null)
                 ret = true;
         }
-        handlerCtx.setOutputValue("objEqual", ret);        
+        handlerCtx.setOutputValue("objEqual", ret);
     }
-    
+
     /**
      * <p> This method displays the save successful message when the page refresh.
      * @param handlerCtx The HandlerContext.
@@ -481,7 +478,7 @@ public class UtilHandlers {
         GuiUtil.prepareSuccessful(handlerCtx);
     }
 
-    /** 
+    /**
      * <p> This method sets the attributes that will be used by the alert component
      *     display the message to user.
      *     If type is not specifed, it will be 'info' by default.
@@ -491,11 +488,11 @@ public class UtilHandlers {
      * @param handlerCtx The HandlerContext.
      */
      @Handler(id="prepareAlertMsg",
-     input={
-        @HandlerInput(name="summary", type=String.class, required=true),
-        @HandlerInput(name="type",  type=String.class),
-        @HandlerInput(name="detail",  type=String.class)
-      })
+         input={
+            @HandlerInput(name="summary", type=String.class, required=true),
+            @HandlerInput(name="type",  type=String.class),
+            @HandlerInput(name="detail",  type=String.class)
+          })
     public static void prepareAlertMsg(HandlerContext handlerCtx){
         String summary = (String) handlerCtx.getInputValue("summary");
         String type = (String) handlerCtx.getInputValue("type");
@@ -504,10 +501,10 @@ public class UtilHandlers {
     }
 
     /**
-     *	<p> This handler will test if a String starts with another String.</p>
+     * <p> This handler will test if a String starts with another String.</p>
      */
     @Handler(id="startsWith",
-    	input={
+        input={
             @HandlerInput(name="testStr", type=String.class, required=true),
             @HandlerInput(name="pattern", type=String.class, required=true)},
         output={
@@ -523,12 +520,12 @@ public class UtilHandlers {
      * if scheme is not specified.
      */
      @Handler(id="decodeString",
-     input={
-        @HandlerInput(name="str", type=String.class, required=true),
-        @HandlerInput(name="scheme", type=String.class)},
-     output={
-        @HandlerOutput(name="output", type=String.class)
-	    })
+         input={
+            @HandlerInput(name="str", type=String.class, required=true),
+            @HandlerInput(name="scheme", type=String.class)},
+         output={
+            @HandlerOutput(name="output", type=String.class)
+        })
     public static void decodeString(HandlerContext handlerCtx) {
         String str = (String) handlerCtx.getInputValue("str");
         String scheme = (String) handlerCtx.getInputValue("scheme");
@@ -536,7 +533,7 @@ public class UtilHandlers {
             handlerCtx.setOutputValue("output", "");
             return;
         }
-        
+
         if (GuiUtil.isEmpty(scheme))
             scheme = "UTF-8";
         try{
@@ -551,13 +548,13 @@ public class UtilHandlers {
         }
      }
 
-    
+
     @Handler(id="roundTo2DecimalPoint",
-    input={
-        @HandlerInput(name="input", type=Double.class)},
-    output={
-        @HandlerOutput(name="output", type=String.class)
-    })
+        input={
+            @HandlerInput(name="input", type=Double.class)},
+        output={
+            @HandlerOutput(name="output", type=String.class)
+        })
     public static void roundTo2DecimalPoint(HandlerContext handlerCtx) {
         DecimalFormat df= new DecimalFormat();
         df.setMaximumFractionDigits(2);
@@ -582,11 +579,11 @@ public class UtilHandlers {
      */
 
     @Handler(id = "addEmptyFirstElement",
-    input = {
-        @HandlerInput(name = "in", type = List.class, required = true)},
-    output = {
-        @HandlerOutput(name = "out", type = List.class)
-    })
+        input = {
+            @HandlerInput(name = "in", type = List.class, required = true)},
+        output = {
+            @HandlerOutput(name = "out", type = List.class)
+        })
     public static void addEmptyFirstElement(HandlerContext handlerCtx) {
         List<String> in = (List) handlerCtx.getInputValue("in");
         ArrayList ar = null;
@@ -602,14 +599,14 @@ public class UtilHandlers {
 
 
     @Handler(id = "getListBoxOptions",
-    input = {
-        @HandlerInput(name = "availableList", type = List.class, required = true),
-        @HandlerInput(name = "selectedCommaString", type = String.class, required = true),
-        @HandlerInput(name = "addEmptyFirstChoice", type = String.class, defaultValue = "true")},
-    output = {
-        @HandlerOutput(name = "availableListResult", type = List.class),
-        @HandlerOutput(name = "selectedOptions", type = String[].class)
-    })
+        input = {
+            @HandlerInput(name = "availableList", type = List.class, required = true),
+            @HandlerInput(name = "selectedCommaString", type = String.class, required = true),
+            @HandlerInput(name = "addEmptyFirstChoice", type = String.class, defaultValue = "true")},
+        output = {
+            @HandlerOutput(name = "availableListResult", type = List.class),
+            @HandlerOutput(name = "selectedOptions", type = String[].class)
+        })
     public static void getListBoxOptions(HandlerContext handlerCtx) {
         String selectedCommaString = (String) handlerCtx.getInputValue("selectedCommaString");
         List<String> availableList = (List) handlerCtx.getInputValue("availableList");
@@ -636,10 +633,10 @@ public class UtilHandlers {
 
 
     @Handler(id = "convertArrayToCommaString",
-    input = {
-        @HandlerInput(name = "array", type = String[].class, required = true)},
-    output = {
-        @HandlerOutput(name = "commaString", type = String.class)})
+        input = {
+            @HandlerInput(name = "array", type = String[].class, required = true)},
+        output = {
+            @HandlerOutput(name = "commaString", type = String.class)})
     public static void convertArrayToCommaString(HandlerContext handlerCtx) {
         String[] array = (String[])handlerCtx.getInputValue("array");
         String commaString = "";
@@ -648,42 +645,42 @@ public class UtilHandlers {
         }
         handlerCtx.setOutputValue("commaString", commaString);
     }
-    
+
     @Handler(id = "convertListToCommaString",
-    input = {
-        @HandlerInput(name = "list", type = List.class, required = true)},
-    output = {
-        @HandlerOutput(name = "commaString", type = String.class)})
+        input = {
+            @HandlerInput(name = "list", type = List.class, required = true)},
+        output = {
+            @HandlerOutput(name = "commaString", type = String.class)})
     public static void convertListToCommaString(HandlerContext handlerCtx) {
         List list = (List)handlerCtx.getInputValue("list");
         String commaString = "";
-		if( (list != null) && list.size() > 0 ) {
-			commaString = GuiUtil.listToString(list, ",");
-		}
+                if( (list != null) && list.size() > 0 ) {
+                        commaString = GuiUtil.listToString(list, ",");
+                }
         handlerCtx.setOutputValue("commaString", commaString);
     }
 
     @Handler(id = "gf.resolveTokens",
-    input = {
-        @HandlerInput(name = "tokens", type = List.class, required = true),
-        @HandlerInput(name = "endPoint", type = String.class, required = true)},
-    output = {
-        @HandlerOutput(name = "resolvedTokens", type = List.class)})
+        input = {
+            @HandlerInput(name = "tokens", type = List.class, required = true),
+            @HandlerInput(name = "endPoint", type = String.class, required = true)},
+        output = {
+            @HandlerOutput(name = "resolvedTokens", type = List.class)})
     public static void resolveTokens(HandlerContext handlerCtx) {
         List<String> tokens = (List<String>)handlerCtx.getInputValue("tokens");
         ArrayList<String> resolvedTokens = new ArrayList();
 
         String endPoint = (String)handlerCtx.getInputValue("endPoint");
-        for (String token : tokens) 
+        for (String token : tokens)
             resolvedTokens.add(RestUtil.resolveToken(endPoint, token));
         handlerCtx.setOutputValue("resolvedTokens", resolvedTokens);
     }
 
     @Handler(id = "convertListToArray",
-    input = {
-        @HandlerInput(name = "list", type = List.class, required = true)},
-    output = {
-        @HandlerOutput(name = "array", type = String[].class)})
+        input = {
+            @HandlerInput(name = "list", type = List.class, required = true)},
+        output = {
+            @HandlerOutput(name = "array", type = String[].class)})
     public static void convertListToArray(HandlerContext handlerCtx) {
         List list = (List)handlerCtx.getInputValue("list");
 
@@ -691,7 +688,7 @@ public class UtilHandlers {
     }
 
    /**
-     *	<p> This handler takes in a string with delimiter and returns list
+     * <p> This handler takes in a string with delimiter and returns list
      */
     @Handler(id="convertStringtoList",
          input={
@@ -723,7 +720,7 @@ public class UtilHandlers {
     }
 
     @Handler(id="convertStringToMap",
-         input={
+        input={
             @HandlerInput(name="str", type=String.class),
             @HandlerInput(name="delimiter", type=String.class)
             },
@@ -748,16 +745,16 @@ public class UtilHandlers {
         handlerCtx.setOutputValue("result", output);
     }
 
-    
+
      //This is the reserve of the above method.
     //We want to separator and display each jar in one line in the text box.
     @Handler(id = "formatStringsforDisplay",
-    input = {
-        @HandlerInput(name = "string", type = String.class, required = true)},
-    output = {
-        @HandlerOutput(name = "formattedString", type = String.class)})
+        input = {
+            @HandlerInput(name = "string", type = String.class, required = true)},
+        output = {
+            @HandlerOutput(name = "formattedString", type = String.class)})
     public static void formatStringsforDisplay(HandlerContext handlerCtx) {
-        
+
         String values = (String) handlerCtx.getInputValue("string");
         if (values == null || GuiUtil.isEmpty(values.trim())) {
             handlerCtx.setOutputValue("formattedString", "");
@@ -775,14 +772,14 @@ public class UtilHandlers {
 
         }
     }
-    
+
     //This converts any tab/NL etc to ${path.separator} before passing to backend for setting.
     //In domain.xml, it will be written out like  c:foo.jar${path.separator}c:bar.jar
     @Handler(id = "formatPathSeperatorStringsforSaving",
-    input = {
-        @HandlerInput(name = "string", type = String.class, required = true)},
-    output = {
-        @HandlerOutput(name = "formattedString", type = String.class)})
+        input = {
+            @HandlerInput(name = "string", type = String.class, required = true)},
+        output = {
+            @HandlerOutput(name = "formattedString", type = String.class)})
     public static void formatPathSeperatorStringsforSaving(HandlerContext handlerCtx) {
         String values = (String) handlerCtx.getInputValue("string");
         StringBuilder token = new StringBuilder("");
@@ -796,47 +793,47 @@ public class UtilHandlers {
             }
         }
         handlerCtx.setOutputValue("formattedString", token.toString());
-    }    
+    }
 
     /**
      *
      */
     @Handler(id="addHandler",
-    input={
-        @HandlerInput(name="id", type=String.class, required=true),
-        @HandlerInput(name="desc", type=String.class),
-        @HandlerInput(name="class", type=String.class, required=true),
-        @HandlerInput(name="method", type=String.class, required=true)
-	})
+        input={
+            @HandlerInput(name="id", type=String.class, required=true),
+            @HandlerInput(name="desc", type=String.class),
+            @HandlerInput(name="class", type=String.class, required=true),
+            @HandlerInput(name="method", type=String.class, required=true)
+        })
     public static void addHandler(HandlerContext handlerCtx) {
-	String id = (String) handlerCtx.getInputValue("id");
-	String desc = (String) handlerCtx.getInputValue("desc");
-	String cls = (String) handlerCtx.getInputValue("class");
-	String meth = (String) handlerCtx.getInputValue("method");
-	HandlerDefinition def = new HandlerDefinition(id);
-	def.setHandlerMethod(cls, meth);
-	if (desc != null) {
-	    def.setDescription(desc);
-	}
-	LayoutDefinitionManager.addGlobalHandlerDefinition(def);
+        String id = (String) handlerCtx.getInputValue("id");
+        String desc = (String) handlerCtx.getInputValue("desc");
+        String cls = (String) handlerCtx.getInputValue("class");
+        String meth = (String) handlerCtx.getInputValue("method");
+        HandlerDefinition def = new HandlerDefinition(id);
+        def.setHandlerMethod(cls, meth);
+        if (desc != null) {
+            def.setDescription(desc);
+        }
+        LayoutDefinitionManager.addGlobalHandlerDefinition(def);
     }
 
 
     /**
-     *	<p> A utility handler that resembles the for() method in Java.  Handler inside the for loop will be executed
+     * <p> A utility handler that resembles the for() method in Java.  Handler inside the for loop will be executed
      *  in a loop.  start index is specified by "start",  till less than "end".
      * eg. forLoop(start="1"  end="3" varName="foo"){}, handler inside the {} will be executed 2 times.
      *
      *  <p> Input value: "start" -- Type: <code>Integer</code> Start index, default to Zero is not specified
      *  <p> Input value: "end" -- Type: <code>Integer</code> End index.
      *  <p> Input value: "varName" -- Type: <code>String</code>  Variable to be replaced in the for loop by the index.
-     *	@param	handlerCtx	The HandlerContext.
+     * @param        handlerCtx        The HandlerContext.
      */
     @Handler(id="forLoop",
-    	input={
-	    @HandlerInput(name="start", type=String.class),
-        @HandlerInput(name="end", type=Integer.class, required=true),
-        @HandlerInput(name="varName", type=String.class, required=true)}
+        input={
+            @HandlerInput(name="start", type=String.class),
+            @HandlerInput(name="end", type=Integer.class, required=true),
+            @HandlerInput(name="varName", type=String.class, required=true)}
         )
     public static boolean forLoop(HandlerContext handlerCtx) {
 
@@ -846,91 +843,91 @@ public class UtilHandlers {
         String varName = ((String) handlerCtx.getInputValue("varName"));
 
         List<com.sun.jsftemplating.layout.descriptors.handler.Handler> handlers = handlerCtx.getHandler().getChildHandlers();
-		if (handlers.size() > 0) {
+                if (handlers.size() > 0) {
             LayoutElement elt = handlerCtx.getLayoutElement();
             Map<String, Object> requestMap = handlerCtx.getFacesContext().getExternalContext().getRequestMap();
             for(int ix=start;  ix<=end; ix++){
                 requestMap.put(varName, ix);
                 //ignore whats returned by the handler.
                 elt.dispatchHandlers(handlerCtx, handlers);
-		    }
-		}
+                    }
+                }
         return false;
     }
 
     /**
-     *	<p> This handler provides the foreach loop functionality.  You should
-     *	    specify a request attribute 'var' that will be used as the key for
-     *	    storing each token in the list.  You can then retreive each value
-     *	    as the loop iterates by requesting the request scoped attribute
-     *	    keyed by the value you suplied for 'var'.  You must also specify
-     *	    the <code>List&lt;Object&gt;</code> to iterate over.</p>
+     * <p> This handler provides the foreach loop functionality.  You should
+     *     specify a request attribute 'var' that will be used as the key for
+     *     storing each token in the list.  You can then retreive each value
+     *     as the loop iterates by requesting the request scoped attribute
+     *     keyed by the value you suplied for 'var'.  You must also specify
+     *     the <code>List&lt;Object&gt;</code> to iterate over.</p>
      */
     @Handler(id="foreach",
-	input={
-	    @HandlerInput(name="var", type=String.class, required=false, defaultValue="idx"),
-	    @HandlerInput(name="list", type=Collection.class, required=true) })
+        input={
+            @HandlerInput(name="var", type=String.class, required=false, defaultValue="idx"),
+            @HandlerInput(name="list", type=Collection.class, required=true) })
     public static boolean foreach(HandlerContext handlerCtx) {
-	String var = (String) handlerCtx.getInputValue("var");
-	Collection<Object> list = (Collection<Object>) handlerCtx.getInputValue("list");
+        String var = (String) handlerCtx.getInputValue("var");
+        Collection<Object> list = (Collection<Object>) handlerCtx.getInputValue("list");
 
-	List<com.sun.jsftemplating.layout.descriptors.handler.Handler> handlers =
+        List<com.sun.jsftemplating.layout.descriptors.handler.Handler> handlers =
             handlerCtx.getHandler().getChildHandlers();
         if (handlers.size() > 0) {
             // We have child handlers in the loop... execute while we iterate
             LayoutElement elt = handlerCtx.getLayoutElement();
             Map<String, Object> requestMap = handlerCtx.getFacesContext().
                     getExternalContext().getRequestMap();
-	    if (list != null) {
-		for (Object obj : list) {
-		    requestMap.put(var, obj);
+            if (list != null) {
+                for (Object obj : list) {
+                    requestMap.put(var, obj);
 
-		    // Ignore whats returned by the handler... we need to return
-		    // false anyway to prevent children from being executed again
+                    // Ignore whats returned by the handler... we need to return
+                    // false anyway to prevent children from being executed again
 // FIXME: Consider supporting a "break" type of functionality
-		    elt.dispatchHandlers(handlerCtx, handlers);
-		}
-	    }
+                    elt.dispatchHandlers(handlerCtx, handlers);
+                }
+            }
         }
 
         // This will prevent the child handlers from executing again
-	return false;
+        return false;
     }
 
     /**
-     *	<p> This handler returns the <code>Set</code> of entries for the given
-     *	    <code>Map</code>.</p>
+     * <p> This handler returns the <code>Set</code> of entries for the given
+     *     <code>Map</code>.</p>
      */
     @Handler(id="mapEntrySet",
-	input = {
-	    @HandlerInput(name="map", type=Map.class, required=true)},
-	output = {
-	    @HandlerOutput(name="set", type=Set.class)})
+        input = {
+            @HandlerInput(name="map", type=Map.class, required=true)},
+        output = {
+            @HandlerOutput(name="set", type=Set.class)})
     public static void mapEntrySet(HandlerContext handlerCtx) {
         Map map = (Map) handlerCtx.getInputValue("map");
         handlerCtx.setOutputValue("set", map.entrySet());
     }
 
     /**
-     *	<p> This handler returns the <code>Set</code> of keys for the given
-     *	    <code>Map</code>.</p>
+     * <p> This handler returns the <code>Set</code> of keys for the given
+     *     <code>Map</code>.</p>
      */
     @Handler(id="mapValues",
-	input = {
-	    @HandlerInput(name="map", type=Map.class, required=true)},
-	output = {
-	    @HandlerOutput(name="values", type=Object.class)})
+        input = {
+            @HandlerInput(name="map", type=Map.class, required=true)},
+        output = {
+            @HandlerOutput(name="values", type=Object.class)})
     public static void mapValues(HandlerContext handlerCtx) {
         Map map = (Map) handlerCtx.getInputValue("map");
         Object xx = map.values();
         handlerCtx.setOutputValue("values", xx);
     }
-    
+
     @Handler(id = "convertStrToBoolean",
-    input = {
-        @HandlerInput(name = "str", type = String.class, required = true)},
-    output = {
-        @HandlerOutput(name = "out", type = Boolean.class)})
+        input = {
+            @HandlerInput(name = "str", type = String.class, required = true)},
+        output = {
+            @HandlerOutput(name = "out", type = Boolean.class)})
     public static void convertStrToBoolean(HandlerContext handlerCtx) {
         String str = (String) handlerCtx.getInputValue("str");
         handlerCtx.setOutputValue("out", "true".equals(str));
@@ -938,13 +935,13 @@ public class UtilHandlers {
 
 
     @Handler(id="gf.logger",
-    input={
-        @HandlerInput(name="logString", type=String.class , defaultValue=""),
-        @HandlerInput(name="level", type=String.class , defaultValue="INFO")
-    },
-    output={
-        @HandlerOutput(name="string", type=String.class)
-    })
+        input={
+            @HandlerInput(name="logString", type=String.class , defaultValue=""),
+            @HandlerInput(name="level", type=String.class , defaultValue="INFO")
+        },
+        output={
+            @HandlerOutput(name="string", type=String.class)
+        })
     public static void logger(HandlerContext handlerCtx) {
 
         GuiUtil.getLogger().log(
@@ -953,32 +950,32 @@ public class UtilHandlers {
     }
 
     /**
-     *	<p> This method returns a new UIViewRoot with the basic JSFT settings
-     *	    from the current ViewRoot.  If you intend to set this before the
-     *	    current view is created (in an effort to swap out the UIViewRoot),
-     *	    you should do so during the initPage event (take care to only do
-     *	    this during the first request, or you might lose all child
-     *	    components).</p>
+     * <p> This method returns a new UIViewRoot with the basic JSFT settings
+     *     from the current ViewRoot.  If you intend to set this before the
+     *     current view is created (in an effort to swap out the UIViewRoot),
+     *     you should do so during the initPage event (take care to only do
+     *     this during the first request, or you might lose all child
+     *     components).</p>
      */
     @Handler(id = "createDefaultViewRoot",
-	output = {
-	    @HandlerOutput(name="viewRoot", type=UIViewRoot.class)})
+        output = {
+            @HandlerOutput(name="viewRoot", type=UIViewRoot.class)})
     public static void createDefaultViewRoot(HandlerContext handlerCtx) {
-	UIViewRoot oldVR = handlerCtx.getFacesContext().getViewRoot();
-	UIViewRoot newVR = new UIViewRoot();
-	newVR.setViewId(oldVR.getViewId());
-	ViewRootUtil.setLayoutDefinitionKey(newVR, ViewRootUtil.getLayoutDefinitionKey(oldVR));
-	newVR.setLocale(oldVR.getLocale());
-	newVR.setRenderKitId(oldVR.getRenderKitId());
+        UIViewRoot oldVR = handlerCtx.getFacesContext().getViewRoot();
+        UIViewRoot newVR = new UIViewRoot();
+        newVR.setViewId(oldVR.getViewId());
+        ViewRootUtil.setLayoutDefinitionKey(newVR, ViewRootUtil.getLayoutDefinitionKey(oldVR));
+        newVR.setLocale(oldVR.getLocale());
+        newVR.setRenderKitId(oldVR.getRenderKitId());
         handlerCtx.setOutputValue("viewRoot", newVR);
     }
 
     /**
-     *	<p> This handler invokes the {@link GuiUtil#genId(String)} method and
-     *	    returns the result.</p>
+     * <p> This handler invokes the {@link GuiUtil#genId(String)} method and
+     *     returns the result.</p>
      */
     @Handler(id="gf.encodeId",
-    	input={
+        input={
             @HandlerInput(name="id", type=String.class, required=true)},
         output={
             @HandlerOutput(name="result", type=String.class)})
@@ -988,15 +985,15 @@ public class UtilHandlers {
     }
 
     /**
-     *	This method converts a Map into a list of Map with keyName and ValueName.  This is suitable for table dislay.
+     * This method converts a Map into a list of Map with keyName and ValueName.  This is suitable for table dislay.
      */
     @Handler(id="gf.convertMapToListOfMap",
-            input={
-                    @HandlerInput(name="map", type=Map.class, required=true),
-                    @HandlerInput(name="keyName", type=String.class, defaultValue = "key"),
-                    @HandlerInput(name="valueName", type=String.class, defaultValue = "value")},
-            output={
-                    @HandlerOutput(name="result", type=List.class)})
+        input={
+                @HandlerInput(name="map", type=Map.class, required=true),
+                @HandlerInput(name="keyName", type=String.class, defaultValue = "key"),
+                @HandlerInput(name="valueName", type=String.class, defaultValue = "value")},
+        output={
+                @HandlerOutput(name="result", type=List.class)})
     public static void convertMapToListOfMap(HandlerContext handlerCtx) {
         Map map = ((Map) handlerCtx.getInputValue("map"));
         String keyName = ((String) handlerCtx.getInputValue("keyName"));
@@ -1015,11 +1012,11 @@ public class UtilHandlers {
     }
 
     /**
-     *	<p> This handler will convert a Java object to JSON by using
-     *	    {@link JSONUtil#javaToJSON}.</p>
+     * <p> This handler will convert a Java object to JSON by using
+     *     {@link JSONUtil#javaToJSON}.</p>
      */
     @Handler(id="javaToJSON",
-    	input={
+        input={
             @HandlerInput(name="obj", type=Object.class, required=true),
             @HandlerInput(name="depth", type=Integer.class, required=false, defaultValue="9")},
         output={
@@ -1029,14 +1026,14 @@ public class UtilHandlers {
         int depth = ((Integer) handlerCtx.getInputValue("depth"));
         handlerCtx.setOutputValue("json", JSONUtil.javaToJSON(obj, depth));
     }
-    
+
     @Handler(id="gf.createPropertyString",
-            input={ 
-                @HandlerInput(name="properties", type=List.class, required=true)
-            },
-            output={
-                @HandlerOutput(name="string", type=String.class)
-            }
+        input={
+            @HandlerInput(name="properties", type=List.class, required=true)
+        },
+        output={
+            @HandlerOutput(name="string", type=String.class)
+        }
     )
     public static void createPropertyString(HandlerContext handlerCtx) {
         StringBuilder sb = new StringBuilder();
@@ -1050,10 +1047,10 @@ public class UtilHandlers {
                     ;
             sep = ":";
         }
-        
+
         handlerCtx.setOutputValue("string", sb.toString());
     }
-    
+
 
 
     /* This is copied from within javaToJSON() */

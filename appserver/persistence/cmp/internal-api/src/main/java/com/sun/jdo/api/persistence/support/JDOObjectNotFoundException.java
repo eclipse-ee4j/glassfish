@@ -22,7 +22,7 @@
 
 package com.sun.jdo.api.persistence.support;
 
-/** 
+/**
  * JDOObjectNotFoundException is thrown instead of a more generic JDODataStoreException
  * in case an internal or an external query returned 0 rows.
  *
@@ -36,10 +36,10 @@ public class JDOObjectNotFoundException extends JDODataStoreException {
    */
   public JDOObjectNotFoundException() {
   }
-  
+
 
   /**
-   * Constructs a new <code>JDOObjectNotFoundException</code> with the specified 
+   * Constructs a new <code>JDOObjectNotFoundException</code> with the specified
    * detail message.
    * @param msg the detail message.
    */
@@ -48,7 +48,7 @@ public class JDOObjectNotFoundException extends JDODataStoreException {
   }
 
   /**
-   * Constructs a new <code>JDOObjectNotFoundException</code> with the specified 
+   * Constructs a new <code>JDOObjectNotFoundException</code> with the specified
    * detail message and nested Exception.
    * @param msg the detail message.
    * @param nested the nested <code>Exception</code>.
@@ -56,8 +56,8 @@ public class JDOObjectNotFoundException extends JDODataStoreException {
   public JDOObjectNotFoundException(String msg, Exception nested) {
     super(msg, nested);
   }
-  
-  /** Constructs a new <code>JDOObjectNotFoundException</code> with the specified 
+
+  /** Constructs a new <code>JDOObjectNotFoundException</code> with the specified
    * detail message and failed object array.
    * @param msg the detail message.
    * @param failed the failed object array.
@@ -65,8 +65,8 @@ public class JDOObjectNotFoundException extends JDODataStoreException {
   public JDOObjectNotFoundException(String msg, Object[] failed) {
     super(msg, failed);
   }
-  
-  /** Constructs a new <code>JDOObjectNotFoundException</code> with the specified 
+
+  /** Constructs a new <code>JDOObjectNotFoundException</code> with the specified
    * detail message, nested exception, and failed object array.
    * @param msg the detail message.
    * @param nested the nested <code>Exception</code>.

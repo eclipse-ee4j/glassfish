@@ -26,8 +26,8 @@ public class TestServlet extends HttpServlet {
         try {
             Object o = Class.forName("test.MyTest").newInstance();
             res.getWriter().println(o.toString());
-	} catch (Exception e) {
-	    throw new ServletException(e);
-	}
+        } catch (Exception e) {
+            throw new ServletException(e);
+        }
     }
 }

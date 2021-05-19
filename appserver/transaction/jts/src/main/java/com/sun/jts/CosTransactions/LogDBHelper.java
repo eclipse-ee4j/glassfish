@@ -16,17 +16,20 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.sql.*;
-import javax.sql.*;
-import javax.naming.*;
-import java.lang.reflect.Method;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
-import com.sun.jts.utils.LogFormatter;
+
+import java.lang.reflect.Method;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.naming.InitialContext;
+import javax.sql.DataSource;
 
 /** The LogDBHelper class takes care of writing the transaction logs
   *  into database.
@@ -45,19 +48,19 @@ class LogDBHelper {
 
     private DataSource ds = null;
     private Method getNonTxConnectionMethod = null;
-    private static final String insertStatement = 
-	         System.getProperty("com.sun.jts.dblogging.insertquery",
+    private static final String insertStatement =
+             System.getProperty("com.sun.jts.dblogging.insertquery",
                  "insert into  txn_log_table values ( ? , ? , ? , ? )");
-    private static final String deleteStatement = 
-	         System.getProperty("com.sun.jts.dblogging.deletequery",
+    private static final String deleteStatement =
+             System.getProperty("com.sun.jts.dblogging.deletequery",
                  "delete from txn_log_table where localtid = ? and servername = ? ");
-    private static final String selectStatement = 
-	         System.getProperty("com.sun.jts.dblogging.selectquery",
+    private static final String selectStatement =
+             System.getProperty("com.sun.jts.dblogging.selectquery",
                  "select * from txn_log_table where servername = ? ");
-    private static final String selectServerNameStatement = 
-	         System.getProperty("com.sun.jts.dblogging.selectservernamequery",
+    private static final String selectServerNameStatement =
+             System.getProperty("com.sun.jts.dblogging.selectservernamequery",
                  "select distinct servername from txn_log_table where instancename = ? ");
-    private static final String createTableStatement = 
+    private static final String createTableStatement =
                  "create table txn_log_table (localtid varchar(20), servername varchar(150), instancename varchar(150), gtrid blob)";
     private static final boolean useNonTxConnectionForAddRecord = Boolean.getBoolean("com.sun.jts.dblogging.use.nontx.connection.for.add");
     private static Logger _logger = LogDomains.getLogger(LogDBHelper.class, LogDomains.TRANSACTION_LOGGER);
@@ -75,8 +78,8 @@ class LogDBHelper {
         try {
             InitialContext ctx = new InitialContext();
             ds = (DataSource)ctx.lookup(resName);
-	    Class cls = ds.getClass();
-	    getNonTxConnectionMethod = cls.getMethod("getNonTxConnection", null);
+        Class cls = ds.getClass();
+        getNonTxConnectionMethod = cls.getMethod("getNonTxConnection", null);
 
             createTable();
 
@@ -114,7 +117,7 @@ class LogDBHelper {
             addRecord(0, null);
         } else if (!s.equals(serverName)) {
             // Override the mapping
-            _logger.log(Level.WARNING, "jts.exception_in_db_log_server_to_instance_mapping", 
+            _logger.log(Level.WARNING, "jts.exception_in_db_log_server_to_instance_mapping",
                     new Object[] {instanceName, s, serverName});
             deleteRecord(0, s);
             addRecord(0, null);
@@ -129,11 +132,11 @@ class LogDBHelper {
                 _logger.fine("LogDBHelper.addRecord for instanceName: " + instanceName);
             }
             Connection conn = null;
-            PreparedStatement prepStmt1 = null;    
+            PreparedStatement prepStmt1 = null;
             try {
                 if (useNonTxConnectionForAddRecord)
-		    conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null)); 
-                else 
+            conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
+                else
                     conn = ds.getConnection();
                 prepStmt1 = conn.prepareStatement(insertStatement);
                 prepStmt1.setString(1,Long.toString(localTID));
@@ -147,7 +150,7 @@ class LogDBHelper {
                 return false;
             } finally {
                 try {
-                    if (prepStmt1 != null) 
+                    if (prepStmt1 != null)
                         prepStmt1.close();
                 } catch (Exception ex1) {
                     _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex1);
@@ -173,10 +176,10 @@ class LogDBHelper {
                 _logger.fine("LogDBHelper.deleteRecord for localTID: " + localTID + " and serverName: " + serverName0);
             }
             Connection conn = null;
-            PreparedStatement prepStmt1 = null;    
+            PreparedStatement prepStmt1 = null;
             try {
-		 // To avoid compile time dependency to get NonTxConnection
-		conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null)); 
+                // To avoid compile time dependency to get NonTxConnection
+                conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
                 prepStmt1 = conn.prepareStatement(deleteStatement);
                 prepStmt1.setString(1,Long.toString(localTID));
                 prepStmt1.setString(2,serverName0); //Configuration.getServerName());
@@ -187,7 +190,7 @@ class LogDBHelper {
                 return false;
             } finally {
                 try {
-                if (prepStmt1 != null) 
+                if (prepStmt1 != null)
                     prepStmt1.close();
                 if (conn != null)
                     conn.close();
@@ -199,9 +202,11 @@ class LogDBHelper {
         return false;
     }
 
+
     Map getGlobalTIDMap() {
         return getGlobalTIDMap(serverName);
     }
+
 
     Map getGlobalTIDMap(String serverName0) {
         Map gtidMap = new HashMap();
@@ -210,11 +215,11 @@ class LogDBHelper {
                 _logger.fine("LogDBHelper get records for serverName: " + serverName0);
             }
             Connection conn = null;
-            PreparedStatement prepStmt1 = null;    
+            PreparedStatement prepStmt1 = null;
             ResultSet rs = null;
             try {
                 //conn = ds.getConnection();
-		conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null)); 
+                conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
                 prepStmt1 = conn.prepareStatement(selectStatement);
                 prepStmt1.setString(1,serverName0); //Configuration.getServerName());
                 rs = prepStmt1.executeQuery();
@@ -234,13 +239,13 @@ class LogDBHelper {
                 _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex);
             } finally {
                 try {
-                    if (rs != null) 
+                    if (rs != null)
                         rs.close();
                 } catch (Exception ex1) {
                     _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex1);
                 }
                 try {
-                    if (prepStmt1 != null) 
+                    if (prepStmt1 != null)
                         prepStmt1.close();
                 } catch (Exception ex1) {
                     _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex1);
@@ -256,6 +261,7 @@ class LogDBHelper {
         return gtidMap;
     }
 
+
     String getServerNameForInstanceName(String instanceName0) {
         String serverName0 = null;
         if (ds != null) {
@@ -263,11 +269,11 @@ class LogDBHelper {
                 _logger.fine("LogDBHelper get serverName for instanceName: " + instanceName0);
             }
             Connection conn = null;
-            PreparedStatement prepStmt1 = null;    
+            PreparedStatement prepStmt1 = null;
             ResultSet rs = null;
             try {
                 //conn = ds.getConnection();
-		conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null)); 
+                conn = (Connection)(getNonTxConnectionMethod.invoke(ds, null));
                 prepStmt1 = conn.prepareStatement(selectServerNameStatement);
                 prepStmt1.setString(1,instanceName0);
                 rs = prepStmt1.executeQuery();
@@ -281,13 +287,13 @@ class LogDBHelper {
                 _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex);
             } finally {
                 try {
-                    if (rs != null) 
+                    if (rs != null)
                         rs.close();
                 } catch (Exception ex1) {
                     _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex1);
                 }
                 try {
-                    if (prepStmt1 != null) 
+                    if (prepStmt1 != null)
                         prepStmt1.close();
                 } catch (Exception ex1) {
                     _logger.log(Level.SEVERE,"jts.exception_in_db_log_resource",ex1);
@@ -329,5 +335,5 @@ class LogDBHelper {
                 }
             }
         }
-    }   
+    }
 }

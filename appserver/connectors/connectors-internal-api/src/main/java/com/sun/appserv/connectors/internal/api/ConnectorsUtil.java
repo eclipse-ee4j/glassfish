@@ -120,20 +120,20 @@ public class ConnectorsUtil {
 
         return j2eeModuleDirName;
     }
-    
+
     private static ConfigBeansUtilities getConfigBeansUtilities() {
-    	ServiceLocator locator = Globals.getDefaultHabitat(); 
-    	if (locator == null) return null;
-    	
-    	return locator.getService(ConfigBeansUtilities.class);
+        ServiceLocator locator = Globals.getDefaultHabitat();
+        if (locator == null) return null;
+
+        return locator.getService(ConfigBeansUtilities.class);
     }
-    
+
     private static String internalGetLocation(String moduleName) {
-    	ConfigBeansUtilities cbu = getConfigBeansUtilities();
-    	if (cbu == null) return null;
-    	
-    	return cbu.getLocation(moduleName);
-    	
+        ConfigBeansUtilities cbu = getConfigBeansUtilities();
+        if (cbu == null) return null;
+
+        return cbu.getLocation(moduleName);
+
     }
 
     public static String getLocation(String moduleName) throws ConnectorRuntimeException {
@@ -686,11 +686,11 @@ public class ConnectorsUtil {
     }
 
     public static boolean isStandAloneRA(String moduleName){
-    	ConfigBeansUtilities cbu = getConfigBeansUtilities();
-    	ApplicationName an = null;
-    	if (cbu != null) {
-    		an = cbu.getModule(moduleName);
-    	}
+        ConfigBeansUtilities cbu = getConfigBeansUtilities();
+        ApplicationName an = null;
+        if (cbu != null) {
+            an = cbu.getModule(moduleName);
+        }
         return (an != null);
     }
 

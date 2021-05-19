@@ -102,7 +102,7 @@ public class IIOPSSLUtilImpl implements IIOPSSLUtil {
 
     /**
      * This API get the format string from resource bundle of _logger.
-     * 
+     *
      * @param key the key of the message
      * @param params the parameter array of Object
      * @return the format String for _logger

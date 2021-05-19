@@ -35,7 +35,7 @@ public class JdbcConnectionPoolTests extends BaseAsadminTest {
     private File path;
     private static final String JAVADB_POOL = "javadb_pool"; //same as in resources.xml
     private static final String ADD_RES     = "add-resources";
-    
+
     @Parameters({"resources.xml.relative.path"})
     @BeforeClass
     public void setupEnvironment(String relative) {
@@ -70,9 +70,9 @@ public class JdbcConnectionPoolTests extends BaseAsadminTest {
         String children = GeneralUtils.getValueForTypeFromManifest(man, GeneralUtils.AsadminManifestKeyType.CHILDREN);
         if (!children.contains(JAVADB_POOL)) {
             throw new RuntimeException("deleted http listener: " + JAVADB_POOL + " exists in the list: " + children);
-        }        
+        }
     }
-    
+
     @Test(groups={"pulse"}, dependsOnMethods={"ensureCreatedPoolExists"})
     public void deletePool() {
         String CMD = "delete-jdbc-connection-pool";
@@ -81,7 +81,7 @@ public class JdbcConnectionPoolTests extends BaseAsadminTest {
         String up = GeneralUtils.toFinalURL(adminUrl, CMD, options, operand);
 //        Reporter.log("url: " + up);
         Manifest man = super.invokeURLAndGetManifest(up);
-        GeneralUtils.handleManifestFailure(man);        
+        GeneralUtils.handleManifestFailure(man);
     }
 
     @Test(groups={"pulse"}, dependsOnMethods={"deletePool"})
@@ -92,7 +92,7 @@ public class JdbcConnectionPoolTests extends BaseAsadminTest {
         String children = GeneralUtils.getValueForTypeFromManifest(man, GeneralUtils.AsadminManifestKeyType.CHILDREN);
         if (children.contains(JAVADB_POOL)) {
             throw new RuntimeException("deleted http listener: " + JAVADB_POOL + " exists in the list: " + children);
-        }         
+        }
     }
 
     private Manifest runListPoolsCommand() {
@@ -103,5 +103,5 @@ public class JdbcConnectionPoolTests extends BaseAsadminTest {
 //        Reporter.log("url: " + up);
         Manifest man = super.invokeURLAndGetManifest(up);
         return ( man );
-    }    
+    }
 }

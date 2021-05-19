@@ -47,7 +47,7 @@ public final class PersistenceType {
      */
     public static final PersistenceType CUSTOM =
         new PersistenceType("custom");
-    
+
     /**
      * old iWS 6.0 style session manager.
      */
@@ -65,14 +65,14 @@ public final class PersistenceType {
      * JDBC based persistence for sessions.
      */
     public static final PersistenceType JDBC =
-        new PersistenceType("jdbc");   
-    
+        new PersistenceType("jdbc");
+
     /**
      * HADB based persistence for sessions.
      */
     public static final PersistenceType HA =
-        new PersistenceType("ha");     
-    
+        new PersistenceType("ha");
+
     /**
      * SJSWS replicated persistence for sessions.
      */
@@ -102,7 +102,7 @@ public final class PersistenceType {
     private String _type = null;
 
     // ------------------------------------------------------------- Properties
-    
+
     /**
      * Returns a string describing the persistence mechanism that the
      * object represents.
@@ -122,7 +122,7 @@ public final class PersistenceType {
         // Default persistence type is MEMORY
         return parseType(type, MEMORY);
     }
-    
+
     /**
      * Parse the specified string and return the corresponding instance
      * of this class that represents the persistence type specified
@@ -133,7 +133,7 @@ public final class PersistenceType {
         PersistenceType pType = defaultType;
         if (type != null) {
             if (type.equalsIgnoreCase(MEMORY.getType()))
-                pType = MEMORY;            
+                pType = MEMORY;
             else if (type.equalsIgnoreCase(FILE.getType()))
                 pType = FILE;
             else if (type.equalsIgnoreCase(COOKIE.getType()))
@@ -145,16 +145,16 @@ public final class PersistenceType {
             else if (type.equalsIgnoreCase(MMAP.getType()))
                 pType = MMAP;
             else if (type.equalsIgnoreCase(JDBC.getType()))
-                pType = JDBC;            
+                pType = JDBC;
             else if (type.equalsIgnoreCase(HA.getType()))
                 pType = HA;
             else if (type.equalsIgnoreCase(REPLICATED.getType()))
-                pType = REPLICATED;    
+                pType = REPLICATED;
             else if (type.equalsIgnoreCase(COHERENCE_WEB.getType()))
                 pType = COHERENCE_WEB;
         }
         return pType;
-    }    
+    }
 
 }
 

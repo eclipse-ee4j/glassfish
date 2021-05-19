@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.stubs.ejbapp;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -31,11 +31,11 @@ public class HelloBean implements SessionBean {
     public HelloBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In HelloBean::ejbCreate !!");
+        System.out.println("In HelloBean::ejbCreate !!");
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public void sayHello() {

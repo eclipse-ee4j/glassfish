@@ -87,7 +87,7 @@ public final class EmployeeServlet extends HttpServlet {
         writer.println("</table>");
         if (hrDs != null && salDs != null) {
             Statement stmt1 = null;
-	    PreparedStatement stmt2 = null;
+        PreparedStatement stmt2 = null;
             try {
                 stmt1 = hrDs.getConnection().createStatement();
 
@@ -100,35 +100,35 @@ public final class EmployeeServlet extends HttpServlet {
 
 
                 ResultSet rs1 = stmt1.executeQuery("SELECT emp_id, emp_name from HR");
-		String salQuery = "SELECT emp_sal from SALARY WHERE emp_id = ? ";
-		stmt2 = salDs.getConnection().prepareStatement(salQuery);
-                
-		DatabaseMetaData dbMetadata2 = stmt2.getConnection().getMetaData();
+        String salQuery = "SELECT emp_sal from SALARY WHERE emp_id = ? ";
+        stmt2 = salDs.getConnection().prepareStatement(salQuery);
+
+        DatabaseMetaData dbMetadata2 = stmt2.getConnection().getMetaData();
                 String dbUrl2 = dbMetadata2.getURL();
                 writer.println("DB URL : " + dbUrl2 + "\n");
                 if (dbUrl2.indexOf("salary_database") == -1) {
                     throw new Exception("Custom Database [salary_database] is not created while provisioning.");
                 }
-                
-		writer.println("<table border=\"1\" width=\"100%\">");
+
+        writer.println("<table border=\"1\" width=\"100%\">");
                 writer.println("<tr>");
                 writer.println("  <th align=\"left\" colspan=\"2\">" + "Employee Information retrieved" + "</th>");
                 writer.println("</tr>");
                 writer.println("<tr>");
                 writer.println("<td>" + "Employee ID" + "</td>");
                 writer.println("<td>" + "Employee Name" + "</td>");
-		writer.println("<td>" + "Employee Salary" + "</td>");
+        writer.println("<td>" + "Employee Salary" + "</td>");
                 writer.println("</tr>");
                 while (rs1.next()) {
                     writer.println("<tr>");
                     writer.println("  <td>" + rs1.getObject(1) + "</td>");
                     writer.println("  <td>" + rs1.getObject(2) + "</td>");
-		    stmt2.setInt(1, (Integer) rs1.getObject(1));
-		    ResultSet rs2 = stmt2.executeQuery();
-		    while(rs2.next()) {
-			writer.println("  <td>" + rs2.getObject(1) + "</td>");
+            stmt2.setInt(1, (Integer) rs1.getObject(1));
+            ResultSet rs2 = stmt2.executeQuery();
+            while(rs2.next()) {
+            writer.println("  <td>" + rs2.getObject(1) + "</td>");
                         writer.println("</tr>");
-		    }	
+            }
                 }
                 writer.println("</table>");
             } catch (Exception ex) {

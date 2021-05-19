@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.jms.jmsejb;
 
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -35,7 +35,7 @@ public class HelloBean implements SessionBean {
     public HelloBean() {}
 
     public void ejbCreate(String str) throws RemoteException {
-	System.out.println("In ejbCreate !!");
+        System.out.println("In ejbCreate !!");
         this.str = str;
         try {
             Context context = new InitialContext();
@@ -47,13 +47,13 @@ public class HelloBean implements SessionBean {
                 System.out.println("HelloEJB has CONTAINER MANAGED TX");
             }
 
-	    String name = (String) context.lookup("java:comp/env/user");
-	    Double d = (Double) context.lookup("java:comp/env/number");
-            System.out.println("Hello EJB - saying hello to " + name + 
-			    ",number is " + d);
+            String name = (String) context.lookup("java:comp/env/user");
+            Double d = (Double) context.lookup("java:comp/env/number");
+            System.out.println("Hello EJB - saying hello to " + name +
+                            ",number is " + d);
             queue = (Queue) context.lookup("java:comp/env/jms/QueueName");
 
-            qcFactory = 
+            qcFactory =
                 (QueueConnectionFactory) context.lookup("java:comp/env/jms/MyQueueConnectionFactory");
 
         } catch(Exception e) {
@@ -100,7 +100,7 @@ public class HelloBean implements SessionBean {
                 sc.getUserTransaction().commit();
             }
 
-            // Now make sure that even though the global transaction 
+            // Now make sure that even though the global transaction
             // is over, calling commit results in an exception.
             // since we're in an ejb.
             try {
@@ -152,7 +152,7 @@ public class HelloBean implements SessionBean {
                     } catch(jakarta.jms.JMSException j2) {
                         throw new JMSException("Got wrong jmsexception");
                     }
-                    
+
                     try {
                         session.getMessageListener();
                         throw new JMSException
@@ -186,7 +186,7 @@ public class HelloBean implements SessionBean {
             QueueSession session = connection.createQueueSession(true, 0);
 
             sendMessageInternal(session, msg);
-            
+
             session.close();
 
             if( beanManagedTx ) {
@@ -213,7 +213,7 @@ public class HelloBean implements SessionBean {
     }
 
     /**
-     * Create a session and store it as part of 
+     * Create a session and store it as part of
      * the ejb's state.  Then send a message.
      * Corresponding recv method will close the session.
      */
@@ -247,7 +247,7 @@ public class HelloBean implements SessionBean {
                 }
             } catch(Exception ne) {}
             throw new EJBException(e);
-        } 
+        }
         return msg;
     }
 
@@ -259,7 +259,7 @@ public class HelloBean implements SessionBean {
         QueueConnection connection = null;
         try {
             connection = qcFactory.createQueueConnection();
-                
+
             QueueSession session = connection.createQueueSession(true, 0);
 
             if( beanManagedTx ) {
@@ -302,7 +302,7 @@ public class HelloBean implements SessionBean {
             }
 
             connection = qcFactory.createQueueConnection();
-                
+
             QueueSession session = connection.createQueueSession(true, 0);
 
             connection.start();
@@ -374,7 +374,7 @@ public class HelloBean implements SessionBean {
     /**
      * Send a message but don't commit.  sendMessagePart2
      * will commit.  This method will only work with
-     * when bean has bean managed tx.  
+     * when bean has bean managed tx.
      */
     public String sendMessage4Part1(String msg) throws EJBException {
         try {
@@ -386,7 +386,7 @@ public class HelloBean implements SessionBean {
             }
 
             savedConnection = qcFactory.createQueueConnection();
-                
+
             savedSession = savedConnection.createQueueSession(true, 0);
             sendMessageInternal(savedSession, msg);
 
@@ -404,7 +404,7 @@ public class HelloBean implements SessionBean {
                 }
             } catch(Exception ne) {}
             throw new EJBException(e);
-        } 
+        }
         return msg;
     }
 
@@ -434,7 +434,7 @@ public class HelloBean implements SessionBean {
                 }
             } catch(Exception ne) {}
             throw new EJBException(e);
-        } 
+        }
         return msg;
     }
 
@@ -447,9 +447,9 @@ public class HelloBean implements SessionBean {
             System.out.println("In sendMessageRollback");
             if( beanManagedTx ) {
                 sc.getUserTransaction().begin();
-            } 
+            }
             savedConnection = qcFactory.createQueueConnection();
-                
+
             savedSession = savedConnection.createQueueSession(true, 0);
             sendMessageInternal(savedSession, msg);
 
@@ -473,7 +473,7 @@ public class HelloBean implements SessionBean {
                 }
             } catch(Exception ne) {}
             throw new EJBException(e);
-        } 
+        }
         return msg;
     }
 
@@ -489,7 +489,7 @@ public class HelloBean implements SessionBean {
             Message message = receiver.receiveNoWait();
 
             if( message != null ) {
-                throw new Exception("Shouldn't have gotten msg " + 
+                throw new Exception("Shouldn't have gotten msg " +
                                     message);
             } else {
                 System.out.println("Successfully DIDN'T receive msg");
@@ -510,7 +510,7 @@ public class HelloBean implements SessionBean {
     /**
      * Receive a message but don't commit.  recvMessagePart2
      * will commit.  This method will only work with
-     * when bean has bean managed tx.  
+     * when bean has bean managed tx.
      */
     public void receiveMessage4Part1() throws EJBException {
         try {
@@ -520,7 +520,7 @@ public class HelloBean implements SessionBean {
                 System.out.println("skipping recvMessage4Part1 b/c of CMT");
                 return;
             }
-            
+
             savedConnection.start();
             Message message = recvMessageInternal(savedSession);
 
@@ -538,9 +538,9 @@ public class HelloBean implements SessionBean {
                 }
             } catch(Exception ne) {}
             throw new EJBException(e);
-        } 
+        }
     }
-    
+
     /**
      * Commit the receive that was done in recvMessagePart1
      */
@@ -586,21 +586,21 @@ public class HelloBean implements SessionBean {
             }
 
             connection = qcFactory.createQueueConnection();
-                
+
             QueueSession session = connection.createQueueSession(true, 0);
 
             String msgText = "sendandreceive";
             sendMessageInternal(session, msgText);
             sc.getUserTransaction().commit();
             System.out.println("Sent message " + msgText);
-            
+
             //
 
             connection.start();
             sc.getUserTransaction().begin();
             recvMessageInternal(session);
             sc.getUserTransaction().commit();
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             try {
@@ -631,7 +631,7 @@ public class HelloBean implements SessionBean {
             }
 
             connection = qcFactory.createQueueConnection();
-                
+
             QueueSession session = connection.createQueueSession(true, 0);
 
             String msgText = "sendandreceiverollback";
@@ -685,7 +685,7 @@ public class HelloBean implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public void ejbRemove() throws RemoteException {}

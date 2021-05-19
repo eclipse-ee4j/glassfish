@@ -19,8 +19,8 @@ package com.sun.enterprise.admin.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 
-/*
-	Used internally.
+/**
+ * Used internally.
  */
 final class ClassToClassMapping {
     final Class mSrc;
@@ -32,70 +32,78 @@ final class ClassToClassMapping {
     }
 }
 
-/*
-	Various utilities used for classes.
+
+/**
+ * Various utilities used for classes.
  */
 public final class ClassUtil {
+
     private ClassUtil() {
         // disallow instantiation
     }
 
-    /*
-    	Test whether an Object is an array
-    	
-    	@param o	object to test
-    	@returns	true if the object is an array, false otherwise.
+
+    /**
+     * Test whether an Object is an array
+     *
+     * @param o object to test
+     * @returns true if the object is an array, false otherwise.
      */
     public static boolean objectIsArray(Object o) {
         return (classIsArray(o.getClass()));
     }
 
-    /*
-    	Test whether a Class is an array
-    	
-    	@param theClass		class to test
-    	@returns			true if the class is an array, false otherwise.
+
+    /**
+     * Test whether a Class is an array
+     *
+     * @param theClass class to test
+     * @returns true if the class is an array, false otherwise.
      */
     public static boolean classIsArray(Class theClass) {
         return (classnameIsArray(theClass.getName()));
     }
 
-    /*
-    	Test whether an Object is an array of primitive types
-    	
-    	@param o		object to test
-    	@returns		true if the object is an array, false otherwise.
+
+    /**
+     * Test whether an Object is an array of primitive types
+     *
+     * @param o object to test
+     * @returns true if the object is an array, false otherwise.
      */
     public static boolean objectIsPrimitiveArray(Object o) {
         return (getPrimitiveArrayTypeCode(o.getClass()) != 0);
     }
 
-    /*
-    	Test whether a classname is an array
-    	
-    	@param classname	classname string
-    	@returns			true if the object is an array, false otherwise.
+
+    /**
+     * Test whether a classname is an array
+     *
+     * @param classname classname string
+     * @returns true if the object is an array, false otherwise.
      */
     public static boolean classnameIsArray(String classname) {
         return (classname.startsWith("["));
     }
 
-    /*
-    	Test whether a classname is a primitive array
-    	
-    	@param classname	classname string
-    	@returns			true if the object is a primitive array, false otherwise.
+
+    /**
+     * Test whether a classname is a primitive array
+     *
+     * @param classname classname string
+     * @returns true if the object is a primitive array, false otherwise.
      */
     public static boolean classnameIsPrimitiveArray(String classname) {
         return (getPrimitiveArrayTypeCode(classname) != 0);
     }
 
-    /*
-    	Return the primitive element type code for an array of primitive types.
-    	Same as getPrimitiveArrayTypeCode( theClass.getName() )
-    	
-    	@param classname	the Class object
-    	@returns			the element type code; otherwise (char)0
+
+    /**
+     * Return the primitive element type code for an array of primitive types.
+     * Same as getPrimitiveArrayTypeCode( theClass.getName() )
+     *
+     * @param classname the Class object
+     * @returns the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(Class theClass) {
         char typeCode = 0;
@@ -107,11 +115,12 @@ public final class ClassUtil {
         return (typeCode);
     }
 
-    /*
-    	Return the primitive element type code for an array of primitive types.
-    	
-    	@param classname	classname string
-    	@returns			the element type code; otherwise (char)0
+
+    /**
+     * Return the primitive element type code for an array of primitive types.
+     *
+     * @param classname classname string
+     * @returns the element type code; otherwise (char)0
      */
     public static char getPrimitiveArrayTypeCode(String classname) {
         char typeCode = 0;
@@ -122,30 +131,31 @@ public final class ClassUtil {
             typeCode = classname.charAt(length - 1);
 
             switch (typeCode) {
-            default:
-                typeCode = 0;
-                break;
+                default:
+                    typeCode = 0;
+                    break;
 
-            case 'Z':
-            case 'B':
-            case 'C':
-            case 'S':
-            case 'I':
-            case 'J':
-            case 'F':
-            case 'D':
-                break;
+                case 'Z':
+                case 'B':
+                case 'C':
+                case 'S':
+                case 'I':
+                case 'J':
+                case 'F':
+                case 'D':
+                    break;
             }
         }
 
         return (typeCode);
     }
 
-    /*
-    	Get the classname for an array element.
-    	
-    	@param classname	classname string
-    	@returns			the classname for the array element
+
+    /**
+     * Get the classname for an array element.
+     *
+     * @param classname classname string
+     * @returns the classname for the array element
      */
     public static String getArrayMemberClassName(String classname) {
         String result = null;
@@ -160,231 +170,10 @@ public final class ClassUtil {
             final char lastChar = classname.charAt(classnameLength - 1);
 
             switch (lastChar) {
-            default:
-                assert (false);
+                default:
+                    assert (false);
 
-                // a simple type
-            case 'Z':
-                result = "boolean";
-                break;
-            case 'B':
-                result = "byte";
-                break;
-            case 'C':
-                result = "char";
-                break;
-            case 'S':
-                result = "short";
-                break;
-            case 'I':
-                result = "int";
-                break;
-            case 'J':
-                result = "long";
-                break;
-            case 'F':
-                result = "float";
-                break;
-            case 'D':
-                result = "double";
-                break;
-            }
-        } else {
-            // strip leading "[L" and trailing ";"
-            result = classname.substring(2, classnameLength - 1);
-        }
-
-        return (result);
-    }
-
-    /* 
-    	Class.forName does not work for primitive types, so we need to do it ourselves here.
-     */
-    final static class ClassNameToClassMapping {
-        String mName;
-        Class mClass;
-
-        ClassNameToClassMapping(String name, Class theClass) {
-            mName = name;
-            mClass = theClass;
-        }
-    }
-
-    private static final ClassNameToClassMapping[] sPrimitiveNameToObjectClass = new ClassNameToClassMapping[] {
-            new ClassNameToClassMapping("int", int.class), new ClassNameToClassMapping("long", long.class),
-            new ClassNameToClassMapping("short", short.class), new ClassNameToClassMapping("byte", byte.class),
-            new ClassNameToClassMapping("boolean", boolean.class), new ClassNameToClassMapping("float", float.class),
-            new ClassNameToClassMapping("double", double.class), new ClassNameToClassMapping("char", char.class),
-            new ClassNameToClassMapping("void", void.class), };
-
-    /*
-    	Get a Class from a classname.  Class.forName does not work for primitive types;
-    	this methods returns the correct Class for any type.
-    	
-    	@param classname	classname string
-    	@returns			the classname for the array element
-     */
-    public static Class getClassFromName(final String classname) throws ClassNotFoundException {
-        Class theClass = null;
-
-        if (classname.startsWith("[L")) {
-            // an array
-            theClass = Class.forName(classname);
-        } else {
-            final int numMappings = Array.getLength(sPrimitiveNameToObjectClass);
-            for (int i = 0; i < numMappings; ++i) {
-                if (sPrimitiveNameToObjectClass[i].mName.equals(classname)) {
-                    theClass = sPrimitiveNameToObjectClass[i].mClass;
-                    break;
-                }
-            }
-
-            if (theClass == null) {
-                theClass = Class.forName(classname);
-            }
-        }
-        return (theClass);
-    }
-
-    private static final ClassToClassMapping[] sPrimitiveClassToObjectClass = new ClassToClassMapping[] {
-            new ClassToClassMapping(int.class, Integer.class), new ClassToClassMapping(long.class, Long.class),
-            new ClassToClassMapping(short.class, Short.class), new ClassToClassMapping(byte.class, Byte.class),
-            new ClassToClassMapping(boolean.class, Boolean.class), new ClassToClassMapping(float.class, Float.class),
-            new ClassToClassMapping(double.class, Double.class), new ClassToClassMapping(char.class, Character.class), };
-
-    /* 
-    	Map primitive class Classes to Object forms eg int.class to Integer.class
-    	
-    	@param		theClass	the class to map
-    	@returns	the corresponding Object class or the original Class if not a primitive.
-     */
-    public static Class primitiveClassToObjectClass(final Class theClass) {
-        Class result = theClass;
-
-        final int numMappings = Array.getLength(sPrimitiveClassToObjectClass);
-        for (int i = 0; i < numMappings; ++i) {
-            final ClassToClassMapping mapping = sPrimitiveClassToObjectClass[i];
-
-            if (mapping.mSrc.equals(theClass)) {
-                result = mapping.mDest;
-                break;
-            }
-        }
-
-        return (result);
-    }
-
-    /* 
-    	Test whether a class is a primitive class.
-    	
-    	@param		theClass	the class to test
-    	@returns	true if it's a primitive class, false otherwise.
-     */
-    public static boolean isPrimitiveClass(final Class theClass) {
-        boolean isSimple = false;
-
-        final int numMappings = Array.getLength(sPrimitiveClassToObjectClass);
-        for (int i = 0; i < numMappings; ++i) {
-            final ClassToClassMapping mapping = sPrimitiveClassToObjectClass[i];
-
-            if (mapping.mSrc.equals(theClass)) {
-                isSimple = true;
-                break;
-            }
-        }
-
-        return (isSimple);
-    }
-
-    public static String primitiveLetterToClassName(final char primitive) {
-        String result = "" + primitive;
-
-        // see JavaDoc on Class.getName()
-        switch (primitive) {
-        case 'B':
-            result = "byte";
-            break;
-        case 'C':
-            result = "char";
-            break;
-        case 'D':
-            result = "double";
-            break;
-        case 'F':
-            result = "float";
-            break;
-        case 'I':
-            result = "int";
-            break;
-        case 'J':
-            result = "long";
-            break;
-        case 'S':
-            result = "short";
-            break;
-        case 'Z':
-            result = "boolean";
-            break;
-        default:
-            result = "unknown";
-            break;
-        }
-
-        return (result);
-    }
-
-    public static String[] getTypes(final Object[] args) {
-        if (args == null)
-            return (null);
-
-        final int numArgs = Array.getLength(args);
-
-        final String[] types = new String[numArgs];
-
-        for (int i = 0; i < numArgs; ++i) {
-            types[i] = args[i].getClass().getName();
-        }
-
-        return (types);
-    }
-
-    public static String getFriendlyClassname(Class theClass) {
-        return (getFriendlyClassname(theClass.getName()));
-    }
-
-    /*
-    	Convert a Java class name string into a more user friendly string. Examples
-    	java.lang.String		=> String
-    	java.lang.<type>		=> <type>;
-    	[i						=> int[]
-    	[Lfoo.bar.ClassName;	=> foo.bar.ClassName[]
-    	
-    	The types thus correspond exactly to what a Java programmer would write, rather
-    	than the internal JVM representation.
-    	
-    	@param 		type
-    	@returns	a friendlier string representing the type
-     */
-    final static String javaLang = "java.lang.";
-
-    public static String getFriendlyClassname(String type) {
-        String result = type;
-
-        if (type.startsWith("[")) {
-            // count how deep the array is
-            int depth = 0;
-            while (type.charAt(depth) == (int) '[') {
-                ++depth;
-            }
-
-            // strip all the '[' characters
-            result = type.substring(depth, type.length());
-
-            if (result.startsWith("L") && result.endsWith(";")) {
-                result = result.substring(1, result.length() - 1);
-            } else if (result.length() == 1) {
-                // a simple type
-                switch (result.charAt(0)) {
+                    // a simple type
                 case 'Z':
                     result = "boolean";
                     break;
@@ -409,9 +198,235 @@ public final class ClassUtil {
                 case 'D':
                     result = "double";
                     break;
-                default:
-                    result = "unknown";
+            }
+        } else {
+            // strip leading "[L" and trailing ";"
+            result = classname.substring(2, classnameLength - 1);
+        }
+
+        return (result);
+    }
+
+    /**
+     * Class.forName does not work for primitive types, so we need to do it ourselves here.
+     */
+    final static class ClassNameToClassMapping {
+
+        String mName;
+        Class mClass;
+
+        ClassNameToClassMapping(String name, Class theClass) {
+            mName = name;
+            mClass = theClass;
+        }
+    }
+
+    private static final ClassNameToClassMapping[] sPrimitiveNameToObjectClass = new ClassNameToClassMapping[] {
+        new ClassNameToClassMapping("int", int.class), new ClassNameToClassMapping("long", long.class),
+        new ClassNameToClassMapping("short", short.class), new ClassNameToClassMapping("byte", byte.class),
+        new ClassNameToClassMapping("boolean", boolean.class), new ClassNameToClassMapping("float", float.class),
+        new ClassNameToClassMapping("double", double.class), new ClassNameToClassMapping("char", char.class),
+        new ClassNameToClassMapping("void", void.class),};
+
+    /**
+     * Get a Class from a classname. Class.forName does not work for primitive types;
+     * this methods returns the correct Class for any type.
+     *
+     * @param classname classname string
+     * @returns the classname for the array element
+     */
+    public static Class getClassFromName(final String classname) throws ClassNotFoundException {
+        Class theClass = null;
+
+        if (classname.startsWith("[L")) {
+            // an array
+            theClass = Class.forName(classname);
+        } else {
+            final int numMappings = Array.getLength(sPrimitiveNameToObjectClass);
+            for (int i = 0; i < numMappings; ++i) {
+                if (sPrimitiveNameToObjectClass[i].mName.equals(classname)) {
+                    theClass = sPrimitiveNameToObjectClass[i].mClass;
                     break;
+                }
+            }
+
+            if (theClass == null) {
+                theClass = Class.forName(classname);
+            }
+        }
+        return (theClass);
+    }
+
+    private static final ClassToClassMapping[] sPrimitiveClassToObjectClass = new ClassToClassMapping[] {
+        new ClassToClassMapping(int.class, Integer.class), new ClassToClassMapping(long.class, Long.class),
+        new ClassToClassMapping(short.class, Short.class), new ClassToClassMapping(byte.class, Byte.class),
+        new ClassToClassMapping(boolean.class, Boolean.class), new ClassToClassMapping(float.class, Float.class),
+        new ClassToClassMapping(double.class, Double.class), new ClassToClassMapping(char.class, Character.class),};
+
+    /**
+     * Map primitive class Classes to Object forms eg int.class to Integer.class
+     *
+     * @param theClass the class to map
+     * @returns the corresponding Object class or the original Class if not a primitive.
+     */
+    public static Class primitiveClassToObjectClass(final Class theClass) {
+        Class result = theClass;
+
+        final int numMappings = Array.getLength(sPrimitiveClassToObjectClass);
+        for (int i = 0; i < numMappings; ++i) {
+            final ClassToClassMapping mapping = sPrimitiveClassToObjectClass[i];
+
+            if (mapping.mSrc.equals(theClass)) {
+                result = mapping.mDest;
+                break;
+            }
+        }
+
+        return (result);
+    }
+
+
+    /**
+     * Test whether a class is a primitive class.
+     *
+     * @param theClass the class to test
+     * @returns true if it's a primitive class, false otherwise.
+     */
+    public static boolean isPrimitiveClass(final Class theClass) {
+        boolean isSimple = false;
+
+        final int numMappings = Array.getLength(sPrimitiveClassToObjectClass);
+        for (int i = 0; i < numMappings; ++i) {
+            final ClassToClassMapping mapping = sPrimitiveClassToObjectClass[i];
+
+            if (mapping.mSrc.equals(theClass)) {
+                isSimple = true;
+                break;
+            }
+        }
+
+        return (isSimple);
+    }
+
+
+    public static String primitiveLetterToClassName(final char primitive) {
+        String result = "" + primitive;
+
+        // see JavaDoc on Class.getName()
+        switch (primitive) {
+            case 'B':
+                result = "byte";
+                break;
+            case 'C':
+                result = "char";
+                break;
+            case 'D':
+                result = "double";
+                break;
+            case 'F':
+                result = "float";
+                break;
+            case 'I':
+                result = "int";
+                break;
+            case 'J':
+                result = "long";
+                break;
+            case 'S':
+                result = "short";
+                break;
+            case 'Z':
+                result = "boolean";
+                break;
+            default:
+                result = "unknown";
+                break;
+        }
+
+        return (result);
+    }
+
+
+    public static String[] getTypes(final Object[] args) {
+        if (args == null) {
+            return (null);
+        }
+
+        final int numArgs = Array.getLength(args);
+
+        final String[] types = new String[numArgs];
+
+        for (int i = 0; i < numArgs; ++i) {
+            types[i] = args[i].getClass().getName();
+        }
+
+        return (types);
+    }
+
+
+    public static String getFriendlyClassname(Class theClass) {
+        return (getFriendlyClassname(theClass.getName()));
+    }
+
+    /**
+     * Convert a Java class name string into a more user friendly string. Examples
+     * java.lang.String => String
+     * java.lang.<type> => <type>;
+     * [i => int[]
+     * [Lfoo.bar.ClassName; => foo.bar.ClassName[]
+     * The types thus correspond exactly to what a Java programmer would write, rather
+     * than the internal JVM representation.
+     *
+     * @param type
+     * @returns a friendlier string representing the type
+     */
+    final static String javaLang = "java.lang.";
+
+    public static String getFriendlyClassname(String type) {
+        String result = type;
+
+        if (type.startsWith("[")) {
+            // count how deep the array is
+            int depth = 0;
+            while (type.charAt(depth) == '[') {
+                ++depth;
+            }
+
+            // strip all the '[' characters
+            result = type.substring(depth, type.length());
+
+            if (result.startsWith("L") && result.endsWith(";")) {
+                result = result.substring(1, result.length() - 1);
+            } else if (result.length() == 1) {
+                // a simple type
+                switch (result.charAt(0)) {
+                    case 'Z':
+                        result = "boolean";
+                        break;
+                    case 'B':
+                        result = "byte";
+                        break;
+                    case 'C':
+                        result = "char";
+                        break;
+                    case 'S':
+                        result = "short";
+                        break;
+                    case 'I':
+                        result = "int";
+                        break;
+                    case 'J':
+                        result = "long";
+                        break;
+                    case 'F':
+                        result = "float";
+                        break;
+                    case 'D':
+                        result = "double";
+                        break;
+                    default:
+                        result = "unknown";
+                        break;
                 }
             }
 
@@ -429,8 +444,7 @@ public final class ClassUtil {
         return (result);
     }
 
-    /*
-     */
+
     public static Class getArrayElementClass(final Class arrayClass) {
         final String arrayClassName = arrayClass.getName();
 
@@ -467,6 +481,7 @@ public final class ClassUtil {
         return (theClass);
     }
 
+
     public static Class getInnerArrayElementClass(final Class arrayClass) throws ClassNotFoundException {
         Class elementClass = arrayClass;
 
@@ -476,6 +491,7 @@ public final class ClassUtil {
 
         return (elementClass);
     }
+
 
     private static Object instantiateObject(final String theString) throws Exception {
         Object result = null;
@@ -489,11 +505,12 @@ public final class ClassUtil {
         return (result);
     }
 
-    /*
-    	Return true if caller signature is compatible with callee.
-    	
-    	@param callee	the signature of the method to be called
-    	@param caller	the signature of the argument list
+
+    /**
+     * Return true if caller signature is compatible with callee.
+     *
+     * @param callee the signature of the method to be called
+     * @param argsSignature the signature of the argument list
      */
     public static boolean signaturesAreCompatible(Class[] callee, Class[] argsSignature) {
         boolean compatible = false;
@@ -512,6 +529,7 @@ public final class ClassUtil {
         return (compatible);
     }
 
+
     public static Object instantiateObject(final Class theClass, final Object[] args) throws Exception {
         final Class[] signature = new Class[args.length];
 
@@ -528,9 +546,7 @@ public final class ClassUtil {
             final Constructor[] constructors = theClass.getConstructors();
 
             int numMatches = 0;
-            for (int i = 0; i < constructors.length; ++i) {
-                final Constructor tempConstructor = constructors[i];
-
+            for (final Constructor tempConstructor : constructors) {
                 final Class[] tempSignature = tempConstructor.getParameterTypes();
 
                 if (signaturesAreCompatible(tempSignature, signature)) {
@@ -564,13 +580,14 @@ public final class ClassUtil {
         return (result);
     }
 
+
     public static Object instantiateObject(final Class theClass, final String theString) throws Exception {
-        final Class[] signature = new Class[] { String.class };
+        final Class[] signature = new Class[] {String.class};
         final Constructor constructor = theClass.getConstructor(signature);
 
         Object result = null;
         try {
-            result = constructor.newInstance(new Object[] { theString });
+            result = constructor.newInstance(new Object[] {theString});
         } catch (java.lang.reflect.InvocationTargetException e) {
             // InvocationTargetException wraps the real cause
             Throwable cause = e.getCause();
@@ -586,10 +603,11 @@ public final class ClassUtil {
         return (result);
     }
 
-    /*
-    	Don't get fancy here, simple precedence:
-    		Integer, Long	 if no decimal point, use Long if won't fit in an Integer
-    		Double			 if decimal point (for maximum precision)
+
+    /**
+     * Don't get fancy here, simple precedence:
+     * Integer, Long if no decimal point, use Long if won't fit in an Integer
+     * Double if decimal point (for maximum precision)
      */
     private static Object instantiateNumber(final String theString) throws Exception {
         Object result = null;
@@ -607,12 +625,13 @@ public final class ClassUtil {
         return (result);
     }
 
-    /*
-    	Given a Class and a String, create a new instance with a constructor that accept
-    	a String. Primitive types are instantiated as their equivalent Object forms.
-    	
-    	@param theClass		the class from which an instance should be instantiated
-    	@param theString	the string to be supplied to the constructor
+
+    /**
+     * Given a Class and a String, create a new instance with a constructor that accept
+     * a String. Primitive types are instantiated as their equivalent Object forms.
+     *
+     * @param theClass the class from which an instance should be instantiated
+     * @param theString the string to be supplied to the constructor
      */
     public static Object instantiateFromString(final Class theClass, final String theString) throws Exception {
         Object result = null;
@@ -640,12 +659,13 @@ public final class ClassUtil {
         return (result);
     }
 
-    /*
-    	Given a Class, create a new instance with an empty constructor.
-    	Primitive types are instantiated as their equivalent Object forms.
-    	Any value is acceptable in the newly created object.
-    	
-    	@param theClass		the class from which an instance should be instantiated
+
+    /**
+     * Given a Class, create a new instance with an empty constructor.
+     * Primitive types are instantiated as their equivalent Object forms.
+     * Any value is acceptable in the newly created object.
+     *
+     * @param theClass the class from which an instance should be instantiated
      */
     public static Object instantiateDefault(final Class inClass) throws Exception {
         Object result = null;
@@ -673,18 +693,17 @@ public final class ClassUtil {
             result = Array.newInstance(getInnerArrayElementClass(inClass), dimensions);
         } else {
             result = objectClass.newInstance();
-            //result	= InstantiateFromString( objectClass, "0" );
+            // result = InstantiateFromString( objectClass, "0" );
         }
         return (result);
     }
 
-    /*
-    	We allow abbrevations of certain standard java types
-    	
-    	Turn "Integer" into "java.lang.Integer", etc.
+    /**
+     * We allow abbrevations of certain standard java types
+     * Turn "Integer" into "java.lang.Integer", etc.
      */
-    final static String[] sJavaLangTypes = { "Character", "Boolean", "Byte", "Short", "Integer", "Long", "Float", "Double", "String",
-            "Object" };
+    final static String[] sJavaLangTypes = {"Character", "Boolean", "Byte", "Short", "Integer", "Long", "Float",
+        "Double", "String", "Object"};
     final static int sNumBaseTypes = Array.getLength(sJavaLangTypes);
 
     public static String expandClassName(final String name) {
@@ -717,12 +736,13 @@ public final class ClassUtil {
         return (fullName);
     }
 
-    /*
-    	Convert inner element.  Only works for arrays of Objects.  Example:
-    	
-    	mapActualElementClass( "[[[LObject;", "Long" ) =>[[[LLong;
+
+    /**
+     * Convert inner element. Only works for arrays of Objects. Example:
+     * mapActualElementClass( "[[[LObject;", "Long" ) =>[[[LLong;
      */
-    public static Class convertArrayClass(final Class arrayClass, final Class newInnerType) throws ClassNotFoundException {
+    public static Class convertArrayClass(final Class arrayClass, final Class newInnerType)
+        throws ClassNotFoundException {
         final String arrayClassname = arrayClass.getName();
         if (!arrayClassname.endsWith(";")) {
             throw new IllegalArgumentException("not an array of Object");

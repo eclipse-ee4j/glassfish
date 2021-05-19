@@ -30,7 +30,7 @@
 
     <artifactId>batch-dev-tests</artifactId>
     <packaging>pom</packaging>
-    
+
    <modules>
        <module>batch-tests-utils</module>
        <module>batch-commands-tests</module>

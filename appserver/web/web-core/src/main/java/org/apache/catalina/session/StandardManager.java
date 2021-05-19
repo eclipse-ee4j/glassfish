@@ -66,9 +66,9 @@ public class StandardManager
         public Void run() throws Exception{
            doLoadFromFile();
            return null;
-        }                       
+        }
     }
-        
+
     private class PrivilegedDoUnload
         implements PrivilegedExceptionAction<Void> {
 
@@ -83,11 +83,11 @@ public class StandardManager
         public Void run() throws Exception{
             doUnload(expire, isShutdown);
             return null;
-        }            
-           
-    }        
+        }
 
-    
+    }
+
+
     // ----------------------------------------------------- Instance Variables
 
 
@@ -335,7 +335,7 @@ public class StandardManager
      * @exception IOException if a read error occurs
      */
     public void load() throws ClassNotFoundException, IOException {
-        if (SecurityUtil.isPackageProtectionEnabled()){   
+        if (SecurityUtil.isPackageProtectionEnabled()){
             try{
                 AccessController.doPrivileged(new PrivilegedDoLoadFromFile());
             } catch (PrivilegedActionException ex){
@@ -352,7 +352,7 @@ public class StandardManager
             }
         } else {
             doLoadFromFile();
-        }       
+        }
     }
 
 
@@ -536,9 +536,9 @@ public class StandardManager
      * domain shutdown (as opposed to an undeployment), and false otherwise
      *
      * @exception IOException if an input/output error occurs
-     */        
+     */
     protected void unload(boolean doExpire, boolean isShutdown) throws IOException {
-        if (SecurityUtil.isPackageProtectionEnabled()){       
+        if (SecurityUtil.isPackageProtectionEnabled()){
             try {
                 AccessController.doPrivileged(
                     new PrivilegedDoUnload(doExpire, isShutdown));
@@ -552,9 +552,9 @@ public class StandardManager
             }
         } else {
             doUnload(doExpire, isShutdown);
-        }       
+        }
     }
-        
+
 
     /**
      * Saves any currently active sessions to file.
@@ -613,7 +613,7 @@ public class StandardManager
      * @param doExpire true if the sessions that were written should also be
      * expired, false otherwise
      */
-    public void writeSessions(OutputStream os, boolean doExpire) 
+    public void writeSessions(OutputStream os, boolean doExpire)
             throws IOException {
         ObjectOutputStream oos = null;
         try {
@@ -721,7 +721,7 @@ public class StandardManager
      * Check if the directory for this full qualified file
      * exists and is valid
      * Hercules: added method
-     */    
+     */
     private boolean isDirectoryValidFor(String fullPathFileName) {
         int lastSlashIdx = fullPathFileName.lastIndexOf(File.separator);
         if(lastSlashIdx == -1) {
@@ -730,7 +730,7 @@ public class StandardManager
         String result = fullPathFileName.substring(0, lastSlashIdx);
         //System.out.println("PATH name = " + result);
         return new File(result).isDirectory();
-    }    
+    }
 
 
     // ------------------------------------------------------ Lifecycle Methods
@@ -776,7 +776,7 @@ public class StandardManager
 
         if( ! initialized )
             init();
-        
+
         // Validate and update our current component state
         if (started) {
             if (log.isLoggable(Level.INFO)) {

@@ -43,10 +43,10 @@ public class SfulEJB2 implements Sful2, SessionSynchronization
 
     // use some package-local mutable static state to check whether
     // session synch callbacks are called correctly for @Remove methods.
-    // This provides a simple way to check the results since the bean 
+    // This provides a simple way to check the results since the bean
     // instance is no longer available to the caller.  The caller must
     // always at most one SFSBs of this bean type at a time for this
-    // to work.  
+    // to work.
     static boolean afterBeginCalled = false;
     static boolean beforeCompletionCalled = false;
     static boolean afterCompletionCalled = false;
@@ -60,7 +60,7 @@ public class SfulEJB2 implements Sful2, SessionSynchronization
     }
 
     @Remove(retainIfException=true)
-    public void removeRetainIfException(boolean throwException) 
+    public void removeRetainIfException(boolean throwException)
         throws Exception {
 
         System.out.println("In SfulEJB2 " +
@@ -72,7 +72,7 @@ public class SfulEJB2 implements Sful2, SessionSynchronization
     }
 
     @Remove
-    public void removeNotRetainIfException(boolean throwException) 
+    public void removeNotRetainIfException(boolean throwException)
         throws Exception {
 
         System.out.println("In SfulEJB2 " +
@@ -86,7 +86,7 @@ public class SfulEJB2 implements Sful2, SessionSynchronization
     @Remove
     public void removeMethodThrowSysException(boolean throwException) {
 
-        System.out.println("In SfulEJB2 " + 
+        System.out.println("In SfulEJB2 " +
                            "removeMethodThrowSysException");
         System.out.println("throwException = " + throwException);
         if( throwException ) {
@@ -100,7 +100,7 @@ public class SfulEJB2 implements Sful2, SessionSynchronization
         afterBeginCalled = true;
         beforeCompletionCalled = false;
         afterCompletionCalled = false;
-        
+
         System.out.println("In SfulEJB2::afterBegin()");
     }
 

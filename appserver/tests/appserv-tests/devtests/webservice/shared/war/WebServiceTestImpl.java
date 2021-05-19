@@ -21,13 +21,13 @@ import javax.xml.rpc.server.ServiceLifecycle;
 import javax.xml.rpc.server.ServletEndpointContext;
 
 public class WebServiceTestImpl implements ServiceLifecycle, WebServiceTest {
- 
+
     WebServiceTest delegate;
-    
+
     public void destroy() {
         System.out.println("Driver servlet destroyed");
     }
-    
+
     public void init(Object context) {
         ServletEndpointContext seContext = (ServletEndpointContext) context;
         String testClassName = seContext.getServletContext().getInitParameter("testclassname");
@@ -55,13 +55,13 @@ public class WebServiceTestImpl implements ServiceLifecycle, WebServiceTest {
             System.out.println("Error : cannot load delegate " + testClassName + " " + e.getMessage());
         }
     }
-    
+
     public String doTest(String[] params) throws RemoteException {
-        
+
         if (delegate!=null) {
             return delegate.doTest(params);
         } else {
             throw new RemoteException("No delegate for test harness");
         }
-    }    
+    }
 }

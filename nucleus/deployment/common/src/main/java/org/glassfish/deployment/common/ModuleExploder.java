@@ -108,7 +108,7 @@ public class ModuleExploder {
             }
         }
     }
-    
+
 
     public static void explodeModule(Archive source, File directory, boolean preserveManifest)
     throws IOException, DeploymentException {
@@ -150,8 +150,8 @@ public class ModuleExploder {
              /*
               *Expand the file only if it is a jar and only if it does not lie in WEB-INF/lib.
               */
-            if (fileName.toLowerCase(Locale.US).endsWith(".jar") && 
-                ( ! fileName.replace('\\', '/').toUpperCase(Locale.getDefault()).startsWith(WEB_INF_PREFIX)) ) { 
+            if (fileName.toLowerCase(Locale.US).endsWith(".jar") &&
+                ( ! fileName.replace('\\', '/').toUpperCase(Locale.getDefault()).startsWith(WEB_INF_PREFIX)) ) {
 
                 try {
                     File f = new File(directory, fileName);

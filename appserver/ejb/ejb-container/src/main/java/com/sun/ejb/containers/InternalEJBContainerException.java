@@ -19,7 +19,7 @@ package com.sun.ejb.containers;
 public class InternalEJBContainerException extends Exception {
 
     private static final long serialVersionUID = 0x7890;
-    
+
     public InternalEJBContainerException() {
         super();
     }

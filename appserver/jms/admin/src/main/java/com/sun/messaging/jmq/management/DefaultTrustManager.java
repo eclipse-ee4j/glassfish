@@ -15,8 +15,8 @@
  */
 
 /*
- * @(#)DefaultTrustManager.java	1.4 06/29/07
- */ 
+ * @(#)DefaultTrustManager.java    1.4 06/29/07
+ */
 
 package com.sun.messaging.jmq.management;
 
@@ -31,7 +31,7 @@ import java.security.cert.X509Certificate;
  */
 
 /**
- * The default trust manager.  
+ * The default trust manager.
  *
  * TBD: Need to describe *when* this class is used i.e. what JMX configuration
  * properties trigger it's use.

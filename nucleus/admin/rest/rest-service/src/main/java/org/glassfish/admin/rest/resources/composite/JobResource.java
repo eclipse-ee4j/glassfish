@@ -42,7 +42,7 @@ import org.glassfish.api.admin.ParameterMap;
  * HTTP/1.1 200 OK { "exitCode": "COMPLETED", "jobId": "1", "jobName": "load-sdp", "jobState": "COMPLETED",
  * "executionDate": "Wed Jan 02 11:36:38 CST 2013", "message": "SDP loaded with name nucleusSDP.", "user": "admin" }
  * </div>
- * 
+ *
  * @author jdlee
  */
 public class JobResource extends CompositeResource {

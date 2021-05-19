@@ -57,8 +57,8 @@ import org.glassfish.deployment.common.DeploymentUtils;
 @TargetType(value={CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Applications.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-application-refs", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-application-refs",
         description="list-applications-refs")
 })
 public class ListApplicationRefsCommand implements AdminCommand, AdminCommandSecurity.AccessCheckProvider {
@@ -76,7 +76,7 @@ public class ListApplicationRefsCommand implements AdminCommand, AdminCommandSec
 
     @Inject
     Domain domain;
-    
+
     private List<ApplicationRef> appRefs;
 
     @Override
@@ -88,8 +88,8 @@ public class ListApplicationRefsCommand implements AdminCommand, AdminCommandSec
         }
         return accessChecks;
     }
-    
-    
+
+
 
     /**
      * Entry point from the framework into the command execution

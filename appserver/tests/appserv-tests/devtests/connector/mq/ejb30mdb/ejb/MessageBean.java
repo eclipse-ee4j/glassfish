@@ -24,9 +24,9 @@ import jakarta.jms.*;
 @MessageDriven(mappedName="jms/ejb_ejb30_hello_mdb_InQueue")
  public class MessageBean implements MessageListener {
 
-    @Resource(mappedName="jms/ejb_ejb30_hello_mdb_QCF") 
+    @Resource(mappedName="jms/ejb_ejb30_hello_mdb_QCF")
     QueueConnectionFactory qcFactory;
-    
+
     //Destination Queue
     @Resource(mappedName="jms/ejb_ejb30_hello_mdb_OutQueue")
     Queue replyQueue;
@@ -35,14 +35,14 @@ import jakarta.jms.*;
         System.out.println("MessageBean::  onMessage :: Got message!!!" + message);
 
         QueueConnection connection = null;
-	QueueSession session = null;
+        QueueSession session = null;
         try {
             connection = qcFactory.createQueueConnection();
             session = connection.createQueueSession(false,
                                    Session.AUTO_ACKNOWLEDGE);
             QueueSender sender = session.createSender(replyQueue);
             TextMessage tmessage = session.createTextMessage();
-	    String msgText =  "Reply for " + ((TextMessage) message).getText();
+            String msgText =  "Reply for " + ((TextMessage) message).getText();
             tmessage.setText(msgText);
             System.out.println("Sending " + msgText);
             sender.send(tmessage);
@@ -50,9 +50,9 @@ import jakarta.jms.*;
             e.printStackTrace();
         } finally {
             try {
-		if (session != null) {
-		    session.close();
-		}
+                if (session != null) {
+                    session.close();
+                }
                 if(connection != null) {
                     connection.close();
                 }

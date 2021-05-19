@@ -53,9 +53,9 @@ public class ApplicationInfo extends ModuleInfo {
 
     final private Collection<ModuleInfo> modules = new ArrayList<ModuleInfo>();
 
-    // The reversed modules contain the same elements as modules but just in 
+    // The reversed modules contain the same elements as modules but just in
     // reversed order, they are used when stopping/unloading the application.
-    // The modules should be stopped/unloaded in the reverse order of what 
+    // The modules should be stopped/unloaded in the reverse order of what
     // they were originally loaded/started.
     final private LinkedList<ModuleInfo> reversedModules = new LinkedList<ModuleInfo>();
 
@@ -66,7 +66,7 @@ public class ApplicationInfo extends ModuleInfo {
     private boolean isJavaEEApp = false;
     private ClassLoader appClassLoader;
     private boolean isLoaded = false;
-    
+
     private ServiceLocator appServiceLocator;
     private DeploymentFailedListener deploymentFailedListener;
 
@@ -82,27 +82,27 @@ public class ApplicationInfo extends ModuleInfo {
         super(events, name, new LinkedHashSet<EngineRef>(), null);
         this.source = source;
     }
-    
+
     private void createServiceLocator() {
         String locatorName = APP_SERVICE_LOCATOR_PREFIX + name;
         ServiceLocatorFactory slf = ServiceLocatorFactory.getInstance();
-        
+
         if (slf.find(locatorName) != null) {
             slf.destroy(locatorName);
         }
-        
+
         appServiceLocator = slf.create(locatorName);
         deploymentFailedListener = new DeploymentFailedListener(source);
         events.register(deploymentFailedListener);
-        
+
     }
-    
+
     private void disposeServiceLocator() {
         if (deploymentFailedListener != null) {
             events.unregister(deploymentFailedListener);
             deploymentFailedListener = null;
         }
-        
+
         if (appServiceLocator != null) {
             ServiceLocatorFactory.getInstance().destroy(appServiceLocator);
             appServiceLocator = null;
@@ -113,8 +113,8 @@ public class ApplicationInfo extends ModuleInfo {
         engines.add(ref);
         reversedEngines.addFirst(ref);
     }
-    
-    public void addTransientAppMetaData(String metaDataKey, 
+
+    public void addTransientAppMetaData(String metaDataKey,
         Object metaDataValue) {
         if (metaDataValue != null) {
             transientAppMetaData.put(metaDataKey, metaDataValue);
@@ -135,8 +135,8 @@ public class ApplicationInfo extends ModuleInfo {
      */
     public String getName() {
         return name;
-    }  
-    
+    }
+
     /**
      * Returns the deployment time libraries for this application
      * @return the libraries
@@ -168,10 +168,10 @@ public class ApplicationInfo extends ModuleInfo {
     public void setAppClassLoader(ClassLoader cLoader) {
         appClassLoader = cLoader;
     }
-    
+
     /**
      * Returns the application scoped ServiceLocator
-     * 
+     *
      * @return The application scoped ServiceLocator
      */
     public ServiceLocator getAppServiceLocator() {
@@ -192,7 +192,7 @@ public class ApplicationInfo extends ModuleInfo {
      */
     public void setIsJavaEEApp(List<EngineInfo> engineInfos) {
         for (EngineInfo engineInfo : engineInfos) {
-            Sniffer sniffer = engineInfo.getSniffer(); 
+            Sniffer sniffer = engineInfo.getSniffer();
             if (sniffer.isJavaEE()) {
                 isJavaEEApp = true;
                 break;
@@ -291,7 +291,7 @@ public class ApplicationInfo extends ModuleInfo {
                 tracing.addModuleMark(DeploymentTracing.ModuleMark.LOADED, module.getName());
             }
         }
-        
+
         populateApplicationServiceLocator();
 
         isLoaded = true;
@@ -306,7 +306,7 @@ public class ApplicationInfo extends ModuleInfo {
         if (tracing!=null) {
             tracing.addMark(DeploymentTracing.Mark.LOADED);
         }
-        
+
     }
 
 
@@ -318,7 +318,7 @@ public class ApplicationInfo extends ModuleInfo {
         if (tracing!=null) {
             tracing.addMark(DeploymentTracing.Mark.START);
         }
-        
+
         super.start(context, tracker);
         // registers all deployed items.
         for (ModuleInfo module : getModuleInfos()) {
@@ -436,7 +436,7 @@ public class ApplicationInfo extends ModuleInfo {
             appClassLoader = null;
         }
 
-        // clean the module class loaders if they are not already 
+        // clean the module class loaders if they are not already
         // been cleaned
         for (ModuleInfo module : getModuleInfos()) {
             if (module.getClassLoaders() != null) {
@@ -444,14 +444,14 @@ public class ApplicationInfo extends ModuleInfo {
                     try {
                         PreDestroy.class.cast(cloader).preDestroy();
                     } catch (Exception e) {
-                        // ignore, the class loader does not need to be 
+                        // ignore, the class loader does not need to be
                         // explicitely stopped or already stopped
                     }
                 }
                 module.cleanClassLoaders();
             }
         }
-        
+
         // Will destroy all underlying services
         disposeServiceLocator();
 
@@ -459,7 +459,7 @@ public class ApplicationInfo extends ModuleInfo {
             events.send(new EventListener.Event<DeploymentContext>(Deployment.APPLICATION_CLEANED, context), false);
         }
     }
-    
+
 
     /**
      * Saves its state to the configuration. this method must be called within a transaction
@@ -484,7 +484,7 @@ public class ApplicationInfo extends ModuleInfo {
                 app.getModule().add(modConfig);
             }
             module.save(modConfig);
-        }        
+        }
     }
 
     public void addModule(ModuleInfo info) {
@@ -495,58 +495,58 @@ public class ApplicationInfo extends ModuleInfo {
     public boolean isLoaded() {
         return isLoaded;
     }
-    
+
     private final static String APPLICATION_LOADER_FILES = DescriptorFileFinder.RESOURCE_BASE + "application";
     private final static String WEB_LOADER_FILES = "hk2-locator/application";
-    
+
     /**
      * Populates the ApplicationServiceLocator with services using the current
      * appClassLoader.  Services must be described in files named
      * META-INF/hk2-locator/application.  {@link PopulationPostProcessor} may be defined
      * in the META-INF/services standard way
-     * 
+     *
      * @throws IOException On failure to read the service files
      */
     private void populateApplicationServiceLocator() throws IOException {
         createServiceLocator();
-        
+
         ServiceLoader<PopulatorPostProcessor> postProcessors =
                 ServiceLoader.load(PopulatorPostProcessor.class, appClassLoader);
-        
+
         LinkedList<PopulatorPostProcessor> allProcessors = new LinkedList<PopulatorPostProcessor>();
         for (PopulatorPostProcessor postProcessor : postProcessors) {
             allProcessors.add(postProcessor);
         }
-        
+
         // Add this one AFTER all the other processors
         allProcessors.addLast(new ApplicationClassLoadingPostProcessor(appClassLoader));
-        
+
         HK2Populator.populate(appServiceLocator, new ApplicationDescriptorFileFinder(appClassLoader, APPLICATION_LOADER_FILES),
             allProcessors);
-        
+
         HashSet<ClassLoader> treatedLoaders = new HashSet<ClassLoader>();
         treatedLoaders.add(appClassLoader);
-        
+
         for (ModuleInfo module : modules) {
             ClassLoader moduleClassLoader = module.getModuleClassLoader();
-            
+
             if ((moduleClassLoader == null) || treatedLoaders.contains(moduleClassLoader)) {
                 continue;
             }
             treatedLoaders.add(moduleClassLoader);
-            
+
             allProcessors.removeLast();
             allProcessors.addLast(new ApplicationClassLoadingPostProcessor(moduleClassLoader));
-                
+
             HK2Populator.populate(appServiceLocator, new ApplicationDescriptorFileFinder(moduleClassLoader,
                     WEB_LOADER_FILES),
-                    allProcessors);  
+                    allProcessors);
         }
     }
-    
+
     private class DeploymentFailedListener implements EventListener {
         private final ReadableArchive archive;
-        
+
         private DeploymentFailedListener(ReadableArchive archive) {
             this.archive = archive;
         }
@@ -554,14 +554,14 @@ public class ApplicationInfo extends ModuleInfo {
         @Override
         public void event(@RestrictTo(Deployment.DEPLOYMENT_FAILURE_NAME) Event event) {
             if( ! event.is(Deployment.DEPLOYMENT_FAILURE) ) return;
-            
+
             DeploymentContext dc = Deployment.DEPLOYMENT_FAILURE.getHook(event);
-            
+
             if (!archive.equals(dc.getSource())) return;
-            
+
             // Will destroy all underlying services
             disposeServiceLocator();
         }
-        
+
     }
 }

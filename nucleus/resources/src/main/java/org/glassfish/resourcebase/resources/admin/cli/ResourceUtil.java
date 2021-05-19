@@ -41,7 +41,7 @@ public class ResourceUtil {
 
     @Inject
     private Domain domain;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
@@ -62,7 +62,7 @@ public class ResourceUtil {
             }
             //return;
         }
-        
+
         Server server = configBeansUtilities.getServerNamed(target);
         if (server != null) {
             if (!server.isResourceRefExists(jndiName)) {

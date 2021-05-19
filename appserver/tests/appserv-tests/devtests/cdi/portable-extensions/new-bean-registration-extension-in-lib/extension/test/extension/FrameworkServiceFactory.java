@@ -25,11 +25,11 @@ import test.fwk.FrameworkService;
 
 
 /**
- * A simple Service Factory class that provides the ability to obtain/get 
- * references to a service implementation (obtained from a service registry) 
+ * A simple Service Factory class that provides the ability to obtain/get
+ * references to a service implementation (obtained from a service registry)
  * and also provides a mechanism to unget or return a service after its usage
  * is completed.
- * 
+ *
  * @author Sivakumar Thyagarajan
  */
 public class FrameworkServiceFactory {
@@ -41,11 +41,11 @@ public class FrameworkServiceFactory {
     public static Object getService(final Type type, final FrameworkService fs){
         debug("getService " + type + " FS:" + fs);
         Object instance = lookupService(type, fs.waitTimeout());
-        
-        //If the service is marked as dynamic, when a method is invoked on a 
-        //a service proxy, an attempt is made to get a reference to the service 
+
+        //If the service is marked as dynamic, when a method is invoked on a
+        //a service proxy, an attempt is made to get a reference to the service
         //and then the method is invoked on the newly obtained service.
-        //This scheme should work for statless and/or idempotent service 
+        //This scheme should work for statless and/or idempotent service
         //implementations that have a dynamic lifecycle that is not linked to
         //the service consumer [service dynamism]
         if (fs.dynamic()) {
@@ -59,14 +59,14 @@ public class FrameworkServiceFactory {
                 }
             };
             instance =  Proxy.newProxyInstance(
-                                Thread.currentThread().getContextClassLoader(), 
-                                new Class[]{(Class)type}, 
-                                proxyInvHndlr); 
+                                Thread.currentThread().getContextClassLoader(),
+                                new Class[]{(Class)type},
+                                proxyInvHndlr);
         }
         return instance;
     }
 
-    //NOTE:hard-coded service instantiation for this test, 
+    //NOTE:hard-coded service instantiation for this test,
     //but ideally should get the
     //service implementation from the framework's service registry
     private static Object lookupService(Type type, int waitTimeout) {
@@ -90,15 +90,15 @@ public class FrameworkServiceFactory {
     /**
      * Unget the service
      */
-    public static void ungetService(Object serviceInstance, 
+    public static void ungetService(Object serviceInstance,
             Type type, FrameworkService frameworkService){
         //unget the service instance from the service registry
     }
-    
+
     private static void debug(String string) {
         if(DEBUG_ENABLED)
             System.out.println("ServiceFactory:: " + string);
     }
-    
+
 
 }

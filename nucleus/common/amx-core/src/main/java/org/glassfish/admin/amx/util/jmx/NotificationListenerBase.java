@@ -152,12 +152,12 @@ public abstract class NotificationListenerBase
         {
             s = SetUtil.newSet(mPattern);
         }
-       
+
         for (final ObjectName objectName : s)
         {
             listenToMBean(objectName);
         }
-        
+
         mSetupListening = true;
     }
 

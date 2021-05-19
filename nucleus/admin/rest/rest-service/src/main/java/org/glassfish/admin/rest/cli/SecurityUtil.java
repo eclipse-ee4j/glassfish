@@ -39,7 +39,7 @@ import org.jvnet.hk2.config.types.Property;
 
 /**
  * AMX Realms implementation. Note that realms don't load until {@link #loadRealms} is called.
- * 
+ *
  * @author ludovic champenosi
  */
 public class SecurityUtil {

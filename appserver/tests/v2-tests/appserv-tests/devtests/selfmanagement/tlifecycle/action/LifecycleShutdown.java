@@ -18,14 +18,14 @@ package com.sun.s1peqe.selfmanagement.tlifecycle.action;
 
 import javax.management.*;
 import java.io.*;
-                                                                                                                                               
-public class LifecycleShutdown implements NotificationListener, 
+
+public class LifecycleShutdown implements NotificationListener,
     com.sun.s1peqe.selfmanagement.tlifecycle.action.LifecycleShutdownMBean {
-    
+
     private final String JMX_LIFECYCLE_SHUTDOWN = "lifecycle.shutdown";
     public LifecycleShutdown() {
     }
-                                                                                                                                               
+
     public synchronized void handleNotification(Notification notification,
                 Object handback) {
         try {

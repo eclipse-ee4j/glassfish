@@ -135,22 +135,22 @@ public final class ProxyTest
     public void
     testProxyInterfaceIsAMX()
             throws Exception {/*
-		final long	start	= now();
-		final TypeInfos	infos	= TypeInfos.getInstance();
-		
-		final Iterator	iter	= infos.getJ2EETypes().iterator();
-		while ( iter.hasNext() )
-		{
-			final TypeInfo	info	= infos.getInfo( (String)iter.next() );
-			final Class	proxyClass	= info.getInterface();
-			
-			if ( ! AMX.class.isAssignableFrom( proxyClass ) )
-			{
-				warning( "Proxy interface does not extend AMX: " + proxyClass.getName() );
-			}
-		}
-		printElapsed( "testProxyInterfaceNameConsistent", start );
-		*/
+        final long    start    = now();
+        final TypeInfos    infos    = TypeInfos.getInstance();
+
+        final Iterator    iter    = infos.getJ2EETypes().iterator();
+        while ( iter.hasNext() )
+        {
+            final TypeInfo    info    = infos.getInfo( (String)iter.next() );
+            final Class    proxyClass    = info.getInterface();
+
+            if ( ! AMX.class.isAssignableFrom( proxyClass ) )
+            {
+                warning( "Proxy interface does not extend AMX: " + proxyClass.getName() );
+            }
+        }
+        printElapsed( "testProxyInterfaceNameConsistent", start );
+        */
     }
 
 
@@ -276,7 +276,7 @@ public final class ProxyTest
 
         // should be < 300 ms, so this is a 10X margin...
         assert (elapsed < 300 * 10 );
-	}
+    }
 }
 
 

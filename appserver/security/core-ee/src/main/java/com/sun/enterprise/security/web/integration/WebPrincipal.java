@@ -119,17 +119,17 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
 
         return customPrincipal.toString();
     }
-    
+
     private static String getPrincipalName(SecurityContext securityContext, X509Certificate[] certificates) {
         Principal callerPrincipal = securityContext.getCallerPrincipal();
         if (callerPrincipal != null) {
             return callerPrincipal.getName();
         }
-        
+
         if (certificates != null && certificates.length > 0) {
             return certificates[0].getSubjectX500Principal().getName();
         }
-        
+
         return null;
     }
 }

@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
  */
 @Test(testName="ProgressStatusBasicTest")
 public class ProgressStatusBasicTest {
-    
+
     public void simple() {
         NadminReturn result = nadminWithOutput("progress-simple");
         assertTrue(result.returnValue);
@@ -43,7 +43,7 @@ public class ProgressStatusBasicTest {
         }
         assertTrue(ProgressMessage.isNonDecreasing(prgs));
     }
-    
+
     public void simpleNoTotal() {
         NadminReturn result = nadminWithOutput("progress-simple", "--nototalsteps");
         assertTrue(result.returnValue);
@@ -58,7 +58,7 @@ public class ProgressStatusBasicTest {
         assertTrue(nonPercentageExists);
         assertTrue(ProgressMessage.isNonDecreasing(prgs));
     }
-    
+
     public void simpleSpecInAnnotation() {
         NadminReturn result = nadminWithOutput("progress-full-annotated");
         assertTrue(result.returnValue);
@@ -71,14 +71,14 @@ public class ProgressStatusBasicTest {
         assertTrue(ProgressMessage.isNonDecreasing(prgs));
         assertEquals("annotated:", prgs.get(5).getScope());
     }
-    
+
     public void simpleTerse() {
         NadminReturn result = nadminWithOutput("--terse", "progress-simple");
         assertTrue(result.returnValue);
         List<ProgressMessage> prgs = ProgressMessage.grepProgressMessages(result.out);
         assertTrue(prgs.isEmpty());
     }
-    
+
 //    public void commandWithPayloud() throws IOException {
 //        File tmp = File.createTempFile(String.valueOf(System.currentTimeMillis()) + "ms_", "test");
 //        FileWriter writer = null;
@@ -95,5 +95,5 @@ public class ProgressStatusBasicTest {
 //            try {tmp.delete();} catch (Exception ex) {}
 //        }
 //    }
-    
+
 }

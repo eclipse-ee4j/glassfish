@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
  * resource-env-ref tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvReferenceDescriptor> {
 
@@ -46,7 +46,7 @@ public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvRefe
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
@@ -76,17 +76,17 @@ public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvRefe
 
     /**
      * writes all the runtime information for resource environment references
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the J2EE component containing ejb references
-     */        
+     */
     public static void writeResoureEnvReferences(Node parent, ResourceEnvReferenceContainer descriptor) {
         // resource-env-ref*
         Iterator resRefs = descriptor.getResourceEnvReferenceDescriptors().iterator();
         if (resRefs.hasNext()) {
             ResourceEnvRefNode resourceEnvRefNode = new ResourceEnvRefNode();
             while (resRefs.hasNext()) {
-                resourceEnvRefNode.writeDescriptor(parent, TagNames.RESOURCE_ENV_REFERENCE, 
+                resourceEnvRefNode.writeDescriptor(parent, TagNames.RESOURCE_ENV_REFERENCE,
                     (ResourceEnvReferenceDescriptor) resRefs.next());
             }
         }

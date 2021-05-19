@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -54,26 +54,26 @@
           <param name="ejbjar.classes" value="**/Hello*.class,**/Dummy*.class"/>
           <param name="ejb-jar.xml" value="descriptor/ejb-jar.xml"/>
           <param name="sun-ejb-jar.xml" value="descriptor/sun-ejb-jar.xml"/>
-          <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>               
+          <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
         </antcall>
         <antcall target="package-ejbjar-common">
           <param name="ejbjar.files" value="${build.classes.dir}"/>
           <param name="ejbjar.classes" value="**/Foo*.class,**/Hello.class,**/HelloHome.class"/>
           <param name="ejb-jar.xml" value="descriptor/ejb-jar.xml.ejbclient"/>
           <param name="sun-ejb-jar.xml" value="descriptor/sun-ejb-jar.xml.ejbclient"/>
-          <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb-ejbclient.jar"/>               
+          <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb-ejbclient.jar"/>
         </antcall>
         <antcall target="appclient-jar-common">
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class,**/*Foo.class,**/*FooHome.class,**/*Hello.class,**/*HelloHome.class" />
         </antcall>
         <antcall target="webclient-war-common">
           <param name="hasWebclient" value="true"/>
         </antcall>
         <antcall target="ear-common"/>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common">
             <param name="as.props" value="${as.props} --generatermistubs=true"/>
@@ -85,10 +85,10 @@
           <param name="appclient.application.args" value="${http.host} ${http.port}"/>
         </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

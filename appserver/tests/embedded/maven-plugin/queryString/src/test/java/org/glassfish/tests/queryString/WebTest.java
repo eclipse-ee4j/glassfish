@@ -31,12 +31,12 @@ import java.net.URL;
 import java.net.URLConnection;
 
 public class WebTest {
-        
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 1;
 
     private String contextPath = "/test";
-    
+
     @BeforeClass
     public static void setup() throws IOException {
     }
@@ -56,7 +56,7 @@ public class WebTest {
             URLConnection yc = servlet.openConnection();
             BufferedReader in = new BufferedReader(new InputStreamReader(
                     yc.getInputStream()));
-            
+
             String line = null;
             int index;
             while ((line = in.readLine()) != null) {
@@ -89,7 +89,7 @@ public class WebTest {
                     }
                 }
             }
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             throw e;

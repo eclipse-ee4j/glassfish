@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 /**
  * Implements the Server-side #printenv command
- * 
+ *
  * @author Dan Sandberg
  * @author David Becker
  * @version $Revision: 1.3 $, $Date: 2007/02/13 19:16:21 $
@@ -36,7 +36,7 @@ public class SSIPrintenv implements SSICommand {
      */
     public long process(SSIMediator ssiMediator, String commandName,
             String[] paramNames, String[] paramValues, PrintWriter writer) {
-    	long lastModified = 0;
+        long lastModified = 0;
         //any arguments should produce an error
         if (paramNames.length > 0) {
             String errorMessage = ssiMediator.getConfigErrMsg();

@@ -22,7 +22,7 @@ import test.beans.TestBeanInterface;
 import test.ejb.TestNoInterfaceEJB;
 
 abstract class TestBeanSuper implements TestBeanInterface {
-    
+
     abstract TestNoInterfaceEJB getTestEJB();
 
     @Override

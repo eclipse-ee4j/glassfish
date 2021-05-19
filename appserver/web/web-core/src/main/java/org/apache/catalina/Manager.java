@@ -124,24 +124,24 @@ public interface Manager {
      */
     public void setSessionIdLength(int length);
 
-    /** 
+    /**
      * Same as getSessionCount
      */
     public int getSessionCounter();
 
-    /** 
+    /**
      * Returns the total number of sessions created by this manager.
      *
      * @return Total number of sessions created by this manager.
      */
     public int getSessionCount();
 
-    /** 
+    /**
      * Same as setSessionCount
      */
     public void setSessionCounter(int sessionCounter);
 
-    /** 
+    /**
      * Sets the total number of sessions created by this manager.
      *
      * @param sessionCounter Total number of sessions created by this manager.
@@ -166,7 +166,7 @@ public interface Manager {
      */
     public void setMaxActive(int maxActive);
 
-    /** 
+    /**
      * Gets the number of currently active sessions.
      *
      * @return Number of currently active sessions
@@ -279,7 +279,7 @@ public interface Manager {
     /**
      * Change the session ID of the current session to a new randomly generated
      * session ID.
-     * 
+     *
      * @param session   The session to change the session ID for
      */
     public void changeSessionId(Session session);
@@ -288,7 +288,7 @@ public interface Manager {
      * Get a session from the recycled ones or create a new empty one.
      * The PersistentManager manager does not need to create session data
      * because it reads it from the Store.
-     */                                                                         
+     */
     public Session createEmptySession();
 
     /**

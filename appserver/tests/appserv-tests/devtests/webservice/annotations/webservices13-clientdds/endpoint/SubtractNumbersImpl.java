@@ -26,7 +26,7 @@ import jakarta.jws.WebService ;
     endpointInterface="endpoint.SubtractNumbersPortType")
 
 public class SubtractNumbersImpl  {
-    
+
     public int subtractNumbers (int number1, int number2) {
         return number1 - number2;
     }

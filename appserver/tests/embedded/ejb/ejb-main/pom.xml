@@ -68,7 +68,7 @@
                 <version>${project.version}</version>
                 <classifier>tests</classifier>
                 <scope>test</scope>
-            </dependency>              
+            </dependency>
             <dependency>
                 <groupId>junit</groupId>
                 <artifactId>junit</artifactId>
@@ -81,5 +81,5 @@
                 <version>${project.version}</version>
                 <scope>test</scope>
             </dependency>
-          </dependencies> 
+          </dependencies>
 </project>

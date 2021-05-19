@@ -41,7 +41,7 @@ public class ObjectCreateRule extends Rule {
      * @param digester The associated Digester
      * @param className Java class name of the object to be created
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #ObjectCreateRule(String className)} instead.
      */
     public ObjectCreateRule(Digester digester, String className) {
@@ -57,7 +57,7 @@ public class ObjectCreateRule extends Rule {
      * @param digester The associated Digester
      * @param clazz Java class name of the object to be created
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #ObjectCreateRule(Class clazz)} instead.
      */
     public ObjectCreateRule(Digester digester, Class<?> clazz) {
@@ -76,7 +76,7 @@ public class ObjectCreateRule extends Rule {
      * @param attributeName Attribute name which, if present, contains an
      *  override of the class name to create
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #ObjectCreateRule(String className, String attributeName)} instead.
      */
     public ObjectCreateRule(Digester digester, String className,
@@ -96,7 +96,7 @@ public class ObjectCreateRule extends Rule {
      * @param clazz Java class name of the object to be created
      *  override of the class name to create
      *
-     * @deprecated The digester instance is now set in the {@link Digester#addRule} method. 
+     * @deprecated The digester instance is now set in the {@link Digester#addRule} method.
      * Use {@link #ObjectCreateRule(String attributeName, Class clazz)} instead.
      */
     public ObjectCreateRule(Digester digester,

@@ -122,7 +122,7 @@ public final class ApplicationDispatcher
          * Outermost response that will be passed on to the invoked servlet.
          */
         ServletResponse outerResponse = null;
-        
+
         /**
          * Request wrapper we have created and installed (if any).
          */
@@ -132,7 +132,7 @@ public final class ApplicationDispatcher
          * Response wrapper we have created and installed (if any).
          */
         ServletResponse wrapResponse = null;
-        
+
         /**
          * The type of dispatch we are performing
          */
@@ -248,9 +248,9 @@ public final class ApplicationDispatcher
      * or included.
      */
     private Wrapper wrapper = null;
-    
+
     private HttpServletMapping mappingForDispatch;
-    
+
     // ------------------------------------------------------------- Properties
 
 
@@ -401,14 +401,14 @@ public final class ApplicationDispatcher
             wrequest.setServletPath(hrequest.getServletPath());
             wrequest.setPathInfo(hrequest.getPathInfo());
             wrequest.setQueryString(hrequest.getQueryString());
-            
+
             processRequest(request, response, state);
 
         } else {
             // Handle an HTTP path-based forward
             ApplicationHttpRequest wrequest = (ApplicationHttpRequest)sr;
 
-            // If the request is being FORWARD- or ASYNC-dispatched for 
+            // If the request is being FORWARD- or ASYNC-dispatched for
             // the first time, initialize it with the required request
             // attributes
             if ((DispatcherType.FORWARD == dispatcherType &&
@@ -416,7 +416,7 @@ public final class ApplicationDispatcher
                         RequestDispatcher.FORWARD_REQUEST_URI) == null) ||
                     (DispatcherType.ASYNC == dispatcherType &&
                         hrequest.getAttribute(
-                            AsyncContext.ASYNC_REQUEST_URI) == null)) { 
+                            AsyncContext.ASYNC_REQUEST_URI) == null)) {
                 wrequest.initSpecialAttributes(hrequest.getRequestURI(),
                                                hrequest.getContextPath(),
                                                hrequest.getServletPath(),
@@ -466,11 +466,11 @@ public final class ApplicationDispatcher
      * @throws IOException if an input/output error occurs
      * @throws ServletException if a servlet error occurs
      */
-    private void processRequest(ServletRequest request, 
+    private void processRequest(ServletRequest request,
                                 ServletResponse response,
                                 State state)
         throws IOException, ServletException {
-                
+
         if (request != null) {
             if (state.dispatcherType != DispatcherType.ERROR) {
                 state.outerRequest.setAttribute(
@@ -500,7 +500,7 @@ public final class ApplicationDispatcher
         }
         return servletPath + pathInfo;
     }
-    
+
 
     /**
      * Include the response from another resource in the current response.
@@ -551,7 +551,7 @@ public final class ApplicationDispatcher
                 log.debug(" Non-HTTP Include");
             request.setAttribute(ApplicationFilterFactory.DISPATCHER_TYPE_ATTR,
                                              Integer.valueOf(ApplicationFilterFactory.INCLUDE));
-            request.setAttribute(ApplicationFilterFactory.DISPATCHER_REQUEST_PATH_ATTR, 
+            request.setAttribute(ApplicationFilterFactory.DISPATCHER_REQUEST_PATH_ATTR,
                                              //origServletPath);
                                              servletPath);
             try{
@@ -607,8 +607,8 @@ public final class ApplicationDispatcher
 
 
     // -------------------------------------------------------- Private Methods
-    
-    
+
+
     /**
      * Ask the resource represented by this RequestDispatcher to process
      * the associated request, and create (or append to) the associated
@@ -633,13 +633,13 @@ public final class ApplicationDispatcher
             crossContext = true;
         }
         if (crossContext) {
-            context.getManager().lockSession(request); 
-        }       
+            context.getManager().lockSession(request);
+        }
         try {
             if (crossContext) {
                 context.getManager().preRequestDispatcherProcess(request,
                                                                  response);
-            }            
+            }
             doInvoke(request, response, crossContext, state);
             if (crossContext) {
                 context.getManager().postRequestDispatcherProcess(request,
@@ -653,8 +653,8 @@ public final class ApplicationDispatcher
         }
         //END OF 6364900
     }
-    
-    
+
+
     /**
      * Ask the resource represented by this RequestDispatcher to process
      * the associated request, and create (or append to) the associated
@@ -693,7 +693,7 @@ public final class ApplicationDispatcher
         ServletException servletException = null;
         RuntimeException runtimeException = null;
         boolean unavailable = false;
-              
+
 
         // Check for the servlet being marked unavailable
         if (wrapper.isUnavailable()) {
@@ -730,7 +730,7 @@ public final class ApplicationDispatcher
             servletException = new ServletException(allocateServletMsg, e);
             servlet = null;
         }
-                
+
         // Get the FilterChain Here
         ApplicationFilterFactory factory = ApplicationFilterFactory.getInstance();
         ApplicationFilterChain filterChain = factory.createFilterChain(
@@ -747,7 +747,7 @@ public final class ApplicationDispatcher
             String jspFile = wrapper.getJspFile();
             if (jspFile != null) {
                 request.setAttribute(Globals.JSP_FILE_ATTR, jspFile);
-            } 
+            }
             support.fireInstanceEvent(
                 InstanceEvent.EventType.BEFORE_DISPATCH_EVENT,
                 servlet, request, response);
@@ -767,7 +767,7 @@ public final class ApplicationDispatcher
                         throw new ServletException(msg);
                     }
                 }
-                // END OF S1AS 4703023 
+                // END OF S1AS 4703023
                 /* IASRI 4665318
                 filterChain.doFilter(request, response);
                 */
@@ -1029,7 +1029,7 @@ public final class ApplicationDispatcher
             //START OF 6364900
             crossContextFlag = Boolean.valueOf(crossContext);
             //END OF 6364900
-            
+
             //START OF github/javaee/glassfish/issues/21846
             if (this.name != null) {
                 this.mappingForDispatch = computeNamedDispatchHttpServletMapping(context, hcurrent);
@@ -1058,14 +1058,14 @@ public final class ApplicationDispatcher
 
         return wrapper;
     }
-    
+
     private HttpServletMapping computeNamedDispatchHttpServletMapping(Context context, HttpServletRequest hcurrent) {
         HttpServletMapping result = null;
         Mapper mapper = context.getMapper();
         if (null == mapper) {
             return null;
         }
-  
+
         MessageBytes uriMB = MessageBytes.newInstance();
         CharChunk cc = uriMB.getCharChunk();
         MappingData mappingData = new MappingData();

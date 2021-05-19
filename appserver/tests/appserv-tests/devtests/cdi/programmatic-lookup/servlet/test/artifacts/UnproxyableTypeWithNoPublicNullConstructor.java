@@ -24,7 +24,7 @@ import jakarta.enterprise.context.Dependent;
 public class UnproxyableTypeWithNoPublicNullConstructor implements UnproxyableType, Serializable{
     //private null ctor
     private UnproxyableTypeWithNoPublicNullConstructor(){
-        
+
     }
 
 }

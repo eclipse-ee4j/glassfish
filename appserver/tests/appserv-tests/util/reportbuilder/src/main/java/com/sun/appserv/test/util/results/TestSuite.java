@@ -24,7 +24,7 @@ import java.util.List;
  * @Description: Class holding One TestSuite info.
  * @Author : Ramesh Mandava
  * @Last Modified : By Ramesh on 10/24/2001
- * @Last Modified : By Ramesh on 1/20/2002 , For preserving order of entry of tests 		used a separate testIdVector
+ * @Last Modified : By Ramesh on 1/20/2002 , For preserving order of entry of tests                 used a separate testIdVector
  * @Last Modified : By Justin Lee on 10/05/2009
  */
 public class TestSuite {

@@ -17,7 +17,7 @@
 package com.oracle.cdi.devtests.runner.main;
 
 /**
- * 
+ *
  * @author jwells
  *
  */

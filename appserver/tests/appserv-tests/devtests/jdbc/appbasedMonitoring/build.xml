@@ -61,7 +61,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="client"/>
@@ -74,21 +74,21 @@
         <param name="appclientjar.classes" value="**/*Client*.class" />
         <param name="appclientjar.files" value="${build.classes.dir}" />
         <param name="appname" value="appmonitoring"/>
-	<param name="appclient.jar" value="${assemble.dir}/appmonitoringAppClient.jar"/>
+        <param name="appclient.jar" value="${assemble.dir}/appmonitoringAppClient.jar"/>
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
       <exec executable="${ASADMIN}" failonerror="true">
         <arg line="deploy"/>
         <arg line="${as.props}"/>
         <arg line="--upload=true"/>
-        <arg line="--retrieve ${assemble.dir}"/>    
-        <arg line="--target ${appserver.instance.name}"/>	
+        <arg line="--retrieve ${assemble.dir}"/>
+        <arg line="--target ${appserver.instance.name}"/>
         <arg line="${assemble.dir}/appmonitoringAppClient.jar"/>
       </exec>
     </target>
-    
+
     <target name="run" depends="init-common">
       <echo message="appclient -client ${assemble.dir}/appmonitoringAppClient.jar -name appmonitoringClient -textauth -user j2ee -password j2ee -xml ${env.S1AS_HOME}/domains/${admin.domain}/config/glassfish-acc.xml ${appclient.application.args}"/>
       <exec executable="${APPCLIENT}" failonerror="false">
@@ -114,12 +114,12 @@
       <exec executable="${ASADMIN}" failonerror="false">
         <arg line="undeploy"/>
         <arg line="${as.props}"/>
-        <arg line="--target ${appserver.instance.name}"/>	
+        <arg line="--target ${appserver.instance.name}"/>
         <arg line="appmonitoringAppClient"/>
       </exec>
       <ant dir="../contauth" target="undeploy"/>
       <ant dir="../statementtimeout" target="undeploy-limited"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

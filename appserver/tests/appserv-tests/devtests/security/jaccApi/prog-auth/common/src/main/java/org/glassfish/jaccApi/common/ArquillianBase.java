@@ -48,35 +48,35 @@ import com.gargoylesoftware.htmlunit.WebClient;
 
 /**
  *
- * 
+ *
  */
 public class ArquillianBase {
 
     private static final String WEBAPP_SRC = "src/main/webapp";
     private static final Logger logger = Logger.getLogger(ArquillianBase.class.getName());
-    
+
     private WebClient webClient;
     private String response;
-    
+
     @Rule
     public TestWatcher ruleExample = new TestWatcher() {
         @Override
         protected void failed(Throwable e, Description description) {
             super.failed(e, description);
-            
-            logger.log(SEVERE, 
-                "\n\nTest failed: " + 
+
+            logger.log(SEVERE,
+                "\n\nTest failed: " +
                 description.getClassName() + "." + description.getMethodName() +
-                
+
                 "\nMessage: " + e.getMessage() +
-                
+
                 "\nLast response: " +
-                
+
                 "\n\n"  + formatHTML(response) + "\n\n");
-            
+
         }
     };
-    
+
     public static String formatHTML(String html) {
         try {
             return parse(html, "", xmlParser()).toString();
@@ -88,9 +88,9 @@ public class ArquillianBase {
     public static Archive<?> defaultArchive() {
         return tryWrapEAR(defaultWebArchive());
     }
-    
+
     public static WebArchive defaultWebArchive() {
-        return 
+        return
             create(WebArchive.class, "test.war")
                 .addPackages(true, "org.javaee7.jaspic")
                 .deleteClass(ArquillianBase.class)
@@ -104,23 +104,23 @@ public class ArquillianBase {
                         .importFrom(new File("target/" + System.getProperty("finalName") + ".war"))
                         .as(WebArchive.class);
     }
-    
+
     public static Archive<?> tryWrapEAR(WebArchive webArchive) {
         if (getBoolean("useEarForJaspic")) {
             return
                 // EAR archive
                 create(EnterpriseArchive.class, "test.ear")
-                
+
                     // Liberty needs to have the binding file in an ear.
                     // TODO: this is no longer the case and this code can be removed (-bnd.xml
                     // needs to be moved to correct place)
                     .addAsManifestResource(resource("ibm-application-bnd.xml"))
-    
+
                     // Web module
                     // This is needed to prevent Arquillian generating an illegal application.xml
                     .addAsModule(
                         webArchive
-                    );  
+                    );
         } else {
             return webArchive;
         }
@@ -129,7 +129,7 @@ public class ArquillianBase {
     public static File resource(String name) {
         return new File(WEBAPP_SRC + "/WEB-INF", name);
     }
-    
+
     public static File web(String name) {
         return new File(WEBAPP_SRC, name);
     }
@@ -148,8 +148,8 @@ public class ArquillianBase {
         webClient.getCookieManager().clearCookies();
         webClient.close();
     }
-    
-    
+
+
 
     protected WebClient getWebClient() {
         return webClient;
@@ -162,7 +162,7 @@ public class ArquillianBase {
     /**
      * Gets content from the path that's relative to the base URL on which the Arquillian test
      * archive is deployed.
-     * 
+     *
      * @param path the path relative to the URL on which the Arquillian test is deployed
      * @return the raw content as a string as returned by the server
      */
@@ -178,7 +178,7 @@ public class ArquillianBase {
                 throw new IllegalStateException(e);
             }
         }
-        
+
         return response;
     }
 

@@ -24,7 +24,7 @@ import org.glassfish.grizzly.http.server.HttpHandler;
 
 /**
  * Abstraction represents an endpoint, which could be registered on {@link NetworkProxy}.
- * 
+ *
  * @author Alexey Stashok
  */
 public abstract class Endpoint {
@@ -37,7 +37,7 @@ public abstract class Endpoint {
     public static Endpoint createEndpoint(final Adapter adapter) {
         return new AdapterEndpoint(adapter);
     }
-    
+
     /**
      * @return the {@link InetAddress} on which this endpoint is listening
      */
@@ -57,7 +57,7 @@ public abstract class Endpoint {
 
     /**
      * Get the underlying Grizzly {@link HttpHandler}.
-     * 
+     *
      * @return the underlying Grizzly {@link HttpHandler}.
      */
     public abstract HttpHandler getEndpointHandler();
@@ -70,11 +70,11 @@ public abstract class Endpoint {
 
     /**
      * Return the {@link ApplicationContainer} endpoint belongs to.
-     * @return the {@link ApplicationContainer} endpoint belongs to. 
+     * @return the {@link ApplicationContainer} endpoint belongs to.
      */
     public abstract ApplicationContainer getContainer();
 
-    
+
     /**
      * {@link Adapter} based <tt>Endpoint</tt> implementation.
      */

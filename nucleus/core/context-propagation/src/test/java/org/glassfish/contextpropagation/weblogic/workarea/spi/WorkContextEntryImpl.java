@@ -26,7 +26,7 @@ import org.glassfish.contextpropagation.weblogic.workarea.WorkContextOutput;
 
 
 /**
- * A basic implementation of <code>WorkAreaContext</code> 
+ * A basic implementation of <code>WorkAreaContext</code>
  * @exclude
  */
 public final class WorkContextEntryImpl implements WorkContextEntry
@@ -50,7 +50,7 @@ public final class WorkContextEntryImpl implements WorkContextEntry
 
   @SuppressWarnings("unused")
   private WorkContextEntryImpl() { }
-  
+
   public WorkContextEntryImpl(String name, WorkContext context,
                               int propagationMode) {
     this.name = name;
@@ -60,17 +60,17 @@ public final class WorkContextEntryImpl implements WorkContextEntry
   }
 
   private WorkContextEntryImpl(String name, WorkContextInput in)
-    throws IOException, ClassNotFoundException 
+    throws IOException, ClassNotFoundException
   {
     this.name = name;
     propagationMode = in.readInt();
     context = in.readContext();
   }
-  
+
   public WorkContext getWorkContext() {
     return context;
   }
-  
+
   public int hashCode() {
     return name.hashCode();
   }
@@ -81,7 +81,7 @@ public final class WorkContextEntryImpl implements WorkContextEntry
     }
     return false;
   }
-  
+
   public String getName() {
     return name;
   }
@@ -94,7 +94,7 @@ public final class WorkContextEntryImpl implements WorkContextEntry
     return originator;
   }
 
-  public void write(WorkContextOutput out) throws IOException 
+  public void write(WorkContextOutput out) throws IOException
   {
     if (this == NULL_CONTEXT) {
       out.writeUTF("");
@@ -106,8 +106,8 @@ public final class WorkContextEntryImpl implements WorkContextEntry
     }
   }
 
-  public static WorkContextEntry readEntry(WorkContextInput in) 
-    throws IOException, ClassNotFoundException 
+  public static WorkContextEntry readEntry(WorkContextInput in)
+    throws IOException, ClassNotFoundException
   {
     String name = in.readUTF();
     MockLoggerAdapter.debug("Read key: " + name);
@@ -118,7 +118,7 @@ public final class WorkContextEntryImpl implements WorkContextEntry
       return new WorkContextEntryImpl(name, in);
     }
   }
-  
+
   public String toString() {
     StringBuffer sb = new StringBuffer(name);
     sb.append(", ");

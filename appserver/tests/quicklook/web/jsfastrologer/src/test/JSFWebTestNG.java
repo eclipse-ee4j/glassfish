@@ -39,21 +39,21 @@ public class JSFWebTestNG {
 
     private static final String EXPECTED_RESPONSE =
         "JSP Page Test";
-    
+
     private String strContextRoot="jsfastrologer";
 
     static String result = "";
     String m_host="";
-    String m_port="";    
+    String m_port="";
     //HttpClient httpclient = new HttpClient();
-    
+
     //@Parameters({"host","port"})
     @BeforeMethod
     public void beforeTest(){
         m_host=System.getProperty("http.host");
         m_port=System.getProperty("http.port");
     }
-            
+
     /*
      *If tw
      o asserts are mentioned in one method, then last assert is taken in
@@ -65,7 +65,7 @@ public class JSFWebTestNG {
     @Test(groups ={ "pulse"} ) // test method
     //public void webtest(String host, String port, String contextroot) throws Exception{
     public void jsfAppDeployedFirstPagetest() throws Exception{
-        
+
         try{
         //System.out.println("Running TestMethod webtest");
 
@@ -83,33 +83,33 @@ public class JSFWebTestNG {
 
         String line = null;
         boolean result=false;
-        String testLine = null;        
+        String testLine = null;
         while ((line = input.readLine()) != null) {
             if(line.indexOf("Welcome to jAstrologer")!=-1){
-                result=true;            
+                result=true;
                 testLine = line;
-            
+
             }
-            
-        }     
-                
+
+        }
+
         Assert.assertEquals(result, true,"Unexpected HTML");
-               
-        
+
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
 
     }
-    
-    
+
+
     @Test(groups ={ "pulse"} ) // test method
     public void jsfIndexPageBasicTest() throws Exception{
          try{
-             
+
              //System.out.println("Running TestMethod SimpleHTMLTest");
-         
+
 
         String testurl = "http://" + m_host  + ":" + m_port + "/"+ strContextRoot + "/index.jsp";
         //System.out.println("URL is: "+testurl);
@@ -119,36 +119,36 @@ public class JSFWebTestNG {
         conn.connect();
         int responseCode = conn.getResponseCode();
 
-        
+
         InputStream is = conn.getInputStream();
         BufferedReader input = new BufferedReader(new InputStreamReader(is));
 
         String line = null;
         boolean result=false;
-        String testLine = null;        
+        String testLine = null;
         while ((line = input.readLine()) != null) {
             if(line.indexOf("JavaServer Faces Greetings Page")!=-1){
                 result=true;
              testLine = line;
            //System.out.println(testLine);
             }
-          
-        }        
-                
+
+        }
+
         Assert.assertEquals(result, true);
-        
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
-        
+
     }
 
     public static void echo(String msg) {
         System.out.println(msg);
     }
-    
-    
+
+
 /*
     @Test(groups={"pulse"})
     public void testRequestResponse() throws Exception{
@@ -164,34 +164,34 @@ public class JSFWebTestNG {
             httpget = new GetMethod(testurl);
             post=new PostMethod("http://localhost:8080/jsfastrologer/faces/greetings.jsp");
 
-            
+
             NameValuePair[] mydata = {
                 // new NameValuePair("loginID", itUser),
                 // new NameValuePair("password", itPwd), Not working for editing of bug
-                
+
                 new NameValuePair("name",name),
                 new NameValuePair("birthday",birthday)
             };
-            
+
             post.setRequestBody(mydata);
             int statusCode = httpclient.executeMethod(post);
             //System.out.println("print status ok "+statusCode);
              Assert.assertEquals(statusCode, 200);
-            
+
             if (statusCode != HttpStatus.SC_OK) {
                 System.err.println("Method failed: " + post.getStatusLine());
             }
             post.getStatusLine();
-        
+
         String response=post.getResponseBodyAsString();
         //System.out.println(response);
-            
-            
+
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
-        
+
     }
 */
 

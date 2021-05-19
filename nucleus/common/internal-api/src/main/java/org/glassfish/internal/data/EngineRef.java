@@ -140,7 +140,7 @@ public class EngineRef {
     public void clean(ExtendedDeploymentContext context) {
 
         try {
-            getContainerInfo().clean(context);            
+            getContainerInfo().clean(context);
         } catch (Exception e) {
             context.getLogger().log(Level.WARNING, "Exception while cleaning module '" + this + "'" + e, e);
         }

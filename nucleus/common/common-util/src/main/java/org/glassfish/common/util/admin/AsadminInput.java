@@ -59,19 +59,19 @@ public class AsadminInput {
 
     public final static String CLI_INPUT_OPTION_NAME = "_auxinput";
     public final static String CLI_INPUT_OPTION = "--" + CLI_INPUT_OPTION_NAME;
-    
+
     public final static String SYSTEM_IN_INDICATOR = "-"; // option value indicating we should read from stdin
-    
+
     private final static String VERSION_1_0 = "1.0";
     private final static String VERSION_INTRODUCER = "version=";
-    
+
     private final static String CURRENT_VERSION = VERSION_1_0;
     private final static LocalStringManager localStrings = new LocalStringManagerImpl(AsadminInput.class);
-    
+
     public interface InputReader {
         public Map<String,Properties> settings();
     }
-    
+
     /**
      * Returns a string containing a specifier for the current version, suitable
      * for use as the first line to write to the asadmin System.in stream.
@@ -160,22 +160,22 @@ public class AsadminInput {
             return result;
         }
     }
-    
+
     private static String readVersionFromFirstLine(final BufferedReader reader) throws IOException {
 
         final String firstLine;
         /*
-         * The first line should be version=some-version-string so 
+         * The first line should be version=some-version-string so
          * complain if it is not.
          */
-        if ( ((firstLine = reader.readLine()) == null) 
-            || ( ! firstLine.startsWith(VERSION_INTRODUCER)) 
+        if ( ((firstLine = reader.readLine()) == null)
+            || ( ! firstLine.startsWith(VERSION_INTRODUCER))
             || ( firstLine.length() <= VERSION_INTRODUCER.length())) {
             throw new IOException(badVersionMsg());
         }
         return firstLine.substring(VERSION_INTRODUCER.length());
     }
-    
+
     private static String badVersionMsg() {
         return MessageFormat.format(
                         localStrings.getLocalString(

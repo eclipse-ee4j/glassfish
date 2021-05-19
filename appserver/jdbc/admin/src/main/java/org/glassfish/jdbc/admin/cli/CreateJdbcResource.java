@@ -38,7 +38,7 @@ import java.util.Properties;
 
 /**
  * Create JDBC Resource Command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @RestEndpoints({
@@ -52,8 +52,8 @@ import java.util.Properties;
 @PerLookup
 @I18n("create.jdbc.resource")
 public class CreateJdbcResource implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJdbcResource.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJdbcResource.class);
 
     @Param(name="connectionpoolid", alias="poolName")
     private String connectionPoolId;
@@ -63,16 +63,16 @@ public class CreateJdbcResource implements AdminCommand {
 
     @Param(optional=true)
     private String description;
-    
+
     @Param(name="property", optional=true, separator=':')
     private Properties properties;
-    
+
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Param(name="jndi_name", primary=true)
     private String jndiName;
-    
+
     @Inject
     private Domain domain;
 
@@ -94,7 +94,7 @@ public class CreateJdbcResource implements AdminCommand {
         attrList.put(ServerTags.DESCRIPTION, description);
         attrList.put(ResourceConstants.ENABLED, enabled.toString());
         ResourceStatus rs;
- 
+
         try {
             rs = jdbcMgr.create(domain.getResources(), attrList, properties, target);
         } catch(Exception e) {

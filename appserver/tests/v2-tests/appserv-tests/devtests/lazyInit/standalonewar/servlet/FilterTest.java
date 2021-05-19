@@ -21,7 +21,7 @@ import jakarta.servlet.http.*;
 import java.net.*;
 import java.io.*;
 public class FilterTest implements Filter{
-    
+
     private ServletContext context;
     private static boolean DEFAULT_REUSE_ADDRESS;
     private static int DEFAULT_RECEIVE_BUFFER_SIZE;
@@ -37,11 +37,11 @@ public class FilterTest implements Filter{
 
     private static boolean tested = false;
 
-    
+
     public void destroy() {
         System.out.println("[Filter.destroy]");
-    }    
-    
+    }
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
         System.out.println("[Filter.doFilter]");
 
@@ -71,15 +71,15 @@ public class FilterTest implements Filter{
 
         ((HttpServletRequest)request).getSession().setAttribute("FILTER", "PASS");
         filterChain.doFilter(request, response);
-        
-    }    
-    
-    
+
+    }
+
+
     public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");
         context = filterConfig.getServletContext();
     }
-    
+
 
     public void test() {
         InetSocketAddress isa;
@@ -87,17 +87,17 @@ public class FilterTest implements Filter{
             isa = new InetSocketAddress(InetAddress.getByName(HOST), PORT);
         } catch (UnknownHostException ex) {
             ex.printStackTrace();
-            throw new RuntimeException (ex);            
+            throw new RuntimeException (ex);
         }
         Socket s = new Socket();
-        try {            
+        try {
             s.connect(isa, 1000);
             testSocketConnection();
             InputStream is = s.getInputStream();
             OutputStream os = s.getOutputStream();
             int count = 1;
             while (true){
-                int available = is.available();                
+                int available = is.available();
                 if (available > 0 || count == 6 || count > 10) {
                     if (count == 6) {
                         try {
@@ -109,37 +109,37 @@ public class FilterTest implements Filter{
                             System.out.println("Expected exception");
                             ie.printStackTrace();
                         }
-                        os.write(count++);                        
+                        os.write(count++);
                     }
                     int i = is.read();
-                    System.out.println(i);                    
+                    System.out.println(i);
                     if (count != i && count < 11 ) throw new RuntimeException("Wrong Data, Expected : " + count + " Got: "+ i);
-                    os.write(count++);                    
+                    os.write(count++);
                 } else {
                     try {
                         Thread.sleep(2000);
                     } catch (InterruptedException ex) {
                         ex.printStackTrace();
                     }
-                }                
+                }
             }
         } catch (IOException ex) {
             if (ex instanceof java.net.SocketException) {
                 System.out.println("Expected Exception");
                 ex.printStackTrace();
-                return; 
+                return;
             } else {
                 throw new RuntimeException(ex);
             }
-        } finally {            
+        } finally {
             try {
-                s.close();            
+                s.close();
             } catch (IOException ex) {
                 throw new RuntimeException("Close Failed");
-            }            
-        }        
+            }
+        }
     }
-    
+
     private void testSocketConnection() {
         try {
             Socket s1 = new Socket(InetAddress.getByName(HOST), PORT);
@@ -168,23 +168,23 @@ public class FilterTest implements Filter{
                 e.printStackTrace();
             }
             Socket s = new Socket();
-            int rsize = s.getReceiveBufferSize();            
+            int rsize = s.getReceiveBufferSize();
             s.setReceiveBufferSize(1000);
-            s.connect(new InetSocketAddress(InetAddress.getByName(HOST), PORT));            
+            s.connect(new InetSocketAddress(InetAddress.getByName(HOST), PORT));
             if (s.getChannel() != null ) throw new RuntimeException ("Channel not null");
             if (s.getInetAddress().equals(InetAddress.getByName(HOST)) == false ) throw new RuntimeException("Not connected to local address");
-            boolean b = s.getKeepAlive();            
+            boolean b = s.getKeepAlive();
             s.setKeepAlive(! b);
             if (s.getKeepAlive() == b) throw new RuntimeException("Keep alive is not set");
-            if (s.getLocalAddress().equals(InetAddress.getByName(HOST)) == false ) throw new RuntimeException("Not connected to local address");            
+            if (s.getLocalAddress().equals(InetAddress.getByName(HOST)) == false ) throw new RuntimeException("Not connected to local address");
             System.out.println("Port : " + s.getLocalPort());
-            System.out.println("Port : " + s.getLocalSocketAddress());            
-            System.out.println("Port : " + s.getPort());              
+            System.out.println("Port : " + s.getLocalSocketAddress());
+            System.out.println("Port : " + s.getPort());
             b = s.getOOBInline();
             s.setOOBInline(! b);
             if (s.getOOBInline() == b) throw new RuntimeException("OOB not set");
             s.setPerformancePreferences(1000, 100, 100);
-            
+
             int bs = s.getReceiveBufferSize();
             if (bs == rsize ) throw new RuntimeException("RBS not set : " + bs);
             b = s.getReuseAddress();
@@ -200,30 +200,30 @@ public class FilterTest implements Filter{
             }
             s.setSoTimeout(1000);
             if (s.getSoTimeout() != 1000 ) throw new RuntimeException("TIMEOUT not SET");
-            
+
             b = s.getTcpNoDelay();
             s.setTcpNoDelay(! b);
-           
+
             if (s.getTcpNoDelay() == b) throw new RuntimeException("TCP NO DELAT not SET");
-            i = s.getTrafficClass();     
-           
-            
+            i = s.getTrafficClass();
+
+
             int j = i +5;
             if (j > 250) j = i -5;
             int k = s.getTrafficClass();
             s.setTrafficClass(j);
             int tc = s.getTrafficClass();
-            if (tc == k) throw new RuntimeException("TC not set: " + tc);       
-            
+            if (tc == k) throw new RuntimeException("TC not set: " + tc);
+
             s.setSendBufferSize(1000);
             s.getSendBufferSize();
         } catch (RuntimeException e){
             throw e;
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new RuntimeException("Unwanted exceprtion");      
-        
-        }       
-           
+            throw new RuntimeException("Unwanted exceprtion");
+
+        }
+
     }
 }

@@ -70,12 +70,12 @@ class LogFile {
     final static int KEYPOINT_START = 1;
     final static int KEYPOINT_END   = 2;
     final static int REWRITE        = 3;
-	
-	/*
-		Logger to log transaction messages
-	*/ 
-	
-	static Logger _logger = LogDomains.getLogger(LogFile.class, LogDomains.TRANSACTION_LOGGER);
+
+    /*
+        Logger to log transaction messages
+    */
+
+    static Logger _logger = LogDomains.getLogger(LogFile.class, LogDomains.TRANSACTION_LOGGER);
 
     /**The handle of the log file.
      */
@@ -133,10 +133,10 @@ class LogFile {
             if( recordLSN != null )
                 recordLSN.copy(resultLSN);
         } catch( LogException le ) {
-			_logger.log(Level.SEVERE,"jts.log_error",le.toString());
-			 String msg = LogFormatter.getLocalizedMessage(_logger,"jts.log_error",
+            _logger.log(Level.SEVERE,"jts.log_error",le.toString());
+             String msg = LogFormatter.getLocalizedMessage(_logger,"jts.log_error",
                                         new java.lang.Object[] {le.toString()});
-			 throw (org.omg.CORBA.INTERNAL) (new org.omg.CORBA.INTERNAL(msg)).initCause(le);
+             throw (org.omg.CORBA.INTERNAL) (new org.omg.CORBA.INTERNAL(msg)).initCause(le);
             //if( recordLSN != null )
             //recordLSN.copy(LogLSN.NULL_LSN);
             //result = false;
@@ -344,7 +344,7 @@ class LogFile {
         // Close the cursor.
 
         try {
-            handle.closeCursor(logCursor); 
+            handle.closeCursor(logCursor);
         } catch( LogException le ) {
         }
 

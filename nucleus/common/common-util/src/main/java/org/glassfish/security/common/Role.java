@@ -29,31 +29,31 @@ public class Role extends PrincipalImpl {
 
     /** Creates a new Role with a given name */
     public Role(String name) {
-	super(name);
+        super(name);
     }
 
 
     public boolean equals(Object other) {
-	boolean ret = false;
-	if(other instanceof Role) {
-	    ret =  getName().equals(((Role)other).getName());
-	}
+        boolean ret = false;
+        if(other instanceof Role) {
+            ret =  getName().equals(((Role)other).getName());
+        }
 
-	return ret;
+        return ret;
     }
     public int hashCode() {
-	return getName().hashCode();
+        return getName().hashCode();
     }
 
     public String getDescription() {
-	if (this.description == null) {
-	    this.description = "";
-	}
-	return this.description;
+        if (this.description == null) {
+            this.description = "";
+        }
+        return this.description;
     }
 
     public void setDescription(String description) {
-	this.description = description;
+        this.description = description;
     }
 }
 

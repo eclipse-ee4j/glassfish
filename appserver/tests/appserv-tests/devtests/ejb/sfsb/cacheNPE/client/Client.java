@@ -34,8 +34,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private ArrayList sfsbList = new ArrayList();
@@ -50,13 +50,13 @@ public class Client {
         client.doTest();
         System.out.println("[cacheNPEClient] DONE doTest()...");
         stat.printSummary("cacheNPE");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
-        initSFSBList(0,4);     //create SFSBs 
+        initSFSBList(0,4);     //create SFSBs
 
         for( int j = 0; j < 400; j++) {
             accessSFSB(0,3,5);
@@ -67,13 +67,13 @@ public class Client {
         } catch (Exception ex ) {
             System.out.println ( "Exception caught : " + ex );
             ex.printStackTrace();
-        } 
+        }
 
         removeSFSB(3);
         removeSFSB(2);
         accessSFSB(1,4,5);
 
-        initSFSBList(5,20);     //create SFSBs 
+        initSFSBList(5,20);     //create SFSBs
 
     }
 
@@ -109,7 +109,7 @@ public class Client {
             for (; i < MAXSFSBS; i=i+step) {
                 SFSB sfsb = (SFSB) sfsbList.get(i);
                 String sfsbName = sfsb.getName();
-                
+
                 boolean sessionCtxTest = sfsb.checkSessionContext();
                 boolean initialCtxTest = sfsb.checkInitialContext();
                 boolean entityHomeTest = sfsb.checkEntityHome();
@@ -120,11 +120,11 @@ public class Client {
                 boolean handleTest = sfsb.checkHandle();
                 boolean utTest = sfsb.checkUserTransaction();
 
-                System.out.println("In accessSFSB: for bean -> " + sfsbName 
+                System.out.println("In accessSFSB: for bean -> " + sfsbName
                     + "; " + sessionCtxTest + "; " + initialCtxTest
                     + "; " + entityHomeTest + "; " + entityLocalHomeTest
                     + "; " + entityRemoteTest + "; " + entityLocalTest
-                    + "; " + homeHandleTest + "; " + handleTest 
+                    + "; " + homeHandleTest + "; " + handleTest
                     + "; " + utTest);
 
                 passed = sessionCtxTest && initialCtxTest
@@ -136,7 +136,7 @@ public class Client {
                     break;
                 }
             }
-            
+
 
             if (passed) {
                 stat.addStatus("ejbclient accessSFSBs", stat.PASS);
@@ -159,7 +159,7 @@ public class Client {
             ex.printStackTrace();
             stat.addStatus("ejbclient removeSFSBs", stat.FAIL);
             return;
-        } 
+        }
 
         stat.addStatus("ejbclient removeSFSBs", stat.PASS);
 

@@ -27,7 +27,7 @@ import jakarta.servlet.http.HttpServletResponse;
 public class TestServlet extends HttpServlet {
     private volatile Integer i = null;
     private volatile Boolean initBeforeGetConfig = null;
-    
+
     public void init() {
         i = new Integer(1);
     }

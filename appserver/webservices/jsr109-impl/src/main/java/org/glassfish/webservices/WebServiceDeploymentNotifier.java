@@ -20,7 +20,7 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 
 /**
  * Notifies {@link WebServiceDeployerListener}s about web service deployment/undeployment
- * 
+ *
  * @author Alexey Stashok
  */
 public interface WebServiceDeploymentNotifier {

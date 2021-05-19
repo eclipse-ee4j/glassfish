@@ -27,76 +27,76 @@ import java.beans.PropertyVetoException;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceMemberElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceClassElement;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
-public abstract class PersistenceMemberElementImpl 
-	extends PersistenceElementImpl implements PersistenceMemberElement.Impl
+public abstract class PersistenceMemberElementImpl
+    extends PersistenceElementImpl implements PersistenceMemberElement.Impl
 {
-	/** Create new PersistenceMemberElementImpl with no corresponding name.   
-	 * This constructor should only be used for cloning and archiving.
-	 */
-	public PersistenceMemberElementImpl ()
-	{
-		this(null);
-	}
+    /** Create new PersistenceMemberElementImpl with no corresponding name.
+     * This constructor should only be used for cloning and archiving.
+     */
+    public PersistenceMemberElementImpl ()
+    {
+        this(null);
+    }
 
-	/** Creates new PersistenceMemberElementImpl with the corresponding name 
-	 * @param name the name of the element
-	 */
-	public PersistenceMemberElementImpl (String name)
-	{
-		super(name);
-	}
+    /** Creates new PersistenceMemberElementImpl with the corresponding name
+     * @param name the name of the element
+     */
+    public PersistenceMemberElementImpl (String name)
+    {
+        super(name);
+    }
 
-	/** Fires property change event.  This method overrides that of 
-	 * PersistenceElementImpl to update the PersistenceClassElementImpl's  
-	 * modified status.
-	 * @param name property name
-	 * @param o old value
-	 * @param n new value
-	 */
-	protected final void firePropertyChange (String name, Object o, Object n)
-	{
-		// even though o == null and n == null will signify a change, that 
-		// is consistent with PropertyChangeSupport's behavior and is 
-		// necessary for this to work
-		boolean noChange = ((o != null) && (n != null) && o.equals(n));
-		PersistenceClassElement classElement = 
-			((PersistenceMemberElement)_element).getDeclaringClass();
+    /** Fires property change event.  This method overrides that of
+     * PersistenceElementImpl to update the PersistenceClassElementImpl's
+     * modified status.
+     * @param name property name
+     * @param o old value
+     * @param n new value
+     */
+    protected final void firePropertyChange (String name, Object o, Object n)
+    {
+        // even though o == null and n == null will signify a change, that
+        // is consistent with PropertyChangeSupport's behavior and is
+        // necessary for this to work
+        boolean noChange = ((o != null) && (n != null) && o.equals(n));
+        PersistenceClassElement classElement =
+            ((PersistenceMemberElement)_element).getDeclaringClass();
 
-		super.firePropertyChange(name, o, n);
+        super.firePropertyChange(name, o, n);
 
-		if ((classElement != null) && !noChange)
-			classElement.setModified(true);
-	}
+        if ((classElement != null) && !noChange)
+            classElement.setModified(true);
+    }
 
-	/** Fires vetoable change event.  This method overrides that of 
-	 * PersistenceElementImpl to give listeners a chance to block 
-	 * changes on the persistence class element modified status.
-	 * @param name property name
-	 * @param o old value
-	 * @param n new value
-	 * @exception PropertyVetoException when the change is vetoed by a listener
-	 */
-	protected final void fireVetoableChange (String name, Object o, Object n)
-		throws PropertyVetoException
-	{
-		// even though o == null and n == null will signify a change, that 
-		// is consistent with PropertyChangeSupport's behavior and is 
-		// necessary for this to work
-		boolean noChange = ((o != null) && (n != null) && o.equals(n));
-		PersistenceClassElement classElement = 
-			((PersistenceMemberElement)_element).getDeclaringClass();
+    /** Fires vetoable change event.  This method overrides that of
+     * PersistenceElementImpl to give listeners a chance to block
+     * changes on the persistence class element modified status.
+     * @param name property name
+     * @param o old value
+     * @param n new value
+     * @exception PropertyVetoException when the change is vetoed by a listener
+     */
+    protected final void fireVetoableChange (String name, Object o, Object n)
+        throws PropertyVetoException
+    {
+        // even though o == null and n == null will signify a change, that
+        // is consistent with PropertyChangeSupport's behavior and is
+        // necessary for this to work
+        boolean noChange = ((o != null) && (n != null) && o.equals(n));
+        PersistenceClassElement classElement =
+            ((PersistenceMemberElement)_element).getDeclaringClass();
 
-		super.fireVetoableChange(name, o, n);
+        super.fireVetoableChange(name, o, n);
 
-		if ((classElement != null) && !noChange)
-		{
-			((PersistenceElementImpl)classElement.getImpl()).
-				fireVetoableChange(PROP_MODIFIED, Boolean.FALSE, Boolean.TRUE);
-		}
-	}
+        if ((classElement != null) && !noChange)
+        {
+            ((PersistenceElementImpl)classElement.getImpl()).
+                fireVetoableChange(PROP_MODIFIED, Boolean.FALSE, Boolean.TRUE);
+        }
+    }
 }

@@ -89,7 +89,7 @@ public class ConcurrentModificationsTest extends ConfigApiTest{
 
                 // now I am throwing a transaction failure since I don't care about saving it
                 throw new TransactionFailure("Test passed", null);
-            }        
+            }
         },resources);
     }
 }

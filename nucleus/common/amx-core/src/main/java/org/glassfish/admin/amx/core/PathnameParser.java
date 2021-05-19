@@ -30,11 +30,12 @@ import static org.glassfish.admin.amx.core.PathnameConstants.*;
 import static org.glassfish.external.amx.AMX.*;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
+
 /**
-Parses a pathname into parts.
-<p>
-The root part (leading "/") is not included in the parts list returned
-by {@link #parts}.
+ * Parses a pathname into parts.
+ * <p>
+ * The root part (leading "/") is not included in the parts list returned
+ * by {@link #parts}.
  */
 @Taxonomy(stability = Stability.UNCOMMITTED)
 public final class PathnameParser
@@ -75,12 +76,12 @@ public final class PathnameParser
         {
             return mName;
         }
-        
+
         public boolean isWildType()
         {
             return mType.indexOf(MATCH_ZERO_OR_MORE) >= 0;
         }
-        
+
         public boolean isWildName()
         {
             return mName != null && mName.indexOf(MATCH_ZERO_OR_MORE) >= 0;
@@ -141,12 +142,12 @@ public final class PathnameParser
     {
         return mIsFullPath;
     }
-    
+
     public boolean isRoot()
     {
         return mParts.isEmpty();
     }
-    
+
     /** return true if any part of the path includes a wildcard */
     public boolean isWild()
     {
@@ -198,13 +199,13 @@ public final class PathnameParser
     }
 
     /**
-        This pattern finds a type and whatever follows.
-        FIXME: how to support arbitrary delimiter or subscript?
+     * This pattern finds a type and whatever follows.
+     * FIXME: how to support arbitrary delimiter or subscript?
      */
     private static final Pattern TYPE_SEARCH_PATTERN = Pattern.compile(LEGAL_TYPE_PATTERN + ".*");
 
     /**
-        This pattern finds a name up to the terminating SUBSCRIPT_RIGHT.
+     * This pattern finds a name up to the terminating SUBSCRIPT_RIGHT.
      */
     private static final Pattern NAME_SEARCH_PATTERN = Pattern.compile("(" + LEGAL_NAME_PATTERN + ")" + SUBSCRIPT_RIGHT + ".*");
 
@@ -307,7 +308,7 @@ public final class PathnameParser
 
     private List<PathPart> parse()
     {
-        final List<PathPart> parts = new ArrayList<PathPart>();
+        final List<PathPart> parts = new ArrayList<>();
 
         parse(mPath, parts);
 
@@ -379,16 +380,3 @@ public final class PathnameParser
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

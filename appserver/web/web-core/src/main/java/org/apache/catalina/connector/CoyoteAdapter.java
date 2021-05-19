@@ -77,8 +77,8 @@ public class CoyoteAdapter extends HttpHandler {
 
 //    protected boolean v3Enabled =
 //        Boolean.valueOf(System.getProperty("v3.grizzly.useMapper", "true"));
-    
-    
+
+
 //    public static final int ADAPTER_NOTES = 1;
 
     static final String JVM_ROUTE = System.getProperty("jvmRoute");
@@ -93,14 +93,14 @@ public class CoyoteAdapter extends HttpHandler {
             "com.sun.enterprise.web.collapseAdjacentSlashes", "true"));
 
     /**
-     * When mod_jk is used, the adapter must be invoked the same way 
+     * When mod_jk is used, the adapter must be invoked the same way
      * Tomcat does by invoking service(...) and the afterService(...). This
      * is a hack to make it compatible with Tomcat 5|6.
      */
     private boolean compatWithTomcat = false;
-    
+
     private String serverName = ServerInfo.getPublicServerInfo();
-    
+
     // Make sure this value is always aligned with {@link ContainerMapper}
     // (@see com.sun.enterprise.v3.service.impl.ContainerMapper)
     protected final static Note<MappingData> MAPPING_DATA =
@@ -118,7 +118,7 @@ public class CoyoteAdapter extends HttpHandler {
     // (@see com.sun.enterprise.v3.service.impl.ContainerMapper)
     private final static Note<DataChunk> DATA_CHUNK =
             org.glassfish.grizzly.http.server.Request.<DataChunk>createNote("DataChunk");
-    
+
     // ----------------------------------------------------------- Constructors
 
 
@@ -158,7 +158,7 @@ public class CoyoteAdapter extends HttpHandler {
 
         Request request = req.getNote(CATALINA_REQUEST_NOTE);
         Response response = req.getNote(CATALINA_RESPONSE_NOTE);
-        
+
         // Grizzly already parsed, decoded, and mapped the request.
         // Let's re-use this info here, before firing the
         // requestStartEvent probe, so that the mapping data will be
@@ -194,7 +194,7 @@ public class CoyoteAdapter extends HttpHandler {
         }
 
         req.addAfterServiceListener(catalinaAfterServiceListener);
-        
+
         try {
             doService(req, request, res, response, v3Enabled);
 
@@ -237,7 +237,7 @@ public class CoyoteAdapter extends HttpHandler {
             log.log(Level.SEVERE, LogFacade.FAILED_TO_INITIALIZE_THE_INTERCEPTOR, th);
         }
     }
-    
+
 
     private void doService(final org.glassfish.grizzly.http.server.Request req,
                            final Request request,
@@ -245,7 +245,7 @@ public class CoyoteAdapter extends HttpHandler {
                            final Response response,
                            final boolean v3Enabled)
             throws Exception {
-        
+
         // START SJSAS 6331392
         // Check connector for disabled state
         if (!connector.isEnabled()) {
@@ -265,12 +265,12 @@ public class CoyoteAdapter extends HttpHandler {
 //        }
 
 
-        // Parse and set Catalina and configuration specific 
+        // Parse and set Catalina and configuration specific
         // request parameters
         if ( postParseRequest(req, request, res, response, v3Enabled) ) {
 
             // START S1AS 6188932
-            boolean authPassthroughEnabled = 
+            boolean authPassthroughEnabled =
                 connector.getAuthPassthroughEnabled();
             ProxyHandler proxyHandler = connector.getProxyHandler();
             if (authPassthroughEnabled && proxyHandler != null) {
@@ -294,7 +294,7 @@ public class CoyoteAdapter extends HttpHandler {
                     request.setAttribute(Globals.CERTIFICATES_ATTR,
                                          certs);
                 }
-                    
+
             }
             // END S1AS 6188932
 
@@ -302,7 +302,7 @@ public class CoyoteAdapter extends HttpHandler {
 //            if (serverName != null && !serverName.isEmpty()) {
 //                response.addHeader("Server", serverName);
 //            }
-                
+
             // Invoke the web container
             connector.requestStartEvent(request.getRequest(),
                 request.getHost(), request.getContext());
@@ -331,7 +331,7 @@ public class CoyoteAdapter extends HttpHandler {
                         GlassFishValve hostValve = host.getPipeline().getBasic();
                         hostValve.invoke(request, response);
                         // Error handling
-                        hostValve.postInvoke(request, response); 
+                        hostValve.postInvoke(request, response);
                     }
                 }
             } finally {
@@ -358,7 +358,7 @@ public class CoyoteAdapter extends HttpHandler {
                                        final Response response,
                                        final boolean v3Enabled)
         throws Exception {
-        // XXX the processor may have set a correct scheme and port prior to this point, 
+        // XXX the processor may have set a correct scheme and port prior to this point,
         // in ajp13 protocols dont make sense to get the port from the connector...
         // otherwise, use connector configuration
         request.setSecure(req.isSecure());
@@ -371,7 +371,7 @@ public class CoyoteAdapter extends HttpHandler {
             response.sendError(HttpServletResponse.SC_BAD_REQUEST, "Invalid URI");
             return false;
         }
-        
+
         if (compatWithTomcat || !v3Enabled) {
 //            decodedURI.duplicate(req.requestURI());
 //            try {
@@ -442,7 +442,7 @@ public class CoyoteAdapter extends HttpHandler {
             decodedURI.setChars(uriCC.getBuffer(), uriCC.getStart(),
                 absSemicolon - uriCC.getStart());
         }
- 
+
         if (compatWithTomcat || !v3Enabled) {
             /*mod_jk*/
             DataChunk localDecodedURI = decodedURI;
@@ -528,7 +528,7 @@ public class CoyoteAdapter extends HttpHandler {
                         }
                     }
                 }
-            }                               
+            }
             res.setStatus(405, "TRACE method is not allowed");
             res.addHeader("Allow", header);
             return false;
@@ -550,9 +550,9 @@ public class CoyoteAdapter extends HttpHandler {
             if (request.isRequestedSessionIdFromURL()) {
                 // This is not optimal, but as this is not very common, it
                 // shouldn't matter
-                redirectPath = redirectPath + ";" + ctx.getSessionParameterName() + "=" 
+                redirectPath = redirectPath + ";" + ctx.getSessionParameterName() + "="
                     + request.getRequestedSessionId();
-            }            
+            }
             // START GlassFish 936
             redirectPath = response.encode(redirectPath);
             // END GlassFish 936
@@ -563,7 +563,7 @@ public class CoyoteAdapter extends HttpHandler {
             }
 
             // START CR 6590921
-            boolean authPassthroughEnabled = 
+            boolean authPassthroughEnabled =
                 connector.getAuthPassthroughEnabled();
             ProxyHandler proxyHandler = connector.getProxyHandler();
             if (authPassthroughEnabled && proxyHandler != null) {
@@ -608,7 +608,7 @@ public class CoyoteAdapter extends HttpHandler {
      * This method normalizes "\", "//", "/./" and "/../". This method will
      * return false when trying to go above the root, or if the URI contains
      * a null byte.
-     * 
+     *
      * @param uriMB URI to be normalized
      */
     public static boolean normalize(MessageBytes uriMB) {
@@ -676,8 +676,8 @@ public class CoyoteAdapter extends HttpHandler {
         // Note: It is possible to extend the URI by 1 without any side effect
         // as the next character is a non-significant WS.
         if (((end - start) > 2) && (b[end - 1] == (byte) '.')) {
-            if ((b[end - 2] == (byte) '/') 
-                || ((b[end - 2] == (byte) '.') 
+            if ((b[end - 2] == (byte) '/')
+                || ((b[end - 2] == (byte) '.')
                     && (b[end - 3] == (byte) '/'))) {
                 b[end] = (byte) '/';
                 end++;
@@ -693,7 +693,7 @@ public class CoyoteAdapter extends HttpHandler {
             index = uriBC.indexOf("/./", 0, 3, index);
             if (index < 0)
                 break;
-            copyBytes(b, start + index, start + index + 2, 
+            copyBytes(b, start + index, start + index + 2,
                       end - start - index - 2);
             end = end - 2;
             uriBC.setEnd(end);
@@ -773,14 +773,14 @@ public class CoyoteAdapter extends HttpHandler {
                     }
                 }
             }
-        }	
+        }
 
         // If the URI ends with "/." or "/..", then we append an extra "/"
         // Note: It is possible to extend the URI by 1 without any side effect
         // as the next character is a non-significant WS.
         if (((end - start) > 2) && (c[end - 1] == (char) '.')) {
-            if ((c[end - 2] == (char) '/') 
-                || ((c[end - 2] == (char) '.') 
+            if ((c[end - 2] == (char) '/')
+                || ((c[end - 2] == (char) '.')
                     && (c[end - 3] == (char) '/'))) {
                 c[end] = (char) '/';
                 end++;
@@ -796,7 +796,7 @@ public class CoyoteAdapter extends HttpHandler {
             index = uriCC.indexOf("/./", 0, 3, index);
             if (index < 0)
                 break;
-            copyChars(c, start + index, start + index + 2, 
+            copyChars(c, start + index, start + index + 2,
                       end - start - index - 2);
             end = end - 2;
             uriCC.setEnd(end);
@@ -836,7 +836,7 @@ public class CoyoteAdapter extends HttpHandler {
 
 
     /**
-     * Copy an array of bytes to a different position. Used during 
+     * Copy an array of bytes to a different position. Used during
      * normalization.
      */
     protected static void copyBytes(byte[] b, int dest, int src, int len) {
@@ -847,7 +847,7 @@ public class CoyoteAdapter extends HttpHandler {
 
 
     /**
-     * Copy an array of chars to a different position. Used during 
+     * Copy an array of chars to a different position. Used during
      * normalization.
      */
     private static void copyChars(char[] c, int dest, int src, int len) {
@@ -883,11 +883,11 @@ public class CoyoteAdapter extends HttpHandler {
       */
     /* CR 6309511
      protected void convertMB(MessageBytes mb) {
- 
+
         // This is of course only meaningful for bytes
         if (mb.getType() != MessageBytes.T_BYTES)
             return;
-        
+
         ByteChunk bc = mb.getByteChunk();
         CharChunk cc = mb.getCharChunk();
         cc.allocate(bc.getLength(), -1);
@@ -900,11 +900,11 @@ public class CoyoteAdapter extends HttpHandler {
             cbuf[i] = (char) (bbuf[i + start] & 0xff);
         }
         mb.setChars(cbuf, 0, bc.getLength());
-   
+
      }
      */
 
-    
+
     // START SJSAS 6349248
     /**
      * Notify all container event listeners that a particular event has
@@ -926,7 +926,7 @@ public class CoyoteAdapter extends HttpHandler {
     }
     // END SJSAS 6349248
 
-    
+
     /**
      * Return true when an instance is executed the same way it does in Tomcat.
      */
@@ -934,11 +934,11 @@ public class CoyoteAdapter extends HttpHandler {
         return compatWithTomcat;
     }
 
-    
+
     /**
      * <tt>true</tt> if this class needs to be compatible with Tomcat
-     * Adapter class. Since Tomcat Adapter implementation doesn't support 
-     * the afterService method, the afterService method must be invoked 
+     * Adapter class. Since Tomcat Adapter implementation doesn't support
+     * the afterService method, the afterService method must be invoked
      * inside the service method.
      */
     public void setCompatWithTomcat(boolean compatWithTomcat) {

@@ -27,7 +27,7 @@ public class WebTest{
 
     static SimpleReporterAdapter stat=
            new SimpleReporterAdapter("appserv-tests");
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 3;
     private static boolean firstConnection = true;
@@ -51,19 +51,19 @@ public class WebTest{
                             + "/ServletTest;jsessionid=01A960C22480CE9F445CDE48DE333F31", ssf);
 
             parseResponse(connection);
-            
+
             firstConnection = false;
             connection = doSSLHandshake(
-                "https://" + host  + ":" + port + "/" + contextRoot 
+                "https://" + host  + ":" + port + "/" + contextRoot
                 + "/ServletTest;jsessionid=" + sessionFalseId, ssf);
             parseResponse(connection);
-            
+
         } catch (Throwable t) {
             t.printStackTrace();
         } finally {
             if (count != EXPECTED_COUNT){
                 stat.addStatus("web-sslCookie", stat.FAIL);
-            }           
+            }
         }
 
 
@@ -101,8 +101,8 @@ public class WebTest{
                     throws Exception{
 
         BufferedReader in = null;
-            
-        String line= ""; 
+
+        String line= "";
         int index = 0;
         try {
             in = new BufferedReader(
@@ -116,7 +116,7 @@ public class WebTest{
                     System.out.println("context: " + context + " status: " + status);
                     if (firstConnection){
                         if ( context.equalsIgnoreCase("getRequestSessionId") )
-                            requestedSessionId = status; 
+                            requestedSessionId = status;
                         else if ( context.equalsIgnoreCase("getSession(false).getId")) {
                             sessionFalseId = status;
                         } else if ( context.equalsIgnoreCase("getRequestURI"))
@@ -148,7 +148,7 @@ public class WebTest{
                             }
                         }
                         count++;
-                    } 
+                    }
                 }
                 lineNum++;
             }

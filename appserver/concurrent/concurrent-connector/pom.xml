@@ -23,10 +23,10 @@
         <groupId>org.glassfish.main.concurrent</groupId>
         <artifactId>concurrent</artifactId>
         <version>6.1.1-SNAPSHOT</version>
-    </parent>    
+    </parent>
     <artifactId>concurrent-connector</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Concurrent Connector Module</name>
 
     <dependencies>

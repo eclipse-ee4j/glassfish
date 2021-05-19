@@ -27,7 +27,7 @@
     </parent>
     <artifactId>cmp-ejb-mapping</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>ejb-mapping module for cmp</name>
 
     <developers>
@@ -67,7 +67,7 @@
             <artifactId>schema2beans</artifactId>
         </dependency>
     </dependencies>
-    
+
     <!--
         Findbugs needs org.netbeans.external:ddl,
         we isolate it in a profile as it requires a separate repository definition.
@@ -95,5 +95,5 @@
                 </dependency>
             </dependencies>
         </profile>
-    </profiles>    
+    </profiles>
 </project>

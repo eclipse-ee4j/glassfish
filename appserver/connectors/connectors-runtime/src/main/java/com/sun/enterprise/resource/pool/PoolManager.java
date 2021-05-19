@@ -55,7 +55,7 @@ public interface PoolManager extends TransactedPoolManager {
     static public final String GENERIC_CREDENTIAL = "jakarta.resource.spi.security.GenericCredential";
 
     /**
-     * Flush Connection pool by reinitializing the connections 
+     * Flush Connection pool by reinitializing the connections
      * established in the pool.
      * @param poolInfo
      * @throws com.sun.appserv.connectors.internal.api.PoolingException
@@ -64,7 +64,7 @@ public interface PoolManager extends TransactedPoolManager {
 
     //Get status of pool
     public PoolStatus getPoolStatus(PoolInfo poolInfo);
-    
+
 
     public ResourceHandle getResourceFromPool(ResourceSpec spec, ResourceAllocator alloc, ClientSecurityInfo info,
                                        Transaction tran) throws PoolingException, RetryableUnavailableException;
@@ -127,7 +127,7 @@ public interface PoolManager extends TransactedPoolManager {
     public void lazyEnlist(ManagedConnection mc) throws ResourceException;
 
     public void registerPoolLifeCycleListener(PoolLifeCycle poolListener);
-    
+
     public void unregisterPoolLifeCycleListener();
 }
 

@@ -31,7 +31,7 @@
         <mkdir dir="${component.lib.home}"/>
 
         <jar jarfile="${component.lib.home}/__ds_jdbc_ra.rar"
-	      basedir="${component.lib.home}" excludes="**/*">
+          basedir="${component.lib.home}" excludes="**/*">
             <manifest>
                 <attribute name="Specification-Title" value="JDBC Specification"/>
                 <attribute name="Specification-Vendor" value="Sun Microsystems, Inc.,"/>
@@ -44,7 +44,7 @@
         </jar>
 
         <jar jarfile="${component.lib.home}/__ds_jdbc_ra.jar" update="true" basedir="${component.classes.dir}"
-		includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
+        includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
             <exclude name="com/sun/gjc/spi/XAManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/CPManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/DMManagedConnectionFactory.class"/>
@@ -71,7 +71,7 @@
 
 
         <jar jarfile="${component.lib.home}/__cp_jdbc_ra.jar" update="true" basedir="${component.classes.dir}"
-		includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
+        includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
             <exclude name="com/sun/gjc/spi/XAManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/DSManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/DMManagedConnectionFactory.class"/>
@@ -84,7 +84,7 @@
         </jar>
 
 
-	<!-- build JDBC RAR of type javax.sql.XADataSource -->
+        <!-- build JDBC RAR of type javax.sql.XADataSource -->
         <jar jarfile="${component.lib.home}/__xa_jdbc_ra.rar"
              basedir="${component.lib.home}" excludes="**/*">
             <manifest>
@@ -100,7 +100,7 @@
 
 
         <jar jarfile="${component.lib.home}/__xa_jdbc_ra.jar" update="true" basedir="${component.classes.dir}"
-		includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
+        includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
             <exclude name="com/sun/gjc/spi/CPManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/DSManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/DMManagedConnectionFactory.class"/>
@@ -127,7 +127,7 @@
         </jar>
 
         <jar jarfile="${component.lib.home}/__dm_jdbc_ra.jar" update="true" basedir="${component.classes.dir}"
-		includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
+        includes="${pkg.dir}/**/*, com/sun/gjc/util/**/*, com/sun/gjc/monitoring/**/*, com/sun/gjc/common/**/*, **/LocalStrings.properties">
             <exclude name="com/sun/gjc/spi/DSManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/CPManagedConnectionFactory.class"/>
             <exclude name="com/sun/gjc/spi/XAManagedConnectionFactory.class"/>
@@ -137,24 +137,24 @@
             <include name="__dm_jdbc_ra.jar"/>
         </jar>
 
-	<echo message="Assembling templates jar"/>
+        <echo message="Assembling templates jar"/>
 
-	<jar jarfile="${component.lib.home}/templates.jar" update="true" basedir="${component.classes.dir}/templates"
-		includes="glassfish/lib/install/templates/resources/jdbc/*, glassfish/lib/install/databases/dbvendormapping/*"> 
-	</jar>
+        <jar jarfile="${component.lib.home}/templates.jar" update="true" basedir="${component.classes.dir}/templates"
+            includes="glassfish/lib/install/templates/resources/jdbc/*, glassfish/lib/install/databases/dbvendormapping/*">
+        </jar>
 
-	<delete dir="${component.classes.dir}"/>
+        <delete dir="${component.classes.dir}"/>
 
-	<unjar src="${component.lib.home}/__xa_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__xa_jdbc_ra"/>
-	<unjar src="${component.lib.home}/__ds_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__ds_jdbc_ra"/>
-	<unjar src="${component.lib.home}/__cp_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__cp_jdbc_ra"/>
-	<unjar src="${component.lib.home}/__dm_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__dm_jdbc_ra"/>
-	<unjar src="${component.lib.home}/templates.jar" dest="${component.classes.dir}"/>
+        <unjar src="${component.lib.home}/__xa_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__xa_jdbc_ra"/>
+        <unjar src="${component.lib.home}/__ds_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__ds_jdbc_ra"/>
+        <unjar src="${component.lib.home}/__cp_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__cp_jdbc_ra"/>
+        <unjar src="${component.lib.home}/__dm_jdbc_ra.rar" dest="${component.classes.dir}/glassfish/lib/install/applications/__dm_jdbc_ra"/>
+        <unjar src="${component.lib.home}/templates.jar" dest="${component.classes.dir}"/>
 
         <zip basedir="${component.classes.dir}" file="${component.target.dir}/jdbc-ra.zip"/>
 
-	<delete dir="${component.lib.home}"/>
-	<!--delete dir="${component.target.rar}"/-->
+        <delete dir="${component.lib.home}"/>
+        <!--delete dir="${component.target.rar}"/-->
     </target>
 
 </project>

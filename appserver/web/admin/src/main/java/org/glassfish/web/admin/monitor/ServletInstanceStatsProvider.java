@@ -91,7 +91,7 @@ public class ServletInstanceStatsProvider {
             return tsd;
         }
     };
-    
+
     public ServletInstanceStatsProvider(String servletName,
             String moduleName, String vsName,
             ServletStatsProvider servletStatsProvider) {
@@ -104,7 +104,7 @@ public class ServletInstanceStatsProvider {
     public String getModuleName() {
         return moduleName;
     }
-    
+
     public String getVSName() {
         return vsName;
     }
@@ -157,11 +157,11 @@ public class ServletInstanceStatsProvider {
             timeStatDataLocal.get().setEntryTime(System.currentTimeMillis());
             if (logger.isLoggable(Level.FINEST)) {
                 logger.finest("Servlet before service event received - " +
-                        "servletName = " + servletName + 
+                        "servletName = " + servletName +
                         ": appName = " + appName + ": hostName = " +
                         hostName);
             }
-        }   
+        }
     }
 
     @ProbeListener("glassfish:web:servlet:afterServiceEvent")
@@ -184,7 +184,7 @@ public class ServletInstanceStatsProvider {
 
             if (logger.isLoggable(Level.FINEST)) {
                 logger.finest("Servlet after service event received - " +
-                        "servletName = " + servletName + 
+                        "servletName = " + servletName +
                         ": appName = " + appName + ": hostName = " +
                         hostName);
             }
@@ -200,7 +200,7 @@ public class ServletInstanceStatsProvider {
         this.serviceTime.reset();
         this.processingTime.reset();
     }
-    
+
     private boolean isValidEvent(String sName, String mName, String hostName) {
         return (moduleName.equals(mName) && vsName.equals(hostName)
                 && servletName.equals(sName));

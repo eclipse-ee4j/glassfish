@@ -19,7 +19,7 @@
  *
  * Created on February 25, 2000
  */
- 
+
 package com.sun.jdo.api.persistence.support;
 import java.util.Collection;
 import java.util.Properties;
@@ -37,7 +37,7 @@ import java.lang.Class;
  * @version 0.1
  */
 
-public interface PersistenceManager 
+public interface PersistenceManager
 {
     /** A PersistenceManager instance can be used until it is closed.
    * @return if this PersistenceManager has been closed
@@ -69,13 +69,13 @@ public interface PersistenceManager
      * @param compiled another Query from the same JDO implementation
      */
     Query newQuery(Object compiled);
-    
+
     /** Create a new Query specifying the Class of the candidate instances.
      * @param cls the Class of the candidate instances
      * @return the new Query
      */
     Query newQuery(Class cls);
-    
+
     /** Create a new Query with the Class of the candidate instances and candidate Collection.
      * specified.
      * @param cls the Class of the candidate instances
@@ -83,7 +83,7 @@ public interface PersistenceManager
      * @return the new Query
      */
     Query newQuery(Class cls,Collection cln);
-    
+
     /** Create a new Query with the Class of the candidate instances and Filter.
      * specified.
      * @param cls the Class of the candidate instances
@@ -91,7 +91,7 @@ public interface PersistenceManager
      * @return the new Query
      */
     Query newQuery (Class cls, String filter);
-    
+
     /** Create a new Query with the Class of the candidate instances, candidate Collection,
      * and Filter.
      * @param cls the Class of the candidate instances
@@ -100,7 +100,7 @@ public interface PersistenceManager
      * @return the new Query
      */
     Query newQuery (Class cls, Collection cln, String filter);
-    
+
     /** The PersistenceManager may manage a collection of instances in the data
      * store based on the class of the instances.  This method returns a
      * Collection of instances in the data store that might be iterated or
@@ -125,7 +125,7 @@ public interface PersistenceManager
      * ObjectId
      */
     Object getObjectById(Object oid);
-    
+
     /** The ObjectId returned by this method represents the JDO identity of
      * the instance.  The ObjectId is a copy (clone) of the internal state
      * of the instance, and changing it does not affect the JDO identity of
@@ -134,7 +134,7 @@ public interface PersistenceManager
      * @return the ObjectId of the instance
      */
     Object getObjectId(Object pc);
-    
+
     /** This method is used to get a PersistenceCapable instance
      * representing the same data store object as the parameter, that is valid
      * for this PersistenceManager.
@@ -143,7 +143,7 @@ public interface PersistenceManager
      * same data store object
      */
     Object getTransactionalInstance(Object pc);
-    
+
     /** Make the transient instance persistent in this PersistenceManager.
      * This method must be called in an active transaction.
      * The PersistenceManager assigns an ObjectId to the instance and
@@ -154,19 +154,19 @@ public interface PersistenceManager
      * PersistenceCapable
      */
     void makePersistent(Object pc);
-    
+
     /** Make an array of instances persistent.
      * @param pcs an array of transient instances
      * @see #makePersistent(Object pc)
      */
     void makePersistent(Object[] pcs);
-    
+
     /** Make a Collection of instances persistent.
      * @param pcs a Collection of transient instances
      * @see #makePersistent(Object pc)
      */
     void makePersistent (Collection pcs);
-    
+
     /** Delete the persistent instance from the data store.
      * This method must be called in an active transaction.
      * The data store object will be removed at commit.
@@ -180,19 +180,19 @@ public interface PersistenceManager
      * @param pc a persistent instance
      */
     void deletePersistent(Object pc);
-    
+
     /** Delete an array of instances from the data store.
      * @param pcs a Collection of persistent instances
      * @see #deletePersistent(Object pc)
      */
     void deletePersistent (Object[] pcs);
-    
+
     /** Delete a Collection of instances from the data store.
      * @param pcs a Collection of persistent instances
      * @see #deletePersistent(Object pc)
      */
     void deletePersistent (Collection pcs);
-    
+
     /** This method returns the PersistenceManagerFactory used to create
      * this PersistenceManager.  It returns null if this instance was
      * created via a constructor.
@@ -200,7 +200,7 @@ public interface PersistenceManager
      * this PersistenceManager
      */
     PersistenceManagerFactory getPersistenceManagerFactory();
-    
+
     /** The application can manage the PersistenceManager instances
      * more easily by having an application object associated with each
      * PersistenceManager instance.
@@ -208,7 +208,7 @@ public interface PersistenceManager
      * @see #getUserObject
      */
     void setUserObject(Object o);
-    
+
     /** The application can manage the PersistenceManager instances
      * more easily by having an application object associated with each
      * PersistenceManager instance.
@@ -216,7 +216,7 @@ public interface PersistenceManager
      * @see #setUserObject
      */
     Object getUserObject();
-    
+
     /** The JDO vendor might store certain non-operational properties and
      * make those properties available to applications (for troubleshooting).
      *
@@ -226,7 +226,7 @@ public interface PersistenceManager
      * @return the Properties of this PersistenceManager
      */
     Properties getProperties();
-    
+
     /** In order for the application to construct instance of the ObjectId class
      * it needs to know the class being used by the JDO implementation.
      * @param cls the PersistenceCapable Class
@@ -236,37 +236,37 @@ public interface PersistenceManager
 
 
     /**
-     * Returns a new Second Class Object instance of the type specified, 
-     * with the owner and field name to notify upon changes to the value 
-     * of any of its fields. If a collection class is created, then the 
+     * Returns a new Second Class Object instance of the type specified,
+     * with the owner and field name to notify upon changes to the value
+     * of any of its fields. If a collection class is created, then the
      * class does not restrict the element types, and allows nulls to be added as elements.
      *
      * @param type Class of the new SCO instance
      * @param owner the owner to notify upon changes
-     * @param fieldName the field to notify upon changes 
+     * @param fieldName the field to notify upon changes
      * @return the object of the class type
      */
     Object newSCOInstance (Class type, Object owner, String fieldName);
 
 
-    /**  
-     * Returns a new Collection instance of the type specified, with the 
-     * owner and field name to notify upon changes to the value of any of its fields. 
-     * The collection class restricts the element types allowed to the elementType or 
-     * instances assignable to the elementType, and allows nulls to be added as 
-     * elements based on the setting of allowNulls. The Collection has an initial size 
+    /**
+     * Returns a new Collection instance of the type specified, with the
+     * owner and field name to notify upon changes to the value of any of its fields.
+     * The collection class restricts the element types allowed to the elementType or
+     * instances assignable to the elementType, and allows nulls to be added as
+     * elements based on the setting of allowNulls. The Collection has an initial size
      * as specified by the initialSize parameter.
      *
-     * @param type Class of the new SCO instance 
-     * @param owner the owner to notify upon changes 
-     * @param fieldName the field to notify upon changes  
+     * @param type Class of the new SCO instance
+     * @param owner the owner to notify upon changes
+     * @param fieldName the field to notify upon changes
      * @param elementType the element types allowed
      * @param allowNulls true if allowed
      * @param initialSize initial size of the Collection
-     * @return the object of the class type 
-     */  
-    Object newCollectionInstance (Class type, Object owner, String fieldName, 
-		Class elementType, boolean allowNulls, int initialSize);
+     * @return the object of the class type
+     */
+    Object newCollectionInstance (Class type, Object owner, String fieldName,
+        Class elementType, boolean allowNulls, int initialSize);
 
 
     /** This method locates a persistent instance in the cache of instances
@@ -335,8 +335,8 @@ public interface PersistenceManager
      * @return      boolean supersedeDeletedInstance flag
      */
     boolean getSupersedeDeletedInstance ();
-  
-  
+
+
     /**
      * Sets the supersedeDeletedInstance flag for this PersistenceManager.
      * @param flag          boolean supersedeDeletedInstance flag
@@ -371,21 +371,21 @@ public interface PersistenceManager
     /**
      * Returns the boolean value of the requireTrackedSCO flag
      * for this PersistenceManager. If set to false, the PersistenceManager
-     * will not create tracked SCO instances for new persistent instances at 
-     * commit with retainValues set to true and while retrieving data from a datastore. 
-     *    
+     * will not create tracked SCO instances for new persistent instances at
+     * commit with retainValues set to true and while retrieving data from a datastore.
+     *
      * @return      boolean requireTrackedSCO flag
-     */  
+     */
     boolean getRequireTrackedSCO();
 
     /**
      * Sets the requireTrackedSCO flag for this PersistenceManager.
      * If set to false, the PersistenceManager will not create tracked
-     * SCO instances for new persistent instances at commit with retainValues 
+     * SCO instances for new persistent instances at commit with retainValues
      * set to true and while retrieving data from a datastore.
-     *   
+     *
      * @param flag          boolean requireTrackedSCO flag
-     */  
+     */
     void setRequireTrackedSCO (boolean flag);
 
     }

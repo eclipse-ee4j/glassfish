@@ -36,8 +36,8 @@ public class XID implements Xid {
     public int branchQualifier;
     public int globalTxID;
 
-    static public  final int MAXGTRIDSIZE= 64; 
-    static public  final int MAXBQUALSIZE= 64; 
+    static public  final int MAXGTRIDSIZE= 64;
+    static public  final int MAXBQUALSIZE= 64;
 
     public XID() {
         int foo = ID++;
@@ -55,10 +55,10 @@ public class XID implements Xid {
         {
             return false;                  // It can't be equal
         }
-        
+
         other = (XID)o;                   // The other XID, now properly cast
-        
-        if (this.formatID == other.formatID 
+
+        if (this.formatID == other.formatID
                 && this.branchQualifier == other.branchQualifier
                 && this.globalTxID == other.globalTxID) {
             return true;
@@ -98,7 +98,7 @@ public class XID implements Xid {
                 "formatID("     + formatID     + "), " +
                 "branchQualifier (" + branchQualifier + "), " +
                 "globalTxID(" + globalTxID + ")}");
-        
+
         return s;
     }
 

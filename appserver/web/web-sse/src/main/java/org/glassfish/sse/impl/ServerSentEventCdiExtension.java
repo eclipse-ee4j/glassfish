@@ -37,7 +37,7 @@ import java.util.logging.Logger;
  * @author Jitendra Kotamraju
  */
 public class ServerSentEventCdiExtension implements Extension {
-    
+
     private final Logger LOGGER = Logger.getLogger(ServerSentEventCdiExtension.class.getName());
 
     // path --> application

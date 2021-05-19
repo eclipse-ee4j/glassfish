@@ -36,400 +36,400 @@ import org.glassfish.ejb.deployment.descriptor.EjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.IASEjbCMPEntityDescriptor;
 import org.glassfish.ejb.deployment.descriptor.PersistenceDescriptor;
 
-/** This is a subclass of 
- * {@link com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper} (in 
- * the <code>com.sun.jdo.spi.persistence.support.ejb.model.util</code> 
- * package) which implements the abstract methods based on an IAS 
+/** This is a subclass of
+ * {@link com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper} (in
+ * the <code>com.sun.jdo.spi.persistence.support.ejb.model.util</code>
+ * package) which implements the abstract methods based on an IAS
  * implementation.
  *
  * @author Rochelle Raccah
  */
-public class NameMapper extends 
-	com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper
+public class NameMapper extends
+    com.sun.jdo.spi.persistence.support.ejb.model.util.NameMapper
 {
-	private static String EJB_NAME = "EJB_NAME"; // NOI18N
-	private static String ABSTRACT_SCHEMA_NAME = "ABSTRACT_SCHEMA_NAME"; // NOI18N
-	private static String PERSISTENCE_NAME = "PERSISTENCE_NAME"; // NOI18N
-	private static String LOCAL_NAME = "LOCAL_NAME"; // NOI18N
-	private static String REMOTE_NAME = "REMOTE_NAME"; // NOI18N
+    private static String EJB_NAME = "EJB_NAME"; // NOI18N
+    private static String ABSTRACT_SCHEMA_NAME = "ABSTRACT_SCHEMA_NAME"; // NOI18N
+    private static String PERSISTENCE_NAME = "PERSISTENCE_NAME"; // NOI18N
+    private static String LOCAL_NAME = "LOCAL_NAME"; // NOI18N
+    private static String REMOTE_NAME = "REMOTE_NAME"; // NOI18N
 
-	private final boolean _expandPCNames;
-	private Map _nameTypeToNameMap;
+    private final boolean _expandPCNames;
+    private Map _nameTypeToNameMap;
 
     /**
      * Signature with CVS keyword substitution for identifying the generated code
      */
-    public static final String SIGNATURE = "$RCSfile: NameMapper.java,v $ $Revision: 1.2 $"; //NOI18N         
-        
-	/** Creates a new instance of NameMapper
-	 * @param bundleDescriptor the IASEjbBundleDescriptor which defines the 
-	 * universe of names for this application.
-	 */
-	public NameMapper (EjbBundleDescriptorImpl bundleDescriptor)
-	{
-		this(bundleDescriptor, true);
-	}
+    public static final String SIGNATURE = "$RCSfile: NameMapper.java,v $ $Revision: 1.2 $"; //NOI18N
 
-	/** Creates a new instance of NameMapper
-	 * @param bundleDescriptor the IASEjbBundleDescriptor which defines the 
-	 * universe of names for this application.
-	 * @param expandPersistenceClassNames flag to indicate whether 
-	 * persistence class names should differ from bean names
-	 */
-	public NameMapper (EjbBundleDescriptorImpl bundleDescriptor,
-		boolean expandPersistenceClassNames)
-	{
-		super(bundleDescriptor);
-		_expandPCNames = expandPersistenceClassNames;
-		initMap();
-	}
+    /** Creates a new instance of NameMapper
+     * @param bundleDescriptor the IASEjbBundleDescriptor which defines the
+     * universe of names for this application.
+     */
+    public NameMapper (EjbBundleDescriptorImpl bundleDescriptor)
+    {
+        this(bundleDescriptor, true);
+    }
 
-	private void initMap ()
-	{
-		Iterator iterator = getBundleDescriptor().getEjbs().iterator();
-		Map ejbMap = new HashMap();
-		Map persistenceClassMap = new HashMap();
-		Set localNames = new HashSet();
-		Set remoteNames = new HashSet();
-		Map abstractSchemaMap = new HashMap();
+    /** Creates a new instance of NameMapper
+     * @param bundleDescriptor the IASEjbBundleDescriptor which defines the
+     * universe of names for this application.
+     * @param expandPersistenceClassNames flag to indicate whether
+     * persistence class names should differ from bean names
+     */
+    public NameMapper (EjbBundleDescriptorImpl bundleDescriptor,
+        boolean expandPersistenceClassNames)
+    {
+        super(bundleDescriptor);
+        _expandPCNames = expandPersistenceClassNames;
+        initMap();
+    }
 
-		_nameTypeToNameMap = new HashMap();
+    private void initMap ()
+    {
+        Iterator iterator = getBundleDescriptor().getEjbs().iterator();
+        Map ejbMap = new HashMap();
+        Map persistenceClassMap = new HashMap();
+        Set localNames = new HashSet();
+        Set remoteNames = new HashSet();
+        Map abstractSchemaMap = new HashMap();
 
-		while (iterator.hasNext())
-		{
-			Object next = iterator.next();
+        _nameTypeToNameMap = new HashMap();
 
-			if (next instanceof IASEjbCMPEntityDescriptor)
-			{
-				IASEjbCMPEntityDescriptor descriptor = 
-					(IASEjbCMPEntityDescriptor)next;
-				String ejbName = descriptor.getName();
+        while (iterator.hasNext())
+        {
+            Object next = iterator.next();
 
-				ejbMap.put(ejbName, descriptor);
-				safePut(persistenceClassMap, 
-					getPersistenceClassForDescriptor(descriptor), ejbName);
-				safeAdd(localNames, descriptor.getLocalClassName());
-				safeAdd(remoteNames, descriptor.getRemoteClassName());
-				safePut(abstractSchemaMap, 
-					descriptor.getAbstractSchemaName(), ejbName);
-			}
-		}
-		_nameTypeToNameMap.put(EJB_NAME, ejbMap);
-		_nameTypeToNameMap.put(PERSISTENCE_NAME, persistenceClassMap);
-		_nameTypeToNameMap.put(LOCAL_NAME, localNames);
-		_nameTypeToNameMap.put(REMOTE_NAME, remoteNames);
-		_nameTypeToNameMap.put(ABSTRACT_SCHEMA_NAME, abstractSchemaMap);
-	}
+            if (next instanceof IASEjbCMPEntityDescriptor)
+            {
+                IASEjbCMPEntityDescriptor descriptor =
+                    (IASEjbCMPEntityDescriptor)next;
+                String ejbName = descriptor.getName();
 
-	// puts a key-value pair in a map as long as the key is not null
-	private void safePut (Map map, Object key, Object value)
-	{
-		if ((key != null) && (map != null))
-			map.put(key, value);
-	}
-	// puts a value in a set as long as the object is not null
-	private void safeAdd (Set set, Object value)
-	{
-		if ((value != null) && (set != null))
-			set.add(value);
-	}
+                ejbMap.put(ejbName, descriptor);
+                safePut(persistenceClassMap,
+                    getPersistenceClassForDescriptor(descriptor), ejbName);
+                safeAdd(localNames, descriptor.getLocalClassName());
+                safeAdd(remoteNames, descriptor.getRemoteClassName());
+                safePut(abstractSchemaMap,
+                    descriptor.getAbstractSchemaName(), ejbName);
+            }
+        }
+        _nameTypeToNameMap.put(EJB_NAME, ejbMap);
+        _nameTypeToNameMap.put(PERSISTENCE_NAME, persistenceClassMap);
+        _nameTypeToNameMap.put(LOCAL_NAME, localNames);
+        _nameTypeToNameMap.put(REMOTE_NAME, remoteNames);
+        _nameTypeToNameMap.put(ABSTRACT_SCHEMA_NAME, abstractSchemaMap);
+    }
 
-	private Map getMap () { return _nameTypeToNameMap; }
+    // puts a key-value pair in a map as long as the key is not null
+    private void safePut (Map map, Object key, Object value)
+    {
+        if ((key != null) && (map != null))
+            map.put(key, value);
+    }
+    // puts a value in a set as long as the object is not null
+    private void safeAdd (Set set, Object value)
+    {
+        if ((value != null) && (set != null))
+            set.add(value);
+    }
 
-	/** Determines if the specified name represents an ejb.
-	 * @param name the fully qualified name to be checked
-	 * @return <code>true</code> if this name represents an ejb; 
-	 * <code>false</code> otherwise.
-	 */
-	public boolean isEjbName (String name)
-	{
-		return mapContainsKey(EJB_NAME, name);
-	}
+    private Map getMap () { return _nameTypeToNameMap; }
 
-	/** Gets the EjbCMPEntityDescriptor which represents the ejb  
-	 * with the specified name.
-	 * @param name the name of the ejb
-	 * @return the EjbCMPEntityDescriptor which represents the ejb.
-	 */
-	public EjbCMPEntityDescriptor getDescriptorForEjbName (String name)
-	{
-		Map ejbMap = (Map)getMap().get(EJB_NAME);
-		Object descriptor = ejbMap.get(name);
+    /** Determines if the specified name represents an ejb.
+     * @param name the fully qualified name to be checked
+     * @return <code>true</code> if this name represents an ejb;
+     * <code>false</code> otherwise.
+     */
+    public boolean isEjbName (String name)
+    {
+        return mapContainsKey(EJB_NAME, name);
+    }
 
-		return (((descriptor != null) && 
-			(descriptor instanceof EjbCMPEntityDescriptor)) ? 
-			(EjbCMPEntityDescriptor)descriptor : null);
-	}
+    /** Gets the EjbCMPEntityDescriptor which represents the ejb
+     * with the specified name.
+     * @param name the name of the ejb
+     * @return the EjbCMPEntityDescriptor which represents the ejb.
+     */
+    public EjbCMPEntityDescriptor getDescriptorForEjbName (String name)
+    {
+        Map ejbMap = (Map)getMap().get(EJB_NAME);
+        Object descriptor = ejbMap.get(name);
 
-	private IASEjbCMPEntityDescriptor getIASDescriptorForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+        return (((descriptor != null) &&
+            (descriptor instanceof EjbCMPEntityDescriptor)) ?
+            (EjbCMPEntityDescriptor)descriptor : null);
+    }
 
-		return (((descriptor != null) && 
-			(descriptor instanceof IASEjbCMPEntityDescriptor)) ? 
-			(IASEjbCMPEntityDescriptor)descriptor : null);
-	}
+    private IASEjbCMPEntityDescriptor getIASDescriptorForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-	/** Gets the name of the abstract bean class which corresponds to the 
-	 * specified ejb name.
-	 * @param name the name of the ejb
-	 * @return the name of the abstract bean for the specified ejb
-	 */
-	public String getAbstractBeanClassForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+        return (((descriptor != null) &&
+            (descriptor instanceof IASEjbCMPEntityDescriptor)) ?
+            (IASEjbCMPEntityDescriptor)descriptor : null);
+    }
 
-		return ((descriptor != null) ? descriptor.getEjbClassName() : null);
-	}
+    /** Gets the name of the abstract bean class which corresponds to the
+     * specified ejb name.
+     * @param name the name of the ejb
+     * @return the name of the abstract bean for the specified ejb
+     */
+    public String getAbstractBeanClassForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-	/** Gets the name of the key class which corresponds to the specified 
-	 * ejb name.
-	 * @param name the name of the ejb
-	 * @return the name of the key class for the ejb
-	 */
-	public String getKeyClassForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+        return ((descriptor != null) ? descriptor.getEjbClassName() : null);
+    }
 
-		return ((descriptor != null) ? 
-			descriptor.getPrimaryKeyClassName() : null);
-	}
+    /** Gets the name of the key class which corresponds to the specified
+     * ejb name.
+     * @param name the name of the ejb
+     * @return the name of the key class for the ejb
+     */
+    public String getKeyClassForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-	/** Gets the name of the ejb which corresponds to the specified abstract 
-	 * schema name.
-	 * @param schemaName the name of the abstract schema
-	 * @return the name of the ejb for the specified abstract schema
-	 */
-	public String getEjbNameForAbstractSchema (String schemaName)
-	{
-		Map abstractSchemaMap = (Map)getMap().get(ABSTRACT_SCHEMA_NAME);
+        return ((descriptor != null) ?
+            descriptor.getPrimaryKeyClassName() : null);
+    }
 
-		return (String)abstractSchemaMap.get(schemaName);
-	}
+    /** Gets the name of the ejb which corresponds to the specified abstract
+     * schema name.
+     * @param schemaName the name of the abstract schema
+     * @return the name of the ejb for the specified abstract schema
+     */
+    public String getEjbNameForAbstractSchema (String schemaName)
+    {
+        Map abstractSchemaMap = (Map)getMap().get(ABSTRACT_SCHEMA_NAME);
 
-	/** Gets the name of the abstract schema which corresponds to the 
-	 * specified ejb.
-	 * @param name the name of the ejb
-	 * @return the name of the abstract schema for the specified ejb
-	 */
-	public String getAbstractSchemaForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+        return (String)abstractSchemaMap.get(schemaName);
+    }
 
-		return ((descriptor != null) ? 
-			descriptor.getAbstractSchemaName() : null);
-	}
+    /** Gets the name of the abstract schema which corresponds to the
+     * specified ejb.
+     * @param name the name of the ejb
+     * @return the name of the abstract schema for the specified ejb
+     */
+    public String getAbstractSchemaForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-	/** Gets the name of the concrete bean class which corresponds to the 
-	 * specified ejb.
-	 * @param name the name of the ejb
-	 * @return the name of the concrete bean for the specified ejb
-	 */
-	public String getConcreteBeanClassForEjbName (String name)
-	{
-		IASEjbCMPEntityDescriptor descriptor = 
-			getIASDescriptorForEjbName(name);
+        return ((descriptor != null) ?
+            descriptor.getAbstractSchemaName() : null);
+    }
 
-		return ((descriptor != null) ? getQualifiedName(
-			getAbstractBeanClassForEjbName(name), 
-			descriptor.getConcreteImplClassName()) : null);
-	}
+    /** Gets the name of the concrete bean class which corresponds to the
+     * specified ejb.
+     * @param name the name of the ejb
+     * @return the name of the concrete bean for the specified ejb
+     */
+    public String getConcreteBeanClassForEjbName (String name)
+    {
+        IASEjbCMPEntityDescriptor descriptor =
+            getIASDescriptorForEjbName(name);
 
-	private String getQualifiedName (String classNameWithPackage, 
-		String classNameToQualify)
-	{
-		if (!StringHelper.isEmpty(classNameToQualify))
-		{
-			String packageName = 
-				JavaTypeHelper.getPackageName(classNameToQualify);
-			
-			if (StringHelper.isEmpty(packageName))	// not already qualified
-			{
-				packageName = 
-					JavaTypeHelper.getPackageName(classNameWithPackage);
+        return ((descriptor != null) ? getQualifiedName(
+            getAbstractBeanClassForEjbName(name),
+            descriptor.getConcreteImplClassName()) : null);
+    }
 
-				if (!StringHelper.isEmpty(packageName))
-					return packageName + '.' + classNameToQualify;
-			}
-		}
+    private String getQualifiedName (String classNameWithPackage,
+        String classNameToQualify)
+    {
+        if (!StringHelper.isEmpty(classNameToQualify))
+        {
+            String packageName =
+                JavaTypeHelper.getPackageName(classNameToQualify);
 
-		return classNameToQualify;
-	}
+            if (StringHelper.isEmpty(packageName))    // not already qualified
+            {
+                packageName =
+                    JavaTypeHelper.getPackageName(classNameWithPackage);
 
-	/** Gets the name of the ejb name which corresponds to the 
-	 * specified persistence-capable class name.
-	 * @param className the name of the persistence-capable
-	 * @return the name of the ejb for the specified persistence-capable
-	 */
-	public String getEjbNameForPersistenceClass (String className)
-	{
-		Map pcMap = (Map)getMap().get(PERSISTENCE_NAME);
+                if (!StringHelper.isEmpty(packageName))
+                    return packageName + '.' + classNameToQualify;
+            }
+        }
 
-		return (String)pcMap.get(className);
-	}
+        return classNameToQualify;
+    }
 
-	/** Gets the name of the persistence-capable class which corresponds to 
-	 * the specified ejb name.
-	 * @param name the name of the ejb
-	 * @return the name of the persistence-capable for the specified ejb
-	 */
-	public String getPersistenceClassForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+    /** Gets the name of the ejb name which corresponds to the
+     * specified persistence-capable class name.
+     * @param className the name of the persistence-capable
+     * @return the name of the ejb for the specified persistence-capable
+     */
+    public String getEjbNameForPersistenceClass (String className)
+    {
+        Map pcMap = (Map)getMap().get(PERSISTENCE_NAME);
 
-		return ((descriptor != null) ? 
-			getPersistenceClassForDescriptor(descriptor) : null);
-	}
+        return (String)pcMap.get(className);
+    }
 
-	private String getPersistenceClassForDescriptor (
-		EjbCMPEntityDescriptor descriptor)
-	{
-		String pcName = ((descriptor instanceof IASEjbCMPEntityDescriptor) ? 
-			((IASEjbCMPEntityDescriptor)descriptor).getPcImplClassName() : 
-			null);
+    /** Gets the name of the persistence-capable class which corresponds to
+     * the specified ejb name.
+     * @param name the name of the ejb
+     * @return the name of the persistence-capable for the specified ejb
+     */
+    public String getPersistenceClassForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-		// use the package name, keep the ejb name
-		if ((pcName != null) && !_expandPCNames)
-		{
-			pcName = JavaTypeHelper.getPackageName(pcName) + 
-				'.' + descriptor.getName();
-		}
+        return ((descriptor != null) ?
+            getPersistenceClassForDescriptor(descriptor) : null);
+    }
 
-		return pcName;
-	}
+    private String getPersistenceClassForDescriptor (
+        EjbCMPEntityDescriptor descriptor)
+    {
+        String pcName = ((descriptor instanceof IASEjbCMPEntityDescriptor) ?
+            ((IASEjbCMPEntityDescriptor)descriptor).getPcImplClassName() :
+            null);
 
-	private boolean mapContainsKey (String stringIndex, String name)
-	{
-		Object mapObject = getMap().get(stringIndex);
-		Set testSet = ((mapObject instanceof Set) ? (Set)mapObject : 
-			((Map)mapObject).keySet());
+        // use the package name, keep the ejb name
+        if ((pcName != null) && !_expandPCNames)
+        {
+            pcName = JavaTypeHelper.getPackageName(pcName) +
+                '.' + descriptor.getName();
+        }
 
-		return ((name != null) ? testSet.contains(name) : false);
-	}
+        return pcName;
+    }
 
-	/** Determines if the specified name represents a local interface.
-	 * @param name the fully qualified name to be checked
-	 * @return <code>true</code> if this name represents a local interface; 
-	 * <code>false</code> otherwise.
-	 */
-	public boolean isLocalInterface (String name)
-	{
-		return mapContainsKey(LOCAL_NAME, name);
-	}
+    private boolean mapContainsKey (String stringIndex, String name)
+    {
+        Object mapObject = getMap().get(stringIndex);
+        Set testSet = ((mapObject instanceof Set) ? (Set)mapObject :
+            ((Map)mapObject).keySet());
 
-	/** Gets the name of the ejb which corresponds to the specified 
-	 * local interface name.
-	 * @param ejbName the name of the ejb which contains fieldName 
-	 * from which to find relationship and therefore the local interface
-	 * @param fieldName the name of the field in the ejb
-	 * @param interfaceName the name of the local interface
-	 * @return the name of the ejb for the specified local interface
-	 */
-	public String getEjbNameForLocalInterface (String ejbName, 
-		String fieldName, String interfaceName)
-	{
-		EjbCMPEntityDescriptor descriptor = 
-			getRelatedEjbDescriptor(ejbName, fieldName);
+        return ((name != null) ? testSet.contains(name) : false);
+    }
 
-		return (((descriptor != null) && !StringHelper.isEmpty(interfaceName)
-			&& interfaceName.equals(descriptor.getLocalClassName())) ? 
-			descriptor.getName() : null);
-	}
+    /** Determines if the specified name represents a local interface.
+     * @param name the fully qualified name to be checked
+     * @return <code>true</code> if this name represents a local interface;
+     * <code>false</code> otherwise.
+     */
+    public boolean isLocalInterface (String name)
+    {
+        return mapContainsKey(LOCAL_NAME, name);
+    }
 
-	/** Gets the name of the local interface which corresponds to the 
-	 * specified ejb name.
-	 * @param name the name of the ejb
-	 * @return the name of the local interface for the specified ejb
-	 */
-	public String getLocalInterfaceForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+    /** Gets the name of the ejb which corresponds to the specified
+     * local interface name.
+     * @param ejbName the name of the ejb which contains fieldName
+     * from which to find relationship and therefore the local interface
+     * @param fieldName the name of the field in the ejb
+     * @param interfaceName the name of the local interface
+     * @return the name of the ejb for the specified local interface
+     */
+    public String getEjbNameForLocalInterface (String ejbName,
+        String fieldName, String interfaceName)
+    {
+        EjbCMPEntityDescriptor descriptor =
+            getRelatedEjbDescriptor(ejbName, fieldName);
 
-		return ((descriptor != null) ? descriptor.getLocalClassName() : null);
-	}
+        return (((descriptor != null) && !StringHelper.isEmpty(interfaceName)
+            && interfaceName.equals(descriptor.getLocalClassName())) ?
+            descriptor.getName() : null);
+    }
 
-	/** Determines if the specified name represents a remote interface.
-	 * @param name the fully qualified name to be checked
-	 * @return <code>true</code> if this name represents a remote interface; 
-	 * <code>false</code> otherwise.
-	 */
-	public boolean isRemoteInterface (String name)
-	{
-		return mapContainsKey(REMOTE_NAME, name);
-	}
+    /** Gets the name of the local interface which corresponds to the
+     * specified ejb name.
+     * @param name the name of the ejb
+     * @return the name of the local interface for the specified ejb
+     */
+    public String getLocalInterfaceForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-	/** Gets the name of the ejb which corresponds to the specified 
-	 * remote interface name.
-	 * @param ejbName the name of the ejb which contains fieldName 
-	 * from which to find relationship and therefore the remote interface
-	 * @param fieldName the name of the field in the ejb
-	 * @param interfaceName the name of the remote interface
-	 * @return the name of the ejb for the specified remote interface
-	 */
-	public String getEjbNameForRemoteInterface (String ejbName, 
-		String fieldName, String interfaceName)
-	{
-		EjbCMPEntityDescriptor descriptor = 
-			getRelatedEjbDescriptor(ejbName, fieldName);
+        return ((descriptor != null) ? descriptor.getLocalClassName() : null);
+    }
 
-		return (((descriptor != null) && !StringHelper.isEmpty(interfaceName)
-			&& interfaceName.equals(descriptor.getRemoteClassName())) ? 
-			descriptor.getName() : null);
-	}
+    /** Determines if the specified name represents a remote interface.
+     * @param name the fully qualified name to be checked
+     * @return <code>true</code> if this name represents a remote interface;
+     * <code>false</code> otherwise.
+     */
+    public boolean isRemoteInterface (String name)
+    {
+        return mapContainsKey(REMOTE_NAME, name);
+    }
 
-	/** Gets the name of the remote interface which corresponds to the 
-	 * specified ejb name.
-	 * @param name the name of the ejb
-	 * @return the name of the remote interface for the specified ejb
-	 */
-	public String getRemoteInterfaceForEjbName (String name)
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
+    /** Gets the name of the ejb which corresponds to the specified
+     * remote interface name.
+     * @param ejbName the name of the ejb which contains fieldName
+     * from which to find relationship and therefore the remote interface
+     * @param fieldName the name of the field in the ejb
+     * @param interfaceName the name of the remote interface
+     * @return the name of the ejb for the specified remote interface
+     */
+    public String getEjbNameForRemoteInterface (String ejbName,
+        String fieldName, String interfaceName)
+    {
+        EjbCMPEntityDescriptor descriptor =
+            getRelatedEjbDescriptor(ejbName, fieldName);
 
-		return ((descriptor != null) ? descriptor.getRemoteClassName() : null);
-	}
+        return (((descriptor != null) && !StringHelper.isEmpty(interfaceName)
+            && interfaceName.equals(descriptor.getRemoteClassName())) ?
+            descriptor.getName() : null);
+    }
 
-	private EjbCMPEntityDescriptor getRelatedEjbDescriptor (
-		String ejbName, String ejbFieldName)
-	{
-		EjbCMPEntityDescriptor descriptor = ((ejbName != null) ? 
-			getDescriptorForEjbName(ejbName) : null);
+    /** Gets the name of the remote interface which corresponds to the
+     * specified ejb name.
+     * @param name the name of the ejb
+     * @return the name of the remote interface for the specified ejb
+     */
+    public String getRemoteInterfaceForEjbName (String name)
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptorForEjbName(name);
 
-		if (descriptor != null)
-		{
-			PersistenceDescriptor persistenceDescriptor =
-				descriptor.getPersistenceDescriptor();
-			CMRFieldInfo cmrf =
-				persistenceDescriptor.getCMRFieldInfoByName(ejbFieldName);
-			
-			return cmrf.role.getPartner().getOwner();
-		}
+        return ((descriptor != null) ? descriptor.getRemoteClassName() : null);
+    }
 
-		return null;
-	}
+    private EjbCMPEntityDescriptor getRelatedEjbDescriptor (
+        String ejbName, String ejbFieldName)
+    {
+        EjbCMPEntityDescriptor descriptor = ((ejbName != null) ?
+            getDescriptorForEjbName(ejbName) : null);
 
-	/** Gets the name of the field in the ejb which corresponds to the 
-	 * specified persistence-capable class name and field name pair.
-	 * @param className the name of the persistence-capable
-	 * @param fieldName the name of the field in the persistence-capable
-	 * @return the name of the field in the ejb for the specified 
-	 * persistence-capable field
-	 */
-	public String getEjbFieldForPersistenceField (String className, 
-		String fieldName)
-	{
-		return fieldName;
-	}
+        if (descriptor != null)
+        {
+            PersistenceDescriptor persistenceDescriptor =
+                descriptor.getPersistenceDescriptor();
+            CMRFieldInfo cmrf =
+                persistenceDescriptor.getCMRFieldInfoByName(ejbFieldName);
 
-	/** Gets the name of the field in the persistence-capable class which 
-	 * corresponds to the specified ejb name and field name pair.
-	 * @param name the name of the ejb
-	 * @param fieldName the name of the field in the ejb
-	 * @return the name of the field in the persistence-capable for the 
-	 * specified ejb field
-	 */
-	public String getPersistenceFieldForEjbField (String name, String fieldName)
-	{
-		return fieldName;
-	}
+            return cmrf.role.getPartner().getOwner();
+        }
+
+        return null;
+    }
+
+    /** Gets the name of the field in the ejb which corresponds to the
+     * specified persistence-capable class name and field name pair.
+     * @param className the name of the persistence-capable
+     * @param fieldName the name of the field in the persistence-capable
+     * @return the name of the field in the ejb for the specified
+     * persistence-capable field
+     */
+    public String getEjbFieldForPersistenceField (String className,
+        String fieldName)
+    {
+        return fieldName;
+    }
+
+    /** Gets the name of the field in the persistence-capable class which
+     * corresponds to the specified ejb name and field name pair.
+     * @param name the name of the ejb
+     * @param fieldName the name of the field in the ejb
+     * @return the name of the field in the persistence-capable for the
+     * specified ejb field
+     */
+    public String getPersistenceFieldForEjbField (String name, String fieldName)
+    {
+        return fieldName;
+    }
 }

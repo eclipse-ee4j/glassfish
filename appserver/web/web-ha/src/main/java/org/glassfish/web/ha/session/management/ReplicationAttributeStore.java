@@ -36,16 +36,16 @@ import java.util.logging.Level;
  * @author Rajiv Mordani
  */
 public class ReplicationAttributeStore extends ReplicationStore {
-    
+
 
     /** Creates a new instance of ReplicationAttributeStore */
     public ReplicationAttributeStore(JavaEEIOUtils ioUtils) {
         super(ioUtils);
         setLogLevel();
     }
-    
+
     // HAStorePoolElement methods begin
-    
+
     /**
      * Save the specified Session into this Store.  Any previously saved
      * information for the associated session identifier is replaced.
@@ -53,7 +53,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
      * @param session Session to be saved
      *
      * @exception IOException if an input/output error occurs
-     */    
+     */
     public void valveSave(Session session) throws IOException {
         if (!(session instanceof HASession)) {
             return;
@@ -65,11 +65,11 @@ public class ReplicationAttributeStore extends ReplicationStore {
             this.doValveSave(session);
             haSess.setPersistent(true);
         }
-        haSess.setDirty(false);        
-    } 
-    
+        haSess.setDirty(false);
+    }
+
     // Store method begin
-    
+
     /**
      * Save the specified Session into this Store.  Any previously saved
      * information for the associated session identifier is replaced.
@@ -77,7 +77,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
      * @param session Session to be saved
      *
      * @exception IOException if an input/output error occurs
-     */    
+     */
     public void save(Session session) throws IOException {
         if (!(session instanceof HASession)) {
             return;
@@ -89,10 +89,10 @@ public class ReplicationAttributeStore extends ReplicationStore {
             this.doSave(session);
             haSess.setPersistent(true);
         }
-        haSess.setDirty(false);        
+        haSess.setDirty(false);
     }
-    
-    
+
+
     /**
      * Save the specified Session into this Store.  Any previously saved
      * information for the associated session identifier is replaced.
@@ -108,8 +108,8 @@ public class ReplicationAttributeStore extends ReplicationStore {
             if (session instanceof HASession) {
                 _logger.fine("ReplicationAttributeStore>>valveSave:ssoId=" + ((HASession)session).getSsoId());
             }
-        }         
-        
+        }
+
         // begin 6470831 do not save if session is not valid
         if( !((StandardSession)session).getIsValid() ) {
             return;
@@ -130,11 +130,11 @@ public class ReplicationAttributeStore extends ReplicationStore {
         }
         BackingStore<String, CompositeMetadata> replicator = getCompositeMetadataBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationAttributeStore>>save: replicator: " + replicator);                    
-        }         
+            _logger.fine("ReplicationAttributeStore>>save: replicator: " + replicator);
+        }
         CompositeMetadata compositeMetadata
             = createCompositeMetadata(modAttrSession);
-                
+
         try {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.fine("CompositeMetadata is " + compositeMetadata + " id is " + session.getIdInternal());
@@ -169,16 +169,16 @@ public class ReplicationAttributeStore extends ReplicationStore {
             return;
         }
 
-        // end 6470831        
+        // end 6470831
         ModifiedAttributeHASession modAttrSession
                 = (ModifiedAttributeHASession)session;
         BackingStore<String, CompositeMetadata> replicator = getCompositeMetadataBackingStore();
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationAttributeStore>>doSave: replicator: " + replicator);                    
-        }         
-        CompositeMetadata compositeMetadata 
+            _logger.fine("ReplicationAttributeStore>>doSave: replicator: " + replicator);
+        }
+        CompositeMetadata compositeMetadata
             = createCompositeMetadata(modAttrSession);
-                
+
         try {
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.fine("CompositeMetadata is " + compositeMetadata + " id is " + session.getIdInternal());
@@ -237,7 +237,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
 
     public Session getSession(CompositeMetadata metadata)
-        throws IOException 
+        throws IOException
     {
         if (metadata == null || metadata.getState() == null) {
             return null;
@@ -246,24 +246,24 @@ public class ReplicationAttributeStore extends ReplicationStore {
         Session _session = null;
         BufferedInputStream bis = null;
         ByteArrayInputStream bais = null;
-        Loader loader = null;    
+        Loader loader = null;
         ClassLoader classLoader = null;
         ObjectInputStream ois = null;
         Container container = manager.getContainer();
         java.security.Principal pal=null; //MERGE chg added
         String ssoId = null;
         long version = 0L;
-            
+
         try
         {
             bais = new ByteArrayInputStream(state);
             bis = new BufferedInputStream(bais);
-            
+
             //Get the username, ssoId from metadata
             //ssoId = metadata.getSsoId();
             ssoId = metadata.getStringExtraParam();
             version = metadata.getVersion();
-            //debug("ReplicationStore.getSession()  id="+id+"  username ="+username+";");    
+            //debug("ReplicationStore.getSession()  id="+id+"  username ="+username+";");
 
             if(_logger.isLoggable(Level.FINEST)) {
                 _logger.finest("loaded session from replicationstore, length = "+state.length);
@@ -275,7 +275,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
             if (loader != null) {
                 classLoader = loader.getClassLoader();
             }
-            
+
             if (classLoader != null) {
 
                 try {
@@ -284,13 +284,13 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
             }
             if (ois == null) {
-                ois = new ObjectInputStream(bis); 
+                ois = new ObjectInputStream(bis);
             }
-            
+
             if(ois != null) {
                 try {
                     _session = readSession(manager, ois);
-                } 
+                }
                 finally {
 
                     try {
@@ -312,7 +312,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
         {
             throw e;
         }
-        String username = ((HASession)_session).getUserName(); 
+        String username = ((HASession)_session).getUserName();
         if((username !=null) && (!username.equals("")) && _session.getPrincipal() == null) {
             if (_debug > 0) {
                 debug("Username retrieved is "+username);
@@ -324,16 +324,16 @@ public class ReplicationAttributeStore extends ReplicationStore {
             if(pal != null) {
                 _session.setPrincipal(pal);
                 if (_debug > 0) {
-                    debug("getSession principal="+pal+" was added to session="+_session); 
-                }                
-            }            
+                    debug("getSession principal="+pal+" was added to session="+_session);
+                }
+            }
         }
-        //--SRI        
-        
+        //--SRI
+
         _session.setNew(false);
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationAttributeStore>>ssoId=" + ssoId);                       
-        }        
+            _logger.fine("ReplicationAttributeStore>>ssoId=" + ssoId);
+        }
 /*
         ((BaseHASession)_session).setSsoId(ssoId);
         if((ssoId !=null) && (!ssoId.equals("")))
@@ -341,7 +341,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
 */
         ((HASession)_session).setVersion(version);
         ((HASession)_session).setDirty(false);
-        
+
         //now load entries from deserialized entries collection
         ((ModifiedAttributeHASession)_session).clearAttributeStates();
         byte[] entriesState = metadata.getState();
@@ -353,13 +353,13 @@ public class ReplicationAttributeStore extends ReplicationStore {
         loadAttributes((ModifiedAttributeHASession)_session, metadata.getEntries());
         return _session;
     }
-    
+
 
     //metadata related
-    
+
     private void postSaveUpdate(ModifiedAttributeHASession modAttrSession) {
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationAttributeStore>>postSaveUpdate");                       
+            _logger.fine("ReplicationAttributeStore>>postSaveUpdate");
         }
         List<String> addedAttrs = modAttrSession.getAddedAttributes();
         List<String> modifiedAttrs = modAttrSession.getModifiedAttributes();
@@ -370,9 +370,9 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
         postProcessSetAttrStates(modAttrSession, addedAttrs);
         postProcessSetAttrStates(modAttrSession, modifiedAttrs);
-        
+
     }
-    
+
     private void postProcessSetAttrStates(ModifiedAttributeHASession modAttrSession, List<String> attrsList) {
         for(int i=0; i<attrsList.size(); i++) {
             String nextStateName = attrsList.get(i);
@@ -380,9 +380,9 @@ public class ReplicationAttributeStore extends ReplicationStore {
             modAttrSession.setAttributeStateDirty(nextStateName, false);
         }
     }
-    
+
     private CompositeMetadata createCompositeMetadata(ModifiedAttributeHASession modAttrSession) {
-        
+
         byte[] trunkState = null;
         if (modAttrSession.isNew()) {
             try {
@@ -392,9 +392,9 @@ public class ReplicationAttributeStore extends ReplicationStore {
             }
         }
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationAttributeStore>>createCompositeMetadata:trunkState=" + trunkState);                       
-        }         
-       
+            _logger.fine("ReplicationAttributeStore>>createCompositeMetadata:trunkState=" + trunkState);
+        }
+
         List<SessionAttributeMetadata> entries = new ArrayList<SessionAttributeMetadata>();
         List<String> addedAttrs = modAttrSession.getAddedAttributes();
         List<String> modifiedAttrs = modAttrSession.getModifiedAttributes();
@@ -402,22 +402,22 @@ public class ReplicationAttributeStore extends ReplicationStore {
         printAttrList("ADDED", addedAttrs);
         printAttrList("MODIFIED", modifiedAttrs);
         printAttrList("DELETED", deletedAttrs);
-        
-        addToEntries(modAttrSession, entries, 
+
+        addToEntries(modAttrSession, entries,
                 SessionAttributeMetadata.Operation.ADD, addedAttrs);
-        addToEntries(modAttrSession, entries, 
+        addToEntries(modAttrSession, entries,
                 SessionAttributeMetadata.Operation.UPDATE, modifiedAttrs);
         addToEntries(modAttrSession, entries,
                 SessionAttributeMetadata.Operation.DELETE, deletedAttrs);
 
-        CompositeMetadata result 
+        CompositeMetadata result
             = new CompositeMetadata(modAttrSession.getVersion(),
                 modAttrSession.getLastAccessedTimeInternal(),
                 modAttrSession.getMaxInactiveInterval()*1000L,
                 entries, trunkState, null);
         return result;
     }
-    
+
     private void printAttrList(String attrListType, List<String> attrList) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.fine("AttributeType = " + attrListType);
@@ -428,7 +428,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
             }
         }
     }
-    
+
     private void addToEntries(ModifiedAttributeHASession modAttrSession,
             List<SessionAttributeMetadata> entries, SessionAttributeMetadata.Operation op,
             List<String> attrList) {
@@ -447,7 +447,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
             entries.add(nextAttrMetadata);
         }
     }
-    
+
     /**
     * Create an byte[] for the session that we can then pass to
     * the HA Store.
@@ -465,7 +465,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
         byte[] obs;
         try {
             bos = new ByteArrayOutputStream();
-            
+
 
             try {
                 oos = ioUtils.createObjectOutputStream(new BufferedOutputStream(bos), true);
@@ -473,8 +473,8 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
             //use normal ObjectOutputStream if there is a failure during stream creation
             if(oos == null) {
-                oos = new ObjectOutputStream(new BufferedOutputStream(bos)); 
-            }            
+                oos = new ObjectOutputStream(new BufferedOutputStream(bos));
+            }
             oos.writeObject(attributeValue);
             oos.close();
             oos = null;
@@ -489,7 +489,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
         return obs;
     }
-    
+
     /**
     * Given a byte[] containing session data, return a session
     * object
@@ -500,23 +500,23 @@ public class ReplicationAttributeStore extends ReplicationStore {
     * @return
     *   A newly created object for the given session attribute data
     */
-    protected Object getAttributeValue(byte[] state) 
-        throws IOException, ClassNotFoundException 
+    protected Object getAttributeValue(byte[] state)
+        throws IOException, ClassNotFoundException
     {
         Object attributeValue = null;
         BufferedInputStream bis = null;
         ByteArrayInputStream bais = null;
-        Loader loader = null;    
+        Loader loader = null;
         ClassLoader classLoader = null;
         ObjectInputStream ois = null;
         Container container = manager.getContainer();
-        
-            
+
+
         try
         {
             bais = new ByteArrayInputStream(state);
             bis = new BufferedInputStream(bais);
-            
+
             if (container != null) {
                 loader = container.getLoader();
             }
@@ -524,7 +524,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
             if (loader != null) {
                 classLoader = loader.getClassLoader();
             }
-            
+
             if (classLoader != null) {
 
                 try {
@@ -533,13 +533,13 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
             }
             if (ois == null) {
-                ois = new ObjectInputStream(bis); 
+                ois = new ObjectInputStream(bis);
             }
-            
+
             if(ois != null) {
                 try {
                     attributeValue = ois.readObject();
-                } 
+                }
                 finally {
 
                     try {
@@ -563,11 +563,11 @@ public class ReplicationAttributeStore extends ReplicationStore {
         catch(IOException e)
         {
             throw e;
-        }      
+        }
 
         return attributeValue;
     }
-    
+
     //new serialization code for Collection
     /**
     * Create an byte[] for the session that we can then pass to
@@ -582,11 +582,11 @@ public class ReplicationAttributeStore extends ReplicationStore {
         ByteArrayOutputStream bos = null;
         ObjectOutputStream oos = null;
 
-        
+
         byte[] obs;
         try {
             bos = new ByteArrayOutputStream();
-            
+
 
             try {
                 oos = ioUtils.createObjectOutputStream(new BufferedOutputStream(bos), true);
@@ -594,7 +594,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
             //use normal ObjectOutputStream if there is a failure during stream creation
             if(oos == null) {
-                oos = new ObjectOutputStream(new BufferedOutputStream(bos)); 
+                oos = new ObjectOutputStream(new BufferedOutputStream(bos));
             }
             //first write out the entriesSize
             int entriesSize = entries.size();
@@ -617,7 +617,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
         return obs;
     }
-    
+
     /**
     * Given a byte[] containing session data, return a session
     * object
@@ -628,22 +628,22 @@ public class ReplicationAttributeStore extends ReplicationStore {
     * @return
     *   A newly created object for the given session attribute data
     */
-    protected Object getAttributeValueCollection(byte[] state) 
-        throws IOException, ClassNotFoundException 
+    protected Object getAttributeValueCollection(byte[] state)
+        throws IOException, ClassNotFoundException
     {
         Collection<Object> attributeValueList = new ArrayList<Object>();
         BufferedInputStream bis = null;
         ByteArrayInputStream bais = null;
-        Loader loader = null;    
+        Loader loader = null;
         ClassLoader classLoader = null;
         ObjectInputStream ois = null;
         Container container = manager.getContainer();
-            
+
         try
         {
             bais = new ByteArrayInputStream(state);
             bis = new BufferedInputStream(bais);
-            
+
             if (container != null) {
                 loader = container.getLoader();
             }
@@ -651,7 +651,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
             if (loader != null) {
                 classLoader = loader.getClassLoader();
             }
-            
+
             if (classLoader != null) {
 
                 try {
@@ -660,7 +660,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
 
             }
             if (ois == null) {
-                ois = new ObjectInputStream(bis); 
+                ois = new ObjectInputStream(bis);
             }
             if(ois != null) {
                 try {
@@ -674,7 +674,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
                         Object nextAttributeValue = ois.readObject();
                         attributeValueList.add(nextAttributeValue);
                     }
-                } 
+                }
                 finally {
                     try {
                         ois.close();
@@ -695,11 +695,11 @@ public class ReplicationAttributeStore extends ReplicationStore {
         catch(IOException e)
         {
             throw e;
-        }      
+        }
 
         return attributeValueList;
-    }    
-    
+    }
+
     //end new serialization code for Collection
 
     /**
@@ -713,8 +713,8 @@ public class ReplicationAttributeStore extends ReplicationStore {
     *
     * @return
     *   A newly created object for the given session attribute data
-    */    
-    protected void loadAttributes(ModifiedAttributeHASession modifiedAttributeSession, 
+    */
+    protected void loadAttributes(ModifiedAttributeHASession modifiedAttributeSession,
             Collection attributeList) {
         if(_logger.isLoggable(Level.FINEST)) {
             _logger.finest("in loadAttributes -- ReplicationAttributeStore : session id=" + modifiedAttributeSession.getIdInternal());
@@ -724,13 +724,13 @@ public class ReplicationAttributeStore extends ReplicationStore {
         //SessionAttributeMetadata.Operation thisAttrOp = null;
         Object thisAttrVal = null;
         Iterator it = attributeList.iterator();
-        while (it.hasNext()) { 
+        while (it.hasNext()) {
             SessionAttributeMetadata nextAttrMetadata = (SessionAttributeMetadata)it.next();
             thisAttrName = nextAttrMetadata.getAttributeName();
             //thisAttrOp = nextAttrMetadata.getOperation();
             byte[] nextAttrState = nextAttrMetadata.getState();
             thisAttrVal = null;
-            try { 
+            try {
                 thisAttrVal = getAttributeValue(nextAttrState);
             } catch (ClassNotFoundException ex1) {
                 //FIXME log?
@@ -747,9 +747,9 @@ public class ReplicationAttributeStore extends ReplicationStore {
                 modifiedAttributeSession.setAttributeStatePersistent(thisAttrName, false);
                 modifiedAttributeSession.setAttributeStateDirty(thisAttrName, false);
             } //end if
-        } //end while 
-    } 
-    
+        } //end while
+    }
+
 
 
 /*
@@ -757,17 +757,17 @@ public class ReplicationAttributeStore extends ReplicationStore {
         byte[] result = null;
         try {
             result = getByteArrayFromCollection(entries);
-        } catch (IOException ex) {} 
+        } catch (IOException ex) {}
         return result;
     }
-    
+
     private byte[] serializeStatesCollectionPrevious(Collection entries) {
         byte[] result = null;
         try {
             result = getByteArray(entries);
-        } catch (IOException ex) {} 
+        } catch (IOException ex) {}
         return result;
-    }    
+    }
 */
 
 
@@ -777,10 +777,10 @@ public class ReplicationAttributeStore extends ReplicationStore {
             result = (Collection)getAttributeValueCollection(entriesState);
         } catch (ClassNotFoundException ex1) {
             // FIXME log?
-        } catch (IOException ex2) {}        
+        } catch (IOException ex2) {}
         return result;
-    } 
-    
+    }
+
 /*
     private Collection deserializeStatesCollectionPrevious(byte[] entriesState) {
         Collection result = new ArrayList();
@@ -788,9 +788,9 @@ public class ReplicationAttributeStore extends ReplicationStore {
             result = (Collection)getAttributeValue(entriesState);
         } catch (ClassNotFoundException ex1) {
               // FIXME log?
-        } catch (IOException ex2) {}        
+        } catch (IOException ex2) {}
         return result;
-    }     
+    }
 */
 
 }

@@ -25,7 +25,7 @@
          domain="Catalina"
          group="Logger"
          type="org.apache.catalina.logger.FileLogger">
-    
+
     <attribute name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
@@ -34,23 +34,23 @@
     <attribute name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
     <attribute name="directory"
                description="The directory in which log files are created"
                type="java.lang.String"/>
-      
+
     <attribute name="prefix"
                description="The prefix that is added to log file filenames"
                type="java.lang.String"/>
-      
+
     <attribute name="suffix"
                description="The suffix that is added to log file filenames"
                type="java.lang.String"/>
-      
+
     <attribute name="timestamp"
                description="Should logged messages be date/time stamped?"
                type="boolean"/>
-      
+
     <attribute   name="verbosity"
                description="The verbosity level for above which log messages may be
                filtered"
@@ -62,41 +62,41 @@
          domain="Catalina"
          group="Logger"
          type="org.apache.catalina.logger.SystemErrLogger">
-    
+
     <attribute name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute   name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
     <attribute   name="verbosity"
                description="The verbosity level for above which log messages may be filtered"
                type="int"/>
     </mbean>
-  
-  
+
+
   <mbean name="SystemOutLogger"
          description="Simple implementation of Logger that writes to System.out"
          domain="Catalina"
          group="Logger"
          type="org.apache.catalina.logger.SystemOutLogger">
-    
+
     <attribute   name="className"
                description="Fully qualified class name of the managed object"
                type="java.lang.String"
                writeable="false"/>
-      
+
     <attribute   name="debug"
                description="The debugging detail level for this component"
                type="int"/>
-      
+
     <attribute   name="verbosity"
                description="The verbosity level for above which log messages may be filtered"
                type="int"/>
   </mbean>
-  
+
 
 </mbeans-descriptors>

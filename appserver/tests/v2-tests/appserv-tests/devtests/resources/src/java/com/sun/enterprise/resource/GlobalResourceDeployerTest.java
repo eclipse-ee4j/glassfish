@@ -38,7 +38,7 @@ public class GlobalResourceDeployerTest extends TestCase {
     ElementProperty [] testProps;
     String [] testNames;
     String [] testValues;
-    
+
     /** Creates a new instance of ConnectorConnectionPoolDeployerTest */
     public GlobalResourceDeployerTest(String name) {
          super(name);
@@ -55,7 +55,7 @@ public class GlobalResourceDeployerTest extends TestCase {
         assertEquals(result[1], testNames[1]);
         assertEquals(result[2], testNames[2]);
     }
-    
+
     /**
      * Tests the getPropNamesAsStrArr method with null param.
      *
@@ -64,7 +64,7 @@ public class GlobalResourceDeployerTest extends TestCase {
         String [] result = deployer.getPropNamesAsStrArr(null);
         assertNull(result);
     }
-    
+
     /**
      * Tests the getPropValuesAsStrArr method.
      *
@@ -74,9 +74,9 @@ public class GlobalResourceDeployerTest extends TestCase {
         assertNotNull(result);
         assertEquals(result[0], testValues[0]);
         assertEquals(result[1], testValues[1]);
-        assertEquals(result[2], testValues[2]);   
+        assertEquals(result[2], testValues[2]);
     }
-    
+
     /**
      * Tests the getPropValuesAsStrArr method with null param.
      */
@@ -84,7 +84,7 @@ public class GlobalResourceDeployerTest extends TestCase {
         String [] result = deployer.getPropValuesAsStrArr(null);
         assertNull(result);
     }
-    
+
     protected void setUp() {
        deployer = new MailResourceDeployer();
        ElementProperty prop1 = new ElementProperty();
@@ -108,7 +108,7 @@ public class GlobalResourceDeployerTest extends TestCase {
         TestSuite suite = new TestSuite(GlobalResourceDeployerTest.class);
         return suite;
     }
-    
+
      public static void main(String args[]) throws Exception {
         final TestRunner runner= new TestRunner();
         final TestResult result =

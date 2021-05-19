@@ -23,11 +23,11 @@
   <alternatives>
     <class>test.artifacts.MockPaymentProcessor</class>
     <!-- DisabledMockPaymentProcessor is not enabled -->
-    <!-- 
+    <!--
         <class>test.artifacts.DisabledMockPaymentProcessor</class>
     -->
-    
+
     <!--  MockCashReliablePaymentProcessor and MockChequePaymentProcessor are not enabled -->
   </alternatives>
-  
+
 </beans>

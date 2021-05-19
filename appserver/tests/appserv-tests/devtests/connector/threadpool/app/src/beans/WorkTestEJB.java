@@ -32,13 +32,13 @@ public class WorkTestEJB implements SessionBean {
 
     public WorkTestEJB() {}
 
-    public void ejbCreate() 
+    public void ejbCreate()
         throws CreateException {
         System.out.println("bean removed");
     }
 
     public void executeTest() {
-	try {
+        try {
             Controls.setup();
             Controls.submit();
             Controls.triggerWork();
@@ -46,13 +46,13 @@ public class WorkTestEJB implements SessionBean {
         } catch (Exception e) {
             e.printStackTrace(System.out);
             throw new EJBException(e);
-	}
+        }
     }
 
     public void setSessionContext(SessionContext context) {
         try {
             Context ic = new InitialContext();
-	    Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
+            Controls = (MyAdminObject) ic.lookup("java:comp/env/eis/testAdmin");
         } catch (Exception ex) {
             ex.printStackTrace();
         }

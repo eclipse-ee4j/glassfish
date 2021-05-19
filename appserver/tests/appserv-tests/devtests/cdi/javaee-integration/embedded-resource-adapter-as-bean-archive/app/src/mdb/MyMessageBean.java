@@ -46,7 +46,7 @@ public class MyMessageBean implements MessageDrivenBean, MyMessageListener {
      * setMessageDrivenContext method, declared as public (but not final or
      * static), with a return type of void, and with one argument of type
      * jakarta.ejb.MessageDrivenContext.
-     * 
+     *
      * @param mdc
      *            the context to set
      */
@@ -64,9 +64,9 @@ public class MyMessageBean implements MessageDrivenBean, MyMessageListener {
     /**
      * onMessage method, declared as public (but not final or static), with a
      * return type of void, and with one argument of type jakarta.jms.Message.
-     * 
+     *
      * Casts the incoming Message to a TextMessage and displays the text.
-     * 
+     *
      * @param inMessage
      *            the incoming message
      */
@@ -123,14 +123,14 @@ public class MyMessageBean implements MessageDrivenBean, MyMessageListener {
                  * debug("Looked up Datasource\n");
                  * debug("Get JDBC connection, auto sign on"); dbConnection =
                  * ds.getConnection();
-                 * 
+                 *
                  * Statement stmt = dbConnection.createStatement(); String query
                  * = "SELECT id from messages where id = 'QQ'"; ResultSet
                  * results = stmt.executeQuery(query); results.next();
                  * System.out.println("QQ has balance " +
                  * results.getInt("balance") + " dollars"); results.close();
                  * stmt.close();
-                 * 
+                 *
                  * System.out.println("Read one account\n");
                  */
 

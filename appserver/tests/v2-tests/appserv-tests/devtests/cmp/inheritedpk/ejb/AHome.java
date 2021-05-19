@@ -24,9 +24,9 @@ import java.util.*;
  */
 
 public interface AHome extends jakarta.ejb.EJBHome {
-    
+
     public  A findByPrimaryKey(APK pk)  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
-    
+
     public  A create(long i, java.lang.String name, double s) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

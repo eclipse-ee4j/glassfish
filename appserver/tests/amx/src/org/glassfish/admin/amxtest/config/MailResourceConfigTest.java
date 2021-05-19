@@ -83,7 +83,7 @@ public final class MailResourceConfigTest
             result = createInstance(dc, getDefaultInstanceName(),
                                     MAIL_RESOURCE_HOST, MAIL_RESOURCE_USER, MAIL_RESOURCE_FROM, OPTIONS);
             assert ! AttributeResolverHelper.resolveBoolean( result, "Enabled" );
-            
+
             final StandaloneServerConfig serverConfig = dc.getServersConfig().getStandaloneServerConfigMap().get("server");
 
             final Map<String, String> options = new HashMap<String, String>();

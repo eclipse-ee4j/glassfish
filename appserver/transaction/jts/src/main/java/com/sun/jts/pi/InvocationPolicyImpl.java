@@ -29,8 +29,7 @@ import org.omg.CosTransactions.INVOCATION_POLICY_TYPE;
  * @author Ram Jeyaraman 11/11/2000
  * @version 1.0
  */
-public class InvocationPolicyImpl
-        extends LocalObject implements InvocationPolicy {
+public class InvocationPolicyImpl extends LocalObject implements InvocationPolicy {
 
     private short value = EITHER.value;
 
@@ -38,31 +37,42 @@ public class InvocationPolicyImpl
         this.value = EITHER.value;
     }
 
+
     public InvocationPolicyImpl(short value) {
         this.value = value;
     }
 
     // org.omg.CosTransactions.InvocationPolicyOperations implementation
 
+
+    @Override
     public short value() {
         return this.value;
     }
 
     // org.omg.CORBA.PolicyOperations implementation
 
+
+    @Override
     public int policy_type() {
-	return INVOCATION_POLICY_TYPE.value;
+        return INVOCATION_POLICY_TYPE.value;
     }
 
+
+    @Override
     public Policy copy() {
-	return new InvocationPolicyImpl(this.value);
+        return new InvocationPolicyImpl(this.value);
     }
 
+
+    @Override
     public void destroy() {
-	value = EITHER.value;
+        value = EITHER.value;
     }
 
+
+    @Override
     public String toString() {
-	return "InvocationPolicy[" + this.value + "]";
+        return "InvocationPolicy[" + this.value + "]";
     }
 }

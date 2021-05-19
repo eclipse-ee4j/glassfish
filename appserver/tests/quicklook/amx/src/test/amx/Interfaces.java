@@ -36,7 +36,7 @@ class Interfaces {
     public Interfaces()
     {
         mInterfaces = new HashMap<String, Class<? extends AMXProxy>>();
-        
+
         add(
             DomainRoot.class,
             Ext.class,
@@ -62,7 +62,7 @@ class Interfaces {
             add( clazz );
         }
     }
-    
+
     public final void add( final Class<? extends AMXProxy> clazz )
     {
         final String type = Util.deduceType(clazz);
@@ -70,26 +70,26 @@ class Interfaces {
         {
             throw new IllegalArgumentException("Interface already exists for type " + type );
         }
-        
+
         mInterfaces.put( type, clazz );
     }
-    
+
     public List<Class<? extends AMXProxy>> all()
     {
         return new ArrayList( mInterfaces.values() );
     }
-    
+
     public Class<? extends AMXProxy> get(final String type)
     {
         Class<? extends AMXProxy> intf = mInterfaces.get(type);
-        
+
         if ( intf == null )
         {
             // a type is not required to have an interface
             //System.out.println( "No AMXProxy interface for type: " + type + " (undesirable, but OK)" );
             intf = AMXProxy.class;
         }
-        
+
         return intf;
     }
 }

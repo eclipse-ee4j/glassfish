@@ -24,7 +24,7 @@ import java.io.IOException;
  *
  */
 public interface LogParserListener {
-    
+
     /**
      * Invoked when the parser parses a log record from an input stream.
      * @param object
@@ -37,10 +37,10 @@ public interface LogParserListener {
      * @param objects
      */
     public void outputSummary(BufferedWriter writer, Object ... objects) throws IOException;
-    
+
     /**
-     * Release any resources that were acquired during the initialization. 
+     * Release any resources that were acquired during the initialization.
      */
     public void close() throws IOException;
-    
+
 }

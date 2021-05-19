@@ -28,10 +28,10 @@ import jakarta.jws.WebMethod;
 )
 public class HelloWS {
 
-	public HelloWS() {}
+        public HelloWS() {}
 
-	@WebMethod(operationName="sayHello", action="urn:SayHello")
-	public String sayHello(String who) {
-		return "Servlet WS:" + who;
-	}
+        @WebMethod(operationName="sayHello", action="urn:SayHello")
+        public String sayHello(String who) {
+                return "Servlet WS:" + who;
+        }
 }

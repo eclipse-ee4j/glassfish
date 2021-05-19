@@ -43,7 +43,7 @@ public class HttpCompressionTest extends BaseDevTest {
     public void run() {
         try {
             final int port = Integer.valueOf(antProp("http.port"));
-				final String path = "configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.compression=";
+                                final String path = "configs.config.server-config.network-config.protocols.protocol.http-listener-1.http.compression=";
             final String[] schemes = {"gzip", "lzma"};
             for (String scheme : schemes) {
                 String header = scheme + "-";
@@ -66,7 +66,7 @@ public class HttpCompressionTest extends BaseDevTest {
                 get("localhost", port, false, "compressed-output-off-2", scheme);
             }
         } catch (Exception e) {
-			  report(e.getMessage(), false);
+                          report(e.getMessage(), false);
             throw new RuntimeException(e.getMessage(), e);
         } finally {
             stat.printSummary();
@@ -94,8 +94,8 @@ public class HttpCompressionTest extends BaseDevTest {
                 found |= line.toLowerCase().contains("content-encoding: " + compScheme);
                 if (zipped) {
                    chunked |= line.toLowerCase().contains("transfer-encoding: chunked");
-                   contentLength |= !line.toLowerCase().contains("content-length"); 
-		}
+                   contentLength |= !line.toLowerCase().contains("content-length");
+                }
             }
         } finally {
             s.close();

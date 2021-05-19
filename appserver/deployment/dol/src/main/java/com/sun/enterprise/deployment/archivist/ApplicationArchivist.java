@@ -65,13 +65,13 @@ public class ApplicationArchivist extends Archivist<Application> {
 
     /** resources... */
     private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(ApplicationArchivist.class);        
-    
+        new LocalStringManagerImpl(ApplicationArchivist.class);
+
     /** Creates new ApplicationArchivist */
     public ApplicationArchivist() {
         handleRuntimeInfo = true;
     }
-    
+
     /**
      * @return the  module type handled by this archivist
      * as defined in the application DTD
@@ -81,8 +81,8 @@ public class ApplicationArchivist extends Archivist<Application> {
     public ArchiveType getModuleType() {
         return DOLUtils.earType();
     }
-    
-            
+
+
     /**
      * writes the content of an archive to a JarFile
      *
@@ -91,19 +91,19 @@ public class ApplicationArchivist extends Archivist<Application> {
      */
     @Override
     protected void writeContents(ReadableArchive in, WritableArchive out) throws IOException {
-        
+
         Vector filesToSkip = new Vector();
-        
-        if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {	
-	    DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
-	}
-         
+
+        if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
+            DOLUtils.getDefaultLogger().fine("Write " + out.getURI() + " with " + this);
+        }
+
         // any files already written to the output should never be rewritten
         for (Enumeration alreadyWritten = out.entries(); alreadyWritten.hasMoreElements();) {
             String elementName = (String) alreadyWritten.nextElement();
             filesToSkip.add(elementName);
         }
-                
+
         // write this application .ear file contents...
         for (ModuleDescriptor aModule : descriptor.getModules()) {
             Archivist subArchivist = archivistFactory.get().getArchivist(aModule.getModuleType());
@@ -112,10 +112,10 @@ public class ApplicationArchivist extends Archivist<Application> {
             if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().info("Write " + aModule.getArchiveUri() + " with " + subArchivist);
             }
-            
+
             // Create a new jar file inside the application .ear
             WritableArchive internalJar = out.createSubArchive(aModule.getArchiveUri());
-              
+
             // we need to copy the old archive to a temp file so
             // the save method can copy its original contents from
 
@@ -149,15 +149,15 @@ public class ApplicationArchivist extends Archivist<Application> {
                     }
                 }
             }
-                
+
             // no need to copy the bundle from the original jar file
             filesToSkip.add(aModule.getArchiveUri());
         }
-        
+
         // now write the old contents and new descriptors
         super.writeContents(in, out, filesToSkip);
     }
-    
+
     /**
 
     /**
@@ -167,7 +167,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     public Application getDefaultBundleDescriptor() {
         return Application.createApplication();
     }
-    
+
     /**
      * open a new application archive file, read all the deployment descriptors
      *
@@ -176,9 +176,9 @@ public class ApplicationArchivist extends Archivist<Application> {
     @Override
     public Application open(ReadableArchive appArchive)
         throws IOException, SAXException {
-        
+
         setManifest(appArchive.getManifest());
-        
+
         // read the standard deployment descriptors
         Application appDesc = readStandardDeploymentDescriptor(appArchive);
         return openWith(appDesc, appArchive);
@@ -205,7 +205,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                 }
             }
         }
- 
+
         // save the handleRuntimeInfo value first
         boolean origHandleRuntimeInfo = handleRuntimeInfo;
 
@@ -216,7 +216,7 @@ public class ApplicationArchivist extends Archivist<Application> {
 
         // now read the runtime deployment descriptors
         handleRuntimeInfo = origHandleRuntimeInfo;
-        
+
         if (handleRuntimeInfo) {
             readRuntimeDeploymentDescriptor(archive, application);
 
@@ -300,7 +300,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                     ModuleDescriptor<BundleDescriptor> md = new ModuleDescriptor<BundleDescriptor>();
                     md.setArchiveUri(uri);
                     md.setModuleType(DOLUtils.warType());
-                    // the context root will be set later after 
+                    // the context root will be set later after
                     // we process the sub modules
                     app.addModule(md);
                 }
@@ -350,7 +350,7 @@ public class ApplicationArchivist extends Archivist<Application> {
 
                     //Still could not decide between an ejb and a library
                     unknowns.add(subArchive);
-                    
+
                     // Prevent this unknown archive from being closed in the
                     // finally block, because the same object will be used in
                     // the block below where unknowns are checked one more time.
@@ -411,7 +411,7 @@ public class ApplicationArchivist extends Archivist<Application> {
             aRoot = (new File(appRoot)).getCanonicalPath();
         } catch (IOException ex) {
             aRoot = appRoot;
-        } 
+        }
 
         //if archive deploy, need to make sure all of the directory
         //structure is correctly included
@@ -420,7 +420,7 @@ public class ApplicationArchivist extends Archivist<Application> {
             uri = subModule.getCanonicalPath().substring(aRoot.length() + 1);
         } catch (IOException ex) {
             uri = subModule.getAbsolutePath().substring(aRoot.length() + 1);
-        } 
+        }
         return uri.replace(File.separatorChar, '/');
     }
 
@@ -509,9 +509,9 @@ public class ApplicationArchivist extends Archivist<Application> {
 
             return false;
         }
-    }    
-    
-    
+    }
+
+
     /**
      * read the modules deployment descriptor from this application object using
      * the passed archive
@@ -521,14 +521,14 @@ public class ApplicationArchivist extends Archivist<Application> {
      */
     public boolean readModulesDescriptors(Application app, ReadableArchive appArchive)
         throws IOException, SAXException {
-        
-        List<ModuleDescriptor> nonexistentModules = 
+
+        List<ModuleDescriptor> nonexistentModules =
             new ArrayList<ModuleDescriptor>();
-        
+
         List<ModuleDescriptor> sortedModules = sortModules(app);
 
         for (ModuleDescriptor aModule : sortedModules) {
-            if (aModule.getArchiveUri().indexOf(" ") != -1) { 
+            if (aModule.getArchiveUri().indexOf(" ") != -1) {
                 throw new IllegalArgumentException(localStrings.getLocalString("enterprise.deployment.unsupporturi", "Unsupported module URI {0}, it contains space(s)", new Object[]{aModule.getArchiveUri()}));
             }
             if(DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
@@ -607,7 +607,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                 aModule.setDescriptor(descriptor);
                 descriptor.setApplication(app);
                 aModule.setManifest(newArchivist.getManifest());
-                // for optional application.xml case, set the 
+                // for optional application.xml case, set the
                 // context root as module name for web modules
                 if (!appArchive.exists("META-INF/application.xml")) {
                     if (aModule.getModuleType().equals(DOLUtils.warType())) {
@@ -622,7 +622,7 @@ public class ApplicationArchivist extends Archivist<Application> {
                 // display a message only if we had a handle on the sub archive
                 return false;
             }
-        }        
+        }
         // now remove all the non-existent modules from app so these modules
         // don't get processed further
         for (ModuleDescriptor nonexistentModule : nonexistentModules) {
@@ -632,21 +632,20 @@ public class ApplicationArchivist extends Archivist<Application> {
     }
 
     private List<ModuleDescriptor> sortModules(Application app) {
-        List<ModuleDescriptor> sortedModules = 
-            new ArrayList<ModuleDescriptor>();
+        List<ModuleDescriptor> sortedModules = new ArrayList<ModuleDescriptor>();
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.rarType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.ejbType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.warType()));
         sortedModules.addAll(app.getModuleDescriptorsByType(DOLUtils.carType()));
         return sortedModules;
     }
-  
-    
+
+
     /**
-     * Read the runtime deployment descriptors (can contained in one or 
+     * Read the runtime deployment descriptors (can contained in one or
      * many file) set the corresponding information in the passed descriptor.
-     * By default, the runtime deployment descriptors are all contained in 
-     * the xml file characterized with the path returned by 
+     * By default, the runtime deployment descriptors are all contained in
+     * the xml file characterized with the path returned by
      *
      * @param archive the input archive
      * @param descriptor the initialized deployment descriptor
@@ -654,11 +653,11 @@ public class ApplicationArchivist extends Archivist<Application> {
     @Override
     public void readRuntimeDeploymentDescriptor(ReadableArchive archive, Application descriptor)
         throws IOException, SAXException {
-        
+
         if (descriptor != null) {
 
             // each modules first...
-            for (ModuleDescriptor md : descriptor.getModules()) { 
+            for (ModuleDescriptor md : descriptor.getModules()) {
                 Archivist archivist = archivistFactory.get().getArchivist(md.getModuleType());
                 archivist.initializeContext(this);
                 archivist.setRuntimeXMLValidation(
@@ -691,11 +690,11 @@ public class ApplicationArchivist extends Archivist<Application> {
         if (cl==null) {
             return;
         }
-	    descriptor.setClassLoader(cl);
+        descriptor.setClassLoader(cl);
         descriptor.visit((ApplicationVisitor) new ApplicationValidator());
-        
-    }    
-    
+
+    }
+
     /**
      * @return the DeploymentDescriptorFile responsible for handling
      * standard deployment descriptor
@@ -703,11 +702,11 @@ public class ApplicationArchivist extends Archivist<Application> {
     @Override
     public DeploymentDescriptorFile getStandardDDFile() {
         if (standardDD == null) {
-            standardDD = new ApplicationDeploymentDescriptorFile();   
+            standardDD = new ApplicationDeploymentDescriptorFile();
         }
         return standardDD;
-    }   
-    
+    }
+
 
     /**
      * @return the list of the DeploymentDescriptorFile responsible for
@@ -721,14 +720,14 @@ public class ApplicationArchivist extends Archivist<Application> {
     }
 
     /**
-     * Perform Optional packages dependencies checking on an archive 
+     * Perform Optional packages dependencies checking on an archive
      */
     @Override
     public boolean performOptionalPkgDependenciesCheck(ReadableArchive archive) throws IOException {
-        
+
         if (!super.performOptionalPkgDependenciesCheck(archive))
             return false;
-        
+
         // now check sub modules
         if (descriptor==null) {
             throw new IOException("Application object not set on archivist");
@@ -745,7 +744,7 @@ public class ApplicationArchivist extends Archivist<Application> {
         }
         return returnValue;
     }
-        
+
     /**
      * Copy this archivist to a new abstract archive
      * @param source the archive to copy from
@@ -759,7 +758,7 @@ public class ApplicationArchivist extends Archivist<Application> {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.fileCopyFailure", spe);
         }
     }
-    
+
     /**
      * Copy this archivist to a new abstract archive
      * @param a the deployment descriptor for an application
@@ -769,7 +768,7 @@ public class ApplicationArchivist extends Archivist<Application> {
     public void copyInto(Application a, ReadableArchive source, WritableArchive target) throws IOException {
         copyInto(a, source, target, true);
     }
-    
+
     /**
      * Copy this archivist to a new abstract archive
      * @param a the deployment descriptor for an application
@@ -804,7 +803,7 @@ public class ApplicationArchivist extends Archivist<Application> {
         }
         super.copyInto(source, target, entriesAdded, overwriteManifest);
     }
-    
+
 
     /**
      * This method will be invoked if and only if the following is true:
@@ -813,7 +812,7 @@ public class ApplicationArchivist extends Archivist<Application> {
      *    standard nor runtime DD
      * <p>
      * Note that we will only venture a guess for case 1.  JSR88 deployment
-     * of an application (ear) using InputStream without any deployment 
+     * of an application (ear) using InputStream without any deployment
      * descriptor will NOT be supported at this time.
      */
     @Override

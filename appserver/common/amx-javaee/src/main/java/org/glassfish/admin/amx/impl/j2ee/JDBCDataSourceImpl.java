@@ -29,19 +29,19 @@ public final class JDBCDataSourceImpl extends J2EEManagedObjectImplBase {
     public JDBCDataSourceImpl(final ObjectName parentObjectName, final Metadata meta) {
         super(parentObjectName, meta, INTF);
     }
-    
+
     public String getjdbcDriver()
     {
         final ObjectName objectName = child( J2EETypes.JDBC_DRIVER );
-        
+
         return objectName == null ? null : objectName.toString();
     }
-    
+
     @Override
     protected void registerChildren()
     {
         super.registerChildren();
-        
+
         // register a JDBCDriver as per JSR 77 spec requirements.  We have only one.
         final JDBCDriverImpl driverImpl = new JDBCDriverImpl( getObjectName(), defaultChildMetadata() );
         ObjectName driverON = new ObjectNameBuilder( getMBeanServer(), getObjectName()).buildChildObjectName(J2EETypes.JDBC_DRIVER, getName());

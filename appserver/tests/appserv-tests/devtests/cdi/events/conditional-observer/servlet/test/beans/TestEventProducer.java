@@ -22,24 +22,24 @@ import jakarta.inject.Inject;
 
 public class TestEventProducer {
     @Inject Event<Document> docEvent;
-    
+
     public void fireEvents(){
         Document d = new Document("Test");
         docEvent.fire(d); //general fire of a Document related event
-        
+
         //send a created event
         docEvent.select(
                 new AnnotationLiteral<Created>(){}).fire(d);
-        
-        
+
+
         d.update();
         //send an updated event
         docEvent.select(
                 new AnnotationLiteral<Updated>(){}).fire(d);
-        
+
         //send an updated and approved event
         docEvent.select(new AnnotationLiteral<Updated>(){}, new AnnotationLiteral<Approved>(){}).fire(d);
-        
+
     }
 
 }

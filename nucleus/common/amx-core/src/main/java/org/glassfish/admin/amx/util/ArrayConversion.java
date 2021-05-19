@@ -60,7 +60,7 @@ public final class ArrayConversion
     Convert an an array of primitive types to an array of Objects of non-primitive
     types eg int to Integer.
 
-    @param array	the array to convert
+    @param array        the array to convert
      */
     public static Object[] toAppropriateType(Object array)
     {
@@ -110,8 +110,8 @@ public final class ArrayConversion
     /**
     Create an array whose type is elementType[] of specified size.
 
-    @param elementType	the type of each entry of the array
-    @param size			the number of elements
+    @param elementType        the type of each entry of the array
+    @param size                        the number of elements
      */
     public static Object[] createObjectArrayType(final Class elementType, final int size)
     {
@@ -183,8 +183,8 @@ public final class ArrayConversion
     Specialize the type of the array (if possible).  For example, if the
     array is an Object[] of Integer, return an Integer[] of Integer.
 
-    @param a			the array to specialize
-    @return	a specialized array (if possible) otherwise the original array
+    @param a                        the array to specialize
+    @return        a specialized array (if possible) otherwise the original array
      */
     public static Object[] specializeArray(final Object[] a)
     {
@@ -206,8 +206,8 @@ public final class ArrayConversion
     Convert a Set to an array. If specialize is true, then provide
     the most specialized type possible via specializeArray()
 
-    @param s			the Set to convert
-    @param specialize	decide whether to specialize the type or not
+    @param s                        the Set to convert
+    @param specialize        decide whether to specialize the type or not
      */
     public static Object[] setToArray(final Set<?> s, boolean specialize)
     {
@@ -224,7 +224,7 @@ public final class ArrayConversion
     /**
     Convert a Set to an Object[].
 
-    @param s			the Set to convert
+    @param s                        the Set to convert
      */
     public static Object[] setToArray(final Set<?> s)
     {
@@ -238,8 +238,8 @@ public final class ArrayConversion
     /**
     Convert a Set to an Object[].
 
-    @param s			the Set to convert
-    @param out			the output array, must be of size s.size()
+    @param s                        the Set to convert
+    @param out                        the output array, must be of size s.size()
      */
     public static Object[] setToArray(final Set<?> s, Object[] out)
     {

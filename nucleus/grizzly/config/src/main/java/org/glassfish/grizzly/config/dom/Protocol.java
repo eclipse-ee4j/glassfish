@@ -59,7 +59,7 @@ public interface Protocol extends ConfigBeanProxy, PropertyBag {
     void setPortUnification(PortUnification value);
 
     /**
-     * Defines <code>http-redirect</code> logic.  
+     * Defines <code>http-redirect</code> logic.
      */
     @Element
     HttpRedirect getHttpRedirect();

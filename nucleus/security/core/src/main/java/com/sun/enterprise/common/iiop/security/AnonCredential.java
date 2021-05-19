@@ -15,14 +15,14 @@
  */
 
 /*
- * @(#)AnonCredential.java	1.1 00/10/20
+ * @(#)AnonCredential.java        1.1 00/10/20
  *
  */
 
 package com.sun.enterprise.common.iiop.security;
 
 /**
- * This class is part of the interface between J2EE RI and security 
+ * This class is part of the interface between J2EE RI and security
  * interceptors. This class is used to assert anonymous identities.
  *
  * @author    Sekhar Vajjhala

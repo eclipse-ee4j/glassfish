@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.allowedmethods.ctxcheck;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -60,7 +60,7 @@ public class DriverBean
             throw ise;
         }
     }
-        
+
     public void localSlsbGetEJBLocalObject() {
         try {
             Context ic = new InitialContext();
@@ -135,7 +135,7 @@ public class DriverBean
             throw ise;
         }
     }
-        
+
     public void localEntityGetEJBLocalObject() {
         try {
             Context ic = new InitialContext();
@@ -195,5 +195,5 @@ public class DriverBean
     public void ejbActivate() {}
 
     public void ejbPassivate() {}
-    
+
 }

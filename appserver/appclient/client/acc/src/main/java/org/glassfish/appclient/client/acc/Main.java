@@ -24,13 +24,13 @@ package org.glassfish.appclient.client.acc;
  * passes the Map to an instance of the embedded ACC.
  */
 public class Main {
-    
+
     private static final String CLIENT = "-client";
     private static final String NAME = "-name";
     private static final String MAIN_CLASS = "-mainclass";
     private static final String TEXT_AUTH = "-textauth";
     private static final String XML_PATH = "-xml";
-    private static final String ACC_CONFIG_XML = "-configxml";    
+    private static final String ACC_CONFIG_XML = "-configxml";
     private static final String DEFAULT_CLIENT_CONTAINER_XML = "sun-acc.xml";
     // duplicated in com.sun.enterprise.jauth.ConfigXMLParser
     private static final String SUNACC_XML_URL = "sun-acc.xml.url";
@@ -44,5 +44,5 @@ public class Main {
     private static final String DASH = "-";
 
     private static final String lineSep = System.getProperty("line.separator");
-    
+
 }

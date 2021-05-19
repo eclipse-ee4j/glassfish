@@ -37,9 +37,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface ConfigurationDeploymentDescriptorFileFor {
     /** Used as the metadata key */
     public final static String DESCRIPTOR_FOR = "DescriptorFor";
-    
+
     /**
-     * the value of the annotation should represent the area 
+     * the value of the annotation should represent the area
      * this configuration deployment descriptor file is for
      */
     @Metadata(DESCRIPTOR_FOR)

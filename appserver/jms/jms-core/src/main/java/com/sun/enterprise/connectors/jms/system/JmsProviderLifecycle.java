@@ -120,7 +120,7 @@ public class JmsProviderLifecycle implements PostConstruct{
         if(defaultJmsHost == null && jmsHostList.size() >0)  {
             defaultJmsHost = jmsHostList.get(0);
         }
-	    boolean lazyInit = false;
+        boolean lazyInit = false;
         if (defaultJmsHost != null)
                 lazyInit = Boolean.parseBoolean(defaultJmsHost.getLazyInit());
 

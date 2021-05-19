@@ -29,7 +29,7 @@ import org.glassfish.gmbal.*;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 
 /**
- * Event listener for the Ejb monitoring events. Used by the probe framework 
+ * Event listener for the Ejb monitoring events. Used by the probe framework
  * to collect and display the data.
  *
  * @author Marina Vatkina
@@ -43,21 +43,21 @@ import com.sun.ejb.containers.EjbContainerUtilImpl;
 public class EjbMethodStatsProvider {
 
     private CountStatisticImpl executionStat = new CountStatisticImpl(
-            "ExecutionTime", "Milliseconds", 
-            "Provides the time in milliseconds spent during the last " 
+            "ExecutionTime", "Milliseconds",
+            "Provides the time in milliseconds spent during the last "
                      + "successful/unsuccessful attempt to execute the operation.");
 
     private CountStatisticImpl invocationStat = new CountStatisticImpl(
-            "TotalNumInvocations", "count", 
+            "TotalNumInvocations", "count",
             "Provides the total number of invocations of the method.");
 
     private CountStatisticImpl errorStat = new CountStatisticImpl(
-            "TotalNumErrors", "count", 
+            "TotalNumErrors", "count",
             "Provides the total number of errors that occured during invocation "
                     + "or execution of an operation.");
 
     private CountStatisticImpl successStat = new CountStatisticImpl(
-                "TotalNumSuccess", "count", 
+                "TotalNumSuccess", "count",
                 "Provides the total number of successful invocations of the method.");
 
     private TimeStatisticImpl methodStat = null;
@@ -71,9 +71,9 @@ public class EjbMethodStatsProvider {
 
         long now = System.currentTimeMillis();
         methodStat = new TimeStatisticImpl(
-                0, 0, 0, 0, "MethodStatistic", "", 
+                0, 0, 0, 0, "MethodStatistic", "",
                 "Provides the number of times an operation was called, the total time "
-                       + "that was spent during the invocation and so on", 
+                       + "that was spent during the invocation and so on",
                 now, now);
     }
 
@@ -96,7 +96,7 @@ public class EjbMethodStatsProvider {
     }
 
     @ManagedAttribute(id="executiontime")
-    @Description("Time (ms) spent executing method for the last successful/unsuccessful " 
+    @Description("Time (ms) spent executing method for the last successful/unsuccessful "
         + "attempt to execute the operation")
     public CountStatistic getTotalExecutionTime() {
         return executionStat;

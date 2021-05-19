@@ -49,5 +49,5 @@ public class RawValueTest extends ConfigApiTest {
         String appRawRoot = rawDomain.getApplicationRoot();
         assertFalse(appRawRoot.equals(appRoot));
         assertTrue(appRawRoot.startsWith("${"));
-    }    
+    }
 }

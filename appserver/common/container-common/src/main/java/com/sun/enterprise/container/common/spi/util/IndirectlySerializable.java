@@ -27,13 +27,13 @@ import org.jvnet.hk2.annotations.Contract;
  * original Non-Serializable object. It is assumed that the
  * SerializableObjectFactory contains enough data that can be used to restore
  * the original state of the object that existed at the time of Serilization
- * 
+ *
  * @author Mahesh Kannan
  */
 @Contract
 public interface IndirectlySerializable {
 
-	public SerializableObjectFactory getSerializableObjectFactory()
-			throws java.io.IOException;
+    public SerializableObjectFactory getSerializableObjectFactory()
+            throws java.io.IOException;
 
 }

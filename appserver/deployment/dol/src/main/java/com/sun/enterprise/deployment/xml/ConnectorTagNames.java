@@ -15,7 +15,7 @@
  */
 
  package com.sun.enterprise.deployment.xml;
- 
+
 /** The XML tag names for the connector dtd
  * @author Vivek Nagar
  * @author Tony Ng
@@ -27,9 +27,9 @@ public interface ConnectorTagNames extends TagNames {
     public static String AUTH_MECHANISM = "authentication-mechanism";
     public static String CREDENTIAL_INTF = "credential-interface";
     public static String AUTH_MECH_TYPE = "authentication-mechanism-type";
-    public static String CONNECTION_FACTORY_INTF = 
+    public static String CONNECTION_FACTORY_INTF =
         "connectionfactory-interface";
-    public static String CONNECTION_FACTORY_IMPL = 
+    public static String CONNECTION_FACTORY_IMPL =
         "connectionfactory-impl-class";
     public static String CONNECTION_INTF = "connection-interface";
     public static String CONNECTION_IMPL = "connection-impl-class";
@@ -41,7 +41,7 @@ public interface ConnectorTagNames extends TagNames {
     public static String CONFIG_PROPERTY_SUPPORTS_DYNAMIC_UPDATES = "config-property-supports-dynamic-updates";
     public static String CONFIG_PROPERTY_CONFIDENTIAL = "config-property-confidential";
     public static String EIS_TYPE = "eis-type";
-    public static String MANAGED_CONNECTION_FACTORY = 
+    public static String MANAGED_CONNECTION_FACTORY =
         "managedconnectionfactory-class";
     public static String REAUTHENTICATION_SUPPORT = "reauthentication-support";
     public static String SPEC_VERSION = "spec-version";
@@ -71,16 +71,16 @@ public interface ConnectorTagNames extends TagNames {
     public static String REQUIRED_CONFIG_PROP = "required-config-property";
     public static String CONNECTION = "connection";
     public static String CONNECTION_FACTORY = "connectionfactory";
-    
-    //FIXME.  the following are no longer valid. need clean up when 
+
+    //FIXME.  the following are no longer valid. need clean up when
     //inbound-ra-class is completed removed from the implementation
     public static String INBOUND_RESOURCE_ADAPTER_CLASS = "resourceadapter-class";
     public static String MSG_LISTENER_NAME = "messagelistener-name";
-    
+
     // Connector DD element valid values
     public static final String DD_BASIC_PASSWORD    = "BasicPassword";
     public static final String DD_KERBEROS          = "Kerbv5";
     public static final String DD_NO_TRANSACTION    = "NoTransaction";
     public static final String DD_LOCAL_TRANSACTION = "LocalTransaction";
-    public static final String DD_XA_TRANSACTION    = "XATransaction";    
+    public static final String DD_XA_TRANSACTION    = "XATransaction";
 }

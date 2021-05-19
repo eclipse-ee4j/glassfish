@@ -22,7 +22,7 @@ import jakarta.xml.ws.WebServiceContext;
 
 @WebService
 public class Hello {
-	
+
     @Resource WebServiceContext wsc;
 
     public String sayHello(String param) {

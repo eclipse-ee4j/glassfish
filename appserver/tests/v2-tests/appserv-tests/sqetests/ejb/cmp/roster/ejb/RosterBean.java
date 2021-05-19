@@ -43,17 +43,17 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     }
 
-    public void createPlayer(PlayerDetails details) { 
+    public void createPlayer(PlayerDetails details) {
         Debug.print("RosterBean createPlayer");
         try {
-            LocalPlayer player = playerHome.create(details.getId(), 
+            LocalPlayer player = playerHome.create(details.getId(),
                 details.getName(), details.getPosition(), details.getSalary());
         } catch (Exception ex) {
             throw new EJBException(ex.getMessage());
         }
     }
- 
-    public void addPlayer(String playerId, String teamId) { 
+
+    public void addPlayer(String playerId, String teamId) {
         Debug.print("RosterBean addPlayer");
         try {
             LocalTeam team = teamHome.findByPrimaryKey(teamId);
@@ -64,7 +64,7 @@ public class RosterBean implements SessionBean {
         }
     }
 
-    public void removePlayer(String playerId) { 
+    public void removePlayer(String playerId) {
         Debug.print("RosterBean removePlayer");
         try {
             LocalPlayer player = playerHome.findByPrimaryKey(playerId);
@@ -73,7 +73,7 @@ public class RosterBean implements SessionBean {
             throw new EJBException(ex.getMessage());
         }
     }
- 
+
     public void dropPlayer(String playerId, String teamId) {
         Debug.print("RosterBean dropPlayer");
         try {
@@ -98,7 +98,7 @@ public class RosterBean implements SessionBean {
         return playerDetails;
     }
 
-    public ArrayList getPlayersOfTeam(String teamId) { 
+    public ArrayList getPlayersOfTeam(String teamId) {
         Debug.print("RosterBean getPlayersOfTeam");
         Collection players = null;
 
@@ -113,7 +113,7 @@ public class RosterBean implements SessionBean {
     }
 
 
-    public ArrayList getPlayersOfTeamCopy(String teamId) { 
+    public ArrayList getPlayersOfTeamCopy(String teamId) {
         Debug.print("RosterBean getPlayersOfTeamCopy");
         ArrayList playersList = null;
 
@@ -128,7 +128,7 @@ public class RosterBean implements SessionBean {
     }
 
 
-    public ArrayList getTeamsOfLeague(String leagueId) { 
+    public ArrayList getTeamsOfLeague(String leagueId) {
         Debug.print("RosterBean getTeamsOfLeague");
 
         ArrayList detailsList = new ArrayList();
@@ -164,7 +164,7 @@ public class RosterBean implements SessionBean {
     }
 
 
-    public ArrayList getPlayersByHigherSalary(String name) { 
+    public ArrayList getPlayersByHigherSalary(String name) {
         Debug.print("RosterBean getPlayersByByHigherSalary");
         Collection players = null;
 
@@ -176,7 +176,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersByHigherSalary
 
-    public ArrayList getPlayersBySalaryRange(double low, double high) { 
+    public ArrayList getPlayersBySalaryRange(double low, double high) {
         Debug.print("RosterBean getPlayersBySalaryRange");
         Collection players = null;
 
@@ -189,7 +189,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersBySalaryRange
 
-    public ArrayList getPlayersByLeagueId(String leagueId) { 
+    public ArrayList getPlayersByLeagueId(String leagueId) {
         Debug.print("RosterBean getPlayersByLeagueId");
         Collection players = null;
 
@@ -202,7 +202,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersByLeagueId
 
-    public ArrayList getPlayersBySport(String sport) { 
+    public ArrayList getPlayersBySport(String sport) {
         Debug.print("RosterBean getPlayersBySport");
         Collection players = null;
 
@@ -214,7 +214,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersBySport
 
-    public ArrayList getPlayersByCity(String city) { 
+    public ArrayList getPlayersByCity(String city) {
         Debug.print("RosterBean getPlayersByCity");
         Collection players = null;
 
@@ -226,7 +226,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersByCity
 
-    public ArrayList getAllPlayers() { 
+    public ArrayList getAllPlayers() {
         Debug.print("RosterBean getAllPlayers");
         Collection players = null;
 
@@ -239,7 +239,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getAllPlayers
 
-    public ArrayList getPlayersNotOnTeam() { 
+    public ArrayList getPlayersNotOnTeam() {
         Debug.print("RosterBean getPlayersNotOnTeam");
         Collection players = null;
 
@@ -251,8 +251,8 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersNotOnTeam
 
-    public ArrayList getPlayersByPositionAndName(String position, 
-        String name) { 
+    public ArrayList getPlayersByPositionAndName(String position,
+        String name) {
         Debug.print("RosterBean getPlayersByPositionAndName");
         Collection players = null;
 
@@ -264,7 +264,7 @@ public class RosterBean implements SessionBean {
         return copyPlayersToDetails(players);
     } // getPlayersByPositionAndName
 
-    public ArrayList getLeaguesOfPlayer(String playerId) { 
+    public ArrayList getLeaguesOfPlayer(String playerId) {
         Debug.print("RosterBean getLeaguesOfPlayer");
         ArrayList detailsList = new ArrayList();
         Collection leagues = null;
@@ -275,7 +275,7 @@ public class RosterBean implements SessionBean {
         } catch (Exception ex) {
             throw new EJBException(ex.getMessage());
         }
-      
+
         Iterator i = leagues.iterator();
         while (i.hasNext()) {
             LocalLeague league = (LocalLeague) i.next();
@@ -287,7 +287,7 @@ public class RosterBean implements SessionBean {
         return detailsList;
     } // getLeaguesOfPlayer
 
-    public ArrayList getSportsOfPlayer(String playerId) { 
+    public ArrayList getSportsOfPlayer(String playerId) {
         Debug.print("RosterBean getSportsOfPlayer");
         ArrayList sportsList = new ArrayList();
         Collection sports = null;
@@ -298,7 +298,7 @@ public class RosterBean implements SessionBean {
         } catch (Exception ex) {
             throw new EJBException(ex.getMessage());
         }
-      
+
         Iterator i = sports.iterator();
         while (i.hasNext()) {
             String sport = (String) i.next();
@@ -308,7 +308,7 @@ public class RosterBean implements SessionBean {
     } // getSportsOfPlayer
 
     // Team business methods
-    public void createTeamInLeague(TeamDetails details, String leagueId) { 
+    public void createTeamInLeague(TeamDetails details, String leagueId) {
         Debug.print("RosterBean createTeamInLeague");
         try {
             LocalLeague league = leagueHome.findByPrimaryKey(leagueId);
@@ -320,8 +320,8 @@ public class RosterBean implements SessionBean {
             throw new EJBException(ex.getMessage());
         }
     }
- 
-    public void removeTeam(String teamId) { 
+
+    public void removeTeam(String teamId) {
         Debug.print("RosterBean removeTeam");
         try {
             LocalTeam team = teamHome.findByPrimaryKey(teamId);
@@ -330,7 +330,7 @@ public class RosterBean implements SessionBean {
             throw new EJBException(ex.getMessage());
         }
     }
- 
+
     public TeamDetails getTeam(String teamId) {
         Debug.print("RosterBean getTeam");
         TeamDetails teamDetails = null;
@@ -345,18 +345,18 @@ public class RosterBean implements SessionBean {
     }
 
     // League business methods
-    public void createLeague(LeagueDetails details) { 
+    public void createLeague(LeagueDetails details) {
         Debug.print("RosterBean createLeague");
         try {
-            LocalLeague league = leagueHome.create(details.getId(), 
+            LocalLeague league = leagueHome.create(details.getId(),
                                                    details.getName(),
                                                    details.getSport());
         } catch (Exception ex) {
             throw new EJBException(ex.getMessage());
         }
     }
- 
-    public void removeLeague(String leagueId) { 
+
+    public void removeLeague(String leagueId) {
         Debug.print("RosterBean removeLeague");
         try {
             LocalLeague league = leagueHome.findByPrimaryKey(leagueId);
@@ -365,7 +365,7 @@ public class RosterBean implements SessionBean {
             throw new EJBException(ex.getMessage());
         }
     }
- 
+
     public LeagueDetails getLeague(String leagueId) {
         Debug.print("RosterBean getLeague");
         LeagueDetails leagueDetails = null;
@@ -379,7 +379,7 @@ public class RosterBean implements SessionBean {
         }
         return leagueDetails;
     }
- 
+
     // SessionBean methods
     public void ejbCreate() throws CreateException {
         Debug.print("RosterBean ejbCreate");
@@ -412,7 +412,7 @@ public class RosterBean implements SessionBean {
     public RosterBean() {}
     public void ejbRemove() {}
     public void setSessionContext(SessionContext sc) {}
- 
+
     // Private methods
     private LocalPlayerHome lookupPlayer() throws NamingException {
         Context initial = new InitialContext();

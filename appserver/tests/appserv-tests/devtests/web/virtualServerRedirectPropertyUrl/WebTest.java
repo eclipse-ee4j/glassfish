@@ -52,7 +52,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6330300");
         WebTest webTest = new WebTest(args);
@@ -60,8 +60,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeServlet();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -70,14 +70,14 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
-        
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET /someprefix/1234 HTTP/1.0\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 

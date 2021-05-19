@@ -22,7 +22,7 @@
 <!--
     PostgreSQL JDBC Driver
 
-    The JAR file for the PostgreSQL driver is postgresql-version.jdbc3.jar, 
+    The JAR file for the PostgreSQL driver is postgresql-version.jdbc3.jar,
     for example, postgresql-8.1-405.jdbc3.jar
     For more information, see http://jdbc.postgresql.org
 
@@ -43,8 +43,8 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="postgresql_type4_pool" 
+    <jdbc-connection-pool
+        name="postgresql_type4_pool"
         datasource-classname="org.postgresql.ds.PGSimpleDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -52,9 +52,9 @@
         <property name="url" value="jdbc:postgresql://DB_HOSTNAME/DATABASE_NAME:5432"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/postgresql_type4" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/postgresql_type4"
+        object-type="user"
         pool-name="postgresql_type4_pool"/>
-</resources> 
+</resources>

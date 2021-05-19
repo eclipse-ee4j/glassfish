@@ -41,7 +41,7 @@ public class HK2NamedServiceFactory2 implements Factory<HK2NamedService> {
             public String getName() {
                 return NAME;
             }
-            
+
         };
     }
 

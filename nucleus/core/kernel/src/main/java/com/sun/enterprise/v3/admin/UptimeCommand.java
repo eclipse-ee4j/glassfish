@@ -38,7 +38,7 @@ import jakarta.inject.Inject;
 /**
  * uptime command
  * Reports on how long the server has been running.
- * 
+ *
  */
 @Service(name = "uptime")
 @PerLookup
@@ -46,8 +46,8 @@ import jakarta.inject.Inject;
 @I18n("uptime")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="uptime", 
+        opType=RestEndpoint.OpType.GET,
+        path="uptime",
         description="Uptime",
         useForAuthorization=true)
 })
@@ -61,7 +61,7 @@ public class UptimeCommand implements AdminCommand {
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         long totalTime_ms = getUptime();
-        String totalTime_mss = "" + totalTime_ms;	
+        String totalTime_mss = "" + totalTime_ms;
         Duration duration = new Duration(totalTime_ms);
         duration.setTerse();
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);

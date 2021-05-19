@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -65,7 +65,7 @@ public class TransactionServiceTest extends BaseSeleniumTestClass {
         assertEquals("commit", getValue("propertyForm:propertySheet:propertSectionTextField:heuristicProp:HeuristicDecision", "value"));
         assertEquals(keypoint, getValue("propertyForm:propertySheet:propertSectionTextField:keyPointProp:Keypoint", "value"));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         //delete the property used to test
         clickByIdAction("propertyForm:basicTable:_tableActionsTop:_selectMultipleButton:_selectMultipleButton_image");
         clickByIdAction("propertyForm:basicTable:topActionsGroup1:button1");

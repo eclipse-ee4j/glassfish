@@ -99,7 +99,7 @@
     </target>
 
     <target name="compile-webclient">
-        <mkdir dir="${build.classes.dir}/webclient"/> 
+        <mkdir dir="${build.classes.dir}/webclient"/>
         <antcall target="wsimport">
             <param name="wsimport.args"
                 value="-keep -d ${build.classes.dir}/webclient http://${http.host}:${http.port}/JmacSoapEmbeddedEjbService/HelloEjb?WSDL"/>
@@ -121,7 +121,7 @@
 
     <target name="build-server" depends="compile-server">
         <mkdir dir="${assemble.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/> 
+        <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/ejbws"/>
@@ -135,16 +135,16 @@
             <fileset dir="${build.classes.dir}/servletws"/>
         </jar>
 
-        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/> 
-        <jar jarfile="${assemble.dir}/${appname}App.ear"> 
+        <copy file="${sun-application.xml}" tofile="${build.classes.dir}/META-INF/sun-application.xml" failonerror="false"/>
+        <jar jarfile="${assemble.dir}/${appname}App.ear">
             <fileset dir="${assemble.dir}">
                <include name="*.jar"/>
                <include name="*.war"/>
             </fileset>
             <fileset dir="${build.classes.dir}">
-	       <include name="META-INF/sun-application.xml"/>
+               <include name="META-INF/sun-application.xml"/>
             </fileset>
-        </jar>   
+        </jar>
     </target>
 
     <target name="build-webclient" depends="compile-webclient">
@@ -153,9 +153,9 @@
         <antcall target="package-war-common">
             <param name="web.xml" value="${web2.xml}"/>
             <param name="sun-web.xml" value="${sun-web2.xml}"/>
-            <param name="war.classes" 
+            <param name="war.classes"
                 value="${build.classes.dir}/webclient"/>
-            <param name="war.file" 
+            <param name="war.file"
                 value="${assemble.dir}/${appname}-client-web.war"/>
         </antcall>
     </target>
@@ -206,7 +206,7 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
         <antcall target="undeploy-war-common">
-            <param name="appname" 
+            <param name="appname"
                 value="${appname}-client"/>
         </antcall>
     </target>

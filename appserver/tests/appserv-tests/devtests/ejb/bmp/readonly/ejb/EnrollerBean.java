@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp.readonly.ejb;
 
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
@@ -26,7 +26,7 @@ import javax.rmi.PortableRemoteObject;
 import java.io.*;
 
 public class EnrollerBean implements SessionBean {
- 
+
     private Connection con;
     private String dbName = "java:comp/env/jdbc/bmp-readonlyDB";
     private DataSource ds;
@@ -62,7 +62,7 @@ public class EnrollerBean implements SessionBean {
     }
 
     /**
-     * Deletes a Student 
+     * Deletes a Student
      * @param studentId primary key of the student object
      * @exception RemoteException
      */
@@ -75,7 +75,7 @@ public class EnrollerBean implements SessionBean {
     }
 
     /**
-     * Deletes a Course 
+     * Deletes a Course
      * @param courseId primary key of the course object
      * @exception RemoteException
      */
@@ -127,11 +127,11 @@ public class EnrollerBean implements SessionBean {
     }
 
     public void ejbActivate() {
-        
+
     }
 
     public void ejbPassivate() {
-       
+
     }
 
     public void setSessionContext(SessionContext context) {
@@ -140,14 +140,14 @@ public class EnrollerBean implements SessionBean {
 
     public EnrollerBean() {}
 
-    /*********************** Database Routines *************************/   
+    /*********************** Database Routines *************************/
 
     private void insertEntry(String studentId, String courseId)
         throws SQLException {
         Connection con = ds.getConnection();
         String insertStatement =
             "insert into ReadOnlyEnrollment values ( ? , ? )";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(insertStatement);
 
         prepStmt.setString(1, studentId);
@@ -158,7 +158,7 @@ public class EnrollerBean implements SessionBean {
         con.close();
     }
 
-    private void deleteEntry(String studentId, String courseId) 
+    private void deleteEntry(String studentId, String courseId)
         throws SQLException {
 
         Connection con = ds.getConnection();
@@ -207,14 +207,14 @@ public class EnrollerBean implements SessionBean {
         con.close();
     }
 
-    private ArrayList selectStudent(String courseId) 
+    private ArrayList selectStudent(String courseId)
         throws SQLException {
 
         Connection con = ds.getConnection();
         String selectStatement =
             "select studentid " +
             "from ReadOnlyEnrollment where courseid = ? ";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, courseId);
@@ -231,14 +231,14 @@ public class EnrollerBean implements SessionBean {
         return a;
     }
 
-    private ArrayList selectCourse(String studentId) 
+    private ArrayList selectCourse(String studentId)
         throws SQLException {
 
         Connection con = ds.getConnection();
         String selectStatement =
             "select courseid " +
             "from ReadOnlyEnrollment where studentid = ? ";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, studentId);
@@ -283,7 +283,7 @@ public class EnrollerBean implements SessionBean {
         }
         return status;
     }
-    
+
     public boolean testReadOnlyBeanLocalCreate(String studentId, String name) {
         boolean status = false;
 
@@ -293,13 +293,13 @@ public class EnrollerBean implements SessionBean {
 
             studentLocalHome.create(studentId, name);
             System.out.println("Error.  Should have gotten CreateException in"
-                               + " testReadOnlyBeanLocalCreate");            
+                               + " testReadOnlyBeanLocalCreate");
         } catch(CreateException ce) {
             System.out.println("Successfully got CreateException when " +
                                "attempting to create a read-only bean");
             status = true;
         } catch(Exception e) {
-            System.out.println("Got unexpected exception in " + 
+            System.out.println("Got unexpected exception in " +
                                "testReadOnlyBeanLocalCreate");
             e.printStackTrace();
         }
@@ -316,7 +316,7 @@ public class EnrollerBean implements SessionBean {
                 com.sun.appserv.ejb.ReadOnlyBeanNotifier
                 notifier = com.sun.appserv.ejb.ReadOnlyBeanHelper.
                     getReadOnlyBeanNotifier("java:comp/env/ejb/Student");
-    
+
                 notifier.refresh(studentId);
                 status = true;
             } else {
@@ -324,7 +324,7 @@ public class EnrollerBean implements SessionBean {
             }
         } catch (Exception ex) {
             System.err.println("******* testReadOnlyBeanStudentRefresh ****");
-            ex.printStackTrace(); 
+            ex.printStackTrace();
             System.err.println("******* testReadOnlyBeanStudentRefresh ****");
         }
 
@@ -341,7 +341,7 @@ public class EnrollerBean implements SessionBean {
                 com.sun.appserv.ejb.ReadOnlyBeanLocalNotifier
                 notifier = com.sun.appserv.ejb.ReadOnlyBeanHelper.
                     getReadOnlyBeanLocalNotifier("java:comp/env/ejb/StudentLocal");
-    
+
                 notifier.refresh(studentId);
                 status = true;
             } else {
@@ -349,7 +349,7 @@ public class EnrollerBean implements SessionBean {
             }
         } catch (Exception ex) {
             System.err.println("******* testReadOnlyBeanLocalStudentRefresh ****");
-            ex.printStackTrace(); 
+            ex.printStackTrace();
             System.err.println("******* testReadOnlyBeanLocalStudentRefresh ****");
         }
 

@@ -20,5 +20,5 @@ import java.rmi.RemoteException;
 import jakarta.ejb.*;
 
 public interface Bar extends EJBObject, TimerStuff {
-    
+
 }

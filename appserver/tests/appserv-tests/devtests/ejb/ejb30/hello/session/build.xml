@@ -35,7 +35,7 @@
       <antcall  target="clean-common"/>
       <delete file="client/Client.java"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <copy file="client/Client.java.token" tofile="client/Client.java"/>
         <replace file="client/Client.java"
@@ -51,14 +51,14 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/Sful*.class,**/Sless*.class"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/Client.class,**/Sful.class,**/Sless.class"/>
         </antcall>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -69,9 +69,9 @@
         <antcall target="run_standaloneclient2"/>
     </target>
 
- 
+
     <target name="run_standaloneclient" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${simple.client}">
@@ -80,7 +80,7 @@
     </target>
 
     <target name="run_standaloneclient2" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/lib/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${simple.client2}">
@@ -96,7 +96,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

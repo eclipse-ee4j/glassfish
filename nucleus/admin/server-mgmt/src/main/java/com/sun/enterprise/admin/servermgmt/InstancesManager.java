@@ -24,7 +24,7 @@ import java.util.Properties;
 public interface InstancesManager {
     /**
      * Creates a server instance.
-     * 
+     *
      * @throws InstanceException This exception is thrown if - the instance already exists. - an invalid or insufficient
      * config. is supplied. - an exception occurred during instance creation.
      */
@@ -32,7 +32,7 @@ public interface InstancesManager {
 
     /**
      * Deletes an instance identified by the given name. (Should we stop the instance before deleting the instance?)
-     * 
+     *
      * @throws InstanceException This exception is thrown if - the instance doesnot exist. - an exception occurred while
      * deleting the instance.
      */
@@ -40,7 +40,7 @@ public interface InstancesManager {
 
     /**
      * Starts the instance.
-     * 
+     *
      * @param startParams
      * @throws InstanceException
      */
@@ -48,7 +48,7 @@ public interface InstancesManager {
 
     /**
      * Starts the instance.
-     * 
+     *
      * @param interativeOptions which may be used for security, these paramters are passed in on the standard input stream
      * of the executing process
      * @throws InstanceException
@@ -57,7 +57,7 @@ public interface InstancesManager {
 
     /**
      * Starts the instance.
-     * 
+     *
      * @param interativeOptions which may be used for security, these paramters are passed in on the standard input stream
      * of the executing process
      * @param commandLineArgs is additional commandline arguments that are to be appended to the processes commandline when
@@ -68,7 +68,7 @@ public interface InstancesManager {
 
     /**
      * Starts the instance.
-     * 
+     *
      * @param interativeOptions which may be used for security, these paramters are passed in on the standard input stream
      * of the executing process
      * @param commandLineArgs is additional commandline arguments that are to be appended to the processes commandline when
@@ -80,7 +80,7 @@ public interface InstancesManager {
 
     /**
      * Stops the instance.
-     * 
+     *
      * @throws InstanceException
      */
     public void stopInstance() throws InstanceException;
@@ -104,7 +104,7 @@ public interface InstancesManager {
 
     /**
      * Trys to stop the instance with the specified timeout. Returns true if success; false if failure
-     * 
+     *
      * @throws InstanceException
      */
     public boolean stopInstanceWithinTime(int timeout) throws InstanceException;

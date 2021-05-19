@@ -29,22 +29,22 @@ public interface ApplicationLifecycleInterceptor {
     /**
      * Provide call back before a certain phase of the application lifecycle
      *
-     * @param phase the application lifecycle phase which the call back will 
+     * @param phase the application lifecycle phase which the call back will
      *              happen before
      * @param context the deployment context
      *
      */
-    public void before(ExtendedDeploymentContext.Phase phase, 
+    public void before(ExtendedDeploymentContext.Phase phase,
             ExtendedDeploymentContext context);
 
     /**
      * Provide call back after a certain phase of the application lifecycle
      *
-     * @param phase the application lifecycle phase which the call back will 
+     * @param phase the application lifecycle phase which the call back will
      *              happen after
      * @param context the deployment context
      *
      */
-    public void after(ExtendedDeploymentContext.Phase phase, 
+    public void after(ExtendedDeploymentContext.Phase phase,
             ExtendedDeploymentContext context);
 }

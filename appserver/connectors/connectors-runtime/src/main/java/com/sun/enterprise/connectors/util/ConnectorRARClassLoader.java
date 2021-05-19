@@ -19,24 +19,24 @@ package com.sun.enterprise.connectors.util;
 import java.security.SecureClassLoader;
 
 /**
- * ConnectorRARClassLoader finds classes and resources from a 
+ * ConnectorRARClassLoader finds classes and resources from a
  * JAR file without exploding it. This uses the JarResourceExtractor
  * for finding classes and resources inside the archive
- * 
+ *
  * This classloader is _used_ only by the admin GUI to retrieve resource
  * adapter class properties without exploding the connector archive.
- *  
+ *
  * @author Sivakumar Thyagarajan
  */
 public class ConnectorRARClassLoader extends SecureClassLoader{
     private JarResourceExtractor jarResources;
-    
+
     public ConnectorRARClassLoader(String jarName, ClassLoader parent) {
         super(parent);
         // Create the JarResource and suck in the .jar file.
         jarResources = new JarResourceExtractor(jarName);
     }
-    
+
     protected byte[] loadClassBytes(String className) {
         className = formatClassName(className);
         return (jarResources.getResource(className));
@@ -56,6 +56,6 @@ public class ConnectorRARClassLoader extends SecureClassLoader{
 
     public String getResourceAsString(String raDeploymentDescPath) {
         return new String(jarResources.getResource(raDeploymentDescPath));
-    }    
-    
+    }
+
 }

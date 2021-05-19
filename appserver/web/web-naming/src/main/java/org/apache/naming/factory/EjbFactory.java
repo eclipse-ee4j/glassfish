@@ -29,7 +29,7 @@ import org.apache.naming.EjbRef;
 
 /**
  * Object factory for EJBs.
- * 
+ *
  * @author Remy Maucherat
  * @version $Revision: 1.3 $ $Date: 2006/03/12 01:27:12 $
  */
@@ -54,13 +54,13 @@ public class EjbFactory
 
     /**
      * Crete a new EJB instance.
-     * 
+     *
      * @param obj The reference object describing the DataSource
      */
     public Object getObjectInstance(Object obj, Name name, Context nameCtx,
                                     Hashtable<?,?> environment)
         throws Exception {
-        
+
         if (obj instanceof EjbRef) {
             Reference ref = (Reference) obj;
 
@@ -77,20 +77,20 @@ public class EjbFactory
                 try {
                     Class home = Class.forName(homeClassName);
                     if (home.isInstance(beanObj)) {
-                        if (log.isDebugEnabled()) 
-                            log.debug("Bean of type " 
-                                           + beanObj.getClass().getName() 
-                                           + " implements home interface " 
+                        if (log.isDebugEnabled())
+                            log.debug("Bean of type "
+                                           + beanObj.getClass().getName()
+                                           + " implements home interface "
                                            + home.getName());
                     } else {
                         if (log.isDebugEnabled())
-                            log.debug("Bean of type " 
-                                           + beanObj.getClass().getName() 
-                                           + " doesn't implement home interface " 
+                            log.debug("Bean of type "
+                                           + beanObj.getClass().getName()
+                                           + " doesn't implement home interface "
                                            + home.getName());
                         throw new NamingException
-                            ("Bean of type " + beanObj.getClass().getName() 
-                             + " doesn't implement home interface " 
+                            ("Bean of type " + beanObj.getClass().getName()
+                             + " doesn't implement home interface "
                              + home.getName());
                     }
                 } catch (ClassNotFoundException e) {
@@ -100,15 +100,15 @@ public class EjbFactory
                 */
                 return beanObj;
             }
-            
+
             ObjectFactory factory = null;
             RefAddr factoryRefAddr = ref.get(Constants.FACTORY);
             if (factoryRefAddr != null) {
                 // Using the specified factory
-                String factoryClassName = 
+                String factoryClassName =
                     factoryRefAddr.getContent().toString();
                 // Loading factory
-                ClassLoader tcl = 
+                ClassLoader tcl =
                     Thread.currentThread().getContextClassLoader();
                 Class<?> factoryClass = null;
                 if (tcl != null) {

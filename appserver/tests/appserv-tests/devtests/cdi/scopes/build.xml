@@ -91,15 +91,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the scopes tests)
-		ant clean (cleans all the scopes tests)
-		ant build (builds all the scopes tests)
-		ant setup (sets up all resources for scopes tests)
-		ant deploy (deploys all the scopes apps)
-		ant run (Executes all the scopes tests)
-		ant undeploy (undeploys all the  scopes apps)
-		ant unsetup (unsets all resources for scopes tests)
-	</echo>
+        <echo> Usage:
+                ant all (Executes all the scopes tests)
+                ant clean (cleans all the scopes tests)
+                ant build (builds all the scopes tests)
+                ant setup (sets up all resources for scopes tests)
+                ant deploy (deploys all the scopes apps)
+                ant run (Executes all the scopes tests)
+                ant undeploy (undeploys all the  scopes apps)
+                ant unsetup (unsets all resources for scopes tests)
+        </echo>
     </target>
 </project>

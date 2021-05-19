@@ -41,7 +41,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 @Service
 @AnnotationHandlerFor(AdministeredObjectDefinitions.class)
 public class AdministeredObjectDefinitionsHandler extends AbstractResourceHandler {
-    
+
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(AdministeredObjectDefinitionsHandler.class);
 
@@ -76,7 +76,7 @@ public class AdministeredObjectDefinitionsHandler extends AbstractResourceHandle
         return getDefaultProcessedResult();
     }
 
-    
+
     public Class<? extends Annotation>[] getTypeDependencies() {
         return getEjbAndWebAnnotationTypes();
     }

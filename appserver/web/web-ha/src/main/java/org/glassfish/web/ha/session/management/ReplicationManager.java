@@ -27,36 +27,33 @@ package org.glassfish.web.ha.session.management;
 import org.glassfish.ha.store.api.BackingStore;
 import org.glassfish.ha.store.api.BackingStoreException;
 
-import java.util.concurrent.CountDownLatch;
-
 /**
  *
  * @author Larry White
  * @author Rajiv Mordani
  */
 public interface ReplicationManager {
-    
-    public String getApplicationId();
 
-    public Object getReplicationSessionMonitor(String id);
-    
+    String getApplicationId();
+
+    Object getReplicationSessionMonitor(String id);
+
 //    public void processMessage(ReplicationState message);
 //
 //    public void processQueryMessage(ReplicationState message, String returnInstance);
-    
-    public void repair(long repairStartTime);
-    
-    public void repair(long repairStartTime, boolean checkForStopping);
-    
-    public void respondToFailure(String instanceName, boolean checkForStopping);
-    
+
+    void repair(long repairStartTime);
+
+    void repair(long repairStartTime, boolean checkForStopping);
+
+    void respondToFailure(String instanceName, boolean checkForStopping);
+
 
 //    public <V> V __load(String id, String version, JxtaBackingStoreImpl jxtaBackingStore)
 //            throws BackingStoreException;
 
-    public <V> V __load(String id, String version, BackingStore backingStore)
-            throws BackingStoreException;
+<V> V __load(String id, String version, BackingStore backingStore) throws BackingStoreException;
 
-    public int processExpiredSessions();
-    
+    int processExpiredSessions();
+
 }

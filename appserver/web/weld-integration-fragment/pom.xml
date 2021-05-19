@@ -64,10 +64,10 @@
                                         org.jboss.weld.util.collections,
                                         org.jboss.weld.annotated.slim
                                         org.jboss.weld.annotated.slim.backed
-        
+
                                added for weld 2.2.9.Final:
                                         org.jboss.weld.security
-        
+
                                         added org.jboss.weld.contexts for Weld 3.0  It may not be necessary.  After all testing take it out.
                              -->
                             <Export-Package>

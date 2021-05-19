@@ -39,7 +39,7 @@ public class PayloadImpl implements Payload {
         private final ArrayList<Payload.Part> parts = new ArrayList<Payload.Part>();
 
         private boolean dirty = false;
-        
+
         @Override
         public int size() {
             return getParts().size();
@@ -153,10 +153,10 @@ public class PayloadImpl implements Payload {
 
         @Override
         public void requestFileReplacement(
-                final String contentType, 
-                final URI fileURI, 
-                final String dataRequestName, 
-                final Properties props, 
+                final String contentType,
+                final URI fileURI,
+                final String dataRequestName,
+                final Properties props,
                 final File file,
                 final boolean isRecursive) throws IOException {
             final Properties enhancedProps = new Properties();
@@ -166,7 +166,7 @@ public class PayloadImpl implements Payload {
             enhancedProps.setProperty("data-request-type", "file-replace");
             enhancedProps.setProperty("data-request-name", dataRequestName);
             enhancedProps.setProperty("data-request-is-recursive", Boolean.toString(isRecursive));
-	    enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
+            enhancedProps.setProperty("last-modified", Long.toString(file.lastModified()));
 
             /*
              * Add a dummy part for the replacement of the directory - if
@@ -197,7 +197,7 @@ public class PayloadImpl implements Payload {
                  * request part for the single file.
                  */
                 parts.add(Part.newInstance(
-                            contentType, 
+                            contentType,
                             fileURI.getRawPath(),
                             enhancedProps,
                             file));
@@ -383,7 +383,7 @@ public class PayloadImpl implements Payload {
         public static Outbound newInstance() {
             return ZipPayloadImpl.Outbound.newInstance();
         }
-        
+
         @Override
         public Iterator<Payload.Part> parts() {
             ArrayList<Payload.Part> prts = getParts();
@@ -425,10 +425,10 @@ public class PayloadImpl implements Payload {
             }
             if (TextPayloadImpl.Inbound.supportsContentType(payloadContentType)) {
                 return TextPayloadImpl.Inbound.newInstance(payloadContentType, is);
-	    } else if (ZipPayloadImpl.Inbound.supportsContentType(payloadContentType)) {
+            } else if (ZipPayloadImpl.Inbound.supportsContentType(payloadContentType)) {
                 return ZipPayloadImpl.Inbound.newInstance(payloadContentType, is);
             } else {
-		return null;
+                return null;
             }
         }
 
@@ -499,8 +499,8 @@ public class PayloadImpl implements Payload {
         public boolean isRecursive() {
             return isRecursive;
         }
-        
-        /** Some use cases need reentrantable implementation of this stream 
+
+        /** Some use cases need reentrantable implementation of this stream
          * implementation. Information about extraction can be used for it.
          */
         @Override
@@ -514,7 +514,7 @@ public class PayloadImpl implements Payload {
         public File getExtracted() {
             return this.extractedFile;
         }
-        
+
         protected InputStream getExtractedInputStream() {
             File file = getExtracted();
             if (file != null) {
@@ -590,7 +590,7 @@ public class PayloadImpl implements Payload {
                 }
             }
         }
-        
+
         /**
          * Implements Part using a stream.
          */
@@ -622,7 +622,7 @@ public class PayloadImpl implements Payload {
                     return extrIS;
                 }
             }
-            
+
         }
 
         /**
@@ -734,11 +734,11 @@ public class PayloadImpl implements Payload {
                 private final InputStream wrappedStream;
                 private boolean isWrappedStreamClosed = false;
                 private boolean isExternallyClosed = false;
-                
+
                 private SelfClosingInputStream(final InputStream wrappedStream) {
                     this.wrappedStream = wrappedStream;
                 }
-                
+
                 @Override
                 public int read() throws IOException {
                     if (isExternallyClosed) {

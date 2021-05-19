@@ -48,8 +48,8 @@ public class JMSConnectionFactoryDefinitionsHandler extends AbstractResourceHand
     @Override
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,  ResourceContainerContext[] rcContexts)
             throws AnnotationProcessorException {
-    	JMSConnectionFactoryDefinitions defns = (JMSConnectionFactoryDefinitions) ainfo.getAnnotation();
-    	JMSConnectionFactoryDefinition values[] = defns.value();
+        JMSConnectionFactoryDefinitions defns = (JMSConnectionFactoryDefinitions) ainfo.getAnnotation();
+        JMSConnectionFactoryDefinition values[] = defns.value();
         Set<String> duplicates = new HashSet<String>();
         if (values != null && values.length > 0) {
             for (JMSConnectionFactoryDefinition defn : values) {

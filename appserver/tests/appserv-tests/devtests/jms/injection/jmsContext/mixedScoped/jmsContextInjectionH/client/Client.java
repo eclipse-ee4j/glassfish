@@ -48,11 +48,11 @@ public class Client {
             }else{
                 STAT.addStatus(ejbName, STAT.FAIL);
             }
-            
+
         } catch(Exception e) {
             e.printStackTrace();
             STAT.addStatus(ejbName, STAT.FAIL);
         }
     }
-    
+
 }

@@ -47,7 +47,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
             throw new IllegalArgumentException();
         }
 
-        this.bucketSize = bucketSize;   
+        this.bucketSize = bucketSize;
 
         hashtables = new Hashtable[bucketSize];
 
@@ -123,7 +123,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
         return hashtables[getBucketIndex(key)].put(key, value);
     }
 
-    /** 
+    /**
      * @param t  BucketizedHashtable
      *           or a Map with a supported operation entrySet
      */
@@ -249,7 +249,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     /**
      * Compares the specified object with this map for equality.
      * @return true if the specified object is a BucketizedHashtable
-     *         with hashtables represent the same set of mappings. 
+     *         with hashtables represent the same set of mappings.
      */
     public boolean equals(Object o) {
         if (o == this) {
@@ -299,7 +299,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
      */
     public String toString() {
         StringBuffer buf = new StringBuffer("[");  // NOI18N
-        //bucketSize always >= 1 
+        //bucketSize always >= 1
         buf.append(hashtables[0].toString());
         for (int i = 1; i < bucketSize; i++) {
             buf.append(", "); // NOI18N
@@ -321,7 +321,7 @@ public class BucketizedHashtable implements Cloneable, Map, Serializable {
     }
 
     /**
-     * @param  key 
+     * @param  key
      * @return the bucket index for the specified key
      */
     private int getBucketIndex(Object key) {

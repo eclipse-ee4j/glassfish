@@ -27,7 +27,7 @@
     </parent>
     <artifactId>console-ejb-lite-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Admin Console EJB Local (Lite) Plugin</name>
     <description>EJB Local (Lite) plugin bundle for GlassFish Admin Console</description>
 

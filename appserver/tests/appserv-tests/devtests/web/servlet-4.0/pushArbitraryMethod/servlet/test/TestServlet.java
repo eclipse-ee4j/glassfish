@@ -58,7 +58,7 @@ public class TestServlet extends HttpServlet {
              * cookie: [375 bytes were stripped]
              * referer: https://localhost:8181/web-servlet-4.0-push-arbitrary-method/test
              */
-            
+
         PushBuilder pushBuilder = req.newPushBuilder().
             method("FOO").
             path("foo/my.css");

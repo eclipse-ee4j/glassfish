@@ -28,7 +28,7 @@
 
     <artifactId>glassfish-batch-connector</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>Batch Connector for Glassfish</name>
     <dependencies>
         <dependency>

@@ -32,13 +32,13 @@ import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * This handler is responsible for handling jakarta.ejb.PrePassivate 
+ * This handler is responsible for handling jakarta.ejb.PrePassivate
  *
  */
 @Service
 @AnnotationHandlerFor(PrePassivate.class)
 public class PrePassivateHandler extends AbstractAttributeHandler {
-    
+
     public PrePassivateHandler() {
     }
 
@@ -46,15 +46,15 @@ public class PrePassivateHandler extends AbstractAttributeHandler {
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         for(EjbContext next : ejbContexts) {
-            
-            EjbSessionDescriptor ejbSessionDescriptor = 
+
+            EjbSessionDescriptor ejbSessionDescriptor =
                 (EjbSessionDescriptor) next.getDescriptor();
 
             ejbSessionDescriptor.addPrePassivateDescriptor(
                 getPrePassivateDescriptor(ainfo));
-            
+
         }
-        
+
         return getDefaultProcessedResult();
     }
 
@@ -70,7 +70,7 @@ public class PrePassivateHandler extends AbstractAttributeHandler {
     private LifecycleCallbackDescriptor getPrePassivateDescriptor(
             AnnotationInfo ainfo) {
         Method annotatedMethod = (Method) ainfo.getAnnotatedElement();
-        LifecycleCallbackDescriptor prePassivate = 
+        LifecycleCallbackDescriptor prePassivate =
                 new LifecycleCallbackDescriptor();
         prePassivate.setLifecycleCallbackClass(annotatedMethod.getDeclaringClass().getName());
         prePassivate.setLifecycleCallbackMethod(annotatedMethod.getName());
@@ -79,8 +79,8 @@ public class PrePassivateHandler extends AbstractAttributeHandler {
 
 
     /**
-     * @return an array of annotation types this annotation handler would 
-     * require to be processed (if present) before it processes it's own 
+     * @return an array of annotation types this annotation handler would
+     * require to be processed (if present) before it processes it's own
      * annotation type.
      */
     public Class<? extends Annotation>[] getTypeDependencies() {

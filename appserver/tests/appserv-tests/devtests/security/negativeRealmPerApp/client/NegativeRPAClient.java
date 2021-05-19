@@ -39,31 +39,31 @@ public class NegativeRPAClient {
         NegativeRPAClient client = new NegativeRPAClient(args);
         client.doTest();
     }
-    
+
     public NegativeRPAClient(String[] args) {
         //super(args);
     }
-    
+
     public String doTest() {
-        
-	NegativeRPARemote hr=null;
+
+        NegativeRPARemote hr=null;
         String res=null;
         Context ic = null;
         LoginContext lc=null;
         NegativeRPAHome home=null;
         String testId = "Sec::NegativeTest-Realm per app";
-    	try{
+            try{
             stat.addDescription("Security::NegativeTest - Realm per app");
-	    ic = new InitialContext();
-            // create EJB using factory from container 
+            ic = new InitialContext();
+            // create EJB using factory from container
             java.lang.Object objref = ic.lookup("negativeRPALoginBean");
-		
-	    System.err.println("Looked up home!!");
-		
+
+            System.err.println("Looked up home!!");
+
             home = (NegativeRPAHome)PortableRemoteObject.narrow(
-					   objref, NegativeRPAHome.class);
-	    System.err.println("Narrowed home!!");
-				
+                                           objref, NegativeRPAHome.class);
+            System.err.println("Narrowed home!!");
+
             hr = home.create("LizHurley");
             System.out.println("Got the EJB!!");
             System.out.println ("Calling authorized method - addItem");
@@ -75,13 +75,13 @@ public class NegativeRPAClient {
             //ex.printStackTrace();
             if(ex instanceof java.rmi.AccessException){
                 System.out.println(" Got java.rmi.AccessException !! ");
-                System.out.println("NegativeRPA:StatefulLoginBean Test Passed: Exception expected");            
+                System.out.println("NegativeRPA:StatefulLoginBean Test Passed: Exception expected");
                 res="PASS";
                 stat.addStatus(testId, stat.PASS);
 
             } else {
                 System.out.println("NegativeRPA:StatefulLoginBean Test Failed");
-                res = "FAIL";  
+                res = "FAIL";
                 stat.addStatus(testId, stat.FAIL);
             }
         } finally {
@@ -89,10 +89,10 @@ public class NegativeRPAClient {
         }
 
         return res;
-        
+
     }
 
-    
+
     public final static String helloStr = "Hello NegativeRPA!!!";
 }
 

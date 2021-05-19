@@ -56,34 +56,34 @@ public final class IIOPHandleDelegate
             );
         return handleDelegate;
     }
-    
-    
+
+
     public void writeEJBObject(jakarta.ejb.EJBObject ejbObject,
             java.io.ObjectOutputStream ostream)
         throws java.io.IOException
     {
         ostream.writeObject(ejbObject); // IIOP stubs are Serializable
     }
-    
+
     public jakarta.ejb.EJBObject readEJBObject(java.io.ObjectInputStream istream)
         throws java.io.IOException, ClassNotFoundException
     {
         return (EJBObject)getStub(istream, EJBObject.class);
     }
-    
+
     public void writeEJBHome(jakarta.ejb.EJBHome ejbHome,
             java.io.ObjectOutputStream ostream)
         throws java.io.IOException
     {
         ostream.writeObject(ejbHome); // IIOP stubs are Serializable
     }
-    
+
     public jakarta.ejb.EJBHome readEJBHome(java.io.ObjectInputStream istream)
         throws java.io.IOException, ClassNotFoundException
     {
         return (EJBHome)getStub(istream, EJBHome.class);
     }
-    
+
     private Object getStub(java.io.ObjectInputStream istream, Class stubClass)
         throws IOException, ClassNotFoundException
     {
@@ -95,8 +95,8 @@ public final class IIOPHandleDelegate
             try {
 
                 // Check if it is already connected to the ORB by getting
-                // the delegate.  If BAD_OPERATION is not thrown, then the 
-                // stub is connected.  This will happen if istream is an 
+                // the delegate.  If BAD_OPERATION is not thrown, then the
+                // stub is connected.  This will happen if istream is an
                 // IIOP input stream.
                 StubAdapter.getDelegate(obj);
 
@@ -115,21 +115,21 @@ public final class IIOPHandleDelegate
                 }
 
                 // Stub is not connected. This can happen if istream is
-		        // not an IIOP input stream (e.g. it's a File stream).
+                // not an IIOP input stream (e.g. it's a File stream).
                 StubAdapter.connect(obj, (com.sun.corba.ee.spi.orb.ORB) orb);
             }
 
         } else {
-            throw new IOException("Unable to create stub for class " + 
-                stubClass.getName() + 
+            throw new IOException("Unable to create stub for class " +
+                stubClass.getName() +
                 ", object deserialized is not a CORBA object, it's type is " +
                 obj.getClass().getName());
         }
 
         // narrow it
         Object stub = PortableRemoteObject.narrow(obj, stubClass);
-     
+
         return stub;
     }
-    
+
 }

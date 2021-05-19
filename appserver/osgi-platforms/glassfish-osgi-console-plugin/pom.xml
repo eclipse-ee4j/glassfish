@@ -27,7 +27,7 @@
     </parent>
     <artifactId>glassfish-osgi-console-plugin</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>GlassFish OSGi Console Plugin</name>
     <description>OSGi Console Plugin for GlassFish Administration Console</description>
 

@@ -32,10 +32,10 @@ public class OrderRequest {
     }
 
     public ConfirmationBean placeOrder(OrderBean orderBean) {
-        ConfirmationBean cb = null;   
+        ConfirmationBean cb = null;
 
         try {
-            SOAPConnectionFactory scf = 
+            SOAPConnectionFactory scf =
                 SOAPConnectionFactory.newInstance();
             SOAPConnection con = scf.createConnection();
 
@@ -75,7 +75,7 @@ public class OrderRequest {
                 orderBean.getCustomer().getPhoneNumber());
 
             childName = envelope.createName("email-address");
-            SOAPElement emailAddress = 
+            SOAPElement emailAddress =
                 customer.addChildElement(childName);
             emailAddress.addTextNode(
                 orderBean.getCustomer().getEmailAddress());
@@ -99,8 +99,8 @@ public class OrderRequest {
             childName = envelope.createName("zip");
             SOAPElement zip = address.addChildElement(childName);
             zip.addTextNode(orderBean.getAddress().getZip());
-    
-            LineItemBean[] lineItems=orderBean.getLineItems();            
+
+            LineItemBean[] lineItems=orderBean.getLineItems();
             for (int i=0;i < lineItems.length;i++) {
                 LineItemBean lib = lineItems[i];
 
@@ -108,7 +108,7 @@ public class OrderRequest {
                 SOAPElement lineItem = order.addChildElement(childName);
 
                 childName = envelope.createName("coffeeName");
-                SOAPElement coffeeName = 
+                SOAPElement coffeeName =
                     lineItem.addChildElement(childName);
                 coffeeName.addTextNode(lib.getCoffeeName());
 
@@ -123,10 +123,10 @@ public class OrderRequest {
 
             // total
             childName = envelope.createName("total");
-            SOAPElement total = 
+            SOAPElement total =
                 order.addChildElement(childName);
-            total.addTextNode(orderBean.getTotal().toString()); 
-              
+            total.addTextNode(orderBean.getTotal().toString());
+
             URL endpoint = new URL(url);
             SOAPMessage reply = con.call(msg, endpoint);
             con.close();
@@ -145,7 +145,7 @@ public class OrderRequest {
             // Get ship date
             SOAPElement sDate = (SOAPElement)bodyIt2.next();
             String shippingDate = sDate.getValue();
-            SimpleDateFormat df = 
+            SimpleDateFormat df =
                 new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
             Date date = df.parse(shippingDate);
             Calendar cal = new GregorianCalendar();

@@ -41,9 +41,9 @@ public class Client {
         System.exit(0);
     }
 
-    @Resource(mappedName="jms/ejb_ejb30_hello_mdb_QCF") 
+    @Resource(mappedName="jms/ejb_ejb30_hello_mdb_QCF")
     private static QueueConnectionFactory queueConFactory;
- 
+
     //Target Queue
     @Resource(mappedName="jms/ejb_ejb30_hello_mdb_InQueue")
     private static jakarta.jms.Queue msgBeanQueue;
@@ -57,7 +57,7 @@ public class Client {
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
     private int numMessages = 2;
-    
+
     public Client(String[] args) {
         if( args.length == 1 ) {
             numMessages = new Integer(args[0]).intValue();
@@ -80,10 +80,10 @@ public class Client {
     public void setup() throws Exception {
         queueCon = queueConFactory.createQueueConnection();
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         // Destination will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(null);        
+        queueSender = queueSession.createSender(null);
         queueReceiver = queueSession.createReceiver(clientQueue);
         queueCon.start();
     }
@@ -98,28 +98,28 @@ public class Client {
         }
     }
 
-    public void sendMsgs(jakarta.jms.Queue queue, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             Message message = queueSession.createTextMessage("foo #" + (i + 1));
-            System.out.println("Sending message " + i + " to " + queue + 
+            System.out.println("Sending message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
             queueSender.send(queue, message);
-	    
-            System.out.println("Sent message " + i + " to " + queue + 
+
+            System.out.println("Sent message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
         }
     }
 
-    public void doTest(int num) 
+    public void doTest(int num)
         throws Exception {
         sendMsgs((jakarta.jms.Queue) msgBeanQueue, num);
-        
-	//Now attempt to receive responses to our message
+
+        //Now attempt to receive responses to our message
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);
         if( recvdmessage != null ) {
-            System.out.println("Received message : " + 
+            System.out.println("Received message : " +
                                    ((TextMessage)recvdmessage).getText());
         } else {
             System.out.println("timeout after " + TIMEOUT + " seconds");

@@ -47,10 +47,10 @@ public class FileStrategyBuilder extends BasePersistenceStrategyBuilder {
         FileStore store = new FileStore();
         store.setDirectory(directory);
         mgr.setStore(store);
-        
+
         //START OF 6364900
         mgr.setSessionLocker(new PESessionLocker(ctx));
-        //END OF 6364900        
+        //END OF 6364900
 
         ctx.setManager(mgr);
 

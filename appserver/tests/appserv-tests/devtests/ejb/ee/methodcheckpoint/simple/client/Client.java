@@ -28,7 +28,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private SFSBHome home;
@@ -44,13 +44,13 @@ public class Client {
         client.doTest();
         System.out.println("[simpletxClient] DONE doTest()...");
         stat.printSummary("simpletx");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
-        initSFSBList();     //create SFSBs 
+        initSFSBList();     //create SFSBs
         accessSFSB();       //access the SFBS
 
     }
@@ -76,26 +76,26 @@ public class Client {
 
     public void accessSFSB() {
         try {
-	    boolean actCountOK = true;
-	    System.out.println("ActivateCount[0]: " + sfsb.getActivateCount());
-	    actCountOK = sfsb.getActivateCount() == 0;
+            boolean actCountOK = true;
+            System.out.println("ActivateCount[0]: " + sfsb.getActivateCount());
+            actCountOK = sfsb.getActivateCount() == 0;
 
-	    String retrievedName = sfsb.getName();
-	    boolean nameOK = _sfsbPrefix.equalsIgnoreCase(retrievedName);
-	    System.out.println("ActivateCount[1]: " + sfsb.getActivateCount());
-	    actCountOK = (sfsb.getActivateCount() == 1);
+            String retrievedName = sfsb.getName();
+            boolean nameOK = _sfsbPrefix.equalsIgnoreCase(retrievedName);
+            System.out.println("ActivateCount[1]: " + sfsb.getActivateCount());
+            actCountOK = (sfsb.getActivateCount() == 1);
 
-	    System.out.println("ActivateCount[2]: " + sfsb.getActivateCount());
-	    sfsb.getPassivateCount();
-	    actCountOK = (sfsb.getActivateCount() == 1);
+            System.out.println("ActivateCount[2]: " + sfsb.getActivateCount());
+            sfsb.getPassivateCount();
+            actCountOK = (sfsb.getActivateCount() == 1);
 
-	    System.out.println("ActivateCount[3]: " + sfsb.getActivateCount());
-	    sfsb.getPassivateCount();
-	    actCountOK = (sfsb.getActivateCount() == 1);
+            System.out.println("ActivateCount[3]: " + sfsb.getActivateCount());
+            sfsb.getPassivateCount();
+            actCountOK = (sfsb.getActivateCount() == 1);
 
-	    System.out.println("ActivateCount[4]: " + sfsb.getActivateCount());
-	    sfsb.getPassivateCount();
-	    actCountOK = (sfsb.getActivateCount() == 1);
+            System.out.println("ActivateCount[4]: " + sfsb.getActivateCount());
+            sfsb.getPassivateCount();
+            actCountOK = (sfsb.getActivateCount() == 1);
 
             if (nameOK && actCountOK) {
                 stat.addStatus("ejbclient accessSFSB ", stat.PASS);
@@ -109,14 +109,14 @@ public class Client {
     }
 
     private void sleepFor(int seconds) {
-	System.out.println("Waiting for 10 seconds before accessing...");
-	for (int i=0; i<seconds; i++) {
-	    System.out.println("" + (10 - i) + " seconds left...");
-	    try {
-		Thread.currentThread().sleep(1*1000);
-	    } catch (Exception ex) {
-	    }
-	}
+        System.out.println("Waiting for 10 seconds before accessing...");
+        for (int i=0; i<seconds; i++) {
+            System.out.println("" + (10 - i) + " seconds left...");
+            try {
+                Thread.currentThread().sleep(1*1000);
+            } catch (Exception ex) {
+            }
+        }
     }
 
 } //Client{}

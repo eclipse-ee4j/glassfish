@@ -36,7 +36,7 @@
     <module>
       <connector>aod-ra.rar</connector>
     </module>
-    
+
     <administered-object>
        <description>global-scope resource defined in application DD</description>
        <name>java:global/env/EAR_AdminObject</name>

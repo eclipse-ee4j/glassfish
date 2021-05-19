@@ -220,7 +220,7 @@ public class WebFragmentDescriptor extends WebBundleDescriptorImpl
                 if (jdr.isConflict((ResourceEnvReferenceDescriptor)jdRef)) {
                     conflictResourceEnvReference = true;
                 }
-                combineInjectionTargets(jdr, jdRef);   
+                combineInjectionTargets(jdr, jdRef);
             } else {
                 addResourceEnvReferenceDescriptor(jdRef);
             }

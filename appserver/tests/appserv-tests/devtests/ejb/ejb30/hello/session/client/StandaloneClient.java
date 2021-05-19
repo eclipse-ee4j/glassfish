@@ -24,7 +24,7 @@ import javax.naming.*;
 
 public class StandaloneClient {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -33,11 +33,11 @@ public class StandaloneClient {
         StandaloneClient client = new StandaloneClient(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-sessionstandaloneID");
-    }  
-    
+    }
+
     public StandaloneClient (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
@@ -49,7 +49,7 @@ public class StandaloneClient {
 
             Sful sful2 = (Sful) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
-            
+
             Sful sful3 = (Sful) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sful#com.sun.s1asdev.ejb.ejb30.hello.session.Sful");
 
@@ -58,7 +58,7 @@ public class StandaloneClient {
 
             Sless sless2 = (Sless) ic.lookup
                 ("com.sun.s1asdev.ejb.ejb30.hello.session.Sless#com.sun.s1asdev.ejb.ejb30.hello.session.Sless");
-            
+
 
             System.out.println("invoking stateful");
             sful1.hello();
@@ -88,8 +88,8 @@ public class StandaloneClient {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
 }

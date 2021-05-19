@@ -31,30 +31,30 @@ public class Client {
 
  /*   private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main (String[] args) {
         stat.addDescription("jaxrpc-hello-web-client");
         Client client = new Client();
         client.doTest(args);
         stat.printSummary("jaxrpc-hello-web-client");
     }
-    
+
     public void doTest(String[] args) {
-    	try {
-            
+            try {
+
             String targetEndpointAddress = args[0];
             Context ic = new InitialContext();
 
             MyHelloService myHelloService =
                 (MyHelloService) ic.lookup(
                     "java:comp/env/service/helloservice");
- 
+
            HelloIF helloPort = myHelloService.getHelloIFPort();
-            
-            
+
+
             ((Stub)helloPort)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY,
                     targetEndpointAddress);
-            
+
             System.out.println("endpoint address = " + targetEndpointAddress);
             System.out.println("Invocation returned " + helloPort.sayHello("All"));
         } catch (Exception ex) {

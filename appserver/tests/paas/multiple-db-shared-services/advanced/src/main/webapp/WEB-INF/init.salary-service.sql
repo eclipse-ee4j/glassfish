@@ -15,8 +15,8 @@
  */
 
 CREATE TABLE SALARY (
-	emp_id    integer not null, 
-	emp_sal   float(7, 2)
+    emp_id    integer not null,
+    emp_sal   float(7, 2)
 );
 
 INSERT INTO SALARY VALUES(101, 11111.12);

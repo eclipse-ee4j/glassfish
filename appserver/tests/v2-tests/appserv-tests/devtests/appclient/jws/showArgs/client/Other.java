@@ -24,8 +24,8 @@ package com.sun.s1asdev.deployment.appclient.jws.showArgs.other;
  * @author tjquinn
  */
 public class Other {
-   
+
     public static String hi() {
         return "From other.Other";
-    } 
+    }
 }

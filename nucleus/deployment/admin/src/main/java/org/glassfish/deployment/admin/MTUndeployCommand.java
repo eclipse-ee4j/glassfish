@@ -56,7 +56,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
 
     @Inject
     Applications applications;
-    
+
     private Application app;
     private List<AppTenant> appTenants = null;
 
@@ -98,7 +98,7 @@ public class MTUndeployCommand implements AdminCommand, AdminCommandSecurity.Acc
     }
 
     private void unprovisionAppFromTenants(String appName, ActionReport report, final Subject subject) {
-        
+
         if (app == null || appTenants== null) {
             return;
         }

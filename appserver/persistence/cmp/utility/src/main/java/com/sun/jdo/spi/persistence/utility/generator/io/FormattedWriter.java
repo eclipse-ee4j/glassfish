@@ -31,126 +31,126 @@ import java.util.*;
  */
 class FormattedWriter
 {
-	static private final String lineSeparator =
-		System.getProperty("line.separator");
-	static private final String indent = "    ";	// NOI18N
+    static private final String lineSeparator =
+        System.getProperty("line.separator");
+    static private final String indent = "    ";    // NOI18N
 
-	private StringBuffer _buffer;
-	private int _initialIndents = 0;
+    private StringBuffer _buffer;
+    private int _initialIndents = 0;
 
-	/** Creates new FormattedWriter */
-	FormattedWriter ()
-	{
-	}
+    /** Creates new FormattedWriter */
+    FormattedWriter ()
+    {
+    }
 
-	private StringBuffer getBuffer ()
-	{
-		if (_buffer == null)
-			_buffer = new StringBuffer();
+    private StringBuffer getBuffer ()
+    {
+        if (_buffer == null)
+            _buffer = new StringBuffer();
 
-		return _buffer;
-	}
+        return _buffer;
+    }
 
-	/** Returns a string representation of the FormattedWriter.
-	 * @return The string representation of the internal StringBuffer 
-	 * used by this object.
-	 */	
-	public String toString () { return getBuffer().toString(); }
+    /** Returns a string representation of the FormattedWriter.
+     * @return The string representation of the internal StringBuffer
+     * used by this object.
+     */
+    public String toString () { return getBuffer().toString(); }
 
-	void writeComments (final String[] comments)
-	{
-		final int n = (comments != null ? comments.length : 0);
+    void writeComments (final String[] comments)
+    {
+        final int n = (comments != null ? comments.length : 0);
 
-		for (int i = 0; i < n; i++)
-		{
-			final String s = comments[i];
+        for (int i = 0; i < n; i++)
+        {
+            final String s = comments[i];
 
-			writeln("// " + (s != null ? s : ""));	// NOI18N
-		}
-	}
+            writeln("// " + (s != null ? s : ""));    // NOI18N
+        }
+    }
 
-	private void _write (final int indents, final String s)
-	{
-		final StringBuffer buffer = getBuffer();
+    private void _write (final int indents, final String s)
+    {
+        final StringBuffer buffer = getBuffer();
 
-		if (!s.equals(lineSeparator))
-		{
-			for (int i = 0; i < indents; i++)
-				buffer.append(indent);
-		}
+        if (!s.equals(lineSeparator))
+        {
+            for (int i = 0; i < indents; i++)
+                buffer.append(indent);
+        }
 
-		buffer.append(s);
-	}
+        buffer.append(s);
+    }
 
-	void write (final int indents, final String s)
-	{
-		_write(indents + _initialIndents, s);
-	}
+    void write (final int indents, final String s)
+    {
+        _write(indents + _initialIndents, s);
+    }
 
-	void write (final String s)
-	{
-		_write(0, s);
-	}
+    void write (final String s)
+    {
+        _write(0, s);
+    }
 
-	void writeln (final int indents, final String s)
-	{
-		if (_initialIndents > 0)
-			_write(_initialIndents, "");	// NOI18N
+    void writeln (final int indents, final String s)
+    {
+        if (_initialIndents > 0)
+            _write(_initialIndents, "");    // NOI18N
 
-		_write(indents, s + lineSeparator);
-	}
+        _write(indents, s + lineSeparator);
+    }
 
-	void writeln (final String s)
-	{
-		writeln(0, s);
-	}
+    void writeln (final String s)
+    {
+        writeln(0, s);
+    }
 
-	void writeln ()
-	{
-		writeln(0, "");			// NOI18N
-	}
+    void writeln ()
+    {
+        writeln(0, "");            // NOI18N
+    }
 
-	void writeList (final int indents, final List list, 
-		final boolean addSeparator)
-	{
-		if ((list != null) && (list.size() > 0))
-		{
-			Iterator iterator = list.iterator();
-	
-			while (iterator.hasNext())
-			{
-				indent(indents, iterator.next().toString());
+    void writeList (final int indents, final List list,
+        final boolean addSeparator)
+    {
+        if ((list != null) && (list.size() > 0))
+        {
+            Iterator iterator = list.iterator();
 
-				if (addSeparator)
-					writeln();
-			}
+            while (iterator.hasNext())
+            {
+                indent(indents, iterator.next().toString());
 
-			if (!addSeparator)
-				writeln();
-		}
-	}
+                if (addSeparator)
+                    writeln();
+            }
 
-	void writeList (final int indents, final List list)
-	{
-		writeList(indents, list, false);
-	}
+            if (!addSeparator)
+                writeln();
+        }
+    }
 
-	void writeList (final List list)
-	{
-		writeList(0, list);
-	}
+    void writeList (final int indents, final List list)
+    {
+        writeList(indents, list, false);
+    }
 
-	private void indent (final int indents, final String s)
-	{
-		if (s.indexOf(lineSeparator) != -1)
-		{
-			StringTokenizer tokenizer =
-				new StringTokenizer(s, lineSeparator, true);
+    void writeList (final List list)
+    {
+        writeList(0, list);
+    }
 
-			while (tokenizer.hasMoreTokens())
-				write(indents, tokenizer.nextToken());
-		}
-		else
-			write(indents, s);
-	}
+    private void indent (final int indents, final String s)
+    {
+        if (s.indexOf(lineSeparator) != -1)
+        {
+            StringTokenizer tokenizer =
+                new StringTokenizer(s, lineSeparator, true);
+
+            while (tokenizer.hasMoreTokens())
+                write(indents, tokenizer.nextToken());
+        }
+        else
+            write(indents, s);
+    }
 }

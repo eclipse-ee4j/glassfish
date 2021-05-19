@@ -151,7 +151,7 @@ public class JmsRaUtil {
         }
         return null;
     }
-    
+
     private static boolean enableClustering() {
         try {
             /* This flag disables the auto clustering functionality
@@ -233,7 +233,7 @@ public class JmsRaUtil {
                                 reconnectDelayInSeconds =
                                     Integer.parseInt(p.getValue());
                             } catch (Exception e) {
-                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION, 
+                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                         new Object[]{e.getMessage()});
                             }
                         }
@@ -242,7 +242,7 @@ public class JmsRaUtil {
                                 reconnectMaxRetries =
                                     Integer.parseInt(p.getValue());
                             } catch (Exception e) {
-                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION, 
+                                _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                         new Object[]{e.getMessage()});
                             }
                         }
@@ -257,7 +257,7 @@ public class JmsRaUtil {
                             }
                         }
                     } catch (Exception e) {
-                        _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION, 
+                        _logger.log(Level.WARNING, JMSLoggerInfo.MDB_CONFIG_EXCEPTION,
                                 new Object[]{e.getMessage()});
                         if (_logger.isLoggable(Level.FINE)) {
                             _logger.log(Level.FINE, e.getClass().getName(), e);
@@ -344,7 +344,7 @@ public class JmsRaUtil {
                rarFile.explode();
                _logger.log(Level.INFO, JMSLoggerInfo.JMSRA_UPGRADE_COMPLETED);
        } catch(ZipFileException ze) {
-               _logger.log(Level.SEVERE, JMSLoggerInfo.JMSRA_UPGRADE_FAILED, 
+               _logger.log(Level.SEVERE, JMSLoggerInfo.JMSRA_UPGRADE_FAILED,
                        new Object[]{ze.getMessage()});
            }
         }
@@ -377,7 +377,7 @@ public class JmsRaUtil {
            ver = mf.getMainAttributes().getValue(MANIFEST_TAG);
            return ver;
        } catch (Exception e) {
-           _logger.log(Level.WARNING, JMSLoggerInfo.JMSRA_UPGRADE_CHECK_FAILED, 
+           _logger.log(Level.WARNING, JMSLoggerInfo.JMSRA_UPGRADE_CHECK_FAILED,
                    new Object[]{e.getMessage() + ":" + jarFile});
            throw e;
        } finally {
@@ -401,7 +401,7 @@ public class JmsRaUtil {
            ver = mf.getMainAttributes().getValue(MANIFEST_TAG);
            return ver;
        } catch (Exception e) {
-           _logger.log(Level.WARNING, JMSLoggerInfo.JMSRA_UPGRADE_CHECK_FAILED, 
+           _logger.log(Level.WARNING, JMSLoggerInfo.JMSRA_UPGRADE_CHECK_FAILED,
                    new Object[]{e.getMessage() + ":" + manifestFile});
            throw e;
        }

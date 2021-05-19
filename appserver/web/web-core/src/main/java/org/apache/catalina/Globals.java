@@ -32,9 +32,9 @@ public final class Globals {
 
     /**
      * The servlet context attribute under which we store the alternate
-     * deployment descriptor for this web application 
+     * deployment descriptor for this web application
      */
-    public static final String ALT_DD_ATTR = 
+    public static final String ALT_DD_ATTR =
         "org.apache.catalina.deploy.alt_dd";
 
     /**
@@ -69,13 +69,13 @@ public final class Globals {
     /**
      * Request dispatcher state.
      */
-    public static final String DISPATCHER_TYPE_ATTR = 
+    public static final String DISPATCHER_TYPE_ATTR =
         "org.apache.catalina.core.DISPATCHER_TYPE";
 
     /**
      * Request dispatcher path.
      */
-    public static final String DISPATCHER_REQUEST_PATH_ATTR = 
+    public static final String DISPATCHER_REQUEST_PATH_ATTR =
         "org.apache.catalina.core.DISPATCHER_REQUEST_PATH";
 
     /**
@@ -129,7 +129,7 @@ public final class Globals {
      */
     public static final String SSL_SESSION_ID_ATTR =
         "jakarta.servlet.request.ssl_session_id";
-    
+
 
     /**
      * The servlet context attribute under which the managed bean Registry
@@ -175,7 +175,7 @@ public final class Globals {
     public static final String SUBJECT_ATTR =
         "javax.security.auth.subject";
 
-    
+
     // START SJSAS
     /**
      * The class name of the default servlet
@@ -188,7 +188,7 @@ public final class Globals {
     /**
      * Has security been turned on?
      */
-    public static final boolean IS_SECURITY_ENABLED = 
+    public static final boolean IS_SECURITY_ENABLED =
         (System.getSecurityManager() != null);
 
 
@@ -207,7 +207,7 @@ public final class Globals {
 
     // START GlassFish 896
     public static final String SESSION_TRACKER =
-        "com.sun.enterprise.http.sessionTracker";    
+        "com.sun.enterprise.http.sessionTracker";
     // END GlassFish 896
 
     public static final String REQUEST_FACADE_HELPER =
@@ -243,11 +243,11 @@ public final class Globals {
 
     public static final String WRAPPED_REQUEST =
         "__jakarta.security.auth.message.request";
-    
+
     public static final String WRAPPED_RESPONSE =
-        "__jakarta.security.auth.message.response"; 
-    
-    
+        "__jakarta.security.auth.message.response";
+
+
     /**
      * The servlet context attribute under which we store a flag used
      * to mark this request as having been processed by the SSIServlet.

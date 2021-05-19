@@ -20,15 +20,15 @@ import java.util.*;
 import java.math.BigDecimal;
 import com.sun.cb.RetailPriceList;
 import com.sun.cb.RetailPriceItem;
- 
+
 public class ShoppingCart {
   ArrayList items = null;
   BigDecimal total = new BigDecimal("0.00");
   int numberOfItems = 0;
-  
+
   public ShoppingCart(RetailPriceList rpl) {
       items = new ArrayList();
-      
+
       for(Iterator i = rpl.getItems().iterator(); i.hasNext(); ) {
         RetailPriceItem item = (RetailPriceItem) i.next();
         ShoppingCartItem sci = new ShoppingCartItem(item, new BigDecimal("0.0"), new BigDecimal("0.00"));
@@ -36,7 +36,7 @@ public class ShoppingCart {
         numberOfItems++;
       }
   }
-  
+
   public synchronized void add (ShoppingCartItem item) {
     items.add(item);
     total = total.add(item.getPrice()).setScale(2);

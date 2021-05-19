@@ -28,10 +28,10 @@ import org.glassfish.logging.annotation.LoggerInfo;
 /* Module private */
 public class AMXLoggerInfo {
     public static final String LOGMSG_PREFIX = "NCLS-COM";
-    
+
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.admin.amx.util.LogMessages";
-    
+
     @LoggerInfo(subsystem = "COMMON", description = "AMX Services", publish = true)
     public static final String AMX_LOGGER = "jakarta.enterprise.system.tools.amx";
     private static final Logger amxLogger = Logger.getLogger(
@@ -40,7 +40,7 @@ public class AMXLoggerInfo {
     public static Logger getLogger() {
         return amxLogger;
     }
-    
+
     @LogMessageInfo(
             message = "AMX Startup Service Shutdown. MBeans have not been unregistered: {0}",
             level = "WARNING")
@@ -135,99 +135,99 @@ public class AMXLoggerInfo {
     @LogMessageInfo(
             message = "MBeans exist in AMX domain prior to DomainRoot (violates Parent requirement): {0}",
             level = "INFO")
-    public static final String mbeanExist = LOGMSG_PREFIX + "-00032";  
-    
+    public static final String mbeanExist = LOGMSG_PREFIX + "-00032";
+
     @LogMessageInfo(
             message = "Can't register config MBean: type={0}, name={1}, exception={2}",
             level = "WARNING")
-    public static final String cantRegister = LOGMSG_PREFIX + "-00033";  
-    
+    public static final String cantRegister = LOGMSG_PREFIX + "-00033";
+
     @LogMessageInfo(
             message = "Unexpected thread death of AMXConfigLoaderThread",
             cause = "The AMX configuration loader thread received an unexpected exception.",
             action = "Check the server logs and contact Oracle support.",
             level = "SEVERE")
-    public static final String unexpectedDeath = LOGMSG_PREFIX + "-00034";  
-    
+    public static final String unexpectedDeath = LOGMSG_PREFIX + "-00034";
+
     @LogMessageInfo(
             message = "Can't create children",
             level = "INFO")
-    public static final String cantCreateChildren = LOGMSG_PREFIX + "-00035";  
-    
+    public static final String cantCreateChildren = LOGMSG_PREFIX + "-00035";
+
     @LogMessageInfo(
             message = "AMXConfigStartupService.preDestroy(): stopping AMX" ,
             level = "INFO")
-    public static final String stoppingAMX = LOGMSG_PREFIX + "-00036";  
-    
+    public static final String stoppingAMX = LOGMSG_PREFIX + "-00036";
+
     @LogMessageInfo(
             message = "Illegal non-string type for {0}.{1}(): {2}",
             level = "INFO")
-    public static final String illegalNonstring = LOGMSG_PREFIX + "-00037";  
-    
+    public static final String illegalNonstring = LOGMSG_PREFIX + "-00037";
+
     @LogMessageInfo(
             message = "Can't get field value for {0}: exception: {1}",
             level = "INFO")
-    public static final String cantGetField = LOGMSG_PREFIX + "-00038";  
-    
+    public static final String cantGetField = LOGMSG_PREFIX + "-00038";
+
     @LogMessageInfo(
             message = "Can't getTypesImplementing for {0}: exception: {1}",
             level = "INFO")
-    public static final String cantGetTypesImplementing = LOGMSG_PREFIX + "-00039";  
-    
+    public static final String cantGetTypesImplementing = LOGMSG_PREFIX + "-00039";
+
     @LogMessageInfo(
             message = "Can't get childrenSet() from MBean: {0}, exception: {1}",
             level = "WARNING")
-    public static final String cantGetChildren = LOGMSG_PREFIX + "-00040";  
-    
+    public static final String cantGetChildren = LOGMSG_PREFIX + "-00040";
+
     @LogMessageInfo(
             message = "Problem with MBean: {0}, exception: {1}" ,
             level = "WARNING")
-    public static final String problemWithMbean = LOGMSG_PREFIX + "-00041";  
-    
+    public static final String problemWithMbean = LOGMSG_PREFIX + "-00041";
+
     @LogMessageInfo(
             message = "PathnamesImpl.getAllPathnames(): unexpected Throwable: {1}" ,
             level = "WARNING")
-    public static final String unexpectedThrowable = LOGMSG_PREFIX + "-00042";  
-    
+    public static final String unexpectedThrowable = LOGMSG_PREFIX + "-00042";
+
     @LogMessageInfo(
             message = "Can't get path() for MBean: {0}, exception: {1}" ,
             level = "WARNING")
-    public static final String cantGetPath = LOGMSG_PREFIX + "-00043";  
-    
+    public static final String cantGetPath = LOGMSG_PREFIX + "-00043";
+
     @LogMessageInfo(
             message = "Can't instantiate realm: {0}, exception: {1}" ,
             level = "WARNING")
-    public static final String cantInstantiateRealm = LOGMSG_PREFIX + "-00044";  
-    
+    public static final String cantInstantiateRealm = LOGMSG_PREFIX + "-00044";
+
     @LogMessageInfo(
             message = "getRealmNames(): Can't get realm names, exception:" ,
             level = "WARNING")
-    public static final String cantGetRealmNames = LOGMSG_PREFIX + "-00045";  
-    
+    public static final String cantGetRealmNames = LOGMSG_PREFIX + "-00045";
+
     @LogMessageInfo(
             message = "Cannot find primordial com.sun.enterprise.osgi-adapter" ,
             level = "WARNING")
-    public static final String cantFindOSGIAdapter = LOGMSG_PREFIX + "-00046";  
-    
+    public static final String cantFindOSGIAdapter = LOGMSG_PREFIX + "-00046";
+
     @LogMessageInfo(
             message = "Stopping server forcibly",
             level = "WARNING")
-    public static final String stoppingServerForcibly = LOGMSG_PREFIX + "-00047";  
-    
+    public static final String stoppingServerForcibly = LOGMSG_PREFIX + "-00047";
+
     @LogMessageInfo(
             message = "Can't get cipher suites",
             level = "INFO")
-    public static final String cantGetCipherSuites = LOGMSG_PREFIX + "-00048";  
-    
+    public static final String cantGetCipherSuites = LOGMSG_PREFIX + "-00048";
+
     @LogMessageInfo(
             message = "MBeanInfoSupport: @ManagedAttribute cannot also be @ManagedOperation: {0}.{1}()",
             level = "WARNING")
-    public static final String attributeCantBeOperation = LOGMSG_PREFIX + "-00049";  
-    
+    public static final String attributeCantBeOperation = LOGMSG_PREFIX + "-00049";
+
     @LogMessageInfo(
             message = "MBeanInfoSupport: @ManagedAttribute not a getter or setter: {0}.{1}()",
             level = "WARNING")
-    public static final String attributeNotGetterSetter = LOGMSG_PREFIX + "-00050";  
-    
-    
+    public static final String attributeNotGetterSetter = LOGMSG_PREFIX + "-00050";
+
+
 }

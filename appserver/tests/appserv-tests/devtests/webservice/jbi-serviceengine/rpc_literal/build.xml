@@ -25,7 +25,7 @@
     <target name="all">
         <ant dir="se_consumer_se_provider/generated_wsdl" target="all"/>
         <ant dir="se_consumer_se_provider/bundled_wsdl" target="all"/>
-		<ant dir="bc_consumer_sc_provider/wsdl-import" target="all"/>
-		<ant dir="bc_consumer_sc_provider/bundled-wsdl" target="all"/>
+                <ant dir="bc_consumer_sc_provider/wsdl-import" target="all"/>
+                <ant dir="bc_consumer_sc_provider/bundled-wsdl" target="all"/>
     </target>
 </project>

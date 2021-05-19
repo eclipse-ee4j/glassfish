@@ -62,7 +62,7 @@ public final class ConnectorMessageBeanClient
         implements MessageBeanClient, MessageEndpointFactory {
 
     private String activationName;
-    
+
     private ConnectorRegistry registry_;
 
     private MessageBeanProtocolManager messageBeanPM_;
@@ -283,7 +283,7 @@ public final class ConnectorMessageBeanClient
 
         // Except system-rars, all other rars are loaded eagerly.
         // Check whether the rar is a system-rar.
-        // (as of now, jms-ra is the only inbound system-rar)  
+        // (as of now, jms-ra is the only inbound system-rar)
         if (activeRar == null && ConnectorsUtil.belongsToSystemRA(resourceAdapterMid)) {
             ConnectorRuntime crt = ConnectorRuntime.getRuntime();
             crt.loadDeferredResourceAdapter(resourceAdapterMid);
@@ -444,7 +444,7 @@ public final class ConnectorMessageBeanClient
      */
     public String getActivationName(){
       if(activationName == null){
-        
+
         String appName = descriptor_.getApplication().getName();
         String moduleID = descriptor_.getEjbBundleDescriptor().getModuleID();
         int pound = moduleID.indexOf("#");
@@ -457,7 +457,7 @@ public final class ConnectorMessageBeanClient
 
         ServerEnvironmentImpl env = Globals.get(ServerEnvironmentImpl.class);
         String instanceName = env.getInstanceName();
-        
+
         Domain domain = Globals.get(Domain.class);
         String domainName = domain.getName();
         Cluster cluster = domain.getServerNamed(instanceName).getCluster();
@@ -467,11 +467,11 @@ public final class ConnectorMessageBeanClient
           // this application is deployed in a cluster
           clusterName = cluster.getName();
         }
-        
+
         if(clusterName!=null){
             // this application is deployed in a cluster
             activationName = combineString(domainName, clusterName, appName, moduleID, mdbClassName);
-            
+
         }else{
             // this application is deployed in a stand-alone server instance.
             activationName = combineString(domainName, instanceName, appName, moduleID, mdbClassName);
@@ -482,15 +482,15 @@ public final class ConnectorMessageBeanClient
 
 //    /**
 //     * Compute the activation name according to the names of domain, cluster, instance,
-//     * application, module and MDB. 
-//     * 
+//     * application, module and MDB.
+//     *
 //     * Check whether the combination of the activation name and instance name
 //     * is longer than 128 characters. If yes, then compact the activation name.
-//     * 
+//     *
 //     */
-//    public String computeActivationName(String domainName, String clusterName, 
+//    public String computeActivationName(String domainName, String clusterName,
 //            String instanceName, String appName, String moduleID, String mdbName){
-//        
+//
 //        if(clusterName!=null){
 //            // this application is deployed in a cluster
 //            String fullActivationName = combineString(domainName, clusterName, appName, moduleID, mdbName);
@@ -499,7 +499,7 @@ public final class ConnectorMessageBeanClient
 //            // BootstrapContextImpl.getInstanceName() will return at most 24 characters
 //            int instanceLenth = Math.min(instanceName.length(), BootstrapContextImpl.MAX_INSTANCE_LENGTH);
 //            if((fullActivationName.length()+instanceLenth)>127){
-//                String compactedName = compactActivationName(fullActivationName, domainName, 
+//                String compactedName = compactActivationName(fullActivationName, domainName,
 //                        clusterName, instanceName, appName, moduleID, mdbName);
 //                logger.log(Level.INFO, "The original activation is: "+fullActivationName
 //                        +", because it is too long, compact it to: "+compactedName);
@@ -512,7 +512,7 @@ public final class ConnectorMessageBeanClient
 //            // this application is deployed in a stand-alone server instance.
 //            String fullActivationName = combineString(domainName, instanceName, appName, moduleID, mdbName);
 //            if(fullActivationName.length()>128){
-//                String compactedName = compactActivationName(fullActivationName, domainName, 
+//                String compactedName = compactActivationName(fullActivationName, domainName,
 //                        instanceName, appName, moduleID, mdbName);
 //                logger.log(Level.INFO, "The original activation is: "+fullActivationName
 //                        +", because it is too long, compact it to: "+compactedName);
@@ -522,28 +522,28 @@ public final class ConnectorMessageBeanClient
 //            }
 //        }
 //    }
-//    /* 
+//    /*
 //     * This method is called when the server is a clustered instance.
-//     * 
+//     *
 //     * Compact the activationName so that the combination of it and instance name
 //     * is no longer than 128 characters. The combination of activation name and
 //     * instance name is of the format:
 //     *   domain_cluster_application_module_mdb_MD5_instance
-//     * 
-//     * The basic idea is that: 
-//     *   1. Add the MD5 digest of the original activationName. This can ensure the 
+//     *
+//     * The basic idea is that:
+//     *   1. Add the MD5 digest of the original activationName. This can ensure the
 //     *      (almost) uniqueness of the activation name. The new activation name
-//     *      will be of the format: domain_cluster_application_module_mdb_MD5 
-//     *   2. The instance name is no longer than 24 characters, the method 
-//     *      BootstrapContextImpl.getInstanceName() will truncate instance name 
+//     *      will be of the format: domain_cluster_application_module_mdb_MD5
+//     *   2. The instance name is no longer than 24 characters, the method
+//     *      BootstrapContextImpl.getInstanceName() will truncate instance name
 //     *      if need.
 //     *   3. Truncate the longest element among the domain, instance, application,
-//     *      module and mdb names, until the combination of new activation 
+//     *      module and mdb names, until the combination of new activation
 //     *      name and instance name is no longer than 128 characters.
-//     *      
-//     */ 
-//    private String compactActivationName(String originalActivationName, 
-//            String domainName, String clusterName, String instanceName, 
+//     *
+//     */
+//    private String compactActivationName(String originalActivationName,
+//            String domainName, String clusterName, String instanceName,
 //            String appName, String moduleID, String mdbName){
 //
 //        String[] names = new String[5];
@@ -552,11 +552,11 @@ public final class ConnectorMessageBeanClient
 //        names[2] = appName;
 //        names[3] = moduleID;
 //        names[4] = mdbName;
-//        
+//
 //        // the instanceName is longer than 24 characters.
 //        int instanceLenth = Math.min(instanceName.length(), BootstrapContextImpl.MAX_INSTANCE_LENGTH);
 //
-//        // the MD5 digestion has 32 characters, the remaining capacity 
+//        // the MD5 digestion has 32 characters, the remaining capacity
 //        // is 128-(32 + size_of_instanceName + 2).
 //        int maxTotal = 94 - instanceLenth;
 //        StringBuilder compacted = compactString(names, maxTotal);
@@ -566,22 +566,22 @@ public final class ConnectorMessageBeanClient
 //        return compacted.toString();
 //    }
 //
-//    /* 
+//    /*
 //     * This method is called when the server is a stand-alone instance.
-//     * 
+//     *
 //     * Compact the activationName so that it is no longer than 128 characters.
 //     * The new activation name is of the format:
 //     *   domain_instance_application_module_mdb_MD5
-//     * 
-//     * The basic idea is that: 
-//     *   1. Add the MD5 digest of the original activationName which can ensure the 
-//     *      (almost) uniqueness of the activation. 
+//     *
+//     * The basic idea is that:
+//     *   1. Add the MD5 digest of the original activationName which can ensure the
+//     *      (almost) uniqueness of the activation.
 //     *   2. Truncate the longest element among the domain, instance, application,
-//     *      module and mdb names, until the combination of them and MD5 
+//     *      module and mdb names, until the combination of them and MD5
 //     *      digestion is no longer than 128 characters.
-//     *      
-//     */ 
-//    private String compactActivationName(String originalActivationName, String domainName, 
+//     *
+//     */
+//    private String compactActivationName(String originalActivationName, String domainName,
 //            String instanceName, String appName, String moduleID, String mdbName){
 //
 //        String[] names = new String[5];
@@ -590,24 +590,24 @@ public final class ConnectorMessageBeanClient
 //        names[2] = appName;
 //        names[3] = moduleID;
 //        names[4] = mdbName;
-//        // the MD5 digestion has 32 characters, the remaining capacity is 
-//        // (128-32-1) = 95 characters. 
+//        // the MD5 digestion has 32 characters, the remaining capacity is
+//        // (128-32-1) = 95 characters.
 //        StringBuilder compacted = compactString(names, 95);
 //
 //        String digest = computeMD5(originalActivationName);
 //        compacted.append("_").append(digest);
 //        return compacted.toString();
 //    }
-//    
-//    /* 
+//
+//    /*
 //     * Compact the given Strings so that their total size is no longer than
-//     * maxTotal characters. 
-//     *  
-//     * Find the longest string, truncate its first half part, because in the most 
-//     * cases, the last characters are more significant. Do this operation until 
+//     * maxTotal characters.
+//     *
+//     * Find the longest string, truncate its first half part, because in the most
+//     * cases, the last characters are more significant. Do this operation until
 //     * the total size is no longer than maxTotal:
-//     * 
-//     */ 
+//     *
+//     */
 //    private StringBuilder compactString(String[] texts, int maxTotal){
 //        int arrayLengh = texts.length;
 //
@@ -617,7 +617,7 @@ public final class ConnectorMessageBeanClient
 //        }
 //        // add the size of delimiter characters between the strings
 //        total+=arrayLengh-1;
-//        
+//
 //        while(total>maxTotal){
 //            // find the longest item
 //            int longestLength = 0;
@@ -629,7 +629,7 @@ public final class ConnectorMessageBeanClient
 //                }
 //            }
 //            // truncate the first half part of the string
-//            // because it seems that the last characters are more significant. 
+//            // because it seems that the last characters are more significant.
 //            int trunctionSize= Math.min(longestLength>>1, total-maxTotal);
 //            texts[longestIndex]=texts[longestIndex].substring(trunctionSize, longestLength);
 //
@@ -644,7 +644,7 @@ public final class ConnectorMessageBeanClient
 //        }
 //        return sb;
 //    }
-    
+
     private String combineString(String... names) {
         StringBuilder sb = new StringBuilder(128);
         sb.append(names[0]);
@@ -670,7 +670,7 @@ public final class ConnectorMessageBeanClient
 //                sb.append(Integer.toHexString((digest[i]>>4)&0x0F));
 //                sb.append(Integer.toHexString(digest[i]&0x0F));
 //            }
-//            
+//
 //        } catch (NoSuchAlgorithmException ignore) {
 //            ignore.printStackTrace();
 //        }

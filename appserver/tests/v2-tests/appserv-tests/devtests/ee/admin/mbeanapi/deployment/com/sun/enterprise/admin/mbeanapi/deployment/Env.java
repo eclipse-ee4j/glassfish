@@ -44,32 +44,32 @@ public class Env
     {
         final TrustStoreTrustManager trustMgr =  TrustStoreTrustManager.
             getSystemInstance();
-		
-		// WBN -- NPE below if this is null, which is very likely if the System Props aren't
-		//setup
-		
-		
-        final HandshakeCompletedListenerImpl handshakeCompletedListener = 
+
+        // WBN -- NPE below if this is null, which is very likely if the System Props aren't
+        //setup
+
+
+        final HandshakeCompletedListenerImpl handshakeCompletedListener =
                 new HandshakeCompletedListenerImpl();
 
-		if(trustMgr == null)
-		{
-			javax.net.ssl.X509TrustManager tm = TrustAnyTrustManager.getInstance();
-			return new TLSParams(tm, handshakeCompletedListener);
-		}
+        if(trustMgr == null)
+        {
+            javax.net.ssl.X509TrustManager tm = TrustAnyTrustManager.getInstance();
+            return new TLSParams(tm, handshakeCompletedListener);
+        }
 
-		
-		trustMgr.setPrompt(true);
+
+        trustMgr.setPrompt(true);
         return new TLSParams(trustMgr, handshakeCompletedListener);
     }
 
     public static boolean useTLS()
     {
-		// WBN -- if useTLS return false -- deployments fail 100% of the time.
-		// so I'm switching this to always return true...
-		return true;
+        // WBN -- if useTLS return false -- deployments fail 100% of the time.
+        // so I'm switching this to always return true...
+        return true;
         //final String useTLS = System.getProperty(USE_TLS_SYSTEM_PROPERTY);
-        //return ((useTLS != null) && 
+        //return ((useTLS != null) &&
                 //(useTLS.equals("true") || useTLS.equals("TRUE")));
     }
 }

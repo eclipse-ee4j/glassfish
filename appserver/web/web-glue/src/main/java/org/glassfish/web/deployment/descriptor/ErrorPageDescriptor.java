@@ -16,98 +16,115 @@
 
 package org.glassfish.web.deployment.descriptor;
 
-
-/** Objects exhiniting this interface represent an error page and the exception type or
-** error code that will cause the redirect from the web container. 
-* @author Danny Coward
-*/
-
+/**
+ * Objects exhiniting this interface represent an error page and the exception type or
+ * error code that will cause the redirect from the web container.
+ *
+ * @author Danny Coward
+ */
 public class ErrorPageDescriptor implements java.io.Serializable{
     private int errorCode = -1;  // none
     private String exceptionType;
     private String location;
-    
-    /** The default constructor.
-    */
+
+    /**
+     * The default constructor.
+     */
     public ErrorPageDescriptor() {
-    
     }
-    
-    /** Constructor for error code to error page mapping.*/
+
+
+    /** Constructor for error code to error page mapping. */
     public ErrorPageDescriptor(int errorCode, String location) {
-	this.errorCode = errorCode;
-	this.location = location;
+        this.errorCode = errorCode;
+        this.location = location;
     }
-    
-     /** Constructor for Java exception type to error page mapping.*/
+
+
+    /** Constructor for Java exception type to error page mapping. */
     public ErrorPageDescriptor(String exceptionType, String location) {
-	this.exceptionType = exceptionType;
-	this.location = location;
+        this.exceptionType = exceptionType;
+        this.location = location;
     }
-	/** Return the error code. -1 if none. */
+
+
+    /** Return the error code. -1 if none. */
     public int getErrorCode() {
-	return this.errorCode;
+        return this.errorCode;
     }
-	/** Sets the error code.*/
+
+
+    /** Sets the error code. */
     public void setErrorCode(int errorCode) {
-	this.errorCode = errorCode;
+        this.errorCode = errorCode;
     }
-	/**
-     *  If there is an exception type, then the exception type is returned.
-     *  Otherwise, if the error code is not -1, then the error code is returned as a string.
-     *  If the error code is -1, then nul is returned.
+
+
+    /**
+     * If there is an exception type, then the exception type is returned.
+     * Otherwise, if the error code is not -1, then the error code is returned as a string.
+     * If the error code is -1, then nul is returned.
      */
     public String getErrorSignifierAsString() {
         if ("".equals(this.getExceptionType())) {
-           if (getErrorCode() == -1) {
-               return null;
-           } else {
-               return String.valueOf(this.getErrorCode());
-           }
+            if (getErrorCode() == -1) {
+                return null;
+            } else {
+                return String.valueOf(this.getErrorCode());
+            }
         }
         return this.getExceptionType();
     }
-    /**Sets the error code if the argument is parsable as an int, or the exception type else.*/
+
+
+    /** Sets the error code if the argument is parsable as an int, or the exception type else. */
     public void setErrorSignifierAsString(String errorSignifier) {
-	try {
-	    int errorCode = Integer.parseInt(errorSignifier);
-	    this.setErrorCode(errorCode);
-	    this.setExceptionType(null);
-	    return;
-	} catch (NumberFormatException nfe) {
-	
-	}
-	this.setExceptionType(errorSignifier);
+        try {
+            int errorCode = Integer.parseInt(errorSignifier);
+            this.setErrorCode(errorCode);
+            this.setExceptionType(null);
+            return;
+        } catch (NumberFormatException nfe) {
+
+        }
+        this.setExceptionType(errorSignifier);
     }
-    
-    /** Return the exception type or the empty string if none.*/
+
+
+    /** Return the exception type or the empty string if none. */
     public String getExceptionType() {
-	if (this.exceptionType == null) {
-	    this.exceptionType = "";
-	}
-	return this.exceptionType;
+        if (this.exceptionType == null) {
+            this.exceptionType = "";
+        }
+        return this.exceptionType;
     }
-    
-    /** Sets the exception type.*/
+
+
+    /** Sets the exception type. */
     public void setExceptionType(String exceptionType) {
-	this.exceptionType = exceptionType;
+        this.exceptionType = exceptionType;
     }
+
+
     /** Return the page to map to */
     public String getLocation() {
-	if (this.location == null) {
-	    this.location = "";
-	}
-	return this.location;
+        if (this.location == null) {
+            this.location = "";
+        }
+        return this.location;
     }
-    /* Set the page to map to */
+
+
+    /** Set the page to map to */
     public void setLocation(String location) {
-	this.location = location;
+        this.location = location;
     }
-    /* A formatted version of my state as a String. */
+
+
+    /** Appends a formatted version of my state as a String. */
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("ErrorPage ").append(this.getErrorCode()).append(" ").append(
-            this.getExceptionType()).append(" ").append(this.getLocation());
+        toStringBuffer.append("ErrorPage ").append(this.getErrorCode())
+            .append(" ").append(this.getExceptionType()).append(" ").append(this.getLocation());
     }
 
 }
-

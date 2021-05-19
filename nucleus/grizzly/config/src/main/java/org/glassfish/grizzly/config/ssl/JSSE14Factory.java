@@ -36,7 +36,7 @@ public class JSSE14Factory implements JSSEFactory {
 // END SJSAS 6240885
 
     // START SJSAS 6240885
-    // 
+    //
     //JSSE14Factory() {
     public JSSE14Factory() {
     // END SJSAS 6240885
@@ -44,10 +44,10 @@ public class JSSE14Factory implements JSSEFactory {
 
     @Override
     public ServerSocketFactory getSocketFactory() {
-	return new JSSE14SocketFactory();
+        return new JSSE14SocketFactory();
     }
-    
-    
+
+
     @Override
     public SSLSupport getSSLSupport(Socket socket) {
         if (!(socket instanceof SSLSocket)) {

@@ -21,9 +21,9 @@ import com.sun.enterprise.deployment.*;
 import java.util.Iterator;
 
 public interface ManagedBeanVisitor extends ComponentVisitor {
-    
+
     public void accept(ManagedBeanDescriptor managedBean);
-    
+
 
 }
 

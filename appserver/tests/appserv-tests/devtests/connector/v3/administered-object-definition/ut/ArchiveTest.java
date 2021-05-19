@@ -70,7 +70,7 @@ public class ArchiveTest extends TestCase {
         ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
         reader.setClassLoader(classLoader);
-        
+
         Application applicationDesc = reader.open(archive);
 //        System.out.println("--------Administered object in application.xml----------");
 //        for( AdministeredObjectDefinitionDescriptor aodd: applicationDesc.getAdministeredObjectDefinitionDescriptors()){
@@ -78,8 +78,8 @@ public class ArchiveTest extends TestCase {
 //            System.out.println(aodd.getName());
 //            System.out.println("");
 //        }
-        
-        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+
+        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs =
                 new HashMap<String,AdministeredObjectDefinitionDescriptor>();
         AdministeredObjectDefinitionDescriptor desc;
 
@@ -129,7 +129,7 @@ public class ArchiveTest extends TestCase {
         reader.setAnnotationProcessingRequested(true);
         reader.setClassLoader(classLoader);
         assertTrue("Archivist should handle annotations.", reader.isAnnotationProcessingRequested());
-        
+
         WebBundleDescriptor webDesc = reader.open(archive);
 //        for(AdministeredObjectDefinitionDescriptor aodd : webDesc.getAdministeredObjectDefinitionDescriptors()){
 //            System.out.println("Description = "+aodd.getDescription());
@@ -138,7 +138,7 @@ public class ArchiveTest extends TestCase {
 //            System.out.println();
 //        }
 
-        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs =
                 new HashMap<String,AdministeredObjectDefinitionDescriptor>();
         AdministeredObjectDefinitionDescriptor desc;
 
@@ -159,7 +159,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("application-scope resource defined by @AdministeredObjectDefinition");
         desc.setName("java:app/env/Servlet_AdminObject");
@@ -168,7 +168,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("module-scope resource defined by @AdministeredObjectDefinition");
         desc.setName("java:module/env/Servlet_AdminObject");
@@ -177,7 +177,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("component-scope resource defined by @AdministeredObjectDefinition");
         desc.setName("java:comp/env/Servlet_AdminObject");
@@ -186,7 +186,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("global-scope resource defined in Web DD");
         desc.setName("java:global/env/Web_DD_AdminObject");
@@ -195,7 +195,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("application-scope resource defined in Web DD");
         desc.setName("java:app/env/Web_DD_AdminObject");
@@ -204,7 +204,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("aod-ra");
         desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
         expectedAODDs.put(desc.getName(), desc);
-        
+
         desc = new AdministeredObjectDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in Web DD");
         desc.setName("java:module/env/Web_DD_AdminObject");
@@ -235,7 +235,7 @@ public class ArchiveTest extends TestCase {
 
         ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
-               
+
         EjbArchivist reader = (EjbArchivist) TestUtil.getByType(EjbArchivist.class);
         reader.setClassLoader(classLoader);
         reader.setAnnotationProcessingRequested(true);
@@ -251,8 +251,8 @@ public class ArchiveTest extends TestCase {
 //                System.out.println("------------------");
 //            }
         }
-        
-        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs = 
+
+        Map<String,AdministeredObjectDefinitionDescriptor> expectedAODDs =
                 new HashMap<String,AdministeredObjectDefinitionDescriptor>();
         AdministeredObjectDefinitionDescriptor desc;
 
@@ -349,7 +349,7 @@ public class ArchiveTest extends TestCase {
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
         }
-        
+
         // administered-object in annotation for stateful EJB
         {
             desc = new AdministeredObjectDefinitionDescriptor();
@@ -360,7 +360,7 @@ public class ArchiveTest extends TestCase {
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
-            
+
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("application-scope resource defined by @AdministeredObjectDefinition");
             desc.setName("java:app/env/HelloStatefulEJB_Annotation_AdminObject");
@@ -399,7 +399,7 @@ public class ArchiveTest extends TestCase {
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
-            
+
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("application-scope resource defined by @AdministeredObjectDefinition");
             desc.setName("java:app/env/HelloEJB_Annotation_AdminObject");
@@ -408,7 +408,7 @@ public class ArchiveTest extends TestCase {
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
-            
+
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("module-scope resource defined by @AdministeredObjectDefinition");
             desc.setName("java:module/env/HelloEJB_Annotation_AdminObject");
@@ -417,7 +417,7 @@ public class ArchiveTest extends TestCase {
             desc.setResourceAdapter("aod-ra");
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
-            
+
             desc = new AdministeredObjectDefinitionDescriptor();
             desc.setDescription("component-scope resource defined by @AdministeredObjectDefinition");
             desc.setName("java:comp/env/HelloEJB_Annotation_AdminObject");
@@ -427,8 +427,8 @@ public class ArchiveTest extends TestCase {
             desc.addProperty("org.glassfish.admin-object.resType", "connector.MyAdminObject");
             expectedAODDs.put(desc.getName(), desc);
         }
-        
+
         TestUtil.compareAODD(expectedAODDs, acturalAODDs);
     }
-    
+
 }

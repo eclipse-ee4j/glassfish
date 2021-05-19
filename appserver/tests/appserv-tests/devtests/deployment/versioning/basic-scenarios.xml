@@ -67,7 +67,7 @@
     <antcall target="deploy.version">
         <param name="force" value="true"/>
         <param name="versionExpression" value="${identifier.2}"/>
-	<param name="xmlVersionIdentifier" value="${identifier.1}"/>
+        <param name="xmlVersionIdentifier" value="${identifier.1}"/>
     </antcall>
     <!-- test that the deployed version running is ${identifier.2} -->
     <antcall target="test.registred">
@@ -551,7 +551,7 @@
     <antcall target="run.positive.clusterInstance2">
         <param name="description" value="rolling.upgrade(1)"/>
     </antcall>
-    
+
     <!-- switch the 2nd instance to the specific version -->
     <antcall target="enable.version.clusterInstance2">
       <param name="versionExpression" value="${identifier.1}"/>

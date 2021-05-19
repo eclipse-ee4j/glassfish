@@ -105,7 +105,7 @@
         <antcall target="undeploy-app"/>
         <antcall target="undeploy-client"/>
     </target>
-    
+
     <target name="undeploy-client" depends="init-common">
       <echo message="Undeploying client application"/>
       <exec executable="${ASADMIN}">
@@ -132,8 +132,8 @@
 
     <target name="runtest" depends="init-common">
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">

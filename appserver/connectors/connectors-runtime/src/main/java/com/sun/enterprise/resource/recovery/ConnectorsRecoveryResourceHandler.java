@@ -84,14 +84,14 @@ public class ConnectorsRecoveryResourceHandler implements RecoveryResourceHandle
     @Inject
     @Named("ApplicationLoaderService")
     private Provider<ApplicationLoaderService> startupProvider;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
     private ResourcesUtil resourcesUtil = null;
-    
+
     private static Logger _logger = LogDomains.getLogger(ConnectorsRecoveryResourceHandler.class, LogDomains.RSR_LOGGER);
-    
+
     private static final Locale locale = Locale.getDefault();
 
 

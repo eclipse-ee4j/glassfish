@@ -27,25 +27,25 @@ public class Client {
 
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main (String[] args) {
         stat.addDescription("webservices-faultcode");
         Client client = new Client();
         client.doTest(args);
         stat.printSummary("webservices-faultcodeID");
     }
-    
+
     public void doTest(String[] args) {
-    	try {
+            try {
 
            String targetEndpointAddress = args[0];
 
-	    Context ic = new InitialContext();
-            
+            Context ic = new InitialContext();
+
             SimpleTestService testService =
                 (SimpleTestService) ic.lookup("java:comp/env/service/faultcode");
             SimpleTest test = testService.getSimpleTest();
-            
+
             ((Stub)test)._setProperty(Stub.ENDPOINT_ADDRESS_PROPERTY,
                                             targetEndpointAddress);
 
@@ -65,11 +65,11 @@ public class Client {
             System.out.println("RETURN LUCKY NUMBER = " + ret);
 */
             stat.addStatus("xsdanyclient main", stat.PASS);
-                
-    	} catch (Exception ex) {
+
+            } catch (Exception ex) {
             System.out.println("xsdany client test failed");
             ex.printStackTrace();
             stat.addStatus("xsdanyclient main", stat.FAIL);
-	} 
+        }
     }
 }

@@ -33,7 +33,7 @@ import org.w3c.dom.Node;
  * This node handles all EJB IOR Configuration information
  *
  * @author Jerome Dochez
- * @version 
+ * @version
  */
 public class IORConfigurationNode extends DeploymentDescriptorNode<EjbIORConfigurationDescriptor> {
 
@@ -46,47 +46,47 @@ public class IORConfigurationNode extends DeploymentDescriptorNode<EjbIORConfigu
     }
 
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        
+
         // transport-config
         table.put(RuntimeTagNames.INTEGRITY, "setIntegrity");
         table.put(RuntimeTagNames.CONFIDENTIALITY, "setConfidentiality");
         table.put(RuntimeTagNames.ESTABLISH_TRUST_IN_TARGET, "setEstablishTrustInTarget");
         table.put(RuntimeTagNames.ESTABLISH_TRUST_IN_CLIENT, "setEstablishTrustInClient");
-        
+
         // as-context
         table.put(RuntimeTagNames.AUTH_METHOD, "setAuthenticationMethod");
         table.put(RuntimeTagNames.REALM, "setRealmName");
         table.put(RuntimeTagNames.REQUIRED, "setAuthMethodRequired");
-        
+
         // sas-context
         table.put(RuntimeTagNames.CALLER_PROPAGATION, "setCallerPropagation");
-        
+
         return table;
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, EjbIORConfigurationDescriptor iorDesc) {    
+    public Node writeDescriptor(Node parent, String nodeName, EjbIORConfigurationDescriptor iorDesc) {
         Node iorNode = appendChild(parent, nodeName);
         Node transportNode = appendChild(iorNode, RuntimeTagNames.TRANSPORT_CONFIG);
 
         appendTextChild(transportNode, RuntimeTagNames.INTEGRITY, iorDesc.getIntegrity());
         appendTextChild(transportNode, RuntimeTagNames.CONFIDENTIALITY, iorDesc.getConfidentiality());
-        appendTextChild(transportNode, RuntimeTagNames.ESTABLISH_TRUST_IN_TARGET, 
+        appendTextChild(transportNode, RuntimeTagNames.ESTABLISH_TRUST_IN_TARGET,
                         iorDesc.getEstablishTrustInTarget());
         appendTextChild(transportNode, RuntimeTagNames.ESTABLISH_TRUST_IN_CLIENT,
                         iorDesc.getEstablishTrustInClient());
 
         // These two sub-elements should only be added if needed.
-        Node asContextNode = appendChild(iorNode, RuntimeTagNames.AS_CONTEXT);        
+        Node asContextNode = appendChild(iorNode, RuntimeTagNames.AS_CONTEXT);
         appendTextChild(asContextNode, RuntimeTagNames.AUTH_METHOD, iorDesc.getAuthenticationMethod());
         appendTextChild(asContextNode, RuntimeTagNames.REALM, iorDesc.getRealmName());
         appendTextChild(asContextNode, RuntimeTagNames.REQUIRED,
                         Boolean.valueOf(iorDesc.isAuthMethodRequired()).toString());
 
         Node sasContextNode = appendChild(iorNode, RuntimeTagNames.SAS_CONTEXT);
-        appendTextChild(sasContextNode, RuntimeTagNames.CALLER_PROPAGATION, iorDesc.getCallerPropagation());   
+        appendTextChild(sasContextNode, RuntimeTagNames.CALLER_PROPAGATION, iorDesc.getCallerPropagation());
         return iorNode;
     }
 }

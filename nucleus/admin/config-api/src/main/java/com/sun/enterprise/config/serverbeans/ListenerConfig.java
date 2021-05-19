@@ -47,7 +47,7 @@ public interface ListenerConfig extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the listenerClassName property.
      *
      * The name of a class that can act as a listener for alerts. Non-empty string containing a Java class name.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(key = true)
@@ -65,7 +65,7 @@ public interface ListenerConfig extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the subscribeListenerWith property.
      *
      * A list of managed object names that the listener should be subscribed to. A non-empty, comma separated list.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute

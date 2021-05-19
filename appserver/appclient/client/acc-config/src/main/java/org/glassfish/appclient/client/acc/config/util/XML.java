@@ -92,7 +92,7 @@ public class XML {
         public Password(char[] pw) {
             this.pw = pw;
         }
-        
+
         public static Password parse(String s) {
             return new Password(s);
         }

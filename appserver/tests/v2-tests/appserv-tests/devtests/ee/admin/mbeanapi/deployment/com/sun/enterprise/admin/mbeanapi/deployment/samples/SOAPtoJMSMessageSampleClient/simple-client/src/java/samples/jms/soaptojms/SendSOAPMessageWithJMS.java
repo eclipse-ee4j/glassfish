@@ -56,17 +56,17 @@ public class SendSOAPMessageWithJMS {
     /**
      * default constructor.
      *
-     * @param topicName a String that contains the name of a JMS Topic 
+     * @param topicName a String that contains the name of a JMS Topic
      *
      */
     public SendSOAPMessageWithJMS(String topicName) {
         init(topicName);
     }
-     
+
     /**
      * Initialize JMS Connection/Session/Topic and Publisher.
      *
-     * @param topicName a String that contains the name of a JMS Topic 
+     * @param topicName a String that contains the name of a JMS Topic
      *
      */
     public void init(String topicName) {
@@ -75,8 +75,8 @@ public class SendSOAPMessageWithJMS {
             tcf = servicelocator.getTopicConnectionFactory(JNDINames.TOPIC_CONNECTION_FACTORY);
             tc = tcf.createTopicConnection();
             session = tc.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            topic = servicelocator.getTopic(topicName); 
-            publisher = session.createPublisher(topic);             
+            topic = servicelocator.getTopic(topicName);
+            publisher = session.createPublisher(topic);
         } catch (JMSException jmse) {
             jmse.printStackTrace();
         } catch(ServiceLocatorException se) {
@@ -96,7 +96,7 @@ public class SendSOAPMessageWithJMS {
         /**
          * Create a SOAP message object.
          */
-        System.out.println ("Create a SOAP message"); 
+        System.out.println ("Create a SOAP message");
         SOAPMessage soapMessage = mf.createMessage();
         /**
          * Get SOAP part.
@@ -128,9 +128,9 @@ public class SendSOAPMessageWithJMS {
         /**
          * Create an atachment with activation API.
          */
-        
+
         URL url = getUrlFromPropsFile();
-        System.out.println ("Attaching the file from URL: " + url); 
+        System.out.println ("Attaching the file from URL: " + url);
 
         DataHandler dh = new DataHandler (url);
         AttachmentPart ap = soapMessage.createAttachmentPart(dh);
@@ -149,38 +149,38 @@ public class SendSOAPMessageWithJMS {
         /**
          * Convert SOAP to JMS message.
          */
-        System.out.println ("Convert the message to JMS message"); 
+        System.out.println ("Convert the message to JMS message");
         Message m = MessageTransformer.SOAPMessageIntoJMSMessage( soapMessage, session );
 
         /**
          * publish JMS message.
          */
-        System.out.println ("Publish the message"); 
+        System.out.println ("Publish the message");
         publisher.publish( m );
     }
 
-    
+
     /** Read server and port from soaptojms.properties file
      *
      */
-    
+
     public URL getUrlFromPropsFile() throws Exception {
         InputStream props = SendSOAPMessageWithJMS.class.getResourceAsStream("soaptojms.properties");
-        
+
         Properties P = new Properties();
         P.load(props);
-        
+
         return (new URL(P.getProperty("url")));
     }
-    
-            
+
+
     /**
      * Close JMS connection.
      *
-     * @exception JMSException 
+     * @exception JMSException
      */
     public void close() throws JMSException {
         tc.close();
     }
-   
+
 }

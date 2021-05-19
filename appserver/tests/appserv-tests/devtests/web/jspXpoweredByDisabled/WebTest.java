@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for disabling 'X-Powered-By: JSP/2.0' response header");
         WebTest webTest = new WebTest(args);
@@ -46,8 +46,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeJsp();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed");

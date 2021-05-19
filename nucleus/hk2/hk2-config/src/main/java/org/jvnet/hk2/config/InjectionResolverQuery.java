@@ -40,5 +40,5 @@ public interface InjectionResolverQuery {
       AnnotatedElement annotated,
       Type genericType,
       Class<V> type) throws MultiException;
-  
+
 }

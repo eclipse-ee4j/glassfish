@@ -78,13 +78,13 @@ public abstract class AbstractConnectorResourceDescriptor extends ResourceDescri
         }
         return false;
     }
-    
+
 
     public int hashCode() {
         int result = 17;
         result = 37*result + getName().hashCode();
         return result;
     }
-    
+
 
 }

@@ -17,7 +17,7 @@
 package org.jvnet.hk2.config;
 
 /**
- * 
+ *
  * @author jwells
  */
 public abstract class AttributeChanges {
@@ -26,11 +26,11 @@ public abstract class AttributeChanges {
     public AttributeChanges(String name) {
         this.name = name;
     }
-    
+
     abstract String[] values();
 
     public String getName() {
         return name;
     }
-    
+
 }

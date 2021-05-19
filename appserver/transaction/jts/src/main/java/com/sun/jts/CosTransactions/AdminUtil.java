@@ -22,7 +22,7 @@ import org.omg.CosTransactions.*;
 /**
  * AdminUtil - Utility class for monitoring and administering jts.
  *
- * This class is used by admin utilities for performing monitoring and 
+ * This class is used by admin utilities for performing monitoring and
  * administration.
  * @author <a href="mailto:ajay.kr@sun.com">Ajay Kumar</a>
  * @version 1.0
@@ -30,13 +30,13 @@ import org.omg.CosTransactions.*;
 public class AdminUtil
 {
     //freezing functionality
-    
+
     /**
      * freezeAll
      *
      * Freeze all transactional activity.
      *
-     * Part of freezing functions that will be used to achive a 
+     * Part of freezing functions that will be used to achive a
      * transactional quiet period before taking any action or collecting
      * any statistics. This call returns when all the activities are frozen.
      * All the states would be allowed to complete before freezing on. For
@@ -54,7 +54,7 @@ public class AdminUtil
      *
      * Unfreeze all transactional activity frozen by a freezeAll call.
      *
-     * Part of freezing functions that will be used to achive a 
+     * Part of freezing functions that will be used to achive a
      * transactional quiet period before taking any action or collecting
      * any statistics. This call returns almost immediately.
      *
@@ -70,7 +70,7 @@ public class AdminUtil
      *
      * Get the current state.
      *
-     * Part of freezing functions that will be used to achive a 
+     * Part of freezing functions that will be used to achive a
      * transactional quiet period before taking any action or collecting
      * any statistics. This call returns almost immediately.
      *
@@ -103,52 +103,52 @@ public class AdminUtil
      * startSampling
      *
      * Start the sampling window. The sample window determines the duration
-     * in which the data is collected. Start and stop calls demarcate the 
+     * in which the data is collected. Start and stop calls demarcate the
      * the window. The sampling data could be number of transactions committed
-     * ,rolledback etc and transient data like pending etc. It also resets 
+     * ,rolledback etc and transient data like pending etc. It also resets
      * various counters.
      *
      * @see stopSampling
      */
     public static void startSampling()
     {
-		if(!bSampling){
-	        try
-    	    {
-            	statisticsLock.acquireWriteLock();
-	            lSampleEndTime = 0 ;
-   	         	lSampleStartTime = System.currentTimeMillis();
-   	         	iCommits = 0;
-            	iAborts = 0;
-            	iPending = 0;
-            	iRecCommits = 0;
-            	iRecAborts = 0;
-            	//iImmigerent = 0;
-            	//iEmmigerent = 0;
-            	Iterator iter = getAllTransactions().iterator();
-            	
-				while ( iter.hasNext() )
-            	{
-               	 CoordinatorImpl coord = (CoordinatorImpl)iter.next();
-               	 if ( coord.get_status() == 
+        if(!bSampling){
+            try
+            {
+                statisticsLock.acquireWriteLock();
+                lSampleEndTime = 0 ;
+                    lSampleStartTime = System.currentTimeMillis();
+                    iCommits = 0;
+                iAborts = 0;
+                iPending = 0;
+                iRecCommits = 0;
+                iRecAborts = 0;
+                //iImmigerent = 0;
+                //iEmmigerent = 0;
+                Iterator iter = getAllTransactions().iterator();
+
+                while ( iter.hasNext() )
+                {
+                    CoordinatorImpl coord = (CoordinatorImpl)iter.next();
+                    if ( coord.get_status() ==
                      org.omg.CosTransactions.Status.StatusPrepared )
                     iPending++;
-           		}
-            
-				bSampling = true;
-        	}
-	        finally
-   		    {
-       		     statisticsLock.releaseWriteLock();
-        	}
-		}
+                   }
+
+                bSampling = true;
+            }
+            finally
+               {
+                    statisticsLock.releaseWriteLock();
+            }
+        }
     }
 
 
     /**
      * stopSampling
      *
-     * Stop sampling the statitics values. This is used to indicate end of 
+     * Stop sampling the statitics values. This is used to indicate end of
      * sampling window.
      *
      * @see startSampling
@@ -208,7 +208,7 @@ public class AdminUtil
             statisticsLock.releaseReadLock();
         }
     }
-    
+
     /**
      * Increment the count of transactions that were rolled back and ne'er went through prepare phase.
      *
@@ -231,7 +231,7 @@ public class AdminUtil
 
 
     /**
-     * Increment the count of pending transactions 
+     * Increment the count of pending transactions
      * - i.e. the transactions entering the prepared state.
      *
      */
@@ -270,7 +270,7 @@ public class AdminUtil
             statisticsLock.releaseReadLock();
         }
     }
-     
+
 
     /**
      * Increments the number of transactions that were rolled back as part
@@ -291,13 +291,13 @@ public class AdminUtil
             statisticsLock.releaseReadLock();
         }
     }
-    
+
 
     /* For future use
      *
     public static void incrementImmigerentTransactionCount()
     {
-        try 
+        try
         {
             statisticsLock.acquireReadLock();
             synchronized ( lkImmigerent )
@@ -358,13 +358,13 @@ public class AdminUtil
      */
     public static long getActiveTransactionCount()
     {
-        return RecoveryManager.getCoordsByGlobalTID().size() 
+        return RecoveryManager.getCoordsByGlobalTID().size()
             - getPendingTransactionCount();
     }
 
     /**
      * Return the count of transactions that are prepared - but not completed.
-     * This includes the total transactions that ever entered into prepared state 
+     * This includes the total transactions that ever entered into prepared state
      * minus ones which got committed, rolledback, taking care of ones that were
      * rolledback without entering prepared state.
      *
@@ -375,14 +375,14 @@ public class AdminUtil
     }
 
     /**
-     * Return the count of transactions that were commited as part of the 
+     * Return the count of transactions that were commited as part of the
      * recovery process.
      */
     public static long getRecoveryCommitedTransactionCount()
     {
         return iRecCommits;
     }
-     
+
 
     /**
      * Return the number of transactions that were rolled back as part of the
@@ -392,13 +392,13 @@ public class AdminUtil
     {
         return iRecAborts;
     }
-    
+
 
     /**
      *
     public static long getImmigerentTransactionCount()
     {
-        
+
         return iImmigerent;
     }
      */
@@ -450,7 +450,7 @@ public class AdminUtil
      */
     public static Collection/*<Coordinator>*/ getAllTransactions()
     {
-        return RecoveryManager.getCoordsByGlobalTID().values(); 
+        return RecoveryManager.getCoordsByGlobalTID().values();
     }
 
     /**
@@ -459,10 +459,10 @@ public class AdminUtil
      */
     public static Enumeration/*<GlobalTID>*/ getAllTIDs()
     {
-        return RecoveryManager.getCoordsByGlobalTID().keys(); 
+        return RecoveryManager.getCoordsByGlobalTID().keys();
     }
 
-    
+
     private static RWLock statisticsLock = new RWLock() ;
     private static long lSampleStartTime = 0 ;
     private static long lSampleEndTime = 0 ;
@@ -474,7 +474,7 @@ public class AdminUtil
     static int iRecCommits = 0;
     static int iRecAborts = 0;
     /*
-     * for future use 
+     * for future use
      *
     static int iImmigerent = 0;
     static int iEmmigerent = 0;

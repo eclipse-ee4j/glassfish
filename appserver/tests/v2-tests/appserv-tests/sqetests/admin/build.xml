@@ -22,7 +22,7 @@
 <!ENTITY props SYSTEM "file:./../../config/properties.xml">
 <!ENTITY commonee SYSTEM "file:./../../config/ee-common.xml">]>
 <project name="Admin Infrastructure" default="all" basedir=".">
-    <property name="src.dir" value="src"/> 
+    <property name="src.dir" value="src"/>
     &props;
     &common;
     &commonee;
@@ -47,15 +47,15 @@
     <target name="run-test" depends="runmain"/>
     <target name="runmain" depends="build, get-version-common">
     <java classname="TestDriver"
-	  dir="."
+      dir="."
           fork="yes">
-	  <arg value="${admin.user}"/>
-	  <arg value="${admin.password}"/>
-	  <arg value="${admin.host}"/>
-	  <arg value="${admin.port}"/>
-	  <!-- following is to check if the protocol is https"/-->
-	  <arg value="${enterprise}"/>
-	  <arg value="tests.list"/>
+        <arg value="${admin.user}"/>
+        <arg value="${admin.password}"/>
+        <arg value="${admin.host}"/>
+        <arg value="${admin.port}"/>
+        <!-- following is to check if the protocol is https"/-->
+        <arg value="${enterprise}"/>
+        <arg value="tests.list"/>
         <classpath>
             <pathelement path="${s1astest.classpath}"/>
             <pathelement path="${build.classes.dir}/admin"/>

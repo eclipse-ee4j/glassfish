@@ -36,7 +36,7 @@ import jakarta.persistence.Table;
 
 /**
  * Entity class WebCustomer
- * 
+ *
  * @author adminuser
  */
 @Entity
@@ -57,7 +57,7 @@ public class WebCustomer implements Serializable {
 
     @Column(name = "CUSTNAME")
     private String custname;
-    
+
     /** Creates a new instance of WebCustomer */
     public WebCustomer() {
     }
@@ -119,7 +119,7 @@ public class WebCustomer implements Serializable {
     }
 
     /**
-     * Returns a hash code value for the object.  This implementation computes 
+     * Returns a hash code value for the object.  This implementation computes
      * a hash code value based on the id fields in this object.
      * @return a hash code value for this object.
      */
@@ -131,8 +131,8 @@ public class WebCustomer implements Serializable {
     }
 
     /**
-     * Determines whether another object is equal to this WebCustomer.  The result is 
-     * <code>true</code> if and only if the argument is not null and is a WebCustomer object that 
+     * Determines whether another object is equal to this WebCustomer.  The result is
+     * <code>true</code> if and only if the argument is not null and is a WebCustomer object that
      * has the same id field values as this object.
      * @param object the reference object with which to compare
      * @return <code>true</code> if this object is the same as the argument;
@@ -150,7 +150,7 @@ public class WebCustomer implements Serializable {
     }
 
     /**
-     * Returns a string representation of the object.  This implementation constructs 
+     * Returns a string representation of the object.  This implementation constructs
      * that representation based on the id fields.
      * @return a string representation of the object.
      */
@@ -158,5 +158,5 @@ public class WebCustomer implements Serializable {
     public String toString() {
         return "persistence.WebCustomer[custId=" + custId + "]";
     }
-    
+
 }

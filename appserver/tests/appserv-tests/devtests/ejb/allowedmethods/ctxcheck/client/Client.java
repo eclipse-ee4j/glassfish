@@ -28,7 +28,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -37,11 +37,11 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-allowedmethods-ctxcheck");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
         localSlsbGetEJBObject();
         localSlsbGetEJBLocalObject();

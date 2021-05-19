@@ -28,10 +28,10 @@ import java.util.Vector;
 
 /**
  * BaseCache
- * Generic in-memory, abstract cache 
+ * Generic in-memory, abstract cache
  */
 public class BaseCache implements Cache {
-    
+
     /**
      * The resource bundle containing the localized message strings.
      */
@@ -75,15 +75,15 @@ public class BaseCache implements Cache {
     private Object  overflowCountLk = new Object();
 
     // table size
-	protected int maxBuckets;
+        protected int maxBuckets;
 
     // cache entries hash table
-	protected CacheItem[] buckets;
+        protected CacheItem[] buckets;
     // bucket-wide locks
-	protected Object[]    bucketLocks;
+        protected Object[]    bucketLocks;
 
     // boolean status and locks for item thread-safe refreshes
-	protected boolean[]   refreshFlags;
+        protected boolean[]   refreshFlags;
 
     protected ArrayList listeners = new ArrayList();
 
@@ -144,13 +144,13 @@ public class BaseCache implements Cache {
 
         // create the cache and the bucket locks
         entryCount = 0;
-       	buckets = new CacheItem[maxBuckets];
-       	bucketLocks = new Object[maxBuckets];
+               buckets = new CacheItem[maxBuckets];
+               bucketLocks = new Object[maxBuckets];
         refreshFlags = new boolean[maxBuckets];
 
         for (int i=0; i<maxBuckets; i++) {
-       		buckets[i] = null;
-			bucketLocks[i] = new Object();
+                       buckets[i] = null;
+                        bucketLocks[i] = new Object();
             refreshFlags[i] = false;
         }
     }
@@ -172,8 +172,8 @@ public class BaseCache implements Cache {
         return h - (h << 7);  // i.e., -127 * h
     }
 
-    /** 
-     * Check for equality of non-null reference x and possibly-null y. 
+    /**
+     * Check for equality of non-null reference x and possibly-null y.
      */
     protected boolean eq(Object x, Object y) {
         return x == y || x.equals(y);
@@ -194,11 +194,11 @@ public class BaseCache implements Cache {
      * @return a overflow item; may be null
      * Cache bucket is already synchronized by the caller
      *
-     * Here, if cache is overflowing (i.e. reached threshold); this class 
-     * simply makes the cache unbounded by raising the threshold. Subclasses 
+     * Here, if cache is overflowing (i.e. reached threshold); this class
+     * simply makes the cache unbounded by raising the threshold. Subclasses
      * are expected to provide a robust cache replacement algorithm.
      *
-     * Subclasses should enhance this implemntation. 
+     * Subclasses should enhance this implemntation.
      */
     protected CacheItem itemAdded(CacheItem item) {
         if (isThresholdReached()) {
@@ -208,7 +208,7 @@ public class BaseCache implements Cache {
     }
 
     /**
-     * this item is accessed 
+     * this item is accessed
      * @param item <code>CacheItem</code> accessed
      *
      * Cache bucket is already synchronized by the caller
@@ -239,24 +239,24 @@ public class BaseCache implements Cache {
      * @returns the Object value associated with the item
      * Cache bucket is already synchronized by the caller
      */
-    protected Object loadValue(Object key, int hashCode) { 
+    protected Object loadValue(Object key, int hashCode) {
         return null;
     }
 
     /**
      * create new item
      * @param hashCode for the entry
-     * @param key <code>Object</code> key 
+     * @param key <code>Object</code> key
      * @param value <code>Object</code> value
      * @param size size in bytes of the item
      * subclasses may override to provide their own CacheItem extensions
      * e.g. one that permits persistence.
      */
-    protected CacheItem createItem(int hashCode, Object key, 
+    protected CacheItem createItem(int hashCode, Object key,
                                         Object value, int size) {
         return new CacheItem(hashCode, key, value, size);
     }
- 
+
     /**
      * has cache reached its threshold
      * @return true when the cache reached its threshold
@@ -265,7 +265,7 @@ public class BaseCache implements Cache {
         return (entryCount > threshold);
     }
 
-    /** 
+    /**
      * get the index of the item in the cache
      * @param hashCode of the entry
      * @return the index to be used in the cache
@@ -274,7 +274,7 @@ public class BaseCache implements Cache {
         return (hashCode & (maxBuckets - 1));
     }
 
-    /** 
+    /**
      * get the index of the item given a key
      * @param key of the entry
      * @return the index to be used in the cache
@@ -301,18 +301,18 @@ public class BaseCache implements Cache {
      */
     public Object get(int hashCode, Object key) {
 
-		int index = getIndex(hashCode);
+                int index = getIndex(hashCode);
         Object value;
         CacheItem item = null;
 
-		synchronized (bucketLocks[index]) {
-		    item = buckets[index];
+                synchronized (bucketLocks[index]) {
+                    item = buckets[index];
 
-			for (; item != null; item = item.next) {
-				if ( (hashCode == item.hashCode) && eq(key, item.key) ) {
-					break;
-				}
-			}
+                        for (; item != null; item = item.next) {
+                                if ( (hashCode == item.hashCode) && eq(key, item.key) ) {
+                                        break;
+                                }
+                        }
 
             // update the stats in line
             if (item != null) {
@@ -321,7 +321,7 @@ public class BaseCache implements Cache {
             }
             else
                 value = loadValue(key, hashCode);
-		}
+                }
 
         if (item != null)
             incrementHitCount();
@@ -330,16 +330,16 @@ public class BaseCache implements Cache {
 
         return value;
     }
-        
+
     /**
      * check if the cache contains the item at the key
      * @param key lookup key
      * @returns true if there is an item stored at the key; false if not.
      */
     public boolean contains(Object key) {
-    	return (get(key) != null);
+            return (get(key) != null);
     }
-    
+
     /**
      * get all the items stored at the key.
      * @param key lookup key
@@ -347,20 +347,20 @@ public class BaseCache implements Cache {
      */
     public Iterator getAll(Object key) {
         int hashCode = hash(key);
-		int index = getIndex(hashCode);
+                int index = getIndex(hashCode);
 
         ArrayList valueList = new ArrayList(entryCount);
-		synchronized (bucketLocks[index]) {
-		    CacheItem item = buckets[index];
+                synchronized (bucketLocks[index]) {
+                    CacheItem item = buckets[index];
 
-			for (; item != null; item = item.next) {
-				if ( (hashCode == item.hashCode) && eq(key, item.key) ) {
+                        for (; item != null; item = item.next) {
+                                if ( (hashCode == item.hashCode) && eq(key, item.key) ) {
                     incrementHitCount();
                     valueList.add(item.getValue());
-				}
-			}
+                                }
+                        }
 
-		}
+                }
 
         return valueList.iterator();
     }
@@ -374,7 +374,7 @@ public class BaseCache implements Cache {
 
         for (int index=0; index < maxBuckets; index++) {
             synchronized (bucketLocks[index]) {
-                for (CacheItem item = buckets[index]; item != null; 
+                for (CacheItem item = buckets[index]; item != null;
                                 item = item.next) {
                     keyList.add(item.key);
                 }
@@ -394,7 +394,7 @@ public class BaseCache implements Cache {
 
         for (int index=0; index < maxBuckets; index++) {
             synchronized (bucketLocks[index]) {
-                for (CacheItem item = buckets[index]; item != null; 
+                for (CacheItem item = buckets[index]; item != null;
                                 item = item.next) {
                     keyList.addElement(item.key);
                 }
@@ -413,7 +413,7 @@ public class BaseCache implements Cache {
 
         for (int index=0; index < maxBuckets; index++) {
             synchronized (bucketLocks[index]) {
-                for (CacheItem item = buckets[index]; item != null; 
+                for (CacheItem item = buckets[index]; item != null;
                                 item = item.next) {
                     valueList.add(item.value);
                 }
@@ -489,39 +489,39 @@ public class BaseCache implements Cache {
      */
     protected Object _put(int hashCode, Object key,
                             Object value, int size, boolean addValue) {
-		int index = getIndex(hashCode);
+                int index = getIndex(hashCode);
 
-		CacheItem item, newItem = null, oldItem = null, overflow = null;
+                CacheItem item, newItem = null, oldItem = null, overflow = null;
         Object oldValue;
         int oldSize = 0;
 
         // lookup the item
-		synchronized (bucketLocks[index]) {
-			for (item = buckets[index]; item != null; item = item.next) {
-				if ((hashCode == item.hashCode) && eq(key, item.key)) {
+                synchronized (bucketLocks[index]) {
+                        for (item = buckets[index]; item != null; item = item.next) {
+                                if ((hashCode == item.hashCode) && eq(key, item.key)) {
 
                     oldItem = item;
-					break;
-				}
-			}
+                                        break;
+                                }
+                        }
 
             // if there was no item in the cache, insert the given item
-			if (addValue || oldItem == null) {
-                newItem = createItem(hashCode, key, value, size); 
-        
+                        if (addValue || oldItem == null) {
+                newItem = createItem(hashCode, key, value, size);
+
                 // add the item at the head of the bucket list
-			    newItem.next = buckets[index];
-			    buckets[index] = newItem;
+                            newItem.next = buckets[index];
+                            buckets[index] = newItem;
 
                 oldValue = null;
                 overflow = itemAdded(newItem);
-			}
+                        }
             else {
                 oldSize = oldItem.getSize();
                 oldValue = oldItem.refreshValue(value, size);
                 itemRefreshed(oldItem, oldSize);
             }
-		}
+                }
 
         if (newItem != null) {
             incrementEntryCount();
@@ -547,7 +547,7 @@ public class BaseCache implements Cache {
 
         Object retVal  = null;
         CacheItem removed = _remove( hashCode, key, null);
-        
+
         if (removed != null)
             retVal = removed.getValue();
         return retVal;
@@ -562,7 +562,7 @@ public class BaseCache implements Cache {
     public Object remove(int hashCode, Object key) {
         Object retVal  = null;
         CacheItem removed = _remove( hashCode, key, null);
-        
+
         if (removed != null)
             retVal = removed.getValue();
         return retVal;
@@ -579,7 +579,7 @@ public class BaseCache implements Cache {
 
         Object retVal  = null;
         CacheItem removed = _remove( hashCode, key, value);
-        
+
         if (removed != null)
             retVal = removed.getValue();
         return retVal;
@@ -589,19 +589,19 @@ public class BaseCache implements Cache {
      * remove the item stored at the key.
      * @param hashCode a precomputed hashCode
      * @param key lookup key
-     * @param value of the item to be matched 
+     * @param value of the item to be matched
      * @returns the item stored at the key; null if not found.
      */
     protected CacheItem _remove(int hashCode, Object key, Object value) {
-		int index = getIndex(hashCode);
+                int index = getIndex(hashCode);
 
-		CacheItem prev = null, item = null;
+                CacheItem prev = null, item = null;
 
-		synchronized (bucketLocks[index]) {
-			for (item = buckets[index]; item != null; item = item.next) {
-			    if (hashCode == item.hashCode && key.equals(item.key)) {
+                synchronized (bucketLocks[index]) {
+                        for (item = buckets[index]; item != null; item = item.next) {
+                            if (hashCode == item.hashCode && key.equals(item.key)) {
 
-				    if (value == null || value == item.value) {
+                                    if (value == null || value == item.value) {
 
                         if (prev == null) {
                             buckets[index] = item.next;
@@ -613,11 +613,11 @@ public class BaseCache implements Cache {
                         itemRemoved(item);
                         break;
                     }
-			    }
-			    prev = item;
-			}
+                            }
+                            prev = item;
+                        }
         }
-        
+
         if (item != null) {
             decrementEntryCount();
             incrementRemovalCount();
@@ -636,13 +636,13 @@ public class BaseCache implements Cache {
      */
     protected CacheItem _removeItem(CacheItem ritem) {
 
-		int index = getIndex(ritem.hashCode);
+                int index = getIndex(ritem.hashCode);
 
-		CacheItem prev = null, item = null;
+                CacheItem prev = null, item = null;
 
-		synchronized (bucketLocks[index]) {
-			for (item = buckets[index]; item != null; item = item.next) {
-			    if (item == ritem) {
+                synchronized (bucketLocks[index]) {
+                        for (item = buckets[index]; item != null; item = item.next) {
+                            if (item == ritem) {
                     if (prev == null) {
                         buckets[index] = item.next;
                     } else  {
@@ -650,11 +650,11 @@ public class BaseCache implements Cache {
                     }
                     item.next = null;
                     break;
-			    }
-			    prev = item;
-			}
+                            }
+                            prev = item;
+                        }
         }
-        
+
         if (item != null) {
             decrementEntryCount();
         }
@@ -668,29 +668,29 @@ public class BaseCache implements Cache {
      */
     public void removeAll(Object key) {
         int hashCode = hash(key);
-		int index = getIndex(hashCode);
+                int index = getIndex(hashCode);
 
-		CacheItem prev = null, item = null;
+                CacheItem prev = null, item = null;
         ArrayList items = new ArrayList(entryCount);
 
-		synchronized (bucketLocks[index]) {
-			for (item = buckets[index]; item != null;
+                synchronized (bucketLocks[index]) {
+                        for (item = buckets[index]; item != null;
                                     item = item.next) {
-			    if (hashCode == item.hashCode && key.equals(item.key)) {
+                            if (hashCode == item.hashCode && key.equals(item.key)) {
                         if (prev == null) {
                             buckets[index] = item.next;
                         } else  {
                             prev.next = item.next;
                         }
                         item.next = null;
-        
+
                         decrementEntryCount();
                         incrementRemovalCount();
 
                         items.add(item);
-			    }
-			    prev = item;
-			}
+                            }
+                            prev = item;
+                        }
         }
 
         // notify subclasses
@@ -721,7 +721,7 @@ public class BaseCache implements Cache {
      *  no thread refreshing this entry.
      */
     public boolean waitRefresh(int index) {
-		synchronized (bucketLocks[index]) {
+                synchronized (bucketLocks[index]) {
             if (refreshFlags[index] == false) {
                 refreshFlags[index] = true;
                 return false;
@@ -729,8 +729,8 @@ public class BaseCache implements Cache {
 
             // wait till refresh is finished
             try {
-		while(refreshFlags[index])
-                	bucketLocks[index].wait();
+                while(refreshFlags[index])
+                        bucketLocks[index].wait();
             } catch (InterruptedException ie) {}
         }
         return true;
@@ -742,7 +742,7 @@ public class BaseCache implements Cache {
      */
     public void notifyRefresh(int index) {
         // notify other threads waiting for refresh
-		synchronized (bucketLocks[index]) {
+                synchronized (bucketLocks[index]) {
             refreshFlags[index] = false;
             bucketLocks[index].notifyAll();
         }
@@ -753,13 +753,13 @@ public class BaseCache implements Cache {
      * @returns the number of entries cleared from the cache
      */
     public int clear() {
-        
-		CacheItem item=null;
+
+                CacheItem item=null;
         int count = 0;
 
         for (int index = 0; index < maxBuckets; index++) {
-		    synchronized (bucketLocks[index]) {
-			    for (item = buckets[index]; item != null; 
+                    synchronized (bucketLocks[index]) {
+                            for (item = buckets[index]; item != null;
                                             item = item.next) {
                     item.next = null;
 
@@ -769,7 +769,7 @@ public class BaseCache implements Cache {
 
                     if (entryCount == 0)
                         break;
-			    }
+                            }
                 buckets[index] = null;
             }
         }
@@ -857,7 +857,7 @@ public class BaseCache implements Cache {
     }
 
     /**
-     * get generic stats from subclasses 
+     * get generic stats from subclasses
      */
 
     /**
@@ -929,7 +929,7 @@ public class BaseCache implements Cache {
     }
 
     /**
-     * Sets all references to null. This method should be called 
+     * Sets all references to null. This method should be called
      * at the end of this object's life cycle.
      */
     public void destroy() {
@@ -969,51 +969,51 @@ public class BaseCache implements Cache {
         Object key;
         Object value;
         int size;
-    
+
         CacheItem next;
-        
+
         protected CacheItem(int hashCode, Object key, Object value, int size) {
             this.hashCode = hashCode;
             this.key = key;
             this.value = value;
             this.size = size;
         }
-        
+
         /**
          * get the item's hashCode
          */
         public int getHashCode() {
             return hashCode;
         }
-    
+
         /**
          * get the item's key
          */
         public Object getKey() {
             return key;
         }
-    
+
         /**
          * get the item's next reference
          */
         public CacheItem getNext() {
             return next;
         }
-    
+
         /**
          * set the item's next reference
          */
         public void setNext(CacheItem next) {
             this.next = next;
         }
-    
+
         /**
          * get the item's value
          */
         public Object getValue() {
             return value;
         }
-    
+
         /**
          * @return size of the entry in bytes
          * a value of -1 indicates unknown size
@@ -1021,7 +1021,7 @@ public class BaseCache implements Cache {
         public int getSize() {
             return size;
         }
-    
+
         /**
          * refresh the item's value
          * @param value value to be updated
@@ -1031,10 +1031,10 @@ public class BaseCache implements Cache {
             Object oldValue = this.value;
             this.value = value;
             this.size = newSize;
-    
+
             return oldValue;
         }
-    
+
         public String toString() {
             return "key: " + key + "; value: " + value.toString();
         }

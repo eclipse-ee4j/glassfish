@@ -490,7 +490,7 @@ public final class TestMain
             println("Reading test classes from: " + StringUtil.quote(testsFile.toString()));
 
             String fileString = null;
-            
+
             try
             {
                 fileString = FileUtils.fileToString(testsFile);
@@ -500,7 +500,7 @@ public final class TestMain
                 println( "Unable to open file " + testsFile.getAbsolutePath() );
                 throw e;
             }
-            
+
             final String temp = fileString.replaceAll("\r\n", "\n").replaceAll("\r", "\n");
             final String[] classnames = temp.split("\n");
 
@@ -568,7 +568,7 @@ public final class TestMain
             final JMXConnectorConfig connConfig = nodeAgentConfig.getJMXConnectorConfig();
 
             final AttributeResolverHelper r = new AttributeResolverHelper(connConfig);
-            
+
             if (! r.resolveBoolean("Enabled") ) {
                 println(nodeAgentName + ": DISABLED CONNECTOR");
                 continue;
@@ -647,7 +647,7 @@ public final class TestMain
             boolean include = true;
 
             Capabilities capabilities = null;
-            
+
             try {
                 capabilities = getCapabilities(c);
             }
@@ -679,13 +679,13 @@ public final class TestMain
 
         return included;
     }
-    
+
     private File mDefaultDir;
-    
+
     static File getDefaultDir( final String propsFile )
     {
         File dir = null;
-        
+
         if ( propsFile != null )
         {
             final File pf = new File(propsFile).getAbsoluteFile();
@@ -695,7 +695,7 @@ public final class TestMain
         {
             dir = new File(System.getProperty("user.dir"));
         }
-        
+
         return dir;
     }
 
@@ -708,7 +708,7 @@ public final class TestMain
         AMXDebug.getInstance().setAll(true);
 
         checkAssertsOn();
-        
+
         mDefaultDir = getDefaultDir(optionalPropertiesFile);
 
         final Map<String, String> props = getProperties(optionalPropertiesFile);
@@ -785,7 +785,7 @@ public final class TestMain
                         "threaded tests will be impacted by other concurrent tests.");
             }
         }
-        
+
         final File temp = new File(TEST_CLASSES_FILE_KEY);
         final File classesFile =  temp.isAbsolute() ?
                     temp : new File( mDefaultDir, getter.getString(TEST_CLASSES_FILE_KEY));
@@ -837,8 +837,8 @@ public final class TestMain
 
             final long elapsed = System.currentTimeMillis() - start;
             println("Time to run tests: " + (elapsed / 1000) + " seconds" );
-		}
-	}
+        }
+    }
 }
 
 

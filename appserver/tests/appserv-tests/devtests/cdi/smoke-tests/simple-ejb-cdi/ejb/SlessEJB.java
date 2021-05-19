@@ -28,7 +28,7 @@ public class SlessEJB implements Sless {
         if (tb != null) {
             return "hello";
         }
-        
+
         return null;
     }
 

@@ -31,7 +31,7 @@ import org.jvnet.hk2.annotations.Service;
  * The context implementation for CustomScope.  Does allow null value
  * returns.  Works more like Singleton than anything else, though it
  * does keep its own map, and hence can do better at shutdown
- * 
+ *
  * @author jwells
  *
  */
@@ -58,8 +58,8 @@ public class CustomScopeContext implements Context<CustomScope> {
         if (values.containsKey(activeDescriptor)) {
             return (U) values.get(activeDescriptor);
         }
-        
-        
+
+
         U retVal = activeDescriptor.create(root);
         values.put(activeDescriptor, retVal);
         return retVal;
@@ -79,7 +79,7 @@ public class CustomScopeContext implements Context<CustomScope> {
     @Override
     public void destroyOne(ActiveDescriptor descriptor) {
         if (!values.containsKey(descriptor)) return;
-        
+
         Object u = values.get(descriptor);
         descriptor.dispose(u);
     }
@@ -108,10 +108,10 @@ public class CustomScopeContext implements Context<CustomScope> {
         for (Map.Entry<ActiveDescriptor, Object> entry : values.entrySet()) {
             ActiveDescriptor ad = entry.getKey();
             Object value = entry.getValue();
-            
+
             ad.dispose(value);
         }
-        
+
         values.clear();
 
     }

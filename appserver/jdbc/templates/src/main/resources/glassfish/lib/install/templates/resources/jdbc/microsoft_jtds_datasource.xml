@@ -32,8 +32,8 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="microsoft_jtds_pool" 
+    <jdbc-connection-pool
+        name="microsoft_jtds_pool"
         datasource-classname="net.sourceforge.jtds.jdbcx.JtdsDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -43,9 +43,9 @@
         <property name="databaseName" value="DATABASE_NAME"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/microsoft_jtds_resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/microsoft_jtds_resource"
+        object-type="user"
         pool-name="microsoft_jtds_pool"/>
-</resources> 
+</resources>

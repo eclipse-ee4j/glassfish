@@ -32,7 +32,7 @@ public class TestServlet extends HttpServlet {
                 throw new ServletException(
                     "Wrong number of resource URLs, expected 2");
             }
-            urls[i++] = e.nextElement();            
+            urls[i++] = e.nextElement();
         }
 
         if (i != 2) {
@@ -51,14 +51,14 @@ public class TestServlet extends HttpServlet {
         /*
          * Since delegate is set to false, we expect the first URL in the
          * returned enum:
-         * 
+         *
          * jar:file:/space/luehe/ws/v3/distributions/web/target/glassfish\
-	 *     /domains/domain1/applications\
+         *     /domains/domain1/applications\
          *     /web-classloader-get-resources-delegate-false-web/WEB-INF/lib\
          *     /mytest.jar!/test.txt
-         * 
+         *
          * to be longer than the second:
-         * 
+         *
          * jar:file:/space/luehe/ws/v3/distributions/web/target/glassfish\
          *     /lib/test.jar!/test.txt|#]
          */

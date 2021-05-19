@@ -30,5 +30,5 @@ public interface LogEventBroadcaster {
      * @param logEvent
      */
     public void informLogEventListeners(LogEvent logEvent);
-    
+
 }

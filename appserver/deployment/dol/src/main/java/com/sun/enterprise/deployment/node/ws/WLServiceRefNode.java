@@ -160,7 +160,7 @@ public class WLServiceRefNode extends DeploymentDescriptorNode {
             while (serviceRefs.hasNext()) {
                 ServiceReferenceDescriptor next =
                         (ServiceReferenceDescriptor) serviceRefs.next();
-                // Only write runtime service-ref entry if there IS 
+                // Only write runtime service-ref entry if there IS
                 // some runtime info...
                 if (!next.getPortsInfo().isEmpty() ||
                         !next.getCallProperties().isEmpty() ||

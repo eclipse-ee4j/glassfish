@@ -28,10 +28,10 @@ import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
 /**
- * Implementation of SQLTraceListener to listen to events related to a 
- * sql record tracing. The registry allows multiple listeners 
+ * Implementation of SQLTraceListener to listen to events related to a
+ * sql record tracing. The registry allows multiple listeners
  * to listen to the sql tracing events. Maintains a list of listeners.
- * 
+ *
  * @author Shalini M
  */
 //@Singleton
@@ -44,7 +44,7 @@ public class SQLTraceDelegator implements SQLTraceListener {
             .getLogger(MethodExecutor.class, LogDomains.RSR_LOGGER);
     }
 
-    //List of listeners 
+    //List of listeners
     protected List<SQLTraceListener> sqlTraceListenersList;
     private String poolName;
     private String appName;
@@ -63,7 +63,7 @@ public class SQLTraceDelegator implements SQLTraceListener {
     }
 
     /**
-     * Add a listener to the list of sql trace listeners maintained by 
+     * Add a listener to the list of sql trace listeners maintained by
      * this registry.
      * @param listener
      */
@@ -72,9 +72,9 @@ public class SQLTraceDelegator implements SQLTraceListener {
                 sqlTraceListenersList = new ArrayList<SQLTraceListener>();
         }
         sqlTraceListenersList.add(listener);
-    }    
+    }
 
-   
+
    public void sqlTrace(SQLTraceRecord record) {
        if (sqlTraceListenersList != null) {
            for (SQLTraceListener listener : sqlTraceListenersList) {
@@ -113,11 +113,11 @@ public class SQLTraceDelegator implements SQLTraceListener {
     }
 
    /**
-    * Check if the method name from the sql trace record can be used to 
+    * Check if the method name from the sql trace record can be used to
     * retrieve a sql string for caching purpose. Most of the method names do not
     * contain a sql string and hence are unusable for caching the sql strings.
     * These method names are filtered in this method.
-    * 
+    *
     * @param methodName
     * @return true if method name can be used to get a sql string for caching.
     */

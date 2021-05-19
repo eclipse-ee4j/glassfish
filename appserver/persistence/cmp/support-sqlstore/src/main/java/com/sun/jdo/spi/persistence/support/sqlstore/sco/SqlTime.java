@@ -31,8 +31,8 @@ import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 
 /**
  * A mutable 2nd class object date.
- * @author Marina Vatkina 
- * @version 1.0 
+ * @author Marina Vatkina
+ * @version 1.0
  * @see     java.sql.Time
  */
 public class SqlTime
@@ -51,41 +51,41 @@ public class SqlTime
      */
     public SqlTime(Object owner, String fieldName)
     {
-	super(0);
-	if (owner instanceof PersistenceCapable)
+    super(0);
+    if (owner instanceof PersistenceCapable)
         {
                 this.owner = (PersistenceCapable)owner;
-		this.fieldName = fieldName;
+        this.fieldName = fieldName;
         }
     }
 
     /**
-     * Creates a <code>SqlTime</code> object that represents the given time 
+     * Creates a <code>SqlTime</code> object that represents the given time
      * in milliseconds. Assigns owning object and field name
-     * @param owner 	the owning object
+     * @param owner     the owning object
      * @param fieldName the owning field name
-     * @param date 	the number of milliseconds
+     * @param date     the number of milliseconds
      */
     public SqlTime(Object owner, String fieldName, long date)
     {
-	super(date);
-	if (owner instanceof PersistenceCapable)
+    super(date);
+    if (owner instanceof PersistenceCapable)
         {
                 this.owner = (PersistenceCapable)owner;
-		this.fieldName = fieldName;
+        this.fieldName = fieldName;
         }
     }
 
     /**
      * Sets the <tt>SqlTime</tt> object to represent a point in time that is
      * <tt>time</tt> milliseconds after January 1, 1970 00:00:00 GMT.
-     *   
+     *
      * @param   time   the number of milliseconds.
      * @see     java.sql.Time
-     */  
+     */
     public void setTime(long time) {
-	this.makeDirty();
-	super.setTime(time);
+    this.makeDirty();
+    super.setTime(time);
     }
 
     /**
@@ -100,8 +100,8 @@ public class SqlTime
     {
         SqlTime obj = (SqlTime) super.clone();
 
-		obj.owner = null; 
-		obj.fieldName = null; 
+        obj.owner = null;
+        obj.fieldName = null;
 
         return obj;
     }
@@ -110,21 +110,21 @@ public class SqlTime
 
     /**
      * Sets the hour of this <tt>SqlTime</tt> object to the specified value.
-     *   
+     *
      * @param   hours   the hour value.
      * @see     java.util.Calendar
      * @see     java.sql.Time
      * @deprecated As of JDK version 1.1,
      * replaced by <code>Calendar.set(Calendar.HOUR_OF_DAY, int hours)</code>.
-     */  
+     */
     public void setHours(int hours) {
-	this.makeDirty();
+    this.makeDirty();
         super.setHours(hours);
-    }  
+    }
 
     /**
      * Sets the minutes of this <tt>SqlTime</tt> object to the specified value.
-     *   
+     *
      * @param   minutes   the value of the minutes.
      * @see     java.util.Calendar
      * @see     java.sql.Time
@@ -132,119 +132,119 @@ public class SqlTime
      * replaced by <code>Calendar.set(Calendar.MINUTE, int minutes)</code>.
      */
     public void setMinutes(int minutes) {
-	this.makeDirty();
+    this.makeDirty();
         super.setMinutes(minutes);
-    }   
- 
+    }
+
     /**
      * Sets the seconds of this <tt>SqlTime</tt> to the specified value.
-     *   
+     *
      * @param   seconds   the seconds value.
      * @see     java.util.Calendar
      * @see     java.sql.Time
      * @deprecated As of JDK version 1.1,
      * replaced by <code>Calendar.set(Calendar.SECOND, int seconds)</code>.
-     */  
+     */
     public void setSeconds(int seconds) {
-	this.makeDirty();
+    this.makeDirty();
         super.setSeconds(seconds);
-    } 
+    }
 
     /** ---------------- internal methods ------------------- */
 
     /**
      * Creates and returns a copy of this object without resetting the owner and field value.
-     *   
-     */  
+     *
+     */
     public Object cloneInternal()
     {
         return super.clone();
-    } 
+    }
 
     /**
      * Sets the <tt>SqlTime</tt> object without notification of the Owner
      * field. Used internaly to populate date from DB
-     *   
+     *
      * @param   time   the number of milliseconds.
      * @see     java.sql.Time
-     */  
-    public void setTimeInternal(long time) {
-	super.setTime(time);
-    }
-
-    /**
-     * Nullifies references to the owner Object and Field 
-	 * NOTE: This method should be called under the locking of
-	 * the owener' state manager.
      */
-    public void unsetOwner() 
-    { 
-		this.owner = null; 
-		this.fieldName = null; 
+    public void setTimeInternal(long time) {
+    super.setTime(time);
     }
 
     /**
-     * Returns the owner object of the SCO instance 
-     * 
-     * @return owner object 
-     */ 
+     * Nullifies references to the owner Object and Field
+     * NOTE: This method should be called under the locking of
+     * the owener' state manager.
+     */
+    public void unsetOwner()
+    {
+        this.owner = null;
+        this.fieldName = null;
+    }
+
+    /**
+     * Returns the owner object of the SCO instance
+     *
+     * @return owner object
+     */
     public Object getOwner()
-    {    
-        return this.owner; 
-    } 
+    {
+        return this.owner;
+    }
 
     /**
      * Returns the field name
-     *   
+     *
      * @return field name as java.lang.String
-     */  
+     */
     public String getFieldName()
     {
         return this.fieldName;
     }
- 
+
     /**
      * Marks object dirty
      */
     public StateManager makeDirty()
     {
-		if (owner != null)
-		{
-			StateManager stateManager = owner.jdoGetStateManager();
-			
-			if (stateManager != null)
-			{
-				PersistenceManager pm = (PersistenceManager) stateManager.getPersistenceManagerInternal();
+        if (owner != null)
+        {
+            StateManager stateManager = owner.jdoGetStateManager();
 
-				pm.acquireShareLock();
-				
-				try
-				{
-					synchronized (stateManager)
-					{	
-						//
-						// Need to recheck owner because it could be set to
-						// null before we lock the stateManager.
-						//
-						if (owner != null)
-						{
-							stateManager.makeDirty(fieldName);
-							return stateManager;
-						}
-					}
-				}
-				finally
-				{
-					pm.releaseShareLock();
-				}
-			}
-		}
-		return null;
-     }   
+            if (stateManager != null)
+            {
+                PersistenceManager pm = (PersistenceManager) stateManager.getPersistenceManagerInternal();
+
+                pm.acquireShareLock();
+
+                try
+                {
+                    synchronized (stateManager)
+                    {
+                        //
+                        // Need to recheck owner because it could be set to
+                        // null before we lock the stateManager.
+                        //
+                        if (owner != null)
+                        {
+                            stateManager.makeDirty(fieldName);
+                            return stateManager;
+                        }
+                    }
+                }
+                finally
+                {
+                    pm.releaseShareLock();
+                }
+            }
+        }
+        return null;
+     }
 
     /**
      * Apply changes (no-op)
-     */  
+     */
     public void applyUpdates(StateManager sm, boolean modified)
     {
     }
@@ -252,10 +252,10 @@ public class SqlTime
     /**
      * Use java.sql.Time as the designated object to be used when writing
      * this object to the stream.
-     *   
+     *
      * @return java.sql.Time that represents the same value.
      * @throws ObjectStreamException.
-     */  
+     */
     Object writeReplace() throws ObjectStreamException
     {
         return new java.sql.Time(getTime());

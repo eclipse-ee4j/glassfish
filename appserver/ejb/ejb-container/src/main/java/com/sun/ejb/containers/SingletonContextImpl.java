@@ -40,7 +40,7 @@ public final class SingletonContextImpl
         } catch(Exception ex) {
             _logger.log(Level.FINE, "Exception in creating InitialContext",
                 ex);
-        }   
+        }
 
     }
 
@@ -55,7 +55,7 @@ public final class SingletonContextImpl
 
         EJBTimerService timerService = EJBTimerService.getValidEJBTimerService();
         return new EJBTimerServiceWrapper(timerService, this);
-        
+
     }
 
     @Override
@@ -110,7 +110,7 @@ public final class SingletonContextImpl
         }
 
         doGetSetRollbackTxAttrCheck();
-        
+
         TransactionManager tm = EjbContainerUtilImpl.getInstance().getTransactionManager();
 
         try {

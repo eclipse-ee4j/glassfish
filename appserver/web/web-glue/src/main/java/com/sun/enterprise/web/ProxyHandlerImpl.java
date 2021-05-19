@@ -89,7 +89,7 @@ public class ProxyHandlerImpl extends ProxyHandler {
             keySize = Integer.parseInt(header);
         }
 
-        return keySize;   
+        return keySize;
     }
 
     /**

@@ -29,7 +29,7 @@ import javax.naming.NamingException;
 
 /**
  * The JndiMBean DynamicMBean interface.
- * 
+ *
  * @author Rob Ruyak
  */
 public interface JndiMBean extends DynamicMBean {

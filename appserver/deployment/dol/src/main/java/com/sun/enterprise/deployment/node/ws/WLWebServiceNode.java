@@ -137,7 +137,7 @@ public class WLWebServiceNode extends DisplayableComponentNode {
                                 WebService descriptor) {
         Node topNode =
                 super.writeDescriptor(parent, nodeName, descriptor);
-        
+
         //TODO is this needed?
         //writeDisplayableComponentInfo(topNode, descriptor);
 

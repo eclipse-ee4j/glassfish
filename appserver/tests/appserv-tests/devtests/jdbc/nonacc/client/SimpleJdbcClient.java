@@ -23,7 +23,7 @@ import javax.sql.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class SimpleJdbcClient {
-    
+
     public static void main( String argv[] ) throws Exception {
         String testSuite = "NonACC ";
         SimpleReporterAdapter stat = new SimpleReporterAdapter();
@@ -39,7 +39,7 @@ public class SimpleJdbcClient {
 
             stmt = con.createStatement();
             stmt.executeQuery("SELECT * FROM NONACC");
-            stat.addStatus(testSuite + "test1 ", stat.PASS ); 
+            stat.addStatus(testSuite + "test1 ", stat.PASS );
         } catch( Exception e) {
             e.printStackTrace();
             stat.addStatus(testSuite + "test1 ",  stat.FAIL );

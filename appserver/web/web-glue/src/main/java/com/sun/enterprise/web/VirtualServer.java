@@ -135,7 +135,7 @@ import org.w3c.dom.*;
  * the iPlanet Application Server.
  */
 
-public class VirtualServer extends StandardHost 
+public class VirtualServer extends StandardHost
         implements org.glassfish.embeddable.web.VirtualServer {
 
     private static final String STATE = "state";
@@ -308,7 +308,7 @@ public class VirtualServer extends StandardHost
             }
         }
     }
-    
+
     /**
      * Gets the value of the allowLinking property of this virtual server.
      *
@@ -483,10 +483,10 @@ public class VirtualServer extends StandardHost
             vsPipeline.removeValve(valve);
         }
     }
-    
+
     private ConfigBeansUtilities getConfigBeansUtilities() {
-    	if (services == null) return null;
-    	return services.getService(ConfigBeansUtilities.class);
+        if (services == null) return null;
+        return services.getService(ConfigBeansUtilities.class);
     }
 
     // ------------------------------------------------------ Protected Methods
@@ -523,13 +523,13 @@ public class VirtualServer extends StandardHost
             WebModuleConfig wmInfo = findWebModuleInJ2eeApp(appsBean, wmID,
                                                             appRegistry);
             if (wmInfo == null) {
-            	ConfigBeansUtilities cbu = getConfigBeansUtilities();
-            	if (cbu == null) {
-            		contextRoot = null;
-            	}
-            	else {
+                ConfigBeansUtilities cbu = getConfigBeansUtilities();
+                if (cbu == null) {
+                    contextRoot = null;
+                }
+                else {
                     contextRoot = cbu.getContextRoot(wmID);
-            	}
+                }
             } else {
                 contextRoot = wmInfo.getContextPath();
             }
@@ -555,14 +555,14 @@ public class VirtualServer extends StandardHost
             Applications appsBean = domain.getApplications();
             wmInfo = findWebModuleInJ2eeApp(appsBean, wmID, appRegistry);
             if (wmInfo == null) {
-            	ConfigBeansUtilities cbu = getConfigBeansUtilities();
-            	String contextRoot = null;
-            	String location = null;
-            	if (cbu != null) {
-            		contextRoot = cbu.getContextRoot(wmID);
-            		location = cbu.getLocation(wmID);
-            	}
-            	
+                ConfigBeansUtilities cbu = getConfigBeansUtilities();
+                String contextRoot = null;
+                String location = null;
+                if (cbu != null) {
+                    contextRoot = cbu.getContextRoot(wmID);
+                    location = cbu.getLocation(wmID);
+                }
+
                 if (contextRoot!=null && location != null) {
                     File docroot = new File(location);
                     WebBundleDescriptorImpl wbd = webArchivist.getDefaultWebXmlBundleDescriptor();
@@ -629,7 +629,7 @@ public class VirtualServer extends StandardHost
                     return new WebappClassLoader(serverContext.getCommonClassLoader());
                 }
             });
-            loader.start();            
+            loader.start();
             wmInfo.setAppClassLoader(loader);
             if ( wbd.getApplication() == null ) {
                 Application application = Application.createApplication();
@@ -943,9 +943,9 @@ public class VirtualServer extends StandardHost
             contextLogger.setSuffix(logSuffix);
         }
         contextLogger.setTimestamp(true);
-        contextLogger.setLevel(logLevel); 
+        contextLogger.setLevel(logLevel);
          */
-        
+
 
         /*
          * Configure separate logger for this virtual server only if
@@ -1056,7 +1056,7 @@ public class VirtualServer extends StandardHost
 
             // create and add new handler
             fileLoggerHandler = fileLoggerHandlerFactory.getHandler(logFile);
-            newLogger.addHandler(fileLoggerHandler);            
+            newLogger.addHandler(fileLoggerHandler);
             newLogger.setUseParentHandlers(false);
         }
 
@@ -1077,7 +1077,7 @@ public class VirtualServer extends StandardHost
             }
         }
     }
-    
+
     void configureAliases(String... hosts) {
         for (String host : hosts) {
             if ( !host.equalsIgnoreCase("localhost") &&
@@ -1508,7 +1508,7 @@ public class VirtualServer extends StandardHost
      * representation of the remote client's IP address.
      */
     void configureRemoteAddressFilterValve() {
-        
+
         Property allow = vsBean.getProperty("allowRemoteAddress");
         Property deny = vsBean.getProperty("denyRemoteAddress");
         String allowStr = null;
@@ -1520,9 +1520,9 @@ public class VirtualServer extends StandardHost
             denyStr = deny.getValue();
         }
         configureRemoteAddressFilterValve(allowStr, denyStr);
-        
+
     }
-        
+
     /**
      * Configures the Remote Address Filter valve of this VirtualServer.
      *
@@ -1571,7 +1571,7 @@ public class VirtualServer extends StandardHost
      * remote host from where the request originated.
      */
     void configureRemoteHostFilterValve() {
-        
+
         Property allow = vsBean.getProperty("allowRemoteHost");
         Property deny = vsBean.getProperty("denyRemoteHost");
         String allowStr = null;
@@ -1583,9 +1583,9 @@ public class VirtualServer extends StandardHost
             denyStr = deny.getValue();
         }
         configureRemoteHostFilterValve(allowStr, denyStr);
-        
+
     }
-    
+
     void configureRemoteHostFilterValve(String allow, String deny) {
 
         RemoteHostValve remoteHostValve = null;
@@ -1809,7 +1809,7 @@ public class VirtualServer extends StandardHost
             ssoEnabled = vsBean.getSsoEnabled();
         }
         return "inherit".equals(ssoEnabled) && globalSSOEnabled
-            || ConfigBeansUtilities.toBoolean(ssoEnabled); 
+            || ConfigBeansUtilities.toBoolean(ssoEnabled);
     }
 
     private void setSingleSignOnForChildren(SingleSignOn sso) {
@@ -1906,10 +1906,10 @@ public class VirtualServer extends StandardHost
     }
 
     // ----------------------------------------------------- embedded methods
-    
-    
+
+
     private VirtualServerConfig config;
-    
+
     private List<WebListener> listeners = new ArrayList<WebListener>();
 
     /**
@@ -1920,7 +1920,7 @@ public class VirtualServer extends StandardHost
     public void setDocRoot(File docRoot) {
         this.setAppBase(docRoot.getPath());
     }
-    
+
     /**
      * Gets the docroot of this <tt>VirtualServer</tt>.
      */
@@ -2237,11 +2237,11 @@ public class VirtualServer extends StandardHost
      * <p>In order for the given configuration to take effect, this
      * <tt>VirtualServer</tt> may be stopped and restarted.
      */
-    public void setConfig(VirtualServerConfig config) 
+    public void setConfig(VirtualServerConfig config)
         throws ConfigException {
-        
+
         this.config = config;
-        configureSingleSignOn(config.isSsoEnabled(), 
+        configureSingleSignOn(config.isSsoEnabled(),
                 Globals.getDefaultHabitat().<PEWebContainerFeatureFactoryImpl>getService(
                 PEWebContainerFeatureFactoryImpl.class),
                 false);
@@ -2256,7 +2256,7 @@ public class VirtualServer extends StandardHost
         configureRemoteAddressFilterValve(config.getAllowRemoteAddress(), config.getDenyRemoteAddress());
         configureRemoteHostFilterValve(config.getAllowRemoteHost(), config.getAllowRemoteHost());
         configureAliases(config.getHostNames());
-        
+
     }
 
     /**
@@ -2265,7 +2265,7 @@ public class VirtualServer extends StandardHost
     public VirtualServerConfig getConfig() {
         return config;
     }
-        
+
     @Override
     public synchronized void stop() throws LifecycleException {
         if (fileLoggerHandler != null) {
@@ -2274,11 +2274,11 @@ public class VirtualServer extends StandardHost
            fileLoggerHandler = null;
         }
         setLogger(_logger, "INFO");
-        
+
         super.stop();
     }
 
-	public void updateWebXml(ContextFacade facade, File file) throws Exception {
+    public void updateWebXml(ContextFacade facade, File file) throws Exception {
 
         Map<String, String> servlets = facade.getAddedServlets();
         Map<String, String[]> mappings = facade.getServletMappings();
@@ -2595,7 +2595,7 @@ public class VirtualServer extends StandardHost
                 }
             }
         }
-        
+
     }
 
 }

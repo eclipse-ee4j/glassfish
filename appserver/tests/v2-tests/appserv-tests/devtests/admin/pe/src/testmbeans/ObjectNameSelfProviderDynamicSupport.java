@@ -116,4 +116,4 @@ public abstract class ObjectNameSelfProviderDynamicSupport implements javax.mana
         }
         return resultList;
    }
-} //GEN-END:generatedCode 
+} //GEN-END:generatedCode

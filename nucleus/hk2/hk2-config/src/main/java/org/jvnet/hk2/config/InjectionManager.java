@@ -36,7 +36,7 @@ import org.glassfish.hk2.api.MultiException;
  */
 @SuppressWarnings("unchecked")
 public class InjectionManager {
-  
+
    /**
      * Initializes the component by performing injection.
      *
@@ -45,7 +45,7 @@ public class InjectionManager {
      * @param targets the injection resolvers to resolve all injection points
      * @throws ComponentException
      *      if injection failed for some reason.
-     */    
+     */
     public void inject(Object component, InjectionResolver... targets) {
         syncDoInject(component, component.getClass(), targets);
     }
@@ -59,7 +59,7 @@ public class InjectionManager {
      * @param targets the injection resolvers to resolve all injection points
      * @throws ComponentException
      *      if injection failed for some reason.
-     */    
+     */
     public void inject(Object component, ExecutorService es, InjectionResolver... targets) {
       try {
         syncDoInject(component, component.getClass(), targets);
@@ -78,7 +78,7 @@ public class InjectionManager {
         throw new MultiException(e);
       }
     }
-    
+
     protected static class InjectContext {
       public final Object component;
       //public final Class<?> type;
@@ -96,7 +96,7 @@ public class InjectionManager {
         this.targets = targets;
       }
     }
-    
+
     /**
       * Initializes the component by performing injection.
       *
@@ -185,11 +185,11 @@ public class InjectionManager {
                         Method setter = target.getSetterMethod(method, inject);
                         if (setter.getReturnType() != void.class) {
                             if (Collection.class.isAssignableFrom(setter.getReturnType())) {
-                                injectCollection(component, setter, 
+                                injectCollection(component, setter,
                                     target.getValue(component, method, null, setter.getReturnType()));
                                 continue;
                             }
-                            
+
                             error_InjectMethodIsNotVoid(method);
                         }
 
@@ -225,8 +225,8 @@ public class InjectionManager {
                                   });
 
                                   Type gparamType[] = setter.getGenericParameterTypes();
-                                  
-                                  Object params[] = new Object[paramTypes.length]; 
+
+                                  Object params[] = new Object[paramTypes.length];
                                   for (int i = 0; i < paramTypes.length; i++) {
                                     Object value = target.getValue(component, method, gparamType[i], paramTypes[i]);
                                     if (value != null) {
@@ -237,7 +237,7 @@ public class InjectionManager {
                                       }
                                     }
                                 }
-                                  
+
                                 setter.invoke(component, params);
                               }
                             } catch (MultiException e) {
@@ -252,7 +252,7 @@ public class InjectionManager {
                         }
                     }
                 }
-                
+
                 currentClass = currentClass.getSuperclass();
             }
         } catch (final LinkageError e) {
@@ -273,7 +273,7 @@ public class InjectionManager {
 
     /**
      * Prototype for the multi-threaded version of inject().
-     * 
+     *
      * @param ic Injection Contect
      *
     protected void asyncDoInject(final InjectContext ic) {
@@ -283,10 +283,10 @@ public class InjectionManager {
         tasks.add(0, new InjectClass(classType, ic));
         classType = classType.getSuperclass();
       }
-      
+
       WorkManager wm = new WorkManager(ic.es, tasks.size());
       wm.executeAll(tasks);
-      
+
       try {
         wm.awaitCompletion();
       } catch (WorkManager.ExecutionException e) {
@@ -308,13 +308,13 @@ public class InjectionManager {
           x.initCause(e);
           throw x;
         }
-        
+
         throw e;
       }
     }
     */
 
-    
+
     protected class InjectClass implements Runnable {
       private final Class<?> classType;
       private final InjectContext ic;
@@ -331,17 +331,17 @@ public class InjectionManager {
         wm.execute(new InjectMethods(this));
         wm.execute(new InjectFields(this));
         wm.awaitCompletion();
-        
+
         new InjectMethods(this).run();
         new InjectFields(this).run();
       }
 
     }
-    
+
 
     protected class InjectFields implements Runnable {
       private final InjectClass iClass;
-      
+
       public InjectFields(InjectClass iClass) {
         this.iClass = iClass;
       }
@@ -364,10 +364,10 @@ public class InjectionManager {
       }
     }
 
-    
+
     protected class InjectMethods implements Runnable {
       private final InjectClass iClass;
-      
+
       public InjectMethods(InjectClass iClass) {
         this.iClass = iClass;
       }
@@ -389,14 +389,14 @@ public class InjectionManager {
         wm.awaitCompletion();
       }
     }
-    
-    
+
+
     protected class InjectField implements Runnable {
       private final InjectContext ic;
       private final Field field;
       private final Annotation inject;
       private final InjectionResolver target;
-      
+
       public InjectField(InjectClass iClass, Field field, Annotation inject, InjectionResolver target) {
         this.ic = iClass.ic;
         this.field = field;
@@ -433,13 +433,13 @@ public class InjectionManager {
         }
       }
     }
-    
+
     protected class InjectMethod implements Runnable {
       private final InjectContext ic;
       private final Method method;
       private final Annotation inject;
       private final InjectionResolver target;
-      
+
       public InjectMethod(InjectClass iClass, Method method, Annotation inject, InjectionResolver target) {
         this.ic = iClass.ic;
         this.method = method;
@@ -452,7 +452,7 @@ public class InjectionManager {
         Method setter = target.getSetterMethod(method, inject);
         if (void.class != setter.getReturnType()) {
           if (Collection.class.isAssignableFrom(setter.getReturnType())) {
-            injectCollection(ic.component, setter, 
+            injectCollection(ic.component, setter,
                 target.getValue(ic.component, method, null, setter.getReturnType()));
           } else {
             error_InjectMethodIsNotVoid(method);
@@ -516,27 +516,27 @@ public class InjectionManager {
         }
       }
     }
-    
+
     protected void error_injectionException(InjectionResolver target, Annotation inject, AnnotatedElement injectionPoint, Throwable e) {
       Logger.getAnonymousLogger().log(Level.FINE, "** Injection failure **", e);
-      
+
       if (UnsatisfiedDependencyException.class.isInstance(e)) {
         if (injectionPoint == ((UnsatisfiedDependencyException)e).getUnsatisfiedElement()) {
           // no need to wrap again
           throw (UnsatisfiedDependencyException)e;
         }
-        
+
         if (target.isOptional(injectionPoint, inject)) {
           return;
         } else {
           throw new UnsatisfiedDependencyException(injectionPoint, inject, e);
         }
       }
-    
+
       if (null != e.getCause() && InvocationTargetException.class.isInstance(e)) {
         e = e.getCause();
       }
-      
+
       throw new MultiException(e);
     }
 
@@ -549,11 +549,11 @@ public class InjectionManager {
 //      if (paramTypes.length > 1) {
 //        error_InjectMethodHasMultipleParams(method);
 //      }
-//  
+//
 //      if (paramTypes.length == 0) {
 //        error_InjectMethodHasNoParams(method);
 //      }
-//  
+//
 //      return true;
     }
 
@@ -591,5 +591,5 @@ public class InjectionManager {
         target.addAll(c);
     }
 
-    
+
 }

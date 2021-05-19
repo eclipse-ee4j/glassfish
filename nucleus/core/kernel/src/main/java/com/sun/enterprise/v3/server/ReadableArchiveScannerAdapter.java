@@ -33,11 +33,11 @@ import org.glassfish.kernel.KernelLoggerInfo;
 
 /**
  * ArchiveAdapter for DOL readable archive instances
- * 
+ *
  * @author Jerome Dochez
  */
 public class ReadableArchiveScannerAdapter extends AbstractAdapter {
-    
+
     final ReadableArchive archive;
     final Parser parser;
     final URI uri;
@@ -63,10 +63,10 @@ public class ReadableArchiveScannerAdapter extends AbstractAdapter {
      * Default timeout value for parsing a single jar (plus all internal jars it may contains)
      */
     private final int DEFAULT_TIMEOUT = Integer.getInteger(Parser.DEFAULT_WAIT_SYSPROP, 600);
-    
+
     private final static Level level = Level.FINE;
     final private static Logger alogger = KernelLoggerInfo.getLogger();
-    
+
 
     public ReadableArchiveScannerAdapter(Parser parser, ReadableArchive archive) {
         this.archive = archive;
@@ -105,7 +105,7 @@ public class ReadableArchiveScannerAdapter extends AbstractAdapter {
             // check for non exploded jars.
             if (name.endsWith(".jar")) {
                 handleJar(name, logger);
-            }  
+            }
         }
         if (logger.isLoggable(level)) {
             logger.log(level, "Finished parsing " + this.uri);
@@ -129,7 +129,7 @@ public class ReadableArchiveScannerAdapter extends AbstractAdapter {
 
     protected void handleEntry(String name, Entry entry, Logger logger /*ignored*/, EntryTask entryTask)
         throws IOException {
-        
+
         InputStream is = null;
         try {
             try {
@@ -198,7 +198,7 @@ public class ReadableArchiveScannerAdapter extends AbstractAdapter {
 
         @Override
         protected Future handleJar(String name, Logger logger) throws IOException {
-            // we don't process second level internal jars 
+            // we don't process second level internal jars
             return null;
         }
     }

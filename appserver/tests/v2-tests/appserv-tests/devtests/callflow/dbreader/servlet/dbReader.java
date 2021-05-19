@@ -40,7 +40,7 @@ import com.sun.enterprise.Switch;
  * @version
  */
 public class dbReader extends HttpServlet {
-    
+
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -53,30 +53,30 @@ public class dbReader extends HttpServlet {
     private static final String __DELETE =" delete from ";
     private static final String REQUEST_START_TBL__SERVER = "REQUEST_START_TBL__SERVER";
     private static final String RS = REQUEST_START_TBL__SERVER;
-    
+
     private static final String REQUEST_END_TBL__SERVER = "REQUEST_END_TBL__SERVER";
     private static final String RE = REQUEST_END_TBL__SERVER;
-    
+
     private static final String METHOD_START_TBL__SERVER = "METHOD_START_TBL__SERVER";
     private static final String MS = METHOD_START_TBL__SERVER;
-    
+
     private static final String METHOD_END_TBL__SERVER ="METHOD_END_TBL__SERVER";
     private static final String ME = METHOD_END_TBL__SERVER;
-    
+
     private static final String START_TIME_TBL__SERVER ="START_TIME_TBL__SERVER";
     private static final String ST = START_TIME_TBL__SERVER;
-    
+
     private static final String END_TIME_TBL__SERVER   ="END_TIME_TBL__SERVER";
     private static final String ET = END_TIME_TBL__SERVER;
-    
+
     private static final String AND = " AND ";
     private static final String RID = ".REQUEST_ID ";
     private static final String COMMA = ",";
     private static final String EQUAL = " = ";
-    
+
    // name of the servlet whose db value is to be queried
     private static final String SERVLET_NAME = "";
-   
+
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -86,10 +86,10 @@ public class dbReader extends HttpServlet {
         String cleandb = request.getParameter ("cleandb");
         if (cleandb != null){
             deleteRows (con);
-	    out.println ("Cleaned rows from all tables in db");
+        out.println ("Cleaned rows from all tables in db");
             return;
         }
-        String servletName = request.getParameter ("servletName");        
+        String servletName = request.getParameter ("servletName");
         if (servletName == null){
             out.println (" Specify servlet name whose data is to be looked up"+
                     " via a request parameter name ="+servletName);
@@ -122,15 +122,15 @@ public class dbReader extends HttpServlet {
             ex.printStackTrace();
         }
     }
-     
+
     private Connection getConnection () throws ServletException{
-    
+
         Connection con = null;
         try {
             con = callflowDS.getConnection();
         } catch (SQLException ex) {
            throw new ServletException (ex);
-        } 
+        }
         return con;
     }
     private String getRequestId (Connection con , String sql) throws ServletException {
@@ -158,24 +158,24 @@ public class dbReader extends HttpServlet {
             throw new ServletException (ex);
         }
         return count;
-        
+
     }
   private void deleteRows (Connection con) throws ServletException{
         try {
             Statement stmt = con.createStatement();
-            stmt.execute (__DELETE + REQUEST_START_TBL__SERVER);            
+            stmt.execute (__DELETE + REQUEST_START_TBL__SERVER);
             stmt.execute (__DELETE + REQUEST_END_TBL__SERVER);
-            
+
             stmt.execute (__DELETE + METHOD_START_TBL__SERVER);
             stmt.execute (__DELETE + METHOD_END_TBL__SERVER);
-            
+
             stmt.execute (__DELETE + START_TIME_TBL__SERVER);
             stmt.execute (__DELETE + END_TIME_TBL__SERVER);
-            
+
         } catch (SQLException ex) {
             throw new ServletException (ex);
         }
-    }    
+    }
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -185,7 +185,7 @@ public class dbReader extends HttpServlet {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -194,7 +194,7 @@ public class dbReader extends HttpServlet {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     /** Returns a short description of the servlet.
      */
     public String getServletInfo() {

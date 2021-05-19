@@ -35,7 +35,7 @@ public class JSFTestBean {
             new TestTable("Mr. X", "+122222222", "SFO"),
     };
 
-    
+
     public class TestTable {
         String name;
         String number;

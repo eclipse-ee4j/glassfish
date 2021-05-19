@@ -250,7 +250,7 @@ public class PersistenceManagerWrapper implements PersistenceManager {
      * @return the <code>PersistenceCapable</code> instance with the specified ObjectId
      * @param oid an ObjectId
      * @param validate if the existence of the instance is to be validated
-     */  
+     */
     public Object getObjectById (Object oid, boolean validate) {
         if (isValid) {
             return pm.getObjectById(oid, validate);
@@ -493,8 +493,8 @@ public class PersistenceManagerWrapper implements PersistenceManager {
                     "jdo.persistencemanagerwrapper.invalidpm"));// NOI18N
         }
     }
-  
-  
+
+
     /**
      * Sets the requireCopyObjectId flag for this PersistenceManager.
      * If set to false, the PersistenceManager will not create a copy of
@@ -517,12 +517,12 @@ public class PersistenceManagerWrapper implements PersistenceManager {
     /**
      * Returns the boolean value of the requireTrackedSCO flag
      * for this PersistenceManager. If set to false, the PersistenceManager
-     * will not create tracked SCO instances for 
+     * will not create tracked SCO instances for
      * new persistent instances at commit with retainValues set to true
      * and while retrieving data from a datastore.
-     *   
+     *
      * @return      boolean requireTrackedSCO flag
-     */  
+     */
     public boolean getRequireTrackedSCO() {
         if (isValid) {
             return pm.getRequireTrackedSCO();
@@ -535,7 +535,7 @@ public class PersistenceManagerWrapper implements PersistenceManager {
     /**
      * Sets the requireTrackedSCO flag for this PersistenceManager.
      * If set to false, the PersistenceManager will not create tracked
-     * SCO instances for new persistent instances at commit with retainValues 
+     * SCO instances for new persistent instances at commit with retainValues
      * set to true and while retrieving data from a datastore.
      *
      * @param flag          boolean requireTrackedSCO flag

@@ -57,7 +57,7 @@ public class FlashlightProbe
         this.statefulReturn = statefulReturn;
         this.statefulException = statefulException;
         this.profileNames = profileNames;
-        
+
         if (self) {
             if (isMethodStatic()) {
                 String errStr = localStrings.getLocalString("cannotDefineSelfOnStatic", "Cannot define \"self\" on a static method - ", probeDesc);
@@ -98,7 +98,7 @@ public class FlashlightProbe
     }
 
     public synchronized boolean addInvoker(ProbeClientInvoker invoker) {
-    	boolean isFirst = (invokers.isEmpty() && firstTransform);
+            boolean isFirst = (invokers.isEmpty() && firstTransform);
 
         if(invokers.putIfAbsent(invoker.getId(), invoker) != null) {
             if (logger.isLoggable(Level.FINE))
@@ -132,7 +132,7 @@ public class FlashlightProbe
         if (logger.isLoggable(Level.FINE)) {
             logger.fine("Total invokers = " + invokers.size());
         }
-        
+
         listenerEnabled.set(!invokers.isEmpty());
 
         initInvokerList();
@@ -155,7 +155,7 @@ public class FlashlightProbe
             if(invoker != null) {
                 invoker.invoke(params);
             }
-        } 
+        }
     }
 
     public ArrayList<ProbeInvokeState> fireProbeBefore(Object[] params) {
@@ -163,8 +163,8 @@ public class FlashlightProbe
             return null;
         }
 
-        ArrayList<ProbeInvokeState> probeInvokeStates = new ArrayList<ProbeInvokeState> (); 
-        
+        ArrayList<ProbeInvokeState> probeInvokeStates = new ArrayList<ProbeInvokeState> ();
+
         if (parent != null) {
             ArrayList <ProbeInvokeState> parentStates = parent.fireProbeBefore(params);
             probeInvokeStates.addAll(parentStates);
@@ -178,8 +178,8 @@ public class FlashlightProbe
                 probeInvokeStates.add(new ProbeInvokeState(invoker.getId(),
                                                invoker.invokeBefore(params)));
             }
-        } 
-        
+        }
+
         return probeInvokeStates;
     }
 
@@ -187,7 +187,7 @@ public class FlashlightProbe
         if(!listenerEnabled.get()) {
             return;
         }
-       
+
         if (parent != null) {
             parent.fireProbeAfter(returnValue, states);
         }
@@ -202,14 +202,14 @@ public class FlashlightProbe
                 if (stateIndex >= 0)
                     invoker.invokeAfter(states.get(stateIndex).getState(), returnValue);
             }
-        } 
+        }
     }
-    
+
     public void fireProbeOnException(Object exceptionValue, ArrayList<ProbeInvokeState> states) {
         if(!listenerEnabled.get()) {
             return;
         }
-       
+
         if (parent != null) {
             parent.fireProbeOnException(exceptionValue, states);
         }
@@ -224,9 +224,9 @@ public class FlashlightProbe
                 if (stateIndex >= 0)
                     invoker.invokeOnException(states.get(stateIndex).getState(), exceptionValue);
             }
-        } 
+        }
     }
-    
+
     public boolean isEnabled() {
         return listenerEnabled.get();
     }
@@ -236,14 +236,14 @@ public class FlashlightProbe
     }
 
     public String getModuleProviderName() {
-		return moduleProviderName;
-	}
+                return moduleProviderName;
+        }
 
     public String getModuleName() {
         return moduleProviderName;
     }
 
-	public String getProbeProviderName() {
+        public String getProbeProviderName() {
         return probeProviderName;
     }
 
@@ -280,12 +280,12 @@ public class FlashlightProbe
     }
 
     public Class getProviderClazz() {
-		return providerClazz;
-	}
+                return providerClazz;
+        }
 
-	 public String toString() {
+         public String toString() {
          StringBuilder sbldr = new StringBuilder(moduleProviderName + ":" + moduleName
-         		+ ":" + probeProviderName + ":" + probeName);
+                         + ":" + probeProviderName + ":" + probeName);
          String delim = " (";
          for (int i = 0; i < paramTypes.length; i++) {
              sbldr.append(delim).append((paramTypes[i] == null) ? " " : paramTypes[i].getName());
@@ -324,17 +324,17 @@ public class FlashlightProbe
     }
 
     public void setParent(FlashlightProbe parent) {
-        // Only setting the parent here if both are stateful or both are stateless (no mixing) 
+        // Only setting the parent here if both are stateful or both are stateless (no mixing)
         if (stateful != parent.getStateful())
             return;
         this.parent = parent;
     }
-    
+
     public boolean getStateful() { return stateful; }
     public boolean getStatefulReturn() { return statefulReturn; }
     public boolean getStatefulException() { return statefulException; }
-    public String [] getProfileNames() { return profileNames; } 
-   
+    public String [] getProfileNames() { return profileNames; }
+
     private void initInvokerList() {
         Set<Map.Entry<Integer, ProbeClientInvoker>> entries = invokers.entrySet();
         List<ProbeClientInvoker> invList = new ArrayList(2);
@@ -369,7 +369,7 @@ public class FlashlightProbe
         }
         return -1;
     }
-    
+
     public static final class ProbeInvokeState {
         private int invokerId;
         private Object state = null;
@@ -381,7 +381,7 @@ public class FlashlightProbe
         /* package */ final Object getState() { return state; }
         /* package */ final int getInvokerId() { return invokerId; }
     }
-    
+
     private Method probeMethod;
     public static final String SELF = "@SELF";
     private int id;

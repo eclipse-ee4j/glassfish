@@ -73,7 +73,7 @@ public class EjbWebServiceServlet extends HttpServlet {
         String requestUri = (requestUriRaw.charAt(0) == '/') ? requestUriRaw.substring(1) : requestUriRaw;
         String query = hreq.getQueryString();
 
-        WebServiceEjbEndpointRegistry wsejbEndpointRegistry = (WebServiceEjbEndpointRegistry) 
+        WebServiceEjbEndpointRegistry wsejbEndpointRegistry = (WebServiceEjbEndpointRegistry)
             Globals.getDefaultHabitat().getService(WSEjbEndpointRegistry.class);
         EjbRuntimeEndpointInfo ejbEndpoint = wsejbEndpointRegistry.getEjbWebServiceEndpoint(requestUri, hreq.getMethod(), query);
 
@@ -92,42 +92,42 @@ public class EjbWebServiceServlet extends HttpServlet {
             if ("http".equals(scheme) && wse.isSecure()) {
                 // redirect to correct protocol scheme if needed
                 logger.log(WARNING, INVALID_REQUEST_SCHEME, new Object[] { wse.getEndpointName(), "https", scheme });
-                
+
                 URL url = wse.composeEndpointAddress(new WsUtil().getWebServerInfoForDAS().getWebServerRootURL(true));
                 StringBuilder sb = new StringBuilder(url.toExternalForm());
                 if (query != null && query.trim().length() > 0) {
                     sb.append("?");
                     sb.append(query);
                 }
-                
+
                 hresp.sendRedirect(URLEncoder.encode(sb.toString(), "UTF-8"));
             } else {
                 boolean dispatch = true;
-                
+
                 // Check if it is a tester servlet invocation
                 if ("Tester".equalsIgnoreCase(query) && (!(HTTP_BINDING.equals(wse.getProtocolBinding())))) {
                     Endpoint endpoint = WebServiceEngineImpl.getInstance().getEndpoint(hreq.getRequestURI());
                     if ((endpoint.getDescriptor().isSecure()) || (endpoint.getDescriptor().getMessageSecurityBinding() != null)) {
-                        
-                        new WsUtil().writeInvalidMethodType(hresp, 
-                            endpoint.getDescriptor().getWebService().getName() + 
+
+                        new WsUtil().writeInvalidMethodType(hresp,
+                            endpoint.getDescriptor().getWebService().getName() +
                                 "is a secured web service; Tester feature is not supported for secured services");
-                        
+
                         return;
                     }
-                    
+
                     if (Boolean.parseBoolean(endpoint.getDescriptor().getDebugging())) {
                         dispatch = false;
                         WebServiceTesterServlet.invoke(hreq, hresp, endpoint.getDescriptor());
                     }
                 }
-                
+
                 if ("wsdl".equalsIgnoreCase(query) && (!(HTTP_BINDING.equals(wse.getProtocolBinding())))) {
                     if (wse.getWsdlExposed() != null && !Boolean.parseBoolean(wse.getWsdlExposed())) {
                         hresp.sendError(SC_NOT_FOUND);
                     }
                 }
-                
+
                 if (dispatch) {
                     dispatchToEjbEndpoint(hreq, hresp, ejbEndpoint);
                 }
@@ -191,7 +191,7 @@ public class EjbWebServiceServlet extends HttpServlet {
                 secServ.resetSecurityContext();
                 secServ.resetPolicyContext();
             }
-            
+
             // Restore context class loader
             Thread.currentThread().setContextClassLoader(savedClassLoader);
         }

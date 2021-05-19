@@ -29,7 +29,7 @@ import org.jvnet.hk2.annotations.Service;
 @jakarta.inject.Singleton
 public class CarType extends ArchiveType {
     /**
-     * 
+     *
      */
     public static final String ARCHIVE_TYPE = "car";
 

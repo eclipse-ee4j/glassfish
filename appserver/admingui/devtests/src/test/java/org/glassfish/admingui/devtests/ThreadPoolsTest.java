@@ -38,7 +38,7 @@ public class ThreadPoolsTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:minThread:minThread", "4");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:timeout:timeout", "1800");
         clickAndWait("propertyForm:propertyContentPage:topButtons:newButton", TRIGGER_THREAD_POOLS);
-        
+
         assertTrue(isTextPresent(threadPoolName));
         clickAndWait(getLinkIdByLinkText("propertyForm:configs", threadPoolName), TRIGGER_EDIT_THREAD_POOL);
         assertEquals("8192", getFieldValue("propertyForm:propertySheet:propertSectionTextField:max:max"));

@@ -16,7 +16,7 @@
 
 -->
 
-<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config" 
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config"
                             dumpMessages="false">
     <xwss:Timestamp/>
     <xwss:RequireEncryption>
@@ -24,11 +24,11 @@
     </xwss:RequireEncryption>
     <xwss:RequireSignature>
         <xwss:Target type="qname">{http://schemas.xmlsoap.org/soap/envelope/}Body</xwss:Target>
-    </xwss:RequireSignature>     
-    <xwss:RequireUsernameToken nonceRequired="false" passwordDigestRequired="false"/>      
+    </xwss:RequireSignature>
+    <xwss:RequireUsernameToken nonceRequired="false" passwordDigestRequired="false"/>
     <xwss:Encrypt keyEncryptionAlgorithm="RSA_v1dot5">
         <xwss:X509Token certificateAlias="s1as"/>
-    </xwss:Encrypt>    
+    </xwss:Encrypt>
     <xwss:Sign>
         <xwss:X509Token certificateAlias="s1as"/>
     </xwss:Sign>

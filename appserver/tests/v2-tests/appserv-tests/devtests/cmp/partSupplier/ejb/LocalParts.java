@@ -25,14 +25,14 @@ import jakarta.ejb.*;
  */
 
 public interface LocalParts extends jakarta.ejb.EJBLocalObject {
-    
+
     public void addSupplier(Data.LocalSuppliers supplier);
-    
+
     public void dropSupplier(Data.LocalSuppliers supplier);
-    
+
     public java.lang.String getName();
-    
+
     public void testInCascadeDelete();
-    
+
 }
 

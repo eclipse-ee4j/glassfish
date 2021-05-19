@@ -40,7 +40,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class Client {
     private Test t;
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
 
@@ -50,7 +50,7 @@ public class Client {
 
             Object objref = initial.lookup("java:comp/env/ejb/T1");
             TestHome thome = (TestHome)PortableRemoteObject.narrow(objref, TestHome.class);
-    
+
             t = thome.create();
         } catch( Exception ex ) {
             System.err.println("Client(): Caught an exception:");
@@ -59,7 +59,7 @@ public class Client {
     }
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
 
@@ -78,7 +78,7 @@ public class Client {
 
         stat.printSummary("ejbFlush");
     }
-    
+
     private void checkCmp11Bean() {
         try {
             t.testA1();
@@ -93,7 +93,7 @@ public class Client {
         try {
             t.testA1WithFlush();
             System.out.println("A1WithFlush OK");
-        } catch (Exception e) {  
+        } catch (Exception e) {
             System.out.println("A1 FAILED " + e.getMessage());
             e.printStackTrace();
             stat.addStatus("ejbclient checkCmp11Bean", stat.FAIL);
@@ -152,7 +152,7 @@ public class Client {
         try {
             t.testA2WithFlush();
             System.out.println("A2WithFlush OK");
-        } catch (Exception e) {  
+        } catch (Exception e) {
             System.out.println("A2 FAILED " + e.getMessage());
             e.printStackTrace();
             stat.addStatus("ejbclient checkCmp20Bean", stat.FAIL);

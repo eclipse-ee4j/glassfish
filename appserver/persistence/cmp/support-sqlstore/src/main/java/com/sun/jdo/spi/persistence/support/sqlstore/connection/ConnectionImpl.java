@@ -42,57 +42,57 @@ import java.util.concurrent.Executor;
  */
 public class ConnectionImpl implements Connection, Linkable {
     /*
-	 * The associated JDBC Connection.
-	 */
+     * The associated JDBC Connection.
+     */
     private Connection connection;
 
     /*
-	 * The datasource url; e.g. "jdbc:oracle:oci7:@ABYSS_ORACLE".
-	 */
+     * The datasource url; e.g. "jdbc:oracle:oci7:@ABYSS_ORACLE".
+     */
     private String url;
 
     /*
-	 * User name.
-	 */
+     * User name.
+     */
     private String userName;
 
     /*
-	 * Previous ConnectionImpl in a chain.
-	 */
+     * Previous ConnectionImpl in a chain.
+     */
     Linkable previous;
 
     /*
-	 * Next ConnectionImpl in a chain.
-	 */
+     * Next ConnectionImpl in a chain.
+     */
     Linkable next;
 
     /*
-	 * Indicates whether this ConnectionImpl is pooled.
-	 */
+     * Indicates whether this ConnectionImpl is pooled.
+     */
     private boolean pooled;
 
     /*
-	 * The Transaction object for the associated transaction.
-	 */
+     * The Transaction object for the associated transaction.
+     */
     private Transaction transaction;
 
     /*
-	 * Indicates whether this ConnectionImpl is to be freed on
-	 * transaction termination.
-	 */
+     * Indicates whether this ConnectionImpl is to be freed on
+     * transaction termination.
+     */
     boolean freePending;
 
     /*
-	 * The resource interface that is registered with a transaction
-	 * object.
-	 */
-    //	private ForteJDBCResource		resource;
+     * The resource interface that is registered with a transaction
+     * object.
+     */
+    //    private ForteJDBCResource        resource;
 
     /*
-	 * The parent ConnectionManager object.
-	 */
+     * The parent ConnectionManager object.
+     */
     ConnectionManager connectionManager;
-    
+
     /**
      * The logger
      */
@@ -116,7 +116,7 @@ public class ConnectionImpl implements Connection, Linkable {
         this.pooled = false;
         this.transaction = null;
         this.freePending = false;
-        //		this.resource = null;
+        //        this.resource = null;
         this.connectionManager = connMgr;
     }
 
@@ -508,7 +508,7 @@ public class ConnectionImpl implements Connection, Linkable {
     }
 
     //-------------End New methods added in JDBC 3.0 --------------
-                                   
+
     //-------------Begin New methods added in JDBC 4.0 --------------
     public Clob createClob() throws SQLException {
         throw new UnsupportedOperationException();
@@ -561,7 +561,7 @@ public class ConnectionImpl implements Connection, Linkable {
     public boolean isWrapperFor(Class<?> iface) throws SQLException {
         throw new UnsupportedOperationException();
     }
-   //-------------End New methods added in JDBC 4.0 --------------                                   
+   //-------------End New methods added in JDBC 4.0 --------------
 
     //---------------- BaseConnectionImpl methods ----------------
 
@@ -581,62 +581,62 @@ public class ConnectionImpl implements Connection, Linkable {
      * @ForteInternal
      */
     synchronized void checkXact() throws SQLException {
-        /*	RESOLVE: Need to reimplement this
-	         * 	for CMP environment if any
+        /*    RESOLVE: Need to reimplement this
+             *     for CMP environment if any
 
-		Transaction		tran;
+        Transaction        tran;
 
-		try
-		{
-   			tran = ThreadContext.transactionContext().getTransaction();
-		}
-		catch (SystemException ex)
-		{
-			tran = null;
-		}
+        try
+        {
+               tran = ThreadContext.transactionContext().getTransaction();
+        }
+        catch (SystemException ex)
+        {
+            tran = null;
+        }
 
-		if (tran == null)
-		{
-			if (this.transaction != null)
-			{
-				throw new SQLException("Thread is no longer in transaction."); // NOI18N
-			}
-			else
-			{
-				// No transaction.
-				return;
-			}
-		}
-		else if (this.transaction == null)
-		{
-			// This is a new transaction.
-			this.transaction = tran;
-			this.resource = new ForteJDBCResource(this);
-			try
-			{
-				TranManager tm = ThreadContext.partition().getTranManager();
-				tm.enlistResource(this.resource);
-				this.setAutoCommit(false);
-			}
-			catch (SQLException ex)
-			{
-			}
-			catch (Throwable ex)
-			{
-				// XXX This shouldn't happen. XXX
-			}
-			this.connectionManager.associateXact(tran, this);
-		}
-		else if (!tran.equals(this.transaction))
-		{
-			throw new SQLException("Wrong Transaction."); // NOI18N
-		}
-		else
-		{
-			// Connection and thread are in the same transaction.
-			return;
-		}
-		*/
+        if (tran == null)
+        {
+            if (this.transaction != null)
+            {
+                throw new SQLException("Thread is no longer in transaction."); // NOI18N
+            }
+            else
+            {
+                // No transaction.
+                return;
+            }
+        }
+        else if (this.transaction == null)
+        {
+            // This is a new transaction.
+            this.transaction = tran;
+            this.resource = new ForteJDBCResource(this);
+            try
+            {
+                TranManager tm = ThreadContext.partition().getTranManager();
+                tm.enlistResource(this.resource);
+                this.setAutoCommit(false);
+            }
+            catch (SQLException ex)
+            {
+            }
+            catch (Throwable ex)
+            {
+                // XXX This shouldn't happen. XXX
+            }
+            this.connectionManager.associateXact(tran, this);
+        }
+        else if (!tran.equals(this.transaction))
+        {
+            throw new SQLException("Wrong Transaction."); // NOI18N
+        }
+        else
+        {
+            // Connection and thread are in the same transaction.
+            return;
+        }
+        */
     }
 
     /**
@@ -813,7 +813,7 @@ public class ConnectionImpl implements Connection, Linkable {
         } catch (SQLException ex) {
             // XXX Need to recover from a bad connection. XXX
         } finally {
-            //			this.resource = null;
+            //            this.resource = null;
             this.transaction = null;
         }
     }

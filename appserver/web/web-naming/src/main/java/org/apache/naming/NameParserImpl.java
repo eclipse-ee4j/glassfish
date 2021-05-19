@@ -29,7 +29,7 @@ import javax.naming.CompositeName;
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:03 $
  */
 
-public class NameParserImpl 
+public class NameParserImpl
     implements NameParser {
 
 
@@ -41,9 +41,9 @@ public class NameParserImpl
 
     /**
      * Parses a name into its components.
-     * 
+     *
      * @param name The non-null string name to parse
-     * @return A non-null parsed form of the name using the naming convention 
+     * @return A non-null parsed form of the name using the naming convention
      * of this parser.
      */
     public Name parse(String name)

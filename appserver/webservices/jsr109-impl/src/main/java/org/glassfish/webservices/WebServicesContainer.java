@@ -54,7 +54,7 @@ public class WebServicesContainer extends MBeanListener.CallbackImpl implements 
         // Register listener for AMX DomainRoot loaded
         final AMXGlassfish amxg = AMXGlassfish.DEFAULT;
         amxg.listenForDomainRoot(ManagementFactory.getPlatformMBeanServer(), this);
-        
+
         LazyMOMProvider.INSTANCE.initMOMForScope(LazyMOMProvider.Scope.GLASSFISH_NO_JMX);
     }
 
@@ -67,7 +67,7 @@ public class WebServicesContainer extends MBeanListener.CallbackImpl implements 
             mom.stripPackagePrefix();
             mom.createRoot(deploymentBean, "webservices-deployment");
         }
-        
+
         LazyMOMProvider.INSTANCE.initMOMForScope(LazyMOMProvider.Scope.GLASSFISH_JMX);
     }
 

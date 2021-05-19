@@ -157,7 +157,7 @@ public class JsonActionReporter extends ActionReporter {
 
     /**
      * Produce a string in double quotes with backslash sequences in all the
-     * right places. 
+     * right places.
      */
     private String quote(String string) {
         if (string == null || string.length() == 0) {

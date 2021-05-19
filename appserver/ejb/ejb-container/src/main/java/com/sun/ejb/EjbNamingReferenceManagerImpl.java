@@ -68,7 +68,7 @@ public class EjbNamingReferenceManagerImpl
             }
         } else if (!ejbRefDesc.hasJndiName() && ejbRefDesc.hasLookupName()) {
             // For a remote reference, only do a context lookup if there is no
-            // jndi name. 
+            // jndi name.
             // The thread context class loader usually is the EAR class loader,
             // which is able to load business interfaces.  But if the lookup request
             // originated from appclient, and the ejb-ref is under java:app/env,
@@ -87,7 +87,7 @@ public class EjbNamingReferenceManagerImpl
                 }
             }
             resolved = true;
-        } else if( ejbRefDesc.hasJndiName() &&     
+        } else if( ejbRefDesc.hasJndiName() &&
                    ejbRefDesc.getJndiName().startsWith("java:app/") &&
                    !ejbRefDesc.getJndiName().startsWith("java:app/env/")) {
 
@@ -127,7 +127,7 @@ public class EjbNamingReferenceManagerImpl
             try {
 
                 try {
-                    
+
                     String refInterface = ejbRefDesc.isEJB30ClientView() ?
                        ejbRefDesc.getEjbInterface() : ejbRefDesc.getHomeClassName();
                     origClassLoader.loadClass(refInterface);
@@ -158,7 +158,7 @@ public class EjbNamingReferenceManagerImpl
                 } else {
                     jndiObj = context.lookup(remoteJndiName);
                 }
-                
+
             } catch(Exception e) {
                 // Important to make the real underlying lookup name part of the exception.
                 NamingException ne = new NamingException("Exception resolving Ejb for '" +

@@ -20,9 +20,9 @@ import org.glassfish.admin.amx.annotation.ManagedAttribute;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 @AMXMBeanMetadata(type = J2EETypes.JDBC_RESOURCE)
-public interface JDBCResource extends J2EEResource
-{
+public interface JDBCResource extends J2EEResource {
+
     /** ObjectName[] */
     @ManagedAttribute
-    public String[] getjdbcDataSources();
+    String[] getjdbcDataSources();
 }

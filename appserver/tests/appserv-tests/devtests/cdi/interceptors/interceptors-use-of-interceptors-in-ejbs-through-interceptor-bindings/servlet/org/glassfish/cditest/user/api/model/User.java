@@ -23,9 +23,9 @@ package org.glassfish.cditest.user.api.model;
 
 /**
  * A user login account within our system.
- * 
+ *
  * @author kane
- * 
+ *
  * @since 0.1
  */
 public interface User
@@ -35,7 +35,7 @@ public interface User
 
     /**
      * Get the value of firstName
-     * 
+     *
      * @return the value of firstName
      */
     public String getFirstName();
@@ -44,19 +44,19 @@ public interface User
      * <p>
      * Get the gender for the user
      * </p>
-     * 
+     *
      * <p>
      * A gender is much better suited to our needs here as the pure biological
      * sex is.
      * </p>
-     * 
+     *
      * @return the value of gender
      */
     public Gender getGender();
 
     /**
      * Get the value of lastName
-     * 
+     *
      * @return the value of lastName
      */
     public String getLastName();
@@ -65,7 +65,7 @@ public interface User
      * <p>
      * Get the username used for login
      * </p>
-     * 
+     *
      * @return the value of username
      */
     public String getUsername();
@@ -74,7 +74,7 @@ public interface User
      * <p>
      * Get the email address of the user
      * </p>
-     * 
+     *
      * @return the value of the email
      */
     public String getEmailAddress();

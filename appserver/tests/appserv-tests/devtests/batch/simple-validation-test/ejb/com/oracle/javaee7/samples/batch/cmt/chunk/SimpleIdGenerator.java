@@ -22,9 +22,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  */
 public class SimpleIdGenerator
     implements IdGenerator {
-    
+
     private AtomicInteger counter = new AtomicInteger(0);
-    
+
     public String nextId() {
         return "" + counter.incrementAndGet();
     }

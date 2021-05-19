@@ -127,27 +127,27 @@ public class AppclientCommandArgumentsTest {
             fail("could not find message key");
         }
     }
-    
+
     @Test
     public void checkPasswordInFile() {
         final Properties props = new Properties();
-        props.setProperty(AppclientCommandArguments.PASSWORD_FILE_PASSWORD_KEYWORD, 
+        props.setProperty(AppclientCommandArguments.PASSWORD_FILE_PASSWORD_KEYWORD,
                 EXPECTED_PASSWORD_IN_PASSWORD_FILE);
         try {
             final AppclientCommandArguments cmdArgs = prepareWithPWFile(props);
             final char[] pwInObject = cmdArgs.getPassword();
-            assertTrue("Password " + EXPECTED_PASSWORD_IN_PASSWORD_FILE + 
-                    " in password file does not match password " + new String(pwInObject) + 
-                    " returned from AppclientCommandArguments object", 
+            assertTrue("Password " + EXPECTED_PASSWORD_IN_PASSWORD_FILE +
+                    " in password file does not match password " + new String(pwInObject) +
+                    " returned from AppclientCommandArguments object",
                     Arrays.equals(pwInObject, EXPECTED_PASSWORD_IN_PASSWORD_FILE.toCharArray()));
-            
+
         } catch (Throwable t) {
             throw new RuntimeException(t);
         }
     }
-    
-    
-    
+
+
+
     @Test
     public void checkErrorHandlingIfRequiredPasswordInPasswordFileIsMissing() {
         final Properties props = new Properties();
@@ -157,7 +157,7 @@ public class AppclientCommandArgumentsTest {
             fail("Missing password in password file NOT correctly detected and flagged");
         } catch (UserError ue) {
             /*
-             * This is what we expect - a UserError complaining about the 
+             * This is what we expect - a UserError complaining about the
              * missing password value.
              */
             return;
@@ -165,15 +165,15 @@ public class AppclientCommandArgumentsTest {
             throw new RuntimeException(ex);
         }
     }
-    
+
     private AppclientCommandArguments prepareWithPWFile(
             final Properties props) throws UserError, IOException {
         final File passwordFile = createTempPWFile(props);
-        
+
         return AppclientCommandArguments.newInstance(
                 Arrays.asList("-passwordfile","\"" + passwordFile.getAbsolutePath() + "\""));
     }
-    
+
     private File createTempPWFile(final Properties props) throws IOException {
         final File tempFile = File.createTempFile("accpw", ".txt");
         props.store(new FileWriter(tempFile), "temp file for acc unit test");
@@ -181,5 +181,5 @@ public class AppclientCommandArgumentsTest {
         return tempFile;
     }
 
-    
+
 }

@@ -47,7 +47,7 @@
   </target>
 
   <!--
-	Quick look test run for integrating with top level for running subset of tests.
+    Quick look test run for integrating with top level for running subset of tests.
   -->
   <target name="quick-look" depends="init-common,setup">
     <ant antfile="build.xml" dir="daomanager" target="all" />
@@ -57,19 +57,19 @@
 
   <target name="usage">
       <!--<antcall target="usage-common"/> -->
-	<echo message="=============================================="/>
- 	<echo message="****** Security Testsuite (BankAdmin App) *****"/>
-	<echo message="Standard Commands:"/>
-	<echo message="ant quick-look -->build,deploy,setup and run a single test, daomanager from bankapp"/>
-	<echo message="ant all -->build,deploy,setup and run the testsuite"/>
-	<echo message=" "/>
-	<echo message="Optional Commands:"/>
-	<echo message="ant setup -->Does the serverside config"/>
-	<echo message="ant restart-server -->Restarts appserver"/>
-	<echo message="ant create-file-users-->Creates security file realm users/groups"/>
-	<echo message="ant create-jmsresource -->Configures all the required jms resources"/>
-	<echo message="ant config-db -->Configures the DB"/>
-	<echo message="=============================================="/>
+    <echo message="=============================================="/>
+    <echo message="****** Security Testsuite (BankAdmin App) *****"/>
+    <echo message="Standard Commands:"/>
+    <echo message="ant quick-look -->build,deploy,setup and run a single test, daomanager from bankapp"/>
+    <echo message="ant all -->build,deploy,setup and run the testsuite"/>
+    <echo message=" "/>
+    <echo message="Optional Commands:"/>
+    <echo message="ant setup -->Does the serverside config"/>
+    <echo message="ant restart-server -->Restarts appserver"/>
+    <echo message="ant create-file-users-->Creates security file realm users/groups"/>
+    <echo message="ant create-jmsresource -->Configures all the required jms resources"/>
+    <echo message="ant config-db -->Configures the DB"/>
+    <echo message="=============================================="/>
   </target>
 
 
@@ -113,7 +113,7 @@
     <ant antfile="build.xml" dir="mesgprovider" target="run" />
     -->
   </target>
-  
+
   <!-- unsetup all the resources -->
   <target name="unsetup" depends="init-common">
     <antcall target="delete-file-users"/>
@@ -157,7 +157,7 @@
 
   <target name="delete-jmsresources-local" depends="init-common">
     <exec executable="${ASADMIN}" failonerror="false">
-      <arg line="delete-jms-resource"/>	
+      <arg line="delete-jms-resource"/>
       <arg line="${as.props}"/>
       <arg line="--instance ${appserver.instance.name}"/>
       <arg line="jms/adminQueue"/>
@@ -181,45 +181,45 @@
       <arg line="jms/MyQueueConnectionFactory"/>
     </exec>
     <exec executable="${ASADMIN}" failonerror="false">
-      <arg line="delete-jmsdest"/>	
+      <arg line="delete-jmsdest"/>
       <arg line="${as.props}"/>
       <arg line="--instance ${appserver.instance.name}"/>
       <arg line="--desttype jakarta.jms.Queue"/>
       <arg line="MyQueue"/>
     </exec>
     <exec executable="${ASADMIN}" failonerror="false">
-      <arg line="delete-jmsdest"/>	
+      <arg line="delete-jmsdest"/>
       <arg line="${as.props}"/>
       <arg line="--instance ${appserver.instance.name}"/>
       <arg line="--desttype jakarta.jms.Queue"/>
       <arg line="adminQueue"/>
-    </exec>  
+    </exec>
   </target>
 
 
 <!--target for creating the file users -->
 <target name="create-file-users" depends="init-common">
-	<antcall target="create-user-common">
-		<param name="user" value="scott"/>
-		<param name="password" value="j2ee"/>
-		<param name="groups" value="ejb-test"/>
-	</antcall>
-	<antcall target="create-user-common">
-		<param name="user" value="deepa"/>
-		<param name="password" value="deepa"/>
-		<param name="groups" value="staff"/>
-	</antcall>
+    <antcall target="create-user-common">
+        <param name="user" value="scott"/>
+        <param name="password" value="j2ee"/>
+        <param name="groups" value="ejb-test"/>
+    </antcall>
+    <antcall target="create-user-common">
+        <param name="user" value="deepa"/>
+        <param name="password" value="deepa"/>
+        <param name="groups" value="staff"/>
+    </antcall>
 </target>
 <!--target for deleting the file users -->
 <target name="delete-file-users" depends="init-common">
-	<antcall target="delete-user-common">
-		<param name="user" value="scott"/>
-		<param name="groups" value="ejb-test"/>
-	</antcall>
-	<antcall target="delete-user-common">
-		<param name="user" value="deepa"/>
-		<param name="groups" value="staff"/>
-	</antcall>
+    <antcall target="delete-user-common">
+        <param name="user" value="scott"/>
+        <param name="groups" value="ejb-test"/>
+    </antcall>
+    <antcall target="delete-user-common">
+        <param name="user" value="deepa"/>
+        <param name="groups" value="staff"/>
+    </antcall>
 </target>
 
 
@@ -241,20 +241,20 @@
       <param name="jms.resource.type" value="jakarta.jms.Queue"/>
       <param name="jms.resource.name" value="jms/MyQueue"/>
     </antcall>
-    
+
   </target>
-  
+
 
   <!-- Target for creating the db and configuration of db" -->
   <target name="config-db">
-	<antcall target="execute-sql-common">
-		<param name="sql.file" value="sql/bankadmin_pointbase.sql"/>
-	</antcall>
+    <antcall target="execute-sql-common">
+        <param name="sql.file" value="sql/bankadmin_pointbase.sql"/>
+    </antcall>
   </target>
 
   <!-- Target for creating the db" -->
   <target name="create-db" depends="init-common">
-	<echo message="Creating the sample db - ${db.url}"/>
+    <echo message="Creating the sample db - ${db.url}"/>
         <exec executable="${db.root}/client_tools/PB_Commander.sh">
                 <arg line="${db.driver}"/>
                 <arg line="${db.url}"/>
@@ -272,32 +272,32 @@
 
    <!-- creating the outfile with zero size to have the file during jdbc setup -->
    <target name="init" depends="init-common">
-	<mkdir dir="${build.classes.dir}"/>
+    <mkdir dir="${build.classes.dir}"/>
         <touch file="${build.classes.dir}/setupDBTables.out"/>
    </target>
 
-   <target name="setup" 
+   <target name="setup"
      depends="init,create-file-users,create-jmsresources,deploy-jdbc-common,create-persistence-resource-common,reconfig-common,config-db">
      <mkdir dir="${build.classes.dir}"/>
-	<echo message="Configured the security file realm, jms resources, jdbc resources, populating db, restarting the server...done"/>
+    <echo message="Configured the security file realm, jms resources, jdbc resources, populating db, restarting the server...done"/>
    </target>
-  
-   <target name="setup-norestart" 
+
+   <target name="setup-norestart"
      depends="init,create-file-users,create-jmsresources,deploy-jdbc-common,create-persistence-resource-common,config-db">
      <mkdir dir="${build.classes.dir}"/>
-	<echo message="Configured the security file realm, jms resources, jdbc resources, populating db...done"/>
+    <echo message="Configured the security file realm, jms resources, jdbc resources, populating db...done"/>
    </target>
 
 <!--
  Clean the DB
 -->
 <target name="clean-db" depends="init-common,create-dboutfile">
-	<antcall target="execute-sql-common">
+    <antcall target="execute-sql-common">
                 <param name="sql.file" value="sql/bankadmin_drop_pointbase.sql"/>
         </antcall>
 
 </target>
-<!-- 
+<!--
 Create the outfile before executing the sql
 -->
 <target name="create-dboutfile" depends="init-common">

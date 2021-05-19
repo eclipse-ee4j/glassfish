@@ -114,7 +114,7 @@ public class SfulEJB implements Sful, SessionSynchronization
 
         } catch(Exception ex) {
             throw new IllegalStateException("Cannot get expected value: " + ex);
-        } 
+        }
         return "goodNight";
     }
 

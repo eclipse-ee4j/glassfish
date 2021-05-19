@@ -22,7 +22,7 @@ import java.util.Map;
 /**
  * Represents an abstract Service. This interface defines sufficient methods for any platform integration of application
  * server with various service control mechanisms on various platforms. An example is SMF for Solaris.
- * 
+ *
  * @since SJSAS 9.1
  * @see #isConfigValid
  * @see ServiceHandler
@@ -33,7 +33,7 @@ public interface Service {
     /**
      * get the dirs with this thread-safe immutable guaranteed object. It saves a LOT of error checking... You should set
      * the variable in the constructor. You are not allowed to change it later
-     * 
+     *
      * @param dirs
      */
     ServerDirs getServerDirs();
@@ -42,21 +42,21 @@ public interface Service {
 
     /**
      * Sets timeout in seconds before the master boot restarter should give up starting this service.
-     * 
+     *
      * @param number a non-negative integer representing timeout. A value of zero implies infinite timeout.
      */
     void setTimeoutSeconds(final int number);
 
     /**
      * Returns the additional properties of the Service.
-     * 
+     *
      * @return String representing addtional properties of the service. May return default properties as well.
      */
     String getServiceProperties();
 
     /**
      * Sets the additional service properties that are specific to it.
-     * 
+     *
      * @param must be a colon separated String, if not null. No effect, if null is passed.
      */
     void setServiceProperties(final String cds);
@@ -67,7 +67,7 @@ public interface Service {
      * configuration is done by the users via various mutator methods of this class. This method must be called to guard
      * against some abnormal failures before creating the service. It makes sure that the caller has set all the necessary
      * parameters reasonably. Note that it does not validate the actual values.
-     * 
+     *
      * @throws RuntimeException if the configuration is not valid
      * @return true if the configuration is valid, an exception is thrown otherwise
      */
@@ -76,7 +76,7 @@ public interface Service {
     /**
      * Returns the tokens and values of the service as a map. This method converts a service into corresponding tokens and
      * their values.
-     * 
+     *
      * @return tokens and values as a Map<String, String>.
      */
     Map<String, String> tokensAndValues();
@@ -98,7 +98,7 @@ public interface Service {
      * Creates an arbitrary service, specified by certain parameters. The implementations should dictate the mappings in the
      * parameters received. The creation of service is either successful or not. In other words, the implementations must
      * retain the original state of the operating platform if the service creation is not successful completely.
-     * 
+     *
      * @param params a Map between Strings that represents the name value pairs required to create the service
      * @throws RuntimeException if there is any error is creation of service
      */

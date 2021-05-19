@@ -191,7 +191,7 @@ public class TransactionImpl
      * If true, at commit instances retain their values and the instances
      */
     private boolean retainValues = true;
-    
+
     /**
      * Flag that indicates how to handle objects after roolback.
      * If true, at rollback instances restore their values and the instances
@@ -317,7 +317,7 @@ public class TransactionImpl
     public boolean getRetainValues() {
         return retainValues;
     }
-    
+
     public void setRestoreValues(boolean flag) {
         //
         // First do a quick check to make sure the transaction is active.
@@ -349,7 +349,7 @@ public class TransactionImpl
     public boolean getRestoreValues() {
         return restoreValues;
     }
-    
+
 
     public void setNontransactionalRead (boolean flag) {
         //
@@ -698,7 +698,7 @@ public class TransactionImpl
                 }
             }
 
-            // Force to close the persistence manager. 
+            // Force to close the persistence manager.
             persistenceManager.forceClose();
 
             throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
@@ -1165,7 +1165,7 @@ public class TransactionImpl
     private void setStatus(int status) {
         synchronized(this.globalLock) {
             if (this.tracing) {
-                Object[] items= new Object[] {Thread.currentThread(),this.toString(), 
+                Object[] items= new Object[] {Thread.currentThread(),this.toString(),
                     this.statusString(this.status), this.statusString(status), persistenceManager};
                 logger.finest("sqlstore.transactionimpl.status",items); // NOI18N
             }
@@ -1198,7 +1198,7 @@ public class TransactionImpl
                 if (!_connection.isClosed()) {
                     closeConnection();
                     throw new JDOFatalInternalException(I18NHelper.getMessage(
-                        messages, 
+                        messages,
                         "transaction.transactionimpl.forget.connectionnotclosed")); // NOI18N
                 }
             } catch (Exception e) {
@@ -1267,7 +1267,7 @@ public class TransactionImpl
             logMessage.append(", onePhase = true"); // NOI18N
         if (s != null)
             logMessage.append(", " + s + " for " + persistenceManager); // NOI18N
-        
+
         logger.finest("sqlstore.transactionimpl.general",logMessage.toString()); // NOI18N
     }
 
@@ -1328,7 +1328,7 @@ public class TransactionImpl
         if (_connection == null) {
             // find a new connection
             if (connectionFactory == null) {
-                throw new JDOFatalInternalException(I18NHelper.getMessage(messages, 
+                throw new JDOFatalInternalException(I18NHelper.getMessage(messages,
                     "transaction.transactionimpl.getconnection.nullcf")); // NOI18N
             }
 
@@ -1338,7 +1338,7 @@ public class TransactionImpl
         _connectionReferenceCount++;
 
         if (debug) {
-            Object[] items = new Object[] {_connection, Boolean.valueOf(optimistic), 
+            Object[] items = new Object[] {_connection, Boolean.valueOf(optimistic),
                 new Integer(_connectionReferenceCount) , persistenceManager};
             logger.finest("sqlstore.transactionimpl.getconnection",items); // NOI18N
         }
@@ -1395,7 +1395,7 @@ public class TransactionImpl
 
         if (debug) {
             Object[] items = new Object[] {Boolean.valueOf(optimistic),
-                Boolean.valueOf(startedCommit), 
+                Boolean.valueOf(startedCommit),
                 new Integer(_connectionReferenceCount) , persistenceManager};
             logger.finest("sqlstore.transactionimpl.releaseconnection",items); // NOI18N
         }

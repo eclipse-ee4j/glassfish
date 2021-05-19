@@ -3574,7 +3574,7 @@ public class LogFacade {
     @LogMessageInfo(
             message = "It is illegal to call push() before setting a path",
             level = "WARNING"
-    )                           
+    )
     public static final String NO_PUSH_PATH_EXCEPTION = prefix + "00545";
 
     @LogMessageInfo(

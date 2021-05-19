@@ -20,7 +20,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  *
- * This unit test checkes LifecycleListener in context.xml configuration. 
+ * This unit test checkes LifecycleListener in context.xml configuration.
  * The global context.xml should be shared across by all webapps.
  */
 public class WebTest {
@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for global LifecycleListener in context.xml");
@@ -55,7 +55,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
 
     }
 

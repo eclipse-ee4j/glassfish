@@ -46,14 +46,14 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer#addWebListener(HttpListener) & HttpListener.setConfig
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedAddWebListenerTest {
 
     static GlassFish glassfish;
     static WebContainer embedded;
-    static File root;                
+    static File root;
     static String contextRoot = "test";
     static int port = 9090;
     static int newPort = 9292;
@@ -67,7 +67,7 @@ public class EmbeddedAddWebListenerTest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
     }
-    
+
     @Test
     public void test() throws Exception {
 
@@ -118,10 +118,10 @@ public class EmbeddedAddWebListenerTest {
         in.close();
         System.out.println(inputLine);
         Assert.assertEquals("Hello World!", sb.toString());
-        
+
         if (appName!=null)
             deployer.undeploy(appName);
-        
+
     }
 
     @AfterClass
@@ -133,5 +133,5 @@ public class EmbeddedAddWebListenerTest {
             glassfish = null;
         }
     }
-    
+
 }

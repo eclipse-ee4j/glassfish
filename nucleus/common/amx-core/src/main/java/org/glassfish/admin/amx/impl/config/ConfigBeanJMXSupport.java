@@ -164,7 +164,7 @@ class ConfigBeanJMXSupport
     }
 
     public Class<? extends ConfigBeanProxy> getIntf() { return mIntf; }
-    
+
     public String toString()
     {
         final StringBuilder buf = new StringBuilder();
@@ -289,9 +289,9 @@ class ConfigBeanJMXSupport
     {
         return mMBeanInfo;
     }
-    
+
     // create only one of these, it's always the same
-    private static final MBeanNotificationInfo ATTRIBUTE_CHANGE_NOTIF_INFO = 
+    private static final MBeanNotificationInfo ATTRIBUTE_CHANGE_NOTIF_INFO =
         new MBeanNotificationInfo(
             new String[] { AttributeChangeNotification.ATTRIBUTE_CHANGE},
             AttributeChangeNotification.class.getName(),
@@ -355,7 +355,7 @@ class ConfigBeanJMXSupport
         {
             if (hasNameAttribute())
             {
-                AMXLoggerInfo.getLogger().log(Level.FINE, 
+                AMXLoggerInfo.getLogger().log(Level.FINE,
                         "ConfigBeanJMXSupport (AMX): @Configured interface {0} has getName() which is not a key value.  Remove getName() or use @Attribute(key=true)",
                         mIntf.getName());
             }
@@ -510,7 +510,7 @@ class ConfigBeanJMXSupport
                 attrs.add(a);
                 if ( a.returnType() != String.class )
                 {
-                    AMXLoggerInfo.getLogger().log(Level.INFO, AMXLoggerInfo.illegalNonstring, 
+                    AMXLoggerInfo.getLogger().log(Level.INFO, AMXLoggerInfo.illegalNonstring,
                             new Object[]{intf.getName(), m.getName(), a.returnType().getName()});
                 }
                 continue;
@@ -530,7 +530,7 @@ class ConfigBeanJMXSupport
             }
         }
     }
-    
+
     /** check for Bad Stuff in Configured interface. */
     public List<String>  sanityCheckConfigured()
     {
@@ -784,7 +784,7 @@ class ConfigBeanJMXSupport
                     }
                     catch (final Exception e)
                     {
-                        AMXLoggerInfo.getLogger().log( Level.INFO, AMXLoggerInfo.cantGetField, 
+                        AMXLoggerInfo.getLogger().log( Level.INFO, AMXLoggerInfo.cantGetField,
                                 new Object[] {a, e.getLocalizedMessage()} );
                     }
                 }
@@ -825,7 +825,7 @@ class ConfigBeanJMXSupport
         descriptor.setField(DESC_NOT_NULL, "" + info.notNull());
 
         Class type = info.returnType();
-        
+
         String description = "@Attribute " + name;
         final boolean isReadable = true;
         // we assume that all getters are writeable for now
@@ -980,7 +980,7 @@ class ConfigBeanJMXSupport
         }
         catch (final Exception e)
         {
-            AMXLoggerInfo.getLogger().log( Level.INFO, AMXLoggerInfo.cantGetTypesImplementing, 
+            AMXLoggerInfo.getLogger().log( Level.INFO, AMXLoggerInfo.cantGetTypesImplementing,
                     new Object[] {clazz, e.getLocalizedMessage()} );
             throw new RuntimeException(e);
         }
@@ -1145,7 +1145,7 @@ class ConfigBeanJMXSupport
             }
             return null;
         }
-        
+
         public boolean hasDefaultValue()
         {
             final Object defaultValue = attribute().defaultValue();
@@ -1428,7 +1428,7 @@ class ConfigBeanJMXSupport
     {
         // we assume that all getters are writeable for now, not true for sub-elements (ObjectName)
         boolean isWriteable = true;
-        
+
         final ElementMethodInfo info = ElementMethodInfo.get(m);
         if (info == null || info.anonymous())
         {

@@ -30,7 +30,7 @@ import org.glassfish.embeddable.GlassFishProperties;
 /**
  *
  * This is a main class for 'java -jar glassfish-uber.jar'
- * 
+ *
  * @author bhavanishankar@dev.java.net
  */
 

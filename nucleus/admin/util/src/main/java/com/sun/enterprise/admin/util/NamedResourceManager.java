@@ -48,7 +48,7 @@ import org.jvnet.hk2.annotations.Service;
  * <p>
  * The named resource POJO class can have fields that point to other named resource classes or fields that are
  * collections or arrays of named resource classes.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -146,7 +146,7 @@ public class NamedResourceManager {
     }
 
     /**
-     * 
+     *
      */
     private static class Model {
         private boolean isPrimary;

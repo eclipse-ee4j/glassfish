@@ -78,7 +78,7 @@ public class HelloSecurityTestNG {
 //        String line = null;
 //        boolean result=false;
 //        String testLine = null;
-//	String EXPECTED_RESPONSE ="JSP Test Page";
+//    String EXPECTED_RESPONSE ="JSP Test Page";
 //        while ((line = input.readLine()) != null) {
 //            if(line.indexOf(EXPECTED_RESPONSE)!=-1){
 //                result=true;
@@ -101,9 +101,9 @@ public class HelloSecurityTestNG {
 /*
     @Test(groups={"pulse"}) //test method for server
     public void testServerRunning() throws Exception{
-	    //Your server is up and running!
-	    //
-	String testurl = "http://" + host  + ":" + port;
+        //Your server is up and running!
+        //
+    String testurl = "http://" + host  + ":" + port;
         //System.out.println("URL is: "+testurl);
         URL url = new URL(testurl);
         //echo("Connecting to: " + url.toString());
@@ -111,7 +111,7 @@ public class HelloSecurityTestNG {
         conn.connect();
         int responseCode = conn.getResponseCode();
 
-	InputStream is = conn.getInputStream();
+    InputStream is = conn.getInputStream();
         BufferedReader input = new BufferedReader(new InputStreamReader(is));
 
         String line = null;

@@ -29,19 +29,19 @@ class StackElement {
 
     private final ElementType type;
     private final AnnotatedElement element;
-    
+
     /** Creates a new instance of StackElement */
     public StackElement(ElementType type, AnnotatedElement element) {
         this.type = type;
         this.element = element;
     }
-    
+
     ElementType getElementType() {
         return type;
     }
-    
+
     AnnotatedElement getAnnotatedElement() {
         return element;
     }
-    
+
 }

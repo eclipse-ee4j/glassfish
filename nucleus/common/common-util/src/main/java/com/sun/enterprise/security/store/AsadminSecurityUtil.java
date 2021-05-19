@@ -39,8 +39,8 @@ import java.util.logging.Logger;
  * @author Tim Quinn (with portions refactored from elsewhere)
  */
 public class AsadminSecurityUtil {
-    
-    private static final File DEFAULT_CLIENT_DIR = 
+
+    private static final File DEFAULT_CLIENT_DIR =
             new File(System.getProperty("user.home"), ".gfclient");
 
     private static AsadminSecurityUtil instance = null;
@@ -91,14 +91,14 @@ public class AsadminSecurityUtil {
         return System.getProperty(SystemPropertyConstants.CLIENT_TRUSTSTORE_PASSWORD_PROPERTY,
             "changeit").toCharArray();
     }
-    
+
     /**
      * Get the default location for client related files
      */
     public static File getDefaultClientDir() {
         if (!DEFAULT_CLIENT_DIR.isDirectory()) {
             if (DEFAULT_CLIENT_DIR.mkdirs() == false) {
-                logger.log(Level.SEVERE, CULoggerInfo.errorCreatingDirectory, 
+                logger.log(Level.SEVERE, CULoggerInfo.errorCreatingDirectory,
                         DEFAULT_CLIENT_DIR);
                 // return the File anyway, the user of the file will report the failure
             }
@@ -141,7 +141,7 @@ public class AsadminSecurityUtil {
         return asadminKeystore;
     }
 
-    private void init(final char[] commandLineMasterPassword, final boolean isPromptable) 
+    private void init(final char[] commandLineMasterPassword, final boolean isPromptable)
             throws IOException, KeyStoreException, NoSuchAlgorithmException, CertificateException {
         char[] passwordToUse = chooseMasterPassword(commandLineMasterPassword);
         try {
@@ -150,7 +150,7 @@ public class AsadminSecurityUtil {
              * the standard system property.  That would allow users to add a
              * key to a client-side keystore and use SSL client auth from
              * asadmin to the DAS (if they have added the corresponding cert to
-             * the DAS truststore). 
+             * the DAS truststore).
              */
             asadminKeystore = openKeystore(passwordToUse);
             if (asadminKeystore == null) {

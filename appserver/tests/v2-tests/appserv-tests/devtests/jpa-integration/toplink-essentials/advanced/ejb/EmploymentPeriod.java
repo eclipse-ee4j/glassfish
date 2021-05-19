@@ -22,8 +22,8 @@ import jakarta.persistence.*;
 
 /**
  * <p><b>Purpose</b>: Defines the period an Employee worked for the organization
- *    <p><b>Description</b>: The period holds the start date and optionally the 
- *    end date if the employee has left (null otherwise). Maintained in an 
+ *    <p><b>Description</b>: The period holds the start date and optionally the
+ *    end date if the employee has left (null otherwise). Maintained in an
  *    aggregate relationship of Employee
  *    @see Employee
  */
@@ -37,10 +37,10 @@ public class EmploymentPeriod implements Serializable {
 
     /**
      * Return a new employment period instance.
-     * The constructor's purpose is to allow only valid instances of a class to 
-     * be created. Valid means that the get/set and clone/toString methods 
-     * should work on the instance. Arguments to constructors should be avoided 
-     * unless those arguments are required to put the instance into a valid 
+     * The constructor's purpose is to allow only valid instances of a class to
+     * be created. Valid means that the get/set and clone/toString methods
+     * should work on the instance. Arguments to constructors should be avoided
+     * unless those arguments are required to put the instance into a valid
      * state, or represent the entire instance definition.
      */
     public EmploymentPeriod(Date theStartDate, Date theEndDate) {
@@ -48,22 +48,22 @@ public class EmploymentPeriod implements Serializable {
         endDate = theEndDate;
     }
 
-	@Column(name="S_DATE")
-	public Date getStartDate() { 
-        return startDate; 
-    }
-    
-	public void setStartDate(Date date) { 
-        this.startDate = date; 
+    @Column(name="S_DATE")
+    public Date getStartDate() {
+        return startDate;
     }
 
-	@Column(name="E_DATE")
-	public Date getEndDate() { 
-        return endDate; 
+    public void setStartDate(Date date) {
+        this.startDate = date;
     }
-    
-	public void setEndDate(Date date) { 
-        this.endDate = date; 
+
+    @Column(name="E_DATE")
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date date) {
+        this.endDate = date;
     }
 
     /**
@@ -72,17 +72,17 @@ public class EmploymentPeriod implements Serializable {
     public String toString() {
         java.io.StringWriter writer = new java.io.StringWriter();
         writer.write("EmploymentPeriod: ");
-        
+
         if (this.getStartDate() != null) {
             writer.write(this.getStartDate().toString());
         }
-        
+
         writer.write("-");
-        
+
         if (this.getEndDate() != null) {
             writer.write(this.getEndDate().toString());
         }
-        
+
         return writer.toString();
     }
 }

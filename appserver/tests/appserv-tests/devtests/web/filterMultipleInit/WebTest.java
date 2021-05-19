@@ -43,7 +43,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for IT 11979");
@@ -78,7 +78,7 @@ public class WebTest {
     public boolean doTest(String page) throws Exception {
         URL url = new URL("http://" + host  + ":" + port
                           + contextRoot + "/" + page);
-     
+
         System.out.println("Connecting to: " + url.toString());
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

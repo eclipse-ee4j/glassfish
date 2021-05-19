@@ -29,8 +29,8 @@ public class Client extends HttpServlet {
         @jakarta.xml.ws.WebServiceRef(HelloService.class)
         Hello port;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

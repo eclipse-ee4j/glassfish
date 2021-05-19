@@ -28,8 +28,8 @@ import shopping.NegativeRPARemote;
  * @version
  */
 public interface NegativeRPAHome extends EJBHome{
-    
-    public NegativeRPARemote create(java.lang.String shopperName) 
+
+    public NegativeRPARemote create(java.lang.String shopperName)
         throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

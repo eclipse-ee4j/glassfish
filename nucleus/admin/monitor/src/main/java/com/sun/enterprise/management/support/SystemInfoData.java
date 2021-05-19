@@ -22,7 +22,7 @@ import java.util.Collections;
 
 /**
  * See also com.sun.enterprise.management.support.SystemInfoImpl
- * 
+ *
  * @see com.sun.appserv.management.base.SystemInfo
  * @see com.sun.enterprise.management.support.SystemInfoImpl
  */

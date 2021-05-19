@@ -35,7 +35,7 @@ import javax.transaction.xa.Xid;
 
 /**
  * This is a sample resource adapter
- * 
+ *
  * @author Qingqing Ouyang
  */
 public class SimpleResourceAdapterImpl implements ResourceAdapter,

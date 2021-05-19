@@ -32,17 +32,17 @@ public class SomeManagedBean2 extends BaseBean {
 
     @PostConstruct
     private void init() {
-	System.out.println("In SomeManagedBean2::init() " + this);
+        System.out.println("In SomeManagedBean2::init() " + this);
     }
-    
+
 
     public void foo() {
-	System.out.println("In SomeManagedBean2::foo() ");
+        System.out.println("In SomeManagedBean2::foo() ");
         if (orb == null) throw new RuntimeException("SomeManagedBean2: ORB is null");
     }
 
     @PreDestroy
     private void destroy() {
-	System.out.println("In SomeManagedBean2::destroy() ");
+        System.out.println("In SomeManagedBean2::destroy() ");
     }
 }

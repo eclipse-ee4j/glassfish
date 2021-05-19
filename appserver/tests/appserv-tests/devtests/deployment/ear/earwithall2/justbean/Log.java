@@ -16,7 +16,7 @@
 
 package justbean;
 
-public class Log implements java.io.Serializable 
+public class Log implements java.io.Serializable
 {
   public static void
   log (String message)

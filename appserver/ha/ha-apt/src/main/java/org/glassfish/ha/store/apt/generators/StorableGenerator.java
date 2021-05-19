@@ -66,7 +66,7 @@ public class StorableGenerator
         super.addAttribute(attrName, paramType);
         println("public void " + setterMethodName + "("
                 + getWrapperType(paramType) + " value) { ");
-        increaseIndent();        
+        increaseIndent();
         println("_markAsDirty(\"" + attrName + "\");");
         println("super." + setterMethodName + "(value);");
         decreaseIndent();
@@ -101,7 +101,7 @@ public class StorableGenerator
         if (getVersionName != null) {
             getVersionName = "g" + getVersionName.substring(1);
         }
-        
+
         println("public String _getVersion() {");
         increaseIndent();
         println("return " + getVersionName + "();");

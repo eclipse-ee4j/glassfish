@@ -32,7 +32,7 @@
    <antcall target="install-bundle">
       <param name="installCode" value="${webbundle-install.code}" />
    </antcall>
-</target> 
+</target>
 
 <target name="install-bundle">
    <java classname="BundleUtil">
@@ -43,7 +43,7 @@
       <arg value="${TestResultFile}"/>
       <arg value="${installCode}${installPath}"/>
    </java>
-</target> 
+</target>
 
 <target name="uninstall-bundle">
    <java classname="BundleUtil">

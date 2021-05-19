@@ -39,7 +39,7 @@ import org.glassfish.hk2.api.PerLookup;
  * Implements ReadableArchive based on multiple underlying ReadableArchives,
  * each of which will be processed in order when looking up entries, finding
  * the manifest, etc.
- * 
+ *
  * @author tjquinn
  */
 @Service
@@ -148,7 +148,7 @@ public class MultiReadableArchive extends AbstractReadableArchive {
     @Override
     public Enumeration<String> entries() {
         /*
-         * Guard against the same entry appearing in multiple archives.  
+         * Guard against the same entry appearing in multiple archives.
          * Only one will be returned so only save the name once.
          */
         final LinkedHashSet<String> enums = new LinkedHashSet<String>();
@@ -216,7 +216,7 @@ public class MultiReadableArchive extends AbstractReadableArchive {
     public URI getURI(final int slot) {
         return archives[slot].getURI();
     }
-    
+
     @Override
     public long getArchiveSize() throws SecurityException {
         throw new UnsupportedOperationException();

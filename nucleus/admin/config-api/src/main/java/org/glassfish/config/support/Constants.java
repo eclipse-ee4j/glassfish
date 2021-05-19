@@ -18,7 +18,7 @@ package org.glassfish.config.support;
 
 /**
  * Shared constants for config-beans packages
- * 
+ *
  * @author Byron Nevins
  */
 

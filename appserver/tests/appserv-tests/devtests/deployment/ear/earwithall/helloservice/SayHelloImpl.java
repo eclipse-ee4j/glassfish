@@ -24,32 +24,32 @@ import statelesshello.*;
 
 public class SayHelloImpl implements SayHello {
 
-	public String message ="Message from servlet is : Bonjour ";
+        public String message ="Message from servlet is : Bonjour ";
 
-	public String sayHello(String s) throws RemoteException {
-	    try {
+        public String sayHello(String s) throws RemoteException {
+            try {
 
-		Context ic = new InitialContext();
+                Context ic = new InitialContext();
 
-		// create EJB using factory from container
-		java.lang.Object objref = ic.lookup("java:comp/env/ejb/MyStatelesshello");
-		System.out.println("Looked up home!!");
+                // create EJB using factory from container
+                java.lang.Object objref = ic.lookup("java:comp/env/ejb/MyStatelesshello");
+                System.out.println("Looked up home!!");
 
-		StatelesshelloHome home =
-		    (StatelesshelloHome) PortableRemoteObject.narrow(
-				objref, StatelesshelloHome.class);
-		System.out.println("Narrowed home!!");
+                StatelesshelloHome home =
+                    (StatelesshelloHome) PortableRemoteObject.narrow(
+                                objref, StatelesshelloHome.class);
+                System.out.println("Narrowed home!!");
 
-		Statelesshello hr = home.create();
-		System.out.println("Got the EJB!!");
+                Statelesshello hr = home.create();
+                System.out.println("Got the EJB!!");
 
-		// invoke method on the EJB
-		message = hr.sayStatelesshello() + ";" + message + s;
-	    } catch (Exception e) {
-		System.out.println("Servlet sayHelloImpl recd exception : " +
-				   e.getMessage());
-		e.printStackTrace();
-	    }
-	    return message;
-	} 
+                // invoke method on the EJB
+                message = hr.sayStatelesshello() + ";" + message + s;
+            } catch (Exception e) {
+                System.out.println("Servlet sayHelloImpl recd exception : " +
+                                   e.getMessage());
+                e.printStackTrace();
+            }
+            return message;
+        }
 }

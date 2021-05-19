@@ -18,10 +18,8 @@ package org.glassfish.admin.amx.j2ee;
 
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
-
 /**
  */
-@AMXMBeanMetadata(type=J2EETypes.JMS_RESOURCE, leaf=true)
-public interface JMSResource extends J2EEResource
-{
+@AMXMBeanMetadata(type = J2EETypes.JMS_RESOURCE, leaf = true)
+public interface JMSResource extends J2EEResource {
 }

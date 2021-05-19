@@ -57,7 +57,7 @@ package org.glassfish.sse.api;
  * @author Jitendra Kotamraju
  */
 public final class ServerSentEventData {
-    
+
     private final StringBuilder strBuilder = new StringBuilder();
 
     public ServerSentEventData comment(String comment) {

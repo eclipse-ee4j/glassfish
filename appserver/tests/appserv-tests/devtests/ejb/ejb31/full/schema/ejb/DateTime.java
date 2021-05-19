@@ -19,38 +19,38 @@ import java.util.*;
 
 public class DateTime {
 
-    
+
     public static void main(String[] args) {
 
-	String xsdDateTime = args[0];
+        String xsdDateTime = args[0];
 
-	System.out.println("Converting xsdDateTime " + xsdDateTime + " ...");
+        System.out.println("Converting xsdDateTime " + xsdDateTime + " ...");
 
-	try {
-	    DatatypeFactory factory = DatatypeFactory.newInstance();
+        try {
+            DatatypeFactory factory = DatatypeFactory.newInstance();
 
-	    XMLGregorianCalendar xmlGreg = factory.newXMLGregorianCalendar(xsdDateTime);
+            XMLGregorianCalendar xmlGreg = factory.newXMLGregorianCalendar(xsdDateTime);
 
-	    GregorianCalendar greg = xmlGreg.toGregorianCalendar();
+            GregorianCalendar greg = xmlGreg.toGregorianCalendar();
 
-	    Date date = greg.getTime();
+            Date date = greg.getTime();
 
-	    System.out.println("Date = " + date);
+            System.out.println("Date = " + date);
 
-	    GregorianCalendar reverseCalendar = new GregorianCalendar();
-	    reverseCalendar.setTime(date);
+            GregorianCalendar reverseCalendar = new GregorianCalendar();
+            reverseCalendar.setTime(date);
 
 
-	    XMLGregorianCalendar reverseXmlGreg = 
-		factory.newXMLGregorianCalendar(reverseCalendar);
+            XMLGregorianCalendar reverseXmlGreg =
+                factory.newXMLGregorianCalendar(reverseCalendar);
 
-	    String reverseXsdDateTime = reverseXmlGreg.toXMLFormat();
+            String reverseXsdDateTime = reverseXmlGreg.toXMLFormat();
 
-	    System.out.println("Back to xsdDateTime = " + reverseXsdDateTime);
+            System.out.println("Back to xsdDateTime = " + reverseXsdDateTime);
 
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

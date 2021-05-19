@@ -65,21 +65,21 @@ public final class DeleteJvmOptions implements AdminCommand, AdminCommandSecurit
 
     @Param(name="profiler", optional=true)
     Boolean fromProfiler = false;
-        
+
     @Param(name="jvm_option_name", primary=true, separator=':')
     List<String> jvmOptions;
-    
+
     @Inject
     Target targetService;
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
-    private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class); 
+    private static final StringManager lsm = StringManager.getManager(ListJvmOptions.class);
 
     @AccessRequired.To("update")
     private JavaConfig jc;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         config = CLIUtil.updateConfigIfNeeded(config, targetService, target);
@@ -105,7 +105,7 @@ public final class DeleteJvmOptions implements AdminCommand, AdminCommandSecurit
             ActionReport.MessagePart part = report.getTopMessagePart().addChild();
             deleteX(bag, jvmOptions, part);
         } catch (Exception e) {
-            String msg = e.getMessage() != null ? e.getMessage() : 
+            String msg = e.getMessage() != null ? e.getMessage() :
                 lsm.getStringWithDefault("delete.jvm.options.failed",
                     "Command: delete-jvm-options failed", new String[]{e.getMessage()});
             report.setMessage(msg);
@@ -113,7 +113,7 @@ public final class DeleteJvmOptions implements AdminCommand, AdminCommandSecurit
             report.setFailureCause(e);
             return;
         }
-        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);        
+        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 
 

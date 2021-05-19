@@ -34,10 +34,10 @@ public interface ObjectNameQuery
     'regexNames' means "match any name" and specifying regexNames[ i ] = null means
     to match only based on regexValues[ i ] (and vice versa).
 
-    @param startingSet 			optional ObjectName pattern for starting set to search
-    @param regexNames			optional series of regular expressions for Property names
-    @param regexValues			optional series of regular expressions for Property values
-    @return 					array of ObjectName (may be of zero length)
+    @param startingSet                         optional ObjectName pattern for starting set to search
+    @param regexNames                        optional series of regular expressions for Property names
+    @param regexValues                        optional series of regular expressions for Property values
+    @return                                         array of ObjectName (may be of zero length)
      */
     Set<ObjectName> matchAll(Set<ObjectName> startingSet, String[] regexNames, String[] regexValues);
 
@@ -55,10 +55,10 @@ public interface ObjectNameQuery
     'regexNames' means "match any name" and specifying regexNames[ i ] = null means
     to match only based on regexValues[ i ] (and vice versa).
 
-    @param startingSet 			optional ObjectName pattern for starting set to search
-    @param regexNames			optional series of regular expressions for Property names
-    @param regexValues			optional series of regular expressions for Property values
-    @return 					array of ObjectName (may be of zero length)
+    @param startingSet                         optional ObjectName pattern for starting set to search
+    @param regexNames                        optional series of regular expressions for Property names
+    @param regexValues                        optional series of regular expressions for Property values
+    @return                                         array of ObjectName (may be of zero length)
      */
     Set<ObjectName> matchAny(Set<ObjectName> startingSet, String[] regexNames, String[] regexValues);
 

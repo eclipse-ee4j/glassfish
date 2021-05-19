@@ -28,7 +28,7 @@ public class CreateInstanceTest extends BaseTest
 
     public CreateInstanceTest(final String user, final String password,
             final String host, final int port, final String instanceName,
-            final String nodeAgentName, final String configName, 
+            final String nodeAgentName, final String configName,
             final Map optional)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -37,7 +37,7 @@ public class CreateInstanceTest extends BaseTest
                 user, password, host, port);
 
         final CreateInstanceCmd createInstanceCmd = cmdFactory.
-                createCreateInstanceCmd(instanceName, nodeAgentName, 
+                createCreateInstanceCmd(instanceName, nodeAgentName,
                         configName, optional);
 
         target = new PipeCmd(connectCmd, createInstanceCmd);

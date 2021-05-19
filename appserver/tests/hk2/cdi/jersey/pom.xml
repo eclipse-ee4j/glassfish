@@ -30,7 +30,7 @@
     <artifactId>jersey</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish HK2 Jersey CDI test</name>  
+    <name>GlassFish HK2 Jersey CDI test</name>
     <modules>
         <module>war</module>
         <module>runner</module>

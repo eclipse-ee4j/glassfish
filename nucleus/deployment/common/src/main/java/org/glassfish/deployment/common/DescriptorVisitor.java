@@ -18,8 +18,8 @@ package org.glassfish.deployment.common;
 
 
 /**
- * This class defines the minimum visitor API each descriptor 
- * is required to implement. 
+ * This class defines the minimum visitor API each descriptor
+ * is required to implement.
  *
  * @author  Jerome Dochez
  */
@@ -33,7 +33,7 @@ public interface DescriptorVisitor {
 
     /**
      * get the visitor for its sub descriptor
-     * @param sub descriptor to return visitor for 
+     * @param sub descriptor to return visitor for
      */
     public DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor);
 }

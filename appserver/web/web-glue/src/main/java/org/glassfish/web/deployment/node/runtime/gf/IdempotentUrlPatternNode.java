@@ -54,7 +54,7 @@ public class IdempotentUrlPatternNode extends RuntimeDescriptorNode<IdempotentUr
     @Override
     protected boolean setAttributeValue(XMLElement elementName, XMLElement attributeName, String value) {
         if (attributeName.getQName().equals(RuntimeTagNames.URL_PATTERN)) {
-            descriptor.setAttributeValue(IdempotentUrlPattern.URL_PATTERN, 
+            descriptor.setAttributeValue(IdempotentUrlPattern.URL_PATTERN,
                 value);
             return true;
         } else if (attributeName.getQName().equals(
@@ -65,7 +65,7 @@ public class IdempotentUrlPatternNode extends RuntimeDescriptorNode<IdempotentUr
         }
         return false;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -75,15 +75,15 @@ public class IdempotentUrlPatternNode extends RuntimeDescriptorNode<IdempotentUr
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
        IdempotentUrlPattern pattern) {
-       Element patternNode = 
+       Element patternNode =
             (Element)super.writeDescriptor(parent, nodeName, pattern);
-        
+
         // url-pattern
         if (pattern.getAttributeValue(pattern.URL_PATTERN) != null) {
             setAttribute(patternNode, RuntimeTagNames.URL_PATTERN, pattern.getAttributeValue(pattern.URL_PATTERN));
-        }   
+        }
 
         // num-of-retries
         if (pattern.getAttributeValue(pattern.NUM_OF_RETRIES) != null) {

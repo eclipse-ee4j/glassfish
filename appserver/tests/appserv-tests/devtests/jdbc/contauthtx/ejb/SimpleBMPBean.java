@@ -30,58 +30,58 @@ public class SimpleBMPBean
     protected DataSource ds;
 
     public void setEntityContext(EntityContext entityContext) {
-	Context context = null;
-	try {
-	    context    = new InitialContext();
-	    ds = (DataSource) context.lookup("java:comp/env/DataSourcetx");
-	} catch (NamingException e) {
-	    throw new EJBException("cant find datasource");
-	}
+        Context context = null;
+        try {
+            context    = new InitialContext();
+            ds = (DataSource) context.lookup("java:comp/env/DataSourcetx");
+        } catch (NamingException e) {
+            throw new EJBException("cant find datasource");
+        }
         System.out.println("[**SimpleBMPBean**] Done with setEntityContext....");
     }
 
     public Integer ejbCreate() throws CreateException {
-	return new Integer(1);
+        return new Integer(1);
     }
 
     public boolean test1() {
         //container auth + user/pwd specified - should pass
-	Connection conn = null;
-	boolean passed = true;
-	try {
-	    conn = ds.getConnection("DBUSER", "DBPASSWORD" );
-	} catch (Exception e) {
-	    passed = false;
-	} finally {
-	    if ( conn != null ) {
-	        try {
-	            conn.close();
-		} catch( Exception e1) {}    
-	    }
-	}
+        Connection conn = null;
+        boolean passed = true;
+        try {
+            conn = ds.getConnection("DBUSER", "DBPASSWORD" );
+        } catch (Exception e) {
+            passed = false;
+        } finally {
+            if ( conn != null ) {
+                try {
+                    conn.close();
+                } catch( Exception e1) {}
+            }
+        }
 
 
-	return passed;
+        return passed;
     }
-    
+
     public boolean test2() {
         //container auth + user/pwd NOT specified - should pass
-	Connection conn = null;
-	boolean passed = true;
-	try {
-	    conn = ds.getConnection();
-	} catch (Exception e) {
-	    passed = false;
-	} finally {
-	    if ( conn != null ) {
-	        try {
-	            conn.close();
-		} catch( Exception e1) {}    
-	    }
-	}
+        Connection conn = null;
+        boolean passed = true;
+        try {
+            conn = ds.getConnection();
+        } catch (Exception e) {
+            passed = false;
+        } finally {
+            if ( conn != null ) {
+                try {
+                    conn.close();
+                } catch( Exception e1) {}
+            }
+        }
 
-	
-	return passed;
+
+        return passed;
     }
 
     public void ejbLoad() {}

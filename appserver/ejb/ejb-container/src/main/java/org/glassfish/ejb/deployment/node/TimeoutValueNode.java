@@ -41,9 +41,9 @@ public class TimeoutValueNode extends DeploymentDescriptorNode<TimeoutValueDescr
         elementToTimeUnit.put("Minutes", TimeUnit.MINUTES);
         elementToTimeUnit.put("Seconds", TimeUnit.SECONDS);
         elementToTimeUnit.put("Milliseconds", TimeUnit.MILLISECONDS);
-        elementToTimeUnit.put("Microseconds", TimeUnit.MICROSECONDS);               
+        elementToTimeUnit.put("Microseconds", TimeUnit.MICROSECONDS);
         elementToTimeUnit.put("Nanoseconds", TimeUnit.NANOSECONDS);
-        
+
         timeUnitToElement = new HashMap<TimeUnit, String>();
 
         Iterator<Map.Entry<String, TimeUnit>> entryIterator = elementToTimeUnit.entrySet().iterator();
@@ -77,7 +77,7 @@ public class TimeoutValueNode extends DeploymentDescriptorNode<TimeoutValueDescr
         Node timeoutNode = super.writeDescriptor(parent, nodeName, descriptor);
         appendTextChild(timeoutNode, EjbTagNames.TIMEOUT_VALUE, Long.toString(desc.getValue()));
         appendTextChild(timeoutNode, EjbTagNames.TIMEOUT_UNIT, timeUnitToElement.get(desc.getUnit()));
-        return timeoutNode;     
+        return timeoutNode;
      }
 
 }

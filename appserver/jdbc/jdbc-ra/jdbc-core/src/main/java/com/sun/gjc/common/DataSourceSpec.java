@@ -53,7 +53,7 @@ public class DataSourceSpec implements java.io.Serializable {
     public static final int DATASOURCE = 23;
     public static final int CONNECTIONPOOLDATASOURCE = 24;
 
-    //GJCINT      
+    //GJCINT
     public static final int CONNECTIONVALIDATIONREQUIRED = 25;
     public static final int VALIDATIONMETHOD = 26;
     public static final int VALIDATIONTABLENAME = 27;

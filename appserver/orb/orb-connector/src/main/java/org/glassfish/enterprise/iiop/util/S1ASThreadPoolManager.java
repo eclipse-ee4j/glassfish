@@ -51,7 +51,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
         return s1asThreadPoolMgr;
     }
 
-    
+
     static {
         try {
             _iiopUtils = Globals.getDefaultHabitat().getService(IIOPUtils.class);
@@ -67,7 +67,7 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
 
 
     }
-    
+
     S1ASThreadPoolManager() {
     }
 
@@ -309,6 +309,6 @@ public class S1ASThreadPoolManager implements ThreadPoolManager {
     public void close() {
         //TODO
     }
-} 
+}
 
 

@@ -20,7 +20,7 @@ import jakarta.ejb.*;
 
 public interface SfulRemote extends CommonRemote, EJBObject
 {
-   
+
     public int getState() throws java.rmi.RemoteException;
 
 }

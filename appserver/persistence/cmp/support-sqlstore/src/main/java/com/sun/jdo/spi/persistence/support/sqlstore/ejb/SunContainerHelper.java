@@ -60,8 +60,8 @@ import org.glassfish.internal.api.Globals;
 
 /** Implementation for Sun specific CMP and Container interactions as defined
 * by the ContainerHelper interface.
-* 
-* IMPORTANT: This class extends SunTransactionHelper class. Any changes to the 
+*
+* IMPORTANT: This class extends SunTransactionHelper class. Any changes to the
 * TransactionHelper implementation must be done in the SunTransactionHelper.
 *
 */
@@ -78,7 +78,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
 
     /** Garantees singleton.
      * Registers itself during initial load
-     */  
+     */
     static {
         CMPHelper.registerContainerHelper (new SunContainerHelper());
     }
@@ -369,7 +369,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * This will guarantee that PersistenceManager is not bound to
      * any transaction.
      *
-     * @return jakarta.transaction.Transaction object representing 
+     * @return jakarta.transaction.Transaction object representing
      * the suspended transaction.
      * Returns null if the calling thread is not associated
      * with a transaction.
@@ -389,7 +389,7 @@ public class SunContainerHelper extends SunTransactionHelper implements Containe
      * This will guarantee that the transaction continues to run after
      * read-only bean accessed its PersistenceManager.
      *
-     * @param tx - The jakarta.transaction.Transaction object that 
+     * @param tx - The jakarta.transaction.Transaction object that
      * represents the transaction to be resumed. If this object had been
      * returned by #suspendCurrentTransaction() call it will be null in
      * case calling thread was not associated with a transaction.

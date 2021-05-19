@@ -37,10 +37,10 @@
     </target>
 
     <target name="info" depends="init-common">
-    	<echo message="build.classes.dir is ${build.classes.dir}"/>
-    	<echo message="s1astest.classpath is ${s1astest.classpath}"/>
+            <echo message="build.classes.dir is ${build.classes.dir}"/>
+            <echo message="s1astest.classpath is ${s1astest.classpath}"/>
     </target>
-    
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -48,7 +48,7 @@
     </target>
 
     <target name="build" depends="compile">
-    	  <echo message="assemble.dir = ${assemble.dir}"/>
+              <echo message="assemble.dir = ${assemble.dir}"/>
         <!--build and package .war first so it doesn't contain ejb bean !-->
         <!--classes that have @Stateless/@Stateul !-->
         <antcall target="webclient-war-common">
@@ -71,23 +71,23 @@
             <param name="ejbjar.classes"
                    value="**/Hello**.class"/>
         </antcall>
-        
+
         <ant dir="ra" target="all"/>
 
         <delete file="${assemble.dir}/${appname}.ear"/>
         <mkdir dir="${assemble.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/>    
+        <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <ear earfile="${assemble.dir}/${appname}App.ear" appxml="${application.xml}">
           <fileset dir="${assemble.dir}">
           <include name="*.jar"/>
           <include name="*.war"/>
-          </fileset>  
+          </fileset>
           <fileset dir="ra/">
             <include name="*.rar"/>
           </fileset>
         </ear>
-        
+
     </target>
 
     <target name="setup" depends="init-common">

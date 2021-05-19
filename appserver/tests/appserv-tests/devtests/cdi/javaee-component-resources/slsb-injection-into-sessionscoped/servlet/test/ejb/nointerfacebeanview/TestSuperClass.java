@@ -18,7 +18,7 @@ package test.ejb.nointerfacebeanview;
 
 import jakarta.enterprise.inject.Alternative;
 
- 
+
 //marked as Alternative, otherwise there would
 //an ambiguous definition for TestLocalInterface between this
 //super class and the TestLocalEJB
@@ -29,7 +29,7 @@ public class TestSuperClass implements TestInterface{
         System.out.println("no interface bean: m1");
         return true;
     }
-    
+
     public boolean m2DefinedInSuperClass(){
         System.out.println("no interface bean: m2");
         return true;

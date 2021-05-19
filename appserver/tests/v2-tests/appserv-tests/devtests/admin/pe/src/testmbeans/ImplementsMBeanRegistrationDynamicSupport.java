@@ -42,7 +42,7 @@ public abstract class ImplementsMBeanRegistrationDynamicSupport implements javax
     /* Creates a new instance of ImplementsMBeanRegistrationDynamicSupport */
     public ImplementsMBeanRegistrationDynamicSupport() {
     }
-    
+
     /**
      * Gets the value of the specified attribute of the DynamicMBean.
      * @param attributeName The attribute name
@@ -51,7 +51,7 @@ public abstract class ImplementsMBeanRegistrationDynamicSupport implements javax
     throws AttributeNotFoundException,
             MBeanException,
             ReflectionException;
-    
+
     /**
      * Sets the value of the specified attribute of the DynamicMBean.
      * @param attribute The attribute to set
@@ -61,7 +61,7 @@ public abstract class ImplementsMBeanRegistrationDynamicSupport implements javax
             InvalidAttributeValueException,
             MBeanException,
             ReflectionException;
-    
+
     /**
      * Create the MBeanInfoConstructors.
      */
@@ -75,7 +75,7 @@ public abstract class ImplementsMBeanRegistrationDynamicSupport implements javax
         }
         return infos;
     }
-    
+
     /**
      * Enables the get values of several attributes of the Dynamic MBean.
      * @param attributeNames Array of attribute names
@@ -93,7 +93,7 @@ public abstract class ImplementsMBeanRegistrationDynamicSupport implements javax
         }
         return resultList;
     }
-    
+
     /**
      * Sets the values of several attributes of the Dynamic MBean
      * and returns the list of attributes that have been set.

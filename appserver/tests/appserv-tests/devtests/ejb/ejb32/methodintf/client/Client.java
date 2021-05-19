@@ -25,12 +25,12 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         stat.addDescription("ejb32-methodintf");
 
         try {
@@ -40,7 +40,7 @@ public class Client {
             stful.test();
             System.out.println("Waiting timer to expire to verify the results");
             Thread.sleep(3000);
-            boolean pass = stles.verify() && stful.verify(); 
+            boolean pass = stles.verify() && stful.verify();
             stat.addStatus("ejb32-methodintf: ", ((pass)? stat.PASS : stat.FAIL) );
 
         } catch(Exception e) {

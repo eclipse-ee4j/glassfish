@@ -24,7 +24,7 @@
 <!-- all -->
 <target name="all" depends="deploy-rar, deploy-war, deploy-ear, deploy-retrieve, undeploy-all"/>
 
-<target name="deploy-rar" 
+<target name="deploy-rar"
     description="Deploy the Connector">
      <sun-appserv-deploy
          file="${rarApp.file}"
@@ -38,10 +38,10 @@
          password="${admin.password}"
          host="${admin.host}"
          port="4848"
-      sunonehome="${sunone.home}" />     
-</target> 
+      sunonehome="${sunone.home}" />
+</target>
 
-<target name="deploy-war" 
+<target name="deploy-war"
     description="Deploy the  WebApp">
      <sun-appserv-deploy
          file="${warApp.file}"
@@ -55,10 +55,10 @@
          password="${admin.password}"
          host="${admin.host}"
          port="${admin.port}"
-         sunonehome="${sunone.home}" />     
-</target> 
+         sunonehome="${sunone.home}" />
+</target>
 
-<target name="deploy-ear" 
+<target name="deploy-ear"
     description="Deploy the earApp">
      <sun-appserv-deploy
          file="${earApp.file}"
@@ -72,10 +72,10 @@
          password="${admin.password}"
          host="${admin.host}"
          port="${admin.port}"
-         sunonehome="${sunone.home}" />     
-</target> 
+         sunonehome="${sunone.home}" />
+</target>
 
-<target name="deploy-retrieve" 
+<target name="deploy-retrieve"
     description="Deploy the  EAR">
      <sun-appserv-deploy
          file="${retrieveApp.file}"
@@ -88,12 +88,12 @@
          user="${admin.user}"
          password="${admin.password}"
          host="${admin.host}"
-         port="${admin.port}"         
-	 retrievestubs="${retrieve.directory}"
-         sunonehome="${sunone.home}" />     
-</target> 
+         port="${admin.port}"
+     retrievestubs="${retrieve.directory}"
+         sunonehome="${sunone.home}" />
+</target>
 
-<target name="undeploy-all" 
+<target name="undeploy-all"
     description="Undeploy all apps">
      <sun-appserv-undeploy
       name="inbound"
@@ -123,6 +123,6 @@
       host="${admin.host}"
       port="${admin.port}"
       sunonehome="${sunone.home}" />
-</target> 
+</target>
 
 </project>

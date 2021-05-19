@@ -16,7 +16,7 @@
 
 package com.sun.s1asdev.ejb.bmp.finder.ejb;
 
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.*;
 import java.sql.*;
 import javax.sql.*;
@@ -26,7 +26,7 @@ import javax.rmi.PortableRemoteObject;
 import java.io.*;
 
 public class EnrollerBean implements SessionBean {
- 
+
     private Connection con;
     private String dbName = "java:comp/env/jdbc/bmp-finderDB";
     private SessionContext context;
@@ -61,7 +61,7 @@ public class EnrollerBean implements SessionBean {
     }
 
     /**
-     * Deletes a Student 
+     * Deletes a Student
      * @param studentId primary key of the student object
      * @exception RemoteException
      */
@@ -74,7 +74,7 @@ public class EnrollerBean implements SessionBean {
     }
 
     /**
-     * Deletes a Course 
+     * Deletes a Course
      * @param courseId primary key of the course object
      * @exception RemoteException
      */
@@ -164,7 +164,7 @@ public class EnrollerBean implements SessionBean {
 
         String insertStatement =
             "insert into FinderEnrollment values ( ? , ? )";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(insertStatement);
 
         prepStmt.setString(1, studentId);
@@ -174,7 +174,7 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private void deleteEntry(String studentId, String courseId) 
+    private void deleteEntry(String studentId, String courseId)
         throws SQLException {
 
         String deleteStatement =
@@ -217,13 +217,13 @@ public class EnrollerBean implements SessionBean {
         prepStmt.close();
     }
 
-    private ArrayList selectStudent(String courseId) 
+    private ArrayList selectStudent(String courseId)
         throws SQLException {
 
         String selectStatement =
             "select studentid " +
             "from FinderEnrollment where courseid = ? ";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, courseId);
@@ -239,13 +239,13 @@ public class EnrollerBean implements SessionBean {
         return a;
     }
 
-    private ArrayList selectCourse(String studentId) 
+    private ArrayList selectCourse(String studentId)
         throws SQLException {
 
         String selectStatement =
             "select courseid " +
             "from FinderEnrollment where studentid = ? ";
-        PreparedStatement prepStmt = 
+        PreparedStatement prepStmt =
             con.prepareStatement(selectStatement);
 
         prepStmt.setString(1, studentId);

@@ -16,11 +16,8 @@
 
 /**
  */
-@Taxonomy(stability = Stability.COMMITTED, description="Java EE Management (JSR 77) interfaces" )
+@Taxonomy(stability = Stability.COMMITTED, description = "Java EE Management (JSR 77) interfaces")
 package org.glassfish.admin.amx.j2ee;
 
 import org.glassfish.external.arc.Taxonomy;
 import org.glassfish.external.arc.Stability;
-
-
-

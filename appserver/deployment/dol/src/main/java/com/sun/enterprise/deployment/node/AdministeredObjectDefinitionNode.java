@@ -30,14 +30,14 @@ import java.util.logging.Level;
  * This class handles all information related to the administered-object xml tag
  *
  * @author  Dapeng Hu
- * @version 
+ * @version
  */
 
 public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<AdministeredObjectDefinitionDescriptor> {
     public final static XMLElement tag = new XMLElement(TagNames.ADMINISTERED_OBJECT);
-    
+
     private AdministeredObjectDefinitionDescriptor descriptor = null;
-    
+
     public AdministeredObjectDefinitionNode() {
         registerElementHandler(new XMLElement(TagNames.ADMINISTERED_OBJECT_PROPERTY), ResourcePropertyNode.class,
                 "addAdministeredObjectPropertyDescriptor");
@@ -53,7 +53,7 @@ public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<A
 
         return table;
     }
-    
+
     @LogMessageInfo(
             message = "For administered-object resource: {0}, there is no application part in its resource adapter name: {1}.",
             level="WARNING",
@@ -68,14 +68,14 @@ public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<A
         appendTextChild(node, TagNames.ADMINISTERED_OBJECT_NAME, desc.getName());
         appendTextChild(node, TagNames.ADMINISTERED_OBJECT_INTERFACE_NAME, desc.getInterfaceName());
         appendTextChild(node, TagNames.ADMINISTERED_OBJECT_CLASS_NAME, desc.getClassName());
-        
+
         // change the resource adapter name from internal format to standard format
         String resourceAdapterName = desc.getResourceAdapter();
         int poundIndex = resourceAdapterName.indexOf("#");
         if(poundIndex > 0){
             // the internal format of resource adapter name is "appName#raName", remove the appName part
             resourceAdapterName =  resourceAdapterName.substring(poundIndex);
-            
+
         }else if(poundIndex == 0){
             // the resource adapter name should not be the standard format "#raName" here
             DOLUtils.getDefaultLogger().log(Level.WARNING, RESOURCE_ADAPTER_NAME_INVALID,
@@ -84,13 +84,13 @@ public class AdministeredObjectDefinitionNode extends DeploymentDescriptorNode<A
             // the resource adapter name represent the standalone RA in this case.
         }
         appendTextChild(node, TagNames.ADMINISTERED_OBJECT_ADAPTER, resourceAdapterName);
-        
+
         ResourcePropertyNode propertyNode = new ResourcePropertyNode();
         propertyNode.writeDescriptor(node, desc);
 
         return node;
     }
-    
+
     public AdministeredObjectDefinitionDescriptor getDescriptor() {
         if(descriptor == null){
             descriptor = new AdministeredObjectDefinitionDescriptor();

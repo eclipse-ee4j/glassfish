@@ -48,7 +48,7 @@ import org.glassfish.apf.HandlerProcessingResult;
  *     protected void processEjbMethodSecurity(Annotaton authAnnotation,
  *          MethodDescriptor md, EjbDescriptor ejbDesc);
  *     protected Classlt;? extends Annotaion&gt;[] relatedAnnotationClasses();
- *      
+ *
  * @author Shing Wai Chan
  */
 abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHandler
@@ -78,7 +78,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         Annotation authAnnotation = ainfo.getAnnotation();
         for (EjbContext ejbContext : ejbContexts) {
             EjbDescriptor ejbDesc = ejbContext.getDescriptor();
-                
+
             if (ElementType.TYPE.equals(ainfo.getElementType())) {
                 // postpone the processing at the end
                 ejbContext.addPostProcessInfo(ainfo, this);
@@ -212,7 +212,7 @@ abstract class AbstractAuthAnnotationHandler extends AbstractCommonAttributeHand
         if (ejbDesc.isLocalBean()) {
             methodAlls.add(
                     new MethodDescriptor(MethodDescriptor.ALL_METHODS,
-                    "", MethodDescriptor.EJB_LOCAL));    
+                    "", MethodDescriptor.EJB_LOCAL));
         }
 
         if (ejbDesc.hasWebServiceEndpointInterface()) {

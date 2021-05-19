@@ -23,15 +23,15 @@ package Data;
  */
 
 public final class SuppliersKey implements java.io.Serializable {
-    
+
     public java.lang.Integer partid;
     public java.lang.Integer supplierid;
-    
+
     /**
      * @see java.lang.Object#equals(java.lang.Object)
      */
     public boolean equals(java.lang.Object otherOb) {
-        
+
         if (this == otherOb) {
             return true;
         }
@@ -40,25 +40,25 @@ public final class SuppliersKey implements java.io.Serializable {
         }
         Data.SuppliersKey other = (Data.SuppliersKey) otherOb;
         return (
-        
+
         (partid==null?other.partid==null:partid.equals(other.partid))
         &&
         (supplierid==null?other.supplierid==null:supplierid.equals(other.supplierid))
-        
+
         );
     }
-    
+
     /**
      * @see java.lang.Object#hashCode()
      */
     public int hashCode() {
         return (
-        
+
         (partid==null?0:partid.hashCode())
         ^
         (supplierid==null?0:supplierid.hashCode())
-        
+
         );
     }
-    
+
 }

@@ -32,5 +32,5 @@ import jakarta.inject.Qualifier;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TestQualifier {
 
-    
+
 }

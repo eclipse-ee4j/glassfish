@@ -21,13 +21,13 @@ import javax.swing.JComponent;
 
 /**
  * Interface which all bindings must implement.
- * 
+ *
  * @author tjquinn
  */
 public interface CallbackBinding<C extends Callback> {
     public void finish();
     public void setCallback(C callback);
-    
+
     public interface GUI<C extends Callback> extends CallbackBinding<C> {
         public JComponent getComponent();
     }

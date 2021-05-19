@@ -21,9 +21,9 @@ public class Hello implements com.sun.s1peqe.selfmanagement.tmonitor.event.Hello
     public Hello() {}
 
     public long getValue() {
-                                        
-        return this.value;                                                                                                
+
+        return this.value;
     }
-    
+
     private long value = 10;
 }

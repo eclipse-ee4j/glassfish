@@ -21,9 +21,9 @@ import jakarta.ejb.*;
 
 
 public interface ItemLocalHome extends EJBLocalHome {
-    
+
     public ItemLocal create (String id, String name, double price) throws CreateException;
-    
+
     public ItemLocal findByPrimaryKey (String id)
         throws FinderException;
 }

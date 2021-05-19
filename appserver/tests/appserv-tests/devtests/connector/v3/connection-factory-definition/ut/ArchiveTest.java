@@ -71,7 +71,7 @@ public class ArchiveTest extends TestCase {
         ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
         reader.setClassLoader(classLoader);
-        
+
         Application applicationDesc = reader.open(archive);
 //        System.out.println("--------Connector resoruce in application.xml----------");
 //        for( ConnectionFactoryDefinitionDescriptor cfdd: applicationDesc.getConnectionFactoryDefinitionDescriptors()){
@@ -82,8 +82,8 @@ public class ArchiveTest extends TestCase {
 //            }
 //            System.out.println("");
 //        }
-        
-        Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = 
+
+        Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs =
                 new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
         ConnectionFactoryDefinitionDescriptor desc;
 
@@ -134,10 +134,10 @@ public class ArchiveTest extends TestCase {
         reader.setAnnotationProcessingRequested(true);
         reader.setClassLoader(classLoader);
         assertTrue("Archivist should handle annotations.", reader.isAnnotationProcessingRequested());
-        
+
         WebBundleDescriptor webDesc = reader.open(archive);
 
-        Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = 
+        Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs =
                 new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
         ConnectionFactoryDefinitionDescriptor desc;
 
@@ -159,7 +159,7 @@ public class ArchiveTest extends TestCase {
         desc.setMinPoolSize(4);
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("application-scope resource defined by @ConnectionFactoryDefinition");
         desc.setName("java:app/env/Servlet_ConnectionFactory");
@@ -170,7 +170,7 @@ public class ArchiveTest extends TestCase {
         desc.setMinPoolSize(4);
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("module-scope resource defined by @ConnectionFactoryDefinition");
         desc.setName("java:module/env/Servlet_ConnectionFactory");
@@ -178,7 +178,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("cfd-ra");
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("component-scope resource defined by @ConnectionFactoryDefinition");
         desc.setName("java:comp/env/Servlet_ConnectionFactory");
@@ -186,7 +186,7 @@ public class ArchiveTest extends TestCase {
         desc.setResourceAdapter("cfd-ra");
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("global-scope resource defined in Web DD");
         desc.setName("java:global/env/Web_DD_ConnectionFactory");
@@ -197,7 +197,7 @@ public class ArchiveTest extends TestCase {
         desc.setMinPoolSize(4);
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("application-scope resource defined in Web DD");
         desc.setName("java:app/env/Web_DD_ConnectionFactory");
@@ -208,7 +208,7 @@ public class ArchiveTest extends TestCase {
         desc.setMinPoolSize(4);
         desc.addProperty("testName", "foo");
         expectedCFDDs.put(desc.getName(), desc);
-        
+
         desc = new ConnectionFactoryDefinitionDescriptor();
         desc.setDescription("module-scope resource defined in Web DD");
         desc.setName("java:module/env/Web_DD_ConnectionFactory");
@@ -238,7 +238,7 @@ public class ArchiveTest extends TestCase {
 
         ASURLClassLoader classLoader = new ASURLClassLoader(this.getClass().getClassLoader());
         classLoader.addURL(archive.toURL());
-               
+
         EjbArchivist reader = (EjbArchivist) TestUtil.getByType(EjbArchivist.class);
         reader.setClassLoader(classLoader);
         reader.setAnnotationProcessingRequested(true);
@@ -249,8 +249,8 @@ public class ArchiveTest extends TestCase {
         for( EjbDescriptor ejbDesc: ejbBundleDesc.getEjbs()){
             acturalCFDDs.addAll(ejbDesc.getResourceDescriptors(JavaEEResourceType.CFD));
         }
-        
-        Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs = 
+
+        Map<String,ConnectionFactoryDefinitionDescriptor> expectedCFDDs =
                 new HashMap<String,ConnectionFactoryDefinitionDescriptor>();
         ConnectionFactoryDefinitionDescriptor desc;
 
@@ -350,7 +350,7 @@ public class ArchiveTest extends TestCase {
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
         }
-        
+
         // connection-factory in annotation for stateful EJB
         {
             desc = new ConnectionFactoryDefinitionDescriptor();
@@ -363,7 +363,7 @@ public class ArchiveTest extends TestCase {
             desc.setMinPoolSize(4);
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
-            
+
             desc = new ConnectionFactoryDefinitionDescriptor();
             desc.setDescription("application-scope resource defined by @ConnectionFactoryDefinition");
             desc.setName("java:app/env/HelloStatefulEJB_Annotation_ConnectionFactory");
@@ -404,7 +404,7 @@ public class ArchiveTest extends TestCase {
             desc.setMinPoolSize(4);
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
-            
+
             desc = new ConnectionFactoryDefinitionDescriptor();
             desc.setDescription("application-scope resource defined by @ConnectionFactoryDefinition");
             desc.setName("java:app/env/HelloEJB_Annotation_ConnectionFactory");
@@ -415,7 +415,7 @@ public class ArchiveTest extends TestCase {
             desc.setMinPoolSize(4);
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
-            
+
             desc = new ConnectionFactoryDefinitionDescriptor();
             desc.setDescription("module-scope resource defined by @ConnectionFactoryDefinition");
             desc.setName("java:module/env/HelloEJB_Annotation_ConnectionFactory");
@@ -423,7 +423,7 @@ public class ArchiveTest extends TestCase {
             desc.setResourceAdapter("cfd-ra");
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
-            
+
             desc = new ConnectionFactoryDefinitionDescriptor();
             desc.setDescription("component-scope resource defined by @ConnectionFactoryDefinition");
             desc.setName("java:comp/env/HelloEJB_Annotation_ConnectionFactory");
@@ -432,9 +432,9 @@ public class ArchiveTest extends TestCase {
             desc.addProperty("testName", "foo");
             expectedCFDDs.put(desc.getName(), desc);
         }
-        
+
         TestUtil.compareCFDD(expectedCFDDs, acturalCFDDs);
 
     }
-    
+
 }

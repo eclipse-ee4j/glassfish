@@ -32,15 +32,15 @@ import org.apache.catalina.Manager;
  * @author  Rajiv Mordani
  */
 public class FullHASession extends BaseHASession {
-    
+
     /**
      * Creates a new instance of FullHASession
-     * @param manager 
+     * @param manager
      */
     public FullHASession(Manager manager) {
         super(manager);
     }
-    
+
     /**
      * always return true for isDirty()
      * this type of session is always dirty
@@ -49,16 +49,16 @@ public class FullHASession extends BaseHASession {
         return true;
     }
 
-    /** 
+    /**
      * this is deliberately a no-op
      * store framework calls this method
      * so it must be there but must not have
      * any effect
      * @param isDirty
-     */ 
+     */
     public void setDirty(boolean isDirty) {
     }
-    
+
     public void removeAttribute(String name) {
         super.removeAttribute(name);
         setDirty(true);
@@ -72,5 +72,5 @@ public class FullHASession extends BaseHASession {
     public Object getAttribute(String name) {
         setDirty(true);
         return super.getAttribute(name);
-    }                
+    }
 }

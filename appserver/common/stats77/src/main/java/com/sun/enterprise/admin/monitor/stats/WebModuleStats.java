@@ -19,7 +19,7 @@ package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
 
-/** 
+/**
  * Interface for querying web module statistics.
  */
 public interface WebModuleStats extends Stats {
@@ -30,7 +30,7 @@ public interface WebModuleStats extends Stats {
      *.
      * @return Number of JSPs that have been loaded
      */
-    public CountStatistic getJspCount();
+    CountStatistic getJspCount();
 
     /**
      * Gets the number of JSPs that have been reloaded in the web module
@@ -38,14 +38,14 @@ public interface WebModuleStats extends Stats {
      *.
      * @return Number of JSPs that have been reloaded
      */
-    public CountStatistic getJspReloadCount();
+    CountStatistic getJspReloadCount();
 
     /**
      * Gets the number of errors that were triggered by JSP invocations.
      *.
      * @return Number of errors triggered by JSP invocations
      */
-    public CountStatistic getJspErrorCount();
+    CountStatistic getJspErrorCount();
 
     /**
      * Gets the total number of sessions that have been created for the web
@@ -53,7 +53,7 @@ public interface WebModuleStats extends Stats {
      *.
      * @return Total number of sessions created
      */
-    public CountStatistic getSessionsTotal();
+    CountStatistic getSessionsTotal();
 
     /**
      * Gets the number of currently active sessions for the web
@@ -61,7 +61,7 @@ public interface WebModuleStats extends Stats {
      *.
      * @return Number of currently active sessions
      */
-    public CountStatistic getActiveSessionsCurrent();
+    CountStatistic getActiveSessionsCurrent();
 
     /**
      * Gets the maximum number of concurrently active sessions for the web
@@ -69,7 +69,7 @@ public interface WebModuleStats extends Stats {
      *
      * @return Maximum number of concurrently active sessions
      */
-    public CountStatistic getActiveSessionsHigh();
+    CountStatistic getActiveSessionsHigh();
 
     /**
      * Gets the total number of rejected sessions for the web
@@ -80,7 +80,7 @@ public interface WebModuleStats extends Stats {
      *.
      * @return Total number of rejected sessions
      */
-    public CountStatistic getRejectedSessionsTotal();
+    CountStatistic getRejectedSessionsTotal();
 
     /**
      * Gets the total number of expired sessions for the web
@@ -88,7 +88,7 @@ public interface WebModuleStats extends Stats {
      *.
      * @return Total number of expired sessions
      */
-    public CountStatistic getExpiredSessionsTotal();
+    CountStatistic getExpiredSessionsTotal();
 
     /**
      * Gets the cumulative processing times of all servlets in the web module
@@ -97,7 +97,7 @@ public interface WebModuleStats extends Stats {
      * @return Cumulative processing times of all servlets in the web module
      * associated with this WebModuleStats
      */
-    public CountStatistic getServletProcessingTimes();
+    CountStatistic getServletProcessingTimes();
 
     /**
      * Returns comma-separated list of all sessions currently active in the web
@@ -106,11 +106,11 @@ public interface WebModuleStats extends Stats {
      * @return Comma-separated list of all sessions currently active in the
      * web module associated with this WebModuleStats
      */
-    public StringStatistic getSessions();
+    StringStatistic getSessions();
 
     /**
      * Resets this WebModuleStats.
      */
-    public void reset();
-        
+    void reset();
+
 }

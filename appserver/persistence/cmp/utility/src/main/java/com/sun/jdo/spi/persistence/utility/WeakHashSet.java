@@ -20,17 +20,17 @@ import java.util.*;
 import java.lang.ref.*;
 
 /**
- * A weak HashSet. An element stored in the WeakHashSet might be garbage collected, 
- * if there is no strong reference to this element. 
+ * A weak HashSet. An element stored in the WeakHashSet might be garbage collected,
+ * if there is no strong reference to this element.
  */
-public class WeakHashSet 
+public class WeakHashSet
     extends HashSet
 {
     /**
      * Helps to detect garbage collected values.
      */
     ReferenceQueue queue = new ReferenceQueue();
-    
+
     /**
      * Returns an iterator over the elements in this set.  The elements
      * are returned in no particular order.
@@ -46,25 +46,25 @@ public class WeakHashSet
         final Iterator i = super.iterator();
 
         return new Iterator () {
-            public boolean hasNext () 
-            { 
-                return i.hasNext(); 
+            public boolean hasNext ()
+            {
+                return i.hasNext();
             }
-            
-            public Object next () 
+
+            public Object next ()
             {
                 // unwrap the element
-                return getReferenceObject((WeakReference)i.next()); 
+                return getReferenceObject((WeakReference)i.next());
             }
-            
-            public void remove () 
+
+            public void remove ()
             {
                 // remove the element from the HashSet
                 i.remove();
             }
         };
     }
-    
+
     /**
      * Returns <code>true</code> if this set contains the specified element.
      *
@@ -89,7 +89,7 @@ public class WeakHashSet
         processQueue();
         return super.add(WeakElement.create(o, this.queue));
     }
-    
+
     /**
      * Removes the given element from this set if it is present.
      *
@@ -104,14 +104,14 @@ public class WeakHashSet
     }
 
     /**
-     * A convenience method to return the object held by the 
+     * A convenience method to return the object held by the
      * weak reference or <code>null</code> if it does not exist.
      */
     private final Object getReferenceObject (WeakReference ref)
     {
         return ((ref != null) ? ref.get() : null);
     }
-    
+
     /**
      * Removes all garbage collected values with their keys from the map.
      * Since we don't know how much the ReferenceQueue.poll() operation
@@ -120,61 +120,61 @@ public class WeakHashSet
     private final void processQueue ()
     {
         WeakElement wv = null;
-        
+
         while  ((wv = (WeakElement)this.queue.poll()) != null)
         {
             super.remove(wv);
         }
     }
-    
+
     /**
-     * A WeakHashSet stores objects of class WeakElement. 
-     * A WeakElement wraps the element that should be stored in the WeakHashSet. 
-     * WeakElement inherits from java.lang.ref.WeakReference. 
-     * It redefines equals and hashCode which delegate to the corresponding methods 
+     * A WeakHashSet stores objects of class WeakElement.
+     * A WeakElement wraps the element that should be stored in the WeakHashSet.
+     * WeakElement inherits from java.lang.ref.WeakReference.
+     * It redefines equals and hashCode which delegate to the corresponding methods
      * of the wrapped element.
      */
-    static private class WeakElement 
-        extends WeakReference 
+    static private class WeakElement
+        extends WeakReference
     {
-        private int hash;	/* Hashcode of key, stored here since the key
+        private int hash;    /* Hashcode of key, stored here since the key
                                may be tossed by the GC */
-        
-        private WeakElement (Object o) 
+
+        private WeakElement (Object o)
         {
             super(o);
             hash = o.hashCode();
         }
 
-        private WeakElement (Object o, ReferenceQueue q) 
+        private WeakElement (Object o, ReferenceQueue q)
         {
             super(o, q);
             hash = o.hashCode();
         }
 
-        private static WeakElement create (Object o) 
+        private static WeakElement create (Object o)
         {
             return (o == null) ? null : new WeakElement(o);
         }
 
-        private static WeakElement create (Object o, ReferenceQueue q) 
+        private static WeakElement create (Object o, ReferenceQueue q)
         {
             return (o == null) ? null : new WeakElement(o, q);
         }
 
         /* A WeakElement is equal to another WeakElement iff they both refer to objects
                that are, in turn, equal according to their own equals methods */
-        public boolean equals (Object o) 
+        public boolean equals (Object o)
         {
-            if (this == o) 
+            if (this == o)
                 return true;
-            if (!(o instanceof WeakElement)) 
+            if (!(o instanceof WeakElement))
                 return false;
             Object t = this.get();
             Object u = ((WeakElement)o).get();
-            if ((t == null) || (u == null)) 
+            if ((t == null) || (u == null))
                 return false;
-            if (t == u) 
+            if (t == u)
                 return true;
             return t.equals(u);
         }
@@ -183,8 +183,8 @@ public class WeakHashSet
         {
             return hash;
         }
-        
+
     }
-    
+
 }
 

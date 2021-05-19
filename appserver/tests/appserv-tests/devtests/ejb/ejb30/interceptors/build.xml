@@ -30,7 +30,7 @@
 
     <target name="all">
         <antcall target="bindings"/>
-        <antcall target="session"/> 
+        <antcall target="session"/>
         <antcall target="inheritence"/>
         <antcall target="mdb"/>
     </target>
@@ -60,9 +60,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the ejb-ejb30-interceptors tests)
-	</echo>
+        <echo>
+                Usage:
+                        ant all (Executes all the ejb-ejb30-interceptors tests)
+        </echo>
     </target>
 </project>

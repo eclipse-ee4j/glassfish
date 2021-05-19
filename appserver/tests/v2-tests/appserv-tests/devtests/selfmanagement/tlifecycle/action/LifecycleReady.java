@@ -18,14 +18,14 @@ package com.sun.s1peqe.selfmanagement.tlifecycle.action;
 
 import javax.management.*;
 import java.io.*;
-                                                                                                                                               
-public class LifecycleReady implements NotificationListener, 
+
+public class LifecycleReady implements NotificationListener,
     com.sun.s1peqe.selfmanagement.tlifecycle.action.LifecycleReadyMBean {
-    
+
     private final String JMX_LIFECYCLE_READY = "lifecycle.ready";
     public LifecycleReady() {
     }
-                                                                                                                                              
+
     public synchronized void handleNotification(Notification notification,
         Object handback) {
         try {

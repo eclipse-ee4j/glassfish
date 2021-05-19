@@ -22,22 +22,22 @@ public interface PwcWebContainerLifecycle {
 
   public void onInitialization(String rootDir, String instanceName,
                                  boolean useNaming, Logger logger,
-                               String embeddedClassName) 
+                               String embeddedClassName)
                         throws Exception;
 
     /**
      * Server is starting up applications
      *
-     * @exception ServerLifecycleException if this subsystem detects a fatal 
+     * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onStartup() 
+    public void onStartup()
                         throws Exception;
 
     /**
      * Server has complted loading the applications and is ready to serve requests.
      *
-     * @exception ServerLifecycleException if this subsystem detects a fatal 
+     * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
     public void onReady() throws Exception;
@@ -45,10 +45,10 @@ public interface PwcWebContainerLifecycle {
     /**
      * Server is shutting down applications
      *
-     * @exception ServerLifecycleException if this subsystem detects a fatal 
+     * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onShutdown() 
+    public void onShutdown()
                         throws Exception;
 
     /**
@@ -57,9 +57,9 @@ public interface PwcWebContainerLifecycle {
      * subsystem.  This method should be the last one called on a given
      * instance of this subsystem.
      *
-     * @exception ServerLifecycleException if this subsystem detects a fatal 
+     * @exception ServerLifecycleException if this subsystem detects a fatal
      *  error that prevents this subsystem from being used
      */
-    public void onTermination() 
+    public void onTermination()
                         throws Exception;
 }

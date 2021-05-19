@@ -33,13 +33,13 @@ import org.glassfish.devtest.ejb31.singleton.servlet.RemoteInitTracker;
 public class Client {
 
 
-	private static String[] EXPECTED_ORDER = new String[] {
-		"org.glassfish.devtest.ejb31.singleton.servlet.InitOrderTrackerBean",
-		"org.glassfish.devtest.ejb31.singleton.mod1.BeanA_Mod1",
-		"org.glassfish.devtest.ejb31.singleton.mod1.RootBean_Mod1",
-		"org.glassfish.devtest.ejb31.singleton.mod2.BeanA_Mod2",
-		"org.glassfish.devtest.ejb31.singleton.mod2.RootBean_Mod2"
-	};
+        private static String[] EXPECTED_ORDER = new String[] {
+                "org.glassfish.devtest.ejb31.singleton.servlet.InitOrderTrackerBean",
+                "org.glassfish.devtest.ejb31.singleton.mod1.BeanA_Mod1",
+                "org.glassfish.devtest.ejb31.singleton.mod1.RootBean_Mod1",
+                "org.glassfish.devtest.ejb31.singleton.mod2.BeanA_Mod2",
+                "org.glassfish.devtest.ejb31.singleton.mod2.RootBean_Mod2"
+        };
 
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
@@ -57,28 +57,28 @@ public class Client {
     }
 
     private void test() {
-	try {
- 
-		String lookupName = "java:global/ejb-ejb31-singleton-threemodulesApp/ejb-ejb31-singleton-threemodules-ejb/InitOrderTrackerBean!org.glassfish.devtest.ejb31.singleton.servlet.RemoteInitTracker";
-		System.out.println("*****************************************************");
-		System.out.println("*** " + lookupName + " ***");
-		System.out.println("*****************************************************");
-		tracker = (RemoteInitTracker) new InitialContext().lookup(lookupName);
-	    
-		List<String> actualList = tracker.getInitializedNames();
-		boolean result = actualList.size() == EXPECTED_ORDER.length;
-		for (int i=0; i<EXPECTED_ORDER.length; i++) {
-			if (! EXPECTED_ORDER[i].equals(actualList.get(i))) {
-				result = false;
-			}
-		}
+        try {
+
+                String lookupName = "java:global/ejb-ejb31-singleton-threemodulesApp/ejb-ejb31-singleton-threemodules-ejb/InitOrderTrackerBean!org.glassfish.devtest.ejb31.singleton.servlet.RemoteInitTracker";
+                System.out.println("*****************************************************");
+                System.out.println("*** " + lookupName + " ***");
+                System.out.println("*****************************************************");
+                tracker = (RemoteInitTracker) new InitialContext().lookup(lookupName);
+
+                List<String> actualList = tracker.getInitializedNames();
+                boolean result = actualList.size() == EXPECTED_ORDER.length;
+                for (int i=0; i<EXPECTED_ORDER.length; i++) {
+                        if (! EXPECTED_ORDER[i].equals(actualList.get(i))) {
+                                result = false;
+                        }
+                }
 System.out.println(actualList);
-        	stat.addStatus("EJB singleton-three-module-dependency",
-			(result ? stat.PASS : stat.FAIL));
-	} catch (Throwable th) {
-		th.printStackTrace();
-        	stat.addStatus("EJB singleton-three-module-dependency", stat.FAIL);
-	}
+                stat.addStatus("EJB singleton-three-module-dependency",
+                        (result ? stat.PASS : stat.FAIL));
+        } catch (Throwable th) {
+                th.printStackTrace();
+                stat.addStatus("EJB singleton-three-module-dependency", stat.FAIL);
+        }
     }
 
 }

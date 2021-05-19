@@ -26,10 +26,10 @@
 package web.jsf.bean;
 
 public class UserBean {
-    
+
     private String name;
     private String birthday;
-    
+
     /** Creates a new instance of UserBean */
     public UserBean() {
     }
@@ -49,5 +49,5 @@ public class UserBean {
     public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
-    
+
 }

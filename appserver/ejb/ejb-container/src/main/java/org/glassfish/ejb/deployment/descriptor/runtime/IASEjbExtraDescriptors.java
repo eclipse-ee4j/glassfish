@@ -34,8 +34,8 @@ import com.sun.enterprise.deployment.runtime.BeanPoolDescriptor;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 import com.sun.enterprise.deployment.util.DOLUtils;
 
-/** 
- * Class that contains all the extra iAS elements for an EJB that are not 
+/**
+ * Class that contains all the extra iAS elements for an EJB that are not
  * in the RI DTD like:
  *
  * MdbConnectionFactoryDescriptor
@@ -54,12 +54,12 @@ import com.sun.enterprise.deployment.util.DOLUtils;
  * @since JDK 1.4
  */
 public class IASEjbExtraDescriptors extends RuntimeDescriptor {
-    
-    public static final String AVAILABILITY_ENABLED = 
+
+    public static final String AVAILABILITY_ENABLED =
         "AvailabilityEnabled";
 
     private boolean isReadOnlyBean;
-    
+
     /**
      * A string field whose value denoted the rate at which the read-only-bean
      * must be refreshed from the data source.
@@ -68,7 +68,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      * Note that the value is just a hint to the container.
      */
     private int refreshPeriodInSeconds;
-    
+
     /**
      * A string value specifies the maximum number of messages to
      * load into a JMS session at one time for a message-driven
@@ -77,13 +77,13 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
     private int jmsMaxMessagesLoad;
 
     private MdbConnectionFactoryDescriptor mdbConnectionFactory;
-    
+
     /**
      * A string field whose valid values are either A, B, or C.
      * Default value is set in the server configuration (server.xml).
      */
     private String commitOption = null;
-    
+
     /**
      * This contains the bean pool properties. Used only for stateless
      * session bean and mdb pools.
@@ -105,14 +105,14 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      * This contains the pass-by-reference property.
      */
     private Boolean passByReference = null;
-    
-    
+
+
     /*
      * This contains the EjbDescriptor - J2EE specific descriptor
      * @see com.sun.enterprise.deployment.EjbDescriptor EjbDescriptor
      */
     private EjbDescriptor ejbDescriptor = null;
-    
+
     /**
      * This contains the timeout used for container started transactions
      * This value is used by the container only if the value is greater than 0
@@ -133,31 +133,31 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      */
     private Boolean perRequestLoadBalancing;
 
-    // contants used to parse the checkpointedMethods 
+    // contants used to parse the checkpointedMethods
     private final static String METHODS_DELIM = ";";
     private final static String PARAMS_DELIM = ",";
     private final static String LEFT_PAREN = "(";
     private final static String RIGHT_PAREN = ")";
     private final static String PARAM_DELIM = " ";
 
-    /** 
-     * Default constructor. 
+    /**
+     * Default constructor.
      */
     public IASEjbExtraDescriptors() {
         jmsMaxMessagesLoad = 1;
         isReadOnlyBean = false;
         refreshPeriodInSeconds = DescriptorConstants.REFRESH_PERIOD_IN_SECONDS_DEFAULT;//RO Bean never refreshed???
     }
-    
-    /** 
+
+    /**
      * Getter for property beanCache.
      * @return Value of property beanCache.
      */
     public BeanCacheDescriptor getBeanCache() {
         return beanCache;
     }
-    
-    /** 
+
+    /**
      * Setter for property beanCache.
      * @param beanCache New value of property beanCache.
      */
@@ -165,22 +165,22 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         this.beanCache = beanCache;
     }
 
-     /**  
+     /**
       * Getter for property beanPool.
       * @return Value of property beanPool.
       */
     public BeanPoolDescriptor getBeanPool() {
         return beanPool;
     }
-    
-    /** 
+
+    /**
      * Setter for property beanPool.
      * @param beanPool New value of property beanPool.
      */
     public void setBeanPool(BeanPoolDescriptor beanPool) {
         this.beanPool = beanPool;
     }
-    
+
      /**
       * Getter for flush-at-end-of-method
       * @return Value of flushMethodDescriptor
@@ -202,14 +202,14 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
       * Getter for checkpoint-at-end-of-method
       * @return Value of checkpointMethodDescriptor
       */
-    public CheckpointAtEndOfMethodDescriptor 
+    public CheckpointAtEndOfMethodDescriptor
         getCheckpointAtEndOfMethodDescriptor() {
         return checkpointMethodDescriptor;
     }
 
     /**
      * Setter for checkpoint-at-end-of-method
-     * @param checkpointMethodDescriptor New value of 
+     * @param checkpointMethodDescriptor New value of
      * checkpointMethodDescriptor.
      */
     public void setCheckpointAtEndOfMethodDescriptor(
@@ -233,15 +233,15 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         this.checkpointedMethods = checkpointedMethods;
     }
 
-    /** 
+    /**
      * Getter for property commitOption.
      * @return Value of property commitOption.
      */
     public java.lang.String getCommitOption() {
         return commitOption;
     }
-    
-    /** 
+
+    /**
      * Setter for property commitOption.
      * @param commitOption New value of property commitOption.
      */
@@ -249,15 +249,15 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         this.commitOption = commitOption;
     }
 
-    /** 
+    /**
      * Getter for property cmt-timeout-in-seconds.
      * @return Value of property cmt-timeout-in-seconds.
-     */    
+     */
     public int getCmtTimeoutInSeconds() {
         return this.cmtTimeoutInSeconds;
     }
 
-    /** 
+    /**
      * Setter for property cmt-timeout-in-seconds.
      * @param commitOption New value of property cmt-timeout-in-seconds.
      */
@@ -281,47 +281,47 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         this.useThreadPoolId = val;
     }
 
-    /** 
+    /**
      * Getter for property isReadOnlyBean.
      * @return Value of property isReadOnlyBean.
      */
     public boolean isIsReadOnlyBean() {
         return isReadOnlyBean;
     }
-    
-    /** 
+
+    /**
      * Setter for property isReadOnlyBean.
      * @param isReadOnlyBean New value of property isReadOnlyBean.
      */
     public void setIsReadOnlyBean(boolean isReadOnlyBean) {
         this.isReadOnlyBean = isReadOnlyBean;
     }
-    
-    /** 
+
+    /**
      * Getter for property jmsMaxMessagesLoad.
      * @return Value of property jmsMaxMessagesLoad.
      */
     public int getJmsMaxMessagesLoad() {
         return jmsMaxMessagesLoad;
     }
-    
-    /** 
+
+    /**
      * Setter for property jmsMaxMessagesLoad.
      * @param jmsMaxMessagesLoad New value of property jmsMaxMessagesLoad.
      */
     public void setJmsMaxMessagesLoad(int jmsMaxMessagesLoad) {
         this.jmsMaxMessagesLoad = jmsMaxMessagesLoad;
     }
-    
-    /** 
+
+    /**
      * Getter for property mdbConnectionFactory.
      * @return Value of property mdbConnectionFactory.
      */
     public MdbConnectionFactoryDescriptor getMdbConnectionFactory() {
         return mdbConnectionFactory;
     }
-    
-    /**  
+
+    /**
      * Setter for property mdbConnectionFactory.
      * @param mdbConnectionFactory New value of property mdbConnectionFactory.
      */
@@ -330,25 +330,25 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
 
         this.mdbConnectionFactory = mdbConnectionFactory;
     }
-    
-    /** 
+
+    /**
      * Getter for property refreshPeriodInSeconds.
      * @return Value of property refreshPeriodInSeconds.
      */
     public int getRefreshPeriodInSeconds() {
         return refreshPeriodInSeconds;
     }
-    
-    /** 
+
+    /**
      * Setter for property refreshPeriodInSeconds.
-     * @param refreshPeriodInSeconds  New value of property 
+     * @param refreshPeriodInSeconds  New value of property
      *                                refreshPeriodInSeconds.
      */
     public void setRefreshPeriodInSeconds(int refreshPeriodInSeconds) {
         this.refreshPeriodInSeconds = refreshPeriodInSeconds;
     }
 
-    /** 
+    /**
      * Gets ejb pass-by-reference value.
      * @return Value of property passByReference if it is not null.  Otherwise
      *         returns value of passByReference property of Application if
@@ -356,7 +356,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
      */
     public boolean getPassByReference() {
         boolean passByReference = false;  // default
-        
+
         // if pass-by-reference defined for ejb
         if (this.isPassByReferenceDefined()) {
             passByReference = this.passByReference.booleanValue();
@@ -365,7 +365,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         } else {
             ejbDescriptor = this.getEjbDescriptor();
             if (ejbDescriptor != null) {
-                Application application = ejbDescriptor.getApplication(); 
+                Application application = ejbDescriptor.getApplication();
                 if (application != null) {
                     if (application.isPassByReferenceDefined()) {
                         passByReference = application.getPassByReference();
@@ -373,28 +373,28 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
                 }
             }
         }
-       
+
         return passByReference;
     }
 
-    /** 
+    /**
      * Sets ejb pass-by-reference value.
      * @param pass-by-reference New value of property pass-by-reference.
      */
     public void setPassByReference(boolean passByReference) {
         this.passByReference = Boolean.valueOf(passByReference);
     }
-    
-    /** 
+
+    /**
      * Sets ejb pass-by-reference value.
      * @param pass-by-reference New value of property pass-by-reference.
      */
     public void setPassByReference(Boolean passByReference) {
         this.passByReference = passByReference;
-    }    
-    
+    }
+
     /**
-     * Evaluates property passByReference for null value 
+     * Evaluates property passByReference for null value
      * @return boolean true if property passByReference is not null
      *         boolean false if property passByReference is null
      */
@@ -405,7 +405,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         }
         return passByReferenceDefined;
     }
-    
+
     /**
      * Getter for property ejbDescriptor.
      * @returns EjbDescriptor object property - J2EE specific
@@ -414,7 +414,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
     public EjbDescriptor getEjbDescriptor() {
         return this.ejbDescriptor;
     }
-    
+
     /**
      * Setter for property ejbDescriptor
      * @param ejbDescriptor - EjbDescriptor object - J2EE specific ejb descriptor
@@ -448,28 +448,28 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
       * Parse checkpointed-methods element and save its values in
       * CheckpointAtEndOfMethodDescriptor
       *
-      * The methods should be separated by semicolons. 
-      * The param list should separated by commas.  
+      * The methods should be separated by semicolons.
+      * The param list should separated by commas.
       * All method param types should be full qualified.
       * Variable name is allowed for the param type.
       * No return type or exception type.
       *
       * Example:
       * foo(java.lang.String,  a.b.c d); bar(java.lang.String s)
-      * 
+      *
       */
     public void parseCheckpointedMethods(EjbDescriptor ejbDesc) {
-        if (checkpointedMethods == null || 
+        if (checkpointedMethods == null ||
             checkpointedMethods.trim().length() == 0) {
             return;
         }
         if (checkpointMethodDescriptor == null) {
-            checkpointMethodDescriptor = 
+            checkpointMethodDescriptor =
                 new CheckpointAtEndOfMethodDescriptor();
             setCheckpointAtEndOfMethodDescriptor(checkpointMethodDescriptor);
             checkpointMethodDescriptor.setEjbDescriptor(ejbDesc);
         }
-        StringTokenizer methodsTokenizer = 
+        StringTokenizer methodsTokenizer =
             new StringTokenizer(checkpointedMethods, METHODS_DELIM);
         while (methodsTokenizer.hasMoreTokens()) {
             // process each method
@@ -477,7 +477,7 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
             if (method.length() == 0) {
                 continue;
             }
-            MethodDescriptor methodDescriptor = 
+            MethodDescriptor methodDescriptor =
                 parseCheckpointedMethod(method);
             if (methodDescriptor != null) {
                 checkpointMethodDescriptor.getMethodDescriptors().add(
@@ -492,16 +492,16 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
         String methodName, methodParams;
         ArrayList paramTypeList = new ArrayList();
         try {
-            if ( method.indexOf(LEFT_PAREN) != -1 && 
-                method.indexOf(RIGHT_PAREN) != -1 ) { 
+            if ( method.indexOf(LEFT_PAREN) != -1 &&
+                method.indexOf(RIGHT_PAREN) != -1 ) {
                 int pos = method.indexOf(LEFT_PAREN);
                 int pos2 = method.indexOf(RIGHT_PAREN);
                 // retrieve the method name
-                methodName = method.substring(0, pos).trim(); 
+                methodName = method.substring(0, pos).trim();
                 // retrieve the parameter list
                 if (pos < pos2-1) {
                     methodParams = method.substring(pos+1, pos2).trim();
-                    StringTokenizer paramsTokenizer = 
+                    StringTokenizer paramsTokenizer =
                         new StringTokenizer(methodParams, PARAMS_DELIM);
                     while (paramsTokenizer.hasMoreTokens()) {
                         // process each param
@@ -509,15 +509,15 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
                         if (param.length() == 0) {
                             continue;
                         }
-                        StringTokenizer paramTokenizer = 
+                        StringTokenizer paramTokenizer =
                             new StringTokenizer(param, PARAM_DELIM);
                         while (paramTokenizer.hasMoreTokens()) {
-                            String paramType = 
+                            String paramType =
                                 paramTokenizer.nextToken().trim();
                             if (paramType.length() != 0) {
                                 paramTypeList.add(paramType);
                                 // only interested in the first token
-                                break;   
+                                break;
                             }
                         }
                     }
@@ -525,11 +525,11 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
                 if (paramTypeList.size() > 0) {
                     String[] paramTypeArray = (String[])paramTypeList.toArray(
                         new String[paramTypeList.size()]);
-                    return new MethodDescriptor(methodName, null, 
+                    return new MethodDescriptor(methodName, null,
                         paramTypeArray, null);
                 } else {
                     return new MethodDescriptor(methodName, null, null, null);
-                }               
+                }
             } else {
                 DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_badformat_checkpointedmethods", new Object[] {method});
                 return null;
@@ -540,6 +540,6 @@ public class IASEjbExtraDescriptors extends RuntimeDescriptor {
             DOLUtils.getDefaultLogger().log(Level.WARNING, "enterprise.deployment_badformat_checkpointedmethods", new Object[] {method});
             DOLUtils.getDefaultLogger().log(Level.WARNING, e.getMessage(), e);
             return null;
-        }     
-    }        
+        }
+    }
 }

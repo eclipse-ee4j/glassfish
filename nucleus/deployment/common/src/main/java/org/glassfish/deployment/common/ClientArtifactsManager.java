@@ -78,21 +78,21 @@ public class ClientArtifactsManager {
             cause = "The server is attempting to register an artifact to be included in the generated client JAR but the artifact does not exist or cannot be read",
             action = "This is an internal server error.  Please file a bug report.")
     private static final String CLIENT_ARTIFACT_MISSING = "NCLS-DEPLOYMENT-00026";
-    
+
     @LogMessageInfo(message = "Artifact with relative path {0} from {1} collides with an existing artifact from file {2}", level="SEVERE",
             cause = "The server has created more than one artifact with the same relative path to be included in the generated client JAR file",
             action = "This is an internal server error.  Please file a bug report.")
     private static final String CLIENT_ARTIFACT_COLLISION = "NCLS-DEPLOYMENT-00027";
-    
+
     private boolean isArtifactSetConsumed = false;
-    
+
     private static final String CLIENT_ARTIFACTS_KEY = "ClientArtifacts";
-    
+
     private final Map<URI,Artifacts.FullAndPartURIs> artifacts =
             new HashMap<URI,Artifacts.FullAndPartURIs>();
-    
+
     /*
-     * To verify sources that are JAR entries we need to make sure the 
+     * To verify sources that are JAR entries we need to make sure the
      * requested entry exists in the specified JAR file.  To optimize the
      * opening of JAR files we record the JARs previous checked
      * here.
@@ -100,10 +100,10 @@ public class ClientArtifactsManager {
     private final Map<URI,JarFile> jarFiles = new HashMap<URI,JarFile>();
 
     /**
-     * Retrieves the client artifacts store from the provided deployment 
-     * context, creating one and storing it back into the DC if none is 
+     * Retrieves the client artifacts store from the provided deployment
+     * context, creating one and storing it back into the DC if none is
      * there yet.
-     * 
+     *
      * @param dc the deployment context to hold the ClientArtifactsManager object
      * @return the ClientArtifactsManager object from the deployment context (created
      * and stored in the DC if needed)
@@ -156,7 +156,7 @@ public class ClientArtifactsManager {
     }
 
     /**
-     * Adds a new artifact to the collection of artifacts to be added to the 
+     * Adds a new artifact to the collection of artifacts to be added to the
      * client JAR file so they can be delivered to the client during a
      * download.
      * <p>
@@ -164,7 +164,7 @@ public class ClientArtifactsManager {
      * in the client JAR, in which case the temp file might not reside in a
      * useful place relative to a base directory.  The caller can just specify
      * the relative path directly.
-     * 
+     *
      * @param artifactFile file to be included in the client JAR
      * @param relativePath relative path within the JAR where the file's contents should appear
      * @param isTemporary whether the artifact file is a temporary file or not
@@ -173,19 +173,19 @@ public class ClientArtifactsManager {
         final Artifacts.FullAndPartURIs artifact = new Artifacts.FullAndPartURIs(artifactFile.toURI(), relativePath, isTemporary);
         add(artifact);
     }
-    
+
     public boolean isEmpty() {
         return artifacts.isEmpty();
     }
-    
+
     /**
      * Adds a new artifact to the collection of artifacts to be added to the
      * client JAR file so they can be delivered to the client during a download.
      * <p>
-     * Note that the "full" part of the FullAndPartURIs object can be of the 
-     * form "jar:path-to-jar!entry-within-jar" 
-     * 
-     * @param artifact 
+     * Note that the "full" part of the FullAndPartURIs object can be of the
+     * form "jar:path-to-jar!entry-within-jar"
+     *
+     * @param artifact
      */
     public void add(Artifacts.FullAndPartURIs artifact) {
         final boolean isLogAdditions = deplLogger.isLoggable(Level.FINE);
@@ -217,15 +217,15 @@ public class ClientArtifactsManager {
                 throw new IllegalArgumentException(artifact.getFull().toASCIIString() + " != [file,jar]");
             }
             if (isLogAdditions) {
-                final String stackTrace = (deplLogger.isLoggable(Level.FINER)) ? 
+                final String stackTrace = (deplLogger.isLoggable(Level.FINER)) ?
                     Arrays.toString(Thread.currentThread().getStackTrace()) : "";
-                deplLogger.log(Level.FINE, "ClientArtifactsManager added {0}\n{1}", 
+                deplLogger.log(Level.FINE, "ClientArtifactsManager added {0}\n{1}",
                         new Object[] {artifact, stackTrace});
             }
             artifacts.put(artifact.getPart(), artifact);
         }
     }
-    
+
     private void verifyFileArtifact(final Artifacts.FullAndPartURIs artifact) {
         final URI fullURI = artifact.getFull();
         final File f = new File(fullURI);
@@ -237,7 +237,7 @@ public class ClientArtifactsManager {
                     );
         }
     }
-    
+
     private void verifyJarEntryArtifact(final Artifacts.FullAndPartURIs artifact) {
         final URI fullURI = artifact.getFull();
         final String ssp = fullURI.getSchemeSpecificPart();
@@ -268,7 +268,7 @@ public class ClientArtifactsManager {
                     );
         }
     }
-    
+
     /**
      * Adds all artifacts in Collection to those to be added to the client
      * facade JAR.
@@ -317,7 +317,7 @@ public class ClientArtifactsManager {
         }
         jarFiles.clear();
     }
-    
+
     private String formattedString(final String key, final Object... args) {
         final String format = deplLogger.getResourceBundle().getString(key);
         return MessageFormat.format(format, args);
@@ -345,7 +345,7 @@ public class ClientArtifactsManager {
          * the artifact URI; if it's relative, just copy it and if it's absolute
          * then relativize it to the base URI to compute the relative URI.
          * @param baseURI
-         * @param artifactURI 
+         * @param artifactURI
          */
         private URIPair(final URI baseURI, final URI artifactURI) {
             if (artifactURI.isAbsolute()) {

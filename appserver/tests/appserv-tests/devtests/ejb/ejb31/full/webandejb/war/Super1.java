@@ -24,15 +24,15 @@ import java.util.concurrent.TimeUnit;
 @Lock(LockType.READ)
 public   class Super1 /*extends Super2*/ {
 
-	public void super1() {}
+        public void super1() {}
 
-	@Lock(LockType.WRITE)
-	public void super11() {}
-
-        @AccessTimeout(value=44544, unit=TimeUnit.HOURS)
-	private void foobar() {}
+        @Lock(LockType.WRITE)
+        public void super11() {}
 
         @AccessTimeout(value=44544, unit=TimeUnit.HOURS)
-	    public String hello() { return ""; }
+        private void foobar() {}
+
+        @AccessTimeout(value=44544, unit=TimeUnit.HOURS)
+            public String hello() { return ""; }
 
     }

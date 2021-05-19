@@ -16,11 +16,9 @@
 
 package com.sun.jndi.ldap.ext;
 
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
-
 import java.io.IOException;
+
+import javax.naming.ldap.ExtendedResponse;
 
 /**
  * This class implements the LDAPv3 Extended Response for WhoAmI.
@@ -36,23 +34,23 @@ import java.io.IOException;
  * The object identifier used by WhoAmI extended operation is
  * 2.16.840.1.113730.3.4.15 and the extended response value is the user
  * authorization identity.
- * <p>   
+ * <p>
  * The extended response's value has the following ASN.1 definition:
  * <pre>
- * 
+ *
  *     AuthzId ::= LDAPString ; containing an authzId as defined in RFC 2829
  *                            ; or an empty value
  *
  *     authzId    = dnAuthzId / uAuthzId
- *  
+ *
  *     ; distinguished-name-based authz id.
  *     dnAuthzId  = "dn:" dn
  *     dn         = utf8string    ; with syntax defined in RFC 2253
- *  
+ *
  *     ; unspecified userid, UTF-8 encoded.
  *     uAuthzId   = "u:" userid
  *     userid     = utf8string    ; syntax unspecified
- *   
+ *
  * </pre>
  * <p>
  * The following code sample shows how the extended operation may be used:
@@ -69,7 +67,7 @@ import java.io.IOException;
  *
  * </pre>
  * @see WhoAmIRequest
- * @see com.sun.jndi.ldap.ctl.AuthorizationIDControl 
+ * @see com.sun.jndi.ldap.ctl.AuthorizationIDControl
  * @author Vincent Ryan
  */
 
@@ -99,13 +97,13 @@ public class WhoAmIResponse implements ExtendedResponse {
      * Constructs a WhoAmI extended response.
      */
     WhoAmIResponse(String id, byte[] value, int offset, int length)
-	throws IOException {
-	
-	this.value = value;
+        throws IOException {
 
-	// decode value
+        this.value = value;
+
+        // decode value
         if ((value != null) && (value.length > 0)) {
-	    authzId = new String(value, offset, length, "UTF8");
+            authzId = new String(value, offset, length, "UTF8");
         }
     }
 
@@ -114,6 +112,7 @@ public class WhoAmIResponse implements ExtendedResponse {
      *
      * @return The non-null object identifier string.
      */
+    @Override
     public String getID() {
         return OID;
     }
@@ -122,17 +121,18 @@ public class WhoAmIResponse implements ExtendedResponse {
      * Retrieves the WhoAmI response's ASN.1 BER encoded value.
      *
      * @return A possibly null byte array representing the ASN.1 BER
-     * 	       encoded value of the LDAP extended response. 
+     *            encoded value of the LDAP extended response.
      */
+    @Override
     public byte[] getEncodedValue() {
-	if (value == null) {
-	    return null;
-	}
+        if (value == null) {
+            return null;
+        }
 
-	// return a copy of value 
-	byte[] retval = new byte[value.length];
-	System.arraycopy(value, 0, retval, 0, value.length);		
-	return retval;
+        // return a copy of value
+        byte[] retval = new byte[value.length];
+        System.arraycopy(value, 0, retval, 0, value.length);
+        return retval;
     }
 
     /**
@@ -142,9 +142,9 @@ public class WhoAmIResponse implements ExtendedResponse {
      * when anonymous authentication is used.
      */
     public String getAuthorizationID() {
-	if (authzId == null) {
-	   return ""; 
-	}
-	return authzId;
+        if (authzId == null) {
+            return "";
+        }
+        return authzId;
     }
 }

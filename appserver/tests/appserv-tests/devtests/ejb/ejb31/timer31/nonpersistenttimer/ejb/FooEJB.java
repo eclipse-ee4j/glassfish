@@ -33,7 +33,7 @@ public class FooEJB extends TimerStuffImpl implements SessionBean, TimedObject {
         try {
             System.out.println("In FooEJB::ejbTimeout --> " + t.getInfo());
             if (t.isPersistent())
-                throw new RuntimeException("FooEJB::ejbTimeout -> " 
+                throw new RuntimeException("FooEJB::ejbTimeout -> "
                        + t.getInfo() + " is PERSISTENT!!!");
         } catch(RuntimeException e) {
             System.out.println("got exception while calling getInfo");
@@ -52,7 +52,7 @@ public class FooEJB extends TimerStuffImpl implements SessionBean, TimedObject {
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
         setContext(sc);
 
         System.out.println("In FooEJB::setSessionContext");
@@ -64,7 +64,7 @@ public class FooEJB extends TimerStuffImpl implements SessionBean, TimedObject {
     }
 
     public void ejbCreate() throws EJBException {
-	System.out.println("In ejbnonpersistenttimer.Foo::ejbCreate !!");
+        System.out.println("In ejbnonpersistenttimer.Foo::ejbCreate !!");
         setupJmsConnection();
         checkGetSetRollbackOnly("ejbCreate", false);
         checkCallerSecurityAccess("ejbCreate", false);
@@ -88,6 +88,6 @@ public class FooEJB extends TimerStuffImpl implements SessionBean, TimedObject {
     public void ejbPassivate() {
     }
 
-    
+
 
 }

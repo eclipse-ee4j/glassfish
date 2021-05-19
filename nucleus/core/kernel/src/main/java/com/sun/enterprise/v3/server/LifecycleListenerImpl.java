@@ -29,21 +29,21 @@ import com.sun.appserv.server.ServerLifecycleException;
  */
 public class LifecycleListenerImpl implements LifecycleListener {
 
-    /** receive a server lifecycle event 
+    /** receive a server lifecycle event
      *  @param event associated event
      *  @throws <code>ServerLifecycleException</code> for exceptional condition.
      *
      *  Configure this module as a lifecycle-module in server.xml:
      *
      *  <applications>
-     *    <lifecycle-module name="test" 
-     *               class-name="com.sun.appserv.server.LifecycleListenerImpl" 
+     *    <lifecycle-module name="test"
+     *               class-name="com.sun.appserv.server.LifecycleListenerImpl"
                      is-failure-fatal="false">
      *      <property name="foo" value="fooval"/>
      *    </lifecycle-module>
      *  </applications>
      *
-     *  Set<code>is-failure-fatal</code>in server.xml to <code>true</code> for 
+     *  Set<code>is-failure-fatal</code>in server.xml to <code>true</code> for
      *  fatal conditions.
      */
     public void handleEvent(LifecycleEvent event) throws ServerLifecycleException {

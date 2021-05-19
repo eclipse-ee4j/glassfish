@@ -25,7 +25,7 @@ import javax.xml.stream.*;
 
 /**
  * Instances and DAS' are quite different
- * 
+ *
  * @author Byron Nevins
  */
 abstract class ServerReaderFilter extends XMLStreamReaderFilter {
@@ -54,7 +54,7 @@ abstract class ServerReaderFilter extends XMLStreamReaderFilter {
     /**
      * Report on whether parsing was a success or not. If there is a missing config for a server just return a String
      * message.
-     * 
+     *
      * @return a String error message if there was an error else return null for all-ok
      */
     abstract String configWasFound();

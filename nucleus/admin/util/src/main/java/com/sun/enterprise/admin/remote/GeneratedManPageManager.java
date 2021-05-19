@@ -158,7 +158,7 @@ connectionpoolid_value: The name of the JDBC connection pool. If two o
  nt, they use the same pool connection at runtime.
 description_value: Text providing descriptive details about the JDBC r
  esource.
-property_value: 
+property_value:
 jndi_name_operand_name: jndi_name_operand
 enabled_name: enabled
 exit-code: SUCCESS
@@ -166,44 +166,44 @@ property_name: property
 GeneratedHelp_value: true
 SYNOPSYS_value: Usage: create-jdbc-resource --connectionpoolid=connect
  ionpoolid [--enabled=true] [--description=description] [--property=pr
- operty] [--target=server] jndi_name 
+ operty] [--target=server] jndi_name
 GeneratedHelp_name: GeneratedHelp
 connectionpoolid_name: connectionpoolid
 description_name: description
 jndi_name_operand_value: The JNDI name of this JDBC resource.
-target_value: 
+target_value:
 
 
 ----------------------------------------------
 NAME :
-	create-jdbc-resource - creates a JDBC resource with the specified JNDI 
-	name
+        create-jdbc-resource - creates a JDBC resource with the specified JNDI
+        name
 
 SYNOPSIS :
-	create-jdbc-resource --connectionpoolid=connectionpoolid [--enabled=true] [--description=description] [--property=property] [--target=server] jndi_name 
+        create-jdbc-resource --connectionpoolid=connectionpoolid [--enabled=true] [--description=description] [--property=property] [--target=server] jndi_name
 
-OPTIONS : 
-	--GeneratedHelp
-	true
+OPTIONS :
+        --GeneratedHelp
+        true
 
-	--connectionpoolid
-	The name of the JDBC connection pool. If two or more JDBC resource ele-
-	ments point to the same connection pool element, they use the same poo-
-	l connection at runtime.
+        --connectionpoolid
+        The name of the JDBC connection pool. If two or more JDBC resource ele-
+        ments point to the same connection pool element, they use the same poo-
+        l connection at runtime.
 
-	--enabled
-	Determines whether the JDBC resource is enabled at runtime. The defaul-
-	t value is true.
+        --enabled
+        Determines whether the JDBC resource is enabled at runtime. The defaul-
+        t value is true.
 
-	--description
-	Text providing descriptive details about the JDBC resource.
+        --description
+        Text providing descriptive details about the JDBC resource.
 
-	--property
+        --property
 
-	--target
+        --target
 
-OPERANDS : 
-	jndi_name - The JNDI name of this JDBC resource.
+OPERANDS :
+        jndi_name - The JNDI name of this JDBC resource.
 
-Command create-jdbc-resource executed successfully. 
+Command create-jdbc-resource executed successfully.
  */

@@ -306,7 +306,7 @@ public final class RegStoreFileParser {
             if(!confFile.delete()) {
                 throw new IOException();
             }
-        } 
+        }
         if (newCreation) {
             logger.log(Level.INFO, "jmac.factory_creating_conf_file",
                     confFile.getPath());
@@ -342,7 +342,7 @@ public final class RegStoreFileParser {
                     logger.log(Level.FINER, "jmac.factory_file_not_found",
                             confFile.getParent() + File.pathSeparator
                             + confFile.getPath());
-                    
+
                 }
                 for (EntryInfo e : defaultEntries) {
                     entries.add(new EntryInfo(e));

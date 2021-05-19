@@ -46,7 +46,7 @@ public class AdministeredObjectHandler extends AbstractHandler {
 
     protected final static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(AdministeredObjectHandler.class);
-    
+
     public HandlerProcessingResult processAnnotation(AnnotationInfo element) throws AnnotationProcessorException {
         AnnotatedElementHandler aeHandler = element.getProcessingContext().getHandler();
         AdministeredObject adminObject = (AdministeredObject) element.getAnnotation();

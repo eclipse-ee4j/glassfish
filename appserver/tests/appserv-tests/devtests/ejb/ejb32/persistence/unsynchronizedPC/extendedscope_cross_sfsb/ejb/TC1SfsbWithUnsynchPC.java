@@ -30,10 +30,10 @@ public class TC1SfsbWithUnsynchPC implements Tester{
             synchronization = SynchronizationType.UNSYNCHRONIZED,
             type = PersistenceContextType.EXTENDED)
     EntityManager em;
-    
+
     @EJB private TC1FinderHome finderHome;
     private TC1Finder finderLocalObject;
-    
+
     public boolean doTest() {
         try {
             // Should throw EJBException here
@@ -51,6 +51,6 @@ public class TC1SfsbWithUnsynchPC implements Tester{
             // Unexpected exception
             return false;
         }
-        
+
     }
 }

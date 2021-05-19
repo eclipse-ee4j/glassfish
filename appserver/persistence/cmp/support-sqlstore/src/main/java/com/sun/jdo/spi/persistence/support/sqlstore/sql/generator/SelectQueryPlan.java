@@ -134,7 +134,7 @@ public class SelectQueryPlan extends QueryPlan {
      */
     private static final boolean MULTILEVEL_PREFETCH = Boolean.valueOf(
         System.getProperty(MULTILEVEL_PREFETCH_PROPERTY, "false")).booleanValue(); // NOI18N
-    
+
     /**
      * Creates a new instance of SelectQueryPlan depending on the retrieve
      * descriptor options.

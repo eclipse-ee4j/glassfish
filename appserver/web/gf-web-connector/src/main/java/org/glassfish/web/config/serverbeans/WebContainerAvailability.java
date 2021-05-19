@@ -40,8 +40,7 @@ import org.glassfish.quality.ToDo;
 }) */
 
 @Configured
-public interface WebContainerAvailability extends ConfigBeanProxy,
-        PropertyBag, AvailabilityServiceExtension {
+public interface WebContainerAvailability extends ConfigBeanProxy, PropertyBag, AvailabilityServiceExtension {
 
     /**
      * Gets the value of the availabilityEnabled property.
@@ -54,40 +53,36 @@ public interface WebContainerAvailability extends ConfigBeanProxy,
      * modules may be ha enabled. Finer-grained control exists at lower levels.
      * If this attribute is missing, it "inherits" the value of the global
      * availability-enabled under availability-service.  Default is "true".
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Attribute (defaultValue="true")
-    public String getAvailabilityEnabled();
+    String getAvailabilityEnabled();
 
     /**
      * Sets the value of the availabilityEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setAvailabilityEnabled(String value) throws PropertyVetoException;
+    void setAvailabilityEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceType property.
      *
      * Specifies the session persistence mechanism for web applications that
      * have availability enabled. Default is "replicated".
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Attribute (defaultValue="replicated")
-    public String getPersistenceType();
+    String getPersistenceType();
 
     /**
      * Sets the value of the persistenceType property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setPersistenceType(String value) throws PropertyVetoException;
+    void setPersistenceType(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceFrequency property.
@@ -95,20 +90,18 @@ public interface WebContainerAvailability extends ConfigBeanProxy,
      * The persistence frequency used by the session persistence framework,
      * when persistence-type = "ha". Values may be "time-based" or "web-event"
      * If it is missing, then the persistence-type will revert to "memory".
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Attribute (defaultValue="web-method")
-    public String getPersistenceFrequency();
+    String getPersistenceFrequency();
 
     /**
      * Sets the value of the persistenceFrequency property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setPersistenceFrequency(String value) throws PropertyVetoException;
+    void setPersistenceFrequency(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceScope property.
@@ -117,20 +110,18 @@ public interface WebContainerAvailability extends ConfigBeanProxy,
      * persistence-type = "ha". Values may be "session", "modified-session",
      * "modified-attribute". If it is missing, then the persistence-type will
      * revert to "memory".
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Attribute (defaultValue="session")
-    public String getPersistenceScope();
+    String getPersistenceScope();
 
     /**
      * Sets the value of the persistenceScope property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setPersistenceScope(String value) throws PropertyVetoException;
+    void setPersistenceScope(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceStoreHealthCheckEnabled property.
@@ -138,40 +129,36 @@ public interface WebContainerAvailability extends ConfigBeanProxy,
      * Deprecated. This attribute has no effect. If you wish to control
      * enabling/disabling HADB health check, refer to store-healthcheck-enabled
      * attribute in the availability-service element.
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Deprecated
     @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getPersistenceStoreHealthCheckEnabled();
+    String getPersistenceStoreHealthCheckEnabled();
 
     /**
      * Sets the value of the persistenceStoreHealthCheckEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setPersistenceStoreHealthCheckEnabled(String value) throws PropertyVetoException;
+    void setPersistenceStoreHealthCheckEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the ssoFailoverEnabled property.
      *
      * Controls whether Single-Sign-On state will be made available for failover
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getSsoFailoverEnabled();
+    String getSsoFailoverEnabled();
 
     /**
      * Sets the value of the ssoFailoverEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setSsoFailoverEnabled(String value) throws PropertyVetoException;
+    void setSsoFailoverEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the httpSessionStorePoolName property.
@@ -180,21 +167,19 @@ public interface WebContainerAvailability extends ConfigBeanProxy,
      * Session Persistence Framework. If missing, internal code will default it
      * to value of store-pool-name under availability-service
      * (ultimately "jdbc/hastore").
-     * 
-     * @return possible object is
-     *         {@link String }
+     *
+     * @return possible object is {@link String}
      */
     @Deprecated
     @Attribute
-    public String getHttpSessionStorePoolName();
+    String getHttpSessionStorePoolName();
 
     /**
      * Sets the value of the httpSessionStorePoolName property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String}
      */
-    public void setHttpSessionStorePoolName(String value) throws PropertyVetoException;
+    void setHttpSessionStorePoolName(String value) throws PropertyVetoException;
 
     /**
      * Gets thevalue of disableJreplica property.
@@ -204,18 +189,19 @@ public interface WebContainerAvailability extends ConfigBeanProxy,
      * @return returns the string representation of the boolean value
      */
     @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getDisableJreplica();
+    String getDisableJreplica();
 
     /**
      * Sets the disableJreplica property
      * @param value allowed object is {@link String}
      * @throws PropertyVetoException
      */
-    public void setDisableJreplica(String value) throws PropertyVetoException;
-    
+    void setDisableJreplica(String value) throws PropertyVetoException;
+
     /**
-    	Properties as per {@link PropertyBag}
+     * Properties as per {@link PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})
     @Element

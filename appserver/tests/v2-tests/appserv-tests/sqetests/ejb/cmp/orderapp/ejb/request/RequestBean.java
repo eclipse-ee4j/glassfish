@@ -29,50 +29,50 @@ import dataregistry.*;
 public class RequestBean implements SessionBean {
 
     private SessionContext context;
-    
+
     private LocalLineItemHome lineItemHome = null;
-    
+
     private LocalOrderHome orderHome = null;
-    
+
     private LocalPartHome partHome = null;
-    
+
     private LocalVendorHome vendorHome = null;
-    
+
     private LocalVendorPartHome vendorPartHome = null;
-    
-    
+
+
     /**
      * @see SessionBean#setSessionContext(SessionContext)
      */
     public void setSessionContext(SessionContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see SessionBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see SessionBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see SessionBean#ejbRemove()
      */
     public void ejbRemove() {
-        
+
     }
-    
-    
+
+
     /**
      * See section 7.10.3 of the EJB 2.0 specification
      */
@@ -87,56 +87,56 @@ public class RequestBean implements SessionBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     public void createPart(PartRequest partRequest) {
         try {
-            LocalPart part = partHome.create(partRequest.partNumber, 
+            LocalPart part = partHome.create(partRequest.partNumber,
                     partRequest.revision, partRequest.description,
-                    partRequest.revisionDate, partRequest.specification, 
+                    partRequest.revisionDate, partRequest.specification,
                     partRequest.drawing);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     public void addPartToBillOfMaterial(BomRequest bomRequest) {
         try {
             PartKey bomkey = new PartKey();
             bomkey.partNumber = bomRequest.bomPartNumber;
             bomkey.revision = bomRequest.bomRevision;
-    
+
             LocalPart bom = partHome.findByPrimaryKey(bomkey);
-    
+
             PartKey pkey = new PartKey();
             pkey.partNumber = bomRequest.partNumber;
             pkey.revision = bomRequest.revision;
-    
+
             LocalPart part = partHome.findByPrimaryKey(pkey);
             part.setBomPart(bom);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     public void createVendor(VendorRequest vendorRequest) {
         try {
-            LocalVendor vendor = vendorHome.create(vendorRequest.vendorId, 
-                    vendorRequest.name, vendorRequest.address, 
+            LocalVendor vendor = vendorHome.create(vendorRequest.vendorId,
+                    vendorRequest.name, vendorRequest.address,
                     vendorRequest.contact, vendorRequest.phone);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     public void createVendorPart(VendorPartRequest vendorPartRequest) {
         try {
             PartKey pkey = new PartKey();
             pkey.partNumber = vendorPartRequest.partNumber;
             pkey.revision = vendorPartRequest.revision;
-    
+
             LocalPart part = partHome.findByPrimaryKey(pkey);
             LocalVendorPart vendorPart = vendorPartHome.create(
-                    vendorPartRequest.description, vendorPartRequest.price, 
+                    vendorPartRequest.description, vendorPartRequest.price,
                     part);
 
             VendorKey vkey = new VendorKey();
@@ -152,24 +152,24 @@ public class RequestBean implements SessionBean {
 
     public void createOrder(OrderRequest orderRequest) {
         try {
-            LocalOrder order = orderHome.create(orderRequest.orderId, 
-                    orderRequest.status, orderRequest.discount, 
+            LocalOrder order = orderHome.create(orderRequest.orderId,
+                    orderRequest.status, orderRequest.discount,
                     orderRequest.shipmentInfo);
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
     }
 
-    public void addLineItem(LineItemRequest lineItemRequest) { 
+    public void addLineItem(LineItemRequest lineItemRequest) {
         try {
             LocalOrder order = orderHome.findByPrimaryKey(lineItemRequest.orderId);
-    
+
             PartKey pkey = new PartKey();
             pkey.partNumber = lineItemRequest.partNumber;
             pkey.revision = lineItemRequest.revision;
-    
+
             LocalPart part = partHome.findByPrimaryKey(pkey);
-    
+
             LocalLineItem lineItem = lineItemHome.create(order, lineItemRequest.quantity,
                     part.getVendorPart());
         } catch (Exception e) {
@@ -183,7 +183,7 @@ public class RequestBean implements SessionBean {
             PartKey bomkey = new PartKey();
             bomkey.partNumber = bomRequest.bomPartNumber;
             bomkey.revision = bomRequest.bomRevision;
-    
+
             LocalPart bom = partHome.findByPrimaryKey(bomkey);
             Collection parts = bom.getParts();
             for (Iterator iterator = parts.iterator(); iterator.hasNext();) {
@@ -191,7 +191,7 @@ public class RequestBean implements SessionBean {
                 LocalVendorPart vendorPart = part.getVendorPart();
                 price += vendorPart.getPrice();
             }
-    
+
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -204,7 +204,7 @@ public class RequestBean implements SessionBean {
         try {
             LocalOrder order = orderHome.findByPrimaryKey(orderId);
             price = order.calculateAmmount();
-    
+
         } catch (Exception e) {
             throw new EJBException(e.getMessage());
         }
@@ -233,7 +233,7 @@ public class RequestBean implements SessionBean {
                 LocalVendor vendor = (LocalVendor)iterator.next();
                 names.add(vendor.getName());
             }
-    
+
         } catch (FinderException e) {
         }
 
@@ -269,7 +269,7 @@ public class RequestBean implements SessionBean {
                       .append(vendor.getName()).append(' ')
                       .append(vendor.getContact()).append('\n');
             }
-    
+
         } catch (FinderException e) {
             throw new EJBException(e.getMessage());
         }

@@ -46,8 +46,8 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="disable-http-lb-application", 
+        opType=RestEndpoint.OpType.POST,
+        path="disable-http-lb-application",
         description="disable-http-lb-application",
         params={
             @RestParam(name="name", value="$parent")
@@ -75,7 +75,7 @@ public final class DisableHTTPLBApplicationCommand implements AdminCommand {
         ActionReport report = context.getActionReport();
 
         Logger logger = context.getLogger();
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
         ApplicationRef appRef = domain.getApplicationRefInTarget(name, target);

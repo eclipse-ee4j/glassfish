@@ -73,7 +73,7 @@ public class OverrideTest {
         Archivist archivist = null;
 
         ReadableArchive archive = null;
-        
+
         // first read/parse and write out the original valid archive
         try {
             File archiveFile = new File(fileName);
@@ -86,8 +86,8 @@ public class OverrideTest {
             archivist.setAnnotationProcessingRequested(true);
             JndiNameEnvironment nameEnv = (JndiNameEnvironment)archivist.open(archiveFile);
 
-            Set<ResourceReferenceDescriptor> resRefDescs = nameEnv.getResourceReferenceDescriptors(); 
- 
+            Set<ResourceReferenceDescriptor> resRefDescs = nameEnv.getResourceReferenceDescriptors();
+
             for (ResourceReferenceDescriptor resRef : resRefDescs) {
                 String refName = resRef.getName();
                 String jndiName = resRef.getJndiName();
@@ -97,11 +97,11 @@ public class OverrideTest {
                 String auth = resRef.getAuthorization();
                 String scope = resRef.getSharingScope();
                 log ("Resource ref [" + refName + "] with JNDI name: " + jndiName + ", description: " + description + ", authorization: " + auth + ", sharing scope: " + scope + ", mappedName: " + mappedName + ", lookupName: " + lookupName);
-                if (refName.equals("myDS7") && 
+                if (refName.equals("myDS7") &&
                     !description.equals(EXPECTED_RESOURCE_DESCRIPTION)) {
                     log("Descriptor did not override the @Resource description attribute as expected");
                     fail();
-                } else if (refName.equals("myDS5and6")) { 
+                } else if (refName.equals("myDS5and6")) {
                     Set<InjectionTarget> targets = resRef.getInjectionTargets();
                     for (InjectionTarget target : targets) {
                        log("Target class name: " + target.getClassName());
@@ -111,28 +111,28 @@ public class OverrideTest {
                         log("The additional injection target specified in the descriptor is not used as expected");
                         fail();
                     }
-                } else if (refName.equals("myDS8") && 
+                } else if (refName.equals("myDS8") &&
                     !mappedName.equals(EXPECTED_RESOURCE_JNDI_NAME)) {
                     log("Descriptor did not override the @Resource mapped-name attribute as expected");
                     fail();
-                } else if (refName.equals("myDS7") && 
+                } else if (refName.equals("myDS7") &&
                     !scope.equals(EXPECTED_RESOURCE_SHARING_SCOPE)) {
                     log("Descriptor did not override the @Resource sharing scope attribute as expected");
                     fail();
-                } else if (refName.equals("myDS7") && 
+                } else if (refName.equals("myDS7") &&
                     !auth.equals(EXPECTED_RESOURCE_AUTHORIZATION)) {
                     log("Descriptor did not override the @Resource authorization attribute as expected");
                     fail();
-                } else if (refName.equals("myDS7") && 
+                } else if (refName.equals("myDS7") &&
                     !lookupName.equals(EXPECTED_RESOURCE_JNDI_NAME)) {
                     log("Descriptor did not override the @Resource lookup name attribute as expected");
                     fail();
                 }
             }
-  
+
         } catch (Exception e) {
             e.printStackTrace();
-            log("Input archive: [" + fileName + 
+            log("Input archive: [" + fileName +
                 "] is not valid");
             fail();
         } finally {
@@ -173,7 +173,7 @@ public class OverrideTest {
             StartupContext startupContext = new StartupContext();
 
             ServiceLocatorUtilities.addOneConstant(serviceLocator, startupContext);
-            ServiceLocatorUtilities.addOneConstant(serviceLocator, 
+            ServiceLocatorUtilities.addOneConstant(serviceLocator,
                 new ProcessEnvironment(ProcessEnvironment.ProcessType.Other));
 
             Globals.setDefaultHabitat(serviceLocator);

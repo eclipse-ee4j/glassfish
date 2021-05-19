@@ -22,7 +22,7 @@ import java.util.TimerTask;
 
 public class Client {
 
-    String cacheName; 
+    String cacheName;
     int    cacheSize, resizeQuantity;
     long   idleTimeout; // idleTimeout value in milliseconds
     float  loadFactor;
@@ -69,11 +69,11 @@ public class Client {
             createObjects();
             addCacheEntries();
             if ( debug )
-                displayCacheEntries( "Display items in cache after adding" ); 
+                displayCacheEntries( "Display items in cache after adding" );
 
             removeCacheEntries();
             if ( debug )
-                System.out.println( "Total items in cache (" + cacheName + 
+                System.out.println( "Total items in cache (" + cacheName +
                     ") after remove call = " + getEntryCount() );
 
             addCacheEntries();
@@ -99,7 +99,7 @@ public class Client {
                 System.out.println( "\n\nIn createCache of Cache(" + cacheName + ")" );
             if ( cacheSize <= 0 && idleTimeout <= 0 ) {
                 if ( debug )
-                    System.out.println( "\t\tCreating BaseCache for cacheSize = " + cacheSize + 
+                    System.out.println( "\t\tCreating BaseCache for cacheSize = " + cacheSize +
                         " :resizeQuantity = " + resizeQuantity + " ::loadFactor = " + loadFactor );
                 cache = new BaseCache();
                 cache.init( DEFAULT_CACHE_SIZE, DEFAULT_LOAD_FACTOR, null );
@@ -108,7 +108,7 @@ public class Client {
                 LruCache lru = new LruCache( DEFAULT_CACHE_SIZE);
                 calculateLoadFactor();
                 if ( debug )
-                    System.out.println( "\t\tCreating LruCache for cacheSize = " + cacheSize + 
+                    System.out.println( "\t\tCreating LruCache for cacheSize = " + cacheSize +
                         " :resizeQuantity = " + resizeQuantity + " ::loadFactor = " + loadFactor );
                 lru.init( cacheSize, idleTimeout, loadFactor, null );
                 cache = lru;
@@ -125,7 +125,7 @@ public class Client {
         for( int i = 0; i < MAX_TEST_ENTRIES; i++ ) {
             dummys[i] = new DummyObject( i );
         }
-    } //createObjects() 
+    } //createObjects()
 
     private void addCacheEntries() {
         Object obj;
@@ -176,13 +176,13 @@ public class Client {
         }
     } //DummyObject{}
 
-    class ExpiredItemTask 
+    class ExpiredItemTask
         extends java.util.TimerTask {
-        
+
         public void run() {
-            cache.trimExpiredEntries( resizeQuantity ); 
+            cache.trimExpiredEntries( resizeQuantity );
         }
-    } //ExpiredItemTask 
+    } //ExpiredItemTask
 
 
 
@@ -265,22 +265,22 @@ public class Client {
         }
 
         if ( debug ) {
-            System.out.println ( 
+            System.out.println (
                 "\n\nList all the items in all the caches to ensure that the idle timeout works correctly" );
-            
+
             System.out.println ( "\t\t Total items in cache (c0) = " + c0.getEntryCount() );
             System.out.println ( "\t\t Total items in cache (c1) = " + c1.getEntryCount() );
             System.out.println ( "\t\t Total items in cache (c2) = " + c2.getEntryCount() );
             System.out.println ( "\t\t Total items in cache (c3) = " + c3.getEntryCount() );
             System.out.println ( "\t\t Total items in cache (c4) = " + c4.getEntryCount() );
 
-            c0.displayCacheEntries( "List items in cache after timeout " ); 
-            c1.displayCacheEntries( "List items in cache after timeout " ); 
-            c2.displayCacheEntries( "List items in cache after timeout " ); 
-            c3.displayCacheEntries( "List items in cache after timeout " ); 
-            c4.displayCacheEntries( "List items in cache after timeout " ); 
+            c0.displayCacheEntries( "List items in cache after timeout " );
+            c1.displayCacheEntries( "List items in cache after timeout " );
+            c2.displayCacheEntries( "List items in cache after timeout " );
+            c3.displayCacheEntries( "List items in cache after timeout " );
+            c4.displayCacheEntries( "List items in cache after timeout " );
         }
-        
+
         success = 0;
         failure = 0;
 
@@ -318,7 +318,7 @@ public class Client {
         System.out.println ( "\nActual   failure count = "  + failure );
 
         timer.cancel();
-        
+
     } //main()
 
 } //Client {}

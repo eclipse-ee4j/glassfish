@@ -43,14 +43,14 @@ public abstract class EJBLocalHomeImpl
     protected BaseContainer container;
 
     private static final Logger _logger = EjbContainerUtilImpl.getLogger();
-    
+
     /**
      * Called from BaseContainer only.
      */
     final void setContainer(BaseContainer c) {
         container = c;
     }
-    
+
     /**
      * Called from concrete EJBLocalHome implementation.
      */
@@ -63,7 +63,7 @@ public abstract class EJBLocalHomeImpl
      * These objects are one and the same when the local home is generated,
      * but distinct in the case of dynamic proxies.  Therefore, code can't
      * assume it can cast an EJBLocalHomeImpl to the EJBLocalHome that
-     * the client uses,  and vice-versa.  This is overridden in the 
+     * the client uses,  and vice-versa.  This is overridden in the
      * InvocationHandler.
      */
     protected EJBLocalHome getEJBLocalHome() {
@@ -91,7 +91,7 @@ public abstract class EJBLocalHomeImpl
         // intfName is the Generated interface name in the case of the no-interface view
         return container.createEJBLocalBusinessObjectImpl(intfName);
     }
-    
+
     /**
      * This is the implementation of the jakarta.ejb.EJBLocalHome remove method.
      */
@@ -102,9 +102,9 @@ public abstract class EJBLocalHomeImpl
             // Session beans dont have primary keys. EJB2.0 Section 6.6.
             throw new RemoveException("Attempt to call remove(Object primaryKey) on a session bean.");
         }
-        
+
         container.authorizeLocalMethod(BaseContainer.EJBLocalHome_remove_Pkey);
-        
+
         Method method=null;
         try {
             method = EJBLocalHome.class.getMethod("remove",
@@ -112,7 +112,7 @@ public abstract class EJBLocalHomeImpl
         } catch ( NoSuchMethodException e ) {
             _logger.log(Level.FINE, "Exception in method remove()", e);
         }
-        
+
         try {
             container.doEJBHomeRemove(primaryKey, method, true);
         } catch(java.rmi.RemoteException re) {
@@ -124,7 +124,7 @@ public abstract class EJBLocalHomeImpl
             throw ejbEx;
         }
     }
-    
+
     public SerializableObjectFactory getSerializableObjectFactory() {
         return new SerializableLocalHome(
             container.getEjbDescriptor().getUniqueId());
@@ -144,7 +144,7 @@ public abstract class EJBLocalHomeImpl
         {
             // Return the LocalHome by getting the target container based
             // on the ejb id.  Note that we can assume this is the
-            // LocalHome rather than a LocalBusinessHome since the 
+            // LocalHome rather than a LocalBusinessHome since the
             // LocalBusinessHome is never visible to the application and
             // would never be stored in SFSB state.
             BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(ejbId);

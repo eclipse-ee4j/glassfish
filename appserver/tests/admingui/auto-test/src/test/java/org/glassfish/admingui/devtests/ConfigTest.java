@@ -21,14 +21,14 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * 
+ *
  * @author jeremylv
  *
  */
 public class ConfigTest extends BaseSeleniumTestClass {
 
     public static final String ID_CLUSTERS_TABLE = "propertyForm:configs";
-    
+
     @Test
     public void testCreateAndDeleteConfig() {
         final String configName= "test-config-"+generateRandomString();
@@ -37,7 +37,7 @@ public class ConfigTest extends BaseSeleniumTestClass {
         clickByIdAction("propertyForm:configs:topActionsGroup1:newButton");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:NameProp:Name", configName);
         clickByIdAction("propertyForm:propertyContentPage:topButtons:okButton");
-        
+
         String prefix = getTableRowByValue(ID_CLUSTERS_TABLE, configName, "col1");
         try {
             assertEquals(configName, getText(prefix + "col1:link"));

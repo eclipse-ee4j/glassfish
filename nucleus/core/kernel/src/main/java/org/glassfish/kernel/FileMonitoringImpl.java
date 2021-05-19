@@ -44,7 +44,7 @@ public class FileMonitoringImpl implements FileMonitoring, PostConstruct {
 
     @Inject
     Events events;
-            
+
     final Map<File, List<FileChangeListener>> listeners = new HashMap<File, List<FileChangeListener>>();
     final Map<File, Long> monitored = new HashMap<File, Long>();
 
@@ -62,7 +62,7 @@ public class FileMonitoringImpl implements FileMonitoring, PostConstruct {
                         removed(file);
                         listeners.remove(file);
                         monitored.remove(file);
-                    } else 
+                    } else
                     if (file.lastModified()!=monitored.get(file)) {
                         // file has changed
                         monitored.put(file, file.lastModified());

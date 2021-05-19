@@ -27,7 +27,7 @@ import org.jvnet.hk2.annotations.Service;
 /**
  * This is the JIT resolver that creates implementations
  * of HK2Service
- * 
+ *
  * @author jwells
  *
  */
@@ -39,10 +39,10 @@ public class JITResolver implements JustInTimeInjectionResolver {
     @Override
     public boolean justInTimeResolution(Injectee failedInjectionPoint) {
         if (!failedInjectionPoint.getRequiredType().equals(HK2Service.class)) return false;
-        
+
         HK2Service hk2Service = new HK2Service() {};
         ServiceLocatorUtilities.addOneConstant(locator, hk2Service);
-        
+
         return true;
     }
 

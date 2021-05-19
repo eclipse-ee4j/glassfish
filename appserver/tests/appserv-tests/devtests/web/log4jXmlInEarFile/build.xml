@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="build" depends="compile">
         <mkdir dir="${assemble.dir}"/>
         <delete file="${assemble.dir}/${mywar.war}"/>
@@ -47,7 +47,7 @@
             <fileset dir="${assemble.dir}" includes="*.war"/>
             <fileset dir="." includes="lib/*.jar, lib/*.xml"/>
         </ear>
-    </target> 
+    </target>
 
     <target name="compile" depends="clean">
         <antcall target="compile-common">
@@ -61,8 +61,8 @@
 
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
-    </target>    
-    
+    </target>
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
           <arg value="${http.host}"/>
@@ -73,7 +73,7 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>

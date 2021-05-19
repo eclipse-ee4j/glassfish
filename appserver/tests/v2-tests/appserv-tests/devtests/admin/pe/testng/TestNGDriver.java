@@ -32,7 +32,7 @@ import org.testng.annotations.*;
 import test.*;
 
 public class TestNGDriver {
-    
+
     private String adminUser;
     private String adminPassword;
     private String adminHost;
@@ -41,7 +41,7 @@ public class TestNGDriver {
     private boolean useRmi;
     private MBeanServerConnection mbsc;
     private String      testfileName;
-    
+
     private static final String SCRIPT_COMMENT = "#"; //this is how comment is denoted, traditionally
 
     @Configuration(beforeTestClass = true)
@@ -63,7 +63,7 @@ public class TestNGDriver {
             System.out.println("Using HTTP: " + mbsc.toString());
         }
     }
-    
+
     private RemoteAdminQuicklookTest c2T(final String testClass) throws RuntimeException {
         try {
             final Class c                       = Class.forName(testClass);
@@ -76,71 +76,71 @@ public class TestNGDriver {
             throw new RuntimeException(e);
         }
     }
-    
+
     private void runRemoteAdminTest(String testClass) {
         RemoteAdminQuicklookTest t = c2T(testClass);
         t.test();
     }
 
     @Test(groups = {"RemoteAdminTests"})
-    public void runSimpleStandardCustomMBeanTest() 
+    public void runSimpleStandardCustomMBeanTest()
     {
         runRemoteAdminTest("test.SimpleStandardCustomMBeanTest");
     }
-    
+
     @Test(groups = {"RemoteAdminTests"})
-    public void runPrimitiveDataTypeMBeanTest() 
+    public void runPrimitiveDataTypeMBeanTest()
     {
         runRemoteAdminTest("test.PrimitiveDataTypeMBeanTest");
     }
 
     @Test(groups = {"RemoteAdminTests"})
-    public void runObjectNameTest() 
+    public void runObjectNameTest()
     {
         runRemoteAdminTest("test.ObjectNameTest");
     }
 
 
-    @Test(groups = {"RemoteAdminTests"}) 
-    public void runJVMInformationTest() 
+    @Test(groups = {"RemoteAdminTests"})
+    public void runJVMInformationTest()
     {
         runRemoteAdminTest("test.JVMInformationTest");
     }
 
 
     @Test(groups = {"RemoteAdminTests"})
-    public void runAttributeSniffer() 
+    public void runAttributeSniffer()
     {
         runRemoteAdminTest("test.AttributeSniffer");
     }
 
 
-    @Test(groups = {"RemoteAdminTests", "brokenTests"}) 
-    public void runSMFTest() 
+    @Test(groups = {"RemoteAdminTests", "brokenTests"})
+    public void runSMFTest()
     {
         runRemoteAdminTest("test.SMFTest");
     }
 
     @Test(groups = {"RemoteAdminTests"})
-    public void runDeployManyMBeans() 
+    public void runDeployManyMBeans()
     {
         runRemoteAdminTest("test.DeployManyMBeans");
     }
 
     @Test(groups = {"RemoteAdminTests"})
-    public void runStringTest() 
+    public void runStringTest()
     {
         runRemoteAdminTest("test.StringTest");
     }
 
     @Test(groups = {"RemoteAdminTests", "interactiveTests"})
-    public void runGetResourceTest() 
+    public void runGetResourceTest()
     {
         runRemoteAdminTest("test.GetResourceTest");
     }
 
 
-       
+
     /***
      * private void loadRmiProperties() throws Exception {
         rmip = new Properties();
@@ -154,7 +154,7 @@ public class TestNGDriver {
     }
 */
     private void loadProperties()
-    { 
+    {
         LocalStringsImpl lsi    = new LocalStringsImpl();
         useRmi              = lsi.getBoolean("useRmi",          true);
         adminUser           = lsi.getString("adminUser",        "admin");
@@ -165,6 +165,6 @@ public class TestNGDriver {
         testfileName        = lsi.getString("testfile",         "tests.list");
         isSecure            = bisSecure.toString();
     }
-    
+
     ///// private methods /////
 }

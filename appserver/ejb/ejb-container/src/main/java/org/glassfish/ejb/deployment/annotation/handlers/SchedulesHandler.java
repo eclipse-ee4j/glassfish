@@ -35,15 +35,15 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(Schedules.class)
 public class SchedulesHandler extends ScheduleHandler {
-    
+
     public SchedulesHandler() {
     }
-    
+
     protected HandlerProcessingResult processAnnotation(AnnotationInfo ainfo,
             EjbContext[] ejbContexts) throws AnnotationProcessorException {
 
         Schedules annotation = (Schedules) ainfo.getAnnotation();
-        
+
         Schedule[] schAnnotations = annotation.value();
         List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
 

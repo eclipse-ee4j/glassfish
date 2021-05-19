@@ -21,31 +21,31 @@
   <property name="sample.home" value="../../../../../"/>
 
   <!-- ======================================================= -->
-  <!-- App name-dependent settings.			       -->
-  <!-- ======================================================= --> 
-
-  <!-- ======================================================= -->
-  <!-- Package directory structures of interest.	       -->
+  <!-- App name-dependent settings.                   -->
   <!-- ======================================================= -->
 
-  <property name="app.pkg" value="samples/jms/soaptojms"/> 
+  <!-- ======================================================= -->
+  <!-- Package directory structures of interest.           -->
+  <!-- ======================================================= -->
+
+  <property name="app.pkg" value="samples/jms/soaptojms"/>
   <property name="clientjar.file"   value="../${appname}Client.jar"/>
- 
+
   <!-- ======================================================= -->
-  <!-- Java Doc properties.				       -->
-  <!-- ======================================================= -->    
+  <!-- Java Doc properties.                       -->
+  <!-- ======================================================= -->
   <property name="javadoc.pkgnames" value="samples.jms.soaptojms.*" />
 
   <!-- ======================================================= -->
-  <!-- Xml files properties.				       -->
-  <!-- ======================================================= -->       
- 
+  <!-- Xml files properties.                       -->
   <!-- ======================================================= -->
-  <!-- Include common.xml				       -->
+
   <!-- ======================================================= -->
- 
+  <!-- Include common.xml                       -->
+  <!-- ======================================================= -->
+
   &include;
-  
+
   <!-- ======================================================= -->
   <!-- Assemble CLIENT JAR module.                             -->
   <!-- ======================================================= -->
@@ -53,7 +53,7 @@
     <copy file="${basedir}/soaptojms.properties" toDir="${build.classesdir}/${app.pkg}/" />
     <mkdir dir="${assemble.clientjar}"/>
     <jar destfile="${assemble.clientjar}/${clientjar}" manifest="${src.conf}/MANIFEST.MF">
-      <zipfileset dir="${build.classesdir}/${app.pkg}/" 
+      <zipfileset dir="${build.classesdir}/${app.pkg}/"
                   includes="**/*.class, **/soaptojms.properties" excludes="**/servlet/"
                   prefix="${app.pkg}"/>
       <metainf dir="${clientDD.dir}" includes="${clientDD}"/>
@@ -64,15 +64,15 @@
   <!-- ======================================================= -->
   <!-- Tagets to run sample application                        -->
   <!-- ======================================================= -->
-  <target name="clean" depends="clean_common"/>     
-  <target name="compile" depends="compile_common" /> 
+  <target name="clean" depends="clean_common"/>
+  <target name="compile" depends="compile_common" />
   <target name="javadocs" depends="javadocs_common" />
   <target name="clientjar" depends="init_common, clientjar_local"/>
-  <target name="core" depends="compile, clientjar" />  
-  <target name="all" depends="core,javadocs"/> 
+  <target name="core" depends="compile, clientjar" />
+  <target name="all" depends="core,javadocs"/>
   <target name="copy_ear" depends="init_common">
-      <delete file="../${clientjar}"/>      
+      <delete file="../${clientjar}"/>
       <copy file="${assemble.clientjar}/${clientjar}" todir=".." />
   </target>
-    
+
 </project>

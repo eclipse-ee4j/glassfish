@@ -55,19 +55,19 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 @I18n("list.loggers")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-loggers", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-loggers",
         description="list-loggers")
 })
 public class ListLoggers implements AdminCommand {
 
     private static final String UNKNOWN = "?";
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListLoggers.class);
-    
-    @Param(optional=true, name="_internal", defaultValue="false")    
+
+    @Param(optional=true, name="_internal", defaultValue="false")
     private boolean listInternalLoggers;
-    
+
     @Inject
     private LoggerInfoMetadata loggerInfoMetadataService;
 
@@ -77,9 +77,9 @@ public class ListLoggers implements AdminCommand {
         String header_name = localStrings.getLocalString("list.loggers.header.name", "Logger Name");
         String header_subsystem = localStrings.getLocalString("list.loggers.header.subsystem", "Subsystem");
         String header_description = localStrings.getLocalString("list.loggers.header.description", "Logger Description");
-        
+
         ColumnFormatter colFormatter = new ColumnFormatter(new String[]{header_name, header_subsystem, header_description});
-                
+
         // An option to specify client locale should be supported. However, it probably
         // should not be specific to this command. For now, localize using the default locale.
         Locale locale = Locale.getDefault();
@@ -91,7 +91,7 @@ public class ListLoggers implements AdminCommand {
             Map<String, String> loggerSubsystems = new TreeMap<String, String>();
             Map<String, String> loggerDescriptions = new TreeMap<String, String>();
             List<String> loggerList = new ArrayList<String>();
-            
+
             for (String logger : sortedLoggers) {
                 String subsystem = loggerInfoMetadataService.getSubsystem(logger);
                 String desc = loggerInfoMetadataService.getDescription(logger, locale);
@@ -102,13 +102,13 @@ public class ListLoggers implements AdminCommand {
                     colFormatter.addRow(new Object[]{logger, subsystem, desc});
                     loggerSubsystems.put(logger, subsystem);
                     loggerDescriptions.put(logger, desc); //Needed for REST xml and JSON output
-                    loggerList.add(logger); //Needed for REST xml and JSON output                                    
+                    loggerList.add(logger); //Needed for REST xml and JSON output
                 }
             }
-            
+
             report.appendMessage(colFormatter.toString());
             report.appendMessage(System.getProperty("line.separator"));
-            
+
             // Populate the extraProperties data structure for REST...
             Properties restData = new Properties();
             restData.put("loggerSubsystems", loggerSubsystems);
@@ -126,5 +126,5 @@ public class ListLoggers implements AdminCommand {
         }
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
-        
+
 }

@@ -29,7 +29,7 @@ import org.glassfish.gmbal.*;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 
 /**
- * Event listener for the Ejb monitoring events. Used by the probe framework 
+ * Event listener for the Ejb monitoring events. Used by the probe framework
  * to collect and display the data.
  *
  * @author Marina Vatkina
@@ -47,10 +47,10 @@ public abstract class EjbMonitoringStatsProvider {
     boolean registered = false;
     protected long beanId;
 
-    private CountStatisticImpl createStat = new CountStatisticImpl("CreateCount", 
+    private CountStatisticImpl createStat = new CountStatisticImpl("CreateCount",
             "count", "Number of times EJB create method is called or 3.x bean is looked up");
 
-    private CountStatisticImpl removeStat = new CountStatisticImpl("RemoveCount", 
+    private CountStatisticImpl removeStat = new CountStatisticImpl("RemoveCount",
             "count", "Number of times EJB remove method is called");
 
     static final Logger _logger = EjbContainerUtilImpl.getLogger();
@@ -109,7 +109,7 @@ public abstract class EjbMonitoringStatsProvider {
         boolean debug = _logger.isLoggable(Level.FINE);
         if (registered) {
             if (debug) {
-                _logger.log(Level.FINE, "[EJBMonitoringStatsProvider] unregister: " 
+                _logger.log(Level.FINE, "[EJBMonitoringStatsProvider] unregister: "
                        + EjbMonitoringUtils.getLoggingName(appName, moduleName, beanName));
             }
             registered = false;
@@ -117,7 +117,7 @@ public abstract class EjbMonitoringStatsProvider {
             for ( EjbMethodStatsProvider monitor : methodMonitorMap.values()) {
                 if (monitor.isRegistered()) {
                     if (debug) {
-                        _logger.log(Level.FINE, "[EJBMonitoringStatsProvider] unregister method: " 
+                        _logger.log(Level.FINE, "[EJBMonitoringStatsProvider] unregister method: "
                                 + monitor.getStringifiedMethodName());
                     }
                     monitor.unregistered();
@@ -200,7 +200,7 @@ public abstract class EjbMonitoringStatsProvider {
 
     protected void log(String mname, String provider) {
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("===> In " + provider + " for: [" 
+            _logger.fine("===> In " + provider + " for: ["
                     + mname + "] " + EjbMonitoringUtils.getLoggingName(appName, moduleName, beanName));
         }
     }
@@ -211,7 +211,7 @@ public abstract class EjbMonitoringStatsProvider {
 
     private void _log(String mname, String method_sig) {
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("===> In EjbMonitoringStatsProvider for: [" 
+            _logger.fine("===> In EjbMonitoringStatsProvider for: ["
                     + mname + "] " + EjbMonitoringUtils.getLoggingName(appName, moduleName, beanName)
                     + "::" + method_sig);
         }

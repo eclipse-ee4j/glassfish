@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
  * This class is responsible for handling the query element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
 
@@ -40,30 +40,30 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
 
     public QueryNode() {
         super();
-        registerElementHandler(new XMLElement(EjbTagNames.QUERY_METHOD), 
-                                                                MethodNode.class, "setQueryMethodDescriptor");                 
+        registerElementHandler(new XMLElement(EjbTagNames.QUERY_METHOD),
+                                                                MethodNode.class, "setQueryMethodDescriptor");
     }
 
     @Override
     public QueryDescriptor getDescriptor() {
         if (descriptor == null) descriptor = new QueryDescriptor();
-        return descriptor;        
+        return descriptor;
     }
- 
+
     @Override
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
-        table.put(EjbTagNames.EJB_QL, "setQuery");    
+        table.put(EjbTagNames.EJB_QL, "setQuery");
         return table;
     }
 
     @Override
-    public void setElementValue(XMLElement element, String value) {    
+    public void setElementValue(XMLElement element, String value) {
         if (EjbTagNames.QUERY_RESULT_TYPE_MAPPING.equals(element.getQName())) {
             if (EjbTagNames.QUERY_REMOTE_TYPE_MAPPING.equals(value)) {
                 descriptor.setHasRemoteReturnTypeMapping();
-            } else if (EjbTagNames.QUERY_LOCAL_TYPE_MAPPING.equals(value)) {            
+            } else if (EjbTagNames.QUERY_LOCAL_TYPE_MAPPING.equals(value)) {
                 descriptor.setHasLocalReturnTypeMapping();
             } else {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
@@ -75,31 +75,31 @@ public class QueryNode extends DeploymentDescriptorNode<QueryDescriptor> {
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, QueryDescriptor descriptor) {        
+    public Node writeDescriptor(Node parent, String nodeName, QueryDescriptor descriptor) {
         Node queryNode = super.writeDescriptor(parent, nodeName, descriptor);
 
         writeLocalizedDescriptions(queryNode, descriptor);
-                
+
         // query-method
         MethodNode methodNode = new MethodNode();
-        methodNode.writeQueryMethodDescriptor(queryNode, EjbTagNames.QUERY_METHOD, 
+        methodNode.writeQueryMethodDescriptor(queryNode, EjbTagNames.QUERY_METHOD,
                                                                          descriptor.getQueryMethodDescriptor());
-        
-        if (descriptor.getHasRemoteReturnTypeMapping()) {            
-            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING, 
-                                                    EjbTagNames.QUERY_REMOTE_TYPE_MAPPING);     
+
+        if (descriptor.getHasRemoteReturnTypeMapping()) {
+            appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING,
+                                                    EjbTagNames.QUERY_REMOTE_TYPE_MAPPING);
         } else {
-	    if (descriptor.getHasLocalReturnTypeMapping()) {
+        if (descriptor.getHasLocalReturnTypeMapping()) {
                 appendTextChild(queryNode, EjbTagNames.QUERY_RESULT_TYPE_MAPPING,
                                                     EjbTagNames.QUERY_LOCAL_TYPE_MAPPING);
             }
-	}
+    }
         // ejbql element is mandatory.  If no EJB QL query has been
         // specified for the method, the xml element will be empty
-        String ejbqlText = descriptor.getIsEjbQl() ? descriptor.getQuery() : "";        
+        String ejbqlText = descriptor.getIsEjbQl() ? descriptor.getQuery() : "";
         Node child = appendChild(queryNode, EjbTagNames.EJB_QL);
-        child.appendChild(getOwnerDocument(child).createTextNode(ejbqlText));          
-        
+        child.appendChild(getOwnerDocument(child).createTextNode(ejbqlText));
+
         return queryNode;
     }
 }

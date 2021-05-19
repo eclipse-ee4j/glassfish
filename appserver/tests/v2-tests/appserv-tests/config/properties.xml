@@ -19,10 +19,10 @@
 <property environment="env"/>
 <target name="init-common" depends="setToolProperty,setS1ASclassPath">
 <!-- Appserver setup properties -->
-<echo message="Loading props from file ${env.APS_HOME}/config.properties" 
+<echo message="Loading props from file ${env.APS_HOME}/config.properties"
     level="verbose"/>
    <property name="pe" value="Platform Edition of S1AS"/>
-   <property file="${env.APS_HOME}/config.properties"/>   
+   <property file="${env.APS_HOME}/config.properties"/>
    <echo message="admin.domain ${admin.domain}" level="verbose"/>
    <echo message="admin.user ${admin.user}" level="verbose"/>
    <echo message="admin.port ${admin.port}" level="verbose"/>
@@ -67,21 +67,21 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <property name="appclient.application.args" value="" />
 
     <!-- Test Harnes properties -->
-    <property name="build.base.dir" 
+    <property name="build.base.dir"
         value="${env.APS_HOME}/build/module"/>
-    <property name="build.webapps.dir" 
+    <property name="build.webapps.dir"
         value="${env.APS_HOME}/build/wars"/>
-    <property name="build.classes.dir" 
+    <property name="build.classes.dir"
         value="${build.base.dir}/classes"/>
-    <property name="assemble.dir" 
+    <property name="assemble.dir"
         value="${build.base.dir}/archive"/>
-    <property name="results.dir" 
+    <property name="results.dir"
         value="${build.base.dir}/results"/>
     <property name="s1astest.classpath"
       value="${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar:${s1as.classpath}:${db.classpath}:${Derby.classpath}"/>
-    <property name="ejbjar.classes" 
+    <property name="ejbjar.classes"
       value="**/*Local*.class,**/*Remote*.class,**/*Home*.class,**/*Bean*.class" />
-    <property name="appclientjar.classes" 
+    <property name="appclientjar.classes"
       value="**/*Local*.class,**/*Home*.class,**/*Remote*.class,**/*Client*.class" />
      <property name="webclient.war.files"
    value="${build.classes.dir}"/>
@@ -119,20 +119,20 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
     <fileset dir="${env.S1AS_HOME}/modules" includes="**/*.jar"/>
     <!-- fileset dir="${env.S1AS_HOME}/imq/lib" includes="*.jar"/ -->
   </path>
-  <pathconvert pathsep=":" 
-    property="s1as.classpath" 
+  <pathconvert pathsep=":"
+    property="s1as.classpath"
     refid="s1as_classpath_jars"/>
 </target>
 
-<target name="setToolProperty" 
+<target name="setToolProperty"
   depends="setOSConditions,setToolWin,setToolUnix">
 </target>
 
     <!--
-    This was needed to make sure that we can 
-    differentiate between .exe/.bat for windows and .sh for solaris. 
+    This was needed to make sure that we can
+    differentiate between .exe/.bat for windows and .sh for solaris.
     -->
-<target name="setOSConditions">  
+<target name="setOSConditions">
   <condition property="isUnix">
     <os family="unix"/>
   </condition>
@@ -142,16 +142,16 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
   </condition>
 </target>
 
-<target name="setToolWin" if="isWindows">  
+<target name="setToolWin" if="isWindows">
   <!--
-    Some tests launch app clients by directly running the appclient script, 
+    Some tests launch app clients by directly running the appclient script,
     using the APPCLIENT property.  Others do so by invoking the
-    runclient-common target.  
-    
+    runclient-common target.
+
     We use the test script (not appclient) if the user wants to launch
     app clients using Java Web Start.
   -->
-  <condition property="APPCLIENT" 
+  <condition property="APPCLIENT"
     value="${env.APS_HOME}/config/jws-appclient.bat"
     else="${env.S1AS_HOME}/bin/appclient.bat">
         <isset property="use.javaws"/>
@@ -159,13 +159,13 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
   <property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin.bat"/>
   <!--<property name="ASADMIN" value="${env.S1AS_HOME}/bin/asadmin"/>-->
   <property name="ASANT" value="${env.S1AS_HOME}/bin/asant.bat"/>
-  <property name="CAPTURESCHEMA" 
+  <property name="CAPTURESCHEMA"
       value="${env.S1AS_HOME}/bin/capture-schema.bat"/>
   <property name="CHECKPATCH" value="${env.S1AS_HOME}/bin/checkpatch.bat"/>
   <property name="INSTALLPATCH" value="${env.S1AS_HOME}/bin/installpatch.bat"/>
   <property name="JSPC" value="${env.S1AS_HOME}/bin/jspc.bat"/>
   <property name="LISTPATCH" value="${env.S1AS_HOME}/bin/listpatch.bat"/>
-  <property name="PACKAGE-APPCLIENT" 
+  <property name="PACKAGE-APPCLIENT"
       value="${env.S1AS_HOME}/bin/package-appclient.bat"/>
   <property name="VERIFIER" value="${env.S1AS_HOME}/bin/verifier.bat"/>
   <property name="RMIC" value="${env.S1AS_HOME}/jdk/bin/rmic.exe"/>
@@ -174,17 +174,17 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
   <property name="WSCOMPILE" value="${env.S1AS_HOME}/bin/wscompile.bat"/>
   <property name="WSGEN" value="${env.S1AS_HOME}/bin/wsgen.bat"/>
   <property name="WSIMPORT" value="${env.S1AS_HOME}/bin/wsimport.bat"/>
-  <property name="pb.start.server" 
+  <property name="pb.start.server"
       value="${env.S1AS_HOME}/pointbase/server/StartServer.bat"/>
-  <property name="pb.start.server1" 
+  <property name="pb.start.server1"
       value="${env.S1AS_HOME}/pointbase/server/StartServer1.bat"/>
   <property name="IMQDBMGR" value="${env.S1AS_HOME}/imq/bin/imqdbmgr.bat"/>
  <property name="ld.library.path" location="${env.S1AS_HOME}/lib;${env.S1AS_HOME}/bin"/>
 </target>
 
-<target name="setToolUnix" if="isUnix">  
-  <condition property="APPCLIENT" 
-    value="${env.APS_HOME}/config/jws-appclient" 
+<target name="setToolUnix" if="isUnix">
+  <condition property="APPCLIENT"
+    value="${env.APS_HOME}/config/jws-appclient"
     else="${env.S1AS_HOME}/bin/appclient">
         <isset property="use.javaws"/>
   </condition>
@@ -195,7 +195,7 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
   <property name="INSTALLPATCH" value="${env.S1AS_HOME}/bin/installpatch"/>
   <property name="JSPC" value="${env.S1AS_HOME}/bin/jspc"/>
   <property name="LISTPATCH" value="${env.S1AS_HOME}/bin/listpatch"/>
-  <property name="PACKAGE-APPCLIENT" 
+  <property name="PACKAGE-APPCLIENT"
       value="${env.S1AS_HOME}/bin/package-appclient"/>
   <property name="VERIFIER" value="${env.S1AS_HOME}/bin/verifier"/>
   <property name="RMIC" value="${env.S1AS_HOME}/jdk/bin/rmic"/>
@@ -203,16 +203,16 @@ AS_ADMIN_MASTERPASSWORD=${master.password}</echo>
   <property name="WSCOMPILE" value="${env.S1AS_HOME}/bin/wscompile"/>
   <property name="WSGEN" value="${env.S1AS_HOME}/bin/wsgen"/>
   <property name="WSIMPORT" value="${env.S1AS_HOME}/bin/wsimport"/>
-  <property name="pb.start.server" 
+  <property name="pb.start.server"
       value="${env.S1AS_HOME}/pointbase/server/StartServer"/>
-  <property name="pb.start.server1" 
+  <property name="pb.start.server1"
       value="${env.S1AS_HOME}/pointbase/server/StartServer1"/>
   <property name="IMQDBMGR" value="${env.S1AS_HOME}/imq/bin/imqdbmgr"/>
  <property name="ld.library.path" location="${env.S1AS_HOME}/lib:${env.S1AS_HOME}/bin"/>
 </target>
 
 <!--
-the fixFiles target removes all ^M charectars from the end of 
+the fixFiles target removes all ^M charectars from the end of
 lines of MANIFEST.MF files since they are very sensitive to it.
 -->
 <target name="fixFiles" depends="setOSConditions" >

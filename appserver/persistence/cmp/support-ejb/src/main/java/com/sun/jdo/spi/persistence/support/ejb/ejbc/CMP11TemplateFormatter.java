@@ -34,8 +34,8 @@ import com.sun.jdo.spi.persistence.utility.generator.JavaClassWriterHelper;
 /*
  * This is the helper class for JDO specific generation of
  * a concrete bean implementation for CMP 1.1 beans.
- * Because both CMP20TemplateFormatter and this class extend 
- * CMPTemplateFormatter, and all references are static, properties 
+ * Because both CMP20TemplateFormatter and this class extend
+ * CMPTemplateFormatter, and all references are static, properties
  * in this class must differ in names. This is why they have 1_1
  * or 11 in them.
  *
@@ -83,7 +83,7 @@ class CMP11TemplateFormatter extends CMPTemplateFormatter {
     public final static String signature1_1_ = "signature1_1"; //NOI18N
 
     // finder/selector methods
-    public static MessageFormat querysetignorecacheformatter = null; // statement to set the ignoreCache flag for a JDOQL query 
+    public static MessageFormat querysetignorecacheformatter = null; // statement to set the ignoreCache flag for a JDOQL query
 
     // CMP1.1 formatter
     public static MessageFormat c11formatter = null; // ejbCreate1_1

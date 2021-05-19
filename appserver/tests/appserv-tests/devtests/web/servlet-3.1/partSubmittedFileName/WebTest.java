@@ -23,7 +23,7 @@ import java.nio.file.Paths;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static final SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -141,7 +141,7 @@ public class WebTest {
    static String[][] expected = {
        {"1234567abcdefg"},
        {"myFile", "test.txt", "36", "text/plain", "content-disposition content-type" },
-       {"myFile2", "test2.txt", "37", "text/plain", 
+       {"myFile2", "test2.txt", "37", "text/plain",
             "content-disposition content-type" },
        {"xyz", "null", "14", "text/plain", "content-disposition content-type"}
    };

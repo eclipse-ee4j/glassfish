@@ -25,25 +25,25 @@ public interface ErrorHandler {
     /**
      * Receive notication of a fine error message
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing 
-     */ 
+     * @throws any exception to stop the annotation processing
+     */
     public void fine(AnnotationProcessorException ape) throws
             AnnotationProcessorException;
-    
+
     /**
      * Receive notification of a warning
      * @param ape The warning information
-     * @throws any exception to stop the annotation processing 
+     * @throws any exception to stop the annotation processing
      */
     public void warning(AnnotationProcessorException ape) throws
             AnnotationProcessorException;
-    
+
     /**
      * Receive notification of an error
      * @param ape The error information
      * @throws amy exception to stop the annotation processing
      */
-    public void error(AnnotationProcessorException ape) throws 
+    public void error(AnnotationProcessorException ape) throws
             AnnotationProcessorException;
-    
+
 }

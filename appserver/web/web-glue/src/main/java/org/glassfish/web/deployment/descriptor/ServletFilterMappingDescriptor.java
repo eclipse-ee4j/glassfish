@@ -17,9 +17,14 @@
 package org.glassfish.web.deployment.descriptor;
 
 import com.sun.enterprise.deployment.web.ServletFilterMapping;
+
+import java.util.EnumSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
 import org.glassfish.deployment.common.Descriptor;
 
-import java.util.*;
 import jakarta.servlet.DispatcherType;
 
 /**
@@ -27,17 +32,17 @@ import jakarta.servlet.DispatcherType;
  * @author Martin D. Flynn
  */
 public final class ServletFilterMappingDescriptor
-    extends Descriptor
-    implements com.sun.enterprise.deployment.web.ServletFilterMapping
+extends Descriptor
+implements com.sun.enterprise.deployment.web.ServletFilterMapping
 {
-    
+
     private EnumSet<DispatcherType> dispatchers;
     private List<String> servletNames;
     private List<String> urlPatterns;
 
     /** generic constructor */
     public ServletFilterMappingDescriptor() {
-	super(""/*name*/, ""/*description*/);
+        super(""/*name*/, ""/*description*/);
     }
 
     /** copy constructor */
@@ -75,7 +80,7 @@ public final class ServletFilterMappingDescriptor
         }
         dispatchers.add(Enum.valueOf(DispatcherType.class, dispatcher));
     }
-    
+
     public void removeDispatcher(String dispatcher) {
         if (dispatchers == null) {
             return;
@@ -98,12 +103,12 @@ public final class ServletFilterMappingDescriptor
             Set<DispatcherType> otherDispatchers = o.getDispatchers();
             boolean sameDispatchers =
                 ( (dispatchers == null &&
-                        (otherDispatchers == null || otherDispatchers.size() == 0)) ||
+                (otherDispatchers == null || otherDispatchers.size() == 0)) ||
                     (dispatchers != null && dispatchers.equals(otherDispatchers)) );
             if ( this.getName().equals(o.getName())
-                    && this.getServletNames().equals(o.getServletNames())
-                    && this.getUrlPatterns().equals(o.getUrlPatterns())
-                    && sameDispatchers ) {
+                && this.getServletNames().equals(o.getServletNames())
+                && this.getUrlPatterns().equals(o.getUrlPatterns())
+                && sameDispatchers ) {
                 return true;
             }
         }

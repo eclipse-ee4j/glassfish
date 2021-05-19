@@ -32,7 +32,7 @@ import static jakarta.servlet.annotation.ServletSecurity.TransportGuarantee.CONF
 
 @WebServlet(urlPatterns="/foo/*")
 public class FooMethodServlet extends HttpServlet {
-        
+
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
@@ -53,6 +53,6 @@ public class FooMethodServlet extends HttpServlet {
             }
             res.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             return;
-            
+
     }
 }

@@ -39,10 +39,10 @@ public class MemoryStrategyBuilder extends BasePersistenceStrategyBuilder {
 
         super.initializePersistenceStrategy(ctx, smBean, serverConfigLookup);
 
-        String persistenceType = PersistenceType.MEMORY.getType();        
+        String persistenceType = PersistenceType.MEMORY.getType();
 
         String ctxPath = ctx.getPath();
-        if(ctxPath != null && !ctxPath.equals("")) {    
+        if(ctxPath != null && !ctxPath.equals("")) {
             if (_logger.isLoggable(Level.FINE)) {
                 Object[] params = { ctx.getPath(), persistenceType };
                 _logger.log(Level.FINE, LogFacade.NO_PERSISTENCE, params);
@@ -60,7 +60,7 @@ public class MemoryStrategyBuilder extends BasePersistenceStrategyBuilder {
 
         // START OF 6364900
         mgr.setSessionLocker(new PESessionLocker(ctx));
-        // END OF 6364900        
+        // END OF 6364900
 
         ctx.setManager(mgr);
 
@@ -79,9 +79,9 @@ public class MemoryStrategyBuilder extends BasePersistenceStrategyBuilder {
             }
         }
         // END CR 6275709
-        
+
         if (!((StandardContext)ctx).isSessionTimeoutOveridden()) {
-            mgr.setMaxInactiveInterval(sessionMaxInactiveInterval); 
-        }        
-    }    
+            mgr.setMaxInactiveInterval(sessionMaxInactiveInterval);
+        }
+    }
 }

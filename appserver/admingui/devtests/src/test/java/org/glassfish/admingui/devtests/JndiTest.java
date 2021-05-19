@@ -79,10 +79,10 @@ public class JndiTest extends BaseSeleniumTestClass {
     public void testCustomResourcesWithTargets() {
         final String resourceName = "customResource" + generateRandomString();
         final String instanceName = "standalone" + generateRandomString();
-       
+
         StandaloneTest instanceTest = new StandaloneTest();
         instanceTest.createStandAloneInstance(instanceName);
-        
+
         clickAndWait("treeForm:tree:resources:jndi:customResources:customResources_link", TRIGGER_CUSTOM_RESOURCES);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton", TRIGGER_NEW_CUSTOM_RESOURCE);
 
@@ -93,7 +93,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         setFieldValue("form:basicTable:rowGroup1:0:col2:col1St", "property"+generateRandomString());
         setFieldValue("form:basicTable:rowGroup1:0:col3:col1St", "value");
         setFieldValue("form:basicTable:rowGroup1:0:col4:col1St", "description");
-        
+
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", instanceName);
         addSelectSelection("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove_available", "server");
         pressButton("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_addButton");
@@ -137,7 +137,7 @@ public class JndiTest extends BaseSeleniumTestClass {
         deleteRow("propertyForm:instancesTable:topActionsGroup1:button1", "propertyForm:instancesTable", instanceName);
         assertFalse(tableContainsRow("propertyForm:instancesTable", "col0", instanceName));
     }
-    
+
     @Test
     public void testExternalResources() {
         final String resourceName = "externalResource" + generateRandomString();

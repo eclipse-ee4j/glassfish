@@ -22,6 +22,6 @@ import jakarta.ejb.CreateException;
 public interface SFSBLocalHome
     extends EJBLocalHome
 {
-	public SFSBLocal create(String sfsbName)
+        public SFSBLocal create(String sfsbName)
             throws CreateException;
 }

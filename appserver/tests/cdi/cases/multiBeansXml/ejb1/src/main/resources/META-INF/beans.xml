@@ -22,5 +22,5 @@
        <interceptors>
            <class>com.oracle.cdi.cases.devtests.multiejb1.Interceptor1</class>
        </interceptors>
-       
+
 </beans>

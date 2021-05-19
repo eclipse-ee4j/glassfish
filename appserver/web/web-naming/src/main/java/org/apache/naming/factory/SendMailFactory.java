@@ -73,57 +73,52 @@ import javax.naming.spi.ObjectFactory;
  * @author Glenn Nielsen Rich Catlett
  */
 
-public class SendMailFactory implements ObjectFactory 
-{
+public class SendMailFactory implements ObjectFactory {
+
     // The class name for the javamail MimeMessageDataSource
-    protected static final String DataSourceClassName =
-	"jakarta.mail.internet.MimePartDataSource";
+    protected static final String DataSourceClassName = "jakarta.mail.internet.MimePartDataSource";
 
-    public Object getObjectInstance(Object RefObj, Name Nm, Context Ctx,
-				    Hashtable<?,?> Env) throws Exception 
-    {
-	final Reference Ref = (Reference)RefObj;
+    @Override
+    public Object getObjectInstance(Object RefObj, Name Nm, Context Ctx, Hashtable<?, ?> Env) throws Exception {
+        final Reference Ref = (Reference) RefObj;
 
-	// Creation of the DataSource is wrapped inside a doPrivileged
-	// so that Jakarta Mail can read its default properties without
-	// throwing Security Exceptions
-	if (Ref.getClassName().equals(DataSourceClassName)) {
-	    return AccessController.doPrivileged(
-                new PrivilegedAction<MimePartDataSource>()
-	    {
-		public MimePartDataSource run() {
-        	    // set up the smtp session that will send the message
-	            Properties props = new Properties();
-		    // enumeration of all refaddr
-		    Enumeration<RefAddr> list = Ref.getAll();
-		    // current refaddr to be set
-		    RefAddr refaddr;
-	            // set transport to smtp
-	            props.put("mail.transport.protocol", "smtp");
+        // Creation of the DataSource is wrapped inside a doPrivileged
+        // so that Jakarta Mail can read its default properties without
+        // throwing Security Exceptions
+        if (Ref.getClassName().equals(DataSourceClassName)) {
+            return AccessController.doPrivileged(new PrivilegedAction<MimePartDataSource>() {
 
-		    while (list.hasMoreElements()) {
-			refaddr = list.nextElement();
+                @Override
+                public MimePartDataSource run() {
+                    // set up the smtp session that will send the message
+                    Properties props = new Properties();
+                    // enumeration of all refaddr
+                    Enumeration<RefAddr> list = Ref.getAll();
+                    // current refaddr to be set
+                    RefAddr refaddr;
+                    // set transport to smtp
+                    props.put("mail.transport.protocol", "smtp");
 
-			// set property
-			props.put(refaddr.getType(), refaddr.getContent());
-		    }
-		    try {
-                        MimeMessage message = new MimeMessage(
-                            Session.getInstance(props));
-			String from = (String)Ref.get("mail.from").getContent();
-		        message.setFrom(new InternetAddress(from));
-		        message.setSubject("");
-                        MimePartDataSource mds = new MimePartDataSource(
-                            (MimePart)message);
+                    while (list.hasMoreElements()) {
+                        refaddr = list.nextElement();
+
+                        // set property
+                        props.put(refaddr.getType(), refaddr.getContent());
+                    }
+                    try {
+                        MimeMessage message = new MimeMessage(Session.getInstance(props));
+                        String from = (String) Ref.get("mail.from").getContent();
+                        message.setFrom(new InternetAddress(from));
+                        message.setSubject("");
+                        MimePartDataSource mds = new MimePartDataSource(message);
                         return mds;
-		    } catch (Exception e) {
+                    } catch (Exception e) {
                         return null;
                     }
-		}
-	    } );
-	}
-	else { // We can't create an instance of the DataSource
-	    return null;
-	}
+                }
+            });
+        } else { // We can't create an instance of the DataSource
+            return null;
+        }
     }
 }

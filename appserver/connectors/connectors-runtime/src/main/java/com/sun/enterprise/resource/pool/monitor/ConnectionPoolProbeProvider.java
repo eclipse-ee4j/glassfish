@@ -19,15 +19,15 @@ package com.sun.enterprise.resource.pool.monitor;
 /**
  * An abstract class that houses the common implementations of various probe
  * providers. All probe providers extend this implementation.
- * 
+ *
  * @author Shalini M
  */
 public abstract class ConnectionPoolProbeProvider {
 
     /**
-     * Emits probe event/notification that the given  connection pool 
+     * Emits probe event/notification that the given  connection pool
      * <code>poolName</code>has got a connection validation failed event.
-     * 
+     *
      * @param poolName for which connection validation has failed
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -39,7 +39,7 @@ public abstract class ConnectionPoolProbeProvider {
     /**
      * Emits probe event/notification that a  connection pool with the given
      * name <code>poolName</code> has got a connection timed out event.
-     * 
+     *
      * @param poolName that has got a connection timed-out event
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -48,9 +48,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the pool with the given name 
+     * Emits probe event/notification that the pool with the given name
      * <code>poolName</code> is having a potentialConnLeak event.
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -59,9 +59,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the given  connection pool 
+     * Emits probe event/notification that the given  connection pool
      * <code>poolName</code>has got a decrement free connections size event.
-     * 
+     *
      * @param poolName for which decrement numConnFree is got
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -70,23 +70,23 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the given  connection pool 
+     * Emits probe event/notification that the given  connection pool
      * <code>poolName</code>has got a decrement free connections size event.
-     * 
+     *
      * @param poolName for which decrement numConnFree is got
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
      * @param beingDestroyed if the connection is destroyed due to error
-     * @param steadyPoolSize 
+     * @param steadyPoolSize
      */
     public void incrementNumConnFreeEvent(String poolName, String appName, String moduleName, boolean beingDestroyed,
             int steadyPoolSize) {
     }
 
     /**
-     * Emits probe event/notification that the given  connection pool 
+     * Emits probe event/notification that the given  connection pool
      * <code>poolName</code>has got a decrement connections used event.
-     * 
+     *
      * @param poolName for which decrement numConnUsed is got
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -95,9 +95,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the given  connection pool 
+     * Emits probe event/notification that the given  connection pool
      * <code>poolName</code>has got a increment connections used event.
-     * 
+     *
      * @param poolName for which increment numConnUsed is got
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -106,9 +106,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the given  connection pool 
+     * Emits probe event/notification that the given  connection pool
      * <code>poolName</code>has got a increment connections free event.
-     * 
+     *
      * @param poolName for which increment numConnFree is got
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -120,8 +120,8 @@ public abstract class ConnectionPoolProbeProvider {
     /**
      * Emits probe event/notification that a connection request is served in the
      * time <code>timeTakenInMillis</code> for the given  connection pool
-     * <code> poolName</code> 
-     * 
+     * <code> poolName</code>
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -131,9 +131,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that a connection is destroyed for the 
+     * Emits probe event/notification that a connection is destroyed for the
      * given  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -144,7 +144,7 @@ public abstract class ConnectionPoolProbeProvider {
     /**
      * Emits probe event/notification that a connection is acquired by application
      * for the given  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -155,7 +155,7 @@ public abstract class ConnectionPoolProbeProvider {
     /**
      * Emits probe event/notification that a connection is released for the given
      *  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -166,7 +166,7 @@ public abstract class ConnectionPoolProbeProvider {
     /**
      * Emits probe event/notification that a new connection is created for the
      * given  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -178,9 +178,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that a connection under test matches the 
+     * Emits probe event/notification that a connection under test matches the
      * current request for the given  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -189,10 +189,10 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that a connection under test does not 
-     * match the current request for the given  connection pool 
+     * Emits probe event/notification that a connection under test does not
+     * match the current request for the given  connection pool
      * <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -201,9 +201,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the wait queue length has increased 
+     * Emits probe event/notification that the wait queue length has increased
      * for the given  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined
@@ -212,9 +212,9 @@ public abstract class ConnectionPoolProbeProvider {
     }
 
     /**
-     * Emits probe event/notification that the wait queue length has decreased 
+     * Emits probe event/notification that the wait queue length has decreased
      * for the given  connection pool <code>poolName</code>
-     * 
+     *
      * @param poolName
      * @param appName application-name in which the pool is defined
      * @param moduleName module-name in which the pool is defined

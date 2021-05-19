@@ -31,41 +31,41 @@ import javax.sql.DataSource;
 @Singleton
 @Startup
 public class DatabaseSetup {
-    
-    @Resource(lookup="java:comp/DefaultDataSource")	
+
+    @Resource(lookup="java:comp/DefaultDataSource")
     private DataSource dataSource;
 
     @PostConstruct
     public void init() {
-        
+
         executeUpdate(dataSource, "CREATE TABLE caller(name VARCHAR(64) PRIMARY KEY, password VARCHAR(64))");
         executeUpdate(dataSource, "CREATE TABLE caller_groups(caller_name VARCHAR(64), group_name VARCHAR(64))");
-        
+
         executeUpdate(dataSource, "INSERT INTO caller VALUES('reza', 'secret1')");
         executeUpdate(dataSource, "INSERT INTO caller VALUES('alex', 'secret2')");
         executeUpdate(dataSource, "INSERT INTO caller VALUES('arjan', 'secret2')");
         executeUpdate(dataSource, "INSERT INTO caller VALUES('werner', 'secret2')");
-        
+
         executeUpdate(dataSource, "INSERT INTO caller_groups VALUES('reza', 'foo')");
         executeUpdate(dataSource, "INSERT INTO caller_groups VALUES('reza', 'bar')");
-        
+
         executeUpdate(dataSource, "INSERT INTO caller_groups VALUES('alex', 'foo')");
         executeUpdate(dataSource, "INSERT INTO caller_groups VALUES('alex', 'bar')");
-        
+
         executeUpdate(dataSource, "INSERT INTO caller_groups VALUES('arjan', 'foo')");
         executeUpdate(dataSource, "INSERT INTO caller_groups VALUES('werner', 'foo')");
     }
-    
+
     @PreDestroy
     public void destroy() {
-    	try {
-    		executeUpdate(dataSource, "DROP TABLE caller");
-    		executeUpdate(dataSource, "DROP TABLE caller_groups");
-    	} catch (Exception e) {
-    		// silently ignore, concerns in-memory database
-    	}
+            try {
+                    executeUpdate(dataSource, "DROP TABLE caller");
+                    executeUpdate(dataSource, "DROP TABLE caller_groups");
+            } catch (Exception e) {
+                    // silently ignore, concerns in-memory database
+            }
     }
-    
+
     private void executeUpdate(DataSource dataSource, String query) {
         try (Connection connection = dataSource.getConnection()) {
             try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -75,5 +75,5 @@ public class DatabaseSetup {
            throw new IllegalStateException(e);
         }
     }
-    
+
 }

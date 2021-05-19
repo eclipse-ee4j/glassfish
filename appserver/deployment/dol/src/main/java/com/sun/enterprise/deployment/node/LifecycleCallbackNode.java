@@ -35,7 +35,7 @@ public class LifecycleCallbackNode extends DeploymentDescriptorNode<LifecycleCal
 
     @Override
     public LifecycleCallbackDescriptor getDescriptor() {
-        
+
        if (descriptor==null) {
             descriptor = new LifecycleCallbackDescriptor();
             Descriptor parentDesc = (Descriptor)getParentNode().getDescriptor();
@@ -44,13 +44,13 @@ public class LifecycleCallbackNode extends DeploymentDescriptorNode<LifecycleCal
                 descriptor.setDefaultLifecycleCallbackClass(
                     ejbDesc.getEjbClassName());
             } else if (parentDesc instanceof EjbInterceptor) {
-                EjbInterceptor ejbInterceptor = 
+                EjbInterceptor ejbInterceptor =
                     (EjbInterceptor)parentDesc;
                 descriptor.setDefaultLifecycleCallbackClass(
                     ejbInterceptor.getInterceptorClassName());
             }
-            // we set the default lifecycle callback class for appclient 
-            // later in validate since the appclient Main class is not 
+            // we set the default lifecycle callback class for appclient
+            // later in validate since the appclient Main class is not
             // available at this point
         }
         return descriptor;
@@ -67,9 +67,9 @@ public class LifecycleCallbackNode extends DeploymentDescriptorNode<LifecycleCal
     @Override
     public Node writeDescriptor(Node parent, String nodeName, LifecycleCallbackDescriptor descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        appendTextChild(myNode, TagNames.LIFECYCLE_CALLBACK_CLASS, 
+        appendTextChild(myNode, TagNames.LIFECYCLE_CALLBACK_CLASS,
             descriptor.getLifecycleCallbackClass());
-        appendTextChild(myNode, TagNames.LIFECYCLE_CALLBACK_METHOD, 
+        appendTextChild(myNode, TagNames.LIFECYCLE_CALLBACK_METHOD,
             descriptor.getLifecycleCallbackMethod());
         return myNode;
     }

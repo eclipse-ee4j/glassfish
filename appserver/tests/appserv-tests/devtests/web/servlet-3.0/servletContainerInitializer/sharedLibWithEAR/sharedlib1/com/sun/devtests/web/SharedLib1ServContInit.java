@@ -23,9 +23,9 @@ import jakarta.servlet.annotation.*;
 @HandlesTypes(WebServlet.class)
 public class SharedLib1ServContInit implements ServletContainerInitializer {
     public SharedLib1ServContInit() {
-	System.out.println("SHARED LIB 1 CONST");
+        System.out.println("SHARED LIB 1 CONST");
     }
     public void onStartup(Set<Class<?>> c, ServletContext ctx) {
-	ctx.setAttribute("SHAREDLIB-1", "CALLED EARSHAREDLIB-1");
+        ctx.setAttribute("SHAREDLIB-1", "CALLED EARSHAREDLIB-1");
     }
 }

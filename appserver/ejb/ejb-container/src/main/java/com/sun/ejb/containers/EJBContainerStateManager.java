@@ -59,7 +59,7 @@ public class EJBContainerStateManager {
      * Note that some of the calls do not have Context assosiated with this
      * invocation, so Context object is passed in separately
      */
-    public void attachObject(EjbInvocation inv, EJBContextImpl context, 
+    public void attachObject(EjbInvocation inv, EJBContextImpl context,
             EJBObjectImpl ejbObjImpl, EJBLocalObjectImpl localObjImpl) {
         if ( ejbObjImpl != null && container.isRemoteObject() && (!inv.isLocal) ) {
             // associate the context with the ejbObject
@@ -110,7 +110,7 @@ public class EJBContainerStateManager {
             context.setEJBLocalObjectImpl(null);
         }
     }
-    
+
     /**
      * Clear EJB Object references in the context
      */
@@ -119,5 +119,5 @@ public class EJBContainerStateManager {
         context.setEJBObjectImpl(null);
         context.setEJBStub(null);
     }
-    
+
 }

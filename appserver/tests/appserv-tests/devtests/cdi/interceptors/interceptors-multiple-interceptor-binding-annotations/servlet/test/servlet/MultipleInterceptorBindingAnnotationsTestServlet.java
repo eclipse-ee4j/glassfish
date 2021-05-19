@@ -39,10 +39,10 @@ public class MultipleInterceptorBindingAnnotationsTestServlet extends HttpServle
     @Inject
     @Preferred
     TestBean tb;
-    
+
     @Inject
     ShoppingCart sc;
-    
+
     @Inject
     @Preferred
     SecondShoppingCart sc2;
@@ -50,7 +50,7 @@ public class MultipleInterceptorBindingAnnotationsTestServlet extends HttpServle
     @Inject
     @Preferred
     ThirdShoppingCart sc3;
-    
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
@@ -64,7 +64,7 @@ public class MultipleInterceptorBindingAnnotationsTestServlet extends HttpServle
         tb.m1();
         if (TransactionalSecureInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke on " +
-            		"TransactionSecureInterceptor called when it shouldn't have";
+                            "TransactionSecureInterceptor called when it shouldn't have";
         tb.m2();
         if (TransactionalSecureInterceptor.aroundInvokeInvocationCount != 0)
             msg += "Business method interceptor invocation on method-level "
@@ -73,8 +73,8 @@ public class MultipleInterceptorBindingAnnotationsTestServlet extends HttpServle
                     + TransactionalSecureInterceptor.aroundInvokeInvocationCount;
         if (!TransactionalSecureInterceptor.errorMessage.trim().equals(""))
             msg += TransactionalSecureInterceptor.errorMessage;
-        
-        
+
+
         //Now use the two shopping cart to test TransactionalSecureInterceptor
         sc.checkout();
         if (!TransactionalSecureInterceptor.aroundInvokeCalled)
@@ -87,7 +87,7 @@ public class MultipleInterceptorBindingAnnotationsTestServlet extends HttpServle
                     + TransactionalSecureInterceptor.aroundInvokeInvocationCount;
         if (!TransactionalSecureInterceptor.errorMessage.trim().equals(""))
             msg += TransactionalSecureInterceptor.errorMessage;
-        
+
         sc2.checkout();
         if (TransactionalSecureInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor invocation on method-level "

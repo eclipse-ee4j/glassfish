@@ -16,4 +16,4 @@
 
 package com.sun.appserv.connectors.spi;
 
-public enum TransactionSupport { NO_TRANSACTION, LOCAL_TRANSACTION, XA_TRANSACTION }    
+public enum TransactionSupport { NO_TRANSACTION, LOCAL_TRANSACTION, XA_TRANSACTION }

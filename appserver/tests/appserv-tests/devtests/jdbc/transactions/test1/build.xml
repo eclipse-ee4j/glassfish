@@ -30,14 +30,14 @@
   &commonBuild;
   &testproperties;
 
-    
+
   <target name="all" depends="build,setup-jdbc,setup-sql,deploy,runweb,undeploy,cleanup-jdbc,cleanup-sql"/>
 
     <target name="clean" depends="init-common">
       <delete dir="${build.classes.dir}"/>
       <delete dir="${assemble.dir}"/>
     </target>
-    
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -55,18 +55,18 @@
       </antcall>
       <antcall target="package-war-local">
         <param name="war.classes" value="${build.classes.dir}"/>
-	<param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
+        <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
       </antcall>
       <antcall target="ear-common"/>
       <!--
       <antcall target="webclient-war-common"/>
         <param name="hasWebclient" value="true"/>
-	<param name="webclient.war.classes" value="**/*.class"/>
-      </antcall>	
+        <param name="webclient.war.classes" value="**/*.class"/>
+      </antcall>
       -->
     </target>
   <target name="package-war-local" >
-    <!-- <delete dir="${build.classes.dir}"/> 
+    <!-- <delete dir="${build.classes.dir}"/>
     <mkdir dir="${build.classes.dir}"/>
      <antcall target="compile-servlet"/>-->
 
@@ -125,7 +125,7 @@
     <antcall target="create-jdbc-resource-common" >
       <param name="jdbc.conpool.name" value="jts-xa-pool2"/>
       <param name="jdbc.resource.name" value="jdbc/oracleds2"/>
-    </antcall> 
+    </antcall>
 
     <antcall target="create-jdbc-oracle-xa-pool" >
       <param name="poolname" value="jts-xa-pool1"/>
@@ -134,7 +134,7 @@
       <param name="ora.sid" value="${ora.sid1}"/>
       <param name="ora.url" value="${ora.url1}"/>
     </antcall>
-    
+
     <antcall target="create-jdbc-resource-common" >
       <param name="jdbc.conpool.name" value="jts-xa-pool1"/>
       <param name="jdbc.resource.name" value="jdbc/oraclethird"/>
@@ -167,7 +167,7 @@
       onerror="continue"
       print="yes"
       classpath="${dbdriver.classpath}"/>
-    
+
     <echo message="Executing sql statement at from ${create.sql.file2}"/>
     <sql
       driver="${db.driver}"
@@ -191,7 +191,7 @@
       onerror="continue"
       print="yes"
       classpath="${dbdriver.classpath}"/>
-    
+
     <echo message="Executing sql statement at from ${drop.sql.file2}"/>
     <sql
       driver="${db.driver}"
@@ -217,14 +217,14 @@
     <antcall target="usage-common"/>
   </target>
 
-  <!-- 
+  <!--
     Tomcat's GTest tool for webtests
   -->
   <target name="runweb" depends="init-common">
-    <taskdef name="gtest" classname="org.apache.tomcat.task.GTest" 
+    <taskdef name="gtest" classname="org.apache.tomcat.task.GTest"
           classpath="${env.APS_HOME}/lib/testdriversecurity.jar:${env.APS_HOME}/lib/commons-logging.jar" />
     <property name="wgdir" value="${env.APS_HOME}/devtests/jdbc/transactions"/>
-    <gtest request="GET /txnstatus/bmservlet4 HTTP/1.0" 
+    <gtest request="GET /txnstatus/bmservlet4 HTTP/1.0"
       debug="9"
       firstTask="true"
       lastTest="true"
@@ -246,7 +246,7 @@
       testCaseDescription="txnstatus-test1"
       testStrategy="txnstatus-test1"
     />
-  </target>  
+  </target>
 
   <target name="create-jdbc-oracle-xa-pool" depends="init-common">
     <antcall target="create-jdbc-connpool-common" >
@@ -262,7 +262,7 @@
         <param name="admin.command" value="set"/>
         <param name="operand.props" value="${resources.dottedname.prefix}.jdbc-connection-pool.${poolname}.property.URL=${ora.url}"/>
       </antcall>
-      
+
   </target>
-  
+
 </project>

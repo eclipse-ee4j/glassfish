@@ -184,7 +184,7 @@ public final class ComplianceMonitor implements NotificationListener {
         }
 
         protected void doRun() throws InterruptedException {
-            //debug( "ValidatorThread.doRun(): started" );                
+            //debug( "ValidatorThread.doRun(): started" );
             while (true) {
                 final ObjectName next = mMBeans.take(); // BLOCK until ready
                 final List<ObjectName> toValidate = new ArrayList<ObjectName>();

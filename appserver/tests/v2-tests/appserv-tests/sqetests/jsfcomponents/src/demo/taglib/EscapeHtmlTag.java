@@ -79,13 +79,13 @@ public class EscapeHtmlTag extends BodyTagSupport {
 
     //*********************************************************************
     // Instance variables
-    
+
     private String reader;
     private String writer;
-    
+
     //*********************************************************************
     // Constructors
-    
+
     public EscapeHtmlTag() {
         super();
         init();
@@ -96,11 +96,11 @@ public class EscapeHtmlTag extends BodyTagSupport {
         reader = null;
         writer = null;
     }
-    
-    
+
+
     //*********************************************************************
     // Tag's properties
-    
+
     /**
      * Tag's 'reader' attribute
      */
@@ -115,10 +115,10 @@ public class EscapeHtmlTag extends BodyTagSupport {
     public void setWriter(String reader) {
         this.writer = writer;
     }
-    
+
     //*********************************************************************
     // TagSupport methods
-    
+
     public int doEndTag() throws JspException {
         Reader in;
         Writer out;
@@ -152,10 +152,10 @@ public class EscapeHtmlTag extends BodyTagSupport {
         super.release();
         init();
     }
-    
+
     //*********************************************************************
     // Tag's scific behavior methods
-    
+
     /**
      * Transform
      */
@@ -179,10 +179,10 @@ public class EscapeHtmlTag extends BodyTagSupport {
                                    "error copying chars", ex);
         }
     }
-    
+
     //*********************************************************************
     // Utility methods
-    
+
     /**
      * Evaluate elexprvalue
      */

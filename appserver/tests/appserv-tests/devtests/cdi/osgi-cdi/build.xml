@@ -82,15 +82,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the osgi-cdi tests)
-		ant clean (cleans all the osgi-cdi tests)
-		ant build (builds all the osgi-cdi tests)
-		ant setup (sets up all resources for osgi-cdi tests)
-		ant deploy (deploys all the osgi-cdi apps)
-		ant run (Executes all the osgi-cdi tests)
-		ant undeploy (undeploys all the  osgi-cdi apps)
-		ant unsetup (unsets all resources for osgi-cdi tests)
-	</echo>
+        <echo> Usage:
+                ant all (Executes all the osgi-cdi tests)
+                ant clean (cleans all the osgi-cdi tests)
+                ant build (builds all the osgi-cdi tests)
+                ant setup (sets up all resources for osgi-cdi tests)
+                ant deploy (deploys all the osgi-cdi apps)
+                ant run (Executes all the osgi-cdi tests)
+                ant undeploy (undeploys all the  osgi-cdi apps)
+                ant unsetup (unsets all resources for osgi-cdi tests)
+        </echo>
     </target>
 </project>

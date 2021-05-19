@@ -36,7 +36,7 @@ public class ContainerRegistry {
 
     @Inject
     ServiceLocator habitat;
-    
+
     Map<String, EngineInfo> containers = new HashMap<String, EngineInfo>();
 
 
@@ -73,5 +73,5 @@ public class ContainerRegistry {
         copy.addAll(containers.values());
         return copy;
     }
-        
+
 }

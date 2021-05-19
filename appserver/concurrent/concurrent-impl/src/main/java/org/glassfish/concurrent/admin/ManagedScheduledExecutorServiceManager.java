@@ -30,7 +30,7 @@ import java.util.Properties;
 
 /**
  *
- * The managed scheduled executor service manager allows you to create and 
+ * The managed scheduled executor service manager allows you to create and
  * delete the managed-scheduled-executor-service config element
  */
 @Service (name=ServerTags.MANAGED_SCHEDULED_EXECUTOR_SERVICE)

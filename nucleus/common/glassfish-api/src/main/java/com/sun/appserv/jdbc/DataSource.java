@@ -81,16 +81,16 @@ public interface DataSource extends javax.sql.DataSource {
      * <pre>
         com.sun.appserv.jdbc.DataSource ds=
            (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
-      	Connection con = ds.getConnection();
-      	Statement stmt = null;
-      	try{
-     		 stmt = con.createStatement();
-     		 stmt.executeUpdate("Update");
-     	}catch(BadConnectionException e){
-     		dataSource.markConnectionAsBad(con) //marking it as bad for removal
-     	}finally{
-     		stmt.close();
-     		con.close(); //Connection will be destroyed while close or Tx completion
+              Connection con = ds.getConnection();
+              Statement stmt = null;
+              try{
+                      stmt = con.createStatement();
+                      stmt.executeUpdate("Update");
+             }catch(BadConnectionException e){
+                     dataSource.markConnectionAsBad(con) //marking it as bad for removal
+             }finally{
+                     stmt.close();
+                     con.close(); //Connection will be destroyed while close or Tx completion
         }
      * </pre>
      *

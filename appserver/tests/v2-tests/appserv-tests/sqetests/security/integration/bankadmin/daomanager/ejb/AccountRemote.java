@@ -20,5 +20,5 @@ import jakarta.ejb.EJBObject;
 
 public interface AccountRemote extends jakarta.ejb.EJBObject
 {
-	public AccountDataObject getDAO() throws java.rmi.RemoteException;
+    public AccountDataObject getDAO() throws java.rmi.RemoteException;
 }

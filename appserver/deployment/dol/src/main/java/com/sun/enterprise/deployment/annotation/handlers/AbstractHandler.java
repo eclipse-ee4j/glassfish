@@ -90,7 +90,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
             throws AnnotationProcessorException {
 
         if (logger.isLoggable(Level.FINE)) {
-            log(Level.FINE, ainfo, 
+            log(Level.FINE, ainfo,
                 localStrings.getLocalString(
                 "enterprise.deployment.annotation.handlers.invalidaehandler",
                 "Invalid annotation symbol found for this type of class."));
@@ -130,7 +130,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
         if( (methodName.length() > 3) &&
             methodName.startsWith("set") ) {
             // Derive javabean property name.
-            propertyName = 
+            propertyName =
                 methodName.substring(3, 4).toLowerCase(Locale.US) +
                 methodName.substring(4);
         }  else {
@@ -157,7 +157,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
                 "enterprise.deployment.annotation.handlers.invalidinjectionmethod",
                 "Injection on a method requires a JavaBeans setter method type with one parameter "),
                 ainfo);
-                
+
         }
         if (!void.class.equals(method.getReturnType())) {
             throw new AnnotationProcessorException(
@@ -183,7 +183,7 @@ public abstract class AbstractHandler implements AnnotationHandler {
 
     /**
      * This is called by getTypeDependencies().
-     * @return an array of all ejb annotation types 
+     * @return an array of all ejb annotation types
      */
     protected Class<? extends Annotation>[] getEjbAnnotationTypes() {
         if (ejbProvider!=null) {

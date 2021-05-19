@@ -161,9 +161,9 @@ public final class PropertyKeys {
 
         props.put(UPLOAD_DOWNLOAD_MGR_TEST_THREADS, DEFAULT_UPLOAD_DOWNLOAD_MGR_TEST_THREADS);
         props.put(UPLOAD_DOWNLOAD_MGR_TEST_BIG_FILE_KB, DEFAULT_UPLOAD_DOWNLOAD_MGR_TEST_BIG_FILE_KB);
-		
-		props.put( DEFAULT_PROPERTIES_FILE, DEFAULT_PROPERTIES_FILE );
-		return( props );
-	}
+
+        props.put( DEFAULT_PROPERTIES_FILE, DEFAULT_PROPERTIES_FILE );
+        return( props );
+    }
 };
 

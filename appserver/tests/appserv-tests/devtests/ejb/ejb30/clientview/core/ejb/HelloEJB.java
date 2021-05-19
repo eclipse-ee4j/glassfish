@@ -53,7 +53,7 @@ public class HelloEJB implements Hello {
 
     @EJB public BmpHome bmpHome;
 
-    @EJB(beanName="BmpBean") 
+    @EJB(beanName="BmpBean")
     public BmpHomeSuper bmpHomeSuper;
 
     private Bmp bmp;
@@ -62,7 +62,7 @@ public class HelloEJB implements Hello {
     private BmpRemote bmpRemote;
 
     private long overhead;
-    
+
     private static final String pkey = "A BMP Bean";
 
     @Resource jakarta.transaction.UserTransaction ut;
@@ -70,27 +70,27 @@ public class HelloEJB implements Hello {
     @PostConstruct
     public void create() {
 
-	try {
+        try {
 
             sful = sfulHome.createSful();
             sfulRemote = sfulRemoteHome.createSful();
-	    System.out.println("Created loca/remote sful objs via homes.");
+            System.out.println("Created loca/remote sful objs via homes.");
 
             bmp = bmpHome.create(pkey);
             bmpRemote = (BmpRemote)
                 bmpRemoteHome.findByPrimaryKey(pkey);
-	    System.out.println("Created BMP bean.");
+            System.out.println("Created BMP bean.");
 
             sless = slessHome.create();
             slessRemote = slessRemoteHome.create();
-	    System.out.println("Created loca/remote sless objs via homes.");
+            System.out.println("Created loca/remote sless objs via homes.");
 
 
             //            ut = context.getUserTransaction();
-	   	     
-	} catch (Exception ex) {
-	    ex.printStackTrace();
-	}
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void testRemove() throws RemoteException {
@@ -99,7 +99,7 @@ public class HelloEJB implements Hello {
             System.out.println("Created BMP bean.");
             bmpHome.remove(bmp2.getPrimaryKey());
             System.out.println("Successfully removed local entity bean");
-        } catch(Exception e) {            
+        } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
@@ -127,9 +127,9 @@ public class HelloEJB implements Hello {
 
         try {
             ((EJBLocalObject)sful).remove();
-            
+
             try {
-                ((EJBLocalObject)sful).remove(); 
+                ((EJBLocalObject)sful).remove();
                 throw new EJBException("2nd sful remove should have caused exception");
             } catch(Exception e) {
                 System.out.println("Successfully caught exception when attempting to "+
@@ -139,7 +139,7 @@ public class HelloEJB implements Hello {
 
             ((EJBLocalObject)sless).remove();
 
-            ((EJBLocalObject)bmp).remove(); 
+            ((EJBLocalObject)bmp).remove();
 
         } catch(Exception e) {
             EJBException ejbEx = new EJBException();
@@ -160,52 +160,52 @@ public class HelloEJB implements Hello {
     public void throwAppException2() throws FinderException {
         throw new ObjectNotFoundException("throwAppException2");
     }
-    
+
     public void warmup(int type) {
 
         try {
             warmup(type, true);
             warmup(type, false);
-            
-            // Measure looping and timing overhead 
+
+            // Measure looping and timing overhead
             long begin = System.currentTimeMillis();
             for ( int i=0; i<ITERATIONS; i++ ) {
             }
             long end = System.currentTimeMillis();
             overhead = end - begin;
-            
+
             String pkey2 = (String) ((EJBLocalObject)bmp).getPrimaryKey();
             if( !pkey2.equals(pkey) ) {
                 throw new EJBException("pkey2 " + pkey2 + " doesn't match " + pkey);
             }
-            
+
             ut = context.getUserTransaction();
-            
+
             testLocalObjects(((EJBLocalObject)sful), ((EJBLocalObject)sless));
             testLocalObjects(((EJBLocalObject)sful), ((EJBLocalObject)bmp));
             testLocalObjects(((EJBLocalObject)sless),((EJBLocalObject)bmp));
-            
+
             testEJBObjects(sfulRemote, slessRemote);
             testEJBObjects(sfulRemote, bmpRemote);
             testEJBObjects(slessRemote, bmpRemote);
-            
+
             testNotImplemented(sful);
             testNotImplemented(sless);
             testNotImplemented(bmp);
-            
+
             testNotImplemented(sfulRemote);
             testNotImplemented(slessRemote);
             testNotImplemented(bmpRemote);
-            
+
             testRemove();
-            
+
             // skip testExceptions for sfsb since throwing a runtime exception
             // will cause the bean to be removed
             // testExceptions(sful);
-            
+
             testExceptions(sless);
             testExceptions(bmp);
-            
+
             testExceptions(slessRemote);
             testExceptions(bmpRemote);
         } catch(Exception e) {
@@ -213,14 +213,14 @@ public class HelloEJB implements Hello {
             throw new EJBException(e);
         }
     }
-    
+
     private void testExceptions(Common c) {
 
         try {
             c.testException1();
             throw new EJBException("didn't get exception for testException1");
         } catch(Exception e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -228,7 +228,7 @@ public class HelloEJB implements Hello {
             c.testException2();
             throw new EJBException("didn't get exception for testException2");
         } catch(EJBException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -236,10 +236,10 @@ public class HelloEJB implements Hello {
             c.testException3();
             throw new EJBException("didn't get exception for testException3");
         } catch(FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
-                
+
     }
 
     private void testExceptions(CommonRemote c) throws RemoteException {
@@ -248,7 +248,7 @@ public class HelloEJB implements Hello {
             c.testException1();
             throw new EJBException("didn't get exception for testException1");
         } catch(Exception e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -256,7 +256,7 @@ public class HelloEJB implements Hello {
             c.testException2();
             throw new EJBException("didn't get exception for testException2");
         } catch(RemoteException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -264,7 +264,7 @@ public class HelloEJB implements Hello {
             c.testException3();
             throw new EJBException("didn't get exception for testException3");
         } catch(FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -272,10 +272,10 @@ public class HelloEJB implements Hello {
             c.testException4();
             throw new EJBException("didn't get exception for testException4");
         } catch(FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
-                
+
     }
 
     public Object testPassByRef() {
@@ -283,15 +283,15 @@ public class HelloEJB implements Hello {
             System.out.println("Doing pass by ref tests for slessRemote " +
                                ", passbyref = true");
             _testPassByRef(slessRemote, true);
-            
+
             System.out.println("Doing pass by ref tests for sfulRemote " +
                                ", passbyref = false");
             _testPassByRef(sfulRemote, false);
-            
+
             System.out.println("Doing pass by ref tests for bmpRemote " +
                                ", passbyref = false");
             _testPassByRef(bmpRemote, false);
-            
+
             // uncomment to see exception that is thrown when non-serializable
             // object is passed over non-collocated remote call
             //return new Helper2();
@@ -303,9 +303,9 @@ public class HelloEJB implements Hello {
         return null;
     }
 
-    private void _testPassByRef(CommonRemote c, boolean passByRef) 
+    private void _testPassByRef(CommonRemote c, boolean passByRef)
         throws Exception {
-        
+
         int intVal = 1;
         String stringVal = "HelloEJB::_testPassByRef";
 
@@ -321,7 +321,7 @@ public class HelloEJB implements Hello {
         if( passByRef ) {
             if( (h1.a == intVal) || h1.b.equals(stringVal) ) {
                 throw new EJBException("h1 mutations not present " + h1);
-            }            
+            }
         } else {
             if( (h1.a != intVal) || !h1.b.equals(stringVal) ) {
                 throw new EJBException("error : h1 was mutated " + h1);
@@ -338,23 +338,23 @@ public class HelloEJB implements Hello {
             System.out.println("After testPassByRef3 : " + h2);
             if( (h2.a == intVal) || h2.b.equals(stringVal) ) {
                 throw new EJBException("h2 mutations not present " + h2);
-            }   
+            }
         } else {
             try {
                 c.testPassByRef3(h2);
-                System.out.println("Error : Expected exception when " + 
+                System.out.println("Error : Expected exception when " +
                                    "passing non-serializable data " + h2);
-                 
+
                 /* DON'T TREAT AS FATAL ERROR WHILE WE INVESTIGATE WHETHER
                  * THIS WAS INTENDED BEHAVIOR FOR THE ORB
-                 throw new EJBException("Error : Expected exception when " + 
-                 "passing non-serializable data " + 
+                 throw new EJBException("Error : Expected exception when " +
+                 "passing non-serializable data " +
                  h2);
                 */
             } catch(EJBException ejbex) {
                 throw ejbex;
             } catch(Exception e) {
-                System.out.println("Caught expected exception when " + 
+                System.out.println("Caught expected exception when " +
                                    " passing non-serializable data" +
                                    e.toString());
             }
@@ -369,16 +369,16 @@ public class HelloEJB implements Hello {
         } else {
             try {
                 Helper2 h6 = c.testPassByRef6();
-                System.out.println("Error : Expected exception when " + 
+                System.out.println("Error : Expected exception when " +
                            "returning non-serializable data " + h6);
-                /* see comment for testPassByRef3 above 
-                throw new EJBException("Error : Expected exception when " + 
+                /* see comment for testPassByRef3 above
+                throw new EJBException("Error : Expected exception when " +
                                        "returning non-serializable data ");
                 */
             } catch(EJBException ejbex) {
-                throw ejbex;                           
+                throw ejbex;
             } catch(Exception e) {
-                System.out.println("Caught expected exception when " + 
+                System.out.println("Caught expected exception when " +
                                    " returning non-serializable data" +
                                    e.toString());
             }
@@ -410,52 +410,52 @@ public class HelloEJB implements Hello {
     }
 
     private void warmup(int type, boolean tx) {
-	// get Hotspot warmed up	
-	Common bean = pre(type, tx);
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.requiresNew();
-	    bean.notSupported();
-	}
-	for ( int i=0; i<ITERATIONS; i++ ) {
-	    bean.required();
-	    if ( tx )
-		bean.mandatory();
-	    else
-		bean.never();
-	    bean.supports();
-	}
-	if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        // get Hotspot warmed up
+        Common bean = pre(type, tx);
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.requiresNew();
+            bean.notSupported();
+        }
+        for ( int i=0; i<ITERATIONS; i++ ) {
+            bean.required();
+            if ( tx )
+                bean.mandatory();
+            else
+                bean.never();
+            bean.supports();
+        }
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
     }
 
-    private Common pre(int type, boolean tx) 
+    private Common pre(int type, boolean tx)
     {
-	if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
-	if ( type == Common.STATELESS )
-	    return sless;
-	else if ( type == Common.STATEFUL )
-	    return sful;
-	else
-	    return bmp;
+        if ( tx ) try { ut.begin(); } catch ( Exception ex ) {}
+        if ( type == Common.STATELESS )
+            return sless;
+        else if ( type == Common.STATEFUL )
+            return sful;
+        else
+            return bmp;
     }
 
-    private CommonRemote preRemote(int type, boolean tx) 
-    {       
-	if ( type == Common.STATELESS )
-	    return slessRemote;
-	else if ( type == Common.STATEFUL )
-	    return sfulRemote;
-	else
-	    return bmpRemote;
+    private CommonRemote preRemote(int type, boolean tx)
+    {
+        if ( type == Common.STATELESS )
+            return slessRemote;
+        else if ( type == Common.STATEFUL )
+            return sfulRemote;
+        else
+            return bmpRemote;
     }
 
 
     private float post(long begin, long end, boolean tx)
     {
-	if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
-	return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
+        if ( tx ) try { ut.commit(); } catch ( Exception ex ) {}
+        return (float)( ((double)(end-begin-overhead))/((double)ITERATIONS) * 1000.0 );
     }
 
-    public float requiresNew(int type, boolean tx) 
+    public float requiresNew(int type, boolean tx)
     {
         long begin = 0;
         long end = 0;
@@ -477,7 +477,7 @@ public class HelloEJB implements Hello {
         return post(begin, end, tx);
     }
 
-    public float notSupported(int type, boolean tx) 
+    public float notSupported(int type, boolean tx)
     {
         long begin = 0;
         long end = 0;
@@ -495,11 +495,11 @@ public class HelloEJB implements Hello {
         } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
-        } 
-	return post(begin, end, tx);
+        }
+        return post(begin, end, tx);
     }
 
-    public float required(int type, boolean tx) 
+    public float required(int type, boolean tx)
     {
         long begin = 0;
         long end = 0;
@@ -513,23 +513,23 @@ public class HelloEJB implements Hello {
             for ( int i=0; i<ITERATIONS; i++ ) {
                 beanRemote.required();
             }
-            
+
             end = System.currentTimeMillis();
         } catch(Exception e) {
             e.printStackTrace();
             throw new EJBException(e);
         }
-	return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
-    public float mandatory(int type, boolean tx) 
+    public float mandatory(int type, boolean tx)
     {
         long begin = 0;
         long end = 0;
         try {
             Common bean = pre(type, tx);
             CommonRemote beanRemote = preRemote(type, tx);
-            begin = System.currentTimeMillis();            
+            begin = System.currentTimeMillis();
             for ( int i=0; i<ITERATIONS; i++ ) {
                 bean.mandatory();
             }
@@ -541,7 +541,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-	return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     public float never(int type, boolean tx)
@@ -563,10 +563,10 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-	return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
-    public float supports(int type, boolean tx) 
+    public float supports(int type, boolean tx)
     {
         long begin = 0;
         long end = 0;
@@ -585,7 +585,7 @@ public class HelloEJB implements Hello {
             e.printStackTrace();
             throw new EJBException(e);
         }
-	return post(begin, end, tx);
+        return post(begin, end, tx);
     }
 
     // assumes lo1 and lo2 are do not have same client identity
@@ -629,11 +629,11 @@ public class HelloEJB implements Hello {
         if( o1.isIdentical(o2) ) {
             throw new EJBException("isIdentical failed");
         }
-        
+
         if( o2.isIdentical(o1) ) {
             throw new EJBException("isIdentical failed");
         }
-        
+
         if( !o1.isIdentical(o1) ) {
             throw new EJBException("isIdentical failed");
         }
@@ -686,12 +686,12 @@ public class HelloEJB implements Hello {
         }
 
         System.out.println("o1.hashCode() = " + o1.hashCode());
-                           
+
         System.out.println("o2.hashCode() = " + o2.hashCode());
-        
+
         System.out.println("o1.toString() = " + o1.toString());
         System.out.println("o2.toString() = " + o2.toString());
-        
+
     }
 
 }

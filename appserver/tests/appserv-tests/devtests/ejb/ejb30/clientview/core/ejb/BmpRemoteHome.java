@@ -21,5 +21,5 @@ import java.rmi.RemoteException;
 
 public interface BmpRemoteHome extends BmpRemoteHomeSuper
 {
-    BmpRemote findByPrimaryKey(String s) throws RemoteException, CreateException;    
+    BmpRemote findByPrimaryKey(String s) throws RemoteException, CreateException;
 }

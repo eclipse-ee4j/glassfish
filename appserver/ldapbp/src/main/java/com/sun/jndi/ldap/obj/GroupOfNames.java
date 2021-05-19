@@ -16,37 +16,49 @@
 
 package com.sun.jndi.ldap.obj;
 
-import java.security.Principal;
 import com.sun.enterprise.security.GroupPrincipal;
+import com.sun.jndi.ldap.LdapURL;
+
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Set;
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
+
+import javax.naming.CompositeName;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NameNotFoundException;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.directory.DirContext;
+import javax.naming.directory.ModificationItem;
+import javax.naming.directory.SearchControls;
+import javax.naming.ldap.LdapContext;
 import javax.naming.spi.NamingManager;
-import com.sun.jndi.ldap.LdapURL;
 
 /**
  * A representation of the LDAP groupOfNames object class.
  * This is a static group: its members are listed in the group's member
  * LDAP attribute.
  * <p>
- * Note that when a <tt>GroupOfNames</tt> object is created by the application 
+ * Note that when a <tt>GroupOfNames</tt> object is created by the application
  * program then most of its methods throw {@link IllegalStateException}
- * until the program binds the object in the directory. However, when a 
- * <tt>GroupOfNames</tt> object is returned to the application program then the 
+ * until the program binds the object in the directory. However, when a
+ * <tt>GroupOfNames</tt> object is returned to the application program then the
  * object is already bound in the directory and its methods function normally.
  * <p>
  * A <tt>GroupOfNames</tt> instance is not synchronized against concurrent
  * multithreaded access. Multiple threads trying to access and modify a
  * <tt>GroupOfNames</tt> should lock the object.
  * <p>
- * In order to bind a <tt>GroupOfNames</tt> object in the directory, the 
- * following LDAP object class definition (RFC 2256) must be supported in the 
+ * In order to bind a <tt>GroupOfNames</tt> object in the directory, the
+ * following LDAP object class definition (RFC 2256) must be supported in the
  * directory schema:
  * <pre>
  *     ( 2.5.6.9 NAME 'groupOfNames'
@@ -62,7 +74,7 @@ import com.sun.jndi.ldap.LdapURL;
  *              description ) )
  * </pre>
  * See
- * {@link javax.naming.directory.DirContext#bind(javax.naming.Name, 
+ * {@link javax.naming.directory.DirContext#bind(javax.naming.Name,
  * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}
  * for details on binding an object in the directory.
  * <p>
@@ -107,7 +119,7 @@ import com.sun.jndi.ldap.LdapURL;
  *             }
  *          }
  *      }
- * 
+ *
  * </pre>
  *
  * @author Vincent Ryan
@@ -118,18 +130,15 @@ public class GroupOfNames implements GroupPrincipal {
     private static final String OBJECT_CLASS = "groupOfNames";
     private static final String MEMBER_ATTR_ID = "member";
     private static final String MEMBER_FILTER_EXPR = "(member={0})";
-    private static final String EXPAND_GROUP =
-	"com.sun.jndi.ldap.obj.expandGroup";
-    private static final Attribute OBJECT_CLASS_ATTR =
-        new BasicAttribute("objectClass", "top");
+    private static final String EXPAND_GROUP = "com.sun.jndi.ldap.obj.expandGroup";
+    private static final Attribute OBJECT_CLASS_ATTR = new BasicAttribute("objectClass", "top");
     static {
-	OBJECT_CLASS_ATTR.add(OBJECT_CLASS);
+        OBJECT_CLASS_ATTR.add(OBJECT_CLASS);
     }
-    private static final SearchControls BASE_SEARCH_NO_ATTRS =
-        new SearchControls();
+    private static final SearchControls BASE_SEARCH_NO_ATTRS = new SearchControls();
     static {
-	BASE_SEARCH_NO_ATTRS.setSearchScope(SearchControls.OBJECT_SCOPE);
-	BASE_SEARCH_NO_ATTRS.setReturningAttributes(new String[0]); //no attrs
+        BASE_SEARCH_NO_ATTRS.setSearchScope(SearchControls.OBJECT_SCOPE);
+        BASE_SEARCH_NO_ATTRS.setReturningAttributes(new String[0]); // no attrs
     }
 
     private boolean objectIsBound;
@@ -138,8 +147,8 @@ public class GroupOfNames implements GroupPrincipal {
     private Attribute memberAttr = null;
     private String memberAttrId;
     private String memberFilterExpr;
-    private Object[] filterArgs = new Object[1];
-    private ModificationItem[] modification = new ModificationItem[1];
+    private final Object[] filterArgs = new Object[1];
+    private final ModificationItem[] modification = new ModificationItem[1];
 
     private String groupDN = null;
     private String bindDN = null;
@@ -153,37 +162,35 @@ public class GroupOfNames implements GroupPrincipal {
     /**
      * Create an empty group object.
      * <p>
-     * Note that the newly constructed object does not represent a group in 
-     * the directory until it is bound by using 
-     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name, 
+     * Note that the newly constructed object does not represent a group in
+     * the directory until it is bound by using
+     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name,
      * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}.
      */
     public GroupOfNames() {
-	if (debug) {
-	    System.out.println("[debug] constructing an empty group");
-	}
-	initializeState(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR,
-	    null);
+        if (debug) {
+            System.out.println("[debug] constructing an empty group");
+        }
+        initializeState(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, null);
     }
 
     /**
      * Create a group object with an initial set of members.
      * <p>
-     * Note that the newly constructed object does not represent a group in 
-     * the directory until it is bound by using 
-     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name, 
+     * Note that the newly constructed object does not represent a group in
+     * the directory until it is bound by using
+     * {@link javax.naming.directory.DirContext#bind(javax.naming.Name,
      * java.lang.Object, javax.naming.directory.Attributes) DirContext.bind}.
      *
-     * @param members The set of initial members. It may be null. 
-     *                Each element is of class {@link String} or 
+     * @param members The set of initial members. It may be null.
+     *                Each element is of class {@link String} or
      *                {@link java.security.Principal}.
      */
     public GroupOfNames(Set members) {
-	if (debug) {
-	    System.out.println("[debug] constructing a group");
-	}
-	initializeState(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR,
-	    members);
+        if (debug) {
+            System.out.println("[debug] constructing a group");
+        }
+        initializeState(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID, MEMBER_FILTER_EXPR, members);
     }
 
     /**
@@ -193,12 +200,11 @@ public class GroupOfNames implements GroupPrincipal {
      * @param objectClass The LDAP objectClass attribute.
      * @param memberAttrId The LDAP attribute ID which identifies the members.
      * @param memberfilterExpr The filter expression used to find a member.
-     * @param members The set of initial members. It may be null. 
+     * @param members The set of initial members. It may be null.
      */
     // package private (used by GroupOfUniqueNames)
-    GroupOfNames(Attribute objectClass, String memberAttrId,
-	    String memberFilterExpr, Set members) {
-	initializeState(objectClass, memberAttrId, memberFilterExpr, members);
+    GroupOfNames(Attribute objectClass, String memberAttrId, String memberFilterExpr, Set members) {
+        initializeState(objectClass, memberAttrId, memberFilterExpr, members);
     }
 
     /**
@@ -208,7 +214,7 @@ public class GroupOfNames implements GroupPrincipal {
      * @param objectClass The LDAP objectClass attribute.
      * @param memberAttrId The LDAP attribute ID which identifies the members.
      * @param memberfilterExpr The filter expression used to find a member.
-     * @param members The set of initial members. It may be null. 
+     * @param members The set of initial members. It may be null.
      * @param groupDN The group's distinguished name.
      * @param name The group's LDAP distinguished name.
      * @param ctx An LDAP context.
@@ -218,11 +224,11 @@ public class GroupOfNames implements GroupPrincipal {
      */
     // package private (used by GroupOfUniqueNames)
     GroupOfNames(Attribute objectClass, String memberAttrId,
-	    String memberFilterExpr, Set members, String groupDN,
-	    DirContext ctx, Name name, Hashtable env, Attributes attributes) {
+        String memberFilterExpr, Set members, String groupDN,
+        DirContext ctx, Name name, Hashtable env, Attributes attributes) {
 
-	initializeState(objectClass, memberAttrId, memberFilterExpr, members);
-	initializeBoundState(groupDN, ctx, name, env, attributes);
+        initializeState(objectClass, memberAttrId, memberFilterExpr, members);
+        initializeBoundState(groupDN, ctx, name, env, attributes);
     }
 
     /**
@@ -237,14 +243,12 @@ public class GroupOfNames implements GroupPrincipal {
      * @return Object The new object instance.
      */
     // package private (used by LdapGroupFactory)
-    static Object getObjectInstance(String groupDN, DirContext ctx, Name name,
-	    Hashtable env, Attributes attributes) {
-
-	if (debug) {
-	    System.out.println("[debug] creating a group named: " + groupDN);
-	}
-	return new GroupOfNames(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID,
-	    MEMBER_FILTER_EXPR, null, groupDN, ctx, name, env, attributes);
+    static Object getObjectInstance(String groupDN, DirContext ctx, Name name, Hashtable env, Attributes attributes) {
+        if (debug) {
+            System.out.println("[debug] creating a group named: " + groupDN);
+        }
+        return new GroupOfNames(OBJECT_CLASS_ATTR, MEMBER_ATTR_ID,
+            MEMBER_FILTER_EXPR, null, groupDN, ctx, name, env, attributes);
     }
 
     /**
@@ -257,14 +261,14 @@ public class GroupOfNames implements GroupPrincipal {
      *         group does not represent a group in the directory.
      */
     public boolean addMember(Principal member) {
-	try {
-	    return addMember(member.getName());
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error adding the member: " + e);
-	    }
-	    return false;
-	}
+        try {
+            return addMember(member.getName());
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error adding the member: " + e);
+            }
+            return false;
+        }
     }
 
     /**
@@ -279,21 +283,20 @@ public class GroupOfNames implements GroupPrincipal {
      *         group does not represent a group in the directory.
      */
     public boolean addMember(String dn) throws NamingException {
-
-	if (! isBound()) {
-	    throw new IllegalStateException(); 
-	}
-	if (debug) {
-	    System.out.println("[debug] adding the member: " + dn);
-	}
-	return modifyMember(dn, DirContext.ADD_ATTRIBUTE);
+        if (! isBound()) {
+            throw new IllegalStateException();
+        }
+        if (debug) {
+            System.out.println("[debug] adding the member: " + dn);
+        }
+        return modifyMember(dn, DirContext.ADD_ATTRIBUTE);
     }
 
     /**
      * Checks if the supplied name is a member of the group.
      * Performs LDAP searches to determine membership.
      * <p>
-     * By default, subgroups are also checked. 
+     * By default, subgroups are also checked.
      * As subgroup expansion is potentially an expensive activity the feature
      * may be disabled by setting the environment property
      * "com.sun.jndi.ldap.obj.expandGroup"
@@ -304,23 +307,23 @@ public class GroupOfNames implements GroupPrincipal {
      * @throws IllegalStateException The exception is thrown if the
      *         group does not represent a group in the directory.
      */
+    @Override
     public boolean isMember(Principal member) {
-	try {
-	    return isMember(member.getName());
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error testing for membership: " +
-		    e);
-	    }
-	    return false;
-	}
+        try {
+            return isMember(member.getName());
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error testing for membership: " + e);
+            }
+            return false;
+        }
     }
 
     /**
      * Checks if the supplied name is a member of the group.
      * Performs LDAP searches to determine membership.
      * <p>
-     * By default, subgroups are also checked. 
+     * By default, subgroups are also checked.
      * As subgroup expansion is potentially an expensive activity the feature
      * may be disabled by setting the environment property
      * "com.sun.jndi.ldap.obj.expandGroup"
@@ -335,53 +338,50 @@ public class GroupOfNames implements GroupPrincipal {
      */
     public boolean isMember(String dn) throws NamingException {
 
-	if (! isBound()) {
-	    throw new IllegalStateException(); 
-	}
-	if (debug) {
-	    System.out.println(
-		"[debug] checking if \"" + dn + "\" is a member");
-	}
+        if (! isBound()) {
+            throw new IllegalStateException();
+        }
+        if (debug) {
+            System.out.println("[debug] checking if \"" + dn + "\" is a member");
+        }
 
-	// Check cache
-	if (memberAttr != null && memberAttr.contains(dn)) {
-	    return true;
-	}
+        // Check cache
+        if (memberAttr != null && memberAttr.contains(dn)) {
+            return true;
+        }
 
-	// Check directory group
-	filterArgs[0] = dn;
-	NamingEnumeration results =
-	    ctx.search(name, memberFilterExpr, filterArgs,
-		BASE_SEARCH_NO_ATTRS);
+        // Check directory group
+        filterArgs[0] = dn;
+        NamingEnumeration results = ctx.search(name, memberFilterExpr, filterArgs, BASE_SEARCH_NO_ATTRS);
 
-	// Membership is confirmed if any results are returned
-	if (results != null && results.hasMore()) {
-	    results.close(); // cleanup
-	    return true;
-	}
+        // Membership is confirmed if any results are returned
+        if (results != null && results.hasMore()) {
+            results.close(); // cleanup
+            return true;
+        }
 
-	// Check directory subgroups
-	if (expandGroup) {
-	    return isSubgroupMember(dn);
-	}
+        // Check directory subgroups
+        if (expandGroup) {
+            return isSubgroupMember(dn);
+        }
 
-	return false;
+        return false;
     }
 
     /**
-     * Returns the members of the group. 
+     * Returns the members of the group.
      * Performs LDAP searches to retrieve the members.
      * <p>
-     * By default, subgroups and their members are also included. 
+     * By default, subgroups and their members are also included.
      * As subgroup expansion is potentially an expensive activity the feature
      * may be disabled by setting the environment property
      * "com.sun.jndi.ldap.obj.expandGroup"
      * to the string value "false". When the feature is disabled only the
      * group's direct members are returned.
      *
-     * @return Enumeration The list of members of the group. 
-     *         When only the {@link LdapGroupFactory} object factory is active 
-     *         then each element in the enumeration is of class 
+     * @return Enumeration The list of members of the group.
+     *         When only the {@link LdapGroupFactory} object factory is active
+     *         then each element in the enumeration is of class
      *         {@link com.sun.enterprise.security.GroupPrincipal} or
      *         {@link java.security.Principal}. However, when additional
      *         object factories are active then the enumeration may contain
@@ -389,32 +389,29 @@ public class GroupOfNames implements GroupPrincipal {
      * @throws IllegalStateException The exception is thrown if the
      *         group does not represent a group in the directory.
      */
+    @Override
     public Enumeration members() {
+        if (!isBound()) {
+            throw new IllegalStateException();
+        }
+        if (debug) {
+            System.out.println("[debug] enumerating the members");
+        }
 
-	if (! isBound()) {
-	    throw new IllegalStateException(); 
-	}
-	if (debug) {
-	    System.out.println("[debug] enumerating the members");
-	}
+        try {
+            // Retrieve the group's member attribute unless already cached
+            if ((memberAttr != null)
+                || (memberAttr = ctx.getAttributes(name, new String[] {memberAttrId}).get(memberAttrId)) != null) {
+                return new Members(memberAttr.getAll());
+            }
 
-	try {
-	    // Retrieve the group's member attribute unless already cached
-	    if ((memberAttr != null) ||
-		(memberAttr =
-		    ctx.getAttributes(name, new String[] {memberAttrId})
-		        .get(memberAttrId)) != null) {
-		return new Members(memberAttr.getAll());
-	    } 
-
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error enumerating the members: " +
-		    e);
-	    }
-	    // ignore
-	}
-	return new Members(); // empty
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error enumerating the members: " + e);
+            }
+            // ignore
+        }
+        return new Members(); // empty
     }
 
     /**
@@ -427,14 +424,14 @@ public class GroupOfNames implements GroupPrincipal {
      *         group does not represent a group in the directory.
      */
     public boolean removeMember(Principal member) {
-	try {
-	    return removeMember(member.getName());
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error removing the member: " + e);
-	    }
-	    return false;
-	}
+        try {
+            return removeMember(member.getName());
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error removing the member: " + e);
+            }
+            return false;
+        }
     }
 
     /**
@@ -449,29 +446,28 @@ public class GroupOfNames implements GroupPrincipal {
      *         group does not represent a group in the directory.
      */
     public boolean removeMember(String dn) throws NamingException {
-
-	if (! isBound()) {
-	    throw new IllegalStateException(); 
-	}
-	if (debug) {
-	    System.out.println("[debug] removing the member: " + dn);
-	}
-	return modifyMember(dn, DirContext.REMOVE_ATTRIBUTE);
+        if (!isBound()) {
+            throw new IllegalStateException();
+        }
+        if (debug) {
+            System.out.println("[debug] removing the member: " + dn);
+        }
+        return modifyMember(dn, DirContext.REMOVE_ATTRIBUTE);
     }
 
     /**
      * Retrieves the distinguished name of the group.
-     * 
+     *
      * @return String The distinguished name of the group.
      * @throws IllegalStateException The exception is thrown if the
      *         group does not represent a group in the directory.
      */
+    @Override
     public String getName() {
-
-	if (! isBound()) {
-	    throw new IllegalStateException(); 
-	}
-	return groupDN;
+        if (!isBound()) {
+            throw new IllegalStateException();
+        }
+        return groupDN;
     }
 
     /**
@@ -484,9 +480,9 @@ public class GroupOfNames implements GroupPrincipal {
      */
     // package private (used by LdapGroupFactory)
     void setName(String groupDN, DirContext ctx, Name name) {
-	bindDN = groupDN;
-	bindCtx = ctx;
-	bindName = name;
+        bindDN = groupDN;
+        bindCtx = ctx;
+        bindName = name;
     }
 
     /**
@@ -496,21 +492,22 @@ public class GroupOfNames implements GroupPrincipal {
      *         the contents of the group's attribute set. See
      * {@link javax.naming.directory.BasicAttributes#toString()}
      *         for details. The name is omitted if the group is not bound in
-     *         the directory and null is returned if no attributes are 
+     *         the directory and null is returned if no attributes are
      *         available.
      */
+    @Override
     public String toString() {
-	isBound(); // refresh attributes (if necessary)
-	if (groupDN != null) {
-	    StringBuffer buffer = new StringBuffer();
-	    buffer.append("{name: ").append(groupDN).append("}");
-	    if (attributes != null) {
-		buffer.append(attributes.toString());
-	    }
-	    return buffer.toString();
-	} else {	   
-	    return attributes == null ? "" : attributes.toString();
-	}
+        isBound(); // refresh attributes (if necessary)
+        if (groupDN != null) {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append("{name: ").append(groupDN).append("}");
+            if (attributes != null) {
+                buffer.append(attributes.toString());
+            }
+            return buffer.toString();
+        } else {
+            return attributes == null ? "" : attributes.toString();
+        }
     }
 
     /**
@@ -521,12 +518,12 @@ public class GroupOfNames implements GroupPrincipal {
      */
     // package private (used by LdapGroupFactory)
     Attributes getAttributes() {
-	return attributes;
+        return attributes;
     }
 
     /**
-     * Determines whether the supplied LDAP objectClass attribute matches that 
-     * of the group. A match occurs if the argument contains the value 
+     * Determines whether the supplied LDAP objectClass attribute matches that
+     * of the group. A match occurs if the argument contains the value
      * "GroupOfNames".
      *
      * @param objectClass The non-null objectClass attribute to check against.
@@ -535,68 +532,63 @@ public class GroupOfNames implements GroupPrincipal {
     // package private (used by LdapGroupFactory)
     static boolean matches(Attribute objectClass) {
 
-	try {
-	    for (Enumeration values = objectClass.getAll();
-		values.hasMoreElements(); ) {
-		if (OBJECT_CLASS.equalsIgnoreCase(
-		    (String)values.nextElement())) {
-		    return true;
-		}
-	    }
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error matching objectClass: " + e);
-	    }
-	    // ignore
-	}
-	return false;
+        try {
+            for (Enumeration values = objectClass.getAll(); values.hasMoreElements();) {
+                if (OBJECT_CLASS.equalsIgnoreCase((String) values.nextElement())) {
+                    return true;
+                }
+            }
+        } catch (NamingException e) {
+            if (debug) {
+                System.out.println("[debug] error matching objectClass: " + e);
+            }
+            // ignore
+        }
+        return false;
     }
 
-    /*
+    /**
      * Determines whether the group object is bound in the directory.
      *
-     * A group object is considered to be bound in the directory when 
-     * each of the values of its objectClass attribute match those of 
+     * A group object is considered to be bound in the directory when
+     * each of the values of its objectClass attribute match those of
      * an object in the directory having this group's distinguished name.
      *
      * @return true if the object is bound; false otherwise.
      */
     private boolean isBound() {
-	if (objectIsBound) {
-	    return true;
+        if (objectIsBound) {
+            return true;
+        } else if (bindCtx != null && bindName != null && attributes != null) {
+            try {
+                // Retrieve the group's attributes
+                Attributes bindAttrs = bindCtx.getAttributes(bindName);
+                Attribute bindObjectClass = bindAttrs.get("objectClass");
+                // Check whether the objectClass attributes match
+                if (bindObjectClass != null && bindObjectClass.equals(attributes.get("objectClass"))) {
+                    // Set the group's bound state
+                    initializeBoundState(bindDN, bindCtx, bindName, env, bindAttrs);
+                    return true;
+                }
 
-	} else if (bindCtx != null && bindName != null && attributes != null)  {
-	    try {
-		// Retrieve the group's attributes
-		Attributes bindAttrs = bindCtx.getAttributes(bindName);
-		Attribute bindObjectClass = bindAttrs.get("objectClass");
-		// Check whether the objectClass attributes match
-		if (bindObjectClass != null && 
-		    bindObjectClass.equals(attributes.get("objectClass"))) {
-		    // Set the group's bound state
-		    initializeBoundState(bindDN, bindCtx, bindName, env,
-			bindAttrs);
-		    return true;
-		}
+            } catch (NameNotFoundException e) {
+                if (debug) {
+                    System.out.println("[debug] object is not bound: " + e);
+                }
+                // ignore
 
-	    } catch (NameNotFoundException e) {
-		if (debug) {
-		    System.out.println("[debug] object is not bound: " + e);
-		}
-		// ignore
-
-	    } catch (NamingException e) {
-		if (debug) {
-		    System.out.println("[debug] error checking if bound: " + e);
-		}
-		// ignore
-	    }
-	    // Reset state to unbound
-	    bindDN = null;
-	    bindCtx = null;
-	    bindName = null;
-	}
-	return false;
+            } catch (NamingException e) {
+                if (debug) {
+                    System.out.println("[debug] error checking if bound: " + e);
+                }
+                // ignore
+            }
+            // Reset state to unbound
+            bindDN = null;
+            bindCtx = null;
+            bindName = null;
+        }
+        return false;
     }
 
     /**
@@ -607,106 +599,97 @@ public class GroupOfNames implements GroupPrincipal {
      *                         encountered while closing the naming context.
      */
     public void close() throws NamingException {
-	if (rootCtx != null && rootCtx != ctx) {
-	    rootCtx.close();
-	    rootCtx = null;
-	}
+        if (rootCtx != null && rootCtx != ctx) {
+            rootCtx.close();
+            rootCtx = null;
+        }
     }
 
-    /*
+    /**
      * Initialize the group's state when unbound.
      */
-    private void initializeState(Attribute objectClass, String memberAttrId,
-	String memberFilterExpr, Set members) {
+    private void initializeState(Attribute objectClass, String memberAttrId, String memberFilterExpr, Set members) {
+        objectIsBound = false;
+        this.memberAttrId = memberAttrId;
+        this.memberFilterExpr = memberFilterExpr;
 
-	objectIsBound = false;
-	this.memberAttrId = memberAttrId;
-	this.memberFilterExpr = memberFilterExpr;
+        // initialize the group's attribute set.
+        attributes = new BasicAttributes(true);
+        attributes.put(objectClass);
 
-	// initialize the group's attribute set.
-	attributes = new BasicAttributes(true);
-	attributes.put(objectClass);
-
-	if (members != null && (! members.isEmpty())) {
-	    memberAttr = new BasicAttribute(memberAttrId);
-	    for (Iterator i = members.iterator(); i.hasNext(); ) {
-		Object object = i.next();
-		if (object instanceof Principal) {
-		    memberAttr.add(((Principal)object).getName());
-		} else {
-		    memberAttr.add(object);
-		}
-	    }
-	    attributes.put(memberAttr);
-	}
+        if (members != null && (!members.isEmpty())) {
+            memberAttr = new BasicAttribute(memberAttrId);
+            for (Object object : members) {
+                if (object instanceof Principal) {
+                    memberAttr.add(((Principal) object).getName());
+                } else {
+                    memberAttr.add(object);
+                }
+            }
+            attributes.put(memberAttr);
+        }
     }
 
-    /*
+    /**
      * Initialize the group's state when bound.
      */
-    private void initializeBoundState(String groupDN, DirContext ctx, Name name,
-	    Hashtable env, Attributes attributes) {
-
-	objectIsBound = true;
-	this.groupDN = groupDN;
-	this.ctx = ctx;
-	this.name = name;
-	this.env = env;
-	if (env == null && ctx != null) {
-	    try {
-		this.env = ctx.getEnvironment();
-	    } catch (NamingException e) {
-		// ignore
-	    }
-	}
-	if (env != null) {
-	    String expandGroup = (String)env.get(EXPAND_GROUP);
-	    if ("false".equalsIgnoreCase(expandGroup)) {
-		this.expandGroup = false;
-	    }
-	}
-	if (attributes != null) {
-	    this.attributes = attributes;
-	    memberAttr = attributes.get(memberAttrId);
-	}
+    private void initializeBoundState(String groupDN, DirContext ctx, Name name, Hashtable env, Attributes attributes) {
+        objectIsBound = true;
+        this.groupDN = groupDN;
+        this.ctx = ctx;
+        this.name = name;
+        this.env = env;
+        if (env == null && ctx != null) {
+            try {
+                this.env = ctx.getEnvironment();
+            } catch (NamingException e) {
+                // ignore
+            }
+        }
+        if (env != null) {
+            String expandGroup = (String) env.get(EXPAND_GROUP);
+            if ("false".equalsIgnoreCase(expandGroup)) {
+                this.expandGroup = false;
+            }
+        }
+        if (attributes != null) {
+            this.attributes = attributes;
+            memberAttr = attributes.get(memberAttrId);
+        }
     }
 
-    /*
+    /**
      * Add or remove a value from the member attribute.
      */
-    private boolean modifyMember(String member, int mod_op) 
-	    throws NamingException {
-	Attribute memberAttr = new BasicAttribute(memberAttrId, member);
-	modification[0] = new ModificationItem(mod_op, memberAttr);
-	ctx.modifyAttributes(name, modification);
-	this.memberAttr = null; // invalidate the cache
-	return true;
+    private boolean modifyMember(String member, int mod_op) throws NamingException {
+        Attribute memberAttr = new BasicAttribute(memberAttrId, member);
+        modification[0] = new ModificationItem(mod_op, memberAttr);
+        ctx.modifyAttributes(name, modification);
+        this.memberAttr = null; // invalidate the cache
+        return true;
     }
 
-    /*
+    /**
      * Checks if the supplied name is a member of any subgroups.
      * All the members are retrieved and any subgroups are explored.
      */
     private boolean isSubgroupMember(String dn) throws NamingException {
-        for (NamingEnumeration members = (NamingEnumeration)members();
-		members.hasMore(); ) {
+        for (NamingEnumeration members = (NamingEnumeration) members(); members.hasMore();) {
             Object obj = members.next();
-            if (obj instanceof GroupOfNames &&
-		((GroupOfNames)obj).isMember(dn)) {
-		members.close(); // cleanup
+            if (obj instanceof GroupOfNames && ((GroupOfNames) obj).isMember(dn)) {
+                members.close(); // cleanup
                 return true;
-            } else if (obj instanceof GroupOfURLs &&
-		((GroupOfURLs)obj).isMember(dn)) {
-		members.close(); // cleanup
+            } else if (obj instanceof GroupOfURLs && ((GroupOfURLs) obj).isMember(dn)) {
+                members.close(); // cleanup
                 return true;
-	    }
+            }
         }
         return false;
     }
 
-    /*
+    /**
      * Generate environment properties suitable for the root context using
-     * the supplied set of properties. The following properties are modified 
+     * the supplied set of properties. The following properties are modified
      * if necessary:
      * <ul>
      * <li> java.naming.provider.url property:
@@ -720,280 +703,280 @@ public class GroupOfNames implements GroupPrincipal {
      */
     // package private (used by GroupOfURLs)
     static Hashtable generateRootContextProperties(Hashtable env) {
-	String url = null;
+        String url = null;
 
-	if (env != null) {
-	    if ((url = (String) env.get(Context.PROVIDER_URL)) != null) {
+        if (env != null) {
+            if ((url = (String) env.get(Context.PROVIDER_URL)) != null) {
 
-		try {
-		    // java.net.URI is cleaner but depends on J2SE v 1.4
-		    LdapURL ldapUrl = new LdapURL(url);
-		    String dn = ldapUrl.getDN();
-		    // check if a non-empty DN is present
-		    if (dn != null && dn.length() > 0) {
-			String host = ldapUrl.getHost();
-			int port = ldapUrl.getPort();
-			url = "ldap://" +
-			    ((host != null) ? host : "") +
-			    ((port != -1) ? (":" + port) : "");
-		    } else {
-			url = null; // reset flag
-		    }
-		} catch (NamingException e) {
-		    throw new IllegalArgumentException(url);
-		}
-	    }
-	    // only clone if making mods
-	    if (url != null) {
-		env = (Hashtable) env.clone();
-		env.put(Context.PROVIDER_URL, url);
-	    }
-	}
-
-	return env;
-    }
-
-
-/**
- * The members of a static group.
- */
-class Members implements NamingEnumeration {
-
-    private NamingEnumeration memberDNs = null;
-    private boolean expandSubgroups;
-    private ArrayList subgroups = null;
-    private NamingEnumeration subgroupMembers = null;
-
-    /*
-     * Empty members object derived from a static group.
-     */
-    Members() {
-	if (debug) {
-	    System.out.println("[debug] constructing an empty GroupOfNames.Members object");
-	}
-        expandSubgroups = expandGroup; // GroupOfNames.expandGroup
-    }
-
-    /*
-     * Members object derived from a static group.
-     */
-    Members(NamingEnumeration memberDNs) {
-	if (debug) {
-	    System.out.println("[debug] constructing a GroupOfNames.Members object");
-	}
-	this.memberDNs = memberDNs;
-        expandSubgroups = expandGroup; // GroupOfNames.expandGroup
-    }
-
-    /**
-     * Check if the group has more members.
-     *
-     * @return true if the group has another member.
-     */
-    public boolean hasMoreElements() {
-	try {
-	    return hasMore();
-	} catch (NamingException e) {
-	    if (debug) {
-		System.out.println("[debug] error checking for more members: " +
-		    e);
-	    }
-	    return false;
-	}
-    }
-
-    /**
-     * Check if the group has more members.
-     *
-     * @return true if the group has another member.
-     * @throws NamingException If a problem is encountered while checking 
-     *                         whether the group has any more members.
-     */
-    public boolean hasMore() throws NamingException {
-
-	if (memberDNs == null) {
-	    return false; // empty
-	}
-
-	if (memberDNs.hasMore()) {
-	    return true;
-	}
-
-	// Check subgroups
-	if (expandSubgroups && subgroups != null) {
-	    if (subgroupMembers == null && (! subgroups.isEmpty())) {
-		// Retrieve the first subgroup's members
-		subgroupMembers =
-		    (NamingEnumeration)((Group)subgroups.remove(0)).members();
-	    }
-	    if (null != subgroupMembers && subgroupMembers.hasMore()) {
-		return true;
-	    } else if (! subgroups.isEmpty()) {
-		// Retrieve the next subgroup's members
-		subgroupMembers = 
-		    (NamingEnumeration)((Group)subgroups.remove(0)).members();
-		return subgroupMembers.hasMore();
-	    }
-	}
-
-	return false;
-    }
-
-    /**
-     * Retrieve the next member of the group.
-     * Some members may themselves be groups. Such a member is returned as 
-     * an object of class {@link com.sun.enterprise.security.GroupPrincipal}.
-     * <p>
-     * Note that in order to determine whether a member is itself a group
-     * this method reads each member's LDAP entry. As this is potentially an
-     * expensive activity the feature may be disabled by setting the 
-     * environment property 
-     * "com.sun.jndi.ldap.obj.expandGroup" 
-     * to the string value "false".  When the feature is
-     * disabled then an object of class {@link java.security.Principal}
-     * is returned. By default, the feature is enabled.
-     *
-     * @return The next member of the group.
-     *         When only the {@link LdapGroupFactory} object factory is active 
-     *         then an object of class 
-     *         {@link java.security.Principal} or
-     *         {@link com.sun.enterprise.security.GroupPrincipal} is returned.
-     *         However, when additional object factories are active then an
-     *         object of a different class may be returned.
-     * @throws NoSuchElementException If no more members exist or if a
-     *         {@link javax.naming.NamingException} was encountered while 
-     *         retrieving the next element.
-     */
-    public Object nextElement() {
-	try {
-	    return next();
-	} catch (NamingException e) {
-	    // Exception.initCause is cleaner but depends on J2SE v 1.4
-	    throw new NoSuchElementException(e.toString());
-	}
-    }
-
-    /**
-     * Retrieve the next member of the group.
-     * Some members may themselves be groups. Such a member is returned as 
-     * an object of class {@link com.sun.enterprise.security.GroupPrincipal}.
-     * <p>
-     * Note that in order to determine whether a member is itself a group
-     * this method reads each member's LDAP entry. As this is potentially an
-     * expensive activity the feature may be disabled by setting the 
-     * environment property 
-     * "com.sun.jndi.ldap.obj.expandGroup" 
-     * to the string value "false".  When the feature is
-     * disabled then an object of class {@link java.security.Principal}
-     * is returned. By default, the feature is enabled.
-     *
-     * @return The next member of the group.
-     *         When only the {@link LdapGroupFactory} object factory is active 
-     *         then an object of class 
-     *         {@link java.security.Principal} or
-     *         {@link com.sun.enterprise.security.GroupPrincipal} is returned.
-     *         However, when additional object factories are active then an
-     *         object of a different class may be returned.
-     * @throws NamingException If a problem is encountered while retrieving the
-     *                         next member of the group.
-     * @throws NoSuchElementException If no more members exist.
-     */
-    public Object next() throws NamingException {
-
-	if (memberDNs == null) {
-	    throw new NoSuchElementException(); // empty
-	}
-
-	String memberDN = null;
-
-	try {
-	    if (memberDNs.hasMore()) {
-		memberDN = (String)memberDNs.next();
-
-		// Skip lookup when expandGroup=false
-		if (! expandGroup) {
-		    return new LdapPrincipal(memberDN);
-		}
-
-		// Create the root context
-		if (rootCtx == null) {
-		    rootCtx = getRootContext();
-		}
-		// Perform the lookup from the root context
-		Object object =
-		    rootCtx.lookup(new CompositeName().add(memberDN));
-
-		if (object instanceof Group) {
-		    if (expandSubgroups) {
-			if (subgroups == null) {
-			    subgroups = new ArrayList();
-			}
-			subgroups.add(object);
-		    }
-		    // Subgroups are members too 
-		    return (Group)object;
-
-		} else if (object instanceof DirContext) {
-		    ((DirContext)object).close(); // cleanup
-		    return new LdapPrincipal(memberDN);
-
-		} else {
-		    return object; // additional object factories are active
-		}
-	    }
-	} catch (NameNotFoundException e) {
-	    // Cannot find the member's LDAP entry so return an LdapPrincipal
-	    return new LdapPrincipal(memberDN);
-	}
-
-        // Check subgroups
-        if (expandSubgroups && subgroups != null) {
-            if (subgroupMembers == null && (! subgroups.isEmpty())) {
-                // Retrieve the first subgroup's members
-                subgroupMembers = 
-		    (NamingEnumeration)((Group)subgroups.remove(0)).members();
+                try {
+                    // java.net.URI is cleaner but depends on J2SE v 1.4
+                    LdapURL ldapUrl = new LdapURL(url);
+                    String dn = ldapUrl.getDN();
+                    // check if a non-empty DN is present
+                    if (dn != null && dn.length() > 0) {
+                        String host = ldapUrl.getHost();
+                        int port = ldapUrl.getPort();
+                        url = "ldap://" + ((host != null) ? host : "") + ((port != -1) ? (":" + port) : "");
+                    } else {
+                        url = null; // reset flag
+                    }
+                } catch (NamingException e) {
+                    throw new IllegalArgumentException(url);
+                }
             }
-            if (null != subgroupMembers && subgroupMembers.hasMore()) {
-                return subgroupMembers.next();
-            } else if (! subgroups.isEmpty()) {
-                // Retrieve the next subgroup's members
-                subgroupMembers = 
-		    (NamingEnumeration)((Group)subgroups.remove(0)).members();
-                return subgroupMembers.next();
+            // only clone if making mods
+            if (url != null) {
+                env = (Hashtable) env.clone();
+                env.put(Context.PROVIDER_URL, url);
             }
         }
 
-        throw new NoSuchElementException();
+        return env;
     }
+
 
     /**
-     * Closes the enumeration and releases its resources.
-     *
-     * @throws NamingException If a problem is encountered while
-     *                         closing the enumeration.
+     * The members of a static group.
      */
-    public void close() throws NamingException {
-	if (subgroupMembers != null) {
-	    subgroupMembers.close(); // cleanup
-	}
-    }
+    class Members implements NamingEnumeration {
 
-    private DirContext getRootContext() throws NamingException {
-	DirContext rootCtx = null;
-	// test for the root of the namespace (the empty name)
-	if (ctx.getNameInNamespace().length() == 0) {
-	    rootCtx = ctx; // context is already a root context
-	} else {
-	    // Make properties suitable for the root context
-	    env = generateRootContextProperties(env);
-	    rootCtx = (DirContext) NamingManager.getInitialContext(env);
-	    // Propagate any context request controls (to rootCtx)
-	    if (ctx instanceof LdapContext) {
-		((LdapContext)rootCtx).setRequestControls(
-		    ((LdapContext)ctx).getRequestControls());
-	    }
-	}
-	return rootCtx;
+        private NamingEnumeration memberDNs = null;
+        private final boolean expandSubgroups;
+        private ArrayList subgroups = null;
+        private NamingEnumeration subgroupMembers = null;
+
+        /**
+         * Empty members object derived from a static group.
+         */
+        Members() {
+            if (debug) {
+                System.out.println("[debug] constructing an empty GroupOfNames.Members object");
+            }
+            expandSubgroups = expandGroup; // GroupOfNames.expandGroup
+        }
+
+        /**
+         * Members object derived from a static group.
+         */
+        Members(NamingEnumeration memberDNs) {
+            if (debug) {
+                System.out.println("[debug] constructing a GroupOfNames.Members object");
+            }
+            this.memberDNs = memberDNs;
+            expandSubgroups = expandGroup; // GroupOfNames.expandGroup
+        }
+
+        /**
+         * Check if the group has more members.
+         *
+         * @return true if the group has another member.
+         */
+        @Override
+        public boolean hasMoreElements() {
+            try {
+                return hasMore();
+            } catch (NamingException e) {
+                if (debug) {
+                    System.out.println("[debug] error checking for more members: " +
+                        e);
+                }
+                return false;
+            }
+        }
+
+        /**
+         * Check if the group has more members.
+         *
+         * @return true if the group has another member.
+         * @throws NamingException If a problem is encountered while checking
+         *                         whether the group has any more members.
+         */
+        @Override
+        public boolean hasMore() throws NamingException {
+
+            if (memberDNs == null) {
+                return false; // empty
+            }
+
+            if (memberDNs.hasMore()) {
+                return true;
+            }
+
+            // Check subgroups
+            if (expandSubgroups && subgroups != null) {
+                if (subgroupMembers == null && (! subgroups.isEmpty())) {
+                    // Retrieve the first subgroup's members
+                    subgroupMembers =
+                        (NamingEnumeration)((GroupPrincipal)subgroups.remove(0)).members();
+                }
+                if (null != subgroupMembers && subgroupMembers.hasMore()) {
+                    return true;
+                } else if (! subgroups.isEmpty()) {
+                    // Retrieve the next subgroup's members
+                    subgroupMembers =
+                        (NamingEnumeration)((GroupPrincipal)subgroups.remove(0)).members();
+                    return subgroupMembers.hasMore();
+                }
+            }
+
+            return false;
+        }
+
+        /**
+         * Retrieve the next member of the group.
+         * Some members may themselves be groups. Such a member is returned as
+         * an object of class {@link com.sun.enterprise.security.GroupPrincipal}.
+         * <p>
+         * Note that in order to determine whether a member is itself a group
+         * this method reads each member's LDAP entry. As this is potentially an
+         * expensive activity the feature may be disabled by setting the
+         * environment property
+         * "com.sun.jndi.ldap.obj.expandGroup"
+         * to the string value "false".  When the feature is
+         * disabled then an object of class {@link java.security.Principal}
+         * is returned. By default, the feature is enabled.
+         *
+         * @return The next member of the group.
+         *         When only the {@link LdapGroupFactory} object factory is active
+         *         then an object of class
+         *         {@link java.security.Principal} or
+         *         {@link com.sun.enterprise.security.GroupPrincipal} is returned.
+         *         However, when additional object factories are active then an
+         *         object of a different class may be returned.
+         * @throws NoSuchElementException If no more members exist or if a
+         *         {@link javax.naming.NamingException} was encountered while
+         *         retrieving the next element.
+         */
+        @Override
+        public Object nextElement() {
+            try {
+                return next();
+            } catch (NamingException e) {
+                // Exception.initCause is cleaner but depends on J2SE v 1.4
+                throw new NoSuchElementException(e.toString());
+            }
+        }
+
+        /**
+         * Retrieve the next member of the group.
+         * Some members may themselves be groups. Such a member is returned as
+         * an object of class {@link com.sun.enterprise.security.GroupPrincipal}.
+         * <p>
+         * Note that in order to determine whether a member is itself a group
+         * this method reads each member's LDAP entry. As this is potentially an
+         * expensive activity the feature may be disabled by setting the
+         * environment property
+         * "com.sun.jndi.ldap.obj.expandGroup"
+         * to the string value "false".  When the feature is
+         * disabled then an object of class {@link java.security.Principal}
+         * is returned. By default, the feature is enabled.
+         *
+         * @return The next member of the group.
+         *         When only the {@link LdapGroupFactory} object factory is active
+         *         then an object of class
+         *         {@link java.security.Principal} or
+         *         {@link com.sun.enterprise.security.GroupPrincipal} is returned.
+         *         However, when additional object factories are active then an
+         *         object of a different class may be returned.
+         * @throws NamingException If a problem is encountered while retrieving the
+         *                         next member of the group.
+         * @throws NoSuchElementException If no more members exist.
+         */
+        @Override
+        public Object next() throws NamingException {
+
+            if (memberDNs == null) {
+                throw new NoSuchElementException(); // empty
+            }
+
+            String memberDN = null;
+
+            try {
+                if (memberDNs.hasMore()) {
+                    memberDN = (String)memberDNs.next();
+
+                    // Skip lookup when expandGroup=false
+                    if (! expandGroup) {
+                        return new LdapPrincipal(memberDN);
+                    }
+
+                    // Create the root context
+                    if (rootCtx == null) {
+                        rootCtx = getRootContext();
+                    }
+                    // Perform the lookup from the root context
+                    Object object = rootCtx.lookup(new CompositeName().add(memberDN));
+
+                    if (object instanceof GroupPrincipal) {
+                        if (expandSubgroups) {
+                            if (subgroups == null) {
+                                subgroups = new ArrayList();
+                            }
+                            subgroups.add(object);
+                        }
+                        // Subgroups are members too
+                        return object;
+
+                    } else if (object instanceof DirContext) {
+                        ((DirContext)object).close(); // cleanup
+                        return new LdapPrincipal(memberDN);
+
+                    } else {
+                        return object; // additional object factories are active
+                    }
+                }
+            } catch (NameNotFoundException e) {
+                // Cannot find the member's LDAP entry so return an LdapPrincipal
+                return new LdapPrincipal(memberDN);
+            }
+
+            // Check subgroups
+            if (expandSubgroups && subgroups != null) {
+                if (subgroupMembers == null && (!subgroups.isEmpty())) {
+                    // Retrieve the first subgroup's members
+                    subgroupMembers = (NamingEnumeration) ((GroupPrincipal) subgroups.remove(0)).members();
+                }
+                if (null != subgroupMembers && subgroupMembers.hasMore()) {
+                    return subgroupMembers.next();
+                } else if (!subgroups.isEmpty()) {
+                    // Retrieve the next subgroup's members
+                    subgroupMembers = (NamingEnumeration) ((GroupPrincipal) subgroups.remove(0)).members();
+                    return subgroupMembers.next();
+                }
+            }
+
+            throw new NoSuchElementException();
+        }
+
+        /**
+         * Closes the enumeration and releases its resources.
+         *
+         * @throws NamingException If a problem is encountered while
+         *                         closing the enumeration.
+         */
+        @Override
+        public void close() throws NamingException {
+            if (subgroupMembers != null) {
+                subgroupMembers.close(); // cleanup
+            }
+        }
+
+
+        private DirContext getRootContext() throws NamingException {
+            DirContext rootCtx = null;
+            // test for the root of the namespace (the empty name)
+            if (ctx.getNameInNamespace().length() == 0) {
+                rootCtx = ctx; // context is already a root context
+            } else {
+                // Make properties suitable for the root context
+                env = generateRootContextProperties(env);
+                rootCtx = (DirContext) NamingManager.getInitialContext(env);
+                // Propagate any context request controls (to rootCtx)
+                if (ctx instanceof LdapContext) {
+                    ((LdapContext) rootCtx).setRequestControls(((LdapContext) ctx).getRequestControls());
+                }
+            }
+            return rootCtx;
+        }
     }
-}
 }

@@ -38,7 +38,7 @@ public class TestFrameworkClassWithConstructorInjection {
     @Inject
     public TestFrameworkClassWithConstructorInjection(@Preferred TestBean tb) {
         System.out.println("constructor based injection " +
-        		"into a framework class" + tb);
+                        "into a framework class" + tb);
         this.tb = tb;
         if (tb == null) {
             msg += "Constructor injection in a test framework class failed";

@@ -31,12 +31,12 @@ public class JaxwsFromWsdlTestNG {
     @BeforeTest
     public void loadClass() throws Exception {
       try {
-	cls = Class.forName ("jaxwsfromwsdl.client.AddNumbersClient");
+    cls = Class.forName ("jaxwsfromwsdl.client.AddNumbersClient");
         ct = cls.getConstructor();
         obj = ct.newInstance();
-	// System.out.println ("class is loaded");
+    // System.out.println ("class is loaded");
       } catch (Exception ex) {
-	System.out.println ("Got ex, class is not loaded.");
+    System.out.println ("Got ex, class is not loaded.");
         throw new Exception(ex);
       }
         System.out.println("done for init");
@@ -44,16 +44,16 @@ public class JaxwsFromWsdlTestNG {
 
     @Test(groups ={"functional"})
     public void testAddNumbers_JaxwsFromWsdl() throws Exception{
-      boolean result = false; 
+      boolean result = false;
       try {
         meth = cls.getMethod("testAddNumbers");
         // System.out.println("meth="+ meth.toString());
         // System.out.println("cls="+ cls);
         // System.out.println("ct="+ ct);
         // System.out.println("obj="+ obj);
-	result = (Boolean) meth.invoke(obj, (Object[])null);     
+    result = (Boolean) meth.invoke(obj, (Object[])null);
       } catch (Exception ex) {
-	System.out.println ("got unexpected exception.");
+    System.out.println ("got unexpected exception.");
         throw new Exception(ex);
       }
       Assert.assertTrue(result);
@@ -62,12 +62,12 @@ public class JaxwsFromWsdlTestNG {
 
     @Test(dependsOnMethods = { "testAddNumbers_JaxwsFromWsdl" })
     public void testAddNumbersException_JaxwsFromWsdl() throws Exception{
-      boolean result = false; 
+      boolean result = false;
       try {
         meth = cls.getMethod("testAddNumbersException");
-	result = (Boolean) meth.invoke(obj, (Object[])null);     
+    result = (Boolean) meth.invoke(obj, (Object[])null);
       } catch (Exception ex) {
-	System.out.println ("got unexpected exception");
+    System.out.println ("got unexpected exception");
         throw new Exception(ex);
       }
       Assert.assertTrue(result);

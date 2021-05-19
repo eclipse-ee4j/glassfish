@@ -344,7 +344,7 @@ public final class UploadDownloadMgrTest
     testUploadFile5()
             throws IOException {
         final Object id = upload(null, 1 + 2048 * K);
-	}
+    }
 }
 
 

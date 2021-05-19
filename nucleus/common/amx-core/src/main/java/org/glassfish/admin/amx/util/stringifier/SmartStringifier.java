@@ -114,7 +114,7 @@ public final class SmartStringifier implements Stringifier {
         String result = null;
 
         if (ClassUtil.objectIsArray(target)) {
-            
+
 
             final Class elementClass =
                     ClassUtil.getArrayElementClass(target.getClass());

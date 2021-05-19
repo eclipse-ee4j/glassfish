@@ -41,226 +41,226 @@ import org.glassfish.ejb.deployment.descriptor.QueryDescriptor;
  */
 abstract public class AbstractMethodHelper
 {
-	/** Constant representing a local interface return type. */
-	public static final int LOCAL_RETURN = 0;
+    /** Constant representing a local interface return type. */
+    public static final int LOCAL_RETURN = 0;
 
-	/** Constant representing a remote interface return type. */
-	public static final int REMOTE_RETURN = 1;
+    /** Constant representing a remote interface return type. */
+    public static final int REMOTE_RETURN = 1;
 
-	/** Constant representing no return type. */
-	public static final int NO_RETURN = 2;
+    /** Constant representing no return type. */
+    public static final int NO_RETURN = 2;
 
-	private EjbCMPEntityDescriptor _cmpDescriptor;
-	private List finders = new ArrayList();
-	private List selectors = new ArrayList();
-	//private ArrayList otherMethods = new ArrayList();
-	private List createMethods = new ArrayList();
-	private Map methodNames = new HashMap();
+    private EjbCMPEntityDescriptor _cmpDescriptor;
+    private List finders = new ArrayList();
+    private List selectors = new ArrayList();
+    //private ArrayList otherMethods = new ArrayList();
+    private List createMethods = new ArrayList();
+    private Map methodNames = new HashMap();
 
-	/** Creates a new instance of AbstractMethodHelper
-	 * @param descriptor the EjbCMPEntityDescriptor which defines the 
-	 * information for this bean.
-	 */
-	public AbstractMethodHelper (EjbCMPEntityDescriptor descriptor)
-	{
-		_cmpDescriptor = descriptor;
-		categorizeMethods();	// Separate methods into categories.
-	}
+    /** Creates a new instance of AbstractMethodHelper
+     * @param descriptor the EjbCMPEntityDescriptor which defines the
+     * information for this bean.
+     */
+    public AbstractMethodHelper (EjbCMPEntityDescriptor descriptor)
+    {
+        _cmpDescriptor = descriptor;
+        categorizeMethods();    // Separate methods into categories.
+    }
 
-	/** Gets the EjbCMPEntityDescriptor which defines the 
-	 * information for this bean.
-	 * @return the EjbCMPEntityDescriptor for the bean specified in the
-	 * constructor.
-	 */
-	protected EjbCMPEntityDescriptor getDescriptor() { return _cmpDescriptor; }
+    /** Gets the EjbCMPEntityDescriptor which defines the
+     * information for this bean.
+     * @return the EjbCMPEntityDescriptor for the bean specified in the
+     * constructor.
+     */
+    protected EjbCMPEntityDescriptor getDescriptor() { return _cmpDescriptor; }
 
-	/**
-	 * Reads all known methods and sorts them by name into specific
-	 * Collections for further processing.
-	 */
-	protected void categorizeMethods ()
-	{
-		EjbCMPEntityDescriptor descriptor = getDescriptor();
-		Iterator iterator = descriptor.getMethodDescriptors().iterator();
+    /**
+     * Reads all known methods and sorts them by name into specific
+     * Collections for further processing.
+     */
+    protected void categorizeMethods ()
+    {
+        EjbCMPEntityDescriptor descriptor = getDescriptor();
+        Iterator iterator = descriptor.getMethodDescriptors().iterator();
 
-		while (iterator.hasNext())
-		{
-			MethodDescriptor methodDescriptor = 
-				(MethodDescriptor)iterator.next();
-			Method method = methodDescriptor.getMethod(descriptor);
-			String methodName = methodDescriptor.getName();
+        while (iterator.hasNext())
+        {
+            MethodDescriptor methodDescriptor =
+                (MethodDescriptor)iterator.next();
+            Method method = methodDescriptor.getMethod(descriptor);
+            String methodName = methodDescriptor.getName();
 
-			//if (DEBUG)
-			//	System.out.println("Method: " + methodName); // NOI18N
+            //if (DEBUG)
+            //    System.out.println("Method: " + methodName); // NOI18N
 
-			if (methodName.startsWith(CMPTemplateFormatter.find_))
-				finders.add(method);
-			else if (methodName.startsWith(CMPTemplateFormatter.ejbSelect_))
-				selectors.add(method); 
-			else if (methodName.startsWith(CMPTemplateFormatter.create_))
-				createMethods.add(method);
-			else if (methodName.startsWith(CMPTemplateFormatter.get_) || 
-				methodName.startsWith(CMPTemplateFormatter.set_))
-			{
-				;// skip
-			}
-			//else
-			//	otherMethods.add(method);
+            if (methodName.startsWith(CMPTemplateFormatter.find_))
+                finders.add(method);
+            else if (methodName.startsWith(CMPTemplateFormatter.ejbSelect_))
+                selectors.add(method);
+            else if (methodName.startsWith(CMPTemplateFormatter.create_))
+                createMethods.add(method);
+            else if (methodName.startsWith(CMPTemplateFormatter.get_) ||
+                methodName.startsWith(CMPTemplateFormatter.set_))
+            {
+                ;// skip
+            }
+            //else
+            //    otherMethods.add(method);
 
-			// It is OK to use HashMap here as we won't use it for possible 
-			// overloaded methods. 
-			methodNames.put(methodName, method);
-		}
-	}
+            // It is OK to use HashMap here as we won't use it for possible
+            // overloaded methods.
+            methodNames.put(methodName, method);
+        }
+    }
 
-	/** Gets the list of finder methods for this bean.
-	 * @return a list of java.lang.reflect.Method objects which represent 
-	 * the finders for this bean
-	 */
-	public List getFinders () { return finders; }
+    /** Gets the list of finder methods for this bean.
+     * @return a list of java.lang.reflect.Method objects which represent
+     * the finders for this bean
+     */
+    public List getFinders () { return finders; }
 
-	// give subclasses a chance to replace the list
-	protected void setFinders (List finderList)
-	{
-		finders = finderList;
-	}
+    // give subclasses a chance to replace the list
+    protected void setFinders (List finderList)
+    {
+        finders = finderList;
+    }
 
-	/** Gets the list of selector methods for this bean.
-	 * @return a list of java.lang.reflect.Method objects which represent 
-	 * the selectors for this bean
-	 */
-	public List getSelectors () { return selectors; }
+    /** Gets the list of selector methods for this bean.
+     * @return a list of java.lang.reflect.Method objects which represent
+     * the selectors for this bean
+     */
+    public List getSelectors () { return selectors; }
 
-	// give subclasses a chance to replace the list
-	protected void setSelectors (List selectorList)
-	{
-		selectors = selectorList;
-	}
+    // give subclasses a chance to replace the list
+    protected void setSelectors (List selectorList)
+    {
+        selectors = selectorList;
+    }
 
-	/** Gets the list of ejb create methods for this bean.
-	 * @return a list of java.lang.reflect.Method objects which represent 
-	 * the ejb create methods for this bean
-	 */
-	public List getCreateMethods () { return createMethods; }
+    /** Gets the list of ejb create methods for this bean.
+     * @return a list of java.lang.reflect.Method objects which represent
+     * the ejb create methods for this bean
+     */
+    public List getCreateMethods () { return createMethods; }
 
-	// might need this later
-	//public List getOtherMethods () { return otherMethods; }
+    // might need this later
+    //public List getOtherMethods () { return otherMethods; }
 
-	/** Gets a map of the method names for this bean.  The keys are the 
-	 * method names and the values are the java.lang.reflect.Method objects.
-	 * These should represent all methods of this bean.
-	 * @return a map of the method names to java.lang.reflect.Method objects 
-	 * for this bean
-	 */
-	public Map getMethodNames () { return methodNames; }
+    /** Gets a map of the method names for this bean.  The keys are the
+     * method names and the values are the java.lang.reflect.Method objects.
+     * These should represent all methods of this bean.
+     * @return a map of the method names to java.lang.reflect.Method objects
+     * for this bean
+     */
+    public Map getMethodNames () { return methodNames; }
 
-	/** Gets the name of the local home which corresponds to this bean.
-	 * @return the name of the local home class
-	 */
-	public String getLocalHome ()
-	{
-		return getDescriptor().getLocalHomeClassName();
-	}
-	
-	/** Gets the name of the remote home which corresponds to this bean.
-	 * @return the name of the remote home class
-	 */
-	public String getRemoteHome ()
-	{
-		return getDescriptor().getHomeClassName();
-	}
+    /** Gets the name of the local home which corresponds to this bean.
+     * @return the name of the local home class
+     */
+    public String getLocalHome ()
+    {
+        return getDescriptor().getLocalHomeClassName();
+    }
 
-	/** Gets the query descriptor associated with the specified method if it 
-	 * exists.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * query string
-	 * @return a query descriptor for the specified method. Returns
-	 * <code>null</code> for CMP 1.1 queries.
-	 */
-	protected QueryDescriptor getQueryDescriptor (Method method)
-	{
-		PersistenceDescriptor persistenceDescriptor =
-			getDescriptor().getPersistenceDescriptor();
-		return persistenceDescriptor.getQueryFor(method);
-	}
+    /** Gets the name of the remote home which corresponds to this bean.
+     * @return the name of the remote home class
+     */
+    public String getRemoteHome ()
+    {
+        return getDescriptor().getHomeClassName();
+    }
 
-	/** Gets the query string associated with the specified method if it 
-	 * exists.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * query string
-	 * @return a query string for the specified method
-	 */
-	public String getQueryString (Method method)
-	{
-		QueryDescriptor queryDescriptor = getQueryDescriptor(method);
+    /** Gets the query descriptor associated with the specified method if it
+     * exists.
+     * @param method the java.lang.reflect.Method object used to find the
+     * query string
+     * @return a query descriptor for the specified method. Returns
+     * <code>null</code> for CMP 1.1 queries.
+     */
+    protected QueryDescriptor getQueryDescriptor (Method method)
+    {
+        PersistenceDescriptor persistenceDescriptor =
+            getDescriptor().getPersistenceDescriptor();
+        return persistenceDescriptor.getQueryFor(method);
+    }
 
-		return ((queryDescriptor != null) ? queryDescriptor.getQuery() : null);
-	}
+    /** Gets the query string associated with the specified method if it
+     * exists.
+     * @param method the java.lang.reflect.Method object used to find the
+     * query string
+     * @return a query string for the specified method
+     */
+    public String getQueryString (Method method)
+    {
+        QueryDescriptor queryDescriptor = getQueryDescriptor(method);
 
-	/** Gets the return type associated with the specified method if it 
-	 * exists.  If no corresponding query descriptor is found, the value
-	 * <code>NO_RETURN</code> is returned.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * query return type
-	 * @return the return type for the specified method, one of 
-	 * {@link #LOCAL_RETURN}, {@link #REMOTE_RETURN}, or {@link #NO_RETURN}
-	 */
-	public int getQueryReturnType (Method method)
-	{
-		QueryDescriptor queryDescriptor = getQueryDescriptor(method);
+        return ((queryDescriptor != null) ? queryDescriptor.getQuery() : null);
+    }
 
-		if (queryDescriptor != null)
-		{
-			if (queryDescriptor.getHasLocalReturnTypeMapping())
-				return LOCAL_RETURN;
-			if (queryDescriptor.getHasRemoteReturnTypeMapping())
-				return REMOTE_RETURN;
-		}
+    /** Gets the return type associated with the specified method if it
+     * exists.  If no corresponding query descriptor is found, the value
+     * <code>NO_RETURN</code> is returned.
+     * @param method the java.lang.reflect.Method object used to find the
+     * query return type
+     * @return the return type for the specified method, one of
+     * {@link #LOCAL_RETURN}, {@link #REMOTE_RETURN}, or {@link #NO_RETURN}
+     */
+    public int getQueryReturnType (Method method)
+    {
+        QueryDescriptor queryDescriptor = getQueryDescriptor(method);
 
-		return NO_RETURN;
-	}
+        if (queryDescriptor != null)
+        {
+            if (queryDescriptor.getHasLocalReturnTypeMapping())
+                return LOCAL_RETURN;
+            if (queryDescriptor.getHasRemoteReturnTypeMapping())
+                return REMOTE_RETURN;
+        }
 
-	/** Returns <code>true</code> if prefetch is enabled for the specified 
-	 * method, <code>false</code> otherwise. Prefetch is enabled by default.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * prefetch setting.
-	 * @return a boolean representing the prefetch setting
-	 */
-	abstract public boolean isQueryPrefetchEnabled (Method method);
+        return NO_RETURN;
+    }
 
-	/** Gets the jdo filter expression associated with the specified method 
-	 * if it exists.  Note that this method should only be used for CMP 1.1 - 
-	 * use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * query filter
-	 * @return the jdo filter expression
-	 */
-	abstract public String getJDOFilterExpression (Method method);
+    /** Returns <code>true</code> if prefetch is enabled for the specified
+     * method, <code>false</code> otherwise. Prefetch is enabled by default.
+     * @param method the java.lang.reflect.Method object used to find the
+     * prefetch setting.
+     * @return a boolean representing the prefetch setting
+     */
+    abstract public boolean isQueryPrefetchEnabled (Method method);
 
-	/** Gets the jdo parameter declaration associated with the specified 
-	 * method if it exists.  Note that this method should only be used for 
-	 * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * parameter declaration
-	 * @return the jdo parameter declaration
-	 */
-	abstract public String getJDOParameterDeclaration (Method method);
+    /** Gets the jdo filter expression associated with the specified method
+     * if it exists.  Note that this method should only be used for CMP 1.1 -
+     * use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * query filter
+     * @return the jdo filter expression
+     */
+    abstract public String getJDOFilterExpression (Method method);
 
-	/** Gets the jdo variables declaration associated with the specified 
-	 * method if it exists.  Note that this method should only be used for 
-	 * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * parameter declaration
-	 * @return the jdo variables declaration
-	 */
-	abstract public String getJDOVariableDeclaration (Method method);
+    /** Gets the jdo parameter declaration associated with the specified
+     * method if it exists.  Note that this method should only be used for
+     * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * parameter declaration
+     * @return the jdo parameter declaration
+     */
+    abstract public String getJDOParameterDeclaration (Method method);
 
-	/** Gets the jdo ordering specification associated with the specified 
-	 * method if it exists.  Note that this method should only be used for
-	 * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
-	 * @param method the java.lang.reflect.Method object used to find the 
-	 * parameter declaration
-	 * @return the jdo ordering specification
-	 */
-	abstract public String getJDOOrderingSpecification (Method method);
+    /** Gets the jdo variables declaration associated with the specified
+     * method if it exists.  Note that this method should only be used for
+     * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * parameter declaration
+     * @return the jdo variables declaration
+     */
+    abstract public String getJDOVariableDeclaration (Method method);
+
+    /** Gets the jdo ordering specification associated with the specified
+     * method if it exists.  Note that this method should only be used for
+     * CMP 1.1 - use {@link #getQueryString} for CMP 2.0.
+     * @param method the java.lang.reflect.Method object used to find the
+     * parameter declaration
+     * @return the jdo ordering specification
+     */
+    abstract public String getJDOOrderingSpecification (Method method);
 }

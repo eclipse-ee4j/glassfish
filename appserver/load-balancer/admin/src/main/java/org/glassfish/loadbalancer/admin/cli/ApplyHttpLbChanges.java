@@ -46,7 +46,7 @@ import jakarta.inject.Inject;
 
 /**
  * Class to publish the loadbalancer.xml to the physical loadbalancer.
- * 
+ *
  * @author Kshitiz Saxena
  */
 @Service(name = "apply-http-lb-changes")
@@ -54,8 +54,8 @@ import jakarta.inject.Inject;
 @I18n("apply.http.lb.changes")
 @RestEndpoints({
     @RestEndpoint(configBean=LoadBalancer.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="apply-http-lb-changes", 
+        opType=RestEndpoint.OpType.POST,
+        path="apply-http-lb-changes",
         description="apply-http-lb-changes",
         params={
             @RestParam(name="id", value="$parent")
@@ -124,9 +124,9 @@ public class ApplyHttpLbChanges implements AdminCommand {
 
     /**
      * publishes the loadbalancer.xml to the physical loadbalancer.
-     * @throws java.io.IOException 
-     * @throws com.sun.enterprise.config.ConfigException 
-     * @throws org.netbeans.modules.schema2beans.Schema2BeansException 
+     * @throws java.io.IOException
+     * @throws com.sun.enterprise.config.ConfigException
+     * @throws org.netbeans.modules.schema2beans.Schema2BeansException
      */
     public void publish(ConnectionManager _connectionManager, Domain domain, String lbConfigName) throws IOException,
             Exception {

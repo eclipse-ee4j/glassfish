@@ -30,7 +30,7 @@
     <artifactId>lib1</artifactId>
 
     <name>HK2 CDI EAR Test Lib1</name>
-    
+
     <build>
       <plugins>
           <plugin>

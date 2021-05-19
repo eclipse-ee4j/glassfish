@@ -38,7 +38,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("jspStaticFileEncoding");
         WebTest webTest = new WebTest(args);
@@ -46,8 +46,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed.");

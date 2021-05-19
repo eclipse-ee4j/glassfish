@@ -27,9 +27,9 @@ import com.sun.enterprise.deployment.node.connector.ConnectorNode;
  * @author Jerome Dochez
  */
 public class ConnectorDeploymentDescriptorFile extends DeploymentDescriptorFile {
-    
-    public final static String DESC_PATH = "META-INF/ra.xml";            
-    
+
+    public final static String DESC_PATH = "META-INF/ra.xml";
+
     public final static String VERSION_10 = "1.0";
     public final static String VERSION_15 = "1.5";
     public final static String VERSION_16 = "1.6";
@@ -37,24 +37,24 @@ public class ConnectorDeploymentDescriptorFile extends DeploymentDescriptorFile 
     /** Creates a new instance of ConnectorDeploymentDescriptorFile */
     public ConnectorDeploymentDescriptorFile() {
     }
-    
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
+    @Override
     public String getDeploymentDescriptorPath() {
-        return DESC_PATH;        
+        return DESC_PATH;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
      *
      * @param the descriptor for which we need the node
      */
+    @Override
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-	
-	return new ConnectorNode();  
+        return new ConnectorNode();
     }
-    
 }

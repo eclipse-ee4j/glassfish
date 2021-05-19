@@ -21,7 +21,7 @@
 
 <property file="build.properties"/>
 <property file="${ws.root}/build.properties"/>
- 
+
 <description>Builds, tests, and runs the asadmin CLI restart, JDBC connection pool tests.</description>
     <import file="${ws.root}/gfproject/build-impl.xml"/>
     <import file="${ws.root}/gfproject/v3-targets.xml"/>
@@ -32,7 +32,7 @@
 <target name="build">
    <antcall target="compile-tests"/>
    <record name="admincli-restart.output" action="start"/>
-	<antcall target="restart-server"/>
+    <antcall target="restart-server"/>
    <record name="admincli-restart.output" action="stop"/>
 </target>
 

@@ -30,27 +30,27 @@ import java.security.BasicPermission;
 public class CORBAObjectPermission extends BasicPermission {
 
     public CORBAObjectPermission() {
-	
-	super("*", "*");
+
+        super("*", "*");
     }
 
     public CORBAObjectPermission(String name) {
 
-	super("*", "*");
+        super("*", "*");
 
-	// currently only name "*" is supported
-	if ( !name.equals("*") ) {
-	    throw new RuntimeException("CORBAObjectPermission name must be *");
-	}
+        // currently only name "*" is supported
+        if ( !name.equals("*") ) {
+            throw new RuntimeException("CORBAObjectPermission name must be *");
+        }
     }
 
     public CORBAObjectPermission(String name, String actions) {
 
-	super("*", actions);
-	
-	// currently only name "*" is supported
-	if ( !name.equals("*") ) {
-	    throw new RuntimeException("CORBAObjectPermission name must be *");
-	}
+        super("*", actions);
+
+        // currently only name "*" is supported
+        if ( !name.equals("*") ) {
+            throw new RuntimeException("CORBAObjectPermission name must be *");
+        }
     }
 }

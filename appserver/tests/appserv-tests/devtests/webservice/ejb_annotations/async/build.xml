@@ -60,8 +60,8 @@
         <param name="wsimport.args"
                value="-keep -b custom-client.xml -d ${build.classes.dir}/client http://${http.host}:${http.port}/AddNumbersImplService/AddNumbersImpl?WSDL"/>
       </antcall>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="client/**"/>
     </target>
 
@@ -72,13 +72,13 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-jar-common"/>
     </target>
-    
+
     <target name="runclient">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>
         <param name="other-args" value="async-ejb-test"/>
       </antcall>
-      <!--restore the tokens back in file--> 
+      <!--restore the tokens back in file-->
       <replace file="custom-client.xml" token="${http.host}" value="HTTP_HOST"/>
       <replace file="custom-client.xml" token="${http.port}" value="HTTP_PORT"/>
     </target>

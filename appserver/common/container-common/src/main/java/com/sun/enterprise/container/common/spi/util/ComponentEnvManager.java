@@ -48,14 +48,14 @@ public interface ComponentEnvManager {
 
     public void unbindFromComponentNamespace(JndiNameEnvironment env)
         throws NamingException;
-    
+
     /**
      * Returns the current application environment if not running in a specified
      * container
-     * 
+     *
      * @return The current application environment or null if we are not currently
      * running as a specific application
      */
     public ApplicationEnvironment getCurrentApplicationEnvironment();
-    
+
 }

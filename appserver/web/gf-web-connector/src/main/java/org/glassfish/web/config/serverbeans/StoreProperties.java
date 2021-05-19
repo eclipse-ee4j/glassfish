@@ -73,9 +73,9 @@ public interface StoreProperties extends ConfigBeanProxy, PropertyBag {
      *              {@link String }
      */
     public void setReapIntervalInSeconds(String value) throws PropertyVetoException;
-    
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+        Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

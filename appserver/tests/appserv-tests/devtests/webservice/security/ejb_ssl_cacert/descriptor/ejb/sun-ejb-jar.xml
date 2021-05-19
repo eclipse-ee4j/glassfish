@@ -28,10 +28,10 @@
       <webservice-endpoint>
         <port-component-name>StateTaxIFPort</port-component-name>
         <endpoint-address-uri>statetaxejb</endpoint-address-uri>
-	<transport-guarantee>CONFIDENTIAL</transport-guarantee>
-	<login-config>
-	  <auth-method>CLIENT-CERT</auth-method>
-	</login-config>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        <login-config>
+          <auth-method>CLIENT-CERT</auth-method>
+        </login-config>
       </webservice-endpoint>
     </ejb>
     <ejb>
@@ -40,7 +40,7 @@
       <webservice-endpoint>
         <port-component-name>FedTaxIFPort</port-component-name>
         <endpoint-address-uri>fedtaxejb</endpoint-address-uri>
-	<transport-guarantee>CONFIDENTIAL</transport-guarantee>
+        <transport-guarantee>CONFIDENTIAL</transport-guarantee>
       </webservice-endpoint>
     </ejb>
   </enterprise-beans>

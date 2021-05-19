@@ -44,7 +44,7 @@
           <classpath refid="gfv3.classpath"/>
          </javac>
     </target>
- 
+
     <target name="create.user" depends="setAsadminArgsWithoutPassword">
         <antcall target="common.createuser.asadmin">
             <param name="arg.list"
@@ -87,8 +87,8 @@
                 <include name="sun-application.xml"/>
             </metainf>
         </ear>
-    </target> 
-    
+    </target>
+
     <target name="deploy.asadmin" depends="prepare">
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="--retrieve ${archivedir} --name ${testName} ${all.ear}"/>
@@ -108,7 +108,7 @@
             <param name="arg.list" value="${testName}"/>
             <param name="testName" value="${testName}"/>
         </antcall>
-    </target>   
+    </target>
 
     <target name="runclient" depends="prepare,setOrbPort2">
         <exec executable="${APPCLIENT}" resultproperty="result" failonerror="false" output="${build}/${log.id}.output.log">
@@ -122,9 +122,9 @@
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
-        </antcall>  
+        </antcall>
     </target>
- 
+
     <target name="private-all">
         <antcall target="create.user"/>
         <antcall target="assemble"/>

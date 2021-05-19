@@ -43,9 +43,9 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
                                ActivationConfigNode.class,
                                "setActivationConfigDescriptor");
 
-        registerElementHandler(new XMLElement(EjbTagNames.AROUND_INVOKE_METHOD), AroundInvokeNode.class, "addAroundInvokeDescriptor"); 
+        registerElementHandler(new XMLElement(EjbTagNames.AROUND_INVOKE_METHOD), AroundInvokeNode.class, "addAroundInvokeDescriptor");
 
-        registerElementHandler(new XMLElement(EjbTagNames.AROUND_TIMEOUT_METHOD), AroundTimeoutNode.class, "addAroundTimeoutDescriptor"); 
+        registerElementHandler(new XMLElement(EjbTagNames.AROUND_TIMEOUT_METHOD), AroundTimeoutNode.class, "addAroundTimeoutDescriptor");
 
         registerElementHandler(new XMLElement(TagNames.POST_CONSTRUCT), LifecycleCallbackNode.class, "addPostConstructDescriptor");
 
@@ -74,10 +74,10 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
 
-        table.put(EjbTagNames.MESSAGING_TYPE, "setMessageListenerType"); 
+        table.put(EjbTagNames.MESSAGING_TYPE, "setMessageListenerType");
         table.put(EjbTagNames.TRANSACTION_TYPE, "setTransactionType");
         table.put(EjbTagNames.MESSAGE_DESTINATION_TYPE, "setDestinationType");
-        table.put(TagNames.MESSAGE_DESTINATION_LINK, 
+        table.put(TagNames.MESSAGE_DESTINATION_LINK,
                   "setMessageDestinationLinkName");
 
         // These are the EJB 2.0 elements that no longer exist in the EJB 2.1
@@ -85,9 +85,9 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
         // written out as activation config properties.
         table.put(EjbTagNames.MSG_SELECTOR, "setJmsMessageSelector");
         table.put(EjbTagNames.JMS_ACKNOWLEDGE_MODE, "setJmsAcknowledgeMode");
-        table.put(EjbTagNames.JMS_DEST_TYPE, "setDestinationType");        
-        table.put(EjbTagNames.JMS_SUBSCRIPTION_DURABILITY, 
-                  "setSubscriptionDurability");        
+        table.put(EjbTagNames.JMS_DEST_TYPE, "setDestinationType");
+        table.put(EjbTagNames.JMS_SUBSCRIPTION_DURABILITY,
+                  "setSubscriptionDurability");
         return table;
     }
 
@@ -96,12 +96,12 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
         Node ejbNode = super.writeDescriptor(parent, nodeName, ejbDesc);
         writeDisplayableComponentInfo(ejbNode, ejbDesc);
         writeCommonHeaderEjbDescriptor(ejbNode, ejbDesc);
-        appendTextChild(ejbNode, EjbTagNames.EJB_CLASS, ejbDesc.getEjbClassName());             
+        appendTextChild(ejbNode, EjbTagNames.EJB_CLASS, ejbDesc.getEjbClassName());
         appendTextChild(ejbNode, EjbTagNames.MESSAGING_TYPE, ejbDesc.getMessageListenerType());
 
 
         MethodNode methodNode = new MethodNode();
-        
+
         if( ejbDesc.isTimedObject() ) {
             if (ejbDesc.getEjbTimeoutMethod() != null) {
                 methodNode.writeJavaMethodDescriptor
@@ -115,7 +115,7 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
             }
         }
 
-        appendTextChild(ejbNode, EjbTagNames.TRANSACTION_TYPE, ejbDesc.getTransactionType());                   
+        appendTextChild(ejbNode, EjbTagNames.TRANSACTION_TYPE, ejbDesc.getTransactionType());
 
         // message-destination-type
         appendTextChild(ejbNode, TagNames.MESSAGE_DESTINATION_TYPE,
@@ -124,7 +124,7 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
         // message-destination-link
         String link = ejbDesc.getMessageDestinationLinkName();
         appendTextChild(ejbNode, TagNames.MESSAGE_DESTINATION_LINK, link);
-        
+
         ActivationConfigNode activationConfigNode = new ActivationConfigNode();
         activationConfigNode.writeDescriptor
             (ejbNode, EjbTagNames.ACTIVATION_CONFIG,
@@ -138,25 +138,25 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
 
         // env-entry*
         writeEnvEntryDescriptors(ejbNode, ejbDesc.getEnvironmentProperties().iterator());
-        
+
         // ejb-ref * and ejb-local-ref*
         writeEjbReferenceDescriptors(ejbNode, ejbDesc.getEjbReferenceDescriptors().iterator());
 
         // service-ref*
         writeServiceReferenceDescriptors(ejbNode, ejbDesc.getServiceReferenceDescriptors().iterator());
-        
+
         // resource-ref*
         writeResourceRefDescriptors(ejbNode, ejbDesc.getResourceReferenceDescriptors().iterator());
-        
+
         // resource-env-ref*
-        writeResourceEnvRefDescriptors(ejbNode, ejbDesc.getResourceEnvReferenceDescriptors().iterator());        
-        
+        writeResourceEnvRefDescriptors(ejbNode, ejbDesc.getResourceEnvReferenceDescriptors().iterator());
+
         // message-destination-ref*
         writeMessageDestinationRefDescriptors(ejbNode, ejbDesc.getMessageDestinationReferenceDescriptors().iterator());
 
         // persistence-context-ref*
         writeEntityManagerReferenceDescriptors(ejbNode, ejbDesc.getEntityManagerReferenceDescriptors().iterator());
-        
+
         // persistence-unit-ref*
         writeEntityManagerFactoryReferenceDescriptors(ejbNode, ejbDesc.getEntityManagerFactoryReferenceDescriptors().iterator());
 
@@ -174,7 +174,7 @@ public class MessageDrivenBeanNode extends EjbNode<EjbMessageBeanDescriptor> {
 
         // security-identity
         writeSecurityIdentityDescriptor(ejbNode, ejbDesc);
-        
+
         return ejbNode;
     }
 }

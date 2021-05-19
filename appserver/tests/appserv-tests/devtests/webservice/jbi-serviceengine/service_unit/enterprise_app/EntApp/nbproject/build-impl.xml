@@ -35,8 +35,8 @@ is divided into following sections:
 <project name="EntApp-impl" default="build" basedir=".." xmlns:ear2="http://www.netbeans.org/ns/j2ee-earproject/2">
     <import file="ant-deploy.xml"/>
     <target name="default" depends="dist" description="Build whole project."/>
-    <!-- 
-    INITIALIZATION SECTION 
+    <!--
+    INITIALIZATION SECTION
     -->
     <target name="pre-init">
         <!-- Empty placeholder for easier customization. -->

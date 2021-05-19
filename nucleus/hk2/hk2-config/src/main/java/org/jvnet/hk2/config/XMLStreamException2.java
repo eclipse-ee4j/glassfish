@@ -21,7 +21,7 @@ import javax.xml.stream.Location;
 
 /**
  * To fix the problem in StAX API where exceptions are not properly chained.
- * 
+ *
  * @author Kohsuke Kawaguchi
  */
 public class XMLStreamException2 extends XMLStreamException {

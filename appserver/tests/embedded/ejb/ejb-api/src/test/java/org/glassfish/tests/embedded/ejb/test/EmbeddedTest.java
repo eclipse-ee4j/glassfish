@@ -36,12 +36,12 @@ public class EmbeddedTest {
     public static void main(String[] args) {
         EmbeddedTest test = new EmbeddedTest();
         System.setProperty("basedir", System.getProperty("user.dir"));
-        test.test();        
+        test.test();
     }
 
     public File getDeployableArtifact() {
         File f = new File(System.getProperty("basedir"), "target");
-        f = new File(f, "classes");        
+        f = new File(f, "classes");
         return f;
     }
 

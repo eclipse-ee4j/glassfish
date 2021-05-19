@@ -16,7 +16,7 @@
 
 package com.sun.enterprise.deployment;
 
-/** 
+/**
  * This class represents information about a web service
  * endpoint.
  *

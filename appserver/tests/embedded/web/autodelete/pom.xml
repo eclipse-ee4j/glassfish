@@ -72,7 +72,7 @@
               <classpathScope>test</classpathScope>
               <includeProjectDependencies>true</includeProjectDependencies>
           </configuration>
-      </plugin>            
+      </plugin>
         </plugins>
     </build>
     <dependencies>

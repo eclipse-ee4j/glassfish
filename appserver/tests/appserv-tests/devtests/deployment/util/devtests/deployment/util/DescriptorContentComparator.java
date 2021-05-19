@@ -52,7 +52,7 @@ public class DescriptorContentComparator {
             };
 
     private static Logger logger = null;
-                
+
     // for easy debug
     private Field lastField = null;
 
@@ -80,7 +80,7 @@ public class DescriptorContentComparator {
      * @return boolean result of comparison
      */
     private boolean compareContent(Field field, Object o1, Object o2, Set set) {
-        if (o1 == o2 || 
+        if (o1 == o2 ||
                 isNullEquivalent(field, o1) && isNullEquivalent(field, o2)) {
             return true;
         }
@@ -91,7 +91,7 @@ public class DescriptorContentComparator {
 
             if (logger.isLoggable(Level.FINE)) {
                 logger.fine("... null, class mismatch or excluded for " +
-                    ((field != null)? field : "") + 
+                    ((field != null)? field : "") +
                     ", o1 = " + o1 + ", o2 = " + o2);
             }
 
@@ -212,7 +212,7 @@ public class DescriptorContentComparator {
         } else if (o instanceof Collection) {
             Collection coll = (Collection)o;
             result = (coll.size() == 0);
-        } else if (o instanceof Map) {                                                    
+        } else if (o instanceof Map) {
 
             Map map = (Map)o;
             int size = map.size();
@@ -332,7 +332,7 @@ public class DescriptorContentComparator {
 
     private void initLogger() {
         logger = Logger.getLogger(DescriptorContentComparator.class.getName());
-        Level logLevel = Boolean.getBoolean("debug") ? 
+        Level logLevel = Boolean.getBoolean("debug") ?
                 Level.FINEST : Level.CONFIG;
         for (Handler h : Logger.getLogger("").getHandlers()) {
             h.setLevel(logLevel);
@@ -370,7 +370,7 @@ public class DescriptorContentComparator {
             }
             if (!(o instanceof ReferencePair)) {
                 return false;
-            }       
+            }
 
             ReferencePair rd = (ReferencePair)o;
             return (c1 == rd.c1 && c2 == rd.c2 ||

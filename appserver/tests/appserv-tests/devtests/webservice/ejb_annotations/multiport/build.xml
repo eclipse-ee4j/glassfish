@@ -63,11 +63,11 @@
       <mkdir dir="${assemble.dir}"/>
       <mkdir dir="${build.classes.dir}/META-INF/wsdl"/>
       <copy file="HttpTestService.wsdl" todir="${build.classes.dir}/META-INF/wsdl"/>
-      <echo message="my build classes dir is:${build.classes.dir}" level="verbose"/> 
+      <echo message="my build classes dir is:${build.classes.dir}" level="verbose"/>
       <jar destfile="${assemble.dir}/${appname}-ejb.jar"
         basedir="${build.classes.dir}"
         includes="service/**,META-INF/**">
-      </jar>            
+      </jar>
     </target>
 
     <target name="assemble-client" depends="init-common">
@@ -77,15 +77,15 @@
             <param name="wsimport.args"
                value="-keep -wsdllocation ${env.APS_HOME}/devtests/webservice/annotations/multiport/HttpTestService.wsdl -b customclient.xml -d ${build.classes.dir}/client HttpTestService.wsdl"/>
         </antcall>
-        <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+        <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="client/**"/>
     </target>
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-jar-common"/>
     </target>
-    
+
     <target name="run">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>

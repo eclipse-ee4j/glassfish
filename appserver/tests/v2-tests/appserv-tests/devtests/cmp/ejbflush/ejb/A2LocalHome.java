@@ -24,9 +24,9 @@ import java.util.*;
  */
 
 public interface A2LocalHome extends jakarta.ejb.EJBLocalHome {
-    
+
     public  A2Local findByPrimaryKey(java.lang.String pk)  throws jakarta.ejb.FinderException;
-    
+
     public  A2Local create(java.lang.String name) throws jakarta.ejb.CreateException;
-    
+
 }

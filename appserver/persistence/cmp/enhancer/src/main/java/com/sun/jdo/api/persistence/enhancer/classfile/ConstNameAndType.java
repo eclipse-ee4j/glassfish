@@ -16,94 +16,93 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Class representing a name and an associated type in the constant pool
  * of a class file
  */
-
 public class ConstNameAndType extends ConstBasic {
-  /* The tag value associated with ConstDouble */
-  public static final int MyTag = CONSTANTNameAndType;
+    /* The tag value associated with ConstDouble */
+    public static final int MyTag = CONSTANTNameAndType;
 
-  /* The name of interest */
-  private ConstUtf8 theName;
+    /* The name of interest */
+    private ConstUtf8 theName;
 
-  /* The index of the name to be resolved
-   *   - used during class file reading */
-  private int theNameIndex;
+    /* The index of the name to be resolved
+     *   - used during class file reading */
+    private int theNameIndex;
 
-  /* The type signature associated with the name */
-  private ConstUtf8 typeSignature;
+    /* The type signature associated with the name */
+    private ConstUtf8 typeSignature;
 
-  /* The index of the signature to be resolved
-   *   - used during class file reading */
-  private int typeSignatureIndex;
+    /* The index of the signature to be resolved
+     *   - used during class file reading */
+    private int typeSignatureIndex;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * The tag of this constant entry
-   */
-  public int tag () { return MyTag; }
+    /**
+     * The tag of this constant entry
+     */
+    public int tag () { return MyTag; }
 
-  /**
-   * Return the name
-   */
-  public ConstUtf8 name() {
-    return theName;
-  }
+    /**
+     * Return the name
+     */
+    public ConstUtf8 name() {
+        return theName;
+    }
 
-  /**
-   * Return the type signature associated with the name
-   */
-  public ConstUtf8 signature() {
-    return typeSignature;
-  }
+    /**
+     * Return the type signature associated with the name
+     */
+    public ConstUtf8 signature() {
+        return typeSignature;
+    }
 
-  /**
-   * Modify the signature
-   */
-  public void changeSignature(ConstUtf8 newSig) {
-    typeSignature = newSig;
-  }
+    /**
+     * Modify the signature
+     */
+    public void changeSignature(ConstUtf8 newSig) {
+        typeSignature = newSig;
+    }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTNameAndType(" + indexAsString() + "): " + //NOI18N
-          "name(" + theName.toString() + ") " +//NOI18N
-          " type(" + typeSignature.toString() + ")";//NOI18N
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTNameAndType(" + indexAsString() + "): " + //NOI18N
+            "name(" + theName.toString() + ") " +//NOI18N
+            " type(" + typeSignature.toString() + ")";//NOI18N
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  ConstNameAndType (ConstUtf8 n, ConstUtf8 sig) {
-    theName = n; typeSignature = sig;
-  }
+    ConstNameAndType (ConstUtf8 n, ConstUtf8 sig) {
+        theName = n; typeSignature = sig;
+    }
 
-  ConstNameAndType (int n, int sig) {
-    theNameIndex = n; typeSignatureIndex = sig;
-  }
+    ConstNameAndType (int n, int sig) {
+        theNameIndex = n; typeSignatureIndex = sig;
+    }
 
-  void formatData (DataOutputStream b) throws IOException {
-    b.writeShort(theName.getIndex());
-    b.writeShort(typeSignature.getIndex());
-  }
+    void formatData (DataOutputStream b) throws IOException {
+        b.writeShort(theName.getIndex());
+        b.writeShort(typeSignature.getIndex());
+    }
 
-  static ConstNameAndType read (DataInputStream input) throws IOException {
-    int cname = input.readUnsignedShort();
-    int sig = input.readUnsignedShort();
+    static ConstNameAndType read (DataInputStream input) throws IOException {
+        int cname = input.readUnsignedShort();
+        int sig = input.readUnsignedShort();
 
-    return new ConstNameAndType (cname, sig);
-  }
+        return new ConstNameAndType (cname, sig);
+    }
 
-  void resolve (ConstantPool p) {
-    theName = (ConstUtf8) p.constantAt(theNameIndex);
-    typeSignature = (ConstUtf8) p.constantAt(typeSignatureIndex);
-  }
+    void resolve (ConstantPool p) {
+        theName = (ConstUtf8) p.constantAt(theNameIndex);
+        typeSignature = (ConstUtf8) p.constantAt(typeSignatureIndex);
+    }
 }
-
-

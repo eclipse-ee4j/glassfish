@@ -25,14 +25,13 @@ import org.glassfish.web.LogFacade;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-//END OF IASRI 4660482 
+//END OF IASRI 4660482
 
 
 /**
  * I dictate how the web app I belong to should be logged into.
  * @author Danny Coward
  */
-
 public class LoginConfigurationImpl extends Descriptor implements LoginConfiguration {
 
     static final Logger _logger = LogFacade.getLogger();
@@ -50,100 +49,119 @@ public class LoginConfigurationImpl extends Descriptor implements LoginConfigura
     private String realmName = "";
     private String formLoginPage = "";
     private String formErrorPage = "";
-    private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(LoginConfigurationImpl.class);
+    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(LoginConfigurationImpl.class);
 
     /** Return my authentication method. */
+    @Override
     public String getAuthenticationMethod() {
-	if (this.authenticationMethod == null) {
-            //START OF IASRI 4660482 - warning log if authentication method isn't defined in descriptor
+        if (this.authenticationMethod == null) {
+            // START OF IASRI 4660482 - warning log if authentication method isn't defined in
+            // descriptor
             _logger.log(Level.WARNING, LogFacade.AUTH_METHOD_NOT_FOUND);
-            //END OF IASRI 4660482 
-	    this.authenticationMethod = AUTHENTICATION_METHOD_BASIC;
-	}
-	return this.authenticationMethod;
+            // END OF IASRI 4660482
+            this.authenticationMethod = AUTHENTICATION_METHOD_BASIC;
+        }
+        return this.authenticationMethod;
     }
 
     /** Sets my authentication method. */
+    @Override
     public void setAuthenticationMethod(String authenticationMethod) {
-	
-	if ( this.isBoundsChecking() )  {
-	
-	    if (!LoginConfiguration.BASIC_AUTHENTICATION.equals(authenticationMethod)
-		&& !LoginConfiguration.DIGEST_AUTHENTICATION.equals(authenticationMethod)
-		    && !LoginConfiguration.FORM_AUTHENTICATION.equals(authenticationMethod)
-			&& !LoginConfiguration.CLIENT_CERTIFICATION_AUTHENTICATION.equals(authenticationMethod) ) {
 
-            throw new IllegalArgumentException(
+        if (Descriptor.isBoundsChecking()) {
+
+            if (!LoginConfiguration.BASIC_AUTHENTICATION.equals(authenticationMethod)
+                && !LoginConfiguration.DIGEST_AUTHENTICATION.equals(authenticationMethod)
+                && !LoginConfiguration.FORM_AUTHENTICATION.equals(authenticationMethod)
+                && !LoginConfiguration.CLIENT_CERTIFICATION_AUTHENTICATION.equals(authenticationMethod) ) {
+
+                throw new IllegalArgumentException(
                     MessageFormat.format(
-                            _logger.getResourceBundle().getString(LogFacade.EXCEPTION_AUTH_METHOD),
-                            authenticationMethod));
-		
-	    }
-	}
-	this.authenticationMethod = authenticationMethod;
-	
+                        _logger.getResourceBundle().getString(LogFacade.EXCEPTION_AUTH_METHOD),
+                        authenticationMethod));
+
+            }
+        }
+        this.authenticationMethod = authenticationMethod;
+
     }
+
 
     /** Obtain the realm the server should use for basic authentication. */
+    @Override
     public String getRealmName() {
-	if (this.realmName == null) {
-	    this.realmName = "";
-	}
-	return this.realmName;
+        if (this.realmName == null) {
+            this.realmName = "";
+        }
+        return this.realmName;
     }
-    
+
+
     /** Set the realm the server should use for basic authentication. */
+    @Override
     public void setRealmName(String realmName) {
-	this.realmName = realmName;
+        this.realmName = realmName;
     }
-    
+
+
     /** Get the name of the login page for form login. */
+    @Override
     public String getFormLoginPage() {
-	if (this.formLoginPage == null) {
-	    this.formLoginPage = "";
-	}
-	return this.formLoginPage;
+        if (this.formLoginPage == null) {
+            this.formLoginPage = "";
+        }
+        return this.formLoginPage;
     }
-     /** Set the name of the login page for form login. */
+
+
+    /** Set the name of the login page for form login. */
+    @Override
     public void setFormLoginPage(String formLoginPage) {
-	this.formLoginPage = formLoginPage;
+        this.formLoginPage = formLoginPage;
     }
-    
+
+
     /** Get the name of the error page for form login. */
+    @Override
     public String getFormErrorPage() {
-	if (this.formErrorPage == null) {
-	    this.formErrorPage = "";
-	}	
-	return this.formErrorPage;
+        if (this.formErrorPage == null) {
+            this.formErrorPage = "";
+        }
+        return this.formErrorPage;
     }
+
+
     /** Set the name of the error page for form login. */
+    @Override
     public void setFormErrorPage(String formErrorPage) {
-	this.formErrorPage = formErrorPage;
+        this.formErrorPage = formErrorPage;
     }
 
     /** My representation as a formatted String.*/
+    @Override
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("LoginConfig:(").append(authenticationMethod).append(" ").append(
+        toStringBuffer.append("LoginConfig:(").append(authenticationMethod).append(" ").append(
             realmName).append(" ").append(formLoginPage).append(" ").append(formErrorPage).append(")");
     }
 
+    @Override
     public boolean equals(Object obj) {
         boolean result = false;
         if (obj instanceof LoginConfigurationImpl) {
             LoginConfigurationImpl other = (LoginConfigurationImpl)obj;
             result = getAuthenticationMethod().equals(other.getAuthenticationMethod()) &&
-                    getRealmName().equals(other.getRealmName()) &&
-                    getFormLoginPage().equals(other.getFormLoginPage()) &&
-                    getFormErrorPage().equals(other.getFormErrorPage());
-        } 
+                getRealmName().equals(other.getRealmName()) &&
+                getFormLoginPage().equals(other.getFormLoginPage()) &&
+                getFormErrorPage().equals(other.getFormErrorPage());
+        }
         return result;
     }
 
+    @Override
     public int hashCode() {
         int hashCode = 1;
         hashCode = 31 * hashCode + getAuthenticationMethod().hashCode();
-        
+
         if (getRealmName().length() > 0) {
             hashCode = 31 * hashCode + getRealmName().hashCode();
         }

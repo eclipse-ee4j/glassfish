@@ -32,7 +32,7 @@ import java.util.TimeZone;
 /**
  * A HttpServletResponseWrapper, used from
  * <code>SSIServletExternalResolver</code>
- * 
+ *
  * @author Bip Thelin
  * @author David Becker
  * @version $Revision: 1.3 $, $Date: 2007/02/13 19:16:20 $
@@ -66,7 +66,7 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
     protected ServletOutputStream captureServletOutputStream;
     protected ServletOutputStream servletOutputStream;
     protected PrintWriter printWriter;
-    
+
     private ServletContext context;
     private HttpServletRequest request;
 
@@ -74,14 +74,14 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
     /**
      * Initialize our wrapper with the current HttpServletResponse and
      * ServletOutputStream.
-     * 
+     *
      * @param context The servlet context
      * @param request The HttpServletResponse to use
      * @param response The response to use
      * @param captureServletOutputStream The ServletOutputStream to use
      */
-    public ResponseIncludeWrapper(ServletContext context, 
-    		HttpServletRequest request, HttpServletResponse response,
+    public ResponseIncludeWrapper(ServletContext context,
+            HttpServletRequest request, HttpServletResponse response,
            ServletOutputStream captureServletOutputStream) {
         super(response);
         this.context = context;
@@ -109,7 +109,7 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
     /**
      * Return a printwriter, throws and exception if a OutputStream already
      * been returned.
-     * 
+     *
      * @return a PrintWriter object
      * @exception java.io.IOException
      *                if the outputstream already been called
@@ -131,7 +131,7 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
     /**
      * Return a OutputStream, throws and exception if a printwriter already
      * been returned.
-     * 
+     *
      * @return a OutputStream object
      * @exception java.io.IOException
      *                if the printwriter already been called
@@ -145,17 +145,17 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
         }
         throw new IllegalStateException();
     }
-    
-    
+
+
     /**
      * Returns the value of the <code>last-modified</code> header field. The
      * result is the number of milliseconds since January 1, 1970 GMT.
      *
      * @return the date the resource referenced by this
      *   <code>ResponseIncludeWrapper</code> was last modified, or -1 if not
-     *   known.                                                             
+     *   known.
      */
-    public long getLastModified() {                                                                                                                                                           
+    public long getLastModified() {
         if (lastModified == -1) {
             // javadocs say to return -1 if date not known, if you want another
             // default, put it here
@@ -191,13 +191,13 @@ public class ResponseIncludeWrapper extends HttpServletResponseWrapper {
             }
             else
             {
-            	// return a safe value
+                // return a safe value
                setContentType("application/x-octet-stream");
             }
         }
         return contentType;
     }
-    
+
     /**
      * Sets the value of the <code>content-type</code> header field.
      *

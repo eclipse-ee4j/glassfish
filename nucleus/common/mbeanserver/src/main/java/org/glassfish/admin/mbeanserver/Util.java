@@ -27,14 +27,14 @@ public final class Util
 {
     @LoggerInfo(subsystem = "JMX", description="JMX System Logger")
     private static final String JMX_LOGGER_NAME = "jakarta.enterprise.system.jmx";
-    
+
     @LogMessagesResourceBundle
     private static final String LOG_MESSAGES_RB = "org.glassfish.admin.mbeanserver.LogMessages";
-    
+
     public static final Logger JMX_LOGGER = Logger.getLogger(JMX_LOGGER_NAME, LOG_MESSAGES_RB);
-    
+
     public static final String LOG_PREFIX = "NCLS-JMX-";
-    
+
     public static String localhost()
     {
         try

@@ -72,4 +72,4 @@
 
 
     <jdbc-resource enabled="true" jndi-name="java:module/jdbc/monitoring-ds" object-type="user" pool-name="java:module/jdbc/monitoring-pool"/>
-</resources> 
+</resources>

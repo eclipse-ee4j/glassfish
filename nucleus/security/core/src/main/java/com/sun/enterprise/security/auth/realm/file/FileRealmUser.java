@@ -30,7 +30,7 @@ import org.glassfish.security.common.FileRealmHelper;
  *
  */
 public class FileRealmUser implements User
-{    
+{
     FileRealmHelper.User user;
     Hashtable attributes = new Hashtable();
     String realm;
@@ -43,11 +43,11 @@ public class FileRealmUser implements User
         this.user = user;
         this.realm = realm;
     }
-    
+
     public String[] getGroups() {
         return user.getGroups();
     }
-    
+
     /**
      * Returns the realm with which this user is associated
      *
@@ -59,7 +59,7 @@ public class FileRealmUser implements User
     @Override
     public Realm getRealm() throws NoSuchRealmException
     {
-	return Realm.getInstance(realm);
+        return Realm.getInstance(realm);
     }
 
     /**
@@ -80,7 +80,7 @@ public class FileRealmUser implements User
      */
     @Override
     public Enumeration getAttributeNames () {
-	return attributes.keys();
+        return attributes.keys();
     }
 
     @Override

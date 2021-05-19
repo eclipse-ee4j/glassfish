@@ -17,8 +17,8 @@
 package org.glassfish.web.deployment.runtime;
 
 public class ClassLoader extends WebPropertyContainer {
+
     static public final String EXTRA_CLASS_PATH = "ExtraClassPath";
     static public final String DELEGATE = "Delegate";
-    static public final String DYNAMIC_RELOAD_INTERVAL =
-        "DynamicReloadInterval";
+    static public final String DYNAMIC_RELOAD_INTERVAL = "DynamicReloadInterval";
 }

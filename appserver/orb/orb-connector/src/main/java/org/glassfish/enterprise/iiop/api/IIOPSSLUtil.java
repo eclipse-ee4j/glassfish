@@ -23,7 +23,7 @@ import javax.net.ssl.TrustManager;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 /**
- * This class tries to avoid the need for orb-iiop to 
+ * This class tries to avoid the need for orb-iiop to
  * depend on some security modules for getting SSL related info
  * @author Kumar
  */
@@ -36,5 +36,5 @@ public interface IIOPSSLUtil {
     public SecureRandom getInitializedSecureRandom();
     public Object getSSLPortsAsSocketInfo(Object ior);
     public TaggedComponent createSSLTaggedComponent(IORInfo iorInfo, Object socketInfos);
-    
+
 }

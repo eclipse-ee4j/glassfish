@@ -28,7 +28,7 @@ public class Compare {
 
         File file1 = new File(file1Name);
         File file2 = new File(file2Name);
-        
+
         float allResults = 0;
         int totalResults = 0;
 
@@ -39,16 +39,16 @@ public class Compare {
 
             LineNumberReader reader2 = new LineNumberReader
                 (new FileReader(file2));
-            
+
             String nextLine1 = reader1.readLine();
 
             while(nextLine1 != null) {
                 String nextLine2 = reader2.readLine();
-                
-                StringTokenizer tokenizer1 = 
+
+                StringTokenizer tokenizer1 =
                     new StringTokenizer(nextLine1);
-                StringTokenizer tokenizer2 = 
-                    new StringTokenizer(nextLine2);                
+                StringTokenizer tokenizer2 =
+                    new StringTokenizer(nextLine2);
                 StringBuffer category = new StringBuffer();
                 boolean tx = true;
                 int numResults = 0;
@@ -82,7 +82,7 @@ public class Compare {
 
                 nextLine1 = reader1.readLine();
                 System.out.println();
-            } 
+            }
 
             System.out.println("total results = " + totalResults);
             System.out.println("avg pcg dif = " + allResults / totalResults);

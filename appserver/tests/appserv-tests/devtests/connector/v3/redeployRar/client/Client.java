@@ -27,35 +27,35 @@ public class Client   {
 
     private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main(String[] args) {
         Client client = new Client();
-	System.out.println("Client: Args: ");
-	for(int i = 0 ; i< args.length; i++) {
-		System.out.println("Client: Args: " + args[i]);
-	}
-	Integer versionNumber = new Integer(args[0]);
+        System.out.println("Client: Args: ");
+        for(int i = 0 ; i< args.length; i++) {
+                System.out.println("Client: Args: " + args[i]);
+        }
+        Integer versionNumber = new Integer(args[0]);
         client.doTest(versionNumber.intValue());
     }
-    
+
     public String doTest(int versionToTest) {
         stat.addDescription("This is to test redeployment of connector modules. Testing version " + versionToTest);
-        
+
         String res = "NOT RUN";
-	debug("doTest() ENTER...");
+        debug("doTest() ENTER...");
         boolean pass = false;
         try {
-		pass = checkResults(versionToTest);
-		debug("Got expected results = " + pass);
-		
-		//do not continue if one test failed
-		if (!pass) {
-			res = "SOME TESTS FAILED";
-			stat.addStatus("Redeploy Connector 1.5 test - Version : "+ versionToTest, stat.FAIL);
-		} else {
-			res  = "ALL TESTS PASSED";
-			stat.addStatus("Redeploy Connector 1.5 test - Version : " + versionToTest , stat.PASS);
-		}
+                pass = checkResults(versionToTest);
+                debug("Got expected results = " + pass);
+
+                //do not continue if one test failed
+                if (!pass) {
+                        res = "SOME TESTS FAILED";
+                        stat.addStatus("Redeploy Connector 1.5 test - Version : "+ versionToTest, stat.FAIL);
+                } else {
+                        res  = "ALL TESTS PASSED";
+                        stat.addStatus("Redeploy Connector 1.5 test - Version : " + versionToTest , stat.PASS);
+                }
         } catch (Exception ex) {
             System.out.println("Redeploy connector test failed.");
             ex.printStackTrace();
@@ -66,20 +66,20 @@ public class Client   {
         debug("EXITING... STATUS = " + res);
         return res;
     }
-    
+
     private boolean checkResults(int num) throws Exception {
-	    debug("checkResult" + num);
-	    debug("got initial context" + (new InitialContext()).toString());
+            debug("checkResult" + num);
+            debug("got initial context" + (new InitialContext()).toString());
         Object o = (new InitialContext()).lookup("java:comp/env/ejb/MyVersionChecker");
-	debug("got o" + o);
-        VersionCheckerHome  home = (VersionCheckerHome) 
+        debug("got o" + o);
+        VersionCheckerHome  home = (VersionCheckerHome)
             PortableRemoteObject.narrow(o, VersionCheckerHome.class);
         debug("got home" + home);
-	    VersionChecker checker = home.create();
-	    debug("got o" + checker);
+            VersionChecker checker = home.create();
+            debug("got o" + checker);
         //problem here!
-	int result = checker.getVersion();
-	debug("checkResult" + result);
+        int result = checker.getVersion();
+        debug("checkResult" + result);
         return result == num;
     }
 

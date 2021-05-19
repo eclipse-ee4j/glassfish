@@ -20,7 +20,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 /*
  * Unit test for http://forums.java.net/jive/thread.jspa?messageID=299899
- * 
+ *
  * Make sure that session established by FormAuthenticator may be accessed
  * (resumed) by protected resource (in this case, AccessSession servlet) even
  * if the original request that caused a (re)login contains a cookie with an
@@ -56,7 +56,7 @@ public class WebTest {
         adminUser = args[3];
         adminPassword = args[4];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test that accesses session established by " +
@@ -71,7 +71,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void run() throws Exception {
@@ -102,7 +102,7 @@ public class WebTest {
             System.out.println(sendCookie);
             os.write(sendCookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -121,7 +121,7 @@ public class WebTest {
             close(is);
             close(br);
         }
- 
+
         if (cookie == null) {
             throw new Exception("Missing Set-Cookie response header");
         }
@@ -151,7 +151,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -198,7 +198,7 @@ public class WebTest {
             System.out.println(sendCookie);
             os.write(sendCookie.getBytes());
             os.write("\r\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 

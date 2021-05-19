@@ -54,20 +54,20 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
 
     @Inject
     private ServerContext sc;
-    
+
     private static final Logger logger = KernelLoggerInfo.getLogger();
 
     private static final LocalStringManagerImpl strings =
                         new LocalStringManagerImpl(SupplementalCommandExecutor.class);
 
     private Map<String, List<ServiceHandle<?>>> supplementalCommandsMap = null;
-    
+
     public Collection<SupplementalCommand> listSuplementalCommands(String commandName) {
         List<ServiceHandle<?>> supplementalList = getSupplementalCommandsList().get(commandName);
         if (supplementalList == null) {
             return Collections.emptyList();
         }
-        
+
         Collection<SupplementalCommand> result = new ArrayList<SupplementalCommand>(supplementalList.size());
         for (ServiceHandle<?> handle : supplementalList) {
             AdminCommand cmdObject = (AdminCommand) handle.getService();
@@ -82,7 +82,7 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
 
     @Override
     public ActionReport.ExitCode execute(Collection<SupplementalCommand> suplementals, Supplemental.Timing time,
-                             AdminCommandContext context, ParameterMap parameters, 
+                             AdminCommandContext context, ParameterMap parameters,
                              MultiMap<String, File> optionFileMap) {
         //TODO : Use the executor service to parallelize this
         ActionReport.ExitCode finalResult = ActionReport.ExitCode.SUCCESS;
@@ -119,22 +119,22 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
         }
         return finalResult;
     }
-    
+
     private static String getOne(String key, Map<String, List<String>> metadata) {
-    	if (key == null || metadata == null) return null;
-    	List<String> found = metadata.get(key);
-    	if (found == null) return null;
-    	
-    	if (found.isEmpty()) return null;
-    	
-    	return found.get(0);
+            if (key == null || metadata == null) return null;
+            List<String> found = metadata.get(key);
+            if (found == null) return null;
+
+            if (found.isEmpty()) return null;
+
+            return found.get(0);
     }
 
     /**
      * Get list of all supplemental commands, map it to various commands and cache this list
      */
     private synchronized Map<String, List<ServiceHandle<?>>> getSupplementalCommandsList() {
-        
+
         if (supplementalCommandsMap != null) return supplementalCommandsMap;
 
         supplementalCommandsMap = new ConcurrentHashMap<String, List<ServiceHandle<?>>>();
@@ -151,19 +151,19 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
                 supplementalCommandsMap.put(commandName, inhList);
             }
         }
-        return supplementalCommandsMap; 
+        return supplementalCommandsMap;
     }
 
     private InjectionResolver<Param> getInjector(AdminCommand command, ParameterMap parameters, MultiMap<String, File> map, AdminCommandContext context) {
-        CommandModel model = command instanceof CommandModelProvider ? 
-	    ((CommandModelProvider)command).getModel() :
-	    new CommandModelImpl(command.getClass());
+        CommandModel model = command instanceof CommandModelProvider ?
+            ((CommandModelProvider)command).getModel() :
+            new CommandModelImpl(command.getClass());
         MapInjectionResolver injector = new MapInjectionResolver(model, parameters, map);
         injector.setContext(context);
         return injector;
     }
 
-    private ActionReport.ExitCode inject(SupplementalCommand cmd, 
+    private ActionReport.ExitCode inject(SupplementalCommand cmd,
             InjectionResolver<Param> injector, ActionReport subActionReport) {
         ActionReport.ExitCode result = ActionReport.ExitCode.SUCCESS;
         try {
@@ -178,7 +178,7 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
     }
 
     public class SupplementalCommandImpl implements SupplementalCommand  {
-        
+
         private AdminCommand command;
         private Supplemental.Timing timing;
         private FailurePolicy failurePolicy;
@@ -189,7 +189,7 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
         private SupplementalCommandImpl(AdminCommand cmd) {
             command = cmd;
             Supplemental supAnn = cmd.getClass().getAnnotation(Supplemental.class);
-            timing = supAnn.on(); 
+            timing = supAnn.on();
             failurePolicy = supAnn.ifFailure();
             ExecuteOn onAnn = cmd.getClass().getAnnotation(ExecuteOn.class);
             progressAnnotation = cmd.getClass().getAnnotation(Progress.class);
@@ -208,30 +208,30 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
 
         @Override
         public void execute(AdminCommandContext ctxt) {
-                Thread thread = Thread.currentThread();
-                ClassLoader origCL = thread.getContextClassLoader();
-                ClassLoader ccl = sc.getCommonClassLoader();
-                if (progressStatus != null) {
-                    ctxt = new AdminCommandContextForInstance(ctxt, progressStatus);
-                }
-                if (origCL != ccl) {
-                    try {
-                        thread.setContextClassLoader(ccl);
-                        if (command instanceof AdminCommandSecurity.Preauthorization) {
-                            ((AdminCommandSecurity.Preauthorization) command).preAuthorization(ctxt);
-                        }
-                        command.execute(ctxt);
-                    } finally {
-                        thread.setContextClassLoader(origCL);
-                    }
-                } else {
+            Thread thread = Thread.currentThread();
+            ClassLoader origCL = thread.getContextClassLoader();
+            ClassLoader ccl = sc.getCommonClassLoader();
+            if (progressStatus != null) {
+                ctxt = new AdminCommandContextForInstance(ctxt, progressStatus);
+            }
+            if (origCL != ccl) {
+                try {
+                    thread.setContextClassLoader(ccl);
                     if (command instanceof AdminCommandSecurity.Preauthorization) {
                         ((AdminCommandSecurity.Preauthorization) command).preAuthorization(ctxt);
                     }
                     command.execute(ctxt);
+                } finally {
+                    thread.setContextClassLoader(origCL);
                 }
+            } else {
+                if (command instanceof AdminCommandSecurity.Preauthorization) {
+                    ((AdminCommandSecurity.Preauthorization) command).preAuthorization(ctxt);
+                }
+                command.execute(ctxt);
+            }
         }
-        
+
         @Override
         public AdminCommand getCommand() {
             return this.command;
@@ -251,7 +251,7 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
         public boolean toBeExecutedAfterReplication() {
             return timing.equals(Supplemental.Timing.AfterReplication);
         }
-        
+
         @Override
         public FailurePolicy onFailure() {
             return failurePolicy;
@@ -276,7 +276,7 @@ public class SupplementalCommandExecutorImpl implements SupplementalCommandExecu
         public Progress getProgressAnnotation() {
             return progressAnnotation;
         }
-        
+
     }
-    
+
 }

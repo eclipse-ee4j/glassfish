@@ -19,8 +19,8 @@ package com.sun.cb;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.*;
-import javax.xml.registry.*; 
-import javax.xml.registry.infomodel.*; 
+import javax.xml.registry.*;
+import javax.xml.registry.infomodel.*;
 
 public class RetailPriceList implements Serializable {
 
@@ -62,7 +62,7 @@ public class RetailPriceList implements Serializable {
 
               // Get price list from service at distributor URI
               PriceListBean priceList = PriceFetcher.getPriceList(distributor);
-             
+
               PriceItemBean[] items = priceList.getPriceItems();
               retailPriceItems = new ArrayList();
               distributors = new ArrayList();
@@ -72,19 +72,19 @@ public class RetailPriceList implements Serializable {
                 RetailPriceItem pi = new RetailPriceItem(items[i].getCoffeeName(), items[i].getPricePerPound(), price , distributor);
                 retailPriceItems.add(pi);
               }
-              distributors.add(distributor); 
+              distributors.add(distributor);
             }
           }
           // Print spacer between organizations
           System.out.println(" --- ");
-        } 
+        }
       } catch (Exception e) {
         e.printStackTrace();
       } finally  {
         // At end, close connection to registry
         if (connection != null) {
           try {
-          	connection.close();
+                  connection.close();
           } catch (JAXRException je) {}
         }
       }
@@ -99,8 +99,8 @@ public class RetailPriceList implements Serializable {
         RetailPriceItem rpi = new RetailPriceItem(pib.getCoffeeName(), pib.getPricePerPound(), price, SAAJOrderURL);
         retailPriceItems.add(rpi);
       }
-      distributors.add(SAAJOrderURL); 
- 		}
+      distributors.add(SAAJOrderURL);
+                 }
 
     public ArrayList getItems() {
         return retailPriceItems;

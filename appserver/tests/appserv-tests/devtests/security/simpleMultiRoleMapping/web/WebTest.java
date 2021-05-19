@@ -23,7 +23,7 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 public class WebTest extends HttpServlet {
-    
+
     protected void doGet(HttpServletRequest request,
         HttpServletResponse response) throws ServletException, IOException {
 
@@ -39,5 +39,5 @@ public class WebTest extends HttpServlet {
         out.println("</html>");
         out.close();
     }
-    
+
 }

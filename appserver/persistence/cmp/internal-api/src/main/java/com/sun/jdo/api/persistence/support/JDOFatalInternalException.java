@@ -22,7 +22,7 @@
 
 package com.sun.jdo.api.persistence.support;
 
-/** 
+/**
  *
  * @author  Craig Russell
  * @version 0.1
@@ -34,7 +34,7 @@ public class JDOFatalInternalException extends JDOFatalException {
    */
   public JDOFatalInternalException() {
   }
-  
+
 
   /**
    * Constructs a new <code>JDOFatalInternalException</code> with the specified detail message.

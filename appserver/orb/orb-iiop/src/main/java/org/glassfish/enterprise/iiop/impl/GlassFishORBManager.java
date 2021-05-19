@@ -146,7 +146,7 @@ public final class GlassFishORBManager {
 
     // This will only apply for stand-alone java clients, since
     // in the server the orb port comes from domain.xml, and in an appclient
-    // the port is set from the sun-acc.xml.  It's set to the same 
+    // the port is set from the sun-acc.xml.  It's set to the same
     // value as the default orb port in domain.xml as a convenience.
     // That way the code only needs to do a "new InitialContext()"
     // without setting any jvm properties and the naming service will be
@@ -306,7 +306,7 @@ public final class GlassFishORBManager {
                 }
             }
 
-            csiv2Props.put(GlassFishORBHelper.ORB_SSL_SERVER_REQUIRED, 
+            csiv2Props.put(GlassFishORBHelper.ORB_SSL_SERVER_REQUIRED,
                 String.valueOf( corbaSSLRequired));
         }
 
@@ -388,12 +388,12 @@ public final class GlassFishORBManager {
             ORBConstants.USER_CONFIGURATOR_PREFIX
                 + "com.sun.corba.ee.impl.folb.ClientGroupManager",
             "dummy");
-         
+
         // This configurator registers the CSIv2SSLTaggedComponentHandler
         orbInitProperties.setProperty(
             ORBConstants.USER_CONFIGURATOR_PREFIX
                 + CSIv2SSLTaggedComponentHandlerImpl.class.getName(),"dummy");
-       
+
 
         if (processType.isServer()) {
             gmsClient = new IiopFolbGmsClient( services ) ;
@@ -437,7 +437,7 @@ public final class GlassFishORBManager {
             // Standard OMG Properties.
             String orbDefaultServerId = DEFAULT_SERVER_ID;
             if (!processType.isServer()) {
-                orbDefaultServerId = ACC_DEFAULT_SERVER_ID;               
+                orbDefaultServerId = ACC_DEFAULT_SERVER_ID;
             }
 
             orbDefaultServerId = System.getProperty(
@@ -517,16 +517,16 @@ public final class GlassFishORBManager {
             // DO NOT MODIFY initORB to return ORB!!!
 
             /**
-             * we can't create object adapters inside the ORB init path, 
+             * we can't create object adapters inside the ORB init path,
              * or else we'll get this same problem in slightly different ways.
              * (address in use exception) Having an IORInterceptor
              * (TxSecIORInterceptor) get called during ORB init always
              * results in a nested ORB.init call because of the call to getORB
              * in the IORInterceptor.i
              */
-                
+
             // TODO Right now we need to explicitly set useOSGI flag.  If it's set to
-            // OSGI mode and we're not in OSGI mode, orb initialization fails.  
+            // OSGI mode and we're not in OSGI mode, orb initialization fails.
             boolean useOSGI = false;
 
             final ClassLoader prevCL = Utility.getClassLoader();
@@ -557,7 +557,7 @@ public final class GlassFishORBManager {
             }
 
             // Can't run with GlassFishORBManager.class.getClassLoader() as the context ClassLoader
-            
+
             // For ORB compatibility with JDK11+ JDKs see https://github.com/eclipse-ee4j/orb-gmbal/issues/22
             System.setProperty("org.glassfish.gmbal.no.multipleUpperBoundsException", "true");
             orb = ORBFactory.create() ;
@@ -628,7 +628,7 @@ public final class GlassFishORBManager {
 
     // Returns the first IiopListenerBean which represents a clear text endpoint
     // Note: it is questionable whether the system actually support multiple
-    // endpoints of the same type, or no clear text endpoint at all in the 
+    // endpoints of the same type, or no clear text endpoint at all in the
     // configuration.
     private IiopListener getClearTextIiopListener() {
         if (iiopListeners != null)  {
@@ -705,12 +705,12 @@ public final class GlassFishORBManager {
 
         // Done to initialize the Persistent Server Port, before any
         // POAs are created. This was earlier done in POAEJBORB
-        // Do it only in the appserver, not on appclient.  
+        // Do it only in the appserver, not on appclient.
         if (processType.isServer()) {
             props.setProperty(ORBConstants.PERSISTENT_SERVER_PORT_PROPERTY,
                     initialPort);
         }
-       
+
         fineLog( "Setting orb initial port to {0}", initialPort);
 
         orbInitialPort = Integer.parseInt(initialPort);
@@ -813,7 +813,7 @@ public final class GlassFishORBManager {
                 int fsize = ((Integer.parseInt(orbBean.getMessageFragmentSize().trim())) / 8) * 8;
                 if (fsize < 32) {
                     fragmentSize = "32";
-                    logger.log(Level.INFO, 
+                    logger.log(Level.INFO,
                         "Setting ORB Message Fragment size to {0}",
                             fragmentSize);
                 } else {

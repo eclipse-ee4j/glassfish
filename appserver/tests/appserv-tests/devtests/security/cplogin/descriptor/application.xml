@@ -23,7 +23,7 @@
     <small-icon></small-icon>
     <large-icon></large-icon>
   </icon>
-  <display-name>PLoginConverterApp</display-name>  
+  <display-name>PLoginConverterApp</display-name>
   <module>
     <java>sec-plogin-converter-client.jar</java>
   </module>

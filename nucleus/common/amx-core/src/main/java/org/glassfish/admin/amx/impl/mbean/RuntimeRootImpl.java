@@ -80,24 +80,24 @@ public final class RuntimeRootImpl extends AMXImplBase
         return getChildren( ServerRuntime.class );
     }
 
+
     @Override
-        protected final void
-    registerChildren()
+    protected final void registerChildren()
     {
         super.registerChildren();
 
-        final ObjectName    self = getObjectName();
-        final MBeanServer   server = getMBeanServer();
-        final ObjectNameBuilder	objectNames	= new ObjectNameBuilder( server, self );
+        final ObjectName self = getObjectName();
+        final MBeanServer server = getMBeanServer();
+        final ObjectNameBuilder objectNames = new ObjectNameBuilder(server, self);
 
         ObjectName childObjectName = null;
         Object mbean = null;
 
         // when clustering comes along, some other party will need to register MBeans
         // for each non-DAS instance
-        childObjectName	= objectNames.buildChildObjectName( ServerRuntime.class, AMXGlassfish.DEFAULT.dasName() );
-        mbean	= new ServerRuntimeImpl(self);
-        registerChild( mbean, childObjectName );
+        childObjectName = objectNames.buildChildObjectName(ServerRuntime.class, AMXGlassfish.DEFAULT.dasName());
+        mbean = new ServerRuntimeImpl(self);
+        registerChild(mbean, childObjectName);
     }
 
 
@@ -131,7 +131,7 @@ public final class RuntimeRootImpl extends AMXImplBase
     private NetworkConfig networkConfig()
     {
         final NetworkConfig config = InjectedValues.getInstance().getHabitat().getService(
-        		NetworkConfig.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+                        NetworkConfig.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         return config;
     }
 
@@ -276,7 +276,7 @@ public final class RuntimeRootImpl extends AMXImplBase
         }
         return result;
     }
-    
+
     public boolean isStartedInDebugMode()
     {
         boolean inDebugMode = false;

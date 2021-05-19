@@ -59,8 +59,8 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
 
     public StandAloneAppClientInfo(
             boolean isJWS, Logger logger, ReadableArchive archive,
-            String mainClassFromCommandLine) 
-        throws IOException, ClassNotFoundException, 
+            String mainClassFromCommandLine)
+        throws IOException, ClassNotFoundException,
                URISyntaxException, SAXParseException {
         super(isJWS, logger, mainClassFromCommandLine);
         appClientArchive = archive;
@@ -288,7 +288,7 @@ public class StandAloneAppClientInfo extends AppClientInfo implements PostConstr
 
     @Override
     protected boolean classContainsAnnotation(
-            String entry, AnnotationDetector detector, 
+            String entry, AnnotationDetector detector,
             ReadableArchive archive, ApplicationClientDescriptor descriptor)
             throws FileNotFoundException, IOException {
 //        JarFile jar = null;

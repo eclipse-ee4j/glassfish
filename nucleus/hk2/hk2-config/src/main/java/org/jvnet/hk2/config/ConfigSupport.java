@@ -78,7 +78,7 @@ public class ConfigSupport implements ConfigurationUtilities {
     ServiceLocator habitat;
 
     public static int lockTimeOutInSeconds=Integer.getInteger("org.glassfish.hk2.config.locktimeout", 3);
- 
+
     /**
      * Execute some logic on one config bean of type T protected by a transaction
      *
@@ -89,7 +89,7 @@ public class ConfigSupport implements ConfigurationUtilities {
      */
     public static <T extends ConfigBeanProxy> Object apply(final SingleConfigCode<T> code, T param)
         throws TransactionFailure {
-        
+
         //ConfigBeanProxy[] objects = { param };
         return apply((new ConfigCode() {
             @SuppressWarnings("unchecked")
@@ -98,7 +98,7 @@ public class ConfigSupport implements ConfigurationUtilities {
             }
         }), param);
     }
-    
+
     /**
      * Executes some logic on some config beans protected by a transaction.
      *
@@ -123,7 +123,7 @@ public class ConfigSupport implements ConfigurationUtilities {
      * @return list of property change events
      * @throws TransactionFailure when the code did run successfully due to a
      * transaction exception
-     */    
+     */
     public Object _apply(ConfigCode code, ConfigBeanProxy... objects)
                 throws TransactionFailure {
 
@@ -151,7 +151,7 @@ public class ConfigSupport implements ConfigurationUtilities {
                     + " in transaction", null);
             }
         }
-        
+
         try {
             final Object toReturn = code.run(proxies);
             try {
@@ -230,7 +230,7 @@ public class ConfigSupport implements ConfigurationUtilities {
         } else {
             return (ConfigBean) bean;
         }
-        
+
     }
 
     /**
@@ -254,7 +254,7 @@ public class ConfigSupport implements ConfigurationUtilities {
      */
     public static UnprocessedChangeEvents sortAndDispatch(PropertyChangeEvent[] events, Changed target, Logger logger) {
         if ( logger == null ) throw new IllegalArgumentException();
-        
+
         List<UnprocessedChangeEvent> unprocessed = new ArrayList<UnprocessedChangeEvent>();
         List<Dom> added = new ArrayList<Dom>();
         List<Dom> changed = new ArrayList<Dom>();
@@ -318,7 +318,7 @@ public class ConfigSupport implements ConfigurationUtilities {
                 logger.log(Level.SEVERE, "Exception while processing config bean changes : ", e);
             }
         }
-        
+
         return new UnprocessedChangeEvents( unprocessed );
     }
 
@@ -462,7 +462,7 @@ public class ConfigSupport implements ConfigurationUtilities {
         throws TransactionFailure {
 
         return createAndSet(parent, childType, convertMapToAttributeChanges(attributes), runnable);
-        
+
     }
     /**
      * Creates a new child of the passed child and add it to the parent's live
@@ -542,7 +542,7 @@ public class ConfigSupport implements ConfigurationUtilities {
                 final Map<String, String> attributes)
             throws TransactionFailure {
 
-        return createAndSet(parent, childType, attributes, null);        
+        return createAndSet(parent, childType, attributes, null);
     }
 
     public ConfigBean createAndSet(
@@ -553,7 +553,7 @@ public class ConfigSupport implements ConfigurationUtilities {
 
         return createAndSet(parent, childType, attributes, null);
     }
-    
+
     public static void deleteChild(
                 final ConfigBean parent,
                 final ConfigBean child)
@@ -656,7 +656,7 @@ public class ConfigSupport implements ConfigurationUtilities {
                     throw new TransactionFailure("Parent " + parent.getProxyType() + " does not have a child of type " + childType);
                 }
     }
-    
+
     public static List<AttributeChanges> convertMapToAttributeChanges(Map<String, String> values) {
         if (values==null) {
             return null;
@@ -667,10 +667,10 @@ public class ConfigSupport implements ConfigurationUtilities {
         }
         return changes;
     }
-    
+
     public static class SingleAttributeChange extends AttributeChanges {
         final String[] values = new String[1];
-        
+
         public SingleAttributeChange(String name, String value) {
             super(name);
             values[0] = value;
@@ -734,7 +734,7 @@ public class ConfigSupport implements ConfigurationUtilities {
         }
         return proxy;
     }
-    
+
     @Override
     public Object addChildWithAttributes(ConfigBeanProxy param,
             ConfigBean parent,
@@ -762,7 +762,7 @@ public class ConfigSupport implements ConfigurationUtilities {
                 Logger.getAnonymousLogger().fine( "elementModel.targetTypeName = " + elementModel.targetTypeName +
                     ", collection: " + e.isCollection() + ", childType.getName() = " + childType.getName() );
             }
-                    
+
             if (elementModel.targetTypeName.equals(childType.getName())) {
                 element = e;
                 break;
@@ -774,12 +774,12 @@ public class ConfigSupport implements ConfigurationUtilities {
                         element = e;
                         break;
                     }
-                } catch (Exception ex ) { 
+                } catch (Exception ex ) {
                     throw new TransactionFailure("EXCEPTION getting class for " + elementModel.targetTypeName, ex);
                 }
             }
         }
-        
+
         // now depending whether this is a collection or a single leaf,
         // we need to process this setting differently
         if (element != null) {
@@ -823,14 +823,14 @@ public class ConfigSupport implements ConfigurationUtilities {
 
         dom.addDefaultChildren();
         dom.register();
-        
+
         if (runnable!=null) {
             runnable.performOn(writeableChild);
         }
 
         return child;
     }
-    
+
     private static void applyProperties(WriteableView target, List<? extends AttributeChanges> changes)
             throws TransactionFailure {
 

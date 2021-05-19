@@ -28,11 +28,11 @@ public class HelloClient {
 
     public static void main(String[] args) {
 
-	boolean testPositive = (Boolean.valueOf(args[0])).booleanValue();
-	if(testPositive)
-	    System.out.println("Test expects successful result");
-	else
-	    System.out.println("Test expected to fail");
+        boolean testPositive = (Boolean.valueOf(args[0])).booleanValue();
+        if(testPositive)
+            System.out.println("Test expects successful result");
+        else
+            System.out.println("Test expected to fail");
         try {
 
             Context ic = new InitialContext();
@@ -75,29 +75,29 @@ public class HelloClient {
 
                 } else {
                     System.out.println("Failure!  Caught unasked for Exception");
-		    System.exit(-1);
+                    System.exit(-1);
                 }
             }
             System.out.println(
                 "Client is now trying to remove the session bean\n");
             hr.remove();
         } catch (NamingException ne) {
-	    if(testPositive) {
-		System.out.println("Caught exception while initializing context : " +
-				   ne.getMessage() + " \n");
-		System.exit(-1);
-	    } else {
-		System.out.println("Recd exception as expected");
-	    }
+            if(testPositive) {
+                System.out.println("Caught exception while initializing context : " +
+                                   ne.getMessage() + " \n");
+                System.exit(-1);
+            } else {
+                System.out.println("Recd exception as expected");
+            }
         } catch (Exception re) {
-	    if(testPositive) {
-		re.printStackTrace();
-		System.out.println( "Session beans could not be removed by the client.\n");
-		System.exit(-1);
-	    } else {
-		System.out.println("Recd exception as expected");
-	    }
-	}
+            if(testPositive) {
+                re.printStackTrace();
+                System.out.println( "Session beans could not be removed by the client.\n");
+                System.exit(-1);
+            } else {
+                System.out.println("Recd exception as expected");
+            }
+        }
         System.out.println(
             "Session bean was successfully removed by the client.\n");
     }

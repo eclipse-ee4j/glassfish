@@ -25,5 +25,5 @@
   </module>
   <module>
     <java>ejb-bmp-robean-client.jar</java>
-  </module>  
+  </module>
 </application>

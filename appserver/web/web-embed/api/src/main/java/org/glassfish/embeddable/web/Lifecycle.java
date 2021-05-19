@@ -25,14 +25,14 @@ public interface Lifecycle {
 
     /**
      * Enables this component.
-     * 
+     *
      * @throws GlassFishException if this component fails to be enabled
      */
     public void enable() throws GlassFishException;
 
     /**
      * Disables this component.
-     * 
+     *
      * @throws GlassFishException if this component fails to be disabled
      */
     public void disable() throws GlassFishException;

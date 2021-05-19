@@ -22,7 +22,7 @@ package org.glassfish.api.jdbc.validation;
  * Provides a custom connection validation
  * mechanism for Sybase dbVendor if custom-validation is chosen as the
  * connection-validation-method.
- * 
+ *
  * @author Shalini M
  */
 public class SybaseConnectionValidation extends DefaultConnectionValidation {

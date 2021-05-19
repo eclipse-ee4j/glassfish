@@ -29,7 +29,7 @@ public class BlockingInterceptor {
     private void afterCreation(InvocationContext ctx) {
 
         String value = (String) ctx.getContextData().get("PostConstruct");
-        System.out.println("In BlockingInterceptor.afterCreation value = " 
+        System.out.println("In BlockingInterceptor.afterCreation value = "
                            + value);
         if(value == null) {
             throw new IllegalStateException("BaseInterceptor.PostConstruct " +
@@ -44,12 +44,12 @@ public class BlockingInterceptor {
 
     @AroundInvoke
     private Object interceptCall(InvocationContext ctx)
-   	throws CallBlockedException 
+           throws CallBlockedException
     {
-	System.out.println("[test.BlockingInterceptor @AroundInvoke]: " + ctx.getMethod());
-	blockCount++;
-	throw new CallBlockedException("Call blocked");
+        System.out.println("[test.BlockingInterceptor @AroundInvoke]: " + ctx.getMethod());
+        blockCount++;
+        throw new CallBlockedException("Call blocked");
     }
 
-    
+
 }

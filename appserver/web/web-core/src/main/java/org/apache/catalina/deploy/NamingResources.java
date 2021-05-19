@@ -26,7 +26,7 @@ import java.util.Hashtable;
 
 
 /**
- * Holds and manages the naming resources defined in the J2EE Enterprise 
+ * Holds and manages the naming resources defined in the J2EE Enterprise
  * Naming Context and their associated JNDI context.
  *
  * @author Remy Maucherat
@@ -492,7 +492,7 @@ public class NamingResources implements Serializable {
     public ContextResourceLink[] findResourceLinks() {
 
         synchronized (resourceLinks) {
-            ContextResourceLink results[] = 
+            ContextResourceLink results[] =
                 new ContextResourceLink[resourceLinks.size()];
             return resourceLinks.values().toArray(results);
         }
@@ -568,7 +568,7 @@ public class NamingResources implements Serializable {
     public ResourceParams[] findResourceParams() {
 
         synchronized (resourceParams) {
-            ResourceParams results[] = 
+            ResourceParams results[] =
                 new ResourceParams[resourceParams.size()];
             return resourceParams.values().toArray(results);
         }

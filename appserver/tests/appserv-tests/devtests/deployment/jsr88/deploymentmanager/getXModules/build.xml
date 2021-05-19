@@ -23,12 +23,12 @@
 
 <project name="getXModules" default="all" basedir=".">
 
-	&commonBuild;    
+        &commonBuild;
 
-	<target name="private-all">
-		<ant dir="childtmid" target="private-all">
-			<property name="build" value="${build}"/>
-		</ant>
-	</target>
+        <target name="private-all">
+                <ant dir="childtmid" target="private-all">
+                        <property name="build" value="${build}"/>
+                </ant>
+        </target>
 
 </project>

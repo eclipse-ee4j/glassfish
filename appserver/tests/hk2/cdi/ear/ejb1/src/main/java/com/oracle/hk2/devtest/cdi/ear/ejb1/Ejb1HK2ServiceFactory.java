@@ -36,13 +36,13 @@ public class Ejb1HK2ServiceFactory implements Factory<Ejb1HK2Service> {
             public String getComponentName() {
                 return HK2Service.EJB1;
             }
-            
+
         };
     }
 
     @Override
     public void dispose(Ejb1HK2Service instance) {
-        
+
     }
 
 

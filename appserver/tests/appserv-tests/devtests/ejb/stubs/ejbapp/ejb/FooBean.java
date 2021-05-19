@@ -18,7 +18,7 @@ package com.sun.s1asdev.ejb.stubs.ejbapp;
 
 import java.util.Enumeration;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -34,13 +34,13 @@ public class FooBean implements SessionBean {
     public FooBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In FooBean::ejbCreate !!");
+        System.out.println("In FooBean::ejbCreate !!");
 
 
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public void callHello()  {
@@ -48,21 +48,21 @@ public class FooBean implements SessionBean {
 
         try {
             Context ic = new InitialContext();
-                
+
             System.out.println("Looking up ejb ref ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             Object objref = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
-                
+
             HelloHome  home = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
-                
+
             Hello hr = home.create();
             System.err.println("Got the EJB!!");
-                
+
             // invoke method on the EJB
             System.out.println("invoking ejb");
             hr.sayHello();

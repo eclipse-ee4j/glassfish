@@ -27,7 +27,7 @@ public class WebTest{
 
     static SimpleReporterAdapter stat=
            new SimpleReporterAdapter("appserv-tests");
-    
+
     private static int count = 0;
     private static int EXPECTED_COUNT = 3;
 
@@ -43,12 +43,12 @@ public class WebTest{
             SSLSocketFactory ssf = getSSLSocketFactory(trustStorePath);
             HttpsURLConnection connection = doSSLHandshake(
                             "https://" + host  + ":" + port + "/", ssf);
-            checkStatus(connection); 
+            checkStatus(connection);
 
             connection = doSSLHandshake(
-                "https://" + host  + ":" + port + "/" + contextRoot 
+                "https://" + host  + ":" + port + "/" + contextRoot
                 + "/ServletTest", ssf);
-            
+
             parseResponse(connection);
         } catch (Throwable t) {
             t.printStackTrace();
@@ -56,7 +56,7 @@ public class WebTest{
 
         if (count != EXPECTED_COUNT){
             stat.addStatus("ssl", stat.FAIL);
-        }           
+        }
 
         stat.printSummary("web/ssl ---> expect 4 PASS");
     }
@@ -89,7 +89,7 @@ public class WebTest{
                     throws Exception{
 
         int responseCode=  connection.getResponseCode();
-        System.out.println("Response code: " + responseCode + " Expected code: 200"); 
+        System.out.println("Response code: " + responseCode + " Expected code: 200");
         if (connection.getResponseCode() != 200){
             stat.addStatus("ssl-responseCode", stat.FAIL);
         } else {
@@ -101,7 +101,7 @@ public class WebTest{
                     throws Exception{
 
         BufferedReader in = null;
-            
+
         String line = "";
         int index;
         try {
@@ -129,7 +129,7 @@ public class WebTest{
                         stat.addStatus("ssl-FILTER", stat.FAIL);
                     }
                     count++;
-                } 
+                }
             }
         } finally {
             try {

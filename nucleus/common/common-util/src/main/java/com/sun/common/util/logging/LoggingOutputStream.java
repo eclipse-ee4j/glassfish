@@ -48,7 +48,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
     private Level level;
 
     private ThreadLocal reentrant = new ThreadLocal();
-    
+
     private BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<LogRecord>(MAX_RECORDS);
 
     private BooleanLatch done = new BooleanLatch();
@@ -104,7 +104,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
             }
         };
         pump.setDaemon(true);
-        pump.start();        
+        pump.start();
     }
 
     /**
@@ -113,7 +113,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
     public void log() {
 
         LogRecord record;
-        
+
         // take is blocking so we take one record off the queue
         try {
             record = pendingRecords.take();
@@ -139,7 +139,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
         }
 
     }
-    
+
     public void close() throws IOException {
         done.tryReleaseShared(1);
         pump.interrupt();
@@ -153,10 +153,10 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
                 logger.log(record);
             }
         }
-        
+
         super.close();
     }
-    
+
 /*
  * LoggingPrintStream creates a PrintStream with a
  * LoggingByteArrayOutputStream as its OutputStream. Once it is
@@ -190,7 +190,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
             super(os, true);
             ensureLoaded(StackTraceObjects.class);
         }
-        
+
         private void ensureLoaded(Class<?> k) {
             try {
                 Class.forName(k.getName());
@@ -215,7 +215,7 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
             } else {
                 StackTraceObjects sTO = new StackTraceObjects((Throwable) x);
                 perThreadStObjects.set(sTO);
-                super.println(sTO.toString());                
+                super.println(sTO.toString());
             }
 
         }
@@ -469,5 +469,5 @@ public class LoggingOutputStream extends ByteArrayOutputStream {
             }
         }
     }
-    
+
 }

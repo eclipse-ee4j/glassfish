@@ -15,19 +15,18 @@
  */
 
 package com.sun.enterprise.admin.monitor.stats;
- 
-import org.glassfish.j2ee.statistics.CountStatistic;
 
 
 /**
- * A Stats interface to represent the statistical data exposed by a JDBC 
+ * A Stats interface to represent the statistical data exposed by a JDBC
  * Connection Pool.
- * It inherits from the ConnectionPoolStats interface and as of now($Revision: 1.3 $) 
+ * It inherits from the ConnectionPoolStats interface and as of now($Revision: 1.3 $)
  * does not provide any additional methods.
+ *
  * @author Murali Vempaty
  * @since S1AS8.0
  * @version $Revision: 1.3 $
  */
 public interface JDBCConnectionPoolStats extends ConnectionPoolStats {
-    
+
 }

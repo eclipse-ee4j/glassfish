@@ -22,65 +22,64 @@ import java.io.PrintStream;
  * InsnTarget is a pseudo-instruction which represents a branch target
  * in an instruction stream.
  */
-
 public class InsnTarget extends Insn {
 
-  private boolean branchTarget = false;
+    private boolean branchTarget = false;
 
-  public int nStackArgs() {
-    return 0;
-  }
+    public int nStackArgs() {
+        return 0;
+    }
 
-  public int nStackResults() {
-    return 0;
-  }
+    public int nStackResults() {
+        return 0;
+    }
 
-  public String argTypes() {
-      return "";//NOI18N
-  }
+    public String argTypes() {
+        return "";//NOI18N
+    }
 
-  public String resultTypes() {
-      return "";//NOI18N
-  }
+    public String resultTypes() {
+        return "";//NOI18N
+    }
 
-  public boolean branches() {
-    return false;
-  }
+    public boolean branches() {
+        return false;
+    }
 
-  public void setBranchTarget() {
-    branchTarget = true;
-  }
+    public void setBranchTarget() {
+        branchTarget = true;
+    }
 
-  /* not valid unless method instructions processed specially */
-  public boolean isBranchTarget() {
-    return branchTarget;
-  }
+    /* not valid unless method instructions processed specially */
+    public boolean isBranchTarget() {
+        return branchTarget;
+    }
 
-  /**
-   * Constructor
-   */
-  public InsnTarget() {
-    super(opc_target, NO_OFFSET);
-  }
+    /**
+     * Constructor
+     */
+    public InsnTarget() {
+        super(opc_target, NO_OFFSET);
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  void print (PrintStream out, int indent) {
-    ClassPrint.spaces(out, indent);
-    out.println(offset() + ":");//NOI18N
-  }
+    void print (PrintStream out, int indent) {
+        ClassPrint.spaces(out, indent);
+        out.println(offset() + ":");//NOI18N
+    }
 
-  int store(byte buf[], int index) {
-    return index;
-  }
+    int store(byte buf[], int index) {
+        return index;
+    }
 
-  int size() {
-    return 0;
-  }
+    int size() {
+        return 0;
+    }
 
-  InsnTarget(int offset) {
-    super(opc_target, offset);
-  }
+    InsnTarget(int offset) {
+        super(opc_target, offset);
+    }
 
 }
 

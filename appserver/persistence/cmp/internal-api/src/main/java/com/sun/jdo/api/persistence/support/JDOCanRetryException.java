@@ -22,7 +22,7 @@
 
 package com.sun.jdo.api.persistence.support;
 
-/** 
+/**
  *
  * @author  clr
  * @version 0.1
@@ -34,7 +34,7 @@ public class JDOCanRetryException extends JDOException {
    */
   public JDOCanRetryException() {
   }
-  
+
 
   /**
    * Constructs a new <code>JDOCanRetryException</code> with the specified detail message.
@@ -52,7 +52,7 @@ public class JDOCanRetryException extends JDOException {
   public JDOCanRetryException(String msg, Exception nested) {
     super(msg, nested);
   }
-  
+
   /** Constructs a new <code>JDOCanRetryException</code> with the specified detail message
    * and failed object array.
    * @param msg the detail message.
@@ -61,7 +61,7 @@ public class JDOCanRetryException extends JDOException {
   public JDOCanRetryException(String msg, Object[] failed) {
     super(msg, failed);
   }
-  
+
   /** Constructs a new <code>JDOCanRetryException</code> with the specified detail message,
    * nested exception, and failed object array.
    * @param msg the detail message.

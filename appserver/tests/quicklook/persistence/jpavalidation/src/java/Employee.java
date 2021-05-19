@@ -24,7 +24,7 @@ import java.util.Collection;
 @Table(name="BV_EMPL")
 public class Employee {
 
-    private int	     id;
+    private int         id;
     private String  name;
     private long salary;
     private Collection<Project> projects;
@@ -95,7 +95,7 @@ public class Employee {
     }
 
     // ===========================================================
-    @Override 
+    @Override
     public String toString() {
         return "Employee {Id:" +  id + " name:" + name + "}";
     }

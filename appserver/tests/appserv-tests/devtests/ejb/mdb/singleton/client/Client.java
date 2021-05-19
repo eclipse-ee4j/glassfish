@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /**
  * Tests for http://java.net/jira/browse/GLASSFISH-13004 (Support MDB singleton).
- * The test ejb jar is configured with property singleton-bean-pool=true in 
+ * The test ejb jar is configured with property singleton-bean-pool=true in
  * sun-ejb-jar.xml.  This test client calls fooTest and doTest(...):
  * fooTest: verify the stateless bean FooBean is single instance;
  * doTest(..): verify the mdb MessageBean is single instance.
@@ -59,7 +59,7 @@ public class Client {
     private static FooRemoteIF foo;
 
     public Client(String[] args) {
-        
+
         if( args.length == 1 ) {
             numMessages = new Integer(args[0]).intValue();
         }
@@ -68,7 +68,7 @@ public class Client {
     public void doTest() {
         try {
             setup();
-	    doTest("jms/ejb_mdb_singleton_InQueue", numMessages);
+            doTest("jms/ejb_mdb_singleton_InQueue", numMessages);
             fooTest();
             stat.addStatus("singleton main", stat.PASS);
         } catch(Throwable t) {
@@ -104,8 +104,8 @@ public class Client {
         context = new InitialContext();
         QueueConnectionFactory queueConFactory = (QueueConnectionFactory) context.lookup ("java:comp/env/FooCF");
         queueCon = queueConFactory.createQueueConnection();
-        queueSession = queueCon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE); 
-        queueSender = queueSession.createSender(null);        
+        queueSession = queueCon.createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
+        queueSender = queueSession.createSender(null);
         queueCon.start();
     }
 
@@ -119,20 +119,20 @@ public class Client {
         }
     }
 
-    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
-            //System.out.println("Sending message " + i + " to " + queue + 
+            //System.out.println("Sending message " + i + " to " + queue +
             //                   " at time " + System.currentTimeMillis());
             queueSender.send(queue, msg);
-           // System.out.println("Sent message " + i + " to " + queue + 
+           // System.out.println("Sent message " + i + " to " + queue +
            //                    " at time " + System.currentTimeMillis());
         }
     }
 
     public void doTest(String destName, int num) throws Exception {
         Destination dest = (Destination) context.lookup(destName);
-            
+
         for(int i = 0; i < numOfCalls; i++) {
             Message message = queueSession.createTextMessage(destName);
             //        Message message = topicSession.createTextMessage(destName);

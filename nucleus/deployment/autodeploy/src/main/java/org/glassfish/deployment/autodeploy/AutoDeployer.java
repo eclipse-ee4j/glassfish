@@ -62,15 +62,15 @@ public class AutoDeployer {
     private String target=null;
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(AutoDeployer.class);
     private DirectoryScanner directoryScanner=null;
-    
+
     private boolean cancelDeployment =false;
-    
+
     private AtomicBoolean inProgress = new AtomicBoolean(false);
-    
+
     private ServiceLocator habitat;
 
     private File domainRoot = null;
-    
+
     @LogMessagesResourceBundle
     private static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.deployment.LogMessages";
 
@@ -103,16 +103,16 @@ public class AutoDeployer {
     protected static final int DEPLOY_SUCCESS = 1;
     protected static final int DEPLOY_FAILURE = 2;
     protected static final int DEPLOY_PENDING = 3;
-    
+
     private AutodeployRetryManager retryManager;
 
     private static final boolean DEFAULT_RENAME_ON_SUCCESS = true;
     private static final boolean DEFAULT_FORCE_DEPLOY = true;
     private static final boolean DEFAULT_INCLUDE_SUBDIR = false;
     private static final boolean DEFAULT_ENABLED = true;
-    
+
     static final String STATUS_SUBDIR_PATH = ".autodeploystatus";
-    
+
     /**
      * Creates a new autodeployer.
      * @param target deployment target for autodeployed applications
@@ -122,19 +122,19 @@ public class AutoDeployer {
      * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException
      */
     public AutoDeployer(
-            String target, 
+            String target,
             String directoryPath,
             String virtualServer,
             ServiceLocator habitat) throws AutoDeploymentException {
         this(
-            target, 
-            directoryPath, 
+            target,
+            directoryPath,
             virtualServer,
-            false /* jspPreCompilation */, 
+            false /* jspPreCompilation */,
             false /* verifierEnabled */,
             habitat);
     }
-    
+
    /**
      * Creates a new instance of AutoDeployer
      * @param target the deployment target for autodeployed applications
@@ -146,19 +146,19 @@ public class AutoDeployer {
      * @param forceDeploy request that forced deployment occur if the app is already deployed
      * @param enabled whether apps should be enabled upon auto-deployment
     * @param habitat HK2 habitat for use in instantiating properly-init'd DeployCommand and UndeployCommand
-    * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException 
+    * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException
      */
     public AutoDeployer(
-            String target, 
-            String directoryPath, 
+            String target,
+            String directoryPath,
             String virtualServer,
-            boolean jspPrecompilationEnabled, 
+            boolean jspPrecompilationEnabled,
             boolean verifierEnabled,
             boolean renameOnSuccess,
             boolean forceDeploy,
             boolean enabled,
             ServiceLocator habitat) throws AutoDeploymentException {
-        
+
         setHabitat(habitat);
         setTarget(target);
         setDirectory(directoryPath);
@@ -170,20 +170,20 @@ public class AutoDeployer {
         setEnabled(enabled);
         setRetryManager(habitat);
     }
-    
+
     public AutoDeployer(
-            String target, 
-            String directoryPath, 
+            String target,
+            String directoryPath,
             String virtualServer,
-            boolean jspPrecompilationEnabled, 
+            boolean jspPrecompilationEnabled,
             boolean verifierEnabled,
             ServiceLocator habitat) throws AutoDeploymentException {
         this(
-            target, 
-            directoryPath, 
+            target,
+            directoryPath,
             virtualServer,
-            jspPrecompilationEnabled, 
-            verifierEnabled, 
+            jspPrecompilationEnabled,
+            verifierEnabled,
             DEFAULT_RENAME_ON_SUCCESS,
             DEFAULT_FORCE_DEPLOY,
             DEFAULT_ENABLED,
@@ -206,18 +206,18 @@ public class AutoDeployer {
     public void setJspPrecompilationEnabled(boolean setting) {
         jspPreCompilation = setting;
     }
-    
-    
+
+
     /**
      * Sets the directory to be scanned by the autodeployer.
      * @param directoryPath the directory path to scan
-     * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException 
+     * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException
      */
     public void setDirectory(String directoryPath) throws AutoDeploymentException {
         validateAutodeployDirectory(directoryPath);
         this.directory = new File(directoryPath);
     }
-    
+
     /**
      * Sets whether descriptor verification should be requested during
      * autodeployments.
@@ -226,7 +226,7 @@ public class AutoDeployer {
     public void setVerifierEnabled(boolean verify) {
         this.verify = verify;
     }
-    
+
     /**
      * Creates the directories for the specified target, except that if the
      * target is/would be a descendant of the base and the base does not exist
@@ -236,7 +236,7 @@ public class AutoDeployer {
      * (which apparently reports success long before it actually finishes) then
      * deletes the domain.  The delete can run before the server has finished
      * stopping.  In some cases, the autodeployer has run in the meantime and
-     * 
+     *
      * @param baseDir
      * @param dir
      * @return true if the directory and all intervening ones were created; false otherwise
@@ -273,7 +273,7 @@ public class AutoDeployer {
         }
         return domainRoot;
     }
-    
+
     private void validateDirectory(File dirFile) throws AutoDeploymentException {
         if ( ! dirFile.exists()) {
             mkdirs(domainRoot(), dirFile);
@@ -281,7 +281,7 @@ public class AutoDeployer {
             if ( ! dirFile.isDirectory()) {
                 throw new AutoDeploymentException(
                         localStrings.getLocalString(
-                            "enterprise.deployment.autodeploy.invalid_source_dir", 
+                            "enterprise.deployment.autodeploy.invalid_source_dir",
                             "invalid source directory {0}",
                             dirFile));
             }
@@ -301,24 +301,24 @@ public class AutoDeployer {
                         dirFile));
         }
     }
-    
-    
+
+
     private void setRenameOnSuccess(boolean rename) {
         renameOnSuccess = rename;
     }
-    
+
     private void setForceDeploy(boolean force) {
         forceDeploy = force;
     }
-    
+
     private void setVirtualServer(String vs) {
         virtualServer = vs;
     }
-    
+
     private void setEnabled(boolean setting) {
         enabled = setting;
     }
-    
+
     /**
      * set  DirectoryScanner which will be used for filtering out deployeble component
      * @param ds the new directory scanner to use
@@ -326,15 +326,15 @@ public class AutoDeployer {
     public void setDirectoryScanner(DirectoryScanner ds) {
         directoryScanner=ds;
     }
-    
+
     /**
      * set  target server where the autual deployment will be done
-     * @param target 
+     * @param target
      */
     public void setTarget(String target) {
         this.target = target;
     }
-    
+
     /**
      * If an archive is successfully autodeployed, file will not be
      * renamed to archive_deployed
@@ -342,7 +342,7 @@ public class AutoDeployer {
     public void disableRenameOnSuccess() {
         renameOnSuccess = false;
     }
-    
+
     /**
      * If an archive is successfully autodeployed will be renamed
      * to archive_deployed
@@ -351,7 +351,7 @@ public class AutoDeployer {
         // FIXME - Mahesh
         renameOnSuccess = true;
     }
-    
+
     /**
      *Set whether this AutoDeployer should verify or not.
      *@param verify whether to verify the app during deployment
@@ -359,7 +359,7 @@ public class AutoDeployer {
     public void setVerify(boolean verify) {
         this.verify =  Boolean.valueOf(verify);
     }
-    
+
     /**
      *Set whether this AutoDeployer should precompile JSPs or not.
      *@param jspPreCompilation precompilation setting
@@ -367,7 +367,7 @@ public class AutoDeployer {
     public void setJspPreCompilation(boolean jspPreCompilation) {
         this.jspPreCompilation = Boolean.valueOf(jspPreCompilation);
     }
-    
+
     /**
      * Run through the auto-deployment procedure.
      * <p>
@@ -381,7 +381,7 @@ public class AutoDeployer {
             deplLogger.fine("autodeploy directory does not exist");
         }
     }
-    
+
     public synchronized void run(boolean includeSubdir) {
         markInProgress();
         try {
@@ -406,7 +406,7 @@ public class AutoDeployer {
     private void setRetryManager(ServiceLocator habitat) {
         retryManager = habitat.getService(AutodeployRetryManager.class);
     }
-    
+
     private void markInProgress() {
         inProgress.set(true);
     }
@@ -415,30 +415,30 @@ public class AutoDeployer {
         inProgress.set(false);
         notifyAll();
     }
-    
+
     public synchronized void waitUntilIdle() throws InterruptedException {
         while ( ! inProgress.get()) {
             wait();
         }
     }
-    
+
     /**
      * do deployment for all the deployable components in autoDeployDir dir.
      * @return
      */
     private void deployAll(File autoDeployDir, boolean includeSubDir) throws AutoDeploymentException {
-        
-        
+
+
         //create with default scanner
         if(directoryScanner==null) {
             directoryScanner=new AutoDeployDirectoryScanner();
         }
-        
+
         File [] files= null;
-        
+
         //get me all deployable entities
         files= directoryScanner.getAllDeployableModules(autoDeployDir, includeSubDir);
-        
+
         /*
          *To support slowly-copied files, the deploy method returns
          *    DEPLOY_SUCCESS  if the file was successfully autodeployed
@@ -467,38 +467,38 @@ public class AutoDeployer {
                     }
                 }
             }
-        } 
+        }
     }
-    
-    
-    
+
+
+
     /**
      * do undeployment for all deleted applications in autoDeployDir dir.
      * @param autoDeployDir the directory to scan for deleted files
-     * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException 
+     * @throws org.glassfish.deployment.autodeploy.AutoDeploymentException
      */
     public void undeployAll(File autoDeployDir, boolean includeSubdir) throws AutoDeploymentException {
-        
-        
+
+
         //create with default scanner
         if(directoryScanner==null) {
             directoryScanner=new AutoDeployDirectoryScanner();
         }
-        
+
         File[] apps= null;
-        
+
         //get me all apps
         apps= directoryScanner.getAllFilesForUndeployment(autoDeployDir, includeSubdir);
-        
+
         //deploying all applications
         if(apps !=null) {
             for (int i=0; i< apps.length && !cancelDeployment;i++) {
                 try {
-                    
-                    this.undeploy(apps[i], autoDeployDir, 
+
+                    this.undeploy(apps[i], autoDeployDir,
                         getNameFromFilePath(autoDeployDir, apps[i]));
-                    
-                    
+
+
                 } catch (AutoDeploymentException ae) {
                     //ignore and move to next file
                 } finally {
@@ -509,20 +509,20 @@ public class AutoDeployer {
         }
         /////////end for apps
     }
-    
+
     private AutodeploymentStatus undeploy(File applicationFile, File autodeployDir,
     String name) throws AutoDeploymentException {
-        
+
         AutoUndeploymentOperation au = AutoUndeploymentOperation.newInstance(
                 habitat,
-                applicationFile, 
-                name, 
+                applicationFile,
+                name,
                 target);
         deplLogger.log(Level.INFO,
                        AUTODEPLOYING_APPLICATION,
                        name);
         return au.run();
-        
+
     }
 
     /**
@@ -533,7 +533,7 @@ public class AutoDeployer {
     public void cancel(boolean value){
         cancelDeployment=value;
     }
-    
+
     /**
      * get cancel flag value
      * @return
@@ -541,16 +541,16 @@ public class AutoDeployer {
     public boolean isCancelled(){
         return cancelDeployment;
     }
-    
+
     /**
      *Deploy any type of module.
      *@param deployablefile the file to be deployed
      *@param autodeployDir the directory where the file resides (holdover from earlier impl)
-     *@return status of the deployment attempt: DEPLOY_SUCCESS, DEPLOY_FAILURE, or DEPLOY_PENDING 
+     *@return status of the deployment attempt: DEPLOY_SUCCESS, DEPLOY_FAILURE, or DEPLOY_PENDING
      *@throws AutoDeploymentException if any invoked method throws an exception
      */
     protected AutodeploymentStatus deploy(File deployablefile, File autodeployDir) throws AutoDeploymentException {
-        
+
         String file=deployablefile.getAbsolutePath();
         if ( ! retryManager.shouldAttemptDeployment(deployablefile)) {
             return AutodeploymentStatus.PENDING;
@@ -563,7 +563,7 @@ public class AutoDeployer {
         AutoDeploymentOperation ad = AutoDeploymentOperation.newInstance(
                 habitat,
                 renameOnSuccess,
-                deployablefile, 
+                deployablefile,
                 enabled,
                 virtualServer,
                 forceDeploy,
@@ -573,9 +573,9 @@ public class AutoDeployer {
         AutodeploymentStatus adStatus = ad.run();
         return adStatus;
     }
-   
+
     static String getNameFromFilePath(File autodeployDir, File filePath) {   //creating module name as file name
-        
+
         File parent = filePath.getParentFile();
         String moduleName = null;
         while (!parent.getAbsolutePath().equals(autodeployDir.getAbsolutePath())) {
@@ -597,24 +597,24 @@ public class AutoDeployer {
         }
         return moduleName;
     }
-    
+
     public enum AutodeploymentStatus {
         SUCCESS(
-                true, 
+                true,
                 ActionReport.ExitCode.SUCCESS,
                 "enterprise.deployment.autodeploy.successfully_autodeployed",
                 "deployment of {0} succeeded",
                 "enterprise.deployment.autodeploy.successfully_autoundeployed",
                 "undeployment of {0} succeeded"),
         FAILURE(
-                false, 
+                false,
                 ActionReport.ExitCode.FAILURE,
                 "enterprise.deployment.autodeploy.autodeploy_failed",
                 "deployment of {0} failed",
                 "enterprise.deployment.autodeploy.autoundeploy_failed",
                 "undeployment of {0} failed"),
         WARNING(
-                true, 
+                true,
                 ActionReport.ExitCode.WARNING,
                 "enterprise.deployment.autodeploy.warning_autodeployed",
                 "deployment of {0} succeeded with warning(s)",
@@ -637,7 +637,7 @@ public class AutoDeployer {
         final String undeploymentDefaultMessage;
 
         AutodeploymentStatus(
-                boolean status, 
+                boolean status,
                 ActionReport.ExitCode exitCode,
                 String deploymentMessageKey,
                 String deploymentDefaultMessage,
@@ -659,7 +659,7 @@ public class AutoDeployer {
             }
             throw new IllegalArgumentException(exitCode.toString());
         }
-    }        
+    }
 
 }
 

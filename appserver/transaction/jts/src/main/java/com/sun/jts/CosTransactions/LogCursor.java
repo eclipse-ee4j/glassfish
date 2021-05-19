@@ -124,7 +124,7 @@ class LogCursor {
      * @see
      */
     synchronized byte[] readCursor( int[/*1*/] type,
-                                    LogLSN     LSNread ) 
+                                    LogLSN     LSNread )
         throws LogException {
 
         // Check BlockValid field in Log_CursorDescriptor block pointed to
@@ -213,9 +213,9 @@ class LogCursor {
             //   return LOG_READ_FAILURE
 
             byte[] headerBytes = new byte[LogRecordHeader.SIZEOF];
-            int bytesRead = 0; 
+            int bytesRead = 0;
             try {
-                bytesRead = logEDP.fileHandle.fileRead(headerBytes); 
+                bytesRead = logEDP.fileHandle.fileRead(headerBytes);
             } catch( LogException le ) {
                 logEDP.lastAccess = LogExtent.ACCESSTYPE_UNKNOWN;
                 throw new LogException(LogException.LOG_READ_FAILURE, 8,

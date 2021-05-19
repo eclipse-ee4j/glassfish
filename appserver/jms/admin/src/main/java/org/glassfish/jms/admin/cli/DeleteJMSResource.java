@@ -91,7 +91,7 @@ public class DeleteJMSResource implements AdminCommand {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
         jndiNameForConnectionPool = jndiName + JNDINAME_APPENDER;
 
         ActionReport subReport = report.addSubActionsReport();

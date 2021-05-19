@@ -70,11 +70,11 @@
 
 <!-- clean -->
 <target name="clean-classes-common" depends="init-common">
-	<delete dir="${build.classes.dir}" failonerror="false"/>
+        <delete dir="${build.classes.dir}" failonerror="false"/>
 </target>
 
 <target name="clean-jars-common" depends="init-common">
-	<delete dir="${assemble.dir}" failonerror="false"/>
+        <delete dir="${assemble.dir}" failonerror="false"/>
 </target>
 
 <target name="clean-common" depends="init-common">
@@ -86,7 +86,7 @@
     <echo message="cleaning all *.output, *.log and RepRunConf.txt files..."/>
     <delete dir="${env.APS_HOME}/build" failonerror="false"/>
     <delete failonerror="false">
-        <fileset dir="${env.APS_HOME}" 
+        <fileset dir="${env.APS_HOME}"
             includes="**/*results*.*ml,
             **/*.output,
             **/*.log,
@@ -103,8 +103,8 @@
 
 <!--  compile  -->
 <target name="compile-common" depends="init-common">
-	<antcall target="compile-common-as"/>
-	<antcall target="compile-common-as80"/>
+        <antcall target="compile-common-as"/>
+        <antcall target="compile-common-as80"/>
 </target>
 
 <target name="compile-common-as" depends="init-common" unless="AS80">
@@ -132,38 +132,38 @@
 
 <!-- war targets -->
 <target name="webclient-war-common" if="hasWebclient" depends="init-common">
-	<mkdir dir="${assemble.dir}"/>
-	<antcall target="package-war-common">
-		<!--param name="war.classes" value="${build.classes.dir}"/-->
-		<param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
-	</antcall>
+        <mkdir dir="${assemble.dir}"/>
+        <antcall target="package-war-common">
+                <!--param name="war.classes" value="${build.classes.dir}"/-->
+                <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
+        </antcall>
 </target>
 
 <target name="package-war-without-sun.xml" unless="sun-web.xml">
-	<echo message="This war does not contain sun-web.xml"/>
-	<echo message="my build classes dir is:${build.classes.dir}"/>
-	<delete file="${war.file}"/>  
-	<mkdir dir="${build.classes.dir}/WEB-INF"/>
-	<copy file="${web.xml}" 
-		tofile="${build.classes.dir}/WEB-INF/web.xml"/>
-	<echo message="Creating war file ${war.file}"/>
-	<!--jar jarfile="${war.file}" basedir="${war.classes}" update="true"-->
-	<jar jarfile="${war.file}" basedir="${build.classes.dir}" 
-		update="true" includes ="${webclient.war.classes}">
-		<fileset dir="${basedir}/web" casesensitive="yes">
-			<include name="*.html"/>
-			<include name="*.jsp"/>
-			<include name="*.gif"/>
-			<include name="*.do"/>
-			<exclude name="**/*.java"/>
-		</fileset>
-		<fileset dir="${build.classes.dir}" casesensitive="true">
-			<include name="WEB-INF/web.xml"/>
-		</fileset>
-	</jar>       
-	<echo message="created war file ${war.file}"/>
-	<delete dir="${build.classes.dir}/WEB-INF" failonerror="false"/> 
-	<echo message="my webclient war classes are:${webclient.war.classes}"/>
+        <echo message="This war does not contain sun-web.xml"/>
+        <echo message="my build classes dir is:${build.classes.dir}"/>
+        <delete file="${war.file}"/>
+        <mkdir dir="${build.classes.dir}/WEB-INF"/>
+        <copy file="${web.xml}"
+                tofile="${build.classes.dir}/WEB-INF/web.xml"/>
+        <echo message="Creating war file ${war.file}"/>
+        <!--jar jarfile="${war.file}" basedir="${war.classes}" update="true"-->
+        <jar jarfile="${war.file}" basedir="${build.classes.dir}"
+                update="true" includes ="${webclient.war.classes}">
+                <fileset dir="${basedir}/web" casesensitive="yes">
+                        <include name="*.html"/>
+                        <include name="*.jsp"/>
+                        <include name="*.gif"/>
+                        <include name="*.do"/>
+                        <exclude name="**/*.java"/>
+                </fileset>
+                <fileset dir="${build.classes.dir}" casesensitive="true">
+                        <include name="WEB-INF/web.xml"/>
+                </fileset>
+        </jar>
+        <echo message="created war file ${war.file}"/>
+        <delete dir="${build.classes.dir}/WEB-INF" failonerror="false"/>
+        <echo message="my webclient war classes are:${webclient.war.classes}"/>
 </target>
 
 <target name="package-war-common">
@@ -172,58 +172,58 @@
 </target>
 
 <target name="package-war-with-sun.xml" if="sun-web.xml">
-	<echo message="my build classes dir is:${build.classes.dir}"/>
-	<delete file="${war.file}"/>
-	<mkdir dir="${build.classes.dir}/tmp"/>
-	<mkdir dir="${build.classes.dir}/tmp/WEB-INF"/>
-	<mkdir dir="${build.classes.dir}/tmp/WEB-INF/classes"/>
-	<copy file="${sun-web.xml}"
-		tofile="${build.classes.dir}/tmp/WEB-INF/sun-web.xml" 
-		failonerror="false"/>
-	<copy file="${webservices.xml}"
-		tofile="${build.classes.dir}/tmp/WEB-INF/webservices.xml"
-		failonerror="false"/>
-	<copy file="${mappingfile.location}/${mappingfile.name}"
-		tofile="${build.classes.dir}/tmp/${mappingfile.name}"
-		failonerror="false"/>
-	<copy file="${wsdlfile.location}/${wsdlfile.name}"
-		tofile="${build.classes.dir}/tmp/WEB-INF/wsdl/${wsdlfile.name}"
-		failonerror="false"/>
-	<copy file="${web.xml}"
-		tofile="${build.classes.dir}/tmp/WEB-INF/web.xml"/>
-	<copy todir="${build.classes.dir}/tmp/WEB-INF/classes">
-		<fileset dir="${build.classes.dir}">
-			<include name="${war.classes}"/>
-		</fileset>
-	</copy>
-	<echo message="Creating war file ${war.file}"/>
-	<jar jarfile="${war.file}" update="true">
-		<fileset dir="${build.classes.dir}/tmp" casesensitive="yes">
-			<include name="**/*class*"/>
-		</fileset>
-		<fileset dir="${basedir}/web" casesensitive="yes">
-			<include name="**/*.html"/>
-			<include name="**/*.jsp"/>
-			<include name="**/*.gif"/>
-			<include name="**/*.do"/>
-			<exclude name="**/*.java,**/*.xml,**/*.properties"/>
-		</fileset>
-		<fileset dir="${build.classes.dir}/tmp/" casesensitive="true">
-			<include name="WEB-INF/web.xml"/>
-			<include name="WEB-INF/sun-web.xml"/>
-			<include name="WEB-INF/webservices.xml"/>
-			<include name="WEB-INF/wsdl/${wsdlfile.name}"/>
-			<include name="${mappingfile.name}"/>
-		</fileset>
-	</jar>
-	<echo message="created war file ${war.file}"/>
-	<delete dir="${build.classes.dir}/tmp/WEB-INF" failonerror="false"/>
-	<echo message="my webclient war classes are:${webclient.war.classes}"/>
+        <echo message="my build classes dir is:${build.classes.dir}"/>
+        <delete file="${war.file}"/>
+        <mkdir dir="${build.classes.dir}/tmp"/>
+        <mkdir dir="${build.classes.dir}/tmp/WEB-INF"/>
+        <mkdir dir="${build.classes.dir}/tmp/WEB-INF/classes"/>
+        <copy file="${sun-web.xml}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/sun-web.xml"
+                failonerror="false"/>
+        <copy file="${webservices.xml}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/webservices.xml"
+                failonerror="false"/>
+        <copy file="${mappingfile.location}/${mappingfile.name}"
+                tofile="${build.classes.dir}/tmp/${mappingfile.name}"
+                failonerror="false"/>
+        <copy file="${wsdlfile.location}/${wsdlfile.name}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/wsdl/${wsdlfile.name}"
+                failonerror="false"/>
+        <copy file="${web.xml}"
+                tofile="${build.classes.dir}/tmp/WEB-INF/web.xml"/>
+        <copy todir="${build.classes.dir}/tmp/WEB-INF/classes">
+                <fileset dir="${build.classes.dir}">
+                        <include name="${war.classes}"/>
+                </fileset>
+        </copy>
+        <echo message="Creating war file ${war.file}"/>
+        <jar jarfile="${war.file}" update="true">
+                <fileset dir="${build.classes.dir}/tmp" casesensitive="yes">
+                        <include name="**/*class*"/>
+                </fileset>
+                <fileset dir="${basedir}/web" casesensitive="yes">
+                        <include name="**/*.html"/>
+                        <include name="**/*.jsp"/>
+                        <include name="**/*.gif"/>
+                        <include name="**/*.do"/>
+                        <exclude name="**/*.java,**/*.xml,**/*.properties"/>
+                </fileset>
+                <fileset dir="${build.classes.dir}/tmp/" casesensitive="true">
+                        <include name="WEB-INF/web.xml"/>
+                        <include name="WEB-INF/sun-web.xml"/>
+                        <include name="WEB-INF/webservices.xml"/>
+                        <include name="WEB-INF/wsdl/${wsdlfile.name}"/>
+                        <include name="${mappingfile.name}"/>
+                </fileset>
+        </jar>
+        <echo message="created war file ${war.file}"/>
+        <delete dir="${build.classes.dir}/tmp/WEB-INF" failonerror="false"/>
+        <echo message="my webclient war classes are:${webclient.war.classes}"/>
 </target>
 
 <!-- ===== package ejb jar ===== -->
 <target name="package-ejbjar-common">
-	<mkdir dir="${assemble.dir}"/>
+        <mkdir dir="${assemble.dir}"/>
     <delete file="${ejb.jar}" failonerror="false"/>
     <echo message="sqe-common.xml: Generating ejb-jar inside build directory"/>
     <mkdir dir="${build.classes.dir}/META-INF"/>
@@ -232,9 +232,9 @@
     <copy file="${sun-ejb-jar.xml}" tofile="${build.classes.dir}/META-INF/sun-ejb-jar.xml"/>
 
     <!-- optional files -->
-    <copy file="${sun-cmp-mappings.xml}" 
+    <copy file="${sun-cmp-mappings.xml}"
         tofile="${build.classes.dir}/META-INF/sun-cmp-mappings.xml"
-		failonerror="false"/>
+                failonerror="false"/>
    <copy file="${dbschema}" todir="${build.classes.dir}" failonerror="false"/>
    <copy file="${mapping.xml}" todir="${build.classes.dir}/META-INF" failonerror="false"/>
    <copy file="${webservices.xml}" todir="${build.classes.dir}/META-INF" failonerror="false"/>
@@ -250,7 +250,7 @@
    </jar>
 
    <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
-</target>  
+</target>
 <!-- ========================================= -->
 
 <!-- appclient package -->
@@ -259,20 +259,20 @@
     <delete file="${appclient.jar}" failonerror="false"/>
     <echo message="sqe-common.xml: Generating appclient-jar in build dir"/>
     <mkdir dir="${build.classes.dir}/META-INF"/>
-    <copy file="${application-client.xml}" 
-		tofile="${build.classes.dir}/META-INF/application-client.xml"/>
-    <copy file="${sun-application-client.xml}" 
-		tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
-    <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}" 
-        update="true" includes ="${appclientjar.classes}" 
-        manifest="./client/MANIFEST.MF">         
+    <copy file="${application-client.xml}"
+                tofile="${build.classes.dir}/META-INF/application-client.xml"/>
+    <copy file="${sun-application-client.xml}"
+                tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
+    <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}"
+        update="true" includes ="${appclientjar.classes}"
+        manifest="./client/MANIFEST.MF">
             <metainf dir="${build.classes.dir}/META-INF">
                 <include name="application-client.xml"/>
                 <include name="sun-application-client.xml"/>
-      	    </metainf>
-	</jar>       
-	<delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
-</target> 
+                  </metainf>
+        </jar>
+        <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
+</target>
 
 <!--  ejb jar packager -->
 <target name="ejb-jar-common" depends="init-common">
@@ -281,28 +281,28 @@
         <param name="ejbjar.files" value="${build.classes.dir}"/>
         <param name="ejb.jar" value="${assemble.dir}/${appname}-ejb.jar"/>
     </antcall>
-</target>     
+</target>
 
 <!--  appclient jar create -->
 <target name="appclient-jar-common" depends="init-common">
     <mkdir dir="${assemble.dir}"/>
     <antcall target="package-appclientjar-common">
-        <param name="appclientjar.files" 
+        <param name="appclientjar.files"
             value="${build.classes.dir}"/>
-        <param name="appclient.jar" 
+        <param name="appclient.jar"
             value="${assemble.dir}/${appname}-client.jar"/>
     </antcall>
-</target> 
+</target>
 
 <!--  ear -->
 <target name="build-ear-common" depends="fixFiles,ejb-jar-common,appclient-jar-common,webclient-war-common">
     <delete file="${assemble.dir}/${appname}.ear"/>
     <mkdir dir="${assemble.dir}"/>
-    <mkdir dir="${build.classes.dir}/META-INF"/>   
-    <copy file="${sun-application.xml}" 
-        tofile="${build.classes.dir}/META-INF/sun-application.xml" 
-        failonerror="false"/> 
-    <ear earfile="${assemble.dir}/${appname}App.ear" 
+    <mkdir dir="${build.classes.dir}/META-INF"/>
+    <copy file="${sun-application.xml}"
+        tofile="${build.classes.dir}/META-INF/sun-application.xml"
+        failonerror="false"/>
+    <ear earfile="${assemble.dir}/${appname}App.ear"
         appxml="${application.xml}">
         <fileset dir="${assemble.dir}">
             <include name="*.jar"/>
@@ -312,18 +312,18 @@
             <include name="META-INF/sun-application.xml"/>
         </fileset>
         <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
-    </ear>        
+    </ear>
 </target>
 
 <!--  ear (Without dependencies) -->
 <target name="ear-common" depends="fixFiles,init-common">
     <delete file="${assemble.dir}/${appname}.ear"/>
     <mkdir dir="${assemble.dir}"/>
-    <mkdir dir="${build.classes.dir}/META-INF"/>    
-    <copy file="${sun-application.xml}" 
-        tofile="${build.classes.dir}/META-INF/sun-application.xml" 
-        failonerror="false"/> 
-    <ear earfile="${assemble.dir}/${appname}App.ear" 
+    <mkdir dir="${build.classes.dir}/META-INF"/>
+    <copy file="${sun-application.xml}"
+        tofile="${build.classes.dir}/META-INF/sun-application.xml"
+        failonerror="false"/>
+    <ear earfile="${assemble.dir}/${appname}App.ear"
         appxml="${application.xml}">
         <fileset dir="${assemble.dir}">
             <include name="*.jar"/>
@@ -333,20 +333,20 @@
             <include name="META-INF/sun-application.xml"/>
         </fileset>
         <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
-    </ear>        
+    </ear>
 </target>
 
 <!--  asadmin common target -->
 <target name="asadmin-common">
   <echo message="Doing admin task ${admin.command}"/>
     <exec executable="${ASADMIN}" failonerror="false">
-        <arg line="${admin.command} ${as.props} ${operand.props}" />        
+        <arg line="${admin.command} ${as.props} ${operand.props}" />
     </exec>
 </target>
 
 <!--  reconfig the AppServ  -->
 <target name="reconfig-common" depends="init-common">
-	<echo message="Reconfig has been deprecated. No Action will be taken by the Appserver !!"/>
+        <echo message="Reconfig has been deprecated. No Action will be taken by the Appserver !!"/>
 </target>
 
 
@@ -363,7 +363,7 @@
         <arg line="${user}"/>
     </exec>
 </target>
-     
+
 <target name="delete-user-common" depends="init-common">
 <echo message="Deleting user ${user} in file realm"/>
     <exec executable="${ASADMIN}" failonerror="false">
@@ -374,16 +374,16 @@
         <arg line="${user}"/>
     </exec>
 </target>
- 
+
 <!--  create JDBC connection pool  -->
-<target name="create-jdbc-connpool-common" depends="init-common"> 
+<target name="create-jdbc-connpool-common" depends="init-common">
     <exec executable="${ASADMIN}" failonerror="false">
-        <arg line="create-jdbc-connection-pool"/>        
-        <arg line="--datasourceclassname ${db.class}"/>        
-        <arg line="--restype ${jdbc.resource.type}"/>        
+        <arg line="create-jdbc-connection-pool"/>
+        <arg line="--datasourceclassname ${db.class}"/>
+        <arg line="--restype ${jdbc.resource.type}"/>
         <arg line="--target ${appserver.instance.name}"/>
         <arg line="${as.props}"/>
-        <arg line="${jdbc.conpool.name}"/>        
+        <arg line="${jdbc.conpool.name}"/>
     </exec>
     <antcall target="set-pool-props"/>
 </target>
@@ -403,7 +403,7 @@
     <arg line="domain.resources.jdbc-connection-pool.${jdbc.conpool.name}.property.Password=${db.pwd}"/>
   </exec>
 
-  <antcall target="set-${db.type}-connpool-props"/> 
+  <antcall target="set-${db.type}-connpool-props"/>
 </target>
 
 <target name="set-derby-connpool-props">
@@ -474,13 +474,13 @@
 </target>
 
 <target name="set-sybase-connpool-props-common" unless="datadirect">
-  <antcall target="set-non-db2-type2-connpool-props"/> 
+  <antcall target="set-non-db2-type2-connpool-props"/>
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="set"/>
     <arg line="${as.props}"/>
     <arg line="domain.resources.jdbc-connection-pool.${jdbc.conpool.name}.property.DatabaseName=${db.name}" />
   </exec>
-</target> 
+</target>
 
 <target name="set-oracle-connpool-props">
     <antcall target="set-datadirect-pool-props"/>
@@ -488,7 +488,7 @@
 </target>
 
 <target name="set-oracle-connpool-props-common" unless="datadirect">
-  <antcall target="set-non-db2-type2-connpool-props"/> 
+  <antcall target="set-non-db2-type2-connpool-props"/>
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="set"/>
     <arg line="${as.props}"/>
@@ -500,7 +500,7 @@
     <arg line="${as.props}"/>
     <arg line="domain.resources.jdbc-connection-pool.${jdbc.conpool.name}.property.url=${db.url}" />
   </exec>
-  <!-- inet driver property added for enabling CLOB's in oracle Deepa 
+  <!-- inet driver property added for enabling CLOB's in oracle Deepa
 Singh 01/27/04 -->
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="set"/>
@@ -547,7 +547,7 @@ Singh 01/27/04 -->
 </target>
 
 <target name="set-pointbase-connpool-props">
-  <antcall target="set-non-db2-type2-connpool-props"/> 
+  <antcall target="set-non-db2-type2-connpool-props"/>
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="set"/>
     <arg line="${as.props}"/>
@@ -569,7 +569,7 @@ Singh 01/27/04 -->
 </target>
 
 <target name="set-microsoft-connpool-props-common">
-  <antcall target="set-non-db2-type2-connpool-props"/> 
+  <antcall target="set-non-db2-type2-connpool-props"/>
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="set"/>
     <arg line="${as.props}"/>
@@ -580,7 +580,7 @@ Singh 01/27/04 -->
     <arg line="${as.props}"/>
     <arg line="domain.resources.jdbc-connection-pool.${jdbc.conpool.name}.property.databaseName=${db.name}" />
   </exec>
-</target> 
+</target>
 
 <!--  create XA JDBC connection pool  -->
 <target name="create-jdbc-xa-connpool-common" depends="init-common">
@@ -603,7 +603,7 @@ Singh 01/27/04 -->
       <arg line="domain.resources.jdbc-connection-pool.${jdbc.conpool.name}.property.Password=${db.pwd}"/>
     </exec>
 
-    <antcall target="set-${db.type}-connpool-props"/> 
+    <antcall target="set-${db.type}-connpool-props"/>
 </target>
 
 <!--  delete JDBC connection-pool  -->
@@ -750,10 +750,10 @@ Singh 01/27/04 -->
 
 <!-- drop all tables as part of cleanup -->
 <target name="drop-sqe-alltables" depends="init-common">
-   <echo message="Droping all tables...executing all drop_xxx.sql 
+   <echo message="Droping all tables...executing all drop_xxx.sql
 files"/>
    <antcall target="execute-sql-common">
-	<param name="sql.file.type" value="drop"/>
+        <param name="sql.file.type" value="drop"/>
    </antcall>
 </target>
 
@@ -840,8 +840,8 @@ files"/>
    <antcall target="set-unix-classpath-suffix"/>
 </target>
 
-<target name="set-unix-classpath-suffix" 
-	depends="init-common" if="isUnix">
+<target name="set-unix-classpath-suffix"
+        depends="init-common" if="isUnix">
         <!-- Get classpath-suffix -->
         <exec executable="${ASADMIN}" failonerror="false"
           output="${classpathsuffix.file}">
@@ -862,8 +862,8 @@ files"/>
         <!-- <antcall target="reconfig-common"/> -->
 </target>
 
-<target name="set-win-classpath-suffix" 
-	depends="init-common" if="isWindows">
+<target name="set-win-classpath-suffix"
+        depends="init-common" if="isWindows">
 
         <!-- Get classpath-suffix -->
         <exec executable="${ASADMIN}" failonerror="false"
@@ -887,8 +887,8 @@ files"/>
 </target>
 
 <!--  create/delete Connector connection pool  -->
-<target name="create-connector-connpool-common" 
-	depends="init-common, create-connector-connpool"/>
+<target name="create-connector-connpool-common"
+        depends="init-common, create-connector-connpool"/>
 
 <target name="create-connector-connpool" depends="init-common">
   <exec executable="${ASADMIN}" failonerror="false">
@@ -907,7 +907,7 @@ files"/>
     <arg line="delete-connector-connection-pool"/>
     <arg line="${as.props}"/>
     <arg line="--target ${appserver.instance.name}"/>
-    <arg line="${connector.conpool.name}"/>  
+    <arg line="${connector.conpool.name}"/>
   </exec>
 </target>
 
@@ -1014,7 +1014,7 @@ ${jms.resource.name}"/>
 
 
 <target name="create-jms-resource-topic-common" if="topic">
-  <echo message="Creating JMS resource with name 
+  <echo message="Creating JMS resource with name
 ${jms.resource.name}"/>
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="create-jmsdest"/>
@@ -1063,11 +1063,11 @@ ${jms.resource.name}"/>
 </target>
 
 <!--  deploy the applications in AppServ  -->
-<target name="deploy-common" depends="init-common">   
+<target name="deploy-common" depends="init-common">
     <antcall target="deploy-common-${execution.mode}"/>
 </target>
 
-<target name="deploy-common-pe" depends="init-common">      
+<target name="deploy-common-pe" depends="init-common">
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="deploy"/>
     <arg line="${as.props}"/>
@@ -1077,7 +1077,7 @@ ${jms.resource.name}"/>
   </exec>
 </target>
 
-<target name="deploy-common-ee" depends="init-common">      
+<target name="deploy-common-ee" depends="init-common">
     <echo message="So you are using Enterprise Version eh ?"/>
 <property name="deployed.app" value="${assemble.dir}/${appname}App.ear"/>
 
@@ -1093,7 +1093,7 @@ ${jms.resource.name}"/>
 <!-- deployed.app defaults to ${assemble.dir}/${appname}App.ear defined in properties.xml-->
     <arg line="${deployed.app}"/>
   </exec>
-  <echo message="Deployment on target server ${appserver.instance.name} 
+  <echo message="Deployment on target server ${appserver.instance.name}
 successful"/>
 
 </target>
@@ -1101,8 +1101,8 @@ successful"/>
 
 <!-- start cmp deploy/undeploy targets -->
     <!--  deploy the applications in java2DB for createtable  -->
-        <target name="deploy-common-createtable" depends="init-common">      
-          <echo message="using java2DB targets"/>   
+        <target name="deploy-common-createtable" depends="init-common">
+          <echo message="using java2DB targets"/>
           <exec executable="${ASADMIN}" failonerror="false">
             <arg line="deploy"/>
             <arg line="${as.props}"/>
@@ -1110,23 +1110,23 @@ successful"/>
             <arg line="--retrieve ${assemble.dir}"/>
             <arg line="--target ${appserver.instance.name}"/>
             <arg line="--dbvendorname ${db.type}"/>
-            <arg line="--createtables=true"/>     
-            <arg line="--uniquetablenames=true"/>  
+            <arg line="--createtables=true"/>
+            <arg line="--uniquetablenames=true"/>
             <arg line="${assemble.dir}/${appname}App.ear"/>
           </exec>
         </target>
 
     <!--  deploy the applications in java2DB for dropandcreatetable  -->
-        <target name="deploy-common-dropcreatetable" depends="init-common">         
-          <echo message="using java2DB targets"/>   
+        <target name="deploy-common-dropcreatetable" depends="init-common">
+          <echo message="using java2DB targets"/>
           <exec executable="${ASADMIN}" failonerror="false">
             <arg line="deploy"/>
             <arg line="${as.props}"/>
             <arg line="--name ${appname}App"/>
             <arg line="--retrieve ${assemble.dir}"/>
             <arg line="--dbvendorname ${db.type}"/>
-            <arg line="--dropandcreatetables=true"/>        
-            <arg line="--uniquetablenames=true"/>  
+            <arg line="--dropandcreatetables=true"/>
+            <arg line="--uniquetablenames=true"/>
             <arg line="--target ${appserver.instance.name}"/>
             <arg line="${assemble.dir}/${appname}App.ear"/>
           </exec>
@@ -1134,7 +1134,7 @@ successful"/>
 
     <!--  undeploy the applications in java2DB for droptable  -->
         <target name="undeploy-common-droptable" depends="init-common">
-          <echo message="using java2DB targets"/>   
+          <echo message="using java2DB targets"/>
           <echo message="Undeploying ${appname}."/>
           <exec executable="${ASADMIN}">
             <arg line="undeploy"/>
@@ -1142,9 +1142,9 @@ successful"/>
             <arg line="--password ${admin.password}"/>
             <arg line="--host ${admin.host}"/>
             <arg line="--port ${admin.port}"/>
-            <arg line="--droptables=true"/>	
+            <arg line="--droptables=true"/>
             <arg line="--target ${appserver.instance.name}"/>
-            <arg line="${appname}App"/>	
+            <arg line="${appname}App"/>
           </exec>
         </target>
 <!-- end cmp targets -->
@@ -1159,11 +1159,11 @@ successful"/>
     <arg line="--target ${appserver.instance.name}"/>
     <arg line="--retrieve ${assemble.dir}"/>
   </exec>
-</target>    
+</target>
 
 <!--  deploy/undeploy module files -->
-<!--  
-    Note: Set "modulefile" param to following values: 
+<!--
+    Note: Set "modulefile" param to following values:
         * <archive_name>.<jar|war|rar> ( for deploy-module-common)
         * <archive_name> (for undeploy-module-common)
         * <archive_name> (for runclient-module-common)
@@ -1228,8 +1228,8 @@ successful"/>
       <param name="test.description" value="${test.description}"/>
   </antcall>
 </target>
-   
-     
+
+
 <!--  deploy/undeploy RAR files -->
 <target name="deploy-rar-common" depends="init-common">
   <echo message="Deploying ${rarfile}."/>
@@ -1249,7 +1249,7 @@ successful"/>
     <arg line="--target ${appserver.instance.name}"/>
     <arg line="${undeployrar}"/>
   </exec>
-</target>    
+</target>
 
 <!-- setup RAR config values for all instances in a cluster -->
 <target name="create-cluster-rarconfig" depends="init-common">
@@ -1294,7 +1294,7 @@ successful"/>
         <arg line="undeploy"/>
         <arg line="${as.props}"/>
         <arg line="--target ${appserver.instance.name}"/>
-        <arg line="${appname}App"/>	
+        <arg line="${appname}App"/>
     </exec>
     <echo message="cmd executed for ${appserver.instance.name}"/>
 </target>
@@ -1340,27 +1340,27 @@ successful"/>
 <target name="startPB" depends="init-common">
   <echo message="Starting Pointbase servers"/>
   <property name="jvm.args"
-      value="-Ddatabase.home=${db.root}/databases 
+      value="-Ddatabase.home=${db.root}/databases
           -Dpointbase.ini=${db.root}/tools/serveroption/pointbase.ini"/>
   <parallel>
-    <java classname="com.pointbase.net.netServer" 
+    <java classname="com.pointbase.net.netServer"
       classpath="${db.classpath}" failonerror="true" fork="true">
       <jvmarg line="${jvm.args}"/>
       <arg line="/port:9092"/>
     </java>
-    <java classname="com.pointbase.net.netServer" 
+    <java classname="com.pointbase.net.netServer"
       classpath="${db.classpath}" failonerror="true" fork="true">
       <jvmarg line="${jvm.args}"/>
       <arg line="/port:9093"/>
-    </java> 
+    </java>
 
     <!-- ports 9094 and 9095 are being used by the Tomcat group -->
-    <java classname="com.pointbase.net.netServer" 
+    <java classname="com.pointbase.net.netServer"
       classpath="${db.classpath}" failonerror="true" fork="true">
       <jvmarg line="${jvm.args}"/>
       <arg line="/port:9094"/>
     </java>
-    <java classname="com.pointbase.net.netServer" 
+    <java classname="com.pointbase.net.netServer"
       classpath="${db.classpath}" failonerror="true" fork="true">
       <jvmarg line="${jvm.args}"/>
       <arg line="/port:9095"/>
@@ -1374,21 +1374,21 @@ successful"/>
   <echo message="Creating Pointbase Databases"/>
   <sleep seconds="10"/>
   <parallel>
-    <java classname="com.pointbase.tools.toolsCommander" 
+    <java classname="com.pointbase.tools.toolsCommander"
       classpath="${db.classpath}" failonerror="false">
       <arg line="${db.driver}"/>
       <arg line="jdbc:pointbase:server://${db.host}:9093/sqe-samples,new"/>
       <arg line="${db.user}"/>
       <arg line="${db.pwd}"/>
     </java>
-    <java classname="com.pointbase.tools.toolsCommander" 
+    <java classname="com.pointbase.tools.toolsCommander"
       classpath="${db.classpath}" failonerror="false">
       <arg line="${db.driver}"/>
       <arg line="jdbc:pointbase:server://${db.host}:9094/ActivityDB,new"/>
       <arg line="PBPUBLIC"/>
       <arg line="PBPUBLIC"/>
     </java>
-    <java classname="com.pointbase.tools.toolsCommander" 
+    <java classname="com.pointbase.tools.toolsCommander"
       classpath="${db.classpath}" failonerror="false">
       <arg line="${db.driver}"/>
       <arg line="jdbc:pointbase:server://${db.host}:9095/app_centric_test_servlet2_4_workflow,new"/>
@@ -1397,7 +1397,7 @@ successful"/>
     </java>
   </parallel>
 </target>
-    
+
 <target name="copyDrivers" depends="init-common">
   <echo message="db.driver.dir=${db.driver.dir}"/>
   <echo message="db.driver=${db.driver}"/>
@@ -1424,7 +1424,7 @@ successful"/>
     <property file="${env.APS_HOME}/devtests/jdbc/config/oracle_datadirect.properties"/>
 </target>
 
-<!-- this target cleans up oracle schema, drops all tables under a user 
+<!-- this target cleans up oracle schema, drops all tables under a user
 and creates a new one
 Added 8/21/2003 Deepa+Sailaja
 -->
@@ -1432,7 +1432,7 @@ Added 8/21/2003 Deepa+Sailaja
   <property file="${env.APS_HOME}/devtests/jdbc/config/oracle.properties"/>
   <sql driver="${db.driver}" url="${db.url}"
     userid="system" password="sysdba"
-    onerror="continue" 
+    onerror="continue"
     classpath="${env.S1AS_HOME}/lib/jdbcdrivers/smoracle.jar">
     drop user ${db.user} cascade;
     create user ${db.user} identified by ${db.pwd};
@@ -1441,8 +1441,8 @@ Added 8/21/2003 Deepa+Sailaja
 </target>
 
 <target name="reconfig" depends="init-common">
-    <echo> 
-        Reconfig has been deprecated. 
+    <echo>
+        Reconfig has been deprecated.
         No Action will be taken by the Appserver !!"/>
     </echo>
 </target>
@@ -1460,7 +1460,7 @@ Added 8/21/2003 Deepa+Sailaja
     </target>
 
     <target name="stopPB" depends="init-common" if="isUnix">
-        <java classname="com.pointbase.tools.toolsCommander" 
+        <java classname="com.pointbase.tools.toolsCommander"
             classpath="${db.classpath}" failonerror="false">
             <arg line="${db.driver}"/>
             <arg line="jdbc:pointbase:server://${admin.host}:9092/sqe-samples"/>
@@ -1473,7 +1473,7 @@ Added 8/21/2003 Deepa+Sailaja
 
 <!-- ======= restart server instance targets ======= -->
     <target name="restart-server-instance-common" depends="init-common">
-   	 <antcall target="restart-server-instance-common-${execution.mode}"/>
+            <antcall target="restart-server-instance-common-${execution.mode}"/>
     </target>
 
     <target name="restart-server-instance-common-ee" depends="init-common">
@@ -1515,7 +1515,7 @@ Added 8/21/2003 Deepa+Sailaja
     <arg line="--port ${admin.port}"/>
     <arg line="${cluster.name}"/>
   </exec>
-  
+
   <sleep seconds="30"/>
   <exec executable="${ASADMIN}" failonerror="false">
     <arg line="start-cluster"/>
@@ -1549,7 +1549,7 @@ Added 8/21/2003 Deepa+Sailaja
 </target>
 
    <target name="start-domain-ee" depends="init-common" if="isEE">
-	<echo message="start-domain is running on Standard/Enterprise Edition..."/>
+        <echo message="start-domain is running on Standard/Enterprise Edition..."/>
       <antcall target="start-domain-win"/>
       <antcall target="start-domain-unix"/>
       <echo message="Waiting for 90 secs to make sure server properly started..."/>
@@ -1655,15 +1655,15 @@ Added 8/21/2003 Deepa+Sailaja
 
 <target name="run-loose-reporter" depends="init-common">
   <!--
-  Caution: 
+  Caution:
   the test description should be passed as 'one' word with no spaces
-  testname_and_status parameter can be overloaded by specifying multiple 
+  testname_and_status parameter can be overloaded by specifying multiple
   test names and their status in the order: testname teststatus
-  thus, passing space seperated argument makes more sense here. 
+  thus, passing space seperated argument makes more sense here.
   -->
   <property name="testdesc" value="default"/>
   <property name="testname_and_status" value="defaultname did_not_run"/>
-  <java 
+  <java
     classname="com.sun.ejte.ccl.reporter.LooseReporterClient"
     classpath="${env.APS_HOME}/lib/reporter.jar">
     <arg line="${testdesc}"/>
@@ -1673,7 +1673,7 @@ Added 8/21/2003 Deepa+Sailaja
 <!-- End Report Targets -->
 
 <target name="list-components-common" depends="init-common">
-    <exec executable="${ASADMIN}" 
+    <exec executable="${ASADMIN}"
         outputproperty="components-list" failonerror="false">
 
         <arg line="list-components"/>
@@ -1682,7 +1682,7 @@ Added 8/21/2003 Deepa+Sailaja
 </target>
 
 <target name="show-component-status-common" depends="init-common">
-    <exec executable="${ASADMIN}" outputproperty="component-status" 
+    <exec executable="${ASADMIN}" outputproperty="component-status"
         failonerror="false">
         <arg line="show-component-status"/>
         <arg line="${as.props}"/>
@@ -1718,13 +1718,13 @@ Added 8/21/2003 Deepa+Sailaja
 
 <!-- usage  -->
 <target name="usage-common">
-  <echo>         
+  <echo>
     ant clean           Remove all classes files
     ant build           Build the application
     ant deploy          Deploy the ear files to S1AS
-    ant run	            Run the application
+    ant run                    Run the application
     ant undeploy        Undeploy the ear files from S1AS
-    ant usage           Display this message            
+    ant usage           Display this message
   </echo>
 </target>
 
@@ -1757,21 +1757,21 @@ Added 8/21/2003 Deepa+Sailaja
 </target>
 
 <target name="setupTimer" depends="init-common" if="ee">
-	<exec executable="${ASADMIN}" failonerror="false">
-	<arg line="create-resource-ref"/>
-    	<arg line="--user ${admin.user}"/>
-	<arg line="--password ${admin.password}"/>
-	<arg line="--host ${admin.host}"/>
-	<arg line="--port ${admin.port}"/>
-	<arg line="--target ${appserver.instance.name}"/>
-	<arg line="${jdbc.resource.name}"/>
+        <exec executable="${ASADMIN}" failonerror="false">
+        <arg line="create-resource-ref"/>
+            <arg line="--user ${admin.user}"/>
+        <arg line="--password ${admin.password}"/>
+        <arg line="--host ${admin.host}"/>
+        <arg line="--port ${admin.port}"/>
+        <arg line="--target ${appserver.instance.name}"/>
+        <arg line="${jdbc.resource.name}"/>
 </exec>
 <exec executable="${ASADMIN}" failonerror="false">
-	<arg line="set"/>
-	<arg line="--user ${admin.user}"/>
-	<arg line="--password ${admin.password}"/>
-	<arg line="--host ${admin.host}"/>
-	<arg line="--port ${admin.port}"/>
+        <arg line="set"/>
+        <arg line="--user ${admin.user}"/>
+        <arg line="--password ${admin.password}"/>
+        <arg line="--host ${admin.host}"/>
+        <arg line="--port ${admin.port}"/>
     <arg line="${appserver.instance.name}-config.ejb-container.ejb-timer-service.timer-datasource=${jdbc.resource.name}"/>
 </exec>
 <echo message="creating timer table from ${env.S1AS_HOME}/lib/install/ejbtimer_${db.type}"/>
@@ -1814,17 +1814,17 @@ Added 8/21/2003 Deepa+Sailaja
 
 
 <target name="asadmin-common-ignore-fail">
-  <echo message="Doing admin task ${admin.command} (ignore failures)" 
+  <echo message="Doing admin task ${admin.command} (ignore failures)"
       level="verbose"/>
   <echo message="Operand ${operand.props}"  level="verbose"/>
   <echo message="asadmin ${admin.command} ${as.props} ${operand.props}"/>
     <exec executable="${ASADMIN}" failonerror="false">
-        <arg line="${admin.command} ${as.props} ${operand.props}" />        
+        <arg line="${admin.command} ${as.props} ${operand.props}" />
     </exec>
 </target>
 
 <target name="asadmin-batch-common">
-  <echo message="Doing admin batch task ${admin.command} --file" 
+  <echo message="Doing admin batch task ${admin.command} --file"
       level="verbose"/>
   <exec executable="${ASADMIN}" failonerror="true">
      <env key="AS_ADMIN_PORT" value="${admin.port}"/>
@@ -1832,8 +1832,8 @@ Added 8/21/2003 Deepa+Sailaja
      <env key="AS_ADMIN_PASSWORD" value="${admin.password}"/>
      <env key="AS_ADMIN_HOST" value="${admin.host}"/>
      <env key="AS_ADMIN_INSTANCE" value="${appserver.instance.name}"/>
-     <arg line="--target ${appserver.instance.name} 
-                multimode --file ${asadmin.file}" />        
+     <arg line="--target ${appserver.instance.name}
+                multimode --file ${asadmin.file}" />
   </exec>
 </target>
 

@@ -17,60 +17,59 @@
 package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
-import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
 /**
- * A Stats interface, to expose the monitoring information 
+ * A Stats interface, to expose the monitoring information
  * about the thread system of the JVM.
  * @since 8.1
  */
 public interface JVMThreadStats extends Stats {
-    
+
     /**
-     * Returns the current number of live daemon and non-daemon 
+     * Returns the current number of live daemon and non-daemon
      * threads
      * @return CountStatistic   current number of live threads
      */
-    public CountStatistic getThreadCount();
-    
+    CountStatistic getThreadCount();
+
     /**
      * Returns the peak live thread count, since the JVM started or
      * the peak was reset
      * @return CountStatistic   peak live thread count
      */
-    public CountStatistic getPeakThreadCount();
-    
+    CountStatistic getPeakThreadCount();
+
     /**
      * Returns the total number of threads created and also started
      * since the JVM started
      * @return CountStatistic   total number of threads started
      */
-    public CountStatistic getTotalStartedThreadCount();
-    
+    CountStatistic getTotalStartedThreadCount();
+
     /**
      * Returns the current number of live daemon threads
      * @return CountStatistic   current number of live daemon threads
      */
-    public CountStatistic getDaemonThreadCount();
-    
+    CountStatistic getDaemonThreadCount();
+
     /**
      * Returns a comma separated list of all live thread ids
      * @return StringStatistic  live thread ids
      */
-    public StringStatistic getAllThreadIds();
-    
+    StringStatistic getAllThreadIds();
+
     /**
      * Returns the CPU time for the current thread in nanoseconds, if
      * CPU time measurement is enabled. Else returns -1
      * @return  CountStatistic  CPU time for the current thread
      */
-    public CountStatistic getCurrentThreadCPUTime();
-    
+    CountStatistic getCurrentThreadCPUTime();
+
     /**
      * Returns a comma separated list of thread ids that are
      * monitor deadlocked
      * @return StringStatistic
      */
-    public StringStatistic getMonitorDeadlockedThreads();
-    
+    StringStatistic getMonitorDeadlockedThreads();
+
 }

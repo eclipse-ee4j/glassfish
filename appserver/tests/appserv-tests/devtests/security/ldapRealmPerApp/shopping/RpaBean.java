@@ -35,26 +35,26 @@ import java.util.List;
  */
 
 public class RpaBean implements SessionBean {
-    
+
     private String shopper = "anonymous";
     private String principal = "j2ee/shingwai";
     private int totalPrice = 0;
-    
+
     private int totalItems = 0;
-    
+
     private List<String> items;
-    
+
     private List<Integer> itemPrice;
-    
+
     private SessionContext sc = null;
-    
+
     /** Creates a new instance of ShoppingEJB */
     public void ejbCreate(String shopperName) {
         shopper = shopperName;
         items = new ArrayList<String>();
         itemPrice = new ArrayList<Integer>();
     }
-    
+
     public void addItem(String item, int price) throws EJBException,
         RemoteException{
         checkCallerPrincipal();
@@ -66,47 +66,47 @@ public class RpaBean implements SessionBean {
             + item +" for price ="+ price +" .Total Items = "+totalItems +
             " .TotalPrice = " + totalPrice);
     }
-    
-    public void deleteItem(String item) throws EJBException, 
+
+    public void deleteItem(String item) throws EJBException,
         RemoteException{
         checkCallerPrincipal();
         int index = items.indexOf(item);
         items.remove(item);
         Integer price = itemPrice.get(index);
-        System.out.println("Shopping Cart: Removing item "+ item +" @price "+ 
+        System.out.println("Shopping Cart: Removing item "+ item +" @price "+
             price.intValue());
         totalPrice -= price.shortValue();
-        itemPrice.remove(index);                    
+        itemPrice.remove(index);
         System.out.println(" Shopping Cart: Shopper "+ shopper +"  .Total Items = "+totalItems +
             " .TotalPrice = " + totalPrice);
     }
-    
+
     public double getTotalCost() throws EJBException{
         checkCallerPrincipal();
         return totalPrice;
     }
-    
+
     public String[] getItems() throws EJBException{
         checkCallerPrincipal();
         String[] itemNames = items.toArray(new String[0]);
         return itemNames;
     }
-    
+
     public void ejbActivate() {
         System.out.println("In Rpa ejbActivate");
     }
-    
-    
+
+
     public void ejbPassivate() {
         System.out.println("In Rpa ejbPassivate");
     }
-    
-    
+
+
     public void ejbRemove()  {
         System.out.println("In Rpa ejbRemove");
     }
-    
-    
+
+
     public void setSessionContext(jakarta.ejb.SessionContext sessionContext) {
         sc = sessionContext;
     }

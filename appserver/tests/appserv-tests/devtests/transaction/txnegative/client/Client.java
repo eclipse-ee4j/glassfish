@@ -36,13 +36,13 @@ public class Client {
     try{
     userTransaction = (UserTransaction) new InitialContext().lookup("java:comp/UserTransaction");
     }catch(Exception ex) {
-    	ex.printStackTrace();
+            ex.printStackTrace();
     }
     }
 
-    
+
     public static void main(String[] args) {
-	System.out.println("\nStarting Txglobal Test Suite");
+        System.out.println("\nStarting Txglobal Test Suite");
         Client client = new Client();
 
         // run the tests
@@ -50,7 +50,7 @@ public class Client {
 
     }
     public void runTestClient() {
-	status.addDescription("This is to test the valid transaction exception!");
+        status.addDescription("This is to test the valid transaction exception!");
         try {
             System.out.println("START");
 
@@ -66,28 +66,28 @@ public class Client {
 
             try {
                 result = t.testA1(xa);
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (jakarta.ejb.CreateException e) {
                 System.out.println("CreateException");
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (Exception e) {
-		System.out.println("TEST PASSED");
+                System.out.println("TEST PASSED");
             }
             if (!result) {
                 status.addStatus("txnegative testA1 ", status.PASS);
             } else {
                 status.addStatus("txnegative testA1 ", status.FAIL);
             }
-	    result = false;
+            result = false;
 
             try {
                 result = t.testA1(nonxa);
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (jakarta.ejb.CreateException e) {
                 System.out.println("CreateException");
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (Exception e) {
-		System.out.println("TEST PASSED");
+                System.out.println("TEST PASSED");
             }
             if (!result) {
                 status.addStatus("txnegative testA2 ", status.PASS);
@@ -97,83 +97,83 @@ public class Client {
             boolean result=false;
 
             try {
-		userTransaction.begin();
-		userTransaction.begin();
-		System.out.println("TEST FAILED");
+                userTransaction.begin();
+                userTransaction.begin();
+                System.out.println("TEST FAILED");
             } catch (NotSupportedException ne) {
                 System.out.println("NotSupportedException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (SystemException ne) {
                 System.out.println("SystemException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (Exception e) {
-		e.printStackTrace();
-		System.out.println("TEST FAILED");
+                e.printStackTrace();
+                System.out.println("TEST FAILED");
             }
             if (result) {
                 status.addStatus("txnegative t1 ", status.PASS);
             } else {
                 status.addStatus("txnegative t1 ", status.FAIL);
             }
-	    result = false;
+            result = false;
             try {
-		userTransaction.commit();
-		System.out.println("TEST FAILED");
+                userTransaction.commit();
+                System.out.println("TEST FAILED");
             } catch (IllegalStateException ne) {
                 System.out.println("IllegalStateException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (SystemException ne) {
                 System.out.println("SystemException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (Exception e) {
-		e.printStackTrace();
-		System.out.println("TEST FAILED");
+                e.printStackTrace();
+                System.out.println("TEST FAILED");
             }
             if (result) {
                 status.addStatus("txnegative t2 ", status.PASS);
             } else {
                 status.addStatus("txnegative t2 ", status.FAIL);
             }
-	    result = false;
+            result = false;
             try {
-		userTransaction.rollback();
-		System.out.println("TEST FAILED");
+                userTransaction.rollback();
+                System.out.println("TEST FAILED");
             } catch (IllegalStateException ne) {
                 System.out.println("IllegalStateException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (SystemException ne) {
                 System.out.println("SystemException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (Exception e) {
-		e.printStackTrace();
-		System.out.println("TEST FAILED");
+                e.printStackTrace();
+                System.out.println("TEST FAILED");
             }
             if (result) {
                 status.addStatus("txnegative t3 ", status.PASS);
             } else {
                 status.addStatus("txnegative t3 ", status.FAIL);
             }
-	    result = false;
+            result = false;
             try {
-		userTransaction.setRollbackOnly();
-		System.out.println("TEST FAILED");
+                userTransaction.setRollbackOnly();
+                System.out.println("TEST FAILED");
             } catch (IllegalStateException ne) {
                 System.out.println("IllegalStateException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (SystemException ne) {
                 System.out.println("SystemException");
-		System.out.println("TEST PASSED");
-		result = true;
+                System.out.println("TEST PASSED");
+                result = true;
             } catch (Exception e) {
-		e.printStackTrace();
-		System.out.println("TEST FAILED");
+                e.printStackTrace();
+                System.out.println("TEST FAILED");
             }
             if (result) {
                 status.addStatus("txnegative t4 ", status.PASS);
@@ -191,6 +191,6 @@ public class Client {
             ex.printStackTrace();
             status.addStatus("txnegative testA1 ", status.FAIL);
         }
-	}
-    
+        }
+
 }

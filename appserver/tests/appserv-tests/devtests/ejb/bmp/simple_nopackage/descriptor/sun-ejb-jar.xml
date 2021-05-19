@@ -24,8 +24,8 @@
       <ejb-name>Test</ejb-name>
       <jndi-name>ejb/Test</jndi-name>
       <resource-ref>
-	<res-ref-name>DataSource</res-ref-name>
-	<jndi-name>jdbc/__default</jndi-name>
+        <res-ref-name>DataSource</res-ref-name>
+        <jndi-name>jdbc/__default</jndi-name>
       </resource-ref>
       <pass-by-reference>false</pass-by-reference>
       <is-read-only-bean>false</is-read-only-bean>

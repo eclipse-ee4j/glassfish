@@ -38,17 +38,17 @@ import org.testng.annotations.Test;
  *   undeploy the app using JSR-88
  *
  * @author: tjquinn
- * 
+ *
  */
 
 public class StatelessHelloTest extends DeploymentTest {
-    
+
     private int nextLogID = 0;
-    
+
     /** Creates a new instance of ExampleTest */
     public StatelessHelloTest() {
     }
-    
+
     /**
      *Deploy the app using asadmin and run it, expecting a positive result.
      */
@@ -57,16 +57,16 @@ public class StatelessHelloTest extends DeploymentTest {
         deploy();
         runPositive("ejb/statelessejb Test asadmin deploy");
     }
-    
+
     /**
-     *Redeploy and run after first test. 
+     *Redeploy and run after first test.
      */
     @Test(dependsOnMethods={"deployWithAsadminAndRun"})
     public void redeployWithAsadminAndRun() {
         redeploy();
         runPositive("ejb/statelessejb Test asadmin redeploy");
     }
-    
+
     /**
      *Undeploy using asadmin after first deployment and redeployment.
      */
@@ -74,7 +74,7 @@ public class StatelessHelloTest extends DeploymentTest {
     public void undeployAfterAsadminRuns() {
         undeploy();
     }
-    
+
     /**
      *Deploy with JSR-88 and run.
      */
@@ -83,7 +83,7 @@ public class StatelessHelloTest extends DeploymentTest {
         deployWithJSR88();
         runPositive("ejb/statelessejb Test jsr88 deploy");
     }
-    
+
     /**
      *Stop using JSR-88 and attempt to run.
      */
@@ -92,7 +92,7 @@ public class StatelessHelloTest extends DeploymentTest {
         stopWithJSR88();
         runNegative("ejb/statelessejb Test jsr88 stopped state");
     }
-    
+
     /**
      *Start with JSR-88 and attempt to run.
      */
@@ -101,7 +101,7 @@ public class StatelessHelloTest extends DeploymentTest {
         startWithJSR88();
         runPositive("ejb/statelessejb Test jsr88 started state");
     }
-    
+
     /**
      *Stop, redeploy, and attempt to run (should fail).
      */
@@ -116,39 +116,39 @@ public class StatelessHelloTest extends DeploymentTest {
     public void unsetup() {
         undeployAtEnd();
     }
-    
+
     public void undeployAtEnd() {
         undeployWithJSR88();
     }
-    
+
     protected void deployWithJSR88() {
         project.executeTarget("deploy.jsr88");
     }
-    
+
     protected void startWithJSR88() {
         project.executeTarget("start.jsr88");
     }
-    
+
     protected void stopWithJSR88() {
         project.executeTarget("stop.jsr88");
     }
-    
+
     protected void redeployWithJSR88() {
         project.executeTarget("redeploy.jsr88");
     }
-    
+
     protected void undeployWithJSR88() {
         project.executeTarget("undeploy.jsr88");
     }
-    
+
     protected void runPositive(String testTitle) {
         run(testTitle, "run.positive");
     }
-    
+
     protected void runNegative(String testTitle) {
         run(testTitle, "run.negative");
     }
-    
+
     protected void run(String testTitle, String runTarget) {
         CallTarget target = new CallTarget();
         target.setProject(project);
@@ -160,7 +160,7 @@ public class StatelessHelloTest extends DeploymentTest {
         logID.setValue(String.valueOf(nextLogID++));
         description.setName("description");
         description.setValue(testTitle);
-        
+
         target.execute();
     }
 }

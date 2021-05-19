@@ -41,7 +41,7 @@ public class SimpleBMPBean
     }
 
 
-   
+
 /* Get a single connection and close it */
     public boolean test1() {
         Connection conn = null;

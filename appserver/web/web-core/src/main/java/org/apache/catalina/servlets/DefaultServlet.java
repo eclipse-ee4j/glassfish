@@ -116,7 +116,7 @@ import org.xml.sax.ext.EntityResolver2;
  * </pre>
  * <p>
  * Then a request to <code>/context/static/images/tomcat.jpg</code> will succeed
- * while a request to <code>/context/images/tomcat2.jpg</code> will fail. 
+ * while a request to <code>/context/images/tomcat2.jpg</code> will fail.
  * </p>
  * @author Craig R. McClanahan
  * @author Remy Maucherat
@@ -224,8 +224,8 @@ public class DefaultServlet
      * Minimum size for sendfile usage in bytes.
      */
     protected int sendfileSize = 48 * 1024;
-    
-    
+
+
     /**
      * Should the Accept-Ranges: bytes header be send with static resources?
      */
@@ -236,14 +236,14 @@ public class DefaultServlet
      * Full range marker.
      */
     protected static final ArrayList<Range> FULL = new ArrayList<Range>();
-    
+
     /**
      * The maximum number of items allowed in Range header.
      * -1 means unbounded.
      */
     protected int maxHeaderRangeItems = 10;
 
-    
+
     // ----------------------------------------------------- Static Initializer
 
 
@@ -324,11 +324,11 @@ public class DefaultServlet
             readOnly = Boolean.parseBoolean(sc.getInitParameter("readonly"));
 
         if (sc.getInitParameter("sendfileSize") != null)
-            sendfileSize = 
+            sendfileSize =
                 Integer.parseInt(sc.getInitParameter("sendfileSize")) * 1024;
 
         if (sc.getInitParameter("maxHeaderRangeItems") != null) {
-            maxHeaderRangeItems = 
+            maxHeaderRangeItems =
                 Integer.parseInt(sc.getInitParameter("maxHeaderRangeItems"));
         }
 
@@ -388,8 +388,8 @@ public class DefaultServlet
                 getServletContext().getAttribute(
                 Globals.ALTERNATE_RESOURCES_ATTR);
     }
-    
-    
+
+
     /**
      * Return if directory listings are enabled
      */
@@ -397,7 +397,7 @@ public class DefaultServlet
         return this.listings;
     }
 
-    
+
     /**
      * Enables or disables directory listings for this DefaultServlet.
      *
@@ -614,7 +614,7 @@ public class DefaultServlet
             if (oldResource != null) {
                 BufferedInputStream bufOldRevStream = null;
                 try {
-                    bufOldRevStream = 
+                    bufOldRevStream =
                         new BufferedInputStream(oldResource.streamContent(),
                                                 BUFFER_SIZE);
 
@@ -796,11 +796,11 @@ public class DefaultServlet
         }
 
         if (!cacheEntry.exists) {
-            // Check if we're included so we can return the appropriate 
+            // Check if we're included so we can return the appropriate
             // missing resource name in the error
             String requestUri = (String) request.getAttribute(
                 RequestDispatcher.INCLUDE_REQUEST_URI);
-            /* IASRI 4878272 
+            /* IASRI 4878272
             if (requestUri == null) {
                 requestUri = request.getRequestURI();
             } else {
@@ -811,7 +811,7 @@ public class DefaultServlet
                  * to be ignored by the including resource (see SRV.8.3,
                  * "The Include Method").
                  * Therefore, the only way we can let the including resource
-                 * know about the missing resource is by throwing an 
+                 * know about the missing resource is by throwing an
                  * exception
                 */
                 throw new FileNotFoundException(requestUri);
@@ -832,7 +832,7 @@ public class DefaultServlet
         if (cacheEntry.context == null) {
             if (path.endsWith("/") || (path.endsWith("\\"))) {
                 /* IASRI 4878272
-                // Check if we're included so we can return the appropriate 
+                // Check if we're included so we can return the appropriate
                 // missing resource name in the error
                 String requestUri = (String) request.getAttribute(
                     RequestDispatcher.INCLUDE_REQUEST_URI);
@@ -938,7 +938,7 @@ public class DefaultServlet
 
         }
 
-        if ( (cacheEntry.context != null) 
+        if ( (cacheEntry.context != null)
                 || ( ((ranges == null) || (ranges.isEmpty()))
                         && (request.getHeader("Range") == null) )
                 || (ranges == FULL) ) {
@@ -1328,14 +1328,14 @@ public class DefaultServlet
             Enumeration<NameClassPair> enumeration =
                 proxyDirContext.list(cacheEntry.name);
             if (sortedBy.equals(SortedBy.LAST_MODIFIED)) {
-                ArrayList<NameClassPair> list = 
+                ArrayList<NameClassPair> list =
                     Collections.list(enumeration);
                 Comparator<NameClassPair> c = new LastModifiedComparator(
                     proxyDirContext, cacheEntry.name);
                 Collections.sort(list, c);
                 enumeration = Collections.enumeration(list);
             } else if (sortedBy.equals(SortedBy.SIZE)) {
-                ArrayList<NameClassPair> list = 
+                ArrayList<NameClassPair> list =
                     Collections.list(enumeration);
                 Comparator<NameClassPair> c = new SizeComparator(
                     proxyDirContext, cacheEntry.name);
@@ -1488,7 +1488,7 @@ public class DefaultServlet
         PrintWriter writer = new PrintWriter(osWriter);
 
         StringBuilder sb = new StringBuilder();
-        
+
         // rewriteUrl(contextPath) is expensive. cache result for later reuse
         String rewrittenContextPath =  rewriteUrl(contextPath);
 
@@ -1558,14 +1558,14 @@ public class DefaultServlet
             Enumeration<NameClassPair> enumeration =
                 proxyDirContext.list(cacheEntry.name);
             if (sortedBy.equals(SortedBy.LAST_MODIFIED)) {
-                ArrayList<NameClassPair> list = 
+                ArrayList<NameClassPair> list =
                     Collections.list(enumeration);
                 Comparator<NameClassPair> c = new LastModifiedComparator(
                     proxyDirContext, cacheEntry.name);
                 Collections.sort(list, c);
                 enumeration = Collections.enumeration(list);
             } else if (sortedBy.equals(SortedBy.SIZE)) {
-                ArrayList<NameClassPair> list = 
+                ArrayList<NameClassPair> list =
                     Collections.list(enumeration);
                 Comparator<NameClassPair> c = new SizeComparator(
                     proxyDirContext, cacheEntry.name);
@@ -1863,7 +1863,7 @@ public class DefaultServlet
         }
         return result;
     }
- 
+
 
     // -------------------------------------------------------- protected Methods
 
@@ -2260,7 +2260,7 @@ public class DefaultServlet
             InputStream resourceInputStream = cacheEntry.resource.streamContent();
             InputStream istream = null;
             try {
-                istream = 
+                istream =
                     new BufferedInputStream(resourceInputStream, input);
 
                 Range currentRange = ranges.next();
@@ -2316,7 +2316,7 @@ public class DefaultServlet
         while ( (exception == null) && (ranges.hasNext()) ) {
 
             InputStream resourceInputStream = cacheEntry.resource.streamContent();
-            
+
             Reader reader;
             if (fileEncoding == null) {
                 reader = new InputStreamReader(resourceInputStream);
@@ -2341,7 +2341,7 @@ public class DefaultServlet
             exception = copyRange(reader, writer, currentRange.start,
                                   currentRange.end);
 
-            reader.close();  
+            reader.close();
         }
 
         writer.println();
@@ -2498,7 +2498,7 @@ public class DefaultServlet
                                               new Object[] {Long.valueOf(skipped),
                                                             Long.valueOf(start)});
             return new IOException(msg);
-        } 
+        }
 
         IOException exception = null;
         long bytesToRead = end - start + 1;

@@ -30,7 +30,7 @@ import org.apache.catalina.deploy.ContextResource;
 public class ContextResourceDecorator extends ContextResource {
 
     private ResourceReferenceDescriptor decoree;
-    
+
     public ContextResourceDecorator(ResourceReferenceDescriptor decoree){
         this.decoree = decoree;
     }
@@ -46,7 +46,7 @@ public class ContextResourceDecorator extends ContextResource {
         return decoree.getDescription();
     }
 
- 
+
     public String getName() {
         return decoree.getName();
     }
@@ -55,10 +55,10 @@ public class ContextResourceDecorator extends ContextResource {
         return decoree.getSharingScope();
     }
 
- 
+
     public String getType() {
         return decoree.getType();
     }
 
- 
+
 }

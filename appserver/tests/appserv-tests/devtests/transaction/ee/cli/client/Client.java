@@ -24,7 +24,7 @@ import java.net.*;
 import java.util.*;
 
 /*
- * CLI Dev test 
+ * CLI Dev test
  * @author mvatkina
  */
 public class Client extends ClientBase {
@@ -140,10 +140,10 @@ public class Client extends ClientBase {
                         .append(File.separator).append(INSTANCE1_NAME).append(File.separator)
                         .append("logs").append(File.separator).append(INSTANCE1_NAME)
                         .append(File.separator).append("tx").toString();
-                result = asadminWithOutput("recover-transactions", "--target", INSTANCE2_NAME, 
-                        "--transactionlogdir", txLog, INSTANCE1_NAME); 
+                result = asadminWithOutput("recover-transactions", "--target", INSTANCE2_NAME,
+                        "--transactionlogdir", txLog, INSTANCE1_NAME);
             } else {
-                result = asadminWithOutput("recover-transactions", INSTANCE1_NAME); 
+                result = asadminWithOutput("recover-transactions", INSTANCE1_NAME);
             }
             System.out.println("Executed command: " + result.out);
             if (!result.returnValue) {

@@ -32,7 +32,7 @@ import java.util.List;
 @PerLookup
 @I18n("create.connector.security.map")
 public class ConnectorSecurityMap {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ConnectorSecurityMap.class);
 
     boolean doesPoolNameExist(String poolName, Collection<ConnectorConnectionPool> ccPools) {

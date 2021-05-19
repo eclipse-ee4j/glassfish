@@ -31,15 +31,15 @@
     &commonRun;
     &testproperties;
 
-    <target name="all" 
+    <target name="all"
             depends="clean,build,setup,deploy,run,undeploy,unsetup"/>
 
     <!-- run-test target added to have setup/unsetup commonly -->
-    <target name="run-test" 
+    <target name="run-test"
       depends="clean,build,deploy,run,undeploy">
     </target>
 
-    <target name="all-no-delete" 
+    <target name="all-no-delete"
             depends="clean,build,setup,deploy,run"/>
 
     <target name="clean" depends="init-common">
@@ -47,17 +47,17 @@
     </target>
 
     <target name="build">
-      <property name="hasWebclient" value="yes"/> 
+      <property name="hasWebclient" value="yes"/>
       <antcall target="webclient-war-common">
         <param name="hasWebclient" value="yes"/>
-        <param name="webclient.war.classes" value="**/*.class"/> 
+        <param name="webclient.war.classes" value="**/*.class"/>
       </antcall>
       <antcall target="local-ear-common"/>
       <javac
         srcdir="."
         classpath="${env.APS_HOME}/lib/reporter.jar"
         includes="WebTest.java"/>
-    </target> 
+    </target>
 
     <target name="setup">
       <antcall target="create-user-common">
@@ -76,7 +76,7 @@
         <param name="groups" value="testgroup10"/>
       </antcall>
     </target>
-    
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -95,7 +95,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup">
       <!-- remove test users, just cleanup. -->
@@ -123,11 +123,11 @@
 <target name="local-ear-common" depends="fixFiles,init-common">
   <delete file="${assemble.dir}/${appname}.ear"/>
   <mkdir dir="${assemble.dir}"/>
-  <mkdir dir="${build.classes.dir}/META-INF"/>    
-  <copy file="${sun-application.xml}" 
+  <mkdir dir="${build.classes.dir}/META-INF"/>
+  <copy file="${sun-application.xml}"
         tofile="${build.classes.dir}/META-INF/sun-application.xml"
-        failonerror="true"/> 
-  <ear earfile="${assemble.dir}/${appname}App.ear" 
+        failonerror="true"/>
+  <ear earfile="${assemble.dir}/${appname}App.ear"
     appxml="${application.xml}">
     <fileset dir="${assemble.dir}">
       <include name="*.war"/>
@@ -135,7 +135,7 @@
     <fileset dir="${build.classes.dir}">
         <include name="META-INF/sun-application.xml"/>
     </fileset>
-  </ear>        
+  </ear>
 </target>
 
 </project>

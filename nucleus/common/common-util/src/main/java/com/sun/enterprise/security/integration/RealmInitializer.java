@@ -19,7 +19,7 @@ package com.sun.enterprise.security.integration;
 import java.security.Principal;
 
 /**
- * Interface to facilitate Initialization of the injected Realm Instance with Application Descriptor info 
+ * Interface to facilitate Initialization of the injected Realm Instance with Application Descriptor info
  *  see com.sun.enterprise.web.WebContainer  and com.sun.web.security.RealmAdapter
  */
 public interface RealmInitializer  {

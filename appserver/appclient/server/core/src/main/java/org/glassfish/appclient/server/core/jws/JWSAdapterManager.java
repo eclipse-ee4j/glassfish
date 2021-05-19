@@ -62,22 +62,22 @@ import org.glassfish.logging.annotation.LogMessageInfo;
 /**
  * Handles all management of the HTTP adapters created to support Java Web
  * Start launches of app clients.
- * 
+ *
  * @author tjquinn
  */
 @Service
 @Singleton
 public class JWSAdapterManager implements PostConstruct {
-    
+
     private final static String SIGNING_ALIAS_PROPERTY_NAME = "jar-signing-alias";
-    
+
     private final static String DEFAULT_SIGNING_ALIAS = "s1as";
-    
+
     private final static String MANIFEST_APP_NAME_FOR_SYSTEM_FILES = "GlassFish";
 
     @Inject
     private ServerEnvironment serverEnv;
-    
+
     @Inject
     private ServerContext serverContext;
 
@@ -90,7 +90,7 @@ public class JWSAdapterManager implements PostConstruct {
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
-    @Inject 
+    @Inject
     AppClientDeployer appClientDeployer;
 
     @Inject
@@ -131,7 +131,7 @@ public class JWSAdapterManager implements PostConstruct {
     private File umbrellaRoot = null;
     private File systemLevelSignedJARsRoot = null;
     private File domainLevelSignedJARsRoot = null;
-    
+
     @LogMessageInfo(
             message = "Error starting the adapter to serve static system-level content",
             cause = "An unexpected internal system error occurred",
@@ -156,7 +156,7 @@ public class JWSAdapterManager implements PostConstruct {
     synchronized File rootForSignedFilesInDomain() {
         return domainLevelSignedJARsRoot;
     }
-    
+
     /**
      * Adds more static content to the content served by the system adapter.
      * @param lookupURI
@@ -183,7 +183,7 @@ public class JWSAdapterManager implements PostConstruct {
             AppClientHTTPAdapter sysAdapter = new AppClientHTTPAdapter(
                     NamingConventions.JWSAPPCLIENT_SYSTEM_PREFIX,
                     new Properties(),
-                    serverEnv.getDomainRoot(), 
+                    serverEnv.getDomainRoot(),
                     new File(installRootURI),
                     iiopService,
                     orbFactory);
@@ -208,7 +208,7 @@ public class JWSAdapterManager implements PostConstruct {
             final Map<String,DynamicContent> dynamicContent) throws IOException {
         systemAdapter().addContentIfAbsent(staticContent, dynamicContent);
     }
-    
+
     /**
      * Records the need for signed copies of the GlassFish system JARs for the
      * specified signing alias.
@@ -247,7 +247,7 @@ public class JWSAdapterManager implements PostConstruct {
                 */
                 final File candidateFile = new File(uri);
                 final String relativeSystemPath = relativeSystemPath(uri);
-                if (candidateFile.exists() && 
+                if (candidateFile.exists() &&
                     ( ! candidateFile.isDirectory()) && ( ! DO_NOT_SERVE_LIST.contains(relativeSystemPath))) {
                     result.put(systemPath,
                             systemJarSignedContent(candidateFile, signingAlias));
@@ -317,7 +317,7 @@ public class JWSAdapterManager implements PostConstruct {
             sb.append("<jar href=\"").append(signingAlias).append("/")
                     .append(relativeURIString).append("\"/>").append(LINE_SEP);
         }
-        
+
         final Properties p = new Properties();
         p.setProperty("system.jars", sb.toString());
         final String replacedText = Util.replaceTokens(template, p);
@@ -338,10 +338,10 @@ public class JWSAdapterManager implements PostConstruct {
 
     String systemPathInClientJNLP(final URI systemFileURI, final String signingAlias) {
         return "${request.scheme}://${request.host}:${request.port}" +
-                NamingConventions.JWSAPPCLIENT_SYSTEM_PREFIX + "/" + 
+                NamingConventions.JWSAPPCLIENT_SYSTEM_PREFIX + "/" +
                 signingAlias + "/" + relativeSystemPath(systemFileURI);
     }
-    
+
     private synchronized String relativeSystemPath(final URI systemFileURI) {
         return umbrellaRootURI.relativize(systemFileURI).getPath();
     }
@@ -408,7 +408,7 @@ public class JWSAdapterManager implements PostConstruct {
         appClientDeployer.recordContextRoot(appName, clientURIWithinEAR, userFriendlyAppAdapter.contextRoot());
         logger.log(Level.FINE, "Registered at context roots {0},{1}",
                 new Object[]{appAdapter.contextRoot(), userFriendlyAppAdapter.contextRoot()});
-        
+
         addContributorToAppLevelAdapter(appName, contributor);
     }
 
@@ -422,7 +422,7 @@ public class JWSAdapterManager implements PostConstruct {
         final AppClientHTTPAdapter adapter = new AppClientHTTPAdapter(
                 contextRoot, staticContent,
                 dynamicContent, tokens,
-                serverEnv.getDomainRoot(), 
+                serverEnv.getDomainRoot(),
                 new File(installRootURI),
                 iiopService,
                 orbFactory);
@@ -450,7 +450,7 @@ public class JWSAdapterManager implements PostConstruct {
     }
 
     private synchronized AppClientHTTPAdapter addAppAdapter(
-            final String appName, 
+            final String appName,
             final Map<String,StaticContent> staticContent,
             final Map<String,DynamicContent> dynamicContent,
             final Properties tokens,
@@ -467,7 +467,7 @@ public class JWSAdapterManager implements PostConstruct {
     }
 
     public static String userFriendlyContextRoot(final AppClientServerApplication contributor) {
-        return userFriendlyContextRoot(contributor.getDescriptor(), 
+        return userFriendlyContextRoot(contributor.getDescriptor(),
                 contributor.dc().getAppProps());
     }
 
@@ -505,7 +505,7 @@ public class JWSAdapterManager implements PostConstruct {
         if (overridingContextRoot != null) {
             ufContextRoot = overridingContextRoot;
         }
-        
+
         /*
          * Grizzly wants the context root to start with a slash.
          */
@@ -581,7 +581,7 @@ public class JWSAdapterManager implements PostConstruct {
 
         appClientDeployer.removeContextRoot(appName, clientURIWithinEAR);
     }
-    
+
     private synchronized void removeContributorToAppLevelAdapter(
             final String appName,
             final AppClientServerApplication contributor) throws EndpointRegistrationException {
@@ -614,7 +614,7 @@ public class JWSAdapterManager implements PostConstruct {
           final Manifest mf = jf.getManifest();
           Attributes mainAttrs = mf.getMainAttributes();
           return mainAttrs.getValue(Attributes.Name.CLASS_PATH);
-        } finally 
+        } finally
         {
           jf.close();
         }

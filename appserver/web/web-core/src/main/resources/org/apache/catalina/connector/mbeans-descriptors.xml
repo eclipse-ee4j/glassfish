@@ -76,7 +76,7 @@
                  type="int"/>
 
     <attribute    name="disableUploadTimeout"
-           description="Should Tomcat ignore setting a timeout for uploads?" 
+           description="Should Tomcat ignore setting a timeout for uploads?"
                   type="boolean"/>
 
     <attribute   name="enableLookups"
@@ -159,7 +159,7 @@
 
     <attribute   name="secret"
           description="Authentication secret (I guess ... not in Javadocs)"
-            readable = "false" 
+            readable = "false"
                  type="java.lang.String"/>
 
     <attribute   name="secure"

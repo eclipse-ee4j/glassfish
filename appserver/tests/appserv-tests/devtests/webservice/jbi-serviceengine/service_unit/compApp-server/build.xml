@@ -34,7 +34,7 @@
     &jaxwsTools;
     &jbicommon;
     &jbiproperties;
-    <target name="all" depends="clean, setup, runtest,undeploy"/> 
+    <target name="all" depends="clean, setup, runtest,undeploy"/>
 
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
@@ -54,7 +54,7 @@
         <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
       </antcall>
       <jar jarfile="${assemble.dir}/${appname}-web.war" update="true">
-	<metainf file="jbi.xml"/>
+        <metainf file="jbi.xml"/>
       </jar>
     </target>
 

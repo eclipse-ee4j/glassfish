@@ -32,8 +32,8 @@ import java.util.*;
  * Caches SQLStore config information.
  *
  * @author Mitesh Meswani
- */ 
-public class ConfigCacheImpl 
+ */
+public class ConfigCacheImpl
         implements ConfigCache, ApplicationLifeCycleEventListener {
 
     /**
@@ -66,8 +66,8 @@ public class ConfigCacheImpl
         classLoaderToClassType = new HashMap();
         oidClassToClassType = new HashMap();
 
-        // Register for call backs on application loader events.        
-        EJBHelper.registerApplicationLifeCycleEventListener(this);        
+        // Register for call backs on application loader events.
+        EJBHelper.registerApplicationLifeCycleEventListener(this);
     }
 
     /**
@@ -128,7 +128,7 @@ public class ConfigCacheImpl
                 if (debug) {
                     Object[] items = new Object[] {"classConfigs", classConfigs.size()};
                     logger.finest("sqlstore.model.configcacheimpl.size_before",items); // NOI18N
-                
+
                     items = new Object[] {"oidClassToClassType", oidClassToClassType.size()};
                     logger.finest("sqlstore.model.configcacheimpl.size_before",items); // NOI18N
                 }
@@ -147,13 +147,13 @@ public class ConfigCacheImpl
                 if (debug) {
                     Object[] items = new Object[] {"classConfigs", classConfigs.size()};
                     logger.finest("sqlstore.model.configcacheimpl.size_after",items); // NOI18N
-                
+
                     items = new Object[] {"oidClassToClassType", oidClassToClassType.size()};
                     logger.finest("sqlstore.model.configcacheimpl.size_after",items); // NOI18N
                 }
 
-                // Data about this classLoader is no longer needed. 
-                // Remove it from cache.  
+                // Data about this classLoader is no longer needed.
+                // Remove it from cache.
                 classLoaderToClassType.remove(classLoader);
                 if (debug) {
                     Object[] items = new Object[] {"classLoaderToClassType", classLoaderToClassType.size()};
@@ -170,15 +170,15 @@ public class ConfigCacheImpl
 
     }
 
-    /**   
+    /**
      * Sets VersionConsistencyCache field.
-     *    
-     * @param vcCache the VersionConsistencyCache instance. 
-     */  
+     *
+     * @param vcCache the VersionConsistencyCache instance.
+     */
     public synchronized void setVersionConsistencyCache(
-            VersionConsistencyCache vcCache) { 
+            VersionConsistencyCache vcCache) {
         this.vcCache = vcCache;
-    } 
+    }
 
     /**
      * Add pcClass to a classLoaderToClassType map. The only call to

@@ -23,17 +23,17 @@ import java.sql.Statement;
 
 /**
  * Provide custom implementation of connection validation for oracle dbvendor.
- * 
- * Provides a custom connection validation 
- * mechanism for Oracle dbVendor if custom-validation is chosen as the 
+ *
+ * Provides a custom connection validation
+ * mechanism for Oracle dbVendor if custom-validation is chosen as the
  * connection-validation-method.
- * 
+ *
  * @author Shalini M
  */
 public class OracleConnectionValidation implements ConnectionValidation {
 
     private static final String SQL = "select sysdate from dual";
-    
+
     /**
      * Check for validity of <code>java.sql.Connection</code>
      *
@@ -56,6 +56,6 @@ public class OracleConnectionValidation implements ConnectionValidation {
                 }
             }
         }
-        return isValid;        
+        return isValid;
     }
 }

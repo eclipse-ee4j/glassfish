@@ -28,79 +28,79 @@ import javax.management.j2ee.statistics.Stats;
 /**
  */
 public class AMXMonitoringTestBase {
-    
+
     DomainRoot mDomainRoot;
     public static final String SERVER_NAME = "server";
     public static final String APP_NAME = "stateless-simple";
     public static final String STATELESS_EJB_NAME = "stateless-simple.war";
 
-    
-    public AMXMonitoringTestBase(final String host, final int port, 
+
+    public AMXMonitoringTestBase(final String host, final int port,
             final String adminUser, final String adminPassword,
             final boolean useTLS) throws IOException {
-                
-        final AMXConnector ct = 
+
+        final AMXConnector ct =
             new AMXConnector( host, port, adminUser, adminPassword, useTLS );
         mDomainRoot = ct.getDomainRoot();
-        
+
     }
-    
+
     /**
      *
      */
     private MonitoringRoot getMonitoringRoot() {
         return mDomainRoot.getMonitoringRoot();
     }
-    
+
     /**
      *
      */
     public ServerRootMonitor getServerRootMonitor(final String serverName) {
-        
-        ServerRootMonitor svrRoot =  
+
+        ServerRootMonitor svrRoot =
             (serverName != null || "".equals(serverName))
             ? ( (ServerRootMonitor) getMonitoringRoot().
                 getServerRootMonitorMap().get(serverName) )
             : ( (ServerRootMonitor) getMonitoringRoot().
                 getServerRootMonitorMap().get(SERVER_NAME) );
-        assert(svrRoot != null) : "Cannot find server with name " + 
+        assert(svrRoot != null) : "Cannot find server with name " +
             serverName + "!";
         return svrRoot;
     }
-    
-    
+
+
     /**
      *
      */
     public ApplicationMonitor getApplicationMonitor(
             final String serverName, final String appName) {
-        ApplicationMonitor app =  
+        ApplicationMonitor app =
             (appName != null || "".equals(appName))
             ? ( (ApplicationMonitor) getServerRootMonitor(serverName).
                 getApplicationMonitorMap().get(appName) )
             : ( (ApplicationMonitor) getServerRootMonitor(serverName).
                 getApplicationMonitorMap().get(APP_NAME) );
-        assert(app != null) : "Cannot find application monitor with name " + 
+        assert(app != null) : "Cannot find application monitor with name " +
             appName + "!";
         return app;
     }
-    
-    
+
+
     /**
      *
      */
-    public void listStats (MonitoringStats ms) { 
+    public void listStats (MonitoringStats ms) {
         if (ms != null) {
             Stats stats = ms.getStats();
             Statistic[] sts = stats.getStatistics();
             printStats(sts);
         } else {
-            System.out.println("VERIFY! Stats for " + ms.getName() 
+            System.out.println("VERIFY! Stats for " + ms.getName()
                 + " doesn't exist!");
         }
     }
 
-    
+
     /**
      *
      */
@@ -108,13 +108,13 @@ public class AMXMonitoringTestBase {
         if (stats == null) {
             return;
         }
-        
+
         for ( int i=0; i < stats.length; i++) {
             printStat(stats[i]);
         }
     }
-    
-    
+
+
     /**
      *
      *
@@ -128,18 +128,18 @@ public class AMXMonitoringTestBase {
             System.out.println("    --- Stat [" + stat.getName() + "]");
             System.out.println("         |");
             System.out.println("         |");
-            System.out.println("         ---- Description: " 
+            System.out.println("         ---- Description: "
                 + stat.getDescription());
             System.out.println("         ---- Start Time: "
                 + stat.getStartTime());
-            System.out.println("         ---- Last Sample Time: " 
+            System.out.println("         ---- Last Sample Time: "
                 + stat.getLastSampleTime());
             System.out.println("         ---- Unit: "
                 + stat.getUnit());
             System.out.println("\n");
         }
     }
-    
+
     /**
      *
      */
@@ -149,7 +149,7 @@ public class AMXMonitoringTestBase {
             System.out.println("Args[" + i + "]: " + args[i]);
         }
     }
-    
+
     /**
      *
      */

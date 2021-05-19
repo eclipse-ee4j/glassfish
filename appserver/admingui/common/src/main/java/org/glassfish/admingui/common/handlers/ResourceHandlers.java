@@ -80,14 +80,14 @@ public class ResourceHandlers {
         }
         handlerCtx.setOutputValue("result", rows);
     }
-    
-    
+
+
     /**
-     *	<p> This handler looks into the config properties, and confidential list, and returns a List of Map for populating the properties table. </p>
+     * <p> This handler looks into the config properties, and confidential list, and returns a List of Map for populating the properties table. </p>
      *   This is called for creating new objects.
      */
     @Handler(id="gf.getConfigPropsInfo",
-    	input={
+            input={
         @HandlerInput(name="extraProps", type=java.util.Map.class),
         @HandlerInput(name="key", type=String.class),
         @HandlerInput(name="confidentialKey", type=String.class, defaultValue="confidentialConfigProps")},
@@ -95,7 +95,7 @@ public class ResourceHandlers {
         @HandlerOutput(name="result", type=java.util.List.class),
         @HandlerOutput(name="hasConfidentialProps", type=java.lang.Boolean.class)})
     public static void getConfigPropsInfo(HandlerContext handlerCtx) {
-        
+
         Map<String,Object> extraProps = (Map) handlerCtx.getInputValue("extraProps");
         String key = (String) handlerCtx.getInputValue("key");
         String confidentialKey = (String) handlerCtx.getInputValue("confidentialKey");
@@ -106,7 +106,7 @@ public class ResourceHandlers {
             hasConfidential = false;
         }
         List<Map> result = new ArrayList();
-        
+
         for(Map.Entry<String, String> e : allProps.entrySet()){
             Map<String, Object> oneRow = new HashMap();
             String name = e.getKey();
@@ -129,18 +129,18 @@ public class ResourceHandlers {
         handlerCtx.setOutputValue("result", result);
         handlerCtx.setOutputValue("hasConfidentialProps", hasConfidential);
     }
-    
+
    /* This method goes through the table list,  if there is confidential properties, will ensure that the masked value1 and value2 is the same.
     * And will copy this to the property value column to continue processing.
     * This method is called just before saving the properties.
     */
     @Handler(id="gf.combineProperties",
-    	input={
+            input={
         @HandlerInput(name="tableList", type=java.util.List.class)},
         output={
         @HandlerOutput(name="combined", type=java.util.List.class)})
     public static void combineProperties(HandlerContext handlerCtx) {
-        
+
         List<Map> tableList = (List) handlerCtx.getInputValue("tableList");
         List<Map> combined = new ArrayList();
         for(Map oneRow: tableList){
@@ -173,17 +173,17 @@ public class ResourceHandlers {
         }
         handlerCtx.setOutputValue("combined", combined);
     }
-    
-    
+
+
     @Handler(id="gf.buildConfidentialPropsTable",
-    	input={
+            input={
         @HandlerInput(name="propsMaps", type=List.class),
         @HandlerInput(name="confidentialList", type=java.util.List.class)},
         output={
         @HandlerOutput(name="result", type=java.util.List.class),
         @HandlerOutput(name="hasConfidentialProps", type=Boolean.class) })
     public static void buildConfidentialPropsTable(HandlerContext handlerCtx) {
-        
+
         List<String> confidentialList = (List<String>) handlerCtx.getInputValue("confidentialList");
         List<Map<String, String>> propsMaps = (List<Map<String, String>>) handlerCtx.getInputValue("propsMaps");
         Boolean hasConfidential = true;

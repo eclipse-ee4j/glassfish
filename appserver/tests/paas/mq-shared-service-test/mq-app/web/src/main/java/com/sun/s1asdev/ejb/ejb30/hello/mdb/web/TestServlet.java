@@ -40,7 +40,7 @@ public class TestServlet extends HttpServlet {
 
     @Resource(mappedName="jms/ejb_ejb30_hello_mdb_QCF")
     private QueueConnectionFactory queueConFactory;
-    
+
     //Target Queue
     @Resource(mappedName="jms/ejb_ejb30_hello_mdb_InQueue")
     private jakarta.jms.Queue msgBeanQueue;
@@ -68,7 +68,7 @@ public class TestServlet extends HttpServlet {
             String name = (String)en.nextElement();
             String value = getInitParameter(name);
             msg += name + "=" + value + ", ";
-        } 
+        }
         writer.write(", initParams: " + msg + "\n");
         doTest(writer);
     }

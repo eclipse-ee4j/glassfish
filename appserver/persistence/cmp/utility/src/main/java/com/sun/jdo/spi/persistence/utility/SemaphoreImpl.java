@@ -48,11 +48,11 @@ public class SemaphoreImpl implements Semaphore {
     /** Semaphore counter.
      */
     private int _counter = 0;
-    
+
     /**
      * I18N message handler
      */
-    private final static ResourceBundle messages = 
+    private final static ResourceBundle messages =
         I18NHelper.loadBundle(SemaphoreImpl.class);
 
 
@@ -77,7 +77,7 @@ public class SemaphoreImpl implements Semaphore {
             //
             if (Thread.currentThread() == _holder) {
                 _counter++;
-                
+
             } else {
                 while (_counter > 0) {
                     try {
@@ -88,7 +88,7 @@ public class SemaphoreImpl implements Semaphore {
                 }
                 _holder = Thread.currentThread();
                 _counter++;
-                
+
                 if (debug) {
                     Object[] items = new Object[] {_owner, Thread.currentThread(),new Integer(_counter)};
                     _logger.finest("utility.semaphoreimpl.gotlock",items); // NOI18N
@@ -101,12 +101,12 @@ public class SemaphoreImpl implements Semaphore {
      */
     public void release() {
         boolean debug = _logger.isLoggable(Logger.FINEST);
-        
+
         if (debug) {
             Object[] items = new Object[] {_owner, Thread.currentThread(),new Integer(_counter)};
             _logger.finest("utility.semaphoreimpl.release",items); // NOI18N
         }
-        
+
         synchronized (_lock) {
             //
             // If the current thread already holds this lock, we simply

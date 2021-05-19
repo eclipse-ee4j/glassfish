@@ -20,17 +20,17 @@ import org.omg.CosTransactions.Resource;
 import org.omg.CosTransactions.Synchronization;
 import org.omg.CosTransactions.RecoveryCoordinator;
 
-/** 
+/**
  * This used for mimicking a superior TopCoordinator behavior.
  *
  * @version 1.0
  * @author  Ram Jeyaraman
  */
 class TxInflowCoordinator extends TopCoordinator {
-        
+
     /**
      * Simply returns a recovery coordinator.
-     *  
+     *
      * @return a RecoveryCoordinator object that could be used by a subordinate
      * TopCoordinator to replay completion.
      */
@@ -39,11 +39,11 @@ class TxInflowCoordinator extends TopCoordinator {
     }
 
     /**
-     * Ignores synchronization registrations from the subordinate. The 
+     * Ignores synchronization registrations from the subordinate. The
      * synchronization flows will be initiated when the superior initiates
      * a transaction completion.
-     * 
+     *
      * @see XATerminatorImpl
      */
-    public void register_synchronization(Synchronization sync) {}  
+    public void register_synchronization(Synchronization sync) {}
 }

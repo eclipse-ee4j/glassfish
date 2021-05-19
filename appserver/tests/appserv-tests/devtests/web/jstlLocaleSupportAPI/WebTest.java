@@ -42,7 +42,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish 871");
@@ -53,11 +53,11 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
             ex.printStackTrace();
         }
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {
-     
+
         // Access test1.jsp
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
@@ -65,7 +65,7 @@ public class WebTest {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
 
@@ -90,7 +90,7 @@ public class WebTest {
         String acceptLanguage = "Accept-Language: de\n";
         os.write(acceptLanguage.getBytes());
         os.write("\n".getBytes());
-        
+
         is = sock.getInputStream();
         br = new BufferedReader(new InputStreamReader(is));
 

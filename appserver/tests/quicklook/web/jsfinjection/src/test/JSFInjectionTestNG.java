@@ -34,13 +34,13 @@ public class JSFInjectionTestNG {
 
     private static final String TEST_NAME =
         "simple-webapp-jsf-injection";
-   
+
     private String strContextRoot="jsfinjection";
 
     static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
     /*
      *If two asserts are mentioned in one method, then last assert is taken in
      *to account.
@@ -51,7 +51,7 @@ public class JSFInjectionTestNG {
     //@Parameters({ "host", "port", "contextroot" })
     @Test(groups ={ "pulse"} ) // test method
     public void injectedValuesTestPage() throws Exception {
-        
+
       try {
 
         String errorText = "";
@@ -78,8 +78,8 @@ public class JSFInjectionTestNG {
         String line2 = null;
         String line3 = null;
         boolean result=false;
-	String EXPECTED_RESPONSE = "Injected entry";
-	String DIVIDER = "===";
+    String EXPECTED_RESPONSE = "Injected entry";
+    String DIVIDER = "===";
         String PC = "Postconstruct";
         while ((line = input.readLine()) != null) {
           //echo ("LINE:"+line);
@@ -107,7 +107,7 @@ public class JSFInjectionTestNG {
           String injectedNumber = injection2Array[1].trim();
           //echo("injectedNumber = " + injectedNumber);
           int num = Integer.parseInt(injectedNumber);
-  
+
           if ( num < 0 ) {
             echo("ERROR: injection 2 is less than zero.");
             errorText = errorText + "ERROR: injection 2 is less than zero";
@@ -128,7 +128,7 @@ public class JSFInjectionTestNG {
                 echo("ERROR:@PostConstruct failed");
                 errorText = errorText + "ERROR: @PostConstruct failed";
                 testPass = false;
-            } 
+            }
         } else {
           echo("ERROR: line with " + PC + " not found.");
           errorText = errorText + "ERROR: line with " + PC + " not found";
@@ -136,7 +136,7 @@ public class JSFInjectionTestNG {
         }
 
         Assert.assertEquals(testPass, true, errorText);
-        
+
       }catch(Exception e){
         echo("ERROR: caught exception!");
         e.printStackTrace();

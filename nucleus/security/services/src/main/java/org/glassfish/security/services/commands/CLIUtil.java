@@ -27,7 +27,7 @@ import org.glassfish.security.services.config.SecurityProvider;
  * @author tjquinn
  */
 public class CLIUtil {
-    
+
     public static SecurityConfiguration findSecurityConfiguration(
             final Domain domain,
             final String serviceName,
@@ -49,7 +49,7 @@ public class CLIUtil {
         }
         return ssc;
     }
-    
+
     public static SecurityProvider findSecurityProvider(
             final Domain domain,
             final String serviceName,

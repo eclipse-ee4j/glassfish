@@ -19,10 +19,10 @@
 
 <!-- jbi.xml file for the SOAP binding deployments binding. -->
 <jbi
-    version="1.0" 
-    xmlns="http://java.sun.com/xml/ns/jbi" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-	 xmlns:ns0="http://example.web.service/EndpointMappingConsumer"
+    version="1.0"
+    xmlns="http://java.sun.com/xml/ns/jbi"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:ns0="http://example.web.service/EndpointMappingConsumer"
     xsi:schemaLocation="http://java.sun.com/xml/ns/jbi ./jbi.xsd">
   <service-assembly>
     <identification>
@@ -52,10 +52,10 @@
     </service-unit>
 
    <connections>
-   	<connection>
-		<consumer endpoint-name="javaee_EndpointMappingConsumerPort" service-name="ns0:EndpointMappingConsumerService"/>
-	   	<provider endpoint-name="EndpointMappingConsumerPort" service-name="ns0:EndpointMappingConsumerService"/>
-	</connection>
+           <connection>
+                <consumer endpoint-name="javaee_EndpointMappingConsumerPort" service-name="ns0:EndpointMappingConsumerService"/>
+                   <provider endpoint-name="EndpointMappingConsumerPort" service-name="ns0:EndpointMappingConsumerService"/>
+        </connection>
    </connections>
 
    </service-assembly>

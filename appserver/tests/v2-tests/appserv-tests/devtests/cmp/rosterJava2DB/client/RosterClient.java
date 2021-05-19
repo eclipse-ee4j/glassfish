@@ -43,32 +43,32 @@ public class RosterClient {
 
    public static void main(String[] args) {
        try {
-	   System.out.println("START");
+           System.out.println("START");
            stat.addDescription("rosterJava2DB");
 
            Context initial = new InitialContext();
            Object objref = initial.lookup("java:comp/env/ejb/SimpleRosterExt");
 
-           RosterHome home = 
-               (RosterHome)PortableRemoteObject.narrow(objref, 
+           RosterHome home =
+               (RosterHome)PortableRemoteObject.narrow(objref,
                                             RosterHome.class);
 
            Roster myRoster = home.create();
-            
+
            insertInfo(myRoster);
            getSomeInfo(myRoster);
 
            getMoreInfo(myRoster);
 
-	   stat.addStatus("ejbclient rosterJava2DB ", stat.PASS);
+           stat.addStatus("ejbclient rosterJava2DB ", stat.PASS);
            stat.printSummary("rosterJava2DB");
 
            System.exit(0);
 
        } catch (Exception ex) {
            System.err.println("Caught an exception:");
-	   ex.printStackTrace();
-	   stat.addStatus("ejbclient rosterJava2DB ", stat.FAIL);
+           ex.printStackTrace();
+           stat.addStatus("ejbclient rosterJava2DB ", stat.FAIL);
            stat.printSummary("rosterJava2DB");
        }
            stat.printSummary("rosterJava2DB");
@@ -137,16 +137,16 @@ public class RosterClient {
            playerList = myRoster.getPlayersByPosition("defender");
            playerList = myRoster.getAllPlayers();
            playerList = myRoster.getPlayersNotOnTeam();
-           playerList = myRoster.getPlayersByPositionAndName("power forward", 
+           playerList = myRoster.getPlayersByPositionAndName("power forward",
                "Jack Patterson");
            playerList = myRoster.getPlayersByCity("Truckee");
            playerList = myRoster.getPlayersBySport("Soccer");
            playerList = myRoster.getPlayersByLeagueId("L1");
 
            playerList = myRoster.getPlayersByHigherSalary("Ian Carlyle");
-           
+
            printDetailsList(playerList);
-           
+
            playerList = myRoster.getPlayersBySalaryRange(500.00, 800.00);
            playerList = myRoster.getPlayersOfTeamCopy("T5");
 

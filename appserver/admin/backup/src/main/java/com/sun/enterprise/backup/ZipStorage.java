@@ -27,8 +27,8 @@ import com.sun.enterprise.util.zip.*;
 
 import java.io.*;
 
-/** 
- * This class implements storing backups as zip files.  
+/**
+ * This class implements storing backups as zip files.
  * @author Byron Nevins
  */
 class ZipStorage {
@@ -36,18 +36,18 @@ class ZipStorage {
     /**
      * @param req
      * @throws BackupException
-     */    
+     */
     ZipStorage(BackupRequest req) throws BackupException {
 
         if(req == null)
             throw new BackupException("backup-res.NoBackupRequest",
                 getClass().getName() + ".ctor");
-        
+
         request = req;
     }
-    
-    /** 
-     * Backups the files to a zip file.  
+
+    /**
+     * Backups the files to a zip file.
      * @throws BackupException if there were any errors writing the file.
      */
     void store() throws BackupException {
@@ -61,20 +61,20 @@ class ZipStorage {
 
         String zipName = FileUtils.safeGetCanonicalPath(request.backupFile);
         String domainDirName = FileUtils.safeGetCanonicalPath(backupFileDir);
-        
+
         FileListerRelative lister = new FileListerRelative(backupFileDir);
         lister.keepEmptyDirectories(); // we want to restore any empty directories too!
         String[] files = lister.getFiles();
-        
+
         LoggerHelper.fine("Writing " + zipName);
-        
+
         try {
 
             ZipWriter writer = new ZipWriter(zipName, domainDirName, files);
 
             if(request.excludeDirs != null && request.excludeDirs.length > 0)
                 writer.excludeDirs(request.excludeDirs);
-            
+
             writer.safeWrite();
         }
         catch(ZipFileException zfe)  {
@@ -83,7 +83,7 @@ class ZipStorage {
     }
 
     void write() throws BackupException  {
-        
+
     }
 
     private    BackupRequest request;

@@ -17,7 +17,7 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies the statistics provided by a JMS session. 
+ * Specifies the statistics provided by a JMS session.
  *
  * @author Hans Hrasna
  */
@@ -31,32 +31,32 @@ public interface JMSSessionStats extends Stats {
 
     /**
      * Returns an array of JMSConsumerStats that provide statistics about the message
-     * consumers associated with the referencing JMS session statistics. 
+     * consumers associated with the referencing JMS session statistics.
      */
     JMSConsumerStats[] getConsumers();
 
     /**
-     * Number of messages exchanged. 
+     * Number of messages exchanged.
      */
     CountStatistic getMessageCount();
 
     /**
-     * Number of pending messages. 
+     * Number of pending messages.
      */
     CountStatistic getPendingMessageCount();
 
     /**
-     * Number of expired messages. 
+     * Number of expired messages.
      */
     CountStatistic getExpiredMessageCount();
 
     /**
-     * Time spent by a message before being delivered. 
+     * Time spent by a message before being delivered.
      */
     TimeStatistic getMessageWaitTime();
 
     /**
-     * Number of durable subscriptions. 
+     * Number of durable subscriptions.
      */
     CountStatistic getDurableSubscriptionCount();
 }

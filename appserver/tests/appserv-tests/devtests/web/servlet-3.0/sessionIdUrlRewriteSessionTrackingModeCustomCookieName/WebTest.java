@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("URL rewriting with custom cookie name");
         WebTest webTest = new WebTest(args);
@@ -50,7 +50,7 @@ public class WebTest {
     }
 
     public void doTest() {
-        try { 
+        try {
             invokeServlet();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -60,14 +60,14 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
-         
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/redirectFrom" + " HTTP/1.0\n";
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -87,7 +87,7 @@ public class WebTest {
         if (cookieLine != null) {
             throw new Exception("Unexpected Set-Cookie response header");
         }
-        
+
         if (redirectLine == null) {
             throw new Exception("Missing Location response header");
         }
@@ -108,7 +108,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             throw new Exception("Wrong response code. Expected: 200" +
                                 ", received: " + responseCode);
         }

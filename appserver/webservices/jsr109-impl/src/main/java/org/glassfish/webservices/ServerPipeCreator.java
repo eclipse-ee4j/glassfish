@@ -17,45 +17,47 @@
 package org.glassfish.webservices;
 
 
-import jakarta.xml.ws.http.HTTPBinding;
-
-import com.sun.xml.ws.api.pipe.Pipe;
-import com.sun.xml.ws.assembler.metro.ServerPipelineHook;
-import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
-
 import com.sun.enterprise.deployment.WebServiceEndpoint;
 import com.sun.xml.ws.api.model.SEIModel;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.ws.api.pipe.Pipe;
+import com.sun.xml.ws.api.pipe.ServerPipeAssemblerContext;
 import com.sun.xml.ws.api.server.WSEndpoint;
+import com.sun.xml.ws.assembler.metro.ServerPipelineHook;
 import com.sun.xml.ws.policy.PolicyMap;
+
 import org.jvnet.hk2.annotations.Contract;
+
+import jakarta.xml.ws.http.HTTPBinding;
 
 /**
  * This is used by JAXWSContainer to return proper 196 security and
- *  app server monitoing pipes to the StandAlonePipeAssembler and 
- *  TangoPipeAssembler
+ * app server monitoing pipes to the StandAlonePipeAssembler and
+ * TangoPipeAssembler
  */
 @Contract
 public abstract class ServerPipeCreator extends ServerPipelineHook {
-    
+
     protected WebServiceEndpoint endpoint;
     protected boolean isHttpBinding;
 
-    protected ServerPipeCreator(){
-    }
-    
-    public void init(WebServiceEndpoint ep){
-        endpoint = ep;
-	isHttpBinding = 
-	    ((HTTPBinding.HTTP_BINDING.equals
-	      (endpoint.getProtocolBinding())) ? true : false); 
+    protected ServerPipeCreator() {
     }
 
+
+    public void init(WebServiceEndpoint ep) {
+        endpoint = ep;
+        isHttpBinding = ((HTTPBinding.HTTP_BINDING.equals(endpoint.getProtocolBinding())) ? true : false);
+    }
+
+
+    @Override
     public Pipe createMonitoringPipe(ServerPipeAssemblerContext ctxt, Pipe tail) {
         return new MonitoringPipe(ctxt, tail, endpoint);
-    }    
-    
-    public abstract Pipe createSecurityPipe(PolicyMap map, SEIModel sei,
-            WSDLPort port, WSEndpoint owner, Pipe tail);
-    
+    }
+
+
+    @Override
+    public abstract Pipe createSecurityPipe(PolicyMap map, SEIModel sei, WSDLPort port, WSEndpoint owner, Pipe tail);
+
 }

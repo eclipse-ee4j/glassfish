@@ -261,10 +261,10 @@ public class NodeTest extends BaseSeleniumTestClass {
         assertEquals( "CONFIG", getSelectedValue(ID_TYPE_FIELD));
         assertEquals("NodeHOSTCC", getFieldValue(ID_NODEHOST_FIELD));
         setFieldValue(ID_NODEHOST_FIELD, "new-NodeHOSTCC");
-        
+
         assertEquals("NodeDirectoryCC", getFieldValue(ID_NODEDIRECTORY_FIELD));
         setFieldValue(ID_NODEDIRECTORY_FIELD, "new-NodeDirectoryCC");
-        
+
         assertEquals("/ProductRoot", getFieldValue(ID_CONFIG_INSTALLDIR_FIELD));
         setFieldValue(ID_CONFIG_INSTALLDIR_FIELD, "/new-ProductRoot");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton", TRIGGER_SAVE_SUCCESS );

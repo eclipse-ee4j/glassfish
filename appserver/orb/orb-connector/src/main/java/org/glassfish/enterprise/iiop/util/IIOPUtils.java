@@ -177,7 +177,7 @@ public class IIOPUtils implements PostConstruct {
     public ORB getORB() {
         return defaultORB;
     }
-    
+
     private <T> Collection<T> allByContract(Class<T> contractClass) {
         return services.getAllServices(contractClass);
     }

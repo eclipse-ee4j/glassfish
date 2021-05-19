@@ -33,29 +33,29 @@ public class Client {
         try {
             description = testSuite + " ejb1: rolesAllowed1";
             hello1.rolesAllowed1("Sun");
-            stat.addStatus(description, stat.PASS);  
+            stat.addStatus(description, stat.PASS);
 
             try {
                 description = testSuite + " ejb1: rolesAllowed2";
                 hello1.rolesAllowed2("Sun");
-                stat.addStatus(description, stat.FAIL);  
+                stat.addStatus(description, stat.FAIL);
             } catch(Exception e) {
                 System.out.println("Expected failure: " + e);
-                stat.addStatus(description, stat.PASS);  
+                stat.addStatus(description, stat.PASS);
             }
 
             try {
                 description = testSuite + " ejb2: rolesAllowed1";
                 hello2.rolesAllowed1("Java");
-                stat.addStatus(description, stat.FAIL);  
+                stat.addStatus(description, stat.FAIL);
             } catch(Exception e) {
                 System.out.println("Expected failure: " + e);
-                stat.addStatus(description, stat.PASS);  
+                stat.addStatus(description, stat.PASS);
             }
 
             description = testSuite + " ejb2: rolesAllowed2";
             hello2.rolesAllowed2("Java");
-            stat.addStatus(description, stat.PASS);  
+            stat.addStatus(description, stat.PASS);
         } catch(Exception ex) {
             ex.printStackTrace();
             stat.addStatus(description, stat.FAIL);

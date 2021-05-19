@@ -28,8 +28,8 @@ import shopping.ShoppingCartRemote;
  * @author  hsingh
  */
 public interface ShoppingCartHome extends EJBHome{
-    
-    public ShoppingCartRemote create(java.lang.String shopperName) 
+
+    public ShoppingCartRemote create(java.lang.String shopperName)
         throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

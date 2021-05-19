@@ -35,7 +35,7 @@
 
     <property name="classes.dir" value="classes" />
     <property name="test.class" value="AdminGUITest" />
-    <!-- uncomment this, when you want to run standalone 
+    <!-- uncomment this, when you want to run standalone
     <property file="./build.properties" />
     -->
     <property name="classpath" value="" />
@@ -66,7 +66,7 @@
            debug="on" deprecation="off" optimize="off">
          <classpath>
              <path refid="base.classpath" />
-	 </classpath>
+     </classpath>
     </javac>
 </target>
 
@@ -87,18 +87,18 @@
 
 <target name="run-test" depends="compile, get-version-common, init-common">
 <!-- Not needed anymore, JSSE.java is doing this
-	<antcall target="get-certdb-to-jks" />
-	-->
+    <antcall target="get-certdb-to-jks" />
+    -->
     <java classname="${test.class}" fork="yes" >
-    	 <sysproperty key="ADMIN_HOST" value="${admin.host}" />
-    	 <sysproperty key="ADMIN_PORT" value="${admin.port}" />
-    	 <sysproperty key="ADMIN_PASSWORD" value="${admin.password}" />
-    	 <sysproperty key="ADMIN_USER" value="${admin.user}" />
-  	 <!--
-       	 <sysproperty key="IS_EE" value="pe" />
-    	 <sysproperty key="javax.net.ssl.trustStore" value="./certdb.jks" />
-    	 <sysproperty key="javax.net.ssl.trustStorePassword" value="${ssl.password}" />
-	 -->
+         <sysproperty key="ADMIN_HOST" value="${admin.host}" />
+         <sysproperty key="ADMIN_PORT" value="${admin.port}" />
+         <sysproperty key="ADMIN_PASSWORD" value="${admin.password}" />
+         <sysproperty key="ADMIN_USER" value="${admin.user}" />
+       <!--
+            <sysproperty key="IS_EE" value="pe" />
+         <sysproperty key="javax.net.ssl.trustStore" value="./certdb.jks" />
+         <sysproperty key="javax.net.ssl.trustStorePassword" value="${ssl.password}" />
+     -->
          <classpath>
              <path refid="base.classpath" />
              <pathelement location="${build.classes.dir}" />
@@ -112,8 +112,8 @@
 <!--  Generate truststore for ee                                                   -->
 <!--  ===================================================================  -->
 <target name="import-cert-jks" >
-	<echo message="Installing certificate in ${keystore.file} ..."/>
-	<exec executable="${env.JAVA_HOME}/bin/keytool">
+    <echo message="Installing certificate in ${keystore.file} ..."/>
+    <exec executable="${env.JAVA_HOME}/bin/keytool">
         <arg value="-import"/>
         <arg value="-noprompt"/>
         <arg value="-trustcacerts"/>
@@ -130,14 +130,14 @@
 
 <!-- Get certificate from NSS db to JKS format -->
 <target name="get-certdb-to-jks" if="ee">
-	<echo message="Installing certificate in ${ee} ..."/>
+    <echo message="Installing certificate in ${ee} ..."/>
       <exec executable="${env.S1AS_HOME}/lib/certutil" output="./certdb.rfc">
         <env key="LD_LIBRARY_PATH" path="${env.S1AS_HOME}/lib"/>
         <arg line="-L -n ${cert.nickname}"/>
         <arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
       </exec>
       <concat>
-    	<filelist dir="." files="certdb.rfc"/>
+        <filelist dir="." files="certdb.rfc"/>
       </concat>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${cert.nickname}"/>

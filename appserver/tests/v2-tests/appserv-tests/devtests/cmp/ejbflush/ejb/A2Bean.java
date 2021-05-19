@@ -19,64 +19,64 @@ package test;
 import jakarta.ejb.*;
 
 /**
- * 2.0 bean. 
+ * 2.0 bean.
  * @author mvatkina
  */
 
 
 public abstract class A2Bean implements EntityBean {
-    
+
     private EntityContext context;
-    
-    
+
+
     /**
      * @see EntityBean#setEntityContext(EntityContext)
      */
     public void setEntityContext(EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see EntityBean#ejbRemove()
      */
     public void ejbRemove() {
 
     }
-    
-    
+
+
     /**
      * @see EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see EntityBean#ejbStore()
      */
@@ -95,8 +95,8 @@ public abstract class A2Bean implements EntityBean {
         setName("ABC");
         return null;
     }
-    
-    public void ejbPostCreate(String name) throws CreateException { 
+
+    public void ejbPostCreate(String name) throws CreateException {
     }
 
     public void setNameWithFlush(String s) {

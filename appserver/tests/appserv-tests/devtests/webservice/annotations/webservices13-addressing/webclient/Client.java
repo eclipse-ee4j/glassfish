@@ -28,11 +28,11 @@ public class Client extends HttpServlet {
 
         @jakarta.xml.ws.WebServiceRef(SubtractNumbersService.class)
        //@Addressing (required = true,enabled=true ,responses=AddressingFeature.Responses.NON_ANONYMOUS)
-        //@Addressing 
+        //@Addressing
         SubtractNumbersImpl port;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

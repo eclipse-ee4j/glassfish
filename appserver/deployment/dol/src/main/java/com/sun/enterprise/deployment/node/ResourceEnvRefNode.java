@@ -24,11 +24,11 @@ import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Node;
 
 /**
- * This class handles all information related to the resource-env-ref 
+ * This class handles all information related to the resource-env-ref
  * xml tag
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvReferenceDescriptor> {
 
@@ -36,8 +36,8 @@ public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvRefe
 
     public ResourceEnvRefNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
-                                InjectionTargetNode.class, "addInjectionTarget");                          
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
+                                InjectionTargetNode.class, "addInjectionTarget");
     }
 
     @Override
@@ -49,21 +49,21 @@ public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvRefe
     @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(TagNames.RESOURCE_ENV_REFERENCE_NAME, "setName");    
-        table.put(TagNames.RESOURCE_ENV_REFERENCE_TYPE, "setRefType");    
+        table.put(TagNames.RESOURCE_ENV_REFERENCE_NAME, "setName");
+        table.put(TagNames.RESOURCE_ENV_REFERENCE_TYPE, "setRefType");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
         return table;
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, ResourceEnvReferenceDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, ResourceEnvReferenceDescriptor descriptor) {
         Node ejbResNode = appendChild(parent, nodeName);
-        
-        writeLocalizedDescriptions(ejbResNode,descriptor);        
-        
-        appendTextChild(ejbResNode, TagNames.RESOURCE_ENV_REFERENCE_NAME, descriptor.getName()); 
-        appendTextChild(ejbResNode, TagNames.RESOURCE_ENV_REFERENCE_TYPE, descriptor.getRefType());   
+
+        writeLocalizedDescriptions(ejbResNode,descriptor);
+
+        appendTextChild(ejbResNode, TagNames.RESOURCE_ENV_REFERENCE_NAME, descriptor.getName());
+        appendTextChild(ejbResNode, TagNames.RESOURCE_ENV_REFERENCE_TYPE, descriptor.getRefType());
         appendTextChild(ejbResNode, TagNames.MAPPED_NAME, descriptor.getMappedName());
 
         if( descriptor.isInjectable() ) {
@@ -74,5 +74,5 @@ public class ResourceEnvRefNode extends DeploymentDescriptorNode<ResourceEnvRefe
         }
         appendTextChild(ejbResNode, TagNames.LOOKUP_NAME, descriptor.getLookupName());
         return ejbResNode;
-    }    
+    }
 }

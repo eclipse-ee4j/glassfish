@@ -38,7 +38,7 @@ public class SvcContextUtils {
     }
     /**
      * Define minor codes for errors specified in section 4.5, "ContextError Values and Exceptions"
-     * 
+     *
      * Currently only MessageInContextMinor code is defined since this is the only used by the security interceptors.
      */
 

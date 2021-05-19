@@ -40,7 +40,7 @@ public class JndiNamingObjectFactory
         this.name = name;
         this.jndiName = jndiName;
         this.cacheResult = cacheResult;
-        this.value = new AtomicReference();       
+        this.value = new AtomicReference();
     }
 
     public boolean isCreateResultCacheable() {

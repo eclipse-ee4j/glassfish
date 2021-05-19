@@ -185,7 +185,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getSystemProperty().add(newItem);
      * </pre>
@@ -401,7 +401,7 @@ public interface Server extends ConfigBeanProxy, PropertyBag, Named, SystemPrope
         /**
          * this is NOT a reliable test. It just checks if ANYTHING has setup shop on the host and port. I wanted to run
          * RemoteAdminCommand but that is (inexplicably) in admin/util -- and we would have a circular dependency
-         * 
+         *
          * @param server
          * @return
          */

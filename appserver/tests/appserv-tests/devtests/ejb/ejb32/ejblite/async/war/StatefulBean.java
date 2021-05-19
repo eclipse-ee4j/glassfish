@@ -29,7 +29,7 @@ public class StatefulBean {
     }
 
     public void hello() {
-	System.out.println("In StatefulBean::hello()");
+        System.out.println("In StatefulBean::hello()");
     }
 
     @PreDestroy

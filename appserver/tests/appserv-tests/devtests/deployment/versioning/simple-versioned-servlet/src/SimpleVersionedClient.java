@@ -42,8 +42,8 @@ public class SimpleVersionedClient {
             versionIdentifier = "";
         }
     }
-    
-    public void doTest() {        
+
+    public void doTest() {
         try {
             // this provides some usefull informations to investigate
             log("Test: devtests/deployment/versioning/simple-versioned-servlet");
@@ -62,7 +62,7 @@ public class SimpleVersionedClient {
                 log("Caught EXPECTED IOException: " + ex);
                 pass();
             }
-	} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -75,7 +75,7 @@ public class SimpleVersionedClient {
         HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
         int code = c1.getResponseCode();
         InputStream is = c1.getInputStream();
-        
+
         BufferedReader input = new BufferedReader (new InputStreamReader(is));
         String line = input.readLine();
         return new TestResponse(code, line);

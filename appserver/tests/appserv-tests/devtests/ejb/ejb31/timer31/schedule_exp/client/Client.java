@@ -25,14 +25,14 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     InitialContext context;
 
     @EJB private static Stles bean;
 
-    public static void main(String args[]) { 
+    public static void main(String args[]) {
         boolean doJms = false; // TODO (args.length == 1) && (args[0].equalsIgnoreCase("jms"));
 
         stat.addDescription("ejb31-timer-schedule_exp");
@@ -40,11 +40,11 @@ public class Client {
 
         try {
             System.out.println("Creating timers for schedule_exp timer test");
-            bean.createTimers(); 
+            bean.createTimers();
             System.out.println("Waiting timers to expire for schedule_exp timer test");
             Thread.sleep(12000);
             System.out.println("Verifying timers for schedule_exp timer test");
-            bean.verifyTimers(); 
+            bean.verifyTimers();
             stat.addStatus("schedule_exp: ", stat.PASS );
 
         } catch(Exception e) {

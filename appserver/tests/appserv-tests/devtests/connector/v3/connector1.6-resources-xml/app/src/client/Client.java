@@ -28,22 +28,22 @@ public class Client   {
 
     private static SimpleReporterAdapter stat =
             new SimpleReporterAdapter("appserv-tests");
-    
+
     public Client (String[] args) {
         //super(args);
     }
-    
+
     public static void main(String[] args) {
         Client client = new Client(args);
         client.doTest();
     }
-    
+
     public String doTest() {
         stat.addDescription("This is to test connector 1.5 "+
-	             "contracts.");
-        
+                     "contracts.");
+
         String res = "NOT RUN";
-	debug("doTest() ENTER...");
+        debug("doTest() ENTER...");
         boolean pass = false;
         try {
 
@@ -54,26 +54,26 @@ public class Client   {
                 e.printStackTrace();
             }
             res  = "ALL TESTS PASSED";
-	    int testCount = 1;
+            int testCount = 1;
             while (!done()) {
-                
+
                 notifyAndWait();
                 if (!done()) {
                     debug("Running...");
                     pass = checkResults(expectedResults());
                     debug("Got expected results = " + pass);
-                    
+
                     //do not continue if one test failed
                     if (!pass) {
                         res = "SOME TESTS FAILED";
                         stat.addStatus("ID Connector 1.6 test - " + testCount, stat.FAIL);
                     } else {
                         stat.addStatus("ID Connector 1.6 test - " + testCount, stat.PASS);
-		    }
+                    }
                 } else {
                     break;
                 }
-		testCount ++;
+                testCount ++;
             }
 
         } catch (Exception ex) {
@@ -83,14 +83,14 @@ public class Client   {
         }
         stat.printSummary("connector1.6ID");
 
-        
+
         debug("EXITING... STATUS = " + res);
         return res;
     }
-    
+
     private boolean checkResults(int num) throws Exception {
         Object o = (new InitialContext()).lookup("MyMessageChecker");
-        MessageCheckerHome  home = (MessageCheckerHome) 
+        MessageCheckerHome  home = (MessageCheckerHome)
             PortableRemoteObject.narrow(o, MessageCheckerHome.class);
         MessageChecker checker = home.create();
         int result = checker.getMessageCount();
@@ -99,7 +99,7 @@ public class Client   {
 
     private boolean done() throws Exception {
         Object o = (new InitialContext()).lookup("MyMessageChecker");
-        MessageCheckerHome  home = (MessageCheckerHome) 
+        MessageCheckerHome  home = (MessageCheckerHome)
             PortableRemoteObject.narrow(o, MessageCheckerHome.class);
         MessageChecker checker = home.create();
         return checker.done();
@@ -107,7 +107,7 @@ public class Client   {
 
     private int expectedResults() throws Exception {
         Object o = (new InitialContext()).lookup("MyMessageChecker");
-        MessageCheckerHome  home = (MessageCheckerHome) 
+        MessageCheckerHome  home = (MessageCheckerHome)
             PortableRemoteObject.narrow(o, MessageCheckerHome.class);
         MessageChecker checker = home.create();
         return checker.expectedResults();
@@ -115,7 +115,7 @@ public class Client   {
 
     private void notifyAndWait() throws Exception {
         Object o = (new InitialContext()).lookup("MyMessageChecker");
-        MessageCheckerHome  home = (MessageCheckerHome) 
+        MessageCheckerHome  home = (MessageCheckerHome)
             PortableRemoteObject.narrow(o, MessageCheckerHome.class);
         MessageChecker checker = home.create();
         checker.notifyAndWait();

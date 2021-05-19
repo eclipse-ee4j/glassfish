@@ -47,8 +47,8 @@ import jakarta.annotation.security.RunAs;
     @EJB private Hello1 hello1;
     @EJB private Hello2 hello2;
 
-    @Resource(name="jms/MyQueueConnectionFactory", 
-              mappedName="jms/security_mdb_QCF") 
+    @Resource(name="jms/MyQueueConnectionFactory",
+              mappedName="jms/security_mdb_QCF")
     QueueConnectionFactory qcFactory;
 
     @Resource(mappedName="jms/security_mdb_OutQueue") Queue clientQueue;
@@ -58,7 +58,7 @@ import jakarta.annotation.security.RunAs;
 
         QueueConnection connection = null;
         try {
-            
+
             System.out.println("Calling hello1 stateless bean");
             hello1.hello("local ejb3.0 stateless");
 
@@ -76,14 +76,14 @@ import jakarta.annotation.security.RunAs;
             QueueSession session = connection.createQueueSession(false,
                                    Session.AUTO_ACKNOWLEDGE);
             QueueSender sender = session.createSender(clientQueue);
-		connection.start();
- 
+                connection.start();
+
             TextMessage tmessage = session.createTextMessage();
             tmessage.setText("mdb() invoked");
             System.out.println("Sending message");
             sender.send(tmessage);
             System.out.println("message sent");
-		connection.close();
+                connection.close();
 
         } catch(Exception e) {
             e.printStackTrace();

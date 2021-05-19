@@ -24,25 +24,25 @@ import jakarta.ejb.Stateless;
 @Stateless
 public class StatelessBean implements StatelessLocal {
 
-    @EJB 
-	private SingletonBean singleton;
-    
+    @EJB
+    private SingletonBean singleton;
+
 
     @PostConstruct
-	public void init() {
-    	System.out.println("In StatelessBean::init()");
-    	System.out.println("singleton = " + singleton);
+    public void init() {
+        System.out.println("In StatelessBean::init()");
+        System.out.println("singleton = " + singleton);
     }
 
     public void hello() {
-    	System.out.println("In StatelessBean::hello()");
+        System.out.println("In StatelessBean::hello()");
     }
 
     @PreDestroy
-	public void destroy() {
-    	System.out.println("In StatelessBean::destroy()");
+    public void destroy() {
+        System.out.println("In StatelessBean::destroy()");
     }
 
-    
+
 
 }

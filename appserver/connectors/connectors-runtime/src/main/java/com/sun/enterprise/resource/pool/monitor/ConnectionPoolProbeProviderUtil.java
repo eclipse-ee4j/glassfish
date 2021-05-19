@@ -27,7 +27,7 @@ import java.util.Collection;
 
 /**
  * Utility class to create providers for monitoring purposes.
- * 
+ *
  * @author Shalini M
  */
 @Service
@@ -35,8 +35,8 @@ public class ConnectionPoolProbeProviderUtil {
 
     private ConnectionPoolProbeProvider jcaProbeProvider = null;
     private ConnectionPoolProbeProvider jdbcProbeProvider = null;
-    
-    @Inject 
+
+    @Inject
     private Provider<ConnectionPoolStatsProviderBootstrap> connectionPoolStatsProviderBootstrapProvider;
 
     @Inject
@@ -45,29 +45,29 @@ public class ConnectionPoolProbeProviderUtil {
     public void registerProbeProvider() {
         if(ConnectorRuntime.getRuntime().isServer()) {
             getConnPoolBootstrap().registerProvider();
-        }        
+        }
     }
-    
+
     /**
      * Create probe provider for jcaPool related events.
-     * 
-     * The generated jcaPool probe providers are shared by all 
-     * jca connection pools. Each jca connection pool will qualify a 
+     *
+     * The generated jcaPool probe providers are shared by all
+     * jca connection pools. Each jca connection pool will qualify a
      * probe event with its pool name.
      *
-     */   
-    public void createJcaProbeProvider() {    
+     */
+    public void createJcaProbeProvider() {
         jcaProbeProvider = new ConnectorConnPoolProbeProvider();
     }
-    
+
     /**
      * Create probe provider for jdbcPool related events.
-     * 
-     * The generated jdbcPool probe providers are shared by all 
-     * jdbc connection pools. Each jdbc connection pool will qualify a 
+     *
+     * The generated jdbcPool probe providers are shared by all
+     * jdbc connection pools. Each jdbc connection pool will qualify a
      * probe event with its pool name.
      *
-     */   
+     */
     public void createJdbcProbeProvider() {
         Collection<ConnectionPoolMonitoringExtension> extensions =
                 habitat.getAllServices(ConnectionPoolMonitoringExtension.class);
@@ -86,7 +86,7 @@ public class ConnectionPoolProbeProviderUtil {
     public ConnectionPoolProbeProvider getJcaProbeProvider() {
         return jcaProbeProvider;
     }
-    
+
     /**
      * Get probe provider for jdbc connection pool related events
      * @return JdbcConnPoolProbeProvider

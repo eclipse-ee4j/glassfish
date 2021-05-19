@@ -19,7 +19,7 @@ package test;
 class Record {
 
     private static String data = "";
-    
+
     static void addData(String a) {
         data += a;
     }

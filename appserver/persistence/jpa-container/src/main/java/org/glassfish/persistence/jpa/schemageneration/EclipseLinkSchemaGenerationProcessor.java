@@ -33,19 +33,19 @@ import jakarta.persistence.spi.PersistenceUnitTransactionType;
 /**
  * SchemaGenerationProcessor that handles schema generation while
  * running against EclipseLink in pre JPA 2.1 mode
- * For each persistence unit descriptors that is defined for 
+ * For each persistence unit descriptors that is defined for
  * an application create the ddl scripts. Additionally if the
  * user has requested the tables to be created or dropped from
  * the database complete that action too.
  *
  * These are the principles and expectations of the implementation.
- * We don't want TopLink code to execute the DDLs, it should only 
- * generate them. So, we always set the *generation-mode* to *script* 
- * in the PUInfo object before passing it to createContainerEMF(). 
- * As a result TopLink never creates the actual tables, nor does it drop 
- * them. The DDLs are executed by our code based on user preference which 
- * considers inputs from persistence.xml and CLI. We set the TopLink 
- * property to DROP_AND_CREATE in that map because we want it to always 
+ * We don't want TopLink code to execute the DDLs, it should only
+ * generate them. So, we always set the *generation-mode* to *script*
+ * in the PUInfo object before passing it to createContainerEMF().
+ * As a result TopLink never creates the actual tables, nor does it drop
+ * them. The DDLs are executed by our code based on user preference which
+ * considers inputs from persistence.xml and CLI. We set the TopLink
+ * property to DROP_AND_CREATE in that map because we want it to always
  * generate both create- and dropDDL.jdbc files.
  * @author pramodg
  */
@@ -242,7 +242,7 @@ public class EclipseLinkSchemaGenerationProcessor implements SchemaGenerationPro
     }
 
     /**
-     * This method is called after the jdbc files have been created. 
+     * This method is called after the jdbc files have been created.
      * Iterate over all created jdbc ddl files and
      * execute it against the database to have the required objects created.
      */

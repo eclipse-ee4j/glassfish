@@ -76,7 +76,7 @@ public class CreateSecurityService implements AdminCommand, AdminCommandSecurity
 
     @AccessRequired.To("create")
     private SecurityConfigurations secConfigs;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
@@ -84,11 +84,11 @@ public class CreateSecurityService implements AdminCommand, AdminCommandSecurity
         return secConfigs != null;
     }
 
-	/**
-	 * Execute the create-security-service admin command.
-	 */
-	@Override
-	public void execute(AdminCommandContext context) {
+    /**
+     * Execute the create-security-service admin command.
+     */
+    @Override
+    public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
         // Setup the service type and configuration handler
@@ -101,7 +101,7 @@ public class CreateSecurityService implements AdminCommand, AdminCommandSecurity
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        
+
         // Add service configuration to the security configurations
         // TODO - Add validation logic required for base service configuration
         SecurityConfiguration config = null;
@@ -128,64 +128,64 @@ public class CreateSecurityService implements AdminCommand, AdminCommandSecurity
         if ((config != null) && (configuration != null) && (!configuration.isEmpty())) {
             serviceConfigHandler.setupConfiguration(report, config);
         }
-	}
+    }
 
-	/**
-	 * Base class for service type configuration handling
-	 */
-	private abstract class ServiceConfigHandler<T extends SecurityConfiguration> {
-		abstract T setupConfiguration(ActionReport report, SecurityConfiguration securityServiceConfig);
-	}
+    /**
+     * Base class for service type configuration handling
+     */
+    private abstract class ServiceConfigHandler<T extends SecurityConfiguration> {
+        abstract T setupConfiguration(ActionReport report, SecurityConfiguration securityServiceConfig);
+    }
 
-	/**
-	 * Handle the authentication service configuration
-	 */
-	private class AuthenticationConfigHandler extends ServiceConfigHandler<AuthenticationService> {
-		@Override
-		public AuthenticationService setupConfiguration(ActionReport report, SecurityConfiguration securityServiceConfig) {
-		    // TODO - Additional type checking needed?
-		    AuthenticationService config = (AuthenticationService) securityServiceConfig;
-		    try {
-		        config = (AuthenticationService) ConfigSupport.apply(new SingleConfigCode<AuthenticationService>() {
-		            @Override
-		            public Object run(AuthenticationService param) throws PropertyVetoException, TransactionFailure {
-		            	// Look at the use password credential setting
-		            	Boolean usePassCred = Boolean.valueOf(configuration.getProperty("use-password-credential"));
-		            	param.setUsePasswordCredential(usePassCred.booleanValue());
-		            	return param;
-		            }
-		        }, config);
-		    } catch (TransactionFailure transactionFailure) {
-		    	report.setMessage("Unable to configure authentication service: " + transactionFailure.getMessage());
-		    	report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-		    	report.setFailureCause(transactionFailure);
-		    	return null;
-		    }
-
-		    // Return the updated configuration object
-		    return config;
-		}
-	}
-        
-        private SecurityConfigurations getSecurityConfigurations(final ActionReport report) {
-            // Lookup or Create the security configurations
-            SecurityConfigurations result = domain.getExtensionByType(SecurityConfigurations.class);
-            if (result == null) {
-                try {
-                    result = (SecurityConfigurations) ConfigSupport.apply(new SingleConfigCode<Domain>() {
-                        @Override
-                        public Object run(Domain wDomain) throws PropertyVetoException, TransactionFailure {
-                            SecurityConfigurations s = wDomain.createChild(SecurityConfigurations.class);
-                            wDomain.getExtensions().add(s);
-                            return s;
-                        }
-                    }, domain);
-                } catch (TransactionFailure transactionFailure)  {
-                    report.setMessage("Unable to create security configurations: " + transactionFailure.getMessage());
-                    report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                    report.setFailureCause(transactionFailure);
-                }
+    /**
+     * Handle the authentication service configuration
+     */
+    private class AuthenticationConfigHandler extends ServiceConfigHandler<AuthenticationService> {
+        @Override
+        public AuthenticationService setupConfiguration(ActionReport report, SecurityConfiguration securityServiceConfig) {
+            // TODO - Additional type checking needed?
+            AuthenticationService config = (AuthenticationService) securityServiceConfig;
+            try {
+                config = (AuthenticationService) ConfigSupport.apply(new SingleConfigCode<AuthenticationService>() {
+                    @Override
+                    public Object run(AuthenticationService param) throws PropertyVetoException, TransactionFailure {
+                        // Look at the use password credential setting
+                        Boolean usePassCred = Boolean.valueOf(configuration.getProperty("use-password-credential"));
+                        param.setUsePasswordCredential(usePassCred.booleanValue());
+                        return param;
+                    }
+                }, config);
+            } catch (TransactionFailure transactionFailure) {
+                report.setMessage("Unable to configure authentication service: " + transactionFailure.getMessage());
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                report.setFailureCause(transactionFailure);
+                return null;
             }
-            return result;
+
+            // Return the updated configuration object
+            return config;
         }
+    }
+
+    private SecurityConfigurations getSecurityConfigurations(final ActionReport report) {
+        // Lookup or Create the security configurations
+        SecurityConfigurations result = domain.getExtensionByType(SecurityConfigurations.class);
+        if (result == null) {
+            try {
+                result = (SecurityConfigurations) ConfigSupport.apply(new SingleConfigCode<Domain>() {
+                    @Override
+                    public Object run(Domain wDomain) throws PropertyVetoException, TransactionFailure {
+                        SecurityConfigurations s = wDomain.createChild(SecurityConfigurations.class);
+                        wDomain.getExtensions().add(s);
+                        return s;
+                    }
+                }, domain);
+            } catch (TransactionFailure transactionFailure)  {
+                report.setMessage("Unable to create security configurations: " + transactionFailure.getMessage());
+                report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+                report.setFailureCause(transactionFailure);
+            }
+        }
+        return result;
+    }
 }

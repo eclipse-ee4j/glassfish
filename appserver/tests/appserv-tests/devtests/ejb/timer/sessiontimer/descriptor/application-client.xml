@@ -32,5 +32,5 @@
     <remote>com.sun.s1asdev.ejb.timer.sessiontimer.TimerSingletonRemote</remote>
     <ejb-link>TimerSingleton</ejb-link>
   </ejb-ref>
- 
+
 </application-client>

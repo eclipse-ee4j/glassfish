@@ -56,7 +56,7 @@ public class WebTest {
         adminUser = args[3];
         adminPassword = args[4];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for GlassFish Issue 1537");
@@ -69,7 +69,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void run() throws Exception {
@@ -99,7 +99,7 @@ public class WebTest {
             System.out.println(get);
             os.write(get.getBytes());
             os.write("\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -147,7 +147,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -195,7 +195,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionId + "\n";
             os.write(cookie.getBytes());
             os.write("\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 
@@ -247,7 +247,7 @@ public class WebTest {
             String cookie = "Cookie: " + jsessionIdSSO + "\n";
             os.write(cookie.getBytes());
             os.write("\n".getBytes());
-        
+
             is = sock.getInputStream();
             br = new BufferedReader(new InputStreamReader(is));
 

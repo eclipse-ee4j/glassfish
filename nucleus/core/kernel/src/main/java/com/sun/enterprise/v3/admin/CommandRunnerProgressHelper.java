@@ -28,7 +28,7 @@ import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
 import org.glassfish.config.support.GenericCrudCommand;
 
-/** Helper class for {@code ProgressStatus} manipulation during 
+/** Helper class for {@code ProgressStatus} manipulation during
  * {@code CommandRunner} execution.<br/><br/>
  * <b>Life cycle:</b><br/>
  * <ul>
@@ -39,20 +39,20 @@ import org.glassfish.config.support.GenericCrudCommand;
  *   <li><i>do replication</i></li>
  *   <li>complete</li>
  * </ul>
- * 
+ *
  * @author mmares
  */
 class CommandRunnerProgressHelper {
-    
+
     //From constructor
     private Progress progressAnnotation;
     private CommandProgressImpl commandProgress;
     private int replicationCount = 0;
 
-    //Changed during lifecycle 
+    //Changed during lifecycle
     private ProgressStatus progressForMainCommand = null;
     private ProgressStatusMirroringImpl progressMirroring = null;
-    
+
     public CommandRunnerProgressHelper(AdminCommand command, String name, Job job, ProgressStatus clientProgressStatus) {
         if (command instanceof GenericCrudCommand) {
             GenericCrudCommand gcc = (GenericCrudCommand) command;
@@ -78,7 +78,7 @@ class CommandRunnerProgressHelper {
             job.setCommandProgress(commandProgress);
         }
     }
-    
+
     private void connectWithClientProgressStatus(Job commandInstance, ProgressStatus clientProgressStatus) {
         if (clientProgressStatus == null) {
             return;
@@ -97,7 +97,7 @@ class CommandRunnerProgressHelper {
                     }
                 });
     }
-    
+
     private String createIdForCommandProgress(Job commandInstance) {
         String cid = commandInstance == null ? null : commandInstance.getId();
         if (cid == null || cid.isEmpty()) {
@@ -113,7 +113,7 @@ class CommandRunnerProgressHelper {
     public void setReplicationCount(int replicationCount) {
         this.replicationCount = replicationCount;
     }
-    
+
     public void addProgressStatusToSupplementalCommand(SupplementalCommand supplemental) {
         if (commandProgress == null || supplemental == null) {
             return;
@@ -134,7 +134,7 @@ class CommandRunnerProgressHelper {
                     0, supplemental.getProgressAnnotation().totalStepCount()));
         }
     }
-    
+
     public AdminCommandContext wrapContext4MainCommand(AdminCommandContext context) {
         if (progressForMainCommand != null) {
             return new AdminCommandContextForInstance(context, progressForMainCommand);
@@ -151,5 +151,5 @@ class CommandRunnerProgressHelper {
         }
         return context;
     }
-    
+
 }

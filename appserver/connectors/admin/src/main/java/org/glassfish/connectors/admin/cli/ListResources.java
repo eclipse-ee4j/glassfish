@@ -39,8 +39,8 @@ import java.util.Map;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="_list-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="_list-resources",
         description="_list-resources")
 })
 public class ListResources implements AdminCommand {

@@ -37,10 +37,10 @@ public class BeanA_Mod2 {
 
     @EJB
     LocalInitTracker tracker;
-    
+
     @PostConstruct
     public void afterInit() {
         tracker.add(this.getClass().getName());
     }
- 
+
 }

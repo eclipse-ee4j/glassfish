@@ -34,10 +34,10 @@ import org.jboss.weld.bootstrap.api.SingletonProvider;
 
 /**
  * Singleton provider that uses Application ClassLoader to differentiate between applications.
- * 
+ *
  * <p>
  * It is different from {@link org.jboss.weld.bootstrap.api.helpers.TCCLSingletonProvider}.
- * 
+ *
  * <p>
  * We can't use TCCLSingletonProvider because thread's context class loader can be different for different modules of a
  * single application (ear). To support Application Scoped beans, Weld needs to be bootstrapped per application as
@@ -47,7 +47,7 @@ import org.jboss.weld.bootstrap.api.SingletonProvider;
  * @author Sanjeeb.Sahoo@Sun.COM
  */
 public class ACLSingletonProvider extends SingletonProvider {
-    
+
     /*
      * See https://glassfish.dev.java.net/issues/show_bug.cgi?id=10192
      * for more details about this class.
@@ -89,19 +89,19 @@ public class ACLSingletonProvider extends SingletonProvider {
             if (instance == null) {
                 throw new IllegalStateException("Singleton not set for " + appClassLoader);
             }
-            
+
             return instance;
         }
 
         /**
          * This is the most significant method of this class. This is what distingushes it from TCCLSIngleton.
-         * 
+         *
          * <p>
          * It tries to obtain a class loader that's common to all modules of an application (ear). Since it runs in the context
          * of Java EE, it can assume that Thread's context class loader is always set as application class loader. In GlassFish,
          * the class loader can vary for each module of an Ear. Thread's context class loader is set depending on which module
-         * is handling the request. 
-         * 
+         * is handling the request.
+         *
          * <p>
          * But, fortunately all those embedded module class loaders have a common parent in their
          * delegation chain. That parent is of type EarLibClassLoader. So, this code walks up the delegation chain until it hits
@@ -118,7 +118,7 @@ public class ACLSingletonProvider extends SingletonProvider {
                     return currentThread().getContextClassLoader();
                 }
             }) : currentThread().getContextClassLoader();
-            
+
             if (contextClassLoader == null) {
                 throw new RuntimeException("Thread's context class loader is null");
             }
@@ -127,7 +127,7 @@ public class ACLSingletonProvider extends SingletonProvider {
             ClassLoader appClassLoader = contextClassLoader;
 
             // Most of the time, the class loader of an application (whether it is a
-            // standalone module or an ear) has a common class loader in their delegation chain. 
+            // standalone module or an ear) has a common class loader in their delegation chain.
             //
             // So, we can break the loop early for them.
             //
@@ -137,14 +137,14 @@ public class ACLSingletonProvider extends SingletonProvider {
                 if (classLoader instanceof EarLibClassLoader) {
                     return classLoader;
                 }
-                
+
                 if (classLoader instanceof WebappClassLoader) {
                     // We do this because it's possible for an app to change the thread's context class loader
                     appClassLoader = classLoader;
                 }
                 classLoader = getParent(classLoader);
             }
-            
+
             return appClassLoader;
         }
 

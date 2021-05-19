@@ -34,7 +34,7 @@ import org.glassfish.external.arc.Stability;
 @Documented
 public @interface Param {
     public String name();
-    
+
     /** true if null may be passed */
     public boolean optional() default false;
 }

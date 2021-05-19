@@ -39,22 +39,22 @@ import jakarta.enterprise.inject.spi.BeanManager;
  */
 @Service
 public class WebComponentInjectionManager<T> implements WebComponentDecorator<T> {
-    
+
     @Override
     @SuppressWarnings("unchecked")
     public void decorate(T webComponent, WebModule webModule) {
         if (webModule.getWebBundleDescriptor().hasExtensionProperty(WELD_EXTENSION)) {
             DeploymentContext deploymentContext = webModule.getWebModuleConfig().getDeploymentContext();
 
-            BeanManager beanManager = 
+            BeanManager beanManager =
                 deploymentContext.getTransientAppMetaData(WELD_BOOTSTRAP, WeldBootstrap.class)
                                  .getManager(deploymentContext.getTransientAppMetaData(WELD_DEPLOYMENT, DeploymentImpl.class)
                                                               .getBeanDeploymentArchives()
                                                               .iterator().next());
-            
+
             // PENDING : Not available in this Web Beans Release
             CreationalContext<T> ccontext = beanManager.createCreationalContext(null);
-            
+
             beanManager.createInjectionTarget(
                 beanManager.createAnnotatedType(
                     (Class<T>) webComponent.getClass())).inject(webComponent, ccontext);

@@ -82,7 +82,7 @@ public class AnnotationScanner extends ClassVisitor {
     }
 
     public void visitEnd() {
-        
+
     }
 
     public void scanArchive(ReadableArchive archive) {

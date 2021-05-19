@@ -28,7 +28,7 @@ import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;
 
 /**
- * Probe listener for the Ejb Pool monitoring events. 
+ * Probe listener for the Ejb Pool monitoring events.
  *
  * @author Marina Vatkina
  */
@@ -47,7 +47,7 @@ public class EjbPoolStatsProvider {
             "TotalBeansDestroyed", "count", "Number of beans destroyed from the associated pool");
 
     private CountStatisticImpl jmsStat = new CountStatisticImpl(
-            "JmsMaxMessagesLoad", "count", 
+            "JmsMaxMessagesLoad", "count",
             "Provides the maximum number of messages to load into a JMS session, at a time.");
 
     private BoundedRangeStatisticImpl beansInPool;
@@ -175,8 +175,8 @@ public class EjbPoolStatsProvider {
 
     private void logWrongEvent(String appName, String moduleName,
             String beanName) {
-        _logger.fine("Recieved event for: [" + this.appName + ":" + 
-                this.moduleName + ":" + this.beanName + "] but this provider is for [" + 
+        _logger.fine("Recieved event for: [" + this.appName + ":" +
+                this.moduleName + ":" + this.beanName + "] but this provider is for [" +
                 appName + ":" + moduleName + ":" + beanName+ "]");
     }
 }

@@ -68,7 +68,7 @@ public class GrizzlyProxy implements NetworkProxy {
 
 
     public GrizzlyProxy(GrizzlyService service, NetworkListener listener) {
-        grizzlyService = service;       
+        grizzlyService = service;
         logger = service.getLogger();
         networkListener = listener;
     }
@@ -159,7 +159,7 @@ public class GrizzlyProxy implements NetworkProxy {
     public void registerEndpoint(String contextRoot, Collection<String> vsServers,
             HttpHandler endpointService,
             ApplicationContainer container) throws EndpointRegistrationException {
-        
+
         // e.g., there is no admin service in an instance
         if (contextRoot == null) {
             return;
@@ -175,7 +175,7 @@ public class GrizzlyProxy implements NetworkProxy {
             httpAdapter.getMapper().register(contextRoot, vsServers, endpointService, container);
         }
     }
-    
+
     /**
      * Removes the context-root from our list of endpoints.
      */
@@ -206,12 +206,12 @@ public class GrizzlyProxy implements NetworkProxy {
         unregisterEndpoint(endpoint.getContextRoot(), endpoint.getContainer());
     }
 
-    
+
     @Override
     public Future<Result<Thread>> start() throws IOException {
         final FutureImpl<Result<Thread>> future =
                 Futures.<Result<Thread>>createUnsafeFuture();
-        
+
         if (!isAjpEnabled(grizzlyListener)) {
             // If this is not AJP listener - initiate startup right now
             start0();
@@ -228,14 +228,14 @@ public class GrizzlyProxy implements NetworkProxy {
                 }
             });
         }
-        
+
         future.result(new Result<Thread>(Thread.currentThread()));
         return future;
     }
 
     /**
      * Start internal Grizzly listener.
-     * @throws IOException 
+     * @throws IOException
      */
     protected void start0() throws IOException {
         final long t1 = System.currentTimeMillis();
@@ -249,7 +249,7 @@ public class GrizzlyProxy implements NetworkProxy {
                     grizzlyListener.getAddress() + ":" + grizzlyListener.getPort()});
         }
     }
-    
+
     @Override
     public int getPort() {
         return portNumber;

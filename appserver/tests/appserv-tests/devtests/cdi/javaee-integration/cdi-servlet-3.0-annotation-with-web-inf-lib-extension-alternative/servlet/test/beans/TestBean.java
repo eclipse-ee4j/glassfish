@@ -27,8 +27,8 @@ import test.beans.artifacts.Preferred;
 @Preferred
 public class TestBean implements TestBeanInterface{
     public static boolean testBeanInvoked = false;
-    
-    @Inject //@TestDatabase 
+
+    @Inject //@TestDatabase
     EntityManager emf;
 
     @Override

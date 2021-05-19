@@ -11,19 +11,19 @@ CREATE TABLE A
     firstName VARCHAR(32) ,
     hireDate  DATE         ,
     birthDate DATE         ,
-    salary    FLOAT        NOT NULL 
+    salary    FLOAT        NOT NULL
 );
 
 CREATE TABLE B
 (
     id DATE          PRIMARY KEY,
-    name   VARCHAR(32) 
+    name   VARCHAR(32)
 );
 
 CREATE TABLE C
 (
     id INT          PRIMARY KEY,
-    name   VARCHAR(32) 
+    name   VARCHAR(32)
 );
 
 commit;

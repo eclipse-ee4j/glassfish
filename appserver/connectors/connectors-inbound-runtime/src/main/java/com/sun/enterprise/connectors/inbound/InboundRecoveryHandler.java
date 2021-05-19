@@ -68,10 +68,10 @@ public class InboundRecoveryHandler implements RecoveryResourceHandler {
 
     @Inject
     private Provider<ConnectorRuntime> connectorRuntimeProvider;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
-    
+
 
     private static Logger _logger = LogDomains.getLogger(InboundRecoveryHandler.class, LogDomains.RSR_LOGGER);
 

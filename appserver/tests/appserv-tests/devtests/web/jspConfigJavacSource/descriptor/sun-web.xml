@@ -22,5 +22,5 @@
 <sun-web-app>
   <jsp-config>
     <property name="compilerSourceVM" value="1.4" />
-  </jsp-config> 
+  </jsp-config>
 </sun-web-app>

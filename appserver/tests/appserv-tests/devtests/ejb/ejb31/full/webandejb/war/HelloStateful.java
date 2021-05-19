@@ -36,26 +36,26 @@ public class HelloStateful {
     // invalid    @EJB java.util.Observable sf22;
 
 
-    @PostConstruct 
+    @PostConstruct
     private void init() {
-	System.out.println("HelloStateful::init()");
-       	me = sesCtx.getBusinessObject(HelloStateful.class);
+        System.out.println("HelloStateful::init()");
+               me = sesCtx.getBusinessObject(HelloStateful.class);
     }
 
     @TransactionAttribute(TransactionAttributeType.REQUIRES_NEW)
     public String hello() {
-	
-	System.out.println("get invoked interface = " + 
-		     	sesCtx.getInvokedBusinessInterface() );
-	
-	sf2.hello();
-	sf2.goodbye();
 
-	return "hello, world!\n";
+        System.out.println("get invoked interface = " +
+                             sesCtx.getInvokedBusinessInterface() );
+
+        sf2.hello();
+        sf2.goodbye();
+
+        return "hello, world!\n";
     }
 
     public void foo() {
-	System.out.println("In HelloStateful::foo");
+        System.out.println("In HelloStateful::foo");
     }
 
     @Remove
@@ -63,23 +63,23 @@ public class HelloStateful {
 
     @PreDestroy
     private void destroy() {
-	System.out.println("HelloStateful::destroy()");
+        System.out.println("HelloStateful::destroy()");
     }
 
     @AfterBegin
-	private void afterBegin() {
-	System.out.println("In HelloStateful::afterBegin()");
+        private void afterBegin() {
+        System.out.println("In HelloStateful::afterBegin()");
     }
 
     @BeforeCompletion
-	protected void beforeCompletion() {
-	System.out.println("In HelloStateful::beforeCompletion()");
+        protected void beforeCompletion() {
+        System.out.println("In HelloStateful::beforeCompletion()");
     }
 
     @AfterCompletion
     void afterCompletion(boolean committed) {
-	System.out.println("In HelloStateful::afterCompletion(). Committed = " +
-			   committed);
+        System.out.println("In HelloStateful::afterCompletion(). Committed = " +
+                           committed);
     }
 
 

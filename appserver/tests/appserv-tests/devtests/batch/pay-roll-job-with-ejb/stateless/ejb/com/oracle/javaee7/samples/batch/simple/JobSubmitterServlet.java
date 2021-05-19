@@ -38,10 +38,10 @@ import jakarta.inject.Inject;
  * @author makannan
  */
 public class JobSubmitterServlet extends HttpServlet {
-    
+
 //    @Resource(name="concurrent/batch-executor-service")
 //    ManagedExecutorService managedExecutorService;
-    
+
     /**
      * Processes requests for both HTTP
      * <code>GET</code> and
@@ -72,7 +72,7 @@ public class JobSubmitterServlet extends HttpServlet {
                 submitJobFromXML(out);
             } else if (request.getParameter("listJobs") != null) {
                 out.println("<tr><td>listJobs</td><td>Not implemented yet</td></tr>");
-            } 
+            }
 
 
             out.println("</table>");
@@ -88,7 +88,7 @@ public class JobSubmitterServlet extends HttpServlet {
 
     private void submitJobFromXML(PrintWriter pw)
             throws Exception {
-        
+
         JobOperator jobOperator = BatchRuntime.getJobOperator();
         pw.println("<tr><td>JobOperator class </td><td>" + jobOperator.getClass().getName() + " </td></tr>");
 
@@ -96,11 +96,11 @@ public class JobSubmitterServlet extends HttpServlet {
         for (int i=0; i<9; i++)
             props.put(i, i);
         Long id = jobOperator.start("PayRollJob", props);
-        
+
         pw.println(jobInfo(jobOperator, id, pw));
-        
+
     }
-    
+
     //getJobNames()
     private String jobNames(JobOperator jobOperator) {
         StringBuilder sb = new StringBuilder("JobOperator.jobNames: ");
@@ -108,7 +108,7 @@ public class JobSubmitterServlet extends HttpServlet {
             sb.append(" ").append(j);
         return sb.toString();
     }
-    
+
     private String jobInfo(JobOperator jobOperator, long id, PrintWriter pw) {
         StringBuilder sb = new StringBuilder("JobOperator.jobNames: ");
         sb.append("<tr><td>Id</td><td" + id + "</td></tr>");
@@ -117,7 +117,7 @@ public class JobSubmitterServlet extends HttpServlet {
         sb.append(asString(jobOperator.getJobExecution(id)));
         return sb.toString();
     }
-    
+
     private String asString(JobExecution je) {
         StringBuilder sb = new StringBuilder("JobExecution: ");
         sb.append("<tr><td>=>    createTime</td><td>").append(je.getCreateTime()).append("</td></tr>");
@@ -128,10 +128,10 @@ public class JobSubmitterServlet extends HttpServlet {
         sb.append("<tr><td>=>    jobParameters: </td><td>").append(je.getJobParameters()).append("</td></tr>");
         sb.append("<tr><td>=>    lastUpdatedTime: </td><td>").append(je.getLastUpdatedTime()).append("</td></tr>");
         sb.append("<tr><td>=>    status: </td><td>").append(je.getExitStatus()).append("</td></tr>");
-        
+
         return sb.toString();
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /**
      * Handles the HTTP

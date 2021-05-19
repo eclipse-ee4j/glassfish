@@ -122,7 +122,7 @@ public class CoyoteServerSocketFactory
      * @param keystoreFile Pathname to the keystore file
      */
     public void setKeystoreFile(String keystoreFile) {
-      
+
         File file = new File(keystoreFile);
         if (!file.isAbsolute())
             file = new File(System.getProperty("catalina.base"),
@@ -145,7 +145,7 @@ public class CoyoteServerSocketFactory
      * @param randomFile Pathname to the random file
      */
     public void setRandomFile(String randomFile) {
-      
+
         File file = new File(randomFile);
         if (!file.isAbsolute())
             file = new File(System.getProperty("catalina.base"),
@@ -168,14 +168,14 @@ public class CoyoteServerSocketFactory
      * @param rootFile Pathname to the root list
      */
     public void setRootFile(String rootFile) {
-      
+
         File file = new File(rootFile);
         if (!file.isAbsolute())
             file = new File(System.getProperty("catalina.base"),
                             rootFile);
         this.rootFile = file.getAbsolutePath();
     }
-     
+
     /**
      * Gets the keystore password.
      *
@@ -295,7 +295,7 @@ public class CoyoteServerSocketFactory
      * enabled
      */
     public String getCiphers() {
-	return this.cipherSuites;
+        return this.cipherSuites;
     }
 
     /**
@@ -307,7 +307,7 @@ public class CoyoteServerSocketFactory
      * @param ciphers Comma-separated list of SSL cipher suites
      */
     public void setCiphers(String ciphers) {
-	this.cipherSuites = ciphers;
+        this.cipherSuites = ciphers;
     }
 
 

@@ -94,7 +94,7 @@ public class ApplicationSignedJARManager {
             new HashMap<URI,StaticContent>();
 
     public ApplicationSignedJARManager(
-            final String autoSigningAlias, 
+            final String autoSigningAlias,
             final ASJarSigner jarSigner,
             final ServiceLocator habitat,
             final DeploymentContext dc,
@@ -176,7 +176,7 @@ public class ApplicationSignedJARManager {
             }
             addAliasToURIsEntry(result.getKey(), aliasesUsedToSignJAR);
         }
-            
+
         arch.close();
         return result.getKey();
     }
@@ -195,7 +195,7 @@ public class ApplicationSignedJARManager {
             updateAliasToURIs(relURI, alias);
         }
     }
-    
+
     private void updateURIToAliases(final URI relURI,
             final String alias) throws IOException {
         Collection<String> aliasesForJAR = relURIToSigningAliases.get(relURI);
@@ -230,7 +230,7 @@ public class ApplicationSignedJARManager {
     public StaticContent staticContent(final URI jarURIRelativeToApp) {
         return relURIToContent.get(jarURIRelativeToApp);
     }
-    
+
     /*
      * Returns information about an auto-signed JAR for a given absolute URI and
      * alias, creating the auto-signed content object and adding it to the

@@ -67,7 +67,7 @@ public class JDOQLElements
 
     /**
      *  Flag indicating whether the result element is associated to an
-     *  aggregate function. 
+     *  aggregate function.
      */
     private boolean isAggregate;
 
@@ -173,17 +173,17 @@ public class JDOQLElements
         this.result = (result == null) ? "" : result; //NOI18N
     }
 
-    /** 
-     * Returns the result type. The result type is the name of the element type 
-     * of the JDO query result set. 
+    /**
+     * Returns the result type. The result type is the name of the element type
+     * of the JDO query result set.
      */
     public String getResultType()
     {
         return resultType;
     }
 
-    /** 
-     * Sets the result type. The result type is the name of the element type 
+    /**
+     * Sets the result type. The result type is the name of the element type
      * of the JDO query result set.
      */
     public void setResultType(String resultType)
@@ -220,7 +220,7 @@ public class JDOQLElements
 
     /**
      * Sets whether the result of the JDOQL query is a associated to
-     * an aggregate function. 
+     * an aggregate function.
      */
     public void setAggregate(boolean isAggregate)
     {
@@ -251,27 +251,27 @@ public class JDOQLElements
         repr.append("candidateClass: "); //NOI18N
         repr.append(candidateClassName);
         if (parameters != null && parameters.length() > 0) {
-            repr.append(", parameters: "); //NOI18N 
+            repr.append(", parameters: "); //NOI18N
             repr.append(parameters);
         }
         if (variables != null && variables.length() > 0) {
-            repr.append(", variables: "); //NOI18N 
+            repr.append(", variables: "); //NOI18N
             repr.append(variables);
         }
         if (filter != null && filter.length() > 0) {
-            repr.append(", filter: "); //NOI18N 
+            repr.append(", filter: "); //NOI18N
             repr.append(filter);
         }
         if (ordering != null && ordering.length() > 0) {
-            repr.append(", ordering: "); //NOI18N 
+            repr.append(", ordering: "); //NOI18N
             repr.append(ordering);
         }
         if (result != null && result.length() > 0) {
-            repr.append(", result: "); //NOI18N 
+            repr.append(", result: "); //NOI18N
             repr.append(result);
-            repr.append(", resultType: "); //NOI18N 
+            repr.append(", resultType: "); //NOI18N
             repr.append(resultType);
-            repr.append(", isPCResult: "); //NOI18N 
+            repr.append(", isPCResult: "); //NOI18N
             repr.append(isPCResult);
         }
         repr.append(", isAggregate: ");

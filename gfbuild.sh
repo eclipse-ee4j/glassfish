@@ -47,7 +47,7 @@ merge_junits(){
   echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" > ${jud}
   echo "<testsuites>" >> ${jud}
   for i in `find . -type d -name "surefire-reports"`
-  do    
+  do
     ls -d -1 ${i}/*.xml | xargs cat | sed 's/<?xml version=\"1.0\" encoding=\"UTF-8\" *?>//g' >> ${jud}
   done
   echo "</testsuites>" >> ${jud}

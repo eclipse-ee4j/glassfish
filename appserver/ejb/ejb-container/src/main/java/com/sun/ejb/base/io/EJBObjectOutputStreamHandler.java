@@ -97,26 +97,26 @@ public class EJBObjectOutputStreamHandler
      * this runtime.
      */
     private ProtocolManager getProtocolManager() {
-	GlassFishORBHelper orbHelper = Globals.getDefaultHabitat().getService(GlassFishORBHelper.class);
-	return orbHelper.isORBInitialized() ? orbHelper.getProtocolManager() : null;
+        GlassFishORBHelper orbHelper = Globals.getDefaultHabitat().getService(GlassFishORBHelper.class);
+        return orbHelper.isORBInitialized() ? orbHelper.getProtocolManager() : null;
     }
 
     private Serializable getRemoteBusinessObjectFactory
-        (RemoteBusinessWrapperBase remoteBusinessWrapper) 
+        (RemoteBusinessWrapperBase remoteBusinessWrapper)
         throws IOException {
         // Create a serializable object with the remote delegate and
         // the name of the client wrapper class.
-        org.omg.CORBA.Object target = (org.omg.CORBA.Object) 
+        org.omg.CORBA.Object target = (org.omg.CORBA.Object)
             remoteBusinessWrapper.getStub();
-        return getSerializableEJBReference(target, 
-					   getProtocolManager(),
+        return getSerializableEJBReference(target,
+                       getProtocolManager(),
                       remoteBusinessWrapper.getBusinessInterfaceName());
     }
 
     private Serializable getSerializableEJBReference(org.omg.CORBA.Object obj,
-						     ProtocolManager protocolMgr,
+                             ProtocolManager protocolMgr,
                              String remoteBusinessInterface)
-	throws IOException
+    throws IOException
     {
         Serializable result = (Serializable) obj;
         try {
@@ -151,13 +151,13 @@ public class EJBObjectOutputStreamHandler
                     }
                 }
             }
-	    } catch (Exception ex) {
-	        _ejbLogger.log(Level.WARNING, "Exception while getting serializable object", ex);
-	        IOException ioEx = new IOException("Exception during extraction of instance key");
-	        ioEx.initCause(ex);
-	        throw ioEx;
-	    }
-	    return result;
+        } catch (Exception ex) {
+            _ejbLogger.log(Level.WARNING, "Exception while getting serializable object", ex);
+            IOException ioEx = new IOException("Exception during extraction of instance key");
+            ioEx.initCause(ex);
+            throw ioEx;
+        }
+        return result;
     }
 
 }
@@ -166,7 +166,7 @@ final class SerializableJNDIContext
     implements SerializableObjectFactory
 {
     private String name;
-    
+
     SerializableJNDIContext(Context ctx)
         throws IOException
     {
@@ -199,7 +199,7 @@ final class SerializableJNDIContext
             IOException ioe = new IOException();
             ioe.initCause(namEx);
             throw ioe;
-	}
+    }
     }
 
 }
@@ -208,25 +208,25 @@ abstract class AbstractSerializableS1ASEJBReference
     implements SerializableObjectFactory
 {
     protected long containerId;
-    protected String debugStr;	//used for loggin purpose only
+    protected String debugStr;    //used for loggin purpose only
 
-    
+
     protected static Logger _ejbLogger =
        LogDomains.getLogger(AbstractSerializableS1ASEJBReference.class, LogDomains.EJB_LOGGER);
 
     AbstractSerializableS1ASEJBReference(long containerId) {
-	this.containerId = containerId;
-	BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(containerId);
-    
-	//container can be null if the app has been undeployed
-	//  after this was serialized
-	if (container == null) {
-	    _ejbLogger.log(Level.WARNING, "ejb.base.io.EJBOutputStream.null_container: "
-		+ containerId);
-	    debugStr = "" + containerId;
-	} else {
-	    debugStr = container.toString();
-	}
+    this.containerId = containerId;
+    BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(containerId);
+
+    //container can be null if the app has been undeployed
+    //  after this was serialized
+    if (container == null) {
+        _ejbLogger.log(Level.WARNING, "ejb.base.io.EJBOutputStream.null_container: "
+        + containerId);
+        debugStr = "" + containerId;
+    } else {
+        debugStr = container.toString();
+    }
     }
 
 
@@ -236,7 +236,7 @@ abstract class AbstractSerializableS1ASEJBReference
         Thread currentThread = Thread.currentThread();
         ClassLoader contextClassLoader =
             currentThread.getContextClassLoader();
-        
+
         java.rmi.Remote returnReference = reference;
 
         if( reference.getClass().getClassLoader() !=
@@ -250,7 +250,7 @@ abstract class AbstractSerializableS1ASEJBReference
                 GlassFishORBHelper orbHelper = EjbContainerUtilImpl.getInstance().getORBHelper();
                 ProtocolManager protocolMgr = orbHelper.getProtocolManager();
 
-               protocolMgr.connectObject(returnReference); 
+               protocolMgr.connectObject(returnReference);
 
             } catch(IOException ioe) {
                 throw ioe;
@@ -268,31 +268,31 @@ abstract class AbstractSerializableS1ASEJBReference
 final class SerializableS1ASEJBHomeReference
     extends AbstractSerializableS1ASEJBReference
 {
-    
+
     SerializableS1ASEJBHomeReference(long containerId) {
-	super(containerId);
+    super(containerId);
     }
 
     public Object createObject()
         throws IOException
     {
-	    Object result = null;
-	    BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(containerId);
-	    //container can be null if the app has been undeployed
-	    //  after this was serialized
-	    if (container == null) {
-	        _ejbLogger.log(Level.WARNING, "ejb.base.io.EJBOutputStream.null_container "
-		    + debugStr);
-	        result = null;
-	    } else {
+        Object result = null;
+        BaseContainer container = EjbContainerUtilImpl.getInstance().getContainer(containerId);
+        //container can be null if the app has been undeployed
+        //  after this was serialized
+        if (container == null) {
+            _ejbLogger.log(Level.WARNING, "ejb.base.io.EJBOutputStream.null_container "
+            + debugStr);
+            result = null;
+        } else {
             // Note that we can assume it's a RemoteHome stub because an
-            // application never sees a reference to the internal 
+            // application never sees a reference to the internal
             // Home for the Remote Business view.
-	        result = AbstractSerializableS1ASEJBReference.
+            result = AbstractSerializableS1ASEJBReference.
                 doRemoteRefClassLoaderConversion(container.getEJBHomeStub());
-	    }
+        }
 
-	    return result;
+        return result;
     }
 }
 
@@ -320,16 +320,16 @@ final class SerializableS1ASEJBObjectReference
         System.arraycopy(objKey, EJBObjectOutputStreamHandler.INSTANCEKEY_OFFSET,
                 instanceKey, 0, keySize);
     }
-    
+
     void setSFSBClientVersion(Object key, long val) {
         this.sfsbKey = key;
         this.sfsbClientVersion = val;
     }
-    
+
     boolean isHAEnabled() {
         return haEnabled;
     }
-    
+
     public Object createObject()
         throws IOException
     {
@@ -385,7 +385,7 @@ final class SerializableS1ASEJBObjectReference
                 }
         }
 
-	    return result;
+        return result;
     }
 }
 

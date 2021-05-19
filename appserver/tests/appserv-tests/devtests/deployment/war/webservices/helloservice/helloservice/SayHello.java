@@ -15,7 +15,7 @@
  */
 
  package helloservice;
- 
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -23,11 +23,11 @@ import java.rmi.RemoteException;
   * This is a minimum WebService interface
   */
   public interface SayHello  extends Remote {
-  	
-  	/*
-  	 * @return a hello string
-  	 */
-  	 public String sayHello(String name) throws RemoteException;
-  
+
+          /*
+           * @return a hello string
+           */
+           public String sayHello(String name) throws RemoteException;
+
   }
-  	
+

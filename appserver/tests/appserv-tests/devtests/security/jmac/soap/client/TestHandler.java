@@ -26,11 +26,11 @@ import jakarta.xml.ws.handler.soap.SOAPMessageContext;
 import jakarta.xml.soap.*;
 
 public class TestHandler implements SOAPHandler<SOAPMessageContext> {
-    
+
     public Set<QName> getHeaders() {
         return null;
     }
-    
+
     public void init() {
     }
 
@@ -56,14 +56,14 @@ public class TestHandler implements SOAPHandler<SOAPMessageContext> {
         }
         return true;
     }
-    
+
     public boolean handleFault(SOAPMessageContext context) {
         return true;
     }
-    
+
     public void destroy() {
     }
-    
+
     public void close(MessageContext context) {
     }
 }

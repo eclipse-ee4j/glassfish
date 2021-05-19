@@ -97,12 +97,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
     @Inject
     Events events;
-    
+
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
-    
+
     private AdminEndpointDecider epd = null;
-    
+
     @Inject
     ServerContext sc;
 
@@ -117,14 +117,14 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private volatile Server server;
-    
+
     @Inject
     AdminAccessController authenticator;
-   
+
     final Class<? extends Privacy> privacyClass;
 
     private boolean isRegistered = false;
-            
+
     CountDownLatch latch = new CountDownLatch(1);
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
@@ -141,7 +141,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     @Override
     public void postConstruct() {
         events.register(this);
-        
+
         epd = new AdminEndpointDecider(config);
         addDocRoot(env.getProps().get(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY) + "/asadmindocroot/");
     }
@@ -166,7 +166,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
         LogHelper.getDefaultLogger().log(Level.FINER, "Received something on {0}", req.getRequestURI());
         LogHelper.getDefaultLogger().log(Level.FINER, "QueryString = {0}", req.getQueryString());
-        
+
         HttpStatus statusCode = HttpStatus.OK_200;
 
         String requestURI = req.getRequestURI();
@@ -186,9 +186,9 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             if (!latch.await(20L, TimeUnit.SECONDS)) {
                 report = getClientActionReport(req.getRequestURI(), req);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-                report.setMessage("V3 cannot process this command at this time, please wait");            
+                report.setMessage("V3 cannot process this command at this time, please wait");
             } else {
-                
+
                 final Subject s = (authenticator == null) ? null : authenticator.loginAsAdmin(req);
                 if (s == null) {
                     reportAuthFailure(res, report, "adapter.auth.userpassword",
@@ -204,12 +204,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             statusCode = reqEx.getResponseStatus();
         } catch(InterruptedException e) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setMessage("V3 cannot process this command at this time, please wait");                        
+            report.setMessage("V3 cannot process this command at this time, please wait");
         } catch (Exception e) {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage("Exception while processing command: " + e);
         }
-        
+
         try {
             res.setStatus(statusCode);
             /*
@@ -351,7 +351,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
          * At this point, this method should be obsolete.  But in case it
          * comes back to life it now conforms to the new API for loginAsAdmin.
          * That is, loginAsAdmin throws a RemoteAdminAccessException if the
-         * request is remote but secure admin is disabled and it throws a 
+         * request is remote but secure admin is disabled and it throws a
          * LoginException if the user is not a legitimate administrator.
          * Further, loginAsAdmin now does nothing regarding full vs. read-only
          * access; those decisions are made during authorization of particular
@@ -366,8 +366,8 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             return AdminAccessController.Access.NONE;
         }
     }
-    
-    
+
+
     /** A convenience method to extract user name from a request. It assumes the HTTP Basic Auth.
      *
      * @param req instance of Request
@@ -463,14 +463,14 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
 
         String scope = getScope(command);
         command = getCommandAfterScope(command);
-        
+
         String qs = req.getQueryString();
         final ParameterMap parameters = extractParameters(qs);
         String passwordOptions = req.getHeader("X-passwords");
         if (passwordOptions != null) {
             decodePasswords(parameters, passwordOptions);
         }
-        
+
         try {
             Payload.Inbound inboundPayload = PayloadImpl.Inbound
                 .newInstance(req.getContentType(), req.getInputStream());
@@ -556,18 +556,18 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      */
     public void fireAdapterEvent(String type, Object data) {
     }
-     
+
     /**
      * decode the parameters that were passed in the X-Passwords header
-     * 
+     *
      * @params requestString value of the X-Passwords header
      * @returns a decoded requestString
      */
     void decodePasswords(ParameterMap pmap, final String requestString) {
         StringTokenizer stoken = new StringTokenizer(requestString == null ? "" : requestString, QUERY_STRING_SEPARATOR);
         while (stoken.hasMoreTokens()) {
-            String token = stoken.nextToken();            
-            if (token.indexOf("=") == -1) 
+            String token = stoken.nextToken();
+            if (token.indexOf("=") == -1)
                 continue;
             String paramName = token.substring(0, token.indexOf("="));
             String value = token.substring(token.indexOf("=") + 1);
@@ -580,7 +580,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
                 continue;
             }
 
-            try {               
+            try {
                 value = new String(decoder.decodeBuffer(value));
             } catch (IOException e) {
                 aalogger.log(Level.WARNING, KernelLoggerInfo.cantDecodeParameter,
@@ -589,12 +589,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
             }
             pmap.add(paramName, value);
         }
-       
+
     }
-     
+
     /**
      *  extract parameters from URI and save it in ParameterMap obj
-     *  
+     *
      *  @params requestString string URI to extract
      *
      *  @returns ParameterMap
@@ -604,8 +604,8 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
         final ParameterMap parameters = new ParameterMap();
         StringTokenizer stoken = new StringTokenizer(requestString == null ? "" : requestString, QUERY_STRING_SEPARATOR);
         while (stoken.hasMoreTokens()) {
-            String token = stoken.nextToken();            
-            if (token.indexOf("=") == -1) 
+            String token = stoken.nextToken();
+            if (token.indexOf("=") == -1)
                 continue;
             String paramName = token.substring(0, token.indexOf("="));
             String value = token.substring(token.indexOf("=") + 1);
@@ -633,12 +633,12 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
     public void event(@RestrictTo(EventTypes.SERVER_READY_NAME) Event event) {
         if (event.is(EventTypes.SERVER_READY)) {
             latch.countDown();
-            aalogger.fine("Ready to receive administrative commands");       
+            aalogger.fine("Ready to receive administrative commands");
         }
         //the count-down does not start if any other event is received
     }
-    
-    
+
+
     @Override
     public int getListenPort() {
         return epd.getListenPort();
@@ -659,7 +659,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      */
     @Override
     public boolean isRegistered() {
-	return isRegistered;
+        return isRegistered;
     }
 
     /**
@@ -668,7 +668,7 @@ public abstract class AdminAdapter extends StaticHttpHandler implements Adapter,
      */
     @Override
     public void setRegistered(boolean isRegistered) {
-	this.isRegistered = isRegistered;
+        this.isRegistered = isRegistered;
     }
 
     /**

@@ -38,7 +38,7 @@ public class MyTag extends TagSupport {
             throw new JspException(ioe.toString(), ioe);
         }
 
-	return EVAL_PAGE;
+        return EVAL_PAGE;
     }
 
     public void setArray(String[] args) {

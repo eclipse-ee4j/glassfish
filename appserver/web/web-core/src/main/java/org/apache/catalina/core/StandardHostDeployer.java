@@ -110,8 +110,8 @@ public class StandardHostDeployer implements Deployer {
 
     /**
      * The config file which should replace the value set for the config file
-     * of the <code>Context</code>being added in the <code>addChild()</code> 
-     * method, or <code>null</code> if the original value should remain 
+     * of the <code>Context</code>being added in the <code>addChild()</code>
+     * method, or <code>null</code> if the original value should remain
      * untouched.
      */
     private String overrideConfigFile = null;
@@ -613,7 +613,7 @@ public class StandardHostDeployer implements Deployer {
         host.log(msgInfo);
         try {
             // Get the work directory for the Context
-            File workDir = 
+            File workDir =
                 (File) context.getServletContext().getAttribute
                 (ServletContext.TEMPDIR);
             String configFile = context.getConfigFile();
@@ -631,7 +631,7 @@ public class StandardHostDeployer implements Deployer {
                                        host.getAppBase());
                 File contextFile = new File(context.getDocBase());
                 File baseDir = contextFile.getParentFile();
-                if ((baseDir == null) 
+                if ((baseDir == null)
                     || (appBase.getCanonicalPath().equals
                         (baseDir.getCanonicalPath()))) {
                     isAppBase = true;
@@ -651,16 +651,16 @@ public class StandardHostDeployer implements Deployer {
                     if (contextPath.length() == 0 && filename.equals("ROOT") ||
                         filename.equals(contextPath.substring(1))) {
                         if (!isWAR) {
-                            long contextLastModified = 
+                            long contextLastModified =
                                 contextFile.lastModified();
                             if (contextFile.isDirectory()) {
                                 deleteDir(contextFile);
                             }
                             if (host.isUnpackWARs()) {
-                                File contextWAR = 
+                                File contextWAR =
                                     new File(context.getDocBase() + ".war");
                                 if (contextWAR.exists()) {
-                                    if (contextLastModified 
+                                    if (contextLastModified
                                         > contextWAR.lastModified()) {
                                         deleteFile(contextWAR);
                                     }

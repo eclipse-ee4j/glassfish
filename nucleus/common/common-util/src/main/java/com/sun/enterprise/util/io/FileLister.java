@@ -27,68 +27,68 @@ import java.util.*;
 /**
  *
  * @author  bnevins
- * @version 
+ * @version
  */
 public abstract class FileLister
 {
-	FileLister(File root)
-	{
-		mainRoot = root;
-		fileList = new ArrayList<File>();
-	}
+        FileLister(File root)
+        {
+                mainRoot = root;
+                fileList = new ArrayList<File>();
+        }
     public void keepEmptyDirectories()
     {
         keepEmpty = true;
     }
 
-	abstract protected boolean relativePath();
-	
-	public String[] getFiles()
-	{
-		getFilesInternal(mainRoot);
-		String[] files = new String[fileList.size()];
-		
-		if(files.length <= 0)
-			return files;
+        abstract protected boolean relativePath();
 
-		int len = 0;
-		
-		if(relativePath())
-			len = mainRoot.getPath().length() + 1;
-		
-		for(int i = 0; i < files.length; i++)
-		{
-			files[i] = (fileList.get(i)).getPath().substring(len).replace('\\', '/');
-		}
-		
-		Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
-		return files;
-	}
-	
-	
-	public void getFilesInternal(File root)
-	{
-		File[] files = root.listFiles();
-		
-		for(int i = 0; i < files.length; i++)
-		{
-			if(files[i].isDirectory())
-			{
-				getFilesInternal(files[i]);
-			}
-			else
-				fileList.add(files[i]);	// actual file
-		}
+        public String[] getFiles()
+        {
+                getFilesInternal(mainRoot);
+                String[] files = new String[fileList.size()];
+
+                if(files.length <= 0)
+                        return files;
+
+                int len = 0;
+
+                if(relativePath())
+                        len = mainRoot.getPath().length() + 1;
+
+                for(int i = 0; i < files.length; i++)
+                {
+                        files[i] = (fileList.get(i)).getPath().substring(len).replace('\\', '/');
+                }
+
+                Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+                return files;
+        }
+
+
+        public void getFilesInternal(File root)
+        {
+                File[] files = root.listFiles();
+
+                for(int i = 0; i < files.length; i++)
+                {
+                        if(files[i].isDirectory())
+                        {
+                                getFilesInternal(files[i]);
+                        }
+                        else
+                                fileList.add(files[i]);        // actual file
+                }
         // add empty directory, if the option is turned on
         if(files.length <= 0 && keepEmpty)
             fileList.add(root);
 
-	}
-		
-		
-    private	ArrayList<File>	fileList = null;
-    private File		mainRoot	 = null;
-    private boolean		keepEmpty	 = false;
+        }
+
+
+    private        ArrayList<File>        fileList = null;
+    private File                mainRoot         = null;
+    private boolean                keepEmpty         = false;
 }
 
 

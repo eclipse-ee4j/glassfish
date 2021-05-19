@@ -33,42 +33,42 @@ import jakarta.jms.JMSException;
 import jakarta.jms.TextMessage;
 import javax.naming.*;
 
-public class TimerSessionEJB implements TimedObject, SessionBean 
+public class TimerSessionEJB implements TimedObject, SessionBean
 {
-	private SessionContext context;
-	private QueueConnection connection;
-	private QueueSession session;
-	private Queue queue;
-	private QueueSender sender;
+        private SessionContext context;
+        private QueueConnection connection;
+        private QueueSession session;
+        private Queue queue;
+        private QueueSender sender;
 
-	public void ejbCreate() throws RemoteException {}
+        public void ejbCreate() throws RemoteException {}
 
-	public void ejbRemove() throws RemoteException {}
+        public void ejbRemove() throws RemoteException {}
 
-	public void setSessionContext(SessionContext sc) {
-		context = sc;
-	}
+        public void setSessionContext(SessionContext sc) {
+                context = sc;
+        }
 
-	// business method to create a timer
+        // business method to create a timer
     public void dummyBusinessMethod() {
         try {
-            System.out.println("dummyBusinessMethod(): getCallerPrincipal() = " 
+            System.out.println("dummyBusinessMethod(): getCallerPrincipal() = "
                 + context.getCallerPrincipal());
-            System.out.println("dummyBusinessMethod(): isCallerInRole(foo) = " 
+            System.out.println("dummyBusinessMethod(): isCallerInRole(foo) = "
                 + context.isCallerInRole("foo"));
         } catch(IllegalStateException ise) {
             System.out.println(
-                "dummyBusinessMethod(): isCallerInRole should not throw " 
+                "dummyBusinessMethod(): isCallerInRole should not throw "
                 + "illegalstateexception in business method");
             throw ise;
         }
     }
 
-	public TimerHandle createTimer(int ms) {
+        public TimerHandle createTimer(int ms) {
             System.out.println("Calling createTimer");
-            System.out.println("createTimer(): getCallerPrincipal() = " 
+            System.out.println("createTimer(): getCallerPrincipal() = "
                 + context.getCallerPrincipal());
-            System.out.println("createTimer(): isCallerInRole(foo) = " 
+            System.out.println("createTimer(): isCallerInRole(foo) = "
                 + context.isCallerInRole("foo"));
             try {
                 System.out.println("Calling isCallerInRole");
@@ -78,7 +78,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
                     throw new Exception("isCallerInRole() should not fail in a business method");
                 }
             } catch(IllegalStateException ise) {
-                System.out.println("isCallerInRole should not throw " 
+                System.out.println("isCallerInRole should not throw "
                     + "illegalstateexception in business method");
                 throw ise;
             } catch(Exception ise) {
@@ -93,22 +93,22 @@ public class TimerSessionEJB implements TimedObject, SessionBean
             }
 
 
-		TimerService timerService = context.getTimerService();
-		Timer timer = timerService.createTimer(ms, "created timer");
-		return timer.getHandle();
-	}
+                TimerService timerService = context.getTimerService();
+                Timer timer = timerService.createTimer(ms, "created timer");
+                return timer.getHandle();
+        }
 
-	// timer callback method
-	public void ejbTimeout(Timer timer) {
+        // timer callback method
+        public void ejbTimeout(Timer timer) {
         try {
             System.out.println("Calling ejbTimeout");
             java.security.Principal principal = context.getCallerPrincipal();
-            System.out.println("In ejbTimeout(): getCallerPrincipal(), principal - " 
+            System.out.println("In ejbTimeout(): getCallerPrincipal(), principal - "
                 + principal);
-            System.out.println("In ejbTimeout(): isCallerInRole(foo), result - " 
+            System.out.println("In ejbTimeout(): isCallerInRole(foo), result - "
                 + context.isCallerInRole("foo"));
         } catch(IllegalStateException ise) {
-            System.out.println("ejbTimeout(): getCallerPrincipal() failed by " 
+            System.out.println("ejbTimeout(): getCallerPrincipal() failed by "
                 + "throwing IllegalStateException");
         }
         try {
@@ -119,7 +119,7 @@ public class TimerSessionEJB implements TimedObject, SessionBean
                 System.out.println("ejbTimeout(): isCallerInRole() failed" );
             }
         } catch(IllegalStateException ise) {
-            System.out.println("ejbTimeout(): isCallerInRole() failed by " 
+            System.out.println("ejbTimeout(): isCallerInRole() failed by "
                 + "throwing IllegalStateException");
         }
 
@@ -127,46 +127,46 @@ public class TimerSessionEJB implements TimedObject, SessionBean
             System.out.println("Calling getMessageContext");
             context.getMessageContext();
         } catch(IllegalStateException ise) {
-            System.out.println("ejbTimeout(): getMessageContext() successfully " 
+            System.out.println("ejbTimeout(): getMessageContext() successfully "
                 + "threw IllegalStateException");
         }
 
 
-		// add message to queue
-		try {
+                // add message to queue
+                try {
 
 
-			InitialContext ic = new InitialContext();
-			QueueConnectionFactory qcFactory = (QueueConnectionFactory)
-				ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
-			Queue queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
-			connection = qcFactory.createQueueConnection();
+                        InitialContext ic = new InitialContext();
+                        QueueConnectionFactory qcFactory = (QueueConnectionFactory)
+                                ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
+                        Queue queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
+                        connection = qcFactory.createQueueConnection();
 
-			QueueSession session = connection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-			sender  = session.createSender(queue);
+                        QueueSession session = connection.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+                        sender  = session.createSender(queue);
 
-			TextMessage message = session.createTextMessage();
-			message.setText("ejbTimeout() invoked");
-			System.out.println("Sending time out message");
-			sender.send(message);
-			System.out.println("Time out message sent");
-		} catch(NamingException e) {
-			e.printStackTrace();
-		} catch(JMSException e) {
-			e.printStackTrace();
-		}
-		finally {
-			try {
-				if(connection != null) {
-					connection.close();
+                        TextMessage message = session.createTextMessage();
+                        message.setText("ejbTimeout() invoked");
+                        System.out.println("Sending time out message");
+                        sender.send(message);
+                        System.out.println("Time out message sent");
+                } catch(NamingException e) {
+                        e.printStackTrace();
+                } catch(JMSException e) {
+                        e.printStackTrace();
+                }
+                finally {
+                        try {
+                                if(connection != null) {
+                                        connection.close();
                     connection = null;
-				}
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
+                                }
+                        } catch(Exception e) {
+                                e.printStackTrace();
+                        }
+                }
+        }
 
-	public void ejbActivate() {}
-	public void ejbPassivate() {}
+        public void ejbActivate() {}
+        public void ejbPassivate() {}
 }

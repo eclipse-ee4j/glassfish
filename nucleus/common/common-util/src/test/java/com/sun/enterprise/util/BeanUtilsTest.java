@@ -28,9 +28,9 @@ import static org.junit.Assert.*;
  * @author martinmares
  */
 public class BeanUtilsTest {
-    
+
     public static class Bean1 {
-        
+
         private String one;
         private boolean two;
         private int three;
@@ -50,7 +50,7 @@ public class BeanUtilsTest {
         public void setTwo(boolean two) {
             this.two = two;
         }
-        
+
         public void setTwo(boolean two, String neco) {
             this.two = two;
         }
@@ -58,12 +58,12 @@ public class BeanUtilsTest {
         public int getThree() {
             return three;
         }
-        
+
         public int someMethod() {
             return 0;
         }
     }
-    
+
     public BeanUtilsTest() {
     }
 
@@ -90,7 +90,7 @@ public class BeanUtilsTest {
         assertEquals("hello", b.getOne());
         assertTrue(b.isTwo());
     }
-    
+
     @Test
     public void testMapToBean2() throws Exception {
         Map<String, Object> map = new HashMap<String, Object>();
@@ -105,7 +105,7 @@ public class BeanUtilsTest {
         } catch (IllegalArgumentException ex) {
         }
     }
-    
+
     @Test
     public void testGetGetters() throws Exception {
         Bean1 b = new Bean1();
@@ -113,7 +113,7 @@ public class BeanUtilsTest {
         assertNotNull(getters);
         assertEquals(3, getters.size());
     }
-    
+
     @Test
     public void testGetSetters() throws Exception {
         Bean1 b = new Bean1();

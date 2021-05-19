@@ -19,86 +19,86 @@
  *
  * Created on March 2, 2000, 6:28 PM
  */
- 
+
 package com.sun.jdo.api.persistence.model.jdo.impl;
 
 import com.sun.jdo.api.persistence.model.ModelException;
 import com.sun.jdo.api.persistence.model.jdo.FieldGroupElement;
 import com.sun.jdo.api.persistence.model.jdo.PersistenceFieldElement;
 
-/** 
+/**
  *
  * @author  raccah
  * @version %I%
  */
-public class FieldGroupElementImpl extends PersistenceMemberElementImpl 
-	implements FieldGroupElement.Impl
+public class FieldGroupElementImpl extends PersistenceMemberElementImpl
+    implements FieldGroupElement.Impl
 {
-	/** Fields of the field group element. */
-	private PersistenceElementCollection _fields;
+    /** Fields of the field group element. */
+    private PersistenceElementCollection _fields;
 
-	/** Create new FieldGroupElementImpl with no corresponding name.  This 
-	 * constructor should only be used for cloning and archiving.
-	 */
-	public FieldGroupElementImpl ()
-	{
-		this(null);
-	}
+    /** Create new FieldGroupElementImpl with no corresponding name.  This
+     * constructor should only be used for cloning and archiving.
+     */
+    public FieldGroupElementImpl ()
+    {
+        this(null);
+    }
 
-	/** Creates new FieldGroupElementImpl with the corresponding name 
-	 * @param name the name of the element
-	 */
-	public FieldGroupElementImpl (String name)
-	{
-		super(name);
-		_fields = new PersistenceElementCollection(this, PROP_FIELDS, 
-			new PersistenceFieldElement[0]);
-	}
+    /** Creates new FieldGroupElementImpl with the corresponding name
+     * @param name the name of the element
+     */
+    public FieldGroupElementImpl (String name)
+    {
+        super(name);
+        _fields = new PersistenceElementCollection(this, PROP_FIELDS,
+            new PersistenceFieldElement[0]);
+    }
 
-	/** Find a field by name.
-	 * @param name the name to match
-	 * @return the field, or <code>null</code> if it does not exist
-	 */
-	public PersistenceFieldElement getField (String name)
-	{
-		return (PersistenceFieldElement)_fields.getElement(name);
-	}
+    /** Find a field by name.
+     * @param name the name to match
+     * @return the field, or <code>null</code> if it does not exist
+     */
+    public PersistenceFieldElement getField (String name)
+    {
+        return (PersistenceFieldElement)_fields.getElement(name);
+    }
 
-	/** Get all fields.
-	 * @return the fields
-	 */
-	public PersistenceFieldElement[] getFields ()
-	{
-		return (PersistenceFieldElement[])_fields.getElements();
-	}
+    /** Get all fields.
+     * @return the fields
+     */
+    public PersistenceFieldElement[] getFields ()
+    {
+        return (PersistenceFieldElement[])_fields.getElements();
+    }
 
 
-	/** Change the set of fields.
-	 * @param fields the new fields
-	 * @param action {@link #ADD}, {@link #REMOVE}, or {@link #SET}
-	 * @exception ModelException if impossible
-	 */
-	public void changeFields (PersistenceFieldElement[] fields, int action)
-		throws ModelException
-	{
-		_fields.changeElements(fields, action);
-	}
+    /** Change the set of fields.
+     * @param fields the new fields
+     * @param action {@link #ADD}, {@link #REMOVE}, or {@link #SET}
+     * @exception ModelException if impossible
+     */
+    public void changeFields (PersistenceFieldElement[] fields, int action)
+        throws ModelException
+    {
+        _fields.changeElements(fields, action);
+    }
 
-	//=============== extra methods needed for xml archiver ==============
+    //=============== extra methods needed for xml archiver ==============
 
-	/** Returns the field collection of this field group element.  This 
-	 * method should only be used internally and for cloning and archiving.
-	 * @return the field collection of this field group element
-	 */
-	public PersistenceElementCollection getCollection () { return _fields; }
+    /** Returns the field collection of this field group element.  This
+     * method should only be used internally and for cloning and archiving.
+     * @return the field collection of this field group element
+     */
+    public PersistenceElementCollection getCollection () { return _fields; }
 
-	/** Set the field collection of this field group element to the supplied 
-	 * collection.  This method should only be used internally and for 
-	 * cloning and archiving.
-	 * @param collection the field collection of this field group element
-	 */
-	public void setCollection (PersistenceElementCollection collection)
-	{
-		_fields = collection;
-	}
+    /** Set the field collection of this field group element to the supplied
+     * collection.  This method should only be used internally and for
+     * cloning and archiving.
+     * @param collection the field collection of this field group element
+     */
+    public void setCollection (PersistenceElementCollection collection)
+    {
+        _fields = collection;
+    }
 }

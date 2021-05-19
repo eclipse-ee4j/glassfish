@@ -22,12 +22,12 @@ import com.sun.ejb.spi.container.SFSBContainerCallback;
 
 public class NRUSessionCache
     extends LruSessionCache
-{ 
+{
 
     protected boolean doOrdering = false;
     protected int orderingThreshold = 0;
 
-    public NRUSessionCache(String cacheName, 
+    public NRUSessionCache(String cacheName,
         SFSBContainerCallback container, int cacheIdleTime, int removalTime)
     {
         super("NRU-" + cacheName, container, cacheIdleTime, removalTime);
@@ -37,13 +37,13 @@ public class NRUSessionCache
         super.init(maxEntries, loadFactor, props);
         orderingThreshold = (int) (0.75 * threshold);
     }
-    
+
     protected CacheItem itemAdded(CacheItem item) {
         CacheItem addedItem = super.itemAdded(item);
         doOrdering = (entryCount >= orderingThreshold);
         return addedItem;
     }
-    
+
     protected void itemAccessed(CacheItem item) {
         LruCacheItem lc = (LruCacheItem) item;
         synchronized (this) {
@@ -61,19 +61,19 @@ public class NRUSessionCache
 
     protected void itemRefreshed(CacheItem item, int oldSize) {
     }
-    
+
     protected void itemRemoved(CacheItem item) {
         super.itemRemoved(item);
         doOrdering = (entryCount >= orderingThreshold);
     }
 
     public void trimTimedoutItems(int  maxCount) {
-        // If we are maintaining an ordered list use 
+        // If we are maintaining an ordered list use
         // the superclass method for trimming
         if (doOrdering) {
             super.trimTimedoutItems(maxCount);
         } else {
-            // we don't have an ordered list, 
+            // we don't have an ordered list,
             // so go through the whole cache and pick victims
             trimUnSortedTimedoutItems(maxCount);
         }

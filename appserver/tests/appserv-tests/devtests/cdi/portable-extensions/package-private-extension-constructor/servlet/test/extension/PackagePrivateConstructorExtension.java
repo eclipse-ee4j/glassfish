@@ -43,7 +43,7 @@ public class PackagePrivateConstructorExtension implements Extension{
         this.enabledInterceptors = Collections.synchronizedSet(new
                 HashSet<Class<?>>());
     }
-    
+
    @SuppressWarnings("unused")
    void observeInterceptors(@Observes ProcessBean<?> pmb)
    {
@@ -52,17 +52,17 @@ public class PackagePrivateConstructorExtension implements Extension{
          this.enabledInterceptors.add(pmb.getBean().getBeanClass());
       }
    }
-   
+
    Collection<Class<?>> getEnabledInterceptors()
    {
       return enabledInterceptors;
    }
-    
+
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery bdd){
         System.out.println("MyExtension::beforeBeanDiscovery" + bdd);
         beforeBeanDiscoveryCalled = true;
     }
-    
+
     <T> void processAnnotatedType(@Observes ProcessAnnotatedType<T> pat){
         System.out.println("MyExtension:Process annotated type" + pat.getAnnotatedType().getBaseType());
         processAnnotatedTypeCalled = true;
@@ -73,10 +73,10 @@ public class PackagePrivateConstructorExtension implements Extension{
             pat.veto();
         }
     }
-    
+
     void afterBeanDiscovery(@Observes AfterBeanDiscovery abd, BeanManager bm){
         System.out.println("MyExtension: abd: " + abd + " BeanManager: " + bm);
-        
+
         if (bm != null) {
             //ensure a valid BeanManager is injected
             afterBeanDiscoveryCalled = true;

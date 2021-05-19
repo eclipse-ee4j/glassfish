@@ -40,7 +40,7 @@ import org.jvnet.hk2.config.types.Property;
  *
  * The rest of the security related upgrade is handled implicitly by the actions of the
  * upgrade service itself.
- * 
+ *
  */
 
 @Service
@@ -63,7 +63,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    
+
     public void postConstruct()  {
         for (Config config : configs.getConfig()) {
             SecurityService service = config.getSecurityService();

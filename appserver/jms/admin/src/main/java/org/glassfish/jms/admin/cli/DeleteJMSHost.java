@@ -50,8 +50,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=JmsHost.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-jms-host", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-jms-host",
         description="Delete JMS Host",
         params={
             @RestParam(name="id", value="$parent")

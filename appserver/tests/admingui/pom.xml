@@ -24,14 +24,14 @@
     <artifactId>admingui</artifactId>
     <version>6.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>GlassFish admingui Tests</name>  
+    <name>GlassFish admingui Tests</name>
 
     <modules>
-    	<module>auto-test</module>
+        <module>auto-test</module>
     </modules>
-	
-	<dependencyManagement>
-		<dependencies>
+
+    <dependencyManagement>
+        <dependencies>
             <dependency>
                 <groupId>org.seleniumhq.selenium</groupId>
                 <artifactId>selenium-java</artifactId>
@@ -44,12 +44,12 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-	
-	<build>
-        <defaultGoal>install</defaultGoal>		
-		
-		<pluginManagement>
-		    <plugins>
+
+    <build>
+        <defaultGoal>install</defaultGoal>
+
+        <pluginManagement>
+            <plugins>
                 <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>2.4</version>
@@ -95,5 +95,5 @@
             </plugins>
         </pluginManagement>
     </build>
-	
+
 </project>

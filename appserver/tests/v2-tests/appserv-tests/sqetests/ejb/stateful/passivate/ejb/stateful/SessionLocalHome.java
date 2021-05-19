@@ -25,9 +25,9 @@ import jakarta.ejb.*;
  */
 
 public interface SessionLocalHome extends jakarta.ejb.EJBLocalHome {
-    
+
     public SessionLocal create() throws jakarta.ejb.CreateException;
-    
+
     public SessionLocal create(java.lang.String initialMessage) throws jakarta.ejb.CreateException;
-    
+
 }

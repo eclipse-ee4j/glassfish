@@ -37,7 +37,7 @@ import org.jvnet.hk2.annotations.Service;
  * @author Marina Vatkina
  */
 @Service
-public class JavaEETransactionManagerXADelegate 
+public class JavaEETransactionManagerXADelegate
             implements JavaEETransactionManagerDelegate {
 
     private JavaEETransactionManagerSimplified tm;
@@ -59,16 +59,16 @@ public class JavaEETransactionManagerXADelegate
     /** XXX Throw an exception if called ??? XXX
      *  it might be a JTS imported global tx or an error
      */
-    public void commitDistributedTransaction() throws 
-            RollbackException, HeuristicMixedException, 
-            HeuristicRollbackException, SecurityException, 
-            IllegalStateException, SystemException {} 
+    public void commitDistributedTransaction() throws
+            RollbackException, HeuristicMixedException,
+            HeuristicRollbackException, SecurityException,
+            IllegalStateException, SystemException {}
 
     /** XXX Throw an exception if called ??? XXX
      *  it might be a JTS imported global tx or an error
      */
-    public void rollbackDistributedTransaction() throws IllegalStateException, 
-            SecurityException, SystemException {} 
+    public void rollbackDistributedTransaction() throws IllegalStateException,
+            SecurityException, SystemException {}
 
     public int getStatus() throws SystemException {
         JavaEETransaction tx = tm.getCurrentTransaction();
@@ -78,7 +78,7 @@ public class JavaEETransactionManagerXADelegate
             return jakarta.transaction.Status.STATUS_NO_TRANSACTION;
     }
 
-    public Transaction getTransaction() 
+    public Transaction getTransaction()
             throws SystemException {
         return  tm.getCurrentTransaction();
     }

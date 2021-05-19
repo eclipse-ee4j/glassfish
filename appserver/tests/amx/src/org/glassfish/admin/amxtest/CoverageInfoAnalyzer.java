@@ -172,21 +172,21 @@ public final class CoverageInfoAnalyzer {
     findMissingJ2EETypes() {
         final Set<String> missing = new HashSet<String>();
 /*
-	    missing.addAll( XTypesMapper.getInstance().getJ2EETypes() );
-	    missing.addAll( J2EETypesMapper.getInstance().getJ2EETypes() );
-	    
-	    missing.removeAll( mTestUtil.findRegisteredJ2EETypes() );
-	    
-	    final Set<ObjectName>   registered  =
-	        Observer.getInstance().getRegistrationListener().getRegistered();
-	    for( final ObjectName objectName : registered )
-	    {
-	        final String    j2eeType    = Util.getJ2EEType( objectName );
-	        if ( j2eeType != null )
-	        {
-	            missing.remove( j2eeType );
-	        }
-	    }
+        missing.addAll( XTypesMapper.getInstance().getJ2EETypes() );
+        missing.addAll( J2EETypesMapper.getInstance().getJ2EETypes() );
+
+        missing.removeAll( mTestUtil.findRegisteredJ2EETypes() );
+
+        final Set<ObjectName>   registered  =
+            Observer.getInstance().getRegistrationListener().getRegistered();
+        for( final ObjectName objectName : registered )
+        {
+            final String    j2eeType    = Util.getJ2EEType( objectName );
+            if ( j2eeType != null )
+            {
+                missing.remove( j2eeType );
+            }
+        }
 */
 
         return missing;

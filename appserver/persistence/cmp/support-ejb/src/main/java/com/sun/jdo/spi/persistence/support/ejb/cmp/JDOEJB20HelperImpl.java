@@ -101,10 +101,10 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
      * not exist in the database or is deleted.
      */
     public Object convertEJBLocalObjectToPC(EJBLocalObject o, PersistenceManager pm, boolean validate) {
-        Object key = null; 
+        Object key = null;
         try {
             key = o.getPrimaryKey();
-        } catch (Exception ex) {   
+        } catch (Exception ex) {
             EJBException e = new EJBException(I18NHelper.getMessage(messages,
                         "EXC_ConvertEJBObjectToPC", o.getClass().getName()), ex);// NOI18N
             logger.throwing("JDOEJB20HelperImpl", "convertEJBLocalObjectToPC", e); // NOI18N
@@ -199,7 +199,7 @@ abstract public class JDOEJB20HelperImpl extends JDOEJB11HelperImpl
 
    /**
      * Validates that this instance is of the correct implementation class
-     * of a local interface. 
+     * of a local interface.
      * Throws IllegalArgumentException if the passed
      * argument is of a wrong type.
      *

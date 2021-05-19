@@ -42,8 +42,8 @@ import org.glassfish.hk2.api.PerLookup;
  *
  * --target      Cluster or stand alone server instance (required)
  * --retrieve    When true, the zip file is downloaded under the specified file_name in local machine
- *	         When false, the zip file is exported under the the specified file_name on DAS
- *	         Default value is false. (optional)
+ *                 When false, the zip file is exported under the the specified file_name on DAS
+ *                 Default value is false. (optional)
  *
  * file_name    Specifies the file name and location of the synchronized content.
  * If file_name is not specified and --retrieve=false, the default value is
@@ -61,8 +61,8 @@ import org.glassfish.hk2.api.PerLookup;
 @I18n("export-sync-bundle")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="export-sync-bundle", 
+        opType=RestEndpoint.OpType.POST,
+        path="export-sync-bundle",
         description="export-sync-bundle")
 })
 public class ExportSyncBundle implements AdminCommand {
@@ -246,7 +246,7 @@ public class ExportSyncBundle implements AdminCommand {
                 //No operand specified, <target>-sync-bundle.zip is created in install-root/domains/domain_name/sync
                 f = getDefaultBundle();
             }
-            
+
             if (f.getParentFile() != null && !f.getParentFile().exists()) {
                 if (!f.getParentFile().mkdirs()) {
                     setError(Strings.get("export.sync.bundle.createDirFailed", f.getParentFile().getPath()));

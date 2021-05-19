@@ -84,11 +84,11 @@ public class SimpleResourceAdapterImpl
             spec.validate();
             work = new WorkDispatcher("DISPATCHER", ctx, factory, spec);
             wm.scheduleWork(work, 30 * 1000, null, null);
-            
+
             //Test if a resource defined in the comp's namespace is available
             Object o = (new InitialContext()).lookup("java:comp/env/MyDB");
             System.out.println("**** lookedup in RA endpointActivation:" + o);
-            
+
             debug("B.001. Scheduled Dispatcher");
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -106,7 +106,7 @@ public class SimpleResourceAdapterImpl
             System.out.println("lookedup in RA endpointDeactivation:" + o);
         } catch (Exception ex){
             System.out.println("**** Error while looking up in component context " +
-            		"in endpointDeactivation");
+                            "in endpointDeactivation");
             ex.printStackTrace();
             throw new RuntimeException(ex);
         }

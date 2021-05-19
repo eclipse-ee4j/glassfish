@@ -28,7 +28,7 @@ public class TestServlet extends HttpServlet {
         Enumeration<String> e = req.getAttributeNames();
         while (e.hasMoreElements()) {
            attrs.append(e.nextElement() + ";");
-        }        
+        }
 
         res.getWriter().print(attrs);
     }

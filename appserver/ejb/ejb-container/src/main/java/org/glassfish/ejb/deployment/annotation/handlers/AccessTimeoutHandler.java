@@ -46,7 +46,7 @@ import org.jvnet.hk2.annotations.Service;
  */
 @Service
 @AnnotationHandlerFor(AccessTimeout.class)
-public class AccessTimeoutHandler extends AbstractAttributeHandler 
+public class AccessTimeoutHandler extends AbstractAttributeHandler
         implements PostProcessor<EjbContext> {
 
     public AccessTimeoutHandler() {
@@ -77,7 +77,7 @@ public class AccessTimeoutHandler extends AbstractAttributeHandler
                     // been processed.  This correctly ignores superclass methods that
                     // are overridden and applies the correct .xml overriding semantics.
                     if(!matchesExistingAccessTimeoutMethod(annMethod, sessionDesc)) {
-                      
+
                         MethodDescriptor newMethodDesc = new MethodDescriptor(annMethod);
                         sessionDesc.addAccessTimeoutMethod(newMethodDesc, timeout.value(),
                                                              timeout.unit());
@@ -117,7 +117,7 @@ public class AccessTimeoutHandler extends AbstractAttributeHandler
         // component definition view that are declared on this class.  This will correctly
         // eliminate any overridden methods and provide the most-derived version of each.
         // Use the Class's declared methods list to get the private methods.
-        
+
         Class classAn = (Class)ainfo.getAnnotatedElement();
         AccessTimeout timeoutAnn = (AccessTimeout) ainfo.getAnnotation();
 

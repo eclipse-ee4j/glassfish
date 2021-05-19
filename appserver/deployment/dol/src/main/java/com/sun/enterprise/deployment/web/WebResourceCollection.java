@@ -18,21 +18,27 @@ package com.sun.enterprise.deployment.web;
 
 import java.util.Set;
 
-    /** I am an interface representing the API to an object
-    ** which represents the information about a web resource collection. 
-    ** @author Danny Coward
-    */
-
+/**
+ * I am an interface representing the API to an object
+ * which represents the information about a web resource collection.
+ *
+ * @author Danny Coward
+ */
 public interface WebResourceCollection extends WebDescriptor {
 
-    public Set<String> getUrlPatterns();
-    public void addUrlPattern(String urlPattern);
+    Set<String> getUrlPatterns();
 
-    public Set<String> getHttpMethods();
-    public void addHttpMethod(String httpMethod);
-    public String[] getHttpMethodsAsArray();
+    void addUrlPattern(String urlPattern);
 
-    public Set<String> getHttpMethodOmissions();
-    public void addHttpMethodOmission(String httpMethodOmission);
-    public String[] getHttpMethodOmissionsAsArray();
+    Set<String> getHttpMethods();
+
+    void addHttpMethod(String httpMethod);
+
+    String[] getHttpMethodsAsArray();
+
+    Set<String> getHttpMethodOmissions();
+
+    void addHttpMethodOmission(String httpMethodOmission);
+
+    String[] getHttpMethodOmissionsAsArray();
 }

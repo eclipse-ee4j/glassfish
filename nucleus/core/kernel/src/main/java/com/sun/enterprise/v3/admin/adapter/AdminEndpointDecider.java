@@ -45,22 +45,22 @@ public final class AdminEndpointDecider {
     private String guiContextRoot;
     private List<String> asadminHosts; //list of virtual servers for asadmin
     private List<String> guiHosts;     //list of virtual servers for admin GUI
-    
+
     private int port;  // both asadmin and admin GUI are on same port
     private InetAddress address;
     private int maxThreadPoolSize = 5;
     private Config cfg;
     private Logger log = KernelLoggerInfo.getLogger();
-    
+
     public static final int ADMIN_PORT           = 4848;
-    
+
     public AdminEndpointDecider(Config cfg) {
         if (cfg == null || log == null)
             throw new IllegalArgumentException("config or logger can't be null");
         this.cfg = cfg;
         setValues();
     }
-    
+
     public int getListenPort() {
         return port;
     }
@@ -76,19 +76,19 @@ public final class AdminEndpointDecider {
     public List<String> getAsadminHosts() {
         return asadminHosts;
     }
-    
+
     public List<String> getGuiHosts() {
         return guiHosts;
     }
-    
+
     public String getAsadminContextRoot() {
         return asadminContextRoot;
     }
-    
+
     public String getGuiContextRoot() {
         return guiContextRoot;
     }
-    
+
     private void setValues() {
         asadminContextRoot = AdminAdapter.PREFIX_URI;  //can't change
         //asadminHosts       = Collections.emptyList();  //asadmin is handled completely by the adapter, no VS needed
@@ -130,25 +130,25 @@ public final class AdminEndpointDecider {
                 setGuiContextRootFromAdminService(as);
         }
     }
-    
+
     private void setGuiContextRootFromAdminService(AdminService as) {
         for (Property p : as.getProperty()) {
             setGuiContextRoot(p);
         }
     }
     private void setGuiContextRoot(Property prop) {
-	if (prop == null) {
-	    guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
-	    return;
-	}
-	if (ServerTags.ADMIN_CONSOLE_CONTEXT_ROOT.equals(prop.getName())) {
-	    if (prop.getValue() != null && prop.getValue().startsWith("/")) {
-		guiContextRoot = prop.getValue();
+        if (prop == null) {
+            guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
+            return;
+        }
+        if (ServerTags.ADMIN_CONSOLE_CONTEXT_ROOT.equals(prop.getName())) {
+            if (prop.getValue() != null && prop.getValue().startsWith("/")) {
+                guiContextRoot = prop.getValue();
                 log.log(Level.INFO, KernelLoggerInfo.contextRoot, guiContextRoot);
-	    } else {
-		log.log(Level.INFO, KernelLoggerInfo.invalidContextRoot, ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT);
-		guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
-	    }
-	}
-    }    
+            } else {
+                log.log(Level.INFO, KernelLoggerInfo.invalidContextRoot, ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT);
+                guiContextRoot = ServerEnvironmentImpl.DEFAULT_ADMIN_CONSOLE_CONTEXT_ROOT;
+            }
+        }
+    }
 }

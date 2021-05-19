@@ -37,16 +37,16 @@ public class BIncludeCNamedDispatcher extends HttpServlet {
      */
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        request.getServletContext().log(this.getClass().getSimpleName() + " " 
+        request.getServletContext().log(this.getClass().getSimpleName() + " "
                 + request.getHttpServletMapping());
         HttpServletMapping forwardMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.FORWARD_MAPPING);
-        request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: " 
+        request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: "
                 + forwardMapping);
         HttpServletMapping includeMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.INCLUDE_MAPPING);
-        request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: " 
+        request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: "
                 + includeMapping);
         HttpServletMapping asyncMapping = (HttpServletMapping) request.getAttribute(AsyncContext.ASYNC_MAPPING);
-        request.getServletContext().log(this.getClass().getSimpleName() + " ASYNC_MAPPING attribute: " 
+        request.getServletContext().log(this.getClass().getSimpleName() + " ASYNC_MAPPING attribute: "
                 + asyncMapping);
         RequestDispatcher rd = request.getServletContext().getNamedDispatcher("ServletC");
         rd.include(request, response);

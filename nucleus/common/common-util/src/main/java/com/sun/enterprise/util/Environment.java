@@ -22,7 +22,7 @@ import com.sun.logging.*;
 
 /**
  * Environment class that contains information about
- * from where this appserver instance is being invoked from 
+ * from where this appserver instance is being invoked from
  */
 public class Environment {
 

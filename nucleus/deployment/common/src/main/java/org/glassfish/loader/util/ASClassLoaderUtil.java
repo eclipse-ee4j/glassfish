@@ -100,36 +100,36 @@ public class ASClassLoaderUtil {
 
     }
 
-    public static String getModuleClassPath (ServiceLocator habitat, 
+    public static String getModuleClassPath (ServiceLocator habitat,
         DeploymentContext context) {
-        DeployCommandParameters params = 
+        DeployCommandParameters params =
             context.getCommandParameters(DeployCommandParameters.class);
         return getModuleClassPath(habitat, params.name(), params.libraries());
     }
 
 
-    private static void addDeployParamLibrariesForModule(StringBuilder sb, 
+    private static void addDeployParamLibrariesForModule(StringBuilder sb,
         String moduleId, String deploymentLibs, ServiceLocator habitat) {
         if (moduleId.indexOf("#") != -1) {
             moduleId = moduleId.substring(0, moduleId.indexOf("#"));
         }
-  
+
         if (deploymentLibs == null) {
-            ApplicationInfo appInfo = 
+            ApplicationInfo appInfo =
                 habitat.<ApplicationRegistry>getService(ApplicationRegistry.class).get(moduleId);
             if (appInfo == null) {
-                // this might be an internal container app, 
+                // this might be an internal container app,
                 // like _default_web_app, ignore.
                 return;
             }
             deploymentLibs = appInfo.getLibraries();
         }
-        final URL[] libs = 
+        final URL[] libs =
             getDeployParamLibrariesAsURLs(deploymentLibs, habitat);
         if (libs != null) {
             for (final URL u : libs) {
                 sb.append(u.getPath());
-                sb.append(File.pathSeparator);                    
+                sb.append(File.pathSeparator);
             }
         }
     }
@@ -144,7 +144,7 @@ public class ASClassLoaderUtil {
     /**
      * converts libraries specified via EXTENSION_LIST entry in MANIFEST.MF of
      * all of the libraries of the deployed archive to
-     * The libraries  are made available to 
+     * The libraries  are made available to
      * the application in the order specified.
      *
      * @param librariesStr is a comma-separated list of library JAR files
@@ -164,8 +164,8 @@ public class ASClassLoaderUtil {
     /**
      * converts libraries specified via the --libraries deployment option to
      * URL[].  The library JAR files are specified by either relative or
-     * absolute paths.  The relative path is relative to 
-     * instance-root/lib/applibs. The libraries  are made available to 
+     * absolute paths.  The relative path is relative to
+     * instance-root/lib/applibs. The libraries  are made available to
      * the application in the order specified.
      *
      * @param librariesStr is a comma-separated list of library JAR files
@@ -221,7 +221,7 @@ public class ASClassLoaderUtil {
                     }
                 }
 
-                //set shared classpath for module so that it doesn't need to be 
+                //set shared classpath for module so that it doesn't need to be
                 //recomputed for every other invocation
                 modulesClassPath = tmpString.toString();
             }
@@ -316,7 +316,7 @@ public class ASClassLoaderUtil {
         }
         return list;
     }
-  
+
     public static URL[] convertURLListToArray(List<URL> list) {
         // converts the list to an array
         URL[] urls = new URL[0];
@@ -330,13 +330,13 @@ public class ASClassLoaderUtil {
     /**
      * get URL list from classpath
      * @param classpath classpath string containing the classpaths
-     * @param delimiter delimiter to separate the classpath components 
+     * @param delimiter delimiter to separate the classpath components
      *                  in the classpath string
      * @param rootPath root path of the classpath if the paths are relative
-     
+
      * @return urlList URL list from the given classpath
      */
-    public static List<URL> getURLsFromClasspath(String classpath, 
+    public static List<URL> getURLsFromClasspath(String classpath,
         String delimiter, String rootPath) {
         final List<URL> urls  = new ArrayList<URL>();
 
@@ -359,7 +359,7 @@ public class ASClassLoaderUtil {
                     }
                 } catch (Exception ie) {
                     // ignore
-                } 
+                }
 
                 if (rootPath != null && rootPath.length() != 0) {
                     path = rootPath + File.separator + path;
@@ -420,13 +420,13 @@ public class ASClassLoaderUtil {
 
 
     /**
-     * Returns the class path (if any) from the given manifest file as an 
+     * Returns the class path (if any) from the given manifest file as an
      * URL list.
      *
      * @param    manifest    manifest file of an archive
      * @param    rootPath    root path to the module
      *
-     * @return   a list of URLs 
+     * @return   a list of URLs
      *           an empty list if given manifest is null
      */
     public static List<URL> getManifestClassPathAsURLs(Manifest manifest,
@@ -441,7 +441,7 @@ public class ASClassLoaderUtil {
 
                 if (next.equals(Attributes.Name.CLASS_PATH)) {
                     String classpathString = (String) entry.getValue();
-                    urlList = getURLsFromClasspath(classpathString, " ", 
+                    urlList = getURLsFromClasspath(classpathString, " ",
                         rootPath);
                 }
             }
@@ -455,11 +455,11 @@ public class ASClassLoaderUtil {
      * @param appRoot the application root
      * @param appLibDir the Application library directory
      * @param compatibilityProp the version of the release that we need to
-     *        maintain backward compatibility 
+     *        maintain backward compatibility
      * @return an array of URL
      */
-    public static URL[] getAppLibDirLibraries(File appRoot, String appLibDir, 
-        String compatibilityProp) 
+    public static URL[] getAppLibDirLibraries(File appRoot, String appLibDir,
+        String compatibilityProp)
         throws IOException {
         return convertURLListToArray(
             getAppLibDirLibrariesAsList(appRoot, appLibDir, compatibilityProp));
@@ -480,8 +480,8 @@ public class ASClassLoaderUtil {
             allLibDirLibraries.add(url);
         }
 
-        // if the compatibility property is set to "v2", we should add all the 
-        // jars under the application root to maintain backward compatibility 
+        // if the compatibility property is set to "v2", we should add all the
+        // jars under the application root to maintain backward compatibility
         // of v2 jar visibility
         if (compatibilityProp != null && compatibilityProp.equals("v2")) {
             List<URL> appRootLibraries = getURLsAsList(null, new File[] {appRoot}, true);

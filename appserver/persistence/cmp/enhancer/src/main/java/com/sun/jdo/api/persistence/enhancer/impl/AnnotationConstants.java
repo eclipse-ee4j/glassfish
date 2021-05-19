@@ -28,11 +28,11 @@ import com.sun.jdo.api.persistence.enhancer.classfile.VMConstants;
 
 /**
  * AnnotationConstants defines a set of constants for use across the
- * filter subsystem. 
+ * filter subsystem.
  */
 public interface AnnotationConstants extends VMConstants {
 
-    /* bit mask constants to describe the types of code annotation needed 
+    /* bit mask constants to describe the types of code annotation needed
      * at specific points within methods
      */
 
@@ -108,7 +108,7 @@ public interface AnnotationConstants extends VMConstants {
     //@olsen: added constant
     public final static int SuperClone = 0x8000;
 
-    /* a bit mask covering a field which describes the type of array 
+    /* a bit mask covering a field which describes the type of array
        being fetched or dirtied */
 //@olsen: disabled feature
 /*

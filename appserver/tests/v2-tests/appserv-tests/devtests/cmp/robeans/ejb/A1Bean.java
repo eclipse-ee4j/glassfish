@@ -25,55 +25,55 @@ import jakarta.ejb.*;
 
 
 public class A1Bean implements EntityBean {
-    
+
     public String id;
     public String shortName;
     public String description;
 
     private EntityContext context;
-    
+
     /**
      * @see EntityBean#setEntityContext(EntityContext)
      */
     public void setEntityContext(EntityContext aContext) {
         context=aContext;
     }
-    
+
     /**
      * @see EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
+
     /**
      * @see EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
+
     /**
      * @see EntityBean#ejbRemove()
      */
     public void ejbRemove() {
 
     }
-    
+
     /**
      * @see EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
+
     /**
      * @see EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
+
     /**
      * @see EntityBean#ejbStore()
      */

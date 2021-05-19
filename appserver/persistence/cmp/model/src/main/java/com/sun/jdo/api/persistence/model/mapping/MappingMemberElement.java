@@ -22,17 +22,17 @@
 
 package com.sun.jdo.api.persistence.model.mapping;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public interface MappingMemberElement extends MappingElement
 {
-	/** Get the declaring class.
-	 * @return the class that owns this member element, or <code>null</code>
-	 * if the element is not attached to any class
-	 */
-	public MappingClassElement getDeclaringClass ();
+    /** Get the declaring class.
+     * @return the class that owns this member element, or <code>null</code>
+     * if the element is not attached to any class
+     */
+    public MappingClassElement getDeclaringClass ();
 }
 

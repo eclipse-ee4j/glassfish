@@ -48,8 +48,8 @@ public class CustomerProgRefreshEJB implements jakarta.ejb.EntityBean {
 
     public PKString1 ejbFindByPrimaryKey(PKString1 SSN) throws FinderException {
         Connection conn = null;
-	Statement statement = null;
-	ResultSet results = null;
+    Statement statement = null;
+    ResultSet results = null;
 
         try {
             conn = dataSource.getConnection();
@@ -66,28 +66,28 @@ public class CustomerProgRefreshEJB implements jakarta.ejb.EntityBean {
             System.out.println("SQLException occured in ejbFindbyPrimaryKey method.");
             return new PKString1("");
         } finally {
-	    if (results != null) 
-		try {
-		    results.close();
-		} catch (Exception ex) { }
-	    if (statement != null) 
-		try {
-		    statement.close();
-		} catch (Exception ex) { }
-	    if (conn != null) 
-		try {
-		    conn.close();
-		} catch (Exception ex) { }
-	}
+        if (results != null)
+        try {
+            results.close();
+        } catch (Exception ex) { }
+        if (statement != null)
+        try {
+            statement.close();
+        } catch (Exception ex) { }
+        if (conn != null)
+        try {
+            conn.close();
+        } catch (Exception ex) { }
+    }
     }
 
     public PKString1 ejbCreate() {
         return null;
     }
-    
-    public void ejbPostCreate() {       
-    }  
-    
+
+    public void ejbPostCreate() {
+    }
+
     public void ejbRemove() {
     }
 
@@ -111,7 +111,7 @@ public class CustomerProgRefreshEJB implements jakarta.ejb.EntityBean {
             conn.close();
         } catch (SQLException e) {
             System.out.println("SQLException occurred in ejbLoad() method");
-        }   
+        }
     }
 
     public void ejbActivate() {

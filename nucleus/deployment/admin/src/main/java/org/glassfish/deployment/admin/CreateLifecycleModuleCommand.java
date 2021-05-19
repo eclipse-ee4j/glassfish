@@ -64,15 +64,15 @@ import org.glassfish.deployment.common.DeploymentUtils;
 @TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-lifecycle-module", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-lifecycle-module",
         description="Create Lifecycle Module",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-lifecycle-module", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-lifecycle-module",
         description="Create Lifecycle Module",
         params={
             @RestParam(name="target", value="$parent")
@@ -125,7 +125,7 @@ public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandS
          * One check for the life cycle module itself.
          */
         accessChecks.add(new AccessCheck(DeploymentCommandUtils.APPLICATION_RESOURCE_NAME, "create"));
-        
+
         /*
          * One check for the target.
          */
@@ -133,10 +133,10 @@ public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandS
                 DeploymentCommandUtils.getTargetResourceNameForNewAppRef(domain, target), "create"));
         return accessChecks;
     }
-   
-    
+
+
     public void execute(AdminCommandContext context) {
-        
+
         ActionReport report = context.getActionReport();
 
         try {
@@ -145,7 +145,7 @@ public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandS
             report.setMessage(ie.getMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
-        } 
+        }
 
         DeployCommandParameters commandParams = new DeployCommandParameters();
         commandParams.name = name;
@@ -171,9 +171,9 @@ public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandS
         if (loadorder != null) {
             appProps.setProperty(ServerTags.LOAD_ORDER, loadorder);
         }
-        appProps.setProperty(ServerTags.IS_FAILURE_FATAL, 
+        appProps.setProperty(ServerTags.IS_FAILURE_FATAL,
             failurefatal.toString());
- 
+
         appProps.setProperty(ServerTags.IS_LIFECYCLE, "true");
 
         try  {
@@ -192,7 +192,7 @@ public class CreateLifecycleModuleCommand implements AdminCommand, AdminCommandS
         List<String> referencedTargets = domain.getAllReferencedTargetsForApplication(name);
         Application app = apps.getApplication(name);
         if (app != null && !app.isLifecycleModule()){
-             throw new IllegalArgumentException(localStrings.getLocalString("application_withsamename_exists", "Application with same name {0} already exists, please pick a different name for the lifecycle module.", name));	
+             throw new IllegalArgumentException(localStrings.getLocalString("application_withsamename_exists", "Application with same name {0} already exists, please pick a different name for the lifecycle module.", name));
         }
         if (referencedTargets.isEmpty()) {
             if (deployment.isRegistered(name)) {

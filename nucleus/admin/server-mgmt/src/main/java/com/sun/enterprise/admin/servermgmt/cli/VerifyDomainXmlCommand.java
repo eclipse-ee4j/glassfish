@@ -50,7 +50,7 @@ import org.jvnet.hk2.config.DomDocument;
  * Implementation for the CLI command verify-domain-xml Verifies the content of the domain.xml file
  *
  * verify-domain-xml [--domaindir install_dir/domains] [domain_name]
- * 
+ *
  * @author Nandini Ektare
  */
 @Service(name = "verify-domain-xml")

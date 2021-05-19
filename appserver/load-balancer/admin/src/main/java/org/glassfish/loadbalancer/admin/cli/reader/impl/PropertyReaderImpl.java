@@ -176,10 +176,10 @@ public class PropertyReaderImpl implements PropertyReader {
     // --- VISITOR IMPLEMENTATION ---
     @Override
     public void accept(Visitor v) throws Exception {
-		if (v instanceof PropertyVisitor) {
-			PropertyVisitor pv = (PropertyVisitor) v;
-			pv.visit(this);
-		}
+        if (v instanceof PropertyVisitor) {
+            PropertyVisitor pv = (PropertyVisitor) v;
+            pv.visit(this);
+        }
     }
 
     // -- PRIVATE VARS ---

@@ -47,7 +47,7 @@ import org.glassfish.api.admin.AccessRequired;
  * ReDeploy command
  *
  * @author Jerome Dochez
- * 
+ *
  */
 @Service(name="redeploy")
 @PerLookup
@@ -62,13 +62,13 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
 
     @Inject
     Deployment deployment;
-    
+
     @Param(optional=false)
     String name;
 
     @Param(primary=true, optional=true)
     File path = null;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
@@ -78,9 +78,9 @@ public class ReDeployCommand extends DeployCommandParameters implements AdminCom
 
     private final Collection<String> excludedDeployCommandParamNames =
             initExcludedDeployCommandParamNames();
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ReDeployCommand.class);
-    
+
     /**
      * Executes the command.
      *

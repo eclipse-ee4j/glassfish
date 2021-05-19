@@ -29,7 +29,7 @@ public class SfulEJB implements Sful {
         if (tb != null) {
             return "hello";
         }
-        
+
         return null;
     }
 

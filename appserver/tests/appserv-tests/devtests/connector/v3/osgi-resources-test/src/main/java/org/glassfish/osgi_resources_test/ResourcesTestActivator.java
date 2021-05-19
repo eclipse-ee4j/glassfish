@@ -92,7 +92,7 @@ public class ResourcesTestActivator implements BundleActivator {
 
 /*
         testJdbcResources(null);
-        
+
         testJdbcResources("(osgi.jdbc.driver.class=oracle.jdbc.pool.OracleDataSource)");
 
         testJdbcResources("(jndi-name=jdbc/oracle_type4_resource)");

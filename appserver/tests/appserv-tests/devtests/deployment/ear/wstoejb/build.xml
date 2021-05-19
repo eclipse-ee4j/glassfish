@@ -23,9 +23,9 @@
 
 <project name="wstoejb" default="all" basedir=".">
 
-	&commonBuild;
+        &commonBuild;
 
-	
+
     <property name="testName" value="wstoejb"/>
     <target name="prepare" depends="init">
         <property name="portable.ear" value="${build}/wstoejb-portable.ear"/>
@@ -45,10 +45,10 @@
             <property name="build" value="${build}/war"/>
         </ant>
 
-        <copy file="${build}/war/WEB-INF/wsdl/WebServiceToEjb.wsdl" todir="appclient"/>                
+        <copy file="${build}/war/WEB-INF/wsdl/WebServiceToEjb.wsdl" todir="appclient"/>
         <ant dir="appclient" target="private-all">
             <property name="build" value="${build}/appclient"/>
-        </ant>  
+        </ant>
 
         <delete file="appclient/WebServiceToEjb.wsdl"/>
         <mkdir dir="${build}/ear/META-INF"/>
@@ -146,11 +146,11 @@
     <target name="runclient" depends="prepare">
         <exec executable="${APPCLIENT}" resultproperty="result" output="${build}/${log.id}.output.log">
             <arg line="-client ${build}/wstoejbClient.jar ${arg.list}"/>
-        </exec>     
+        </exec>
         <antcall target="processResult">
             <param name="result" value="${result}"/>
             <param name="log" value="${build}/${log.id}.output.log"/>
-        </antcall>                
+        </antcall>
     </target>
 
     <target name="private-all" unless="EE">

@@ -29,29 +29,31 @@ public class FinderNode extends DeploymentDescriptorNode<IASEjbCMPFinder> {
 
     @Override
     public IASEjbCMPFinder getDescriptor() {
-        if (descriptor==null) descriptor = new IASEjbCMPFinder();
+        if (descriptor==null) {
+            descriptor = new IASEjbCMPFinder();
+        }
         return descriptor;
     }
 
     @Override
-    protected Map getDispatchTable() {  
-	Map dispatchTable = super.getDispatchTable();
-	dispatchTable.put(RuntimeTagNames.METHOD_NAME, "setMethodName");
-	dispatchTable.put(RuntimeTagNames.QUERY_PARAMS, "setQueryParameterDeclaration");
-	dispatchTable.put(RuntimeTagNames.QUERY_FILTER, "setQueryFilter");
-	dispatchTable.put(RuntimeTagNames.QUERY_VARIABLES, "setQueryVariables");
-	dispatchTable.put(RuntimeTagNames.QUERY_ORDERING, "setQueryOrdering");
-	return dispatchTable;
+    protected Map getDispatchTable() {
+        Map dispatchTable = super.getDispatchTable();
+        dispatchTable.put(RuntimeTagNames.METHOD_NAME, "setMethodName");
+        dispatchTable.put(RuntimeTagNames.QUERY_PARAMS, "setQueryParameterDeclaration");
+        dispatchTable.put(RuntimeTagNames.QUERY_FILTER, "setQueryFilter");
+        dispatchTable.put(RuntimeTagNames.QUERY_VARIABLES, "setQueryVariables");
+        dispatchTable.put(RuntimeTagNames.QUERY_ORDERING, "setQueryOrdering");
+        return dispatchTable;
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, IASEjbCMPFinder finder) {    
-	Node finderNode = super.writeDescriptor(parent, nodeName, finder);
-	appendTextChild(finderNode, RuntimeTagNames.METHOD_NAME, finder.getMethodName());
-	appendTextChild(finderNode, RuntimeTagNames.QUERY_PARAMS, finder.getQueryParameterDeclaration());
-	appendTextChild(finderNode, RuntimeTagNames.QUERY_FILTER, finder.getQueryFilter());
-	appendTextChild(finderNode, RuntimeTagNames.QUERY_VARIABLES, finder.getQueryVariables());
-	appendTextChild(finderNode, RuntimeTagNames.QUERY_ORDERING, finder.getQueryOrdering());
-	return finderNode;
+    public Node writeDescriptor(Node parent, String nodeName, IASEjbCMPFinder finder) {
+        Node finderNode = super.writeDescriptor(parent, nodeName, finder);
+        appendTextChild(finderNode, RuntimeTagNames.METHOD_NAME, finder.getMethodName());
+        appendTextChild(finderNode, RuntimeTagNames.QUERY_PARAMS, finder.getQueryParameterDeclaration());
+        appendTextChild(finderNode, RuntimeTagNames.QUERY_FILTER, finder.getQueryFilter());
+        appendTextChild(finderNode, RuntimeTagNames.QUERY_VARIABLES, finder.getQueryVariables());
+        appendTextChild(finderNode, RuntimeTagNames.QUERY_ORDERING, finder.getQueryOrdering());
+        return finderNode;
     }
 }

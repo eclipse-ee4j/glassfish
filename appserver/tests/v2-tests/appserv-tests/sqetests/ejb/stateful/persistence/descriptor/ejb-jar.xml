@@ -32,13 +32,13 @@
       <transaction-type>Container</transaction-type>
       <env-entry>
         <env-entry-name>BEAS</env-entry-name>
-	<env-entry-type>java.lang.Double </env-entry-type>
-	<env-entry-value>100.0</env-entry-value>
+        <env-entry-type>java.lang.Double </env-entry-type>
+        <env-entry-value>100.0</env-entry-value>
       </env-entry>
       <env-entry>
         <env-entry-name>MSFT</env-entry-name>
-	<env-entry-type>java.lang.Double </env-entry-type>
-	<env-entry-value>150.0</env-entry-value>
+        <env-entry-type>java.lang.Double </env-entry-type>
+        <env-entry-value>150.0</env-entry-value>
       </env-entry>
     </session>
   </enterprise-beans>
@@ -46,9 +46,9 @@
     <container-transaction>
       <method>
         <ejb-name>statefulSession</ejb-name>
-	<method-name>*</method-name>
+        <method-name>*</method-name>
       </method>
       <trans-attribute>Required</trans-attribute>
     </container-transaction>
-  </assembly-descriptor>  
+  </assembly-descriptor>
 </ejb-jar>

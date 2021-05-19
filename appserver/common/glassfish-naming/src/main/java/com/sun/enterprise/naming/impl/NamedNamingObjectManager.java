@@ -85,32 +85,32 @@ public class NamedNamingObjectManager {
 //                }
 //            }
 //        }
-        
-		for (ServiceHandle<?> inhabitant : getHabitat()
-				.getAllServiceHandles(NamespacePrefixes.class)) {
-		    List<String> prefixes = inhabitant.getActiveDescriptor().getMetadata().get(GlassfishNamingManager.NAMESPACE_METADATA_KEY);
-		    if (prefixes == null) continue;
-		    
-		    String prefix = null;
-		    for (String candidate : prefixes) {
-		        if (name.startsWith(candidate)) {
-		            prefix = candidate;
-		            break;
-		        }
-		    }
-		    
-			if (prefix != null) {
-				proxy = (NamedNamingObjectProxy) inhabitant.getService();
-				if (logger.isLoggable(Level.FINE)) {
-					logger.logp(Level.FINE, "NamedNamingObjectManager",
-							"tryNamedProxies",
-							"found a new proxy [{0}] for [{1}]", new Object[] {
-									proxy, name });
-				}
-				cacheProxy(prefix, proxy);
-				return proxy.handle(name);
-			}
-		}
+
+        for (ServiceHandle<?> inhabitant : getHabitat()
+                .getAllServiceHandles(NamespacePrefixes.class)) {
+            List<String> prefixes = inhabitant.getActiveDescriptor().getMetadata().get(GlassfishNamingManager.NAMESPACE_METADATA_KEY);
+            if (prefixes == null) continue;
+
+            String prefix = null;
+            for (String candidate : prefixes) {
+                if (name.startsWith(candidate)) {
+                    prefix = candidate;
+                    break;
+                }
+            }
+
+            if (prefix != null) {
+                proxy = (NamedNamingObjectProxy) inhabitant.getService();
+                if (logger.isLoggable(Level.FINE)) {
+                    logger.logp(Level.FINE, "NamedNamingObjectManager",
+                            "tryNamedProxies",
+                            "found a new proxy [{0}] for [{1}]", new Object[] {
+                                    proxy, name });
+                }
+                cacheProxy(prefix, proxy);
+                return proxy.handle(name);
+            }
+        }
 
         return null;
     }

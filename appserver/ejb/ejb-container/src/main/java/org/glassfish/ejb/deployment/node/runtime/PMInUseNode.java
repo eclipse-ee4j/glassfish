@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
  * This node handles the pm-inuse runtime xml element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 
 public class PMInUseNode extends RuntimeDescriptorNode<PersistenceManagerInUse> {

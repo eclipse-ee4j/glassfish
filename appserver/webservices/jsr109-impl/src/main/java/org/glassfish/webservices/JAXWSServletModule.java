@@ -38,12 +38,12 @@ import java.util.concurrent.ConcurrentHashMap;
  * the other hand, the requirements imposed by WSIT WS-MetadataExchange
  * require that all endpoints sharing a context root share a ServletMoule.
  * Therefore, in general, multiple JAXWSContainers will share a JAXWSServletModule,
- * so JAXWSContainer must use a lookup in the static 
- * <code>JAXWSServletModule.modules</code> to find its associatiated module. 
+ * so JAXWSContainer must use a lookup in the static
+ * <code>JAXWSServletModule.modules</code> to find its associatiated module.
  */
 
 public class JAXWSServletModule extends ServletModule {
-    
+
     //Map of context-roots to JAXWSServletModules
     private final static Map<String, JAXWSServletModule> modules =
             new ConcurrentHashMap<String, JAXWSServletModule>();
@@ -54,11 +54,11 @@ public class JAXWSServletModule extends ServletModule {
     //field is returned by <code>getBoundEndpoints</code>.
      private final Map<String, BoundEndpoint> endpoints =
              new ConcurrentHashMap<String, BoundEndpoint>();
-     
+
     //the context-root for endpoints belonging to this module.
     private final String contextPath;
-    
-         
+
+
     public static synchronized JAXWSServletModule getServletModule(String contextPath) {
 
         JAXWSServletModule ret = modules.get(contextPath);
@@ -67,7 +67,7 @@ public class JAXWSServletModule extends ServletModule {
             modules.put(contextPath, ret);
         }
         return ret;
-    } 
+    }
 
     public static void destroy(String contextPath) {
         modules.remove(contextPath);
@@ -76,7 +76,7 @@ public class JAXWSServletModule extends ServletModule {
     private JAXWSServletModule(String contextPath) {
             this.contextPath = contextPath;
     }
-  
+
     public void addEndpoint(String uri, ServletAdapter adapter) {
         endpoints.put(uri, adapter);
     }

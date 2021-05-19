@@ -45,11 +45,11 @@
       </cmp-field>
       <primkey-field>accountID</primkey-field>
       <security-role-ref>
-      	<role-name>Manager</role-name>
+          <role-name>Manager</role-name>
         <role-link>Manager</role-link>
       </security-role-ref>
       <security-role-ref>
-      	<role-name>Administrator</role-name>
+          <role-name>Administrator</role-name>
         <role-link>Administrator</role-link>
       </security-role-ref>
       <security-identity>
@@ -85,11 +85,11 @@
         <ejb-link>sec-daomanager-ejb.jar#AccountBean</ejb-link>
       </ejb-local-ref>
       <security-role-ref>
-      	<role-name>Manager</role-name>
+          <role-name>Manager</role-name>
         <role-link>Manager</role-link>
       </security-role-ref>
       <security-role-ref>
-      	<!--<role-name>ADMIN</role-name>-->
+          <!--<role-name>ADMIN</role-name>-->
         <role-name>Administrator</role-name>
         <role-link>Administrator</role-link>
       </security-role-ref>

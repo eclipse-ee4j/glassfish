@@ -16,22 +16,16 @@
 
 package com.sun.jdo.api.persistence.enhancer.meta;
 
-import java.util.Map;
-import java.util.List;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.StringTokenizer;
-
-import java.io.PrintWriter;
-
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataProperties.JDOClass;
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaDataProperties.JDOField;
-
 import com.sun.jdo.api.persistence.enhancer.util.Support;
+
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 /**
  * Provides the JDO meta information based on properties.
@@ -102,14 +96,11 @@ public class JDOMetaDataPropertyImpl extends Support
      * Creates an instance.
      * //@lars: out id not used anymore
      */
-    public JDOMetaDataPropertyImpl(Properties properties,
-                                   PrintWriter out)
-       throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+    public JDOMetaDataPropertyImpl(Properties properties, PrintWriter out)
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         // check arguments
         if (properties == null) {
-            final String msg
-                = "Initializing meta data: properties == null";//NOI18N
+            final String msg = "Initializing meta data: properties == null";// NOI18N
             throw new JDOMetaDataFatalError(msg);
         }
         /*
@@ -125,291 +116,276 @@ public class JDOMetaDataPropertyImpl extends Support
         //this.out = out;
     }
 
+
     /**
      * Creates an instance.
      * //@lars: out id not used anymore
      */
-    public JDOMetaDataPropertyImpl(Properties properties)
-       throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        this (properties, null);
+    public JDOMetaDataPropertyImpl(Properties properties) throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        this(properties, null);
     }
+
 
     /**
      * Tests whether a class is known to be persistence-capable.
      */
-    public boolean isPersistenceCapableClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        //check the transient prefixes
+    @Override
+    public boolean isPersistenceCapableClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        // check the transient prefixes
         for (Iterator i = transientTypePrefixes.iterator(); i.hasNext();) {
-            final String typePrefix = (String)i.next();
-            if (classPath.startsWith(typePrefix))
+            final String typePrefix = (String) i.next();
+            if (classPath.startsWith(typePrefix)) {
                 return false;
+            }
         }
-        JDOClass clazz = getJDOClass (classPath);
-        return (clazz != null  ?  clazz.isPersistent ()  :  false);
+        JDOClass clazz = getJDOClass(classPath);
+        return (clazz != null ? clazz.isPersistent() : false);
     }
 
     /**********************************************************************
      *
      *********************************************************************/
 
-    public boolean isTransientClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        return ! isPersistenceCapableClass (classPath);
+    @Override
+    public boolean isTransientClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        return !isPersistenceCapableClass(classPath);
     }
+
 
     /**
      * Tests whether a class is known as a persistence-capable root class.
      */
+    @Override
     public boolean isPersistenceCapableRootClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        //@lars
-        if  ( ! isPersistenceCapableClass (classPath))
-        {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        // @lars
+        if (!isPersistenceCapableClass(classPath)) {
             return false;
         }
-        String superclass = getSuperClass (classPath);
-        return (superclass != null  ?  ! isPersistenceCapableClass (superclass)  :  true);
+        String superclass = getSuperClass(classPath);
+        return (superclass != null ? !isPersistenceCapableClass(superclass) : true);
 
-        //^olsen: exchange dummy implementation
-//        return isPersistenceCapableClass(classPath);
+        // ^olsen: exchange dummy implementation
+        // return isPersistenceCapableClass(classPath);
     }
+
 
     /**
      * Returns the name of the persistence-capable root class of a class.
      */
+    @Override
     public String getPersistenceCapableRootClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        //^olsen: exchange dummy implementation
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        // ^olsen: exchange dummy implementation
         return (isPersistenceCapableClass(classPath) ? classPath : null);
     }
 
+
     /**
-     *  Returns the superclass of a class.
+     * Returns the superclass of a class.
      */
 
-    public final String getSuperClass (String classname)
-    {
+    @Override
+    public final String getSuperClass(String classname) {
+        JDOClass clazz = getJDOClass(classname);
+        return (clazz != null ? clazz.getSuperClassName() : null);
 
-        JDOClass clazz = getJDOClass (classname);
-        return (clazz != null  ?  clazz.getSuperClassName ()  :  null);
-
-    }  //JDOMetaDataPropertyImpl.getSuperClass()
+    } // JDOMetaDataPropertyImpl.getSuperClass()
 
 
     /**
      * Tests whether a type is known for Second Class Objects.
      */
-    public boolean isSecondClassObjectType(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+    @Override
+    public boolean isSecondClassObjectType(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         return secondClassObjectTypes.contains(classPath);
     }
+
 
     /**
      * Tests whether a type is known for Mutable Second Class Objects.
      */
+    @Override
     public boolean isMutableSecondClassObjectType(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         return mutableSecondClassObjectTypes.contains(classPath);
     }
+
 
     /**
      * Tests whether a field of a class is known to be persistent.
      */
+    @Override
     public boolean isPersistentField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        JDOField field = getJDOField (classPath, fieldName);
-        return (field != null  ?  field.isPersistent ()  :  false);
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        JDOField field = getJDOField(classPath, fieldName);
+        return (field != null ? field.isPersistent() : false);
     }
+
 
     /**
      * Tests whether a field of a class is known to be transactional.
      */
+    @Override
     public boolean isTransactionalField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        JDOField field = getJDOField (classPath, fieldName);
-        return (field != null  ?  field.isTransactional ()  :  false);
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        JDOField field = getJDOField(classPath, fieldName);
+        return (field != null ? field.isTransactional() : false);
     }
+
 
     /**
      * Tests whether a field of a class is known to be Primary Key.
      */
+    @Override
     public boolean isPrimaryKeyField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        JDOField field = getJDOField (classPath, fieldName);
-        return (field != null  ?  field.isPk ()  :  false);
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        JDOField field = getJDOField(classPath, fieldName);
+        return (field != null ? field.isPk() : false);
     }
+
 
     /**
      * Tests whether a field of a class is known to be part of the
      * Default Fetch Group.
      */
+    @Override
     public boolean isDefaultFetchGroupField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        JDOField field = getJDOField (classPath, fieldName);
-        return (field != null  ?  field.isInDefaultFetchGroup ()  :  false);
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        JDOField field = getJDOField(classPath, fieldName);
+        return (field != null ? field.isInDefaultFetchGroup() : false);
     }
+
 
     /**
      * Returns the unique field index of a declared, persistent field of a
      * class.
      */
-    public int getFieldNo(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        JDOClass clazz = getJDOClass (classPath);
-        return (clazz != null  ?  clazz.getIndexOfField (fieldName)  :  -1);
+    @Override
+    public int getFieldNo(String classPath, String fieldName) throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        JDOClass clazz = getJDOClass(classPath);
+        return (clazz != null ? clazz.getIndexOfField(fieldName) : -1);
     }
+
 
     /**
      * Returns an array of field names of all declared, persistent fields
      * of a class.
      */
-    public String [] getManagedFields (String classname)
-    {
+    @Override
+    public String[] getManagedFields(String classname) {
+        JDOClass clazz = getJDOClass(classname);
+        return (clazz != null ? clazz.getManagedFieldNames() : new String[] {});
 
-        JDOClass clazz = getJDOClass (classname);
-        return (clazz != null  ?  clazz.getManagedFieldNames ()  :  new String [] {});
-
-    }  //JDOMetaDataPropertyImpl.getManagedFields()
-
-
-    /**********************************************************************
-     *  No interface method.
-     *********************************************************************/
-
-    public final String [] getKnownClasses ()
-    {
-
-        return this.properties.getKnownClassNames ();
-
-    }  //JDOMetaDataPropertyImpl.getKnownClasses()
+    } // JDOMetaDataPropertyImpl.getManagedFields()
 
 
     /**********************************************************************
-     *  Gets all known fields of a class.
+     * No interface method.
      *********************************************************************/
 
-    public final String [] getKnownFields (String classname)
-    {
+    @Override
+    public final String[] getKnownClasses() {
+        return this.properties.getKnownClassNames();
 
-        JDOClass clazz = getJDOClass (classname);
-        return (clazz != null  ?  clazz.getFields ()  :  new String [] {});
+    } // JDOMetaDataPropertyImpl.getKnownClasses()
 
-    }  //JDOMetaDataPropertyImpl.getKnownFields()
+
+    /**********************************************************************
+     * Gets all known fields of a class.
+     *********************************************************************/
+
+    @Override
+    public final String[] getKnownFields(String classname) {
+        JDOClass clazz = getJDOClass(classname);
+        return (clazz != null ? clazz.getFields() : new String[] {});
+
+    } // JDOMetaDataPropertyImpl.getKnownFields()
 
 
     /**********************************************************************
      *  Gets the access modifier of a class.
      *********************************************************************/
 
-    public final int getClassModifiers (String classname)
-    {
+    @Override
+    public final int getClassModifiers(String classname) {
+        JDOClass clazz = getJDOClass(classname);
+        return (clazz != null ? clazz.getModifiers() : 0);
 
-        JDOClass clazz = getJDOClass (classname);
-        return (clazz != null  ?  clazz.getModifiers ()  :  0);
-
-    }  //JDOMetaDataPropertyImpl.getClassModifiers()
+    } // JDOMetaDataPropertyImpl.getClassModifiers()
 
 
     /**********************************************************************
-     *  Gets the access modifier of a field.
+     * Gets the access modifier of a field.
      *********************************************************************/
 
-    public final int getFieldModifiers (String classname,
-                                        String fieldname)
-    {
+    @Override
+    public final int getFieldModifiers(String classname, String fieldname) {
+        JDOField field = getJDOField(classname, fieldname);
+        return (field != null ? field.getModifiers() : 0);
 
-        JDOField field = getJDOField (classname, fieldname);
-        return (field != null  ?  field.getModifiers ()  :  0);
-
-    }  //JDOMetaDataPropertyImpl.getFieldModifiers()
+    } // JDOMetaDataPropertyImpl.getFieldModifiers()
 
 
     /**********************************************************************
      *
      *********************************************************************/
 
-    public final String getFieldType (String classname,
-                                      String fieldname)
-    {
+    @Override
+    public final String getFieldType(String classname, String fieldname) {
+        JDOField field = getJDOField(classname, fieldname);
+        return (field != null ? field.getType() : null);
 
-        JDOField field = getJDOField (classname, fieldname);
-        return (field != null  ?  field.getType ()  :  null);
-
-    }  //JDOMetaDataPropertyImpl.getFieldType()
+    } // JDOMetaDataPropertyImpl.getFieldType()
 
 
     /**********************************************************************
      *
      *********************************************************************/
 
-    private final JDOClass getJDOClass (String classname)
-                           throws JDOMetaDataUserException
-    {
+    private final JDOClass getJDOClass(String classname) throws JDOMetaDataUserException {
+        return this.properties.getJDOClass(classname);
 
-        return this.properties.getJDOClass (classname);
-
-    }  //JDOMetaDataPropertyImpl.getJDOClass()
+    } // JDOMetaDataPropertyImpl.getJDOClass()
 
 
     /**********************************************************************
      *
      *********************************************************************/
 
-    private final void readProperties ()
-    {
+    private final void readProperties() {
+        // read all classes
+        String[] classnames = this.properties.getKnownClassNames();
+        for (int i = classnames.length - 1; i >= 0; i--) {
+            JDOClass clazz = getJDOClass(classnames[i]); // should be always != null
 
-        //read all classes
-        String [] classnames = this.properties.getKnownClassNames ();
-        for  (int i = classnames.length - 1; i >= 0; i--)
-        {
-            JDOClass clazz = getJDOClass (classnames [i]);  //should be always != null
-
-            //if the class is persistence it cannot be a second class object type
-            if  (clazz.isPersistent ()  &&  secondClassObjectTypes.contains (clazz.getName ()))
-            {
-                throw new JDOMetaDataUserException ("ERROR: Parsing meta data properties: " +
-                                                    "The persistent-capable class '" + clazz.getName () +
-                                                    "' is second class object type.");
+            // if the class is persistence it cannot be a second class object type
+            if (clazz.isPersistent() && secondClassObjectTypes.contains(clazz.getName())) {
+                throw new JDOMetaDataUserException("ERROR: Parsing meta data properties: "
+                    + "The persistent-capable class '" + clazz.getName() + "' is second class object type.");
             }
         }
 
-    }  //JDOMetaDataPropertyImpl.readProperties()
+    } // JDOMetaDataPropertyImpl.readProperties()
 
 
     /**********************************************************************
      *
      *********************************************************************/
 
-    private final JDOField getJDOField (String classname,
-                                        String fieldname)
-    {
+    private final JDOField getJDOField(String classname, String fieldname) {
+        JDOClass clazz = getJDOClass(classname);
+        return (clazz != null ? clazz.getField(fieldname) : null);
 
-        JDOClass clazz = getJDOClass (classname);
-        return (clazz != null  ?  clazz.getField (fieldname)  :  null);
-
-    }  //JDOMetaDataPropertyImpl.getJDOField()
+    } // JDOMetaDataPropertyImpl.getJDOField()
 
 
     /**********************************************************************
      *
      *********************************************************************/
 
-    public String getKeyClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+    @Override
+    public String getKeyClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         final JDOClass clazz = getJDOClass(classPath);
         return (clazz != null ? clazz.getOidClassName() : null);
     }
@@ -419,9 +395,9 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
+    @Override
     public boolean isKeyField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         final JDOField field = getJDOField(classPath, fieldName);
         return (field != null ? field.isPk() : false);
     }
@@ -431,10 +407,8 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
-    public boolean isKnownNonManagedField(String classPath,
-                                          String fieldName,
-                                          String fieldSig)
-    {
+    @Override
+    public boolean isKnownNonManagedField(String classPath, String fieldName, String fieldSig) {
         final JDOClass clazz = getJDOClass(classPath);
         if (clazz == null) {
             return true;
@@ -448,11 +422,10 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
+    @Override
     public boolean isManagedField(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        return (isPersistentField(classPath, fieldName)
-                || isTransactionalField(classPath, fieldName));
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        return (isPersistentField(classPath, fieldName) || isTransactionalField(classPath, fieldName));
     }
 
 
@@ -460,9 +433,9 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
+    @Override
     public int getFieldFlags(String classPath, String fieldName)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         if (!isManagedField(classPath, fieldName)) {
             affirm(!isTransactionalField(classPath, fieldName));
             affirm(!isPersistentField(classPath, fieldName));
@@ -470,29 +443,29 @@ public class JDOMetaDataPropertyImpl extends Support
             affirm(!isDefaultFetchGroupField(classPath, fieldName));
             return 0;
         }
-        //affirm(isManagedField(classPath, fieldName));
+        // affirm(isManagedField(classPath, fieldName));
 
         if (isTransactionalField(classPath, fieldName)) {
             affirm(!isPersistentField(classPath, fieldName));
             affirm(!isKeyField(classPath, fieldName));
             // ignore any dfg membership of transactional fields
-            //affirm(!isDefaultFetchGroupField(classPath, fieldName));
+            // affirm(!isDefaultFetchGroupField(classPath, fieldName));
             return CHECK_WRITE;
         }
-        //affirm(!isTransactionalField(classPath, fieldName));
+        // affirm(!isTransactionalField(classPath, fieldName));
         affirm(isPersistentField(classPath, fieldName));
 
         if (isKeyField(classPath, fieldName)) {
             // ignore any dfg membership of key fields
-            //affirm(!isDefaultFetchGroupField(classPath, fieldName));
+            // affirm(!isDefaultFetchGroupField(classPath, fieldName));
             return MEDIATE_WRITE;
         }
-        //affirm(!isKeyField(classPath, fieldName));
+        // affirm(!isKeyField(classPath, fieldName));
 
         if (isDefaultFetchGroupField(classPath, fieldName)) {
             return CHECK_READ | CHECK_WRITE;
         }
-        //affirm(!isDefaultFetchGroupField(classPath, fieldName));
+        // affirm(!isDefaultFetchGroupField(classPath, fieldName));
 
         return MEDIATE_READ | MEDIATE_WRITE;
     }
@@ -502,9 +475,9 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
+    @Override
     public int[] getFieldFlags(String classPath, String[] fieldNames)
-        throws  JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         final int n = (fieldNames != null ? fieldNames.length : 0);
         final int[] flags = new int[n];
         for (int i = 0; i < n; i++) {
@@ -518,9 +491,8 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
-    public final String[] getFieldType(String classname,
-                                        String[] fieldnames)
-    {
+    @Override
+    public final String[] getFieldType(String classname, String[] fieldnames) {
         final int n = (fieldnames != null ? fieldnames.length : 0);
         final String[] types = new String[n];
         for (int i = 0; i < n; i++) {
@@ -534,9 +506,9 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
+    @Override
     public int[] getFieldNo(String classPath, String[] fieldNames)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
         final int n = (fieldNames != null ? fieldNames.length : 0);
         final int[] flags = new int[n];
         for (int i = 0; i < n; i++) {
@@ -550,9 +522,8 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
-    public String[] getKeyFields(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
+    @Override
+    public String[] getKeyFields(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
         final List keys = new ArrayList();
         final String[] fieldNames = getManagedFields(classPath);
         final int n = fieldNames.length;
@@ -561,7 +532,7 @@ public class JDOMetaDataPropertyImpl extends Support
                 keys.add(fieldNames[i]);
             }
         }
-        return (String[])keys.toArray(new String[keys.size()]);
+        return (String[]) keys.toArray(new String[keys.size()]);
     }
 
 
@@ -569,12 +540,10 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
+    @Override
     public String getPersistenceCapableSuperClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        for (String clazz = getSuperClass(classPath);
-             clazz != null;
-             clazz = getSuperClass(clazz))  {
+        throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        for (String clazz = getSuperClass(classPath); clazz != null; clazz = getSuperClass(clazz)) {
             if (isPersistenceCapableClass(clazz)) {
                 return clazz;
             }
@@ -587,12 +556,10 @@ public class JDOMetaDataPropertyImpl extends Support
      *
      *********************************************************************/
 
-    public String getSuperKeyClass(String classPath)
-        throws JDOMetaDataUserException, JDOMetaDataFatalError
-    {
-        for (String superClass = getPersistenceCapableSuperClass(classPath);
-             superClass != null;
-             superClass = getPersistenceCapableSuperClass(superClass)) {
+    @Override
+    public String getSuperKeyClass(String classPath) throws JDOMetaDataUserException, JDOMetaDataFatalError {
+        for (String superClass = getPersistenceCapableSuperClass(
+            classPath); superClass != null; superClass = getPersistenceCapableSuperClass(superClass)) {
             final String superKeyClass = getKeyClass(superClass);
             if (superKeyClass != null) {
                 return superKeyClass;
@@ -600,7 +567,6 @@ public class JDOMetaDataPropertyImpl extends Support
         }
         return null;
     }
-
 
     /**********************************************************************
      *

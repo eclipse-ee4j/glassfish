@@ -25,19 +25,19 @@ import com.sun.jdo.spi.persistence.utility.logging.LogHelper;
  * @version 1.0
  */
 public class LogHelperEntityLifecycle {
-    
+
     /** The component name for this component
      */
     protected static final String componentName = "jakarta.enterprise.system.container.ejb.entity.lifecycle"; //NOI18N
-    
+
     /** The class loader for this component
      */
     protected static final ClassLoader loader = LogHelperEntityLifecycle.class.getClassLoader();
-    
+
     /** The bundle name for this component
      */
     protected static final String bundleName = "com.sun.jdo.spi.persistence.support.ejb.cmp.Bundle"; //NOI18N
-    
+
     /** Return the logger for the entity lifecycle component
      */
     public static Logger getLogger() {

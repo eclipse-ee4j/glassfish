@@ -19,7 +19,7 @@
 <FindBugsFilter>
     <!--
         This method purposely returns null and callers are careful to
-	check for null.
+        check for null.
     -->
     <Match>
         <Class name="com.sun.enterprise.admin.launcher.GFLauncherInfo"/>

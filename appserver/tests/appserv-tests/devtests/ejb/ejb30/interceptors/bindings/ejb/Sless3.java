@@ -17,7 +17,7 @@
 package com.sun.s1asdev.ejb.ejb30.interceptors.bindings;
 
 import jakarta.ejb.Remote;
-	
+
 @Remote
 public interface Sless3
 {
@@ -35,7 +35,7 @@ public interface Sless3
 
     public void dcef();
 
-    public void dcbaef();    
+    public void dcbaef();
 
     public void abcdef();
 

@@ -30,7 +30,7 @@ public class CheckRequestPath extends HttpServlet {
         String expectedCtxtRoot = null;
         String expectedRequestURL = null;
         String expectedRequestURI = null;
-        
+
         String run = req.getParameter("run");
         if ("first".equals(run)) {
             expectedCtxtRoot = "";
@@ -41,7 +41,7 @@ public class CheckRequestPath extends HttpServlet {
             expectedCtxtRoot =
                 "/web-virtual-server-default-web-module-request-path";
             expectedRequestURI = expectedCtxtRoot + servletPath;
-            expectedRequestURL = "http://" + host + ":" + port + 
+            expectedRequestURL = "http://" + host + ":" + port +
                     expectedRequestURI;
         } else {
             throw new ServletException();

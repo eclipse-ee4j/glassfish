@@ -34,7 +34,7 @@ import com.sun.appserv.management.config.AMXConfig;
 
 
 /**
- * generic named config element tester 
+ * generic named config element tester
  * @author alexkrav
  *         Date: Aug 23, 2004
  * @version $Revision: 1.11 $
@@ -53,7 +53,7 @@ public class ElemTester {
         mElement         = element;
         mMasterConfig    = mElement.getMasterAMXConfigForElement(domainRoot);
         String msg = "\n\n------- tester created for  "+mElement.getElementName();
-        printObj(msg, mElement.getAttributesMapCopy()); 
+        printObj(msg, mElement.getAttributesMapCopy());
     }
 
     public ElemTester(final MBeanServerConnection connection, final DomainRoot domainRoot, final TestElement element,
@@ -70,18 +70,18 @@ public class ElemTester {
     {
         System.out.println(str);
     }
-    
+
     void printObj(String str, Object obj)
     {
         ConfigTestHelper.printObj(str, obj);
     }
-    
+
     public Object createElement()  throws Exception
     {
         Object ret = null;
-        
-        final boolean	isNamedElement	= false;
-        
+
+        final boolean    isNamedElement    = false;
+
         if( isNamedElement ){
             ret = ConfigTestHelper.invokeInMgr(mMasterConfig, "create",
                      mElement.getCreationParams(),
@@ -101,9 +101,9 @@ public class ElemTester {
     public void deleteElement()  throws Exception
     {
         String key = mElement.getElementKey();
-        
-        final boolean	isNamedElement	= key != null;
-        
+
+        final boolean    isNamedElement    = key != null;
+
         if( isNamedElement ){
             ConfigTestHelper.invokeInMgr(mMasterConfig, "remove",
                      new Object[] {key});
@@ -117,15 +117,15 @@ public class ElemTester {
         }
 
     }
-   
-	public ObjectName getElemMBeanObjectName()  throws Exception
+
+    public ObjectName getElemMBeanObjectName()  throws Exception
     {
         return mElement.getElemMBeanObjectName();
     }
 
 
-    
-    public Map list() 
+
+    public Map list()
     {
         try{
             println(REPORT_PREFIX +"list()");
@@ -137,17 +137,17 @@ public class ElemTester {
             return null;
         }
     }
-    
+
     public void cleanExceptionIfMatched(String parseStr)
     {
         if(ConfigTestHelper._lastException!=null &&
-            (parseStr==null ||   
+            (parseStr==null ||
             ((String)(""+ConfigTestHelper.getLastExceptionShortMsg())).indexOf(parseStr)>=0))
         {
            ConfigTestHelper._lastException = null;
         }
     }
-    
+
     public boolean checkNoException(String description)
     {
         if(ConfigTestHelper._lastException!=null)
@@ -157,8 +157,8 @@ public class ElemTester {
         }
         return true;
     }
-    
-    
+
+
     public boolean checkList(String description) throws Exception
     {
         Map map = list();
@@ -197,7 +197,7 @@ public class ElemTester {
         }
         return bOk;
     }
-    
+
     private ArrayList getAttributesNamesFromMBeanInfo() throws Exception
     {
         ArrayList list = new ArrayList();
@@ -209,13 +209,13 @@ public class ElemTester {
         }
         return list;
     }
-    
+
     public boolean checkAttributes(String description, Object amxBean) throws Exception
     {
 //        if(!checkNoException(description))
 //           return false;
         ArrayList attrNames = getAttributesNamesFromMBeanInfo();
-        AttributeList attrsInConfig  = mConnection.getAttributes(getElemMBeanObjectName(), new String[]{""});  
+        AttributeList attrsInConfig  = mConnection.getAttributes(getElemMBeanObjectName(), new String[]{""});
         HashMap elemAttrsFromConfig = new HashMap();
         for(int i=0; i<attrsInConfig.size(); i++)
         {
@@ -227,7 +227,7 @@ public class ElemTester {
         boolean bOk = true;
         for(int i=0; i<attrNames.size(); i++)
         {
-            String      attrName = (String)attrNames.get(i);        
+            String      attrName = (String)attrNames.get(i);
             Object      valueInConfig       = elemAttrsFromConfig.get(attrName);
             Object      valueInElem         = elemAttrsFromAMXAttrMap.get(attrName);
             if( (valueInConfig==null && valueInElem!=null) ||
@@ -271,8 +271,8 @@ public class ElemTester {
         }
         return bOk;
     }
-    
-    public boolean checkExist(String description) 
+
+    public boolean checkExist(String description)
     {
         if(!checkNoException(description))
            return false;
@@ -307,7 +307,7 @@ public class ElemTester {
         try{
             println("--- generic test");
             deleteElement();
-//TEMPORARY            
+//TEMPORARY
     //if(ConfigTestHelper._lastException!=null)
     //    ConfigTestHelper._lastException.printStackTrace();
 //checkNoException("testting phase");
@@ -320,7 +320,7 @@ public class ElemTester {
                 checkAttributes("attributes-check", created);
 
             println("WHAT TO DO WITH NON-EXISTENT \"mElemMgr instanceof AMXConfigMgr\"????");
-			/*
+            /*
             if(mElemMgr instanceof AMXConfigMgr)
                 checkList("list operation");
             */
@@ -329,7 +329,7 @@ public class ElemTester {
 //if(ConfigTestHelper._lastException!=null)
 //    ConfigTestHelper._lastException.printStackTrace();
             checkNotExist("after final-deletion");
-            
+
         } catch (Exception e)
         {
            //e.printStackTrace();

@@ -306,7 +306,7 @@ public class MonitoringHandlers {
     }
 
     /**
-     *	<p> Add list to new list
+     * <p> Add list to new list
      */
     @Handler(id = "addToMonitorList",
     input = {
@@ -502,7 +502,7 @@ public class MonitoringHandlers {
         handlerCtx.setOutputValue("statType", statType);
     }
     /*
-     * Filter the request,session,jsp and servlets. 
+     * Filter the request,session,jsp and servlets.
      * Filed an issue :12687.
      * Once this issue is resolved, we can remove this handler.
      */
@@ -565,7 +565,7 @@ public class MonitoringHandlers {
     /*
      * Returns the jdbc connection pools, connector connection pools,
      * first jdbc element and first connector element for the given set of
-     * pool names  and resources endpoint. 
+     * pool names  and resources endpoint.
      */
     @Handler(id = "gf.getMonitoringPools",
     input = {

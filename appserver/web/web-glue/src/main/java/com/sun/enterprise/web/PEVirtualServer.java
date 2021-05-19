@@ -27,10 +27,10 @@ public final class PEVirtualServer extends VirtualServer {
     // ------------------------------------------------------------ Constructor
 
     /**
-     * Default constructor that simply gets a handle to the web container 
+     * Default constructor that simply gets a handle to the web container
      * subsystem's logger.
      */
     public PEVirtualServer() {
-        super();      
+        super();
     }
 }

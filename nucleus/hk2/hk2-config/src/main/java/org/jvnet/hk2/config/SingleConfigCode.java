@@ -16,24 +16,25 @@
 
 package org.jvnet.hk2.config;
 
-import org.jvnet.hk2.config.TransactionFailure;
-
 import java.beans.PropertyVetoException;
 
 /**
- * SimpleConfigCode is code snippet that can be used to apply some configuration 
+ * SimpleConfigCode is code snippet that can be used to apply some configuration
  * changes to one configuration object.
  *
- * For example say, you need to modify the HttpListener config object with a new 
- * port number, you can do so by writing the following code snippet. 
+ * For example say, you need to modify the HttpListener config object with a new
+ * port number, you can do so by writing the following code snippet.
  *
- *	{@code	new SingleConfigCode<HttpListener>() {
- *			public boolean run(HttpListener httpListener) throws PropertyVetoException {
- *				httpListener.setPort("8989");
- *				return true;
- *			}
- *		};
- *  }
+ * <pre>
+ * {@code
+ * new SingleConfigCode<HttpListener>() {
+ *     public boolean run(HttpListener httpListener) throws PropertyVetoException {
+ *         httpListener.setPort("8989");
+ *         return true;
+ *     }
+ * };
+ * }
+ * </pre>
  * This new SingleConfigCode can then be used with in the ConfigSupport utilities to
  * run this code within a Transaction freeing the developer to know/care about Transaction
  * APIs and semantics.
@@ -42,15 +43,15 @@ import java.beans.PropertyVetoException;
  */
 public interface SingleConfigCode<T extends ConfigBeanProxy> {
 
-	/**
-	 * Runs the following command passing the configration object. The code will be run
-	 * within a transaction, returning true will commit the transaction, false will abort
-	 * it.
-	 * 
-	 * @param param is the configuration object protected by the transaction
+    /**
+     * Runs the following command passing the configration object. The code will be run
+     * within a transaction, returning true will commit the transaction, false will abort
+     * it.
+     *
+     * @param param is the configuration object protected by the transaction
      * @return any object that should be returned from within the transaction code
      * @throws PropertyVetoException if the changes cannot be applied
      * to the configuration
-	 */
-    public Object run(T param) throws PropertyVetoException, TransactionFailure;
+     */
+    Object run(T param) throws PropertyVetoException, TransactionFailure;
 }

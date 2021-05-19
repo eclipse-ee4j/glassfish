@@ -94,7 +94,7 @@ public class AppClientScanner extends ModuleScanner<ApplicationClientDescriptor>
 
         //always add main class
         String mainClassName = desc.getMainClassName();
-        addScanClassName(mainClassName);        
+        addScanClassName(mainClassName);
 
         // add callback handle if it exist in appclient-client.xml
         String callbackHandler = desc.getCallbackHandler();

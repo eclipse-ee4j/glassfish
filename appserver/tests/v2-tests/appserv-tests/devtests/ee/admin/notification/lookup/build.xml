@@ -42,7 +42,7 @@
 
     <target name="setup"/>
     <target name="unsetup"/>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -54,8 +54,8 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-ee">
             <param name="appserver.instance.name" value="ee-event-cluster"/>
@@ -77,7 +77,7 @@
         </antcall>
     </target>
 
-    <target name="deploy-ee" depends="init-common" if="ee">      
+    <target name="deploy-ee" depends="init-common" if="ee">
       <echo message="So you are using Enterprise Version eh ?"/>
       <property name="deployed.app" value="${assemble.dir}/${appname}App.ear"/>
 
@@ -96,7 +96,7 @@
       <echo message="Deployment on target server ${appserver.instance.name} successful"/>
     </target>
 
-    
+
     <target name="run" depends="init-common">
         <antcall target="run-test-0" />
         <antcall target="run-test-1" />
@@ -375,31 +375,31 @@
     <target name="run-standalone-client" depends="init-common">
         <property name="jndi.name" value="lookupbean"/>
         <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
-        <property name="ctxfactory" 
+        <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-	<property name="ctxfactory" 
-            	value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
+    <property name="ctxfactory"
+                value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-	<echo message="provider.url used is ${provider.url}"/>
+      <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
-	<jvmarg value="-DtestId=${test.id}"/>
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+        <jvmarg value="-DtestId=${test.id}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
       </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common">
             <param name="appserver.instance.name" value="ee-event-cluster"/>
         </antcall>
         <antcall target="restart-cluster"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

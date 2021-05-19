@@ -98,7 +98,7 @@ public class Util {
                     replaceAll(">", "&gt;").
                     replaceAll("\"", "&quot;");
     }
-    
+
     public static URI getCodebase(final Request gReq) {
         return URI.create(gReq.getScheme() + "://" + gReq.getServerName());
     }

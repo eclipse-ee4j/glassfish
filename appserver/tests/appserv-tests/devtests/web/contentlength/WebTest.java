@@ -26,8 +26,8 @@ public class WebTest{
     private static URLConnection conn = null;
     private static URL url;
     private static ObjectOutputStream objectWriter = null;
-    private static ObjectInputStream objectReader = null;  
-    
+    private static ObjectInputStream objectReader = null;
+
     public static void main(String args[]) throws Exception{
         String host = args[0];
         String port = args[1];
@@ -35,7 +35,7 @@ public class WebTest{
 
         try{
             stat.addDescription("Standalone Servlet/Filter war test");
-            
+
             System.out.println("Running test");
             url = new URL("http://" + host  + ":" + port + contextRoot + "/ServletTest");
             String originalLoc = url.toString();
@@ -46,7 +46,7 @@ public class WebTest{
                     HttpURLConnection urlConnection = (HttpURLConnection)conn;
                     urlConnection.setDoOutput(true);
 
-                    DataOutputStream out = 
+                    DataOutputStream out =
                        new DataOutputStream(urlConnection.getOutputStream());
                                         out.writeByte(1);
 
@@ -54,13 +54,13 @@ public class WebTest{
                    String encodedURL = urlConnection.getHeaderField ("Location");
                    System.out.println("responseCode: " + responseCode);
                    System.err.println("encodedURL : " + encodedURL);
-                    
+
                    if (urlConnection.getResponseCode() != 201){
                         stat.addStatus("contentLength-responseCode", stat.FAIL);
                    } else {
                         stat.addStatus("contentLength-responseCode", stat.PASS);
                    }
-                
+
                    if (encodedURL != null && !encodedURL.startsWith(originalLoc)){
                         stat.addStatus("contentLength-header", stat.FAIL);
                    } else {

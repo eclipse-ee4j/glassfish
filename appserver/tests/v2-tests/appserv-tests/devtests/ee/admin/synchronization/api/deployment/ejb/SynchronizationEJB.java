@@ -35,16 +35,16 @@ import com.sun.enterprise.server.ApplicationServer;
 import com.sun.enterprise.config.ConfigContext;
 
 public class SynchronizationEJB
-    implements SessionBean 
+    implements SessionBean
 {
-	private SessionContext context;
+    private SessionContext context;
     private Context initialCtx;
 
-	public void ejbCreate() {
+    public void ejbCreate() {
     }
 
-    public boolean getFile(String instanceName, String sourceFile, 
-	String destLoc) {
+    public boolean getFile(String instanceName, String sourceFile,
+    String destLoc) {
         try {
             ConfigContext ctx = ApplicationServer.getServerContext().
                     getConfigContext();
@@ -59,7 +59,7 @@ public class SynchronizationEJB
         }
     }
 
-    public boolean get(String instanceName, String name, String type, 
+    public boolean get(String instanceName, String name, String type,
         String destLoc) {
         try {
             ConfigContext ctx = ApplicationServer.getServerContext().
@@ -67,7 +67,7 @@ public class SynchronizationEJB
             ApplicationsMgr appSynchMgr = SynchronizationFactory.
                 createSynchronizationContext(ctx).getApplicationsMgr();
 
-            if (type == null) { 
+            if (type == null) {
                 return false;
             }
 
@@ -108,10 +108,10 @@ public class SynchronizationEJB
         }
     }
 
-    public boolean putFile(String instanceName, String sourceFile, 
-	String destDir)  {
+    public boolean putFile(String instanceName, String sourceFile,
+    String destDir)  {
         try {
-            SynchronizationClient sc = 
+            SynchronizationClient sc =
               SynchronizationFactory.createSynchronizationClient( instanceName);
             sc.connect();
             String s = sc.put(sourceFile, destDir);
@@ -124,22 +124,22 @@ public class SynchronizationEJB
         }
     }
 
-	public void setSessionContext(SessionContext sc) {
-		this.context = sc;
+    public void setSessionContext(SessionContext sc) {
+        this.context = sc;
         try {
             this.initialCtx = new InitialContext();
         } catch (Throwable th) {
             th.printStackTrace();
         }
-	}
+    }
 
-	public void ejbRemove() {}
+    public void ejbRemove() {}
 
-	public void ejbActivate() {
+    public void ejbActivate() {
         System.out.println ("In SFSB.ejbActivate() " );
     }
 
-	public void ejbPassivate() {
+    public void ejbPassivate() {
         System.out.println ("In SFSB.ejbPassivate() ");
     }
 }

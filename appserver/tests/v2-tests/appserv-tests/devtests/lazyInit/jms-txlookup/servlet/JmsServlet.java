@@ -33,21 +33,21 @@ public class JmsServlet extends HttpServlet {
     private QueueConnectionFactory qcFactory;
 
     public void  init( ServletConfig config) throws ServletException {
-        
+
         super.init(config);
         System.out.println("In jmsservlet... init()");
     }
-    
+
     public void service ( HttpServletRequest req , HttpServletResponse resp ) throws ServletException, IOException {
-                 
+
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        
+
         try {
 
             InitialContext context = new InitialContext();
 
-            UserTransaction userTx = (UserTransaction) 
+            UserTransaction userTx = (UserTransaction)
                 context.lookup("java:comp/UserTransaction");
             userTx.begin();
             XAQueueConnectionFactory xacf = new com.sun.messaging.XAQueueConnectionFactory();
@@ -80,20 +80,20 @@ public class JmsServlet extends HttpServlet {
 
             out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
-            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" ); 
+            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" );
             out.println("</BODY> </HTML> ");
-            
+
         }catch (Exception ex) {
             ex.printStackTrace();
             System.out.println("jmsservlet test failed");
             throw new ServletException(ex);
-        } 
+        }
     }
 
     /**
-     * Send a message. 
+     * Send a message.
      */
     public String sendMessage(String msg) throws JMSException {
         QueueConnection connection = null;
@@ -143,9 +143,9 @@ public class JmsServlet extends HttpServlet {
             } catch(Exception e) {}
         }
     }
-    
+
     public void  destroy() {
         System.out.println("in jmsservlet destroy");
     }
-    
+
 }

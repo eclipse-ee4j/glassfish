@@ -35,8 +35,8 @@ public class CreatePMFResourceCmd extends BaseResourceCmd
         assert isConnected();
 
         final PersistenceManagerFactoryResourceConfig resource =
-        	getDomainConfig().createPersistenceManagerFactoryResourceConfig(
-            	getJNDIName(), getOptional());
+            getDomainConfig().createPersistenceManagerFactoryResourceConfig(
+                getJNDIName(), getOptional());
         return resource;
     }
 }

@@ -49,7 +49,7 @@ Might need to disable that test because other ISPs do this too.
 
 MY (Byron Nevins) Response -- move the test into the "special" tests...
 
-MY (Sahoo) Repsonse -- Since this is not yet moved, I am disabling this, 
+MY (Sahoo) Repsonse -- Since this is not yet moved, I am disabling this,
 because it is currently failing for me in a clean workspace.
  */
 @Ignore
@@ -128,7 +128,7 @@ public class NetUtilsTest {
             assertFalse(NetUtils.isEqual(unlikelyName, unlikelyName));
         }
     }
-    
+
     private static final String unlikelyName;
     private static final boolean SPECIAL = false;
 

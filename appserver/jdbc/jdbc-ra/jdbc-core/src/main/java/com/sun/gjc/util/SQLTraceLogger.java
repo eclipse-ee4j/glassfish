@@ -23,24 +23,24 @@ import org.glassfish.api.jdbc.SQLTraceListener;
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
 /**
- * Implementation of SQLTraceListener to listen to events related to a 
- * sql record tracing. 
- * 
+ * Implementation of SQLTraceListener to listen to events related to a
+ * sql record tracing.
+ *
  * @author Shalini M
  */
 public class SQLTraceLogger implements SQLTraceListener {
-    
+
     private static Logger _logger = initLogger();
 
     private static Logger initLogger() {
         _logger = LogDomains.getLogger(SQLTraceLogger.class, LogDomains.SQL_TRACE_LOGGER);
         return _logger;
     }
-    
+
     public SQLTraceLogger() {
-        
+
     }
-    
+
     public void sqlTrace(SQLTraceRecord record) {
         _logger.log(Level.FINE, record.toString());
     }

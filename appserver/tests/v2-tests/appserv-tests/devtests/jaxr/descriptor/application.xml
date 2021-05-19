@@ -19,11 +19,11 @@
 -->
 
 <application>
-	<display-name>JaxrraApp</display-name> 
+    <display-name>JaxrraApp</display-name>
   <module>
-	  <java>jaxrra-client.jar</java>
+      <java>jaxrra-client.jar</java>
   </module>
   <module>
-	  <ejb>jaxrra-ejb.jar</ejb>
+      <ejb>jaxrra-ejb.jar</ejb>
   </module>
 </application>

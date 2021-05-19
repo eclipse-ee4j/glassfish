@@ -28,16 +28,16 @@ public class PermissionItemNode extends DeploymentDescriptorNode {
     private Map<String, String> dispatchTable;
 
     private PermissionItemDescriptor pemItemDes;
-    
-    
+
+
     public PermissionItemNode() {
 
         if (handlers != null) handlers.clear();
         initDispatchTable();
     }
-    
-    
-    
+
+
+
     private void initDispatchTable() {
         assert(dispatchTable == null);
 
@@ -45,18 +45,18 @@ public class PermissionItemNode extends DeploymentDescriptorNode {
         table.put(DeclaredPermissionsTagNames.PERM_CLASS_NAME, "setPermissionClassName");
         table.put(DeclaredPermissionsTagNames.PERM_TARGET_NAME, "setTargetName");
         table.put(DeclaredPermissionsTagNames.PERM_ACTIONS, "setActions");
-        this.dispatchTable = table;        
+        this.dispatchTable = table;
     }
-    
-    
+
+
     @Override
     public PermissionItemDescriptor getDescriptor() {
         if (pemItemDes == null)
             pemItemDes = new PermissionItemDescriptor();
-            
+
         return pemItemDes;
     }
-    
+
     @Override
     protected Map getDispatchTable() {
         return dispatchTable;

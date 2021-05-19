@@ -30,10 +30,10 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant jmsweb (Executes the jms-msgdest jmsweb test)
-			ant all (Executes all the jms-msgdest tests)
-	</echo>
+        <echo>
+                Usage:
+                        ant jmsweb (Executes the jms-msgdest jmsweb test)
+                        ant all (Executes all the jms-msgdest tests)
+        </echo>
     </target>
 </project>

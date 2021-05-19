@@ -34,7 +34,7 @@ import java.util.logging.Level;
  * This node is responsible for handling servlet-mapping subtree node
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ServletMappingNode extends DeploymentDescriptorNode {
 
@@ -53,14 +53,14 @@ public class ServletMappingNode extends DeploymentDescriptorNode {
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
-     */    
+     */
     public void setElementValue(XMLElement element, String value) {
         if (WebTagNames.SERVLET_NAME.equals(element.getQName())) {
             servletName = value;
-        } 
+        }
         if (WebTagNames.URL_PATTERN.equals(element.getQName())) {
             if (!URLPattern.isValid(value)) {
                 // try trimming url (in case DD uses extra
@@ -70,15 +70,15 @@ public class ServletMappingNode extends DeploymentDescriptorNode {
                     trimmedUrl = "";
                 }
 
-                // If URL Pattern does not start with "/" then 
-                // prepend it (for Servlet2.2 Web apps) 
-                Object parent = getParentNode().getDescriptor(); 
-                if (parent instanceof WebBundleDescriptor &&  
-                        ((WebBundleDescriptor) parent).getSpecVersion().equals("2.2")) { 
+                // If URL Pattern does not start with "/" then
+                // prepend it (for Servlet2.2 Web apps)
+                Object parent = getParentNode().getDescriptor();
+                if (parent instanceof WebBundleDescriptor &&
+                        ((WebBundleDescriptor) parent).getSpecVersion().equals("2.2")) {
                     if(!trimmedUrl.startsWith("/") &&
-                            !trimmedUrl.startsWith("*.")) { 
-                        trimmedUrl = "/" + trimmedUrl; 
-                    } 
+                            !trimmedUrl.startsWith("*.")) {
+                        trimmedUrl = "/" + trimmedUrl;
+                    }
                 }
 
                 if (URLPattern.isValid(trimmedUrl)) {
@@ -100,14 +100,14 @@ public class ServletMappingNode extends DeploymentDescriptorNode {
 
             XMLNode  parentNode = getParentNode();
             if (parentNode instanceof WebCommonNode) {
-                ((WebCommonNode) parentNode).addServletMapping(servletName, 
+                ((WebCommonNode) parentNode).addServletMapping(servletName,
                 urlPattern);
             } else {
                 DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.addDescriptorFailure",
                     new Object[]{getXMLRootTag() , "servlet-mapping"});
             }
 
-        } 
+        }
     }
 
 }

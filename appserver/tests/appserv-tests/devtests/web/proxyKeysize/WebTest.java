@@ -41,7 +41,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6170450");
         WebTest webTest = new WebTest(args);
@@ -50,8 +50,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invokeJsp();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -60,7 +60,7 @@ public class WebTest {
     }
 
     private void invokeJsp() throws Exception {
-         
+
         Socket sock = null;
         OutputStream os = null;
         InputStream is = null;
@@ -74,7 +74,7 @@ public class WebTest {
             os.write(get.getBytes());
             os.write("Proxy-keysize: 512\n".getBytes());
             os.write("\n".getBytes());
-        
+
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
 

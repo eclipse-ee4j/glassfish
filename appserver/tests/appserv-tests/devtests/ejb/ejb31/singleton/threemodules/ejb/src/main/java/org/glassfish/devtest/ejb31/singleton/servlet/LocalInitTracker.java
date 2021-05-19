@@ -22,7 +22,7 @@ import java.util.List;
 
 @Local
 public interface LocalInitTracker {
-    
+
     public void add(String entry);
 
     public List getInitializedNames();

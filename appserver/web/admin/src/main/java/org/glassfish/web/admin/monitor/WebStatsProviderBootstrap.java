@@ -140,7 +140,7 @@ public class WebStatsProviderBootstrap implements PostConstruct {
                 websp);
 
         for (String servletName : servletNames) {
-             ServletInstanceStatsProvider servletInstanceStatsProvider = 
+             ServletInstanceStatsProvider servletInstanceStatsProvider =
                  new ServletInstanceStatsProvider(servletName,
                      monitoringName, vsName, servletStatsProvider);
              StatsProviderManager.register(
@@ -156,7 +156,7 @@ public class WebStatsProviderBootstrap implements PostConstruct {
     public void unregisterApplicationStatsProviders(String monitoringName,
             String vsName) {
 
-        Map<String, Queue<Object>> statsProviderMap = vsNameToStatsProviderMap.get(vsName); 
+        Map<String, Queue<Object>> statsProviderMap = vsNameToStatsProviderMap.get(vsName);
         // remove stats providers for a given monitoringName and vs
         Queue<Object> statsProviders = statsProviderMap.remove(monitoringName);
         for (Object statsProvider : statsProviders) {

@@ -34,8 +34,8 @@ public class TestServlet extends HttpServlet {
             throws IOException, ServletException {
 
         boolean passed = false;
-	
-	try {
+
+        try {
             URL main = context.getResource("/test/res1.jsp");
             URL sub = new URL(main, "res2.jsp");
             URL sub1 = context.getResource("/test/res2.jsp");

@@ -22,7 +22,7 @@ import javax.net.ssl.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test related to 
+ * Unit test related to
  * https://glassfish.dev.java.net/issues/show_bug.cgi?id=562
  * ("HttpServletRequest does not return any attribute in JAX-WS web service"):
  *
@@ -64,7 +64,7 @@ public class WebTest {
         String contextRoot = args[2];
         String keyStorePath = args[3];
         String trustStorePath = args[4];
-        
+
         try {
             SSLSocketFactory ssf = getSSLSocketFactory(keyStorePath,
                                                        trustStorePath);
@@ -72,9 +72,9 @@ public class WebTest {
                                                     + port + contextRoot
                                                     + "/TestServlet",
                                                     ssf);
-            
+
             parseResponse(connection);
-            
+
         } catch (Throwable t) {
             stat.addStatus(TEST_NAME, stat.FAIL);
             t.printStackTrace();
@@ -117,7 +117,7 @@ public class WebTest {
 
         SSLContext ctx = SSLContext.getInstance("TLS");
 
-        // Keystore 
+        // Keystore
         KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = "changeit".toCharArray();
         ks.load(new FileInputStream(keyStorePath), passphrase);
@@ -133,7 +133,7 @@ public class WebTest {
         tmf.init(trustStore);
 
         ctx.init(kmf.getKeyManagers(),tmf.getTrustManagers(), null);
-        
+
         return ctx.getSocketFactory();
     }
 

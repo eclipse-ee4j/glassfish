@@ -32,14 +32,14 @@ import java.sql.Statement;
 import org.glassfish.api.jdbc.SQLTraceRecord;
 
 /**
- * Wrapper class that aids to provide wrapper for Statement, PreparedStatement, 
+ * Wrapper class that aids to provide wrapper for Statement, PreparedStatement,
  * CallableStatement, DatabaseMetaData. Along with providing a wrapper, this
- * aids in logging the SQL statements executed by the various applications. 
- * 
+ * aids in logging the SQL statements executed by the various applications.
+ *
  * @author Shalini M
  */
 public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements ConnectionWrapper {
-    
+
     private SQLTraceDelegator sqlTraceDelegator;
 
     /**
@@ -87,7 +87,7 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.Statement.class};
         try{
             output = (java.sql.Statement)getProxyObject(
-                    new StatementWrapper40(this, 
+                    new StatementWrapper40(this,
                     super.createStatement(resultSetType, resultSetConcurrency)), intf);
         }catch(Exception e){
             throw new SQLException(e);
@@ -110,8 +110,8 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.Statement.class};
         try{
             output = (java.sql.Statement)getProxyObject(
-                    new StatementWrapper40(this, 
-                    super.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability)), 
+                    new StatementWrapper40(this,
+                    super.createStatement(resultSetType, resultSetConcurrency, resultSetHoldability)),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
@@ -143,7 +143,7 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.CallableStatement.class};
         try{
             output = (java.sql.CallableStatement)getProxyObject(
-                    mc.prepareCachedCallableStatement(this,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY), 
+                    mc.prepareCachedCallableStatement(this,sql, ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
@@ -167,12 +167,12 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.CallableStatement.class};
         try{
             output = (java.sql.CallableStatement)getProxyObject(
-                    mc.prepareCachedCallableStatement(this, sql, resultSetType, resultSetConcurrency), 
+                    mc.prepareCachedCallableStatement(this, sql, resultSetType, resultSetConcurrency),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
         }
-        return output;        
+        return output;
     }
 
     /**
@@ -193,12 +193,12 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.CallableStatement.class};
         try{
             output = (java.sql.CallableStatement)getProxyObject(
-                    mc.prepareCachedCallableStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability), 
+                    mc.prepareCachedCallableStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
         }
-        return output;        
+        return output;
     }
 
     /**
@@ -212,16 +212,16 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         PreparedStatement output = null;
         Class intf[] = new Class[]{java.sql.PreparedStatement.class};
-        
+
         try{
             output = (PreparedStatement)getProxyObject(
-                    mc.prepareCachedStatement(this, sql, 
+                    mc.prepareCachedStatement(this, sql,
                     ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_READ_ONLY),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
         }
-        return output;        
+        return output;
     }
 
     /**
@@ -283,7 +283,7 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.PreparedStatement.class};
         try{
             output = (PreparedStatement)getProxyObject(
-                    mc.prepareCachedStatement(this, sql, resultSetType, resultSetConcurrency), 
+                    mc.prepareCachedStatement(this, sql, resultSetType, resultSetConcurrency),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
@@ -309,12 +309,12 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         Class intf[] = new Class[]{java.sql.PreparedStatement.class};
         try{
             output = (PreparedStatement)getProxyObject(
-                    mc.prepareCachedStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability), 
+                    mc.prepareCachedStatement(this, sql, resultSetType, resultSetConcurrency, resultSetHoldability),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
         }
-        return output;        
+        return output;
     }
 
     /**
@@ -332,13 +332,13 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
         PreparedStatement output = null;
         Class intf[] = new Class[]{java.sql.PreparedStatement.class};
         try{
-            output = (PreparedStatement)getProxyObject(mc.prepareCachedStatement(this, sql, columnNames), 
+            output = (PreparedStatement)getProxyObject(mc.prepareCachedStatement(this, sql, columnNames),
                     intf);
         }catch(Exception e){
             throw new SQLException(e);
         }
         return output;
-        
+
     }
 
     public PreparedStatementWrapper40 prepareCachedStatement(String sql,
@@ -395,7 +395,7 @@ public class ProfiledConnectionWrapper40 extends ConnectionHolder40 implements C
 
     //TODO refactor this method and move to a higher level
     private <T> T getProxyObject(final Object actualObject, Class<T>[] ifaces) throws Exception {
-        
+
         T result;
         InvocationHandler ih = new InvocationHandler() {
 

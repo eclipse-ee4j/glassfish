@@ -24,37 +24,37 @@ public interface SFSB
 {
 
     public String getName()
-	throws RemoteException;
+        throws RemoteException;
 
-    public void createSFSBChild() 
-	throws RemoteException;
+    public void createSFSBChild()
+        throws RemoteException;
 
     public String getMessage()
-	throws RemoteException;
+        throws RemoteException;
 
     public boolean checkSessionContext()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkInitialContext()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkEntityHome()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkEntityLocalHome()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkEntityRemoteRef()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkEntityLocalRef()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkHomeHandle()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkHandle()
-        throws RemoteException;       
+        throws RemoteException;
 
     public boolean checkUserTransaction()
         throws RemoteException;
@@ -63,17 +63,17 @@ public interface SFSB
         throws RemoteException;
 
     public int getActivationCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public int getPassivationCount()
-	throws RemoteException;
+        throws RemoteException;
 
     public void makeStateNonSerializable()
-	throws RemoteException;
+        throws RemoteException;
 
     public void sleepForSeconds(int sec)
-	throws RemoteException;
+        throws RemoteException;
 
     public void unusedMethod()
-	throws RemoteException;
+        throws RemoteException;
 }

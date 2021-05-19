@@ -1,14 +1,14 @@
 drop table customer2;
 
 create table customer2 (
-  SSN varchar2(9), 
-  lastNAme varchar2(20), 
-  firstname varchar2(20), 
-  address1 varchar2 (20), 
-  address2 varchar2(20), 
-  city varchar2(10), 
-  state varchar2(10), 
-  zipcode varchar2(5), 
+  SSN varchar2(9),
+  lastNAme varchar2(20),
+  firstname varchar2(20),
+  address1 varchar2 (20),
+  address2 varchar2(20),
+  city varchar2(10),
+  state varchar2(10),
+  zipcode varchar2(5),
   savingsbalance number(10) ,
   checkingbalance number(10) );
 

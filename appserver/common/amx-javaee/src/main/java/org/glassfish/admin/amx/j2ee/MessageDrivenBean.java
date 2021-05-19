@@ -19,6 +19,5 @@ package org.glassfish.admin.amx.j2ee;
 import org.glassfish.admin.amx.core.AMXMBeanMetadata;
 
 @AMXMBeanMetadata(type = J2EETypes.MESSAGE_DRIVEN_BEAN, leaf = true)
-public interface MessageDrivenBean extends EJB
-{
+public interface MessageDrivenBean extends EJB {
 }

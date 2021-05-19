@@ -27,9 +27,9 @@ public interface SecurityConstants {
     public static final int CERTIFICATE = 2;
     // harry - added for LoginContextDriver access
     public static final int ALL = 3;
-    
+
     public static final String CLIENT_JAAS_PASSWORD = "default";
     public static final String CLIENT_JAAS_CERTIFICATE = "certificate";
 
-    
+
 }

@@ -97,7 +97,7 @@ public class CommandLaunchInfo {
     public String getAppcPath() {
         return appcPath;
     }
-    
+
     private ClientLaunchType saveArgInfo(
             final AgentArguments agentArgs) throws UserError {
         if (agentArgs == null){

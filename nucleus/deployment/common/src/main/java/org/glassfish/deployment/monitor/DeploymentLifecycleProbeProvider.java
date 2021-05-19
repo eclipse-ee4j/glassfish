@@ -27,7 +27,7 @@ import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 public class DeploymentLifecycleProbeProvider {
 
     /*
-     * Emits probe event that the application with 
+     * Emits probe event that the application with
      * <code>appName</code> and <code>appType</code> has been deployed.
      *
      * @param appName the name of the application has been deployed
@@ -38,7 +38,7 @@ public class DeploymentLifecycleProbeProvider {
     @Probe(name="applicationDeployedEvent")
     public void applicationDeployedEvent(
         @ProbeParam("appName") String appName,
-        @ProbeParam("appType") String appType, 
+        @ProbeParam("appType") String appType,
         @ProbeParam("loadTime") String loadTime) {}
 
 

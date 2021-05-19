@@ -60,7 +60,7 @@ public class WebtierTests extends BaseAsadminTest {
             String CMD = "create-http-listener";
             Map<String, String> options = getCreateOptions();
             options.put("defaultvs", options.get("default-virtual-server"));
-				options.remove("default-virtual-server");
+                options.remove("default-virtual-server");
             String up = GeneralUtils.toFinalURL(adminUrl, CMD, options, operand);
             //Reporter.log("url: " + up);
             Manifest man = super.invokeURLAndGetManifest(up);

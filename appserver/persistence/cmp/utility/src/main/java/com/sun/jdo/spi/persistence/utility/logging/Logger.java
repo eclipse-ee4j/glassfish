@@ -23,9 +23,9 @@ import java.security.SecurityPermission;
  * that need logging services and the implementation of those services.
  * <P>
  * The JDO Logger interface contains a small number of convenience methods
- * in addition to a subset of the 
+ * in addition to a subset of the
  * methods in the java.util.logging.Logger class, and can therefore
- * be implemented in a very straightforward way by a subclass of the 
+ * be implemented in a very straightforward way by a subclass of the
  * java.util.logging.Logger class.
  * There is one instance of the implementing class for each subsystem
  * in JDO.
@@ -34,11 +34,11 @@ import java.security.SecurityPermission;
  */
 
 public interface Logger {
-    
+
     /** Levels are defined as ints to avoid including the java.util.logging.Level
      * class in this package.
      */
-    
+
     /**
      * OFF is a special level that can be used to turn off logging.
      */
@@ -67,7 +67,7 @@ public interface Logger {
      * INFO is a message level for informational messages.
      * <p>
      * Typically INFO messages will be written to the console
-     * or its equivalent.  So the INFO level should only be 
+     * or its equivalent.  So the INFO level should only be
      * used for reasonably significant messages that will
      * make sense to end users and system admins.
      */
@@ -120,7 +120,7 @@ public interface Logger {
      * ALL indicates that all messages should be logged.
      */
     public static final int ALL = Integer.MIN_VALUE;
-    
+
     /** Test if this logger is logging messages.  This is a test for
      * log level FINE, FINER, or FINEST.  If the log message is expensive to construct,
      * this method should be used to determine whether it is a waste of time.
@@ -129,7 +129,7 @@ public interface Logger {
      * @return if FINE, FINER, or FINEST is currently being logged
      */
     public boolean isLoggable();
-    
+
     /** Test if this logger is logging messages at the specific level.
      * If the log message is expensive to construct,
      * this method should be used to determine whether it is a waste of time.
@@ -138,7 +138,7 @@ public interface Logger {
      * @return if this level is currently being logged
      * @param level The level to be tested */
     public boolean isLoggable(int level);
-    
+
 
     //======================================================================
     // Start of convenience methods for logging.
@@ -166,7 +166,7 @@ public interface Logger {
      * <p>
      * @param   sourceClass    name of class that issued the logging request
      * @param   sourceMethod   name of method that is being entered
-     * @param   param1	       parameter to the method being entered
+     * @param   param1           parameter to the method being entered
      */
     public void entering(String sourceClass, String sourceMethod, Object param1);
 
@@ -174,14 +174,14 @@ public interface Logger {
      * Log a method entry, with an array of parameters.
      * <p>
      * This is a convenience method that can be used to log entry
-     * to a method.  A LogRecord with message "ENTRY" (followed by a 
-     * format {N} indicator for each entry in the parameter array), 
-     * log level FINER, and the given sourceMethod, sourceClass, and 
+     * to a method.  A LogRecord with message "ENTRY" (followed by a
+     * format {N} indicator for each entry in the parameter array),
+     * log level FINER, and the given sourceMethod, sourceClass, and
      * parameters is logged.
      * <p>
      * @param   sourceClass    name of class that issued the logging request
      * @param   sourceMethod   name of method that is being entered
-     * @param   params	       array of parameters to the method being entered
+     * @param   params           array of parameters to the method being entered
      */
     public void entering(String sourceClass, String sourceMethod, Object params[]);
 
@@ -193,7 +193,7 @@ public interface Logger {
      * FINER, and the given sourceMethod and sourceClass is logged.
      * <p>
      * @param   sourceClass    name of class that issued the logging request
-     * @param   sourceMethod   name of the method 
+     * @param   sourceMethod   name of the method
      */
     public void exiting(String sourceClass, String sourceMethod);
 
@@ -207,7 +207,7 @@ public interface Logger {
      * object is logged.
      * <p>
      * @param   sourceClass    name of class that issued the logging request
-     * @param   sourceMethod   name of the method 
+     * @param   sourceMethod   name of the method
      * @param   result  Object that is being returned
      */
     public void exiting(String sourceClass, String sourceMethod, Object result);
@@ -216,10 +216,10 @@ public interface Logger {
      * Log throwing an exception.
      * <p>
      * This is a convenience method to log that a method is
-     * terminating by throwing an exception.  The logging is done 
+     * terminating by throwing an exception.  The logging is done
      * using the FINER level.
      * <p>
-     * If the logger is currently enabled for the given message 
+     * If the logger is currently enabled for the given message
      * level then the given arguments are stored in a LogRecord
      * which is forwarded to all registered output handlers.  The
      * LogRecord's message is set to "THROW".
@@ -238,68 +238,68 @@ public interface Logger {
     /**
      * Log a SEVERE message.
      * <p>
-     * If the logger is currently enabled for the SEVERE message 
+     * If the logger is currently enabled for the SEVERE message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void severe(String msg);
 
     /**
      * Log a WARNING message.
      * <p>
-     * If the logger is currently enabled for the WARNING message 
+     * If the logger is currently enabled for the WARNING message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void warning(String msg);
 
     /**
      * Log an INFO message.
      * <p>
-     * If the logger is currently enabled for the INFO message 
+     * If the logger is currently enabled for the INFO message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void info(String msg);
 
     /**
      * Log a CONFIG message.
      * <p>
-     * If the logger is currently enabled for the CONFIG message 
+     * If the logger is currently enabled for the CONFIG message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void config(String msg);
 
     /**
      * Log a message.
      * <p>
-     * If the logger is currently enabled for the message 
+     * If the logger is currently enabled for the message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
      * @param   level   The level for this message
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void log(int level, String msg);
 
     /**
      * Log a message.
      * <p>
-     * If the logger is currently enabled for the message 
+     * If the logger is currently enabled for the message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
      * @param   level   The level for this message
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      */
     public void log(int level, String msg, Object o1);
@@ -307,12 +307,12 @@ public interface Logger {
     /**
      * Log a  message.
      * <p>
-     * If the logger is currently enabled for the  message 
+     * If the logger is currently enabled for the  message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
      * @param   level   The level for this message
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o      Objects to be inserted into the message
      */
     public void log(int level, String msg, Object[] o);
@@ -320,12 +320,12 @@ public interface Logger {
     /**
      * Log a message.
      * <p>
-     * If the logger is currently enabled for the  message 
+     * If the logger is currently enabled for the  message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
      * @param   level   The level for this message
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      */
@@ -334,12 +334,12 @@ public interface Logger {
     /**
      * Log a  message.
      * <p>
-     * If the logger is currently enabled for the  message 
+     * If the logger is currently enabled for the  message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
      * @param   level   The level for this message
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      * @param   o3      A parameter to be inserted into the message
@@ -349,36 +349,36 @@ public interface Logger {
     /**
      * Log a message.
      * <p>
-     * If the logger is currently enabled for the message 
-     * level then the given message, and the exception dump, 
-	 * is forwarded to all the
+     * If the logger is currently enabled for the message
+     * level then the given message, and the exception dump,
+     * is forwarded to all the
      * registered output Handler objects.
      * <p>
      * @param   level   The level for this message
-     * @param   msg	The string message (or a key in the message catalog)
-     * @param   thrown	The exception to log
+     * @param   msg    The string message (or a key in the message catalog)
+     * @param   thrown    The exception to log
      */
     public void log(int level, String msg, Throwable thrown );
 
     /**
      * Log a  message.
      * <p>
-     * If the logger is currently enabled for the  message 
+     * If the logger is currently enabled for the  message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void fine(String msg);
 
     /**
      * Log a FINE message.
      * <p>
-     * If the logger is currently enabled for the FINE message 
+     * If the logger is currently enabled for the FINE message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      */
     public void fine(String msg, Object o1);
@@ -386,11 +386,11 @@ public interface Logger {
     /**
      * Log a FINE message.
      * <p>
-     * If the logger is currently enabled for the FINE message 
+     * If the logger is currently enabled for the FINE message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o      Objects to be inserted into the message
      */
     public void fine(String msg, Object[] o);
@@ -398,11 +398,11 @@ public interface Logger {
     /**
      * Log a FINE message.
      * <p>
-     * If the logger is currently enabled for the FINE message 
+     * If the logger is currently enabled for the FINE message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      */
@@ -411,11 +411,11 @@ public interface Logger {
     /**
      * Log a FINE message.
      * <p>
-     * If the logger is currently enabled for the FINE message 
+     * If the logger is currently enabled for the FINE message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      * @param   o3      A parameter to be inserted into the message
@@ -425,22 +425,22 @@ public interface Logger {
     /**
      * Log a FINER message.
      * <p>
-     * If the logger is currently enabled for the FINER message 
+     * If the logger is currently enabled for the FINER message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void finer(String msg);
 
     /**
      * Log a FINER message.
      * <p>
-     * If the logger is currently enabled for the FINER message 
+     * If the logger is currently enabled for the FINER message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o      Objects to be inserted into the message
      */
     public void finer(String msg, Object[] o);
@@ -448,11 +448,11 @@ public interface Logger {
     /**
      * Log a FINER message.
      * <p>
-     * If the logger is currently enabled for the FINER message 
+     * If the logger is currently enabled for the FINER message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      */
     public void finer(String msg, Object o1);
@@ -460,11 +460,11 @@ public interface Logger {
     /**
      * Log a FINER message.
      * <p>
-     * If the logger is currently enabled for the FINER message 
+     * If the logger is currently enabled for the FINER message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      */
@@ -473,11 +473,11 @@ public interface Logger {
     /**
      * Log a FINER message.
      * <p>
-     * If the logger is currently enabled for the FINER message 
+     * If the logger is currently enabled for the FINER message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      * @param   o3      A parameter to be inserted into the message
@@ -487,22 +487,22 @@ public interface Logger {
     /**
      * Log a FINEST message.
      * <p>
-     * If the logger is currently enabled for the FINEST message 
+     * If the logger is currently enabled for the FINEST message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      */
     public void finest(String msg);
 
     /**
      * Log a FINEST message.
      * <p>
-     * If the logger is currently enabled for the FINEST message 
+     * If the logger is currently enabled for the FINEST message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o      Objects to be inserted into the message
      */
     public void finest(String msg, Object[] o);
@@ -510,11 +510,11 @@ public interface Logger {
     /**
      * Log a FINEST message.
      * <p>
-     * If the logger is currently enabled for the FINEST message 
+     * If the logger is currently enabled for the FINEST message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      */
     public void finest(String msg, Object o1);
@@ -522,11 +522,11 @@ public interface Logger {
     /**
      * Log a FINEST message.
      * <p>
-     * If the logger is currently enabled for the FINEST message 
+     * If the logger is currently enabled for the FINEST message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      */
@@ -535,11 +535,11 @@ public interface Logger {
     /**
      * Log a FINEST message.
      * <p>
-     * If the logger is currently enabled for the FINEST message 
+     * If the logger is currently enabled for the FINEST message
      * level then the given message is forwarded to all the
      * registered output Handler objects.
      * <p>
-     * @param   msg	The string message (or a key in the message catalog)
+     * @param   msg    The string message (or a key in the message catalog)
      * @param   o1      A parameter to be inserted into the message
      * @param   o2      A parameter to be inserted into the message
      * @param   o3      A parameter to be inserted into the message
@@ -547,7 +547,7 @@ public interface Logger {
     public void finest(String msg, Object o1, Object o2, Object o3);
 
     //================================================================
-    // End of convenience methods 
+    // End of convenience methods
     //================================================================
 
     /**

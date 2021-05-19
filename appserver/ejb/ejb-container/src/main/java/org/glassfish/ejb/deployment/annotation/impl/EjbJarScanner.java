@@ -66,7 +66,7 @@ public class EjbJarScanner extends ModuleScanner<EjbBundleDescriptor> {
         // interceptor classes that are defined in ejb-jar.xml
         // regardless of they have annotation or not
         for (EjbDescriptor ejbDesc : desc.getEjbs()) {
-            if (ejbDesc instanceof EjbSessionDescriptor || 
+            if (ejbDesc instanceof EjbSessionDescriptor ||
                 ejbDesc instanceof EjbMessageBeanDescriptor) {
                 addScanClassName(ejbDesc.getEjbClassName());
             }

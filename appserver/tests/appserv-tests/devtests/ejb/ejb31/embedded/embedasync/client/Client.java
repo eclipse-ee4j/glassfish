@@ -50,46 +50,46 @@ public class Client {
         // ok now let's look up the EJB...
         Context ic = c.getContext();
         try {
-	    System.out.println("Sleeping for a second...");
-	    Thread.sleep(1000);
+            System.out.println("Sleeping for a second...");
+            Thread.sleep(1000);
 
-	    SingletonBean sb = (SingletonBean) ic.
-		lookup("java:global/classes/SingletonBean!com.acme.SingletonBean");
-	    sb.hello();
+            SingletonBean sb = (SingletonBean) ic.
+                lookup("java:global/classes/SingletonBean!com.acme.SingletonBean");
+            sb.hello();
 
-	    StatefulBean sfTimeout = (StatefulBean) ic.
-		lookup("java:global/classes/StatefulBean");
-	    StatefulBean2 sfNoTimeout = (StatefulBean2) ic.
-		lookup("java:global/classes/StatefulBean2");
-	    sfTimeout.hello();
-	    sfNoTimeout.hello();
+            StatefulBean sfTimeout = (StatefulBean) ic.
+                lookup("java:global/classes/StatefulBean");
+            StatefulBean2 sfNoTimeout = (StatefulBean2) ic.
+                lookup("java:global/classes/StatefulBean2");
+            sfTimeout.hello();
+            sfNoTimeout.hello();
 
-	    System.out.println("Sleeping to wait for sf bean to be removed ...");
-	    Thread.sleep(7000);
-	    System.out.println("Waking up , checking sf bean existence");
+            System.out.println("Sleeping to wait for sf bean to be removed ...");
+            Thread.sleep(7000);
+            System.out.println("Waking up , checking sf bean existence");
 
-	    try {
-		sfTimeout.hello();
-		throw new RuntimeException("StatefulTimeout(0) bean should have timed out");
-	    } catch(EJBException e) {
-		System.out.println("Stateful bean successfully timed out");
-	    }
+            try {
+                sfTimeout.hello();
+                throw new RuntimeException("StatefulTimeout(0) bean should have timed out");
+            } catch(EJBException e) {
+                System.out.println("Stateful bean successfully timed out");
+            }
 
-	    sfNoTimeout.hello();
-	    System.out.println("Stateful bean with longer timeout is still around");
+            sfNoTimeout.hello();
+            System.out.println("Stateful bean with longer timeout is still around");
 
-	    /**
-	    HelloRemote hr = (HelloRemote) ic.
-		lookup("java:global/classes/SingletonBean!com.acme.HelloRemote");
-	    hr.hello();
-	    */
+            /**
+            HelloRemote hr = (HelloRemote) ic.
+                lookup("java:global/classes/SingletonBean!com.acme.HelloRemote");
+            hr.hello();
+            */
 
-	    if( sb.getPassed() ) {
-		System.out.println("getPassed() returned true");
-		stat.addStatus("embedded async test", stat.PASS);
-	    } else {
-		throw new EJBException("getPassed() returned false");
-	    }
+            if( sb.getPassed() ) {
+                System.out.println("getPassed() returned true");
+                stat.addStatus("embedded async test", stat.PASS);
+            } else {
+                throw new EJBException("getPassed() returned false");
+            }
         } catch (Exception e) {
             stat.addStatus("embedded async test", stat.FAIL);
             System.out.println("ERROR calling EJB:");
@@ -97,8 +97,8 @@ public class Client {
         }
 
         System.out.println("Closing container");
-	
-	c.close();
+
+        c.close();
         System.out.println("Done Closing container");
 
     }

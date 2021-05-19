@@ -46,7 +46,7 @@ import com.sun.corba.ee.spi.ior.iiop.IIOPProfile;
 import com.sun.corba.ee.spi.orb.ORBVersionFactory;
 import com.sun.corba.ee.spi.oa.rfm.ReferenceFactoryManager;
 import com.sun.corba.ee.spi.misc.ORBConstants;
- 
+
 import java.util.logging.Logger;
 import java.util.logging.Level;
 import com.sun.logging.LogDomains;
@@ -82,11 +82,11 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     public static final String INTEROP_MODE = "com.sun.jts.pi.INTEROP_MODE";
     // The ReferenceFactoryManager from the orb.
     private static ReferenceFactoryManager rfm = null;
-	
-	/*
-		Logger to log transaction messages
-	*/  
-	 static Logger _logger = LogDomains.getLogger(InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
+
+    /**
+     * Logger to log transaction messages
+     */
+    static Logger _logger = LogDomains.getLogger(InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     public static final ThreadLocal otsThreadLocal =
         new ThreadLocal() {
@@ -107,7 +107,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     // static initializer block
 
     static {
-	    /**
+        /**
         Any any = ORB.init().create_any();
         any.insert_boolean(false);
         nullContext = new PropagationContext(
@@ -122,7 +122,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             new TransIdentity(null, null, new otid_t(-1, 0, new byte[0])),
             new TransIdentity[0],
             any);
-	    ***/
+        ***/
     }
 
     private static ORB txOrb = null;
@@ -185,7 +185,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     // implementation of the Interceptor interface.
 
     public String name() {
-	return InterceptorImpl.name;
+        return InterceptorImpl.name;
     }
 
     public void destroy() {}
@@ -263,8 +263,8 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         }
 
         if (_logger.isLoggable(Level.FINE)) {
-			_logger.log(Level.FINE," sending_request["+ ri.request_id() + 
-					"] : " + ri.operation() + ", ThreadName : " +
+            _logger.log(Level.FINE," sending_request["+ ri.request_id() +
+                    "] : " + ri.operation() + ", ThreadName : " +
                 Thread.currentThread().toString());
         }
 
@@ -286,7 +286,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         // once OTS RTF redrafts the OTS spec based on PI. An issue needs to be
         // filed.
         org.omg.CORBA.Object target = ri.effective_target();
-        if ( StubAdapter.isStub(target) && StubAdapter.isLocal(target) ) { 
+        if ( StubAdapter.isStub(target) && StubAdapter.isLocal(target) ) {
             // target is local
             // load a dummy context and discard the current tx context.
             hctx.value = dummyContext;
@@ -294,25 +294,25 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             // load a null context and discard the current tx context.
             hctx.value = nullContext;
         } else {
-		    /*
-	    IOR ior = ((com.sun.corba.ee.spi.orb.ORB)txOrb).getIOR( target, false ) ;
-	    IIOPProfile prof = ior.getProfile() ;
-	    ObjectKeyTemplate oktemp = prof.getObjectKeyTemplate() ;
-	    if (oktemp.getORBVersion().equals(ORBVersionFactory.getFOREIGN()))
-	    {
+            /*
+        IOR ior = ((com.sun.corba.ee.spi.orb.ORB)txOrb).getIOR( target, false ) ;
+        IIOPProfile prof = ior.getProfile() ;
+        ObjectKeyTemplate oktemp = prof.getObjectKeyTemplate() ;
+        if (oktemp.getORBVersion().equals(ORBVersionFactory.getFOREIGN()))
+        {
                 hctx.value = nullContext;
-	    } else {
-	        ObjectAdapterId oaid = oktemp.getObjectAdapterId() ;
-	        String[] adapterName = oaid.getAdapterName() ;
-	        boolean isEjbCall = isEjbAdapterName(adapterName);
-	        if (!isEjbCall) {
+        } else {
+            ObjectAdapterId oaid = oktemp.getObjectAdapterId() ;
+            String[] adapterName = oaid.getAdapterName() ;
+            boolean isEjbCall = isEjbAdapterName(adapterName);
+            if (!isEjbCall) {
                     hctx.value = nullContext;
-	        } else {
+            } else {
                     // Call JTS proprietary interceptor to get current tx.
                     sender.sending_request(ri.request_id(), hctx);
-	        } */
+            } */
                 sender.sending_request(ri.request_id(), hctx);
-	    // }
+        // }
         }
 
         // add service context.
@@ -349,9 +349,9 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             // transaction to fail.
         }
 
-	if (svc == null) {
-	    return;
-	}
+        if (svc == null) {
+            return;
+        }
         // a tx svc context is available.
 
         // check if TransactionService is available.
@@ -360,9 +360,9 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         }
 
         if (_logger.isLoggable(Level.FINE)) {
-			_logger.log(Level.FINE,"   received_reply[" + ri.request_id() + "] : " +
-	                ri.operation() + ", ThreadName : " +
-					Thread.currentThread().toString());
+            _logger.log(Level.FINE,"   received_reply[" + ri.request_id() + "] : " +
+                    ri.operation() + ", ThreadName : " +
+                    Thread.currentThread().toString());
         }
 
         // read the propagation context
@@ -379,9 +379,9 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         PropagationContext ctx = PropagationContextHelper.extract(any);
 
         // Set up the Environment instance with exception information.
-	// The exception can be a SystemException or an UnknownUserException.
+        // The exception can be a SystemException or an UnknownUserException.
 
-	Environment env = null;
+        Environment env = null;
         if (txOrb != null) {
             env = txOrb.create_environment();
         } else {
@@ -389,15 +389,15 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             env = ORB.init().create_environment();
         }
 
-	env.exception(null);
+        env.exception(null);
 
         // call the OTS proprietary hook.
 
         try {
-	    sender.received_reply(ri.request_id(), ctx, env);
-	} catch (org.omg.CORBA.WrongTransaction ex) {
+            sender.received_reply(ri.request_id(), ctx, env);
+        } catch (org.omg.CORBA.WrongTransaction ex) {
             throw new INVALID_TRANSACTION(0, CompletionStatus.COMPLETED_YES);
-	}
+        }
     }
 
     public void receive_exception(ClientRequestInfo ri) throws ForwardRequest {
@@ -412,20 +412,19 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             // REVISIT Exception replies may not carry a tx context back,
             // as a result checked transaction behaviour will cause the
             // transaction to fail.
+        } catch (Exception e) {
+            return;
         }
-	catch(Exception e){
-		return;
-	}
 
-	if (svc == null) {
-	    return;
-	}
+        if (svc == null) {
+            return;
+        }
 
         // a tx svc context is available.
 
         // Set up the Environment instance with exception information.
-	// The exception can be a SystemException or an UnknownUserException.
-	Environment env = null;
+        // The exception can be a SystemException or an UnknownUserException.
+        Environment env = null;
         if (txOrb != null) {
             env = txOrb.create_environment();
         } else {
@@ -439,18 +438,18 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         String repId = ri.received_exception_id();
         strm.read_string(); // read repId
         int minorCode = strm.read_long(); // read minorCode
-        CompletionStatus completionStatus = // read completionStatus
-            CompletionStatus.from_int(strm.read_long());
+        // read completionStatus
+        CompletionStatus completionStatus = CompletionStatus.from_int(strm.read_long());
         if (repId.indexOf("UNKNOWN") != -1) { // user exception ?
-	    if (minorCode == 1) { // read minorCode
+            if (minorCode == 1) { // read minorCode
                 // user exception
-	    } else { // system exception
+            } else { // system exception
                 exception = SYS_EXC;
-	    }
+            }
         } else { // system exception
             exception = SYS_EXC;
         }
-	env.exception(exception);
+        env.exception(exception);
 
         // check if TransactionService is available.
         if (this.tsiImpl == null || this.sender == null) {
@@ -472,11 +471,12 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         // call the OTS proprietary hook.
 
         try {
-	    sender.received_reply(ri.request_id(), ctx, env);
-	} catch (org.omg.CORBA.WrongTransaction ex) {
+            sender.received_reply(ri.request_id(), ctx, env);
+        } catch (org.omg.CORBA.WrongTransaction ex) {
             throw new INVALID_TRANSACTION(0, completionStatus);
-	}
+        }
     }
+
 
     public void receive_other(ClientRequestInfo ri) throws ForwardRequest {
 
@@ -492,9 +492,9 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             // transaction to fail.
         }
 
-	if (svc == null) {
-	    return;
-	}
+        if (svc == null) {
+            return;
+        }
         // a tx svc context is available.
 
         // check if TransactionService is available.
@@ -516,9 +516,9 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         PropagationContext ctx = PropagationContextHelper.extract(any);
 
         // Set up the Environment instance with exception information.
-	// The exception can be a SystemException or an UnknownUserException.
+        // The exception can be a SystemException or an UnknownUserException.
 
-	Environment env = null;
+        Environment env = null;
         if (txOrb != null) {
             env = txOrb.create_environment();
         } else {
@@ -526,22 +526,21 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             env = ORB.init().create_environment();
         }
 
-	env.exception(null);
+        env.exception(null);
 
         // call the OTS proprietary hook.
 
         try {
-	    sender.received_reply(ri.request_id(), ctx, env);
-	} catch (org.omg.CORBA.WrongTransaction ex) {
+            sender.received_reply(ri.request_id(), ctx, env);
+        } catch (org.omg.CORBA.WrongTransaction ex) {
             throw new INVALID_TRANSACTION(0, CompletionStatus.COMPLETED_NO);
-	}
+        }
     }
 
     // implementation of the ServerInterceptor interface.
 
-    public void receive_request_service_contexts(ServerRequestInfo ri)
-            throws ForwardRequest {
 
+    public void receive_request_service_contexts(ServerRequestInfo ri) throws ForwardRequest {
         // since this could be called on a seperate thread, we need to
         // transfer the svc context to the request PICurrent slots.
         // But for now, since we know that this is called by the same thread
@@ -617,7 +616,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             }
 
             if (_logger.isLoggable(Level.FINE)) {
-				_logger.log(Level.FINE," received_request[" +
+                _logger.log(Level.FINE," received_request[" +
                     ri.request_id() + "] : " + ri.operation() +
                     ", ThreadName : " + Thread.currentThread().toString());
             }
@@ -756,8 +755,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         InputStream strm = any.create_input_stream();
         strm.read_string(); // repId
         strm.read_long(); // minorCode
-        CompletionStatus completionStatus =
-            CompletionStatus.from_int(strm.read_long());
+        CompletionStatus completionStatus = CompletionStatus.from_int(strm.read_long());
 
         processServerSendPoint(ri, completionStatus);
     }
@@ -777,7 +775,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             return true;
         }
         */
-        // return ((Integer) stack.peek() == NULL_CTX); 
+        // return ((Integer) stack.peek() == NULL_CTX);
         ArrayListStack stack = (ArrayListStack) threadLocalState[NULL_CTX_SLOT];
         return (stack.peek() == NULL_CTX);
         // IASRI 4698847 END
@@ -801,8 +799,8 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     public static void setThreadLocalData(int slot, Object data) {
         Object[] threadLocalState = (Object[]) otsThreadLocal.get();
         // IASRI 4698847 START
-        //((Stack) threadLocalState[slot]).push(data); 
-        ((ArrayListStack) threadLocalState[slot]).push(data); 
+        //((Stack) threadLocalState[slot]).push(data);
+        ((ArrayListStack) threadLocalState[slot]).push(data);
         // IASRI 4698847 END
     }
 
@@ -830,19 +828,19 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
             new TransIdentity(null, null, new otid_t(-1, 0, new byte[0])),
             new TransIdentity[0],
             any);
-	try {
-	    rfm = (ReferenceFactoryManager)orb.resolve_initial_references(
-	          ORBConstants.REFERENCE_FACTORY_MANAGER ) ;
-	} catch (Exception ex) {
-	    _logger.log(Level.WARNING,ex.getMessage(), ex);
-	}
+        try {
+            rfm = (ReferenceFactoryManager)orb.resolve_initial_references(
+                ORBConstants.REFERENCE_FACTORY_MANAGER ) ;
+        } catch (Exception ex) {
+            _logger.log(Level.WARNING,ex.getMessage(), ex);
+        }
     }
 
-     public static boolean isEjbAdapterName( String[] adapterName ) {
-         boolean result = false ;
-	 if (rfm != null)
-	     result = rfm.isRfmName( adapterName ) ;
-         return result ;
-     }
+    public static boolean isEjbAdapterName( String[] adapterName ) {
+        boolean result = false ;
+        if (rfm != null)
+            result = rfm.isRfmName( adapterName ) ;
+        return result ;
+    }
 
 }

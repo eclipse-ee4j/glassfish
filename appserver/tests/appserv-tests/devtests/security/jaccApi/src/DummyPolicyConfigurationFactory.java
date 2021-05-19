@@ -21,9 +21,9 @@ import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
 
 public class DummyPolicyConfigurationFactory extends PolicyConfigurationFactory {
-    public PolicyConfiguration 
+    public PolicyConfiguration
             getPolicyConfiguration(String contextID, boolean remove)
-    	    throws jakarta.security.jacc.PolicyContextException {
+                throws jakarta.security.jacc.PolicyContextException {
         return null;
     }
 

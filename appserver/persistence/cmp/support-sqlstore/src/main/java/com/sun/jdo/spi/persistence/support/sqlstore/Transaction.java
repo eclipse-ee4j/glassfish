@@ -21,11 +21,11 @@ import jakarta.transaction.*;
 
 public interface Transaction extends com.sun.jdo.api.persistence.support.Transaction, Synchronization
 {
-	Connection getConnection();
-	void releaseConnection();
-	void replaceConnection();
-	void setRollbackOnly() throws java.lang.IllegalStateException,
+    Connection getConnection();
+    void releaseConnection();
+    void replaceConnection();
+    void setRollbackOnly() throws java.lang.IllegalStateException,
                             SystemException;
-	void begin(jakarta.transaction.Transaction t);
+    void begin(jakarta.transaction.Transaction t);
 }
 

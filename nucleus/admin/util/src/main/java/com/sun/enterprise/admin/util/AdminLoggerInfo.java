@@ -23,7 +23,7 @@ import org.glassfish.logging.annotation.LoggerInfo;
 
 /**
  * Logger information for the admin-util module.
- * 
+ *
  * @author Tom Mueller
  */
 /* Module private */

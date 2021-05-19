@@ -28,7 +28,7 @@ public class ShoppingCart  {
     public void addItem(String s) {
         shoppingCartInvoked = true;
         System.out.println("ShoppingCart::addItem called");
-        
+
     }
 
 }

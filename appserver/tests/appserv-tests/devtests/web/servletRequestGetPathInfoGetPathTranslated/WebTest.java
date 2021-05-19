@@ -61,8 +61,8 @@ public class WebTest {
     }
 
     public void doTest() {
-     
-        try { 
+
+        try {
             invoke();
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -92,7 +92,7 @@ public class WebTest {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;
@@ -143,7 +143,7 @@ public class WebTest {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.connect();
         int responseCode = conn.getResponseCode();
-        if (responseCode != 200) { 
+        if (responseCode != 200) {
             System.err.println("Wrong response code. Expected: 200"
                                + ", received: " + responseCode);
             fail = true;

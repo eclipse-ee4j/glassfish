@@ -24,7 +24,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class StandAloneClient {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private String word;
@@ -32,12 +32,12 @@ public class StandAloneClient {
     private String googleKey;
 
     public static void main (String[] args) {
-        stat.addDescription("googleserver standalone");	
+        stat.addDescription("googleserver standalone");
         StandAloneClient client = new StandAloneClient(args);
         client.doTest();
         stat.printSummary("googleserver-standaloneID");
     }
-    
+
     public StandAloneClient(String[] args) {
         word = (args.length > 0) ? "spellng" : args[0];
         targetEndpointAddress = (args.length > 1) ?
@@ -47,11 +47,11 @@ public class StandAloneClient {
     }
 
     public void doTest() {
-    	try {
-            GoogleSearchService googleSearchService = 
+            try {
+            GoogleSearchService googleSearchService =
                 new GoogleSearchService_Impl();
 
-            GoogleSearchPort googleSearchPort = 
+            GoogleSearchPort googleSearchPort =
                 googleSearchService.getGoogleSearchPort();
 
             ((Stub)googleSearchPort)._setProperty
@@ -72,15 +72,15 @@ public class StandAloneClient {
                                spellingSuggestion + "'");
 
             stat.addStatus("appclient main", stat.PASS);
-                
-    	} catch (Exception ex) {
+
+            } catch (Exception ex) {
             System.out.println("google client test failed");
             ex.printStackTrace();
             stat.addStatus("appclient main" , stat.FAIL);
 
-	} 
+        }
 
     }
-        
+
 }
 

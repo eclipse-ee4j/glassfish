@@ -76,14 +76,14 @@ import org.w3c.dom.ls.LSSerializer;
  */
 abstract class CombinedXPath {
 
-    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
     /** property names for the types of combined JNLP content */
     private static final String OWNED_PROPERTY_NAME = "owned";
     private static final String DEFAULTED_PROPERTY_NAME = "defaulted";
     private static final String MERGED_PROPERTY_NAME = "merged";
-    
+
     private final static XPathFactory xPathFactory = XPathFactory.newInstance();
 
     private final static XPath xPath = xPathFactory.newXPath();
@@ -93,10 +93,10 @@ abstract class CombinedXPath {
 
     private final String parentPath;
     private final String targetRelativePath;
-    
+
     /** xpath expression for the target node in the DOM for the developer's XML */
     private final XPathExpression targetExpr;
-    
+
     /** if developer didn't provide the target, this is the parent where we'll
      * create a new child.
      */
@@ -118,15 +118,15 @@ abstract class CombinedXPath {
                 return new MergedXPath(xPath, pathA, pathB);
             }
         };
-        
+
         private String propertyName;
-        
+
         Type(final String propName) {
             propertyName = propName;
         }
-        
+
         abstract CombinedXPath combinedXPath(String pathA, String pathB);
-        
+
     }
 
     static List<CombinedXPath> parse(final Properties p) {
@@ -149,7 +149,7 @@ abstract class CombinedXPath {
     private static List<CombinedXPath> parse(
                 final Properties p,
                 Type type) {
-            
+
             final List<CombinedXPath> result = new
                     ArrayList<CombinedXPath>();
             final String refs = p.getProperty(type.propertyName);
@@ -165,7 +165,7 @@ abstract class CombinedXPath {
 
     /**
      * Creates a new combined XPath.
-     * 
+     *
      * @param xPath XPath available for searching
      * @param parentPath path to parent for new child (if developer's document lacks the target)
      * @param targetRelativePath path relative to the parent for the target node in the developer DOM
@@ -300,7 +300,7 @@ abstract class CombinedXPath {
                 }
             }
         }
-        
+
     }
 
     /**

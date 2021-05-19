@@ -27,11 +27,11 @@ public class Server {
       POA rootPOA = POAHelper.narrow(orb.resolve_initial_references("RootPOA"));
 
       // Create policies for our persistent POA
-      org.omg.CORBA.Policy[] policies = { 
-        rootPOA.create_lifespan_policy(LifespanPolicyValue.PERSISTENT) 
+      org.omg.CORBA.Policy[] policies = {
+        rootPOA.create_lifespan_policy(LifespanPolicyValue.PERSISTENT)
       };
       // Create myPOA with the right policies
-      POA myPOA = rootPOA.create_POA( "rmi_bank_poa", rootPOA.the_POAManager(), 
+      POA myPOA = rootPOA.create_POA( "rmi_bank_poa", rootPOA.the_POAManager(),
                                         policies );
       // Create the servant
       AccountManagerImpl managerServant = new AccountManagerImpl();
@@ -43,7 +43,7 @@ public class Server {
       // Activate the POA manager
       rootPOA.the_POAManager().activate();
 
-      System.out.println(myPOA.servant_to_reference(managerServant) + 
+      System.out.println(myPOA.servant_to_reference(managerServant) +
                          " is ready.");
       // Wait for incoming requests
       orb.run();

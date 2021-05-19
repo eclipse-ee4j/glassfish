@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -44,16 +44,16 @@
     </target>
 
     <target name="build" depends="compile">
-        <property name="hasWebclient" value="yes"/> 
+        <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="**/*.class"/> 
+            <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="WebTest.java"/>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common">
         <antcall target="copyJarToDomainLib"/>
         <antcall target="asadmin-common-ignore-fail">
@@ -65,12 +65,12 @@
             <param name="admin.command" value="set" />
             <param name="operand.props"
                    value="${appserver.instance.name}.http-service.virtual-server.server.property.valve_2=&quot;valves.GlassFishValveImpl&quot;"/>
-        </antcall> 
+        </antcall>
         <antcall target="asadmin-common-ignore-fail">
             <param name="admin.command" value="set" />
             <param name="operand.props"
                    value="${appserver.instance.name}.http-service.virtual-server.server.property.valve_3=&quot;valves.TomcatValveBase_2&quot;"/>
-        </antcall> 
+        </antcall>
         <antcall target="restart-server-instance-common"/>
     </target>
 
@@ -85,7 +85,7 @@
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
           <arg value="${http.host}"/>
@@ -97,10 +97,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="restore" depends="init-common">
         <antcall target="removeJarFromDomainLib"/>

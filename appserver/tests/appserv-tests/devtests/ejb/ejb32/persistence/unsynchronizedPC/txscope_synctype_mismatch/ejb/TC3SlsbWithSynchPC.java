@@ -24,14 +24,14 @@ import jakarta.persistence.SynchronizationType;
 
 @Stateless
 public class TC3SlsbWithSynchPC implements Tester{
-    
+
     @PersistenceContext(unitName="lib/unsyncpc_txscope_synctype_mismatch-par.jar#em",
             synchronization = SynchronizationType.SYNCHRONIZED)
     EntityManager em;
-    
-    @EJB(beanName = "TC3SlsbWithUnSynchPC") 
+
+    @EJB(beanName = "TC3SlsbWithUnSynchPC")
     Finder finder;
-    
+
     @Override
     public boolean doTest() {
         try {

@@ -35,7 +35,7 @@ import org.glassfish.quality.ToDo;
  * service. Some container-specific security configuration elements are in the various container configuration elements
  * and not here. SSL configuration is also elsewhere. At this time the security service configuration consists of a set
  * of authentication realms. A number of top-level attributes are defined as well
- * 
+ *
  */
 /* @XmlType(name = "", propOrder = {
     "authRealm",
@@ -53,7 +53,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      *
      * Specifies which realm (by name) is used by default when no realm is specifically requested. The file realm is the
      * common default
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "file")
@@ -70,7 +70,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the defaultPrincipal property.
      *
      * Used as the identity of default security contexts when necessary and no principal is provided
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -87,7 +87,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the defaultPrincipalPassword property.
      *
      * Password of default principal
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -104,7 +104,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the anonymousRole property.
      *
      * This attribute is deprecated.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "AttributeDeprecated")
@@ -121,7 +121,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the auditEnabled property.
      *
      * If true, additional access logging is performed to provide audit information
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
@@ -137,7 +137,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
     /**
      * Gets the value of the jacc property. Specifies the name of the jacc-provider element to use for setting up the JACC
      * infrastructure. The default value "default" does not need to be changed unless adding a custom JACC provider.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "default")
@@ -155,7 +155,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      *
      * Optional list of audit provider modules which will be used by the audit subsystem. Default value refers to the
      * internal log-based audit module
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "default")
@@ -175,7 +175,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * application specific mapping defined. Every role is mapped to a same-named (as the role) instance of a
      * java.security.Principal implementation class (see mapped-principal-class) This behavior is similar to that of Tomcat
      * servlet container. It is off by default.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)
@@ -196,7 +196,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * role mapping. This attribute is optional. When it is not specified, com.sun.enterprise.deployment.Group
      * implementation of java.security.Principal is used. The value of this attribute is only relevant when the
      * activate-default principal-to-role-mapping attribute is set to true
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -219,7 +219,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getAuthRealm().add(newItem);
      * </pre>
@@ -241,7 +241,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getJaccProvider().add(newItem);
      * </pre>
@@ -263,7 +263,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getAuditModule().add(newItem);
      * </pre>
@@ -279,7 +279,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the messageSecurityConfig property.
      *
      * Optional list of layer specific lists of configured message security providers.
-     * 
+     *
      * <p/>
      * <p/>
      * This accessor method returns a reference to the live list, not a snapshot. Therefore any modification you make to the
@@ -288,7 +288,7 @@ public interface SecurityService extends ConfigBeanProxy, PropertyBag {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getMessageSecurityConfig().add(newItem);
      * </pre>

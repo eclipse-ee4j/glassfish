@@ -30,7 +30,7 @@ import org.glassfish.api.admin.config.ApplicationName;
  * <CODE>DeploymentOrder</CODE>.
  * <p>
  * Note that the comparator of the deployment types should
- * return a consistent value during the lifetime of the 
+ * return a consistent value during the lifetime of the
  * deployment objects, e.g. it should not depend on values of
  * mutable fields of the deployment objects.
  * <p>
@@ -63,7 +63,7 @@ public class DeploymentType implements Comparator {
   private final String name;
   private final Class cls;
 
-  public final static DeploymentType INTERNAL_APP = 
+  public final static DeploymentType INTERNAL_APP =
     new DeploymentType(INTERNAL_APP_NAME, ApplicationOrderInfo.class) {
       public boolean isInstance(Object obj) {
         if (super.isInstance(obj)) {
@@ -76,7 +76,7 @@ public class DeploymentType implements Comparator {
       }
     };
 
-  public final static DeploymentType DEFAULT_APP = 
+  public final static DeploymentType DEFAULT_APP =
     new DeploymentType(DEFAULT_APP_NAME, ApplicationOrderInfo.class) {
       public boolean isInstance(Object obj) {
         if (super.isInstance(obj)) {
@@ -89,7 +89,7 @@ public class DeploymentType implements Comparator {
       }
     };
 
-  public final static DeploymentType CONNECTOR = 
+  public final static DeploymentType CONNECTOR =
     new DeploymentType(CONNECTOR_NAME, ApplicationOrderInfo.class) {
       public boolean isInstance(Object obj) {
         if (super.isInstance(obj)) {
@@ -103,7 +103,7 @@ public class DeploymentType implements Comparator {
       }
     };
 
-  private DeploymentType(String name, Class cls) { 
+  private DeploymentType(String name, Class cls) {
     this.name = name;
     this.cls = cls;
   }

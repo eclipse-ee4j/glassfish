@@ -39,5 +39,5 @@ public interface ServerSentEventHandlerContext<T extends ServerSentEventHandler>
      * @return all the active handlers
      */
     public Set<T> getHandlers();
-    
+
 }

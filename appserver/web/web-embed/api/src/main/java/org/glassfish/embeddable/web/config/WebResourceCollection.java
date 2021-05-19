@@ -68,11 +68,11 @@ public class WebResourceCollection {
     /**
      * Sets the url patterns that correspond to this
      * web resource
-     * 
-     * @param urlPatterns the url patterns 
+     *
+     * @param urlPatterns the url patterns
      */
     public void setUrlPatterns(Set<String> urlPatterns) {
-        this.urlPatterns = urlPatterns;          
+        this.urlPatterns = urlPatterns;
     }
 
     /**
@@ -114,7 +114,7 @@ public class WebResourceCollection {
     /**
      * Sets the HTTP methods to be omitted from protection
      *
-     * @param httpMethodOmissions the HTTP methods to be 
+     * @param httpMethodOmissions the HTTP methods to be
      * omitted from protection
      *
      * @throws GlassFishException if HttpMethods is already defined

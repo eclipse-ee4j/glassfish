@@ -29,14 +29,14 @@ public class ServletTest3 extends HttpServlet {
 
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("================ In Servlet3 ===============");
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();

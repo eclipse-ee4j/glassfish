@@ -24,7 +24,7 @@ import javax.xml.rpc.handler.MessageContext;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.Call;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -33,24 +33,24 @@ import javax.naming.*;
 public class GoogleEJB implements SessionBean {
     private SessionContext sc;
 
-    private static final QName PORT_QNAME = 
+    private static final QName PORT_QNAME =
         new QName("urn:GoogleSearch", "GoogleSearchPort");
     private static final QName OPERATION_QNAME =
         new QName("urn:GoogleSearch", "doSpellingSuggestion");
-    
+
     public GoogleEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In GoogleEJB::ejbCreate !!");
+        System.out.println("In GoogleEJB::ejbCreate !!");
     }
 
-    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url) 
-    { 
-        return null; 
+    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url)
+    {
+        return null;
     }
 
-    public String doSpellingSuggestion(java.lang.String key, 
-                                       java.lang.String phrase) 
+    public String doSpellingSuggestion(java.lang.String key,
+                                       java.lang.String phrase)
        {
 
         try {
@@ -75,12 +75,12 @@ public class GoogleEJB implements SessionBean {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new EJBException("GoogleEJB.doSpellingSuggestion():Unexpected exception caught - ", ex);        
+            throw new EJBException("GoogleEJB.doSpellingSuggestion():Unexpected exception caught - ", ex);
         }
-            
+
         /*
         try {
-            
+
             boolean result = sc.isCallerInRole("foo");
             System.out.println(
                 "GoogleEJB.doSpellingSuggestion():isCallerInRole(foo) returned - " + result);
@@ -89,7 +89,7 @@ public class GoogleEJB implements SessionBean {
             }
         } catch (Exception ex) {
             ex.printStackTrace();
-            throw new EJBException("GoogleEJB.doSpellingSuggestion():Unexpected exception caught in isCallerInRole(foo) call ", ex);            
+            throw new EJBException("GoogleEJB.doSpellingSuggestion():Unexpected exception caught in isCallerInRole(foo) call ", ex);
         }
         */
 
@@ -99,10 +99,10 @@ public class GoogleEJB implements SessionBean {
             Service genericServiceWithWSDL = null;
             try {
                 InitialContext ic = new InitialContext();
-                Service service = (Service) 
+                Service service = (Service)
                     ic.lookup("java:comp/env/service/WebDIIReference");
                 doDynamicProxyTest(service);
-                GoogleSearchPort webPort = (GoogleSearchPort) 
+                GoogleSearchPort webPort = (GoogleSearchPort)
                     service.getPort(GoogleSearchPort.class);
                 returnValue = webPort.doSpellingSuggestion(key, phrase);
             } catch(Exception e) {
@@ -114,10 +114,10 @@ public class GoogleEJB implements SessionBean {
         System.out.println("GoogleEJB returning " + returnValue);
         return returnValue;
     }
-        
+
     public void helloOneWay(String s1) {
 
-        jakarta.transaction.TransactionManager tm = 
+        jakarta.transaction.TransactionManager tm =
             com.sun.enterprise.Switch.getSwitch().getTransactionManager();
         int txStatus = -1;
         try {
@@ -126,34 +126,34 @@ public class GoogleEJB implements SessionBean {
             throw new EJBException(e);
         }
 
-        // The following tests make sure tx attributes are processed 
+        // The following tests make sure tx attributes are processed
         // correctly when the same method is defined on both the remote
         // and webservice interface.   Descriptor is set up to have
         // no tx for the webservice case and a TX_REQUIRED for the
         // Remote case.
         try {
-            
+
             sc.getMessageContext();
-          
+
             // we were invoked through a webserivce invocation.  there
             // shouldn't be a transaction.
             if( txStatus == jakarta.transaction.Status.STATUS_NO_TRANSACTION) {
                 System.out.println("Correctly found no tx for helloOneWay " +
                                    " invoked through a webservice");
             } else {
-                throw new EJBException("Got wrong tx status = " + txStatus + 
+                throw new EJBException("Got wrong tx status = " + txStatus +
                                        " for helloOneWay invoked through a " +
                                        "web service");
             }
         } catch(Exception e) {
             // since there's no WEB service message context, we were
-            // invoked through a remote invocation.  
-                    
+            // invoked through a remote invocation.
+
             if( txStatus == jakarta.transaction.Status.STATUS_ACTIVE) {
                 System.out.println("Correctly found an active tx for " +
                    "helloOneWay invoked through a Remote interface");
             } else {
-                throw new EJBException("Got wrong tx status = " + txStatus + 
+                throw new EJBException("Got wrong tx status = " + txStatus +
                                        " for helloOneWay invoked through a " +
                                        "remote interface");
             }
@@ -176,16 +176,16 @@ public class GoogleEJB implements SessionBean {
     public GoogleSearchResult doGoogleSearch(java.lang.String key, java.lang.String q, int start, int maxResults, boolean filter, java.lang.String restrict, boolean safeSearch, java.lang.String lr, java.lang.String ie, java.lang.String oe) {
         return null;
     }
-    
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 
     private void doDynamicProxyTest(Service service) throws Exception {
@@ -193,14 +193,14 @@ public class GoogleEJB implements SessionBean {
         Call c1 = service.createCall();
         Call c2 = service.createCall(PORT_QNAME);
         Call c3 = service.createCall(PORT_QNAME, OPERATION_QNAME);
-        Call c4 = service.createCall(PORT_QNAME, 
+        Call c4 = service.createCall(PORT_QNAME,
                                      OPERATION_QNAME.getLocalPart());
         Call[] calls = service.getCalls(PORT_QNAME);
 
         // container-managed port selection
-        GoogleSearchPort sei = (GoogleSearchPort) 
+        GoogleSearchPort sei = (GoogleSearchPort)
             service.getPort(GoogleSearchPort.class);
-        sei = (GoogleSearchPort) 
+        sei = (GoogleSearchPort)
             service.getPort(PORT_QNAME, GoogleSearchPort.class);
 
         QName serviceName = service.getServiceName();
@@ -209,7 +209,7 @@ public class GoogleEJB implements SessionBean {
             System.out.println("wsdlLocation = " + wsdlLocation);
         }
         Iterator ports = service.getPorts();
-        
+
     }
 
 

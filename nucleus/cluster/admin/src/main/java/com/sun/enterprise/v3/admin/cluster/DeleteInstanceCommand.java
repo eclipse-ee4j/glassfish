@@ -47,8 +47,8 @@ import java.util.ArrayList;
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-instance", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-instance",
         description="Delete Instance",
         params={
             @RestParam(name="id", value="$parent")
@@ -79,7 +79,7 @@ public class DeleteInstanceCommand implements AdminCommand {
     private Server instance;
     private String noderef;
     private String nodedir;
-    private Logger logger;    
+    private Logger logger;
     private String instanceHost;
     private Node theNode = null;
 
@@ -166,7 +166,7 @@ public class DeleteInstanceCommand implements AdminCommand {
             msg = msg + NL + NL + Strings.get("delete.instance.config.failed",
                     instanceName, instanceHost);
         } else if (!configfailure && fsfailure) {
-            report.setActionExitCode(ActionReport.ExitCode.WARNING);            
+            report.setActionExitCode(ActionReport.ExitCode.WARNING);
             // leave msg as is
         }
 

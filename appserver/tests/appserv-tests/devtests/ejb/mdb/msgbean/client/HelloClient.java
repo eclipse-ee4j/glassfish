@@ -68,7 +68,7 @@ public class HelloClient {
                                         BFALSE,  // jdbc
                                         BFALSE } };  // rollback
 
-    Object[][] onePhaseCommitTests = { 
+    Object[][] onePhaseCommitTests = {
         { "jms/queue_cmt",   BFALSE, BFALSE, BFALSE },
         { "jms/topic_cmt",   BFALSE, BFALSE, BFALSE },
 
@@ -79,7 +79,7 @@ public class HelloClient {
         { "jms/topic_bmt",   BFALSE, BTRUE,  BFALSE },
     };
 
-    Object[][] twoPhaseCommitTests = { 
+    Object[][] twoPhaseCommitTests = {
         { "jms/queue_cmt",   BFALSE, BTRUE,  BFALSE },
         { "jms/topic_cmt",   BFALSE, BTRUE,  BFALSE },
 
@@ -92,21 +92,21 @@ public class HelloClient {
         { "jms/queue_cmt",   BTRUE,  BTRUE,  BFALSE },
         { "jms/topic_cmt",   BTRUE,  BTRUE,  BFALSE },
     };
-    
-    Object[][] rollbackTests = { 
+
+    Object[][] rollbackTests = {
 
         { "jms/queue_cmt",   BTRUE,  BFALSE,  BTRUE },
         { "jms/topic_cmt",   BTRUE,  BFALSE,  BTRUE },
-	
+
         { "jms/queue_cmt",   BTRUE,  BTRUE,   BTRUE },
         { "jms/topic_cmt",   BTRUE,  BTRUE,   BTRUE },
-	
+
         { "jms/queue_cmt",   BFALSE, BFALSE,  BTRUE },
         { "jms/topic_cmt",   BFALSE, BFALSE,  BTRUE },
-	
+
         { "jms/queue_cmt",   BTRUE,  BFALSE,  BTRUE },
-        { "jms/topic_cmt",   BTRUE,  BFALSE,  BTRUE },        
-        
+        { "jms/topic_cmt",   BTRUE,  BFALSE,  BTRUE },
+
     };
 
 
@@ -119,10 +119,10 @@ public class HelloClient {
 
     public void doTest() {
         int numIter = 10;
-        if(args.length == 0 || (args.length > 0 && 
+        if(args.length == 0 || (args.length > 0 &&
                                   args[0].equals("1pc" )) ) {
             System.out.println("Running 1 phase commit msgbean tests");
-            numIter = (args.length >= 2) ? 
+            numIter = (args.length >= 2) ?
                 Integer.parseInt(args[1]) : numIter;
             doTests(onePhaseCommitTests, numIter);
         } else if( args[0].equals("2pc") ) {
@@ -143,22 +143,22 @@ public class HelloClient {
             doTests(onePhaseCommitTests, numIter);
             doTests(twoPhaseCommitTests, numIter);
             doTests(localTxTests, numIter);
-	    doTests(rollbackTests, numIter);
+            doTests(rollbackTests, numIter);
         } else {
             userSpecifiedTxTest[0][0] = args[0];
             numIter = Integer.parseInt(args[1]);
             System.out.println("Running " + userSpecifiedTxTest[0][0]);
             System.out.println("Num iterations = " + numIter);
             if( args.length == 3 ) {
-                userSpecifiedTxTest[0][1] = 
+                userSpecifiedTxTest[0][1] =
                     new Boolean(args[2].indexOf("reply") != -1);
-                userSpecifiedTxTest[0][2] = 
+                userSpecifiedTxTest[0][2] =
                     new Boolean((args[2].indexOf("jdbc") != -1));
-                userSpecifiedTxTest[0][3] = 
+                userSpecifiedTxTest[0][3] =
                     new Boolean((args[2].indexOf("rollback") != -1));
             }
             doTests(userSpecifiedTxTest, numIter);
-        } 
+        }
 
         return;
     }
@@ -167,7 +167,7 @@ public class HelloClient {
         if (numIter > 20) {
             TIMEOUT = TIMEOUT * (int)(numIter / 10);
         }
-        
+
         for(int i = 0; i < tests.length; i++) {
             String destName = "java:comp/env/" + (String) tests[i][0];
             boolean expectReply = ((Boolean)tests[i][1]).booleanValue();
@@ -178,11 +178,11 @@ public class HelloClient {
             try {
                 setup();
                 doTest(destName, numIter, expectReply, jdbc, rollback);
-                stat.addStatus(test, stat.PASS);                
+                stat.addStatus(test, stat.PASS);
             } catch(Throwable t) {
                 System.out.println("Caught unexpected exception " + t);
                 t.printStackTrace();
-                stat.addStatus(test, stat.FAIL);                
+                stat.addStatus(test, stat.FAIL);
                 break;
             } finally {
                 cleanup();
@@ -193,37 +193,37 @@ public class HelloClient {
 
     public void setup() throws Exception {
         context = new InitialContext();
-        
-        QueueConnectionFactory queueConFactory = 
+
+        QueueConnectionFactory queueConFactory =
             (QueueConnectionFactory) context.lookup
             ("java:comp/env/jms/QCF");
-            
+
         queueCon = queueConFactory.createQueueConnection();
 
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         // Producer will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(null);        
+        queueSender = queueSession.createSender(null);
 
-        clientQueue = (jakarta.jms.Queue) 
+        clientQueue = (jakarta.jms.Queue)
             context.lookup("java:comp/env/jms/client_queue");
 
         queueReceiver = queueSession.createReceiver(clientQueue);
 
-        TopicConnectionFactory topicConFactory = 
+        TopicConnectionFactory topicConFactory =
             (TopicConnectionFactory) context.lookup
             ("java:comp/env/jms/TCF");
-                
+
         topicCon = topicConFactory.createTopicConnection();
 
-        topicSession = 
+        topicSession =
             topicCon.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-            
+
         // Producer will be specified when actual msg is published.
         topicPublisher = topicSession.createPublisher(null);
 
-        clientTopic = (Topic) 
+        clientTopic = (Topic)
             context.lookup("java:comp/env/jms/client_topic");
 
         topicSubscriber = topicSession.createSubscriber(clientTopic);
@@ -249,7 +249,7 @@ public class HelloClient {
         }
     }
 
-    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Sending message " + i + " to " + queue);
@@ -257,7 +257,7 @@ public class HelloClient {
         }
     }
 
-    public void publishMsgs(Topic topic, Message msg, int num) 
+    public void publishMsgs(Topic topic, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
             System.out.println("Publishing message " + i + " to " + topic);
@@ -270,7 +270,7 @@ public class HelloClient {
             System.out.println("Waiting for queue message " + (i+1) + " of " + num);
             Message recvdmessage = queueReceiver.receive(TIMEOUT);
             if( recvdmessage != null ) {
-                System.out.println("Received message : " + 
+                System.out.println("Received message : " +
                                    ((TextMessage)recvdmessage).getText());
             } else {
                 System.out.println("timeout after " + TIMEOUT + " seconds");
@@ -284,7 +284,7 @@ public class HelloClient {
             System.out.println("Waiting for topic message " + (i+1) + " of " + num);
             Message recvdmessage = topicSubscriber.receive(TIMEOUT);
             if( recvdmessage != null ) {
-                System.out.println("Received message : " + 
+                System.out.println("Received message : " +
                                    ((TextMessage)recvdmessage).getText());
             } else {
                 System.out.println("timeout after " + TIMEOUT + " seconds");
@@ -293,11 +293,11 @@ public class HelloClient {
         }
     }
 
-    /** 
+    /**
      * Generate testname. (Try to keep synched with target names in Makefile.)
      */
-    private String generateTestName(String destName, boolean doJdbc, 
-				    boolean expectReply, boolean rollbackEnabled) 
+    private String generateTestName(String destName, boolean doJdbc,
+                                    boolean expectReply, boolean rollbackEnabled)
     {
         String testName = destName.toLowerCase();
         if (doJdbc) {
@@ -317,27 +317,27 @@ public class HelloClient {
     }
 
     public void doTest(String destName, int numIter, boolean expectReply,
-                       boolean doJdbc, boolean rollbackEnabled) 
-                       
-        throws Exception 
+                       boolean doJdbc, boolean rollbackEnabled)
+
+        throws Exception
     {
-        String testName = 
+        String testName =
             generateTestName(destName, doJdbc, expectReply, rollbackEnabled);
         try {
             Destination dest = (Destination) context.lookup(destName);
-            
+
             boolean pointToPoint = dest instanceof jakarta.jms.Queue;
-            
+
             System.out.println("Beginning test : " + testName);
-            
+
             Timer.start();
-            
+
             if( pointToPoint ) {
-                Message message = 
+                Message message =
                     queueSession.createTextMessage(destName);
                 message.setBooleanProperty("doJdbc", doJdbc);
                 message.setBooleanProperty("rollbackEnabled", rollbackEnabled);
-                
+
                 /* aid identifying what test message is associated with on JMS server side.
                  * (JMS RI Message Implementation toString() will print this property if it
                  *  is set.)
@@ -348,11 +348,11 @@ public class HelloClient {
                 }
                 sendMsgs((jakarta.jms.Queue) dest, message, numIter);
             } else {
-                Message message = 
+                Message message =
                     topicSession.createTextMessage(destName);
                 message.setBooleanProperty("doJdbc", doJdbc);
                 message.setBooleanProperty("rollbackEnabled", rollbackEnabled);
-                
+
                 /* aid identifying what test message is associated with on JMS server side.
                  * (JMS RI Message Implementation toString() will print this property if it
                  *  is set.)
@@ -363,7 +363,7 @@ public class HelloClient {
                 }
                 publishMsgs((Topic) dest, message, numIter);
             }
-            
+
             if( expectReply ) {
                 if( pointToPoint ) {
                     recvQueueMsgs(numIter);
@@ -371,38 +371,38 @@ public class HelloClient {
                     recvTopicMsgs(numIter);
                 }
             }
-            
+
             long time = Timer.stop();
-            
+
             System.out.println("End test : " + testName + ". Time = " +
                                Timer.format(time) + " -> " + (time/numIter) +
                                " msec/msg (" + numIter + " msgs)");
         } catch (Exception e) {
-            System.out.println("Unexpected exception " + e + " in test " + 
+            System.out.println("Unexpected exception " + e + " in test " +
                                testName);
             throw e;
         }
     }
-    
+
     // helper class for timing the tests
     private static class Timer {
         static long startTime;
-        
+
         public static void start() {
             startTime = System.currentTimeMillis();
         }
-        
+
         public static long stop() {
             return System.currentTimeMillis() - startTime;
         }
-        
+
         /**
          * Returns a string that outputs time in an
          * easily readable format.
          */
         public static String format(long timeIn) {
             double foo = ((double)timeIn)/1000;
-            long time = Math.round(foo); 
+            long time = Math.round(foo);
             String ret = null;
             if (time < 60) {
                 ret = time + " seconds";

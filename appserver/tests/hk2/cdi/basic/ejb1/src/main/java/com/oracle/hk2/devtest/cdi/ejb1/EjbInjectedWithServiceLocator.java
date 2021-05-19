@@ -41,7 +41,7 @@ import com.oracle.hk2.devtest.cdi.locator.BasicService;
 
 /**
  * Simple EJB created by CDI that injects a HK2 ServiceLocator!
- * 
+ *
  * @author jwells
  */
 @Stateless
@@ -49,13 +49,13 @@ import com.oracle.hk2.devtest.cdi.locator.BasicService;
 public class EjbInjectedWithServiceLocator implements BasicEjb {
     @Inject
     private BeanManager beanManager;
-    
+
     @Inject
     private ServiceLocator locator;
-    
+
     @Inject
     private CustomScopedEjb customScopedEjb;
-    
+
     @Inject
     private CDIServiceInjectedWithHK2Service cdiInjectedWithHK2Service;
 
@@ -73,10 +73,10 @@ public class EjbInjectedWithServiceLocator implements BasicEjb {
     public void installHK2Service() {
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
-        
+
         config.addActiveDescriptor(BasicService.class);
-        
-        config.commit(); 
+
+        config.commit();
     }
 
     @Override
@@ -85,7 +85,7 @@ public class EjbInjectedWithServiceLocator implements BasicEjb {
         if (bs == null) {
             throw new RuntimeException("Could not find BasicService in locator " + locator);
         }
-        
+
         boolean retVal = bs.gotInjectedWithBeanManager();
         return retVal;
     }
@@ -93,21 +93,21 @@ public class EjbInjectedWithServiceLocator implements BasicEjb {
     @Override
     public void isServiceLocatorAvailableInAllCDIExtensionEvents() {
         HK2ExtensionVerifier verifier = locator.getService(HK2ExtensionVerifier.class);
-        
+
         verifier.validate();
     }
 
     @Override
     public void isEJBWithCustomHK2ScopeProperlyInjected() {
         customScopedEjb.checkMe();
-        
+
     }
 
     @Override
     public void doesApplicationDefinedPopulatorPostProcessorRun() {
         ActiveDescriptor<?> descriptor = locator.getBestDescriptor(BuilderHelper.createContractFilter(HK2Service.class.getName()));
         Map<String, List<String>> metadata = descriptor.getMetadata();  // An NPE means we don't have the descriptor
-        
+
         List<String> values = metadata.get(ApplicationPopulatorPostProcessor.KEY);
         if (!values.get(0).equals(ApplicationPopulatorPostProcessor.VALUE)) {
             throw new AssertionError("Incorrect value 0: " + values.get(0));
@@ -129,15 +129,15 @@ public class EjbInjectedWithServiceLocator implements BasicEjb {
                 HK2PerLookupInjectedWithCDIApplicationScoped.class);
         HK2PerLookupInjectedWithCDIApplicationScoped hk2Service3 = locator.getService(
                 HK2PerLookupInjectedWithCDIApplicationScoped.class);
-        
+
         CountingApplicationScopedCDIService cdiService1 = hk2Service1.getCountingCDIService();
         CountingApplicationScopedCDIService cdiService2 = hk2Service2.getCountingCDIService();
         CountingApplicationScopedCDIService cdiService3 = hk2Service3.getCountingCDIService();
-        
+
         if (1 != cdiService1.getNumberOfTimesMethodCalled()) {
             throw new AssertionError("Did not get 1 for first call");
         }
-        
+
         if (2 != cdiService2.getNumberOfTimesMethodCalled()) {
             throw new AssertionError("Did not get 2 for second call (not the same instance) " + cdiService1 + "/" + cdiService2 + "/" + cdiService3);
         }
@@ -145,20 +145,20 @@ public class EjbInjectedWithServiceLocator implements BasicEjb {
         if (3 != cdiService3.getNumberOfTimesMethodCalled()) {
             throw new AssertionError("Did not get 3 for second call (not the same instance) " + cdiService1 + "/" + cdiService2 + "/" + cdiService3);
         }
-        
+
         int constructorCount1 = cdiService1.getConstructedCount();
         if (constructorCount1 > 2) {  // One for the proxy, one for the true object
             throw new AssertionError("counstructorCount1=" + constructorCount1 + " it should less than 2");
         }
-        
+
         int constructorCount2 = cdiService2.getConstructedCount();
         if (constructorCount1 > 2) {  // One for the proxy, one for the true object
             throw new AssertionError("counstructorCount2=" + constructorCount2 + " it should be less than 2");
         }
-        
+
         int constructorCount3 = cdiService3.getConstructedCount();
         if (constructorCount1 > 2) {  // One for the proxy, one for the true object
             throw new AssertionError("counstructorCount3=" + constructorCount3 + " it should be less than 2");
         }
-    }    
+    }
 }

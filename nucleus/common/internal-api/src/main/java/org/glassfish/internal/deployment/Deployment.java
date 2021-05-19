@@ -61,7 +61,7 @@ public interface Deployment {
      * once before any sniffer is invoked.
      */
     public final EventTypes<DeploymentContext> DEPLOYMENT_START = EventTypes.create("Deployment_Start", DeploymentContext.class);
-    
+
     /**
      * The name of the Deployment Failure event
      */
@@ -72,17 +72,17 @@ public interface Deployment {
      */
     public final EventTypes<DeploymentContext> DEPLOYMENT_FAILURE = EventTypes.create(DEPLOYMENT_FAILURE_NAME, DeploymentContext.class);
     /**
-     * This synchronous event is sent after creation of deployment classloader. 
+     * This synchronous event is sent after creation of deployment classloader.
      */
     public final EventTypes<DeploymentContext> AFTER_DEPLOYMENT_CLASSLOADER_CREATION =
             EventTypes.create("After_Deployment_ClassLoader_Creation", DeploymentContext.class);
     /**
-     * This synchronous event is sent before prepare phase of deployment. 
+     * This synchronous event is sent before prepare phase of deployment.
      */
     public final EventTypes<DeploymentContext> DEPLOYMENT_BEFORE_CLASSLOADER_CREATION =
             EventTypes.create("Deployment_ClassLoader_Creation", DeploymentContext.class);
     /**
-     * This synchronous event is sent after creation of application classloader. 
+     * This synchronous event is sent after creation of application classloader.
      */
     public final EventTypes<DeploymentContext> AFTER_APPLICATION_CLASSLOADER_CREATION =
             EventTypes.create("After_Application_ClassLoader_Creation", DeploymentContext.class);
@@ -134,7 +134,7 @@ public interface Deployment {
 
 
     /**
-     * The following synchronous event is sent before the application is 
+     * The following synchronous event is sent before the application is
      * undeployed so various listeners could validate the undeploy operation
      * and decide whether to abort undeployment
      */
@@ -153,7 +153,7 @@ public interface Deployment {
         public Logger logger();
         public ActionReport report();
         public OpsParams params();
-        
+
         public ExtendedDeploymentContext build() throws IOException;
 
         public abstract ExtendedDeploymentContext build(ExtendedDeploymentContext initialContext)
@@ -164,7 +164,7 @@ public interface Deployment {
 
 
     /**
-     * The following asynchronous event is sent after all applications are 
+     * The following asynchronous event is sent after all applications are
      * started in server start up.
      */
     public final EventTypes<DeploymentContext> ALL_APPLICATIONS_PROCESSED= EventTypes.create("All_Applications_Processed", DeploymentContext.class);
@@ -189,10 +189,10 @@ public interface Deployment {
         throws TransactionFailure;
 
     public void registerAppInDomainXML(final ApplicationInfo
-        applicationInfo, final DeploymentContext context, Transaction t) 
+        applicationInfo, final DeploymentContext context, Transaction t)
         throws TransactionFailure;
 
-    public void unregisterAppFromDomainXML(final String appName, 
+    public void unregisterAppFromDomainXML(final String appName,
         final String target)
         throws TransactionFailure;
 
@@ -239,8 +239,8 @@ public interface Deployment {
     public ApplicationInfo unload(ApplicationInfo appInfo,
         ExtendedDeploymentContext context);
 
-    public DeploymentContext disable(UndeployCommandParameters commandParams, 
-        Application app, ApplicationInfo appInfo, ActionReport report, 
+    public DeploymentContext disable(UndeployCommandParameters commandParams,
+        Application app, ApplicationInfo appInfo, ActionReport report,
         Logger logger) throws Exception;
 
     public DeploymentContext enable(String target, Application app, ApplicationRef appRef,

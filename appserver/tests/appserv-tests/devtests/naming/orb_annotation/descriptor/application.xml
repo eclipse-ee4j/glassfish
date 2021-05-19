@@ -26,6 +26,6 @@
     </web>
 </module>
   <module>
-    <java>orb_annotation-client.jar</java> 
+    <java>orb_annotation-client.jar</java>
   </module>
 </application>

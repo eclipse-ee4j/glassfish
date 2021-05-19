@@ -19,8 +19,8 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for GLASSFISH-18861 
- * 
+ * Unit test for GLASSFISH-18861
+ *
  * After setting context root of two wars which deployed on the server target with the same value,
  * both of the two wars accessed failed.
  *
@@ -42,7 +42,7 @@ public class WebTest {
         contextRoot1 = args[2];
         contextRoot2 = args[3];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GLASSFISH-18861");
         WebTest webTest = new WebTest(args);
@@ -50,8 +50,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed.");

@@ -37,12 +37,12 @@ import java.util.Arrays;
  * password is the password that is used to encrypt the DAS (and instances) keystore. Therefore the DAS and associated
  * server instances need the password to open the keystore at startup. The master password is the same for the DAS and
  * all instances in the domain The default master password is "changeit"and can be saved in a master-password file:
- * 
+ *
  * 1. DAS: domains/domainname/master-password 2. Instance: nodes/node-name/master-password The master-password may be
  * changed on the DAS by running change-master-password. The DAS must be down to run this command.
  * change-master-password supports the --savemasterpassword option. To change the master-password file on a node you run
  * change-master-password with --nodedir and the node name. The instances must be down to run this command on a node
- * 
+ *
  * If --nodedir is not specified it will look in the default location of nodes folder and find the node
  *
  * If the domain and node have the same name it will execute the command for the domain. Incase you want the command to

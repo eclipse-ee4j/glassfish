@@ -49,9 +49,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the Selfmanagement tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the Selfmanagement tests)
+    </echo>
     </target>
 </project>

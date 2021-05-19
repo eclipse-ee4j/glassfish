@@ -47,7 +47,7 @@ public class StringSubstitutionParser {
     private static final Logger _logger = SLogger.getLogger();
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(StringSubstitutionParser.class);
-    // Path where schema resides i.e Parent directory for schema. 
+    // Path where schema resides i.e Parent directory for schema.
     private final static String DEFAULT_SCHEMA = "xsd/schema/stringsubs.xsd";
 
     /**

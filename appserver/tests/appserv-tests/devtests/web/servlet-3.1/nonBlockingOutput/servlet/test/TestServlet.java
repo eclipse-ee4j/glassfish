@@ -58,7 +58,7 @@ public class TestServlet extends HttpServlet {
                 long startTime = System.currentTimeMillis();
                 while (output.isReady()) {
                     writeData(output);
-                    count++;    
+                    count++;
                     if (System.currentTimeMillis() - startTime > MAX_TIME_MILLIS
                             || count > 10) {
                         throw new IOException("Cannot fill the write buffer");

@@ -32,7 +32,7 @@ import javax.transaction.xa.XAResource;
 import javax.transaction.xa.Xid;
 
 /**
- * 
+ *
  * @author Qingqing Ouyang
  */
 public class WorkDispatcher implements Work {

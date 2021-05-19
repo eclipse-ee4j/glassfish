@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client extends ClientSuper {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -35,7 +35,7 @@ public class Client extends ClientSuper {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-session2fullID");
-    }  
+    }
 
     private static Sful sful1;
     private static Sful sful2;
@@ -44,7 +44,7 @@ public class Client extends ClientSuper {
 
     private static Sless sless1;
 
-    // linked to SlessEJB2 via sun-application-client.xml 
+    // linked to SlessEJB2 via sun-application-client.xml
     // so no beanName disambiguation is needed
     private static Sless sless2;
 
@@ -54,11 +54,11 @@ public class Client extends ClientSuper {
 
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
-            
+
             System.out.println("Calling superSless1");
             superSless1.hello();
             System.out.println("Called superSless1");
@@ -78,7 +78,7 @@ public class Client extends ClientSuper {
             if( get1.equals(get2) ) {
                 throw new Exception("SFSB get test failed");
             }
-            
+
             // Call application-defined @Remove method. This method has
             // no relationship to EJBObject.remove().  It's a coincidence
             // that it has the same name.
@@ -196,7 +196,7 @@ public class Client extends ClientSuper {
             if( r1.getId().equals(r2.getId()) ) {
                 throw new Exception("remote param passing getId() test failed");
             }
-            
+
             sless3.hello();
             sless3.hello3();
 
@@ -227,8 +227,8 @@ public class Client extends ClientSuper {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
 }

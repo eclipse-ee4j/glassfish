@@ -70,9 +70,9 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
 
     // this is needed to cleanup properly on completion and to avoid leaks.
     ControlImpl control = null;
-   	/*
-		Logger to log transaction messages
-	*/  
+       /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(TerminatorImpl.class, LogDomains.TRANSACTION_LOGGER);
     /**
      * Default TerminatorImpl constructor.
@@ -294,20 +294,20 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
                     TerminatorHelper.narrow(poa.servant_to_reference(this));
                 //thisRef = (Terminator) this;
             } catch(ServantAlreadyActive saexc) {
-				_logger.log(Level.SEVERE,"jts.create_terminator_object_error",saexc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_terminator_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,"jts.create_terminator_object_error",saexc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_terminator_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             } catch(ServantNotActive snexc) {
-				_logger.log(Level.SEVERE,"jts.create_terminator_object_error",snexc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_terminator_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,"jts.create_terminator_object_error",snexc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_terminator_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             } catch(Exception exc) {
-				_logger.log(Level.SEVERE,"jts.create_terminator_object_error",exc);
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-										 "jts.create_terminator_object_error");
-				throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,"jts.create_terminator_object_error",exc);
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_terminator_object_error");
+                throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -329,7 +329,7 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
                 poa.deactivate_object(poa.reference_to_id(thisRef));
                 thisRef = null;
             } catch (Exception exc) {
-				_logger.log(Level.WARNING,"jts.object_destroy_error","Terminator");
+                _logger.log(Level.WARNING,"jts.object_destroy_error","Terminator");
             }
         }
 
@@ -370,18 +370,18 @@ class TerminatorImpl extends TerminatorPOA implements Terminator {
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 
     public Request _create_request(Context ctx,
-				   String operation,
-				   NVList arg_list,
-				   NamedValue result,
-				   ExceptionList exceptions,
-				   ContextList contexts) {
+                   String operation,
+                   NVList arg_list,
+                   NamedValue result,
+                   ExceptionList exceptions,
+                   ContextList contexts) {
         throw new org.omg.CORBA.NO_IMPLEMENT("This is a locally constrained object.");
     }
 

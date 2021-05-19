@@ -28,10 +28,10 @@ import java.io.Serializable;
 public class StringWorkContext implements PrimitiveWorkContext, Serializable
 {
   private String str;
-  
+
   public StringWorkContext() {
   }
-  
+
   /* package */ StringWorkContext(String str) {
     this.str = str;
   }
@@ -45,11 +45,11 @@ public class StringWorkContext implements PrimitiveWorkContext, Serializable
     }
     return false;
   }
-  
+
   public void writeContext(WorkContextOutput out) throws IOException {
     out.writeUTF(str);
   }
-  
+
   public void readContext(WorkContextInput in) throws IOException {
     str = in.readUTF();
   }

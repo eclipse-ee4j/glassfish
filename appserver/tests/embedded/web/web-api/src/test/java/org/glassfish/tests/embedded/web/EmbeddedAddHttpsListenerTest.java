@@ -37,14 +37,14 @@ import org.junit.Test;
 
 /**
  * Tests WebContainer#addWebListener(HttpsListener)
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedAddHttpsListenerTest {
 
     static GlassFish glassfish;
     static WebContainer embedded;
-    static File root;                
+    static File root;
     static String contextRoot = "test";
 
     @BeforeClass
@@ -134,10 +134,10 @@ public class EmbeddedAddHttpsListenerTest {
         verify(9191);
         //verify(9292);
         //verify(9393);
-        
+
         if (appName!=null)
             deployer.undeploy(appName);
-        
+
     }
 
     public static void disableCertValidation() {
@@ -174,5 +174,5 @@ public class EmbeddedAddHttpsListenerTest {
             glassfish = null;
         }
     }
-    
+
 }

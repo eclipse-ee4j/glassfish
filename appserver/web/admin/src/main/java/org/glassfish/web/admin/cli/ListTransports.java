@@ -47,8 +47,8 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-transports", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-transports",
         description="list-transports")
 })
 public class ListTransports implements AdminCommand {

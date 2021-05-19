@@ -45,13 +45,13 @@ public class CommandRunnerTest extends HK2Runner {
 
     @Inject
     CommandRunner commandRunner;
-    
+
     @Inject
     InternalSystemAdministrator kernelIdentity;
 
     @BeforeClass
     public void setup() {
-        
+
         /*
          * The CommandRunnerImpl now injects Domain but these tests do not
          * exercise the code path that requires the domain.  So register a
@@ -64,7 +64,7 @@ public class CommandRunnerTest extends HK2Runner {
                 BuilderHelper.createConstantDescriptor(new SingleModulesRegistry(CommandRunnerTest.class.getClassLoader()),
                         null, ModulesRegistry.class));
     }
-    
+
     private static Domain simpleDomain() {
         InvocationHandler handler = new InvocationHandler() {
 

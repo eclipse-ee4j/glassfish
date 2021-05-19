@@ -53,13 +53,13 @@ public interface Orb extends ConfigBeanProxy, PropertyBag {
      * the threadpool(s) used by the ORB. More than one thread-pool-id(s) could
      * be specified by using commas to separate the names
      * e.g. orb-thread-pool-1, orb-thread-pool-2
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
     @Attribute
     @NotNull
-    public String getUseThreadPoolIds();
+    String getUseThreadPoolIds();
 
     /**
      * Sets the value of the useThreadPoolIds property.
@@ -67,7 +67,7 @@ public interface Orb extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setUseThreadPoolIds(String value) throws PropertyVetoException;
+    void setUseThreadPoolIds(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the messageFragmentSize property.
@@ -80,7 +80,7 @@ public interface Orb extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute (defaultValue="1024")
     @Min(value=128)
-    public String getMessageFragmentSize();
+    String getMessageFragmentSize();
 
     /**
      * Sets the value of the messageFragmentSize property.
@@ -88,19 +88,19 @@ public interface Orb extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setMessageFragmentSize(String value) throws PropertyVetoException;
+    void setMessageFragmentSize(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the maxConnections property.
      *
      * Maximum number of incoming connections, on all listeners
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
     @Attribute (defaultValue="1024",dataType=Integer.class)
     @Min(value=0)
-    public String getMaxConnections();
+    String getMaxConnections();
 
     /**
      * Sets the value of the maxConnections property.
@@ -108,11 +108,12 @@ public interface Orb extends ConfigBeanProxy, PropertyBag {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setMaxConnections(String value) throws PropertyVetoException;
-    
+    void setMaxConnections(String value) throws PropertyVetoException;
+
     /**
-    	Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
+     * Properties as per {@link org.jvnet.hk2.config.types.PropertyBag}
      */
+    @Override
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})
     @Element

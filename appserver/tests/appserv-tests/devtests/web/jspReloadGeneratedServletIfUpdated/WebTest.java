@@ -54,7 +54,7 @@ public class WebTest {
         contextRoot = args[2];
         run = args[3];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test to ensure that servlet that "
@@ -75,7 +75,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {

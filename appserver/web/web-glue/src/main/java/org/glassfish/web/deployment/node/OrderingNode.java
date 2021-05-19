@@ -27,11 +27,11 @@ import org.w3c.dom.Node;
  * This node is responsible for handling the ordering xml tree.
  *
  * @author  Shing Wai Chan
- * @version 
+ * @version
  */
 public class OrderingNode extends DeploymentDescriptorNode {
     public final static XMLElement tag = new XMLElement(WebTagNames.ORDERING);
-       
+
     protected OrderingDescriptor descriptor = null;
 
     public OrderingNode() {
@@ -49,13 +49,13 @@ public class OrderingNode extends DeploymentDescriptorNode {
             descriptor = new OrderingDescriptor();
         }
         return descriptor;
-    }  
+    }
 
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */

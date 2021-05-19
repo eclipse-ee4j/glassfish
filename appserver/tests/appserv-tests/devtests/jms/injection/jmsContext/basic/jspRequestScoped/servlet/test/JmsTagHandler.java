@@ -59,10 +59,10 @@ public class JmsTagHandler extends TagSupport {
             }
             //Get the writer object for output.
             JspWriter out = pageContext.getOut();
- 
+
             //Perform substr operation on string.
             out.println(text);
- 
+
         } catch (Exception e) {
             throw new JspException(e);
         }

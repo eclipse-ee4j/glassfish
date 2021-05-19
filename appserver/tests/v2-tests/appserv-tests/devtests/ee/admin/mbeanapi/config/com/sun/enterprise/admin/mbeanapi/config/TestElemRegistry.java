@@ -36,12 +36,12 @@ public class TestElemRegistry {
     }
     private static void  addRegEntry(HashMap map, String masterNode, String entryName, String[] req)
     {
-        map.put(entryName, 
+        map.put(entryName,
               new RegEntry(entryName, entryName, req, masterNode));
     }
     private static void  addRegEntry(HashMap map, String masterNode, String entryName, String dtd_name, String[] req)
     {
-        map.put(entryName, 
+        map.put(entryName,
               new RegEntry(entryName, dtd_name, req, masterNode));
     }
  /*
@@ -60,19 +60,19 @@ public class TestElemRegistry {
         RegEntry entry = getRegEntry(name);
         return entry.dtdName;
     }
-    
+
     public static int getLevel(String name)
     {
         RegEntry entry = getRegEntry(name);
         return entry.getLevel();
     }
 */
-    
+
     //////////////////////////////////////////////////////////////////////////////////////
     public static boolean initRegistry(String configName)
     {
         mConfigName = configName;
-        
+
         HashMap reg = new HashMap();
         addRegEntry(reg, "domain", "jdbc-connection-pool", new String[]{"name", "datasource-classname"});
         addRegEntry(reg, "domain", "custom-resource", new String[]{"jndi-name", "res-type", "factory-class"});
@@ -84,7 +84,7 @@ public class TestElemRegistry {
         addRegEntry(reg, "domain", "connector-resource", new String[]{"jndi-name", "pool-name"});
         addRegEntry(reg, "domain", "resource-adapter", "resource-adapter-config", new String[]{"resource-adapter-name"});
         addRegEntry(reg, "domain", "admin-object-resource", new String[]{"jndi-name", "res-type", "res-adapter"});
-        
+
         addRegEntry(reg, "http-service", "virtual-server", new String[]{"id", "hosts"});
         addRegEntry(reg, "http-service", "http-listener", new String[]{"id", "address", "port*int", "default-virtual-server", "server-name"});
 

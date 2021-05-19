@@ -17,7 +17,7 @@
 package test.beans;
 
 public class ShoppingCart {
-    
+
     @Action public void checkout(){
         System.out.println("ShoppingCart::checkout");
     }

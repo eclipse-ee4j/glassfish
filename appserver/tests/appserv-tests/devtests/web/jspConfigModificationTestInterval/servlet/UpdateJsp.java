@@ -32,7 +32,7 @@ public class UpdateJsp extends HttpServlet {
 
         /*
          * Manually update timestamp on JSP file to a value far into the
-         * future, so that the corresponding servlet class file will be 
+         * future, so that the corresponding servlet class file will be
          * guaranteed to be out-of-date
          */
         f.setLastModified(System.currentTimeMillis() + 9000000000L);

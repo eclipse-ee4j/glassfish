@@ -20,24 +20,24 @@ import java.util.List;
 
 /**
  * This interface defines all the protocol associated with a root node
- * of an XML file. 
+ * of an XML file.
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface RootXMLNode<T>  extends XMLNode<T> {
-    
-    /** 
+
+    /**
      * @return the DOCTYPE that should be written to the XML file
      */
     public String getDocType();
-    
+
     /**
      * set the DOCTYPE as read in the input XML File
      * @param docType doctype for the xml
      */
     public void setDocType(String docType);
-    
+
     /**
      * @return the SystemID of the XML file
      */
@@ -47,11 +47,11 @@ public interface RootXMLNode<T>  extends XMLNode<T> {
      * @return the list of SystemID of the XML schema supported
      */
     public List<String> getSystemIDs();
-    
-    /** 
+
+    /**
      * @return the default spec version level this node complies to
      */
-    public String getSpecVersion();    
-    
+    public String getSpecVersion();
+
 }
 

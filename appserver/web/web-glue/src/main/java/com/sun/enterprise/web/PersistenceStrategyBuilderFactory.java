@@ -51,7 +51,7 @@ public class PersistenceStrategyBuilderFactory {
      * creates the correct implementation of PersistenceStrategyBuilder
      * if an invalid combination is input; an error is logged
      * and MemoryStrategyBuilder is returned
-     */    
+     */
     public PersistenceStrategyBuilder createPersistenceStrategyBuilder(
             String persistenceType, String frequency, String scope,
             Context ctx) {
@@ -88,13 +88,13 @@ public class PersistenceStrategyBuilderFactory {
               builder.setPassedInPersistenceType(persistenceType);
           }
         return builder;
-    } 
+    }
 
     /**
      * returns the application id for the module
      *
      * @param ctx the context
-     */    
+     */
 
     public String getApplicationId(Context ctx) {
         if (ctx instanceof WebModule) {
@@ -102,6 +102,6 @@ public class PersistenceStrategyBuilderFactory {
         } else {
             return ctx.getName();
         }
-    }    
+    }
 
 }

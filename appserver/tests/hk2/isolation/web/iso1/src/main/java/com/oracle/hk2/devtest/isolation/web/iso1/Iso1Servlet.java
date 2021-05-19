@@ -32,7 +32,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 
 /**
  * Simple returns the name of the HABITAT property
- * 
+ *
  * @author jwells
  */
 public class Iso1Servlet extends HttpServlet {
@@ -40,20 +40,20 @@ public class Iso1Servlet extends HttpServlet {
      * For serialization
      */
     private static final long serialVersionUID = -9177540431267005946L;
-    
+
     private static final String HABITAT_ATTRIBUTE = "org.glassfish.servlet.habitat";
     private static final String JNDI_APP_LOOKUP = "java:app/hk2/ServiceLocator";
-    
+
     private static final String SERVLET_CONTEXT_LOCATOR = "ServletContextLocator=";
     private static final String JNDI_APP_LOCATOR = "JndiAppLocator=";
-    
+
     private String getJndiAppLocatorName() {
-        
+
         try {
           Context context = new InitialContext();
-          
+
           ServiceLocator retVal = (ServiceLocator) context.lookup(JNDI_APP_LOOKUP);
-          
+
           return retVal.getName();
         }
         catch (NamingException ne) {
@@ -68,20 +68,20 @@ public class Iso1Servlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
             HttpServletResponse response)
         throws IOException, ServletException {
-        
-        
+
+
         ServletContext context = getServletContext();
-        
+
         ServiceLocator locator = (ServiceLocator) context.getAttribute(HABITAT_ATTRIBUTE);
-        
+
         String reply1 = SERVLET_CONTEXT_LOCATOR + ((locator == null) ? "null" : locator.getName());
-        
+
         String jndiAppLocatorName = getJndiAppLocatorName();
         String reply2 = JNDI_APP_LOCATOR + ((jndiAppLocatorName == null) ? "null" : jndiAppLocatorName);
 
         response.setContentType("text/html");
         PrintWriter writer = response.getWriter();
-        
+
         writer.println("<html>");
         writer.println("<head>");
         writer.println("<title>Iso1 WebApp</title>");

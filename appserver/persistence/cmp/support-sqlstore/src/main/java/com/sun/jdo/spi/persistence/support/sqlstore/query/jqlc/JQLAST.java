@@ -30,17 +30,17 @@ import antlr.ASTFactory;
 import com.sun.jdo.spi.persistence.support.sqlstore.query.util.type.Type;
 import com.sun.jdo.spi.persistence.support.sqlstore.RetrieveDesc;
 
-/** 
- * This class represents a node in the intermediate representation (AST) 
- * used by the query compiler. 
+/**
+ * This class represents a node in the intermediate representation (AST)
+ * used by the query compiler.
  * It provides
  * - line info
  * - column info
- * - type info (object of class util.type.Type): the semantic analysis calculates 
+ * - type info (object of class util.type.Type): the semantic analysis calculates
  *   the type of an expression and adds this info to each node.
  * - RetrieveDesc info
- * - value: this allows to add an arbitrary value to a node. 
- *   This is used in compile time calulation of constant expression. 
+ * - value: this allows to add an arbitrary value to a node.
+ *   This is used in compile time calulation of constant expression.
  * @author  Michael Bouschen
  * @version 0.1
  */
@@ -77,17 +77,17 @@ public class JQLAST
     {
         initialize(t);
     }
-    
+
     public JQLAST(JQLAST ast)
     {
         initialize(ast);
     }
-    
+
     public void initialize(int type)
     {
         setType(type);
     }
-    
+
     public void initialize(int type, String text)
     {
         setType(type);
@@ -133,7 +133,7 @@ public class JQLAST
         setRetrieveDesc(ast.getRetrieveDesc());
         setValue(ast.getValue());
     }
-    
+
     public void setLine(int line)
     {
         this.line = line;
@@ -184,14 +184,14 @@ public class JQLAST
         return value;
     }
 
-    /** 
+    /**
      * Returns a string representation of this JQLAST w/o child nodes.
      * @return a string representation of the object.
      */
     public String toString()
     {
         StringBuffer repr = new StringBuffer();
-		Object jqlType = getJQLType();
+        Object jqlType = getJQLType();
         RetrieveDesc rd = getRetrieveDesc();
         // token text
         repr.append((getText() == null ? "null" : getText())); //NOI18N
@@ -213,15 +213,15 @@ public class JQLAST
     }
 
     /**
-     * Returns a full string representation of this JQLAST. 
-     * The returned string starts with the specified title string, 
+     * Returns a full string representation of this JQLAST.
+     * The returned string starts with the specified title string,
      * followed by the string representation of this ast,
      * followed by the string representation of the child ast nodes of this ast.
-     * The method dumps each ast node on a separate line. 
+     * The method dumps each ast node on a separate line.
      * Child ast nodes are indented.
      * The method calls toString to dump a single node w/o children.
      * @return string representation of this ast including children.
-     */ 
+     */
     public String getTreeRepr(String title)
     {
         return title + this.getTreeRepr(0);
@@ -236,14 +236,14 @@ public class JQLAST
         repr.append(getIndent(level));
         repr.append(this.toString());
         // handle children
-        for (JQLAST node = (JQLAST)this.getFirstChild(); 
-             node != null; 
+        for (JQLAST node = (JQLAST)this.getFirstChild();
+             node != null;
              node = (JQLAST)node.getNextSibling()) {
             repr.append(node.getTreeRepr(level+1));
         }
         return repr.toString();
     }
-    
+
     /** Returns a string representation of the spceified RetrieveDesc. */
     public static String getRetrieveDescRepr(RetrieveDesc rd)
     {
@@ -267,7 +267,7 @@ public class JQLAST
     }
 
     /** Returns the indent specified by level. */
-    private String getIndent(int level) 
+    private String getIndent(int level)
     {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < level; i++) {
@@ -276,33 +276,33 @@ public class JQLAST
         return buf.toString();
     }
 
-    /** 
+    /**
      * Factory to create and connect JQLAST nodes.
      */
     public static class Factory
         extends ASTFactory
     {
-        /** The singleton Factory instance. */    
+        /** The singleton Factory instance. */
         private static Factory factory = new Factory();
-        
-        /** 
+
+        /**
          * Get an instance of Factory.
          * @return an instance of Factory
-         */    
+         */
         public static Factory getInstance()
         {
             return factory;
         }
-        
+
         /** */
         protected Factory()
         {
             this.theASTNodeTypeClass = JQLAST.class;
             this.theASTNodeType = this.theASTNodeTypeClass.getName();
         }
-        
+
         /** */
-        public AST create() 
+        public AST create()
         {
             return new JQLAST();
         }

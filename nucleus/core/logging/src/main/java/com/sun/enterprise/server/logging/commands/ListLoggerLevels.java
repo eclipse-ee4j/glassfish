@@ -49,8 +49,8 @@ import java.util.*;
 @I18n("list.log.levels")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-log-levels", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-log-levels",
         description="list-log-levels")
 })
 public class ListLoggerLevels implements AdminCommand {
@@ -146,12 +146,12 @@ public class ListLoggerLevels implements AdminCommand {
                     final ActionReport.MessagePart part = report.getTopMessagePart()
                             .addChild();
                     String n = name.substring(0, name.lastIndexOf(".level"));
-                   // GLASSFISH-21560: removing the condition which filter out logger ending with "Handler" 
+                   // GLASSFISH-21560: removing the condition which filter out logger ending with "Handler"
                    // above if condition takes care of filtering out everything except log levels from logging.properties
                   //  Format of logger used is <logger_name>.level=<log_level>
                     part.setMessage(n + "\t" + "<" + (String) props.get(name) + ">");
                     logLevelMap.put(n, props.get(name)); //Needed for REST xml and JSON output
-                    loggerList.add(n); //Needed for REST xml and JSON output                    
+                    loggerList.add(n); //Needed for REST xml and JSON output
                 }
             }
             // Populate the extraProperties data structure for REST...

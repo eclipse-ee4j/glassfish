@@ -20,13 +20,13 @@ import org.glassfish.deployment.common.Descriptor;
 
 import java.util.*;
 
-/** 
- * Holds namespace-to-package mapping information from a 
+/**
+ * Holds namespace-to-package mapping information from a
  * "non-exhaustive" jaxrpc mapping file.
  *
  * @author Kenneth Saks
  */
- 
+
 public class JaxrpcMappingDescriptor extends Descriptor {
 
     private Map packageToNamespaceUriMap = new HashMap();
@@ -77,7 +77,7 @@ public class JaxrpcMappingDescriptor extends Descriptor {
     public static class Mapping {
         private String namespaceUri;
         private String javaPackage;
-        
+
         public Mapping(String namespace, String thePackage) {
             namespaceUri = namespace;
             javaPackage  = thePackage;
@@ -91,5 +91,5 @@ public class JaxrpcMappingDescriptor extends Descriptor {
             return javaPackage;
         }
     }
-    
+
 }

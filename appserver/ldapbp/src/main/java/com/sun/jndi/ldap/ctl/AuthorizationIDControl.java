@@ -16,11 +16,7 @@
 
 package com.sun.jndi.ldap.ctl;
 
-import java.io.IOException;
 import javax.naming.ldap.BasicControl;
-import com.sun.jndi.ldap.Ber;
-import com.sun.jndi.ldap.BerEncoder;
-import javax.naming.ldap.InitialLdapContext;
 
 /**
  * This class implements the LDAP request control for authorization identity
@@ -67,7 +63,6 @@ import javax.naming.ldap.InitialLdapContext;
  * @see com.sun.jndi.ldap.ext.WhoAmIRequest
  * @author Vincent Ryan
  */
-
 public class AuthorizationIDControl extends BasicControl {
 
     /**
@@ -81,9 +76,9 @@ public class AuthorizationIDControl extends BasicControl {
     /**
      * Constructs a control to request the authorization identity.
      *
-     * @param   criticality The control's criticality setting.
+     * @param criticality The control's criticality setting.
      */
     public AuthorizationIDControl(boolean criticality) {
-	super(OID, criticality, null);
+        super(OID, criticality, null);
     }
 }

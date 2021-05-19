@@ -39,10 +39,10 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant doclit 
-			ant all
-	</echo>
+        <echo>
+                Usage:
+                        ant doclit
+                        ant all
+        </echo>
     </target>
 </project>

@@ -38,7 +38,7 @@ public class WebTest {
         port = Integer.parseInt(args[1]);
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for ServletContext.addJspFile");
         WebTest webTest = new WebTest(args);

@@ -39,15 +39,15 @@ public class MyAdminObject implements java.io.Serializable {
     public void setNumberOfSetupWorks(int count) {
         control.setNumberOfSetupWorks(count);
     }
-                                 
+
     public int getNumberOfSetupWorks() {
         return control.getNumberOfSetupWorks();
     }
-     
+
     public void setNumberOfActualWorks(int num) {
         control.setNumberOfActualWorks(num);
     }
-     
+
     public int getNumberOfActualWorks() {
         return control.getNumberOfActualWorks();
     }

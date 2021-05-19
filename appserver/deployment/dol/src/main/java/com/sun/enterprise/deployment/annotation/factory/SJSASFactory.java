@@ -40,7 +40,7 @@ import java.util.Set;
 
 /**
  * This factory is responsible for initializing a ready to use
- * AnnotationProcessor. 
+ * AnnotationProcessor.
  *
  * @author Shing Wai Chan
  */
@@ -56,7 +56,7 @@ public class SJSASFactory extends Factory {
 
     // we have two system processors to process annotations:
     // one to process all JavaEE annotations when metadata-complete is false,
-    // another to process a subset of JavaEE annotations when 
+    // another to process a subset of JavaEE annotations when
     // metadata-complete is true
     private AnnotationProcessorImpl systemProcessor=null;
     private AnnotationProcessorImpl systemProcessorMetaDataComplete=null;
@@ -64,7 +64,7 @@ public class SJSASFactory extends Factory {
     public AnnotationProcessor getAnnotationProcessor(boolean isMetaDataComplete) {
         AnnotationProcessorImpl processor =
             Factory.getDefaultAnnotationProcessor();
-        if (!isMetaDataComplete) { 
+        if (!isMetaDataComplete) {
             processor.setDelegate(systemProcessor);
         } else {
             processor.setDelegate(systemProcessorMetaDataComplete);
@@ -80,37 +80,37 @@ public class SJSASFactory extends Factory {
             return (HashSet<String>)((HashSet<String>)annotationClassNamesMetaDataComplete).clone();
         }
     }
-    
+
     private static String getAnnotationHandlerForStringValue(ActiveDescriptor<AnnotationHandler> onMe) {
         Map<String, List<String>> metadata = onMe.getMetadata();
         List<String> answers = metadata.get(AnnotationHandler.ANNOTATION_HANDLER_METADATA);
         if (answers == null || answers.isEmpty()) return null;
-        
+
         return answers.get(0);
     }
 
     @SuppressWarnings({ "unused", "unchecked" })
     @PostConstruct
     private void postConstruct() {
-        if (systemProcessor != null && 
+        if (systemProcessor != null &&
             systemProcessorMetaDataComplete != null) return;
-        
-        // initialize our system annotation processor...            
+
+        // initialize our system annotation processor...
         systemProcessor = new AnnotationProcessorImpl();
         systemProcessorMetaDataComplete = new AnnotationProcessorImpl();
         for (ActiveDescriptor<?> i : locator.getDescriptors(BuilderHelper.createContractFilter(
                 AnnotationHandler.class.getName()))) {
             ActiveDescriptor<AnnotationHandler> descriptor = (ActiveDescriptor<AnnotationHandler>) i;
-            
+
             String annotationTypeName = getAnnotationHandlerForStringValue(descriptor);
             if (annotationTypeName == null) continue;
-          
-            systemProcessor.pushAnnotationHandler(annotationTypeName, new LazyAnnotationHandler(descriptor)); 
+
+            systemProcessor.pushAnnotationHandler(annotationTypeName, new LazyAnnotationHandler(descriptor));
             annotationClassNames.add("L" +
                     annotationTypeName.
-                    replace('.', '/') + ";");  
+                    replace('.', '/') + ";");
 
-            // In the current set of the annotations processed by the 
+            // In the current set of the annotations processed by the
             // deployment layer, the only annotation that should be
             // processed even when metadata-complete atribute value is true
             // is jakarta.annotation.ManagedBean. If there are more annotations
@@ -123,18 +123,18 @@ public class SJSASFactory extends Factory {
             }
         }
     }
-    
+
     private class LazyAnnotationHandler implements AnnotationHandler {
         private final ActiveDescriptor<AnnotationHandler> descriptor;
         private AnnotationHandler handler;
-        
+
         private LazyAnnotationHandler(ActiveDescriptor<AnnotationHandler> descriptor) {
             this.descriptor = descriptor;
         }
-        
+
         private AnnotationHandler getHandler() {
             if (handler != null) return handler;
-            
+
             handler = locator.getServiceHandle(descriptor).getService();
             return handler;
         }
@@ -154,6 +154,6 @@ public class SJSASFactory extends Factory {
         public Class<? extends Annotation>[] getTypeDependencies() {
             return getHandler().getTypeDependencies();
         }
-        
+
     }
 }

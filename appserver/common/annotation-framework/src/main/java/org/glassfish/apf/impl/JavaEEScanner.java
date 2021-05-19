@@ -41,7 +41,7 @@ import java.io.IOException;
 public abstract class JavaEEScanner {
 
     Types types;
-    
+
     public ComponentInfo getComponentInfo(Class componentImpl){
         return new ComponentDefinition(componentImpl);
     }

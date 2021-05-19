@@ -74,12 +74,12 @@ import com.sun.enterprise.util.shared.ArchivistUtils;
 public abstract class AppClientDeployerHelper {
 
     private final static String PERSISTENCE_XML_PATH = "META-INF/persistence.xml";
-    
+
     final static String GF_CLIENT_MODULE_PATH ="gf-client-module.jar";
-    
+
     final static String[] CLIENT_POLICY_FILE_NAMES = {"javaee.client.policy","restrict.client.policy"};
     final static String CLIENT_POLICY_PATH_IN_JAR = "META-INF/";
-    
+
     private final DeploymentContext dc;
     private final ApplicationClientDescriptor appClientDesc;
     protected final AppClientArchivist archivist;
@@ -92,12 +92,12 @@ public abstract class AppClientDeployerHelper {
 
     private final ServiceLocator habitat;
 
-    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+    private static final Logger logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
-    
+
     public static final String ACC_MAIN_LOGGER = "jakarta.enterprise.system.container.appclient";
     public static final String LOG_MESSAGE_RESOURCE = "org.glassfish.appclient.server.LogMessages";
-    
+
     /**
      * Returns the correct concrete implementation of Helper.
      * @param dc the DeploymentContext for this deployment
@@ -113,7 +113,7 @@ public abstract class AppClientDeployerHelper {
         ApplicationClientDescriptor bundleDesc = dc.getModuleMetaData(ApplicationClientDescriptor.class);
         Application application = bundleDesc.getApplication();
         boolean insideEar = ! application.isVirtual();
-        final AppClientDeployerHelper helper = 
+        final AppClientDeployerHelper helper =
             (insideEar ? new NestedAppClientDeployerHelper(
                                     dc,
                                     bundleDesc,
@@ -149,15 +149,15 @@ public abstract class AppClientDeployerHelper {
         this.clientName = appClientDesc.getModuleDescriptor().getArchiveUri();
         this.application = application;
     }
-    
+
     static File getModulesDir(final ServiceLocator habitat) {
         return new File(habitat.getService(ServerContext.class).getInstallRoot(), "modules/");
     }
-    
+
     static File getLibDir(final ServiceLocator locator) {
         return new File(locator.getService(ServerContext.class).getInstallRoot(), "lib/");
     }
-    
+
     static File getAppClientLibDir(final ServiceLocator locator) {
         return new File(getLibDir(locator), "appclient/");
     }
@@ -188,7 +188,7 @@ public abstract class AppClientDeployerHelper {
     public abstract URI groupFacadeUserURI(DeploymentContext dc);
 
     public abstract URI groupFacadeServerURI(DeploymentContext dc);
-    
+
     /**
      * Returns the file name (and type) for the facade, excluding any
      * directory information.
@@ -201,7 +201,7 @@ public abstract class AppClientDeployerHelper {
      * Returns the URI to the developer's original app client JAR within
      * the download directory the user specifies in "deploy --retrieve" or
      * "get-client-stubs."
-     * 
+     *
      * @param dc
      * @return
      */
@@ -210,7 +210,7 @@ public abstract class AppClientDeployerHelper {
     /**
      * Returns the URI to be used for the GlassFish-AppClient manifest entry
      * in the facade.
-     * 
+     *
      * @param dc
      * @return
      */
@@ -245,7 +245,7 @@ public abstract class AppClientDeployerHelper {
      * containing app; the URI for such app clients is just the file name
      * and type.  The URI for nested app clients within an EAR is the
      * module URI to the app client.
-     * 
+     *
      * @param dc
      * @return
      */
@@ -288,7 +288,7 @@ public abstract class AppClientDeployerHelper {
     public abstract void createAndAddLibraryJNLPs(final AppClientDeployerHelper helper,
             final TokenHelper tHelper, final Map<String,DynamicContent> dynamicContent)
             throws IOException;
-    
+
     public Map<String,Map<URI,StaticContent>> signingAliasToJar() {
         return Collections.EMPTY_MAP;
     }
@@ -317,7 +317,7 @@ public abstract class AppClientDeployerHelper {
     /**
      * Returns a FixedContent object for the file, within the EAR, at the
      * specified relative location.
-     * 
+     *
      * @param uriString relative path within the EAR
      * @return FixedContent object for the file
      */
@@ -409,7 +409,7 @@ public abstract class AppClientDeployerHelper {
         facadeMainAttrs.put(AppClientDeployer.GLASSFISH_APP_NAME, application.getAppName());
 
         facadeMainAttrs.put(AppClientArchivist.GLASSFISH_ANCHOR_DIR, anchorDirRelativeToClient());
-        
+
         if ( ! appClientDesc.isStandalone()) {
 //            final DownloadableArtifacts.FullAndPartURIs earFacadeDownload =
 //                dc().getTransientAppMetaData("earFacadeDownload", DownloadableArtifacts.FullAndPartURIs.class);
@@ -433,7 +433,7 @@ public abstract class AppClientDeployerHelper {
     protected URI relativeURIToGroupFacade() {
         return URI.create(relativePathToGroupFacade());
     }
-    
+
     private String relativePathToGroupFacade() {
         final StringBuilder sb = new StringBuilder(anchorDirRelativeToClient());
         try {
@@ -462,15 +462,15 @@ public abstract class AppClientDeployerHelper {
     }
 
     protected abstract void addTopLevelContentToClientFacade(final OutputJarArchive facadeArchive) throws IOException;
-    
+
     /**
      * Adds the client policy files to the top-level generated JAR.
      * <p>
      * For a stand-alone client (not in an EAR) this implementation adds the
-     * policy files to the generated app client facade JAR.  
-     * 
+     * policy files to the generated app client facade JAR.
+     *
      * @param clientFacadeArchive the generated app client facade JAR
-     * @throws IOException 
+     * @throws IOException
      */
     protected void addClientPolicyFiles(final OutputJarArchive clientFacadeArchive) throws IOException {
         for (String policyFileName : CLIENT_POLICY_FILE_NAMES) {
@@ -480,9 +480,9 @@ public abstract class AppClientDeployerHelper {
             }
         }
     }
-    
+
     protected abstract void copyFileToTopLevelJAR(final OutputJarArchive clientFacadeArchive, final File f, final String path) throws IOException;
-    
+
     protected final void generateAppClientFacade() throws IOException, URISyntaxException {
         OutputJarArchive facadeArchive = new OutputJarArchive();
         /*
@@ -506,7 +506,7 @@ public abstract class AppClientDeployerHelper {
             throw new IOException(MessageFormat.format(msg, source.getURI().toASCIIString()));
         }
         Manifest facadeManifest = facadeArchive.getManifest();
-        initGeneratedManifest(sourceManifest, facadeManifest, 
+        initGeneratedManifest(sourceManifest, facadeManifest,
                 facadeClassPath(), PUScanTargets(), application);
         /*
          * If the developer's app client JAR contains a splash screen, copy
@@ -543,9 +543,9 @@ public abstract class AppClientDeployerHelper {
         copyPersistenceUnitXML(source, facadeArchive);
 
         copyMainClass(facadeArchive);
-        
+
         addTopLevelContentToClientFacade(facadeArchive);
-        
+
         facadeArchive.close();
     }
 
@@ -572,9 +572,9 @@ public abstract class AppClientDeployerHelper {
             } else {
                 // This may be a directory specification if there is no entry
                 // in the source for it...for example, a directory expression
-                // in the Class-Path entry from a JAR's manifest.  
-                // 
-                // Try to copy all entries from the source that have the 
+                // in the Class-Path entry from a JAR's manifest.
+                //
+                // Try to copy all entries from the source that have the
                 // entryName as a prefix.
                 for (Enumeration e = source.entries(entryName); e.hasMoreElements();) {
                     copy(source, target, (String) e.nextElement());
@@ -600,7 +600,7 @@ public abstract class AppClientDeployerHelper {
             }
         }
     }
-    
+
     static void copyArchive(
             ReadableArchive source, WritableArchive target, Set excludeList) {
         for (Enumeration e = source.entries(); e.hasMoreElements();) {
@@ -615,7 +615,7 @@ public abstract class AppClientDeployerHelper {
             }
         }
     }
-    
+
     private void copyClass(final WritableArchive facadeArchive,
             final String classResourcePath) throws IOException {
         OutputStream os = facadeArchive.putNextEntry(classResourcePath);
@@ -628,7 +628,7 @@ public abstract class AppClientDeployerHelper {
         } catch (IOException ignore) {
         }
     }
-    
+
 
     private void copyMainClass(final WritableArchive facadeArchive) throws IOException {
         copyClass(facadeArchive, AppClientDeployer.APPCLIENT_FACADE_CLASS_FILE);
@@ -656,7 +656,7 @@ public abstract class AppClientDeployerHelper {
     protected abstract Set<Artifacts.FullAndPartURIs> clientLevelDownloads() throws IOException;
 
     public abstract Set<Artifacts.FullAndPartURIs> earLevelDownloads() throws IOException;
-    
+
     Proxy proxy() {
         return new Proxy(this);
     }

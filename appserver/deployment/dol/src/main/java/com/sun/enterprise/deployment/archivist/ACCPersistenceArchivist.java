@@ -47,11 +47,11 @@ import org.xml.sax.SAXException;
 @ExtensionsArchivistFor("jpa")
 public class ACCPersistenceArchivist extends PersistenceArchivist {
 
-    
-    
+
+
     @Inject
     private ProcessEnvironment env;
-    
+
     @Inject
     private ArchiveFactory archiveFactory;
 
@@ -67,34 +67,34 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
                     "readPersistenceDeploymentDescriptors", "archive = {0}",
                     archive.getURI());
         }
-        
+
         final Map<String,ReadableArchive> candidatePersistenceArchives =
                 new HashMap<String,ReadableArchive>();
-        
+
         /*
          * The descriptor had better be an ApplicationClientDescriptor!
          */
         if ( ! (descriptor instanceof ApplicationClientDescriptor)) {
             return null;
         }
-        
+
         final ApplicationClientDescriptor acDescr = ApplicationClientDescriptor.class.cast(descriptor);
-        
+
         try {
             final Manifest mf = archive.getManifest();
             final Attributes mainAttrs = mf.getMainAttributes();
             /*
-             * We must scan the app client archive itself.  
+             * We must scan the app client archive itself.
              */
             URI clientURI = clientURI(archive, acDescr);
             candidatePersistenceArchives.put(clientURI.toASCIIString(), archive);
 
             /*
-             * If this app client 
+             * If this app client
              * was deployed as part of an EAR then scan any library JARs and, if the
              * client was also deployed or launched in v2-compatibility mode, any
              * top-level JARs in the EAR.
-             * 
+             *
              * Exactly how we do this depends on whether this is a deployed client
              * (which will reside in a client download directory) or a non-deployed
              * one (which will reside either as a stand-alone client or within an
@@ -109,9 +109,9 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
             }
 
             for (Map.Entry<String, ReadableArchive> pathToArchiveEntry : candidatePersistenceArchives.entrySet()) {
-                readPersistenceDeploymentDescriptor(main, 
-                        pathToArchiveEntry.getValue(), 
-                        pathToArchiveEntry.getKey(), 
+                readPersistenceDeploymentDescriptor(main,
+                        pathToArchiveEntry.getValue(),
+                        pathToArchiveEntry.getKey(),
                         descriptor);
             }
         } finally {
@@ -155,7 +155,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
 
         return archive.getURI();
     }
-    
+
     private boolean isStandAlone(final ApplicationClientDescriptor ac) {
         /*
          * For a non-deployed app (this case), the descriptor for a stand-alone
@@ -168,27 +168,27 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         final String gfClient = mainAttrs.getValue(AppClientArchivist.GLASSFISH_APPCLIENT);
         return gfClient != null;
     }
-    
+
     private void addOtherDeployedScanTargets(
             final ReadableArchive archive,
             final Attributes mainAttrs,
             Map<String,ReadableArchive> candidates) throws IOException {
-        
+
         final String otherPUScanTargets = mainAttrs.getValue(
                 AppClientArchivist.GLASSFISH_CLIENT_PU_SCAN_TARGETS_NAME);
-        
+
         /*
          * Include library JARs - listed in the facade's Class-Path - and
          * any additional (typically top-level) JARs to be scanned.
          */
-        
+
         addScanTargetsFromURIList(archive, otherPUScanTargets, candidates);
     }
-    
+
     private void addOtherNondeployedScanTargets(final ReadableArchive clientArchive,
             final ApplicationClientDescriptor acDescr,
             final Map<String,ReadableArchive> candidates) {
-        
+
         /*
          * The archive is a non-deployed one.  We know from an earlier check
          * that this is not a stand-alone app client, so we can use the
@@ -201,11 +201,11 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
                 acDescr.getApplication(),
                 true,
                 candidates);
-        
-        
-        
+
+
+
     }
-    
+
     private void addScanTargetsFromURIList(final ReadableArchive archive,
             final String relativeURIList,
             final Map<String,ReadableArchive> candidates) throws IOException {
@@ -218,15 +218,15 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
             candidates.put(uriText, archiveFactory.openArchive(scanTargetURI));
         }
     }
-    
+
     private class AppClientPURootScanner extends SubArchivePURootScanner {
 
         private final ReadableArchive clientArchive;
-        
+
         private AppClientPURootScanner(final ReadableArchive clientArchive) {
             this.clientArchive = clientArchive;
         }
-        
+
         @Override
         ReadableArchive getSubArchiveToScan(ReadableArchive parentArchive) {
             return clientArchive;
@@ -235,7 +235,7 @@ public class ACCPersistenceArchivist extends PersistenceArchivist {
         /**
          * The superclass requires this implementation, but it is never used
          * because we also override getSubArchiveToScan.
-         * 
+         *
          * @return
          */
         @Override

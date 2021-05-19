@@ -33,7 +33,7 @@ import org.xml.sax.SAXException;
  * This tests that a call from a Servlet to HttpServletRequest#authenticate can result
  * in a successful authentication.
  *
- * 
+ *
  */
 @RunWith(Arquillian.class)
 public class ProgrammaticAuthenticationIT extends ArquillianBase {
@@ -49,6 +49,6 @@ public class ProgrammaticAuthenticationIT extends ArquillianBase {
         String response = getFromServerPath("public/authenticate");
         assertTrue("Should contain web user test and architect in subject principals", response.contains("Principals: test, architect"));
     }
-   
+
 
 }

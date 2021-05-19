@@ -56,8 +56,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Protocol.class,
-        opType=RestEndpoint.OpType.DELETE, 
-        path="delete-protocol-filter", 
+        opType=RestEndpoint.OpType.DELETE,
+        path="delete-protocol-filter",
         description="Delete",
         params={
             @RestParam(name="protocol", value="$parent")

@@ -52,22 +52,22 @@ public class SimpleServlet extends HttpServlet {
 
 
         String res = "NOT RUN";
-	    debug("doTest() ENTER...");
+            debug("doTest() ENTER...");
         boolean pass = false;
         try {
-		pass = checkResults(versionToTest);
-		debug("Got expected results = " + pass);
+                pass = checkResults(versionToTest);
+                debug("Got expected results = " + pass);
 
-		//do not continue if one test failed
-		if (!pass) {
-			res = "SOME TESTS FAILED";
-			System.out.println("Redeploy Connector 1.5 test - Version : "+ versionToTest + " FAIL");
+                //do not continue if one test failed
+                if (!pass) {
+                        res = "SOME TESTS FAILED";
+                        System.out.println("Redeploy Connector 1.5 test - Version : "+ versionToTest + " FAIL");
             out.println("TEST:FAIL");
-		} else {
-			res  = "ALL TESTS PASSED";
-			System.out.println("Redeploy Connector 1.5 test - Version : "+ versionToTest + " PASS");
+                } else {
+                        res  = "ALL TESTS PASSED";
+                        System.out.println("Redeploy Connector 1.5 test - Version : "+ versionToTest + " PASS");
             out.println("TEST:PASS");
-		}
+                }
         } catch (Exception ex) {
             System.out.println("Redeploy connector test failed.");
             ex.printStackTrace();
@@ -83,18 +83,18 @@ public class SimpleServlet extends HttpServlet {
     }
 
     private boolean checkResults(int num) throws Exception {
-	    debug("checkResult" + num);
-	    debug("got initial context" + (new InitialContext()).toString());
+            debug("checkResult" + num);
+            debug("got initial context" + (new InitialContext()).toString());
         Object o = (new InitialContext()).lookup("java:comp/env/ejb/MyVersionChecker");
-	debug("got o" + o);
+        debug("got o" + o);
         VersionCheckerHome home = (VersionCheckerHome)
             PortableRemoteObject.narrow(o, VersionCheckerHome.class);
         debug("got home" + home);
-	    VersionChecker checker = home.create();
-	    debug("got o" + checker);
+            VersionChecker checker = home.create();
+            debug("got o" + checker);
         //problem here!
-	int result = checker.getVersion();
-	debug("checkResult" + result);
+        int result = checker.getVersion();
+        debug("checkResult" + result);
         return result == num;
     }
 

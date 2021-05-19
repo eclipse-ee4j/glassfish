@@ -29,14 +29,14 @@ public class TransactionInterceptor {
     public static boolean aroundInvokeCalled = false;
     public static int aroundInvokeInvocationCount = 0;
     public static String errorMessage = "";
-    
+
     @Inject
     TransactionInterceptor(ServiceFrameworkExtension myex){ //Injection of portable extension in a bean
         if(myex == null) {
             errorMessage += "Portable Extension Injection in Interceptor failed";
         }
     }
-    
+
     @AroundInvoke
     public Object manageTransaction(InvocationContext ctx) throws Exception {
         System.out.println("TransactionInterceptor::AroundInvoke");

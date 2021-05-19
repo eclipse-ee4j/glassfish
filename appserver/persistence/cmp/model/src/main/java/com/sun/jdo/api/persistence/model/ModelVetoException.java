@@ -27,130 +27,130 @@ import java.io.PrintWriter;
 
 import com.sun.jdo.spi.persistence.utility.StringHelper;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public class ModelVetoException extends ModelException
 {
-	/** This field holds the target if the
-	 * ModelVetoException (Throwable target) constructor was
-	 * used to instantiate the object
-	 */
-	private Throwable _target;
+    /** This field holds the target if the
+     * ModelVetoException (Throwable target) constructor was
+     * used to instantiate the object
+     */
+    private Throwable _target;
 
-	/**
-	 * Creates new <code>ModelVetoException</code> without detail message and 
-	 * <code>null</code> as the target exception.
-	 */
-	public ModelVetoException ()
-	{
-	}
+    /**
+     * Creates new <code>ModelVetoException</code> without detail message and
+     * <code>null</code> as the target exception.
+     */
+    public ModelVetoException ()
+    {
+    }
 
-	/**
-	 * Constructs an <code>ModelVetoException</code> with the specified 
-	 * detail message and <code>null</code> as the target exception..
-	 * @param msg the detail message.
-	 */
-	public ModelVetoException (String msg)
-	{
-		super(msg);
-	}
+    /**
+     * Constructs an <code>ModelVetoException</code> with the specified
+     * detail message and <code>null</code> as the target exception..
+     * @param msg the detail message.
+     */
+    public ModelVetoException (String msg)
+    {
+        super(msg);
+    }
 
-	/**
-	 * Constructs a ModelVetoException with a target exception.
-	 */
-	public ModelVetoException (Throwable target)
-	{
-		super();
-		_target = target;
-	}
+    /**
+     * Constructs a ModelVetoException with a target exception.
+     */
+    public ModelVetoException (Throwable target)
+    {
+        super();
+        _target = target;
+    }
 
-	/**
-	 * Constructs a ModelVetoException with a target exception
-	 * and a detail message.
-	 */
-	public ModelVetoException (Throwable target, String s)
-	{
-		super(s);
-		_target = target;
-	}
+    /**
+     * Constructs a ModelVetoException with a target exception
+     * and a detail message.
+     */
+    public ModelVetoException (Throwable target, String s)
+    {
+        super(s);
+        _target = target;
+    }
 
-	/**
-	 * Get the thrown target exception.
-	 */
-	public Throwable getTargetException() { return _target; }
+    /**
+     * Get the thrown target exception.
+     */
+    public Throwable getTargetException() { return _target; }
 
-	/**
-	* Returns the error message string of this throwable object.
-	* @return the error message string of this <code>ModelVetoException</code>
-	* object if it was created with an error message string, the error 
-	* message of the target exception if it was not created a message 
-	* but the target exception has a message, or <code>null</code> if 
-	* neither has an error message.
-	*
-	*/
-	public String getMessage()
-	{
-		String message = super.getMessage();
+    /**
+    * Returns the error message string of this throwable object.
+    * @return the error message string of this <code>ModelVetoException</code>
+    * object if it was created with an error message string, the error
+    * message of the target exception if it was not created a message
+    * but the target exception has a message, or <code>null</code> if
+    * neither has an error message.
+    *
+    */
+    public String getMessage()
+    {
+        String message = super.getMessage();
 
-		if (StringHelper.isEmpty(message))
-		{
-			Throwable target = getTargetException();
+        if (StringHelper.isEmpty(message))
+        {
+            Throwable target = getTargetException();
 
-			message	= target.getMessage();
-		}
+            message    = target.getMessage();
+        }
 
-		return message;
-	}
+        return message;
+    }
 
-	/**
-	 * Prints the stack trace of the thrown target exception.
-	 * @see java.lang.System#err
-	 */
-	public void printStackTrace ()
-	{
-		printStackTrace(System.err);
-	}
+    /**
+     * Prints the stack trace of the thrown target exception.
+     * @see java.lang.System#err
+     */
+    public void printStackTrace ()
+    {
+        printStackTrace(System.err);
+    }
 
-	/**
-	 * Prints the stack trace of the thrown target exception to the specified
-	 * print stream.
-	 */
-	public void printStackTrace (PrintStream ps)
-	{
-		synchronized (ps)
-		{
-			Throwable target = getTargetException();
+    /**
+     * Prints the stack trace of the thrown target exception to the specified
+     * print stream.
+     */
+    public void printStackTrace (PrintStream ps)
+    {
+        synchronized (ps)
+        {
+            Throwable target = getTargetException();
 
-			if (target != null)
-			{
-				ps.print(getClass() + ": ");			// NOI18N
-				target.printStackTrace(ps);
-			}
-			else
-				super.printStackTrace(ps);
-		}
-	}
+            if (target != null)
+            {
+                ps.print(getClass() + ": ");            // NOI18N
+                target.printStackTrace(ps);
+            }
+            else
+                super.printStackTrace(ps);
+        }
+    }
 
-	/**
-	 * Prints the stack trace of the thrown target exception to the
-	 * specified print writer.
-	 */
-	public void printStackTrace (PrintWriter pw)
-	{
-		synchronized (pw)
-		{
-			Throwable target = getTargetException();
+    /**
+     * Prints the stack trace of the thrown target exception to the
+     * specified print writer.
+     */
+    public void printStackTrace (PrintWriter pw)
+    {
+        synchronized (pw)
+        {
+            Throwable target = getTargetException();
 
-			if (target != null)
-			{
-				pw.print(getClass() + ": ");			// NOI18N
-				target.printStackTrace(pw);
-			}
-			else
-				super.printStackTrace(pw);
-		}
-	}
+            if (target != null)
+            {
+                pw.print(getClass() + ": ");            // NOI18N
+                target.printStackTrace(pw);
+            }
+            else
+                super.printStackTrace(pw);
+        }
+    }
 }

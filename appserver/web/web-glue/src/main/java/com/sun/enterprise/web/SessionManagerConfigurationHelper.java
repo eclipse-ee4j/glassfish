@@ -38,7 +38,7 @@ public class SessionManagerConfigurationHelper {
 
 
 protected WebModule _ctx = null;
-    protected SessionManager _smBean = null; 
+    protected SessionManager _smBean = null;
     protected WebBundleDescriptor _wbd = null;
     protected WebModuleConfig _wmInfo = null;
     protected PersistenceType _persistence = PersistenceType.MEMORY;
@@ -60,17 +60,17 @@ protected WebModule _ctx = null;
         _systemApps.add("com_sun_web_ui");
         _systemApps.add(Constants.DEFAULT_WEB_MODULE_PREFIX + "admingui");
         _systemApps.add("adminapp");
-        _systemApps.add("admingui");        
+        _systemApps.add("admingui");
     }
-    
+
     protected boolean isSystemApp(String appName) {
         return _systemApps.contains(appName);
     }
-    
+
     protected void initializeConfiguration() {
 
         //XXX Need to look at whether the app is distributable.
-        
+
         boolean isAppDistributable = false;
         if (_wbd != null) {
             isAppDistributable = _wbd.isDistributable();
@@ -84,8 +84,8 @@ protected WebModule _ctx = null;
         PersistenceType persistence = PersistenceType.MEMORY;
         String persistenceFrequency = null;
         String persistenceScope = null;
-        
-        boolean isAvailabilityEnabled = 
+
+        boolean isAvailabilityEnabled =
             serverConfigLookup.calculateWebAvailabilityEnabledFromConfig(_ctx);
         if (_logger.isLoggable(Level.FINEST)) {
             _logger.log(Level.FINEST, LogFacade.AVAILABILITY_GLOBALLY_ENABLED, isAvailabilityEnabled);
@@ -97,13 +97,13 @@ protected WebModule _ctx = null;
             persistenceFrequency = "web-method";
             persistenceScope = "session";
         }
-        
+
         PersistenceType serverDefaultPersistenceType =
             serverConfigLookup.getPersistenceTypeFromConfig();
 
 
         if (serverDefaultPersistenceType != null) {
-            persistence = serverDefaultPersistenceType;        
+            persistence = serverDefaultPersistenceType;
             persistenceFrequency = serverConfigLookup.getPersistenceFrequencyFromConfig();
             persistenceScope = serverConfigLookup.getPersistenceScopeFromConfig();
         }
@@ -116,17 +116,17 @@ protected WebModule _ctx = null;
                     LogFacade.INSTANCE_LEVEL_INFO,
                     new Object[] {insLevelPersistenceTypeString, persistenceFrequency, persistenceScope});
         }
-        
+
         String webAppLevelPersistenceFrequency = null;
         String webAppLevelPersistenceScope = null;
 
         if (_smBean != null) {
-            // The persistence-type controls what properties of the 
+            // The persistence-type controls what properties of the
             // session manager can be configured
             String pType = _smBean.getAttributeValue(SessionManager.PERSISTENCE_TYPE);
             persistence = PersistenceType.parseType(pType, persistence);
 
-            webAppLevelPersistenceFrequency = getPersistenceFrequency(_smBean);           
+            webAppLevelPersistenceFrequency = getPersistenceFrequency(_smBean);
             webAppLevelPersistenceScope = getPersistenceScope(_smBean);
             if (_logger.isLoggable(Level.FINEST)) {
                 _logger.log(Level.FINEST,
@@ -134,7 +134,7 @@ protected WebModule _ctx = null;
                         new Object[] {pType, webAppLevelPersistenceFrequency, webAppLevelPersistenceScope});
             }
         }
-        
+
         // Use web app level values if they exist (i.e. not null)
         if (webAppLevelPersistenceFrequency != null) {
             persistenceFrequency = webAppLevelPersistenceFrequency;
@@ -146,12 +146,12 @@ protected WebModule _ctx = null;
             _logger.log(Level.FINEST, LogFacade.AFTER_WEB_LEVEL_CHECK_INFO,
                     new Object[] {persistence.getType(), persistenceFrequency, persistenceScope});
         }
-        
+
         // Delegate remaining initialization to builder
         String frequency = null;
         String scope = null;
-        if ( persistence == PersistenceType.MEMORY 
-            || persistence == PersistenceType.FILE 
+        if ( persistence == PersistenceType.MEMORY
+            || persistence == PersistenceType.FILE
             || persistence == PersistenceType.CUSTOM) {
             // Deliberately leaving frequency & scope null
         } else {
@@ -174,21 +174,21 @@ protected WebModule _ctx = null;
             // log message only if availabilityenabled = true is attempted
             if (isAvailabilityEnabled &&
                     !wmName.equals(Constants.DEFAULT_WEB_MODULE_NAME) &&
-                    !this.isSystemApp(wmName)) { 
+                    !this.isSystemApp(wmName)) {
                 //log error
                 if (_logger.isLoggable(Level.INFO)) {
                     Object[] params = { getApplicationId(_ctx), persistence.getType(), frequency, scope };
                     _logger.log(Level.INFO,
                                 LogFacade.INVALID_SESSION_MANAGER_CONFIG,
-                                params); 
+                                params);
                 }
-            }    
+            }
             // Set back to memory option
             persistence = PersistenceType.MEMORY;
             frequency = null;
-            scope = null;            
+            scope = null;
         }
-        
+
         // If availability-enabled is false, reset to "memory"
         if (!isAvailabilityEnabled && (persistence != PersistenceType.FILE &&
                 persistence != PersistenceType.COOKIE &&
@@ -196,34 +196,34 @@ protected WebModule _ctx = null;
             // Set back to memory option
             persistence = PersistenceType.MEMORY;
             frequency = null;
-            scope = null;             
+            scope = null;
         }
-        
+
         if (_logger.isLoggable(Level.FINEST)) {
             _logger.log(Level.FINEST,
                     LogFacade.CONFIGURE_SESSION_MANAGER_FINAL,
                     new Object[] {persistence.getType(), frequency, scope});
         }
-        
+
         _persistence = persistence;
         _persistenceFrequency = frequency;
         _persistenceScope = scope;
     }
-    
+
     /**
      * The application id for this web module
-     */    
+     */
     public String getApplicationId(WebModule ctx) {
         return ctx.getID();
     }
-    
+
     /**
      * Get the persistence frequency for this web module
      * (this is the value from sun-web.xml if defined
      * @param smBean the session manager config bean
      */
     protected String getPersistenceFrequency(SessionManager smBean) {
-        String persistenceFrequency = null;        
+        String persistenceFrequency = null;
         ManagerProperties mgrBean = smBean.getManagerProperties();
         if ((mgrBean != null) && (mgrBean.sizeWebProperty() > 0)) {
             WebProperty[] props = mgrBean.getWebProperty();
@@ -237,12 +237,12 @@ protected WebModule _ctx = null;
         }
         return persistenceFrequency;
     }
-    
+
     /**
      * Get the persistence scope for this web module
      * (this is the value from sun-web.xml if defined
      * @param smBean the session manager config bean
-     */    
+     */
     protected String getPersistenceScope(SessionManager smBean) {
         String persistenceScope = null;
         StoreProperties storeBean = smBean.getStoreProperties();
@@ -257,27 +257,27 @@ protected WebModule _ctx = null;
             }
         }
         return persistenceScope;
-    } 
-    
+    }
+
     protected void checkInitialization() {
         if (!_initialized) {
             initializeConfiguration();
             _initialized = true;
         }
-    }    
-    
+    }
+
     public PersistenceType getPersistenceType() {
         checkInitialization();
         return _persistence;
     }
-    
+
     public String getPersistenceFrequency() {
         checkInitialization();
         return _persistenceFrequency;
-    } 
-    
+    }
+
     public String getPersistenceScope() {
         checkInitialization();
         return _persistenceScope;
-    }    
+    }
 }

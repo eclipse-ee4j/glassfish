@@ -65,7 +65,7 @@ public class MenuBarRenderer extends BaseRenderer {
     public void decode(FacesContext context, UIComponent component) {
 
         Graph graph = null;
-  
+
         // if a node was clicked queue an ActionEvent.
         Map requestParameterMap = (Map) context.getExternalContext().
             getRequestParameterMap();
@@ -107,7 +107,7 @@ public class MenuBarRenderer extends BaseRenderer {
         selectedClass = (String) component.getAttributes().get("selectedClass");
         unselectedClass =
             (String) component.getAttributes().get("unselectedClass");
-        
+
         // Render the menu bar for this graph
         Iterator menus = null;
         ResponseWriter writer = context.getResponseWriter();
@@ -125,7 +125,7 @@ public class MenuBarRenderer extends BaseRenderer {
             Node menu = (Node) menus.next();
             writer.write("<th bgcolor=\"silver\" align=\"left\">");
             // The image links of the nodes that have children behave like
-            // command buttons causing the form to be submitted so the state of 
+            // command buttons causing the form to be submitted so the state of
             // node can be toggled
             if (menu.isEnabled()) {
                 writer.write("<a href=\"");
@@ -154,7 +154,7 @@ public class MenuBarRenderer extends BaseRenderer {
                     Node node = (Node) items.next();
                     writer.write("<li>");
                     // Render the label for this node (if any) as a
-                    // link is the node is enabled. 
+                    // link is the node is enabled.
                     if (node.getLabel() != null) {
                         writer.write("   ");
                         String labelStyle = null;
@@ -207,9 +207,9 @@ public class MenuBarRenderer extends BaseRenderer {
 
     /**
      * <p> Returns a string that is rendered as the value of
-     * <code>onmousedown</code> attribute. <code>onmousedown</code> event 
-     * handler is used the track the node that was clicked using a hidden field, 
-     * then submits the form so that we have the state information to 
+     * <code>onmousedown</code> attribute. <code>onmousedown</code> event
+     * handler is used the track the node that was clicked using a hidden field,
+     * then submits the form so that we have the state information to
      * reconstitute the tree.
      */
     protected String getSubmitScript(String path, FacesContext context) {

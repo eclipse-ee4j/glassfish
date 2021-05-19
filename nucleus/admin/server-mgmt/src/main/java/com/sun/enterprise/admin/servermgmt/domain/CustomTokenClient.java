@@ -180,7 +180,7 @@ public class CustomTokenClient {
 
     /**
      * Check for empty or null input string.
-     * 
+     *
      * @return true Only if given string string is null or empty.
      */
     private boolean isNullOrEmpty(String input) {

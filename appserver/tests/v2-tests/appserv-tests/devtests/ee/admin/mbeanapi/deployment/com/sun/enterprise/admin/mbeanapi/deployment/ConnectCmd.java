@@ -47,7 +47,7 @@ public class ConnectCmd extends BaseCmd implements SourceCmd
         final String    password    = (String)getCmdEnv().get(kPassword);
 
         final AppserverConnectionSource cs = new AppserverConnectionSource(
-            AppserverConnectionSource.PROTOCOL_RMI, host, port.intValue(), 
+            AppserverConnectionSource.PROTOCOL_RMI, host, port.intValue(),
             user, password, getTLSParams(), null);
 
         getCmdEnv().put(kConnectionSource, cs);

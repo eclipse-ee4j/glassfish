@@ -165,7 +165,7 @@ public class CharsetMapper implements Cloneable {
 
     // START SJSAS 6292972
     public final Object clone() {
-        
+
         try {
             CharsetMapper clone = (CharsetMapper)super.clone();
             clone.map = (Properties)map.clone();

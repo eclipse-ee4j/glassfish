@@ -39,7 +39,7 @@ class MemoryReporter {
     private List<MemoryPoolMXBean> pools;
     private List<GarbageCollectorMXBean> gcmbeans;
     private final static StringManager sm = StringManager.getManager(MemoryReporter.class);
-    
+
     public MemoryReporter(final MBeanServerConnection mbsc) {
         this.mbsc = mbsc;
     }
@@ -51,7 +51,7 @@ class MemoryReporter {
         sb.append(getMemoryMXBeanReport());
         return ( sb.toString() );
     }
-    
+
     private void init() throws RuntimeException {
         try {
             this.rmbean = ManagementFactory.newPlatformMXBeanProxy(mbsc,
@@ -87,12 +87,12 @@ class MemoryReporter {
                                                GarbageCollectorMXBean.class);
                     gcmbeans.add(gc);
                 }
-            }        
+            }
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
     }
-    
+
     private String getMemoryPoolReport() {
         final StringBuilderNewLineAppender sb = new StringBuilderNewLineAppender(new StringBuilder());
         final long millis = rmbean.getUptime();
@@ -115,7 +115,7 @@ class MemoryReporter {
         final String max  = JVMInformationCollector.formatLong(mu.getMax());
         sb.append(sm.getString("memory.usage.max", max));
         final String used = JVMInformationCollector.formatLong(mu.getUsed());
-        sb.append(sm.getString("memory.usage.used", used));        
+        sb.append(sm.getString("memory.usage.used", used));
         return ( sb.toString() );
     }
     private String getGarbageCollectionReport() {

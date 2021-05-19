@@ -33,7 +33,7 @@ import com.sun.enterprise.deployment.Application;
  * deliveries that have occurred, and any existing JDK
  * timer task that is currently scheduled for this timer.
  * It also caches read-only state of a timer to improve
- * performance. 
+ * performance.
  *
  * @author Kenneth Saks
  */
@@ -45,7 +45,7 @@ public class RuntimeTimerState {
     // Fine-grained timer states
     //
 
-    // Timer has been created but not committed.  
+    // Timer has been created but not committed.
     private static final int CREATED     = 0;
 
     // There is a scheduled JDK timer task for this timer.
@@ -58,7 +58,7 @@ public class RuntimeTimerState {
     // The timer has been cancelled but the cancellation can still be
     // rolled back.
     private static final int CANCELLED   = 3;
-    
+
     private int state_;
 
     //
@@ -79,7 +79,7 @@ public class RuntimeTimerState {
     //
     private BaseContainer container_;
 
-    // Handle to scheduled timer task. This is only set when timer is SCHEDULED 
+    // Handle to scheduled timer task. This is only set when timer is SCHEDULED
     private EJBTimerTask currentTask_;
 
     //
@@ -88,10 +88,10 @@ public class RuntimeTimerState {
 
     private int numExpirations_;
     private int numFailedDeliveries_;
-    
+
     public RuntimeTimerState(TimerPrimaryKey timerId,
-                      Date initialExpiration, long intervalDuration, 
-                      BaseContainer container, 
+                      Date initialExpiration, long intervalDuration,
+                      BaseContainer container,
                       Object timedObjectPkey,
                       EJBTimerSchedule schedule,
                       Serializable info,
@@ -101,9 +101,9 @@ public class RuntimeTimerState {
     }
 
     RuntimeTimerState(TimerPrimaryKey timerId,
-                      Date initialExpiration, long intervalDuration, 
-                      long containerId, 
-                      BaseContainer container, 
+                      Date initialExpiration, long intervalDuration,
+                      long containerId,
+                      BaseContainer container,
                       Object timedObjectPkey,
                       EJBTimerSchedule schedule,
                       Serializable info,
@@ -124,7 +124,7 @@ public class RuntimeTimerState {
         containerId_       = containerId;
 
         if( logger.isLoggable(Level.FINE) ) {
-            logger.log(Level.FINE, "RuntimeTimerState " + timerId_ + 
+            logger.log(Level.FINE, "RuntimeTimerState " + timerId_ +
                        " created");
         }
 
@@ -169,7 +169,7 @@ public class RuntimeTimerState {
         return schedule_;
     }
 
-   
+
     //
     // Operations for performing state transitions.
     //
@@ -191,7 +191,7 @@ public class RuntimeTimerState {
         state_ = SCHEDULED;
         numFailedDeliveries_++;
     }
-    
+
     /**
      * Transition from CANCELLED to DELIVERED when ejbTimeout calls
      * cancel and then rolls back.  Don't reset numFailedDeliveries.
@@ -215,10 +215,10 @@ public class RuntimeTimerState {
         if( numFailedDeliveries_ == 0 ) {
             numExpirations_++;
         }
-        
+
         state_ = BEING_DELIVERED;
     }
-    
+
     void cancelled() {
         if( logger.isLoggable(Level.FINER) ) {
             printStateTransition(state_, CANCELLED);
@@ -250,19 +250,19 @@ public class RuntimeTimerState {
         logger.log(Level.FINER, timerId_ + ": " + stateToString(fromState) +
                    " to " + stateToString(toState));
     }
-    
+
     int getNumExpirations() {
         return numExpirations_;
     }
 
     /**
-     * Number of failed deliveries since timer last transitioned to 
+     * Number of failed deliveries since timer last transitioned to
      * the SCHEDULED state.
      */
     public int getNumFailedDeliveries() {
         return numFailedDeliveries_;
     }
-    
+
     EJBTimerTask getCurrentTimerTask() {
         return currentTask_;
     }
@@ -288,7 +288,7 @@ public class RuntimeTimerState {
     boolean isActive() {
         return (state_ != CANCELLED);
     }
-    
+
     boolean isCancelled() {
         return (state_ == CANCELLED);
     }
@@ -368,7 +368,7 @@ public class RuntimeTimerState {
     }
 
     public String toString() {
-        StringBuffer buffer = new StringBuffer();        
+        StringBuffer buffer = new StringBuffer();
         buffer.append("'" + getTimerId() + "' ");
         buffer.append("'TimedObject = " + getTimedObjectEjbName() + "' ");
         buffer.append("'Application = " + getTimedObjectApplicationName()

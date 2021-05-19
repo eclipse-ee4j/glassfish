@@ -27,7 +27,7 @@ public class WebTest{
            new SimpleReporterAdapter("appserv-tests");
     private static URLConnection conn = null;
     private static URL url;
-    
+
     public static void main(String args[]) throws Exception{
         String host = args[0];
         String port = args[1];
@@ -47,7 +47,7 @@ public class WebTest{
                 writeOneByte(urlConnection);
 
                 int responseCode=  urlConnection.getResponseCode();
-                System.out.println("installationPathDisclosure: " + responseCode + " Expected code: 40X"); 
+                System.out.println("installationPathDisclosure: " + responseCode + " Expected code: 40X");
                 if (urlConnection.getResponseCode() >= 400 && urlConnection.getResponseCode() < 500){
                     stat.addStatus("Test installationPathDisclosure", stat.PASS);
                 } else {
@@ -65,7 +65,7 @@ public class WebTest{
                 writeOneByte(urlConnection);
 
                 int responseCode=  urlConnection.getResponseCode();
-                System.out.println("installationPathDisclosure: " + responseCode + " Expected code: 40X"); 
+                System.out.println("installationPathDisclosure: " + responseCode + " Expected code: 40X");
                 if (urlConnection.getResponseCode() >= 400 && urlConnection.getResponseCode() < 500){
                     stat.addStatus("Test installationPathDisclosure-wrongUrl", stat.PASS);
                 } else {

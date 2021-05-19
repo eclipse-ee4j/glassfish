@@ -22,10 +22,10 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  * Instances of this type represent the types java.util.Date,
  * java.sql.Date, java.sql.Time or java.sql.Timestamp.
- * 
+ *
  * @author  Michael Bouschen
  */
 public class DateType

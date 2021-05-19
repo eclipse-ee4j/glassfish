@@ -40,11 +40,11 @@ public class SimpleDecoratorTestServlet extends HttpServlet {
     @Inject
     @Preferred
     TestBean tb;
-    
+
     @Inject
     @Preferred
     ShoppingCart sc;
-    
+
     @Inject
     Account testAccount;
 
@@ -69,51 +69,51 @@ public class SimpleDecoratorTestServlet extends HttpServlet {
                     + TransactionInterceptor.aroundInvokeInvocationCount;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))
             msg += TransactionInterceptor.errorMessage;
-        
+
         if (RequiresNewTransactionInterceptor.aroundInvokeCalled)
             msg += "RequiresNew TransactionInterceptor called when " +
-            		"it shouldn't have been called";
-        
+                            "it shouldn't have been called";
+
         TransactionInterceptor.clear();
         //invoke shopping cart bean. This should result in an invocation on
         //the RequiresNewTransactional
         sc.addItem("Test Item");
         if (!RequiresNewTransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor aroundInvoke in requires new " +
-            		"transaction interceptor not called";
+                            "transaction interceptor not called";
         if (RequiresNewTransactionInterceptor.aroundInvokeInvocationCount != 1)
             msg += "Business method requires new interceptor invocation on " +
-            		"method-level interceptor annotation count not expected. "
+                            "method-level interceptor annotation count not expected. "
                     + "expected =1, actual="
                     + RequiresNewTransactionInterceptor.aroundInvokeInvocationCount;
         if (!RequiresNewTransactionInterceptor.errorMessage.trim().equals(""))
             msg += RequiresNewTransactionInterceptor.errorMessage;
-        
+
         //TransactionInterceptor should not have been called
         if (TransactionInterceptor.aroundInvokeCalled)
             msg += "TranscationInterceptor aroundInvoke called when a requiresnew" +
-            		"transaction interceptor should have been called";
-        
+                            "transaction interceptor should have been called";
+
         //Test decorators
         System.out.println(testAccount.getBalance());
-        if (testAccount.getBalance().compareTo(new BigDecimal(100)) != 0)            
+        if (testAccount.getBalance().compareTo(new BigDecimal(100)) != 0)
                 msg += "Decorators:Invalid initial balance";
-        
+
         testAccount.deposit(new BigDecimal(10));
         if (testAccount.getBalance().compareTo(new BigDecimal(115)) != 0) //5 as bonus by the decorator
             msg += "Decorators:Invalid balance after deposit";
-            
-        
+
+
         testAccount.withdraw(new BigDecimal(10));
         if (testAccount.getBalance().compareTo(new BigDecimal(105)) != 0)
             msg += "Decorators:Invalid balance after withdrawal";
 
-        
+
         if (!LargeTransactionDecorator.depositCalled)
             msg += "deposit method in Decorator not called";
         if (!LargeTransactionDecorator.withDrawCalled)
             msg += "deposit method in Decorator not called";
-        
+
         writer.write(msg + "\n");
     }
 

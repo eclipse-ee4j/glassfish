@@ -54,7 +54,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
     private TransactionService txnService;
 
-    @Inject 
+    @Inject
     private ServiceLocator habitat;
 
     private JavaEETransactionManager txMgr;
@@ -63,10 +63,10 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
     private RecoveryResourceRegistry recoveryListenersRegistry;
 
-    private static Logger _logger = 
+    private static Logger _logger =
             LogDomains.getLogger(JavaEETransactionManagerSimplified.class,
             LogDomains.JTA_LOGGER);
-    private static StringManager localStrings = 
+    private static StringManager localStrings =
             StringManager.getManager(JavaEETransactionManagerSimplified.class);
 
     private volatile boolean lazyRecovery = false;
@@ -92,7 +92,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * @throws Exception when unable to recover
      */
     public boolean recoverIncompleteTx(boolean delegated, String logPath) throws Exception {
-        return recoverIncompleteTx(delegated, logPath, 
+        return recoverIncompleteTx(delegated, logPath,
                 ((delegated)? null : Configuration.getPropertyValue(Configuration.INSTANCE_NAME)), false);
     }
 
@@ -105,9 +105,9 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * @return boolean indicating the status of transaction recovery
      * @throws Exception when unable to recover
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance, 
+    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance,
             boolean notifyRecoveryListeners) throws Exception {
-        boolean result = false; 
+        boolean result = false;
         Map<RecoveryResourceHandler, Vector> handlerToXAResourcesMap = null;
         try {
             if (_logger.isLoggable(Level.FINE)) {
@@ -130,7 +130,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
                 xaresArray[i] = (XAResource) xaresList.elementAt(i);
             }
             if (_logger.isLoggable(Level.FINE)) {
-                String msg = localStrings.getStringWithDefault("xaresource.recovering", 
+                String msg = localStrings.getStringWithDefault("xaresource.recovering",
                         "Recovering {0} XA resources...", new Object[] {String.valueOf(size)});
 
                 _logger.log(Level.FINE, msg);
@@ -179,7 +179,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * @return recovery-handlers and their resources
      */
     private Map<RecoveryResourceHandler, Vector> getAllRecoverableResources(Vector xaresList) {
-        Map<RecoveryResourceHandler, Vector> resourcesToHandlers = 
+        Map<RecoveryResourceHandler, Vector> resourcesToHandlers =
                 new HashMap<RecoveryResourceHandler, Vector>();
 
         for (RecoveryResourceHandler handler : recoveryResourceHandlers) {
@@ -213,7 +213,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
                 configure();
 
                 Vector xaresList = new Vector();
-                Map<RecoveryResourceHandler, Vector> resourcesToHandler = 
+                Map<RecoveryResourceHandler, Vector> resourcesToHandler =
                         getAllRecoverableResources(xaresList);
 
                 int size = xaresList.size();

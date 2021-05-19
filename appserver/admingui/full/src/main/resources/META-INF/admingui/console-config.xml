@@ -41,7 +41,7 @@
                 priority="400"
                 content="fullResourceLink.jsf"
     />
-    
+
     <!-- add the property sheet for deployment page, specific for ear app -->
     <integration-point
         id="full_deploy_ear"

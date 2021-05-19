@@ -29,8 +29,8 @@ public class Client extends HttpServlet {
        @WebServiceRef(name="sun-web.serviceref/HelloEJBService")
        HelloEJBService service;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
@@ -38,7 +38,7 @@ public class Client extends HttpServlet {
               throws jakarta.servlet.ServletException {
             try {
                 System.out.println(" Service is :" + service);
-		Hello port = service.getHelloEJBPort();
+                Hello port = service.getHelloEJBPort();
                 // Get Stub
 /*
                 BindingProvider stub = (BindingProvider)port;

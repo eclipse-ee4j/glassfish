@@ -24,7 +24,7 @@ if ERRORLEVEL 0 goto ok
 echo "Unable to enable extensions"
 exit /B 1
 :ok
-call "%~dp0..\config\asenv.bat" 
+call "%~dp0..\config\asenv.bat"
 if "%AS_JAVA%x" == "x" goto UsePath
 set JAVA="%AS_JAVA%\bin\java"
 goto run

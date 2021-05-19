@@ -67,7 +67,7 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
      */
     @Override
     protected int executeCommand() throws CommandException {
-        
+
         if (synchronizeInstance())
             return SUCCESS;
         else {
@@ -79,10 +79,10 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
     }
 
     /**
-     * Synchronize this server instance.  Return true if server is synchronized. 
+     * Synchronize this server instance.  Return true if server is synchronized.
      * Return false if synchronization failed, but no files were changed
      * (meaning that it is ok to bring the server up).
-     * Throw a CommandException if synchronization failed in such a way that 
+     * Throw a CommandException if synchronization failed in such a way that
      * instance startup should not be attempted.
      */
     protected boolean synchronizeInstance() throws CommandException {
@@ -281,7 +281,7 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
                 logger.finer("Exception during synchronization: " + ex);
             exc = ex;
         }
-        
+
         if (exc != null) {
             /*
              * Some unexpected failure.  If the domain.xml hasn't
@@ -439,25 +439,25 @@ public class SynchronizeInstanceCommand extends LocalInstanceCommand {
                 Strings.get("Sync.cantCreateDirectory", dir));
         long modtime = archive.lastModified();
         ZipFile zf = new ZipFile(archive);
-	try {
-	    Enumeration<? extends ZipEntry> e = zf.entries();
-	    while (e.hasMoreElements()) {
-		ZipEntry ze = e.nextElement();
-		File entry = new File(dir, ze.getName());
-		if (ze.isDirectory()) {
-		    if (!entry.mkdir())
-			logger.warning(
-			    Strings.get("Sync.cantCreateDirectory", dir));
-		} else {
-		    FileUtils.copy(zf.getInputStream(ze),
-				    new FileOutputStream(entry), 0);
-		}
-	    }
-	} finally {
-	    try {
-		zf.close();
-	    } catch (IOException ex) { }
-	}
+        try {
+            Enumeration<? extends ZipEntry> e = zf.entries();
+            while (e.hasMoreElements()) {
+                ZipEntry ze = e.nextElement();
+                File entry = new File(dir, ze.getName());
+                if (ze.isDirectory()) {
+                    if (!entry.mkdir())
+                        logger.warning(
+                            Strings.get("Sync.cantCreateDirectory", dir));
+                } else {
+                    FileUtils.copy(zf.getInputStream(ze),
+                                    new FileOutputStream(entry), 0);
+                }
+            }
+        } finally {
+            try {
+                zf.close();
+            } catch (IOException ex) { }
+        }
         if (!dir.setLastModified(modtime))
             logger.warning(
                 Strings.get("Sync.cantSetModTime", dir));

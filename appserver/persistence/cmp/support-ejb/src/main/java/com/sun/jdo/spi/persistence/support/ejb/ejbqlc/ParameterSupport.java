@@ -27,8 +27,8 @@ import java.util.ResourceBundle;
 
 import org.glassfish.persistence.common.I18NHelper;
 
-/** 
- * Helper class to handle EJBQL query parameters. 
+/**
+ * Helper class to handle EJBQL query parameters.
  *
  * @author  Michael Bouschen
  * @author  Shing Wai Chan
@@ -37,32 +37,32 @@ public class ParameterSupport
 {
     /** The types of the parameters of the finder/selector method. */
     private Class[] parameterTypes;
-    
+
     /**
      * The EJB names corresponding to types of parameters of the
      * finder/selector method.
      */
     private String[] parameterEjbNames;
-    
+
     /** I18N support. */
     protected final static ResourceBundle msgs = I18NHelper.loadBundle(
         ParameterSupport.class);
 
-    /** 
-     * Constructor. 
+    /**
+     * Constructor.
      * @param method the Method instance of the finder/selector method.
      */
     public ParameterSupport(Method method)
     {
-        this.parameterTypes = 
+        this.parameterTypes =
             (method == null) ? new Class[0] : method.getParameterTypes();
         this.parameterEjbNames = new String[this.parameterTypes.length];
     }
 
-    /** 
-     * Returns type of the EJBQL parameter by input parameter declaration 
-     * string. The specified string denotes a parameter application in EJBQL. 
-     * It has the form "?<number>" where <number> is the parameter number 
+    /**
+     * Returns type of the EJBQL parameter by input parameter declaration
+     * string. The specified string denotes a parameter application in EJBQL.
+     * It has the form "?<number>" where <number> is the parameter number
      * starting with 1.
      * @return class instance representing the parameter type.
      */
@@ -71,9 +71,9 @@ public class ParameterSupport
         return getParameterType(getParamNumber(ejbqlParamDecl));
     }
 
-    /** 
-     * Returns the type of the EJBQL parameter by number. 
-     * Note, the numbering of EJBQL parameters starts with 1, 
+    /**
+     * Returns the type of the EJBQL parameter by number.
+     * Note, the numbering of EJBQL parameters starts with 1,
      * so the method expects 1 as the number of the first parameter.
      * @return class instance representing the parameter type.
      */
@@ -84,11 +84,11 @@ public class ParameterSupport
         return parameterTypes[paramNumber - 1];
     }
 
-    /** 
+    /**
      * Get EJB name corresponding to the EJBQL parameter by input
      * parameter declaration string.
-     * @param ejbqlParamDecl denotes a parameter application in EJBQL. 
-     * It has the form "?<number>" where <number> is the parameter number 
+     * @param ejbqlParamDecl denotes a parameter application in EJBQL.
+     * It has the form "?<number>" where <number> is the parameter number
      * starting with 1.
      * @return class instance representing the parameter type.
      */
@@ -97,7 +97,7 @@ public class ParameterSupport
         return getParameterEjbName(getParamNumber(ejbqlParamDecl));
     }
 
-    /** 
+    /**
      * Get EJB name corresponding to the EJBQL parameter number.
      * @param paramNumber numbering of parameters starting with 1
      * @return class instance representing the parameter type.
@@ -107,11 +107,11 @@ public class ParameterSupport
         return parameterEjbNames[paramNumber - 1];
     }
 
-    /** 
+    /**
      * Set EJB name corresponding to the EJBQL parameter by input
      * parameter declaration string.
-     * @param ejbqlParamDecl denotes a parameter application in EJBQL. 
-     * It has the form "?<number>" where <number> is the parameter number 
+     * @param ejbqlParamDecl denotes a parameter application in EJBQL.
+     * It has the form "?<number>" where <number> is the parameter number
      * starting with 1.
      * @param ejbName
      */
@@ -120,7 +120,7 @@ public class ParameterSupport
         parameterEjbNames[getParamNumber(ejbqlParamDecl) - 1] = ejbName;
     }
 
-    /** 
+    /**
      * Get all EJB names corresponding to the EJBQL parameters.
      * @return class instance representing the parameter type.
      */
@@ -129,28 +129,28 @@ public class ParameterSupport
         return parameterEjbNames;
     }
 
-    /** 
+    /**
      * Returns the name of the corresponding JDO parameter.
-     * The specified string denotes a parameter application in EJBQL. 
-     * It has the form "?<number>" where <number> is the parameter number 
+     * The specified string denotes a parameter application in EJBQL.
+     * It has the form "?<number>" where <number> is the parameter number
      * starting with 1.
-     * @return name of JDOQL parameter 
+     * @return name of JDOQL parameter
      */
     public String getParameterName(String ejbqlParamDecl)
     {
         return getParameterName(getParamNumber(ejbqlParamDecl));
     }
 
-    /** 
+    /**
      * Returns the name of the corresponding JDO parameter by parameter number.
-     * @return name of JDOQL parameter 
+     * @return name of JDOQL parameter
      */
     public String getParameterName(int paramNumber)
     {
         return "_jdoParam" + String.valueOf(paramNumber);
     }
 
-    /** 
+    /**
      * Returns the number of parameters.
      * @return parameter count.
      */
@@ -161,9 +161,9 @@ public class ParameterSupport
 
     // Internal methods
 
-    /** 
-     * Internal method to extract the number from a parameter application 
-     * in EJBQL. 
+    /**
+     * Internal method to extract the number from a parameter application
+     * in EJBQL.
      */
     private int getParamNumber(String ejbqlParamDecl)
     {

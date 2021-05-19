@@ -84,11 +84,11 @@ import com.sun.logging.LogDomains;
  * The 3 states of a Message-driven EJB (an EJB can be in only 1 state at a
  * time): 1. POOLED : ready for invocations, no transaction in progress 2.
  * INVOKING : processing an invocation 3. DESTROYED : does not exist
- * 
+ *
  * A Message-driven Bean can hold open DB connections across invocations. It's
  * assumed that the Resource Manager can handle multiple incomplete transactions
  * on the same connection.
- * 
+ *
  * @author Kenneth Saks
  */
 public final class MessageBeanContainer extends BaseContainer implements
@@ -125,8 +125,8 @@ public final class MessageBeanContainer extends BaseContainer implements
     private static final int DEFAULT_STEADY_SIZE = 0;
     private static final int DEFAULT_MAX_POOL_SIZE = 32;
     private static final int DEFAULT_IDLE_TIMEOUT = 600;
-        
-        //issue 4629. 0 means a bean can remain idle indefinitely. 
+
+        //issue 4629. 0 means a bean can remain idle indefinitely.
     private static final int MIN_IDLE_TIMEOUT = 0;
 
         // TODO : remove
@@ -179,9 +179,9 @@ public final class MessageBeanContainer extends BaseContainer implements
                 Method next = msgListenerMethods[i];
                 addInvocationInfo(next, MethodDescriptor.EJB_BEAN, null);
             }
-            
+
             poolMgr = ejbContainerUtilImpl.getServices().getService(TransactedPoolManager.class);
-            
+
             // NOTE : No need to register tx attribute for ejbTimeout. It's
             // done in BaseContainer intialization.
             // Message-driven beans can be timed objects.
@@ -263,22 +263,22 @@ public final class MessageBeanContainer extends BaseContainer implements
         return new MessageDrivenBeanStatsProvider(getContainerId(), appName, modName, ejbName);
     }
 
-    @Override 
+    @Override
     public boolean scanForEjbCreateMethod() {
         return true;
     }
 
-    @Override 
+    @Override
     protected void initializeHome() throws Exception {
         throw new UnsupportedOperationException("MessageDrivenBean needn't initialize home");
     }
 
-    @Override 
+    @Override
     protected void addLocalRemoteInvocationInfo() throws Exception {
         // Nothing to do for MDBs
     }
-    
-    @Override 
+
+    @Override
     protected final boolean isCreateHomeFinder(Method method) {
         return false;
     }
@@ -447,7 +447,7 @@ public final class MessageBeanContainer extends BaseContainer implements
         try {
 
             Method method = getTimeoutMethod(timerState);
-                        
+
             // Do pre-invoke logic for message bean with tx import = false
             // and a null resource handle.
             beforeMessageDelivery(method, MessageDeliveryType.Timer,
@@ -674,8 +674,8 @@ public final class MessageBeanContainer extends BaseContainer implements
         // 2. Associate message bean context/instance with MessageBeanListener
         // across invocations. This saves one pool retrieval and one
         // pool replacement operation for each invocation.
-        // 
-        // 
+        //
+        //
         return new MessageBeanListenerImpl(this, resource);
     }
 
@@ -768,7 +768,7 @@ public final class MessageBeanContainer extends BaseContainer implements
                 createEjbInstanceAndContext();
 
             Object ejb = context.getEJB();
-            
+
 
             // java:comp/env lookups are allowed from here on...
             inv = createEjbInvocation(ejb, context);
@@ -787,7 +787,7 @@ public final class MessageBeanContainer extends BaseContainer implements
             // have the same "operations allowed" permissions as
             // setMessageDrivenContext.
             injectEjbInstance(context);
-            
+
 
             // Set flag in context so UserTransaction can
             // be used from ejbCreate. Didn't want to add
@@ -918,13 +918,13 @@ public final class MessageBeanContainer extends BaseContainer implements
         ASyncClientShutdownTask task = new ASyncClientShutdownTask(appEJBName_,
                 messageBeanClient_, loader, messageBeanPool_, componentInvocation);
         long timeout = 0;
-        try { 
+        try {
                     ConnectorRuntime cr = ejbContainerUtilImpl.getServices()
                             .getService(ConnectorRuntime.class);
                     timeout = cr.getShutdownTimeout();
-                } catch (Throwable th) { 
+                } catch (Throwable th) {
                     _logger.log(Level.WARNING, "[MDBContainer] Got exception while trying " +
-                     " to get shutdown timeout", th); 
+                     " to get shutdown timeout", th);
                 }
         try {
             boolean addedAsyncTask = false;
@@ -1060,20 +1060,20 @@ public final class MessageBeanContainer extends BaseContainer implements
 
     /**
      * Actual message delivery happens in three steps :
-     * 
+     *
      * 1) beforeMessageDelivery(Message, MessageListener) This is our chance to
      * make the message delivery itself part of the instance's global
      * transaction.
-     * 
+     *
      * 2) onMessage(Message, MessageListener) This is where the container
      * delegates to the actual ejb instance's onMessage method.
-     * 
+     *
      * 3) afterMessageDelivery(Message, MessageListener) Perform transaction
      * cleanup and error handling.
-     * 
+     *
      * We use the EjbInvocation manager's thread-specific state to track the
      * invocation across these three calls.
-     * 
+     *
      */
 
     public void beforeMessageDelivery(Method method, MessageDeliveryType deliveryType,
@@ -1099,7 +1099,7 @@ public final class MessageBeanContainer extends BaseContainer implements
             if( deliveryType == MessageDeliveryType.Timer ) {
                 invocation.isTimerCallback = true;
             }
-            
+
             // Set the context class loader here so that message producer will
             // have access to application class loader during message
             // processing.
@@ -1206,7 +1206,7 @@ public final class MessageBeanContainer extends BaseContainer implements
                 // beans could only implement
                 // void jakarta.jms.MessageListener.onMessage() , which does
                 // not declare any exceptions.
-                // 
+                //
                 // In the J2EE 1.3 implementation, exceptions were only
                 // propagated when the message driven bean was not configured
                 // with CMT/Required transaction mode. This has been changed
@@ -1221,7 +1221,7 @@ public final class MessageBeanContainer extends BaseContainer implements
                 // Specifically, if the exception thrown is an Application
                 // exception(defined in 18.2.1), it does not automatically
                 // result in a rollback of the container-started transaction.
-                // 
+                //
 
                 Throwable cause = ite.getCause();
                 // set cause on invocation , rather than the propagated

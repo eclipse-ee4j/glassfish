@@ -28,24 +28,24 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * 1. domain.xml test:
  *
  *    %java -Ddomain.xml.url=domain.xml
- *	-Djava.security.debug=configfile,configxmlparser
- *	-classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
- *	AuthConfigTest xml-parse
- * 
+ *        -Djava.security.debug=configfile,configxmlparser
+ *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
+ *        AuthConfigTest xml-parse
+ *
  * 2. sun-acc.xml test:
  *
  *    %java -Dsun-acc.xml.url=sun-acc.xml
- *	-Djava.security.debug=configfile,configxmlparser
- *	-classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
- *	AuthConfigTest xml-parse
- * 
+ *        -Djava.security.debug=configfile,configxmlparser
+ *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
+ *        AuthConfigTest xml-parse
+ *
  * 3. custom module config file test:
  *
  *    %java -Djava.authconfig=testConfig/config.module
- *	-Dconfigfile.parser=file
- *	-Djava.security.debug=configfile,configfileparser
- *	-classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
- *	AuthConfigTest file-parse
+ *        -Dconfigfile.parser=file
+ *        -Djava.security.debug=configfile,configfileparser
+ *        -classpath .:classes:config-api.jar:appserv-commons.jar:schema2beans.jar
+ *        AuthConfigTest file-parse
  */
 
 public class AuthConfigTest extends Thread {
@@ -53,44 +53,44 @@ public class AuthConfigTest extends Thread {
     private static final String SOAP = "SOAP";
     private static final String HTTP = "HTTP";
     private static final String EJB = "EJB";
-    
+
     private static final String testId = "Sec::Container-Auth_Test_Num_";
 
     private static final AuthPolicy configRequest =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, true, true);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, true, true);
 
     private static final AuthPolicy configResponse =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, true, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, true, false);
 
     private static final AuthPolicy ddRequest =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
 
     private static final AuthPolicy ddResponse =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_SENDER, false, false);
 
     private static final AuthPolicy ddHttpRequest =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, false, false);
 
     private static final AuthPolicy ddHttpResponse =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_CONTENT, false, false);
 
     private static final AuthPolicy ddEjbResponse =
-		new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, true, false);
+                new AuthPolicy(AuthPolicy.SOURCE_AUTH_NONE, true, false);
 
     private static SimpleReporterAdapter stat = new SimpleReporterAdapter("appserv-tests");
-    
+
     public static void main(String[] args) throws Exception {
-        
+
         int testnum = 0;
         if (args == null || args.length == 0 ||
         args[0].equalsIgnoreCase("xml-parse")) {
-            
+
             testnum = xmlParse(testnum);
-            
+
         } else if (args[0].equalsIgnoreCase("file-parse")) {
-            
+
             testnum = fileParse(testnum);
-            
+
         } else {
             throw new Exception("unrecognized command for AuthConfigTest");
         }
@@ -103,11 +103,11 @@ public class AuthConfigTest extends Thread {
             AuthConfig config = AuthConfig.getAuthConfig();
             ClientAuthContext cac;
             ServerAuthContext sac;
-            
+
             Subject subject = new Subject();
             HashMap options;
             TestCredential cred1;
-            
+
             /**
              * Test NULL return
              */
@@ -119,18 +119,18 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid, stat.PASS);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             if (config.getServerAuthContext(EJB, null, null, null, null) != null) {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
             testnum++;
-            
+
             /**
              * SOAP - CLIENT
              */
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP, "foo", null, null, null);
             cac.secureRequest(null, subject, null);
             options = new HashMap();
@@ -147,7 +147,7 @@ public class AuthConfigTest extends Thread {
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                     "app1",
                     ddRequest,
@@ -158,7 +158,7 @@ public class AuthConfigTest extends Thread {
                         new HashMap(),
                         ddRequest,
                         ddResponse);
-            
+
             if (!subject.getPublicCredentials().contains(cred1)) {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
@@ -166,7 +166,7 @@ public class AuthConfigTest extends Thread {
 
             cac.disposeSubject(subject, null);
             testnum++;
-            
+
             System.out.println("Testing Container-auth testid = "+testnum);
             cac = config.getClientAuthContext(SOAP,
                         "app4",
@@ -177,7 +177,7 @@ public class AuthConfigTest extends Thread {
             cred1 = new TestCredential("ClientModule1",
                             new HashMap(),
                             ddRequest,
-                            null);            
+                            null);
             if (!subject.getPublicCredentials().contains(cred1)) {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
@@ -186,7 +186,7 @@ public class AuthConfigTest extends Thread {
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                                             "app3",
                                             null,
@@ -201,11 +201,11 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                                                 "foo",
                                                 ddRequest,
@@ -222,11 +222,11 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                                                 null,
                                                 ddRequest,
@@ -243,12 +243,12 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
-            
+
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                                                 "app1",
                                                 ddRequest,
@@ -263,11 +263,11 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                                                 "app1",
                                                 null,
@@ -282,13 +282,13 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             // SKIP DD URI8 entry in XML-PARSE case
-            
+
             cac = config.getClientAuthContext(SOAP,
                                                 null,
                                                 ddRequest,
@@ -309,7 +309,7 @@ public class AuthConfigTest extends Thread {
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             cac = config.getClientAuthContext(SOAP,
                                                 null,
                                                 null,
@@ -326,15 +326,15 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             /**
              * SOAP - SERVER
              */
-            
+
             sac = config.getServerAuthContext(SOAP,
                                                 null,
                                                 ddRequest,
@@ -352,7 +352,7 @@ public class AuthConfigTest extends Thread {
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             sac = config.getServerAuthContext(SOAP,
                                                 null,
                                                 null,
@@ -367,15 +367,15 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             cac.disposeSubject(subject, null);
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
-            
+
             /**
              * SOAP - check null request/response policies
              */
-            
+
             if (config.getServerAuthContext(SOAP,
                                             "app6",
                                             null,
@@ -384,33 +384,33 @@ public class AuthConfigTest extends Thread {
                 stat.addStatus(testid+testnum, stat.FAIL);
             }else
                 stat.addStatus(testid+testnum, stat.PASS);
-                
+
             testnum++;
             System.out.println("Testing Container-auth testid = "+testnum);
         }finally{
             stat.printSummary();
         }
-        
+
         return testnum;
     }
-    
+
     private static int fileParse(int testnum) throws Exception {
-        
+
         AuthConfig config = AuthConfig.getAuthConfig();
         ClientAuthContext cac;
         ServerAuthContext sac;
-        
+
         Subject subject = new Subject();
         HashMap options;
         TestCredential cred1;
         TestCredential cred2;
-        
+
         testnum = xmlParse(testnum);
-        
+
         /**
          * test case for multiple modules
          */
-        
+
         cac = config.getClientAuthContext(SOAP,
         "app5",
         ddRequest,
@@ -431,11 +431,11 @@ public class AuthConfigTest extends Thread {
         }
         cac.disposeSubject(subject, null);
         testnum++;
-        
+
         /**
          * HTTP - SERVER
          */
-        
+
         sac = config.getServerAuthContext(HTTP,
         null,
         ddHttpRequest,
@@ -452,7 +452,7 @@ public class AuthConfigTest extends Thread {
         }
         sac.disposeSubject(subject, null);
         testnum++;
-        
+
         sac = config.getServerAuthContext(HTTP,
         "app9",
         null,
@@ -469,7 +469,7 @@ public class AuthConfigTest extends Thread {
         }
         sac.disposeSubject(subject, null);
         testnum++;
-        
+
         /**
          * EJB - SERVER
          */
@@ -489,7 +489,7 @@ public class AuthConfigTest extends Thread {
         }
         sac.disposeSubject(subject, null);
         testnum++;
-        
+
         return testnum;
     }
 }

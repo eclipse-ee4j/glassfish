@@ -29,7 +29,7 @@ public abstract class LeagueBean implements EntityBean {
 
     public abstract String getLeagueId();
     public abstract void setLeagueId(String id);
-    
+
     public abstract String getName();
     public abstract void setName(String name);
 
@@ -50,7 +50,7 @@ public abstract class LeagueBean implements EntityBean {
     public abstract Set ejbSelectRemoteTeams(League league)
         throws FinderException;
 
-        
+
     public abstract LocalTeam ejbSelectTeamByCity(String city)
         throws FinderException;
 
@@ -60,63 +60,63 @@ public abstract class LeagueBean implements EntityBean {
     public abstract String ejbSelectTeamsNameByCity(String city)
         throws FinderException;
 
-        
+
     public abstract Set ejbSelectPlayersByLeague(LocalLeague league)
         throws FinderException;
 
     public abstract Collection ejbSelectRemotePlayersByLeague(League league)
         throws FinderException;
-        
+
     // Business methods
 
     public Set getCitiesOfThisLeague() throws FinderException {
-         
-         LocalLeague league = 
+
+         LocalLeague league =
              (team.LocalLeague)context.getEJBLocalObject();
-         
-         return ejbSelectTeamsCity(league); 
+
+         return ejbSelectTeamsCity(league);
     }
 
 
     public Set getRemoteTeamsOfThisLeague() throws FinderException {
-         
+
          League league =  (team.League)context.getEJBObject();
-         
-         return ejbSelectRemoteTeams(league); 
+
+         return ejbSelectRemoteTeams(league);
     }
 
-    
+
     public LocalTeam getTeamByCity(String city) throws FinderException {
-        
+
         return ejbSelectTeamByCity(city);
     }
 
     public Team getRemoteTeamByCity(String city) throws FinderException {
-        
+
         return ejbSelectRemoteTeamByCity(city);
     }
-    
+
     public String getTeamsNameByCity(String city) throws FinderException {
-        
+
         return ejbSelectTeamsNameByCity(city);
     }
 
-    
+
     public Set getPlayersFromLeague() throws FinderException{
-        
+
         LocalLeague league = (team.LocalLeague)context.getEJBLocalObject();
-        
+
         return ejbSelectPlayersByLeague(league);
-    } 
-    
+    }
+
     public Collection getRemotePlayersFromLeague() throws FinderException{
-        
+
         League league = (team.League)context.getEJBObject();
-        
+
         return ejbSelectRemotePlayersByLeague(league);
-    } 
-        
-    
+    }
+
+
     public void addTeam(LocalTeam team) {
 
         Debug.print("TeamBean addTeam");
@@ -150,32 +150,32 @@ public abstract class LeagueBean implements EntityBean {
         setSport(sport);
         return null;
     }
-         
+
     public void ejbPostCreate (String id, String name, String sport)
         throws CreateException { }
 
     public void setEntityContext(EntityContext ctx) {
         context = ctx;
     }
-    
+
     public void unsetEntityContext() {
         context = null;
     }
-    
+
     public void ejbRemove() {
         Debug.print("LeagueBean ejbRemove");
     }
-    
+
     public void ejbLoad() {
         Debug.print("LeagueBean ejbLoad");
     }
-    
+
     public void ejbStore() {
         Debug.print("LeagueBean ejbStore");
     }
-    
+
     public void ejbPassivate() { }
-    
+
     public void ejbActivate() { }
 
 } // LeagueBean class

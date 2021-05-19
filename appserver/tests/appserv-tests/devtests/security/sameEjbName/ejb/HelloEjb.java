@@ -27,7 +27,7 @@ public class HelloEjb implements Hello {
     public String rolesAllowed1(String who) {
         return "Hello rolesAllowed1, " + who;
     }
-    
+
     @RolesAllowed(value={"ejbuser"})
     public String rolesAllowed2(String who) {
         return "Hello rolesAllowed2, " + who;

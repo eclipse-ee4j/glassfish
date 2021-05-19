@@ -129,7 +129,7 @@ public class ScheduleHandlers {
         Map<String, String> map = (Map) handlerCtx.getInputValue("map");
         String delimiter = (String)handlerCtx.getInputValue("delimiter");
         String type = (String)handlerCtx.getInputValue("type");
-        
+
         if (delimiter == null)
             delimiter =",";
         String str = "";

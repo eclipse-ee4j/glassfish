@@ -137,7 +137,7 @@ public class SingleSignOn
 
 
     /**
-     * Get the lifecycle listeners associated with this lifecycle. If this 
+     * Get the lifecycle listeners associated with this lifecycle. If this
      * Lifecycle has no listeners registered, a zero-length array is returned.
      */
     /** CR 6411114 (Lifecycle implementation moved to ValveBase)
@@ -303,7 +303,7 @@ public class SingleSignOn
             } else if (Constants.SINGLE_SIGN_ON_VERSION_COOKIE.equals(cookies[i].getName())) {
                 versionCookie = cookies[i];
             }
-            
+
             if (cookie != null && versionCookie != null) {
                 break;
             }

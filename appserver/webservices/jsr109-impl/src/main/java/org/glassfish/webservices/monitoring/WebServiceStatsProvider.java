@@ -40,7 +40,7 @@ import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 
 /**
  * Provides statistics for Web Service endpoints.
- * 
+ *
  * For deployment - keeps track of 109 and sun-jaxws.xml style deployed applications.
  *
  * @author Jitendra Kotamraju
@@ -110,7 +110,7 @@ public class WebServiceStatsProvider {
                 list.add(de.getStaticAsMap());
             }
         }
-        
+
         return list;
     }
 

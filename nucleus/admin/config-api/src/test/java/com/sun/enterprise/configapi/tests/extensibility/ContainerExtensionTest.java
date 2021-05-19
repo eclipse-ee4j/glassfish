@@ -40,7 +40,7 @@ public class ContainerExtensionTest extends ConfigApiTest {
     public String getFileName() {
         return "Extensibility";
     }
-    
+
     @Test
     public void existenceTest() {
 
@@ -62,7 +62,7 @@ public class ContainerExtensionTest extends ConfigApiTest {
         assertNotNull(extension);
         assertEquals("foo", extension.getSomeAttribute());
     }
-    
+
     @Test
     public void applicationExtensionTest() {
         Application a = habitat.getService(Application.class);

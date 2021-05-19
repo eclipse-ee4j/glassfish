@@ -29,28 +29,28 @@ import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.EntityManager;
 
 public class Client {
-    
+
     private String host;
     private String port;
 
-    @PersistenceUnit 
+    @PersistenceUnit
         private static EntityManagerFactory emf1;
 
-    @PersistenceUnit(name="myemf", unitName="foo") 
+    @PersistenceUnit(name="myemf", unitName="foo")
         private static EntityManagerFactory emf2;
 
     public Client (String[] args) {
         host = ( args.length > 0) ? args[0] : "localhost";
         port = ( args.length > 1) ? args[1] : "4848";
     }
-    
+
     public static void main(String[] args) {
         Client client = new Client(args);
         client.doTest();
     }
-    
+
     public void doTest() {
-        
+
         String env = null;
         try {
 
@@ -74,11 +74,11 @@ public class Client {
             }
 
 
-            String url = "http://" + host + ":" + port + 
+            String url = "http://" + host + ":" + port +
                 "/ejb-ejb30-hello-session3/servlet";
             System.out.println("invoking webclient servlet at " + url);
             int code = invokeServlet(url);
-            
+
             if(code != 200) {
                 System.out.println("Incorrect return code: " + code);
             } else {
@@ -88,15 +88,15 @@ public class Client {
             System.out.println("Jms web test failed.");
             ex.printStackTrace();
         }
-        
+
         return;
-        
+
     }
 
     private int invokeServlet(String url) throws Exception {
-            
+
         URL u = new URL(url);
-        
+
         HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
         int code = c1.getResponseCode();
         InputStream is = c1.getInputStream();
@@ -109,6 +109,6 @@ public class Client {
         }
         return code;
     }
-    
+
 }
 

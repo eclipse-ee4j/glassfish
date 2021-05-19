@@ -42,7 +42,7 @@ public class LifecycleCallbackInterceptor {
 
     private static int postActivateCallbackCount = 0;
 
-    
+
 
     private int interceptorID;
 
@@ -60,7 +60,7 @@ public class LifecycleCallbackInterceptor {
 
     void prePassivate(InvocationContext ctx) {
 
-	prePassivateCallbackCount++;
+        prePassivateCallbackCount++;
 
     }
 
@@ -70,7 +70,7 @@ public class LifecycleCallbackInterceptor {
 
     private void postActivate(InvocationContext ctx) {
 
-	postActivateCallbackCount++;
+        postActivateCallbackCount++;
 
     }
 
@@ -80,7 +80,7 @@ public class LifecycleCallbackInterceptor {
 
     Object aroundInvoke(InvocationContext ctx)
 
-	        throws Exception {
+                throws Exception {
 
         if (ctx.getMethod().getName().equals("setID")) {
 
@@ -104,7 +104,7 @@ public class LifecycleCallbackInterceptor {
 
     public static void resetLifecycleCallbackCounters() {
 
-	prePassivateCallbackCount = postActivateCallbackCount = 0;
+        prePassivateCallbackCount = postActivateCallbackCount = 0;
 
     }
 
@@ -112,7 +112,7 @@ public class LifecycleCallbackInterceptor {
 
     public static int getPrePassivateCallbackCount() {
 
-	return prePassivateCallbackCount;
+        return prePassivateCallbackCount;
 
     }
 
@@ -120,11 +120,11 @@ public class LifecycleCallbackInterceptor {
 
     public static int getPostActivateCallbackCount() {
 
-	return postActivateCallbackCount;
+        return postActivateCallbackCount;
 
     }
 
-    
+
 
 
 
@@ -136,7 +136,7 @@ public class LifecycleCallbackInterceptor {
 
     }
 
-    
+
 
     int getInterceptorID() {
 
@@ -144,17 +144,17 @@ public class LifecycleCallbackInterceptor {
 
     }
 
-    
+
 
     boolean checkInterceptorID(int val) {
 
-        return (val == interceptorID) && 
+        return (val == interceptorID) &&
 
             (computedInterceptorID == 2 * val + 1);
 
     }
 
-   
+
 
 }
 

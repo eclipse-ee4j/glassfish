@@ -49,14 +49,14 @@ import java.util.Vector;
 public class ModuleContentValidator extends ModuleContentLinker implements ComponentPostVisitor {
 
     private ReadableArchive archive_;
-    
+
     // resources...
     private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(ModuleContentValidator.class);      
+        new LocalStringManagerImpl(ModuleContentValidator.class);
 
     public ModuleContentValidator() {
     }
- 
+
     public void setArchive(ReadableArchive archive) {
         archive_ = archive;
     }
@@ -73,9 +73,9 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
                 url = new URL(wsdlFileUri);
             } catch(java.net.MalformedURLException e) {
                 // don't care, will eventuall fail below
-            } 
+            }
             if (url!=null) {
-                if (url.getProtocol().equals("http") || url.getProtocol().equals("https")) 
+                if (url.getProtocol().equals("http") || url.getProtocol().equals("https"))
                     return;
             }
             File tmpFile = new File(wsdlFileUri);
@@ -83,46 +83,46 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
                 return;
             }
             try {
-                InputStream wsdlFileInputStream = 
-                    archive_.getEntry(wsdlFileUri); 
+                InputStream wsdlFileInputStream =
+                    archive_.getEntry(wsdlFileUri);
                 if( wsdlFileInputStream != null ) {
                     wsdlFileInputStream.close();
                 } else {
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.wsdlfilenotfound",
+                   "enterprise.deployment.util.wsdlfilenotfound",
                            "wsdl file {0} does not exist for service-ref {1}",
                            new Object[] {wsdlFileUri, serviceRef.getName()});
                     DOLUtils.getDefaultLogger().warning(msg);
 
-                } 
+                }
             } catch(IOException ioe) {
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.wsdlfilenotreadable",
+                   "enterprise.deployment.util.wsdlfilenotreadable",
                            "wsdl file {0}  for service-ref {1} cannot be opened : {2}",
                            new Object[] {wsdlFileUri, serviceRef.getName(), ioe.getMessage()});
                     DOLUtils.getDefaultLogger().warning(msg);
-                   
+
             }
         }
-        
+
         if( serviceRef.hasMappingFile() ) {
             String mappingFileUri = serviceRef.getMappingFileUri();
             try {
-                InputStream mappingFileInputStream = 
+                InputStream mappingFileInputStream =
                     archive_.getEntry(mappingFileUri);
                 if( mappingFileInputStream != null ) {
                     mappingFileInputStream.close();
                 } else {
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.mappingfilenotfound",
+                   "enterprise.deployment.util.mappingfilenotfound",
                            "mapping file {0} does not exist for service-ref {1}",
                            new Object[] {mappingFileUri, serviceRef.getName()});
                     DOLUtils.getDefaultLogger().severe(msg);
                     throw new RuntimeException(msg);
-                } 
+                }
             } catch(IOException ioe) {
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.mappingfilenotreadable",
+                   "enterprise.deployment.util.mappingfilenotreadable",
                            "mapping file {0}  for service-ref {1} cannot be opened : {2}",
                            new Object[] {mappingFileUri, serviceRef.getName(), ioe.getMessage()});
                     DOLUtils.getDefaultLogger().severe(msg);
@@ -132,12 +132,12 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
     }
 
     public void accept(WebService webService) {
-        
+
         try {
-            
+
             String wsdlFileUri = webService.getWsdlFileUri();
             if (!webService.hasWsdlFile()) {
-                // no wsdl was specified in the annotation or deployment descritor, 
+                // no wsdl was specified in the annotation or deployment descritor,
                 //it will be generated at deployment.
                 return;
             }
@@ -151,7 +151,7 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
             InputStream wsdlFileInputStream = archive_.getEntry(wsdlFileUri);
 
             if( wsdlFileInputStream != null ) {
-                
+
                 wsdlFileInputStream.close();
                 BundleDescriptor bundle = webService.getBundleDescriptor();
                 if( !isWsdlContent(wsdlFileUri, bundle) ) {
@@ -160,25 +160,25 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
                         "wsdl file {0} for web service {1} must be packaged in or below {2}",
                         new Object[] {wsdlFileUri, webService.getName(), bundle.getWsdlDir()});
                     DOLUtils.getDefaultLogger().severe(msg);
-                    throw new RuntimeException(msg);                  
+                    throw new RuntimeException(msg);
                 }
             } else {
                 // let's look in the wsdl directory
                 String fullFileUri = webService.getBundleDescriptor().getWsdlDir() + "/" + wsdlFileUri;
                 wsdlFileInputStream = archive_.getEntry(fullFileUri);
 
-                if( wsdlFileInputStream != null ) {        
+                if( wsdlFileInputStream != null ) {
                     // found it, let's update the DOL to not have to recalculate this again
                     wsdlFileInputStream.close();
                     webService.setWsdlFileUri(fullFileUri);
                 } else {
                     // this time I give up, no idea where this WSDL is
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.servicewsdlfilenotfound",
+                   "enterprise.deployment.util.servicewsdlfilenotfound",
                            "wsdl file {0} does not exist for web service {1}",
                            new Object[] {wsdlFileUri, webService.getName()});
                     DOLUtils.getDefaultLogger().severe(msg);
-                    throw new RuntimeException(msg);           
+                    throw new RuntimeException(msg);
                 }
             }
         } catch(IOException ioe) {
@@ -189,37 +189,37 @@ public class ModuleContentValidator extends ModuleContentLinker implements Compo
                     DOLUtils.getDefaultLogger().severe(msg);
             throw new RuntimeException(ioe);
         }
-        
+
         if(webService.getMappingFileUri() == null) {
             return;
         }
 
         try {
-            InputStream mappingFileInputStream = 
+            InputStream mappingFileInputStream =
                 archive_.getEntry(webService.getMappingFileUri());
             if( mappingFileInputStream != null ) {
                 mappingFileInputStream.close();
             } else {
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.servicemappingfilenotfound",
+                   "enterprise.deployment.util.servicemappingfilenotfound",
                            "Web Service mapping file {0} for web service {1} not found",
                            new Object[] {webService.getMappingFileUri(), webService.getName()});
                     DOLUtils.getDefaultLogger().severe(msg);
-                    throw new RuntimeException(msg);                
+                    throw new RuntimeException(msg);
             }
         } catch(IOException ioe) {
                     String msg = localStrings.getLocalString(
-		    	   "enterprise.deployment.util.servicemappingfilenotreadable",
+                   "enterprise.deployment.util.servicemappingfilenotreadable",
                            "Web Service mapping file {0} for web service {1} not found {2} ",
                            new Object[] {webService.getMappingFileUri(), webService.getName(), ioe});
                     DOLUtils.getDefaultLogger().severe(msg);
-                    throw new RuntimeException(ioe);                
+                    throw new RuntimeException(ioe);
         }
     }
 
     /**
      * All wsdl files and wsdl imported files live under a well-known
-     * wsdl directory. 
+     * wsdl directory.
      * @param uri module uri
      */
     public boolean isWsdlContent(String uri, BundleDescriptor bundle) {

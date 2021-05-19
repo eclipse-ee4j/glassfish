@@ -34,23 +34,23 @@ public class SimpleMessageBean implements MessageDrivenBean,
     public static final String  TOPICCONFAC = "jms/TCFactory";
     public SimpleMessageBean() {
         beancount++;
-        System.out.println("MESSAGE BEAN:["+beancount+"].SimpleMessageBean()");        
+        System.out.println("MESSAGE BEAN:["+beancount+"].SimpleMessageBean()");
     }
 
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In "
             + "MESSAGE BEAN:["+beancount+"].setMessageDrivenContext()");
-	this.mdc = mdc;
+    this.mdc = mdc;
          try {
             jndiContext=new javax.naming.InitialContext();
              }catch(Throwable e) {
-          
+
           System.out.println(e.toString());
     }
     }
 
     public void ejbCreate() {
-	System.out.println("MESSAGE BEAN: SimpleMessageBean.ejbCreate()");
+    System.out.println("MESSAGE BEAN: SimpleMessageBean.ejbCreate()");
     }
 
     public void onMessage(Message inMessage) {
@@ -72,32 +72,32 @@ public class SimpleMessageBean implements MessageDrivenBean,
             te.printStackTrace();
         }
     }  // onMessage
-    
+
     public void sendMessage(Message message) {
-        System.out.println("MESSAGE BEAN: sendMessage back to appclient");        
+        System.out.println("MESSAGE BEAN: sendMessage back to appclient");
         try{
-            
+
             TopicConnectionFactory topicfactory=(TopicConnectionFactory)jndiContext.lookup(TOPICCONFAC);
-            Topic topic=(Topic)jndiContext.lookup("java:comp/env/jms/SampleTopic");          
-                        
-            TopicConnection 
-            
+            Topic topic=(Topic)jndiContext.lookup("java:comp/env/jms/SampleTopic");
+
+            TopicConnection
+
             connect = topicfactory.createTopicConnection();
-            
+
             TopicSession session = connect.createTopicSession(false,0);
-            
+
             TopicPublisher publisher=session.createPublisher(topic);
             Thread.sleep(3000);
-            publisher.publish(message);                                
+            publisher.publish(message);
             System.out.println("<<Sent Message back to appclient >>");
-            
+
         }catch(Throwable e) {
             System.out.println("!!!!MESSAGE BEAN: sendMessage Exception");
             e.printStackTrace();
         }
-    }  
-      
-    
+    }
+
+
 
     public void ejbRemove() {
         System.out.println("In SimpleMessageBean.remove()");

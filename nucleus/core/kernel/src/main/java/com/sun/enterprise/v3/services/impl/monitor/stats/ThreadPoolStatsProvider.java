@@ -29,7 +29,7 @@ import org.glassfish.grizzly.threadpool.ThreadPoolConfig;
 
 /**
  * Thread Pool statistics
- * 
+ *
  * @author Alexey Stashok
  */
 @AMXMetadata(type = "thread-pool-mon", group = "monitoring")
@@ -40,7 +40,7 @@ public class ThreadPoolStatsProvider implements StatsProvider {
     private final String name;
     protected final CountStatisticImpl maxThreadsCount = new CountStatisticImpl("MaxThreads", "count", "Maximum number of threads allowed in the thread pool");
     protected final CountStatisticImpl coreThreadsCount = new CountStatisticImpl("CoreThreads", "count", "Core number of threads in the thread pool");
-    
+
     protected final CountStatisticImpl totalExecutedTasksCount = new CountStatisticImpl("TotalExecutedTasksCount", "count", "Provides the total number of tasks, which were executed by the thread pool");
     protected final CountStatisticImpl currentThreadCount = new CountStatisticImpl("CurrentThreadCount", "count", "Provides the number of request processing threads currently in the listener thread pool");
     protected final CountStatisticImpl currentThreadsBusy = new CountStatisticImpl("CurrentThreadsBusy", "count", "Provides the number of request processing threads currently in use in the listener thread pool serving requests");

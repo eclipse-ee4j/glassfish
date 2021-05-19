@@ -25,8 +25,8 @@ public class Client {
       // Get the manager Id
       byte[] managerId = "RMIBankManager".getBytes();
       // Locate an account manager. Give the full POA name and the servant ID.
-      Bank.AccountManager manager = 
-	Bank.AccountManagerHelper.bind(orb, "/rmi_bank_poa", managerId);
+      Bank.AccountManager manager =
+        Bank.AccountManagerHelper.bind(orb, "/rmi_bank_poa", managerId);
       // Use any number of argument pairs to indicate name,balance of accounts to create
       if (args.length == 0 || args.length % 2 != 0) {
         args = new String[2];
@@ -47,10 +47,10 @@ public class Client {
         Bank.Account account = manager.create(data);
         System.out.println
           ("Created account for " + name + " with opening balance of $" + balance);
-      } 
-    
+      }
+
       java.util.Hashtable accounts = manager.getAccounts();
-    
+
       for (java.util.Enumeration e = accounts.elements(); e.hasMoreElements();) {
         Bank.Account account = Bank.AccountHelper.narrow((org.omg.CORBA.Object)e.nextElement());
         String name = account.name();

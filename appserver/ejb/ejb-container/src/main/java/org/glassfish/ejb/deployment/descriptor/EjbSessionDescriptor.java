@@ -37,7 +37,7 @@ import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.deployment.AnnotationTypesProvider;
 
 /**
-    * Objects of this kind represent the deployment information describing a single 
+    * Objects of this kind represent the deployment information describing a single
     * Session Ejb : { stateful , stateless, singleton }
     *@author Danny Coward
     */
@@ -93,13 +93,13 @@ public class EjbSessionDescriptor extends EjbDescriptor
 
 
     private ConcurrencyManagementType concurrencyManagementType;
-    
+
     private static LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(EjbSessionDescriptor.class); 
+        new LocalStringManagerImpl(EjbSessionDescriptor.class);
 
     /**
-	*  Default constructor.
-	*/
+    *  Default constructor.
+    */
     public EjbSessionDescriptor() {
     }
 
@@ -128,46 +128,46 @@ public class EjbSessionDescriptor extends EjbDescriptor
     }
 
     /**
-	* Returns the type of this bean - always "Session".
-	*/
+    * Returns the type of this bean - always "Session".
+    */
     public String getType() {
-	    return TYPE;
+        return TYPE;
     }
-    
+
     /**
     * Returns the string STATELESS or STATEFUL according as to whether
     * the bean is stateless or stateful.
     **/
-    
+
     public String getSessionType() {
-	    if (this.isStateless()) {
-	        return STATELESS;
-	    } else if( isStateful() ){
-	        return STATEFUL;
-	    } else {
+        if (this.isStateless()) {
+            return STATELESS;
+        } else if( isStateful() ){
+            return STATEFUL;
+        } else {
             return SINGLETON;
         }
     }
-    
-	/** 
-	* Accepts the Strings STATELESS / STATEFUL / SINGLETON
-	*/
+
+    /**
+    * Accepts the Strings STATELESS / STATEFUL / SINGLETON
+    */
     public void setSessionType(String sessionType) {
-	    if (STATELESS.equals(sessionType)) {
-	       isStateless = true;
-	    } else if(STATEFUL.equals(sessionType)) {
-	       isStateful = true;
+        if (STATELESS.equals(sessionType)) {
+           isStateless = true;
+        } else if(STATEFUL.equals(sessionType)) {
+           isStateful = true;
         } else if(SINGLETON.equals(sessionType)){
             isSingleton = true;
         } else {
             if (this.isBoundsChecking()) {
-	        throw new IllegalArgumentException(localStrings.getLocalString(
-		        "enterprise.deployment.exceptionsessiontypenotlegaltype",
-		        "{0} is not a legal session type for session ejbs. The type must be {1} or {2}",
+            throw new IllegalArgumentException(localStrings.getLocalString(
+                "enterprise.deployment.exceptionsessiontypenotlegaltype",
+                "{0} is not a legal session type for session ejbs. The type must be {1} or {2}",
                 new Object[] {sessionType, STATEFUL, STATELESS}));
-	        }
+            }
 
-	    }
+        }
         sessionTypeIsSet = true;
         return;
     }
@@ -180,43 +180,43 @@ public class EjbSessionDescriptor extends EjbDescriptor
     public boolean isSessionTypeSet() {
         return sessionTypeIsSet;
     }
-    
-	/**
-	* Sets my type
-	*/
+
+    /**
+    * Sets my type
+    */
     public void setType(String type) {
-	    throw new IllegalArgumentException(localStrings.getLocalString(
-								   "enterprise.deployment.exceptioncannotsettypeofsessionbean",
-								   "Cannot set the type of a session bean"));
+        throw new IllegalArgumentException(localStrings.getLocalString(
+                                   "enterprise.deployment.exceptioncannotsettypeofsessionbean",
+                                   "Cannot set the type of a session bean"));
     }
-    
 
-    
-	/**
-	*  Sets the transaction type for this bean. Must be either BEAN_TRANSACTION_TYPE or CONTAINER_TRANSACTION_TYPE.
-	*/
+
+
+    /**
+    *  Sets the transaction type for this bean. Must be either BEAN_TRANSACTION_TYPE or CONTAINER_TRANSACTION_TYPE.
+    */
     public void setTransactionType(String transactionType) {
-	    boolean isValidType = (BEAN_TRANSACTION_TYPE.equals(transactionType) ||
-				CONTAINER_TRANSACTION_TYPE.equals(transactionType));
-				
-	    if (!isValidType && this.isBoundsChecking()) {
-	        throw new IllegalArgumentException(localStrings.getLocalString(
-									   "enterprise.deployment..exceptointxtypenotlegaltype",
-									   "{0} is not a legal transaction type for session beans", new Object[] {transactionType}));
-	    } else {
-	        super.transactionType = transactionType;
-	        super.setMethodContainerTransactions(new Hashtable());
+        boolean isValidType = (BEAN_TRANSACTION_TYPE.equals(transactionType) ||
+                CONTAINER_TRANSACTION_TYPE.equals(transactionType));
 
-	    }
+        if (!isValidType && this.isBoundsChecking()) {
+            throw new IllegalArgumentException(localStrings.getLocalString(
+                                       "enterprise.deployment..exceptointxtypenotlegaltype",
+                                       "{0} is not a legal transaction type for session beans", new Object[] {transactionType}));
+        } else {
+            super.transactionType = transactionType;
+            super.setMethodContainerTransactions(new Hashtable());
+
+        }
     }
-    
-	/**
-	* Returns true if I am describing a stateless session bean.
-	*/
+
+    /**
+    * Returns true if I am describing a stateless session bean.
+    */
     public boolean isStateless() {
-	    return isStateless;
+        return isStateless;
     }
-    
+
     public boolean isStateful() {
         return isStateful;
     }
@@ -226,7 +226,7 @@ public class EjbSessionDescriptor extends EjbDescriptor
     }
 
     public boolean hasAsynchronousMethods() {
-        return (asyncMethods.size() > 0);    
+        return (asyncMethods.size() > 0);
     }
 
     public void addAsynchronousMethod(MethodDescriptor m) {
@@ -328,15 +328,15 @@ public class EjbSessionDescriptor extends EjbDescriptor
     public void addInitMethod(EjbInitInfo initInfo) {
         initMethods.add(initInfo);
     }
-    
+
     public Set<LifecycleCallbackDescriptor> getPostActivateDescriptors() {
         if (postActivateDescs == null) {
-            postActivateDescs = 
-                new HashSet<LifecycleCallbackDescriptor>(); 
+            postActivateDescs =
+                new HashSet<LifecycleCallbackDescriptor>();
         }
         return postActivateDescs;
-    }   
-            
+    }
+
     public void addPostActivateDescriptor(LifecycleCallbackDescriptor
         postActivateDesc) {
         String className = postActivateDesc.getLifecycleCallbackClass();
@@ -353,7 +353,7 @@ public class EjbSessionDescriptor extends EjbDescriptor
         }
     }
 
-    public LifecycleCallbackDescriptor 
+    public LifecycleCallbackDescriptor
         getPostActivateDescriptorByClass(String className) {
 
         for (LifecycleCallbackDescriptor next :
@@ -371,12 +371,12 @@ public class EjbSessionDescriptor extends EjbDescriptor
 
     public Set<LifecycleCallbackDescriptor> getPrePassivateDescriptors() {
         if (prePassivateDescs == null) {
-            prePassivateDescs = 
-                new HashSet<LifecycleCallbackDescriptor>(); 
+            prePassivateDescs =
+                new HashSet<LifecycleCallbackDescriptor>();
         }
         return prePassivateDescs;
-    }   
-            
+    }
+
     public void addPrePassivateDescriptor(LifecycleCallbackDescriptor
         prePassivateDesc) {
         String className = prePassivateDesc.getLifecycleCallbackClass();
@@ -393,7 +393,7 @@ public class EjbSessionDescriptor extends EjbDescriptor
         }
     }
 
-    public LifecycleCallbackDescriptor 
+    public LifecycleCallbackDescriptor
         getPrePassivateDescriptorByClass(String className) {
 
         for (LifecycleCallbackDescriptor next :
@@ -471,14 +471,14 @@ public class EjbSessionDescriptor extends EjbDescriptor
             afterBeginMethod = m;
         }
     }
-    
+
     /**
      * Returns the Method annotated @AfterBegin.
      */
     public MethodDescriptor getAfterBeginMethod() {
         return afterBeginMethod;
     }
-    
+
     /**
      * Set the Method annotated @BeforeCompletion.
      */
@@ -487,14 +487,14 @@ public class EjbSessionDescriptor extends EjbDescriptor
             beforeCompletionMethod = m;
         }
     }
-    
+
     /**
      * Returns the Method annotated @AfterBegin.
      */
     public MethodDescriptor getBeforeCompletionMethod() {
         return beforeCompletionMethod;
     }
-    
+
     /**
      * Set the Method annotated @AfterCompletion.
      */
@@ -503,7 +503,7 @@ public class EjbSessionDescriptor extends EjbDescriptor
             afterCompletionMethod = m;
         }
     }
-    
+
     /**
      * Returns the Method annotated @AfterCompletion.
      */
@@ -588,7 +588,7 @@ public class EjbSessionDescriptor extends EjbDescriptor
         if( concMethod.hasAccessTimeout() ) {
 
             this.addAccessTimeoutMethod(methodDesc, concMethod.getAccessTimeoutValue(),
-                    concMethod.getAccessTimeoutUnit());    
+                    concMethod.getAccessTimeoutUnit());
         }
 
     }
@@ -637,18 +637,18 @@ public class EjbSessionDescriptor extends EjbDescriptor
         return all;
     }
 
-	/**
-	* Returns a formatted String of the attributes of this object.
-	*/
+    /**
+    * Returns a formatted String of the attributes of this object.
+    */
     public void print(StringBuffer toStringBuffer) {
-	    toStringBuffer.append("Session descriptor");
-	    toStringBuffer.append("\n sessionType ").append(getSessionType());
-	    super.print(toStringBuffer);
+        toStringBuffer.append("Session descriptor");
+        toStringBuffer.append("\n sessionType ").append(getSessionType());
+        super.print(toStringBuffer);
     }
 
     /**
      * Return the fully-qualified portable JNDI name for a given
-     * client view (Remote, Local, or no-interface).  
+     * client view (Remote, Local, or no-interface).
      */
     public String getPortableJndiName(String clientViewType) {
         String appName = null;

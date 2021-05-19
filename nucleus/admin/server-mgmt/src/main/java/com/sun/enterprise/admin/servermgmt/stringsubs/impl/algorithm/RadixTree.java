@@ -50,7 +50,7 @@ class RadixTree {
      * <li>Insertion of node having empty or null key is not allowed.</li>
      * </p>
      * <br/>
-     * 
+     *
      * @param key The input key.
      * @param value The value that need to be stored corresponding to the given key.
      * @return <code>true</code> if key inserted successfully.<br/>
@@ -72,7 +72,7 @@ class RadixTree {
             for (; i < maxLoop; i++) {
                 if (nodeKey.charAt(i) != inputChars[noOfMatchedChars]) {
                     // e.g new key/value : successive/successive
-                    // before, 
+                    // before,
                     // |-node (key: successful, value: successful)
                     // | |-node_childs...
                     //after...
@@ -95,7 +95,7 @@ class RadixTree {
             // If the given key is smaller than the matched node key
             if (nodeKey.length() > maxLoop) {
                 // e.g new key/value : acid/acid
-                // before, 
+                // before,
                 // |-node (key: acidic, value: acidic)
                 // | |-node_childs...
                 //after...
@@ -131,7 +131,7 @@ class RadixTree {
 
     /**
      * Return's the root node helps to traverse the tree.
-     * 
+     *
      * @return Root node of tree.
      */
     RadixTreeNode getRootNode() {

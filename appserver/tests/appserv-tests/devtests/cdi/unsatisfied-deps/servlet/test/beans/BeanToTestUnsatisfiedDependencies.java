@@ -44,6 +44,6 @@ public class BeanToTestUnsatisfiedDependencies {
                 + numberOfPaymentProcessors);
         System.out.println("mock payment procssor:" + pp);
         return (numberOfPaymentProcessors == 1) // MockPaymentProcessor
-                && (pp instanceof MockPaymentProcessor); 
+                && (pp instanceof MockPaymentProcessor);
     }
 }

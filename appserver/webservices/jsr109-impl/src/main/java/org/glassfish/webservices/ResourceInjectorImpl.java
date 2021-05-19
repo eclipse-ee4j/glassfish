@@ -41,7 +41,7 @@ import org.glassfish.api.invocation.ComponentInvocation;
  */
 
 public class ResourceInjectorImpl extends ResourceInjector {
-    
+
     private WebServiceEndpoint endpoint;
     private ComponentInvocation inv;
     private InvocationManager invMgr;
@@ -51,11 +51,11 @@ public class ResourceInjectorImpl extends ResourceInjector {
 
         WebServiceContractImpl    wscImpl = WebServiceContractImpl.getInstance();
         invMgr =  wscImpl.getInvocationManager();
-        inv = invMgr.getCurrentInvocation();      
+        inv = invMgr.getCurrentInvocation();
         endpoint = ep;
 
     }
-    
+
     public void inject(WSWebServiceContext context, Object instance)
                     throws WebServiceException {
 

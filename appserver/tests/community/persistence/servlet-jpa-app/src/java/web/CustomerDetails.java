@@ -47,7 +47,7 @@ public class CustomerDetails extends HttpServlet {
 
     @Resource
     private UserTransaction utx;
-    
+
     /** Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
      * @param request servlet request
      * @param response servlet response
@@ -63,7 +63,7 @@ public class CustomerDetails extends HttpServlet {
         out.println("</head>");
         out.println("<body>");
         out.println("<h1>Servlet CustomerDetails at " + request.getContextPath () + "</h1>");
-        
+
         out.println("<h2>Search Customer Information</h2>");
         out.println("<p>Pl. select from 1,2,3,4,5 as a customer number</p>");
         String customerNr = request.getParameter("customer_nr");
@@ -80,14 +80,14 @@ public class CustomerDetails extends HttpServlet {
         out.println("Customer number: <input type='text' name='customer_nr' />");
         out.println("<input type=submit value=Select />");
         out.println("</form>");
-        
-        
+
+
         out.println("</body>");
         out.println("</html>");
-        
+
         out.close();
     }
-    
+
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
     /** Handles the HTTP <code>GET</code> method.
      * @param request servlet request
@@ -97,7 +97,7 @@ public class CustomerDetails extends HttpServlet {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     /** Handles the HTTP <code>POST</code> method.
      * @param request servlet request
      * @param response servlet response
@@ -106,7 +106,7 @@ public class CustomerDetails extends HttpServlet {
     throws ServletException, IOException {
         processRequest(request, response);
     }
-    
+
     /** Returns a short description of the servlet.
      */
     public String getServletInfo() {
@@ -122,17 +122,17 @@ public class CustomerDetails extends HttpServlet {
             EntityManager em =  (EntityManager) ctx.lookup("persistence/LogicalName");
             customer = em.find(WebCustomer.class, customerNr);
             utx.commit();
-            
-            
+
+
             // TODO:
             // em.persist(object);    utx.commit();
         } catch(Exception e) {
             Logger.getLogger(getClass().getName()).log(Level.SEVERE,"exception caught", e);
             throw new RuntimeException(e);
         }
-        
+
         return customer;
     }
-    
-    
+
+
 }

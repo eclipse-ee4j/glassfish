@@ -34,14 +34,14 @@ public class StatelessBean
     public void setSessionContext(SessionContext sessionContext) {
         this.sessionContext = sessionContext;
 
-	    Context context = null;
-	    try {
-	        context    = new InitialContext();
-	        Object objRef = context.lookup("java:comp/env/ejb/SimpleBMPHome");
-	        bmpHome = (SimpleBMPHome) PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
-	    } catch (NamingException e) {
-	        throw new EJBException("cant find SimpleBMPHome");
-	    }
+            Context context = null;
+            try {
+                context    = new InitialContext();
+                Object objRef = context.lookup("java:comp/env/ejb/SimpleBMPHome");
+                bmpHome = (SimpleBMPHome) PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
+            } catch (NamingException e) {
+                throw new EJBException("cant find SimpleBMPHome");
+            }
     }
 
     public void createBMP(Integer key)

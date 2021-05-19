@@ -21,7 +21,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -34,7 +34,7 @@ public class GMSTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:configurations:default-config:default-config_turner:default-config_turner_image");
         clickAndWait("treeForm:tree:configurations:default-config:gms:gms_link");
         setFieldValue("propertyForm:propertySheet:propertSectionTextField:fdMax:fdMax", protocolMaxTrial);
-        
+
         int count = addTableRow("propertyForm:basicTable", "propertyForm:basicTable:topActionsGroup1:addSharedTableButton");
         sleep(500);
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col2:col1St", "a");
@@ -44,10 +44,10 @@ public class GMSTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:basicTable:rowGroup1:0:col4:col1St", "c");
         clickAndWait("propertyForm:propertyContentPage:topButtons:saveButton");
         assertTrue(isElementSaveSuccessful("label_sun4","New values successfully saved."));
-        
+
         assertEquals(protocolMaxTrial, getValue("propertyForm:propertySheet:propertSectionTextField:fdMax:fdMax", "value"));
         assertTableRowCount("propertyForm:basicTable", count);
-        
+
         //delete the property used to test
         gotoDasPage();
         clickAndWait("treeForm:tree:configurations:default-config:gms:gms_link");

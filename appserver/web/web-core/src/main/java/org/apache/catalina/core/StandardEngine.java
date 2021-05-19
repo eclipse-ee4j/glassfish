@@ -105,7 +105,7 @@ public class StandardEngine
     public Realm getRealm() {
         Realm configured=super.getRealm();
         // If no set realm has been called - default to JAAS
-        // This can be overridden at engine, context and host level  
+        // This can be overridden at engine, context and host level
         if( configured==null ) {
             configured=new JAASRealm();
             this.setRealm( configured );
@@ -144,7 +144,7 @@ public class StandardEngine
                                    this.defaultHost);
 
     }
-    
+
     public void setName(String name ) {
         if( domain != null ) {
             // keep name==domain, ignore override
@@ -257,7 +257,7 @@ public class StandardEngine
     /* CR 6368085
     private boolean initialized=false;
     */
-    
+
     public void init() {
         if( initialized ) return;
         /* CR 6368085
@@ -279,7 +279,7 @@ public class StandardEngine
                 log.log(Level.INFO, LogFacade.ERROR_REGISTERING_EXCEPTION, t);
             }
         }
-        
+
         if( service==null ) {
             // for consistency...: we are probably in embedded mode
             try {
@@ -295,10 +295,10 @@ public class StandardEngine
         // START CR 6368085
         initialized = true;
         // END CR 6368085
-        
+
     }
 
-    /* CR 6368085    
+    /* CR 6368085
     public void destroy() throws LifecycleException {
     */
     // START CR 6368085
@@ -315,7 +315,7 @@ public class StandardEngine
         // if we created it, make sure it's also destroyed
         ((StandardService)service).destroy();
     }
-    
+
     /**
      * Start this Engine component.
      *
@@ -343,7 +343,7 @@ public class StandardEngine
         super.start();
 
     }
-    
+
     public void stop() throws LifecycleException {
         super.stop();
     }
@@ -365,7 +365,7 @@ public class StandardEngine
     // ------------------------------------------------------ Protected Methods
 
 
-    // FIXME Remove -- not used 
+    // FIXME Remove -- not used
     public ObjectName getParentName() throws MalformedObjectNameException {
         if (getService()==null) {
             return null;
@@ -373,9 +373,9 @@ public class StandardEngine
         String name = getService().getName();
         ObjectName serviceName=new ObjectName(domain +
                         ":type=Service,serviceName="+name);
-        return serviceName;                
+        return serviceName;
     }
-    
+
     public ObjectName createObjectName(String domain, ObjectName parent)
         throws Exception
     {
@@ -383,17 +383,17 @@ public class StandardEngine
             log.log(Level.FINE, "Create ObjectName " + domain + " " + parent);
         return new ObjectName( domain + ":type=Engine");
     }
-    
+
     public String getDomain() {
         if (domain!=null) {
             return domain;
-        } else { 
+        } else {
             return getName();
         }
     }
-    
+
     public void setDomain(String domain) {
         this.domain = domain;
     }
-    
+
 }

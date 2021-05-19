@@ -47,14 +47,14 @@ public class TestServlet2 extends HttpServlet {
         writer.write("p:Hello, " + req.getRemoteUser() + "\n");
     }
 
-    public void doOptions(HttpServletRequest req, HttpServletResponse res) 
+    public void doOptions(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("o:Hello");
     }
 
-    protected void doPut(HttpServletRequest req, HttpServletResponse res) 
+    protected void doPut(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();

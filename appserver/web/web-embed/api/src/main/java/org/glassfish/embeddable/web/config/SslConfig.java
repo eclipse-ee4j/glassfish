@@ -21,7 +21,7 @@ import java.util.Set;
 
 /**
  * Class used to configure SSL processing parameters
- * 
+ *
  * @author Rajiv Mordani
  */
 public class SslConfig {
@@ -92,7 +92,7 @@ public class SslConfig {
 
     /**
      * Sets the algorithm
-     * 
+     *
      * @param algorithms
      */
     public void setAlgorithms(Set<SslType> algorithms) {
@@ -156,7 +156,7 @@ public class SslConfig {
     /**
      * Gets the nickname of the server certificate in the certificate database
      *
-     * @return the certNickname 
+     * @return the certNickname
      */
     public String getCertNickname() {
        return this.certNickname;

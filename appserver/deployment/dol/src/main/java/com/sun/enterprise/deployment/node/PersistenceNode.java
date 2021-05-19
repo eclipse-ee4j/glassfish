@@ -60,7 +60,7 @@ public class PersistenceNode extends AbstractBundleNode {
         systemIDs.add(SCHEMA_ID_1_0);
         return Collections.unmodifiableList(systemIDs);
     }
-    
+
     /**
      * This is the default constructor which is also called from other
      * constructors of this class. Inside this constructor, we clear the
@@ -104,7 +104,7 @@ public class PersistenceNode extends AbstractBundleNode {
     public Map<String, Class> registerRuntimeBundle(Map<String, String> publicIDToSystemIDMapping, final Map<String, List<Class>> versionUpgrades) {
         return Collections.EMPTY_MAP;
     }
-    
+
     public String getDocType() {
         return null;
     }

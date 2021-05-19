@@ -29,15 +29,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * This handler is responsible for handling the 
+ * This handler is responsible for handling the
  * jakarta.persistence.PersistenceContexts annotation.
  *
  */
 @Service
 @AnnotationHandlerFor(PersistenceContexts.class)
-public class EntityManagerReferencesHandler 
+public class EntityManagerReferencesHandler
     extends EntityManagerReferenceHandler {
-    
+
     public EntityManagerReferencesHandler() {
     }
 
@@ -45,9 +45,9 @@ public class EntityManagerReferencesHandler
             ResourceContainerContext[] rcContexts)
             throws AnnotationProcessorException {
 
-        PersistenceContexts annotation = (PersistenceContexts) 
+        PersistenceContexts annotation = (PersistenceContexts)
             ainfo.getAnnotation();
-        
+
         PersistenceContext[] emRefAnnotations = annotation.value();
         List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
 

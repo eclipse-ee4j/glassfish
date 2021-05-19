@@ -77,7 +77,7 @@ public class Utils {
             final DomDocument document = parser.parse(xif.createXMLStreamReader(inputStream));
 
             ServiceLocatorUtilities.addOneConstant(habitat, document);
-            
+
             return habitat;
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,7 +109,7 @@ public class Utils {
 
         return (habitat != null) ? habitat : ServiceLocatorFactory.getInstance().create(name);
     }
-    
+
     @SuppressWarnings("UnusedDeclaration")
     public static String composeThreadPoolName(final NetworkListener networkListener) {
         return networkListener.getThreadPool() + '-' + networkListener.getPort();
@@ -130,7 +130,7 @@ public class Utils {
             final String name, final String realClassName) {
         return newInstance(habitat, clazz, name, realClassName, null, null);
     }
-    
+
     /**
          * Load or create an Object with the specific service name and class name.
          *
@@ -142,11 +142,11 @@ public class Utils {
          *  arguments.
          */
         @SuppressWarnings({"unchecked"})
-        public static <E> E newInstance(ServiceLocator habitat, 
+        public static <E> E newInstance(ServiceLocator habitat,
                                         Class<E> clazz,
-                                        final String name, 
-                                        final String realClassName, 
-                                        Class<?>[] argTypes, 
+                                        final String name,
+                                        final String realClassName,
+                                        Class<?>[] argTypes,
                                         Object[] args) {
             boolean isInitialized = false;
             E instance = null;
@@ -169,25 +169,25 @@ public class Utils {
             } else {
                 isInitialized = true;
             }
-    
+
             if (!isInitialized) {
                 LOGGER.log(Level.WARNING, "Instance could not be initialized. "
                         + "Class={0}, name={1}, realClassName={2}",
                         new Object[]{clazz, name, realClassName});
                 return null;
             }
-    
+
             return instance;
         }
 
     public static Object newInstance(String classname) throws Exception {
         return loadClass(classname).newInstance();
     }
-    
-    public static Object newInstance(String classname, 
-                                     Class<?>[] argTypes, 
+
+    public static Object newInstance(String classname,
+                                     Class<?>[] argTypes,
                                      Object[] args) throws Exception {
-        final Class<?> clazz = loadClass(classname);        
+        final Class<?> clazz = loadClass(classname);
         final Constructor c = clazz.getConstructor(argTypes);
         assert (c != null);
         return c.newInstance(args);

@@ -22,7 +22,7 @@ package com.sun.enterprise.admin.servermgmt;
 public class DomainException extends RepositoryException {
     /**
      * Constructs a new DomainException object.
-     * 
+     *
      * @param message
      */
     public DomainException(String message) {
@@ -31,7 +31,7 @@ public class DomainException extends RepositoryException {
 
     /**
      * Constructs a new DomainException object.
-     * 
+     *
      * @param cause
      */
     public DomainException(Throwable cause) {
@@ -40,7 +40,7 @@ public class DomainException extends RepositoryException {
 
     /**
      * Constructs a new DomainException object.
-     * 
+     *
      * @param message
      * @param cause
      */

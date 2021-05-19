@@ -216,7 +216,7 @@ public class CreateConnectorConnectionPool implements AdminCommand {
                             "\nAttempting to ping during Connector Connection " +
                             "Pool Creation : {0} - Succeeded.", poolname));
                 }
-            }            
+            }
         }
         if (rs.getMessage() != null) {
             report.setMessage(rs.getMessage());

@@ -21,7 +21,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -30,11 +30,11 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-nopkg-sessionID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB(mappedName="Sful") Sful sful;
     private static @EJB(mappedName="Sless") Sless sless;
 
@@ -56,8 +56,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
 }

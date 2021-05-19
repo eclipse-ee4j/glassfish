@@ -47,7 +47,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     boolean WEBSOCKET_SUPPORT_ENABLED = true;
     boolean XPOWERED_BY = true;
     boolean ALLOW_PAYLOAD_FOR_UNDEFINED_HTTP_METHODS = false;
-    
+
     int COMPRESSION_MIN_SIZE = 2048;
     int CONNECTION_UPLOAD_TIMEOUT = 300000;
     int HEADER_BUFFER_LENGTH = 8192;
@@ -210,7 +210,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
     String getMaxSwallowingInputBytes();
 
     void setMaxSwallowingInputBytes(String max);
-    
+
     @Attribute(dataType = Integer.class)
     String getNoCompressionUserAgents();
 
@@ -280,7 +280,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(defaultValue = "" + WEBSOCKETS_TIMEOUT, dataType = Integer.class)
     String getWebsocketsTimeoutSeconds();
-    
+
     void setWebsocketsTimeoutSeconds(String timeout);
 
     @Attribute(defaultValue = "" + TRACE_ENABLED, dataType = Boolean.class)
@@ -415,7 +415,7 @@ public interface Http extends ConfigBeanProxy, PropertyBag {
      */
     @Attribute(defaultValue = "" + ALLOW_PAYLOAD_FOR_UNDEFINED_HTTP_METHODS, dataType = Boolean.class)
     String getAllowPayloadForUndefinedHttpMethods();
-    
+
     void setAllowPayloadForUndefinedHttpMethods(String allowPayloadForUndefinedHttpMethods);
 
 

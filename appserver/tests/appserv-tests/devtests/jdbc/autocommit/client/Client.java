@@ -27,36 +27,36 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 public class Client {
 
     SimpleReporterAdapter stat = new SimpleReporterAdapter();
-    
+
     public static void main(String[] args)
         throws Exception {
 
         Client client = new Client();
-	client.runTest();
+        client.runTest();
     }
-    
+
     public void runTest() throws Exception {
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/SimpleBMPHome");
-	SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
+        SimpleBMPHome simpleBMPHome = (SimpleBMPHome)
         javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP simpleBMP = simpleBMPHome.create();
-	stat.addDescription("Autocommit Test");
+        stat.addDescription("Autocommit Test");
 
         if ( simpleBMP.test1() ) {
-	    stat.addStatus(" AutoCommit test1 : ", stat.PASS);
-	} else {
-	    stat.addStatus(" AutoCommit test1 : ", stat.FAIL);
-	}
+            stat.addStatus(" AutoCommit test1 : ", stat.PASS);
+        } else {
+            stat.addStatus(" AutoCommit test1 : ", stat.FAIL);
+        }
 
         if ( simpleBMP.test2() ) {
-	    stat.addStatus(" AutoCommit test2 : ", stat.PASS);
-	} else {
-	    stat.addStatus(" AutoCommit test2 : ", stat.FAIL);
-	}
+            stat.addStatus(" AutoCommit test2 : ", stat.PASS);
+        } else {
+            stat.addStatus(" AutoCommit test2 : ", stat.FAIL);
+        }
 
-	System.out.println("jdbc autocommit status: ");
-	stat.printSummary();
+        System.out.println("jdbc autocommit status: ");
+        stat.printSummary();
     }
 }

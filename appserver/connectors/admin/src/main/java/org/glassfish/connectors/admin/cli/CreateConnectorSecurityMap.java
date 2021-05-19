@@ -51,7 +51,7 @@ import static org.glassfish.connectors.admin.cli.CLIConstants.SM.*;
 @PerLookup
 @I18n("create.connector.security.map")
 public class CreateConnectorSecurityMap extends ConnectorSecurityMap implements AdminCommand {
-    
+
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateConnectorSecurityMap.class);
 
     @Param(optional = true, obsolete = true)

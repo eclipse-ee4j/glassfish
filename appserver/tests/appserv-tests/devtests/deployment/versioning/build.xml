@@ -35,7 +35,7 @@
       <ant dir="simple-versioned-appclient" target="private-all">
           <property name="build" value="${build}/simple-versioned-appclient"/>
       </ant>
-      
+
       <!-- play some versioning devtests scenarios with simple-versioned-ejb -->
       <ant dir="simple-versioned-ejb" target="private-all">
         <property name="build" value="${build}/simple-versioned-ejb"/>

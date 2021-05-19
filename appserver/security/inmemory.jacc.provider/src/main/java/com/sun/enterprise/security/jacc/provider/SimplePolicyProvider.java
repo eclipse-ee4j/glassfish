@@ -35,7 +35,7 @@ public class SimplePolicyProvider extends Policy {
 
     private static final String REUSE = "java.security.Policy.supportsReuse";
     private Policy basePolicy;
-    
+
     /**
      * ThreadLocal object to keep track of the reentrancy status of each thread. It contains a byte[] object whose single
      * element is either 0 (initial value or no reentrancy), or 1 (current thread is reentrant). When a thread exists the
@@ -183,7 +183,7 @@ public class SimplePolicyProvider extends Policy {
             throw new IllegalStateException(pce);
         }
     }
-    
+
     /*
      * NB: Excluded perms should be removed from the collections returned by getPermissions. Permissions that imply excluded
      * permissions should also be excluded. There is a potential semantic integrity issue if the exluded perms have been

@@ -51,7 +51,7 @@ import static org.junit.Assert.*;
 public class InputJarArchiveTest {
 
     private static final String NESTED_JAR_ENTRY_NAME = "nested/archive.jar";
-    
+
     public InputJarArchiveTest() {
     }
 
@@ -207,16 +207,16 @@ public class InputJarArchiveTest {
             fail("Error during test");
         }
     }
-    
+
     @Test
     public void testNestedTopLevelDirEntryNames() {
         try {
             System.out.println("nested top-level directory entry names in InputJarArchive");
             final ReadableArchive arch = getArchiveForTest();
             ReadableArchive subArchive = arch.getSubArchive(NESTED_JAR_ENTRY_NAME);
-            
+
             final Set<String> returnedNames = new HashSet<String>(subArchive.getDirectories());
-            assertEquals("Returned nested top-level directories do not match expected", 
+            assertEquals("Returned nested top-level directories do not match expected",
                     testJarTopLevelDirEntryNames(), returnedNames);
             retireArchive(arch);
         } catch (IOException ex) {
@@ -231,10 +231,10 @@ public class InputJarArchiveTest {
             System.out.println("nested non-directory entry names in InputJarArchive");
             final ReadableArchive arch = getArchiveForTest();
             ReadableArchive subArchive = arch.getSubArchive(NESTED_JAR_ENTRY_NAME);
-            
+
             final Set<String> returnedNames = new HashSet<String>(
                     setFromEnumeration(subArchive.entries()));
-            assertEquals("Returned nested non-directories do not match expected", 
+            assertEquals("Returned nested non-directories do not match expected",
                     testSubArchiveNonDirEntryNames(), returnedNames);
             retireArchive(arch);
         } catch (IOException ex) {
@@ -242,7 +242,7 @@ public class InputJarArchiveTest {
             fail("Error during test");
         }
     }
-    
+
     private File createTestJAR() throws IOException {
         final File tempJAR = File.createTempFile("InputJarArchive", ".jar");
         tempJAR.deleteOnExit();
@@ -260,28 +260,28 @@ public class InputJarArchiveTest {
             jos.closeEntry();
             // Note that these entries in the test JAR are empty - we just need to test the names
         }
-        
+
         /*
          * Now create a nested JAR within the main test JAR.  For simplicity
          * use the same entry names as the outer JAR.
          */
         final JarEntry nestedJarEntry = new JarEntry(NESTED_JAR_ENTRY_NAME);
         jos.putNextEntry(nestedJarEntry);
-        
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         final JarOutputStream nestedJOS = new JarOutputStream(baos);
-        
+
         for (String entryName : testJarEntryNames()) {
             final JarEntry nestedEntry = new JarEntry(entryName);
             nestedJOS.putNextEntry(nestedEntry);
             nestedJOS.closeEntry();
         }
-        
+
         nestedJOS.close();
         jos.write(baos.toByteArray());
         jos.closeEntry();
-        
-        
+
+
         jos.close();
         return tempJAR;
     }
@@ -292,7 +292,7 @@ public class InputJarArchiveTest {
 
         return e;
     }
-    
+
     private static List<String> testStringsAsArrayList() {
         return Arrays.asList("one","two","three","four","five");
     }
@@ -305,7 +305,7 @@ public class InputJarArchiveTest {
                 "topLevelDir/secondLevelDir/",
                 "topLevelDir/secondLevelDir/thirdLevelNonDir");
     }
-    
+
     private static Set<String> testJarTopLevelDirEntryNames() {
         return new HashSet(Arrays.asList(
                 "topLevelDir/"));
@@ -313,7 +313,7 @@ public class InputJarArchiveTest {
 
     private static Set<String> testSubArchiveNonDirEntryNames() {
         return new HashSet(Arrays.asList(
-                "topLevelNonDir", "topLevelDir/secondLevelNonDir", 
+                "topLevelNonDir", "topLevelDir/secondLevelNonDir",
                 "topLevelDir/secondLevelDir/thirdLevelNonDir"));
     }
 

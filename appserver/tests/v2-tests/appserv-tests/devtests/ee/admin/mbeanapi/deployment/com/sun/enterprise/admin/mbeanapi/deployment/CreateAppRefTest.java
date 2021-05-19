@@ -28,9 +28,9 @@ public class CreateAppRefTest extends BaseTest
 {
     private final Cmd target;
 
-    public CreateAppRefTest(final String user, 
-        final String password, final String host, final int port, 
-        final String refName, final boolean enabled, 
+    public CreateAppRefTest(final String user,
+        final String password, final String host, final int port,
+        final String refName, final boolean enabled,
         final String virtualServers,final boolean lbEnabled,
         final int disableTimeoutInMinutes, final String appservTarget)
     {
@@ -39,9 +39,9 @@ public class CreateAppRefTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateAppRefCmd createCmd = 
-                cmdFactory.createCreateAppRefCmd(refName, enabled, 
-                    virtualServers, lbEnabled, disableTimeoutInMinutes, 
+        final CreateAppRefCmd createCmd =
+                cmdFactory.createCreateAppRefCmd(refName, enabled,
+                    virtualServers, lbEnabled, disableTimeoutInMinutes,
                     appservTarget);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -63,7 +63,7 @@ public class CreateAppRefTest extends BaseTest
         final String virtualServers = args.length == 3 ? args[2] : null;
 
         new CreateAppRefTest(
-                "admin", "password", "localhost", 8686, 
+                "admin", "password", "localhost", 8686,
                 appRef, false, virtualServers, false, 160, target).run();
     }
 

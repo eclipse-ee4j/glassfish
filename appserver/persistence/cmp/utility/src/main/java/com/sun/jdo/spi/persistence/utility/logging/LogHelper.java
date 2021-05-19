@@ -22,7 +22,7 @@ package com.sun.jdo.spi.persistence.utility.logging;
  * <P>
  * This class has no JDK 1.4 dependencies.
  * <P>
- * The log factory is responsible for constructing the loggers and for 
+ * The log factory is responsible for constructing the loggers and for
  * ensuring that there is only one logger per component.
  *
  * @author  Craig Russell
@@ -30,18 +30,18 @@ package com.sun.jdo.spi.persistence.utility.logging;
  */
 
 public class LogHelper {
-    
-    /** Flag to tell we are running in JDK 1.4 and can use 
+
+    /** Flag to tell we are running in JDK 1.4 and can use
      * java.util.logging.Logger implementation.
      */
     protected static boolean jdk14 = isJDK14();
-    
+
     /** LoggerFactory registered for creating new loggers.
      */
     protected static LoggerFactory loggerFactory = null;
-    
+
     /** Get a Logger.  This call is delegated to the registered LoggerFactory.
-     * If there is no registered LoggerFactory, then initialize one based on 
+     * If there is no registered LoggerFactory, then initialize one based on
      * whether we are running in JDK 1.4 (or higher).
      * The bundle name and class loader are passed to allow the implementation
      * to properly find and construct the internationalization bundle.
@@ -63,7 +63,7 @@ public class LogHelper {
         }
         return loggerFactory.getLogger(loggerName, bundleName, loader);
     }
-        
+
     /** Register a LoggerFactory for use in managed environments or
      * for special situations.  This
      * factory will be delegated to for all getLogger requests.
@@ -72,10 +72,10 @@ public class LogHelper {
     public static void registerLoggerFactory (LoggerFactory factory) {
         loggerFactory = factory;
     }
-    
+
     /** Check to see if the JDK 1.4 logging environment is available.
      * @return  true if JDK 1.4 logging is available
-     */    
+     */
     public static boolean isJDK14() {
         try {
             Class logger = Class.forName("java.util.logging.Logger"); //NOI18N
@@ -84,5 +84,5 @@ public class LogHelper {
             return false;
         }
     }
-        
+
 }

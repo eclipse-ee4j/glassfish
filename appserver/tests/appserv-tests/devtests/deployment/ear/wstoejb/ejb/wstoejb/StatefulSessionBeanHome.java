@@ -22,11 +22,11 @@ import jakarta.ejb.CreateException;
 
 /**
  * Simple interface to create a statefull session bean
- * 
+ *
  * @author Jerome Dochez
  */
 public interface StatefulSessionBeanHome extends EJBHome {
 
-	public StatefulSessionBean create () throws RemoteException, CreateException;
+        public StatefulSessionBean create () throws RemoteException, CreateException;
 
 }

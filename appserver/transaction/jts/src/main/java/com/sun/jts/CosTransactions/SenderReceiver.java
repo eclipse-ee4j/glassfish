@@ -30,14 +30,22 @@
 
 package com.sun.jts.CosTransactions;
 
-import org.omg.CORBA.*;
-import org.omg.CORBA.TSIdentificationPackage.*;
-import org.omg.CosTransactions.*;
-import org.omg.CosTSPortability.*;
-
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.TRANSACTION_REQUIRED;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CORBA.TSIdentification;
+import org.omg.CORBA.WrongTransaction;
+import org.omg.CORBA.TSIdentificationPackage.AlreadyIdentified;
+import org.omg.CORBA.TSIdentificationPackage.NotAvailable;
+import org.omg.CosTSPortability.Receiver;
+import org.omg.CosTSPortability.Sender;
+import org.omg.CosTransactions.PropagationContext;
+import org.omg.CosTransactions.PropagationContextHolder;
 /**
  * The SenderRecevier class is our implemention of the OTS Sender and Receiver
  * classes.
@@ -63,9 +71,9 @@ import com.sun.logging.LogDomains;
 class SenderReceiver implements Sender, Receiver {
 
     private static SenderReceiver sendRec = new SenderReceiver();
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(SenderReceiver.class, LogDomains.TRANSACTION_LOGGER);
 
     /**
@@ -94,15 +102,15 @@ class SenderReceiver implements Sender, Receiver {
      *
      * @see
      */
+    @Override
     public void sending_request(int id, PropagationContextHolder holder)
             throws TRANSACTION_ROLLEDBACK, TRANSACTION_REQUIRED {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"In sending_request"+
-			":"+id+","+holder.value.current.otid.formatID);
+                _logger.log(Level.FINE, "In sending_request" + ":" + id + "," + holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In sending_request"+ ":"+id+","+holder);
+                _logger.log(Level.FINE, "In sending_request" + ":" + id + "," + holder);
             }
         }
 
@@ -110,10 +118,9 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"Out sending_request"+
-			":"+id+","+holder.value.current.otid.formatID);
+                _logger.log(Level.FINE, "Out sending_request" + ":" + id + "," + holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out sending_request"+ ":"+id+","+holder);
+                _logger.log(Level.FINE, "Out sending_request" + ":" + id + "," + holder);
             }
         }
     }
@@ -132,16 +139,15 @@ class SenderReceiver implements Sender, Receiver {
      *
      * @see
      */
+    @Override
     public void received_reply(int id, PropagationContext context,
             org.omg.CORBA.Environment ex)
             throws org.omg.CORBA.WrongTransaction {
-
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"In received_reply"+
-			":"+id+","+context.current.otid.formatID);
+                _logger.log(Level.FINE, "In received_reply" + ":" + id + "," + context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In received_reply"+ ":"+id+", null context");
+                _logger.log(Level.FINE, "In received_reply" + ":" + id + ", null context");
             }
         }
 
@@ -149,13 +155,13 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"Out received_reply"+
-			":"+id+","+context.current.otid.formatID);
+                _logger.log(Level.FINE, "Out received_reply" + ":" + id + "," + context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out received_reply"+ ":"+id+", null context");
+                _logger.log(Level.FINE, "Out received_reply" + ":" + id + ", null context");
             }
         }
     }
+
 
     /**
      * Pass the operation through to the CurrentTransaction class.
@@ -167,14 +173,14 @@ class SenderReceiver implements Sender, Receiver {
      *
      * @see
      */
+    @Override
     public void received_request(int id, PropagationContext context) {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"In received_request"+
-			":"+id+","+context.current.otid.formatID);
+                _logger.log(Level.FINE, "In received_request" + ":" + id + "," + context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In received_request"+ ":"+id+", null context");
+                _logger.log(Level.FINE, "In received_request" + ":" + id + ", null context");
             }
         }
 
@@ -182,10 +188,9 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (context != null) {
-		_logger.log(Level.FINE,"Out received_request"+
-			":"+id+","+context.current.otid.formatID);
+                _logger.log(Level.FINE, "Out received_request" + ":" + id + "," + context.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out received_request"+ ":"+id+", null context");
+                _logger.log(Level.FINE, "Out received_request" + ":" + id + ", null context");
             }
         }
     }
@@ -207,15 +212,14 @@ class SenderReceiver implements Sender, Receiver {
      *
      * @see
      */
+    @Override
     public void sending_reply(int id, PropagationContextHolder holder)
         throws INVALID_TRANSACTION, TRANSACTION_ROLLEDBACK {
-
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"In sending_reply"+
-			":"+id+","+holder.value.current.otid.formatID);
+                _logger.log(Level.FINE, "In sending_reply" + ":" + id + "," + holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"In sending_reply"+ ":"+id+","+holder);
+                _logger.log(Level.FINE, "In sending_reply" + ":" + id + "," + holder);
             }
         }
 
@@ -223,10 +227,9 @@ class SenderReceiver implements Sender, Receiver {
 
         if (_logger.isLoggable(Level.FINE)) {
             if (holder.value != null) {
-		_logger.log(Level.FINE,"Out sending_reply"+
-			":"+id+","+holder.value.current.otid.formatID);
+                _logger.log(Level.FINE, "Out sending_reply" + ":" + id + "," + holder.value.current.otid.formatID);
             } else {
-		_logger.log(Level.FINE,"Out sending_reply"+ ":"+id+","+holder);
+                _logger.log(Level.FINE, "Out sending_reply" + ":" + id + "," + holder);
             }
         }
     }
@@ -245,24 +248,24 @@ class SenderReceiver implements Sender, Receiver {
             ident.identify_sender(sendRec);
             ident.identify_receiver(sendRec);
             if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE,"Sender/Receiver "+ sendRec +
-                                   " successfully identified");
+                _logger.log(Level.FINE, "Sender/Receiver " + sendRec + " successfully identified");
             }
-        } catch(AlreadyIdentified exc) {
-			_logger.log(Level.FINE,"jts.already_indetified_communication_manager");
+        } catch (AlreadyIdentified exc) {
+            _logger.log(Level.FINE, "jts.already_indetified_communication_manager");
         } catch (NotAvailable exc) {
-			_logger.log(Level.WARNING,"jts.unable_to_indetify_communication_manager");
+            _logger.log(Level.WARNING, "jts.unable_to_indetify_communication_manager");
         }
     }
 
+
     private void debugMessage(String msg, int id, PropagationContext ctx) {
-		//System.err.print is not removed as debug Message will no more be
-		//used.
-		_logger.log(Level.FINE,msg+";"+id);
+        // System.err.print is not removed as debug Message will no more be
+        // used.
+        _logger.log(Level.FINE, msg + ";" + id);
         if (ctx == null) {
-			_logger.log(Level.FINE,"");
+            _logger.log(Level.FINE, "");
         } else {
-			_logger.log(Level.FINE,"," + ctx.current.otid.formatID);
+            _logger.log(Level.FINE, "," + ctx.current.otid.formatID);
         }
     }
 }

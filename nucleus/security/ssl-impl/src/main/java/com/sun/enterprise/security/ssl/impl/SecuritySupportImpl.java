@@ -76,23 +76,23 @@ import jakarta.inject.Singleton;
 public class SecuritySupportImpl extends SecuritySupport {
     private static final String DEFAULT_KEYSTORE_PASS = "changeit";
     private static final String DEFAULT_TRUSTSTORE_PASS = "changeit";
-    
+
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "com.sun.enterprise.security.ssl.LogMessages";
-    
+
     @LoggerInfo(subsystem = "SECURITY - SSL", description = "Security - SSL", publish = true)
     public static final String SEC_SSL_LOGGER = "jakarta.enterprise.system.security.ssl";
 
     protected static final Logger _logger =
-            Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
-    
+        Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+
     @LogMessageInfo(
-			message = "The SSL certificate has expired: {0}",
-			level = "SEVERE",
-			cause = "Certificate expired.",
-			action = "Check the expiration date of the certicate.")
-	private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
-    
+        message = "The SSL certificate has expired: {0}",
+        level = "SEVERE",
+        cause = "Certificate expired.",
+        action = "Check the expiration date of the certicate.")
+    private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
+
     private static boolean initialized = false;
     protected static final List<KeyStore> keyStores = new ArrayList<KeyStore>();
     protected static final List<KeyStore> trustStores = new ArrayList<KeyStore>();
@@ -201,7 +201,7 @@ public class SecuritySupportImpl extends SecuritySupport {
      * @param trustStoreFile
      * @param trustStoreType
      */
-    /*protected synchronized static void loadStores(String tokenName, 
+    /*protected synchronized static void loadStores(String tokenName,
     String storeType, Provider provider,
     String keyStoreFile, String keyStorePass,
     String trustStoreFile, String trustStorePass) {*/
@@ -371,7 +371,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     /**
-     * @param  token 
+     * @param  token
      * @return a keystore
      */
     public KeyStore getKeyStore(String token) {
@@ -383,7 +383,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     /**
-     * @param  token 
+     * @param  token
      * @return a truststore
      */
     public KeyStore getTrustStore(String token) {
@@ -395,7 +395,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     /**
-     * @return returned index 
+     * @return returned index
      */
     private int getTokenIndex(String token) {
         int idx = -1;

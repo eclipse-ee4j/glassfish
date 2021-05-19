@@ -70,7 +70,7 @@ public class EjbEndpointFacadeImpl implements EjbEndpointFacade {
 
         // AS per latest spec change, the MessageContext object in WebSvcCtxt
         // should be the same one as used in the ejb's interceptors'
-        // TODO    
+        // TODO
         // inv.setContextData(wsCtxt);
 
         // In all cases, the WebServiceInvocationHandler will do the
@@ -81,7 +81,7 @@ public class EjbEndpointFacadeImpl implements EjbEndpointFacade {
 
     }
 
-    
+
     public void endInvocation(ComponentInvocation inv) {
 
         try {

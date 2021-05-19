@@ -26,7 +26,7 @@ import javax.management.DescriptorKey;
 /**
     Units annotation to be used on @Configured interfaces.  Units are strings because
     they are an unbounded set, but do try to use the provided values for consistency.
-    
+
    @author Lloyd Chambers
  */
 @Retention(RUNTIME)
@@ -37,15 +37,15 @@ public @interface Units {
     public final String MINUTES = "minutes";
     public final String HOURS = "hours";
     public final String DAYS = "days";
-    
+
     public final String BYTES = "bytes";
     public final String KILOBYTES = "kilobytes";
     public final String MEGABYTES = "megabytes";
     public final String GIGABYTES = "gigabytes";
-    
+
     /** value is an arbitrary count */
     public final String COUNT = "count";
-    
+
     /**
     Units should always be lower-case and appropriate for human viewing.  Suggested units:
     <ul>

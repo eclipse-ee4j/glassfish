@@ -25,10 +25,10 @@ package com.sun.enterprise.admin.monitor.stats;
  * @version 1.0
  */
 public final class StringStatisticImpl extends StatisticImpl implements StringStatistic {
-    
+
     private final String strVal;
-    
-    /** 
+
+    /**
      * Constructor
      * @param str    The current value of this statistic
      * @param name      The name of the statistic
@@ -37,22 +37,22 @@ public final class StringStatisticImpl extends StatisticImpl implements StringSt
      * @param startTime Time in milliseconds at which the measurement was started
      * @param sampleTime Time at which the last measurement was done.
      **/
-    public StringStatisticImpl(String str, String name, String unit, 
+    public StringStatisticImpl(String str, String name, String unit,
                                String desc, long startTime, long sampleTime) {
-        
+
         super(name, unit, desc, startTime, sampleTime);
         strVal = str;
     }
-    
+
     /**
      * Returns the String value of the statistic.
      */
     public String getCurrent() {
         return strVal;
     }
-    
+
     public String toString() {
-        return super.toString() + NEWLINE + 
+        return super.toString() + NEWLINE +
             "Current: " + getCurrent();
     }
 

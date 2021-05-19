@@ -127,7 +127,7 @@ public class PEDomainConfigValidator extends DomainConfigValidator {
 
     /**
      * Return a string representation of the given map, but only for those entries where the value has a size greater than 1
-     * 
+     *
      * @param map a map of key to Set of value
      */
     private final String printDuplicatesFromMap(final Map map) {

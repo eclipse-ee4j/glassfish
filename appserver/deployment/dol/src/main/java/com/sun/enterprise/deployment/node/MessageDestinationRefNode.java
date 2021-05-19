@@ -24,11 +24,11 @@ import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Node;
 
 /**
- * This class handles all information related to the message-destination-ref 
+ * This class handles all information related to the message-destination-ref
  * xml tag
  *
  * @author  Kenneth Saks
- * @version 
+ * @version
  */
 public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageDestinationReferenceDescriptor> {
 
@@ -36,17 +36,17 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
 
     public MessageDestinationRefNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
                                 InjectionTargetNode.class, "addInjectionTarget");
     }
 
     @Override
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(TagNames.MESSAGE_DESTINATION_REFERENCE_NAME, "setName");    
-        table.put(TagNames.MESSAGE_DESTINATION_TYPE, "setDestinationType"); 
+        table.put(TagNames.MESSAGE_DESTINATION_REFERENCE_NAME, "setName");
+        table.put(TagNames.MESSAGE_DESTINATION_TYPE, "setDestinationType");
         table.put(TagNames.MESSAGE_DESTINATION_USAGE, "setUsage");
-        table.put(TagNames.MESSAGE_DESTINATION_LINK, 
+        table.put(TagNames.MESSAGE_DESTINATION_LINK,
                   "setMessageDestinationLinkName");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
@@ -60,23 +60,23 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
                                 MessageDestinationReferenceDescriptor desc) {
-    
+
         Node msgDestRefNode = appendChild(parent, nodeName);
 
         writeLocalizedDescriptions(msgDestRefNode, desc);
 
         appendTextChild(msgDestRefNode,
                         TagNames.MESSAGE_DESTINATION_REFERENCE_NAME,
-                        desc.getName()); 
-        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_TYPE, 
-                        desc.getDestinationType());         
-        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_USAGE, 
-                        desc.getUsage());         
+                        desc.getName());
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_TYPE,
+                        desc.getDestinationType());
+        appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_USAGE,
+                        desc.getUsage());
         appendTextChild(msgDestRefNode, TagNames.MESSAGE_DESTINATION_LINK,
                             desc.getMessageDestinationLinkName());
-        appendTextChild(msgDestRefNode, TagNames.MAPPED_NAME, 
+        appendTextChild(msgDestRefNode, TagNames.MAPPED_NAME,
             desc.getMappedName());
 
         if( desc.isInjectable() ) {
@@ -86,9 +86,9 @@ public class MessageDestinationRefNode extends DeploymentDescriptorNode<MessageD
             }
         }
 
-        appendTextChild(msgDestRefNode, TagNames.LOOKUP_NAME, 
+        appendTextChild(msgDestRefNode, TagNames.LOOKUP_NAME,
             desc.getLookupName());
 
         return msgDestRefNode;
-    }    
+    }
 }

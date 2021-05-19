@@ -35,23 +35,23 @@ public class IdempotentUrlPatternVisitor implements Visitor {
     }
 
     /**
-     * Visit reader class 
+     * Visit reader class
      */
     @Override
     public void visit(BaseReader br) throws Exception {
         // FIXME, make as assert here about no class cast exception
-		if (br instanceof IdempotentUrlPatternReader) {
-			IdempotentUrlPatternReader iRdr = (IdempotentUrlPatternReader) br;
-			_m.addIdempotentUrlPattern(true);
-			_m.setAttributeValue(WebModule.IDEMPOTENT_URL_PATTERN, _i,
-					URL_PATTERN, iRdr.getUrlPattern());
-			_m.setAttributeValue(WebModule.IDEMPOTENT_URL_PATTERN, _i, RETRIES,
-					iRdr.getNoOfRetries());
-		}
+        if (br instanceof IdempotentUrlPatternReader) {
+            IdempotentUrlPatternReader iRdr = (IdempotentUrlPatternReader) br;
+            _m.addIdempotentUrlPattern(true);
+            _m.setAttributeValue(WebModule.IDEMPOTENT_URL_PATTERN, _i,
+                    URL_PATTERN, iRdr.getUrlPattern());
+            _m.setAttributeValue(WebModule.IDEMPOTENT_URL_PATTERN, _i, RETRIES,
+                    iRdr.getNoOfRetries());
+        }
     }
     //--- PRIVATE VARS ----
     WebModule _m = null;
     int _i = 0;
-    private static final String URL_PATTERN = "UrlPattern";	//NOI18N
+    private static final String URL_PATTERN = "UrlPattern";    //NOI18N
     private static final String RETRIES = "NoOfRetries";     //NOI18N
 }

@@ -32,7 +32,7 @@ public class SfulEJB2 implements Sful2
     private boolean aroundInvokeCalled = false;
 
     public void cd() {
-        System.out.println("in SfulEJB:cd().  aroundInvokeCalled = " + 
+        System.out.println("in SfulEJB:cd().  aroundInvokeCalled = " +
                            aroundInvokeCalled);
 
         // a little extra checking to make sure aroundInvoke is invoked...
@@ -53,12 +53,12 @@ public class SfulEJB2 implements Sful2
     @ExcludeClassInterceptors
     public void abef(int i) {}
 
-    // @ExcludeDefaultInterceptors is a no-op here since it 
+    // @ExcludeDefaultInterceptors is a no-op here since it
     // was already excluded at class-level
     @ExcludeDefaultInterceptors
     @Interceptors({InterceptorE.class, InterceptorF.class})
     public void cdef() {}
-    
+
     @ExcludeClassInterceptors
     public void nothing() {}
 
@@ -74,5 +74,5 @@ public class SfulEJB2 implements Sful2
             throw new EJBException(e);
         }
     }
-    
+
 }

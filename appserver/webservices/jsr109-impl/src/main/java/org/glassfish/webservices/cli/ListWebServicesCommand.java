@@ -56,8 +56,8 @@ endpointname <endpointname>]]]
 @ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-webservices", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-webservices",
         description="list-webservices",
         params={
             @RestParam(name="appName", value="$parent")
@@ -126,7 +126,7 @@ public class ListWebServicesCommand implements AdminCommand {
                         }
                     }
                 }
-            }   
+            }
         }
     }
 

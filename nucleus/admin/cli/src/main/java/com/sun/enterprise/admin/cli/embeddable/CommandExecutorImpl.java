@@ -125,7 +125,7 @@ public class CommandExecutorImpl implements org.glassfish.embeddable.CommandRunn
      * command. This method uses the internal system admin identity to authorize the command to be run and this should never
      * be done if a user has authenticated to the system and is running a separate, already-authorized command. This method
      * is, therefore, used from some embedded functionality.
-     * 
+     *
      * @param command
      * @param args
      * @return

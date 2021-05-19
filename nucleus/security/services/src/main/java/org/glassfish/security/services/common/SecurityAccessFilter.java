@@ -36,17 +36,17 @@ public class SecurityAccessFilter implements Filter {
             @Override
             public Boolean run() {
                 Boolean rtn = Boolean.FALSE;
-                
+
                 String wlsName = System.getProperty(SYS_PROP_JAVA_SEC_POLICY);
-                
+
                 if ( wlsName != null && !wlsName.isEmpty() )
                         rtn = Boolean.TRUE;
-                
+
                 return rtn;
             }
         });
-    
-    
+
+
     @Override
     public boolean matches(Descriptor d) {
 
@@ -61,7 +61,7 @@ public class SecurityAccessFilter implements Filter {
 
             return false;
         }
-        
+
         if (d == null)
             return false;
 
@@ -70,7 +70,7 @@ public class SecurityAccessFilter implements Filter {
             for (String s : qualifiers) {
                 if (Secure.class.getCanonicalName().equals(s)) {
                     if (LOG.isLoggable(Level.FINE)) {
-                        LOG.fine("The instance is annotated with \'Secure\': " + s);                                
+                        LOG.fine("The instance is annotated with \'Secure\': " + s);
                     }
                     return true;
                 }

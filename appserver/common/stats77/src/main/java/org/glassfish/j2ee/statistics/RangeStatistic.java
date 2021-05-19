@@ -17,21 +17,21 @@
 package org.glassfish.j2ee.statistics;
 
 /**
- * Specifies standard measurements of the lowest and highest values an attribute has held as well as its current value. 
+ * Specifies standard measurements of the lowest and highest values an attribute has held as well as its current value.
  */
 public interface RangeStatistic extends Statistic {
     /**
-     * The highest value this attribute has held since the beginning of the measurement. 
+     * The highest value this attribute has held since the beginning of the measurement.
      */
     long getHighWaterMark();
 
     /**
-     * The lowest value this attribute has held since the beginning of the measurement. 
+     * The lowest value this attribute has held since the beginning of the measurement.
      */
     long getLowWaterMark();
 
     /**
-     * The current value of this attribute. 
+     * The current value of this attribute.
      */
     long getCurrent();
 }

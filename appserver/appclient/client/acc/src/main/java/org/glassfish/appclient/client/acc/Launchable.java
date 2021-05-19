@@ -109,7 +109,7 @@ interface Launchable {
             }
             return result;
         }
-        
+
         static Launchable newLaunchable(final ServiceLocator habitat, final Class mainClass) {
             return new MainClassLaunchable(habitat, mainClass);
         }

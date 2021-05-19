@@ -22,6 +22,6 @@ import jakarta.ejb.Stateless;
 
 @Stateless(name="ejb/myslsb2")
 public class MySLSB2 {
-  
+
 
 }

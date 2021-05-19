@@ -27,7 +27,7 @@
     </parent>
     <artifactId>cmp-internal-api</artifactId>
     <packaging>glassfish-jar</packaging>
-    
+
     <name>internal-api module for cmp</name>
 
     <developers>
@@ -52,5 +52,5 @@
             <artifactId>persistence-common</artifactId>
             <version>${project.version}</version>
         </dependency>
-	</dependencies>
+    </dependencies>
 </project>

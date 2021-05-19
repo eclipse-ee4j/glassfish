@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  * This class is the super class for all integral and floating point types.
  *
  * @author  Michael Bouschen
@@ -39,7 +39,7 @@ public abstract class NumericType
     {
         super(name, clazz, enumType);
     }
-    
+
     /**
      * A numeric type defines an ordering.
      */
@@ -50,7 +50,7 @@ public abstract class NumericType
 
     /**
      * Converts the specified value into a value of this numeric type.
-     * E.g. an Integer is converted into a Double, if this represents 
+     * E.g. an Integer is converted into a Double, if this represents
      * the numeric type double.
      * @param value value to be converted
      * @return converted value
@@ -58,10 +58,10 @@ public abstract class NumericType
     public abstract Number getValue(Number value);
 
     /**
-     * Returns -value. 
+     * Returns -value.
      * @param value value to be negated
      * @return -value
      */
     public abstract Number negate(Number value);
-   
+
 }

@@ -31,7 +31,7 @@
     &testproperties;
     &run;
 
- 
+
 
     <target name="all" depends="build,setup,deploy,run,undeploy,unsetup"/>
     <target name="run-test" depends="build,deploy,run,undeploy"/>
@@ -39,7 +39,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -51,13 +51,13 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/Address*.class,**/Customer*.class,**/PKString*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/Address*.class,**/Customer*.class,**/PKString*.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="setup" depends="init-common,compile">
         <echo message="sql/create_${db.type}.sql"/>
         <antcall target="execute-sql-common">
@@ -66,28 +66,28 @@
         <antcall target="deploy-jdbc-common">
             <param name="jdbc.conpool.name" value="bmp-robean-pool"/>
             <param name="jdbc.resource.name" value="jdbc/bmp-robean"/>
-	</antcall>	
+        </antcall>
     </target>
 
     <target name="deploy" depends="init-common">
       <echo message="Deploying via asadmin..."/>
       <antcall target="deploy-common"/>
-    </target> 
-    
+    </target>
+
      <target name="sql" depends="init-common">
  <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_${db.type}.sql"/>
     </antcall>
-    
+
     </target>
 
     <target name="run" depends="init-common">
       <antcall target="runclient-common"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="unsetup" depends="init-common">
       <antcall target="undeploy-jdbc-common">
@@ -97,7 +97,7 @@
     <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/drop_${db.type}.sql"/>
       </antcall>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
@@ -114,7 +114,7 @@
 
     <target name="autodeploy-ear" depends="init-common">
         <echo message="Dropping the app under the autodeploy dir..."/>
-	<delete file="${autodeploy.dir}/${appname}App.ear_deployed" failonerror="false"/>
+        <delete file="${autodeploy.dir}/${appname}App.ear_deployed" failonerror="false"/>
         <copy file="${assemble.dir}/${appname}App.ear"
             todir="${autodeploy.dir}"/>
     </target>

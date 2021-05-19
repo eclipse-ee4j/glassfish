@@ -42,7 +42,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
       <antcall target="compile-common">
         <param name="src" value="ejb"/>
@@ -54,13 +54,13 @@
 
     <target name="build" depends="compile">
       <antcall target="build-ear-common">
-        <param name="ejbjar.classes" 
+        <param name="ejbjar.classes"
           value="**/*.class" />
-        <param name="appclientjar.classes" 
+        <param name="appclientjar.classes"
           value="**/SimpleBMP.class, **/SimpleBMPHome.class,**/*Client*.class" />
       </antcall>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
@@ -76,7 +76,7 @@
 
       <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
       <antcall target="execute-sql-common">
         <param name="sql.file" value="sql/create_pointbase.sql"/>
@@ -90,7 +90,7 @@
 
            <antcall target="asadmin-common">
              <param name="admin.command" value="set"/>
-             <param name="operand.props" 
+             <param name="operand.props"
                     value="${resources.dottedname.prefix}.jdbc-connection-pool.ql-jdbc-pool.steady_pool_size=${steady-pool-size}"/>
             </antcall>
 
@@ -124,14 +124,14 @@
 
 
     </target>
-<target name="switch-on-monitoring"> 
+<target name="switch-on-monitoring">
 <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
                    value="server.monitoring-service.module-monitoring-levels.jdbc-connection-pool=HIGH"/>
         </antcall>
     </target>
-<target name="switch-off-monitoring"> 
+<target name="switch-off-monitoring">
 <antcall target="asadmin-common">
             <param name="admin.command" value="set"/>
             <param name="operand.props"
@@ -145,7 +145,7 @@
 
       <antcall target="undeploy-jdbc-common"/>
       <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

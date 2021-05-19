@@ -54,7 +54,7 @@ public class HelloBean implements Hello {
         if(Arrays.equals(expectedURLs, actualURLs)) {
             return ("Got expected " + Arrays.toString(actualURLs));
         } else {
-            throw new EJBException("Expecting " + Arrays.toString(expectedURLs) + 
+            throw new EJBException("Expecting " + Arrays.toString(expectedURLs) +
                 ", actual " + Arrays.toString(actualURLs));
         }
     }

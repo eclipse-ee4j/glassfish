@@ -39,12 +39,12 @@ public class Client {
     private static create.A1UnPKHome a1unhome;
     private static create.A2Home a2home;
     private static create.A2UnPKHome a2unhome;
-    
+
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main(String[] args) {
-       
+
         try {
             System.out.println("START");
             stat.addDescription("createExceptionsTest");
@@ -54,15 +54,15 @@ public class Client {
             runCreateException11Test();
             runBeanStateResetTest();
 
-	    stat.addStatus("ejbclient createExceptionsTest", stat.PASS);
+            stat.addStatus("ejbclient createExceptionsTest", stat.PASS);
             System.out.println("FINISH");
 
         } catch (Exception ex) {
             System.err.println("Caught an exception:");
             ex.printStackTrace();
-	    stat.addStatus("ejbclient createExceptionsTest", stat.FAIL);
+            stat.addStatus("ejbclient createExceptionsTest", stat.FAIL);
         }
-           stat.printSummary("createExceptionsTest");
+        stat.printSummary("createExceptionsTest");
     }
 
     private static void lookupBeans() throws NamingException {
@@ -73,14 +73,14 @@ public class Client {
         a2home = (create.A2Home)PortableRemoteObject.narrow(objref, create.A2Home.class);
 
         objref = initial.lookup("java:comp/env/ejb/CRUN2");
-        a2unhome = (create.A2UnPKHome)PortableRemoteObject.narrow(objref, 
+        a2unhome = (create.A2UnPKHome)PortableRemoteObject.narrow(objref,
                 create.A2UnPKHome.class);
 
         objref = initial.lookup("java:comp/env/ejb/CR1");
         a1home = (create.A1Home)PortableRemoteObject.narrow(objref, create.A1Home.class);
 
         objref = initial.lookup("java:comp/env/ejb/CRUN1");
-        a1unhome = (create.A1UnPKHome)PortableRemoteObject.narrow(objref, 
+        a1unhome = (create.A1UnPKHome)PortableRemoteObject.narrow(objref,
                 create.A1UnPKHome.class);
 
     }
@@ -90,7 +90,7 @@ public class Client {
      * If ejbCreate throws CreateException, the transaction is rolled back.
      * If ejbPostCreate throws CreateException, the transaction is committed.
      */
-    private static void runCreateException20Test() throws java.rmi.RemoteException, 
+    private static void runCreateException20Test() throws java.rmi.RemoteException,
             jakarta.ejb.FinderException, jakarta.ejb.RemoveException {
 
         // Test CreateException from ejbPostCreate
@@ -104,7 +104,7 @@ public class Client {
         create.A2 a2bean = a2home.findByPrimaryKey("A2");
         System.out.println("FOUND A2 Bean after failed ejbPostCreate");
 
-        // Test CreateException from ejbCreate 
+        // Test CreateException from ejbCreate
         try {
             a2home.create();
         } catch (jakarta.ejb.CreateException e) {
@@ -130,7 +130,7 @@ public class Client {
         if (c.size() == 1)
             System.out.println("FOUND A2 Bean with Unknown PK after failed ejbPostCreate");
         else
-            System.out.println("ERROR found " + c.size() 
+            System.out.println("ERROR found " + c.size()
                 + " A2 Beans with Unknown PK after failed ejbPostCreate");
 
     }
@@ -140,7 +140,7 @@ public class Client {
      * If ejbCreate throws CreateException, the transaction is rolled back.
      * If ejbPostCreate throws CreateException, the transaction is committed.
      */
-    private static void runCreateException11Test() throws java.rmi.RemoteException, 
+    private static void runCreateException11Test() throws java.rmi.RemoteException,
             jakarta.ejb.FinderException, jakarta.ejb.RemoveException {
 
         // Test CreateException from ejbPostCreate
@@ -156,7 +156,7 @@ public class Client {
 
         // Test CreateException from ejbPostCreate without a container transaction.
         try {
-            a1home.create("A11", true); 
+            a1home.create("A11", true);
         } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
@@ -167,7 +167,7 @@ public class Client {
 
         // We will also test non-transactional remove, as there are no other
         // CMP unit test that tests this feature.
-        a1bean.remove(); 
+        a1bean.remove();
 
         // Only 1 A1 bean should be left.
         Collection c = a1home.findAll();
@@ -179,7 +179,7 @@ public class Client {
 
         // Test CreateException from ejbCreate without a container transaction.
         try {
-            a1home.create("A111", false); 
+            a1home.create("A111", false);
         } catch (jakarta.ejb.CreateException e) {
             System.out.println("Caught expected CreateException: " + e.getMessage());
         }
@@ -204,7 +204,7 @@ public class Client {
         if (c.size() == 1)
             System.out.println("FOUND A1 Bean with Unknown PK after failed ejbPostCreate");
         else
-            System.out.println("ERROR found " + c.size() 
+            System.out.println("ERROR found " + c.size()
                 + " A1 Beans with Unknown PK after failed ejbPostCreate");
 
     }
@@ -242,5 +242,5 @@ public class Client {
         }
 
     }
-    
+
 }

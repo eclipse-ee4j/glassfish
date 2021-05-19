@@ -15,43 +15,43 @@
  */
 
 /**
- *	This generated bean class Loadbalancer matches the schema element loadbalancer
+ * This generated bean class Loadbalancer matches the schema element loadbalancer
  *
- *	Generated on Wed Jul 13 18:07:29 IST 2005
+ * Generated on Wed Jul 13 18:07:29 IST 2005
  *
- *	This class matches the root element of the DTD,
- *	and is the root of the following bean graph:
+ * This class matches the root element of the DTD,
+ * and is the root of the following bean graph:
  *
- *	loadbalancer : Loadbalancer
- *		cluster : Cluster[0,n]
- *			[attr: name CDATA #REQUIRED ]
- *			[attr: policy CDATA round-robin]
- *			[attr: policy-module CDATA ]
- *			instance : Boolean[0,n]
- *				[attr: name CDATA #REQUIRED ]
- *				[attr: enabled CDATA true]
- *				[attr: disable-timeout-in-minutes CDATA 31]
- *				[attr: listeners CDATA #REQUIRED ]
- *				[attr: weight CDATA 100]
- *				EMPTY : String
- *			web-module : WebModule[0,n]
- *				[attr: context-root CDATA #REQUIRED ]
- *				[attr: enabled CDATA true]
- *				[attr: disable-timeout-in-minutes CDATA 31]
- *				[attr: error-url CDATA ]
- *				idempotent-url-pattern : Boolean[0,n]
- *					[attr: url-pattern CDATA #REQUIRED ]
- *					[attr: no-of-retries CDATA -1]
- *					EMPTY : String
- *			health-checker : Boolean?
- *				[attr: url CDATA /]
- *				[attr: interval-in-seconds CDATA 30]
- *				[attr: timeout-in-seconds CDATA 10]
- *				EMPTY : String
- *		property2 : Property[0,n]
- *			[attr: name CDATA #REQUIRED ]
- *			[attr: value CDATA #REQUIRED ]
- *			description : String?
+ *    loadbalancer : Loadbalancer
+ *        cluster : Cluster[0,n]
+ *            [attr: name CDATA #REQUIRED ]
+ *            [attr: policy CDATA round-robin]
+ *            [attr: policy-module CDATA ]
+ *            instance : Boolean[0,n]
+ *                [attr: name CDATA #REQUIRED ]
+ *                [attr: enabled CDATA true]
+ *                [attr: disable-timeout-in-minutes CDATA 31]
+ *                [attr: listeners CDATA #REQUIRED ]
+ *                [attr: weight CDATA 100]
+ *                EMPTY : String
+ *            web-module : WebModule[0,n]
+ *                [attr: context-root CDATA #REQUIRED ]
+ *                [attr: enabled CDATA true]
+ *                [attr: disable-timeout-in-minutes CDATA 31]
+ *                [attr: error-url CDATA ]
+ *                idempotent-url-pattern : Boolean[0,n]
+ *                    [attr: url-pattern CDATA #REQUIRED ]
+ *                    [attr: no-of-retries CDATA -1]
+ *                    EMPTY : String
+ *            health-checker : Boolean?
+ *                [attr: url CDATA /]
+ *                [attr: interval-in-seconds CDATA 30]
+ *                [attr: timeout-in-seconds CDATA 10]
+ *                EMPTY : String
+ *        property2 : Property[0,n]
+ *            [attr: name CDATA #REQUIRED ]
+ *            [attr: value CDATA #REQUIRED ]
+ *            description : String?
  *
  */
 package org.glassfish.loadbalancer.admin.cli.beans;
@@ -65,8 +65,8 @@ import java.io.*;
 public class Loadbalancer extends org.netbeans.modules.schema2beans.BaseBean {
 
     static Vector comparators = new Vector();
-    static public final String CLUSTER = "Cluster";	// NOI18N
-    static public final String PROPERTY2 = "Property2";	// NOI18N
+    static public final String CLUSTER = "Cluster";    // NOI18N
+    static public final String PROPERTY2 = "Property2";    // NOI18N
 
     public Loadbalancer() {
         this(null, Common.USE_DEFAULT_VALUES);
@@ -84,13 +84,13 @@ public class Loadbalancer extends org.netbeans.modules.schema2beans.BaseBean {
 
     protected void initFromNode(org.w3c.dom.Node doc, int options) throws Schema2BeansException {
         if (doc == null) {
-            doc = GraphManager.createRootElementNode("loadbalancer");	// NOI18N
+            doc = GraphManager.createRootElementNode("loadbalancer");    // NOI18N
             if (doc == null) {
                 throw new Schema2BeansException(Common.getMessage(
                         "CantCreateDOMRoot_msg", "loadbalancer"));
             }
         }
-        Node n = GraphManager.getElementNode("loadbalancer", doc);	// NOI18N
+        Node n = GraphManager.getElementNode("loadbalancer", doc);    // NOI18N
         if (n == null) {
             throw new Schema2BeansException(Common.getMessage(
                     "DocRootNotInDOMGraph_msg", "loadbalancer", doc.getFirstChild().getNodeName()));
@@ -295,29 +295,29 @@ public class Loadbalancer extends org.netbeans.modules.schema2beans.BaseBean {
         Object o;
         org.netbeans.modules.schema2beans.BaseBean n;
         str.append(indent);
-        str.append("Cluster[" + this.sizeCluster() + "]");	// NOI18N
+        str.append("Cluster[" + this.sizeCluster() + "]");    // NOI18N
         for (int i = 0; i < this.sizeCluster(); i++) {
             str.append(indent + "\t");
             str.append("#" + i + ":");
             n = (org.netbeans.modules.schema2beans.BaseBean) this.getCluster(i);
             if (n != null) {
-                n.dump(str, indent + "\t");	// NOI18N
+                n.dump(str, indent + "\t");    // NOI18N
             } else {
-                str.append(indent + "\tnull");	// NOI18N
+                str.append(indent + "\tnull");    // NOI18N
             }
             this.dumpAttributes(CLUSTER, i, str, indent);
         }
 
         str.append(indent);
-        str.append("Property2[" + this.sizeProperty2() + "]");	// NOI18N
+        str.append("Property2[" + this.sizeProperty2() + "]");    // NOI18N
         for (int i = 0; i < this.sizeProperty2(); i++) {
             str.append(indent + "\t");
             str.append("#" + i + ":");
             n = (org.netbeans.modules.schema2beans.BaseBean) this.getProperty2(i);
             if (n != null) {
-                n.dump(str, indent + "\t");	// NOI18N
+                n.dump(str, indent + "\t");    // NOI18N
             } else {
-                str.append(indent + "\tnull");	// NOI18N
+                str.append(indent + "\tnull");    // NOI18N
             }
             this.dumpAttributes(PROPERTY2, i, str, indent);
         }
@@ -327,8 +327,8 @@ public class Loadbalancer extends org.netbeans.modules.schema2beans.BaseBean {
     @Override
     public String dumpBeanNode() {
         StringBuffer str = new StringBuffer();
-        str.append("Loadbalancer\n");	// NOI18N
-        this.dump(str, "\n  ");	// NOI18N
+        str.append("Loadbalancer\n");    // NOI18N
+        this.dump(str, "\n  ");    // NOI18N
         return str.toString();
     }
 }

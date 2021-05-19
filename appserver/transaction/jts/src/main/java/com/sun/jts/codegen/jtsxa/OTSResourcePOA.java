@@ -147,7 +147,7 @@ public abstract class OTSResourcePOA extends org.omg.PortableServer.Servant
 
   // Type-specific CORBA::Object operations
   private static String[] __ids = {
-    "IDL:jtsxa/OTSResource:1.0", 
+    "IDL:jtsxa/OTSResource:1.0",
     "IDL:omg.org/CosTransactions/Resource:1.0"};
 
   public String[] _all_interfaces (org.omg.PortableServer.POA poa, byte[] objectId)
@@ -155,13 +155,13 @@ public abstract class OTSResourcePOA extends org.omg.PortableServer.Servant
     return (String[])__ids.clone ();
   }
 
-  public OTSResource _this() 
+  public OTSResource _this()
   {
     return OTSResourceHelper.narrow(
     super._this_object());
   }
 
-  public OTSResource _this(org.omg.CORBA.ORB orb) 
+  public OTSResource _this(org.omg.CORBA.ORB orb)
   {
     return OTSResourceHelper.narrow(
     super._this_object(orb));

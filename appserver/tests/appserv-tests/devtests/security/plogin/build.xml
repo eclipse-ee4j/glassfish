@@ -32,7 +32,7 @@
     &run;
 
     <target name="all">
-	<ant dir="standalone" target="all"/>
+        <ant dir="standalone" target="all"/>
     </target>
 
 </project>

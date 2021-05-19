@@ -37,10 +37,10 @@ public class UniqueResourceNameValidator implements ConstraintValidator<UniqueRe
 
         /*ServiceLocator locator = ServiceLocatorFactory.getInstance().find("default");
         if (locator == null) return;
-        
+
         ConfigBeansUtilities cbu = locator.getService(ConfigBeansUtilities.class);
         if (cbu == null) return;
-        
+
         domain = cbu.getDomain();*/
 
         ServiceLocator habitat = Globals.getDefaultHabitat();

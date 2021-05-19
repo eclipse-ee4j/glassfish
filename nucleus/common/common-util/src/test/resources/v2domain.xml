@@ -199,7 +199,7 @@
         <jvm-options>-XX:NewRatio=2</jvm-options>
         <!--
         Use the following jvm-options element to disable the quick startup:
-	com.sun.enterprise.server.ss.ASQuickStartup=false
+        com.sun.enterprise.server.ss.ASQuickStartup=false
       -->
       </java-config>
       <thread-pools>

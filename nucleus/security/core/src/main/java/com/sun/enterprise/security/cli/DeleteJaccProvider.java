@@ -50,7 +50,7 @@ import org.jvnet.hk2.config.TransactionFailure;
  *Usage: delete-jacc-provider
  *         [--help] [--user admin_user] [--passwordfile file_name]
  *         [ --target  target_name] jacc_provider_name
- * 
+ *
  */
 @Service(name="delete-jacc-provider")
 @PerLookup
@@ -76,10 +76,10 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
     private Domain domain;
 
     private SecurityService securityService;
-    
+
     @AccessRequired.To("delete")
     private JaccProvider jprov;
-    
+
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
@@ -104,10 +104,10 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
          }
-        
+
         return true;
     }
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
@@ -120,7 +120,7 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
                    break;
                }
             }
-            
+
             final JaccProvider jaccprov = jprov;
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
                 public Object run(SecurityService param)

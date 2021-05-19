@@ -64,7 +64,7 @@
     <antcall target="compile-common">
         <param name="src" value="src/web"/>
     </antcall>
-</target> 
+</target>
 
 <target name="pkg-pu" depends="init-common,compile">
     <antcall target="package-pu-common">
@@ -80,10 +80,10 @@
         destdir="${build.classes.dir}"
         classpath="${env.APS_HOME}/lib/reporter.jar"
                        includes="WebTestUtil.java"/>
-    <javac srcdir="src/test" 
+    <javac srcdir="src/test"
         destdir="${build.classes.dir}"
-	classpath="${env.APS_HOME}/lib/reporter.jar"
-        	       includes="WebTest.java"/>
+        classpath="${env.APS_HOME}/lib/reporter.jar"
+                       includes="WebTest.java"/>
 </target>
 
 <target name="deploy" depends="init-common">
@@ -92,11 +92,11 @@
 
 <target name="run" depends="init-common">
         <java classname="test.WebTest" fork="true">
-	  <arg value="${testsuite.id}"/>
+          <arg value="${testsuite.id}"/>
           <arg value="${http.host}"/>
           <arg value="${http.port}"/>
           <arg value="${contextroot}"/>
-	  <arg value="${urlpattern}"/>
+          <arg value="${urlpattern}"/>
           <classpath>
            <pathelement location="${env.APS_HOME}/lib/reporter.jar"/>
            <pathelement location="${build.classes.dir}"/>

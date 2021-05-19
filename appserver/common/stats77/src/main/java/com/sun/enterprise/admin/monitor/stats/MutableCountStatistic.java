@@ -16,19 +16,22 @@
 
 package com.sun.enterprise.admin.monitor.stats;
 
-/** An interface that imparts mutability to a {@link CountStatistic} by the
+/**
+ * An interface that imparts mutability to a {@link CountStatistic} by the
  * virtue of extending MutableStatistic.
+ *
  * @author Kedar Mhaswade
  * @since S1AS8.0
  * @version 1.0
  */
-
 public interface MutableCountStatistic extends MutableStatistic {
-    
-    /** Provides the mutator to the only statistic in the implementing class that
+
+    /**
+     * Provides the mutator to the only statistic in the implementing class that
      * changes - Count. It is expected that the count is monotonically increasing
      * on a temporal scale.
-     * @param current       long that specifies the value when measured (sampled).
+     *
+     * @param current long that specifies the value when measured (sampled).
      */
-    public void setCount(long current);
+    void setCount(long current);
 }

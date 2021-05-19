@@ -42,7 +42,7 @@
         <antcall target="create-jdbc-resource-common"/>
 
         <antcall target="create-jdbc-connpool-common">
-            <param name="jdbc.conpool.name" value="ejb30-pool-1"/>           
+            <param name="jdbc.conpool.name" value="ejb30-pool-1"/>
         </antcall>
 
         <antcall target="create-jdbc-resource-common">
@@ -69,7 +69,7 @@
         <property name="ejb.jar" value="${assemble.dir}/${appname}-persistence.par"/>
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
-        </antcall>   
+        </antcall>
 
         <mkdir dir="${assemble.dir}"/>
         <delete file="${ejb.jar}" failonerror="false"/>
@@ -77,7 +77,7 @@
         <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <!-- optional files -->
-        <copy file="${persistence.xml}" 
+        <copy file="${persistence.xml}"
             tofile="${build.classes.dir}/META-INF/persistence.xml"
             failonerror="false"/>
 
@@ -91,25 +91,25 @@
         </jar>
 
         <delete dir="${build.classes.dir}/META-INF" failonerror="false"/>
-    </target>  
+    </target>
 
 
-    <target name="build" depends="init-common,clean">    
+    <target name="build" depends="init-common,clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
-        </antcall> 
+        </antcall>
         <antcall target="compile-common">
             <param name="src" value="client"/>
         </antcall>
-       
+
         <!--<antcall target="build-entity"/>-->
         <antcall target="build-ear-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
-	<antcall target="runclient-common">
+    <antcall target="runclient-common">
             <param name="appclient.application.args" value="${testsuite.id} "/>
-	</antcall>
+    </antcall>
     </target>
 
 
@@ -118,23 +118,23 @@
           <param name="sql.file" value="sql/create_${db.type}.sql"/>
         </antcall>
     </target>
-   
+
    <target name="drop" depends="init-common">
-	<antcall target="execute-sql-common">
-	  <param name="sql.file" value="sql/drop_${db.type}.sql"/>
-	</antcall>
+    <antcall target="execute-sql-common">
+      <param name="sql.file" value="sql/drop_${db.type}.sql"/>
+    </antcall>
     </target>
 
     <target name="unsetup" depends="init-common">
         <antcall target="drop"/>
-	<antcall target="undeploy-jdbc-common"/>
+    <antcall target="undeploy-jdbc-common"/>
         <antcall target="delete-jdbc-connpool-common">
             <param name="jdbc.conpool.name" value="ejb30-pool-1"/>
-        </antcall>  
+        </antcall>
         <antcall target="delete-jdbc-resource-common">
             <param name="jdbc.conpool.name" value="ejb30-pool-1"/>
             <param name="jdbc.resource.name" value="jdbc/sqetestDB"/>
         </antcall>
-    </target>   
-       
+    </target>
+
 </project>

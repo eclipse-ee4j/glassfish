@@ -33,16 +33,16 @@ import java.util.Iterator;
  * utility to convert JMS messages back to SOAP messages.
  */
 public class SOAPMessageWithJMSClient {
-   
-    /**    
+
+    /**
      * The main program to send SOAP messages with JMS and ReceiveSOAPMessageWithJMS.
-     */    
+     */
     public static void main (String[] args) {
 
         String topicName = JNDINames.TEST_MDB_TOPIC;
         String usage = "\nUsage: enter parameter Send or Receive (followed by optional Topic name). \n"+
                        "To Receive message: \"appclient -client SOAPtoJMSMessageSampleClient.jar Receive\" \n"+
-                       "To Send message: \"appclient -client SOAPtoJMSMessageSampleClient.jar Send\"";                      
+                       "To Send message: \"appclient -client SOAPtoJMSMessageSampleClient.jar Send\"";
 
         if (args.length > 0) {
             if (args[0].equalsIgnoreCase("Receive")){
@@ -68,7 +68,7 @@ public class SOAPMessageWithJMSClient {
                 }
             } else {
               System.out.println(usage);
-            }            
+            }
         } else {
             System.out.println(usage);
         }

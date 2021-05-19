@@ -40,8 +40,8 @@ public class NormalLookupInEARServlet extends HttpServlet {
     protected String myString;
 
     private Hello singleton1;
-    
-    @Inject 
+
+    @Inject
     TestBean tw;
 
     private String msg = "";
@@ -91,7 +91,7 @@ public class NormalLookupInEARServlet extends HttpServlet {
         }
 
         singleton1.hello();
-        
+
         checkForNull(tw, "normal lookup of session scoped bean in war failed");
 
         out.println(msg);

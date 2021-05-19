@@ -26,20 +26,20 @@ import java.rmi.*;
 
 public class PrivilegeImpl implements Privilege {
     private String name;
-    
+
     /**
      * Creates a new Privilege object..
      *
      */
     public PrivilegeImpl(String name) {
-	this.name = name;
+        this.name = name;
     }
 
     /**
      * Returns the hashCode ..
      */
     public int hashCode() {
-	return name.hashCode();
+        return name.hashCode();
     }
 
     /**
@@ -47,18 +47,18 @@ public class PrivilegeImpl implements Privilege {
      * @return The name of the name of the Privilege.
      */
     public String getName() {
-	return name;
+        return name;
     }
 
     /**
      * Compares equality...
      */
     public boolean equals(Object obj) {
-	if(obj instanceof Privilege) {
-	    Privilege priv = (Privilege) obj;
-	    return getName().equals(priv.getName());
-	} else {
-	    return false;
-	}
+        if(obj instanceof Privilege) {
+            Privilege priv = (Privilege) obj;
+            return getName().equals(priv.getName());
+        } else {
+            return false;
+        }
     }
 }

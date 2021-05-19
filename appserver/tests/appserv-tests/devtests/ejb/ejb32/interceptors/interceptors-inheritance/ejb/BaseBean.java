@@ -29,20 +29,20 @@ public class BaseBean {
 
     @AroundInvoke
     private Object interceptCall(InvocationContext ctx) throws Exception {
-	System.out.println("**BaseBean AROUND-INVOKE++ [@AroundInvoke]: " + ctx.getMethod());
+        System.out.println("**BaseBean AROUND-INVOKE++ [@AroundInvoke]: " + ctx.getMethod());
         ai = true;
         return ctx.proceed();
     }
 
     @PostConstruct
     private void init() {
-	System.out.println("**BaseBean PostConstruct");
+        System.out.println("**BaseBean PostConstruct");
         pc = true;
     }
 
     @PreDestroy
     private void destroy() {
-	System.out.println("**BaseBean PreDestroy");
+        System.out.println("**BaseBean PreDestroy");
         pd = true;
     }
 

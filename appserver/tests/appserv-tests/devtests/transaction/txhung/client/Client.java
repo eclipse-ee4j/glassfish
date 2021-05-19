@@ -33,9 +33,9 @@ public class Client {
     status = new SimpleReporterAdapter("appserv-tests");
     }
 
-    
+
     public static void main(String[] args) {
-	System.out.println("\nStarting Txglobal Test Suite");
+        System.out.println("\nStarting Txglobal Test Suite");
         Client client = new Client();
 
         // run the tests
@@ -43,7 +43,7 @@ public class Client {
 
     }
     public void runTestClient() {
-	status.addDescription("This is to test the hung transaction!");
+        status.addDescription("This is to test the hung transaction!");
         try {
             System.out.println("START");
 
@@ -59,12 +59,12 @@ public class Client {
 
             try {
                 result = t.testA1(xa);
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (jakarta.ejb.CreateException e) {
                 System.out.println("CreateException");
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (Exception e) {
-		System.out.println("TEST PASSED");
+                System.out.println("TEST PASSED");
                // System.out.println(""+e.getMessage());
             }
             if (!result) {
@@ -72,16 +72,16 @@ public class Client {
             } else {
                 status.addStatus("txhung testA1 ", status.FAIL);
             }
-	    result = false;
+            result = false;
 
             try {
                 result = t.testA1(nonxa);
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (jakarta.ejb.CreateException e) {
                 System.out.println("CreateException");
-		System.out.println("TEST FAILED");
+                System.out.println("TEST FAILED");
             } catch (Exception e) {
-		System.out.println("TEST PASSED");
+                System.out.println("TEST PASSED");
                // System.out.println(""+e.getMessage());
             }
             if (!result) {
@@ -99,6 +99,6 @@ public class Client {
             ex.printStackTrace();
             status.addStatus("txhung testA1 ", status.FAIL);
         }
-	}
-    
+        }
+
 }

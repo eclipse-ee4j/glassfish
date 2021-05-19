@@ -16,64 +16,63 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Class representing a float constant in the constant pool of a class file
  */
-
 public class ConstFloat extends ConstValue {
-  /* The tag value associated with ConstFloat */
-  public static final int MyTag = CONSTANTFloat;
+    /* The tag value associated with ConstFloat */
+    public static final int MyTag = CONSTANTFloat;
 
-  /* The value */
-  private float floatValue;
+    /* The value */
+    private float floatValue;
 
-  /* public accessors */
+    /* public accessors */
 
-  /**
-   * The tag of this constant entry
-   */
-  public int tag () { return MyTag; }
+    /**
+     * The tag of this constant entry
+     */
+    public int tag () { return MyTag; }
 
-  /**
-   * return the value associated with the entry
-   */
-  public float value() {
-    return floatValue;
-  }
+    /**
+     * return the value associated with the entry
+     */
+    public float value() {
+        return floatValue;
+    }
 
-  /**
-   * Return the descriptor string for the constant type.
-   */
-  public String descriptor() {
-      return "F";//NOI18N
-  }
+    /**
+     * Return the descriptor string for the constant type.
+     */
+    public String descriptor() {
+        return "F";//NOI18N
+    }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTFloat(" + indexAsString() + "): " + //NOI18N
-          "floatValue(" + Float.toString(floatValue) + ")";//NOI18N
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTFloat(" + indexAsString() + "): " + //NOI18N
+            "floatValue(" + Float.toString(floatValue) + ")";//NOI18N
+    }
 
-  /* package local methods */
+    /* package local methods */
 
-  ConstFloat (float f) {
-    floatValue = f;
-  }
+    ConstFloat (float f) {
+        floatValue = f;
+    }
 
-  void formatData (DataOutputStream b) throws IOException {
-    b.writeFloat(floatValue);
-  }
+    void formatData (DataOutputStream b) throws IOException {
+        b.writeFloat(floatValue);
+    }
 
-  static ConstFloat read (DataInputStream input) throws IOException {
-    return new ConstFloat (input.readFloat());
-  }
+    static ConstFloat read (DataInputStream input) throws IOException {
+        return new ConstFloat (input.readFloat());
+    }
 
-  void resolve (ConstantPool p) { }
+    void resolve (ConstantPool p) { }
 
 }
-
-

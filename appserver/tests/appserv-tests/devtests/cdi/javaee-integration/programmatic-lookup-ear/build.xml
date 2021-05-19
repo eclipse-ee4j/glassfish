@@ -34,7 +34,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="war"/>
@@ -46,8 +46,8 @@
             <param name="src" value="ejb"/>
         </antcall>
 
-	<javac classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/modules/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
-	 
+        <javac classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/modules/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar" srcdir="client" destdir="${build.classes.dir}" debug="on" failonerror="true">
+
         </javac>
 <!--
         <antcall target="compile-common">
@@ -62,15 +62,15 @@
           <param name="ejbjar.classes" value="**/Foo.class,**/Hello.class,**/HelloRemote.class,**/Singleton*.class,**/HelloStateless.class,**/HelloSingleton.class,**/FooManagedBean.class,**/BarManagedBean.class, **/FooBarManagedBean.class, **/ManagedSuper.class"/>
         </antcall>
         <antcall target="ear-common"/>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
 
     <target name="run" depends="init-common">
-       <java  fork="on" 
+       <java  fork="on"
               failonerror="true"
               classpath="${env.S1AS_HOME}/lib/javaee.jar:${env.S1AS_HOME}/modules/gf-client.jar:${build.classes.dir}:${env.APS_HOME}/lib/reporter.jar"
               classname="${se.client}">
@@ -79,10 +79,10 @@
            <arg line="${http.port}"/>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

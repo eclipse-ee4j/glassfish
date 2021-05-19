@@ -54,13 +54,13 @@ public class WebTestNG {
      * Returns true in case of success, false otherwise.
      */
     private static boolean doTest(String urlString, String expected) {
-        try { 
+        try {
             URL url = new URL(urlString);
             System.out.println("Connecting to: " + url.toString());
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.connect();
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) { 
+            if (responseCode != 200) {
                 System.out.println("Wrong response code. Expected: 200"
                                    + ", received: " + responseCode);
                 return false;

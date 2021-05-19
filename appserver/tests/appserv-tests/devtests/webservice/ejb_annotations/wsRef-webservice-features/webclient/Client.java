@@ -30,11 +30,11 @@ public class Client extends HttpServlet {
         @MTOM(enabled=true)
         @RespectBinding
         @Addressing (required = false,enabled=true)
- 
+
         Hello hiport;
 
-       public void doGet(HttpServletRequest req, HttpServletResponse resp) 
-		throws jakarta.servlet.ServletException {
+       public void doGet(HttpServletRequest req, HttpServletResponse resp)
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 

@@ -93,7 +93,7 @@ public interface MessageSecurityConfig extends ConfigBeanProxy {
      *
      * Used to identify the client provider to be invoked for any application for which a specific client provider has not
      * been bound
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -117,7 +117,7 @@ public interface MessageSecurityConfig extends ConfigBeanProxy {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getProviderConfig().add(newItem);
      * </pre>

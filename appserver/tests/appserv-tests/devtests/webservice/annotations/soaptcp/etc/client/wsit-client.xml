@@ -18,10 +18,10 @@
 -->
 
  <definitions
- xmlns="http://schemas.xmlsoap.org/wsdl/" 
- xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" 
- xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
- xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="mainclientconfig" 
+ xmlns="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+ xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+ xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" name="mainclientconfig"
  >
     <import location="ServiceChannelWSImpl.wsdl" namespace="http://servicechannel.tcp.transport.ws.xml.sun.com/"/>
     <import location="ServletHelloService.wsdl" namespace="http://servlet_endpoint/"/>

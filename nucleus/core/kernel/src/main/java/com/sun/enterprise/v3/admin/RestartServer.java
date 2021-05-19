@@ -46,7 +46,7 @@ import jakarta.inject.Provider;
 public class RestartServer {
     @Inject
     private Provider<GlassFish> glassfishProvider;
-    
+
     protected final void setDebug(Boolean b) {
         debug = b;
     }
@@ -74,16 +74,16 @@ public class RestartServer {
                 throw new NullPointerException(new LocalStringsImpl(getClass()).get("restart.server.internalError", "registry was not set"));
 
             init(context);
-            
+
             // get the GlassFish object - we have to wait in case startup is still in progress
-            // This is a temporary work-around until HK2 supports waiting for the service to 
-            // show up in the ServiceLocator. 
+            // This is a temporary work-around until HK2 supports waiting for the service to
+            // show up in the ServiceLocator.
             GlassFish gfKernel = glassfishProvider.get();
             while (gfKernel == null) {
                 Thread.sleep(1000);
                 gfKernel = glassfishProvider.get();
             }
-            
+
             if (!verbose) {
                 // do it now while we still have the Logging service running...
                 reincarnate();

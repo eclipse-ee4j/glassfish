@@ -154,7 +154,7 @@ public class StatementLeakDetector {
                         stmtLeakListener.reclaimStatement();
                     } catch (SQLException ex) {
                         Object[] params = new Object[]{poolInfo, ex};
-                        _logger.log(Level.WARNING, 
+                        _logger.log(Level.WARNING,
                                 "statement.leak.detector_reclaim_statement_failure",
                                 params);
                     }

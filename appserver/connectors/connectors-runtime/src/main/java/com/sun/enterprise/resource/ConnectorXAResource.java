@@ -74,7 +74,7 @@ public class ConnectorXAResource implements XAResource {
         this.poolMgr = ConnectorRuntime.getRuntime().getPoolManager();
         this.userHandle = null;
         this.spec = spec;
-	    this.poolInfo = spec.getPoolInfo();
+        this.poolInfo = spec.getPoolInfo();
         this.alloc = alloc;
         this.info = info;
         localConnection = (ManagedConnection) handle.getResource();
@@ -150,10 +150,10 @@ public class ConnectorXAResource implements XAResource {
             handleResourceException(e);
         }
     }
-    
+
     public void forget(Xid xid) throws XAException {
         if(_logger.isLoggable(Level.FINE)) {
-	    _logger.fine("Well, forget is called for xid :"+xid);
+        _logger.fine("Well, forget is called for xid :"+xid);
         }
         // no-op
     }
@@ -161,7 +161,7 @@ public class ConnectorXAResource implements XAResource {
     public int getTransactionTimeout() throws XAException {
         return 0;
     }
-    
+
     public boolean isSameRM(XAResource other) throws XAException {
         if (this == other) return true;
         if (other == null) return false;
@@ -172,20 +172,20 @@ public class ConnectorXAResource implements XAResource {
         } else {
             return false;
         }
-    }        
+    }
 
     public int prepare(Xid xid) throws XAException {
         return TransactionConstants.LAO_PREPARE_OK;
     }
-    
+
     public Xid[] recover(int flag) throws XAException {
         return new Xid[0];
     }
-    
+
     public void rollback(Xid xid) throws XAException {
         try {
-	    ResourceHandle handle = getResourceHandle();
-	    ManagedConnection mc = (ManagedConnection) handle.getResource();
+        ResourceHandle handle = getResourceHandle();
+        ManagedConnection mc = (ManagedConnection) handle.getResource();
             mc.getLocalTransaction().rollback();
         } catch (Exception ex) {
             handleResourceException(ex);
@@ -263,7 +263,7 @@ public class ConnectorXAResource implements XAResource {
             handleResourceException(ex);
         }
     }
-   
+
     public JavaEETransaction getAssociatedTransaction(){
          return associatedTransaction;
     }

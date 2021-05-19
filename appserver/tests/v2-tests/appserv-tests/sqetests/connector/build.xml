@@ -39,7 +39,7 @@
   </target>
 
   <target name="usage">
-      <antcall target="usage-common"/> 
+      <antcall target="usage-common"/>
   </target>
 
   <target name="clean" depends="init-common">

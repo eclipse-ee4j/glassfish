@@ -18,10 +18,9 @@ package com.sun.enterprise.deployment.util.webservice;
 
 /**
  * This class is used by the deployment tool to set the required information for jaxrpc-config.xml
- * that is passed as an argument to the wscompile tool. This class is to be used when the developer is
- * using the deploytool to generate WSDL given an SEI
+ * that is passed as an argument to the wscompile tool. This class is to be used when the developer
+ * is using the deploytool to generate WSDL given an SEI
  */
-
 public class SEIConfig {
 
     private String webServiceName;
@@ -32,13 +31,14 @@ public class SEIConfig {
 
     /**
      * Constructor takes all required arguments and sets them appropriately
+     *
      * @param svcName Name of the webservice
-     * @param space   namespace to be used for the webservice
-     * @param pkg     the package name where the SEI and its implementations are present
-     * @param svcIntf the name of the SEI 
+     * @param space namespace to be used for the webservice
+     * @param pkg the package name where the SEI and its implementations are present
+     * @param svcIntf the name of the SEI
      * @param svcImpl the name of SEI implementation
      */
-    
+
     public SEIConfig(String svcName, String space, String pkg, String svcIntf, String svcImpl) {
         this.webServiceName = svcName;
         this.nameSpace = space;
@@ -46,14 +46,29 @@ public class SEIConfig {
         this.interfaceName = svcIntf;
         this.servantName = svcImpl;
     }
-    
-    public String getWebServiceName() { return this.webServiceName; }
-    
-    public String getNameSpace() { return this.nameSpace; }
-    
-    public String getPackageName() { return this.packageName; }
-    
-    public String getInterface() { return this.interfaceName; }
-    
-    public String getServant() { return this.servantName; }
+
+
+    public String getWebServiceName() {
+        return this.webServiceName;
+    }
+
+
+    public String getNameSpace() {
+        return this.nameSpace;
+    }
+
+
+    public String getPackageName() {
+        return this.packageName;
+    }
+
+
+    public String getInterface() {
+        return this.interfaceName;
+    }
+
+
+    public String getServant() {
+        return this.servantName;
+    }
 }

@@ -93,7 +93,7 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the haAgentPort property.
      *
      * Port number where highly available store management agents can be contacted
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -111,7 +111,7 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the haAgentPassword property. password needed to contact highly available store management agents
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -127,7 +127,7 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the haStoreName property. Name of the session store
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -170,7 +170,7 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
      * ejb-container-availability (with sfsb-store-pool-name). If store-pool-name is not over-ridden then both containers
      * will share the same connection pool. If either container over-rides then it may have its own dedicated pool. In this
      * case there must also be a new corresponding JDBC Resource and JDBC Connection Pool defined for this new pool name.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -186,7 +186,7 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
 
     /**
      * Gets the value of the haStoreHealthcheckEnabled property.
-     * 
+     *
      * Application server stops saving session state when the store service does not function properly or is is not
      * accessible for any reason. When this attribute is set to true, periodic checking is done to detect if the store
      * service has become available again. If healthcheck succeeds the session state saving is resumed.
@@ -208,7 +208,7 @@ public interface AvailabilityService extends ConfigBeanProxy, PropertyBag {
      * Gets the value of the haStoreHealthcheckIntervalInSeconds property.
      *
      * The periodicity at which store health is checked.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "5")

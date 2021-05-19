@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -34,8 +34,8 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-session5ID");
-    }  
-    
+    }
+
     /**
      * This test ensures that we don't assume a remote ejb client has
      * access to all the classes for all the remote business interfaces that
@@ -43,7 +43,7 @@ public class Client {
      * remote business interfaces, but this client only uses Sful2 and
      * Sless2 and does not package the Sful or Sless classes at all. The
      * internal generated RMI-IIOP stubs created at runtime should not
-     * cause any classloading errors in the client. 
+     * cause any classloading errors in the client.
      */
     public Client (String[] args) {
     }
@@ -73,8 +73,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
 }

@@ -39,7 +39,7 @@ import java.util.logging.Level;
  * the descriptor classes
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class J2EEDocumentBuilder {
 
@@ -47,9 +47,9 @@ public class J2EEDocumentBuilder {
     public J2EEDocumentBuilder() {
     }
 
-    /** 
-     * Creates and Return a new DOM document based on the current 
-     * configuration 
+    /**
+     * Creates and Return a new DOM document based on the current
+     * configuration
      *
      * @return the new DOM Document object
      */
@@ -68,37 +68,37 @@ public class J2EEDocumentBuilder {
             }
 
             DocumentBuilder builder = factory.newDocumentBuilder();
-            
-            DOMImplementation domImplementation = 
+
+            DOMImplementation domImplementation =
                 builder.getDOMImplementation();
-            
+
             Document document = builder.newDocument();
             return document;
         } catch (Exception e) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, "enterprise.deployment.backend.saxParserError",
                     new Object[] {"JAXP configuration error"});
             DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
-        } 
+        }
         return null;
-    }    
-    
-    /** 
-     * Return a document containing a result node based 
+    }
+
+    /**
+     * Return a document containing a result node based
      * on the given result descriptor.
      */
     public static Document getDocument(Descriptor descriptor, XMLNode node) {
         try {
             Node domNode = node.writeDescriptor(newDocument(), descriptor);
-            if (domNode instanceof Document) 
+            if (domNode instanceof Document)
                 return (Document) domNode;
-            else 
+            else
                 return domNode.getOwnerDocument();
         } catch (Exception e) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);  
+            DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
         }
         return null;
-    }    
-        
+    }
+
     public static void write (Descriptor descriptor, final RootXMLNode node,  final File resultFile) throws Exception {
         if (node==null) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
@@ -117,13 +117,13 @@ public class J2EEDocumentBuilder {
             out.close();
         }
     }
-    
+
     public static void write (Descriptor descriptor, final RootXMLNode node,  final OutputStream os) throws Exception {
         Result output = new StreamResult(os);
         write(descriptor, node, output);
-    }    
+    }
 
-    public static void write (Descriptor descriptor, final RootXMLNode node,  final Result output) 
+    public static void write (Descriptor descriptor, final RootXMLNode node,  final Result output)
                                 throws Exception {
         if (node==null) {
             DOLUtils.getDefaultLogger().log(Level.SEVERE, DOLUtils.INVALID_DESC_MAPPING,
@@ -137,10 +137,10 @@ public class J2EEDocumentBuilder {
             setTransformerProperties(node, transformer);
             transformer.transform(source, output);
         } catch(Exception e) {
-            DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);  
+            DOLUtils.getDefaultLogger().log(Level.WARNING, "Error occurred", e);
             throw e;
         }
-    }        
+    }
 
     private static Transformer getTransformer() throws Exception {
         //get current TCL and system property values
@@ -157,12 +157,12 @@ public class J2EEDocumentBuilder {
             if (userTransformerFactory != null) {
                 System.clearProperty("javax.xml.transform.TransformerFactory");
             }
-             
+
             //get the VM default transformer factory and use that for DOL
             //processing
             transformer = TransformerFactory.newInstance().newTransformer();
         } finally {
-            //reset thread context classloader and system property to their 
+            //reset thread context classloader and system property to their
             //original values
             Thread.currentThread().setContextClassLoader(currentTCL);
             if (userTransformerFactory != null) {
@@ -170,8 +170,8 @@ public class J2EEDocumentBuilder {
             }
         }
         return transformer;
-    }        
-    
+    }
+
     private static void setTransformerProperties (RootXMLNode node, Transformer transformer) {
         if (node.getDocType()!=null) {
             transformer.setOutputProperty(
@@ -180,20 +180,21 @@ public class J2EEDocumentBuilder {
                 transformer.setOutputProperty(
                     OutputKeys.DOCTYPE_SYSTEM, node.getSystemID());
             }
-        }            
-        transformer.setOutputProperty(OutputKeys.METHOD, "xml");        
+        }
+        transformer.setOutputProperty(OutputKeys.METHOD, "xml");
         transformer.setOutputProperty(OutputKeys.INDENT, "yes");
         transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
         transformer.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
-    }  
-    
+    }
+
+
     public static String descriptorToString(Descriptor descriptor, final DeploymentDescriptorFile ddFile)
-                                throws Exception {
+        throws Exception {
         java.io.StringWriter sw = new java.io.StringWriter();
         StreamResult sr = new StreamResult(sw);
-	if (descriptor != null) {
-	    write(descriptor, ddFile.getRootXMLNode(descriptor), sr);
-	}
-        return sw.toString();        
+        if (descriptor != null) {
+            write(descriptor, ddFile.getRootXMLNode(descriptor), sr);
+        }
+        return sw.toString();
     }
 }

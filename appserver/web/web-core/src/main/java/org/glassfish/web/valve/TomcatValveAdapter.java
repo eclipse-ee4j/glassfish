@@ -25,7 +25,7 @@ import java.io.IOException;
 /**
  * Tomcat-style wrapper valve around GlassFish-style valve.
  *
- * This allows Tomcat- and GlassFish-style valves to be added to a 
+ * This allows Tomcat- and GlassFish-style valves to be added to a
  * pipeline in arbitrary order.
  *
  * @author jluehe

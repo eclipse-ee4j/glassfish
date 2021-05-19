@@ -101,7 +101,7 @@
     </session>
     <session>
       <ejb-name>SfulBean</ejb-name>
-      <home>com.sun.s1asdev.ejb.stubs.proxy.SfulRemoteHome</home> 
+      <home>com.sun.s1asdev.ejb.stubs.proxy.SfulRemoteHome</home>
       <remote>com.sun.s1asdev.ejb.stubs.proxy.SfulRemote</remote>
       <local-home>com.sun.s1asdev.ejb.stubs.proxy.SfulHome</local-home>
       <local>com.sun.s1asdev.ejb.stubs.proxy.Sful</local>

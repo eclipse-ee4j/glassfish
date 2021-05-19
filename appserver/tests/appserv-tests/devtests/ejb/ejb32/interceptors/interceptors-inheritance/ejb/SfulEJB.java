@@ -33,7 +33,7 @@ public class SfulEJB extends BaseBean implements Sful {
 
     public String hello() {
         System.out.println("In SfulEJB:hello()");
-	return sless.sayHello();
+        return sless.sayHello();
     }
 
     @Remove
@@ -43,7 +43,7 @@ public class SfulEJB extends BaseBean implements Sful {
 
     @AroundInvoke
     private Object interceptCall0(InvocationContext ctx) throws Exception {
-	System.out.println("**SfulEJB AROUND-INVOKE++ [@AroundInvoke]: " + ctx.getMethod());
+        System.out.println("**SfulEJB AROUND-INVOKE++ [@AroundInvoke]: " + ctx.getMethod());
         if (!ai) throw new RuntimeException("BaseBean was not called");
         ai = false; //reset
         return ctx.proceed();
@@ -51,14 +51,14 @@ public class SfulEJB extends BaseBean implements Sful {
 
     @PostConstruct
     private void init0() {
-	System.out.println("**SfulEJB PostConstruct");
+        System.out.println("**SfulEJB PostConstruct");
         if (!pc) throw new RuntimeException("BaseBean was not called");
         pc = false; //reset
     }
 
     @PreDestroy
     private void destroy0() {
-	System.out.println("**SfulEJB PreDestroy");
+        System.out.println("**SfulEJB PreDestroy");
     }
 
 }

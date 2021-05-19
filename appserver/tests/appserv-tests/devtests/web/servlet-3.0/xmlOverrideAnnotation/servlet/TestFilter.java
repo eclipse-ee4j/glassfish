@@ -32,7 +32,7 @@ public class TestFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         System.out.println(">>> filter.init");
         mesg = filterConfig.getInitParameter("mesg");
-    }   
+    }
 
     public void doFilter(ServletRequest req, ServletResponse res,
             FilterChain chain) throws IOException, ServletException {

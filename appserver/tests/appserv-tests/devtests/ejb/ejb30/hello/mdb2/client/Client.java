@@ -30,7 +30,7 @@ public class Client {
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    private static @Resource(name="FooCF") 
+    private static @Resource(name="FooCF")
         QueueConnectionFactory queueConFactory;
 
     public static void main (String[] args) {
@@ -52,7 +52,7 @@ public class Client {
 
     private int numMessages = 2;
     public Client(String[] args) {
-        
+
         if( args.length == 1 ) {
             numMessages = new Integer(args[0]).intValue();
         }
@@ -73,17 +73,17 @@ public class Client {
 
     public void setup() throws Exception {
         context = new InitialContext();
-        
+
         queueCon = queueConFactory.createQueueConnection();
 
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         // Producer will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(null);        
+        queueSender = queueSession.createSender(null);
 
         clientQueue = (jakarta.jms.Queue)
-	    context.lookup("java:comp/env/jms/MsgBeanClientQueue");
+            context.lookup("java:comp/env/jms/MsgBeanClientQueue");
 
         queueReceiver = queueSession.createReceiver(clientQueue);
 
@@ -101,18 +101,18 @@ public class Client {
         }
     }
 
-    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num) 
+    public void sendMsgs(jakarta.jms.Queue queue, Message msg, int num)
         throws JMSException {
         for(int i = 0; i < num; i++) {
-            System.out.println("Sending message " + i + " to " + queue + 
+            System.out.println("Sending message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
             queueSender.send(queue, msg);
-            System.out.println("Sent message " + i + " to " + queue + 
+            System.out.println("Sent message " + i + " to " + queue +
                                " at time " + System.currentTimeMillis());
         }
     }
 
-    public void doTest(String destName, int num) 
+    public void doTest(String destName, int num)
         throws Exception {
 
         Destination dest = (Destination) context.lookup(destName);
@@ -126,7 +126,7 @@ public class Client {
         System.out.println("Waiting for queue message");
         Message recvdmessage = queueReceiver.receive(TIMEOUT);
         if( recvdmessage != null ) {
-            System.out.println("Received message : " + 
+            System.out.println("Received message : " +
                                    ((TextMessage)recvdmessage).getText());
         } else {
             System.out.println("timeout after " + TIMEOUT + " seconds");

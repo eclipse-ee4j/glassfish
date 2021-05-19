@@ -216,7 +216,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
                                    pc.substring(COOKIES_BY_NAME_PREFIX_LEN),
                                    hreq);
             } else if (DATE_TIME.equals(pc)) {
-                appendCurrentDate(charBuffer);       
+                appendCurrentDate(charBuffer);
             } else if (HEADER_ACCEPT.equals(pc)) {
                 appendHeaderAccept(charBuffer, hreq);
             } else if (HEADER_AUTH.equals(pc)) {
@@ -311,32 +311,32 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
             String component = pattern.substring(index+1, end);
 
             if (!component.startsWith(ATTRIBUTE_BY_NAME_PREFIX)
-                    && !AUTH_USER_NAME.equals(component) 
-                    && !CLIENT_DNS.equals(component) 
-                    && !CLIENT_NAME.equals(component) 
-                    && !COOKIE.equals(component) 
-                    && !COOKIES.equals(component) 
+                    && !AUTH_USER_NAME.equals(component)
+                    && !CLIENT_DNS.equals(component)
+                    && !CLIENT_NAME.equals(component)
+                    && !COOKIE.equals(component)
+                    && !COOKIES.equals(component)
                     && !COOKIE_VALUE.equals(component)
                     && !component.startsWith(COOKIE_BY_NAME_PREFIX)
                     && !component.startsWith(COOKIES_BY_NAME_PREFIX)
-                    && !DATE_TIME.equals(component) 
-                    && !HEADER_ACCEPT.equals(component) 
-                    && !HEADER_AUTH.equals(component) 
-                    && !HEADER_DATE.equals(component) 
-                    && !HEADER_IF_MOD_SINCE.equals(component) 
-                    && !HEADER_USER_AGENT.equals(component) 
-                    && !HEADER_REFERER.equals(component) 
-                    && !HTTP_METHOD.equals(component) 
-                    && !HTTP_URI.equals(component) 
-                    && !HTTP_VERSION.equals(component) 
-                    && !QUERY_STR.equals(component) 
-                    && !REFERER.equals(component) 
-                    && !REQUEST.equals(component) 
+                    && !DATE_TIME.equals(component)
+                    && !HEADER_ACCEPT.equals(component)
+                    && !HEADER_AUTH.equals(component)
+                    && !HEADER_DATE.equals(component)
+                    && !HEADER_IF_MOD_SINCE.equals(component)
+                    && !HEADER_USER_AGENT.equals(component)
+                    && !HEADER_REFERER.equals(component)
+                    && !HTTP_METHOD.equals(component)
+                    && !HTTP_URI.equals(component)
+                    && !HTTP_VERSION.equals(component)
+                    && !QUERY_STR.equals(component)
+                    && !REFERER.equals(component)
+                    && !REQUEST.equals(component)
                     && !RESPONSE_LENGTH.equals(component)
                     && !RESPONSE_CONTENT_TYPE.equals(component)
-                    && !STATUS.equals(component) 
-                    && !TIME_TAKEN.equals(component) 
-                    && !USER_AGENT.equals(component) 
+                    && !STATUS.equals(component)
+                    && !TIME_TAKEN.equals(component)
+                    && !USER_AGENT.equals(component)
                     && !VS_ID.equals(component)
                     && !component.startsWith(HEADER_BY_NAME_PREFIX)
                     && !component.startsWith(HEADERS_BY_NAME_PREFIX)
@@ -354,7 +354,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
             }
 
             list.add(component);
-            from = end + 1;    
+            from = end + 1;
         }
 
         if (errorInPattern) {
@@ -549,7 +549,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
             long startTime = startTimeObj.longValue();
             long endTime = System.currentTimeMillis();
             timeTaken = String.valueOf(endTime - startTime);
-        } 
+        }
         cb.put(timeTaken);
         cb.put(QUOTE);
     }
@@ -676,7 +676,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
     /*
      * Appends the values (separated by ";") of all headers with the
      * specified name in the given request to the given char buffer, or
-     * NULL-HEADERS-<headerName> if no headers with the given name are 
+     * NULL-HEADERS-<headerName> if no headers with the given name are
      * present in the request..
      */
     private void appendHeadersByName(CharBuffer cb,
@@ -855,7 +855,7 @@ public class DefaultAccessLogFormatterImpl extends AccessLogFormatter {
                         first = false;
                     } else {
                         cb.put(";");
-		    }
+            }
                     cb.put(cookies[i].getValue());
                 }
             }

@@ -20,7 +20,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -47,7 +47,7 @@ public class WorkSecurityMapTest extends BaseSeleniumTestClass {
 
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
-        
+
         assertEquals(testGroupMapKey + "=" + testGroupMapValue, getValue("propertyForm:propertySheet:propertSectionTextField:groupProp:eisgrouptext", "value"));
         clickAndWait("propertyForm:propertyContentPage:topButtons:cancelButton");
 

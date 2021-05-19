@@ -22,7 +22,7 @@ import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.rpc.Call;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import javax.naming.*;
 import javax.xml.rpc.Service;
 import javax.xml.rpc.server.ServiceLifecycle;
@@ -30,11 +30,11 @@ import javax.xml.namespace.QName;
 
 public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, ServiceLifecycle {
 
-    private static final QName PORT_QNAME = 
+    private static final QName PORT_QNAME =
         new QName("urn:GoogleSearch", "GoogleSearchPort");
     private static final QName OPERATION_QNAME =
         new QName("urn:GoogleSearch", "doSpellingSuggestion");
-    
+
     private boolean gotInit = false;
 
     public GoogleServletImpl() {
@@ -50,9 +50,9 @@ public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, Ser
         System.out.println("Got ServiceLifecycle::destroy call");
     }
 
-    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url) 
-    { 
-        return null; 
+    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url)
+    {
+        return null;
     }
 
     public void helloOneWay(String s1) {
@@ -71,8 +71,8 @@ public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, Ser
                            new Date());
     }
 
-    public String doSpellingSuggestion(java.lang.String key, 
-                                       java.lang.String phrase) 
+    public String doSpellingSuggestion(java.lang.String key,
+                                       java.lang.String phrase)
 
         throws RemoteException {
         System.out.println("GoogleServletImpl.doSpellingSuggestion() " +
@@ -88,22 +88,22 @@ public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, Ser
             Service genericServiceWithWSDL = null;
             try {
                 InitialContext ic = new InitialContext();
-                Service service = (Service) 
+                Service service = (Service)
                     ic.lookup("java:comp/env/service/EjbDIIReference");
                 doDynamicProxyTest(service);
-                GoogleSearchPort ejbPort = (GoogleSearchPort) 
+                GoogleSearchPort ejbPort = (GoogleSearchPort)
                     service.getPort(GoogleSearchPort.class);
                 returnValue = ejbPort.doSpellingSuggestion(key, phrase);
             } catch(Exception e) {
                 e.printStackTrace();
                 throw new RemoteException(e.getMessage(), e);
             }
-        }               
-        
+        }
+
         System.out.println("GoogleServletImpl returning " + returnValue);
         return returnValue;
     }
-        
+
     public GoogleSearchResult doGoogleSearch(java.lang.String key, java.lang.String q, int start, int maxResults, boolean filter, java.lang.String restrict, boolean safeSearch, java.lang.String lr, java.lang.String ie, java.lang.String oe) {
         return null;
     }
@@ -113,14 +113,14 @@ public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, Ser
         Call c1 = service.createCall();
         Call c2 = service.createCall(PORT_QNAME);
         Call c3 = service.createCall(PORT_QNAME, OPERATION_QNAME);
-        Call c4 = service.createCall(PORT_QNAME, 
+        Call c4 = service.createCall(PORT_QNAME,
                                      OPERATION_QNAME.getLocalPart());
         Call[] calls = service.getCalls(PORT_QNAME);
 
         // container-managed port selection
-        GoogleSearchPort sei = (GoogleSearchPort) 
+        GoogleSearchPort sei = (GoogleSearchPort)
             service.getPort(GoogleSearchPort.class);
-        sei = (GoogleSearchPort) 
+        sei = (GoogleSearchPort)
             service.getPort(PORT_QNAME, GoogleSearchPort.class);
 
         QName serviceName = service.getServiceName();
@@ -129,7 +129,7 @@ public class GoogleServletImpl implements jakarta.servlet.SingleThreadModel, Ser
             System.out.println("wsdlLocation = " + wsdlLocation);
         }
         Iterator ports = service.getPorts();
-        
+
     }
-    
+
 }

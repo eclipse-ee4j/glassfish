@@ -26,19 +26,19 @@ import java.lang.management.ManagementFactory;
 
 public final class ObjectNamesTest extends TestBase
 {
-    
+
     public ObjectNamesTest() {
     }
 
     private ObjectNameBuilder get() {
         return new ObjectNameBuilder( ManagementFactory.getPlatformMBeanServer(), amxDomain());
     }
-    
+
     @Before
     public void setUp() {
         initBootUtil();
     }
-    
+
     @Test
     public void testCreate() {
         final ObjectNameBuilder objectNames = get();
@@ -48,7 +48,7 @@ public final class ObjectNamesTest extends TestBase
     {
         return "test";
     }
-    
+
     @Test
     public void testMisc() {
         get().getJMXDomain();

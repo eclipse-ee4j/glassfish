@@ -29,17 +29,17 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private static String appName;
 
     public static void main(String args[]) {
 
-	appName = args[0]; 
-	stat.addDescription(appName);
-	Client client = new Client(args);       
-        client.doTest();	
+        appName = args[0];
+        stat.addDescription(appName);
+        Client client = new Client(args);
+        client.doTest();
         stat.printSummary(appName + "ID");
     }
 
@@ -47,22 +47,22 @@ public class Client {
 
     public void doTest() {
 
-	try {
+        try {
 
-	    Hello bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB");
-	    System.out.println("SFSB test : " + bean.test("BAR", 1));
+            Hello bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB");
+            System.out.println("SFSB test : " + bean.test("BAR", 1));
             bean.testRemove();
 
-	    bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB");
-	    System.out.println("SFSB test destroyed: " + bean.test("FOO", 1));
-	    System.out.println("SFSB test again: " + bean.test("BAR", 2));
+            bean = (Hello) new InitialContext().lookup("java:global/" + appName + "/SFSB");
+            System.out.println("SFSB test destroyed: " + bean.test("FOO", 1));
+            System.out.println("SFSB test again: " + bean.test("BAR", 2));
 
-	     stat.addStatus("local main", stat.PASS);
+             stat.addStatus("local main", stat.PASS);
 
-	} catch(Exception e) {
-	    stat.addStatus("local main", stat.FAIL);
-	    e.printStackTrace();
-	}
+        } catch(Exception e) {
+            stat.addStatus("local main", stat.FAIL);
+            e.printStackTrace();
+        }
     }
 
 

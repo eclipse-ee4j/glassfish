@@ -39,12 +39,12 @@ import org.glassfish.hk2.api.PerLookup;
 /**
  * Represents the action report as XML like this:
  * <br>
- * <!-- 
- *     Apologies for the formatting - it's necessary for the JavaDoc to be readable 
+ * <!--
+ *     Apologies for the formatting - it's necessary for the JavaDoc to be readable
  *     If you are using NetBeans, for example, click anywhere in this comment area to see
  *     the document example clearly in the JavaDoc preview
  * -->
- * <code> 
+ * <code>
  * <br>&lt;action-report description="xxx" exit-code="xxx" [failure-cause="xxx"]>
  * <br>&nbsp;&nbsp;&lt;message-part message="xxx">
  * <br>&nbsp;&nbsp;&nbsp;&nbsp;&lt;property name="xxx" value="xxx"/>
@@ -58,7 +58,7 @@ import org.glassfish.hk2.api.PerLookup;
  * <br>&nbsp;&nbsp;&lt;/action-report>
  * <br>&lt;/action-report>
  * </code>
- * 
+ *
  * @author tjquinn
  */
 @Service(name="xml")
@@ -77,9 +77,9 @@ public class XMLActionReporter extends ActionReporter {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
+
     }
-    
+
     /**
      * Creates a new Element representing the XML content describing an
      * action report.  Invokes itself recursively to capture information
@@ -105,9 +105,9 @@ public class XMLActionReporter extends ActionReporter {
 
     @Override
     public String getContentType() {
-        return "text/xml"; 
+        return "text/xml";
     }
-    
+
     private void writePart(Element actionReport, MessagePart part, String childType) {
         Document d = actionReport.getOwnerDocument();
         Element messagePart = d.createElement("message-part");
@@ -115,7 +115,7 @@ public class XMLActionReporter extends ActionReporter {
         if (childType != null) {
             messagePart.setAttribute("type", childType);
         }
-        
+
         for (Map.Entry prop : part.getProps().entrySet()) {
             Element p = d.createElement("property");
             messagePart.appendChild(p);
@@ -152,7 +152,7 @@ public class XMLActionReporter extends ActionReporter {
             }
         }
     }
-    
+
     private void addMapElement(Element parent, Map map) {
         Document d = parent.getOwnerDocument();
         Element mapElement = d.createElement("map");
@@ -164,7 +164,7 @@ public class XMLActionReporter extends ActionReporter {
             Object value = entry.getValue();
             mapElement.appendChild(entryElement);
             entryElement.setAttribute("key", key);
-            
+
             if (value instanceof List) {
                 addListElement(entryElement, (List) value);
             } else if (value instanceof Map) {

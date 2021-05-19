@@ -20,7 +20,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This service will be named and injected into a field with a naked Named annotation
- * 
+ *
  * @author jwells
  */
 @Contract

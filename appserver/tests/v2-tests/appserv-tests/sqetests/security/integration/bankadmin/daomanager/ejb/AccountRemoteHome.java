@@ -25,8 +25,8 @@ import jakarta.ejb.FinderException;
 
 public interface AccountRemoteHome extends jakarta.ejb.EJBHome
 {
-	public AccountRemote createAccount (AccountDataObject dao)
-	throws jakarta.ejb.CreateException,RemoteException;
+    public AccountRemote createAccount (AccountDataObject dao)
+    throws jakarta.ejb.CreateException,RemoteException;
         public AccountRemote findByPrimaryKey(String id) throws jakarta.ejb.FinderException,RemoteException;
 
 }

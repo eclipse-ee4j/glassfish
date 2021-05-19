@@ -23,7 +23,7 @@ import org.glassfish.web.deployment.runtime.CookieProperties;
  * This node is the superclass for all web related runtime nodes
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class CookiePropertiesNode extends WebPropertyContainerNode {
     // tag class

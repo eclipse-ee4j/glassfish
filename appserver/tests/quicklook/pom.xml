@@ -36,7 +36,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-		        <version>3.0.0</version>
+                <version>3.0.0</version>
                 <executions>
                     <execution>
                         <id>default-test</id>
@@ -47,7 +47,7 @@
                                          classpathref="maven.plugin.classpath" />
                                 <property name="compile_classpath" refid="maven.compile.classpath"/>
                                 <property name="plugin_classpath" refid="maven.plugin.classpath"/>
-                                
+
                                 <echo message="compile classpath: ${compile_classpath}"/>
                                 <echo message="plugin classpath:  ${plugin_classpath}"/>
                                 <if>
@@ -55,7 +55,7 @@
                                     <then>
                                         <ant dir="." antfile="build.xml" target="all">
                                             <property name="glassfish.home" value="${glassfish.home}"/>
-                                        </ant>                                        
+                                        </ant>
                                     </then>
                                 </if>
                                 <if>
@@ -188,12 +188,12 @@
                             </exclusion>
                         </exclusions>
                     </dependency>
-                    
-		    <dependency>
-			<groupId>com.beust</groupId>
-			<artifactId>jcommander</artifactId>
-			<version>1.72</version>
-		    </dependency>
+
+            <dependency>
+            <groupId>com.beust</groupId>
+            <artifactId>jcommander</artifactId>
+            <version>1.72</version>
+            </dependency>
                 </dependencies>
             </plugin>
         </plugins>

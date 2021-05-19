@@ -26,20 +26,20 @@ import org.jvnet.hk2.annotations.Contract;
 /**
  * The Interface usable by AppClient Container for configuring the
  * Security Runtime.
- * 
+ *
  * @author Kumar Jayanti
  */
 @Contract
 public interface AppClientSecurityInfo {
-    
-    public enum CredentialType { 
+
+    public enum CredentialType {
         USERNAME_PASSWORD, CERTIFICATE, ALL
     };
 
-    
+
     /**
      * Initialize Security Runtime for the AppContainerr (Stores, SecurityManager, JSR 196 etc)
-     * 
+     *
      * @param container the Appclient Configuration Object
      * @param handler the CallbackHandler
      * @param appclientCredType The CredentialType of the Appclient
@@ -56,13 +56,13 @@ public interface AppClientSecurityInfo {
             String username, char[] password,
             boolean isJWS, boolean useGUIAuth);
 
-    
+
     /**
      * @param type the credential type
      * @return the integer encoding for this type
      */
     public int getCredentialEncoding(CredentialType type);
-   
+
     /**
      * Do a client login using the CredentialType
      * @param credType

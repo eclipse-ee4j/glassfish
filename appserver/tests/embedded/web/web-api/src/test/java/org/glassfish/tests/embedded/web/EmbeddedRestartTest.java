@@ -46,7 +46,7 @@ public class EmbeddedRestartTest {
         glassfish.start();
         System.out.println("================ Embedded Restart Test");
     }
-    
+
     @Test
     public void testEmbeddedWebAPI() throws Exception {
 
@@ -104,5 +104,5 @@ public class EmbeddedRestartTest {
             glassfish = null;
         }
     }
-    
+
 }

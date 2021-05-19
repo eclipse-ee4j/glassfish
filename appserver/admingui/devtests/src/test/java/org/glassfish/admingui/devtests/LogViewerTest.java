@@ -16,43 +16,43 @@
 
 package org.glassfish.admingui.devtests;
 
-import static org.junit.Assert.*;
-
 import org.junit.Test;
 
+import static org.junit.Assert.assertTrue;
 
 public class LogViewerTest extends BaseSeleniumTestClass {
+
     private static final String TRIGGER_SERVER = "i18n.instance.GeneralTitle";
     private static final String TRIGGER_LV = "i18nc.logViewer.levelLabel";
     private static final String TRIGGER_IV = "i18nc.logViewer.instanceLabel";
 
-
     // basic sanity test for log viewer
     @Test
     public void testLogViewer() {
-    	try {
-	        clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
-	        pressButton("propertyForm:propertyContentPage:logViewer");
-	        waitForPopUp("LogViewerWindow", "300000");
-	        selectWindow("LogViewerWindow");
-	        assertTrue(isTextPresent(TRIGGER_LV));
-    	} finally {
-    		selectWindow(null);
-    	}
+        try {
+            clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
+            pressButton("propertyForm:propertyContentPage:logViewer");
+            waitForPopUp("LogViewerWindow", "300000");
+            selectWindow("LogViewerWindow");
+            assertTrue(isTextPresent(TRIGGER_LV));
+        } finally {
+            selectWindow(null);
+        }
     }
+
 
     // basic sanity test for raw log viewer
     @Test
     public void testRawLogViewer() {
-    	try {
-		    clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
-		    pressButton("propertyForm:propertyContentPage:logViewerRaw");
-		    waitForPopUp("LogViewerRawWindow", "300000");
-		    selectWindow("LogViewerRawWindow");
-		    assertTrue(isTextPresent(TRIGGER_IV));
-    	} finally {
-    		selectWindow(null);
-    	}
+        try {
+            clickAndWait("treeForm:tree:applicationServer:applicationServer_link", TRIGGER_SERVER);
+            pressButton("propertyForm:propertyContentPage:logViewerRaw");
+            waitForPopUp("LogViewerRawWindow", "300000");
+            selectWindow("LogViewerRawWindow");
+            assertTrue(isTextPresent(TRIGGER_IV));
+        } finally {
+            selectWindow(null);
+        }
     }
 }
 

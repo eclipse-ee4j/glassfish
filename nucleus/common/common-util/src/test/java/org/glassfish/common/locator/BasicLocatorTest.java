@@ -34,7 +34,7 @@ public class BasicLocatorTest {
     /*
     private final static ServiceLocator locator = ServiceLocatorFactory.getInstance().create(TEST_NAME);
     */
-    
+
     /**
      * Called by junit before any test is run
      *
@@ -42,15 +42,15 @@ public class BasicLocatorTest {
     public void before() {
         DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
-        
+
         config.addActiveDescriptor(ProxiableSingletonContext.class);
         config.addActiveDescriptor(SimpleService.class);
         config.addActiveDescriptor(SimpleInjectee.class);
-        
+
         config.commit();
     }
     */
-    
+
     /**
      * Tests that a proxied method can be called when injected into a non-proxied class
      */
@@ -59,7 +59,7 @@ public class BasicLocatorTest {
         /*
         SimpleInjectee si = locator.getService(SimpleInjectee.class);
         Assert.assertNotNull(si);
-        
+
         si.callIt();  // This will throw if there are any problems
         */
     }

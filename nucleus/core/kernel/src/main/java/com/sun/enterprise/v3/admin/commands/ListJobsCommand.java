@@ -48,7 +48,7 @@ import org.jvnet.hk2.annotations.Service;
 @PerLookup
 @I18n("list-jobs")
 public class ListJobsCommand implements AdminCommand,AdminCommandSecurity.AccessCheckProvider {
-    
+
     private ActionReport report;
     private static final String DEFAULT_USER_STRING = "-";
 
@@ -59,7 +59,7 @@ public class ListJobsCommand implements AdminCommand,AdminCommandSecurity.Access
      * Associates an access check with each candidate JobInfo we might report on.
      */
     private final Collection<AccessRequired.AccessCheck<JobInfo>> jobAccessChecks = new ArrayList<AccessRequired.AccessCheck<JobInfo>>();
-    
+
     private final String JOBS_FILE = "jobs.xml";
 
     @Param(optional = true, primary = true)
@@ -91,15 +91,15 @@ public class ListJobsCommand implements AdminCommand,AdminCommandSecurity.Access
     protected JobInfos getCompletedJobs() {
         return jobManagerService.getCompletedJobs(jobManagerService.getJobsFile());
     }
-    
+
     protected JobInfo getCompletedJobForId(final String jobID) {
         return (JobInfo) jobManagerService.getCompletedJobForId(jobID);
     }
-    
+
     protected boolean isSingleJobOK(final Job singleJob) {
         return (singleJob != null);
     }
-    
+
     protected boolean isJobEligible(final Job job) {
         return !skipJob(job.getName()) && checkScope(job);
     }
@@ -107,7 +107,7 @@ public class ListJobsCommand implements AdminCommand,AdminCommandSecurity.Access
     protected boolean checkScope(Job job) {
         return job.getScope()==null;
     }
-    
+
     private List<JobInfo> chooseJobs() {
         List<JobInfo> jobsToReport = new ArrayList<JobInfo>();
 
@@ -169,12 +169,12 @@ public class ListJobsCommand implements AdminCommand,AdminCommandSecurity.Access
         }
         return jobsToReport;
     }
-        
+
     @Override
     public void execute(AdminCommandContext context) {
         display(AccessRequired.AccessCheck.relatedObjects(jobAccessChecks),context);
     }
-    
+
     public static boolean skipJob(String name) {
         return name == null || "attach".equals(name) || name.startsWith("_");
     }

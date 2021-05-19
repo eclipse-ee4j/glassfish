@@ -28,10 +28,10 @@ import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.Callback
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/** 
+/**
  *
  * @author Kenneth Saks
- */    
+ */
 
 public class SystemInterceptorProxy
 {
@@ -47,7 +47,7 @@ public class SystemInterceptorProxy
 
 
     public void setDelegate(Object d) {
-             
+
         Class delegateClass = d.getClass();
 
         try {
@@ -65,10 +65,10 @@ public class SystemInterceptorProxy
                    prepareMethod(m);
                } else if( m.getAnnotation(AroundTimeout.class) != null ) {
                    aroundTimeout = m;
-                   prepareMethod(m);                         
+                   prepareMethod(m);
                } else if( m.getAnnotation(AroundConstruct.class) != null ) {
                    aroundConstruct = m;
-                   prepareMethod(m);                         
+                   prepareMethod(m);
                }
            }
 
@@ -129,7 +129,7 @@ public class SystemInterceptorProxy
                 if (cause instanceof Exception) {
                     throw (Exception) cause;
                 }
-                
+
                 throw new Exception(cause);
             }
         } else {
@@ -169,7 +169,7 @@ public class SystemInterceptorProxy
                desc.setLifecycleCallbackMethod("destroy");
                interceptor.addCallbackDescriptor(CallbackType.PRE_DESTROY, desc);
         }
-        
+
         {
                LifecycleCallbackDescriptor desc = new LifecycleCallbackDescriptor();
                desc.setLifecycleCallbackClass(interceptorName);

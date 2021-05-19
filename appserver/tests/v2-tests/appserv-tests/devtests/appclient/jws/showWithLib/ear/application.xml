@@ -29,14 +29,14 @@
   xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
   xsi:schemaLocation='http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/application_5.xsd'
   version="5">
-  
+
   <!--
-    With the following element commented out, deployment throws an 
+    With the following element commented out, deployment throws an
     exception.
     -->
-    
+
   <display-name>show-args</display-name>
-  
+
   <module>
      <java>showWithLib-client.jar</java>
   </module>

@@ -82,7 +82,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
 
     @Inject
     private ServerContext context;
-    
+
     @Inject
     private Provider<ResourcesApplication> resourcesApplicationProvider;
 
@@ -99,7 +99,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
     private Events events;
 
     @Inject
-    private ServiceLocator locator; 
+    private ServiceLocator locator;
 
     private final Applications applications;
 
@@ -218,7 +218,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             throw new DeploymentException("Failue while processing glassfish-resources.xml(s) in the archive ", e);
         }
     }
-    
+
     private void processArchive(DeploymentContext dc) {
 
         try {
@@ -586,7 +586,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             ResourcesRegistry.putResources(appName, allResources);
         }
     }
-                            
+
     private void createModuleScopedResources(Application app, Module module,
                                                     List<org.glassfish.resources.api.Resource> resources,
                                                     DeploymentContext dc, boolean embedded)
@@ -925,7 +925,7 @@ public class ResourcesDeployer extends JavaEEDeployer<ResourcesContainer, Resour
             final DeployCommandParameters deployCommandParameters =
                     dc.getCommandParameters(DeployCommandParameters.class);
             if (deployCommandParameters.origin == OpsParams.Origin.deploy ||
-                    deployCommandParameters.origin == OpsParams.Origin.deploy_instance || 
+                    deployCommandParameters.origin == OpsParams.Origin.deploy_instance ||
                     deployCommandParameters.origin == OpsParams.Origin.create_application_ref) {
                 Properties properties = deployCommandParameters.properties;
                 String appName = deployCommandParameters.name();

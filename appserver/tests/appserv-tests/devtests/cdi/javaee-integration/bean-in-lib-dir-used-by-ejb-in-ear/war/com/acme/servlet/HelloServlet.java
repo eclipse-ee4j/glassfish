@@ -37,60 +37,60 @@ import com.acme.util.TestDatabase;
 @SuppressWarnings("serial")
 public class HelloServlet extends HttpServlet {
     String msg = "";
-    
+
     @EJB(name = "java:module/m1", beanName = "HelloSingleton", beanInterface = Hello.class)
     Hello h;
-    
+
     @PersistenceUnit(unitName = "pu1")
     @TestDatabase
     private EntityManagerFactory emf;
 
 //    @Inject
 //    private ResourcesProducer rp;
-//    
+//
 //    @Inject
 //    private TestDependentBeanInLib fb;
-    
+
 //    @Inject
 //    private TestManagedBean tmb;
-    
+
 //    @Inject
 //    private TestSessionScopedBeanInLib tssil;
-    
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         System.out.println("In HelloServlet::doGet");
         resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
-        
+
         checkForNull(emf, "Injection of EMF failed in Servlet");
         //ensure EMF works!
         emf.createEntityManager();
-        
+
         //call Singleton EJB
         String response = h.hello();
         if(!response.equals(Hello.ALL_OK_STRING))
             msg += "Invocation of Hello Singeton EJB failed:msg=" + response;
-        
+
 //        if (!rp.isInjectionSuccessful())
 //            msg += "Injection of a bean in lib directory into another " +
-//            		"Bean in lib directory failed";
+//                            "Bean in lib directory failed";
 //        checkForNull(fb, "Injection of a bean that is placed in lib directory " +
-//        		"into a Servlet that is placed in a WAR failed");
+//                        "into a Servlet that is placed in a WAR failed");
 //        checkForNull(tmb, "Injection of a Managed bean that is placed in lib directory " +
 //        "into a Servlet that is placed in a WAR failed");
 //        checkForNull(tssil, "Injection of a session scoped Bean placed in lib dir into a " +
 //            "into a servlet in that ear failed");
-        
+
 //        if (!rp.isInjectionSuccessful())
 //            msg += "Injection of a bean in lib directory into another Bean " +
-//            		"in lib directory failed";
-        
+//                            "in lib directory failed";
+
 //        if (!tmb.isInjectionSuccessful())
 //            msg += "Injection of a Bean placed in lib dir into a " +
-//            		"ManagedBean placed in lib dir failed";
-        
+//                            "ManagedBean placed in lib dir failed";
+
         out.println(msg);
     }
 

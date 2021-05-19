@@ -32,7 +32,7 @@ public class ConfigTestHelper {
     {
         return SmartStringifier.toString(o);
     }
-    
+
     static public void printObj(String title, Object o)
     {
         if(title==null)
@@ -42,27 +42,27 @@ public class ConfigTestHelper {
 
     static public Object invokeInMgr(Object mgr, String operation)  throws Exception
     {
-       return invokeInMgr(mgr, operation, null, null);   
+       return invokeInMgr(mgr, operation, null, null);
     }
-    
+
     static public Object invokeInMgr(Object mgr, String operation, Object[] params)  throws Exception
     {
         if(params==null || params.length==0)
-            return invokeInMgr(mgr, operation, null, null);   
+            return invokeInMgr(mgr, operation, null, null);
         Class[] classes = new Class[params.length];
         for(int i=0; i<params.length; i++)
             if(params[i]!=null)
                  classes[i] = params[i].getClass();
-            else 
+            else
                 classes[i] = null;
-        return invokeInMgr(mgr, operation, params, classes);   
+        return invokeInMgr(mgr, operation, params, classes);
     }
-    
+
     static public Object invokeInMgr(Object mgr, String operation, Object[] params, Class[] classes) throws Exception
     {
-        return invokeInMgr(mgr, operation, params, classes, true);   
+        return invokeInMgr(mgr, operation, params, classes, true);
     }
-    
+
     static public Object invokeInMgr(Object mgr, String operation, Object[] params, Class[] classes, boolean bHideException) throws Exception
     {
         try
@@ -70,7 +70,7 @@ public class ConfigTestHelper {
             _lastException = null;
             _lastOperation = operation;
             _lastParams = params;
-            
+
             Object res = null;
             Method method =null;
             Class cl = mgr.getClass();
@@ -101,17 +101,17 @@ public class ConfigTestHelper {
         String msg = null;
         if(_lastException!=null)
             msg = ExceptionUtil.getRootCause(_lastException).getMessage();
-        int idx = msg!=null?msg.indexOf('\n'):-1; 
+        int idx = msg!=null?msg.indexOf('\n'):-1;
           if(idx>=0)
           {
               int idx2 = msg.indexOf('\n', idx+1);
-              if(idx2>=0) 
+              if(idx2>=0)
                   idx = idx2;
               msg = msg.substring(0, idx);
           }
         return "Exception: " + msg + " Operation: "+_lastOperation + "("+ SmartStringifier.toString(_lastParams) +")";
     }
-    
+
     static void replaceStr(StringBuffer buf, String strOld, String strNew)
     {
         int idx = 0;
@@ -123,7 +123,7 @@ public class ConfigTestHelper {
             idx+=lenNew;
         }
     }
-    
+
     static public String camelize(String str)
     {
         if(str.length()==0)
@@ -148,13 +148,13 @@ public class ConfigTestHelper {
         //String res = buf.toString();
         return buf.toString();
     }
-    
+
     static public Object getBeanAttribute(Object bean, String attributeName) throws Exception
     {
 
         return invokeInMgr(bean, "get"+camelize(attributeName), null, null, true);
     }
-    
+
 
     public static Throwable _lastException;
     public static Object _lastResult;

@@ -26,7 +26,7 @@
                domain="Catalina"
                 group="Loader"
                  type="org.apache.catalina.loader.WebappLoader">
-                 
+
     <attribute   name="className"
           description="Fully qualified class name of the managed object"
                  type="java.lang.String"
@@ -51,7 +51,7 @@
 
     <attribute   name="repositoriesString"
           description="Extra repositories managed by this loader"
-             writeable="false" 
+             writeable="false"
                  type="java.lang.String"/>
 
     <attribute   name="loaderRepositories"

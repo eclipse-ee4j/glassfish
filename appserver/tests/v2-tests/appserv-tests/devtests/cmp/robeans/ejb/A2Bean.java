@@ -25,9 +25,9 @@ import jakarta.ejb.*;
 
 
 public abstract class A2Bean implements EntityBean {
-    
+
     private EntityContext context;
-    
+
     public abstract String getId();
     public abstract void setId(String s);
 
@@ -43,42 +43,42 @@ public abstract class A2Bean implements EntityBean {
     public void setEntityContext(EntityContext aContext) {
         context=aContext;
     }
-    
+
     /**
      * @see EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
+
     /**
      * @see EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
+
     /**
      * @see EntityBean#ejbRemove()
      */
     public void ejbRemove() {
 
     }
-    
+
     /**
      * @see EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
+
     /**
      * @see EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
+
     /**
      * @see EntityBean#ejbStore()
      */

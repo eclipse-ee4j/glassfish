@@ -52,7 +52,7 @@ import org.glassfish.api.admin.ProcessEnvironment;
  */
 @Service
 @PerLookup
-public class AppClientServerApplication implements 
+public class AppClientServerApplication implements
         ApplicationContainer<ApplicationClientDescriptor> {
 
     @Inject
@@ -65,21 +65,21 @@ public class AppClientServerApplication implements
     private DeploymentContext dc;
 
     private Logger logger;
-    
+
     private AppClientDeployerHelper helper;
 
     private ApplicationClientDescriptor acDesc;
     private Application appDesc;
-    
+
     private String deployedAppName;
 
     private JavaWebStartInfo jwsInfo = null;
-    
+
     public void init (final DeploymentContext dc,
             final AppClientDeployerHelper helper) {
         this.dc = dc;
         this.helper = helper;
-        this.logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER, 
+        this.logger = Logger.getLogger(JavaWebStartInfo.APPCLIENT_SERVER_MAIN_LOGGER,
                 JavaWebStartInfo.APPCLIENT_SERVER_LOGMESSAGE_RESOURCE);
 
         acDesc = helper.appClientDesc();
@@ -87,7 +87,7 @@ public class AppClientServerApplication implements
         appDesc = acDesc.getApplication();
 
         deployedAppName = dc.getCommandParameters(DeployCommandParameters.class).name();
-        
+
     }
 
     public String deployedAppName() {
@@ -105,7 +105,7 @@ public class AppClientServerApplication implements
 
     public boolean matches(final String appName, final String moduleName) {
         return (appName.equals(deployedAppName)
-                && (moduleName != null && 
+                && (moduleName != null &&
                     (moduleName.equals(acDesc.getModuleName())
                      || acDesc.getModuleName().equals(moduleName + ".jar"))));
     }
@@ -143,7 +143,7 @@ public class AppClientServerApplication implements
         if (jwsInfo != null) {
             jwsInfo.stop();
         }
-        
+
         return true;
     }
 
@@ -175,7 +175,7 @@ public class AppClientServerApplication implements
             public URLClassLoader run() {
                 return new URLClassLoader(new URL[0]);
             }
-            
+
         });
     }
 
@@ -186,7 +186,7 @@ public class AppClientServerApplication implements
     public String registrationName() {
         return appDesc.getRegistrationName();
     }
-        
+
     public String moduleExpression() {
         String moduleExpression;
         if (appDesc.isVirtual()) {

@@ -21,25 +21,25 @@ import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 
 public class JustSessionBean implements SessionBean {
- 
+
     private SessionContext ctx;
-    
-    public void 
-    ejbCreate() 
-        throws RemoteException 
+
+    public void
+    ejbCreate()
+        throws RemoteException
     {
         log("JustSessionBean.ejbCreate()...");
     }
 
-    public void 
-    ejbRemove() 
-        throws RemoteException 
+    public void
+    ejbRemove()
+        throws RemoteException
     {
         log("JustSessionBean.ejbRemove()...");
     }
-    
+
     public void
-    log(String message) 
+    log(String message)
     {
         Log.log(message);
     }
@@ -53,43 +53,43 @@ public class JustSessionBean implements SessionBean {
         strArray[1] = "You have lost all your marbles.";
         return strArray;
     }
-    
-    
-    /** 
+
+
+    /**
      * ejbDestroy - called by the Container before this bean is destroyed.
-     */ 
-    public void 
-    ejbDestroy() 
+     */
+    public void
+    ejbDestroy()
     {
         log("JustSessionBean.ejbDestroy()...");
     }
-    
-    /** 
-     * ejbActivate - called by the Container after this bean instance 
+
+    /**
+     * ejbActivate - called by the Container after this bean instance
      * is activated from its passive state.
      */
-    public void 
-    ejbActivate() 
+    public void
+    ejbActivate()
     {
         log("JustSessionBean.ejbActivate()...");
     }
-    
+
     /**
-     * ejbPassivate - called by the Container before this bean instance 
-     * is put in passive state. 
-     */ 
-    public void 
-    ejbPassivate() 
+     * ejbPassivate - called by the Container before this bean instance
+     * is put in passive state.
+     */
+    public void
+    ejbPassivate()
     {
         log("JustSessionBean.ejbPassivate()...");
     }
-    
+
     /**
      * setSessionContext - called by the Container after creation of this
      * bean instance.
      */
-    public void 
-    setSessionContext(SessionContext context) 
+    public void
+    setSessionContext(SessionContext context)
     {
         log("JustSessionBean.setSessionContext(ctx)... ctx = " + ctx);
         ctx = context;

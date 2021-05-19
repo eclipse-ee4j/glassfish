@@ -51,7 +51,7 @@ public class NewFilter implements Filter {
         initParamValue = config.getInitParameter("filterInitParamName");
 
         ServletContext sc = config.getServletContext();
-    
+
         try {
             int loginTimeout = ds1.getLoginTimeout();
             sc.log("ds1-login-timeout=" + loginTimeout);

@@ -24,7 +24,7 @@ public interface StatefulCncSuperIntf {
     public String hello();
 
     public String helloWait();
-  
+
     public Future<String> helloAsync();
 
     public void fireAndForget();

@@ -274,10 +274,10 @@ public class FacadeLaunchable implements Launchable {
                 public ACCClassLoader run() {
                     return new ACCClassLoader(loader.getURLs(), loader.getParent());
                 }
-                
+
             });
-            
-            
+
+
             archivist.setClassLoader(tempLoader);
 
             acDesc = archivist.open(combinedRA, mainClassNameToLaunch);
@@ -285,7 +285,7 @@ public class FacadeLaunchable implements Launchable {
 
 //            acDesc = LaunchableUtil.openWithAnnoProcessingAndTempLoader(
 //                    arch, loader, facadeClientRA, clientRA);
-            
+
             Application.createVirtualApplication(null, acDesc.getModuleDescriptor());
 
             final Manifest facadeMF = combinedRA.getManifest();
@@ -402,7 +402,7 @@ public class FacadeLaunchable implements Launchable {
              * the user specified a main class or a name but it does not
              * match the single app client that's present.
              */
-            
+
             FacadeLaunchable facade = null;
 
             /*
@@ -410,7 +410,7 @@ public class FacadeLaunchable implements Launchable {
              * command to specify an artitrary class, not restricted to the
              * the main class as specified as the Main-Class in an app client
              * JAR's manifest.  To preserve backward compatibility we need to
-             * do the same.  
+             * do the same.
              */
 
             if (Launchable.LaunchableUtil.matchesAnyClass(clientRA, callerSpecifiedMainClassName)) {

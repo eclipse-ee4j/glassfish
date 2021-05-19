@@ -43,13 +43,13 @@ import org.glassfish.hk2.api.PerLookup;
 @Service(name = "list-network-listeners")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
-@I18n("list.network.listeners")  
+@I18n("list.network.listeners")
 @ExecuteOn(RuntimeType.DAS)
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=HttpService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-network-listeners", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-network-listeners",
         description="list-network-listeners")
 })
 public class ListNetworkListeners implements AdminCommand {

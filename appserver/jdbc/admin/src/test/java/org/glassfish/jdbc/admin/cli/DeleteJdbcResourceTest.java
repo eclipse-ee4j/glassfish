@@ -50,13 +50,13 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
     private ParameterMap parameters = new ParameterMap();
     private AdminCommandContext context = null;
     private CommandRunner cr = habitat.getService(CommandRunner.class);
-    
+
     @Override
     public DomDocument getDocument(ServiceLocator habitat) {
 
         return new TestDocument(habitat);
     }
-    
+
     /**
      * Returns the DomainTest file name without the .xml extension to load the test configuration
      * from.
@@ -70,21 +70,21 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
     @Before
     public void setUp() {
         assertTrue(resources!=null);
-        
+
         // Create a JDBC Resource jdbc/foo for each test
         CreateJdbcResource createCommand = habitat.getService(CreateJdbcResource.class);
         assertTrue(createCommand!=null);
-        
+
         parameters.add("connectionpoolid", "DerbyPool");
         parameters.add("DEFAULT", "jdbc/foo");
-        
+
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(DeleteJdbcResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        
+
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         // Setup for delete-jdbc-resource
         parameters = new ParameterMap();
         deleteCommand = habitat.getService(DeleteJdbcResource.class);
@@ -107,13 +107,13 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
     public void testExecuteSuccessDefaultTarget() {
         // Set operand
         parameters.add("DEFAULT", "jdbc/foo");
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource was deleted
         boolean isDeleted = true;
         for (Resource resource : resources.getResources()) {
@@ -125,13 +125,13 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
                     continue;
                 }
             }
-        }       
+        }
         assertTrue(isDeleted);
         logger.fine("msg: " + context.getActionReport().getMessage());
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource ref was deleted
         Servers servers = habitat.getService(Servers.class);
         boolean isRefDeleted = true;
@@ -147,7 +147,7 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         }
         assertTrue(isRefDeleted);
     }
-    
+
     /**
      * Test of execute method, of class DeleteJdbcResource.
      * delete-jdbc-resource --target server jdbc/foo
@@ -157,13 +157,13 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         // Set operand
         parameters.add("target", "server");
         parameters.add("DEFAULT", "jdbc/foo");
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource was deleted
         boolean isDeleted = true;
         for (Resource resource : resources.getResources()) {
@@ -175,13 +175,13 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
                     continue;
                 }
             }
-        }       
+        }
         assertTrue(isDeleted);
         logger.fine("msg: " + context.getActionReport().getMessage());
-        
+
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        
+
         //Check that the resource ref was deleted
         Servers servers = habitat.getService(Servers.class);
         boolean isRefDeleted = true;
@@ -206,18 +206,18 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
     public void testExecuteFailDoesNotExist() {
         // Set operand
         parameters.add("DEFAULT", "doesnotexist");
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        
+
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-        
+
         // Check the error message
         assertEquals("A JDBC resource named doesnotexist does not exist.", context.getActionReport().getMessage());
         logger.fine("msg: " + context.getActionReport().getMessage());
     }
-    
+
     /**
      * Test of execute method, of class DeleteJdbcResource.
      * delete-jdbc-resource
@@ -227,14 +227,14 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
     public void testExecuteFailNoOperand() {
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        
+
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         // Check the error message
         assertEquals("Operand required.", context.getActionReport().getMessage());
         logger.fine("msg: " + context.getActionReport().getMessage());
     }
-    
+
     /**
      * Test of execute method, of class DeleteJdbcResource.
      * delete-jdbc-resource --invalid jdbc/foo
@@ -245,10 +245,10 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         // Set operand
         parameters.add("invalid", "");
         parameters.add("DEFAULT", "jdbc/foo");
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        
+
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         // Check the error message
@@ -261,7 +261,7 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
      * delete-jdbc-resource --target invalid jdbc/foo
      */
     @Test
-    @Ignore 
+    @Ignore
     //disabling the test.
     //in v3, this test was expecting the Command to return failure code.
     //in 3.1 --target validation is done by CLI framework (as part of command replication)
@@ -271,10 +271,10 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         // Set operand
         parameters.add("target", "invalid");
         parameters.add("DEFAULT", "jdbc/foo");
-        
+
         //Call CommandRunnerImpl.doCommand(..) to execute the command
         cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        
+
         //Check that the resource was NOT deleted
         boolean isDeleted = true;
         for (Resource resource : resources.getResources()) {
@@ -289,14 +289,14 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         }
         // Need bug fix in DeleteJdbcResource before uncommenting assertion
         //assertFalse(isDeleted);
-        
+
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         // Check the error message
         // Need bug fix in DeleteJdbcResource before uncommenting assertion
         //assertEquals(" Invalid target: invalid", context.getActionReport().getMessage());
         logger.fine("msg: " + context.getActionReport().getMessage());
-        
+
         //Check that the resource ref was NOT deleted
         Servers servers = habitat.getService(Servers.class);
         boolean isRefDeleted = true;

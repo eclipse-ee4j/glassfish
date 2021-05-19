@@ -22,7 +22,7 @@ import org.glassfish.hk2.api.HK2RuntimeException;
  * A generic Transaction failure.
  *
  * @see ConfigTransactionRejectedException
- * 
+ *
  * @author Jeff Trent
  */
 public class ConfigTransactionException extends HK2RuntimeException {

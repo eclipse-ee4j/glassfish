@@ -92,7 +92,7 @@ public class Server {
         /**
          * Set the jmx port number. Also enables the jmx connector. This applies
          * only when the default configuration is being used.
-         * 
+         *
          * @param portNumber jmx port number.
          * @return this instance
          */
@@ -156,7 +156,7 @@ public class Server {
         private Container(EmbeddedContainer container) {
             this.container = container;
         }
-        
+
     }
 
     private final static Map<String, Server> servers = new HashMap<String, Server>();
@@ -198,10 +198,10 @@ public class Server {
         }
         // TODO :: Support modification of jmxPort
     }
-    
+
     private Server(Builder builder, Properties properties) {
         serverName = builder.serverName;
-        
+
         try {
             if(properties == null) {
                 properties = new Properties();
@@ -215,19 +215,19 @@ public class Server {
             setGlassFishProperties(gfProps, fs);
             glassfish = glassfishRuntime.newGlassFish(gfProps);
             glassfish.start();
-            
+
             if(fs == null) {
                 EmbeddedFileSystem.Builder fsBuilder = new EmbeddedFileSystem.Builder();
                 fsBuilder.autoDelete(true);
                 fs = fsBuilder.build();
             }
-            
+
             // Add the neccessary inhabitants.
             habitat = glassfish.getService(ServiceLocator.class);
             ServiceLocatorUtilities.addOneConstant(habitat, this);
             fileSystem = habitat.getServiceHandle(
                     ServiceLocatorUtilities.<EmbeddedFileSystem>addOneConstant(habitat, fs, null, EmbeddedFileSystem.class));
-            
+
             logger.logp(Level.FINER, "Server", "<init>", "Created GlassFish = {0}, " +
                     "GlassFish Status = {1}", new Object[]{glassfish, glassfish.getStatus()});
         } catch (Throwable ex) {
@@ -293,7 +293,7 @@ public class Server {
      * @return the configuration to configure a container of type <T>
      */
     public <T extends ContainerBuilder<?>> T createConfig(Class<T> configType) {
-        return habitat.getService(configType);        
+        return habitat.getService(configType);
     }
 
     /**
@@ -427,7 +427,7 @@ public class Server {
         for (Container c : containers) {
             copy.add(c.container);
         }
-        return copy;        
+        return copy;
     }
 
     /**

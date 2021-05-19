@@ -21,32 +21,32 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import java.util.Set;
 
 /**
- * This interface defines the behaviour of a Java EE component containaing 
+ * This interface defines the behaviour of a Java EE component containaing
  * web service references
- * Note from the author, I hate being so verbose with method names but 
+ * Note from the author, I hate being so verbose with method names but
  * I follow the current design pattern. should be fixed one day
  *
  * @author Jerome Dochez
  */
 public interface ServiceReferenceContainer {
-    
-    /** 
+
+    /**
      * get a particular service reference by name
      */
-    public ServiceReferenceDescriptor getServiceReferenceByName(String name);
-    
-    /** 
+    ServiceReferenceDescriptor getServiceReferenceByName(String name);
+
+    /**
      * return the list of service references
      */
-    public Set getServiceReferenceDescriptors();
-    
+    Set getServiceReferenceDescriptors();
+
     /**
      * Add a new service reference
      */
-    public void addServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
-    
+    void addServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
+
     /**
      * remove a service reference
      */
-    public void removeServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
+    void removeServiceReferenceDescriptor(ServiceReferenceDescriptor descriptor);
 }

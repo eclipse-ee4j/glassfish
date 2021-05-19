@@ -26,11 +26,11 @@ public class ServletTest extends HttpServlet{
     private static final String PASS = "WLDelegateTest::PASS";
     private static final String FAIL = "WLDelegateTest::FAIL";
 
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        System.out.println("[Servlet.init]");        
-        
+        System.out.println("[Servlet.init]");
+
     }
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -38,12 +38,12 @@ public class ServletTest extends HttpServlet{
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         System.out.println("[Servlet.doPost]");
-        
+
         String status = FAIL;
         response.setContentType("text/html");
-        
+
         DelegateTest delegate = null;
         try{
             Class clazz = Class.forName("test.DelegateTest");
@@ -56,7 +56,7 @@ public class ServletTest extends HttpServlet{
 
         if (delegate != null){
             try{
-                System.out.println("Delegate: " + delegate.getChildName());       
+                System.out.println("Delegate: " + delegate.getChildName());
                 status = PASS;
             } catch (Exception ex){
                 status = FAIL;

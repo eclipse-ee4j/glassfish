@@ -46,15 +46,15 @@ public class JPAResourceInjectionServletFromSingletonEJB extends HttpServlet {
     @Inject
     @ProducedViaProducerMethod
     private EntityManagerFactory emf_producer;
-    
+
     @Inject
     @ProducedViaStaticField
     private EntityManagerFactory emf_static;
-    
+
 
     private @Resource
     UserTransaction utx;
-    
+
     @Inject
     @Preferred
     TestBeanInterface tbi;
@@ -65,13 +65,13 @@ public class JPAResourceInjectionServletFromSingletonEJB extends HttpServlet {
         PrintWriter writer = response.getWriter();
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
-        
+
         if (emf == null)
             msg += "Simple injection of EntityManagerFactory through " +
-            		"@PersistenceUnit failed";
+                            "@PersistenceUnit failed";
         String testcase = request.getParameter("testcase");
         System.out.println("testcase=" + testcase);
-        
+
         String whichEMF = request.getParameter("whichemf");
         System.out.println("whichEMF=" + whichEMF);
 
@@ -89,9 +89,9 @@ public class JPAResourceInjectionServletFromSingletonEJB extends HttpServlet {
             System.out.println("JPAResourceInjectionServlet::createEM" +
                     "EntityManager=" + em);
         }
-        
+
         if (testcase != null) {
-            
+
             JpaTest jt = new JpaTest(em, utx);
             boolean status = false;
             if ("llinit".equals(testcase)) {
@@ -101,10 +101,10 @@ public class JPAResourceInjectionServletFromSingletonEJB extends HttpServlet {
             } else if ("llquery".equals(testcase)) {
                 status = jt.lazyLoadingByQuery("Carla");
             } else if ("llinj".equals(testcase)){
-                status = ((tbi != null) && 
+                status = ((tbi != null) &&
                         (tbi.testDatasourceInjection().trim().length()==0));
             }
-            
+
             if (status) {
                 msg += "";// pass
             } else {

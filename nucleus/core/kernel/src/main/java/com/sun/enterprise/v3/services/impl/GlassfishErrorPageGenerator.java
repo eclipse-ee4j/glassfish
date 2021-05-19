@@ -29,7 +29,7 @@ public class GlassfishErrorPageGenerator implements ErrorPageGenerator {
     public String generate(final Request request, final int status,
             final String reasonPhrase, final String description,
             final Throwable exception) {
-        
+
 
         if (status == 404) {
             return HttpUtils.getErrorPage(Version.getVersion(),

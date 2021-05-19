@@ -39,7 +39,7 @@ public class MyFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
 
         ServletContext sc = filterConfig.getServletContext();
-    
+
         try {
 
             int loginTimeout = ds1.getLoginTimeout();

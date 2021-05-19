@@ -33,7 +33,7 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
  * This class is responsible for handling the activation config elements.
  *
  * @author Qingqing Ouyang
- * @version 
+ * @version
  */
 public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationConfigDescriptor> {
 
@@ -52,7 +52,7 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
     public ActivationConfigDescriptor getDescriptor() {
         if (descriptor == null) {
             descriptor = ((EjbMessageBeanDescriptor) getParentNode().getDescriptor()).getRuntimeActivationConfigDescriptor();
-        } 
+        }
         return descriptor;
     }
 
@@ -63,13 +63,13 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
     }
 
     @Override
-    public void setElementValue(XMLElement element, String value) {    
+    public void setElementValue(XMLElement element, String value) {
         if (RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY_NAME.equals
                 (element.getQName())) {
             propertyName = value;
         } else if(RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY_VALUE.equals
                 (element.getQName())) {
-            EnvironmentProperty prop = 
+            EnvironmentProperty prop =
                 new EnvironmentProperty(propertyName, value, "");
             descriptor.getActivationConfig().add(prop);
             propertyName = null;
@@ -78,7 +78,7 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, 
+    public Node writeDescriptor(Node parent, String nodeName,
                                 ActivationConfigDescriptor descriptor) {
 
         Node activationConfigNode = null;
@@ -86,19 +86,19 @@ public class ActivationConfigNode extends DeploymentDescriptorNode<ActivationCon
         if( activationConfig.size() > 0 ) {
             activationConfigNode = appendChild(parent, nodeName);
             for(Iterator iter = activationConfig.iterator(); iter.hasNext();) {
-                Node activationConfigPropertyNode = 
-                    appendChild(activationConfigNode, 
+                Node activationConfigPropertyNode =
+                    appendChild(activationConfigNode,
                                 RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY);
                 EnvironmentProperty next = (EnvironmentProperty) iter.next();
-                appendTextChild(activationConfigPropertyNode, 
-                        RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY_NAME, 
+                appendTextChild(activationConfigPropertyNode,
+                        RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY_NAME,
                         next.getName());
                 appendTextChild(activationConfigPropertyNode,
-                        RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY_VALUE, 
+                        RuntimeTagNames.ACTIVATION_CONFIG_PROPERTY_VALUE,
                         next.getValue());
             }
         }
-        
+
         return activationConfigNode;
     }
 }

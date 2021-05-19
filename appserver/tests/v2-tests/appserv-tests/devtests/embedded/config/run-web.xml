@@ -33,10 +33,10 @@
                 </or>
             </waitfor>
             <antcall target="${target-to-run}"/>
-	    <antcall target="report"/>
-	    <antcall target="mail"/>
+        <antcall target="report"/>
+        <antcall target="mail"/>
 <!--
-	    <antcall target="stopAS"/>
+        <antcall target="stopAS"/>
 -->
         </sequential>
     </parallel>

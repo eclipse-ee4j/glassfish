@@ -37,7 +37,7 @@ import java.util.*;
 
 /**
  * List JDBC Resources command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @ExecuteOn(value={RuntimeType.DAS})
@@ -47,17 +47,17 @@ import java.util.*;
 @I18n("list.jdbc.resources")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jdbc-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jdbc-resources",
         description="List JDBC Resources")
 })
 public class ListJdbcResources implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListJdbcResources.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListJdbcResources.class);
 
     @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME, alias = "targetName")
     private String target ;
-    
+
     @Inject
     private Domain domain;
 

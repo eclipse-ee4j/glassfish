@@ -45,31 +45,31 @@ import com.sun.enterprise.deployment.autodeploy.AutoDeployConstants;
   * @author  tjquinn
   */
 public class AutoDeployMonitor {
-    
+
     private static boolean DEBUG = Boolean.getBoolean("monitor.debug");
-    
+
     private static int ITERATION_LIMIT = Integer.getInteger("monitor.iterationLimit", 60 * 2 /* default = two minutes */).intValue();
-    
+
     private String archiveName = null;
-    
+
 //    private String autodeployDirSpec = null;
-    
+
     private File autodeployDir = null;
 
 //    private String timestampFormat = null;
-    
+
 //    private String timestampString = null;
-    
+
     private long timestamp;
-    
+
     private Date startTime = null;
-    
+
     private final static String LINE_SEP = System.getProperty("line.separator");
-    
+
     /** Creates a new instance of AutoDeployer */
     public AutoDeployMonitor() {
     }
-    
+
     /**
       * @param args the command line arguments
       */
@@ -83,7 +83,7 @@ public class AutoDeployMonitor {
             usage();
             System.exit(1);
         }
-        
+
         archiveName = args[0];
         String autodeployDirSpec = args[1];
         String timestampFormat = args[2];
@@ -95,21 +95,21 @@ public class AutoDeployMonitor {
         debug("Autodeploy directory: " + autodeployDir.getAbsolutePath());
 
         StringBuffer result = new StringBuffer();
-        
+
         /*
          *Check auto-deploy directory.
          */
         if ( ! autodeployDir.exists()) {
             result.append(LINE_SEP).append("Autodeploy directory " + autodeployDir.getAbsolutePath() + " does not exist but should.");
         }
-        
+
         /*
          *Check archive file name.
          */
         if (archiveName.length() == 0) {
             result.append(LINE_SEP).append("Archive file name must not be empty but is.");
         }
-        
+
         /*
          *Check the timestamp format and value.
          */
@@ -122,12 +122,12 @@ public class AutoDeployMonitor {
         } catch (ParseException pe) {
             result.append(LINE_SEP).append("Could not interpret timestamp " + timestampString + " using format " + timestampFormat).append(LINE_SEP).append("    ").append(pe.getMessage());
         }
-        
+
         if (result.length() > 0) {
             throw new IllegalArgumentException(result.toString());
         }
     }
-    
+
     private int run(String[] args) {
         /*
          *The calling script should pass these command line arguments:
@@ -141,9 +141,9 @@ public class AutoDeployMonitor {
 
         try {
             processArguments(args);
-            
+
             /*
-             *The timestamp handling allows the logic below to identify a marker file (..._deployed, 
+             *The timestamp handling allows the logic below to identify a marker file (..._deployed,
              *..._undeployed, ..._deployFailed, ..._undeployFailed) that was created after the
              *archive was deposited into (for autodeploy) or removed from (for autoundeploy) the
              *autodeploy directory.  We need to do this to make sure we do not accidentally take
@@ -155,16 +155,16 @@ public class AutoDeployMonitor {
              *For auto-deploy, the archive will have just been copied into the autodeploy directory.
              *For auto-undeploy, the archive will have just been deleted from there.  The file filter
              *below uses both the file name and also a timestamp to make sure it accepts
-             *marker files created after the archive itself.  
+             *marker files created after the archive itself.
              *
              *Note that the following is both a declaration of the filter and its initialization by
              *invoking its init method.
              */
 
-            FileFilter filter = new FileFilter () { 
+            FileFilter filter = new FileFilter () {
 
                 private long timestamp;
-                private String archiveName = null; 
+                private String archiveName = null;
 
                 public boolean accept(File candidateFile) {
                     /*
@@ -176,7 +176,7 @@ public class AutoDeployMonitor {
                     long candidateTimestamp = candidateFile.lastModified();
                     String candidateNameAndType = candidateFileSpec.substring(candidateFileSpec.lastIndexOf(File.separator) + 1);
                     String candidateType = candidateFileSpec.substring(candidateFileSpec.lastIndexOf('.') + 1);
-                    
+
                     boolean answer = (candidateTimestamp > this.timestamp)
                         && (candidateNameAndType.equals(archiveName + AutoDeployConstants.DEPLOYED) ||
                             candidateNameAndType.equals(archiveName + AutoDeployConstants.UNDEPLOYED) ||
@@ -196,11 +196,11 @@ public class AutoDeployMonitor {
                     return this;
                 }
                 }.init(archiveName, timestamp);
-            
+
             File [] matches = null;
 
             /*
-             *Begin waiting for a new marker file to appear in the autodeploy directory.  Don't wait longer than 
+             *Begin waiting for a new marker file to appear in the autodeploy directory.  Don't wait longer than
              *two minutes (by default) in case there is some problem.
              */
             int iterationCount = 0;
@@ -214,7 +214,7 @@ public class AutoDeployMonitor {
                 matches = autodeployDir.listFiles(filter);
 
             } while ( (matches.length == 0) && (iterationCount < ITERATION_LIMIT));
-                
+
             /*
              *Return 0 if the marker file found ends with _deployed, 1 if the marker ends with
              *_deployFailed, and -1 otherwise.
@@ -243,7 +243,7 @@ public class AutoDeployMonitor {
             return -1;
         }
     }
-    
+
     private void usage() {
         System.err.println("Usage:");
         System.err.println("    autodeploy.loader.client.AutoDeployMonitor <archive-name> <autodeploy-directory> <SimpleDateFormat-pattern-for-timestamp> <timestamp-value>");

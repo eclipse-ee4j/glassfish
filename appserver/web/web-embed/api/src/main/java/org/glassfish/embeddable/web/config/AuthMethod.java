@@ -18,7 +18,7 @@ package org.glassfish.embeddable.web.config;
 
 /**
  * Enumeration of supported authentication methods.
- * 
+ *
  * @author Rajiv Mordani
  */
 public enum AuthMethod {

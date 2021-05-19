@@ -27,21 +27,21 @@ import java.util.Iterator;
 
 public class MethodMapTest {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
-    
+
     private static final Class[] TEST_CLASSES = {
         java.lang.Object.class,
-        MethodMapTest1.class, MethodMapTest2.class, MethodMapTest3.class, 
+        MethodMapTest1.class, MethodMapTest2.class, MethodMapTest3.class,
         MethodMapTest4.class, MethodMapTest3.class, MethodMapTest6.class,
-        MethodMapTest.class, jakarta.ejb.EJBHome.class, 
+        MethodMapTest.class, jakarta.ejb.EJBHome.class,
         jakarta.ejb.EJBObject.class, jakarta.ejb.EJBLocalObject.class,
         jakarta.ejb.EJBLocalHome.class, jakarta.ejb.SessionBean.class,
         jakarta.ejb.EnterpriseBean.class, java.util.Map.class,
         jakarta.jms.QueueConnection.class, jakarta.jms.QueueSession.class,
         jakarta.jms.Session.class, java.util.Date.class,
         javax.swing.Action.class, javax.swing.AbstractAction.class,
-        javax.swing.JComboBox.class, javax.swing.JTextArea.class        
+        javax.swing.JComboBox.class, javax.swing.JTextArea.class
 
     };
 
@@ -51,9 +51,9 @@ public class MethodMapTest {
         MethodMapTest test = new MethodMapTest(args);
         test.doTest();
         stat.printSummary("ejb-util-methodmapID");
-    }  
-    
-    public MethodMapTest (String[] args) {               
+    }
+
+    public MethodMapTest (String[] args) {
     }
 
     public void doTest() {
@@ -63,17 +63,17 @@ public class MethodMapTest {
             System.out.println("Doing methodmap test for " + c);
             boolean result = testClass(c);
             if( result ) {
-                stat.addStatus("methodmapclient main", stat.PASS);            
+                stat.addStatus("methodmapclient main", stat.PASS);
             } else {
-                stat.addStatus("methodmapclient main", stat.FAIL); 
+                stat.addStatus("methodmapclient main", stat.FAIL);
             }
-        }        
-        
+        }
+
         testCtor();
         testUnsupportedOperations();
 
-        
-        
+
+
     }
 
     private void testCtor() {
@@ -83,7 +83,7 @@ public class MethodMapTest {
         try {
             new MethodMap(new HashMap(), -1);
             System.out.println("bucketSize -1 should have thrown exception");
-        } catch(IllegalArgumentException e) {         
+        } catch(IllegalArgumentException e) {
             ctorTest1Passed = true;
         } catch(Exception e) {
             e.printStackTrace();
@@ -107,23 +107,23 @@ public class MethodMapTest {
             ctorTest3Passed = true;
         } catch(Exception e) {
             e.printStackTrace();
-        }        
+        }
 
         // pass map containing something other than Method objects
         Map otherMap = new HashMap();
         otherMap.put("foo", "bar");
         boolean ctorTest4Passed = false;
         try {
-            new MethodMap(otherMap);            
+            new MethodMap(otherMap);
         } catch(Exception e) {
             ctorTest4Passed = true;
         }
 
-        if( ctorTest1Passed && ctorTest2Passed & ctorTest3Passed 
+        if( ctorTest1Passed && ctorTest2Passed & ctorTest3Passed
             && ctorTest4Passed ) {
-            stat.addStatus("methodmapclient ctor", stat.PASS);  
+            stat.addStatus("methodmapclient ctor", stat.PASS);
         } else {
-            stat.addStatus("methodmapclient ctor", stat.FAIL);  
+            stat.addStatus("methodmapclient ctor", stat.FAIL);
         }
 
     }
@@ -157,7 +157,7 @@ public class MethodMapTest {
         } catch(Exception e) {
             e.printStackTrace();
         }
-        
+
         boolean uoeTest3Passed = false;
         try {
             methodMap.remove(method1);
@@ -176,19 +176,19 @@ public class MethodMapTest {
                                " null method value");
         } catch(Exception e) {
             uoeTest4Passed = true;
-        } 
+        }
 
         if( uoeTest1Passed && uoeTest2Passed && uoeTest3Passed &&
             uoeTest4Passed ) {
-            stat.addStatus("methodmapclient unsupportedop", stat.PASS); 
+            stat.addStatus("methodmapclient unsupportedop", stat.PASS);
         } else {
-            stat.addStatus("methodmapclient unsupportedop", stat.FAIL); 
+            stat.addStatus("methodmapclient unsupportedop", stat.FAIL);
         }
 
     }
 
     private boolean testClass(Class c) {
-      
+
         Map regularMap = new HashMap();
 
         Method[] methods = c.getDeclaredMethods();
@@ -196,31 +196,31 @@ public class MethodMapTest {
         for(int i = 0; i < methods.length; i++) {
             regularMap.put(methods[i], methods[i].toString());
         }
-        
+
         Map defaultMethodMap = new MethodMap(regularMap);
         System.out.println("Testing " + c + " with default MethodMap");
-        boolean defaultTest = 
+        boolean defaultTest =
             testClass(c, methods, false, regularMap, defaultMethodMap);
-        boolean defaultTestOpt = 
+        boolean defaultTestOpt =
             testClass(c, methods, true, regularMap, defaultMethodMap);
 
         // test degenerate case where there is only 1 bucket in MethodMap.
-        // unless there are less than 2 methods in the map, this should 
+        // unless there are less than 2 methods in the map, this should
         // always defer to parent.
         Map oneBucketMethodMap = new MethodMap(regularMap, 1);
         System.out.println("Testing " + c + " with 1-bucket MethodMap");
-        boolean oneBucketTest = 
+        boolean oneBucketTest =
             testClass(c, methods, false, regularMap, oneBucketMethodMap);
         boolean oneBucketTestOpt =
             testClass(c, methods, true, regularMap, oneBucketMethodMap);
 
         Map seventeenBucketMethodMap = new MethodMap(regularMap, 17);
         System.out.println("Testing " + c + " with 17-bucket MethodMap");
-        boolean seventeenBucketTest = 
-            testClass(c, methods, false, regularMap, seventeenBucketMethodMap); 
-        boolean seventeenBucketTestOpt = 
-            testClass(c, methods, true, regularMap, seventeenBucketMethodMap);  
-    
+        boolean seventeenBucketTest =
+            testClass(c, methods, false, regularMap, seventeenBucketMethodMap);
+        boolean seventeenBucketTestOpt =
+            testClass(c, methods, true, regularMap, seventeenBucketMethodMap);
+
 
         boolean clearTest = false;
         try {
@@ -233,7 +233,7 @@ public class MethodMapTest {
                     clearTest = true;
                 } else {
                     System.out.println("Clear() should have returned null for " +
-                                       methods[0] 
+                                       methods[0]
                                        + " after clear().  instead it " +
                                        " returned " + obj);
                 }
@@ -245,8 +245,8 @@ public class MethodMapTest {
             System.out.println("clear() threw an exception");
             e.printStackTrace();
         }
-        
-        return (defaultTest && defaultTestOpt && 
+
+        return (defaultTest && defaultTestOpt &&
                 oneBucketTest && oneBucketTestOpt &&
                 seventeenBucketTest && seventeenBucketTestOpt &&
                 clearTest);
@@ -254,7 +254,7 @@ public class MethodMapTest {
 
     private boolean testClass(Class c, Method[] methods, boolean useParamOpt,
                               Map regularMap, Map methodMap) {
-        
+
         for(int i = 0; i < methods.length; i++) {
             Method next = methods[i];
             int numParams = next.getParameterTypes().length;
@@ -267,15 +267,15 @@ public class MethodMapTest {
             } else {
                 methodMapLookup = methodMap.get(next);
             }
-            
+
             if( regularLookup != methodMapLookup ) {
                 System.out.println("Error.  regularLookup = " + regularLookup
                                    + " methodMapLookup = " + methodMapLookup
                                    + " for Method " + next.toString());
                 return false;
-            } 
+            }
 
-            //            System.out.println("Got " + regularLookup + " for method " + 
+            //            System.out.println("Got " + regularLookup + " for method " +
             //                 next.toString());
 
         }
@@ -305,19 +305,19 @@ public class MethodMapTest {
 
         // array params
         int abc(int[] a);
-        int def(int[][][][][][][][] b);        
+        int def(int[][][][][][][][] b);
 
         // arbitrary unicode chars
         void _B\u8001$();
         void _CCMcx\u04e3\u05E90123();
 
-        
+
     }
 
     private interface MethodMapTest3 {
 
         void A();
-        
+
     }
 
     private interface MethodMapTest4 extends MethodMapTest3 {}

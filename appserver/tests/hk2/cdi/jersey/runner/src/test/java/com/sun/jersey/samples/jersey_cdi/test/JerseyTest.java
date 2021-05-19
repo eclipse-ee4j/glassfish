@@ -30,36 +30,36 @@ public class JerseyTest extends NucleusStartStopTest {
     private final static String JERSEY_WAR = "cdi/jersey/war/target/jersey-cdi.war";
     private final static String SOURCE_HOME_WAR = "/appserver/tests/hk2/" + JERSEY_WAR;
     private final static String JERSEY_WAR_APP_NAME = "jersey-cdi";
-    
+
     private boolean deployed1;
     private Context context;
-    
+
     @BeforeTest
     public void beforeTest() throws NamingException {
         context = new InitialContext();
-        
+
         String jerseyWar = JERSEY_WAR;
         if (!SOURCE_HOME.startsWith("$")) {
             jerseyWar = SOURCE_HOME + SOURCE_HOME_WAR;
         }
-        
+
         deployed1 = NucleusTestUtils.nadmin("deploy", jerseyWar);
         Assert.assertTrue(deployed1);
     }
-    
+
     @AfterTest
     public void afterTest() throws NamingException {
         if (deployed1) {
             NucleusTestUtils.nadmin("undeploy", JERSEY_WAR_APP_NAME);
             deployed1 = false;
         }
-        
+
         if (context != null) {
             context.close();
             context = null;
         }
     }
-    
+
     @Test
     public void testJustATest() {
     }

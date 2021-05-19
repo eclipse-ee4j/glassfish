@@ -29,10 +29,10 @@ import jakarta.inject.Inject;
 
 /**
  * Superclass of all web module config-related commands.
- * 
+ *
  * All of these commands have the app-name (with perhaps /module-name appended)
  * as a required argument.
- * 
+ *
  * @author tjquinn
  */
 public abstract class WebModuleConfigCommand implements AdminCommand {
@@ -165,7 +165,7 @@ public abstract class WebModuleConfigCommand implements AdminCommand {
     protected String appName() {
         return appNameAndOptionalModuleName.substring(0, endOfAppName());
     }
-    
+
     private int endOfAppName() {
         final int slash = appNameAndOptionalModuleName.indexOf('/');
         return (slash == -1 ? appNameAndOptionalModuleName.length() : slash);

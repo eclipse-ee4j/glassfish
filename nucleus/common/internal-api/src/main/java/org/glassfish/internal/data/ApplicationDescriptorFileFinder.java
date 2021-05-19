@@ -28,15 +28,15 @@ import org.glassfish.hk2.bootstrap.DescriptorFileFinder;
 /**
  * This DescriptorFileFinder is used to find all of the META-INF/hk2-locator/application files
  * in the application
- * 
+ *
  * @author jwells
  *
  */
 public class ApplicationDescriptorFileFinder implements DescriptorFileFinder {
-    
+
     private final String resourceName;
     private final ClassLoader loaderToUse;
-    
+
     /* package */
     ApplicationDescriptorFileFinder(ClassLoader loaderToUse, String resourceName) {
         this.resourceName = resourceName;
@@ -48,13 +48,13 @@ public class ApplicationDescriptorFileFinder implements DescriptorFileFinder {
         Enumeration<URL> urls = loaderToUse.getResources(resourceName);
 
         LinkedList<InputStream> retVal = new LinkedList<InputStream>();
-        
+
         while (urls.hasMoreElements()) {
             URL url = urls.nextElement();
-            
+
             retVal.add(url.openStream());
         }
-                
+
         return retVal;
     }
 

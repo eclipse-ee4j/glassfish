@@ -40,7 +40,7 @@ public class Person {
     private String profession;
 
     public Person() {}
-    
+
     public Person(String uuid, String name, String profession) {
         setUuid(uuid);
         setName(name);

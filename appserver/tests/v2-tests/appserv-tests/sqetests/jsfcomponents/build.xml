@@ -77,7 +77,7 @@
             debug="on" deprecation="off" optimize="off">
             <classpath>
                 <path refid="base.classpath" />
-  	    </classpath>
+          </classpath>
         </javac>
      </target>
 
@@ -85,7 +85,7 @@
 <!--  Create jar file                                                 -->
 <!--  ==============================================================  -->
 
-     <target name="create-jar-local" depends="clean-jars-common,compile">    
+     <target name="create-jar-local" depends="clean-jars-common,compile">
         <mkdir dir="${assemble.jar}"/>
 
         <!-- copy over the application configuration resource -->
@@ -95,12 +95,12 @@
         <copy todir="${assemble.jar}/META-INF"
             file="${src.dir}/components/taglib/components.tld"/>
         <copy todir="${assemble.jar}">
- 	    <fileset dir="${build.classes.dir}/" includes="**/*.class"
+         <fileset dir="${build.classes.dir}/" includes="**/*.class"
                  excludes="${demo.pkg}/**/*.class,JSFTest.class"/>
         </copy>
 
-        <jar jarfile="${assemble.jar}/${jar}" 
-	      basedir="${assemble.jar}"/>
+        <jar jarfile="${assemble.jar}/${jar}"
+          basedir="${assemble.jar}"/>
      </target>
 
 <!--  ==============================================================  -->
@@ -112,10 +112,10 @@
      </target>
 
      <target name="clean-war-local" depends="init-common">
-         <delete dir="${assemble.war}" quiet="true" />  
+         <delete dir="${assemble.war}" quiet="true" />
      </target>
 
-     <target name="create-war-local" 
+     <target name="create-war-local"
          depends="clean-war-local,mkdir_webinf,create-jar-local"
          description="create war file." >
 
@@ -128,7 +128,7 @@
 
          <!-- Copy the demo classes only. Components are jarred -->
          <copy todir="${assemble.war}/WEB-INF/classes/">
-             <fileset dir="${build.classes.dir}/" 
+             <fileset dir="${build.classes.dir}/"
                 includes="${demo.pkg}/**/*.class"/>
          </copy>
 
@@ -137,35 +137,35 @@
             <fileset dir="${src.dir}/components" />
          </copy>
          <copy todir="${assemble.war}/src/java/demo">
-            <fileset dir="${src.dir}/demo" />    
+            <fileset dir="${src.dir}/demo" />
          </copy>
-        
+
          <!-- Copy descriptor -->
-         <copy todir="${assemble.war}/WEB-INF"> 
+         <copy todir="${assemble.war}/WEB-INF">
               <fileset dir="descriptor"/>
          </copy>
 
          <!-- Copy docroot   -->
          <copy todir="${assemble.war}">
-              <fileset dir="docroot"/> 
+              <fileset dir="docroot"/>
          </copy>
-    
+
          <!-- Copy the jsfcomponents.jar file to the assemble area -->
-         <copy todir="${assemble.war}/WEB-INF/lib" 
-         	file="${assemble.jar}/${jar}"/>
+         <copy todir="${assemble.war}/WEB-INF/lib"
+             file="${assemble.jar}/${jar}"/>
 
          <!-- Create war file -->
          <jar jarfile="${assemble.dir}/${war}"
               basedir="${assemble.war}" />
 
-     </target>   
+     </target>
 
 <!--  ==============================================================  -->
 <!--  build                                                           -->
 <!--  ==============================================================  -->
 
      <target name="build" depends="create-war-local">
-     </target> 
+     </target>
 
 <!--  ==============================================================  -->
 <!--  setup/unsetup (dummy)                                           -->
@@ -183,11 +183,11 @@
 
      <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
-     </target>    
+     </target>
 
      <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-     </target>   
+     </target>
 
 
 <!--  ==============================================================  -->

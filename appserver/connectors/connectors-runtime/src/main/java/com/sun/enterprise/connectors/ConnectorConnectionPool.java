@@ -83,7 +83,7 @@ public class ConnectorConnectionPool implements Serializable {
     //This property will be set by ConnectorConnectionPoolDeployer or
     //JdbcConnectionPoolDeployer.
     private boolean preferValidateOverRecreate_ = false;
-    
+
     private String validateAtmostOncePeriod_ = null;
 
     private String conCreationRetryAttempts_ = null;
@@ -166,17 +166,17 @@ public class ConnectorConnectionPool implements Serializable {
 
     /**
      * Setter method of Ping pool during creation attribute.
-     * 
+     *
      * @param enabled enables/disables ping during creation.
      */
     public void setPingDuringPoolCreation(boolean enabled) {
-        pingDuringPoolCreation = enabled;    
+        pingDuringPoolCreation = enabled;
     }
-    
+
     public boolean isPoolingOn() {
         return poolingOn;
     }
-    
+
     /**
      * Setter method of pooling attribute
      *

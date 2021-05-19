@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for 
+ * Unit test for
  *
  *   https://glassfish.dev.java.net/issues/show_bug.cgi?id=10992
  *   ("Unable to deploy JSF2 backing bean B 72, works in B71")
@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for IT 10992");
@@ -54,10 +54,10 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
-    public void doTest() throws Exception {     
+    public void doTest() throws Exception {
         URL url = new URL("http://" + host  + ":" + port + contextRoot +
             "/index.jsp");
         System.out.println("Connecting to: " + url.toString());

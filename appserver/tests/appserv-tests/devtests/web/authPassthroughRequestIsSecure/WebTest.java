@@ -46,7 +46,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 6397218");
         WebTest test = new WebTest(args);
@@ -71,7 +71,7 @@ public class WebTest {
     }
 
     private void invokeJsp() throws Exception {
-         
+
         sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/jsp/test.jsp" + " HTTP/1.0\n";
@@ -80,7 +80,7 @@ public class WebTest {
         os.write("Proxy-keysize: 512\n".getBytes());
         os.write("Proxy-ip: 123.456.789\n".getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;

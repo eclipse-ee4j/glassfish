@@ -34,7 +34,7 @@ public class MyListener implements ServletContextListener {
         ServletContext sc = sce.getServletContext();
         ServletRegistration srPrelim = sc.getServletRegistration("MyServlet");
         if (srPrelim == null) {
-            throw new RuntimeException("Missing ServletRegistration for " + 
+            throw new RuntimeException("Missing ServletRegistration for " +
                 "MyServlet");
         }
 

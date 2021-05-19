@@ -40,7 +40,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
     String _fileName;
     String _current;
     NameHelper _nameHelper;
-    
+
     /** Creates new form NodeViewFrame */
     public NodeViewFrame() {
         initComponents();
@@ -50,11 +50,11 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
         root.setUserObject("GlassFish Configuration");
         model.reload();
         jTree1.setEnabled(false);
-        
+
         initTables();
-        
+
     }
-    
+
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -254,7 +254,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
 
         }
 //        fillArrayTable();
-        setTablesForCurrentNode();        
+        setTablesForCurrentNode();
         jPropsTable.changeSelection(iSelected, iSelected, false, false);
     }//GEN-LAST:event_jDeleteProperyActionPerformed
 
@@ -272,7 +272,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
         jButton2.setEnabled((new File(jTextField1.getText())).exists());
     }//GEN-LAST:event_jTextField1InputMethodTextChanged
 
-    private void setTablesForCurrentNode()                                    
+    private void setTablesForCurrentNode()
     {
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                        jTree1.getLastSelectedPathComponent();
@@ -305,8 +305,8 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
         jPropsTable.getModel().addTableModelListener(new MyTableListener(this, true));
         jPropsTable.getSelectionModel().addListSelectionListener(this);
         jDeletePropery.setEnabled(false);
-        
-    }                                        
+
+    }
 
     private void jTree1ValueChanged(javax.swing.event.TreeSelectionEvent evt)//GEN-FIRST:event_jTree1ValueChanged
     {//GEN-HEADEREND:event_jTree1ValueChanged
@@ -323,7 +323,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
         TableModel model = (TableModel)event.getSource();
         Object data = model.getValueAt(row, column);
         Object name = model.getValueAt(row, 0);
-        
+
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                        jTree1.getLastSelectedPathComponent();
         if(!(node.getUserObject() instanceof DottedNameInfo))
@@ -337,9 +337,9 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
             JOptionPane.showMessageDialog(this, "Exception:\n"+e.getMessage(),"", JOptionPane.ERROR_MESSAGE);
             setTablesForCurrentNode();
         }
-        
+
     }
-    
+
     private void initTables()
     {
         fillTable(jAttrsTable, new String[]{"Attribute","Value"}, null);
@@ -347,7 +347,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
         jDeletePropery.setEnabled(false);
 
     }
-    
+
     private void fillTable(JTable table, String[] header, Object[][] lines)
     {
         String[] longValues = {header[0], header[1]};
@@ -380,7 +380,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
             column.setPreferredWidth(comp.getPreferredSize().width);
         }
     }
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         JFileChooser chooser = new JFileChooser();
         switch(chooser.showOpenDialog(this))
@@ -408,7 +408,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
         DefaultMutableTreeNode root = (DefaultMutableTreeNode)model.getRoot();
         root.removeAllChildren();
         root.setUserObject("GlassFish Configuration");
-        
+
         try {
             _nameHelper = new NameHelper(_fileName);
             _nameHelper.fillDottedNamesTree(root);
@@ -416,12 +416,12 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
             e.printStackTrace();
             JOptionPane.showMessageDialog(this, "File corrupted:\nException:\n"+e.getMessage(),"", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         model.reload();
         jTree1.setEnabled(true);
 
     }
-        
+
     class MyTableModel extends DefaultTableModel {
         /*
          * Don't need to implement this method unless your table's
@@ -450,7 +450,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
                     JSetArrayDialog dialog = new JSetArrayDialog(
                             parentFrame, true,
                             _nameHelper,
-                            (DottedNameInfo)node.getUserObject(),    
+                            (DottedNameInfo)node.getUserObject(),
                             (String)this.getValueAt(row, col-1),
                             (Object[])obj);
                     dialog.setVisible(true);
@@ -477,7 +477,7 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
     public void valueChanged(ListSelectionEvent e) {
        jDeletePropery.setEnabled(jPropsTable.getSelectedRowCount()>0);
     }
-    
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jAddPropery;
@@ -497,5 +497,5 @@ public class NodeViewFrame extends javax.swing.JFrame implements ListSelectionLi
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
-    
+
 }

@@ -32,7 +32,7 @@ import org.w3c.dom.Node;
  * This class handles the run-as xml fragment
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class RunAsNode extends DeploymentDescriptorNode <RunAsIdentityDescriptor>{
 
@@ -48,12 +48,12 @@ public class RunAsNode extends DeploymentDescriptorNode <RunAsIdentityDescriptor
     protected Map getDispatchTable() {
         // no need to be synchronized for now
         Map table = super.getDispatchTable();
-        table.put(TagNames.ROLE_NAME, "setRoleName");    
+        table.put(TagNames.ROLE_NAME, "setRoleName");
         return table;
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, RunAsIdentityDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, RunAsIdentityDescriptor descriptor) {
         Node subNode = super.writeDescriptor(parent, nodeName, descriptor);
         writeLocalizedDescriptions(subNode, descriptor);
         appendTextChild(subNode, TagNames.ROLE_NAME, descriptor.getRoleName());

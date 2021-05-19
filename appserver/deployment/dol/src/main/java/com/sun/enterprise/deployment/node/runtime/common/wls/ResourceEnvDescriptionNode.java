@@ -36,7 +36,7 @@ import java.util.Set;
  */
 public class ResourceEnvDescriptionNode extends RuntimeDescriptorNode<ResourceEnvReferenceDescriptor> {
     private ResourceEnvReferenceDescriptor descriptor = null;
-    
+
     public ResourceEnvDescriptionNode() {
     }
 
@@ -50,12 +50,12 @@ public class ResourceEnvDescriptionNode extends RuntimeDescriptorNode<ResourceEn
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map getDispatchTable() {    
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
@@ -91,7 +91,7 @@ public class ResourceEnvDescriptionNode extends RuntimeDescriptorNode<ResourceEn
         appendTextChild(refNode, TagNames.RESOURCE_ENV_REFERENCE_NAME, descriptor.getName());
         appendTextChild(refNode, RuntimeTagNames.JNDI_NAME, descriptor.getJndiName());
         return refNode;
-    }    
+    }
 
     /**
      * write all occurrences of the descriptor corresponding to the current
@@ -116,7 +116,7 @@ public class ResourceEnvDescriptionNode extends RuntimeDescriptorNode<ResourceEn
             // resource-env-description*
             Set<ResourceEnvReferenceDescriptor> resourceEnvReferenceDescriptors =
                 resourceEnvReferenceContainer.getResourceEnvReferenceDescriptors();
-            for (ResourceEnvReferenceDescriptor resourceEnvReferenceDescriptor : 
+            for (ResourceEnvReferenceDescriptor resourceEnvReferenceDescriptor :
                     resourceEnvReferenceDescriptors) {
                 writeDescriptor(parent, nodeName, resourceEnvReferenceDescriptor);
             }

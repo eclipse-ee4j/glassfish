@@ -60,134 +60,130 @@ import com.sun.logging.LogDomains;
  *    }
  * </pre></blockquote><hr>
  * <p>
- * @author Dhiru Pandey 8/7/2000 
+ * @author Dhiru Pandey 8/7/2000
  */
- 
- 
 public class RWLock {
 
-  int currentReaders;
-  int pendingReaders;
-  int currentWriters;
-  /*
- 	 Logger to log transaction messages
-  */ 
-  static Logger _logger = LogDomains.getLogger(RWLock.class, LogDomains.TRANSACTION_LOGGER);
- 
-  Queue writerQueue = new Queue();
-  /**
-   * This method is used to acquire a read lock. If there is already a writer thread
-   * accessing the object using the RWLock then the reader thread will wait until
-   * the writer completes its operation
-   */
-  public synchronized void acquireReadLock() {
-    if (currentWriters == 0 && writerQueue.size() == 0) {
-      ++currentReaders;
-    } else {
-      ++pendingReaders;
-      try {
-        wait();
-      } catch(InterruptedException ie) {
-	  	_logger.log(Level.FINE,"Error in acquireReadLock",ie);
-      }
-    }
-  }
+    int currentReaders;
+    int pendingReaders;
+    int currentWriters;
+    /*
+      Logger to log transaction messages
+     */
+    static Logger _logger = LogDomains.getLogger(RWLock.class, LogDomains.TRANSACTION_LOGGER);
 
-  /**
-   * This method is used to acquire a write lock. If there are already reader threads
-   * accessing the object using the RWLock, then the writer thread will wait till all
-   * the reader threads are finished with their operations.
-   */
-  public void acquireWriteLock() {
-    Object lock = new Object();
-
-    synchronized(lock) {
-      synchronized(this) {
-        if (writerQueue.size() == 0 && currentReaders == 0 && currentWriters == 0) {
-          ++currentWriters;
-          // Use logging facility if you need to log this
-			//_logger.log(Level.FINE," RW: incremented WriterLock count");
-          return;
+    Queue writerQueue = new Queue();
+    /**
+     * This method is used to acquire a read lock. If there is already a writer thread
+     * accessing the object using the RWLock then the reader thread will wait until
+     * the writer completes its operation
+     */
+    public synchronized void acquireReadLock() {
+        if (currentWriters == 0 && writerQueue.size() == 0) {
+            ++currentReaders;
+        } else {
+            ++pendingReaders;
+            try {
+                wait();
+            } catch(InterruptedException ie) {
+                _logger.log(Level.FINE,"Error in acquireReadLock",ie);
+            }
         }
-        writerQueue.enQueue(lock);
-        // Use logging facility if you need to log this
-			//_logger.log(Level.FINE," RW: Added WriterLock to queue");
-      }
-      try {
-        lock.wait();
-      } catch(InterruptedException ie) {
-	  	_logger.log(Level.FINE,"Error in acquireWriteLock",ie);
-      }
-    }
-  }
-
-  /**
-   * isWriteLocked
-   * 
-   * returns true if the RWLock is in a write locked state.
-   *
-   */
-  public boolean isWriteLocked()
-  {
-	  return currentWriters > 0 ;
-  }
- 
-  /**
-   * This method is used to release a read lock. 
-   * It also notifies any waiting writer thread
-   * that it could now acquire a write lock.
-   */
-  public synchronized void releaseReadLock() {
-    if (--currentReaders == 0) 
-      notifyWriters();
-  }
- 
-  /**
-   * This method is used to release a write lock. It also notifies any pending
-   * readers that they could now acquire the read lock. If there are no reader
-   * threads then it will try to notify any waiting writer thread that it could now
-   * acquire a write lock.
-   */
-  public synchronized void releaseWriteLock() {
-    --currentWriters;
-    if (pendingReaders > 0) 
-      notifyReaders();
-    else 
-      notifyWriters();
-  }
-  private void notifyReaders() {
-    currentReaders += pendingReaders;
-    pendingReaders = 0;
-    notifyAll();
-  }
-  
-  private void notifyWriters() {
-    if (writerQueue.size() > 0) {
-      Object lock = writerQueue.deQueueFirst();
-      ++currentWriters;
-      synchronized(lock) { 
-        lock.notify();
-      }
-    }
-  }
-
-  class Queue extends LinkedList {
-
-    public Queue() {
-      super();
     }
 
-    public void enQueue(Object o) {
-      super.addLast(o);
+    /**
+     * This method is used to acquire a write lock. If there are already reader threads
+     * accessing the object using the RWLock, then the writer thread will wait till all
+     * the reader threads are finished with their operations.
+     */
+    public void acquireWriteLock() {
+        Object lock = new Object();
+
+        synchronized(lock) {
+            synchronized(this) {
+                if (writerQueue.size() == 0 && currentReaders == 0 && currentWriters == 0) {
+                    ++currentWriters;
+                    // Use logging facility if you need to log this
+                    //_logger.log(Level.FINE," RW: incremented WriterLock count");
+                    return;
+                }
+                writerQueue.enQueue(lock);
+                // Use logging facility if you need to log this
+                //_logger.log(Level.FINE," RW: Added WriterLock to queue");
+            }
+            try {
+                lock.wait();
+            } catch(InterruptedException ie) {
+                _logger.log(Level.FINE,"Error in acquireWriteLock",ie);
+            }
+        }
     }
 
-    public Object deQueueFirst() {
-      return super.removeFirst();
+    /**
+     * isWriteLocked
+     *
+     * returns true if the RWLock is in a write locked state.
+     *
+     */
+    public boolean isWriteLocked()
+    {
+        return currentWriters > 0 ;
     }
 
-  }
+    /**
+     * This method is used to release a read lock.
+     * It also notifies any waiting writer thread
+     * that it could now acquire a write lock.
+     */
+    public synchronized void releaseReadLock() {
+        if (--currentReaders == 0) {
+            notifyWriters();
+        }
+    }
 
+    /**
+     * This method is used to release a write lock. It also notifies any pending
+     * readers that they could now acquire the read lock. If there are no reader
+     * threads then it will try to notify any waiting writer thread that it could now
+     * acquire a write lock.
+     */
+    public synchronized void releaseWriteLock() {
+        --currentWriters;
+        if (pendingReaders > 0) {
+            notifyReaders();
+        } else {
+            notifyWriters();
+        }
+    }
+    private void notifyReaders() {
+        currentReaders += pendingReaders;
+        pendingReaders = 0;
+        notifyAll();
+    }
+
+    private void notifyWriters() {
+        if (writerQueue.size() > 0) {
+            Object lock = writerQueue.deQueueFirst();
+            ++currentWriters;
+            synchronized(lock) {
+                lock.notify();
+            }
+        }
+    }
+
+    class Queue extends LinkedList {
+
+        public Queue() {
+            super();
+        }
+
+        public void enQueue(Object o) {
+            super.addLast(o);
+        }
+
+        public Object deQueueFirst() {
+            return super.removeFirst();
+        }
+
+    }
 }
- 
-
-

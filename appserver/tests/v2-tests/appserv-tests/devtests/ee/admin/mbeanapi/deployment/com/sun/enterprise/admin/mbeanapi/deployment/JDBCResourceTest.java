@@ -31,8 +31,8 @@ public class JDBCResourceTest extends BaseTest
     static final String kPoolName       = "__TimerPool";
     static final String kObjectType     = "user";
 
-    public JDBCResourceTest(final String user, 
-        final String password, final String host, final int port, 
+    public JDBCResourceTest(final String user,
+        final String password, final String host, final int port,
         final String jndiName, final String poolName)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -40,11 +40,11 @@ public class JDBCResourceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateJDBCResourceCmd createCmd = 
-                cmdFactory.createCreateJDBCResourceCmd(jndiName, 
+        final CreateJDBCResourceCmd createCmd =
+                cmdFactory.createCreateJDBCResourceCmd(jndiName,
                         poolName, getOptional());
 
-        final DeleteJDBCResourceCmd deleteCmd = 
+        final DeleteJDBCResourceCmd deleteCmd =
                 cmdFactory.createDeleteJDBCResourceCmd(jndiName);
 
         final PipeCmd p1 = new PipeCmd(connectCmd, createCmd);
@@ -66,14 +66,14 @@ public class JDBCResourceTest extends BaseTest
 
     public static void main(String[] args) throws Exception
     {
-        new JDBCResourceTest("admin", "password", "localhost", 8686, 
-                kJNDIName, kPoolName).run(); 
+        new JDBCResourceTest("admin", "password", "localhost", 8686,
+                kJNDIName, kPoolName).run();
     }
 
     private Map getOptional()
     {
         final Map optional = new HashMap();
-        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY, 
+        //optional.put(CreateResourceKeys.RESOURCE_OBJECT_TYPE_KEY,
                 //kObjectType);
         return optional;
     }

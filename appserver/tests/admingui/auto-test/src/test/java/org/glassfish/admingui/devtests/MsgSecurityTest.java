@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.assertEquals;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -129,7 +129,7 @@ public class MsgSecurityTest extends BaseSeleniumTestClass {
         clickAndWait("treeForm:tree:configurations:configurations_link");
         deleteRow("propertyForm:configs:topActionsGroup1:button1", "propertyForm:configs", configName);
     }
-    
+
 
     @Test
     public void testCreateAdditionalProviders() {
@@ -231,7 +231,7 @@ public class MsgSecurityTest extends BaseSeleniumTestClass {
         Select select = new Select(driver.findElement(By.id("propertyForm:propertySheet:propertSectionTextField:ConfigProp:Config")));
         select.selectByVisibleText(srcName);
         clickAndWait("propertyForm:propertyContentPage:topButtons:okButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:configs", newConfigName, "col1");
         assertEquals(newConfigName, getText(prefix + "col1:link"));
     }

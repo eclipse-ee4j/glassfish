@@ -62,20 +62,20 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
             context = new InitialContext();
             beanManagedTx = ((Boolean) context.lookup
                              ("java:comp/env/beanManagedTx")).booleanValue();
-            
+
             if( beanManagedTx ) {
                 System.out.println("BEAN MANAGED TRANSACTIONS");
             } else {
                 System.out.println("CONTAINER MANAGED TRANSACTIONS");
             }
-            
-            dataSource = (DataSource) 
+
+            dataSource = (DataSource)
                 context.lookup("java:comp/env/jdbc/AccountDB");
-            
+
             // Create a Queue Session.
-            queueConFactory = (QueueConnectionFactory) 
+            queueConFactory = (QueueConnectionFactory)
                 context.lookup("java:comp/env/jms/MyQueueConnectionFactory");
-            
+
             topicConFactory = (TopicConnectionFactory)
                 context.lookup("java:comp/env/jms/MyTopicConnectionFactory");
         } catch(Exception e) {
@@ -91,16 +91,16 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
             String messageID = recvMsg.getJMSMessageID();
 
             boolean doJms = (recvMsg.getJMSReplyTo() != null);
-            boolean doJdbc = 
+            boolean doJdbc =
                 recvMsg.getBooleanProperty("doJdbc");
-            boolean rollbackEnabled = 
+            boolean rollbackEnabled =
                 recvMsg.getBooleanProperty("rollbackEnabled");
 
             System.out.println("In MsgBean::onMessage() : " + messageID);
             System.out.println("jdbc enabled : " + doJdbc + " , " +
                                "jms reply enabled : " + doJms + " , " +
                                "rollback enabled : " + rollbackEnabled);
-            
+
             if( beanManagedTx ) {
                 mdc.getUserTransaction().begin();
             } else if( rollbackEnabled ) {
@@ -111,7 +111,7 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
                              "but redelivered flag not set" +
                              " : " + recvMsg);
                     } else {
-                        System.out.println("Got redelivered message " + 
+                        System.out.println("Got redelivered message " +
                                            messageID);
                     }
                 }
@@ -123,12 +123,12 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
                 mdc.getUserTransaction().commit();
             } else if( rollbackEnabled ) {
                 if( recvMsg.getJMSRedelivered() ) {
-                    System.out.println("Got redelivered message " + 
+                    System.out.println("Got redelivered message " +
                                        messageID);
                     // no more rollbacks -- container will commit tx
                 } else {
                     rollbackMessages.add(recvMsg);
-                    System.out.println("Rolling back message " + 
+                    System.out.println("Rolling back message " +
                                        messageID);
                     mdc.setRollbackOnly();
                 }
@@ -140,13 +140,13 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
     }
 
     protected void doStuff(boolean doJdbc, Message recvMsg) throws Exception {
-        
+
         Destination replyTo = recvMsg.getJMSReplyTo();
-        
+
         if( replyTo != null ) {
             doJmsStuff(replyTo, recvMsg);
         }
-        
+
         if( doJdbc) {
             doJdbcStuff();
         }
@@ -178,41 +178,41 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
 
         QueueConnection queueCon = null;
         TopicConnection topicCon = null;
-        
+
         try {
-            
+
             if( replyTo instanceof Queue ) {
                 queueCon = queueConFactory.createQueueConnection();
-                
+
                 // parameters to createQueueSession are ignored when there
                 // is a tx context.  If there's a CMT unspecified tx context,
-                // e.g. CMT NotSupported, jms activity must be coded 
+                // e.g. CMT NotSupported, jms activity must be coded
                 // in a defensive way since the container has a lot of leeway
-                // in how it performs the work.  
+                // in how it performs the work.
                 QueueSession queueSession = queueCon.
                     createQueueSession(false, Session.AUTO_ACKNOWLEDGE);
-                
+
                 QueueSender sender  = queueSession.
                     createSender((Queue)replyTo);
-                
+
                 TextMessage sendMsg = queueSession.createTextMessage();
                 sendMsg.setText("Reply for " + ((TextMessage)recvMsg).getText() + " " + recvMsg.getJMSMessageID());
                 sender.send(sendMsg);
-                System.out.println("Sent reply " + sendMsg + 
+                System.out.println("Sent reply " + sendMsg +
                                    " to " + replyTo);
             } else {
                 topicCon = topicConFactory.createTopicConnection();
-                
+
                 TopicSession topicSession = topicCon.
                     createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
-                
+
                 TopicPublisher publisher =
                     topicSession.createPublisher((Topic)replyTo);
-                
+
                 TextMessage sendMsg = topicSession.createTextMessage();
                 sendMsg.setText("Reply for " + ((TextMessage)recvMsg).getText() + " " + recvMsg.getJMSMessageID());
                 publisher.publish(sendMsg);
-                System.out.println("Published reply " + sendMsg + 
+                System.out.println("Published reply " + sendMsg +
                                    " to " + replyTo);
             }
         } catch(JMSException jmse) {
@@ -230,10 +230,10 @@ public class MsgBean implements MessageDrivenBean, MessageListener {
             }
         }
     }
-        
+
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In MsgBean::setMessageDrivenContext()!!");
-	this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     public void ejbRemove() {

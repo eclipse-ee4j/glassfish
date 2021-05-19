@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  * precompilation (during deployment) as long as jsp-config property
  * 'ignoreJspFragmentErrors' has been set to TRUE in sun-web.xml.
  *
- * Otherwise, precompilation of this webapp's JSPs would have failed, 
+ * Otherwise, precompilation of this webapp's JSPs would have failed,
  * since the 'counter' variable is not declared in any of the included
  * JSP segments.
  */
@@ -48,7 +48,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for 6393940");
@@ -61,7 +61,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {

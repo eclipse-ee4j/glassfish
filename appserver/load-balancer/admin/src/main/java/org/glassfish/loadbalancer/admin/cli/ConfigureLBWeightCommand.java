@@ -47,15 +47,15 @@ import org.glassfish.hk2.api.PerLookup;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="configure-lb-weight", 
+        opType=RestEndpoint.OpType.POST,
+        path="configure-lb-weight",
         description="Configure LB Weight",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="configure-lb-weight", 
+        opType=RestEndpoint.OpType.POST,
+        path="configure-lb-weight",
         description="Configure LB Weight",
         params={
             @RestParam(name="target", value="$parent")
@@ -79,7 +79,7 @@ public final class ConfigureLBWeightCommand extends LBCommandsBase
         final ActionReport report = context.getActionReport();
 
         final Logger logger = context.getLogger();
-        
+
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
 
         Map<String,Integer> instanceWeights = null;
@@ -134,7 +134,7 @@ public final class ConfigureLBWeightCommand extends LBCommandsBase
                     report.setMessage(msg);
                     return;
                 }
-                updateLBWeight(s, entry.getValue().toString());                
+                updateLBWeight(s, entry.getValue().toString());
             } catch (TransactionFailure ex) {
                 report.setMessage(ex.getMessage());
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -142,14 +142,14 @@ public final class ConfigureLBWeightCommand extends LBCommandsBase
                 return;
             }
         }
-        
+
     }
 
     private void updateLBWeight(final Server s, final String w)
                                 throws TransactionFailure {
         ConfigSupport.apply(new SingleConfigCode<Server>() {
                 @Override
-                public Object run(Server param) throws PropertyVetoException, TransactionFailure {                    
+                public Object run(Server param) throws PropertyVetoException, TransactionFailure {
                     param.setLbWeight(w);
                     return Boolean.TRUE;
                 }

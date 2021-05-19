@@ -23,7 +23,7 @@ public class TestServlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
         String path = getServletContext().getRealPath("/abc.txt");
-        if (path == null || 
+        if (path == null ||
                 path.indexOf("/META-INF/resources") == -1) {
             throw new ServletException("Wrong resource path");
         }

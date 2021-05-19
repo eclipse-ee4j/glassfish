@@ -48,8 +48,8 @@ import java.util.List;
 @I18n("list.mail.resources")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-mail-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-mail-resources",
         description="List Jakarta Mail Resources")
 })
 public class ListMailResources implements AdminCommand {

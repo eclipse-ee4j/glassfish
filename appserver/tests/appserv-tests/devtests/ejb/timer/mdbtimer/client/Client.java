@@ -46,7 +46,7 @@ public class Client {
 
     private int numMessages = 2;
     public Client(String[] args) {
-        
+
         if( args.length == 1 ) {
             numMessages = new Integer(args[0]).intValue();
         }
@@ -67,20 +67,20 @@ public class Client {
 
     public void setup() throws Exception {
         context = new InitialContext();
-        
-        QueueConnectionFactory queueConFactory = 
+
+        QueueConnectionFactory queueConFactory =
             (QueueConnectionFactory) context.lookup
             ("java:comp/env/FooCF");
 
         queueCon = queueConFactory.createQueueConnection();
 
         queueSession = queueCon.createQueueSession
-            (false, Session.AUTO_ACKNOWLEDGE); 
+            (false, Session.AUTO_ACKNOWLEDGE);
 
         targetDest = (jakarta.jms.Queue) context.lookup("java:comp/env/jms/MsgBeanQueue");
 
         // Producer will be specified when actual msg is sent.
-        queueSender = queueSession.createSender(targetDest);        
+        queueSender = queueSession.createSender(targetDest);
 
         clientDest = (jakarta.jms.Queue) context.lookup("java:comp/env/jms/ClientQueue");
 
@@ -101,7 +101,7 @@ public class Client {
         }
     }
 
-    public void sendMsg(Message msg) 
+    public void sendMsg(Message msg)
         throws JMSException {
         System.out.println("Sending message to " +
                                " at time " + System.currentTimeMillis());
@@ -114,7 +114,7 @@ public class Client {
         System.out.println("Waiting for queue message ");
         Message recvdmessage = queueReceiver.receive(timeout);
         if( recvdmessage != null ) {
-            System.out.println("Received message : " + recvdmessage + 
+            System.out.println("Received message : " + recvdmessage +
                                " at " + new Date());
         } else {
             System.out.println("timeout after " + timeout + " seconds");
@@ -131,11 +131,11 @@ public class Client {
 
         ObjectMessage recvMsg1 = (ObjectMessage) recvQueueMsg(20000);
         Date cancellation = (Date) recvMsg1.getObject();
-        
+
         Date now = new Date();
-        
+
         // wait for message after timer is cancelled (plus some buffer time)
-        long wait = now.before(cancellation) ? 
+        long wait = now.before(cancellation) ?
             (cancellation.getTime() - now.getTime()) + 30000 : 0;
         System.out.println("Timer will be cancelled after " + cancellation);
         System.out.println("Waiting for cancellation notification until " +

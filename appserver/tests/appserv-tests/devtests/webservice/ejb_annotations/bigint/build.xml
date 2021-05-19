@@ -51,7 +51,7 @@
       <jar destfile="${assemble.dir}/${appname}-ejb.jar"
             basedir="${build.classes.dir}"
             includes="**">
-      </jar>            
+      </jar>
     </target>
 
     <target name="assemble-client" depends="init-common">
@@ -61,8 +61,8 @@
         <param name="wsimport.args"
                value="-keep -d ${build.classes.dir}/client http://${http.host}:${http.port}/CustomerManagerService/CustomerManager?WSDL"/>
       </antcall>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="client/**"/>
     </target>
 
@@ -75,7 +75,7 @@
         <arg line="${as.props}"/>
         <arg line="--upload=true"/>
         <arg line="--dropandcreatetables"/>
-        <arg line="--target ${appserver.instance.name}"/>	
+        <arg line="--target ${appserver.instance.name}"/>
         <arg line="${assemble.dir}/${appname}-ejb.jar"/>
       </exec>
     </target>
@@ -86,14 +86,14 @@
           <arg line="${as.props}"/>
           <arg line="--droptables=true"/>
           <arg line="--cascade=true"/>
-          <arg line="--target ${appserver.instance.name}"/>	
+          <arg line="--target ${appserver.instance.name}"/>
           <arg line="${appname}-ejb"/>
         </exec>
         <exec executable="${ASADMIN}" failonerror="true">
           <arg line="stop-database"/>
         </exec>
     </target>
-    
+
     <target name="runclient">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>

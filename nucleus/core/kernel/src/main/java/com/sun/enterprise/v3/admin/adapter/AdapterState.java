@@ -23,7 +23,7 @@ package com.sun.enterprise.v3.admin.adapter;
  * @since GlassFish V3
  */
 enum AdapterState {
-    
+
     UNINITIAZED("state.uninitialized", "The Admin Console Adapter is not yet initialized."),
     AUTHENTICATING("state.authenticating", "Authentication required before the Admin Console can be installed."),
     PERMISSION_NEEDED("state.permissionNeeded", "The Admin Console requires your permission before it can be downloaded or installed."),
@@ -46,23 +46,24 @@ enum AdapterState {
     APPLICATION_RESTORE("state.restore", "Restoring previously deployed Admin Console..."),
     APPLICATION_UPGRADE_FALED("state.upgradeFailed", "Cannot upgrade Admin Console."),
     WELCOME_TO("status.welcometo", "Welcome to ");
-    
-    
+
+
     private final String desc;
     private final String i18nKey;
-    
+
     private AdapterState(String i18nKey, String desc) {
-	this.i18nKey = i18nKey;
+        this.i18nKey = i18nKey;
         this.desc = desc;
     }
 
+
     /**
-     *	This is the key that should be used to retrieve the localized message from a properties file.
+     * This is the key that should be used to retrieve the localized message from a properties file.
      */
     public String getI18NKey() {
-	return i18nKey;
+        return i18nKey;
     }
-    
+
     @Override
     public String toString() {
         return (desc);

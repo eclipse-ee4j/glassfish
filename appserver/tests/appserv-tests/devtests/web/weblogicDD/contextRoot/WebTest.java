@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for context root in weblogic.xml");
         WebTest webTest = new WebTest(args);
@@ -77,11 +77,11 @@ public class WebTest {
             }
             boolean testStatus = EXPECTED_RESPONSE.equals(line);
             if (!testStatus) {
-                System.out.println("Wrong response. Expected: " + 
+                System.out.println("Wrong response. Expected: " +
                     EXPECTED_RESPONSE + ", received: " + line);
                 testStatus = false;
             }
-            
+
             stat.addStatus(TEST_NAME, (testStatus)? stat.PASS : stat.FAIL);
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);

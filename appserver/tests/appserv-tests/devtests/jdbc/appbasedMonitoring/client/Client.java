@@ -49,18 +49,18 @@ public class Client {
         stat.addDescription("App based monitoring tests");
 
         if (getMonitorablePropertyOfConnectionPool(app1, NUM_ACQUIRED) == 2 && getMonitorablePropertyOfConnectionPool(app2, NUM_ACQUIRED) == 3 && getMonitorablePropertyOfConnectionPool(null, NUM_ACQUIRED) == 5) {
-	    System.out.println("Monitoring : Acquired Statistic test pass");
+            System.out.println("Monitoring : Acquired Statistic test pass");
             stat.addStatus("Monitoring : Acquired Statistic test: ", stat.PASS);
         } else {
-	    System.out.println("Monitoring : Acquired Statistic test fail");
+            System.out.println("Monitoring : Acquired Statistic test fail");
             stat.addStatus("Monitoring : Acquired Statistic test: ", stat.FAIL);
         }
 
         if (getMonitorablePropertyOfConnectionPool(app1, NUM_RELEASED) == 2 && getMonitorablePropertyOfConnectionPool(app2, NUM_RELEASED) == 3 && getMonitorablePropertyOfConnectionPool(null, NUM_RELEASED) == 5) {
-	    System.out.println("Monitoring : Released Statistic test pass");
+            System.out.println("Monitoring : Released Statistic test pass");
             stat.addStatus("Monitoring : Released Statistic test: ", stat.PASS);
         } else {
-	    System.out.println("Monitoring : Released Statistic test fail");
+            System.out.println("Monitoring : Released Statistic test fail");
             stat.addStatus("Monitoring : Released Statistic test: ", stat.FAIL);
         }
 
@@ -69,24 +69,24 @@ public class Client {
 
     public int getMonitorablePropertyOfConnectionPool(String appName, String monitoringStat) throws Exception {
 
-	final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";    
+        final String urlStr = "service:jmx:rmi:///jndi/rmi://" + HOST_NAME + ":" + JMX_PORT + "/jmxrmi";
         final JMXServiceURL url = new JMXServiceURL(urlStr);
 
-	final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
-	final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
+        final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
+        final MBeanServerConnection connection = jmxConn.getMBeanServerConnection();
 
         ObjectName objectName = null;
-	if(appName == null) {
+        if(appName == null) {
             objectName = new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-mon,name=resources/" + poolName);
-	} else {
-	    objectName = new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-app-mon,name=resources/" + poolName + "/" + appName);
-	}
+        } else {
+            objectName = new ObjectName("amx:pp=/mon/server-mon[server],type=jdbc-connection-pool-app-mon,name=resources/" + poolName + "/" + appName);
+        }
 
-	javax.management.openmbean.CompositeDataSupport returnValue = 
-		(javax.management.openmbean.CompositeDataSupport) 
-		connection.getAttribute(objectName, monitoringStat);
+        javax.management.openmbean.CompositeDataSupport returnValue =
+                (javax.management.openmbean.CompositeDataSupport)
+                connection.getAttribute(objectName, monitoringStat);
 
-	System.out.println(">>>" + monitoringStat + "=" + returnValue.get("count"));
+        System.out.println(">>>" + monitoringStat + "=" + returnValue.get("count"));
         return new Integer(returnValue.get("count").toString());
     }
 

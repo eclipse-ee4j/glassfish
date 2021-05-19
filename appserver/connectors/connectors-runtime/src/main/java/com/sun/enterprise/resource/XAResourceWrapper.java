@@ -56,7 +56,7 @@ public class XAResourceWrapper implements XAResource {
         res.end(xid, flags);
     }
 
-    
+
     public void forget(Xid xid) throws XAException {
         print("XAResource.forget: " + xidToString(xid));
         res.forget(xid);
@@ -88,7 +88,7 @@ public class XAResourceWrapper implements XAResource {
         print("prepare result = " + flagToString(result));
         return result;
     }
-    
+
     public Xid[] recover(int flag) throws XAException {
         print("XAResource.recover: " + flagToString(flag));
         return res.recover(flag);
@@ -102,7 +102,7 @@ public class XAResourceWrapper implements XAResource {
     public boolean setTransactionTimeout(int seconds) throws XAException {
         return res.setTransactionTimeout(seconds);
     }
-            
+
     public void start(Xid xid, int flags) throws XAException {
         print("XAResource.start: " + xidToString(xid) + "," +
               flagToString(flags));
@@ -164,4 +164,4 @@ public class XAResourceWrapper implements XAResource {
     public int hashCode() {
         return res.hashCode();
     }
-}    
+}

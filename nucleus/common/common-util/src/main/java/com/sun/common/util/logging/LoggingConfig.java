@@ -38,8 +38,8 @@ public interface LoggingConfig {
     String setLoggingProperty(String propertyName, String propertyValue) throws IOException;
 
     /* set propertyName to be propertyValue.  The logManager
-	*  readConfiguration is not called in this method.
-	*/
+        *  readConfiguration is not called in this method.
+        */
 
     String setLoggingProperty(String propertyName, String propertyValue, String targetServer) throws IOException;
 
@@ -53,11 +53,11 @@ public interface LoggingConfig {
     Map<String, String> updateLoggingProperties(Map<String, String> properties) throws IOException;
 
     /* update the properties to new values for given target server..  properties is a Map of names of properties and
-	 * their cooresponding value.  If the property does not exist then it is added to the
-	 * logging.properties file.
-	 *
-	 * The readConfiguration method is called on the logManager after updating the properties.
-	*/
+         * their cooresponding value.  If the property does not exist then it is added to the
+         * logging.properties file.
+         *
+         * The readConfiguration method is called on the logManager after updating the properties.
+        */
 
     Map<String, String> updateLoggingProperties(Map<String, String> properties, String targetServer) throws IOException;
 
@@ -67,7 +67,7 @@ public interface LoggingConfig {
     Map<String, String> getLoggingProperties(String targetServer) throws IOException;
 
     /* get the properties and corresponding values in the logging.properties file.
-	*/
+        */
 
     Map<String, String> getLoggingProperties() throws IOException;
 
@@ -81,7 +81,7 @@ public interface LoggingConfig {
 
     public void deleteLoggingProperties(Map<String, String> properties, String targetConfigName) throws IOException;
 
-    /* delete the properties from logging.properties file. 
+    /* delete the properties from logging.properties file.
       */
 
     public void deleteLoggingProperties(Map<String, String> properties) throws IOException;

@@ -23,7 +23,7 @@ import jakarta.persistence.SynchronizationType;
 
 @Stateful
 public class TC4SfsbWithUnsynchPC implements Finder{
-    
+
     @PersistenceContext(unitName="lib/unsyncpc_txscope_synctype_mismatch-par.jar#em",
             synchronization = SynchronizationType.UNSYNCHRONIZED)
     EntityManager em;

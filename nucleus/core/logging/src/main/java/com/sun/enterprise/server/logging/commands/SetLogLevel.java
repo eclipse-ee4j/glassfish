@@ -68,8 +68,8 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 @I18n("set.log.level")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="set-log-levels", 
+        opType=RestEndpoint.OpType.POST,
+        path="set-log-levels",
         description="set-log-levels")
 })
 public class SetLogLevel implements AdminCommand {
@@ -126,18 +126,18 @@ public class SetLogLevel implements AdminCommand {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
-            
+
             TargetInfo targetInfo = new TargetInfo(domain, target);
             String targetConfigName = targetInfo.getConfigName();
             boolean isDas = targetInfo.isDas();
-            
+
             if (targetConfigName != null && !targetConfigName.isEmpty()) {
                 loggingConfig.updateLoggingProperties(m, targetConfigName);
                 success = true;
             } else if (isDas) {
                 loggingConfig.updateLoggingProperties(m);
                 success = true;
-            } 
+            }
 
             if (success) {
                 successMsg.append(localStrings.getLocalString(
@@ -145,7 +145,7 @@ public class SetLogLevel implements AdminCommand {
                 report.setMessage(successMsg.toString());
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             }
-            
+
         } catch (IOException e) {
             report.setMessage(localStrings.getLocalString("set.log.level.failed",
                     "Could not set logger levels for {0}.", target));

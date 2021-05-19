@@ -29,7 +29,7 @@ import com.sun.enterprise.security.BaseProgrammaticLoginPermission;
  *
  */
 public class ProgrammaticLoginPermission extends BaseProgrammaticLoginPermission {
-    
+
     public ProgrammaticLoginPermission(String name)
     {
         super(name);

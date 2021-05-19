@@ -40,7 +40,7 @@
         </delete>
         <delete file="lib/bean-lib.jar"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <!-- create WEB-INF/lib/bean-lib.jar -->
         <mkdir dir="${build.classes.dir}"/>
@@ -54,8 +54,8 @@
             <fileset dir="${build.classes.dir}"/>
         </jar>
         <delete dir="${build.classes.dir}"/>
-   
-        <!-- compile test servlet -->     
+
+        <!-- compile test servlet -->
         <mkdir dir="${build.classes.dir}"/>
         <echo message="common.xml: Compiling test source files" level="verbose"/>
         <mkdir dir="servlet"/>
@@ -63,23 +63,23 @@
     </target>
 
     <target name="build" depends="compile">
-       <property name="hasWebclient" value="yes"/> 
+       <property name="hasWebclient" value="yes"/>
         <antcall target="webclient-war-common">
             <param name="hasWebclient" value="yes"/>
-            <param name="webclient.war.classes" value="**/*.class"/> 
+            <param name="webclient.war.classes" value="**/*.class"/>
         </antcall>
 
         <javac srcdir="." classpath="${env.APS_HOME}/lib/reportbuilder.jar"
                includes="WebTest.java"/>
 
-    </target> 
+    </target>
 
     <target name="build-publish-war" depends="build, publish-war-common" />
-    
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
         <java classname="WebTest">
           <arg value="${http.host}"/>
@@ -91,10 +91,10 @@
          </classpath>
         </java>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

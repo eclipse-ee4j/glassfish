@@ -22,7 +22,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 /**
  * This is a CDI ApplicationScoped (a NormalScope) class that will be injected
  * into an HK2 service
- * 
+ *
  * @author jwells
  *
  */
@@ -30,21 +30,21 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ManagedBean
 public class CountingApplicationScopedCDIService {
     private static int constructedCount;  // static to be class wide
-    
+
     private int methodCalledCount;  // not static, to be instance wide
-    
+
     public CountingApplicationScopedCDIService() {
         synchronized (CountingApplicationScopedCDIService.class) {
             constructedCount++;
         }
     }
-    
+
     public int getConstructedCount() {
         synchronized (CountingApplicationScopedCDIService.class) {
             return constructedCount;
         }
     }
-    
+
     public int getNumberOfTimesMethodCalled() {
         return ++methodCalledCount;
     }

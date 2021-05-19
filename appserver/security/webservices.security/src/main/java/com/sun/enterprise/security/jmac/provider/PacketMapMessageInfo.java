@@ -22,7 +22,7 @@ import com.sun.xml.ws.api.message.Packet;
 
 
 /**
- * 
+ *
  */
 public class PacketMapMessageInfo implements PacketMessageInfo {
 
@@ -31,61 +31,69 @@ public class PacketMapMessageInfo implements PacketMessageInfo {
     private Map infoMap;
 
     public PacketMapMessageInfo(Packet reqPacket, Packet resPacket) {
-	soapAuthParam = new SOAPAuthParam(reqPacket,resPacket,0);
+        soapAuthParam = new SOAPAuthParam(reqPacket, resPacket, 0);
     }
 
+
+    @Override
     public Map getMap() {
-	if (this.infoMap == null) {
-	    this.infoMap = soapAuthParam.getMap();
-	}
-	return this.infoMap;
+        if (this.infoMap == null) {
+            this.infoMap = soapAuthParam.getMap();
+        }
+        return this.infoMap;
     }
 
+
+    @Override
     public Object getRequestMessage() {
-	return soapAuthParam.getRequest();
+        return soapAuthParam.getRequest();
     }
 
+
+    @Override
     public Object getResponseMessage() {
-	return soapAuthParam.getResponse();
+        return soapAuthParam.getResponse();
     }
 
+
+    @Override
     public void setRequestMessage(Object request) {
-	soapAuthParam.setRequest((SOAPMessage)request);
+        soapAuthParam.setRequest((SOAPMessage) request);
     }
 
+
+    @Override
     public void setResponseMessage(Object response) {
-	soapAuthParam.setResponse((SOAPMessage)response);
+        soapAuthParam.setResponse((SOAPMessage) response);
     }
 
+
+    @Override
     public SOAPAuthParam getSOAPAuthParam() {
-	return soapAuthParam;
+        return soapAuthParam;
     }
 
+
+    @Override
     public Packet getRequestPacket() {
-	return (Packet) soapAuthParam.getRequestPacket();
+        return (Packet) soapAuthParam.getRequestPacket();
     }
 
+
+    @Override
     public Packet getResponsePacket() {
-	return (Packet) soapAuthParam.getResponsePacket();
+        return (Packet) soapAuthParam.getResponsePacket();
     }
 
+
+    @Override
     public void setRequestPacket(Packet p) {
-	soapAuthParam.setRequestPacket(p);
+        soapAuthParam.setRequestPacket(p);
     }
 
+
+    @Override
     public void setResponsePacket(Packet p) {
-	soapAuthParam.setResponsePacket(p);
+        soapAuthParam.setResponsePacket(p);
     }
-
 }
-
-
-
-
-
-
-
-
-
-
-

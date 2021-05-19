@@ -30,7 +30,7 @@
     <artifactId>hk2</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish HK2 Tests</name>  
+    <name>GlassFish HK2 Tests</name>
     <modules>
         <module>isolation</module>
         <module>cdi</module>

@@ -26,13 +26,13 @@ public class SecureInterceptor {
     public static boolean aroundInvokeCalled = false;
     public static int aroundInvokeInvocationCount = 0;
     public static String errorMessage = "";
-    
+
     @Inject
     TestRequestScopedBean tb;
-    
+
     @AroundInvoke
     public Object manageTransaction(InvocationContext ctx) throws Exception {
-        
+
         System.out.println("SecureInterceptor::AroundInvoke");
         if (tb == null) errorMessage="Dependency Injection " +
                 "into TransactionInterceptor failed";

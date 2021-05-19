@@ -51,7 +51,7 @@ public class EmbeddedJSPTest {
         glassfish.start();
         System.out.println("================ Embedded JSP Test");
     }
-    
+
     @Test
     public void testDefaultStart() throws Exception {
 
@@ -87,7 +87,7 @@ public class EmbeddedJSPTest {
         in.close();
         System.out.println(inputLine);
         */
-        
+
         if (appName!=null)
             deployer.undeploy(appName);
 
@@ -103,5 +103,5 @@ public class EmbeddedJSPTest {
             glassfish = null;
         }
     }
-    
+
 }

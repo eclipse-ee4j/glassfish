@@ -39,7 +39,7 @@ public class PUGrizzlyConfigTest extends BaseTestGrizzlyConfig {
     @Test
     public void puConfig() throws IOException, InstantiationException {
         GrizzlyConfig grizzlyConfig = null;
-        
+
         try {
             grizzlyConfig = new GrizzlyConfig("grizzly-config-pu.xml");
             grizzlyConfig.setupNetwork();
@@ -92,7 +92,7 @@ public class PUGrizzlyConfigTest extends BaseTestGrizzlyConfig {
         GrizzlyConfig grizzlyConfig = null;
 
         boolean isIllegalState = false;
-        
+
         try {
             grizzlyConfig = new GrizzlyConfig("grizzly-config-pu-loop.xml");
             grizzlyConfig.setupNetwork();
@@ -106,7 +106,7 @@ public class PUGrizzlyConfigTest extends BaseTestGrizzlyConfig {
 
         Assert.assertTrue("Double http definition should throw IllegalStateException", isIllegalState);
     }
-        
+
 //    private String getContent(URLConnection connection) throws IOException {
 //        final InputStream inputStream = connection.getInputStream();
 //        StringBuilder builder;
@@ -149,7 +149,7 @@ public class PUGrizzlyConfigTest extends BaseTestGrizzlyConfig {
         OutputStream os = null;
         InputStream is = null;
         ByteArrayOutputStream baos = null;
-        
+
         try {
             s = new Socket(host, port);
             os = s.getOutputStream();

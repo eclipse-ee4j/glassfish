@@ -76,20 +76,20 @@ public class TransactionManagerImpl implements TransactionManager {
     static private int[] directLookup;
     static final int maxStatus;
 
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(TransactionManagerImpl.class, LogDomains.TRANSACTION_LOGGER);
-	
-  	//START IASRI 4706150 
 
-	/**
-	* store XAResource Timeout 
-	*/
-	static private int xaTimeOut = 0;
-  	//END IASRI 4706150 
+      //START IASRI 4706150
 
-	static private Status CosTransactionStatus[] =
+    /**
+    * store XAResource Timeout
+    */
+    static private int xaTimeOut = 0;
+      //END IASRI 4706150
+
+    static private Status CosTransactionStatus[] =
     {
         org.omg.CosTransactions.Status.StatusActive,
         org.omg.CosTransactions.Status.StatusMarkedRollback,
@@ -183,13 +183,13 @@ public class TransactionManagerImpl implements TransactionManager {
             TransactionServiceProperties.initRecovery(true);
 
             // V2-commented-out transactionStates = new Hashtable();
-        } catch (InvalidName inex) { 
-			_logger.log(Level.SEVERE,
-					"jts.unexpected_error_in_create_transaction_manager",inex);
+        } catch (InvalidName inex) {
+            _logger.log(Level.SEVERE,
+                    "jts.unexpected_error_in_create_transaction_manager",inex);
         } catch (Exception ex) {
-			_logger.log(Level.SEVERE,
-					"jts.unexpected_error_in_create_transaction_manager",ex);
-		}			
+            _logger.log(Level.SEVERE,
+                    "jts.unexpected_error_in_create_transaction_manager",ex);
+        }
     }
 
     /**
@@ -252,10 +252,10 @@ public class TransactionManagerImpl implements TransactionManager {
         }
     }
 
-	//START IASRI PERFIMPROVEMNT
+    //START IASRI PERFIMPROVEMNT
     /**
-     * Create a new transaction with the given timeout and associate it 
-	 *		with the current thread.
+     * Create a new transaction with the given timeout and associate it
+     *        with the current thread.
      *
      * @exception NotSupportedException Thrown if the thread is already
      *    associated with a transaction.
@@ -274,7 +274,7 @@ public class TransactionManagerImpl implements TransactionManager {
             throw new SystemException();
         }
     }
-	//END IASRI PERFIMPROVEMNT
+    //END IASRI PERFIMPROVEMNT
 
     /**
      * Complete the transaction associated with the current thread. When this
@@ -298,8 +298,8 @@ public class TransactionManagerImpl implements TransactionManager {
      *    not associated with a transaction.
      */
     public void commit() throws RollbackException,
-	HeuristicMixedException, HeuristicRollbackException, SecurityException,
-	IllegalStateException, SystemException {
+    HeuristicMixedException, HeuristicRollbackException, SecurityException,
+    IllegalStateException, SystemException {
 
         try {
             current.commit(true);
@@ -415,8 +415,8 @@ public class TransactionManagerImpl implements TransactionManager {
 
         try {
             if (seconds < 0) {
-				String msg = LogFormatter.getLocalizedMessage(_logger,
-							 "jts.invalid_timeout");
+                String msg = LogFormatter.getLocalizedMessage(_logger,
+                             "jts.invalid_timeout");
                 throw new SystemException(msg);
             }
             current.set_timeout(seconds);
@@ -465,7 +465,7 @@ public class TransactionManagerImpl implements TransactionManager {
         try {
             current.resume(control);
         } catch (InvalidControl ex) {
-			//_logger.log(Level.FINE,"Invalid Control Exception in resume",ex);
+            //_logger.log(Level.FINE,"Invalid Control Exception in resume",ex);
             throw new InvalidTransactionException();
         } catch (Exception ex) {
             throw new SystemException(ex.toString());
@@ -510,8 +510,8 @@ public class TransactionManagerImpl implements TransactionManager {
                         new SynchronizationListener(gtid, result);
                     tran.registerSynchronization(sync);
                 } catch (Exception ex) {
-					_logger.log(Level.WARNING,
-							"jts.unexpected_error_in_get_or_create_transaction_state",ex);
+                    _logger.log(Level.WARNING,
+                            "jts.unexpected_error_in_get_or_create_transaction_state",ex);
                     throw new SystemException();
                 }
             }
@@ -558,15 +558,15 @@ public class TransactionManagerImpl implements TransactionManager {
     /**
      * Recreate a transaction based on the Xid. This call causes the calling
      * thread to be associated with the specified transaction.
-     * 
-     * @param xid the Xid object representing a transaction. 
+     *
+     * @param xid the Xid object representing a transaction.
      * @param timeout positive, non-zero value for transaction timeout.
      */
     public static void recreate(Xid xid, long timeout) throws WorkException {
-                
+
         // check if xid is valid
         if (xid == null || xid.getFormatId() == 0 ||
-                xid.getBranchQualifier() == null || 
+                xid.getBranchQualifier() == null ||
                 xid.getGlobalTransactionId() == null) {
             WorkException workExc = new WorkCompletedException("Invalid Xid");
             workExc.setErrorCode(WorkException.TX_RECREATE_FAILED);
@@ -575,40 +575,40 @@ public class TransactionManagerImpl implements TransactionManager {
 
         // has TransactionService been initialized?
         if (!DefaultTransactionService.isActive()) {
-            WorkException workExc = 
+            WorkException workExc =
                 new WorkCompletedException("Transaction Manager unavailable");
             workExc.setErrorCode(WorkException.TX_RECREATE_FAILED);
             throw workExc;
         }
-        
-        // recreate the transaction        
+
+        // recreate the transaction
         GlobalTID tid = new GlobalTID(xid);
-        try {        
+        try {
             CurrentTransaction.recreate(
-		tid, (int) ((timeout <= 0) ? 0 : timeout));
+        tid, (int) ((timeout <= 0) ? 0 : timeout));
         } catch (Throwable exc) {
             String errorCode = WorkException.TX_RECREATE_FAILED;
             if (exc instanceof INVALID_TRANSACTION &&
-                    (((INVALID_TRANSACTION) exc).minor == 
+                    (((INVALID_TRANSACTION) exc).minor ==
                         MinorCode.TX_CONCURRENT_WORK_DISALLOWED)) {
                 errorCode = WorkException.TX_CONCURRENT_WORK_DISALLOWED;
             }
             WorkException workExc = new WorkCompletedException(exc);
             workExc.setErrorCode(errorCode);
-            throw workExc;             
-        }  
+            throw workExc;
+        }
     }
 
     /**
-     * Release a transaction. This call causes the calling thread to be 
+     * Release a transaction. This call causes the calling thread to be
      * dissociated from the specified transaction.
-     * 
-     * @param xid the Xid object representing a transaction. 
-     */    
+     *
+     * @param xid the Xid object representing a transaction.
+     */
     public static void release(Xid xid) throws WorkException {
-                
+
         GlobalTID tid = new GlobalTID(xid);
-        try {        
+        try {
             CurrentTransaction.release(tid);
         } catch (Throwable exc) {
             String errorCode = WorkException.UNDEFINED;
@@ -616,34 +616,34 @@ public class TransactionManagerImpl implements TransactionManager {
                 errorCode = WorkException.INTERNAL;
             }
             WorkException workExc = new WorkCompletedException(exc);
-            workExc.setErrorCode(errorCode);            
-            throw workExc;             
+            workExc.setErrorCode(errorCode);
+            throw workExc;
         }
     }
 
     /**
      * Provides a handle to a <code>XATerminator</code> instance. The
-     * <code>XATerminator</code> instance could be used by a resource adapter 
+     * <code>XATerminator</code> instance could be used by a resource adapter
      * to flow-in transaction completion and crash recovery calls from an EIS.
      *
      * @return a <code>XATerminator</code> instance.
-     */    
+     */
     public static jakarta.resource.spi.XATerminator getXATerminator() {
         return new XATerminatorImpl();
     }
 
-  	//START IASRI 4706150 
-	/**
-	* used to set XAResource timeout
-	*/
-	public static void setXAResourceTimeOut(int value){
-		xaTimeOut = value;
-	}
+      //START IASRI 4706150
+    /**
+    * used to set XAResource timeout
+    */
+    public static void setXAResourceTimeOut(int value){
+        xaTimeOut = value;
+    }
 
-	public static int getXAResourceTimeOut(){
-		return xaTimeOut;
-	}
-  	//END IASRI 4706150 
+    public static int getXAResourceTimeOut(){
+        return xaTimeOut;
+    }
+      //END IASRI 4706150
   /**
     class SynchronizationListener implements Synchronization {
 
@@ -661,12 +661,12 @@ public class TransactionManagerImpl implements TransactionManager {
 
         public void beforeCompletion() {
             try {
-	      tranState.beforeCompletion();
-	    }catch(XAException xaex){
-	      _logger.log(Level.WARNING,"jts.unexpected_xa_error_in_beforecompletion", new java.lang.Object[] {xaex.errorCode, xaex.getMessage()});
-	      _logger.log(Level.WARNING,"",xaex);
+          tranState.beforeCompletion();
+        }catch(XAException xaex){
+          _logger.log(Level.WARNING,"jts.unexpected_xa_error_in_beforecompletion", new java.lang.Object[] {xaex.errorCode, xaex.getMessage()});
+          _logger.log(Level.WARNING,"",xaex);
             } catch (Exception ex) {
-				_logger.log(Level.WARNING,"jts.unexpected_error_in_beforecompletion",ex);
+                _logger.log(Level.WARNING,"jts.unexpected_error_in_beforecompletion",ex);
             }
         }
     }

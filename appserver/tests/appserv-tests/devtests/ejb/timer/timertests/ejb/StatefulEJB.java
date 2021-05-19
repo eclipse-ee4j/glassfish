@@ -29,7 +29,7 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
         setContext(sc);
 
         checkCallerSecurityAccess("setSessionContext", false);
@@ -37,7 +37,7 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     }
 
     public void ejbCreate(TimerHandle th) throws RemoteException {
-	System.out.println("In ejbtimer.Stateful::ejbCreate !!");
+        System.out.println("In ejbtimer.Stateful::ejbCreate !!");
 
         timerHandle = th;
 
@@ -68,8 +68,8 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     public void ejbPassivate() {
     }
 
-    public void afterBegin() {  
-        System.out.println("in afterBegin"); 
+    public void afterBegin() {
+        System.out.println("in afterBegin");
         try {
             Timer t = timerHandle.getTimer();
             t.getInfo();
@@ -82,7 +82,7 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     }
 
     public void beforeCompletion() {
-        System.out.println("in beforeCompletion"); 
+        System.out.println("in beforeCompletion");
         try {
             Timer t = timerHandle.getTimer();
         } catch(NoSuchObjectLocalException nsole) {
@@ -95,7 +95,7 @@ public class StatefulEJB extends TimerStuffImpl implements SessionBean, SessionS
     }
 
     public void afterCompletion(boolean committed) {
-        System.out.println("in afterCompletion. committed = " + committed); 
+        System.out.println("in afterCompletion. committed = " + committed);
         try {
             Timer t = timerHandle.getTimer();
             System.out.println("Error : should have gotten exception in " +

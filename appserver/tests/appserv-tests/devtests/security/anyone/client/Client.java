@@ -51,7 +51,7 @@ public class Client {
         try {
             description = testSuite + " ejb: hello";
             hello.hello("Sun");
-            stat.addStatus(description, stat.PASS);  
+            stat.addStatus(description, stat.PASS);
         } catch(Exception ex) {
             ex.printStackTrace();
             stat.addStatus(description, stat.FAIL);
@@ -71,7 +71,7 @@ public class Client {
             ex.printStackTrace();
             stat.addStatus(description, stat.FAIL);
         }
- 
+
         stat.printSummary("security-anyone");
     }
 

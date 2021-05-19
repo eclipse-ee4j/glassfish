@@ -26,26 +26,26 @@ public class AssertedCredentials {
     private String realmName = "";
     private String userName = "";
     private Object info = null;
-    
+
     public AssertedCredentials(String realmName,String userName) {
         this.realmName = realmName;
         this.userName = userName;
     }
-    
+
     public AssertedCredentials(String realmName,String userName,Object info) {
         this.realmName = realmName;
         this.userName = userName;
         this.info = info;
     }
-    
+
     public String getRealmName(){
         return realmName;
     }
-    
+
     public String getUserName(){
         return userName;
     }
-    
+
     public Object getInfo(){
         return info;
     }

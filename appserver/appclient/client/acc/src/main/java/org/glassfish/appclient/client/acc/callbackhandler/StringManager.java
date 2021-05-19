@@ -24,9 +24,9 @@ import java.util.ResourceBundle;
  * @author tjquinn
  */
 public class StringManager {
-    private static final ResourceBundle resourceBundle = 
+    private static final ResourceBundle resourceBundle =
             ResourceBundle.getBundle(StringManager.class.getPackage().getName() + ".LocalStrings");
-    
+
     public static String getString(String messageKey, Object... args) {
         String message = resourceBundle.getString(messageKey);
         return MessageFormat.format(message, args);

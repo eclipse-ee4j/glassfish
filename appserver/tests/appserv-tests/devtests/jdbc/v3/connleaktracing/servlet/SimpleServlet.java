@@ -56,24 +56,24 @@ public class SimpleServlet extends HttpServlet {
         //stat.addDescription("Running serializable connector test ");
         SimpleBMP bean = simpleBMPHome.create();
 
-	    for(int i=0; i<3; i++){
+            for(int i=0; i<3; i++){
                 if(!bean.test1()){
-		    //stat.addStatus("jdbc-connectionleakttracing : test ", stat.FAIL);
+                    //stat.addStatus("jdbc-connectionleakttracing : test ", stat.FAIL);
                     out.println("TEST:FAIL");
-	            break;
-	        }
-	        Thread.sleep(20000);
-	    }
-	    out.println("TEST:PASS");
-	} catch(NamingException ne) {
-	    ne.printStackTrace();
-	} catch(CreateException e) {
-	    e.printStackTrace();
-	} catch(java.lang.InterruptedException ie) {
-		ie.printStackTrace();
+                    break;
+                }
+                Thread.sleep(20000);
+            }
+            out.println("TEST:PASS");
+        } catch(NamingException ne) {
+            ne.printStackTrace();
+        } catch(CreateException e) {
+            e.printStackTrace();
+        } catch(java.lang.InterruptedException ie) {
+                ie.printStackTrace();
         } finally {
-	    out.println("END_OF_TEST");
-	    out.flush();
-	}
+            out.println("END_OF_TEST");
+            out.flush();
+        }
     }
 }

@@ -28,11 +28,11 @@ import org.apache.catalina.deploy.ContextEnvironment;
 public class ContextEnvironmentDecorator extends ContextEnvironment {
 
     private EnvironmentProperty decoree;
-    
+
     public ContextEnvironmentDecorator(EnvironmentProperty decoree){
         this.decoree = decoree;
     }
-      
+
 
     // ------------------------------------------------------------- Properties
 
@@ -46,15 +46,15 @@ public class ContextEnvironmentDecorator extends ContextEnvironment {
         return decoree.getName();
     }
 
-  
+
     public String getType() {
         return decoree.getType();
     }
 
- 
+
     public String getValue() {
         return decoree.getValue();
     }
 
- 
+
 }

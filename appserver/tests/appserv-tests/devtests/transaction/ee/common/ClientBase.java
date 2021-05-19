@@ -24,7 +24,7 @@ import java.net.*;
 import java.util.*;
 
 /*
- * CLI Dev test 
+ * CLI Dev test
  * @author mvatkina
  */
 public abstract class ClientBase extends AdminBaseDevTest {
@@ -119,7 +119,7 @@ public abstract class ClientBase extends AdminBaseDevTest {
 
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
-  
+
             String line = null;
             while ((line = input.readLine()) != null) {
                 System.out.println("Processing line: " + line);

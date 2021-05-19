@@ -43,53 +43,38 @@ package com.sun.jdo.api.persistence.enhancer.meta;
  * </ul>
  */
 //@olsen: new interface
-public interface JDOMetaData
-{
-    String JDOExternalPath = "com/sun/jdo/api/persistence/support/";//NOI18N
-    String JDOPath = "com/sun/jdo/spi/persistence/support/sqlstore/";//NOI18N
+public interface JDOMetaData {
 
-    String JDOPersistenceCapableName = "PersistenceCapable";//NOI18N
-    String JDOPersistenceCapablePath
-    = JDOPath + JDOPersistenceCapableName;//NOI18N
-    String JDOPersistenceCapableSig
-    = "L" + JDOPersistenceCapablePath + ";";//NOI18N
-    String JDOPersistenceCapableType
-        = JDOPersistenceCapablePath.replace('/', '.');
+    String JDOExternalPath = "com/sun/jdo/api/persistence/support/";// NOI18N
+    String JDOPath = "com/sun/jdo/spi/persistence/support/sqlstore/";// NOI18N
 
-    static String javaLangCloneablePath = "java/lang/Cloneable";
+    String JDOPersistenceCapableName = "PersistenceCapable";// NOI18N
+    String JDOPersistenceCapablePath = JDOPath + JDOPersistenceCapableName;// NOI18N
+    String JDOPersistenceCapableSig = "L" + JDOPersistenceCapablePath + ";";// NOI18N
+    String JDOPersistenceCapableType = JDOPersistenceCapablePath.replace('/', '.');
 
-    String JDOInstanceCallbacksName = "InstanceCallbacks";//NOI18N
-    String JDOInstanceCallbacksPath
-    = JDOPath + JDOInstanceCallbacksName;//NOI18N
-    String JDOInstanceCallbacksSig
-    = "L" + JDOInstanceCallbacksPath + ";";//NOI18N
-    String JDOInstanceCallbacksType
-        = JDOInstanceCallbacksPath.replace('/', '.');
+    String javaLangCloneablePath = "java/lang/Cloneable";
 
-    String JDOSecondClassObjectBaseName = "SCO";//NOI18N
-    String JDOSecondClassObjectBasePath
-    = JDOPath + JDOSecondClassObjectBaseName;//NOI18N
-    String JDOSecondClassObjectBaseSig
-    = "L" + JDOSecondClassObjectBasePath + ";";//NOI18N
-    String JDOSecondClassObjectBaseType
-        = JDOSecondClassObjectBasePath.replace('/', '.');
+    String JDOInstanceCallbacksName = "InstanceCallbacks";// NOI18N
+    String JDOInstanceCallbacksPath = JDOPath + JDOInstanceCallbacksName;// NOI18N
+    String JDOInstanceCallbacksSig = "L" + JDOInstanceCallbacksPath + ";";// NOI18N
+    String JDOInstanceCallbacksType = JDOInstanceCallbacksPath.replace('/', '.');
 
-    String JDOPersistenceManagerName = "PersistenceManager";//NOI18N
+    String JDOSecondClassObjectBaseName = "SCO";// NOI18N
+    String JDOSecondClassObjectBasePath = JDOPath + JDOSecondClassObjectBaseName;// NOI18N
+    String JDOSecondClassObjectBaseSig = "L" + JDOSecondClassObjectBasePath + ";";// NOI18N
+    String JDOSecondClassObjectBaseType = JDOSecondClassObjectBasePath.replace('/', '.');
+
+    String JDOPersistenceManagerName = "PersistenceManager";// NOI18N
     // we use the external, "public" PersistenceManager interface only
-    String JDOPersistenceManagerPath
-    = JDOExternalPath + JDOPersistenceManagerName;//NOI18N
-    String JDOPersistenceManagerSig
-    = "L" + JDOPersistenceManagerPath + ";";//NOI18N
-    String JDOPersistenceManagerType
-        = JDOPersistenceManagerPath.replace('/', '.');
+    String JDOPersistenceManagerPath = JDOExternalPath + JDOPersistenceManagerName;// NOI18N
+    String JDOPersistenceManagerSig = "L" + JDOPersistenceManagerPath + ";";// NOI18N
+    String JDOPersistenceManagerType = JDOPersistenceManagerPath.replace('/', '.');
 
-    String JDOStateManagerName = "StateManager";//NOI18N
-    String JDOStateManagerPath
-    = JDOPath + JDOStateManagerName;//NOI18N
-    String JDOStateManagerSig
-    = "L" + JDOStateManagerPath + ";";//NOI18N
-    String JDOStateManagerType
-        = JDOStateManagerPath.replace('/', '.');
+    String JDOStateManagerName = "StateManager";// NOI18N
+    String JDOStateManagerPath = JDOPath + JDOStateManagerName;// NOI18N
+    String JDOStateManagerSig = "L" + JDOStateManagerPath + ";";// NOI18N
+    String JDOStateManagerType = JDOStateManagerPath.replace('/', '.');
 
     String JDOStateManagerFieldName = "jdoStateManager";//NOI18N
     String JDOStateManagerFieldType = JDOStateManagerType;

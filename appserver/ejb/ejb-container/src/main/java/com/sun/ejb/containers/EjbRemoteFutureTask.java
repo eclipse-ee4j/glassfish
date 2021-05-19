@@ -40,7 +40,7 @@ public class EjbRemoteFutureTask<V>
 
     // Used to remember if cancel() was called already
     private boolean cancelCalled = false;
-        
+
 
     private boolean complete = false;
     private V resultValue;
@@ -86,7 +86,7 @@ public class EjbRemoteFutureTask<V>
         }
 
         // For now we don't even try checking to see if the task has started running.
-        // Just return false so the caller knows the task could not be cancelled.      
+        // Just return false so the caller knows the task could not be cancelled.
         return false;
     }
 
@@ -132,7 +132,7 @@ public class EjbRemoteFutureTask<V>
 
         // If get() has already been called, produce the same behavior
         // as initial call, except if get(timeout, unit) resulted in a
-        // TimeoutException        
+        // TimeoutException
 
         if( !complete ) {
 
@@ -160,7 +160,7 @@ public class EjbRemoteFutureTask<V>
             } else {
                 throw new ExecutionException(resultException);
             }
-        } 
+        }
 
         return resultValue;
     }

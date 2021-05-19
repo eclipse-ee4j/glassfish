@@ -39,13 +39,13 @@ import org.jvnet.hk2.annotations.Service;
 @I18n("version.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="version", 
+        opType=RestEndpoint.OpType.GET,
+        path="version",
         description="version",
         useForAuthorization=true)
 })
 public class VersionCommand implements AdminCommand {
-    
+
     @Param(optional=true, defaultValue="false", shortName = "v")
     Boolean verbose;
 
@@ -66,7 +66,7 @@ public class VersionCommand implements AdminCommand {
         Properties ep = new Properties();
         ep.setProperty("version", Version.getVersion());
         ep.setProperty("full-version", Version.getFullVersion());
-        ep.setProperty("version-number", Version.getVersionNumber());     
+        ep.setProperty("version-number", Version.getVersionNumber());
         report.setExtraProperties(ep);
         report.setActionExitCode(ExitCode.SUCCESS);
         report.setMessage(vers);

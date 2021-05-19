@@ -26,13 +26,13 @@ import static org.junit.Assert.assertNotNull;
 
 /**
  * Unit tests {@link org.apache.commons.fileupload.MultipartStream}.
- * 
+ *
  * @version $Id$
  */
 public class MultipartStreamTest {
-    
+
     static private final String BOUNDARY_TEXT = "myboundary";
-    
+
     /**
      * The Carriage Return ASCII character value.
      */
@@ -49,7 +49,7 @@ public class MultipartStreamTest {
      * The dash (-) ASCII character value.
      */
     public static final byte DASH = 0x2D;
-    
+
     @Test
     public void testThreeParamConstructor() throws Exception {
         final String strData = "foobar";
@@ -94,5 +94,5 @@ public class MultipartStreamTest {
                 new MultipartStream.ProgressNotifier(null, contents.length));
         assertNotNull(ms);
     }
-    
+
 }

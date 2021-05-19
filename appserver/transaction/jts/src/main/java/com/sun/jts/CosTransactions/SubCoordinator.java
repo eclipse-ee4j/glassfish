@@ -30,16 +30,24 @@
 
 package com.sun.jts.CosTransactions;
 
-import java.util.*;
-
-import org.omg.CORBA.*;
-import org.omg.CosTransactions.*;
-
-import com.sun.jts.codegen.otsidl.*;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
+import com.sun.jts.codegen.otsidl.CoordinatorResource;
+import com.sun.jts.codegen.otsidl.JCoordinator;
+import com.sun.jts.codegen.otsidl.JCoordinatorHelper;
 import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.omg.CORBA.Any;
+import org.omg.CORBA.BAD_PARAM;
+import org.omg.CORBA.CompletionStatus;
+import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INVALID_TRANSACTION;
+import org.omg.CORBA.OBJECT_NOT_EXIST;
+import org.omg.CORBA.SystemException;
+import org.omg.CORBA.TRANSACTION_ROLLEDBACK;
+import org.omg.CosTransactions.*;
 
 /**
  * The SubCoordinator interface is our implementation of the standard
@@ -78,9 +86,9 @@ class SubCoordinator extends CoordinatorImpl {
     boolean             dying = false;
     boolean             temporary = false;
     int                 hash = 0;
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(SubCoordinator.class,LogDomains.TRANSACTION_LOGGER);
 
 
@@ -144,15 +152,14 @@ class SubCoordinator extends CoordinatorImpl {
 
         if (!tranState.setState(TransactionState.STATE_ACTIVE)) {
             LogicErrorException exc = new LogicErrorException(
-					 LogFormatter.getLocalizedMessage(_logger,
-					 "jts.invalid_state_change"));
+                LogFormatter.getLocalizedMessage(_logger, "jts.invalid_state_change"));
             throw exc;
         } else {
             // Inform the RecoveryManager of the existence of this transaction.
-            RecoveryManager.addCoordinator(tranState.globalTID,
-                                           tranState.localTID, this, 0);
+            RecoveryManager.addCoordinator(tranState.globalTID, tranState.localTID, this, 0);
         }
     }
+
 
     /**
      * Creates and initialises a subordinate SubCoordinator, given the global
@@ -163,15 +170,12 @@ class SubCoordinator extends CoordinatorImpl {
      * first time. If the request returns and the subtransaction has no
      * participants, it is destroyed, along with any temporary ancestors.
      *
-     * @param globalTID  The global identifier for the transaction.
-     * @param superior   The superior Coordinator.
-     * @param temporary  The temporary flag.
-     * @param ancestors  The ancestors of the transaction.
-     *
+     * @param globalTID The global identifier for the transaction.
+     * @param superior The superior Coordinator.
+     * @param temporary The temporary flag.
+     * @param ancestors The ancestors of the transaction.
      * @return
-     *
-     * @exception LogicErrorException  An internal logic error occurred.
-     *
+     * @exception LogicErrorException An internal logic error occurred.
      * @see
      */
     SubCoordinator(GlobalTID globalTID, Coordinator superior,
@@ -221,18 +225,15 @@ class SubCoordinator extends CoordinatorImpl {
 
         if (!tranState.setState(TransactionState.STATE_ACTIVE)) {
             LogicErrorException exc = new LogicErrorException(
-					LogFormatter.getLocalizedMessage(_logger,
-					"jts.invalid_state_change"));
+                LogFormatter.getLocalizedMessage(_logger, "jts.invalid_state_change"));
             throw exc;
-        } else if (!RecoveryManager.addCoordinator(globalTID,
-                                                   tranState.localTID,
-                                                   this, 0)) {
+        } else if (!RecoveryManager.addCoordinator(globalTID, tranState.localTID, this, 0)) {
             LogicErrorException exc = new LogicErrorException(
-					LogFormatter.getLocalizedMessage(_logger,
-					"jts.transaction_id_already_in_use"));
+                LogFormatter.getLocalizedMessage(_logger, "jts.transaction_id_already_in_use"));
             throw exc;
         }
     }
+
 
     /**
      * Cleans up the state of the object.
@@ -259,33 +260,35 @@ class SubCoordinator extends CoordinatorImpl {
 
         switch (state) {
 
-        // If the transaction is active it should be rolled back.  This
-        // will result in the TopCoordinator self-destructing at the
-        // end of two-phase commit.
+            // If the transaction is active it should be rolled back.  This
+            // will result in the TopCoordinator self-destructing at the
+            // end of two-phase commit.
 
-        case TransactionState.STATE_ACTIVE :
-            rollback(true);
-            break;
+            case TransactionState.STATE_ACTIVE :
+                rollback(true);
+                break;
 
-        // For committed or rolled-back, we really need to destroy the object
+                // For committed or rolled-back, we really need to destroy the object
 
-        case TransactionState.STATE_COMMITTED :
-        case TransactionState.STATE_ROLLED_BACK :
-            if( superInfo != null ) superInfo.doFinalize();
+            case TransactionState.STATE_COMMITTED :
+            case TransactionState.STATE_ROLLED_BACK :
+                if( superInfo != null ) {
+                    superInfo.doFinalize();
+                }
 
-            tranState = null;
-            superInfo = null;
-            nestingInfo = null;
-            participants = null;
-            terminator = null;
-            name = null;
-            break;
+                tranState = null;
+                superInfo = null;
+                nestingInfo = null;
+                participants = null;
+                terminator = null;
+                name = null;
+                break;
 
-        // For any other state, the transaction is completing, so the
-        // TopCoordinator will eventually self-destruct.  We do nothing here.
+                // For any other state, the transaction is completing, so the
+                // TopCoordinator will eventually self-destruct.  We do nothing here.
 
-        default :
-            break;
+            default :
+                break;
         }
     }
 
@@ -306,57 +309,56 @@ class SubCoordinator extends CoordinatorImpl {
 
             switch (tranState.state) {
 
-            // If active, return active or marked rollback-only
-            // if the flag is set.
+                // If active, return active or marked rollback-only
+                // if the flag is set.
 
-            case TransactionState.STATE_ACTIVE :
-                if (rollbackOnly) {
-                    result = Status.StatusMarkedRollback;
-                } else {
-                    result = Status.StatusActive;
-                }
-                break;
+                case TransactionState.STATE_ACTIVE :
+                    if (rollbackOnly) {
+                        result = Status.StatusMarkedRollback;
+                    } else {
+                        result = Status.StatusActive;
+                    }
+                    break;
 
-            // If prepared, (successfully or otherwise), return prepared.
-            // If committing return prepared (may want to block in this case).
+                    // If prepared, (successfully or otherwise), return prepared.
+                    // If committing return prepared (may want to block in this case).
 
-            case TransactionState.STATE_PREPARED_SUCCESS :
-            case TransactionState.STATE_PREPARED_FAIL :
-            case TransactionState.STATE_PREPARED_READONLY :
-                result = Status.StatusPrepared;
-                break;
+                case TransactionState.STATE_PREPARED_SUCCESS :
+                case TransactionState.STATE_PREPARED_FAIL :
+                case TransactionState.STATE_PREPARED_READONLY :
+                    result = Status.StatusPrepared;
+                    break;
 
-            // If we have no internal state, return that fact.
-            // All of these states map directly to the OMG values.
+                    // If we have no internal state, return that fact.
+                    // All of these states map directly to the OMG values.
 
-            case TransactionState.STATE_NONE :
-                result = Status.StatusNoTransaction;
-                break;
-            case TransactionState.STATE_PREPARING :
-                result = Status.StatusPreparing;
-                break;
-            case TransactionState.STATE_COMMITTING :
-                result = Status.StatusCommitting;
-                break;
-            case TransactionState.STATE_COMMITTED :
-                result = Status.StatusCommitted;
-                break;
-            case TransactionState.STATE_ROLLING_BACK :
-                result = Status.StatusRollingBack;
-                break;
-            case TransactionState.STATE_ROLLED_BACK :
-                result = Status.StatusRolledBack;
-                break;
+                case TransactionState.STATE_NONE :
+                    result = Status.StatusNoTransaction;
+                    break;
+                case TransactionState.STATE_PREPARING :
+                    result = Status.StatusPreparing;
+                    break;
+                case TransactionState.STATE_COMMITTING :
+                    result = Status.StatusCommitting;
+                    break;
+                case TransactionState.STATE_COMMITTED :
+                    result = Status.StatusCommitted;
+                    break;
+                case TransactionState.STATE_ROLLING_BACK :
+                    result = Status.StatusRollingBack;
+                    break;
+                case TransactionState.STATE_ROLLED_BACK :
+                    result = Status.StatusRolledBack;
+                    break;
 
-            // Any other state, return unknown.
+                    // Any other state, return unknown.
 
-            default :
-                result = Status.StatusUnknown;
-                break;
+                default :
+                    result = Status.StatusUnknown;
+                    break;
             }
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -383,16 +385,15 @@ class SubCoordinator extends CoordinatorImpl {
         // Return the parents status.  If there is none, this is an error;
         // return no transaction status (may want to raise a LogicError here).
 
-		if (tranState != null) {
-			CoordinatorImpl parent = nestingInfo.getParent(false); 
-			if (parent != null) { 
-				result = parent.get_status();
-			}
-		} else {
-			INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-				MinorCode.Completed, CompletionStatus.COMPLETED_NO); 
-			throw exc; 
-		}
+        if (tranState != null) {
+            CoordinatorImpl parent = nestingInfo.getParent(false);
+            if (parent != null) {
+                result = parent.get_status();
+            }
+        } else {
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            throw exc;
+        }
 
         return result;
     }
@@ -423,8 +424,7 @@ class SubCoordinator extends CoordinatorImpl {
                 result = topLevel.get_status();
             }
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -459,8 +459,7 @@ class SubCoordinator extends CoordinatorImpl {
         if (name != null) {
           result = name.equals(other.get_transaction_name());
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -497,8 +496,7 @@ class SubCoordinator extends CoordinatorImpl {
                 result = other.is_descendant_transaction(topLevel.object());
             }
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -526,8 +524,7 @@ class SubCoordinator extends CoordinatorImpl {
         if (tranState != null) {
             result = other.is_descendant_transaction(this.object());
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -564,8 +561,7 @@ class SubCoordinator extends CoordinatorImpl {
             result = nestingInfo.isDescendant(other);
             }
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -591,8 +587,7 @@ class SubCoordinator extends CoordinatorImpl {
 
         boolean result = false;
         if (tranState == null) {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -614,8 +609,7 @@ class SubCoordinator extends CoordinatorImpl {
         int result =  hash;
 
         if (tranState == null) {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -643,8 +637,7 @@ class SubCoordinator extends CoordinatorImpl {
                 result = topLevel.hash_transaction();
             }
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                MinorCode.Completed, CompletionStatus.COMPLETED_NO);
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -682,8 +675,7 @@ class SubCoordinator extends CoordinatorImpl {
         // First check the state of the transaction. If it is not active,
         // do not allow the registration.
 
-        if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
+        if (tranState == null || tranState.state != TransactionState.STATE_ACTIVE) {
             Inactive exc = new Inactive();
             throw exc;
         }
@@ -691,8 +683,7 @@ class SubCoordinator extends CoordinatorImpl {
         // Check whether the transaction has been marked rollback-only.
 
         if (rollbackOnly) {
-            TRANSACTION_ROLLEDBACK exc =
-                new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
+            TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -716,8 +707,7 @@ class SubCoordinator extends CoordinatorImpl {
         // Find out whether the Resource is actually a
         // SubtransactionAwareResource.
 
-        boolean subAwareRes =
-            res._is_a(SubtransactionAwareResourceHelper.id());
+        boolean subAwareRes = res._is_a(SubtransactionAwareResourceHelper.id());
 
         // If the Resource is actually a SubtransactionAwareResource,
         // then it needs to be registered for participation in completion
@@ -737,9 +727,7 @@ class SubCoordinator extends CoordinatorImpl {
                 // our reference, and a flag to indicate that it does
                 //  not represent a subtransaction.
 
-                CoordinatorResourceImpl cImpl =
-                    new CoordinatorResourceImpl(superInfo.globalTID,
-                                                this, true);
+                CoordinatorResourceImpl cImpl = new CoordinatorResourceImpl(superInfo.globalTID, this, true);
 
                 // Register the CoordinatorResource with superior Coordinator,
                 // and store the resulting RecoveryCoordinator reference.
@@ -758,9 +746,7 @@ class SubCoordinator extends CoordinatorImpl {
                     // then allow it to percolate to the caller.
 
                     if (exc instanceof OBJECT_NOT_EXIST) {
-                        TRANSACTION_ROLLEDBACK ex2 =
-                            new TRANSACTION_ROLLEDBACK(
-                                0, CompletionStatus.COMPLETED_NO);
+                        TRANSACTION_ROLLEDBACK ex2 = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
                         throw ex2;
                     }
 
@@ -774,8 +760,7 @@ class SubCoordinator extends CoordinatorImpl {
 
                     // Otherwise throw an internal exception.
 
-                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                                CompletionStatus.COMPLETED_NO);
+                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                     throw ex2;
                 }
             }
@@ -819,15 +804,12 @@ class SubCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-    synchronized public void register_subtran_aware(
-            SubtransactionAwareResource sares)
-            throws SystemException, Inactive, TRANSACTION_ROLLEDBACK {
-
+    synchronized public void register_subtran_aware(SubtransactionAwareResource sares)
+        throws SystemException, Inactive, TRANSACTION_ROLLEDBACK {
         // First check the state of the transaction. If it is not active,
         // do not allow the registration.
 
-        if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
+        if (tranState == null || tranState.state != TransactionState.STATE_ACTIVE) {
             Inactive exc = new Inactive();
             throw exc;
         }
@@ -835,8 +817,7 @@ class SubCoordinator extends CoordinatorImpl {
         // Check whether the transaction has been marked rollback-only.
 
         if (rollbackOnly) {
-            TRANSACTION_ROLLEDBACK exc =
-                new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
+            TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -851,8 +832,7 @@ class SubCoordinator extends CoordinatorImpl {
             // our reference, and a
             // flag to indicate that it does not represent a subtransaction.
 
-            CoordinatorResourceImpl cImpl =
-                new CoordinatorResourceImpl(superInfo.globalTID, this, true);
+            CoordinatorResourceImpl cImpl = new CoordinatorResourceImpl(superInfo.globalTID, this, true);
 
             // Register the CoordinatorResource with the superior Coordinator,
             // and store the resulting RecoveryCoordinator reference.
@@ -870,9 +850,7 @@ class SubCoordinator extends CoordinatorImpl {
                 // it to percolate to the caller.
 
                 if (exc instanceof OBJECT_NOT_EXIST) {
-                    TRANSACTION_ROLLEDBACK ex2 =
-                        new TRANSACTION_ROLLEDBACK(
-                            0, CompletionStatus.COMPLETED_NO);
+                    TRANSACTION_ROLLEDBACK ex2 = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
                     throw ex2;
                 }
 
@@ -886,8 +864,7 @@ class SubCoordinator extends CoordinatorImpl {
 
                 // Otherwise throw an internal exception.
 
-                INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                            CompletionStatus.COMPLETED_NO);
+                INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                 throw ex2;
             }
         }
@@ -948,10 +925,7 @@ class SubCoordinator extends CoordinatorImpl {
         if (tranState != null) {
             result = name;
         } else {
-            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(
-                                        MinorCode.Completed,
-                                        CompletionStatus.COMPLETED_NO);
-
+            INVALID_TRANSACTION exc = new INVALID_TRANSACTION(MinorCode.Completed, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
@@ -978,8 +952,7 @@ class SubCoordinator extends CoordinatorImpl {
         // First check the state of the transaction. If it is not active,
         // do not allow the subtransaction to be created.
 
-        if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
+        if (tranState == null || tranState.state != TransactionState.STATE_ACTIVE) {
             Inactive exc = new Inactive();
             throw exc;
         }
@@ -990,8 +963,7 @@ class SubCoordinator extends CoordinatorImpl {
         // global TID as this is done by the factory when it creates the child.
 
         CoordinatorImpl[] thisAncestors = nestingInfo.getAncestors();
-        CoordinatorImpl[] ancestors =
-            new CoordinatorImpl[thisAncestors.length + 1];
+        CoordinatorImpl[] ancestors = new CoordinatorImpl[thisAncestors.length + 1];
         System.arraycopy(thisAncestors, 0, ancestors, 1, thisAncestors.length);
         ancestors[0] = this;
 
@@ -1004,8 +976,7 @@ class SubCoordinator extends CoordinatorImpl {
         SubCoordinator child = null;
         TerminatorImpl terminator = null;
         try {
-            child = new SubCoordinator(superInfo.globalTID,
-                                       superInfo.localTID, ancestors);
+            child = new SubCoordinator(superInfo.globalTID, superInfo.localTID, ancestors);
 
             // Create a Terminator object, and initialise it with
             // the SubCoordinator reference and a flag to indicate that
@@ -1091,9 +1062,7 @@ class SubCoordinator extends CoordinatorImpl {
      *
      * @see
      */
-    synchronized CoordinatorImpl replyAction(int[/*1*/] action)
-            throws SystemException {
-
+    synchronized CoordinatorImpl replyAction(int[/* 1 */] action) throws SystemException {
         CoordinatorImpl result = null;
         action[0] = CoordinatorImpl.doNothing;
 
@@ -1102,10 +1071,10 @@ class SubCoordinator extends CoordinatorImpl {
         // variable has not been set up, there are no children.
 
         if (!root && nestingInfo.replyCheck()) {
-          action[0] = CoordinatorImpl.activeChildren;
+            action[0] = CoordinatorImpl.activeChildren;
 
-        // If there are no active children, then check whether this
-        // transaction needs to be destroyed, or registered on reply.
+            // If there are no active children, then check whether this
+            // transaction needs to be destroyed, or registered on reply.
 
         } else {
 
@@ -1114,8 +1083,7 @@ class SubCoordinator extends CoordinatorImpl {
 
             if (!registered) {
                 if (participants != null && participants.involved()) {
-                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered,
-                                                CompletionStatus.COMPLETED_NO);
+                    INTERNAL ex2 = new INTERNAL(MinorCode.NotRegistered, CompletionStatus.COMPLETED_NO);
                     throw ex2;
                 } else {
                     action[0] = forgetMe;
@@ -1128,8 +1096,9 @@ class SubCoordinator extends CoordinatorImpl {
             // cleaning everything else up whenit receives the forgetMe
             // response.
 
-            if (action[0] == doNothing && !registered)
+            if (action[0] == doNothing && !registered) {
                 action[0] = forgetMe;
+            }
         }
 
         // Default action is do nothing when we are registered.
@@ -1217,9 +1186,9 @@ class SubCoordinator extends CoordinatorImpl {
         TransIdentity[] result = new TransIdentity[coords.length];
         for (int i = 0; i < coords.length; i++) {
             try {
-                result[i] = new TransIdentity(coords[i].object(), null,
-                                              coords[i].getGlobalTID());
-            } catch (Throwable exc) {}
+                result[i] = new TransIdentity(coords[i].object(), null, coords[i].getGlobalTID());
+            } catch (Throwable exc) {
+            }
         }
 
         return result;
@@ -1314,8 +1283,8 @@ class SubCoordinator extends CoordinatorImpl {
         if (root && nestingInfo.numChildren() != 0) {
             INVALID_TRANSACTION exc =
                 new INVALID_TRANSACTION(MinorCode.UnfinishedSubtransactions,
-                                        CompletionStatus.COMPLETED_NO);
-                throw exc;
+                    CompletionStatus.COMPLETED_NO);
+            throw exc;
         }
 
         // If the SubCoordinator is in the wrong state, return immediately.
@@ -1371,13 +1340,10 @@ class SubCoordinator extends CoordinatorImpl {
             // If the SubCoordinator is in the wrong state, return immediately.
 
             if (!tranState.setState(TransactionState.STATE_COMMITTING)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-							"commit");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 							"jts.transaction_wrong_state",
-											new java.lang.Object[] {
-											"commit"});
-					 throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "commit");
+                String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                    new java.lang.Object[] {"commit"});
+                throw new org.omg.CORBA.INTERNAL(msg);
             }
 
             // Get the reference of the parent Coordinator.
@@ -1395,15 +1361,11 @@ class SubCoordinator extends CoordinatorImpl {
             try {
                 participants.distributeSubcommit(parent);
             } catch (Throwable exc) {
-				_logger.log(Level.SEVERE,"jts.exception_on_resource_operation",
-                        new java.lang.Object[] { exc.toString(),
-						"commit"});
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 							"jts.exception_on_resource_operation",
-											new java.lang.Object[]
-											{exc.toString(),
-											"commit"});
-				 throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE, "jts.exception_on_resource_operation",
+                    new java.lang.Object[] {exc.toString(), "commit"});
+                String msg = LogFormatter.getLocalizedMessage(_logger, "jts.exception_on_resource_operation",
+                    new java.lang.Object[] {exc.toString(), "commit"});
+                throw new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -1415,13 +1377,10 @@ class SubCoordinator extends CoordinatorImpl {
             // Set the state
 
             if (!tranState.setState(TransactionState.STATE_COMMITTED)) {
-					_logger.log(Level.SEVERE,"jts.transaction_wrong_state",
-							"commit");
-					 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 							"jts.transaction_wrong_state",
-											new java.lang.Object[] {
-											"commit"});
-					 throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE, "jts.transaction_wrong_state", "commit");
+                String msg = LogFormatter.getLocalizedMessage(_logger, "jts.transaction_wrong_state",
+                    new java.lang.Object[] {"commit"});
+                throw new org.omg.CORBA.INTERNAL(msg);
             }
 
             // Remove our reference from the parents set of children
@@ -1450,8 +1409,7 @@ class SubCoordinator extends CoordinatorImpl {
             // there is nothing left to  do, so get the
             //RecoveryManager to forget about us, then self-destruct.
 
-            RecoveryManager.removeCoordinator(superInfo.globalTID,
-                                              superInfo.localTID, false);
+            RecoveryManager.removeCoordinator(superInfo.globalTID, superInfo.localTID, false);
             destroy();
 
             /*!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!*/
@@ -1487,11 +1445,8 @@ class SubCoordinator extends CoordinatorImpl {
             // coordinator has prepared or is in an
             // inappropriate state, do not continue and return FALSE.
 
-            if (!force &&
-                    ((tranState.state ==
-                        TransactionState.STATE_PREPARED_SUCCESS) ||
-                     (!tranState.setState(TransactionState.STATE_ROLLING_BACK))
-                    )) {
+            if (!force && ((tranState.state == TransactionState.STATE_PREPARED_SUCCESS)
+                || (!tranState.setState(TransactionState.STATE_ROLLING_BACK)))) {
                 return;
             }
 
@@ -1500,11 +1455,10 @@ class SubCoordinator extends CoordinatorImpl {
             // we do not change state as this would
             // cause a log force in a subordinate, which is not required.
 
-            if (!temporary &&
-                    !tranState.setState(TransactionState.STATE_ROLLING_BACK)) {
-	        if(_logger.isLoggable(Level.FINE)) {
-		    _logger.log(Level.FINE,
-                         "SubCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
+            if (!temporary && !tranState.setState(TransactionState.STATE_ROLLING_BACK)) {
+                if (_logger.isLoggable(Level.FINE)) {
+                    _logger.log(Level.FINE,
+                        "SubCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                 }
 
             }
@@ -1535,11 +1489,10 @@ class SubCoordinator extends CoordinatorImpl {
             // Set the state to rolled back.
 
             // Remove our reference from the parents set of children
-            if (!temporary &&
-                    !tranState.setState(TransactionState.STATE_ROLLED_BACK)) {
-	        if(_logger.isLoggable(Level.FINE)) {
-		    _logger.log(Level.FINE,
-                         "SubCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
+            if (!temporary && !tranState.setState(TransactionState.STATE_ROLLED_BACK)) {
+                if (_logger.isLoggable(Level.FINE)) {
+                    _logger.log(Level.FINE,
+                        "SubCoordinator - setState(TransactionState.STATE_ROLLED_BACK) returned false");
                 }
             }
 
@@ -1567,8 +1520,7 @@ class SubCoordinator extends CoordinatorImpl {
             // there is nothing left to do, so get the RecoveryManager
             // to forget about us, then self-destruct.
 
-            RecoveryManager.removeCoordinator(superInfo.globalTID,
-                                              superInfo.localTID, false);
+            RecoveryManager.removeCoordinator(superInfo.globalTID, superInfo.localTID, false);
 
             if (!dying) {
                 destroy();
@@ -1598,14 +1550,12 @@ class SubCoordinator extends CoordinatorImpl {
      * @see
      */
     synchronized public void register_synchronization(Synchronization sync)
-            throws Inactive, SynchronizationUnavailable {
-
+        throws Inactive, SynchronizationUnavailable {
         // First check the state of the transaction. If it is not active,
         // do not allow the registration.
 
-        if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE) {
-              Inactive exc = new Inactive();
+        if (tranState == null || tranState.state != TransactionState.STATE_ACTIVE) {
+            Inactive exc = new Inactive();
               throw exc;
           }
 
@@ -1644,7 +1594,6 @@ class SubCoordinator extends CoordinatorImpl {
      * @see
      */
     Coordinator getParent() {
-
         Coordinator result = nestingInfo.getParent(false).object();
         return result;
     }
@@ -1659,7 +1608,6 @@ class SubCoordinator extends CoordinatorImpl {
      * @see
      */
     Coordinator getSuperior() {
-
         Coordinator result = superInfo.superior;
         return result;
     }
@@ -1695,7 +1643,7 @@ class SubCoordinator extends CoordinatorImpl {
         }
     }
     */
-    
+
     /**
      * Gets the object normally responsible for terminating this Coordinator.
      *
@@ -1707,7 +1655,6 @@ class SubCoordinator extends CoordinatorImpl {
      * @see
      */
     CompletionHandler getTerminator() {
-
         CompletionHandler result = terminator;
         return result;
     }
@@ -1732,9 +1679,7 @@ class SubCoordinator extends CoordinatorImpl {
         // First check the state of the transaction. If it is not active,
         // do not allow the operation.
 
-        if (tranState == null ||
-                tranState.state != TransactionState.STATE_ACTIVE ||
-                rollbackOnly) {
+        if (tranState == null || tranState.state != TransactionState.STATE_ACTIVE || rollbackOnly) {
             Unavailable exc = new Unavailable();
             throw exc;
         }
@@ -1750,25 +1695,21 @@ class SubCoordinator extends CoordinatorImpl {
         long timeLeft = TimeoutManager.timeLeft(superInfo.localTID);
         int timeout = 0;
         if (timeLeft > 0) {
-          timeout = (int) timeLeft / 1000;
+            timeout = (int) timeLeft / 1000;
         } else if (timeLeft == 0) {
             // If the timeout has expired, then do not return a context,
             // but roll the transaction back and throw
             // the TRANSACTION_ROLLEDBACK exception.
 
-            TimeoutManager.timeoutCoordinator(superInfo.localTID,
-                                              TimeoutManager.ACTIVE_TIMEOUT);
-            TRANSACTION_ROLLEDBACK exc =
-                new TRANSACTION_ROLLEDBACK(0,CompletionStatus.COMPLETED_NO);
+            TimeoutManager.timeoutCoordinator(superInfo.localTID, TimeoutManager.ACTIVE_TIMEOUT);
+            TRANSACTION_ROLLEDBACK exc = new TRANSACTION_ROLLEDBACK(0, CompletionStatus.COMPLETED_NO);
             throw exc;
         }
 
         // Fill in the context with the current transaction information,
         // and the ancestor information.
 
-        TransIdentity current = new TransIdentity(this.object(),
-                                                  null,
-                                                  superInfo.globalTID.realTID);
+        TransIdentity current = new TransIdentity(this.object(), null, superInfo.globalTID.realTID);
         TransIdentity[] parents = getAncestors();
 
         // Ensure that the implementation specific data is filled with a value.
@@ -1778,8 +1719,7 @@ class SubCoordinator extends CoordinatorImpl {
             emptyData.insert_boolean(false);
         }
 
-        PropagationContext result = new PropagationContext(timeout, current,
-                                                           parents, emptyData);
+        PropagationContext result = new PropagationContext(timeout, current, parents, emptyData);
 
         return result;
     }
@@ -1799,7 +1739,8 @@ class SubCoordinator extends CoordinatorImpl {
 
         try {
             rollback(true);
-        } catch (Throwable exc) {}
+        } catch (Throwable exc) {
+        }
 
         // If the transaction is a subtransaction, remove the
         // child from the parent's  set of children.
@@ -1905,8 +1846,7 @@ class SubCoordinator extends CoordinatorImpl {
             // JCoordinator class, use the getGlobalTID method remotely.
 
             try {
-                JCoordinator jcoord =
-                    JCoordinatorHelper.narrow((org.omg.CORBA.Object) other);
+                JCoordinator jcoord = JCoordinatorHelper.narrow((org.omg.CORBA.Object) other);
                 otherTID = jcoord.getGlobalTID();
             } catch (BAD_PARAM exc) {
 
@@ -1917,8 +1857,7 @@ class SubCoordinator extends CoordinatorImpl {
                 // from the target Coordinator.
 
                 try {
-                    Coordinator coord =
-                        CoordinatorHelper.narrow((org.omg.CORBA.Object)other);
+                    Coordinator coord = CoordinatorHelper.narrow((org.omg.CORBA.Object) other);
                     PropagationContext pc = coord.get_txcontext();
                     otherTID = pc.current.otid;
                 } catch (BAD_PARAM ex2) {
@@ -1930,9 +1869,8 @@ class SubCoordinator extends CoordinatorImpl {
                     // transaction, so we cannot compare the Coordinator
                     // objects.
 
-                    INVALID_TRANSACTION ex3 =
-                        new INVALID_TRANSACTION(MinorCode.CompareFailed,
-                                                CompletionStatus.COMPLETED_NO);
+                    INVALID_TRANSACTION ex3
+                        = new INVALID_TRANSACTION(MinorCode.CompareFailed, CompletionStatus.COMPLETED_NO);
                     throw ex3;
                 }
             }

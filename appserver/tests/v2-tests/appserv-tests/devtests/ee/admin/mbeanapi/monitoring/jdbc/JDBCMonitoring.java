@@ -51,7 +51,7 @@ import com.sun.enterprise.admin.mbeanapi.common.AMXConnector;
  */
 public class JDBCMonitoring {
 
-    private static DomainRoot	mDomainRoot;
+    private static DomainRoot    mDomainRoot;
 
     private static String SERVER_NAME = "server";
 
@@ -59,15 +59,15 @@ public class JDBCMonitoring {
     {
 
         Map cpMtrMgr =   svrRootMtr.getConnectorConnectionPoolMonitorMap();
-        System.out.println("connector connection pool size  is " + 
+        System.out.println("connector connection pool size  is " +
                         cpMtrMgr.size());
         Iterator itr = cpMtrMgr.values().iterator();
         while (itr.hasNext()) {
             Object o = itr.next();
             System.out.println(" Connector Connection pool  is " + o);
             ConnectorConnectionPoolMonitor cPool  =
-                    (ConnectorConnectionPoolMonitor)o; 
-            listStat(cPool); 
+                    (ConnectorConnectionPoolMonitor)o;
+            listStat(cPool);
        }
 
     }
@@ -81,8 +81,8 @@ public class JDBCMonitoring {
         while (itr.hasNext()) {
             Object o = itr.next();
             System.out.println(" Connection pool  is " + o);
-            JDBCConnectionPoolMonitor cPool  = (JDBCConnectionPoolMonitor)o; 
-            listStat(cPool); 
+            JDBCConnectionPoolMonitor cPool  = (JDBCConnectionPoolMonitor)o;
+            listStat(cPool);
        }
 
     }
@@ -96,47 +96,47 @@ public class JDBCMonitoring {
         }
     }
 
-    public void listStats(MonitoringStats ms) 
+    public void listStats(MonitoringStats ms)
     {
         Stats stats = ms.getStats();
         Statistic[] sts = stats.getStatistics();
         printStats(sts);
     }
 
-    public void printStats(Statistic[] stats) 
+    public void printStats(Statistic[] stats)
     {
         if (stats == null)
             return;
 
-        for ( int i=0; i < stats.length; i++) 
+        for ( int i=0; i < stats.length; i++)
         {
             printStat(stats[i]);
         }
-        
+
     }
-    
-    public void printStat(Statistic stat) 
+
+    public void printStat(Statistic stat)
     {
         if (stat == null)
             return;
         else
-            System.out.println(" Stat name is " + stat.getName() + 
-                " description: " + stat.getDescription() + " start time " 
-                + stat.getStartTime() + " last sample time " 
+            System.out.println(" Stat name is " + stat.getName() +
+                " description: " + stat.getDescription() + " start time "
+                + stat.getStartTime() + " last sample time "
                 + stat.getLastSampleTime() + " unit " + stat.getUnit());
     }
 
-    public JDBCMonitoring(final String host, 
-                                   final int port, 
-                                   final String adminUser, 
+    public JDBCMonitoring(final String host,
+                                   final int port,
+                                   final String adminUser,
                                    final String adminPassword,
                                    final boolean useTLS)
                                     throws IOException
     {
-        final AMXConnector ct	= 
+        final AMXConnector ct    =
             new AMXConnector( host, port, adminUser, adminPassword, useTLS );
 
-        mDomainRoot	= ct.getDomainRoot();
+        mDomainRoot    = ct.getDomainRoot();
 
     }
 
@@ -159,8 +159,8 @@ public class JDBCMonitoring {
             ServerRootMonitor svrRootMtr = (ServerRootMonitor) monitorRoot.
                         getServerRootMonitorMap().  get(SERVER_NAME);
 
-            jdbcMtr.testJDBCPoolStats(svrRootMtr); 
-            jdbcMtr.testCCPoolStats(svrRootMtr); 
+            jdbcMtr.testJDBCPoolStats(svrRootMtr);
+            jdbcMtr.testCCPoolStats(svrRootMtr);
         }
         catch( Throwable t )
         {

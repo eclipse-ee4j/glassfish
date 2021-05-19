@@ -108,7 +108,7 @@ public final class WebServiceMgrTest
             {
                 System.out.println( key );
             }
-            
+
             System.out.println("Values are  ");
             for( final WebServiceEndpointInfo info : infos.values() )
             {
@@ -146,7 +146,7 @@ public final class WebServiceMgrTest
         map.put(WebServiceMgr.QUERY_URL_KEY, qurl);
         map.put(WebServiceMgr.PUBLISH_URL_KEY, purl);
 
-        //getDomainRoot().getWebServiceMgr().addRegistryConnectionResources (jndiname, description, 
+        //getDomainRoot().getWebServiceMgr().addRegistryConnectionResources (jndiname, description,
         //       map);
         assertTrue(true);
     }

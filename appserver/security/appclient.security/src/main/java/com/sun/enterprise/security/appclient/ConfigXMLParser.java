@@ -201,7 +201,7 @@ public class ConfigXMLParser implements ConfigParser {
         if (policy == null) {
             return null;
         }
-        
+
         String authSource = null;
         String authRecipient = null;
 
@@ -214,7 +214,7 @@ public class ConfigXMLParser implements ConfigParser {
             authSource = clientResponsePolicy.getAuthSource();
             authRecipient = clientResponsePolicy.getAuthRecipient();
         }
-        
+
         return AuthMessagePolicy.getMessagePolicy(authSource, authRecipient);
     }
 
@@ -241,7 +241,7 @@ public class ConfigXMLParser implements ConfigParser {
             assert (util != null);
             msgconfigs = (List<MessageSecurityConfig>) util.getAppClientMsgSecConfigs();
         }
-        
+
         this.initialize(msgconfigs);
     }
 }

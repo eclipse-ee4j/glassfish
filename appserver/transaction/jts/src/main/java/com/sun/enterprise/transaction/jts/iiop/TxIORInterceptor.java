@@ -39,27 +39,27 @@ import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.hk2.api.ServiceLocator;
 
 public class TxIORInterceptor extends LocalObject implements IORInterceptor {
-    
 
-    private static Logger _logger = 
+
+    private static Logger _logger =
            LogDomains.getLogger(com.sun.jts.pi.InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     private Codec codec;
-    
+
     private ServiceLocator habitat;
-   
+
     public TxIORInterceptor(Codec c, ServiceLocator h) {
         codec = c;
         habitat = h;
     }
-    
+
     public void destroy() {
     }
-    
+
     public String name() {
         return "TxIORInterceptor";
     }
-    
+
     // Note: this is called for all remote refs created from this ORB,
     // including EJBs and COSNaming objects.
     public void establish_components(IORInfo iorInfo) {
@@ -70,12 +70,12 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
             OTSPolicy otsPolicy = null;
             try {
                 otsPolicy = (OTSPolicy)iorInfo.get_effective_policy(
-			 habitat.getService(GlassFishORBHelper.class).getOTSPolicyType());
+             habitat.getService(GlassFishORBHelper.class).getOTSPolicyType());
             } catch ( INV_POLICY ex ) {
-                _logger.log(Level.FINE, 
+                _logger.log(Level.FINE,
                         "TxIORInterceptor.establish_components: OTSPolicy not present");
             }
-	    addOTSComponents(iorInfo, otsPolicy);
+        addOTSComponents(iorInfo, otsPolicy);
 
         } catch (Exception e) {
             _logger.log(Level.WARNING,"Exception in establish_components", e);
@@ -84,29 +84,29 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
         }
     }
 
-    private void addOTSComponents(IORInfo iorInfo, OTSPolicy otsPolicy) {       
+    private void addOTSComponents(IORInfo iorInfo, OTSPolicy otsPolicy) {
         short invPolicyValue = SHARED.value;
-        short otsPolicyValue = ADAPTS.value;            
+        short otsPolicyValue = ADAPTS.value;
 
         if (otsPolicy != null) {
-	    otsPolicyValue = otsPolicy.value();
-	}
-        
+        otsPolicyValue = otsPolicy.value();
+    }
+
         Any otsAny = ORB.init().create_any();
         Any invAny = ORB.init().create_any();
-        
+
         otsAny.insert_short(otsPolicyValue);
         invAny.insert_short(invPolicyValue);
-        
+
         byte[] otsCompValue = null;
-        byte[] invCompValue = null;                 
+        byte[] invCompValue = null;
         try {
             otsCompValue = codec.encode_value(otsAny);
             invCompValue = codec.encode_value(invAny);
         } catch (org.omg.IOP.CodecPackage.InvalidTypeForEncoding e) {
             throw new INTERNAL("InvalidTypeForEncoding "+e.getMessage());
         }
-    
+
         TaggedComponent otsComp = new TaggedComponent(TAG_OTS_POLICY.value,
                                                       otsCompValue);
         iorInfo.add_ior_component(otsComp);

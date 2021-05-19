@@ -30,7 +30,7 @@ import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 
 public class SFSBEJB
-    implements SessionBean 
+    implements SessionBean
 {
 
     private static final String LOCAL_CHILD_SUFFIX = "_childLocal";
@@ -51,7 +51,7 @@ public class SFSBEJB
     private SimpleEntityLocalHome       entityLocalHome;
     private SimpleEntityLocal           entityLocal;
     private SFSBHome                    sfsbHome;
-    private SFSB                        sfsbRemote;    
+    private SFSB                        sfsbRemote;
     private SFSBLocalHome               sfsbLocalHome;
     private SFSBLocal                   sfsbLocal;
 
@@ -60,9 +60,9 @@ public class SFSBEJB
     private UserTransaction             userTransaction1;
     private UserTransaction             userTransaction2;
 
-    private int				activationCount;
-    private int				passivationCount;
-    private Object			nonSerializableState;
+    private int                                activationCount;
+    private int                                passivationCount;
+    private Object                        nonSerializableState;
 
     public void ejbCreate(String sfsbName) {
         System.out.println ("In SFSB.ejbCreate() for name -> " + sfsbName);
@@ -75,10 +75,10 @@ public class SFSBEJB
 
             sfsbHome = (SFSBHome) sessionCtx.getEJBHome();
             sfsbLocalHome = (SFSBLocalHome) sessionCtx.getEJBLocalHome();
-            
+
             homeHandle = entityHome.getHomeHandle();
             handle = entityRemote.getHandle();
-            
+
             userTransaction1 = sessionCtx.getUserTransaction();
             userTransaction2 = (UserTransaction) new InitialContext().
                 lookup("java:comp/UserTransaction");
@@ -98,15 +98,15 @@ public class SFSBEJB
             sfsbRemote = sfsbHome.create(sfsbName + " _child");
             sfsbLocal = sfsbLocalHome.create(sfsbName + LOCAL_CHILD_SUFFIX);
         } catch(Exception e) {
-	    EJBException ex = new EJBException(e.getMessage());
-	    ex.initCause(e);
+            EJBException ex = new EJBException(e.getMessage());
+            ex.initCause(e);
             throw ex;
         }
     }
 
     public boolean checkSFSBChild() {
         String childName = sfsbLocal.getName();
-        boolean status = childName.equals(sfsbName + LOCAL_CHILD_SUFFIX);       
+        boolean status = childName.equals(sfsbName + LOCAL_CHILD_SUFFIX);
         return status;
     }
 
@@ -203,7 +203,7 @@ public class SFSBEJB
     public boolean checkUserTransaction() {
         boolean status =
             ((userTransaction1 != null) && (userTransaction2 != null));
-        
+
         try {
             if( status ) {
                 userTransaction1.begin();
@@ -235,7 +235,7 @@ public class SFSBEJB
             }
             if (ok) {
                 fieldName = "java:";
-                ok = ( (javaCtx != null) && 
+                ok = ( (javaCtx != null) &&
                        javaCtx.getNameInNamespace().equals(fieldName) );
             }
             if (ok) {
@@ -247,7 +247,7 @@ public class SFSBEJB
                 fieldName = "java:comp/env";
                 ok = ( (envCtx != null) &&
                        envCtx.getNameInNamespace().equals(fieldName) );
-                
+
             }
             if (ok) {
                 fieldName = "java:comp/env/ejb";
@@ -256,7 +256,7 @@ public class SFSBEJB
             }
             if (ok) {
                 fieldName = "env-entry";
-          
+
                 String value1 = (String)
                     initialCtx.lookup("java:comp/env/TagValue");
                 String value2 = (String) envCtx.lookup("TagValue");
@@ -268,9 +268,9 @@ public class SFSBEJB
             ex.printStackTrace();
             ok = false;
         }
-        
+
         this.message = (ok) ? null : (fieldName + " not restored properly");
-        
+
         return ok;
     }
 
@@ -279,22 +279,22 @@ public class SFSBEJB
     }
 
     public int getActivationCount() {
-	return this.activationCount;
+        return this.activationCount;
     }
 
     public int getPassivationCount() {
-	return this.passivationCount;
+        return this.passivationCount;
     }
 
     public void makeStateNonSerializable() {
-	nonSerializableState = new Object();
+        nonSerializableState = new Object();
     }
 
     public void sleepForSeconds(int sec) {
-	try {
-	    Thread.currentThread().sleep(sec * 1000);
-	} catch (Exception ex) {
-	}
+        try {
+            Thread.currentThread().sleep(sec * 1000);
+        } catch (Exception ex) {
+        }
     }
 
     public void unusedMethod() {

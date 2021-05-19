@@ -25,18 +25,18 @@ import jakarta.ejb.*;
  */
 
 public interface LocalB extends jakarta.ejb.EJBLocalObject {
-    
+
     public java.lang.Integer getId();
-    
+
     public void setC(cascadeDelete.LocalC c);
-    
+
     public java.util.Collection getDs();
-    
+
     public String getName();
 
     public void cascadeDeleteFromA();
-    
+
     public void cascadeDeleteFromC();
-    
+
 }
 

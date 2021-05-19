@@ -27,8 +27,8 @@ public class CustomerBean implements Serializable {
 
     public CustomerBean() { }
 
-    public CustomerBean(String firstName, String lastName, 
-        String phoneNumber, String emailAddress) { 
+    public CustomerBean(String firstName, String lastName,
+        String phoneNumber, String emailAddress) {
 
         this.firstName = firstName;
         this.lastName = lastName;

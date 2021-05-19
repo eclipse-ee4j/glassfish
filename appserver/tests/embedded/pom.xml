@@ -24,15 +24,15 @@
     <artifactId>embedded</artifactId>
     <version>6.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>GlassFish Embedded Tests</name>  
+    <name>GlassFish Embedded Tests</name>
 
     <modules>
-    	<module>basic</module>
-    	<module>cdi_basic</module>
-    	<module>cdi_ejb_jpa</module>
-    	<module>glassfish_resources_xml</module>
-    	<module>ejb</module>
-    	<module>scatteredarchive</module>
+        <module>basic</module>
+        <module>cdi_basic</module>
+        <module>cdi_ejb_jpa</module>
+        <module>glassfish_resources_xml</module>
+        <module>ejb</module>
+        <module>scatteredarchive</module>
         <module>maven-plugin</module>
         <module>web</module>
     </modules>

@@ -21,5 +21,5 @@ import jakarta.ejb.*;
 public interface SFSBLocal
     extends EJBLocalObject
 {
-    public String getName();	
+    public String getName();
 }

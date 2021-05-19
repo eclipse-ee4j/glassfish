@@ -38,6 +38,6 @@ public class CheckResult extends HttpServlet {
                     (currentTime - lastAccessedTime <= maxIdleTime));
         }
         out.println(result);
-        
+
     }
 }

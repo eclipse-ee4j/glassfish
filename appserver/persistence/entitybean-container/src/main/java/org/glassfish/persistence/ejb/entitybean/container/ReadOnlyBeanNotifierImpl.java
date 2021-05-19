@@ -32,7 +32,7 @@ import org.glassfish.persistence.ejb.entitybean.container.spi.ReadOnlyEJBHome;
  */
 
 @Service
-public final class ReadOnlyBeanNotifierImpl 
+public final class ReadOnlyBeanNotifierImpl
     implements java.io.Serializable,
         com.sun.appserv.ejb.ReadOnlyBeanNotifier
 {
@@ -48,7 +48,7 @@ public final class ReadOnlyBeanNotifierImpl
         this.readOnlyBeanHome = home;
     }
 
-    public void refresh (Object primaryKey) 
+    public void refresh (Object primaryKey)
         throws java.rmi.RemoteException
     {
         readOnlyBeanHome._refresh_com_sun_ejb_containers_read_only_bean_(primaryKey);

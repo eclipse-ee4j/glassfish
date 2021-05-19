@@ -25,7 +25,7 @@ import java.util.Map;
  * another keeping the value
  *
  * @author  Gerald Ingalls
- * @version 
+ * @version
  */
 public abstract class ReplaceVersionUpgrade implements VersionUpgrade {
   protected Map<String,String> matches;

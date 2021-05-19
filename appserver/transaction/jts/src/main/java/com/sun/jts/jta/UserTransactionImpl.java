@@ -30,15 +30,15 @@ import com.sun.logging.LogDomains;
  * @version 1.0 Feb 09, 1999
  */
 public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
-	javax.naming.Referenceable, java.io.Serializable {
+    javax.naming.Referenceable, java.io.Serializable {
 
-	// Instance variables
+    // Instance variables
 
     private transient TransactionManager transactionManager;
 
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(UserTransactionImpl.class, LogDomains.TRANSACTION_LOGGER);
     // Constructor
 
@@ -58,7 +58,7 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
      */
     public void begin() throws NotSupportedException, SystemException {
         if (transactionManager == null) init();
-    	this.transactionManager.begin();
+        this.transactionManager.begin();
     }
 
     /**
@@ -86,10 +86,10 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
      *    encounters an unexpected error condition
     */
     public void commit() throws RollbackException,
-	HeuristicMixedException, HeuristicRollbackException, SecurityException,
-	IllegalStateException, SystemException {
+    HeuristicMixedException, HeuristicRollbackException, SecurityException,
+    IllegalStateException, SystemException {
         if (transactionManager == null) init();
-    	this.transactionManager.commit();
+        this.transactionManager.commit();
     }
 
     /**
@@ -109,7 +109,7 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
     public void rollback() throws IllegalStateException, SecurityException,
         SystemException {
         if (transactionManager == null) init();
-    	this.transactionManager.rollback();
+        this.transactionManager.rollback();
     }
 
     /**
@@ -125,9 +125,9 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
      *
      */
     public void setRollbackOnly() throws IllegalStateException,
-    	SystemException {
+        SystemException {
         if (transactionManager == null) init();
-    	this.transactionManager.setRollbackOnly();
+        this.transactionManager.setRollbackOnly();
     }
 
     /**
@@ -143,7 +143,7 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
      */
     public int getStatus() throws SystemException {
         if (transactionManager == null) init();
-    	return this.transactionManager.getStatus();
+        return this.transactionManager.getStatus();
     }
 
     /**
@@ -163,7 +163,7 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
      */
     public void setTransactionTimeout(int seconds) throws SystemException {
         if (transactionManager == null) init();
-    	this.transactionManager.setTransactionTimeout(seconds);
+        this.transactionManager.setTransactionTimeout(seconds);
     }
 
     // Implementation of the javax.naming.Referenceable interface
@@ -172,9 +172,9 @@ public class UserTransactionImpl implements jakarta.transaction.UserTransaction,
      * This method is used by JNDI to store a referenceable object.
      */
     public Reference getReference() throws NamingException {
-		//_logger.log(Level.FINE,"Referenceable object invoked");
-    	return new Reference(this.getClass().getName(),
-        	UserTransactionFactory.class.getName(), null);
+        //_logger.log(Level.FINE,"Referenceable object invoked");
+        return new Reference(this.getClass().getName(),
+            UserTransactionFactory.class.getName(), null);
     }
 
     // serializable interface related

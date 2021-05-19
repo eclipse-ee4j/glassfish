@@ -26,7 +26,7 @@ public interface Sful {
     void setName(String name);
 
     Map<String, Boolean> doTests(String prefix);
-    
+
     public void createSfulDelegates();
 
 }

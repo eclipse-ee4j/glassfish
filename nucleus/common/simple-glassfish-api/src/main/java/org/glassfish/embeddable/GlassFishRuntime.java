@@ -49,7 +49,7 @@ public abstract class GlassFishRuntime {
     protected GlassFishRuntime() {
         // Empty protected constructor so that it does not show up in the javadoc.
     }
-    
+
     /**
      * Bootstrap a GlassFishRuntime with default {@link BootstrapProperties}.
      *

@@ -49,7 +49,7 @@ public class WebTest {
         appserverTestPath = args[3];
         adminPort = args[4];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Security Vulnerability test for RequestDispatcher directory traversal");
         WebTest webTest = new WebTest(args);
@@ -57,8 +57,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
         } catch (Exception ex) {
             stat.addStatus(TEST_NAME, stat.FAIL);
@@ -109,7 +109,7 @@ public class WebTest {
             } else {
                 System.err.println("Missing expected response: " + EXPECTED);
             }
-            
+
         } finally {
             try {
                 if (os != null) os.close();
@@ -125,9 +125,9 @@ public class WebTest {
             } catch (IOException ex) {}
         }
     }
-    
+
     private void invokeValidationTestForDoubleDot() throws Exception {
-        
+
         Socket sock = null;
         OutputStream os = null;
         InputStream is = null;
@@ -170,9 +170,9 @@ public class WebTest {
             } catch (IOException ex) {}
         }
     }
-    
+
     private void invokeValidationTestForColon() throws Exception {
-        
+
         Socket sock = null;
         OutputStream os = null;
         InputStream is = null;

@@ -39,7 +39,7 @@ import com.sun.enterprise.util.OS;
 import org.glassfish.api.admin.ServerEnvironment;
 
 /**
- * This class is used to generate the RMI-IIOP version of a 
+ * This class is used to generate the RMI-IIOP version of a
  * remote business interface.
  */
 
@@ -181,7 +181,7 @@ public class StaticRmiStubGenerator {
         // client.jar.  Turning on the deployment-time rmic flag ONLY
         // controls the generation of rmic stubs.  Dynamic stubs will be used
         // in the server, in the Application Client container, and in
-        // stand-alone clients that instantiate our naming provider.  
+        // stand-alone clients that instantiate our naming provider.
 
         progress(localStrings.getStringWithDefault
                  ("generator.processing_beans", "Processing beans..."));
@@ -305,7 +305,7 @@ public class StaticRmiStubGenerator {
                     "[RMIC] Generated client files: " + allClientFiles);
     }
 
-      
+
     private String getStubName(String fullName) {
 
         String className = fullName;
@@ -319,7 +319,7 @@ public class StaticRmiStubGenerator {
 
         String stubName = packageName + "_" + className + "_Stub";
 
-    	if(isSpecialPackage(fullName))
+        if(isSpecialPackage(fullName))
             stubName = ORG_OMG_STUB_PREFIX + stubName;
 
         return stubName;
@@ -327,22 +327,22 @@ public class StaticRmiStubGenerator {
 
     private boolean isSpecialPackage(String name)
     {
-    	// these package names are magic.  RMIC puts any home/remote stubs
-    	// into a different directory in these cases.
-    	// 4845896  bnevins, April 2003
+        // these package names are magic.  RMIC puts any home/remote stubs
+        // into a different directory in these cases.
+        // 4845896  bnevins, April 2003
 
-    	// this is really an error.  But we have enough errors. Let's be forgiving
-    	// and not allow a NPE out of here...
-    	if(name == null)
-    		return false;
+        // this is really an error.  But we have enough errors. Let's be forgiving
+        // and not allow a NPE out of here...
+        if(name == null)
+            return false;
 
-    	// Licensee bug 4959550
-    	// if(name.startsWith("com.sun.") || name.startsWith("javax."))
-    	if(name.startsWith("javax.")) {
-    		return true;
+        // Licensee bug 4959550
+        // if(name.startsWith("com.sun.") || name.startsWith("javax."))
+        if(name.startsWith("javax.")) {
+            return true;
         }
 
-    	return false;
+        return false;
     }
 
     private Set getRemoteSuperInterfaces(ClassLoader jcl,

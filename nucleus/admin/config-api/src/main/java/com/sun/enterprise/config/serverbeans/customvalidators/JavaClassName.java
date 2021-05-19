@@ -28,7 +28,7 @@ import jakarta.validation.Payload;
 /**
  * User-defined constraint to check if an attribute is a valid Java class name The class name can be a fully qualified
  * classname inlcuding its package name
- * 
+ *
  * @author Nandini Ektare
  */
 

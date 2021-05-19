@@ -24,9 +24,9 @@ import java.util.*;
  */
 
 public interface BlobTestHome extends jakarta.ejb.EJBHome {
-    
+
     public  BlobTest create(Integer i, java.lang.String name, byte[] b) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
     public  BlobTest findByPrimaryKey (Integer key) throws java.rmi.RemoteException, jakarta.ejb.FinderException;
 
 }

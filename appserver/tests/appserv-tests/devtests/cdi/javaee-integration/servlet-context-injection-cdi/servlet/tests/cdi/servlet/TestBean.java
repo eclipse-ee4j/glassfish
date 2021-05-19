@@ -19,12 +19,12 @@ package tests.cdi.servlet;
 import jakarta.inject.Inject;
 import jakarta.servlet.ServletContext;
 
-//Simple TestBean to test CDI. 
+//Simple TestBean to test CDI.
 public class TestBean
 {
     @Inject
     ServletContext sc;
-    
+
     public String m1(){
         System.out.println("**********SC = " + sc.getContextPath());
         return sc.getContextPath();

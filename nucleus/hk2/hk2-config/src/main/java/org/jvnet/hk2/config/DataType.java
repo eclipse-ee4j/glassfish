@@ -20,13 +20,13 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Denotes the <code>type</code> of the data a particular config
- * element (attribute, element) should have. This interface should be 
+ * element (attribute, element) should have. This interface should be
  * implemented whenever a need arises to check if
  * an abstract data type can be represented as a given <code> String </code>.
  * The implementations of a DataType are mapped by their <code> names </code> elsewhere.
  * Implementations should provide functional implementation of the #validate method
  * and must have a public parameterless constructor (except possibly for primitives).
- * 
+ *
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  * @see PrimitiveDataType
  * @see WriteableView

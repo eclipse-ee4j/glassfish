@@ -109,7 +109,7 @@ public class EjbSessionNode extends InterfaceBasedEjbNode<EjbSessionDescriptor> 
         table.put(EjbTagNames.SESSION_TYPE, "setSessionType");
         table.put(EjbTagNames.TRANSACTION_TYPE, "setTransactionType");
         table.put(EjbTagNames.INIT_ON_STARTUP, "setInitOnStartup");
-        table.put(EjbTagNames.PASSIVATION_CAPABLE, "setPassivationCapable");        
+        table.put(EjbTagNames.PASSIVATION_CAPABLE, "setPassivationCapable");
         return table;
     }
 
@@ -282,7 +282,7 @@ public class EjbSessionNode extends InterfaceBasedEjbNode<EjbSessionDescriptor> 
         // resource-env-ref*
         writeResourceEnvRefDescriptors(ejbNode, ejbDesc.getResourceEnvReferenceDescriptors().iterator());
 
-        // message-destination-ref*        
+        // message-destination-ref*
         writeMessageDestinationRefDescriptors(ejbNode, ejbDesc.getMessageDestinationReferenceDescriptors().iterator());
 
         // persistence-context-ref*
@@ -317,7 +317,7 @@ public class EjbSessionNode extends InterfaceBasedEjbNode<EjbSessionDescriptor> 
             appendTextChild(ejbNode, EjbTagNames.PASSIVATION_CAPABLE,
                     Boolean.toString(ejbDesc.isPassivationCapable()));
         }
-        
+
         return ejbNode;
     }
 }

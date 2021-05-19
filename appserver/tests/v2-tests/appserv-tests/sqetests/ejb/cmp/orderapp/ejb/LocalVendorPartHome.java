@@ -20,7 +20,7 @@ import jakarta.ejb.*;
 
 
 public interface LocalVendorPartHome extends EJBLocalHome {
- 
+
     public LocalVendorPart findByPrimaryKey(Object aKey)
             throws FinderException;
 

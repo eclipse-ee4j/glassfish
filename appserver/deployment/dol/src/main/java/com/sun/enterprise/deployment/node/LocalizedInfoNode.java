@@ -31,27 +31,29 @@ import com.sun.enterprise.deployment.xml.TagNames;
  * @author Jerome Dochez
  */
 public class LocalizedInfoNode extends LocalizedNode {
-    
+
     /**
      * we do not create descriptors in this node
      */
-     public Object getDescriptor() {
-	 return null;
-     }
-     
+    @Override
+    public Object getDescriptor() {
+        return null;
+    }
+
+
     /**
      * notification of the end of XML parsing for this node
      */
+    @Override
     public void postParsing() {
         Object o = getParentNode().getDescriptor();
         if (o instanceof Descriptor) {
             Descriptor descriptor = (Descriptor) o;
             if (getXMLRootTag().getQName().equals(TagNames.DESCRIPTION)) {
                 descriptor.setLocalizedDescription(lang, localizedValue);
-            } else 
-            if (getXMLRootTag().getQName().equals(TagNames.NAME)) {
+            } else if (getXMLRootTag().getQName().equals(TagNames.NAME)) {
                 descriptor.setLocalizedDisplayName(lang, localizedValue);
             }
         }
-    }    
+    }
 }

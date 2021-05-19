@@ -58,8 +58,8 @@ import org.glassfish.api.admin.AdminCommandSecurity;
 @TargetType(value={CommandTarget.DOMAIN, CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="show-component-status", 
+        opType=RestEndpoint.OpType.GET,
+        path="show-component-status",
         description="Show Component Status",
         params={
             @RestParam(name="id", value="$parent")
@@ -85,12 +85,12 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
 
     @Inject
     VersioningService versioningService;
-    
+
     private ActionReport report;
     private Logger logger;
     private List<String> matchedVersions = null;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAppRefsCommand.class);
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
@@ -98,14 +98,14 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
         logger = context.getLogger();
 
         // retrieve matched version(s) if exist
-        
+
         try {
             matchedVersions = versioningService.getMatchedVersions(name, target);
         } catch (VersioningException e) {
             report.failure(logger, e.getMessage());
             return false;
         }
-        
+
         // if matched list is empty and no VersioningException thrown,
         // this is an unversioned behavior and the given application is not registered
         if(matchedVersions.isEmpty()){
@@ -113,7 +113,7 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
-        
+
         return true;
     }
 
@@ -130,9 +130,9 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
         }
         return accessChecks;
     }
-    
+
     public void execute(AdminCommandContext context) {
-        
+
         ActionReport.MessagePart part;
         if (report == null) {
             // We could handle this more elegantly by requiring that report be passed as an argument.
@@ -158,7 +158,7 @@ public class ShowComponentStatusCommand implements AdminCommand, AdminCommandSec
             if (domain.isAppEnabledInTarget(appName, target)) {
                 status = "enabled";
             }
-            
+
             ActionReport.MessagePart childPart = part.addChild();
             String message = localStrings.getLocalString("component.status","Status of {0} is {1}.", appName, status);
             childPart.setMessage(message);

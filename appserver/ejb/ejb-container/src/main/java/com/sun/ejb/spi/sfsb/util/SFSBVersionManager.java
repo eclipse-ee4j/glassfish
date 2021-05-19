@@ -24,17 +24,17 @@ public interface SFSBVersionManager {
     public long NO_VERSION = -404;
 
     public long getRequestClientVersion();
-    
+
     public void setRequestClientVersion(long val);
-    
+
     public void clearRequestClientVersion();
-    
+
     public long getResponseClientVersion();
 
     public void setResponseClientVersion(long val);
-    
+
     public void clearResponseClientVersion();
 
     public void removeAll(long containerId);
-    
+
 }

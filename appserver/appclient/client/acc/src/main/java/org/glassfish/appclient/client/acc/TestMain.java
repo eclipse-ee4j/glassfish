@@ -36,7 +36,7 @@ public class TestMain {
             CommandLaunchInfo.newInstance(agentArgs);
         } catch (UserError ex) {
             System.err.println(ex.getLocalizedMessage());
-            
+
         }
     }
 

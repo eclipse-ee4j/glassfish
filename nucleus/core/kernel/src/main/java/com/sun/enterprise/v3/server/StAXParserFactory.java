@@ -33,7 +33,7 @@ import org.glassfish.hk2.api.PerLookup;
  * so this is as lazy as it gets.
  *
  * <p>
- * TODO: if we need to let people choose StAX implementation, this is the place to do it. 
+ * TODO: if we need to let people choose StAX implementation, this is the place to do it.
  *
  * @author Kohsuke Kawaguchi
  */
@@ -63,6 +63,6 @@ public class StAXParserFactory implements Factory<XMLInputFactory> {
      */
     @Override
     public void dispose(XMLInputFactory instance) {
-        
+
     }
 }

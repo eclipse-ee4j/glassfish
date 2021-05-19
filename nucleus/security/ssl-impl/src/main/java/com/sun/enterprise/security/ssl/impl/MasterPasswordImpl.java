@@ -45,7 +45,7 @@ public class MasterPasswordImpl implements MasterPassword {
         char pw[] = idm == null ? null : idm.getMasterPassword();
         return new PasswordAdapter(pw);
     }
-    
+
     public char[] getMasterPassword() {
         return idm == null ? null : idm.getMasterPassword();
     }

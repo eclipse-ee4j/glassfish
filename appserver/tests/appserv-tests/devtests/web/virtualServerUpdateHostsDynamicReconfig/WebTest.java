@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.*;
  * "myhost", deploys a webapp to it, and accesses the webapp by specifying
  * a Host header equal to "myhost" in the request.
  *
- * The test then updates the virtual server's "hosts" attribute to 
+ * The test then updates the virtual server's "hosts" attribute to
  * "mynewhost", and ensures that the webapp may still be accessed when
  * specifying a Host header equal to "mynewhost" in the request.
  */
@@ -52,7 +52,7 @@ public class WebTest {
         contextRoot = args[2];
         run = args[3];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for 6712778");
@@ -80,7 +80,7 @@ public class WebTest {
      * is mapped to the virtual server.
      */
     private void firstRun() throws Exception {
-        
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/test.txt HTTP/1.1\n";
@@ -115,7 +115,7 @@ public class WebTest {
      * is mapped to the updated virtual server.
      */
     private void secondRun() throws Exception {
-        
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
         String get = "GET " + contextRoot + "/test.txt HTTP/1.1\n";

@@ -27,7 +27,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class SimpleClient {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -47,8 +47,8 @@ public class SimpleClient {
         }
 
         stat.printSummary("ejb-stubs-standaloneclient");
-    }  
-    
+    }
+
     private String jndiName;
     private String propsFileName;
 
@@ -58,7 +58,7 @@ public class SimpleClient {
 
         if( (args.length > 1) && (args[1].length() > 0) ) {
             propsFileName = args[1];
-            System.out.println("Using props file " + propsFileName + 
+            System.out.println("Using props file " + propsFileName +
                                " for InitialContext");
         } else {
             System.out.println("Using no-arg InitialContext");
@@ -75,9 +75,9 @@ public class SimpleClient {
             Properties props = new Properties();
             FileInputStream fis = new FileInputStream(propsFileName);
             props.load(fis);
-	    System.out.println("Using props = " + props);
+            System.out.println("Using props = " + props);
             ic = new InitialContext(props);
-	    System.out.println("ic = " + ic);
+            System.out.println("ic = " + ic);
         }
 
         return ic;
@@ -86,47 +86,47 @@ public class SimpleClient {
     private void doTest() throws Exception {
 
         Context ic = getContext();
-        
+
         System.out.println("Looking up global jndi name = " + jndiName);
-        // create EJB using factory from container 
+        // create EJB using factory from container
         Object objref = ic.lookup(jndiName);
         System.out.println("objref = " + objref);
         System.err.println("Looked up home!!");
-        
+
         HelloHome  home = (HelloHome)PortableRemoteObject.narrow
             (objref, HelloHome.class);
-        
+
         System.err.println("Narrowed home!!");
-        
+
         Hello hr = home.create();
         System.err.println("Got the EJB!!");
-        
+
         // invoke method on the EJB
         System.out.println("invoking ejb");
         hr.sayHello();
         System.out.println("successfully invoked ejb");
-        
-        EJBMetaData md = home.getEJBMetaData();            
+
+        EJBMetaData md = home.getEJBMetaData();
         System.out.println("Got EJB meta data = " + md);
-        
-        EJBMetaData md2 = home.getEJBMetaData();            
+
+        EJBMetaData md2 = home.getEJBMetaData();
         System.out.println("Got EJB meta data again = " + md2);
-        
+
         HomeHandle homeHandle = home.getHomeHandle();
         System.out.println("Got Home Handle");
         HelloHome home2 = (HelloHome) homeHandle.getEJBHome();
         System.out.println("Converted Home Handle back to HelloHome");
-        EJBMetaData md3 = home2.getEJBMetaData();            
+        EJBMetaData md3 = home2.getEJBMetaData();
         System.out.println("Got EJB meta data a 3rd time = " + md3);
-        
+
         Handle helloHandle = hr.getHandle();
         System.out.println("Got hello Handle");
         Hello hello2 = (Hello) helloHandle.getEJBObject();
         System.out.println("Converted Hello Handle back to Hello");
         hello2.sayHello();
         System.out.println("successfully invoked ejb again");
-        
-    	return;
+
+            return;
     }
 
 }

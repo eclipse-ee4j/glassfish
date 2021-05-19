@@ -61,15 +61,15 @@ import jakarta.inject.Inject;
 @org.glassfish.api.admin.ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-http-health-checker", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-http-health-checker",
         description="",
         params={
             @RestParam(name="target", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="create-http-health-checker", 
+        opType=RestEndpoint.OpType.POST,
+        path="create-http-health-checker",
         description="",
         params={
             @RestParam(name="target", value="$parent")
@@ -104,7 +104,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
     private ActionReport report;
 
     final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(CreateHTTPHealthCheckerCommand.class);    
+        new LocalStringManagerImpl(CreateHTTPHealthCheckerCommand.class);
 
     @Override
     public void execute(AdminCommandContext context) {
@@ -121,7 +121,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
             report.setMessage(msg);
             return;
         }
-         
+
         if (config != null) {
             LbConfig lbConfig = lbconfigs.getLbConfig(config);
             createHealthCheckerInternal(url,interval,timeout,lbConfig,
@@ -137,9 +137,9 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
             }
 
             List<LbConfig> match = null;
-            
+
             match = matchLbConfigToTarget(lbConfigs, target);
-            
+
             if ( (match == null) || (match.size() == 0) ) {
                 String msg = localStrings.getLocalString("UnassociatedTarget", "No LB config references target {0}", target);
                 logger.warning(msg);
@@ -153,7 +153,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
                     lc, lc.getName(), target);
             }
         }
-   
+
     }
 
     /**
@@ -235,7 +235,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
                 }
                 logger.info(localStrings.getLocalString("http_lb_admin.HealthCheckerCreated",
                         "Health checker created for target {0}", target));
-            } else {                
+            } else {
                 String msg = localStrings.getLocalString("HealthCheckerExists",
                         "Health checker server/cluster [{0}] already exists.", target);
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
@@ -282,7 +282,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setMessage(msg);
             return;
-        }        
+        }
     }
 
     private void addHealthChecker(final ClusterRef ref)
@@ -326,7 +326,7 @@ public final class CreateHTTPHealthCheckerCommand implements AdminCommand {
      * @param  target     name of server or cluster
      *
      * @return array of LbConfigs that has a ref to the target server
-     * 
+     *
      */
     private List<LbConfig> matchLbConfigToTarget(List<LbConfig> lbConfigs,
             String target)

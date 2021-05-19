@@ -59,7 +59,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
     @LogMessageInfo(message = "Failed to scan archive for annotations: {0}", level="WARNING")
     private static final String FAILED_ANNOTATION_SCAN = "NCLS-DEPLOYMENT-00009";
     boolean found = false;
-    List<String> annotations = new ArrayList<String>();; 
+    List<String> annotations = new ArrayList<String>();;
 
     public GenericAnnotationDetector(Class[] annotationClasses) {
         super(Opcodes.ASM7);
@@ -74,7 +74,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
         scanArchive(archive);
         if (found) {
             return found;
-        }      
+        }
         ArchiveFactory archiveFactory = null;
         if (Globals.getDefaultHabitat() != null) {
             archiveFactory = Globals.getDefaultHabitat().getService(ArchiveFactory.class);
@@ -123,11 +123,11 @@ public class GenericAnnotationDetector extends AnnotationScanner {
                         cr.accept(this, crFlags);
                         if (found) {
                             return;
-                        } 
+                        }
                     } finally {
                         is.close();
                     }
-                } else if (entryName.endsWith(".jar") && 
+                } else if (entryName.endsWith(".jar") &&
                     entryName.indexOf('/') == -1) {
                     // scan class files inside top level jar
                     try {
@@ -146,7 +146,7 @@ public class GenericAnnotationDetector extends AnnotationScanner {
                                         cr.accept(this, crFlags);
                                         if (found) {
                                             return;
-                                        } 
+                                        }
                                     } finally {
                                         is.close();
                                     }

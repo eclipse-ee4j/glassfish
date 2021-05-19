@@ -24,11 +24,11 @@ import org.jvnet.hk2.annotations.Contract;
  * This interface defines a cisitor API for the Application related DOL descriptors
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 @Contract
 public interface ApplicationVisitor extends ComponentVisitor {
-    
+
     /**
      * visit an application object
      * @param application the application descriptor

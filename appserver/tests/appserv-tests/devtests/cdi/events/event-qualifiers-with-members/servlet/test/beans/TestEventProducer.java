@@ -22,27 +22,27 @@ import jakarta.inject.Inject;
 
 public class TestEventProducer {
     @Inject Event<Document> docEvent;
-    
+
     @Inject @Updated(updatedBy="admin") Event<Document> updatedByAdminEvent;
-    
+
     public void fireEvents(){
         Document d = new Document("Test");
         docEvent.fire(d); //general fire of a Document related event
-        
+
         //send a created event
         docEvent.select(
                 new AnnotationLiteral<Created>(){}).fire(d);
-        
-        
+
+
         d.update();
         //send an updated by admin event
         updatedByAdminEvent.fire(d);
-        
+
         //send an updated by FooUser event
         docEvent.select(new UserBinding("FooUser")).fire(d);
-        
+
     }
-    
+
 
 }
 
@@ -57,5 +57,5 @@ class UserBinding extends AnnotationLiteral<Updated> implements Updated{
     public String updatedBy() {
         return this.userName;
     }
-    
+
 }

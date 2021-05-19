@@ -26,8 +26,8 @@
     <name>MQ</name>
     <packaging>pom</packaging>
     <modules>
-	<module>ejb</module>
-	<module>web</module>
-	<module>ear</module>
-    </modules>	
+    <module>ejb</module>
+    <module>web</module>
+    <module>ear</module>
+    </modules>
 </project>

@@ -24,7 +24,7 @@ public class MockThreadLocalAccessor implements ThreadLocalAccessor {
 
   @Override
   public void set(AccessControlledMap contextMap) {
-    mapThreadLocal.set(contextMap);    
+    mapThreadLocal.set(contextMap);
   }
 
   @Override

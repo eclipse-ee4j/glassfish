@@ -328,7 +328,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                 formatter.setRecordFieldSeparator(recordFieldSeparator);
                 formatter.setExcludeFields(excludeFields);
                 formatter.setMultiLineMode(multiLineMode);
-                for (Handler handler : logMgr.getLogger("").getHandlers()) {                    
+                for (Handler handler : logMgr.getLogger("").getHandlers()) {
                     // only get the ConsoleHandler
                     if (handler.getClass().equals(ConsoleHandler.class)) {
                         handler.setFormatter(formatter);
@@ -351,7 +351,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
 
             //setting default attributes value for all properties
             serverLogFileDetail = props.get(SERVER_LOG_FILE_PROPERTY);
-            handlerDetail = props.get(HANDLER_PROPERTY);   
+            handlerDetail = props.get(HANDLER_PROPERTY);
             handlerServices = props.get(HANDLER_SERVICES_PROPERTY);
             if (handlerServices == null) {
                 handlerServices = "";
@@ -377,12 +377,12 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
             LOGGER.log(Level.SEVERE, LogFacade.ERROR_APPLYING_CONF, e);
         }
 
-        Collection<Handler> handlers = getHandlerServices();        
+        Collection<Handler> handlers = getHandlerServices();
         if (handlers != null && handlers.size() > 0) {
             // add the new handlers to the root logger
             for (Handler handler : handlers) {
                 addHandler(handler);
-            }            
+            }
         }
 
         // Need to lock Logger.class first before locking LogManager to avoid deadlock.
@@ -409,7 +409,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                 }
             }
         }
-        
+
         // add the filter if there is one
         try {
 
@@ -439,7 +439,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
         stderrOutputStream = new LoggingOutputStream(_elogger, Level.SEVERE);
         LoggingOutputStream.LoggingPrintStream perr = stderrOutputStream.new LoggingPrintStream(stderrOutputStream);
         System.setErr(perr);
-                
+
         // finally listen to changes to the logging.properties file
         if (logging != null) {
             fileMonitoring.monitors(logging, new FileMonitoring.FileChangeListener() {
@@ -627,7 +627,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                 customHandlers.add(handler);
             }
         }
-        
+
         // Set formatter on custom handler service if configured
         for (Handler handler : customHandlers) {
             try {
@@ -641,15 +641,15 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
             } catch (IOException e) {
                 LOGGER.log(Level.SEVERE, LogFacade.ERROR_APPLYING_CONF, e);
             }
-        }        
+        }
         return result;
     }
 
-    private Formatter getCustomFormatter(String formatterClassName, 
-            GFFileHandler gfFileHandler) 
+    private Formatter getCustomFormatter(String formatterClassName,
+            GFFileHandler gfFileHandler)
     {
         try {
-            Class customFormatterClass = 
+            Class customFormatterClass =
                     ClassLoader.getSystemClassLoader().loadClass(
                             formatterClassName);
             return (Formatter) customFormatterClass.newInstance();

@@ -37,7 +37,7 @@ import com.sun.appserv.server.util.Version;
  * plug our Dom implementation
  *
  * @author Jerome Dochez
- * 
+ *
  */
 public class GlassFishDocument extends DomDocument<GlassFishConfigBean> {
 

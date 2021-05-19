@@ -44,7 +44,7 @@ public class Utils {
     final static String habitatName = "default";
     final static String inhabitantPath = "META-INF/inhabitants";
 
-    private static Map<String, ServiceLocator> habitats = new HashMap<String, ServiceLocator>();
+    private static Map<String, ServiceLocator> habitats = new HashMap<>();
     public static final Utils instance = new Utils();
 
     public synchronized ServiceLocator getHabitat(ConfigApiTest test) {
@@ -67,33 +67,32 @@ public class Utils {
         final String fileName = test.getFileName();
         ConfigParser configParser = new ConfigParser(sl);
 
-		long now = System.currentTimeMillis();
-		URL url = Utils.class.getClassLoader().getResource(fileName + ".xml");
-		if (url != null) {
-			try {
-			    DomDocument testDocument = test.getDocument(sl);
-				DomDocument document = configParser.parse(url,
-						testDocument);
-				ServiceLocatorUtilities.addOneConstant(sl, document);
-				test.decorate(sl);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			Logger.getAnonymousLogger().fine(
-					"time to parse domain.xml : "
-							+ String.valueOf(System.currentTimeMillis() - now));
-		}
-        
+        long now = System.currentTimeMillis();
+        URL url = Utils.class.getClassLoader().getResource(fileName + ".xml");
+        if (url != null) {
+            try {
+                DomDocument testDocument = test.getDocument(sl);
+                DomDocument document = configParser.parse(url, testDocument);
+                ServiceLocatorUtilities.addOneConstant(sl, document);
+                test.decorate(sl);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Logger.getAnonymousLogger().fine(
+                "time to parse domain.xml : "
+                    + String.valueOf(System.currentTimeMillis() - now));
+        }
+
         return sl;
     }
 
     public static ServiceLocator getNewHabitat() {
-    	final String root =  Utils.class.getResource("/").getPath();
+        final String root =  Utils.class.getResource("/").getPath();
         return getNewHabitat(root);
     }
 
     public static ServiceLocator getNewHabitat(String root) {
- 
+
         Properties p = new Properties();
         p.put(com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME, root);
         p.put(com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME, root);
@@ -102,13 +101,13 @@ public class Utils {
         return defaultSL;
     }
 
-	public void shutdownServiceLocator(
-			final ConfigApiTest test) {
-	    String fileName = test.getFileName();
-	    
+    public void shutdownServiceLocator(
+        final ConfigApiTest test) {
+        String fileName = test.getFileName();
+
         if (habitats.containsKey(fileName))  {
-        	ServiceLocator locator = habitats.remove(fileName);
-        	ServiceLocatorFactory.getInstance().destroy(locator);
+            ServiceLocator locator = habitats.remove(fileName);
+            ServiceLocatorFactory.getInstance().destroy(locator);
         }
-	}
+    }
 }

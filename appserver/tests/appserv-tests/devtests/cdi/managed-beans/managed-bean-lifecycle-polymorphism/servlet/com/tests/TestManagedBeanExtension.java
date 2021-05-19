@@ -36,7 +36,7 @@ public class TestManagedBeanExtension extends TestManagedBean {
         System.out.println(preDestroyMessage);
     }
 
-    
+
     @Override
     public String toString() {
         return TOSTRING_EXT;

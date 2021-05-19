@@ -52,10 +52,10 @@ public class HttpListenerTest extends ConfigApiTest {
         }
 
         logger.fine("listener = " + listener);
-        assertTrue(listener!=null);                 
+        assertTrue(listener!=null);
 
     }
-    
+
     @Test
     public void portTest() {
         logger.fine("port = " + listener.getPort());
@@ -64,7 +64,7 @@ public class HttpListenerTest extends ConfigApiTest {
 
     @Test
     public void validTransaction() throws TransactionFailure {
-        
+
         ConfigSupport.apply(new SingleConfigCode<Transport>() {
             public Object run(Transport okToChange) {
                 okToChange.setAcceptorThreads("2");
@@ -74,5 +74,5 @@ public class HttpListenerTest extends ConfigApiTest {
         }, listener.findTransport());
         logger.fine("ID outside the transaction is " + listener.getName());
         assertTrue("2".equals(listener.findTransport().getAcceptorThreads()));
-    }    
+    }
 }

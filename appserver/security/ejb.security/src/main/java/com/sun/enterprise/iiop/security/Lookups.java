@@ -27,7 +27,7 @@ import jakarta.inject.Provider;
 
 /**
  * This class is a local utility class to provide for hk2 lookups during runtime.
- * 
+ *
  * @author Sudarsan Sridhar
  */
 public class Lookups {

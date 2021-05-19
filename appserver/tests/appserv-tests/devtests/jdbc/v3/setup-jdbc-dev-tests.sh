@@ -92,7 +92,7 @@ echo "\n"
 
 #Create Pool/Resource for lazy-connection-associationtest
 echo Creating Pool/Resource Lazy connection association test
-./bin/asadmin create-jdbc-connection-pool --maxwait=10 --datasourceclassname=org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource --restype=javax.sql.ConnectionPoolDataSource  --lazyconnectionenlistment=true --lazyconnectionassociation=true --property="password=APP:user=APP:databaseName=sun-appserv-samples:connectionAttributes=\;create\\=true" jdbc-lazy-assoc-test-pool 
+./bin/asadmin create-jdbc-connection-pool --maxwait=10 --datasourceclassname=org.apache.derby.jdbc.EmbeddedConnectionPoolDataSource --restype=javax.sql.ConnectionPoolDataSource  --lazyconnectionenlistment=true --lazyconnectionassociation=true --property="password=APP:user=APP:databaseName=sun-appserv-samples:connectionAttributes=\;create\\=true" jdbc-lazy-assoc-test-pool
 ./bin/asadmin create-jdbc-resource --connectionpoolid=jdbc-lazy-assoc-test-pool jdbc/jdbc-lazy-assoc-test-resource
 echo "\n"
 
@@ -150,7 +150,7 @@ rm -rf $v3home/domains/domain1/applications/v3_jdbc_dev_tests/WEB-INF/lib/glassf
 ./bin/asadmin start-domain
 echo "\n"
 
-sleep 5 
+sleep 5
 wget http://localhost:8080/v3_jdbc_dev_tests/TestResultServlet -O $testResult1
 wget http://localhost:8080/v3_jdbc_dev_tests/TestResultServlet?testName=lazy-assoc -O $testResult2
 

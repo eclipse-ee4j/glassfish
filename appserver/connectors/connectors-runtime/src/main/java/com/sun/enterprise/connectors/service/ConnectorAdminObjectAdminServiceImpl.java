@@ -48,7 +48,7 @@ public class ConnectorAdminObjectAdminServiceImpl extends
             String connectorName,
             ResourceInfo resourceInfo,
             String adminObjectType,
-            String adminObjectClassName, 
+            String adminObjectClassName,
             Properties props)
             throws ConnectorRuntimeException {
         ActiveResourceAdapter ar =

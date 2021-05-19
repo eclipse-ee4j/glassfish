@@ -41,10 +41,10 @@ public class Client {
     // NOTE: Token 3700 will be replaced in @EJB annotations below
     // with the value of the port from config.properties during the build
     //
-    @EJB(mappedName = "corbaname:iiop:localhost:3700#test.Foo") 
+    @EJB(mappedName = "corbaname:iiop:localhost:3700#test.Foo")
     private static Foo sless2;
 
-    @EJB(mappedName = "corbaname:iiop:localhost:3700#java:global/simple-ejb-implicit-cdiApp/simple-ejb-implicit-cdi-ejb/SlessEJB!test.Foo") 
+    @EJB(mappedName = "corbaname:iiop:localhost:3700#java:global/simple-ejb-implicit-cdiApp/simple-ejb-implicit-cdi-ejb/SlessEJB!test.Foo")
     private static Foo sless3;
 
     public void doTest() {

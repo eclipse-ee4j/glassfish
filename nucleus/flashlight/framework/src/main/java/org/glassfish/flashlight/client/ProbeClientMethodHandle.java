@@ -28,5 +28,5 @@ public interface ProbeClientMethodHandle {
     public void enable();
 
     public void disable();
-    
+
 }

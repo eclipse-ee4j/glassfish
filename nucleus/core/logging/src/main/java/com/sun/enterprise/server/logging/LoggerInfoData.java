@@ -21,13 +21,13 @@ class LoggerInfoData {
      * Logger subsystem
      */
     private String subsystem;
-    
+
     /**
      * Logger description
      */
     private String description;
     /**
-     * Field to indicate whether logger is published. 
+     * Field to indicate whether logger is published.
      */
     private boolean published;
 
@@ -35,7 +35,7 @@ class LoggerInfoData {
      * Default constructor
      */
     public LoggerInfoData() {}
-    
+
     public LoggerInfoData(String subsystem, String description, boolean published) {
         this.subsystem = subsystem;
         this.description = description;

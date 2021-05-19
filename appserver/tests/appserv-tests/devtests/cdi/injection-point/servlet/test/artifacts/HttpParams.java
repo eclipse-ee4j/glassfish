@@ -26,13 +26,13 @@ import jakarta.servlet.ServletRequest;
 @RequestScoped
 public class HttpParams {
     //A thread local variable to house the servlet request. This is set by the
-    //servlet filter. This is not a recommended way to get hold of HttpServletRequest 
+    //servlet filter. This is not a recommended way to get hold of HttpServletRequest
     //in a CDI bean but a workaround that is described in
     //http://www.seamframework.org/Community/HowToReachHttpServletRequestAndHttpServletResponseFromBean
     //The right approach is to use JSF's FacesContext as described in
     //https://docs.jboss.org/weld/reference/snapshot/en-US/html/injection.html#d0e1635
     public static ThreadLocal<ServletRequest> sr = new ThreadLocal<ServletRequest>();
-    
+
     @Produces
     @HttpParam("")
     String getParamValue(InjectionPoint ip) {

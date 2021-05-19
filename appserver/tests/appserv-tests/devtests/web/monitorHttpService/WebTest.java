@@ -63,12 +63,12 @@ public class WebTest {
         port = args[6];
         contextRoot = args[7];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for issue 9549");
         WebTest webTest = new WebTest(args);
         webTest.doTest();
-	    stat.printSummary();
+            stat.printSummary();
     }
 
     public void doTest() {
@@ -81,7 +81,7 @@ public class WebTest {
             System.out.println("errorcount = " + errorcount);
 
             invokeURL("http://" + host + ":" + port + contextRoot + "/statuscode?code=503");
-            
+
             int count503_2 = getCount("count503");
             System.out.println("count503_2 = " + count503_2);
             int count5xx_2 = getCount("count5xx");
@@ -101,7 +101,7 @@ public class WebTest {
     }
 
     private String invokeURL(String urlString) throws Exception {
-     
+
         StringBuilder sb = new StringBuilder();
 
         URL url = new URL(urlString);
@@ -154,7 +154,7 @@ public class WebTest {
         System.out.println("getCount: "+resultStr);
         RestResponse response = RestUtil.get(url);
         Map<String, Object> map = response.getResponse();
-        
+
         return ((Long)((Map)((Map)((Map)((Map)map.get("data")).get("extraProperties")).get(
                 "entity")).get(monitorPath)).get("count")).intValue();
     }

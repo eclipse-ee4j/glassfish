@@ -32,7 +32,7 @@ public class HelloStatelessSuper {
         System.out.println("In HelloStatelessSuper:mytimeoutmethod");
 
         try {
-            // Proprietary way to look up tx manager.  
+            // Proprietary way to look up tx manager.
             TransactionManager tm = (TransactionManager)
                 new InitialContext().lookup("java:appserver/TransactionManager");
             // Use an implementation-specific check to ensure that there
@@ -43,9 +43,9 @@ public class HelloStatelessSuper {
             if( txStatus == Status.STATUS_NO_TRANSACTION ) {
                 System.out.println("Successfully verified tx attr = " +
                                    "TX_NOT_SUPPORTED in mytimeoutmethod()");
-                
+
                 timeoutHappened = true;
-                
+
             } else {
                 System.out.println("Invalid tx status for TX_NOT_SUPPORTED" +
                                    " method " + txStatus);

@@ -25,7 +25,7 @@ import com.sun.ejte.ccl.reporter.*;
  *   (SQE cache tests failed /w PWC6117: File "/jsp/caching/Sun ONE
  *   Application Server Tags" not found)
  *
- * Make sure that during precompilation, the JSP compiler will not 
+ * Make sure that during precompilation, the JSP compiler will not
  * (erroneously) ignore any locally bundled appserv-tags.jar (and cause
  * precompilation and therefore deployment to fail), even though this JAR
  * file is not listed amongst the JAR files known to contain TLD resources
@@ -48,7 +48,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for GlassFish Issue 1668");
         WebTest webTest = new WebTest(args);
@@ -56,8 +56,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invoke();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -67,7 +67,7 @@ public class WebTest {
     }
 
     private void invoke() throws Exception {
-        
+
         URL url = new URL("http://" + host  + ":" + port + contextRoot
                           + "/jsp/caching/basicCache.jsp");
         System.out.println("Connecting to: " + url.toString());

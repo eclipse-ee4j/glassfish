@@ -42,26 +42,26 @@ import jakarta.inject.Singleton;
 @Singleton
 public class Util {
     private static ServiceLocator habitat = Globals.getDefaultHabitat();
-    
-    @Inject 
+
+    @Inject
     private ProcessEnvironment penv;
-    
-   
+
+
     //stuff required for AppClient
     private CallbackHandler callbackHandler;
     private Object appClientMsgSecConfigs;
-    
-    //Note: Will return Non-Null only after Util has been 
+
+    //Note: Will return Non-Null only after Util has been
     //Injected in some Service.
     public static ServiceLocator getDefaultHabitat() {
         return habitat;
     }
-    
+
     public static Util getInstance() {
         // return my singleton service
         return habitat.getService(Util.class);
     }
-    
+
     public boolean isACC() {
         return penv.getProcessType().equals(ProcessType.ACC);
     }
@@ -87,7 +87,7 @@ public class Util {
     public void setAppClientMsgSecConfigs(Object appClientMsgSecConfigs) {
         this.appClientMsgSecConfigs = appClientMsgSecConfigs;
     }
-    
+
     public static boolean isEmbeddedServer() {
         List<String> servers = Server.getServerNames();
         if (!servers.isEmpty()) {
@@ -95,7 +95,7 @@ public class Util {
         }
         return false;
     }
-    
+
     public static File writeConfigFileToTempDir(String fileName) throws IOException {
         File filePath = new File(fileName);
 
@@ -141,9 +141,9 @@ public class Util {
                 oStream.write(iStream.read());
             }
         } finally {
-	    if (oStream != null) {
+            if (oStream != null) {
                 oStream.close();
-	    }
+            }
             if  (iStream != null) {
                 iStream.close();
             }
@@ -160,5 +160,5 @@ public class Util {
         return embeddedServerName;
 
     }
-    
+
 }

@@ -86,41 +86,40 @@ public class MailSessionFactory implements ObjectFactory {
      *
      * @exception Exception if an error occurs during object creation
      */
-    public Object getObjectInstance(Object refObj, Name name, Context context,
-				    Hashtable<?,?> env) throws Exception 
-    {
+    @Override
+    public Object getObjectInstance(Object refObj, Name name, Context context, Hashtable<?, ?> env) throws Exception {
 
         // Return null if we cannot create an object of the requested type
-	final Reference ref = (Reference) refObj;
-        if (!ref.getClassName().equals(factoryType))
+        final Reference ref = (Reference) refObj;
+        if (!ref.getClassName().equals(factoryType)) {
             return (null);
+        }
 
         // Create a new Session inside a doPrivileged block, so that Jakarta
         // Mail can read its default properties without throwing Security
         // exceptions
-        return AccessController.doPrivileged( new PrivilegedAction<Session>() {
-		public Session run() {
+        return AccessController.doPrivileged(new PrivilegedAction<Session>() {
 
-                    // Create the Jakarta Mail properties we will use
-                    Properties props = new Properties();
-                    props.put("mail.transport.protocol", "smtp");
-                    props.put("mail.smtp.host", "localhost");
-                    Enumeration<RefAddr> attrs = ref.getAll();
-                    while (attrs.hasMoreElements()) {
-                        RefAddr attr = attrs.nextElement();
-                        if ("factory".equals(attr.getType()))
-                            continue;
-                        props.put(attr.getType(), attr.getContent());
+            @Override
+            public Session run() {
+                // Create the Jakarta Mail properties we will use
+                Properties props = new Properties();
+                props.put("mail.transport.protocol", "smtp");
+                props.put("mail.smtp.host", "localhost");
+                Enumeration<RefAddr> attrs = ref.getAll();
+                while (attrs.hasMoreElements()) {
+                    RefAddr attr = attrs.nextElement();
+                    if ("factory".equals(attr.getType())) {
+                        continue;
                     }
+                    props.put(attr.getType(), attr.getContent());
+                }
 
-                    // Create and return the new Session object
-                    Session session = Session.getInstance(props, null);
-                    return (session);
+                // Create and return the new Session object
+                Session session = Session.getInstance(props, null);
+                return (session);
 
-		}
-	    } );
-
+            }
+        });
     }
-
-
 }

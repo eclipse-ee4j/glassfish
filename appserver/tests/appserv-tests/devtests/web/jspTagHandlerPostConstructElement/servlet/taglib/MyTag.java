@@ -49,7 +49,7 @@ public class MyTag extends TagSupport {
             sb.append(",ds3-login-timeout=" + loginTimeout);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
-        } 
+        }
 
     }
 

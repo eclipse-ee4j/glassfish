@@ -21,13 +21,13 @@ package org.glassfish.admin.rest.composite.metadata;
  * where such values are dependent on other values in the running system. For example, a default account name can not
  * conflict with an existing account, so such an implementation would apply logic to calculate a reasonable default that
  * is not currently in use in the system.
- * 
+ *
  * @author jdlee
  */
 public interface DefaultsGenerator {
     /**
      * Generate/calculate the default value for the property of the given name.
-     * 
+     *
      * @param propertyName
      * @return
      */

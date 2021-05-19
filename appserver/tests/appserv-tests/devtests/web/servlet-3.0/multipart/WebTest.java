@@ -21,7 +21,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest {
-    
+
     private static final SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -143,28 +143,28 @@ public class WebTest {
         } finally {
             try {
                 if (bis != null) {
-                    bis.close(); 
+                    bis.close();
                 }
             } catch(IOException ex) {
                 // ignore
             }
             try {
                 if (is != null) {
-                    is.close(); 
+                    is.close();
                 }
             } catch(IOException ex) {
                 // ignore
             }
             try {
                 if (os != null) {
-                    os.close(); 
+                    os.close();
                 }
             } catch(IOException ex) {
                 // ignore
             }
             try {
                 if (sock != null) {
-                    sock.close(); 
+                    sock.close();
                 }
             } catch(IOException ex) {
                 // ignore
@@ -175,7 +175,7 @@ public class WebTest {
    static String[][] expected = {
        {"1234567abcdefg"},
        {"myFile", "36", "text/plain", "content-disposition content-type" },
-       {"myFile2", "13812", "application/x-java-archive", 
+       {"myFile2", "13812", "application/x-java-archive",
             "content-disposition content-type" },
        {"xyz", "14", "text/plain", "content-disposition content-type"}
    };
@@ -185,5 +185,5 @@ public class WebTest {
            return 0;
        return 1;
    }
-  
+
 }

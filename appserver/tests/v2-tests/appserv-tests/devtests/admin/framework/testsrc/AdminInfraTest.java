@@ -57,7 +57,7 @@ public class AdminInfraTest extends TestCase
     private LineNumberReader _compareStream; //for COMPARE_MODE only
     private AdminTester _tester; // = new AdminTester(_mode, _registry, _configContext);
 
-    
+
     public AdminInfraTest(String name) throws Exception
     {
         super(name);
@@ -114,7 +114,7 @@ public class AdminInfraTest extends TestCase
         }
         TEST_DIR = args[1];
         if(length>2)
-        {    
+        {
             System.out.println("MODE="+args[2]);
             if(args[2].trim().equals("print"))
                 _mode=2;
@@ -126,17 +126,17 @@ public class AdminInfraTest extends TestCase
         System.exit(result.errorCount() + result.failureCount());
     }
 
-    
+
 
     //******************************************************************
     //******************MBeanServer emulation***************************
     //******************************************************************
     private Object getAttribute(String onName, String attr) throws Exception
     {
-        mbean = _registry.instantiateConfigMBean(new ObjectName(onName), null, _configContext); 
+        mbean = _registry.instantiateConfigMBean(new ObjectName(onName), null, _configContext);
         return mbean.getAttribute(attr);
     }
-    
+
     //******************************************************************
     //******************T E S T S***************************************
     //******************************************************************
@@ -162,28 +162,28 @@ public class AdminInfraTest extends TestCase
     {
         runTestCase("testMBeanRegistry");
     }
-    
+
     String[] location;
     BaseAdminMBean mbean;
     AttributeList attrs;
     Object retObject;
-    
+
     public void testMBeansInstantiation() throws Exception
     {
         //***********************************************************************************************
         location = new String[]{"testdomain", "server-config"};
-        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext);
         assertNotNull("ejb-container INSTANTIATION (type+location): mbean==null", mbean);
         assertEquals("cache_resize_quantity not equal 32", mbean.getAttribute("cache_resize_quantity"), "32");
 
         //***********************************************************************************************
-        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=ejb-container,config=server-config,category=config"), 
-                    null, _configContext); 
+        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=ejb-container,config=server-config,category=config"),
+                    null, _configContext);
         assertNotNull("ejb-container INSTANTIATION (ObjectName): mbean==null", mbean);
-        
+
         //***********************************************************************************************
-        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=config,name=server-config,category=config"), 
-                    null, _configContext); 
+        mbean = _registry.instantiateConfigMBean(new ObjectName("testdomain:type=config,name=server-config,category=config"),
+                    null, _configContext);
         assertNotNull("config INSTANTIATION By ObjectName: mbean==null", mbean);
 //_tester.testMBeansInstantiation();
 //runTestCase("testMBeansInstantiation");
@@ -193,22 +193,22 @@ public class AdminInfraTest extends TestCase
     {
         //***********************************************************************************************
         location = new String[]{"testdomain", "server-config"};
-        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext);
         assertNotNull("ejb-container INSTANTIATION (type+location): mbean==null", mbean);
-        
+
         assertEquals("cache_resize_quantity not equal 32", mbean.getAttribute("cache_resize_quantity"),  "32");
         assertEquals("cache_idle_timeout_in_seconds not equal 600", mbean.getAttribute("cache_idle_timeout_in_seconds"), "600");
         //enumeration
         assertEquals("commit-option != B", mbean.getAttribute("commit_option"), "B");
-        
-        try 
+
+        try
         {
             mbean.getAttribute("wrong_attribute");
             fail("wrong_attribute did not cause exception");
         } catch (AttributeNotFoundException anfe)
         {
         }
-        try 
+        try
         {
             //scase sensibility test
             mbean.getAttribute("commit_Option");
@@ -216,7 +216,7 @@ public class AdminInfraTest extends TestCase
         } catch (AttributeNotFoundException anfe)
         {
         }
-        
+
     }
 
 /*    public void testMBeansCreateChild() throws Exception
@@ -226,14 +226,14 @@ public class AdminInfraTest extends TestCase
     {
         runTestCase(new String[]{"testMBeansGettersSetters"}, "GettersSetters");
     }
-    
+
     public void testMBeansSetAttribue() throws Exception
     {
         //***********************************************************************************************
         location = new String[]{"testdomain", "server-config"};
-        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("ejb-container", location, null, _configContext);
         assertNotNull("ejb-container INSTANTIATION (type+location): mbean==null", mbean);
-        
+
         mbean.setAttribute(new Attribute("cache_resize_quantity",  "35"));
         assertEquals("cache_resize_quantity not equal 35", mbean.getAttribute("cache_resize_quantity"),  "35");
         mbean.setAttribute(new Attribute("cache_resize_quantity",  "36"));
@@ -264,7 +264,7 @@ public class AdminInfraTest extends TestCase
     {
         //***********************************************************************************************
         location = new String[]{"testdomain", "server-config"};
-        mbean = _registry.instantiateMBean("http-service", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("http-service", location, null, _configContext);
         assertNotNull("http-service INSTANTIATION (type+location): mbean==null", mbean);
         attrs = new AttributeList();
         attrs.add(new Attribute("address","0.0.0.0"));
@@ -279,11 +279,11 @@ public class AdminInfraTest extends TestCase
         assertNotNull("createHttpListener: retObject==null", retObject);
         //***********************************************************************************************
         location = new String[]{"testdomain", "server-config", "test-listener"};
-        mbean = _registry.instantiateMBean("http-listener", location, null, _configContext); 
+        mbean = _registry.instantiateMBean("http-listener", location, null, _configContext);
         assertNotNull("http-listener INSTANTIATION (type+location): mbean==null", mbean);
         assertEquals("server-name attribute value is not \"empty\" as expected", mbean.getAttribute("server-name"),"");
         assertNull("server-name attribute value is not null as expected", mbean.getAttribute("redirect-port"));
-        _configContext.flush();       
+        _configContext.flush();
     }
 
 }

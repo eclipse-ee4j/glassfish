@@ -24,19 +24,19 @@ import org.junit.Test;
 import com.sun.enterprise.server.logging.logviewer.backend.LogFile.LogEntry;
 
 /**
- * 
+ *
  * @author sanshriv
  *
  */
 public class LogFileTest {
 
     @Test
-    public void testLogEntryDeserialization() throws IOException, ClassNotFoundException {   
+    public void testLogEntryDeserialization() throws IOException, ClassNotFoundException {
         ObjectInputStream objectInput = new ObjectInputStream(
                 LogFileTest.class.getResource("logentry.bin").openStream());
         // Create and initialize a LogEntry from binary file
-        LogFile.LogEntry entry = (LogEntry) objectInput.readObject(); 
-        
+        LogFile.LogEntry entry = (LogEntry) objectInput.readObject();
+
         System.out.println("DateTime=" + entry.getLoggedDateTime());
         System.out.println("Level=" + entry.getLoggedLevel());
         System.out.println("Logger=" + entry.getLoggedLoggerName());
@@ -45,7 +45,7 @@ public class LogFileTest {
         System.out.println("Product=" + entry.getLoggedProduct());
         System.out.println("MessageId=" + entry.getMessageId());
         System.out.println("RecordNumber=" + entry.getRecordNumber());
-        
+
         objectInput.close();
     }
 

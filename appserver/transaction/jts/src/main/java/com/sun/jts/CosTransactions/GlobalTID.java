@@ -63,18 +63,18 @@ public class GlobalTID extends Object {
     private int hashCode = 0;
     private boolean hashed = false;
 
-	/*
-		Logger to log transaction messages
-	*/
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(GlobalTID.class, LogDomains.TRANSACTION_LOGGER);
 
     /*
      * Keep this line at the end of all variable initialization as
-     * The class's static initializer should not create an instance of the class 
+     * The class's static initializer should not create an instance of the class
      * before all of the static final fields are assigned.
      */
     static GlobalTID NULL_GLOBAL_TID = new GlobalTID(-1,-1,null);
-    
+
     /**Creates a new global identifier which is a copy of the parameter.
      *
      * @param otherTID  The other global identifier.
@@ -109,16 +109,16 @@ public class GlobalTID extends Object {
      * @param xid The Xid object containing transaction id.
      */
     public GlobalTID(javax.transaction.xa.Xid xid) {
-        
+
         int glen = xid.getGlobalTransactionId().length;
         int blen = xid.getBranchQualifier().length;
         byte[] xidRep = new byte[glen + blen];
-        
+
         System.arraycopy(xid.getGlobalTransactionId(), 0, xidRep, 0, glen);
         System.arraycopy(xid.getBranchQualifier(), 0, xidRep, glen, blen);
-        
+
         realTID = new otid_t(xid.getFormatId(), blen, xidRep);
-    }  
+    }
 
     /**Creates a GlobalTID from the given stream.
      *
@@ -226,7 +226,7 @@ public class GlobalTID extends Object {
 
         if (otherTID == null)
             return false;
-        
+
         boolean result = false;
 
         // If the references are equal, return immediately.
@@ -296,93 +296,93 @@ public class GlobalTID extends Object {
     }
 
     public GlobalTID(String stid){
-		//invalid data
+        //invalid data
         if(stid==null){
              return ;
-		}
+        }
 
-		//there was no proper formatId
-		if(stid.equals("[NULL ID]")){
+        //there was no proper formatId
+        if(stid.equals("[NULL ID]")){
                         realTID = new otid_t(-1, -1, null);
-			//realTID.formatID=-1;
-			return;
-		}
-		if(_logger.isLoggable(Level.FINEST))
-			_logger.logp(Level.FINEST,"GlobalTID","GlobalTID(String)",
-					"Tid is: "+stid);
+            //realTID.formatID=-1;
+            return;
+        }
+        if(_logger.isLoggable(Level.FINEST))
+            _logger.logp(Level.FINEST,"GlobalTID","GlobalTID(String)",
+                    "Tid is: "+stid);
 
-		//main part starts here
-   		char [] ctid =stid.toCharArray();
+        //main part starts here
+           char [] ctid =stid.toCharArray();
 
-		int colon=stid.indexOf(":");
+        int colon=stid.indexOf(":");
 
-		//bqualLen and globalLen are not real lengths but twice of them
-		int globalLen=0;
-		int bqualLen=0;
-		if(colon==-1){
-			//there was no bqual_length in the tid
-			globalLen=ctid.length-2;
-		}
-		else{
-			globalLen=colon-1;
-			bqualLen=ctid.length -3 - globalLen;
-		}
+        //bqualLen and globalLen are not real lengths but twice of them
+        int globalLen=0;
+        int bqualLen=0;
+        if(colon==-1){
+            //there was no bqual_length in the tid
+            globalLen=ctid.length-2;
+        }
+        else{
+            globalLen=colon-1;
+            bqualLen=ctid.length -3 - globalLen;
+        }
 
-		if( (globalLen%2!=0) || (bqualLen%2 !=0)){
-			if(_logger.isLoggable(Level.FINEST)){
-				_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-						"Corrupted gtid string , total length is not integral");
-        	}
-			throw new RuntimeException("invalid global tid");
-		}
+        if( (globalLen%2!=0) || (bqualLen%2 !=0)){
+            if(_logger.isLoggable(Level.FINEST)){
+                _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                        "Corrupted gtid string , total length is not integral");
+            }
+            throw new RuntimeException("invalid global tid");
+        }
 
 
-		byte [] b=new byte[(globalLen+bqualLen)/2];
-		int index=1;
-		int bIndex=0;
+        byte [] b=new byte[(globalLen+bqualLen)/2];
+        int index=1;
+        int bIndex=0;
 
-		//while b gets filled
-		while(bIndex<b.length){
+        //while b gets filled
+        while(bIndex<b.length){
 
-			int t=ctid[index++];
-			int t1=ctid[index++];
-			if(_logger.isLoggable(Level.FINEST))
-				_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-					 	"Index is : "+bIndex+" value of t,t1 is : "+t+","+t1);	
-			if( t >= 'A'){
-				t = t - 'A'+10;
-			}
-			else{
-				t=t-'0';
-			}
-			if( t1 >= 'A'){
-				t1 = t1 - 'A'+10;
-			}
-			else{
-				t1=t1-'0';
-			}
-			if(_logger.isLoggable(Level.FINEST))
-				_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-						" Value of t,t1 is : "+t+","+t1);
-			t=t<<4;
-			if(_logger.isLoggable(Level.FINEST))
-				_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-						"Value of t is : "+t);
-			t=t|t1;
-			
-			if(_logger.isLoggable(Level.FINEST))
-				_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-						" Value of t is :  "+t);
-			b[bIndex++] = (byte)t;
-			if(_logger.isLoggable(Level.FINEST))
-				_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-						"Value of t is : "+(byte)t);
-		}
+            int t=ctid[index++];
+            int t1=ctid[index++];
+            if(_logger.isLoggable(Level.FINEST))
+                _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                         "Index is : "+bIndex+" value of t,t1 is : "+t+","+t1);
+            if( t >= 'A'){
+                t = t - 'A'+10;
+            }
+            else{
+                t=t-'0';
+            }
+            if( t1 >= 'A'){
+                t1 = t1 - 'A'+10;
+            }
+            else{
+                t1=t1-'0';
+            }
+            if(_logger.isLoggable(Level.FINEST))
+                _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                        " Value of t,t1 is : "+t+","+t1);
+            t=t<<4;
+            if(_logger.isLoggable(Level.FINEST))
+                _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                        "Value of t is : "+t);
+            t=t|t1;
+
+            if(_logger.isLoggable(Level.FINEST))
+                _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                        " Value of t is :  "+t);
+            b[bIndex++] = (byte)t;
+            if(_logger.isLoggable(Level.FINEST))
+                _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                        "Value of t is : "+(byte)t);
+        }
 
         realTID = new otid_t(TransactionState.XID_FORMAT_ID,bqualLen/2,b);
-		if(_logger.isLoggable(Level.FINEST))
-			_logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
-					"created gtid : "+this);
+        if(_logger.isLoggable(Level.FINEST))
+            _logger.logp(Level.FINEST,"GlobalTID", "GlobalTID(String)",
+                    "created gtid : "+this);
     }
 
 

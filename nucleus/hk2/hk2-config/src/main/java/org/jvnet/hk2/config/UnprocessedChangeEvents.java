@@ -31,7 +31,7 @@ public final class UnprocessedChangeEvents {
     public UnprocessedChangeEvents( final List<UnprocessedChangeEvent> unprocessed ) {
         mUnprocessed = unprocessed;
     }
-    
+
     public UnprocessedChangeEvents( final UnprocessedChangeEvent single ) {
         mUnprocessed = new ArrayList<UnprocessedChangeEvent>();
         mUnprocessed.add(single);
@@ -40,15 +40,15 @@ public final class UnprocessedChangeEvents {
     UnprocessedChangeEvents() {
         mUnprocessed = new ArrayList<UnprocessedChangeEvent>();
     }
-    
+
     void addEvents(Collection<UnprocessedChangeEvent> events) {
         mUnprocessed.addAll(events);
     }
 
     public List<UnprocessedChangeEvent> getUnprocessed() { return mUnprocessed;}
-    
+
     public int size() { return mUnprocessed == null ? 0 : mUnprocessed.size(); }
-    
+
     public String toString() {
         StringBuffer result = new StringBuffer("UnprocessedChangeEvents: " + size());
         if ( size() != 0 ) {

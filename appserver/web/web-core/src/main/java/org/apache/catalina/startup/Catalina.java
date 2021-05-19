@@ -288,7 +288,7 @@ public class Catalina extends Embedded {
         digester.addObjectCreate("Server/Service/Connector",
                                  "org.apache.catalina.connector.CoyoteConnector",
                                  "className");
-        digester.addRule("Server/Service/Connector", 
+        digester.addRule("Server/Service/Connector",
                          new SetAllPropertiesRule());
         digester.addSetNext("Server/Service/Connector",
                             "addConnector",
@@ -531,7 +531,7 @@ public class Catalina extends Embedded {
     }
 
 
-    /* 
+    /*
      * Load using arguments
      */
     public void load(String args[]) {
@@ -602,7 +602,7 @@ public class Catalina extends Embedded {
     public void stop() {
 
         try {
-            // Remove the ShutdownHook first so that server.stop() 
+            // Remove the ShutdownHook first so that server.stop()
             // doesn't get invoked twice
             Runtime.getRuntime().removeShutdownHook(shutdownHook);
         } catch (Throwable t) {
@@ -658,7 +658,7 @@ public class Catalina extends Embedded {
             if (server != null) {
                 Catalina.this.stop();
             }
-            
+
         }
 
     }

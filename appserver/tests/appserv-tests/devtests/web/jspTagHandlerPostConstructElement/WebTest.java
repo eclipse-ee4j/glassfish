@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
  * Unit test for specifying post-construction requirements of a JSP tag
  * handler using the <post-construct> deployment descriptor element.
  *
- * This unit test is equivalent in functionality to the 
+ * This unit test is equivalent in functionality to the
  * jspResourceInjectionTagHandlerPostConstruct unit test, where the
  * post-construction requirements are declared using the @PostConstruct
  * annotation.
@@ -47,7 +47,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
 
         stat.addDescription("Unit test for post-construct element on "
@@ -61,7 +61,7 @@ public class WebTest {
             stat.addStatus(TEST_NAME, stat.FAIL);
         }
 
-	stat.printSummary();
+        stat.printSummary();
     }
 
     public void doTest() throws Exception {

@@ -26,7 +26,7 @@ public class CreateClusteredInstanceTest extends BaseTest
 
     public CreateClusteredInstanceTest(final String user, final String password,
             final String host, final int port, final String instanceName,
-            final String clusterName, final String nodeAgentName, 
+            final String clusterName, final String nodeAgentName,
             final Map optional)
     {
         final CmdFactory cmdFactory = getCmdFactory();
@@ -34,7 +34,7 @@ public class CreateClusteredInstanceTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateClusteredInstanceCmd createClusteredInstanceCmd = 
+        final CreateClusteredInstanceCmd createClusteredInstanceCmd =
                 cmdFactory.createCreateClusteredInstanceCmd(
                     instanceName, clusterName, nodeAgentName, optional);
 

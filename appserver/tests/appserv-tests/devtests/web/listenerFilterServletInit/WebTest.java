@@ -22,7 +22,7 @@ import com.sun.ejte.ccl.reporter.*;
 
 public class WebTest
 {
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -44,14 +44,14 @@ public class WebTest
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Unit test for IT 13555");
 
         WebTest webTest = new WebTest(args);
 
         int port = new Integer(webTest.portS).intValue();
         String name;
-        
+
         try {
             webTest.goGet(webTest.host, port,
                 webTest.contextRoot + "/test" );
@@ -81,7 +81,7 @@ public class WebTest
         System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
         os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = null;
         BufferedReader bis = null;
         String line = null;
@@ -122,5 +122,5 @@ public class WebTest
             stat.addStatus(TEST_NAME + " FAILED", stat.FAIL);
         }
    }
-  
+
 }

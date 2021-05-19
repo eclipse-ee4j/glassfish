@@ -66,11 +66,11 @@ public class ManifestUtilsTest {
         fooAtt.putValue("fooKey", "fooValue");
         fooAtt.putValue("fooKey2", hasToken);
         mainAtt.putValue("mainKey", "mainValue");
-        
+
         Map<String,Map<String,String>> norm = ManifestUtils.normalize(m);
         Map<String,String> normMainAtt = norm.get(ManifestUtils.MAIN_ATTS);
         Map<String,String> normFooAtt = norm.get("foo");
-        
+
         assertTrue(norm.size() == 2);
         assertNotNull(normMainAtt);
         assertNotNull(normFooAtt);
@@ -90,9 +90,9 @@ public class ManifestUtilsTest {
         String s1 = ManifestUtils.encode(noLinefeed);
         String s2 = ManifestUtils.encode(linefeed);
         String s3 = ManifestUtils.encode(dosfeed);
-        
+
         String desired = "abc" + ManifestUtils.EOL_TOKEN + "def";
-        
+
         assertEquals(noLinefeed, s1);
         assertFalse(linefeed.equals(s2));
         assertFalse(dosfeed.equals(s3));

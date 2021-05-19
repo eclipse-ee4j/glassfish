@@ -37,9 +37,9 @@ public class CacheUtil {
      */
     private static final ResourceBundle _rb = _logger.getResourceBundle();
 
-    private static final String PAGE_SCOPE = "page";   
-    private static final String REQUEST_SCOPE = "request";   
-    private static final String SESSION_SCOPE = "session";   
+    private static final String PAGE_SCOPE = "page";
+    private static final String REQUEST_SCOPE = "request";
+    private static final String SESSION_SCOPE = "session";
     private static final String APPLICATION_SCOPE = "application";
 
     /**
@@ -54,7 +54,7 @@ public class CacheUtil {
 
     /**
      * This function generates the key to the cache. It creates the key
-     * by suffixing the servlet path with either the user-specified key or 
+     * by suffixing the servlet path with either the user-specified key or
      * by keeping a counter in the request attribute which it will
      * increment each time so that multiple cache tags in a page each get
      * a unique key.
@@ -76,7 +76,7 @@ public class CacheUtil {
 
             req.setAttribute(Constants.JSPTAG_COUNTER_KEY, suffix);
         }
-        
+
         // concatenate the servlet path and the suffix to generate key
         return req.getServletPath() + '_' + suffix;
     }
@@ -98,7 +98,7 @@ public class CacheUtil {
 
         if (REQUEST_SCOPE.equalsIgnoreCase(scope)) {
             ret = PageContext.REQUEST_SCOPE;
-	} else if (SESSION_SCOPE.equalsIgnoreCase(scope)) {
+    } else if (SESSION_SCOPE.equalsIgnoreCase(scope)) {
             ret = PageContext.SESSION_SCOPE;
         } else if (APPLICATION_SCOPE.equalsIgnoreCase(scope)) {
             ret = PageContext.APPLICATION_SCOPE;

@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpServletResponse;
 /**
  * Test Servlet that prints out the name of the authenticated caller and whether
  * this caller is in any of the roles {foo, bar, kaz}
- * 
+ *
  *
  */
 @DeclareRoles({ "foo", "bar", "kaz" })
@@ -44,7 +44,7 @@ public class Servlet extends HttpServlet {
             request.logout(); // slightly ill-defined, but only for current request
             request.getSession().invalidate();
         }
-        
+
         response.getWriter().write("This is a servlet \n");
 
         String webName = null;
@@ -57,9 +57,9 @@ public class Servlet extends HttpServlet {
         response.getWriter().write("web user has role \"foo\": " + request.isUserInRole("foo") + "\n");
         response.getWriter().write("web user has role \"bar\": " + request.isUserInRole("bar") + "\n");
         response.getWriter().write("web user has role \"kaz\": " + request.isUserInRole("kaz") + "\n");
-        
+
         String mechanismCalled = (String) request.getAttribute("authentication-mechanism-called");
-        
+
         response.getWriter().write("\nauthentication mechanism called: " + (mechanismCalled != null? mechanismCalled : false) + "\n");
     }
 

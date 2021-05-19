@@ -24,11 +24,11 @@ import jakarta.inject.Singleton;
 //into session scoped or conversation scoped bean
 public class TestSingletonScopedBean {
     private static int instantiationCounter = 0;
-    
+
     public TestSingletonScopedBean(){
         instantiationCounter++;
     }
-    
+
     public int getInstancesCount(){
         return this.instantiationCounter;
     }

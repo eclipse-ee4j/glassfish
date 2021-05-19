@@ -22,10 +22,10 @@ import jakarta.interceptor.Interceptors;
 
 @Stateless
 public class SlessEJB
-	implements Sless
+        implements Sless
 {
     public String sayHello() {
-	    return "Hello";
+            return "Hello";
     }
 
     @Interceptors(ArgumentsVerifier.class)

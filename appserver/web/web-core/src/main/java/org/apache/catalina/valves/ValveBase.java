@@ -240,9 +240,9 @@ public abstract class ValveBase
             getNext().event(request, response, event);
         }
     }
-    
-        
-    /**    
+
+
+    /**
      * @return true if this access log valve has been started, false
      * otherwise.
      */
@@ -392,7 +392,7 @@ public abstract class ValveBase
             parentName=",servlet=" + container.getName() +
                     ",path=" + path + ",host=" + host.getName();
         }
-        
+
         if (log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "valve parent=" + parentName + " " + parent);
         }
@@ -422,7 +422,7 @@ public abstract class ValveBase
             ext=",seq=" + seq;
         }
 
-        ObjectName objectName = 
+        ObjectName objectName =
             new ObjectName( domain + ":type=Valve,name=" + className + ext + parentName);
 
         if (log.isLoggable(Level.FINE)) {

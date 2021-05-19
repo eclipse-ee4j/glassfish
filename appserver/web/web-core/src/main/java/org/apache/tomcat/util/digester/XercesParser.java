@@ -32,7 +32,7 @@ import java.util.logging.Logger;
 /**
  * Create a <code>SAXParser</code> based on the underlying Xerces version.
  * Currently, Xerces 2.3 and up doesn't implement schema validation the same way
- * 2.1 was. In other to support schema validation in a portable way between 
+ * 2.1 was. In other to support schema validation in a portable way between
  * parser, some features/properties need to be set.
  *
  * @since 1.6
@@ -64,7 +64,7 @@ public class XercesParser{
     /**
      * Xerces dynamic validation property
      */
-    protected static final String XERCES_DYNAMIC = 
+    protected static final String XERCES_DYNAMIC =
         "http://apache.org/xml/features/validation/dynamic";
 
 
@@ -96,14 +96,14 @@ public class XercesParser{
         String versionNumber = "1.0";
         try{
             // Use reflection to avoid a build dependency with Xerces.
-            Class<?> versionClass = 
+            Class<?> versionClass =
                             Class.forName("org.apache.xerces.impl.Version");
             // Will return Xerces-J 2.x.0
-            Method method = 
-                versionClass.getMethod("getVersion", (Class[]) null); 
+            Method method =
+                versionClass.getMethod("getVersion", (Class[]) null);
             String version = (String)method.invoke(null, (Object[]) null);
-            versionNumber = version.substring( "Xerces-J".length() , 
-                                               version.lastIndexOf(".") ); 
+            versionNumber = version.substring( "Xerces-J".length() ,
+                                               version.lastIndexOf(".") );
         } catch (Exception ex){
             // Do nothing.
         }
@@ -117,12 +117,12 @@ public class XercesParser{
      * @param properties parser specific properties/features
      * @return an XML Schema/DTD enabled <code>SAXParser</code>
      */
-    public static SAXParser newSAXParser(Properties properties) 
-            throws ParserConfigurationException, 
+    public static SAXParser newSAXParser(Properties properties)
+            throws ParserConfigurationException,
                    SAXException,
                    SAXNotSupportedException {
 
-        SAXParserFactory factory =  
+        SAXParserFactory factory =
                         (SAXParserFactory)properties.get("SAXParserFactory");
 
         if (versionNumber == null){
@@ -130,7 +130,7 @@ public class XercesParser{
             version = new Float( versionNumber ).floatValue();
         }
 
-        // Note: 2.2 is completely broken (with XML Schema). 
+        // Note: 2.2 is completely broken (with XML Schema).
         if (version > 2.1) {
 
             configureXerces(factory);
@@ -146,12 +146,12 @@ public class XercesParser{
     /**
      * Configure schema validation as recommended by the JAXP 1.2 spec.
      * The <code>properties</code> object may contains information about
-     * the schema local and language. 
+     * the schema local and language.
      * @param properties parser optional info
      */
-    private static void configureOldXerces(SAXParser parser, 
-                                           Properties properties) 
-            throws ParserConfigurationException, 
+    private static void configureOldXerces(SAXParser parser,
+                                           Properties properties)
+            throws ParserConfigurationException,
                    SAXNotSupportedException {
 
         String schemaLocation = (String)properties.get("schemaLocation");
@@ -164,8 +164,8 @@ public class XercesParser{
             }
         } catch (SAXNotRecognizedException e){
             if (log.isLoggable(Level.INFO)) {
-                log.log(Level.INFO, parser.getClass().getName() + ": " 
-                                            + e.getMessage() + " not supported."); 
+                log.log(Level.INFO, parser.getClass().getName() + ": "
+                                            + e.getMessage() + " not supported.");
             }
         }
 
@@ -173,13 +173,13 @@ public class XercesParser{
 
 
     /**
-     * Configure schema validation as recommended by the Xerces spec. 
+     * Configure schema validation as recommended by the Xerces spec.
      * Both DTD and Schema validation will be enabled simultaneously.
      * @param factory SAXParserFactory to be configured
      */
     private static void configureXerces(SAXParserFactory factory)
-            throws ParserConfigurationException, 
-                   SAXNotRecognizedException, 
+            throws ParserConfigurationException,
+                   SAXNotRecognizedException,
                    SAXNotSupportedException {
 
         factory.setFeature(XERCES_DYNAMIC, true);

@@ -22,7 +22,7 @@ import jakarta.ejb.Remote;
 // Use @Remote without parameters.  If there's only one ambiguous
 // interface in implements clause, it will be treate as @Remote instead of
 // @Local
-@Remote  
+@Remote
 @Stateless
 public class SlessEJB implements Sless
 {

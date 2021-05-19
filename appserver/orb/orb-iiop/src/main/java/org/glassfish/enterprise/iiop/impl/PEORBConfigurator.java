@@ -110,7 +110,7 @@ public class PEORBConfigurator implements ORBConfigurator {
             }
 
             // Do the stats for the threadpool
-            
+
             ThreadPoolManager tpool =  orb.getThreadPoolManager();
             // ORB creates its own threadpool if threadpoolMgr was null above
             ThreadPool thpool=tpool.getDefaultThreadPool();
@@ -119,11 +119,11 @@ public class PEORBConfigurator implements ORBConfigurator {
                 thpool.getWorkQueue(0).getThreadPool());
             StatsProviderManager.register("orb", PluginPoint.SERVER,
                 "thread-pool/orb/threadpool/"+ThreadPoolName, tpStats);
-           
+
             configureCopiers(orb);
             configureCallflowInvocationInterceptor(orb);
 
-            // In the server-case, iiop acceptors need to be set up after the 
+            // In the server-case, iiop acceptors need to be set up after the
             // initial part of the orb creation but before any
             // portable interceptor initialization
             IIOPUtils iiopUtils = IIOPUtils.getInstance();
@@ -131,7 +131,7 @@ public class PEORBConfigurator implements ORBConfigurator {
                 List<IiopListener> iiop_listener_list = IIOPUtils.getInstance()
                         .getIiopService().getIiopListener() ;
                 IiopListener[] iiopListenerBeans =  iiop_listener_list
-                        .toArray(new IiopListener [iiop_listener_list.size()]) ;                
+                        .toArray(new IiopListener [iiop_listener_list.size()]) ;
                 this.createORBListeners(iiopUtils, iiopListenerBeans, orb);
             }
             if (orb.getORBData().environmentIsGFServer()) {
@@ -147,19 +147,19 @@ public class PEORBConfigurator implements ORBConfigurator {
             getHelper().setORB(orb);
         } catch (NoSuchWorkQueueException ex) {
             Logger.getLogger(PEORBConfigurator.class.getName()).log(Level.SEVERE, null, ex);
-        }  
-        } 
+        }
+        }
 
     private static void configureCopiers(ORB orb) {
         CopierManager cpm = orb.getCopierManager();
 
-        ObjectCopierFactory stream = 
+        ObjectCopierFactory stream =
             CopyobjectDefaults.makeORBStreamObjectCopierFactory(orb) ;
-        ObjectCopierFactory reflect = 
+        ObjectCopierFactory reflect =
             CopyobjectDefaults.makeReflectObjectCopierFactory(orb) ;
-        ObjectCopierFactory fallback = 
+        ObjectCopierFactory fallback =
             CopyobjectDefaults.makeFallbackObjectCopierFactory( reflect, stream ) ;
-        ObjectCopierFactory reference = 
+        ObjectCopierFactory reference =
             CopyobjectDefaults.getReferenceObjectCopierFactory() ;
 
         cpm.registerObjectCopierFactory( fallback, IIOPConstants.PASS_BY_VALUE_ID ) ;
@@ -199,17 +199,17 @@ public class PEORBConfigurator implements ORBConfigurator {
         );
     }
 
-    private Acceptor addAcceptor( org.omg.CORBA.ORB orb, boolean isLazy, 
+    private Acceptor addAcceptor( org.omg.CORBA.ORB orb, boolean isLazy,
         String host, String type, int port ) {
 
         com.sun.corba.ee.spi.orb.ORB theOrb = (com.sun.corba.ee.spi.orb.ORB) orb;
         TransportManager ctm = theOrb.getTransportManager() ;
         Acceptor acceptor ;
         if (isLazy) {
-            acceptor = TransportDefault.makeLazyCorbaAcceptor( 
+            acceptor = TransportDefault.makeLazyCorbaAcceptor(
                 theOrb, port, host, type );
         } else {
-            acceptor = TransportDefault.makeStandardCorbaAcceptor( 
+            acceptor = TransportDefault.makeStandardCorbaAcceptor(
                 theOrb, port, host, type ) ;
         }
         ctm.registerAcceptor( acceptor ) ;
@@ -224,7 +224,7 @@ public class PEORBConfigurator implements ORBConfigurator {
             try {
                 return java.net.InetAddress.getLocalHost().getHostAddress() ;
             } catch (java.net.UnknownHostException exc) {
-                logger.log( Level.WARNING, 
+                logger.log( Level.WARNING,
                     "Unknown host exception : Setting host to localhost" ) ;
                 return DEFAULT_ORB_INIT_HOST ;
             }
@@ -233,7 +233,7 @@ public class PEORBConfigurator implements ORBConfigurator {
         }
     }
 
-    private void createORBListeners( IIOPUtils iiopUtils, 
+    private void createORBListeners( IIOPUtils iiopUtils,
         IiopListener[] iiopListenerBeans, org.omg.CORBA.ORB orb ) {
 
         if (iiopListenerBeans != null) {
@@ -247,8 +247,8 @@ public class PEORBConfigurator implements ORBConfigurator {
                 }
 
                 if (lazyCount > 1) {
-                    throw new IllegalStateException( "Invalid iiop-listener " 
-                        + ilb.getId() 
+                    throw new IllegalStateException( "Invalid iiop-listener "
+                        + ilb.getId()
                         + ". Only one iiop-listener can be configured "
                         + "with lazy-init=true");
                 }
@@ -257,22 +257,22 @@ public class PEORBConfigurator implements ORBConfigurator {
                 String host = handleAddrAny( ilb.getAddress() ) ;
 
                 if (!securityEnabled || ilb.getSsl() == null) {
-                    Acceptor acceptor = addAcceptor( orb, isLazy, host, 
+                    Acceptor acceptor = addAcceptor( orb, isLazy, host,
                             IIOP_CLEAR_TEXT_CONNECTION, port ) ;
                     if( isLazy ) {
                         lazyAcceptor = acceptor;
                     }
                 } else {
                     if (isLazy) {
-                        throw new IllegalStateException( "Invalid iiop-listener " 
-                            + ilb.getId() 
+                        throw new IllegalStateException( "Invalid iiop-listener "
+                            + ilb.getId()
                             + ". Lazy-init not supported for SSL iiop-listeners");
                     }
 
                     Ssl sslBean = ilb.getSsl() ;
                     assert sslBean != null ;
 
-                    boolean clientAuth = Boolean.valueOf( 
+                    boolean clientAuth = Boolean.valueOf(
                         sslBean.getClientAuthEnabled() ) ;
                     String type = clientAuth ? SSL_MUTUALAUTH : SSL ;
                     addAcceptor( orb, isLazy, host, type, port ) ;
@@ -286,7 +286,7 @@ public class PEORBConfigurator implements ORBConfigurator {
         }
     }
 
-    private static class AcceptorDelegateImpl 
+    private static class AcceptorDelegateImpl
         implements GlassFishORBHelper.SelectableChannelDelegate {
 
         private Acceptor acceptor;

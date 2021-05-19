@@ -46,7 +46,7 @@ public class TestServlet extends HttpServlet {
         pushBuilder = req.newPushBuilder().
             path("/web-servlet-4.0-push-dynamic/NOTfaces/javax.faces.resource/parameterMapFailure.js?ln=resources");
         pushBuilder.push();
-        
+
         res.getWriter().println("<html><head><title>HTTP2 Test</title><link rel=\"stylesheet\" href=\"/web-servlet-4.0-push-dynamic/NOTfaces/javax.faces.resource/style.css\"><script type=\"text/javascript\" src=\"/web-servlet-4.0-push-dynamic/NOTfaces/javax.faces.resource/jsf.js?ln=javax.faces\"></script><script type=\"text/javascript\" src=\"/web-servlet-4.0-push-dynamic/NOTfaces/javax.faces.resource/parameterMapFailure.js?ln=resources\"></script></head><body>Hello</body></html>");
     }
 }

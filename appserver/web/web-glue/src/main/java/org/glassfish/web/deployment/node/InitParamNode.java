@@ -27,7 +27,7 @@ import java.util.Map;
  * This node is responsible for handling init-param and context-param xml subtree.
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class InitParamNode extends DeploymentDescriptorNode<EnvironmentProperty> {
 
@@ -46,31 +46,31 @@ public class InitParamNode extends DeploymentDescriptorNode<EnvironmentProperty>
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
-    protected Map<String, String> getDispatchTable() {    
+    protected Map<String, String> getDispatchTable() {
         Map<String, String> table = super.getDispatchTable();
         table.put(WebTagNames.PARAM_NAME, "setName");
-        table.put(WebTagNames.PARAM_VALUE, "setValue");                
+        table.put(WebTagNames.PARAM_VALUE, "setValue");
         return table;
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, EnvironmentProperty descriptor) {       
+    public Node writeDescriptor(Node parent, String nodeName, EnvironmentProperty descriptor) {
         Node myNode = appendChild(parent, nodeName);
-        
-        writeLocalizedDescriptions(myNode, descriptor);        
+
+        writeLocalizedDescriptions(myNode, descriptor);
         appendTextChild(myNode, WebTagNames.PARAM_NAME, descriptor.getName());
         appendTextChild(myNode, WebTagNames.PARAM_VALUE, descriptor.getValue());
         return myNode;

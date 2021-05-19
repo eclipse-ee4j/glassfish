@@ -37,37 +37,37 @@ import java.util.Set;
  * @author  dochez
  */
 public class IconNode extends LocalizedNode {
-    
+
     private String smallIcon = null;
     private String largeIcon = null;
-    
+
     /**
      * @return the descriptor for this node
      */
     public Object getDescriptor() {
         return null;
     }
-    
+
     /**
      * receives notification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     public void setElementValue(XMLElement element, String value) {
         if (element.getQName().equals(TagNames.SMALL_ICON)) {
             smallIcon = value;
-        } else 
+        } else
         if (element.getQName().equals(TagNames.LARGE_ICON)) {
             largeIcon = value;
-        }        
+        }
     }
-        
+
     /**
      * notification of the end of XML parsing for this node
      */
     public void postParsing() {
-        Object o = getParentNode().getDescriptor();    
+        Object o = getParentNode().getDescriptor();
         if (o!=null && o instanceof Descriptor) {
             Descriptor descriptor = (Descriptor) o;
             if (largeIcon!=null) {
@@ -75,13 +75,13 @@ public class IconNode extends LocalizedNode {
             }
             if (smallIcon!=null) {
                 descriptor.setLocalizedSmallIconUri(lang, smallIcon);
-            }            
+            }
         }
     }
-    
+
     /**
      * writes all localized icon information
-     * 
+     *
      * @param parentNode for all icon xml fragments
      * @param descriptor containing the icon information
      */
@@ -104,7 +104,7 @@ public class IconNode extends LocalizedNode {
                 }
                 addIconInfo(parentNode, lang, smallIconUri, largeIconUri);
             }
-        } 
+        }
         if (largeIcons!=null) {
             Set<Map.Entry> entrySet = largeIcons.entrySet();
             Iterator<Map.Entry> entryIt = entrySet.iterator();
@@ -119,18 +119,18 @@ public class IconNode extends LocalizedNode {
                 addIconInfo(parentNode, lang, null, largeIconUri);
             }
         }
-        
+
     }
-    
+
     /**
      * writes xml tag and fragment for a particular icon information
      */
     private void addIconInfo(Node node, String lang, String smallIconUri, String largeIconUri) {
-        
+
         Element iconNode =appendChild(node, TagNames.ICON);
         if (Locale.ENGLISH.getLanguage().equals(lang)) {
-	    iconNode.setAttributeNS(TagNames.XML_NAMESPACE, TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG, lang);
-	}
+        iconNode.setAttributeNS(TagNames.XML_NAMESPACE, TagNames.XML_NAMESPACE_PREFIX + TagNames.LANG, lang);
+    }
         appendTextChild(iconNode, TagNames.SMALL_ICON, smallIconUri);
         appendTextChild(iconNode, TagNames.LARGE_ICON, largeIconUri);
     }

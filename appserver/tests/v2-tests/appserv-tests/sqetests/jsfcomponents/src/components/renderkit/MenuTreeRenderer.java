@@ -106,7 +106,7 @@ public class MenuTreeRenderer extends MenuBarRenderer {
 
         // Render the beginning of this node
         writer.write("  <tr valign=\"middle\">");
-      
+
         // Create the appropriate number of indents
         for (int i = 0; i < level; i++) {
             int levels = level - i;
@@ -125,13 +125,13 @@ public class MenuTreeRenderer extends MenuBarRenderer {
             writer.write("\n");
         }
 
-        // Render the tree state image for this node. use the "onmousedown" event 
+        // Render the tree state image for this node. use the "onmousedown" event
         // handler to track which node was clicked. The images are rendered
         // as links.
         writer.write("    <td>");
         if (!node.isLeaf()) {
             // The image links of the nodes that have children behave like
-            // command buttons causing the form to be submitted so the state of 
+            // command buttons causing the form to be submitted so the state of
             // node can be toggled
             writer.write("<a href=\"");
             writer.write(getSubmitScript(node.getPath(), context));

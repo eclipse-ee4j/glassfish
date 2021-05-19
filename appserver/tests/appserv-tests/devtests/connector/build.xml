@@ -37,19 +37,19 @@
 
     <target name="pe-all">
         <antcall target="backup-config-pe"/>
-	<echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/pe-config.properties. The file will be reverted to its original state after the completion of these tests."/>
-	<copy file="${basedir}/config/pe-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
-	<antcall target="create-pe-passwordfile"/>
-	<antcall target="all"/>
+        <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/pe-config.properties. The file will be reverted to its original state after the completion of these tests."/>
+        <copy file="${basedir}/config/pe-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
+        <antcall target="create-pe-passwordfile"/>
+        <antcall target="all"/>
         <antcall target="restore-config-pe"/>
     </target>
-	
+
     <target name="das-all">
         <antcall target="backup-config-pe"/>
         <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/das-config.properties. The file will be reverted to its original state after the completion of these tests."/>
-	<copy file="${basedir}/config/das-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
-	<antcall target="create-ee-passwordfile"/>
-	<antcall target="all"/>
+        <copy file="${basedir}/config/das-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
+        <antcall target="create-ee-passwordfile"/>
+        <antcall target="all"/>
         <antcall target="restore-config-pe"/>
     </target>
 
@@ -57,58 +57,58 @@
         <antcall target="backup-config-pe"/>
         <antcall target="backup-config-ee"/>
         <echo message="NOTE: The file ${env.APS_HOME}/config.properties is being replaced with ${basedir}/config/das-config.properties. The file will be reverted to its original state after the completion of these tests."/>
-	<copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
-	<copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true"/>
-	<antcall target="create-ee-passwordfile"/>
-	<antcall target="ee"/>
-	<antcall target="all"/>
+        <copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
+        <copy file="${basedir}/config/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true"/>
+        <antcall target="create-ee-passwordfile"/>
+        <antcall target="ee"/>
+        <antcall target="all"/>
         <antcall target="restore-config-pe"/>
         <antcall target="restore-config-ee"/>
     </target>
 
     <target name="backup-config-pe" depends="replace-password-with-passwordfile">
-	<copy file="${env.APS_HOME}/config.properties" tofile="${env.APS_HOME}/config.properties.bak" overwrite="true"/>
+        <copy file="${env.APS_HOME}/config.properties" tofile="${env.APS_HOME}/config.properties.bak" overwrite="true"/>
     </target>
 
     <target name="restore-config-pe" depends="undo-replace-password-with-passwordfile">
-	<copy file="${env.APS_HOME}/config.properties.bak" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
+        <copy file="${env.APS_HOME}/config.properties.bak" tofile="${env.APS_HOME}/config.properties" overwrite="true"/>
     </target>
-		
+
     <target name="backup-config-ee">
-	<copy file="${env.APS_HOME}/eeconfig/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties.bak" overwrite="true"/>
+        <copy file="${env.APS_HOME}/eeconfig/ee-config.properties" tofile="${env.APS_HOME}/eeconfig/ee-config.properties.bak" overwrite="true"/>
     </target>
 
     <target name="restore-config-ee">
-	<copy file="${env.APS_HOME}/eeconfig/ee-config.properties.bak" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true"/>
+        <copy file="${env.APS_HOME}/eeconfig/ee-config.properties.bak" tofile="${env.APS_HOME}/eeconfig/ee-config.properties" overwrite="true"/>
     </target>
-    
+
     <target name="create-pe-passwordfile">
-	<property file="${env.APS_HOME}/config.properties"/>
-	<echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/connector/config/password.txt"/>
+        <property file="${env.APS_HOME}/config.properties"/>
+        <echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/connector/config/password.txt"/>
     </target>
 
     <target name="create-ee-passwordfile">
-	<property file="${env.APS_HOME}/config.properties"/>
-	<echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/connector/config/password.txt"/>
-	<echo message="AS_ADMIN_MASTERPASSWORD=${master.password}${line.separator}" file="${env.APS_HOME}/devtests/connector/config/password.txt" append="true"/>
+        <property file="${env.APS_HOME}/config.properties"/>
+        <echo message="AS_ADMIN_PASSWORD=${admin.password}${line.separator}" file="${env.APS_HOME}/devtests/connector/config/password.txt"/>
+        <echo message="AS_ADMIN_MASTERPASSWORD=${master.password}${line.separator}" file="${env.APS_HOME}/devtests/connector/config/password.txt" append="true"/>
     </target>
-    
+
     <target name="replace-password-with-passwordfile">
-	<replace dir="${env.APS_HOME}/config/">
+        <replace dir="${env.APS_HOME}/config/">
            <include name="**/*.xml"/>
-	   <replacetoken>--password ${admin.password}</replacetoken>
-	   <replacevalue>--passwordfile ${env.APS_HOME}/devtests/connector/config/password.txt</replacevalue>
-	</replace>
+           <replacetoken>--password ${admin.password}</replacetoken>
+           <replacevalue>--passwordfile ${env.APS_HOME}/devtests/connector/config/password.txt</replacevalue>
+        </replace>
     </target>
 
     <target name="undo-replace-password-with-passwordfile">
-	<replace dir="${env.APS_HOME}/config/">
+        <replace dir="${env.APS_HOME}/config/">
            <include name="**/*.xml"/>
-	   <replacetoken>--passwordfile ${env.APS_HOME}/devtests/connector/config/password.txt</replacetoken>
-	   <replacevalue>--password ${admin.password}</replacevalue>
-	</replace>
+           <replacetoken>--passwordfile ${env.APS_HOME}/devtests/connector/config/password.txt</replacetoken>
+           <replacevalue>--password ${admin.password}</replacevalue>
+        </replace>
     </target>
-	
+
     <target name="run-test">
         <antcall target="connector">
         <param name="connector-target" value="run-test"/>
@@ -168,57 +168,57 @@
 
     <target name="connector">
         <record name="connector.output" action="start" />
-		<echo message="@@## connector1.5 ##@@"/>
+                <echo message="@@## connector1.5 ##@@"/>
             <ant dir="connector1.5" target="${connector-target}"/>
-		<echo message="@@## embeddedConnector1.5 ##@@"/>
+                <echo message="@@## embeddedConnector1.5 ##@@"/>
             <ant dir="embeddedConnector1.5" target="${connector-target}"/>
-		<echo message="@@## embeddedweb ##@@"/>
+                <echo message="@@## embeddedweb ##@@"/>
             <ant dir="embeddedweb" target="${connector-target}"/>
                 <echo message="@@## mq ##@@"/>
             <ant dir="mq" target="${connector-target}"/>
-     	        <echo message="@@## nonacc ##@@"/>
+                     <echo message="@@## nonacc ##@@"/>
             <ant dir="nonacc" target="${connector-target}"/>
-<!--	    Commented out the defaultConnectorResource test because we  cannot 
+<!--            Commented out the defaultConnectorResource test because we  cannot
 add a non-XA Resource [a database connection in this case] to a global JTS transaction containing
-a XA resource, [a JMS resource in this case]. This test was passing due to a 
-JTS bug, that allowed a non-XA resource enlistment after a XA-Resource enlistment in 
+a XA resource, [a JMS resource in this case]. This test was passing due to a
+JTS bug, that allowed a non-XA resource enlistment after a XA-Resource enlistment in
 a global transaction!
-	    <ant dir="defaultConnectorResource" target="${connector-target}"/>
+            <ant dir="defaultConnectorResource" target="${connector-target}"/>
 -->
             <!-- running web2connector twice -->
-		<echo message="@@## web2connector ##@@"/>
-	    <ant dir="web2connector" target="${connector-target}" />
-		<echo message="@@## web2connector (second time) ##@@"/>
+                <echo message="@@## web2connector ##@@"/>
+            <ant dir="web2connector" target="${connector-target}" />
+                <echo message="@@## web2connector (second time) ##@@"/>
             <ant dir="web2connector" target="${connector-target}" />
         <!-- this test is disabled because of dependency on point base database jar which is not available -->
-		<!--echo message="@@## redeployRar ##@@"/>
+                <!--echo message="@@## redeployRar ##@@"/>
             <ant dir="redeployRar" target="${connector-target}" /-->
-		<echo message="@@## nonstringmcfproperties ##@@"/>
+                <echo message="@@## nonstringmcfproperties ##@@"/>
             <ant dir="nonstringmcfproperties" target="${connector-target}" />
-		<echo message="@@## nonstringraproperties ##@@"/>
+                <echo message="@@## nonstringraproperties ##@@"/>
             <ant dir="nonstringraproperties" target="${connector-target}" />
-		<echo message="@@## txlevelswitch ##@@"/>
+                <echo message="@@## txlevelswitch ##@@"/>
             <ant dir="txlevelswitch" target="${connector-target}" />
-		<echo message="@@## threadpool ##@@"/>
+                <echo message="@@## threadpool ##@@"/>
             <ant dir="threadpool" target="${connector-target}" />
         <record name="connector.output" action="stop" />
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant connector1.5 (Executes the connector1.5 tests)
-		ant embdeddedWeb (Executes embeddedWeb tests)
-		ant mq (Executes the mq tests)
-		ant nonacc (Executes the nonacc test)
-		ant all (Executes all the connector tests)
-		ant clean (cleans all the connector tests)
-		ant build (builds all the connector tests)
-		ant setup (sets up all resources for connector tests)
-		ant deploy (deploys all the connector apps)
-		ant run (Executes all the connector tests)
-		ant undeploy (undeploys all the  connector apps)
-		ant unsetup (unsets all resources for connector tests)
-	</echo>
+        <echo> Usage:
+                ant connector1.5 (Executes the connector1.5 tests)
+                ant embdeddedWeb (Executes embeddedWeb tests)
+                ant mq (Executes the mq tests)
+                ant nonacc (Executes the nonacc test)
+                ant all (Executes all the connector tests)
+                ant clean (cleans all the connector tests)
+                ant build (builds all the connector tests)
+                ant setup (sets up all resources for connector tests)
+                ant deploy (deploys all the connector apps)
+                ant run (Executes all the connector tests)
+                ant undeploy (undeploys all the  connector apps)
+                ant unsetup (unsets all resources for connector tests)
+        </echo>
     </target>
 
     <target name="oracle">

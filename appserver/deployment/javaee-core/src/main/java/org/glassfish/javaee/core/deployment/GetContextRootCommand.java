@@ -41,8 +41,8 @@ import org.glassfish.hk2.api.PerLookup;
 @CommandLock(CommandLock.LockType.NONE)
 @RestEndpoints({
     @RestEndpoint(configBean=com.sun.enterprise.config.serverbeans.Application.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="get-context-root", 
+        opType=RestEndpoint.OpType.GET,
+        path="get-context-root",
         description="Get Context Root",
         params={
             @RestParam(name="appname", value="$parent")

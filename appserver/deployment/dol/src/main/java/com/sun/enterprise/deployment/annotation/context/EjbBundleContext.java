@@ -39,12 +39,12 @@ import java.util.List;
  * @author Jerome Dochez
  */
 public class EjbBundleContext extends ResourceContainerContextImpl {
-    
+
     /** Creates a new instance of EjbBundleContext */
     public EjbBundleContext(EjbBundleDescriptor descriptor) {
         super(descriptor);
     }
-    
+
     public EjbBundleDescriptor getDescriptor() {
         return (EjbBundleDescriptor)descriptor;
     }
@@ -77,8 +77,8 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
         }
         return aeHandler;
     }
-            
-    public HandlerChainContainer[] 
+
+    public HandlerChainContainer[]
             getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
         if(serviceSideHandlerChain) {
             EjbDescriptor[] ejbs;
@@ -98,15 +98,15 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
             return(result.toArray(new HandlerChainContainer[result.size()]));
         }
     }
-    
+
     public ServiceReferenceContainer[] getServiceRefContainers() {
-        ServiceReferenceContainer[] container = 
+        ServiceReferenceContainer[] container =
                 new ServiceReferenceContainer[getDescriptor().getEjbs().size()];
-        ServiceReferenceContainer[] ret = 
+        ServiceReferenceContainer[] ret =
                 (ServiceReferenceContainer[])getDescriptor().getEjbs().toArray(container);
         return ret;
-    }    
-    
+    }
+
     /**
      * This methods create a context for EjbInterceptor associated to
      * given className.
@@ -119,7 +119,7 @@ public class EjbBundleContext extends ResourceContainerContextImpl {
         EjbInterceptor ejbInterceptor =
                 this.getDescriptor().getInterceptorByClassName(
                 interceptorClass.getName());
-        
+
         AnnotatedElementHandler aeHandler = null;
         if (ejbInterceptor != null) {
             aeHandler = new EjbInterceptorContext(ejbInterceptor);

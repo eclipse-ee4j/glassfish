@@ -68,7 +68,7 @@
             </classpath>
             <arg value="http://${http.host}:${http.port}/wsclient/RequestProcessor"/>
           </java>
-          <!--restore the tokens back in file--> 
+          <!--restore the tokens back in file-->
           <replace file="webclient/Client.java" token="${http.host}" value="HTTP_HOST"/>
           <replace file="webclient/Client.java" token="${http.port}" value="HTTP_PORT"/>
         </target>
@@ -154,7 +154,7 @@
 
     <target name="run-client">
         <echo message="Deployed passed"/>
-    </target>	
+    </target>
 
     <target name="report-success">
             <echo message="Test PASSED"/>
@@ -162,7 +162,7 @@
 
     <target name="report-failure">
             <echo message="Test FAILED"/>
-    </target>   	
-    
+    </target>
+
 </project>
 -->

@@ -37,26 +37,26 @@ import java.util.logging.Level;
  * This node is responsible for handling the servlet xml sub tree
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor> {
 
-    private final static XMLElement tag = 
+    private final static XMLElement tag =
         new XMLElement(WebTagNames.SERVLET);
-    
+
     private WebComponentDescriptor descriptor;
-    
+
     /** Creates new ServletNode */
     public ServletNode() {
         super();
-        registerElementHandler(new XMLElement(WebTagNames.ROLE_REFERENCE), SecurityRoleRefNode.class);        
-        registerElementHandler(new XMLElement(WebTagNames.INIT_PARAM), InitParamNode.class);                
-        registerElementHandler(new XMLElement(WebTagNames.RUNAS_SPECIFIED_IDENTITY), 
-                                                             RunAsNode.class, "setRunAsIdentity");                
-        registerElementHandler(new XMLElement(WebTagNames.MULTIPART_CONFIG), MultipartConfigNode.class);                
-        
+        registerElementHandler(new XMLElement(WebTagNames.ROLE_REFERENCE), SecurityRoleRefNode.class);
+        registerElementHandler(new XMLElement(WebTagNames.INIT_PARAM), InitParamNode.class);
+        registerElementHandler(new XMLElement(WebTagNames.RUNAS_SPECIFIED_IDENTITY),
+                                                             RunAsNode.class, "setRunAsIdentity");
+        registerElementHandler(new XMLElement(WebTagNames.MULTIPART_CONFIG), MultipartConfigNode.class);
+
     }
-    
+
     /**
      * @return the XML tag associated with this XMLNode
      */
@@ -64,69 +64,69 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
     protected XMLElement getXMLRootTag() {
         return tag;
     }
-    
+
     /**
      * @return the descriptor instance to associate with this XMLNode
      */
     @Override
     public WebComponentDescriptor getDescriptor() {
-        
+
         if (descriptor==null) {
             descriptor = new WebComponentDescriptorImpl();
         }
         return descriptor;
-    }     
-    
+    }
+
     /**
-     * Adds  a new DOL descriptor instance to the descriptor instance associated with 
+     * Adds  a new DOL descriptor instance to the descriptor instance associated with
      * this XMLNode
      *
      * @param newDescriptor the new descriptor
      */
     @Override
-    public void addDescriptor(Object newDescriptor) {       
-        if (newDescriptor instanceof RoleReference) {  
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {            
+    public void addDescriptor(Object newDescriptor) {
+        if (newDescriptor instanceof RoleReference) {
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding security role ref " + newDescriptor);
             }
             descriptor.addSecurityRoleReference(
-                        (RoleReference) newDescriptor);    
-        } else if (newDescriptor instanceof EnvironmentEntry) {            
-            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {            
+                        (RoleReference) newDescriptor);
+        } else if (newDescriptor instanceof EnvironmentEntry) {
+            if (DOLUtils.getDefaultLogger().isLoggable(Level.FINE)) {
                 DOLUtils.getDefaultLogger().fine("Adding init-param " + newDescriptor);
             }
             descriptor.addInitializationParameter(
-                        (InitializationParameter) newDescriptor);    
+                        (InitializationParameter) newDescriptor);
         } else if (newDescriptor instanceof MultipartConfig) {
             descriptor.setMultipartConfig((MultipartConfig)newDescriptor);
         } else super.addDescriptor(newDescriptor);
     }
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
     protected Map<String, String> getDispatchTable() {
         // no need to be synchronized for now
         Map<String, String> table = super.getDispatchTable();
-        table.put(WebTagNames.NAME, "setName");        
+        table.put(WebTagNames.NAME, "setName");
         table.put(WebTagNames.SERVLET_NAME, "setCanonicalName");
         return table;
-    }        
+    }
 
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
     @Override
     public void setElementValue(XMLElement element, String value) {
         if (WebTagNames.SERVLET_CLASS.equals(element.getQName())) {
-            descriptor.setServlet(true);            
+            descriptor.setServlet(true);
             descriptor.setWebComponentImplementation(value);
         } else if (WebTagNames.JSP_FILENAME.equals(element.getQName())) {
             descriptor.setServlet(false);
@@ -144,8 +144,8 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
         } else {
             super.setElementValue(element, value);
         }
-    }    
-    
+    }
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -154,41 +154,41 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
      * @return the DOM tree top node
      */
     @Override
-    public Node writeDescriptor(Node parent, WebComponentDescriptor descriptor) {    
+    public Node writeDescriptor(Node parent, WebComponentDescriptor descriptor) {
 
         Node myNode = super.writeDescriptor(parent, descriptor);
-        appendTextChild(myNode, WebTagNames.SERVLET_NAME, descriptor.getCanonicalName());         
+        appendTextChild(myNode, WebTagNames.SERVLET_NAME, descriptor.getCanonicalName());
         if (descriptor.isServlet()) {
             appendTextChild(myNode, WebTagNames.SERVLET_CLASS, descriptor.getWebComponentImplementation());
         } else {
             appendTextChild(myNode, WebTagNames.JSP_FILENAME, descriptor.getWebComponentImplementation());
         }
-        
+
         // init-param*
         WebCommonNode.addInitParam(myNode, WebTagNames.INIT_PARAM, descriptor.getInitializationParameters());
-        
+
         if (descriptor.getLoadOnStartUp()!=null) {
             appendTextChild(myNode, WebTagNames.LOAD_ON_STARTUP, String.valueOf(descriptor.getLoadOnStartUp()));
         }
 
         appendTextChild(myNode, WebTagNames.ENABLED, String.valueOf(descriptor.isEnabled()));
-        if (descriptor.isAsyncSupported() != null) { 
+        if (descriptor.isAsyncSupported() != null) {
             appendTextChild(myNode, WebTagNames.ASYNC_SUPPORTED, String.valueOf(descriptor.isAsyncSupported()));
         }
-        
+
         // run-as
         RunAsIdentityDescriptor runAs = descriptor.getRunAsIdentity();
         if (runAs!=null) {
             RunAsNode runAsNode = new RunAsNode();
             runAsNode.writeDescriptor(myNode, WebTagNames.RUNAS_SPECIFIED_IDENTITY, runAs);
         }
-        
+
         // sercurity-role-ref*
         Enumeration roleRefs = descriptor.getSecurityRoleReferences();
         SecurityRoleRefNode roleRefNode = new SecurityRoleRefNode();
         while (roleRefs.hasMoreElements()) {
-            roleRefNode.writeDescriptor(myNode, WebTagNames.ROLE_REFERENCE, 
-                            (RoleReference) roleRefs.nextElement());            
+            roleRefNode.writeDescriptor(myNode, WebTagNames.ROLE_REFERENCE,
+                            (RoleReference) roleRefs.nextElement());
         }
 
         // multipart-config
@@ -199,7 +199,7 @@ public class ServletNode extends DisplayableComponentNode<WebComponentDescriptor
             multipartConfigNode.writeDescriptor(myNode, WebTagNames.MULTIPART_CONFIG,
                     multipartConfigDesc);
         }
-        
+
         return myNode;
     }
 }

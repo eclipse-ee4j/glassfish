@@ -30,7 +30,7 @@ import jakarta.transaction.UserTransaction;
 import java.rmi.RemoteException;
 
 public class SFSBEJB
-    implements SessionBean 
+    implements SessionBean
 {
 
     private static final String LOCAL_CHILD_SUFFIX = "_childLocal";
@@ -58,21 +58,21 @@ public class SFSBEJB
     }
 
     public int getActivateCount() {
-	return activateCount;
+        return activateCount;
     }
 
     public int getPassivateCount() {
-	return passivateCount;
+        return passivateCount;
     }
 
     public void ejbRemove() {}
 
     public void ejbActivate() {
-	activateCount++;
+        activateCount++;
     }
 
     public void ejbPassivate() {
-	passivateCount++;
+        passivateCount++;
     }
 
 }

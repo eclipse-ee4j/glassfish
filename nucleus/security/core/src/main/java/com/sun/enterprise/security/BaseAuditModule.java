@@ -31,7 +31,7 @@ import java.util.Properties;
  */
 public abstract class BaseAuditModule {
     protected Properties props = null;
-    /** 
+    /**
      * Method is invoked at server startup, during AuditModule initialization.
      * If method returns without any exception then S1AS assumes that the module
      * is ready to serve any requests.
@@ -41,7 +41,7 @@ public abstract class BaseAuditModule {
     public void init(Properties props) {
         this.props = props;
     }
-    
+
     /**
      * Invoked post authentication request for a user in a given realm
      * @param user username for whom the authentication request was made
@@ -50,7 +50,7 @@ public abstract class BaseAuditModule {
      */
     public void authentication(String user, String realm, boolean success) {
     }
-    
+
     /**
      * Invoked upon completion of the server startup
      */

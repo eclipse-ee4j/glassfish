@@ -27,23 +27,24 @@ import java.util.Map;
 
 /**
  * This node is responsible for handling license subtree.
- *
  */
 public class LicenseNode extends DeploymentDescriptorNode {
-    
+
     /**
-     * all sub-implementation of this class can use a dispatch table to 
-     * map xml element to method name on the descriptor class for 
-     * setting the element value. 
-     *  
-     * @return the map with the element name as a key, the setter method 
-     * as a value
-     */    
-    protected Map getDispatchTable() {    
+     * all sub-implementation of this class can use a dispatch table to
+     * map xml element to method name on the descriptor class for
+     * setting the element value.
+     *
+     * @return the map with the element name as a key, the setter method
+     *         as a value
+     */
+    @Override
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.LICENSE_REQUIRED, "setLicenseRequired");
-	return table;
-    }   
+        return table;
+    }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -51,15 +52,13 @@ public class LicenseNode extends DeploymentDescriptorNode {
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, ConnectorDescriptor descriptor) {
         LicenseDescriptor licenseDesc = descriptor.getLicenseDescriptor();
         if (licenseDesc != null) {
-            Node licenseNode = appendChild(parent, 
-                ConnectorTagNames.LICENSE); 
-            writeLocalizedDescriptions(licenseNode, licenseDesc);        
-            appendTextChild(licenseNode, ConnectorTagNames.LICENSE_REQUIRED, 
-                licenseDesc.getLicenseRequiredValue());  
+            Node licenseNode = appendChild(parent, ConnectorTagNames.LICENSE);
+            writeLocalizedDescriptions(licenseNode, licenseDesc);
+            appendTextChild(licenseNode, ConnectorTagNames.LICENSE_REQUIRED, licenseDesc.getLicenseRequiredValue());
         }
         return parent;
     }

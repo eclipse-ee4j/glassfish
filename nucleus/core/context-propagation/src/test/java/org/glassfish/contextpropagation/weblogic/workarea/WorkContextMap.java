@@ -135,8 +135,8 @@ public interface WorkContextMap
 
   /**
    * Given a PropagationMode {@link org.glassfish.contextpropagation.weblogic.workarea.PropagationMode} , this method will iterate
-   * over the map and return true if the propagation mode is present. The method 
-   * should return true if there exists at least one entry in the map which has 
+   * over the map and return true if the propagation mode is present. The method
+   * should return true if there exists at least one entry in the map which has
    * at least one propagation mode specified by propMode
    *
    * @param PropagationMode  {@link org.glassfish.contextpropagation.weblogic.workarea.PropagationMode} value

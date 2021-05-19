@@ -38,7 +38,7 @@ import org.glassfish.api.admin.ServerEnvironment;
 public class WebAllTest {
     private static Server server = null;
     private static Port http=null;
-    
+
     @BeforeClass
     public static void setup() throws IOException {
 
@@ -52,7 +52,7 @@ public class WebAllTest {
 
         EmbeddedFileSystem fs = fsBuilder.instanceRoot(root).build();
         Server.Builder builder = new Server.Builder("WebAllTest");
-        builder.embeddedFileSystem(fs);                
+        builder.embeddedFileSystem(fs);
         server = builder.build();
         server.getHabitat().getService(NetworkConfig.class,
                 ServerEnvironment.DEFAULT_INSTANCE_NAME);

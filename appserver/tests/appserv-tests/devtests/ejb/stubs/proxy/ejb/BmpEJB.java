@@ -25,7 +25,7 @@ public class BmpEJB implements EntityBean
     public BmpEJB(){}
 
     public String ejbCreate(String s) {
-	return s;
+        return s;
     }
 
     public void ejbPostCreate(String s) {}
@@ -45,10 +45,10 @@ public class BmpEJB implements EntityBean
     public void unsetEntityContext()
     {}
 
-    public void ejbRemove() 
+    public void ejbRemove()
     {}
 
-    public void ejbActivate() 
+    public void ejbActivate()
     {}
 
     public void ejbPassivate()
@@ -61,7 +61,7 @@ public class BmpEJB implements EntityBean
     {}
 
     public String ejbFindByPrimaryKey(String s) {
-	return s;
+        return s;
     }
 
     public void testException1() throws Exception {
@@ -99,7 +99,7 @@ public class BmpEJB implements EntityBean
     }
 
     public void testPassByRef4(CommonRemote cr) {
-       
+
     }
 
     public Helper1 testPassByRef5() {

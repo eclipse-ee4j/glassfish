@@ -52,7 +52,7 @@ public class TransactionalInterceptorNever extends TransactionalInterceptorBase 
         if (isLifeCycleMethod(ctx)) {
             return proceed(ctx);
         }
-        
+
         setTransactionalTransactionOperationsManger(true);
         try {
             if (getTransactionManager().getTransaction() != null) {

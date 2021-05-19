@@ -33,10 +33,10 @@
   </servers>
   <configs>
     <config name="server-config">
-		<random-container name="random" number-of-runtime="1243">
-			<random-element attr1="foo">
-			</random-element> 
-		</random-container>
+        <random-container name="random" number-of-runtime="1243">
+            <random-element attr1="foo">
+            </random-element>
+        </random-container>
         <random-extension some-attribute="foo"/>
     </config>
   </configs>

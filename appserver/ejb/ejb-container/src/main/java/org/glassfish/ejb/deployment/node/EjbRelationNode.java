@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
 /**
  *
  * @author  dochez
- * @version 
+ * @version
  */
 public class EjbRelationNode extends DeploymentDescriptorNode<RelationshipDescriptor> {
 
@@ -39,7 +39,7 @@ public class EjbRelationNode extends DeploymentDescriptorNode<RelationshipDescri
     public EjbRelationNode() {
        super();
        registerElementHandler(new XMLElement(EjbTagNames.EJB_RELATIONSHIP_ROLE),
-                                                            EjbRelationshipRoleNode.class);                   
+                                                            EjbRelationshipRoleNode.class);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class EjbRelationNode extends DeploymentDescriptorNode<RelationshipDescri
                 source = (RelationRoleDescriptor) newDescriptor;
             } else {
                 sink = (RelationRoleDescriptor) newDescriptor;
-                
+
                 descriptor.setSource(source);
                 source.setPartner(sink);
                 source.setRelationshipDescriptor(descriptor);
@@ -66,7 +66,7 @@ public class EjbRelationNode extends DeploymentDescriptorNode<RelationshipDescri
                 if ( source.getCMRField() != null && sink.getCMRField() != null )
                     descriptor.setIsBidirectional(true);
                 else
-                    descriptor.setIsBidirectional(false);                
+                    descriptor.setIsBidirectional(false);
             }
         }
     }
@@ -81,9 +81,9 @@ public class EjbRelationNode extends DeploymentDescriptorNode<RelationshipDescri
 
     @Override
     public Node writeDescriptor(Node parent, String nodeName, RelationshipDescriptor descriptor) {
-        Node ejbRelationNode = super.writeDescriptor(parent, nodeName, descriptor);        
+        Node ejbRelationNode = super.writeDescriptor(parent, nodeName, descriptor);
         writeLocalizedDescriptions(ejbRelationNode, descriptor);
-        appendTextChild(ejbRelationNode, EjbTagNames.EJB_RELATION_NAME, descriptor.getName());     
+        appendTextChild(ejbRelationNode, EjbTagNames.EJB_RELATION_NAME, descriptor.getName());
         EjbRelationshipRoleNode roleNode = new EjbRelationshipRoleNode();
         roleNode.writeDescriptor(ejbRelationNode, EjbTagNames.EJB_RELATIONSHIP_ROLE, descriptor.getSource());
         roleNode.writeDescriptor(ejbRelationNode, EjbTagNames.EJB_RELATIONSHIP_ROLE, descriptor.getSink());

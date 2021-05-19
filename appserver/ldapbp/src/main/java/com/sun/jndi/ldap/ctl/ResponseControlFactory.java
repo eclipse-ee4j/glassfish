@@ -17,9 +17,10 @@
 package com.sun.jndi.ldap.ctl;
 
 import java.io.IOException;
-import javax.naming.*;
-import javax.naming.directory.*;
-import javax.naming.ldap.*;
+
+import javax.naming.NamingException;
+import javax.naming.ldap.Control;
+import javax.naming.ldap.ControlFactory;
 
 /**
  * This class represents a factory for creating LDAP response controls.
@@ -56,7 +57,6 @@ import javax.naming.ldap.*;
  * @see AuthorizationIDResponseControl
  * @author Vincent Ryan
  */
-
 public class ResponseControlFactory extends ControlFactory {
 
     /**
@@ -76,46 +76,38 @@ public class ResponseControlFactory extends ControlFactory {
      *            error condition while attempting to create the LDAP control,
      *            and no other control factories are to be tried.
      */
-    public Control getControlInstance(Control ctl) 
-	throws NamingException {
+    @Override
+    public Control getControlInstance(Control ctl) throws NamingException {
+        String id = ctl.getID();
+        Control newCtl = null;
 
-	String id = ctl.getID();
-	Control newCtl = null;
+        try {
+            if (id.equals(SortResponseControl.OID)) {
+                newCtl = new SortResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
 
-	try {
-	    if (id.equals(SortResponseControl.OID)) {
-		newCtl = new SortResponseControl(id, ctl.isCritical(),
-		    ctl.getEncodedValue());
+            } else if (id.equals(VirtualListViewResponseControl.OID)) {
+                newCtl = new VirtualListViewResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
 
-	    } else if (id.equals(VirtualListViewResponseControl.OID)) {
-                newCtl = new VirtualListViewResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+            } else if (id.equals(PagedResultsResponseControl.OID)) {
+                newCtl = new PagedResultsResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
 
-	    } else if (id.equals(PagedResultsResponseControl.OID)) {
-		newCtl = new PagedResultsResponseControl(id, ctl.isCritical(),
-		    ctl.getEncodedValue());
+            } else if (id.equals(DirSyncResponseControl.OID)) {
+                newCtl = new DirSyncResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
 
-	    } else if (id.equals(DirSyncResponseControl.OID)) {
-		newCtl = new DirSyncResponseControl(id, ctl.isCritical(),
-		    ctl.getEncodedValue());
-
-	    } else if (id.equals(PasswordExpiredResponseControl.OID)) {
-                newCtl = new PasswordExpiredResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+            } else if (id.equals(PasswordExpiredResponseControl.OID)) {
+                newCtl = new PasswordExpiredResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
 
             } else if (id.equals(PasswordExpiringResponseControl.OID)) {
-                newCtl = new PasswordExpiringResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+                newCtl = new PasswordExpiringResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
 
             } else if (id.equals(AuthorizationIDResponseControl.OID)) {
-		newCtl = new AuthorizationIDResponseControl(id,
-		    ctl.isCritical(), ctl.getEncodedValue());
+                newCtl = new AuthorizationIDResponseControl(id, ctl.isCritical(), ctl.getEncodedValue());
             }
-	} catch (IOException e) {
-	    NamingException ne = new NamingException();
-	    ne.setRootCause(e);
-	    throw ne;
-	}
-	return newCtl;
+        } catch (IOException e) {
+            NamingException ne = new NamingException();
+            ne.setRootCause(e);
+            throw ne;
+        }
+        return newCtl;
     }
 }

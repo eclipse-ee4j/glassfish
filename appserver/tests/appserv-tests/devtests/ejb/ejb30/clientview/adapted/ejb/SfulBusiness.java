@@ -23,10 +23,10 @@ public interface SfulBusiness extends Common, CommonFoo
     // so it's not a problem to define a method that happens to have the
     // same signature as one of EJBLocalObject's methods.  remove() is
     // a likely name for a method that has @Remove behavior so it needs
-    // to work.  
+    // to work.
     public void remove();
 
-    public void removeRetainIfException(boolean throwException) 
+    public void removeRetainIfException(boolean throwException)
         throws Exception;
 
     public SfulBusiness2 getSfulBusiness2();

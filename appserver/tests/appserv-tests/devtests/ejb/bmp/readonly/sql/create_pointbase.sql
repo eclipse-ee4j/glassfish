@@ -1,5 +1,5 @@
-create table ReadOnlyStudent 
-(studentid varchar(15) constraint pk_ReadOnlystudent primary key not null,  
+create table ReadOnlyStudent
+(studentid varchar(15) constraint pk_ReadOnlystudent primary key not null,
 name varchar(36));
 
 insert into ReadOnlyStudent
@@ -16,8 +16,8 @@ insert into ReadOnlyStudent
 values ('student5', 'Student_ID_5');
 
 
-create table ReadOnlyCourse 
-(courseid varchar(15) constraint pk_ReadOnlycourse primary key not null,  
+create table ReadOnlyCourse
+(courseid varchar(15) constraint pk_ReadOnlycourse primary key not null,
 name varchar(36));
 
 insert into ReadOnlyCourse
@@ -34,8 +34,8 @@ insert into ReadOnlyCourse
 values ('course5', 'Course_ID_5');
 
 create table ReadOnlyEnrollment
-(studentid varchar(15),  
-courseid varchar(15),  
+(studentid varchar(15),
+courseid varchar(15),
 constraint fk_studentid
 foreign key (studentid)
 references ReadOnlystudent(studentid),

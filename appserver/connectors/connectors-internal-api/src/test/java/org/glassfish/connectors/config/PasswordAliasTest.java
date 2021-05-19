@@ -44,7 +44,7 @@ public  class PasswordAliasTest extends ConfigApiTest{
 
         String password = bp1.getPassword();
         //Currently the habitat.getByContract(MasterPassword is null)
-        
+
         assertTrue(password!=null);
         //assertTrue(!password.startsWith(starter));
 

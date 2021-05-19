@@ -38,11 +38,11 @@ public class CertificateLM extends AppservCertificateLoginModule {
             // At this point, one has the application name and the DN of
             // the certificate. A suitable login decision can be made here.
             if (next.startsWith("CN=")) {
-		String cname = next.substring(3);
-		if (cname.equals("SSLTest")){
-			commitUserAuthentication(new String[]{getAppName() + ":alice-group"});
-			return;
-		}
+                String cname = next.substring(3);
+                if (cname.equals("SSLTest")){
+                        commitUserAuthentication(new String[]{getAppName() + ":alice-group"});
+                        return;
+                }
             }
         }
         throw new LoginException("No OU found.");

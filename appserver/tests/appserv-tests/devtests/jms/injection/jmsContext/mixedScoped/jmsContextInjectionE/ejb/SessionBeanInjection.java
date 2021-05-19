@@ -66,24 +66,24 @@ public class SessionBeanInjection implements SessionBeanInjectionRemote {
             System.out.println("The context variables used in the first call are NOT in request scope.");
             return false;
         }
-            
+
         if (context2.indexOf(requestScope) != -1){
             System.out.println("The context variables used in the second call are in request scope.");
         }else{
             System.out.println("The context variables used in the second call are NOT in request scope.");
             return false;
         }
-        
+
         String context1Annotation = context1.substring(context1.indexOf(preIdentical),context1.indexOf(requestScope));
         String context2Annotation = context2.substring(context2.indexOf(preIdentical),context2.indexOf(requestScope));
-        
+
         if(context1Annotation.equals(context2Annotation)){
             System.out.println("The context variables in the first and second calls to context.send() injected are using identical annotations.");
         }else{
             System.out.println("The context variables in the first and second calls to context.send() injected are not using identical annotations.");
             return false;
         }
-       	
+
         if (context1.substring(context1.indexOf(requestScope)).equals(context2.substring(context2.indexOf(requestScope)))){
             System.out.println("The context variables used in the first and second calls to context.send() take place in the same request.");
         }else{

@@ -28,10 +28,10 @@ import org.glassfish.logging.annotation.LoggerInfo;
 /* Module private */
 public class AMXEELoggerInfo {
     public static final String LOGMSG_PREFIX = "AS-AMXEE";
-    
+
     @LogMessagesResourceBundle
     public static final String SHARED_LOGMESSAGE_RESOURCE = "org.glassfish.admin.amx.j2ee.LogMessages";
-    
+
     @LoggerInfo(subsystem = "AMX-JAVAEE", description = "AMX Services", publish = true)
     public static final String AMXEE_LOGGER = "jakarta.enterprise.system.tools.amxee";
     private static final Logger amxEELogger = Logger.getLogger(
@@ -40,7 +40,7 @@ public class AMXEELoggerInfo {
     public static Logger getLogger() {
         return amxEELogger;
     }
-    
+
     @LogMessageInfo(
             message = "Registering application {0} using AMX having exception {1}",
             level = "INFO")

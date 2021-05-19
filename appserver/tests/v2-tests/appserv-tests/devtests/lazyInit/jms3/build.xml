@@ -82,16 +82,16 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant simple (Executes the simple tests)
-		ant all (Executes all the ejb  jms3 tests)
-		ant clean (cleans all the ejb  jms3 tests)
-		ant build (builds all the ejb  jms3 tests)
-		ant setup (sets up all resources for jms3 tests)
-		ant deploy (deploys all the ejb  jms3 apps)
-		ant run (Executes all the ejb  jms3 tests)
-		ant undeploy (undeploys all the  jms3 apps)
-		ant unsetup (unsets all resources for jms3 tests)
-	</echo>
+    <echo> Usage:
+        ant simple (Executes the simple tests)
+        ant all (Executes all the ejb  jms3 tests)
+        ant clean (cleans all the ejb  jms3 tests)
+        ant build (builds all the ejb  jms3 tests)
+        ant setup (sets up all resources for jms3 tests)
+        ant deploy (deploys all the ejb  jms3 apps)
+        ant run (Executes all the ejb  jms3 tests)
+        ant undeploy (undeploys all the  jms3 apps)
+        ant unsetup (unsets all resources for jms3 tests)
+    </echo>
     </target>
 </project>

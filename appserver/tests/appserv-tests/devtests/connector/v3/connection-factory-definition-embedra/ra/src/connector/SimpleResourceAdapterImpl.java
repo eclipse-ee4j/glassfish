@@ -29,14 +29,14 @@ import javax.transaction.xa.XAResource;
 
 /**
  * This is a sample resource adapter
- * 
+ *
  * @author Qingqing Ouyang
  */
 @Connector(
 /* moduleName="My Simple RAR", */
-    displayName = "Simple Resource Adapter", 
-    vendorName = "Java Software", 
-    eisType = "Generic Type", 
+    displayName = "Simple Resource Adapter",
+    vendorName = "Java Software",
+    eisType = "Generic Type",
     version = "1.0Alpha",
     transactionSupport=TransactionSupportLevel.XATransaction)
 

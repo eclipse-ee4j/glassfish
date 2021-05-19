@@ -57,7 +57,7 @@
 
     <target name="setup"/>
     <target name="unsetup"/>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="ejb"/>
@@ -69,8 +69,8 @@
 
     <target name="build" depends="compile">
         <antcall target="build-ear-common"/>
-    </target> 
-    
+    </target>
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-ee">
             <param name="appserver.instance.name" value="ee-synchronization-cluster"/>
@@ -86,7 +86,7 @@
         </antcall>
         <antcall target="remove-cleaner-cookie"/>
         <antcall target="restart-cluster"/>
-    </target>   
+    </target>
 
     <target name="copy-client-jar" depends="init-common">
         <copy file="${admin.domain.dir}/${admin.domain}/applications/j2ee-apps/${appname}App/${appname}AppClient.jar" todir="${assemble.dir}" failonerror="false"/>
@@ -105,7 +105,7 @@
         </antcall>
     </target>
 
-    <target name="deploy-ee" depends="init-common" if="ee">      
+    <target name="deploy-ee" depends="init-common" if="ee">
       <echo message="Deploy ${appname}App.ear to ${appserver.instance.name}"/>
       <property name="deployed.app" value="${assemble.dir}/${appname}App.ear"/>
 
@@ -123,26 +123,26 @@
       </exec>
       <echo message="Deployment on target server ${appserver.instance.name} successful"/>
     </target>
-     
+
     <!-- =============================================== -->
     <!-- Target to run the standalone client without ACC -->
     <!-- =============================================== -->
     <target name="run-standalone-client" depends="init-common">
         <property name="jndi.name" value="lookupbean"/>
         <property name="provider.url" value="iiop://${admin.host}:${orb.port}"/>
-        <property name="ctxfactory" 
+        <property name="ctxfactory"
             value="com.sun.enterprise.naming.SerialInitContextFactory"/>
 <!--
-	<property name="ctxfactory" 
-            	value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
+    <property name="ctxfactory"
+                value="org.glassfish.jndi.cosnaming.CNCtxFactory"/>
 -->
-	<echo message="provider.url used is ${provider.url}"/>
+      <echo message="provider.url used is ${provider.url}"/>
       <java classname="${test.client}"
         classpath="${s1astest.classpath}:${assemble.dir}/${appname}AppClient.jar"
         failonerror="true" fork="true">
-	<jvmarg value="-DtestId=${test.id}"/>
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
-	<jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
+        <jvmarg value="-DtestId=${test.id}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialHost=${admin.host}"/>
+        <jvmarg value="-Dorg.omg.CORBA.ORBInitialPort=${orb.port}"/>
         <arg value="${provider.url}"/>
         <arg value="${ctxfactory}"/>
         <arg value="${jndi.name}"/>
@@ -197,19 +197,19 @@
     </path>
 
     <target name="compile-test" depends="init-common"
-        description="Compile test sources">  
+        description="Compile test sources">
       <echo message="JUnit Jar ${junit.jar}" />
-     
-        <javac srcdir="${testsrc.dir}" 
+
+        <javac srcdir="${testsrc.dir}"
                destdir="${build.classes.dir}"
-               debug="${javac.debug}" 
+               debug="${javac.debug}"
                optimize="${javac.optimize}"
                deprecation="${javac.deprecation}"
                failonerror="true">
             <classpath>
                 <path refid="test.classpath"/>
             </classpath>
-            <include name="**/*.java"/>            
+            <include name="**/*.java"/>
         </javac>
     </target>
 </project>

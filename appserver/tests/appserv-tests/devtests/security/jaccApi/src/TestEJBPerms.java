@@ -18,7 +18,7 @@ package jakarta.security.jacc;
 
 import java.lang.reflect.*;
 import java.util.Enumeration;
-import java.security.*; 
+import java.security.*;
 import jakarta.security.jacc.EJBMethodPermission;
 import jakarta.security.jacc.EJBRoleRefPermission;
 
@@ -50,14 +50,14 @@ public class TestEJBPerms {
 
         Permission p2 = p1;
         try {
-            FileOutputStream fout = new 
+            FileOutputStream fout = new
                 FileOutputStream("serial-test-file.tmp");
             ObjectOutputStream sout = new ObjectOutputStream(fout);
             sout.writeObject(p1);
             sout.flush();
             sout.close();
             fout.close();
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             t.printStackTrace();
             debug( "-- Serialization Test Failed(write)-" + p1.getName() + "," + p1.getActions());
         }
@@ -67,18 +67,18 @@ public class TestEJBPerms {
             ObjectInputStream sin = new ObjectInputStream(fin);
             p2 = (Permission) sin.readObject();
             sin.close();
-            fin.close(); 
-        } catch( Throwable t ) { 
+            fin.close();
+        } catch( Throwable t ) {
             t.printStackTrace();
             debug( "-- Serialization Test Failed(read)-" + p1.getName() + "," + p1.getActions());
             result = false;
         }
 
         if (result == true) {
-            if (p2.equals(p1)) { 
+            if (p2.equals(p1)) {
                 debug( "-- Serialization Test Succeeded -----------" + p2.getName() + "," + p2.getActions());
                 stat.addStatus(description, stat.PASS);
-            } else { 
+            } else {
                 debug( "-- Serialization Test Failed-" + p1.getName() + "," + p1.getActions());
                 stat.addStatus(description, stat.FAIL);
             }
@@ -105,7 +105,7 @@ public class TestEJBPerms {
 
             if (expectedToSucceed) {
 
-                p2 = new EJBMethodPermission(p1.getName(),p1.getActions()); 
+                p2 = new EJBMethodPermission(p1.getName(),p1.getActions());
                 testSerialization(p2);
 
                 if (!p1.equals(p2)) {
@@ -123,7 +123,7 @@ public class TestEJBPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -146,7 +146,7 @@ public class TestEJBPerms {
     }
 
     private static void doEJBMethodPermission( boolean expectedToSucceed,
-           String ejbName, String methodName, String methodInterface, 
+           String ejbName, String methodName, String methodInterface,
            String[] methodParams) {
         String description = "doEJBMethodPermissionWithParams:" +
             expectedToSucceed + "-" + ejbName + "-" + methodName +
@@ -163,7 +163,7 @@ public class TestEJBPerms {
                                          methodParams);
 
             if (expectedToSucceed) {
-                p2 = new EJBMethodPermission(p1.getName(),p1.getActions()); 
+                p2 = new EJBMethodPermission(p1.getName(),p1.getActions());
                 testSerialization(p2);
 
                 if (!p1.equals(p2)) {
@@ -181,16 +181,16 @@ public class TestEJBPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
             }
-            
+
             result = false;
-        } 
+        }
         if (result == expectedToSucceed) {
-            if (expectedToSucceed) { 
+            if (expectedToSucceed) {
                 debug( "-- Construct Test Succeeded -------------------------------------");
             } else {
                 debug( "-- Construct Test Succeeded (negative)---------------------------");
@@ -206,7 +206,7 @@ public class TestEJBPerms {
              String ejbName, String methodInterface, Method method) {
 
         String description = "doEJBMethodPermissionWithMethod:" +
-            expectedToSucceed + "-" + ejbName + 
+            expectedToSucceed + "-" + ejbName +
             "-" + methodInterface + "-" + method;
 
         boolean result = true;
@@ -241,7 +241,7 @@ public class TestEJBPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -251,7 +251,7 @@ public class TestEJBPerms {
         }
 
         if (result == expectedToSucceed) {
-            if (expectedToSucceed) { 
+            if (expectedToSucceed) {
                 debug( "-- Construct Test Succeeded -------------------------------------");
             } else {
                 debug( "-- Construct Test Succeeded (negative)---------------------------");
@@ -281,7 +281,7 @@ public class TestEJBPerms {
 
             if (expectedToSucceed) {
 
-                p2 = new EJBRoleRefPermission(p1.getName(),p1.getActions()); 
+                p2 = new EJBRoleRefPermission(p1.getName(),p1.getActions());
                 testSerialization(p2);
 
                 if (!p1.equals(p2)) {
@@ -300,7 +300,7 @@ public class TestEJBPerms {
                 result = false;
             }
 
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
 
             if (expectedToSucceed) {
                 t.printStackTrace();
@@ -310,7 +310,7 @@ public class TestEJBPerms {
         }
 
         if (result == expectedToSucceed) {
-            if (expectedToSucceed) { 
+            if (expectedToSucceed) {
                 debug( "-- Construct Test Succeeded -------------------------------------" + p1.hashCode());
             } else {
                 debug( "-- Construct Test Succeeded (negative)---------------------------");
@@ -324,7 +324,7 @@ public class TestEJBPerms {
 
     private static void doPermissionImplies ( boolean expectedResult,
             Permission thisP, Permission p) {
-        //SEC is added there so that it will not cut off the 
+        //SEC is added there so that it will not cut off the
         //first part with space, an issue in reporting tools
         String description = "SEC doPermissionImplies:" +
             expectedResult + "-" + thisP + "-" + p;
@@ -336,17 +336,17 @@ public class TestEJBPerms {
             if (thisP.implies(p) != expectedResult) {
                 debug(
                     (expectedResult ? "unexpected failure:" :"unexpected success:")
-                     + p + (expectedResult ?" not implied by:":" implied by:") + 
+                     + p + (expectedResult ?" not implied by:":" implied by:") +
                     thisP);
                 debug( "-- Permission implies Test Failed ----------------------------------------");
                 stat.addStatus(description, stat.FAIL);
             } else {
-                debug(p + 
+                debug(p +
                    (expectedResult ? " implied by:":" not implied by:") + thisP);
                 debug( "-- Permission implies Test Succeeded -------------------------------------");
                 stat.addStatus(description, stat.PASS);
             }
-        } catch( Throwable t ) { 
+        } catch( Throwable t ) {
             debug("unexpected exception");
             t.printStackTrace();
             debug( "-- Permission implies Test Failed ----------------------------------------");
@@ -368,41 +368,41 @@ public class TestEJBPerms {
             doEJBMethodPermission(true,"bankbean","withdraw,Home");
             doEJBMethodPermission(true,"bankbean","withdraw,Home,java.lang.string");
             doEJBMethodPermission(true,"bankbean",",Home");
-    
+
             doEJBMethodPermission(true,"bankbean",",Home,java.lang.string");
-    
+
             doEJBMethodPermission(true,"bankbean","withdraw");
             doEJBMethodPermission(true,"bankbean","withdraw,Home");
             doEJBMethodPermission(true,"bankbean","withdraw,,java.lang.string");
             doEJBMethodPermission(true,"bankbean","withdraw,,");
             doEJBMethodPermission(false,"bankBean","withdraw","Home",params3);
-    
+
             doEJBMethodPermission(true,"bankBean","withdraw","Home",params1);
             doEJBMethodPermission(true,"bankBean","withdraw","Home",params2);
-     
+
             doEJBMethodPermission(true,"bankBean","withdraw","Home",null);
-    
+
             doEJBMethodPermission(true,"bankBean",null,"Home",params1);
-        
+
             doEJBMethodPermission(true,"bankBean","withdraw",null,params2);
-    
+
             doEJBMethodPermission(true,"bankBean",null,null,null);
-            
-            EJBMethodPermission a = 
+
+            EJBMethodPermission a =
                 new EJBMethodPermission("bankBean","withdraw,Home,java.lang.string");
-            EJBMethodPermission b = 
+            EJBMethodPermission b =
                 new EJBMethodPermission("myBean","withdraw,Home,java.lang.string");
-            EJBMethodPermission c = 
+            EJBMethodPermission c =
                 new EJBMethodPermission("myBean",",Home,java.lang.string");
-            EJBMethodPermission d = 
+            EJBMethodPermission d =
                 new EJBMethodPermission("myBean",",,java.lang.string");
-            EJBMethodPermission e = 
+            EJBMethodPermission e =
                 new EJBMethodPermission("myBean","withdraw,,java.lang.string");
-            EJBMethodPermission f = 
+            EJBMethodPermission f =
                 new EJBMethodPermission("myBean","withdraw,,java.lang.int");
-            EJBMethodPermission g = 
+            EJBMethodPermission g =
                 new EJBMethodPermission("myBean","withdraw,Remote,");
-            EJBMethodPermission h = 
+            EJBMethodPermission h =
                 new EJBMethodPermission("myBean","withdraw","Remote",new String[0]);
             testSerialization(a);
             testSerialization(b);
@@ -412,7 +412,7 @@ public class TestEJBPerms {
             testSerialization(f);
             testSerialization(g);
             testSerialization(h);
-    
+
             doPermissionImplies(false,a,b);
             doPermissionImplies(false,b,a);
             doPermissionImplies(false,c,a);
@@ -428,7 +428,7 @@ public class TestEJBPerms {
             doPermissionImplies(true,d,c);
             doPermissionImplies(true,g,h);
             doPermissionImplies(true,h,g);
-    
+
             doEJBRoleRefPermission(true,"EJBName","customer");
 
             EJBRoleRefPermission a1,a2,a3,a4;
@@ -441,7 +441,7 @@ public class TestEJBPerms {
             testSerialization(a2);
             testSerialization(a3);
             testSerialization(a4);
-    
+
             doPermissionImplies(true,a1,a1);
             doPermissionImplies(false,a1,a2);
             doPermissionImplies(false,a1,a3);
@@ -468,7 +468,7 @@ public class TestEJBPerms {
 
         for (int i=0; i< m.length; i++) {
             for (int j=0; j<m.length; j++) {
-                if (i == j) { 
+                if (i == j) {
                     doPermissionImplies(true,p[i],p[j]);
                 } else {
                     doPermissionImplies(false,p[i],p[j]);

@@ -33,14 +33,14 @@ import jakarta.jms.QueueReceiver;
 import jakarta.jms.TextMessage;
 
 public class TimerStuffImpl implements TimerStuff {
-    
+
     private static final int TX_CMT = 0;
     private static final int TX_BMT = 1;
     private static final int TX_UNSPECIFIED = 2;
-    
+
     private EJBContext context_;
     private int txMode = TX_CMT;
-    
+
     private Queue queue;
     private QueueSession session;
     private QueueConnection connection;
@@ -60,12 +60,12 @@ public class TimerStuffImpl implements TimerStuff {
             } else {
                 txMode = TX_UNSPECIFIED;
             }
-	    /** TODO
+            /** TODO
             queue = (Queue) ic.lookup("java:comp/env/jms/MyQueue");
 
-            qcFactory = (QueueConnectionFactory) 
+            qcFactory = (QueueConnectionFactory)
                 ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
-	    **/
+            **/
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -75,7 +75,7 @@ public class TimerStuffImpl implements TimerStuff {
     protected boolean isCMT() { return txMode == TX_CMT; }
     protected boolean isBMT() { return txMode == TX_BMT; }
     protected boolean isTxUnspecified() { return txMode == TX_UNSPECIFIED; }
-    
+
     public Timer createTimer(long duration, String info) throws Exception {
         TimerService ts = context_.getTimerService();
         Timer t = ts.createSingleActionTimer(duration, new TimerConfig(info, false));
@@ -86,30 +86,30 @@ public class TimerStuffImpl implements TimerStuff {
         return createTimer(duration, "createTimer<long>" + duration);
     }
 
-    public Timer createTimer(long initialDuration, long interval) 
+    public Timer createTimer(long initialDuration, long interval)
         throws Exception {
-        return createTimer(initialDuration, interval, 
+        return createTimer(initialDuration, interval,
                            "createTimer<long, long>" + initialDuration +
                            "," + interval);
     }
 
-    public Timer createTimer(long initialDuration, long interval, 
-                                   String info) 
+    public Timer createTimer(long initialDuration, long interval,
+                                   String info)
         throws Exception {
         if( isBMT() ) {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createIntervalTimer(initialDuration, interval, 
+        Timer t = ts.createIntervalTimer(initialDuration, interval,
                     new TimerConfig(new AppInfo(info), false));
-                                 
+
         if( isBMT() ) {
             context_.getUserTransaction().commit();
         }
         return t;
     }
 
-    public Timer createTimer(Date expirationTime) 
+    public Timer createTimer(Date expirationTime)
         throws Exception {
         TimerService ts = context_.getTimerService();
         if( isBMT() ) {
@@ -120,7 +120,7 @@ public class TimerStuffImpl implements TimerStuff {
         // This should happen very rarely since container puts the brakes
         // on a bit by adding a few seconds if, upon creation, the expiration
         // time has already passed.
-        Timer t = ts.createSingleActionTimer(expirationTime, 
+        Timer t = ts.createSingleActionTimer(expirationTime,
                 new TimerConfig("createTimer<Date>" + expirationTime, false));
         if( isBMT() ) {
             context_.getUserTransaction().commit();
@@ -128,14 +128,14 @@ public class TimerStuffImpl implements TimerStuff {
         return t;
     }
 
-    public Timer createTimer(Date expirationTime, long interval) 
+    public Timer createTimer(Date expirationTime, long interval)
         throws Exception {
 
         if( isBMT() ) {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createIntervalTimer(expirationTime, interval, 
+        Timer t = ts.createIntervalTimer(expirationTime, interval,
                 new TimerConfig("createTimer<Date, long>" + expirationTime +
                                  "," + interval, false));
         if( isBMT() ) {
@@ -151,7 +151,7 @@ public class TimerStuffImpl implements TimerStuff {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createSingleActionTimer(duration, 
+        Timer t = ts.createSingleActionTimer(duration,
                 new TimerConfig("createTimerAndRollback" + duration, false));
         if( isBMT() ) {
             context_.getUserTransaction().rollback();
@@ -165,7 +165,7 @@ public class TimerStuffImpl implements TimerStuff {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createSingleActionTimer(duration, 
+        Timer t = ts.createSingleActionTimer(duration,
                 new TimerConfig("createTimerAndCancel" + duration, false));
         t.cancel();
         if( isBMT() ) {
@@ -175,12 +175,12 @@ public class TimerStuffImpl implements TimerStuff {
 
     public void createTimerAndCancelAndCancel(long duration) throws Exception {
         if( isTxUnspecified() ) {
-            return; 
+            return;
         } else if( isBMT() ) {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createSingleActionTimer(duration, 
+        Timer t = ts.createSingleActionTimer(duration,
                 new TimerConfig("createTimerAndCancelAndCancel"+ duration, false));
         t.cancel();
         t.cancel();
@@ -189,7 +189,7 @@ public class TimerStuffImpl implements TimerStuff {
         }
     }
 
-    public void createTimerAndCancelAndRollback(long duration) 
+    public void createTimerAndCancelAndRollback(long duration)
         throws Exception {
         if( isTxUnspecified() ) {
             return;
@@ -197,7 +197,7 @@ public class TimerStuffImpl implements TimerStuff {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createSingleActionTimer(duration, 
+        Timer t = ts.createSingleActionTimer(duration,
                 new TimerConfig("createTimerAndCancelAndRollback" + duration, false));
         t.cancel();
         if( isBMT() ) {
@@ -242,8 +242,8 @@ public class TimerStuffImpl implements TimerStuff {
             context_.getUserTransaction().commit();
         }
     }
-    
-    public void cancelTimerAndRollback(Timer timer) 
+
+    public void cancelTimerAndRollback(Timer timer)
         throws Exception {
         if( isTxUnspecified() ) {
             return;
@@ -258,7 +258,7 @@ public class TimerStuffImpl implements TimerStuff {
         }
     }
 
-    public void cancelTimerAndCancelAndRollback(Timer timer) 
+    public void cancelTimerAndCancelAndRollback(Timer timer)
         throws Exception {
         if( isTxUnspecified() ) {
             return;
@@ -308,7 +308,7 @@ public class TimerStuffImpl implements TimerStuff {
             // success
         } else {
             throw new RemoteException("getTimers failure");
-        }                                   
+        }
     }
 
     public Timer getTimeRemainingTest1(int numIterations) throws Exception {
@@ -316,7 +316,7 @@ public class TimerStuffImpl implements TimerStuff {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createIntervalTimer(1, 1, 
+        Timer t = ts.createIntervalTimer(1, 1,
                 new TimerConfig("getTimeRemainingTest1", false));
         System.out.println("Remaining times for " + t.getInfo());
         for(int i = 0; i < numIterations; i++) {
@@ -345,7 +345,7 @@ public class TimerStuffImpl implements TimerStuff {
             context_.getUserTransaction().begin();
         }
         TimerService ts = context_.getTimerService();
-        Timer t = ts.createIntervalTimer(1, 1, 
+        Timer t = ts.createIntervalTimer(1, 1,
                 new TimerConfig("getNextTimeoutTest1", false));
         System.out.println("Remaining times for " + t.getInfo());
         for(int i = 0; i < numIterations; i++) {
@@ -369,7 +369,7 @@ public class TimerStuffImpl implements TimerStuff {
         }
     }
 
-    // Make sure there are no active timers.  
+    // Make sure there are no active timers.
     public void assertNoTimers() throws Exception {
         checkCallerSecurityAccess("assertNoTimers", true);
         TimerService ts = context_.getTimerService();
@@ -379,11 +379,11 @@ public class TimerStuffImpl implements TimerStuff {
         }
     }
 
-    public void assertTimerNotActive(Timer timer) 
+    public void assertTimerNotActive(Timer timer)
         throws RemoteException {
         try {
             timer.getTimeRemaining();
-            throw 
+            throw
                 new Exception("assertTimerNotActive called with active timer");
         } catch(NoSuchObjectLocalException nsole) {
             // caught expected exception
@@ -392,10 +392,10 @@ public class TimerStuffImpl implements TimerStuff {
         }
     }
 
-    public Serializable getInfoNoError(Timer timer) 
+    public Serializable getInfoNoError(Timer timer)
         throws Exception {
         return getInfo(timer, false);
-        
+
     }
 
     public Serializable getInfo(Timer timer) throws Exception {
@@ -446,18 +446,18 @@ public class TimerStuffImpl implements TimerStuff {
         return;
     }
 
-    public void recvMessageAndCreateTimer(boolean expectMessage) 
+    public void recvMessageAndCreateTimer(boolean expectMessage)
         throws Exception {
         if( isTxUnspecified() ) {
             return;
         }
         try {
-            
+
             if( isBMT() ) {
                 context_.getUserTransaction().begin();
             }
 
-            recvMessageAndCreateTimer("recvMessageAndCreateTimer", 
+            recvMessageAndCreateTimer("recvMessageAndCreateTimer",
                                       expectMessage);
 
         } catch(Exception e) {
@@ -471,7 +471,7 @@ public class TimerStuffImpl implements TimerStuff {
         return;
     }
 
-    public void recvMessageAndCreateTimerAndRollback(boolean expectMessage) 
+    public void recvMessageAndCreateTimerAndRollback(boolean expectMessage)
         throws Exception {
 
         if( isTxUnspecified() ) {
@@ -511,7 +511,7 @@ public class TimerStuffImpl implements TimerStuff {
             Timer t = ts.createSingleActionTimer(1, new TimerConfig(timerName, false));
         } catch(Exception e) {
             throw e;
-        } 
+        }
         return;
     }
 
@@ -522,11 +522,11 @@ public class TimerStuffImpl implements TimerStuff {
             QueueReceiver receiver = session.createReceiver(queue);
             // Send a message.
             TextMessage message = (TextMessage) receiver.receiveNoWait();
-            
+
             if( message == null ) {
                 if( expectMessage ) {
                     throw new RemoteException("Expecting message in " +
-                                              "recvMessageAndCreateTimerAndRollback");           
+                                              "recvMessageAndCreateTimerAndRollback");
                 }
             } else {
                 if( !expectMessage ) {
@@ -534,12 +534,12 @@ public class TimerStuffImpl implements TimerStuff {
                                               message.getText());
                 }
             }
-            
+
             TimerService ts = context_.getTimerService();
             Timer t = ts.createSingleActionTimer(1, new TimerConfig(timerName, false));
         } catch(Exception e) {
             throw e;
-        } 
+        }
 
         return;
     }
@@ -625,7 +625,7 @@ public class TimerStuffImpl implements TimerStuff {
                 context_.getUserTransaction().begin();
                 txStarted = true;
             }
-            Timer t = ts.createIntervalTimer(1, 1, 
+            Timer t = ts.createIntervalTimer(1, 1,
                     new TimerConfig("doTimerStuff_" + method, false));
             t.cancel();
             if( !allowed ) {
@@ -688,7 +688,7 @@ public class TimerStuffImpl implements TimerStuff {
             } catch(IllegalStateException e) { }
             getTimerService("ejbTimeout", true);
             doTimerStuff("ejbTimeout", true);
-        } 
+        }
     }
 
     protected void checkCallerSecurityAccess(String method, boolean allowed) {
@@ -730,19 +730,19 @@ public class TimerStuffImpl implements TimerStuff {
 
 
     protected void setupJmsConnection() {
-	/** TODO
-	
+        /** TODO
+
         try {
             InitialContext ic = new InitialContext();
             connection = qcFactory.createQueueConnection();
             session = connection.createQueueSession(true, 0);
             connection.start();
         } catch(Exception e) { e.printStackTrace(); }
-	*/
+        */
     }
 
     protected void cleanup() {
-	/** TODO
+        /** TODO
         if( connection != null ) {
             try {
                 connection.close();
@@ -751,7 +751,7 @@ public class TimerStuffImpl implements TimerStuff {
                 jmse.printStackTrace();
             }
         }
-	**/
+        **/
     }
 
 

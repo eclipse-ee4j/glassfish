@@ -49,14 +49,14 @@ final public class PagedResultsResponseControl extends BasicControl {
      */
     public static final String OID = "1.2.840.113556.1.4.319";
 
-    /** 
+    /**
      * An estimate of the number of entries in the search result.
      *
      * @serial
      */
     private int resultSize;
 
-    /** 
+    /**
      * A server-generated cookie.
      *
      * @serial
@@ -85,7 +85,7 @@ final public class PagedResultsResponseControl extends BasicControl {
 
             ber.parseSeq(null);
             resultSize = ber.parseInt();
-	    cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
+            cookie = ber.parseOctetString(Ber.ASN_OCTET_STR, null);
         }
     }
 
@@ -98,17 +98,17 @@ final public class PagedResultsResponseControl extends BasicControl {
         return resultSize;
     }
 
-    /*
+    /**
      * Retrieves the server-generated cookie. Null is returned when there are
      * no more entries for the server to return.
      *
      * @return A possibly null server-generated cookie.
      */
     public byte[] getCookie() {
-	if (cookie.length == 0) {
-	    return null;
-	} else {
+        if (cookie.length == 0) {
+            return null;
+        } else {
             return cookie;
-	}
+        }
     }
 }

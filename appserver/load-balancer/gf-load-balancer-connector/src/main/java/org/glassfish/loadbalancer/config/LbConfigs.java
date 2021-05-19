@@ -75,7 +75,7 @@ public interface LbConfigs extends ConfigBeanProxy, DomainExtension {
      * @param   name    the name of the lb config
      * @return          the LbConfig object, or null if no such lb config
      */
-    
+
     @DuckTyped
     public LbConfig getLbConfig(String name);
 
@@ -88,5 +88,5 @@ public interface LbConfigs extends ConfigBeanProxy, DomainExtension {
             }
             return null;
         }
-    }  
+    }
 }

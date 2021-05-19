@@ -379,7 +379,7 @@ public class ResourcesUtil {
         }
         String rarName = adminObjectResource.getResAdapter();
         if(rarName != null){
-            //TODO ASR : look for RACs in application/module's resources also 
+            //TODO ASR : look for RACs in application/module's resources also
             resourcesToload[0] = adminObjectResource;
             ResourceAdapterConfig[] resourceAdapterConfig =
                     new ResourceAdapterConfig[1];

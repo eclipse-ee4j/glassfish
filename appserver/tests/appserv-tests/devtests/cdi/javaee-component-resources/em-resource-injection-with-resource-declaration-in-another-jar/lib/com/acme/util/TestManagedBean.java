@@ -23,7 +23,7 @@ import jakarta.inject.Inject;
 public class TestManagedBean {
     @Inject
     private TestDependentBeanInLib tdbl;
-    
+
     public boolean isInjectionSuccessful(){
         return tdbl != null;
     }

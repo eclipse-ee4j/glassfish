@@ -50,7 +50,7 @@ public abstract class BackupCommands extends LocalDomainCommand {
 
     @Param(name = "long", shortName="l", alias = "verbose", optional = true)
     boolean verbose;
- 
+
     @Param(name = "domain_name", primary = true, optional = true)
     String domainName;
 
@@ -78,9 +78,9 @@ public abstract class BackupCommands extends LocalDomainCommand {
                 strings.get("NoVerboseAndTerseAtTheSameTime"));
 
         if (domainDirParam == null || domainDirParam.length() <= 0) {
-            
+
             try {
-            
+
                 domainDirParam = DomainDirs.getDefaultDomainsDir().getPath();
             } catch (IOException ioe) {
                 throw new CommandException(ioe.getMessage());
@@ -96,7 +96,7 @@ public abstract class BackupCommands extends LocalDomainCommand {
         }
 
         // if user hasn't specified domain_name, get the default one
-        
+
         if (domainName == null)
             domainName = getDomainName();
 
@@ -134,7 +134,7 @@ public abstract class BackupCommands extends LocalDomainCommand {
         request.setTerse(programOpts.isTerse());
         request.setVerbose(verbose);
     }
- 
+
     /*
      * Method to check if the file is writable directory
      */

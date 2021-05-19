@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 
 /**
  * Provides the logging facilities.
- * 
+ *
  * @author Shing Wai Chan
  */
 public class LogFacade {

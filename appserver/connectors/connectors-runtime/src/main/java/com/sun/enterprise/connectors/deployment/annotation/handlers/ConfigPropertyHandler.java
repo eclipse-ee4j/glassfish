@@ -152,7 +152,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
             String getterMethod = "get" + getCamelCasedPropertyName(fieldName);
 
             if(Boolean.class.isAssignableFrom(f.getType())){
-                getterMethod = "is" + getCamelCasedPropertyName(fieldName);                
+                getterMethod = "is" + getCamelCasedPropertyName(fieldName);
             }
             Method m = declaringClass.getDeclaredMethod(getterMethod);
             m.setAccessible(true);
@@ -300,7 +300,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
                 desc.addConfigPropertyProcessedClass(adminObjectClass.getName());
             }
         } else {
-            // ideally adminObject should not be null as "@AdministeredObject" 
+            // ideally adminObject should not be null as "@AdministeredObject"
             // should have been handled before @ConfigProperty
             getFailureResult(element, "could not get adminobject of interface " +
                     "[ " + adminObjectIntf.getName() + " ]" +
@@ -404,7 +404,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
 
     public static boolean processConnector(ConnectorDescriptor desc, ConnectorConfigProperty ep, Class declaringClass) {
         // make sure that the RA Class considered here is the one specified in descriptor
-        // If not, it will be processed once the @Connector is selected during post-processing 
+        // If not, it will be processed once the @Connector is selected during post-processing
 
         // handle the annotation specified on a ResourceAdapter JavaBean
         // make sure that the property is not already specified in DD

@@ -41,7 +41,7 @@ public class JDBCActivator implements BundleActivator {
     private void test(){
 
         testJdbcResources(null);
-        
+
         testJdbcResources("(osgi.jdbc.driver.class=oracle.jdbc.pool.OracleDataSource)");
         testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.EmbeddedXADataSource)");
         testJdbcResources("(osgi.jdbc.driver.class=org.apache.derby.jdbc.ClientDataSource)");
@@ -59,7 +59,7 @@ public class JDBCActivator implements BundleActivator {
 
         testJdbcResources("(&(jndi-name=jdbc/oracle_type4_resource)(osgi.jdbc.driver.class=org.apache.derby.jdbc.ClientDataSource))");
 
-        
+
     }
 
     private void testJdbcResources(String filter) {

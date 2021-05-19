@@ -16,7 +16,7 @@
 
 package com.sun.jdo.spi.persistence.generator.database;
 
-/** 
+/**
  * This interface defines string constants used by the database generation.
  *
  * @author Jie Leng, Dave Bristor

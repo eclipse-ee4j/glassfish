@@ -21,27 +21,27 @@ import com.sun.enterprise.deployment.node.ApplicationNode;
 import com.sun.enterprise.deployment.node.RootXMLNode;
 
 /**
- * This class is responsible for handling J2EE applications 
+ * This class is responsible for handling J2EE applications
  * DeploymentDescriptor files
  *
  * @author Jerome Dochez
  */
 public class ApplicationDeploymentDescriptorFile extends DeploymentDescriptorFile {
-    
-    public final static String DESC_PATH = "META-INF/application.xml";        
-    
+
+    public final static String DESC_PATH = "META-INF/application.xml";
+
     /** Creates a new instance of ApplicationDeploymentDescriptorFile */
     public ApplicationDeploymentDescriptorFile() {
     }
-    
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.APPLICATION_JAR_ENTRY;        
+        return DescriptorConstants.APPLICATION_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -51,5 +51,5 @@ public class ApplicationDeploymentDescriptorFile extends DeploymentDescriptorFil
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
         return new ApplicationNode();
     }
-    
+
 }

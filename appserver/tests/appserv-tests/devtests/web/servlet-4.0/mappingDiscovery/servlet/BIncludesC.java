@@ -41,13 +41,13 @@ public class BIncludesC extends HttpServlet {
         PrintWriter out = response.getWriter();
         try {
             /* TODO output your page here. You may use following sample code. */
-            request.getServletContext().log(this.getClass().getSimpleName() + " " 
+            request.getServletContext().log(this.getClass().getSimpleName() + " "
                     + request.getHttpServletMapping());
             HttpServletMapping forwardMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.FORWARD_MAPPING);
-            request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: " 
+            request.getServletContext().log(this.getClass().getSimpleName() + " FORWARD_MAPPING attribute: "
                     + forwardMapping);
             HttpServletMapping includeMapping = (HttpServletMapping) request.getAttribute(RequestDispatcher.INCLUDE_MAPPING);
-            request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: " 
+            request.getServletContext().log(this.getClass().getSimpleName() + " INCLUDE_MAPPING attribute: "
                     + includeMapping);
             out.print("<p> In " + this.getClass().getSimpleName() + " " + request.getHttpServletMapping() + "</p>");
             out.print("<p> FORWARD_MAPPING: " + forwardMapping + "</p>");

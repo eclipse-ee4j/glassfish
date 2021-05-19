@@ -23,14 +23,14 @@
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>6.1.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>        
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <groupId>org.glassfish.main.core</groupId>
     <artifactId>core</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish Core modules</name>  
+    <name>GlassFish Core modules</name>
     <modules>
-	<module>javaee-kernel</module>
-        <module>api-exporter-fragment</module>       
+        <module>javaee-kernel</module>
+        <module>api-exporter-fragment</module>
     </modules>
 </project>

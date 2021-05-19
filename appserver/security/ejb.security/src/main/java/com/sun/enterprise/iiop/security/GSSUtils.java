@@ -29,9 +29,9 @@ import org.ietf.jgss.Oid;
 import com.sun.logging.*;
 
 /*
- * @author    Sekhar Vajjhala 
+ * @author    Sekhar Vajjhala
  * (Almost complete rewrite of an old version)
- *         
+ *
  */
 public class GSSUtils {
     private static final java.util.logging.Logger _logger = LogDomains.getLogger(GSSUtils.class, LogDomains.CORBA_LOGGER);
@@ -213,7 +213,7 @@ public class GSSUtils {
      * Generate an exported name as specified in [RFC 2743] section 3.2,
      * "Mechanism-Independent Exported Name Object Format". For convenience, the format of the exported name is reproduced
      * here from [RFC2743] :
-     * 
+     *
      * Format: Bytes 2 0x04 0x01 2 mech OID length (len) len mech OID's DER value 4 exported name len name len exported name
      *
      */
@@ -249,7 +249,7 @@ public class GSSUtils {
 
     /*
      * Return the DER representation of an ObjectIdentifier. The DER representation is as follows:
-     * 
+     *
      * 0x06 -- Tag for OBJECT IDENTIFIER derOID.length -- length in octets of OID DER value of OID -- written as specified
      * byte the DER representation for an ObjectIdentifier.
      */
@@ -259,12 +259,12 @@ public class GSSUtils {
             _logger.log(Level.FINE, "Returning OID in DER format");
             _logger.log(Level.FINE, "    OID = " + id.toString());
         }
-        
+
         byte[] oid = id.getDER();
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "    DER OID: " + dumpHex(oid));
         }
-        
+
         return oid;
     }
 
@@ -287,7 +287,7 @@ public class GSSUtils {
      *
      * 0x60 | Tag for [APPLICATION 0] SEQUENCE <token-length-octets> | 0x06 | Along with the next two entries
      * <object-identifier-length> | is a DER encoding of an object <object-identifier-octets> | identifier
-     * 
+     *
      * Mechanism specific token | format defined by the mechanism itself outside of RFC 2743.
      */
 
@@ -314,7 +314,7 @@ public class GSSUtils {
             _logger.log(Level.FINE, "Mechanism independent token created: ");
             _logger.log(Level.FINE, dumpHex(token));
         }
-        
+
         return token;
     }
 
@@ -351,14 +351,14 @@ public class GSSUtils {
      *
      * If the header is well formed, then the starting position of the mechanism specific token within the token is
      * returned.
-     * 
+     *
      * If the header is mal formed, then an exception is thrown.
      */
 
     private static int verifyTokenHeader(Oid oid, byte[] token) throws GSSException {
         int index = 0;
         _logger.log(Level.FINE, "Attempting to verify tokenheader in the mechanism independent token.");
-        
+
         // verify header
         if (token[index++] != 0x60)
             throw new GSSException(GSSException.DEFECTIVE_TOKEN);

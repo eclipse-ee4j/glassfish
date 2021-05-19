@@ -134,7 +134,7 @@ class ZipPayloadImpl extends PayloadImpl {
 
         private void invalidateCurrentWrapperStream() {
         }
-        
+
         private void prefetchNextEntry() throws IOException {
             invalidateCurrentWrapperStream();
             nextEntry = zis.getNextEntry();
@@ -233,14 +233,14 @@ class ZipPayloadImpl extends PayloadImpl {
             return new Inbound(is);
         }
 
-	/**
-	 * Does this Inbound Payload implementation support the given content type?
-	 * @return true if the content type is supported
-	 */
-	public static boolean supportsContentType(final String contentType) {
-	    return PAYLOAD_IMPL_CONTENT_TYPE.equalsIgnoreCase(contentType);
-	}
-        
+        /**
+         * Does this Inbound Payload implementation support the given content type?
+         * @return true if the content type is supported
+         */
+        public static boolean supportsContentType(final String contentType) {
+            return PAYLOAD_IMPL_CONTENT_TYPE.equalsIgnoreCase(contentType);
+        }
+
         @Override
         public Iterator<Payload.Part> parts() {
             return new Iterator<Payload.Part>() {
@@ -261,7 +261,7 @@ class ZipPayloadImpl extends PayloadImpl {
                 public Payload.Part next() {
                     final Extra extra = new Extra(nextEntry.getExtra());
                     final Payload.Part part = new ZipPayloadImpl.Part(
-                            nextEntry.getName(), 
+                            nextEntry.getName(),
                             extra.getContentType(),
                             extra.getProperties(),
                             Inbound.this);

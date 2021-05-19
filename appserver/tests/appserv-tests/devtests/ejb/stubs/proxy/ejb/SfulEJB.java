@@ -39,14 +39,14 @@ public class SfulEJB implements SessionBean
         sc_ = sc;
     }
 
-    public void ejbRemove() 
-    { 
+    public void ejbRemove()
+    {
         System.out.println("In SfulEJB.ejbRemove(). about to throw exception");
         throw new RuntimeException("test cleanup for case where " +
                                    "ejbRemove throws an exception");
     }
 
-    public void ejbActivate() 
+    public void ejbActivate()
     {}
 
     public void ejbPassivate()
@@ -102,7 +102,7 @@ public class SfulEJB implements SessionBean
         Helper2 h2 = new Helper2();
         h2.a = 1;
         h2.b = "SfulEJB::testPassByRef6";
-        return h2;    
+        return h2;
     }
 
     public CommonRemote testPassByRef7() {

@@ -35,7 +35,7 @@ import javax.naming.NamingException;
  */
 @Service
 @NamespacePrefixes(EJBContextNamingProxy.EJB_CONTEXT)
-public class EJBContextNamingProxy 
+public class EJBContextNamingProxy
         implements NamedNamingObjectProxy {
 
     static final String EJB_CONTEXT
@@ -51,12 +51,12 @@ public class EJBContextNamingProxy
 
     private Object getEJBContextObject() {
 
-        // Cannot store EjbContainerUtilImpl.getInstance() in an instance 
-        // variable because it shouldn't be accessed before EJB container 
-        // is initialized. 
+        // Cannot store EjbContainerUtilImpl.getInstance() in an instance
+        // variable because it shouldn't be accessed before EJB container
+        // is initialized.
         // NamedNamingObjectProxy is initialized on the first lookup.
 
-        ComponentInvocation currentInv = 
+        ComponentInvocation currentInv =
                 EjbContainerUtilImpl.getInstance().getCurrentInvocation();
 
         if(currentInv == null) {

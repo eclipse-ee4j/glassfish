@@ -30,10 +30,10 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
+        <echo>
+                Usage:
                      ant all (Executes all the ejb-bmp txtests tests)
-			
-	</echo>
+
+        </echo>
     </target>
 </project>

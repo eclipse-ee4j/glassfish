@@ -82,15 +82,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the decorators tests)
-		ant clean (cleans all the decorators tests)
-		ant build (builds all the decorators tests)
-		ant setup (sets up all resources for decorators tests)
-		ant deploy (deploys all the decorators apps)
-		ant run (Executes all the decorators tests)
-		ant undeploy (undeploys all the  decorators apps)
-		ant unsetup (unsets all resources for decorators tests)
-	</echo>
+        <echo> Usage:
+                ant all (Executes all the decorators tests)
+                ant clean (cleans all the decorators tests)
+                ant build (builds all the decorators tests)
+                ant setup (sets up all resources for decorators tests)
+                ant deploy (deploys all the decorators apps)
+                ant run (Executes all the decorators tests)
+                ant undeploy (undeploys all the  decorators apps)
+                ant unsetup (unsets all resources for decorators tests)
+        </echo>
     </target>
 </project>

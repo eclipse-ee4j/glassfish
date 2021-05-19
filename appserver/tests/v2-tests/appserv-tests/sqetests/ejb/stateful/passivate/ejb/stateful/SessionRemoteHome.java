@@ -25,10 +25,10 @@ import jakarta.ejb.*;
  */
 
 public interface SessionRemoteHome extends jakarta.ejb.EJBHome {
-    
+
     public SessionRemote create()
     throws jakarta.ejb.CreateException, java.rmi.RemoteException;
-    
+
     public SessionRemote create(java.lang.String initialMessage) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

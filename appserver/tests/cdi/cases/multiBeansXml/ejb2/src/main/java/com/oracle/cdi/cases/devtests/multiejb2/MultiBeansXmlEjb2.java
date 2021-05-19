@@ -25,10 +25,10 @@ import java.util.List;
 public interface MultiBeansXmlEjb2 {
     public final static String INTERCEPTOR2 = "Interceptor2";
     public final static String CALL_ME2 = "CallMe2";
-    
+
     /**
      * This method should have all interceptors listed in the return list
-     * 
+     *
      * @param callerList An empty, non-null list
      * @return The list of all the classes that intercepted (and the final impl class) this call
      */

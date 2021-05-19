@@ -63,7 +63,7 @@ public class SubstitutionFileUtil {
 
     /**
      * Create a directory with the given prefix.
-     * 
+     *
      * @param prefix Prefix for the directory name.
      * @return An extraction directory.
      */

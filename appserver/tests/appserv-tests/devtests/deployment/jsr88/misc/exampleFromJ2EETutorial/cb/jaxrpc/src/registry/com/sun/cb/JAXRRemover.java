@@ -16,8 +16,8 @@
 
 package com.sun.cb;
 
-import javax.xml.registry.*; 
-import javax.xml.registry.infomodel.*; 
+import javax.xml.registry.*;
+import javax.xml.registry.infomodel.*;
 import java.net.*;
 import java.security.*;
 import java.util.*;
@@ -25,8 +25,8 @@ import javax.naming.*;
 
 /**
  * The JAXRRemover class consists of a makeConnection method,
- * a createOrgKey method, and an executeRemove method. It 
- * finds and deletes the organization that the OrgPublisher 
+ * a createOrgKey method, and an executeRemove method. It
+ * finds and deletes the organization that the OrgPublisher
  * class created.
  */
 public class JAXRRemover {
@@ -35,34 +35,34 @@ public class JAXRRemover {
     RegistryService rs = null;
 
     public JAXRRemover() {}
-    
+
     /**
      * Establishes a connection to a registry.
      *
-     * @param queryUrl	the URL of the query registry
-     * @param publishUrl	the URL of the publish registry
+     * @param queryUrl        the URL of the query registry
+     * @param publishUrl        the URL of the publish registry
      */
-    public void makeConnection(String queryUrl, 
+    public void makeConnection(String queryUrl,
         String publishUrl) {
 
         Context           context = null;
         ConnectionFactory factory = null;
         /*
-         * Define connection configuration properties. 
-         * To delete, you need both the query URL and the 
+         * Define connection configuration properties.
+         * To delete, you need both the query URL and the
          * publish URL.
          */
         Properties props = new Properties();
         props.setProperty("javax.xml.registry.queryManagerURL",
             queryUrl);
-        props.setProperty("javax.xml.registry.lifeCycleManagerURL", 
+        props.setProperty("javax.xml.registry.lifeCycleManagerURL",
             publishUrl);
 
         try {
-            // Create the connection, passing it the 
+            // Create the connection, passing it the
             // configuration properties
             context = new InitialContext();
-            factory = (ConnectionFactory) 
+            factory = (ConnectionFactory)
                 context.lookup("java:comp/env/eis/JAXR");
             factory.setProperties(props);
             connection = factory.createConnection();
@@ -82,9 +82,9 @@ public class JAXRRemover {
      * program, verifying it by checking that the key strings
      * match.
      *
-     * @param keyStr	the key of the published organization
+     * @param keyStr        the key of the published organization
      *
-     * @return	the key of the organization found
+     * @return        the key of the organization found
      */
     public javax.xml.registry.infomodel.Key createOrgKey(String keyStr) {
 
@@ -96,7 +96,7 @@ public class JAXRRemover {
             blcm = rs.getBusinessLifeCycleManager();
             System.out.println("Got registry service and " +
                 "life cycle manager");
-            
+
             orgKey = blcm.createKey(keyStr);
         } catch (Exception e) {
             e.printStackTrace();
@@ -114,19 +114,19 @@ public class JAXRRemover {
     /**
      * Removes the organization with the specified key value.
      *
-     * @param key	the Key of the organization
+     * @param key        the Key of the organization
      */
     public void executeRemove(javax.xml.registry.infomodel.Key key,
         String username, String password) {
 
         BusinessLifeCycleManager blcm = null;
-    
+
         try {
             blcm = rs.getBusinessLifeCycleManager();
 
             // Get authorization from the registry
             PasswordAuthentication passwdAuth =
-                new PasswordAuthentication(username, 
+                new PasswordAuthentication(username,
                     password.toCharArray());
 
             Set creds = new HashSet();
@@ -155,7 +155,7 @@ public class JAXRRemover {
                 Exception exception = null;
                 while (excIter.hasNext()) {
                     exception = (Exception) excIter.next();
-                    System.err.println("Exception on delete: " + 
+                    System.err.println("Exception on delete: " +
                     exception.toString());
                 }
             }

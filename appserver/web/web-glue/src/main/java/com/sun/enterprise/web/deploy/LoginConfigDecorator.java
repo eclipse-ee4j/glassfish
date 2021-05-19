@@ -32,24 +32,24 @@ public class LoginConfigDecorator extends LoginConfig {
     // ----------------------------------------------------------- Constructors
 
     private LoginConfiguration decoree;
-    
+
     private String errorPage;
-    
+
     private String loginPage;
-    
+
     public LoginConfigDecorator(LoginConfiguration decoree){
         this.decoree = decoree;
-        
+
         String errorPage = RequestUtil.urlDecode(decoree.getFormErrorPage());
         if (!errorPage.startsWith("/")){
             errorPage = "/" + errorPage;
         }
         setErrorPage(errorPage);
-        
+
         String loginPage = RequestUtil.urlDecode(decoree.getFormLoginPage());
         if (!loginPage.startsWith("/")){
             loginPage = "/" + loginPage;
-        }     
+        }
         setLoginPage(loginPage);
         setAuthMethod(decoree.getAuthenticationMethod());
         setRealmName(decoree.getRealmName());

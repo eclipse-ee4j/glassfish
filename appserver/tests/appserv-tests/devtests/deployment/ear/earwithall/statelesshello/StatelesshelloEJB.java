@@ -17,7 +17,7 @@
 package statelesshello;
 
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -25,26 +25,26 @@ import javax.naming.*;
 
 public class StatelesshelloEJB implements SessionBean {
     private SessionContext sc;
-    
+
     public StatelesshelloEJB(){}
-    
+
     public void ejbCreate() throws RemoteException {
-	System.out.println("In ejbCreate !!");
+        System.out.println("In ejbCreate !!");
     }
 
     public String sayStatelesshello() throws EJBException {
-	System.out.println("StatelesshelloEJB is saying hello to user\n");
+        System.out.println("StatelesshelloEJB is saying hello to user\n");
         return("A Big hello from stateless HELLO");
     }
-    
+
     public void setSessionContext(SessionContext sc) {
-	
+
         this.sc = sc;
     }
-    
+
     public void ejbRemove() throws RemoteException {}
-    
+
     public void ejbActivate() {}
-    
+
     public void ejbPassivate() {}
 }

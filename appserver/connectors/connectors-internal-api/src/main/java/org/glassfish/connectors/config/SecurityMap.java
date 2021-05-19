@@ -32,7 +32,7 @@ import jakarta.validation.constraints.Pattern;
  * Perform mapping from principal received during Servlet/EJB authentication,
  * to credentials accepted by the EIS. This mapping is optional.
  * It is possible to map multiple (server) principal to same backend principal
- * 
+ *
  */
 
 /* @XmlType(name = "", propOrder = {
@@ -85,7 +85,7 @@ public interface SecurityMap extends ConfigBeanProxy {
      */
     @Element
     public List<String> getPrincipal();
-    
+
     void setPrincipal(List<String> principals) throws PropertyVetoException;
 
 
@@ -95,6 +95,6 @@ public interface SecurityMap extends ConfigBeanProxy {
      */
     @Element
     public List<String> getUserGroup();
-    
+
     void setUserGroup(List<String> userGroups) throws PropertyVetoException;
 }

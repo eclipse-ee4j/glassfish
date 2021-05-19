@@ -25,7 +25,7 @@ import javax.management.*;
 /**
  */
 public class JVMInformationCollector extends StandardMBean implements JVMInformationMBean {
-    
+
     static final String SERVER_NAME_KEY_IN_ON = "server"; // the key to identify the server
     private MBeanServerConnection mbsc;
     private static final StringManager sm = StringManager.getManager(JVMInformationCollector.class);
@@ -70,7 +70,7 @@ public class JVMInformationCollector extends StandardMBean implements JVMInforma
         String li      = title + "\n" + invokeMBean(on, "getLogInformation");
         return ( li );
     }
-    
+
     private ObjectName processTarget(final String processName) throws RuntimeException {
         try {
             //get the object-name of the "other" real implementation of JVMInformationMBean interface :)
@@ -96,9 +96,9 @@ public class JVMInformationCollector extends StandardMBean implements JVMInforma
             final Object[] params   = {null};
             final String[] sign     = {"java.lang.String"};
             final Object ret        = this.mbsc.invoke(jvm, method, params, sign);
-            
+
             return ( (String) ret );
-            
+
         } catch (final Exception e) {
             throw new RuntimeException(e);
         }
@@ -122,7 +122,7 @@ public class JVMInformationCollector extends StandardMBean implements JVMInforma
     @Override
     public void postDeregister() {
     }
-    
+
     /* package private */ static ObjectName formObjectName(final String sn, final String cName) throws Exception {
         /* domain:type=impl-class,server=target-server*/
         final String domain = "amx-internal";
@@ -133,11 +133,11 @@ public class JVMInformationCollector extends StandardMBean implements JVMInforma
         props.put(snk, sn);
         return ( new ObjectName(domain, props) );
     }
-    
+
     private String getInstanceNameFromObjectName(ObjectName on) {
         return ( on.getKeyProperty(SERVER_NAME_KEY_IN_ON) );
     }
-    
+
     static String millis2HoursMinutesSeconds(final long millis) {
         final long secmin = millis / (long) 1000;
         final long sec = secmin % 60;
@@ -145,7 +145,7 @@ public class JVMInformationCollector extends StandardMBean implements JVMInforma
         final long min = minhr % 60;
         final long hr = minhr / 60;
         final String msg = sm.getString("m2hms", hr, min, sec);
-        
+
         return ( msg );
     }
     static String millis2SecondsMillis(final long millis) {

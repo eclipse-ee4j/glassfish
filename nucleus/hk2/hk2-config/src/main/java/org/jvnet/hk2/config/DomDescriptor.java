@@ -47,7 +47,7 @@ public class DomDescriptor<T>
     private Dom theDom;
 
     private Creator<T> creator;
-    
+
     private T theOne;
 
     /**
@@ -138,7 +138,7 @@ public class DomDescriptor<T>
         if (a instanceof DomDescriptor && super.equals(a)) {
             DomDescriptor other = (DomDescriptor) a;
             return theDom.equals(other.theDom);
-            
+
         }
         return false;
     }

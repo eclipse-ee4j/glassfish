@@ -27,15 +27,15 @@ package com.sun.enterprise.util.uuid;
  * @author  lwhite
  */
 public class UuidUtilPadded extends UuidUtil {
-    
+
     static final int DESIRED_UUID_LENGTH = 40;
-    
+
     //this method can take in the session object
     //and insure better uniqueness guarantees
     //needed length must be greater than not less than
     //expected returned lengths - i.e. at least 40
     public static String generateUuid(Object obj, int inputLength) {
-        int desiredLength = 
+        int desiredLength =
             DESIRED_UUID_LENGTH >= inputLength ? DESIRED_UUID_LENGTH:inputLength;
         String unpaddedUuid = UuidUtil.generateUuid(obj);
         StringBuffer sb = new StringBuffer(unpaddedUuid);
@@ -47,8 +47,8 @@ public class UuidUtilPadded extends UuidUtil {
             }
         }
         return sb.toString();
-    }    
-    
+    }
+
     /**
      * Method main
      *
@@ -63,5 +63,5 @@ public class UuidUtilPadded extends UuidUtil {
         System.out.println(UuidUtilPadded.generateUuid(new Object()));
         System.out.println(UuidUtilPadded.generateUuid(new Object(), 40));
     }
-    
+
 }

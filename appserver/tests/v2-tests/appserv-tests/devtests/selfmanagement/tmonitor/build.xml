@@ -52,7 +52,7 @@
             <param name="appclientjar.classes" value="**/*.class" />
         </antcall>
     </target>
-                                                                                                                                               
+
     <target name="deploy" depends="init-common">
         <antcall target="deploy-selfmgmt-jar-common">
         </antcall>
@@ -154,10 +154,10 @@
         <antcall target="delete-selfmanagement-jar"/>
         <antcall target="stopDomain"/>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="unsetup"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

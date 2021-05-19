@@ -30,10 +30,11 @@ import jakarta.servlet.descriptor.*;
  * This node represents the <jsp-config> element in a web application.
  */
 public class JspConfigNode extends DeploymentDescriptorNode<JspConfigDescriptorImpl> {
+
     public JspConfigNode() {
-	super();
-	registerElementHandler(new XMLElement(WebTagNames.TAGLIB), TagLibNode.class, "addTagLib");
-	registerElementHandler(new XMLElement(WebTagNames.JSP_GROUP), JspGroupNode.class, "addJspGroup");
+        super();
+        registerElementHandler(new XMLElement(WebTagNames.TAGLIB), TagLibNode.class, "addTagLib");
+        registerElementHandler(new XMLElement(WebTagNames.JSP_GROUP), JspGroupNode.class, "addJspGroup");
     }
 
     protected JspConfigDescriptorImpl descriptor = null;
@@ -43,32 +44,32 @@ public class JspConfigNode extends DeploymentDescriptorNode<JspConfigDescriptorI
      */
     @Override
     public JspConfigDescriptorImpl getDescriptor() {
-        if (descriptor==null) {
+        if (descriptor == null) {
             descriptor = new JspConfigDescriptorImpl();
         }
         return descriptor;
     }
-    
+
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
-     * @param node name for the root element of this xml fragment      
+     * @param parent node in the DOM tree
+     * @param node name for the root element of this xml fragment
      * @param the descriptor to write
      * @return the DOM tree top node
      */
+    @Override
     public Node writeDescriptor(Node parent, String nodeName, JspConfigDescriptorImpl descriptor) {
-	Node myNode = appendChild(parent, nodeName);
-	TagLibNode lNode = new TagLibNode();
-	for (TaglibDescriptor desc : descriptor.getTaglibs()) {
-            lNode.writeDescriptor(myNode, WebTagNames.TAGLIB, 
-                (TagLibConfigurationDescriptor) desc);
-	}
-	JspGroupNode jspGroup = new JspGroupNode();
-	for(JspPropertyGroupDescriptor desc : descriptor.getJspPropertyGroups()) {
-            jspGroup.writeDescriptor(myNode, WebTagNames.JSP_GROUP, 
-                (JspGroupDescriptor) desc);
-	}
+        Node myNode = appendChild(parent, nodeName);
+        TagLibNode lNode = new TagLibNode();
+        for (TaglibDescriptor desc : descriptor.getTaglibs()) {
+            lNode.writeDescriptor(myNode, WebTagNames.TAGLIB, (TagLibConfigurationDescriptor) desc);
+        }
+        JspGroupNode jspGroup = new JspGroupNode();
+        for (JspPropertyGroupDescriptor desc : descriptor.getJspPropertyGroups()) {
+            jspGroup.writeDescriptor(myNode, WebTagNames.JSP_GROUP, (JspGroupDescriptor) desc);
+        }
 
         return myNode;
     }

@@ -36,15 +36,15 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @AnnotationHandlerFor(WebServiceRefs.class)
 public class WebServiceRefsHandler extends WebServiceRefHandler {
-    
+
     public WebServiceRefsHandler() {
     }
-    
+
     public HandlerProcessingResult processAnnotation(AnnotationInfo ainfo)
             throws AnnotationProcessorException {
 
         WebServiceRefs wsRefsAnnotation = (WebServiceRefs) ainfo.getAnnotation();
-        
+
         WebServiceRef[] wsRefAnnotations = wsRefsAnnotation.value();
         List<HandlerProcessingResult> results = new ArrayList<HandlerProcessingResult>();
 

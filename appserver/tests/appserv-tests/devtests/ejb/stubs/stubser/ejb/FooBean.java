@@ -19,7 +19,7 @@ package com.sun.s1asdev.ejb.stubs.stubser;
 import java.util.Date;
 import java.util.Collection;
 import java.io.Serializable;
-import java.rmi.RemoteException; 
+import java.rmi.RemoteException;
 import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionContext;
 import jakarta.ejb.EJBException;
@@ -36,20 +36,20 @@ public class FooBean implements SessionBean {
     public FooBean() {}
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In FooBean::ejbCreate !!");
+        System.out.println("In FooBean::ejbCreate !!");
 
         try {
             Context ic = new InitialContext();
-                
+
             System.out.println("Looking up ejb ref ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             Object objref = ic.lookup("java:comp/env/ejb/hello");
             System.out.println("objref = " + objref);
             System.err.println("Looked up home!!");
-                
+
             helloHome = (HelloHome)PortableRemoteObject.narrow
                 (objref, HelloHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
 
             hello = helloHome.create();
@@ -64,14 +64,14 @@ public class FooBean implements SessionBean {
     }
 
     public void setSessionContext(SessionContext sc) {
-	this.sc = sc;
+        this.sc = sc;
     }
 
     public void callHello()  {
         System.out.println("in FooBean::callHello()");
 
         try {
-                
+
             hello.sayHello();
 
             System.out.println("successfully invoked ejb");
@@ -84,7 +84,7 @@ public class FooBean implements SessionBean {
             throw ise;
         }
 
-        
+
     }
 
     public void ejbRemove() throws RemoteException {}

@@ -147,7 +147,7 @@ public class CreateMailResource implements AdminCommand {
             if (rs.getMessage() == null) {
                  report.setMessage(localStrings.getLocalString("create.mail.resource.fail",
                     "Unable to create Mail Resource {0}.", jndiName));
-                
+
             }
             if (rs.getException() != null)
                 report.setFailureCause(rs.getException());

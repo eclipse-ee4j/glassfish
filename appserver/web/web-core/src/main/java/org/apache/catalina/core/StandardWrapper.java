@@ -148,7 +148,7 @@ public class StandardWrapper
      * Flag that indicates if this instance has been initialized
      */
     protected volatile boolean instanceInitialized = false;
-    
+
 
     /**
      * The support object for our instance listeners.
@@ -278,22 +278,22 @@ public class StandardWrapper
 
 
     /**
-     * Static class array used when the SecurityManager is turned on and 
+     * Static class array used when the SecurityManager is turned on and
      * <code>Servlet.init</code> is invoked.
      */
     private static Class<?>[] classType = new Class[]{ServletConfig.class};
-    
-    
+
+
     /**
-     * Static class array used when the SecurityManager is turned on and 
+     * Static class array used when the SecurityManager is turned on and
      * <code>Servlet.service</code>  is invoked.
-     */                                                 
+     */
     private static Class<?>[] classTypeUsedInService = new Class[]{
                                                          ServletRequest.class,
                                                          ServletResponse.class};
 
     /**
-     * File upload (multipart) support 
+     * File upload (multipart) support
      */
     private boolean multipartConfigured = false;
     private String multipartLocation = null;
@@ -719,7 +719,7 @@ public class StandardWrapper
      * servlet
      */
     public String[] getServletMethods() throws ServletException {
-	
+
         loadServletClass();
 
         if (!jakarta.servlet.http.HttpServlet.class.isAssignableFrom(
@@ -730,7 +730,7 @@ public class StandardWrapper
         HashSet<String> allow = new HashSet<String>();
         allow.add("TRACE");
         allow.add("OPTIONS");
-	
+
         Method[] methods = getAllDeclaredMethods(servletClass);
         for (int i=0; methods != null && i<methods.length; i++) {
             Method m = methods[i];
@@ -848,7 +848,7 @@ public class StandardWrapper
     public synchronized void addValve(GlassFishValve valve) {
         /*
          * This exception should never be thrown in reality, because we never
-         * add any valves to a StandardWrapper. 
+         * add any valves to a StandardWrapper.
          * This exception is added here as an alert mechanism only, should
          * there ever be a need to add valves to a StandardWrapper in the
          * future.
@@ -867,7 +867,7 @@ public class StandardWrapper
 
     /**
      * Extract the root cause from a servlet exception.
-     * 
+     *
      * @param e The servlet exception
      */
     public static Throwable getRootCause(ServletException e) {
@@ -925,7 +925,7 @@ public class StandardWrapper
      * @return true if the init parameter with the given name and value
      * was set, false otherwise
      */
-    public boolean setInitParameter(String name, String value, 
+    public boolean setInitParameter(String name, String value,
                                     boolean override) {
         if (null == name || null == value) {
             throw new IllegalArgumentException(
@@ -966,7 +966,7 @@ public class StandardWrapper
                 }
                 if (parameters.containsKey(e.getKey())) {
                     if (conflicts == null) {
-                        conflicts = new HashSet<String>();    
+                        conflicts = new HashSet<String>();
                     }
                     conflicts.add(e.getKey());
                 }
@@ -979,7 +979,7 @@ public class StandardWrapper
             for (Map.Entry<String, String> e : initParameters.entrySet()) {
                 setInitParameter(e.getKey(), e.getValue(), true);
             }
-   
+
             return Collections.emptySet();
         }
     }
@@ -1350,8 +1350,8 @@ public class StandardWrapper
         ClassLoader classLoader = loader.getClassLoader();
 
         // Special case class loader for a container provided servlet
-        //  
-        if (isContainerProvidedServlet(actualClass) && 
+        //
+        if (isContainerProvidedServlet(actualClass) &&
                 ! ((Context)getParent()).getPrivileged() ) {
             // If it is a priviledged context - using its own
             // class loader will work, since it's a child of the container
@@ -1469,7 +1469,7 @@ public class StandardWrapper
                 // END OF SJS WS 7.0 6236329
                     Object[] serviceType = new Object[2];
                     serviceType[0] = req;
-                    serviceType[1] = res;                
+                    serviceType[1] = res;
                     SecurityUtil.doAsPrivilege("service", servlet,
                                                classTypeUsedInService,
                                                serviceType);
@@ -1517,26 +1517,26 @@ public class StandardWrapper
                 if (reqFacHelper != null) {
                     reqFacHelper.disableAsyncSupport();
                 }
-            } 
+            }
             if ((request instanceof HttpServletRequest) &&
                 (response instanceof HttpServletResponse)) {
-                    
+
                 if ( SecurityUtil.executeUnderSubjectDoAs() ){
                     final ServletRequest req = request;
                     final ServletResponse res = response;
-                    Principal principal = 
+                    Principal principal =
                         ((HttpServletRequest) req).getUserPrincipal();
 
                     Object[] serviceType = new Object[2];
                     serviceType[0] = req;
                     serviceType[1] = res;
-                    
+
                     SecurityUtil.doAsPrivilege("service",
                                                serv,
-                                               classTypeUsedInService, 
+                                               classTypeUsedInService,
                                                serviceType,
-                                               principal);                                                   
-                } else {  
+                                               principal);
+                } else {
                     serv.service((HttpServletRequest) request,
                                  (HttpServletResponse) response);
                 }
@@ -1752,7 +1752,7 @@ public class StandardWrapper
             if ( SecurityUtil.executeUnderSubjectDoAs() ){
             // END OF SJS WS 7.0 6236329
                 SecurityUtil.doAsPrivilege("destroy", instance);
-                SecurityUtil.remove(instance);                           
+                SecurityUtil.remove(instance);
             } else {
                 instance.destroy();
             }
@@ -1787,7 +1787,7 @@ public class StandardWrapper
                     // END OF SJS WS 7.0 6236329
                         SecurityUtil.doAsPrivilege("destroy",
                                                    instancePool.pop());
-                        SecurityUtil.remove(instance);                           
+                        SecurityUtil.remove(instance);
                     } else {
                         instancePool.pop().destroy();
                     }
@@ -1813,7 +1813,7 @@ public class StandardWrapper
         singleThreadModel = false;
 
         unloading = false;
-   
+
         if (notifyContainerListeners) {
             fireContainerEvent("unload", this);
         }
@@ -1978,17 +1978,14 @@ public class StandardWrapper
         }
 
         if ((parentMethods != null) && (parentMethods.length > 0)) {
-            Method[] allMethods =
-                new Method[parentMethods.length + thisMethods.length];
-	    System.arraycopy(parentMethods, 0, allMethods, 0,
-                             parentMethods.length);
-	    System.arraycopy(thisMethods, 0, allMethods, parentMethods.length,
-                             thisMethods.length);
+            Method[] allMethods = new Method[parentMethods.length + thisMethods.length];
+            System.arraycopy(parentMethods, 0, allMethods, 0, parentMethods.length);
+            System.arraycopy(thisMethods, 0, allMethods, parentMethods.length, thisMethods.length);
 
-	    thisMethods = allMethods;
-	}
+            thisMethods = allMethods;
+        }
 
-	return thisMethods;
+        return thisMethods;
     }
 
 
@@ -2002,27 +1999,27 @@ public class StandardWrapper
      * @exception LifecycleException if a fatal error occurs during startup
      */
     public void start() throws LifecycleException {
-    
-        // Send j2ee.state.starting notification 
+
+        // Send j2ee.state.starting notification
         if (this.getObjectName() != null) {
             Notification notification = new Notification("j2ee.state.starting", this, sequenceNumber++);
             sendNotification(notification);
         }
-        
+
         // Start up this component
         super.start();
 
         if( oname != null )
             registerJMX((StandardContext)getParent());
-        
+
         // Load and initialize an instance of this servlet if requested
         // MOVED TO StandardContext START() METHOD
 
         setAvailable(0L);
-        
-        // Send j2ee.state.running notification 
+
+        // Send j2ee.state.running notification
         if (this.getObjectName() != null) {
-            Notification notification = 
+            Notification notification =
                 new Notification("j2ee.state.running", this, sequenceNumber++);
             sendNotification(notification);
         }
@@ -2039,14 +2036,14 @@ public class StandardWrapper
     public void stop() throws LifecycleException {
 
         setAvailable(Long.MAX_VALUE);
-        
-        // Send j2ee.state.stopping notification 
+
+        // Send j2ee.state.stopping notification
         if (this.getObjectName() != null) {
-            Notification notification = 
+            Notification notification =
                 new Notification("j2ee.state.stopping", this, sequenceNumber++);
             sendNotification(notification);
         }
-        
+
         // Shut down our servlet instance (if it has been initialized)
         try {
             unload();
@@ -2058,17 +2055,17 @@ public class StandardWrapper
         // Shut down this component
         super.stop();
 
-        // Send j2ee.state.stoppped notification 
+        // Send j2ee.state.stoppped notification
         if (this.getObjectName() != null) {
-            Notification notification = 
+            Notification notification =
                 new Notification("j2ee.state.stopped", this, sequenceNumber++);
             sendNotification(notification);
         }
-        
+
         if( oname != null ) {
-            
-            // Send j2ee.object.deleted notification 
-            Notification notification = 
+
+            // Send j2ee.object.deleted notification
+            Notification notification =
                 new Notification("j2ee.object.deleted", this, sequenceNumber++);
             sendNotification(notification);
         }
@@ -2097,8 +2094,8 @@ public class StandardWrapper
         try {
             oname=new ObjectName(onameStr);
             controller=oname;
-            
-            // Send j2ee.object.created notification 
+
+            // Send j2ee.object.created notification
             if (this.getObjectName() != null) {
                 Notification notification = new Notification( "j2ee.object.created", this, sequenceNumber++);
                 sendNotification(notification);
@@ -2139,22 +2136,22 @@ public class StandardWrapper
         }
         return;
     }
-    
+
 
     // ------------------------------------------------------------- Attributes
-        
-        
+
+
     public boolean isEventProvider() {
         return false;
     }
-    
+
     public boolean isStateManageable() {
         return false;
     }
-    
+
     public boolean isStatisticsProvider() {
         return false;
     }
-        
-        
+
+
 }

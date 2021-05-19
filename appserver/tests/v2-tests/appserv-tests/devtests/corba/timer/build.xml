@@ -45,7 +45,7 @@
         <pathelement location="${env.S1AS_HOME}/lib/appserv-rt.jar" />
         <pathelement location="${env.APS_HOME}/lib/testng.jar"/>
     </path>
-   
+
     <target name="compile" depends="init-common">
         <mkdir dir="${build.dir}/classes" />
         <echo message="compile, build.class.dir=${build.dir}/classes"/>
@@ -53,12 +53,12 @@
             debug="true" source="1.5">
             <classpath>
                 <path refid="compile.classpath" />
-  	    </classpath>
+            </classpath>
         </javac>
     </target>
 
     <target name="build" depends="compile">
-    </target> 
+    </target>
 
     <path id="run.classpath">
         <pathelement location="${build.dir}/classes"/>

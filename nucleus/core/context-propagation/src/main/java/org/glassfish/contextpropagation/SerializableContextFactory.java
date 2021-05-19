@@ -27,19 +27,19 @@ import java.io.Serializable;
 
 /**
  *  The purpose of this factory is to support legacy custom work contexts
- *  from WebLogic Server (WLS). This is for the case where a custom work context 
+ *  from WebLogic Server (WLS). This is for the case where a custom work context
  *  is NOT wrapped into a weblogic.workarea.SerializableWorkContext.
  *  It is also used when Glassfish uses a different class than WLS. In that
- *  case a factory can be registered to replace a WLS class with a Glassfish class. 
+ *  case a factory can be registered to replace a WLS class with a Glassfish class.
  *  This will work as
  *  long as the Glassfish and WLS classes have the same serialization profile.
- */  
+ */
  /*   - TODO QUESTION(For PM) Do we want to support legacy custom work contexts in open source glassfish.
  *     If not, we can move this factory interface to closed source.
  */
 public interface SerializableContextFactory {
   public WLSContext createInstance();
-  
+
   public interface WLSContext {
     /**
      * Writes the implementation of <code>Context</code> to the
@@ -52,14 +52,14 @@ public interface SerializableContextFactory {
      * {@link ContextInput} data stream.
      */
     public void readContext(ObjectInput in) throws IOException;
-    
+
     public interface WLSContextHelper {
       public byte[] toBytes(WLSContext ctx) throws IOException;
       public byte[] toBytes(Serializable object) throws IOException;
       public WLSContext readFromBytes(WLSContext ctx, byte[] bytes) throws IOException;
       public Serializable readFromBytes(byte[] bytes) throws IOException, ClassNotFoundException;
     }
-    
+
     /**
      * HELPER is used internally to facilitate work with WLSContexts
      */
@@ -69,14 +69,14 @@ public interface SerializableContextFactory {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         ctx.writeContext(oos);
-        oos.flush();       
+        oos.flush();
         return baos.toByteArray();
       }
       @Override
       public WLSContext readFromBytes(WLSContext ctx, byte[] bytes) throws IOException {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
-        ctx.readContext(ois);  
+        ctx.readContext(ois);
         return ctx;
       }
       @Override
@@ -84,7 +84,7 @@ public interface SerializableContextFactory {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         oos.writeObject(object);
-        oos.flush();       
+        oos.flush();
         return baos.toByteArray();
      }
       @Override
@@ -92,9 +92,9 @@ public interface SerializableContextFactory {
         ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
         ObjectInputStream ois = new ObjectInputStream(bais);
         return (Serializable) ois.readObject();
-      }      
+      }
     };
 
   }
-  
+
 }

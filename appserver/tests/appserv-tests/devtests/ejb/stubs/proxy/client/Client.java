@@ -27,7 +27,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -36,34 +36,34 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-stubs-proxyID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
 
-	    Context ic = new InitialContext();
+            Context ic = new InitialContext();
 
-	    // create EJB using factory from container 
-	    java.lang.Object objref = 
+            // create EJB using factory from container
+            java.lang.Object objref =
                 ic.lookup("java:comp/env/ejb/ProxyApp");
 
-	    System.out.println("Looked up home!!");
+            System.out.println("Looked up home!!");
 
-	    HelloHome  home = (HelloHome)
+            HelloHome  home = (HelloHome)
                 PortableRemoteObject.narrow(objref, HelloHome.class);
-	    System.out.println("Narrowed home!!");
+            System.out.println("Narrowed home!!");
 
-	    Hello hr = home.create();
-	    System.out.println("Got the EJB!!");
+            Hello hr = home.create();
+            System.out.println("Got the EJB!!");
 
             hr.testPassByRef();
 
-	    // invoke method on the EJB
-	    doProxyTest(hr);
+            // invoke method on the EJB
+            doProxyTest(hr);
 
             testExceptions(hr);
 
@@ -75,8 +75,8 @@ public class Client {
             e.printStackTrace();
             stat.addStatus("local main" , stat.FAIL);
         }
-        
-    	return;
+
+            return;
     }
 
     private void testExceptions(Hello h) throws Exception {
@@ -85,7 +85,7 @@ public class Client {
             h.throwException();
         } catch(Exception e) {
             if( e.getClass() == Exception.class ) {
-                System.out.println("Successfully caught exception " + 
+                System.out.println("Successfully caught exception " +
                                    e.getClass() + " " + e.getMessage());
             } else {
                 throw e;
@@ -96,7 +96,7 @@ public class Client {
             h.throwAppException1();
             throw new Exception("didn't get exception for testException2");
         } catch(jakarta.ejb.FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -104,7 +104,7 @@ public class Client {
             h.throwAppException2();
             throw new Exception("didn't get exception for testException3");
         } catch(jakarta.ejb.FinderException e) {
-            System.out.println("Successfully caught exception " + 
+            System.out.println("Successfully caught exception " +
                                e.getClass() + " " + e.getMessage());
         }
 
@@ -130,36 +130,36 @@ public class Client {
         }
     }
 
-    private void doProxyTest(Hello hr) 
-	throws Exception
+    private void doProxyTest(Hello hr)
+        throws Exception
     {
-	System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
-	hr.warmup(Common.STATEFUL);
-	runTests(Common.STATEFUL, hr);
+        System.out.println("\nStateful Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL);
+        runTests(Common.STATEFUL, hr);
 
-	System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
-	hr.warmup(Common.STATEFUL);
-	runTests(Common.STATELESS, hr);
+        System.out.println("\nStateless Session results (microsec): \twith tx \tno tx:");
+        hr.warmup(Common.STATEFUL);
+        runTests(Common.STATELESS, hr);
 
-	System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
-	hr.warmup(Common.BMP);
-	runTests(Common.BMP, hr);
+        System.out.println("\nBMP Entity results (microsec): \t\twith tx \tno tx:");
+        hr.warmup(Common.BMP);
+        runTests(Common.BMP, hr);
     }
 
     private void runTests(int type, Hello hr)
-	throws Exception
+        throws Exception
     {
-      
+
         hr.notSupported(type, true);
         hr.notSupported(type, false);
         hr.supports(type, true);
-	hr.supports(type, false);
+        hr.supports(type, false);
         hr.required(type, true);
-	hr.required(type, false);
+        hr.required(type, false);
         hr.requiresNew(type, true);
-	hr.requiresNew(type, false);
+        hr.requiresNew(type, false);
         hr.mandatory(type, true);
-	hr.never(type, false);
+        hr.never(type, false);
     }
 }
 

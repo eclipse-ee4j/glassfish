@@ -49,7 +49,7 @@ public final class WorkContextInputAdapter implements WorkContextInput
     throws IOException, ClassNotFoundException
   {
 
-    Class<?> rcClass = null; 
+    Class<?> rcClass = null;
     // Fix for bug 7391692 - Use the correct context classloader but guard its usage for NPEs
     if (Thread.currentThread().getContextClassLoader() !=null) {
         rcClass = Class.forName(readASCII(),false,Thread.currentThread().getContextClassLoader());

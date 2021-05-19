@@ -71,7 +71,7 @@ public class ConfigTest {
         DynamicConfigurationService dcs = habitat.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
         new ConfigModule(habitat).configure(config);
-        
+
         config.commit();
     }
 
@@ -98,7 +98,7 @@ public class ConfigTest {
     public void lookupInjectorByName() {
         ServiceHandle inhabitant1 = habitat.getServiceHandle(ConfigInjector.class, "simple-connector");
         ServiceHandle inhabitant2 = habitat.getServiceHandle(ConfigInjector.class, "ejb-container-availability");
-        
+
         assert(inhabitant1 != null && inhabitant2 != null
                 && inhabitant1.getActiveDescriptor().getImplementation().equals(SimpleConnectorInjector.class.getName())
                 && inhabitant2.getActiveDescriptor().getImplementation().equals(EjbContainerAvailabilityInjector.class.getName()));
@@ -120,7 +120,7 @@ public class ConfigTest {
         assert(desc != null
                 && desc.getImplementation().equals(EjbContainerAvailabilityInjector.class.getName()));
     }
-    
+
     // @Test
     public void parseDomainXml() {
         ConfigParser parser = new ConfigParser(habitat);
@@ -160,7 +160,7 @@ public class ConfigTest {
         System.out.println("[testConfig] : " + sc.getClass().getName());
         assert(Proxy.isProxyClass(sc.getClass()));
     }
-    
+
     // @Test
     public void testDefaultValuesFromConfig() {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
@@ -219,7 +219,7 @@ public class ConfigTest {
             assert(false);
         }
     }
-    
+
     // @Test
     public void testDomTxReadOnlyAttributes() {
         SimpleConnector sc = habitat.getService(SimpleConnector.class);
@@ -346,7 +346,7 @@ public class ConfigTest {
         assert(obj.getClass() == Integer.class);
 
     }
-    
+
     // @Test
     public void testConfigurationPopulator() {
         DummyPopulator pop = (DummyPopulator) habitat.getService(Populator.class);
@@ -367,7 +367,7 @@ public class ConfigTest {
 
         assert(simpleConnector1 != null && simpleConnector1 == simpleConnector2);
     }
-    
+
     /**
      * This test is an unfortunate reaction to the fact that JDK 7 does not run the
      * tests above in order, and that the fact that the ordering seems to be important
@@ -395,9 +395,9 @@ public class ConfigTest {
         testIntDataType();
         testConfigurationPopulator();
         testSingletonProxy();
-        
+
     }
-    
+
     /**
      * Ensures that even the non-standard format of metadata from the hk2-config subsystem can
      * be read from the service in addClasses.  addClasses will now read both forms, if the
@@ -406,28 +406,28 @@ public class ConfigTest {
     @Test
     public void testAddClassOfInjector() {
         ServiceLocator locator = ServiceLocatorFactory.getInstance().create(null);
-        
+
         List<ActiveDescriptor<?>> added = ServiceLocatorUtilities.addClasses(locator, EjbContainerAvailabilityInjector.class);
         ActiveDescriptor<?> descriptor = added.get(0);
-        
+
         Assert.assertEquals("org.jvnet.hk2.config.test.EjbContainerAvailability", ServiceLocatorUtilities.getOneMetadataField(descriptor, "target"));
-        
+
     }
-    
+
     @Test
     public void testEnableConfigUtilities() {
         ServiceLocator locator = ServiceLocatorFactory.getInstance().create(null);
-        
+
         Assert.assertNull(locator.getService(ConfigSupport.class));
         Assert.assertNull(locator.getService(ConfigurationPopulator.class));
         Assert.assertNull(locator.getService(Transactions.class));
         Assert.assertNull(locator.getService(ConfigInstanceListener.class));
-        
+
         HK2DomConfigUtilities.enableHK2DomConfiguration(locator);
-        
+
         // Twice to check idempotence
         HK2DomConfigUtilities.enableHK2DomConfiguration(locator);
-        
+
         Assert.assertEquals(1, locator.getAllServices(ConfigSupport.class).size());
         Assert.assertEquals(1, locator.getAllServices(ConfigurationPopulator.class).size());
         Assert.assertEquals(1, locator.getAllServices(Transactions.class).size());
@@ -478,18 +478,18 @@ public class ConfigTest {
             return false;
         }
     }
-    
+
     private static class EjbObservableBean
         implements ConfigListener {
 
         private AtomicInteger count = new AtomicInteger();
-        
+
         @Override
         public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
             System.out.println("** EjbContainerAvailability changed ==> " + count.incrementAndGet());
             return null;
         }
-        
+
         public int getCount() {
             return count.get();
         }

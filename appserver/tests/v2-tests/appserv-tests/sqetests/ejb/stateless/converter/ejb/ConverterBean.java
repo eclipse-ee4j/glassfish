@@ -35,7 +35,7 @@ import java.math.*;
  * @see ConverterHome
  */
 public class ConverterBean implements SessionBean, TimedObject {
-    
+
     SessionContext sessionContext_;
 
     BigDecimal yenRate = new BigDecimal("121.6000");
@@ -53,7 +53,7 @@ public class ConverterBean implements SessionBean, TimedObject {
         // number of tests is getting large.  This set of operations will
         // ensure that the timer persistent store is configured properly,
         // in addition to exercising some of the common timer functions.
-        testTimerService();        
+        testTimerService();
 
         BigDecimal result = dollars.multiply(yenRate);
         return result.setScale(2,BigDecimal.ROUND_UP);
@@ -88,7 +88,7 @@ public class ConverterBean implements SessionBean, TimedObject {
      * Loads the state of the bean from secondary storage. Required by EJB spec.
      */
     public void ejbActivate() {}
-    
+
     /**
      * Keeps the state of the bean to secondary storage. Required by EJB spec.
      */
@@ -139,7 +139,7 @@ public class ConverterBean implements SessionBean, TimedObject {
             e.printStackTrace();
             throw new EJBException(e);
         }
-        
+
         try {
             sessionContext_.getUserTransaction().begin();
             Collection timers = timerService.getTimers();

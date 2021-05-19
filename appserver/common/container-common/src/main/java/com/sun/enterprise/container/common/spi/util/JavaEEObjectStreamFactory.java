@@ -88,7 +88,7 @@ public class JavaEEObjectStreamFactory {
                 throw (IOException) ex.getException();
             }
         }
-        return oos; 
+        return oos;
     }
 
     /**
@@ -99,7 +99,7 @@ public class JavaEEObjectStreamFactory {
      *@throws java.io.IOException when the de-serialziation fails
      *@return an ObjectInputStream that can be used to deserialize objects
      */
-	public ObjectInputStream createObjectInputStream(
+    public ObjectInputStream createObjectInputStream(
             final InputStream is,
             final boolean resolveObject,
             final ClassLoader loader)

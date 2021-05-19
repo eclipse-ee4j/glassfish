@@ -23,7 +23,7 @@
 
 <project name="jsr88" default="all" basedir=".">
 
-    &commonBuild;    
+    &commonBuild;
 
     <target name="private-all">
         <ant dir="war" target="private-all">

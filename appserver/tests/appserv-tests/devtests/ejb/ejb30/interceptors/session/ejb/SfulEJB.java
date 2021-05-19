@@ -41,7 +41,7 @@ public class SfulEJB implements Sful
     @EJB(name="foobar") Sless foobar;
 
     private int count = 0;
-    
+
     private int id;
     private LifecycleCallbackInterceptor interceptor;
 
@@ -52,17 +52,17 @@ public class SfulEJB implements Sful
 
     public String hello() {
         System.out.println("In SfulEJB:hello()");
-	sless.sayHello();
-	System.out.println("caller principal = " + sc.getCallerPrincipal());
+        sless.sayHello();
+        System.out.println("caller principal = " + sc.getCallerPrincipal());
         return "hello";
     }
 
     @AroundInvoke
     private Object interceptCall(InvocationContext ctx)
-   	throws Exception 
+           throws Exception
     {
-	System.out.println("**Beans AROUNDINVOKE++ [@AroundInvoke]: " + ctx.getMethod());
-	count++;
+        System.out.println("**Beans AROUNDINVOKE++ [@AroundInvoke]: " + ctx.getMethod());
+        count++;
         try {
             if (ctx.getMethod().getName().equals("setID")) {
                 java.util.Map map = ctx.getContextData();
@@ -75,9 +75,9 @@ public class SfulEJB implements Sful
     }
 
     public int getCount() {
-	    return count;
+            return count;
     }
-    
+
     public void throwAppException(String msg)
         throws AppException
     {
@@ -85,17 +85,17 @@ public class SfulEJB implements Sful
     }
 
     public String computeMid(int min, int max)
-	    throws SwapArgumentsException
+            throws SwapArgumentsException
     {
-	    return sless.sayHello()
-		    	+ ", Midpoint of " + min + ", " + max + "; "
-			+  sless.computeMidPoint(min, max);
+            return sless.sayHello()
+                            + ", Midpoint of " + min + ", " + max + "; "
+                        +  sless.computeMidPoint(min, max);
     }
 
     public String callDummy()
-	    throws Exception
+            throws Exception
     {
-	    return dummy.dummy();
+            return dummy.dummy();
     }
 
     public String eatException()
@@ -106,22 +106,22 @@ public class SfulEJB implements Sful
     }
 
     public int getPrePassivateCallbackCount() {
-	return LifecycleCallbackInterceptor.getPrePassivateCallbackCount();
+        return LifecycleCallbackInterceptor.getPrePassivateCallbackCount();
     }
 
     public int getPostActivateCallbackCount() {
-	return LifecycleCallbackInterceptor.getPostActivateCallbackCount();
+        return LifecycleCallbackInterceptor.getPostActivateCallbackCount();
     }
 
     public void resetLifecycleCallbackCounters() {
-	LifecycleCallbackInterceptor.resetLifecycleCallbackCounters();
+        LifecycleCallbackInterceptor.resetLifecycleCallbackCounters();
     }
 
     public void setID(int val) {
         this.id = val;
         interceptor.setInterceptorID(val);
     }
-    
+
     public boolean isStateRestored() {
         return interceptor.checkInterceptorID(id);
     }

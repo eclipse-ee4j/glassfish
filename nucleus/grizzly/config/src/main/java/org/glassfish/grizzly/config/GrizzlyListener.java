@@ -37,7 +37,7 @@ import org.glassfish.hk2.api.ServiceLocator;
  */
 @SuppressWarnings("UnusedDeclaration")
 public interface GrizzlyListener {
-    
+
     void start() throws IOException;
 
     void stop() throws IOException;
@@ -45,7 +45,7 @@ public interface GrizzlyListener {
     void destroy();
 
     String getName();
-    
+
     InetAddress getAddress();
 
     int getPort();

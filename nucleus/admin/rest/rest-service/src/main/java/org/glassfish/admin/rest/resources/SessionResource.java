@@ -27,7 +27,7 @@ import org.glassfish.common.util.admin.RestSessionManager;
 
 /**
  * Represents a session with GlassFish Rest service
- * 
+ *
  * @author Mitesh Meswani
  */
 public class SessionResource {

@@ -20,11 +20,12 @@ package com.sun.jdo.api.persistence.enhancer.util;
  * Support for signalling internal implementation errors.
  */
 //@olsen: added class
-public class InternalError
-    extends RuntimeException {
+public class InternalError extends RuntimeException {
+
     public InternalError() {
     }
-    
+
+
     public InternalError(String message) {
         super(message);
     }

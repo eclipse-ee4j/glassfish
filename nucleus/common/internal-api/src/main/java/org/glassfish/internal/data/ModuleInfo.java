@@ -70,9 +70,9 @@ public class ModuleInfo {
     private boolean started=false;
     private ClassLoader moduleClassLoader;
     private Set<ClassLoader> classLoaders = new HashSet<ClassLoader>();
-    
-  
-    public ModuleInfo(final Events events, String name, Collection<EngineRef> refs, 
+
+
+    public ModuleInfo(final Events events, String name, Collection<EngineRef> refs,
         Properties moduleProps) {
         this.name = name;
         this.events = events;
@@ -88,7 +88,7 @@ public class ModuleInfo {
     public Set<EngineRef> getEngineRefs() {
         Set<EngineRef> copy = new LinkedHashSet<EngineRef>();
         copy.addAll(_getEngineRefs());
-        return copy; 
+        return copy;
     }
 
     protected Set<EngineRef> _getEngineRefs() {
@@ -98,13 +98,13 @@ public class ModuleInfo {
     public Set<ClassLoader> getClassLoaders() {
         return classLoaders;
     }
-    
+
     public ClassLoader getModuleClassLoader() {
         return moduleClassLoader;
     }
 
     public void cleanClassLoaders() {
-        classLoaders = null; 
+        classLoaders = null;
         moduleClassLoader = null;
     }
 
@@ -167,14 +167,14 @@ public class ModuleInfo {
         try {
             Thread.currentThread().setContextClassLoader(context.getClassLoader());
             for (EngineRef engine : _getEngineRefs()) {
-    
+
                 final EngineInfo engineInfo = engine.getContainerInfo();
 
                 if (tracing!=null) {
                     tracing.addContainerMark(DeploymentTracing.ContainerMark.LOAD,
                         engineInfo.getSniffer().getModuleType());
                 }
-                
+
                 // get the container.
                 Deployer deployer = engineInfo.getDeployer();
 
@@ -215,7 +215,7 @@ public class ModuleInfo {
             Thread.currentThread().setContextClassLoader(currentClassLoader);
         }
 
-    }    
+    }
 
     /*
      * Returns the EngineRef for a particular container type
@@ -247,8 +247,8 @@ public class ModuleInfo {
 
         if (started)
             return;
-        
-        ClassLoader currentClassLoader  = 
+
+        ClassLoader currentClassLoader  =
             Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(context.getClassLoader());
@@ -290,7 +290,7 @@ public class ModuleInfo {
 
         if (!started)
             return;
-        
+
         ClassLoader currentClassLoader  = Thread.currentThread().getContextClassLoader();
         try {
             Thread.currentThread().setContextClassLoader(moduleClassLoader);
@@ -350,8 +350,8 @@ public class ModuleInfo {
         }
         if (events!=null) {
             events.send(new Event<DeploymentContext>(Deployment.MODULE_CLEANED,context), false);
-        }        
-        
+        }
+
     }
 
     public boolean suspend(Logger logger) {
@@ -399,7 +399,7 @@ public class ModuleInfo {
         if (Boolean.valueOf(moduleProps.getProperty(
             ServerTags.IS_COMPOSITE))) {
             moduleProps.remove(ServerTags.IS_COMPOSITE);
-            for (Iterator itr = moduleProps.keySet().iterator(); 
+            for (Iterator itr = moduleProps.keySet().iterator();
                 itr.hasNext();) {
                 String propName = (String) itr.next();
                 Property prop = module.createChild(Property.class);

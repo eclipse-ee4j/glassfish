@@ -316,7 +316,7 @@ public class LBCommandsTest extends AdminBaseDevTest {
 
         deleteInstances();
         asadmin("stop-domain");
-	stat.printSummary();
+        stat.printSummary();
     }
 
 

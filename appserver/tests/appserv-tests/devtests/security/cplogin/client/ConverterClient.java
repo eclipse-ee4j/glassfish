@@ -29,7 +29,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /**
  * A simple java client. This uses the services provided by the <code>ConverterBean</code> and
- * converts 100 US dollars to Yen and 100 Yen to Euro. 
+ * converts 100 US dollars to Yen and 100 Yen to Euro.
  * <p>In this regard, it does the following in order
  * <ul>
  * <li>Locates the home interface of the enterprise bean
@@ -39,21 +39,21 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
  * <br>
  * <b>Locating the home interface:</b>
  * <blockquote><pre>
- *	Context initial = new InitialContext();
- *	Context myEnv = (Context)initial.lookup("java:comp/env");
- *	Object objref = myEnv.lookup("ejb/SimpleConverter");
+ *        Context initial = new InitialContext();
+ *        Context myEnv = (Context)initial.lookup("java:comp/env");
+ *        Object objref = myEnv.lookup("ejb/SimpleConverter");
  *  ConverterHome home = (ConverterHome)PortableRemoteObject.narrow(objref, ConverterHome.class);
  * </pre></blockquote>
  * <br>
  * <b>Creating the remote interface:</b>
  * <blockquote><pre>
- *	Converter currencyConverter = home.create();
+ *        Converter currencyConverter = home.create();
  * </pre></blockquote>
  * <br>
  * <b>Invoking business methods:</b>
  * <blockquote><pre>
  *  BigDecimal param = new BigDecimal ("100.00");
- *	amount = currencyConverter.dollarToYen(param);
+ *        amount = currencyConverter.dollarToYen(param);
  *  amount = currencyConverter.yenToEuro(param);
  * </pre></blockquote>
  * <br>
@@ -82,25 +82,25 @@ public class ConverterClient {
     *
     */
     public static void main(String[] args) {
-	ConverterClient client = new ConverterClient();
-	client.run(args);
+        ConverterClient client = new ConverterClient();
+        client.run(args);
     }
 
     private void run(String[] args) {
         String url = null;
-	String testIdPrefix = null;
-	String testId = "";
+        String testIdPrefix = null;
+        String testId = "";
         String jndiName = null;
         Context context = null;
         String ctxFactory = null;
-	java.lang.Object obj = null;
+        java.lang.Object obj = null;
         try {
             stat.addDescription("Security::client side programmatic login");
 
             if (args.length == 3) {
                 url = args[0];
                 ctxFactory = args[1];
-		jndiName = args[2];
+                jndiName = args[2];
             }
 
             String user = "shingwai";
@@ -109,7 +109,7 @@ public class ConverterClient {
             ProgrammaticLogin plogin = new ProgrammaticLogin();
             plogin.login(user, password);
             boolean isAppClientTest = (url == null) || (ctxFactory == null);
-            
+
             /*
              * User tx is to test issue:
              * https://glassfish.dev.java.net/issues/show_bug.cgi?id=1568
@@ -117,7 +117,7 @@ public class ConverterClient {
             UserTransaction ut = null;
 
             if (isAppClientTest) {
-		testIdPrefix = "Sec::PLogin Converter Sample AppClient";
+                testIdPrefix = "Sec::PLogin Converter Sample AppClient";
                 testId = testIdPrefix;
                 // Initialize the Context with default properties
                 context = new InitialContext();
@@ -126,7 +126,7 @@ public class ConverterClient {
                 obj = context.lookup("java:comp/env/ejb/PLoginSimpleConverter");
                 ut = (UserTransaction) context.lookup("UserTransaction");
             } else {
-		testIdPrefix = "Sec::PLogin Standalone-Client";
+                testIdPrefix = "Sec::PLogin Standalone-Client";
                 testId = testIdPrefix;
                 Properties env = new Properties();
                 env.put("java.naming.provider.url", url);
@@ -137,7 +137,7 @@ public class ConverterClient {
                                    "URL: " + url + ", Factory: " + ctxFactory);
                 // Create Home object
                 obj = context.lookup(jndiName);
-                
+
                 ut = (UserTransaction) context.lookup("UserTransaction");
             }
             ConverterRemoteHome home =
@@ -145,7 +145,7 @@ public class ConverterClient {
                                             ConverterRemoteHome.class);
 
             ConverterRemote currencyConverter = home.create();
-            
+
             System.out.println("\n\n\n===========Beginning Simple Test=====\n\n");
             testId = testIdPrefix + " Programmatic Login";
             processRequest(home, "100");
@@ -166,7 +166,7 @@ public class ConverterClient {
                 stat.addStatus(testId, stat.PASS);
                 System.out.println("OK! Got an expected java.rmi.AccessException");
             }
-            
+
             testId = testIdPrefix + " Programmatic Relogin after logout";
             plogin.login(user, password);
             processRequest(home, "500");
@@ -190,7 +190,7 @@ public class ConverterClient {
             processRequest(home, "800");
             stat.addStatus(testId, stat.PASS);
         } catch (Throwable ex) {
-	    System.err.println("TestID" +testId);
+            System.err.println("TestID" +testId);
             stat.addStatus(testId, stat.FAIL);
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
@@ -202,33 +202,33 @@ public class ConverterClient {
     // default method that does not require transaction
     private void processRequest(ConverterRemoteHome home, String amt)
         throws Exception {
-        
+
         processRequest(home, amt, null);
     }
-    
+
     private void processRequest(ConverterRemoteHome home, String amt,
         UserTransaction tx) throws Exception {
 
         ConverterRemote currencyConverter = home.create();
-            
-        String s = currencyConverter.myCallerPrincipal();            
+
+        String s = currencyConverter.myCallerPrincipal();
         System.out.println(" The caller principal received from ejb ->"+s);
-            
+
         BigDecimal param = new BigDecimal (amt);
         if (tx != null) {
             System.out.println("Beginning user transaction");
             tx.begin();
         }
-        
+
         BigDecimal amount = currencyConverter.dollarToYen(param);
         System.out.println("$" + amt + " is : "+amount+"Yen");
         amount = currencyConverter.yenToEuro(param);
         System.out.println("Yen is :"+amount+"Euro\n");
-        
+
         if (tx != null) {
             System.out.println("Committing user transaction");
             tx.commit();
         }
     }
-    
+
 }

@@ -43,7 +43,7 @@ public class TestServlet extends HttpServlet {
         boolean passed = false;
         if (num == 2 && deLocaleSeen && frLocaleSeen) {
             passed = true;
-        }    
+        }
         res.getWriter().print(passed);
     }
 }

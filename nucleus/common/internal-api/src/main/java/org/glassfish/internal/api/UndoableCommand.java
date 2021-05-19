@@ -57,7 +57,7 @@ import java.util.List;
  * call the {@link #undo(AdminCommandContext, ParameterMap, List<Server>)} method on the same instance that was used for the
  * {@link #execute(AdminCommandContext)} invocation, as well as any supplemented commands that implement
  * this interface.
- * 
+ *
  * @author Jerome Dochez
  */
 public interface UndoableCommand extends AdminCommand {

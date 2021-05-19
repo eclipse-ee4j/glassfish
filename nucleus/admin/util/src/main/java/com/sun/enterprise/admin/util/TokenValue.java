@@ -34,7 +34,7 @@ public final class TokenValue implements Comparable {
      * Creates a new instance of TokenValue - with default delimiter. Also note that if the value contains any '\'
      * characters, then these are appended to by another '\' character to work around the Java byte code interpretation.
      * Note that none of the arguments can be null. The value of delimiter is given by DEFAULT_DELIMITER.
-     * 
+     *
      * @param token a String that is the name of the token in this TokenValue.
      * @param value a String that is the value of the token.
      * @throws IllegalArgumentException in case of null values.

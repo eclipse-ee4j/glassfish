@@ -32,7 +32,7 @@ public class ServletProbeProvider {
      *
      * @param servletName the name of the servlet that was initialized
      * @param appName the name of the app to which the servlet belongs
-     * @param hostName the name of the virtual server on which the app has 
+     * @param hostName the name of the virtual server on which the app has
      * been deployed
      */
     @Probe(name="servletInitializedEvent")
@@ -46,7 +46,7 @@ public class ServletProbeProvider {
      *
      * @param servletName the name of the servlet that was destroyed
      * @param appName the name of the app to which the servlet belongs
-     * @param hostName the name of the virtual server on which the app has 
+     * @param hostName the name of the virtual server on which the app has
      * been deployed
      */
     @Probe(name="servletDestroyedEvent")
@@ -61,7 +61,7 @@ public class ServletProbeProvider {
      *
      * @param servletName the name of the servlet
      * @param appName the name of the app to which the servlet belongs
-     * @param hostName the name of the virtual server on which the app has 
+     * @param hostName the name of the virtual server on which the app has
      * been deployed
      */
     @Probe(name="beforeServiceEvent")
@@ -77,7 +77,7 @@ public class ServletProbeProvider {
      * @param servletName the name of the servlet
      * @param responseStatus the response status
      * @param appName the name of the app to which the servlet belongs
-     * @param hostName the name of the virtual server on which the app has 
+     * @param hostName the name of the virtual server on which the app has
      * been deployed
      */
     @Probe(name="afterServiceEvent")

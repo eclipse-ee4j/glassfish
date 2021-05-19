@@ -36,7 +36,7 @@ public class Client {
                 javax.rmi.PortableRemoteObject.narrow(objRef, SimpleBMPHome.class);
 
         SimpleBMP convalBMP = convalBMPHome.create();
-	stat.addDescription("JDBC Validate Atmost Once Period Tests");
+        stat.addDescription("JDBC Validate Atmost Once Period Tests");
 
         if (args != null && args.length > 0) {
             String param = args[0];

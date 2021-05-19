@@ -34,10 +34,10 @@ public class SfulEJB implements SessionBean
     public void setSessionContext(SessionContext sc)
     {}
 
-    public void ejbRemove() 
+    public void ejbRemove()
     {}
 
-    public void ejbActivate() 
+    public void ejbActivate()
     {}
 
     public void ejbPassivate()

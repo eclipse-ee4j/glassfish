@@ -22,10 +22,10 @@ import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 
 public class ServletTest extends HttpServlet implements HttpSessionListener {
-    
+
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response)
-            throws ServletException, IOException {        
+            throws ServletException, IOException {
         request.getSession().setAttribute("response", response);
         request.getSession().invalidate();
     }
@@ -33,7 +33,7 @@ public class ServletTest extends HttpServlet implements HttpSessionListener {
     public void sessionCreated(HttpSessionEvent httpSessionEvent) {
         // Do nothing
     }
-    
+
     public void sessionDestroyed(HttpSessionEvent httpSessionEvent) {
         // Make sure IllegalStateException is not thrown
         try {

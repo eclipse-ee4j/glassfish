@@ -25,7 +25,7 @@ import com.sun.enterprise.container.common.spi.util.InterceptorInfo;
  * A factory for creating an interceptor builder. An interceptor builder abstracts out
  * the resources needed to create a proxy for invoking a target object with interceptors.
  * There is typically one instance of an interceptor builder per target class ,and one
- * interceptor invoker per target class instance.  
+ * interceptor invoker per target class instance.
  */
 
 @Contract
@@ -37,6 +37,6 @@ public interface JavaEEInterceptorBuilderFactory {
      * Tests if a given object is a client proxy associated with an interceptor invoker.
      */
     public boolean isClientProxy(Object obj);
-    
+
 
 }

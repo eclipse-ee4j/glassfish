@@ -1627,7 +1627,7 @@ public abstract class ResultSetWrapper implements ResultSet {
     }
 
     /**
-     * Updates the designated column with a <code>float	</code> value.
+     * Updates the designated column with a <code>float    </code> value.
      * The updater methods are used to update column values in the
      * current row or the insert row.  The updater methods do not
      * update the underlying database; instead the <code>updateRow</code> or

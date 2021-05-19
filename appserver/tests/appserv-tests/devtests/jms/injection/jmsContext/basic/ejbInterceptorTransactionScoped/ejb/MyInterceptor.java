@@ -37,7 +37,7 @@ public class MyInterceptor {
     public Object sendMsg(InvocationContext ctx) throws Exception {
 
         Object[] params = ctx.getParameters();
-        
+
         try {
             lookupQueue();
             JMSProducer producer = jmsContext.createProducer();

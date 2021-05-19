@@ -24,7 +24,7 @@ public class TestAccount implements Account {
     @Override
     public void deposit(BigDecimal amount) {
         System.out.println("TestAccount::deposit+" + amount);
-        
+
         //get a bonus of 5
         currentBal = currentBal.add(amount.add(new BigDecimal(5)));
         System.out.println("new bal:" + currentBal);

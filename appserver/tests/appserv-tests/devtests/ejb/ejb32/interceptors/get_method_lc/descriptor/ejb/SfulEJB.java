@@ -36,7 +36,7 @@ public class SfulEJB extends BaseBean {
         System.out.println("In SfulEJB:hello()");
         verifyB_AC("SfulEJB");
         verifyB_PC("SfulEJB");
-	return sless.sayHello();
+        return sless.sayHello();
     }
 
     @Remove
@@ -46,7 +46,7 @@ public class SfulEJB extends BaseBean {
 
     @PostConstruct
     private void init0() {
-	System.out.println("**SfulEJB PostConstruct");
+        System.out.println("**SfulEJB PostConstruct");
         verifyMethod(null);
     }
 

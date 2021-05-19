@@ -32,7 +32,7 @@ import javax.naming.NamingEnumeration;
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:29:04 $
  */
 
-public class NamingContextBindingsEnumeration 
+public class NamingContextBindingsEnumeration
     implements NamingEnumeration<Binding> {
 
 
@@ -102,11 +102,11 @@ public class NamingContextBindingsEnumeration
             throw new RuntimeException(e.getMessage(), e);
         }
     }
-    
+
     private Binding nextElementInternal() throws NamingException {
         NamingEntry entry = iterator.next();
         Object value;
-        
+
         // If the entry is a reference, resolve it
         if (entry.type == NamingEntry.REFERENCE
                 || entry.type == NamingEntry.LINK_REF) {
@@ -122,7 +122,7 @@ public class NamingContextBindingsEnumeration
         } else {
             value = entry.value;
         }
-        
+
         return new Binding(entry.name, value.getClass().getName(), value, true);
     }
 }

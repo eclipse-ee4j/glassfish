@@ -26,25 +26,25 @@ import jakarta.jms.Session;
 import javax.naming.InitialContext;
 
 public class JmsAuthBean implements SessionBean {
-    
+
     private SessionContext ctxt_;
     private QueueConnectionFactory qcf_;
     private QueueConnectionFactory qcf1_;
 
     public void ejbCreate() throws CreateException {
         try {
-	    InitialContext ic = new InitialContext();
-            qcf_ = (QueueConnectionFactory) 
-	        ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
-            qcf1_ = (QueueConnectionFactory) 
-	        ic.lookup("java:comp/env/jms/MyQueueConnectionFactory_CM");
-	} catch( Exception e ) {
-	    e.printStackTrace();
-	    CreateException ce = new CreateException( e.getMessage() );
-	    ce.initCause( e );
-	    throw ce;
-	}
-	
+            InitialContext ic = new InitialContext();
+            qcf_ = (QueueConnectionFactory)
+                ic.lookup("java:comp/env/jms/MyQueueConnectionFactory");
+            qcf1_ = (QueueConnectionFactory)
+                ic.lookup("java:comp/env/jms/MyQueueConnectionFactory_CM");
+        } catch( Exception e ) {
+            e.printStackTrace();
+            CreateException ce = new CreateException( e.getMessage() );
+            ce.initCause( e );
+            throw ce;
+        }
+
     }
 
     public void ejbRemove() {
@@ -62,189 +62,189 @@ public class JmsAuthBean implements SessionBean {
 
     public boolean test1() {
         //application auth - getConnection w/ user/pass - must pass
-	boolean passed = true;
+        boolean passed = true;
         QueueConnection con = null;
-	QueueSession session = null;
+        QueueSession session = null;
 
-	try {
-            con = qcf_.createQueueConnection("guest", "guest");	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 1--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = false;
-	} finally {
+        try {
+            con = qcf_.createQueueConnection("guest", "guest");
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 1--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = false;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
-                	
-            } catch( Exception e ) {}
-	}
 
-	return passed;
+            } catch( Exception e ) {}
+        }
+
+        return passed;
     }
 
     public boolean test2() {
         //application auth - getConnection w/o user/pass - must fail
-	boolean passed = true;
+        boolean passed = true;
         QueueConnection con = null;
         QueueSession session = null;
 
-	try {
-            con = qcf_.createQueueConnection();	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 2--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = false;
-	} finally {
+        try {
+            con = qcf_.createQueueConnection();
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 2--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = false;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
             } catch( Exception e ) {}
-	}
+        }
 
-	return passed;
+        return passed;
     }
-    
+
     public boolean test3() {
         //application auth - getConnection w/ wrong user/pass - must fail
-	boolean passed = false;
+        boolean passed = false;
         QueueConnection con = null;
         QueueSession session = null;
 
-	try {
-            con = qcf_.createQueueConnection("xyz", "xyz");	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 3--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = true;
-	} finally {
+        try {
+            con = qcf_.createQueueConnection("xyz", "xyz");
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 3--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = true;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
             } catch( Exception e ) {}
-	}
+        }
 
-	return passed;
+        return passed;
     }
 
     public boolean test4() {
-        //application auth - getConnection w/ correct user/pass 
-	//and then wrong - must pass
-	boolean passed = false;
+        //application auth - getConnection w/ correct user/pass
+        //and then wrong - must pass
+        boolean passed = false;
         QueueConnection con = null;
         QueueSession session = null;
 
-	try {
-            con = qcf_.createQueueConnection("guest", "guest");	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 4--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    return passed;
-	} finally {
+        try {
+            con = qcf_.createQueueConnection("guest", "guest");
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 4--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            return passed;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
             } catch( Exception e ) {}
-	}
-        
-	try {
-	    con = qcf_.createQueueConnection("xyz", "xyz" );
-	    session = con.createQueueSession( true, Session.AUTO_ACKNOWLEDGE );
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 4--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = true;
-	} finally {
-	    try {
-	        session.close();
-		con.close();
-	    } catch( Exception e ) {}	
-	}
-	
-	return passed;
+        }
+
+        try {
+            con = qcf_.createQueueConnection("xyz", "xyz" );
+            session = con.createQueueSession( true, Session.AUTO_ACKNOWLEDGE );
+        } catch( Exception e ) {
+            System.out.println("------------jms test 4--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = true;
+        } finally {
+            try {
+                session.close();
+                con.close();
+            } catch( Exception e ) {}
+        }
+
+        return passed;
     }
 
     public boolean test5() {
         //container auth - getConnection w/o user/pass - must pass
-	boolean passed = true;
+        boolean passed = true;
         QueueConnection con = null;
-	QueueSession session = null;
+        QueueSession session = null;
 
-	try {
-            con = qcf1_.createQueueConnection();	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 5--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = false;
-	} finally {
+        try {
+            con = qcf1_.createQueueConnection();
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 5--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = false;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
-                	
-            } catch( Exception e ) {}
-	}
 
-	return passed;
+            } catch( Exception e ) {}
+        }
+
+        return passed;
     }
-    
+
     public boolean test6() {
         //container auth - getConnection w/ user/pass - must pass
-	boolean passed = true;
+        boolean passed = true;
         QueueConnection con = null;
-	QueueSession session = null;
+        QueueSession session = null;
 
-	try {
-            con = qcf1_.createQueueConnection("guest","guest");	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 6--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = false;
-	} finally {
+        try {
+            con = qcf1_.createQueueConnection("guest","guest");
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 6--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = false;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
-                	
-            } catch( Exception e ) {}
-	}
 
-	return passed;
+            } catch( Exception e ) {}
+        }
+
+        return passed;
     }
 
     public boolean test7() {
         //container auth - getConnection w/ wrong user/pass - must fail
-	boolean passed = false;
+        boolean passed = false;
         QueueConnection con = null;
-	QueueSession session = null;
+        QueueSession session = null;
 
-	try {
-            con = qcf1_.createQueueConnection("xyz", "xyz");	
-	    session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
-	} catch( Exception e ) {
-	    System.out.println("------------jms test 7--------------");
-	    e.printStackTrace();
-	    System.out.println("------------------------------------");
-	    passed = true;
-	} finally {
+        try {
+            con = qcf1_.createQueueConnection("xyz", "xyz");
+            session = con.createQueueSession(true, Session.AUTO_ACKNOWLEDGE);
+        } catch( Exception e ) {
+            System.out.println("------------jms test 7--------------");
+            e.printStackTrace();
+            System.out.println("------------------------------------");
+            passed = true;
+        } finally {
             try {
-	        session.close();
+                session.close();
                 con.close();
-                	
-            } catch( Exception e ) {}
-	}
 
-	return passed;
+            } catch( Exception e ) {}
+        }
+
+        return passed;
     }
 }

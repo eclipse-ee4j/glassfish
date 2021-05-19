@@ -30,7 +30,7 @@
     <artifactId>runner</artifactId>
 
     <name>HK2 CDI Basic Test Runner</name>
-    
+
     <build>
         <plugins>
             <plugin>

@@ -59,45 +59,45 @@ import org.glassfish.admin.amx.util.AMXLoggerInfo;
     Note that realms don't load until {@link #loadRealms} is called.
  */
 public final class RealmsImpl extends AMXImplBase
-    // implements Realms
+// implements Realms
 {
-		public
-	RealmsImpl( final ObjectName containerObjectName )
-	{
+    public
+    RealmsImpl( final ObjectName containerObjectName )
+    {
         super( containerObjectName, Realms.class);
-	}
-    
+    }
+
     public static RealmsManager
     getRealmsManager()
     {
         final RealmsManager mgr = Globals.getDefaultHabitat().getService(RealmsManager.class);
         return mgr;
     }
-    
+
     private volatile boolean    realmsLoaded = false;
-    
+
     private SecurityService getSecurityService()
-    {   
-    	return InjectedValues.getInstance().getHabitat().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+    {
+        return InjectedValues.getInstance().getHabitat().getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
     }
 
     private List<AuthRealm>  getAuthRealms()
     {
         return getSecurityService().getAuthRealm();
     }
-    
+
     /** realm names as found in configuration; some might be defective and unable to be loaded */
     private Set<String> getConfiguredRealmNames()
     {
-    	Set<String> names = new HashSet<String>();
-    	List<AuthRealm> realms = getAuthRealms();
-    	for (AuthRealm realm : realms) {
-    		names.add(realm.getName());
-    	}
-    	return names;
+        Set<String> names = new HashSet<String>();
+        List<AuthRealm> realms = getAuthRealms();
+        for (AuthRealm realm : realms) {
+            names.add(realm.getName());
+        }
+        return names;
     }
-    
-        private synchronized void 
+
+    private synchronized void
     loadRealms()
     {
         if ( realmsLoaded )
@@ -110,17 +110,17 @@ public final class RealmsImpl extends AMXImplBase
             // reload: there are new or different realms
             realmsLoaded = false;
         }
-        
+
         _loadRealms();
     }
-                                                                                                      
-        private void
+
+    private void
     _loadRealms()
     {
         if ( realmsLoaded ) throw new IllegalStateException();
 
         final List<AuthRealm> authRealms = getAuthRealms();
-        
+
         final List<String> goodRealms = new ArrayList<String>();
         for( final AuthRealm authRealm : authRealms )
         {
@@ -138,10 +138,10 @@ public final class RealmsImpl extends AMXImplBase
             catch( final Exception e )
             {
                 AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantInstantiateRealm,
-                        new Object[] {StringUtil.quote(authRealm), e.getLocalizedMessage()} );
+                    new Object[] {StringUtil.quote(authRealm), e.getLocalizedMessage()} );
             }
         }
-        
+
         if ( goodRealms.size() != 0 )
         {
             final String goodRealm = goodRealms.iterator().next();
@@ -154,25 +154,25 @@ public final class RealmsImpl extends AMXImplBase
             catch (final Exception e)
             {
                 AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantInstantiateRealm,
-                        new Object[] {StringUtil.quote(goodRealm), e.getLocalizedMessage()} );
+                    new Object[] {StringUtil.quote(goodRealm), e.getLocalizedMessage()} );
                 Realm.setDefaultRealm(goodRealms.iterator().next());
             }
         }
-        
+
         realmsLoaded = true;
     }
-    
-    
-        private String[]
-    _getRealmNames()
+
+
+    private String[]
+        _getRealmNames()
     {
         final List<String> items = ListUtil.newList( getRealmsManager().getRealmNames() );
         return CollectionUtil.toArray(items, String.class);
     }
-    
-    
+
+
     public String[]
-    getRealmNames()
+        getRealmNames()
     {
         try
         {
@@ -181,33 +181,33 @@ public final class RealmsImpl extends AMXImplBase
         }
         catch( final Exception e )
         {
-            AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantGetRealmNames, 
-                    e.getLocalizedMessage() );
+            AMXLoggerInfo.getLogger().log( Level.WARNING, AMXLoggerInfo.cantGetRealmNames,
+                e.getLocalizedMessage() );
             return new String[] {};
         }
     }
 
-    
+
     public String[]
-    getPredefinedAuthRealmClassNames()
+        getPredefinedAuthRealmClassNames()
     {
         final List<String> items = getRealmsManager().getPredefinedAuthRealmClassNames();
         return CollectionUtil.toArray(items, String.class);
     }
-    
-    
+
+
     public String getDefaultRealmName()
     {
         return getRealmsManager().getDefaultRealmName();
     }
-    
-    
+
+
     public void setDefaultRealmName(final String realmName)
     {
         getRealmsManager().setDefaultRealmName(realmName);
     }
-        
-        private Realm
+
+    private Realm
     getRealm(final String realmName)
     {
         loadRealms();
@@ -218,7 +218,7 @@ public final class RealmsImpl extends AMXImplBase
         }
         return realm;
     }
-    
+
     public void addUser(
         final String realmName,
         final String user,
@@ -226,7 +226,7 @@ public final class RealmsImpl extends AMXImplBase
         final String[] groupList )
     {
         checkSupportsUserManagement(realmName);
-        
+
         try
         {
             final Realm realm = getRealm(realmName);
@@ -238,7 +238,7 @@ public final class RealmsImpl extends AMXImplBase
             throw new RuntimeException(e);
         }
     }
-    
+
     public void updateUser(
         final String realmName,
         final String existingUser,
@@ -247,7 +247,7 @@ public final class RealmsImpl extends AMXImplBase
         final String[] groupList )
     {
         checkSupportsUserManagement(realmName);
-        
+
         try
         {
             final Realm realm = getRealm(realmName);
@@ -259,11 +259,11 @@ public final class RealmsImpl extends AMXImplBase
             throw new RuntimeException(e);
         }
     }
-    
+
     public void removeUser(final String realmName, final String user)
     {
         checkSupportsUserManagement(realmName);
-        
+
         try
         {
             final Realm realm = getRealm(realmName);
@@ -275,13 +275,13 @@ public final class RealmsImpl extends AMXImplBase
             throw new RuntimeException(e);
         }
     }
-    
+
     public boolean supportsUserManagement(final String realmName)
     {
         return getRealm(realmName).supportsUserManagement();
     }
-    
-        private void
+
+    private void
     checkSupportsUserManagement(final String realmName)
     {
         if ( ! supportsUserManagement(realmName) )
@@ -304,7 +304,7 @@ public final class RealmsImpl extends AMXImplBase
             throw new RuntimeException(e);
         }
     }
-    
+
     public String[] getGroupNames(final String realmName)
     {
         try
@@ -317,7 +317,7 @@ public final class RealmsImpl extends AMXImplBase
             throw new RuntimeException(e);
         }
     }
-    
+
     public String[] getGroupNames(final String realmName, final String user)
     {
         try
@@ -329,8 +329,8 @@ public final class RealmsImpl extends AMXImplBase
             throw new RuntimeException(e);
         }
     }
-    
-    
+
+
     public Map<String,Object> getUserAttributes(final String realmName, final String username)
     {
         try
@@ -338,7 +338,7 @@ public final class RealmsImpl extends AMXImplBase
             final User user = getRealm(realmName).getUser(username);
             final Map<String,Object> m = new HashMap<String,Object>();
             final List<String> attrNames = ListUtil.newList(user.getAttributeNames());
-            for( final String attrName : attrNames ) 
+            for( final String attrName : attrNames )
             {
                 m.put( attrName, user.getAttribute(attrName) );
             }
@@ -346,25 +346,25 @@ public final class RealmsImpl extends AMXImplBase
         }
         catch( final Exception e )
         {
-        throw new RuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
-    
+
     private static final String ADMIN_REALM = "admin-realm";
     private static final String ANONYMOUS_USER = "anonymous";
     private static final String FILE_REALM_CLASSNAME = "com.sun.enterprise.security.auth.realm.file.FileRealm";
-            
 
-     public String getAnonymousUser() {
+
+    public String getAnonymousUser() {
         final Domain domain = InjectedValues.getInstance().getHabitat().getService(Domain.class);
         final List<Config> configs = domain.getConfigs().getConfig();
-        
+
         // find the ADMIN_REALM
         AuthRealm adminFileAuthRealm = null;
         for( final Config config : configs )
         {
             if ( config.getSecurityService() == null ) continue;
-            
+
             for( final AuthRealm auth : config.getSecurityService().getAuthRealm() )
             {
                 if ( auth.getName().equals(ADMIN_REALM) )
@@ -372,7 +372,7 @@ public final class RealmsImpl extends AMXImplBase
                     adminFileAuthRealm = auth;
                     break;
                 }
-            } 
+            }
         }
         if (adminFileAuthRealm == null) {
             // There must always be an admin realm
@@ -396,7 +396,7 @@ public final class RealmsImpl extends AMXImplBase
         if (keyFile == null) {
             throw new IllegalStateException( "Cannot find key file" );
         }
-        
+
         //System.out.println( "############### keyFile: " + keyFile);
         String user = null;
         final String[] usernames = getUserNames(adminFileAuthRealm.getName());
@@ -413,7 +413,7 @@ public final class RealmsImpl extends AMXImplBase
                 //e.printStackTrace();
             }
         }
-        
+
         return user;
     }
 

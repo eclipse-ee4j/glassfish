@@ -23,7 +23,7 @@ import org.apache.tools.ant.Project;
 import java.io.File;
 
 /**
- *Custom Ant task that runs Java, just like the built-in java ant task, but stores the result of the invocation as a 
+ *Custom Ant task that runs Java, just like the built-in java ant task, but stores the result of the invocation as a
  *property value, which Ant's java task does not (yet) support.
  *<p>
  *Fortunately, we only need to minimally extend the Java class in Ant, overriding the execute method (to set the result property if
@@ -42,14 +42,14 @@ import java.io.File;
  * @author  tjquinn
  */
 public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
-    
+
     /*
      *String holding the name of the property to be set to the result value of the Java execution.  If
      *the build.xml file does not specify the property name, then this will remain null and no property
      *value assignment will occur.
      */
     private String resultProperty = null;
-    
+
     /*
      *The next two declarations were duplicated from the java task's source so the duplicated execute
      *method could be modified as little as possible.
@@ -60,7 +60,7 @@ public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
     /** Creates a new instance of JavaWithResult */
     public JavaWithResult() {
     }
-    
+
     public void init() {
         super.init();
         /*
@@ -74,13 +74,13 @@ public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
      * The working directory of the process.
      *<p>
      *This method simply mirrors the superclass setDir method.  We use it to set this class's private dir
-     *variable and also to set the superclass's private dir variable.  
+     *variable and also to set the superclass's private dir variable.
      */
     public void setDir(File d) {
         super.setDir(d);
         this.dir = d;
     }
-    
+
     /**
      *Assigns the name of the property to receive the result value from the JVM execution.
      *@param resultProperty name of the property to be assigned
@@ -88,7 +88,7 @@ public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
     public void setResultProperty(String resultProperty) {
         this.resultProperty = resultProperty;
     }
-    
+
     /**
      * If true, then fail if the command exits with a
      * returncode other than 0
@@ -102,7 +102,7 @@ public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
     /**
      * Do the execution.
      *<p>
-     *Almost all of this code is duplicated from the source for the build-in java ant task.  The difference is 
+     *Almost all of this code is duplicated from the source for the build-in java ant task.  The difference is
      *the logic that checks whether the resultproperty variable has been set and, if so, assigns a value to that
      *property.
      */
@@ -111,7 +111,7 @@ public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
 
         int err = -1;
         try {
-            if ((err = executeJava()) != 0) { 
+            if ((err = executeJava()) != 0) {
                 if (failOnError) {
                     throw new BuildException("Java returned: " + err, location);
                 } else {
@@ -120,7 +120,7 @@ public class JavaWithResult extends org.apache.tools.ant.taskdefs.Java {
             }
         } finally {
             dir = savedDir;
-            
+
             /*
              *If the result property was assigned - meaning the invoking build.xml wants to know the
              *result of the JVM execution - then assign the JVM result to the specified property.  Because

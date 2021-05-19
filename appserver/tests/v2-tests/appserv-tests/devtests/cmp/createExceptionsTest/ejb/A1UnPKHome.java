@@ -24,11 +24,11 @@ import java.util.*;
  */
 
 public interface A1UnPKHome extends jakarta.ejb.EJBHome {
-    
+
     public  java.util.Collection findAll()  throws java.rmi.RemoteException, jakarta.ejb.FinderException;
-    
+
     public  A1 create(java.lang.String name) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
     public  A1 create(int i) throws java.rmi.RemoteException, jakarta.ejb.CreateException;
-    
+
 }

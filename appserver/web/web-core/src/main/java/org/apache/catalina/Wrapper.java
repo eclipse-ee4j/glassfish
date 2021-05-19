@@ -247,7 +247,7 @@ public interface Wrapper extends Container {
 
     /**
      * Add a mapping associated with the Wrapper.
-     * 
+     *
      * @param mapping The new wrapper mapping
      */
     public void addMapping(String mapping);

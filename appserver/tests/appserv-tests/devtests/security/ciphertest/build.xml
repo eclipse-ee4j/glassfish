@@ -35,19 +35,19 @@
    &commonSecurity;
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all ciphertests)
-	</echo>
+        <echo>
+                Usage:
+                        ant all (Executes all ciphertests)
+        </echo>
     </target>
 
     <target name="all" depends="build, setup, deploy,run, undeploy, unsetup">
     </target>
 
     <target name="setup" depends="init-common, prepare-store-common">
-	<property name="https.1.port" value="1${https.port}" />
-	<property name="https.2.port" value="2${https.port}" />
-	<copy file="testsetup.asadmin.template" tofile="testsetup.asadmin" overwrite="true"/>
+        <property name="https.1.port" value="1${https.port}" />
+        <property name="https.2.port" value="2${https.port}" />
+        <copy file="testsetup.asadmin.template" tofile="testsetup.asadmin" overwrite="true"/>
         <replace file="testsetup.asadmin">
             <replacefilter token="@HTTPS1PORT@" value="${https.1.port}"/>
             <replacefilter token="@HTTPS2PORT@" value="${https.2.port}"/>
@@ -101,7 +101,7 @@
 
       <java classname="CipherTest" fork="true">
         <classpath>
-  	       <pathelement path="${build.classes.dir}:${s1astest.classpath}"/>
+                 <pathelement path="${build.classes.dir}:${s1astest.classpath}"/>
         </classpath>
         <jvmarg value="-Djavax.net.ssl.trustStore=${mytruststore.db.file}"/>
         <jvmarg value="-Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
@@ -125,7 +125,7 @@
 
       <property name="https.1.port" value="1${https.port}" />
       <property name="https.2.port" value="2${https.port}" />
-      
+
       <antcall target="cipher-test">
         <param name="should-pass-cipher" value=""/>
         <param name="enable-cipher"      value="SSL_RSA_WITH_DES_CBC_SHA"/>
@@ -159,11 +159,11 @@
 
 
     <target name="runciphertest-2" depends="init-common">
-     
+
      <property name="https.1.port" value="1${https.port}" />
      <property name="https.2.port" value="2${https.port}" />
- 
-<!-- JDK 8 u172 - 3DES cipher suites disabled 
+
+<!-- JDK 8 u172 - 3DES cipher suites disabled
      <antcall target="cipher-test">
         <param name="should-pass-cipher" value="SSL_RSA_WITH_3DES_EDE_CBC_SHA"/>
         <param name="enable-cipher"      value="SSL_RSA_WITH_3DES_EDE_CBC_SHA"/>
@@ -190,7 +190,7 @@
         <param name="enable-cipher"      value="SSL_RSA_WITH_NULL_MD5"/>
         <param name="https.port"         value="${https.2.port}"/>
       </antcall>
-      
+
       <antcall target="cipher-test">
         <param name="should-pass-cipher" value="SSL_RSA_WITH_NULL_SHA"/>
         <param name="enable-cipher"      value="SSL_RSA_WITH_NULL_SHA"/>
@@ -204,8 +204,8 @@
       </antcall>
     </target>
 
-    <target name="runciphertest-3" depends="init-common">    
-     <property name="https.1.port" value="1${https.port}" />   
+    <target name="runciphertest-3" depends="init-common">
+     <property name="https.1.port" value="1${https.port}" />
      <property name="https.2.port" value="2${https.port}" />
      <antcall target="cipher-test">
         <param name="should-pass-cipher" value=""/>

@@ -73,7 +73,7 @@ public class CompositeUtilTest {
     public void testAttributeReferenceProcessing() throws Exception {
         final CompositeUtil cu = CompositeUtil.instance();
         BaseModel model = cu.getModel(BaseModel.class);
-        
+
         final Method clusterMethod = Cluster.class.getMethod("getConfigRef");
         final Method modelMethod = model.getClass().getDeclaredMethod("getConfigRef");
 

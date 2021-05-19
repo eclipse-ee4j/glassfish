@@ -23,9 +23,9 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 
-/** 
+/**
  * CacheContextListener implements the ServletContextListener interface
- * in order to be notified when the context is created and destroyed. 
+ * in order to be notified when the context is created and destroyed.
  * It is used to create the cache and add it as a context attribute.
  */
 public class CacheContextListener implements ServletContextListener

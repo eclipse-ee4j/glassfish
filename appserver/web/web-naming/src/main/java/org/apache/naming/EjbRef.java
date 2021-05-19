@@ -39,7 +39,7 @@ public class EjbRef
     /**
      * Default factory for this reference.
      */
-    public static final String DEFAULT_FACTORY = 
+    public static final String DEFAULT_FACTORY =
         org.apache.naming.factory.Constants.DEFAULT_EJB_FACTORY;
 
 
@@ -66,7 +66,7 @@ public class EjbRef
 
     /**
      * EJB Reference.
-     * 
+     *
      * @param ejbType EJB type
      * @param home Home interface classname
      * @param remote Remote interface classname
@@ -79,7 +79,7 @@ public class EjbRef
 
     /**
      * EJB Reference.
-     * 
+     *
      * @param ejbType EJB type
      * @param home Home interface classname
      * @param remote Remote interface classname
@@ -114,7 +114,7 @@ public class EjbRef
 
 
     /**
-     * Retrieves the class name of the factory of the object to which this 
+     * Retrieves the class name of the factory of the object to which this
      * reference refers.
      */
     public String getFactoryClassName() {

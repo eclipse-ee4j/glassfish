@@ -33,7 +33,7 @@ public class GetSetTest extends AdminBaseDevTest {
     }
 
     public static void main(String[] args) {
-        new GetSetTest().runTests();    
+        new GetSetTest().runTests();
     }
 
     private String encodeStar(String s) {
@@ -52,20 +52,20 @@ public class GetSetTest extends AdminBaseDevTest {
         startDomain();
         report("create-cluster", asadmin("create-cluster", "gs1"));
     }
-    
+
     @Override
     public void cleanup() {
         report("delete-cluster", asadmin("delete-cluster", "gs1"));
-        stopDomain();        
+        stopDomain();
     }
-    
+
     /*
      * Use "get *" to get all settable values, and then use set to set the attribute
      * to the current value.
      */
     private void testGetSetAll() {
         final String t = "getsetall-";
-        
+
         AsadminReturn rv = asadminWithOutput("get", encodeStar("*"));
         report(t + "get", rv.returnValue);
         String[] lines = rv.out.split("[\r\n]");
@@ -80,7 +80,7 @@ public class GetSetTest extends AdminBaseDevTest {
         }
         testSets(t, setlines);
     }
-    
+
     /*
      * Use "get *" to get all settable alias values, and then use set to set the attribute
      * to the current value using the alias for the value.
@@ -94,7 +94,7 @@ public class GetSetTest extends AdminBaseDevTest {
         };
         List<String> setlines = new ArrayList();
 
-        
+
         for (String a : aliases) {
             AsadminReturn rv = asadminWithOutput("get", encodeStar(a + ".*"));
             report(t + "get", rv.returnValue);
@@ -102,12 +102,12 @@ public class GetSetTest extends AdminBaseDevTest {
             if (!rv.returnValue) continue;
 
             filterJunk(lines);
-        
+
             for (String line : lines) {
                 line = filterSet(line);
                 if (line == null) continue;
                 line = line.replace(a + ".", "");
-                
+
                 if (line.contains("server.name") ||
                     line.contains("gs1.name")) continue;
                 setlines.add(line);
@@ -115,9 +115,9 @@ public class GetSetTest extends AdminBaseDevTest {
         }
         testSets(t, setlines);
     }
-    
+
     /*
-     * Filter out set requests that are known not work. 
+     * Filter out set requests that are known not work.
      * Encode the request if necessary.
      */
     private String filterSet(String line) {
@@ -140,14 +140,14 @@ public class GetSetTest extends AdminBaseDevTest {
         if (line.contains("security-configurations")) return null;
 
         // escape the "." in some property names
-        final String[] dottedprops = { 
-            "encryption.key.alias", 
+        final String[] dottedprops = {
+            "encryption.key.alias",
             "signature.key.alias",
             "dynamic.username.password",
             "security.config",
             "administrative.domain.name",
         };
-        
+
         for (String dp : dottedprops) {
             if (line.contains(dp)) {
                  line = line.replace(dp, dp.replace(".", "\\."));
@@ -157,7 +157,7 @@ public class GetSetTest extends AdminBaseDevTest {
         return line;
 
 }
-    /* 
+    /*
      * Test a list of set requests by running asadmin set repeatedly.
      */
     private void testSets(String tname, List<String> reqs) {

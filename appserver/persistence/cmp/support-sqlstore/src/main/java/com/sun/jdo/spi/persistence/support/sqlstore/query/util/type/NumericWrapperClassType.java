@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  *
  * @author  Michael Bouschen
  * @version 0.1
@@ -34,12 +34,12 @@ public class NumericWrapperClassType
     /**
      *
      */
-    public NumericWrapperClassType(String name, Class clazz, int enumType, 
+    public NumericWrapperClassType(String name, Class clazz, int enumType,
                                    PrimitiveType primitiveType, TypeTable typetab)
     {
         super(name, clazz, enumType, primitiveType, typetab);
     }
-    
+
     /**
      * A numeric wrapper class type defines an ordering.
      */
@@ -50,7 +50,7 @@ public class NumericWrapperClassType
 
     /**
      * Converts the specified value into a value of this numeric type.
-     * E.g. an Integer is converted into a Double, if this represents 
+     * E.g. an Integer is converted into a Double, if this represents
      * the numeric type double.
      * @param value value to be converted
      * @return converted value
@@ -61,7 +61,7 @@ public class NumericWrapperClassType
     }
 
     /**
-     * Returns -value. 
+     * Returns -value.
      * @param value value to be negated
      * @return -value
      */

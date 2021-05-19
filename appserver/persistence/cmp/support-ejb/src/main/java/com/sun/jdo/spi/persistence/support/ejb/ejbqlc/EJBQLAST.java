@@ -26,18 +26,18 @@ import antlr.Token;
 import antlr.CommonAST;
 import antlr.collections.AST;
 
-/** 
- * An instance of this class represents a node of the intermediate 
+/**
+ * An instance of this class represents a node of the intermediate
  * representation (AST) used by the query compiler. It stores per node:
  * <ul>
  * <li> token type info
- * <li> token text 
+ * <li> token text
  * <li> line info
  * <li> column info
- * <li> type info the semantic analysis calculates the type of an expression 
+ * <li> type info the semantic analysis calculates the type of an expression
  * and adds this info to each node.
  * </ul>
- * 
+ *
  * @author  Michael Bouschen
  */
 public class EJBQLAST
@@ -73,7 +73,7 @@ public class EJBQLAST
     {
         initialize(ast);
     }
-    
+
     /** */
     public void initialize(Token t)
     {
@@ -101,7 +101,7 @@ public class EJBQLAST
         setColumn(ast.getColumn());
         setTypeInfo(ast.getTypeInfo());
     }
-    
+
     /** */
     public void setLine(int line)
     {
@@ -138,7 +138,7 @@ public class EJBQLAST
         return typeInfo;
     }
 
-    /** 
+    /**
      * Returns a string representation of this EJBQLAST w/o child ast nodes.
      * @return a string representation of the object.
      */
@@ -162,12 +162,12 @@ public class EJBQLAST
         return repr.toString();
     }
 
-    /** 
-     * Returns a full string representation of this JQLAST. 
-     * The returned string starts with the specified title string, 
+    /**
+     * Returns a full string representation of this JQLAST.
+     * The returned string starts with the specified title string,
      * followed by the string representation of this ast,
      * followed by the string representation of the child ast nodes of this ast.
-     * The method dumps each ast node on a separate line. 
+     * The method dumps each ast node on a separate line.
      * Child ast nodes are indented.
      * The method calls toString to dump a single node w/o children.
      * @return string representation of this ast including children.
@@ -186,16 +186,16 @@ public class EJBQLAST
         repr.append(getIndent(level));
         repr.append(this.toString());
         // handle children
-        for (EJBQLAST node = (EJBQLAST)this.getFirstChild(); 
-             node != null; 
+        for (EJBQLAST node = (EJBQLAST)this.getFirstChild();
+             node != null;
              node = (EJBQLAST)node.getNextSibling()) {
             repr.append(node.getTreeRepr(level+1));
         }
         return repr.toString();
     }
-    
+
     /** Returns the indent specified by level. */
-    private String getIndent(int level) 
+    private String getIndent(int level)
     {
         StringBuffer buf = new StringBuffer();
         for (int i = 0; i < level; i++) {
@@ -206,9 +206,9 @@ public class EJBQLAST
 
     /**
      * Creates and returns a copy of this object.
-     * The returned EJBQLAST shares the same state as this object, meaning 
-     * the fields type, text, line, column, and typeInfo have the same values. 
-     * But it is not bound to any tree structure, thus the child is null 
+     * The returned EJBQLAST shares the same state as this object, meaning
+     * the fields type, text, line, column, and typeInfo have the same values.
+     * But it is not bound to any tree structure, thus the child is null
      * and the sibling is null.
      * @return a clone of this instance.
      */
@@ -220,6 +220,6 @@ public class EJBQLAST
         clone.setNextSibling(null);
         return clone;
     }
-    
+
 }
 

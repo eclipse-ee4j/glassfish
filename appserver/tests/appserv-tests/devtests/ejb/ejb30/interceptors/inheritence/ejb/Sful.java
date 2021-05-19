@@ -42,13 +42,13 @@ public interface Sful
 
     public String computeMid(int min, int max)
 
-	    throws SwapArgumentsException;
+            throws SwapArgumentsException;
 
 
 
     public String callDummy()
 
-	    throws Exception;
+            throws Exception;
 
 
 

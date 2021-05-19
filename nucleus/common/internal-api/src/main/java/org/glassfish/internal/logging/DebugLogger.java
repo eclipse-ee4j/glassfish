@@ -21,30 +21,30 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 /**
- * 
+ *
  * Helper class for logging FINE level messages.
  */
 public class DebugLogger {
-    
+
     public static DebugLogger getDebugLogger(String name) {
       return new DebugLogger(name);
     }
-        
+
     // Delegate logger instance.
     private Logger logger;
 
     private DebugLogger(String name) {
       logger = Logger.getLogger(name);
     }
-    
+
     public boolean isDebugEnabled() {
       return logger.isLoggable(Level.FINE);
     }
-    
+
     public void debug(String msg) {
       logger.fine(msg);
     }
-    
+
     public void debug(String msg, Throwable thrown) {
       LogRecord rec = new LogRecord(Level.FINE, msg);
       rec.setThrown(thrown);

@@ -20,7 +20,7 @@ import java.beans.PropertyChangeEvent;
 
 /**
  * Simple extension to java beans events to support notification for adding/removing indexed properties.
- * 
+ *
  */
 public class TypedChangeEvent extends PropertyChangeEvent {
 

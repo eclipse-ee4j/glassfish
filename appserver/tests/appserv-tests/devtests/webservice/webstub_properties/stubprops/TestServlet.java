@@ -33,16 +33,16 @@ import javax.xml.rpc.Service;
  * @author dochez
  */
 public class TestServlet implements WebServiceTest {
-    
+
     SimpleServer port;
-    
+
     /** Creates a new instance of TestServlet */
     public TestServlet() {
-        System.out.println("Test servlet instantiated");        
+        System.out.println("Test servlet instantiated");
     }
-    
+
     public String doTest(String[] parameters) throws RemoteException {
-        
+
         System.out.println("Test servlet invoked");
         Service ref;
         try {
@@ -60,7 +60,7 @@ public class TestServlet implements WebServiceTest {
         java.util.Iterator itr = ref.getPorts();
         while (itr.hasNext()) {
             System.out.println(itr.next());
-            
+
         }
 
             port = (SimpleServer) ref.getPort(SimpleServer.class);
@@ -73,6 +73,6 @@ public class TestServlet implements WebServiceTest {
             System.out.println("failure : cannot get port");
             return "Failed - Cannot get port";
         }
-        return port.sayHello(parameters[0]);        
-    }    
+        return port.sayHello(parameters[0]);
+    }
 }

@@ -21,7 +21,7 @@
 
 <!--
     MySQL Type 4 Driver
-    The JAR file for the MySQL driver is mysql-connector-java-version-bin-g.jar, 
+    The JAR file for the MySQL driver is mysql-connector-java-version-bin-g.jar,
     for example, mysql-connector-java-5.0.5-bin.jar.
 
     To learn more on JDBC resources, pl. refer to JDBC resources chapter of admin guide.
@@ -41,8 +41,8 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="mysql-pool" 
+    <jdbc-connection-pool
+        name="mysql-pool"
         datasource-classname="com.mysql.jdbc.jdbc2.optional.MysqlDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
@@ -50,9 +50,9 @@
         <property name="url" value="jdbc:mysql://DB_HOSTNAME:3306/DATABASE_NAME"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/mysql-resource" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/mysql-resource"
+        object-type="user"
         pool-name="mysql-pool"/>
-</resources> 
+</resources>

@@ -34,8 +34,8 @@ public class Client {
     public static String kTestNotRun    = "TEST NOT RUN";
     public static String kTestPassed    = "TEST PASSED";
     public static String kTestFailed    = "TEST FAILED";
-    
-    private static SimpleReporterAdapter stat = 
+
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     private static final int    MAX_TIMERS = 60;
@@ -50,11 +50,11 @@ public class Client {
         client.doTest();
         System.out.println("[TimerSerializationClinet] DONE doTest()...");
         stat.printSummary("timerserialization");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
         initSFSBList();       //create MAX_TIMERS
 
@@ -172,7 +172,7 @@ public class Client {
             TimerSFSB sfsb = (TimerSFSB) sfsbList.get(i);
             String timerName = sfsb.getName();
             System.out.println("Accessing Timer bean for: " + timerName);
-            sfsb.cancelTimer();  
+            sfsb.cancelTimer();
             System.out.println("Successfully accessed Timer bean for: " + timerName);
 
             stat.addStatus("ejbclient cancelTimers", stat.PASS);
@@ -185,4 +185,4 @@ public class Client {
 
 
 }
-    
+

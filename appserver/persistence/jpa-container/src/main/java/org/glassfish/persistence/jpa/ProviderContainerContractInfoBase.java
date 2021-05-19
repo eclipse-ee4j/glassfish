@@ -34,7 +34,7 @@ public abstract class ProviderContainerContractInfoBase implements ProviderConta
 
     public ProviderContainerContractInfoBase(ConnectorRuntime connectorRuntime) {
         //This ctor is currently called only by ACC impl of ProviderContainerContractInfo which which will not deal with app/module scoped resources
-        this.connectorRuntime = connectorRuntime; 
+        this.connectorRuntime = connectorRuntime;
     }
 
     public ProviderContainerContractInfoBase(ConnectorRuntime connectorRuntime, DeploymentContext context) {

@@ -111,7 +111,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     Events events;
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config serverConfig;
-    
+
     AdminEndpointDecider epd;
     private static final Logger logger = KernelLoggerInfo.getLogger();
     private String statusHtml;
@@ -259,20 +259,20 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             if (!isRestStarted) {
                 forceRestModuleLoad(req);
             }
-	    synchronized(this) {
-		if (isInstalling()) {
-		    sendStatusPage(req, res);
-		} else {
+            synchronized(this) {
+                if (isInstalling()) {
+                    sendStatusPage(req, res);
+                } else {
                     if (isApplicationLoaded()) {
-			// Double check here that it is not yet loaded (not
-			// likely, but possible)
-			handleLoadedState();
-		    }else {
+                        // Double check here that it is not yet loaded (not
+                        // likely, but possible)
+                        handleLoadedState();
+                    }else {
                         loadConsole();
-			sendStatusPage(req, res);
-		    }
-		}
-	    }
+                        sendStatusPage(req, res);
+                    }
+                }
+            }
 
         }
 
@@ -292,7 +292,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
                     "Unable to install Admin Console!", ex);
         }
     }
-    
+
     /**
      * @param req the Request
      * @return <code>true</code> if the request is for a resource with a known content
@@ -473,9 +473,9 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
         if (logger.isLoggable(Level.FINE)) {
             logger.log(Level.FINE, "Admin Console download location: {0}", warFile.getAbsolutePath());
         }
-        
+
         initState();
-        
+
         try {
             epd = new AdminEndpointDecider(serverConfig);
             contextRoot = epd.getGuiContextRoot();
@@ -484,7 +484,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             return;
         }
     }
-    
+
     void initRest() {
         InputStream is = null;
         try {
@@ -512,7 +512,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             }
         }
     }
-    
+
 
     /**
      *
@@ -773,7 +773,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
                 }
             }, adminService);
         } catch (Exception ex) {
-            logger.log(Level.WARNING, KernelLoggerInfo.consoleCannotWriteProperty, 
+            logger.log(Level.WARNING, KernelLoggerInfo.consoleCannotWriteProperty,
                     new Object[] {propName, propValue, ex});
         }
     }

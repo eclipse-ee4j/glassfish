@@ -79,7 +79,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
             }
         }
     }
- 
+
     /**
      * Constructs an object that implements the <code>Clob</code> interface. The object
      * returned initially contains no data.  The <code>setAsciiStream</code>,
@@ -173,7 +173,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * The query submitted by the driver to validate the connection shall be
      * executed in the context of the current transaction.
      *
-     * @param timeout -		The time in seconds to wait for the database operation
+     * @param timeout - The time in seconds to wait for the database operation
      *                used to validate the connection to complete.  If
      *                the timeout period expires before the operation
      *                completes, this method returns false.  A value of
@@ -201,12 +201,12 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * and the maximum length that may be specified for each property.
      * <p/>
      * The driver stores the value specified in a suitable location in the
-     * database.  For example in a special register, session parameter, or
-     * system table column.  For efficiency the driver may defer setting the
+     * database. For example in a special register, session parameter, or
+     * system table column. For efficiency the driver may defer setting the
      * value in the database until the next time a statement is executed or
-     * prepared.  Other than storing the client information in the appropriate
+     * prepared. Other than storing the client information in the appropriate
      * place in the database, these methods shall not alter the behavior of
-     * the connection in anyway.  The values supplied to these methods are
+     * the connection in anyway. The values supplied to these methods are
      * used for accounting, diagnostics and debugging purposes only.
      * <p/>
      * The driver shall generate a warning if the client info name specified
@@ -214,37 +214,37 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * <p/>
      * If the value specified to this method is greater than the maximum
      * length for the property the driver may either truncate the value and
-     * generate a warning or generate a <code>SQLClientInfoException</code>.  If the driver
+     * generate a warning or generate a <code>SQLClientInfoException</code>. If the driver
      * generates a <code>SQLClientInfoException</code>, the value specified was not set on the
      * connection.
      * <p/>
-     * The following are standard client info properties.  Drivers are not
+     * The following are standard client info properties. Drivers are not
      * required to support these properties however if the driver supports a
      * client info property that can be described by one of the standard
      * properties, the standard property name should be used.
      * <p/>
      * <ul>
-     * <li>ApplicationName	-	The name of the application currently utilizing
+     * <li>ApplicationName - The name of the application currently utilizing
      * the connection</li>
-     * <li>ClientUser		-	The name of the user that the application using
-     * the connection is performing work for.  This may
+     * <li>ClientUser - The name of the user that the application using
+     * the connection is performing work for. This may
      * not be the same as the user name that was used
      * in establishing the connection.</li>
-     * <li>ClientHostname	-	The hostname of the computer the application
+     * <li>ClientHostname - The hostname of the computer the application
      * using the connection is running on.</li>
      * </ul>
      * <p/>
      *
-     * @param name  The name of the client info property to set
-     * @param value The value to set the client info property to.  If the
-     *              value is null, the current value of the specified
-     *              property is cleared.
-     *              <p/>
+     * @param name The name of the client info property to set
+     * @param value The value to set the client info property to. If the
+     *            value is null, the current value of the specified
+     *            property is cleared.
+     *            <p/>
      * @throws java.sql.SQLClientInfoException
-     *          if the database server returns an error while
-     *          setting the client info value on the database server or this method
-     *          is called on a closed connection
-     *          <p/>
+     *             if the database server returns an error while
+     *             setting the client info value on the database server or this method
+     *             is called on a closed connection
+     *             <p/>
      * @since 1.6
      */
     public void setClientInfo(String name, String value) throws SQLClientInfoException {
@@ -357,12 +357,12 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * whether the driver supports the client info properties or not.
      * Note that the <code>DatabaseMetaData</code> will be cached by <code>ManagedConnection</code>.
      * <p/>
-     * 
+     *
      * @return true if the client info properties are supported, false otherwise
      *
      * @throws jakarta.resource.ResourceException if the access to connection is failed.
      *
-     * @throws java.sql.SQLException if the database server returns an error when retrieving 
+     * @throws java.sql.SQLException if the database server returns an error when retrieving
      *                               a list of the client info properties.
      *
      * @see java.sql.DatabaseMetaData#getClientInfoProperties
@@ -390,7 +390,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
             }
         }
     }
-    
+
     /**
      * Factory method for creating Array objects.
      *
@@ -626,7 +626,7 @@ public class ConnectionHolder40 extends ConnectionHolder {
      * of the transaction, the connection is destroyed. A running thread
      * holding a connection will run to completion before the connection is
      * destroyed
-     * 
+     *
      * @param executor
      * @throws SQLException
      */

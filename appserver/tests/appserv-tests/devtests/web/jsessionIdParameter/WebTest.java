@@ -37,7 +37,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for IT 13129");
         WebTest webTest = new WebTest(args);
@@ -64,7 +64,7 @@ public class WebTest {
             System.out.print(get);
             os.write(get.getBytes());
             os.write("\n".getBytes());
-        
+
             is = sock.getInputStream();
             bis = new BufferedReader(new InputStreamReader(is));
 
@@ -85,7 +85,7 @@ public class WebTest {
 
             System.out.println("session id = " + id);
             return id;
-	    } finally {
+            } finally {
             if (bis != null) {
                 try {
                     bis.close();

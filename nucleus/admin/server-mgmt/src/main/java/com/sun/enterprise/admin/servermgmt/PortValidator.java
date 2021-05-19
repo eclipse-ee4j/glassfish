@@ -28,7 +28,7 @@ import com.sun.enterprise.util.net.NetUtils;
 
 /**
  * This validator ensures that the specified port is not in use.
- * 
+ *
  * @author kebbs
  */
 public class PortValidator extends Validator {
@@ -42,7 +42,7 @@ public class PortValidator extends Validator {
 
     /**
      * Validates the given Port.
-     * 
+     *
      * @param str Must be the absolute path of the File that will be validated.
      * @throws InvalidConfigException
      */

@@ -54,7 +54,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
     private Set<WebModule> webModules = new HashSet<WebModule>();
     private final org.glassfish.web.config.serverbeans.WebModuleConfig appConfigCustomizations;
 
-    public WebApplication(WebContainer container, WebModuleConfig config, 
+    public WebApplication(WebContainer container, WebModuleConfig config,
             final ApplicationConfigInfo appConfigInfo) {
         this.container = container;
         this.wmInfo = config;
@@ -115,7 +115,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         if (logger.isLoggable(Level.INFO)) {
             logger.log(Level.INFO, LogFacade.LOADING_APP, new Object[] {wmInfo.getDescriptor().getName(), wmInfo.getDescriptor().getContextRoot()});
         }
-        
+
         return true;
     }
 
@@ -182,7 +182,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
     /**
      * Gets a set of all the WebModule instances (one per virtual
      * server deployment) of this WebApplication.
-     * 
+     *
      * <p>For each WebModule in the returned set, the corresponding
      * ServletContext may be obtained by calling WebModule#getServletContext
      */
@@ -476,7 +476,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         private ContextParamCustomizer(Set<ContextParameter> descriptorItems, List<ContextParam> customizations) {
             super(descriptorItems, customizations, "context-param"); // NOI18N
         }
-        
+
         @Override
         protected boolean isIgnoreDescriptorItem(ContextParam customization) {
             return Boolean.parseBoolean(customization.getIgnoreDescriptorItem());
@@ -489,10 +489,10 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
 
         @Override
         protected ContextParameter newDescriptorItem(ContextParam customization) {
-            ContextParameter newItem = 
+            ContextParameter newItem =
                     new EnvironmentProperty(
-                        customization.getParamName(), 
-                        customization.getParamValue(), 
+                        customization.getParamName(),
+                        customization.getParamValue(),
                         "" /* description */);
             return newItem;
         }
@@ -516,14 +516,14 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         protected String toString(ContextParam customization) {
             return "Context-param: name=" + customization.getParamName() + ", value=" + customization.getParamValue();
         }
-            
+
     }
 
     /**
      * Concrete implementation for the EnvEntry customizer.
      */
     private class EnvEntryCustomizer extends Customizer<EnvironmentEntry,EnvEntry> {
-        
+
         private EnvEntryCustomizer(Set<EnvironmentEntry> descriptorItems, List<EnvEntry> customizations) {
             super(descriptorItems, customizations, "env-entry"); // NOI18N
         }
@@ -543,11 +543,11 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
         @Override
         protected EnvironmentEntry newDescriptorItem(EnvEntry customization) {
             customization.validateValue();
-            EnvironmentEntry newItem = 
+            EnvironmentEntry newItem =
                     new EnvironmentProperty(
-                        customization.getEnvEntryName(), 
-                        customization.getEnvEntryValue(), 
-                        customization.getDescription(), 
+                        customization.getEnvEntryName(),
+                        customization.getEnvEntryValue(),
+                        customization.getDescription(),
                         customization.getEnvEntryType());
             /*
              * Invoke setValue which records that the value has been set.
@@ -582,7 +582,7 @@ public class WebApplication implements ApplicationContainer<WebBundleDescriptorI
     }
 
     private void stopCoherenceWeb() {
-        if (wmInfo.getDescriptor() != null && 
+        if (wmInfo.getDescriptor() != null &&
                 wmInfo.getDescriptor().getSunDescriptor() != null) {
             SunWebAppImpl sunWebApp = (SunWebAppImpl) wmInfo.getDescriptor().getSunDescriptor();
             if (sunWebApp.getSessionConfig() != null &&

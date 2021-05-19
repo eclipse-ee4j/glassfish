@@ -48,10 +48,10 @@ import com.sun.enterprise.security.common.SecurityConstants;
 import org.glassfish.internal.api.Globals;
 
 
-/** 
+/**
  *
  * This class is invoked implicitly by the server to log in the user
- * information that was sent on the wire by the client. Clients will 
+ * information that was sent on the wire by the client. Clients will
  * use the <i>doClientLogin</i> method to simulate authentication to the
  * server.
  *
@@ -71,9 +71,9 @@ public class LoginContextDriver  {
 //    private static final String CLIENT_JAAS_CERTIFICATE = "certificate";
 
     public static final String CERT_REALMNAME = "certificate";
-  
+
     private  static volatile AuditManager AUDIT_MANAGER=null;
-    
+
     /** This class cannot be instantiated
      *
      */
@@ -103,18 +103,18 @@ public class LoginContextDriver  {
      * @param String username
      * @param String password
      * @param String realmName the name of the realm to login into, if realmName
-     * is null, we login into the default realm	 
+     * is null, we login into the default realm
      */
-    
+
     public static void login(String username, char[] password, String realmName){
 
-        if(realmName == null || !(Realm.isValidRealm(realmName))){    
+        if(realmName == null || !(Realm.isValidRealm(realmName))){
             realmName = Realm.getDefaultRealm();
-        }         
+        }
         final Subject fs = new Subject();
         final PasswordCredential pc =
             new PasswordCredential(username, password, realmName);
-        
+
         AppservAccessController.doPrivileged(new PrivilegedAction(){
             public java.lang.Object run(){
                 fs.getPrivateCredentials().add(pc);
@@ -207,22 +207,22 @@ public class LoginContextDriver  {
                         "Processing login with credentials of type: "+
                         cls.toString());
         }
-        
+
         if(cls.equals(PasswordCredential.class)) {
             doPasswordLogin(subject);
 
         } else if (cls.equals(X509CertificateCredential.class)) {
             doCertificateLogin(subject);
-            
+
         } else if (cls.equals(AnonCredential.class)) {
             doAnonLogin();
-            
+
         } else if (cls.equals(GSSUPName.class)) {
             doGSSUPLogin(subject);
-            
+
         } else if (cls.equals(X500Principal.class)) {
             doX500Login(subject, null);
-            
+
         } else {
             _logger.log(Level.INFO, SecurityLoggerInfo.unknownCredentialError,
                         cls.toString());
@@ -237,7 +237,7 @@ public class LoginContextDriver  {
      * a JAAS subject whose credential is to type GSSUPName.
      * This is used primarily for runas
      *
-     */ 
+     */
     public static void loginPrincipal(String username, String realmName)
         throws LoginException {
 
@@ -245,10 +245,10 @@ public class LoginContextDriver  {
         if(realmName == null || realmName.length() == 0){
             realmName = Realm.getDefaultRealm();
         }
-        
+
         final Subject s = new Subject();
 
-        final org.glassfish.security.common.PrincipalImpl p 
+        final org.glassfish.security.common.PrincipalImpl p
             = new org.glassfish.security.common.PrincipalImpl(username);
 
         final GSSUPName name = new GSSUPName(username, realmName);
@@ -281,7 +281,7 @@ public class LoginContextDriver  {
         setSecurityContext(username, s, realmName);
     }
 
-    
+
     /**
      * This method logs out the user by clearing the security context.
      *
@@ -319,10 +319,10 @@ public class LoginContextDriver  {
         throws LoginException
     {
         final Subject s = subject;
-        
+
         Object obj = getPrivateCredentials(s, PasswordCredential.class);
         assert obj != null;
-        
+
         PasswordCredential p = (PasswordCredential) obj;
         String user = p.getUser();
         char[] pwd = p.getPassword();
@@ -352,7 +352,7 @@ public class LoginContextDriver  {
             // name/pwd info is already contained in Subject's Credential
             LoginContext lg = new LoginContext(jaasCtx, s, dummyCallback);
             lg.login();
-            
+
         } catch (Exception e) {
             if (_logger.isLoggable(Level.FINEST)) {
                 _logger.log(Level.FINEST, "doPasswordLogin fails", e);
@@ -472,7 +472,7 @@ public class LoginContextDriver  {
 
         String userName = "";
         try {
-            
+
             userName = x500Principal.getName();
 
             AppservAccessController.doPrivileged(new PrivilegedAction(){
@@ -600,7 +600,7 @@ public class LoginContextDriver  {
         SecurityContext.setUnauthenticatedContext();
        if(_logger.isLoggable(Level.FINE)){
             _logger.log(Level.FINE,"Set anonymous security context.");
-        }  
+        }
     }
 
 
@@ -620,10 +620,10 @@ public class LoginContextDriver  {
             Object obj = getPublicCredentials(s, GSSUPName.class);
 
             user = ((GSSUPName)obj).getUser();
-    
+
             setSecurityContext(user, s, realm);
             if(getAuditManager().isAuditOn()){
-                getAuditManager().authentication(user, realm, true);        
+                getAuditManager().authentication(user, realm, true);
             }
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.fine("GSSUP login succeeded for : " + user);
@@ -647,7 +647,7 @@ public class LoginContextDriver  {
     public static void doX500Login(Subject s, String appModuleID)
         throws LoginException
     {
-       if(_logger.isLoggable(Level.FINE)){        
+       if(_logger.isLoggable(Level.FINE)){
             _logger.fine("Processing X.500 name login.");
        }
        String user = null;
@@ -655,7 +655,7 @@ public class LoginContextDriver  {
        try{
             X500Principal x500Principal = (X500Principal) getPublicCredentials(s, X500Principal.class);
             user = x500Principal.getName();
-        
+
             // In the RI-inherited implementation this directly creates
             // some credentials and sets the security context. This means
             // that the certificate realm does not get an opportunity to
@@ -668,7 +668,7 @@ public class LoginContextDriver  {
             Realm realm = Realm.getInstance(CertificateRealm.AUTH_TYPE);
 
             if (realm instanceof CertificateRealm) { // should always be true
-    
+
                 CertificateRealm certRealm = (CertificateRealm)realm;
                 String jaasCtx = certRealm.getJAASContext();
                 if (jaasCtx != null) {
@@ -681,12 +681,12 @@ public class LoginContextDriver  {
                 if(getAuditManager().isAuditOn()){
                     getAuditManager().authentication(user, realm_name, true);
                 }
-            } else {            
-                _logger.warning(SecurityLoggerInfo.certLoginBadRealmError);            
+            } else {
+                _logger.warning(SecurityLoggerInfo.certLoginBadRealmError);
                 realm_name = realm.getName();
                 setSecurityContext(user, s, realm_name);
             }
-        
+
             if (_logger.isLoggable(Level.FINE)) {
                 _logger.fine("X.500 name login succeeded for : " + user);
             }
@@ -713,7 +713,7 @@ public class LoginContextDriver  {
         throws LoginException
     {
         Set credset = s.getPublicCredentials(cls);
-        
+
         final Iterator iter = credset.iterator();
 
         if(!iter.hasNext()) {
@@ -725,8 +725,8 @@ public class LoginContextDriver  {
             throw new LoginException("Expected public credential of type: "+
                                      credmsg + " but none found.");
         }
-        
-        Object obj = null;    
+
+        Object obj = null;
         try{
             obj = AppservAccessController.doPrivileged(new PrivilegedAction(){
                 public java.lang.Object run(){
@@ -734,7 +734,7 @@ public class LoginContextDriver  {
                 }
             });
         } catch (Exception e){
-            // should never come here 
+            // should never come here
             if( e instanceof LoginException )
                 throw (LoginException)e;
             else
@@ -761,7 +761,7 @@ public class LoginContextDriver  {
     {
         final Subject s = subject;
         final Class<?> cl = cls;
-        
+
         final Set credset = (Set)
             AppservAccessController.doPrivileged(new PrivilegedAction() {
                 public java.lang.Object run() {
@@ -791,7 +791,7 @@ public class LoginContextDriver  {
                 }
             });
         } catch (Exception e){
-            // should never come here 
+            // should never come here
             if( e instanceof LoginException )
                 throw (LoginException)e;
             else
@@ -803,9 +803,9 @@ public class LoginContextDriver  {
         return obj;
     }
 
-    
+
     /**
-     * This method sets the security context on the current Thread Local 
+     * This method sets the security context on the current Thread Local
      * Storage
      * @param String username is the user who authenticated
      * @param Subject is the subject representation of the user
@@ -830,7 +830,7 @@ private static void setSecurityContext(String userName,
      * It just simulates the login on the client side.
      * The method uses the callback handlers and generates correct
      * credential information that will be later sent to the server
-     * @param int type whether it is <i> username_password</i> or 
+     * @param int type whether it is <i> username_password</i> or
      * <i> certificate </i> based login.
      * @param CallbackHandler the callback handler to gather user information.
      * @exception LoginException the exception thrown by the callback handler.
@@ -843,24 +843,24 @@ private static void setSecurityContext(String userName,
             jaasHandler;
         // the subject will actually be filled in with a PasswordCredential
         // required by the csiv2 layer in the LoginModule.
-        // we create the dummy credential here and call the 
+        // we create the dummy credential here and call the
         // set security context. Thus, we have 2  credentials, one each for
         // the csiv2 layer and the other for the RI.
         final Subject subject = new Subject();
-        
+
         if (type == SecurityConstants.USERNAME_PASSWORD ){
             AppservAccessController.doPrivileged(new PrivilegedAction() {
                 public java.lang.Object run() {
                     try{
-                        LoginContext lg = 
-                            new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, 
+                        LoginContext lg =
+                            new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD,
                                              subject, handler);
                         lg.login();
                     }catch(javax.security.auth.login.LoginException e){
                         throw (LoginException)
                             new LoginException(e.toString()).initCause(e);
                     }
-                    
+
                     return null;
                 }
             });
@@ -870,7 +870,7 @@ private static void setSecurityContext(String userName,
             AppservAccessController.doPrivileged(new PrivilegedAction() {
                 public java.lang.Object run() {
                     try{
-                        LoginContext lg = 
+                        LoginContext lg =
                             new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE,
                                              subject, handler);
                         lg.login();
@@ -878,7 +878,7 @@ private static void setSecurityContext(String userName,
                         throw (LoginException)
                             new LoginException(e.toString()).initCause(e);
                     }
-                    
+
                     return null;
                 }
             });
@@ -891,12 +891,12 @@ private static void setSecurityContext(String userName,
                         LoginContext lgup =
                             new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD,
                                              subject, handler);
-                        LoginContext lgc = 
+                        LoginContext lgc =
                             new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE,
                                                  subject, handler);
                         lgup.login();
                         postClientAuth(subject, PasswordCredential.class);
-                        
+
                         lgc.login();
                         postClientAuth(subject,
                                        X509CertificateCredential.class);
@@ -904,17 +904,17 @@ private static void setSecurityContext(String userName,
                         throw (LoginException)
                             new LoginException(e.toString()).initCause(e);
                     }
-                    
+
                     return null;
                 }
             });
             return subject;
-        } else{ 
+        } else{
             AppservAccessController.doPrivileged(new PrivilegedAction() {
                 public java.lang.Object run() {
                     try{
                         LoginContext lg =
-                            new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, 
+                            new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD,
                                              subject, handler);
                         lg.login();
                         postClientAuth(subject, PasswordCredential.class);
@@ -980,7 +980,7 @@ private static void setSecurityContext(String userName,
         setSecurityContext(digestCred.getUserName(), subject, digestCred.getRealmName());
     }
 
- 
+
     /**
      * Extract the relevant username and realm information from the
      * subject and sets the correct state in the security context. The
@@ -994,7 +994,7 @@ private static void setSecurityContext(String userName,
     private  static void postClientAuth(Subject subject, Class<?> clazz){
         final Class<?> clas = clazz;
         final Subject fs = subject;
-        Set credset = 
+        Set credset =
             (Set) AppservAccessController.doPrivileged(new PrivilegedAction() {
                 public java.lang.Object run() {
                 if(_logger.isLoggable(Level.FINEST)){
@@ -1005,7 +1005,7 @@ private static void setSecurityContext(String userName,
             });
         final Iterator iter = credset.iterator();
         while(iter.hasNext()) {
-            Object obj = null;    
+            Object obj = null;
             try{
                 obj = AppservAccessController.doPrivileged(new PrivilegedAction(){
                     public java.lang.Object run(){
@@ -1013,7 +1013,7 @@ private static void setSecurityContext(String userName,
                     }
                 });
             } catch (Exception e){
-                // should never come here 
+                // should never come here
                 _logger.log(Level.SEVERE,
                             SecurityLoggerInfo.securityAccessControllerActionError,
                             e);
@@ -1042,7 +1042,7 @@ private static void setSecurityContext(String userName,
         }
     }
 
-    
+
     /**
      * Sets the security context on the appclient side.
      * It sets the relevant information into the TLS
@@ -1050,14 +1050,14 @@ private static void setSecurityContext(String userName,
      * @param Subject is the subject representation of the user
      * @param Credentials the credentials that the server associated with it
      */
-    private static void setClientSecurityContext(String username, 
-                                                 Subject subject) {                                       
+    private static void setClientSecurityContext(String username,
+                                                 Subject subject) {
         ClientSecurityContext securityContext =
             new ClientSecurityContext(username, subject);
         ClientSecurityContext.setCurrent(securityContext);
     }
 
-    
+
     /**
      * Unsets the current appclient security context on the Thread
      * Local Storage

@@ -37,8 +37,9 @@ class LdapPrincipal implements Principal {
      * @param name The principal's string name.
      */
     public LdapPrincipal(String name) {
-	this.name = name;
+        this.name = name;
     }
+
 
     /**
      * Compares this principal to the specified object.
@@ -46,60 +47,70 @@ class LdapPrincipal implements Principal {
      * @param object The object to compare this principal against.
      * @return true if they are equal; false otherwise.
      */
+    @Override
     public boolean equals(Object object) {
-	if (ldapName == null) {
-	    ldapName = getLdapName(name);
-	}
-	//this is a broken equals implementation. It doesnot have any dependency on Glassfish code
-	/*if (object instanceof String) {
-	    return ldapName.equals(getLdapName((String)object));
-	}*/
-	if (object instanceof Principal) {
-	    return ldapName.equals(getLdapName(((Principal)object).getName()));
-	}
-	return false;
+        if (ldapName == null) {
+            ldapName = getLdapName(name);
+        }
+        // this is a broken equals implementation. It doesnot have any dependency on Glassfish code
+        /*
+         * if (object instanceof String) {
+         * return ldapName.equals(getLdapName((String)object));
+         * }
+         */
+        if (object instanceof Principal) {
+            return ldapName.equals(getLdapName(((Principal) object).getName()));
+        }
+        return false;
     }
+
 
     /**
      * Returns a hash code for this principal.
      *
      * @return The principal's hash code.
      */
+    @Override
     public int hashCode() {
-	if (hash == -1) {
-	    if (ldapName == null) {
-		ldapName = getLdapName(name);
-	    }
-	    hash = ldapName.hashCode();
-	}
-	return hash;
+        if (hash == -1) {
+            if (ldapName == null) {
+                ldapName = getLdapName(name);
+            }
+            hash = ldapName.hashCode();
+        }
+        return hash;
     }
+
 
     /**
      * Returns the name of this principal.
      *
      * @return String The principal's string name.
      */
+    @Override
     public String getName() {
-	return name;
+        return name;
     }
+
 
     /**
      * Returns a string representation of this principal.
      *
      * @return String The principal's string name.
      */
+    @Override
     public String toString() {
-	return name;
+        return name;
     }
 
+
     private LdapName getLdapName(String name) {
-	LdapName ldapName = null;
-	try {
-	    ldapName = new LdapName(name);
-	} catch (NamingException e) {
-	    // ignore
-	}
-	return ldapName;
+        LdapName ldapName = null;
+        try {
+            ldapName = new LdapName(name);
+        } catch (NamingException e) {
+            // ignore
+        }
+        return ldapName;
     }
 }

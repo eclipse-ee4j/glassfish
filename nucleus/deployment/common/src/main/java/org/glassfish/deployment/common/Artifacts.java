@@ -161,15 +161,15 @@ public class Artifacts {
     public synchronized void addArtifact(URI full, String part) {
         addArtifact(full, URI.create(part));
     }
-    
+
     public synchronized void addArtifact(final URI full, final String part, final boolean isTemporary) {
         addArtifact(full, URI.create(part), isTemporary);
     }
-    
+
     /**
      * Adds an artifact.
      * @param full
-     * @param part 
+     * @param part
      */
     public synchronized void addArtifact(final URI full, final URI part) {
         addArtifact(full, part, false);
@@ -249,11 +249,11 @@ public class Artifacts {
         public FullAndPartURIs(URI full, String part) {
             this(full, part, false);
         }
-        
+
         public FullAndPartURIs(URI full, String part, boolean isTemporary) {
             this(full, URI.create(part), isTemporary);
         }
-        
+
         public FullAndPartURIs(URI full, URI part, boolean isTemporary) {
             this.full = full;
             this.part = part;
@@ -267,7 +267,7 @@ public class Artifacts {
         public URI getPart() {
             return part;
         }
-        
+
         public boolean isTemporary() {
             return isTemporary;
         }

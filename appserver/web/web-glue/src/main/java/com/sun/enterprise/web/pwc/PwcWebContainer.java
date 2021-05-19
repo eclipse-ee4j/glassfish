@@ -44,7 +44,7 @@ public class PwcWebContainer implements PwcWebContainerLifecycle {
 
     public void onInitialization(String rootDir, String instanceName,
                                  boolean useNaming, Logger logger,
-                                 String embeddedClassName) 
+                                 String embeddedClassName)
         throws Exception {
         Class c = Class.forName(embeddedClassName);
         _embedded = (Embedded) c.newInstance();
@@ -54,7 +54,7 @@ public class PwcWebContainer implements PwcWebContainerLifecycle {
         _embedded.addEngine(_engine);
     }
 
-    public void onStartup() 
+    public void onStartup()
         throws Exception {
         _started = true;
 
@@ -62,17 +62,17 @@ public class PwcWebContainer implements PwcWebContainerLifecycle {
 
     }
 
-    public void onReady() 
-        throws Exception {
-    }
-
- 
-    public void onShutdown() 
+    public void onReady()
         throws Exception {
     }
 
 
-    public void onTermination() 
+    public void onShutdown()
+        throws Exception {
+    }
+
+
+    public void onTermination()
         throws Exception {
         _started = false;
         _embedded.stop();

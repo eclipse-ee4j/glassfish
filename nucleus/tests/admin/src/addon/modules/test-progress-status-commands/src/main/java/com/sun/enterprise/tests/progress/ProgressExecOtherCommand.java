@@ -73,7 +73,7 @@ public class ProgressExecOtherCommand implements AdminCommand {
         }
 
         progressStatus.complete("Finished outer command");
-        
+
         System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
     }
 

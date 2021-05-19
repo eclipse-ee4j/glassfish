@@ -35,19 +35,19 @@ public class Test1Servlet extends HttpServlet {
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
-	StringBuffer ret = new StringBuffer();
+        StringBuffer ret = new StringBuffer();
         String attr = (String) context.getAttribute("SHAREDLIB-1");
-	ret.append(attr +";");
+        ret.append(attr +";");
         attr = (String) context.getAttribute("SHAREDLIB-2");
-	ret.append(attr +";");
-	attr = (String) context.getAttribute("SHAREDLIB-3");
-	ret.append(attr +";");
+        ret.append(attr +";");
+        attr = (String) context.getAttribute("SHAREDLIB-3");
+        ret.append(attr +";");
         attr = (String) context.getAttribute("SHAREDLIB-4");
-	ret.append(attr +";");
+        ret.append(attr +";");
         attr = (String) context.getAttribute("APPLIB-1");
-	ret.append(attr +";");
-	attr = (String) context.getAttribute("APPLIB-2");
-	ret.append(attr);
+        ret.append(attr +";");
+        attr = (String) context.getAttribute("APPLIB-2");
+        ret.append(attr);
         res.getWriter().write(ret.toString());
     }
 }

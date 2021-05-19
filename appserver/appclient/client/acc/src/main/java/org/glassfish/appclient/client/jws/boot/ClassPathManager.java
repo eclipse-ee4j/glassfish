@@ -34,8 +34,8 @@ import java.net.URLClassLoader;
  * @author tjquinn
  */
 public abstract class ClassPathManager {
-    
-    public static final String PERSISTENCE_JAR_CLASSES = 
+
+    public static final String PERSISTENCE_JAR_CLASSES =
             "org.apache.derby.client.ClientDataSourceFactory," /* derbyclient.jar */ +
             "persistence.antlr.ActionElement," /* toplink-essentials */ +
             "org.netbeans.modules.dbschema.ColumnElement," /* dbschema */
@@ -43,9 +43,9 @@ public abstract class ClassPathManager {
 
     /** instance of appropriate type of class path manager, depending on the Java runtime version */
     private static volatile ClassPathManager mgr = null;
-    
+
     private final boolean keepJWSClassLoader;
-    
+
     /**
      *Returns the appropriate type of ClassPathManager.
      *@return an instance of the correct implementation subclass class path manager
@@ -66,7 +66,7 @@ public abstract class ClassPathManager {
         }
         return mgr;
     }
-    
+
     /** the JNLP class loader active during the instantiation of this mgr */
     private ClassLoader jnlpClassLoader = null;
 
@@ -78,24 +78,24 @@ public abstract class ClassPathManager {
         jnlpClassLoader = loader;
         this.keepJWSClassLoader = keepJWSClassLoader;
     }
-    
+
     protected boolean keepJWSClassLoader() {
         return keepJWSClassLoader;
     }
-    
+
     protected ClassLoader getJnlpClassLoader() {
         return jnlpClassLoader;
     }
-    
+
     /**
      *Locates the URI for the JAR containing the specified class
      *@param className the name of the class to be located
      *@return the URI for the JAR file containing the class of interest
      */
-    public URI locateClass(String className) throws 
-            IllegalAccessException, 
-            InvocationTargetException, 
-            MalformedURLException, 
+    public URI locateClass(String className) throws
+            IllegalAccessException,
+            InvocationTargetException,
+            MalformedURLException,
             URISyntaxException, ClassNotFoundException {
         String resourceName = classNameToResourceName(className);
         URL classURL = locateResource(resourceName);
@@ -111,7 +111,7 @@ public abstract class ClassPathManager {
 
     /**
      *Returns the appropriate parent class loader for the ACC.
-     *@return the correct class loader instance 
+     *@return the correct class loader instance
      */
     public abstract ClassLoader getParentClassLoader();
 
@@ -120,11 +120,11 @@ public abstract class ClassPathManager {
      *@param resourceURL URL to look for
      *@return File object for the jar or directory containing the entry
      */
-    public abstract File findContainingJar(URL resourceURL) throws 
-            IllegalArgumentException, 
-            URISyntaxException, 
-            MalformedURLException, 
-            IllegalAccessException, 
+    public abstract File findContainingJar(URL resourceURL) throws
+            IllegalArgumentException,
+            URISyntaxException,
+            MalformedURLException,
+            IllegalAccessException,
             InvocationTargetException;
 
     /**
@@ -135,7 +135,7 @@ public abstract class ClassPathManager {
     protected ClassLoader getJNLPClassLoader() {
         return jnlpClassLoader;
     }
-    
+
     /**
      *Converts a class name to a resource name.
      *@param className the name of the class of interest in x.y.z format
@@ -154,27 +154,27 @@ public abstract class ClassPathManager {
         URL resourceURL = getClass().getClassLoader().getResource(resourceName);
         return resourceURL;
     }
-     
+
     /**
      *Reports URLs for the locally-cached copies of the JARs downloaded by
      *Java Web Start needed for the ACC's class path and policy settings.
      *@return array of URLs, one entry for each downloaded JAR
      */
-    public URL[] locateDownloadedJars() throws 
-            ClassNotFoundException, 
-            URISyntaxException, 
-            NoSuchMethodException, 
-            IllegalAccessException, 
-            InvocationTargetException, 
+    public URL[] locateDownloadedJars() throws
+            ClassNotFoundException,
+            URISyntaxException,
+            NoSuchMethodException,
+            IllegalAccessException,
+            InvocationTargetException,
             MalformedURLException {
         /*
          *For each downloaded unsigned app client jar, get a URL that locates
          *it and add the URL to the list.
          *
-         *This set of values should be automated on the server side and 
-         *communicated via a property setting in the JNLP document so 
+         *This set of values should be automated on the server side and
+         *communicated via a property setting in the JNLP document so
          *any changes in the list of downloaded files does not need to be made
-         *there and here.  
+         *there and here.
          */
         String probeClassNames = System.getProperty("com.sun.aas.jar.probe.class.names",
                 "com.sun.enterprise.appclient.jws.boot.JWSACCMain," /* appserv-jwsacc */ +
@@ -184,7 +184,7 @@ public abstract class ClassPathManager {
                 "com.sun.enterprise.deployment.client.DeploymentClientUtils," /* appserv-deployment-client */ +
                 "jakarta.ejb.EJB," /* jakarta ee */ +
                 "jakarta.security.auth.message.module.ServerAuthModule," /* jmac-api */ +
-                "com.sun.appserv.management.ext.logging.LogAnalyzer," /* appserv-ext */ + 
+                "com.sun.appserv.management.ext.logging.LogAnalyzer," /* appserv-ext */ +
                 "com.sun.mail.iap.Argument," /* mail */ +
                 "com.sun.activation.viewers.ImageViewer," /* activation */ +
                 "com.sun.xml.ws.api.server.WSEndpoint," /* webservices-rt */ +
@@ -194,12 +194,12 @@ public abstract class ClassPathManager {
                 );
 
         return locateJARs(probeClassNames);
-    }        
-    
-    public URL[] locateJARs(String classNamesString) throws 
-            IllegalAccessException, InvocationTargetException, 
+    }
+
+    public URL[] locateJARs(String classNamesString) throws
+            IllegalAccessException, InvocationTargetException,
             MalformedURLException, URISyntaxException, ClassNotFoundException {
-        
+
         String [] classNames = classNamesString.split(",");
 
         /*
@@ -216,9 +216,9 @@ public abstract class ClassPathManager {
         }
         return urls;
     }
-    
-    public URL[] locatePersistenceJARs() throws 
-            IllegalAccessException, InvocationTargetException, 
+
+    public URL[] locatePersistenceJARs() throws
+            IllegalAccessException, InvocationTargetException,
             MalformedURLException, URISyntaxException, ClassNotFoundException {
         return locateJARs(PERSISTENCE_JAR_CLASSES);
     }

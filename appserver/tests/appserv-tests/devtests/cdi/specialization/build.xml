@@ -83,15 +83,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the specialization tests)
-		ant clean (cleans all the specialization tests)
-		ant build (builds all the specialization tests)
-		ant setup (sets up all resources for specialization tests)
-		ant deploy (deploys all the specialization apps)
-		ant run (Executes all the specialization tests)
-		ant undeploy (undeploys all the  specialization apps)
-		ant unsetup (unsets all resources for specialization tests)
-	</echo>
+        <echo> Usage:
+                ant all (Executes all the specialization tests)
+                ant clean (cleans all the specialization tests)
+                ant build (builds all the specialization tests)
+                ant setup (sets up all resources for specialization tests)
+                ant deploy (deploys all the specialization apps)
+                ant run (Executes all the specialization tests)
+                ant undeploy (undeploys all the  specialization apps)
+                ant unsetup (unsets all resources for specialization tests)
+        </echo>
     </target>
 </project>

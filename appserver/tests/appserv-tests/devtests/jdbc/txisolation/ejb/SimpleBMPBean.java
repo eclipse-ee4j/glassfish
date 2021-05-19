@@ -71,7 +71,7 @@ public class SimpleBMPBean
                 }catch(Exception e){e.printStackTrace();}
             }
         }
-    return result;        
+    return result;
     }
 
     public boolean modifyIsolation(int isolationLevel){

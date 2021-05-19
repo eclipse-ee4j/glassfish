@@ -46,7 +46,7 @@ import java.util.logging.Logger;
  *
  * The response contents are then committed, to comply with SRV.8.4
  * ("The Forward Method"):
- * 
+ *
  *   Before the forward method of the <code>RequestDispatcher</code>
  *   interface returns without exception, the response content must be
  *   sent and committed, and closed by the servlet container.
@@ -84,13 +84,13 @@ class ApplicationDispatcherForward {
         int statusCode = hres.getStatus();
         Object exception = hreq.getAttribute(
             RequestDispatcher.ERROR_EXCEPTION);
-        String errorReportValveClass = 
+        String errorReportValveClass =
             ((StandardHost)(context.getParent())).getErrorReportValveClass();
         boolean hasErrorReportValve = (errorReportValveClass != null &&
                 errorReportValveClass.length() > 0);
         RequestFacadeHelper reqFacHelper = RequestFacadeHelper.getInstance(request);
         if (hasErrorReportValve && reqFacHelper != null && reqFacHelper.isResponseError() &&
-                statusCode >= 400 && exception == null) {            
+                statusCode >= 400 && exception == null) {
             boolean matchFound = status(hreq, hres, context, wrapper, statusCode);
             if (!matchFound) {
                 boolean isDefaultErrorPageEnabled = true;
@@ -125,7 +125,7 @@ class ApplicationDispatcherForward {
      * the given context has been deployed.
      *
      * If a match is found using the context mappings, the request is forwarded
-     * to the error page. Otherwise, if a match is found using the host 
+     * to the error page. Otherwise, if a match is found using the host
      * mappings, the contents of the error page are returned. If no match is
      * found, no action is taken.
      *
@@ -191,7 +191,7 @@ class ApplicationDispatcherForward {
 
     /**
      * Handles an HTTP status code or exception by forwarding control
-     * to the location included in the specified errorPage object. 
+     * to the location included in the specified errorPage object.
      */
     private static void custom(HttpServletRequest request,
                                HttpServletResponse response,
@@ -271,7 +271,7 @@ class ApplicationDispatcherForward {
             response.reset();
             response.setStatus(statusCode, message);
         }
-         
+
         try {
             ostream = response.getOutputStream();
         } catch (IllegalStateException e) {
@@ -358,10 +358,10 @@ class ApplicationDispatcherForward {
         }
     }
 
-    
+
 /*
     private static ResponseFacade getResponseFacade(ServletResponse response) {
-   
+
         while (response instanceof ServletResponseWrapper) {
             response = ((ServletResponseWrapper) response).getResponse();
         }

@@ -68,7 +68,7 @@ public final class FeatureAvailability
     //public static final String  MBEAN_SERVER_FEATURE    = "MBeanServer";
     /** feature stating that the SunoneInterceptor is active.  Associated data should be ignored. */
     //public static final String  SUN_ONE_INTERCEPTOR_FEATURE    = "SunoneInterceptor";
-    /** feature stating that the com.sun.appserv:category=config MBeans are available. 
+    /** feature stating that the com.sun.appserv:category=config MBeans are available.
     Result data should not be used */
     //public static final String COM_SUN_APPSERV_CONFIG_MBEANS_FEATURE    = "com.sun.appserv:category=config";
     /** feature stating that the AMX MBean Loader is available (but not AMX).  Data should not be used */

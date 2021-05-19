@@ -39,7 +39,7 @@ import jakarta.inject.Inject;
 /**
  *
  * Upgrade load-balancer config from v2 to v3
- * 
+ *
  * @author Kshitiz Saxena
  */
 @Service(name = "loadbalancerConfigUpgrade")
@@ -61,7 +61,7 @@ public class LoadBalancerConfigUpgrade implements PostConstruct,
         if(loadBalancers == null){
             return;
         }
-        
+
         List<LoadBalancer> loadBalancerList =
                 loadBalancers.getLoadBalancer();
 

@@ -33,7 +33,7 @@ public class CreateClusterTest extends BaseTest
         final ConnectCmd connectCmd = cmdFactory.createConnectCmd(
                 user, password, host, port);
 
-        final CreateClusterCmd createClusterCmd = 
+        final CreateClusterCmd createClusterCmd =
                 cmdFactory.createCreateClusterCmd(
                     clusterName, configName, optional);
 

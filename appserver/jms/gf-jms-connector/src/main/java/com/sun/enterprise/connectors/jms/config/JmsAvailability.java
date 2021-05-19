@@ -60,7 +60,7 @@ public interface JmsAvailability extends ConfigExtension, PropertyBag, Availabil
      * If this attribute is missing, availability is turned off by default
      * [i.e. the MQ cluster associated with the AS cluster would behave as a
      * non-HA cluster]
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -219,16 +219,16 @@ public interface JmsAvailability extends ConfigExtension, PropertyBag, Availabil
      */
     @Attribute
     String getMqStorePoolName();
-    
+
     /**
      * Sets the value of the MQ store pool name property.
      *
      * @param value allowed object is
      *              {@link String }
      */
-    void setMqStorePoolName(String value) throws PropertyVetoException;    
+    void setMqStorePoolName(String value) throws PropertyVetoException;
     /**
-    	Properties as per {@link PropertyBag}
+        Properties as per {@link PropertyBag}
      */
     @ToDo(priority=ToDo.Priority.IMPORTANT, details="Provide PropertyDesc for legal props" )
     @PropertiesDesc(props={})

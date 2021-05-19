@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 
 /**
 Enforce singleton semantics: if an item already exists, an Error is thrown.
-Otherwise it is recorded for future checks.  This facility exists because of 
+Otherwise it is recorded for future checks.  This facility exists because of
 ugly framework requirements for singletons to offer public constructors, which can allow
 more than one instance of a class to be instantiated.
  */

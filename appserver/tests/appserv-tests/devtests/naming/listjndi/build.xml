@@ -56,12 +56,12 @@
 
     <target name="build">
         <mkdir dir="build"/>
-        <javac  includeAntRuntime="false" destdir="build" debug="true" 
+        <javac  includeAntRuntime="false" destdir="build" debug="true"
                srcdir="${env.APS_HOME}/devtests/admin/cli/src" includes="**/AdminBaseDevTest.java">
 
             <classpath path="${classpath}"/>
         </javac>
-        <javac  includeAntRuntime="false" 
+        <javac  includeAntRuntime="false"
                destdir="build" debug="true" srcdir="." includes="**/*.java">
             <classpath path="${classpath}"/>
         </javac>

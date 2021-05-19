@@ -23,15 +23,15 @@ import javax.sql.DataSource;
 import javax.naming.*;
 
 public class FilterTest implements Filter{
-    
+
     private ServletContext context;
     private @Resource(name="jdbc/__default") DataSource ds;
 //    private DataSource ds;
-    
+
     public void destroy() {
         System.out.println("[Filter.destroy]");
-    }    
-    
+    }
+
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws java.io.IOException, jakarta.servlet.ServletException {
         System.out.println("[Filter.doFilter]");
 
@@ -58,13 +58,13 @@ public class FilterTest implements Filter{
 
         ((HttpServletRequest)request).getSession().setAttribute("FILTER", msg);
         filterChain.doFilter(request, response);
-        
-    }    
-    
-    
+
+    }
+
+
     public void init(jakarta.servlet.FilterConfig filterConfig) throws jakarta.servlet.ServletException {
         System.out.println("[Filter.init]");
         context = filterConfig.getServletContext();
     }
-    
+
 }

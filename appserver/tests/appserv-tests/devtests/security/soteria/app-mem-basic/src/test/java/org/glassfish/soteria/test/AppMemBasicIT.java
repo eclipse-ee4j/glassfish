@@ -47,75 +47,75 @@ public class AppMemBasicIT extends ArquillianBase {
     public static void printSummary(){
       stat.printSummary();
     }
-    
+
     @Deployment(testable = false)
-    public static Archive<?> createDeployment() {        
+    public static Archive<?> createDeployment() {
         return mavenWar();
     }
 
     @Test
     public void testAuthenticated() {
-    	
-    	DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-    	credentialsProvider.addCredentials("reza", "secret1");
-    	
-    	getWebClient().setCredentialsProvider(credentialsProvider);
-    	
+
+            DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials("reza", "secret1");
+
+            getWebClient().setCredentialsProvider(credentialsProvider);
+
         assertDefaultAuthenticated(
             readFromServer("/servlet"));
     }
-    
+
     @Test
     public void testNotAuthenticated() {
-        
+
         WebResponse response = responseFromServer("/servlet");
-        
+
         assertEquals(401, response.getStatusCode());
-        
+
         assertTrue(
-            "Response did not contain the \"WWW-Authenticate\" header, but should have", 
+            "Response did not contain the \"WWW-Authenticate\" header, but should have",
             response.getResponseHeaderValue("WWW-Authenticate") != null);
-        
+
         assertDefaultNotAuthenticated(
             response.getContentAsString());
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongName() {
-    	
-    	DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-    	credentialsProvider.addCredentials("romo", "secret1");
-    	
-    	getWebClient().setCredentialsProvider(credentialsProvider);
-    	
-    	WebResponse response = responseFromServer("/servlet");
-          
-    	assertEquals(401, response.getStatusCode());
-          
-    	assertTrue(
-	        "Response did not contain the \"WWW-Authenticate\" header, but should have", 
-	        response.getResponseHeaderValue("WWW-Authenticate") != null);
-          
-    	assertDefaultNotAuthenticated(
-	        response.getContentAsString());
+
+            DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials("romo", "secret1");
+
+            getWebClient().setCredentialsProvider(credentialsProvider);
+
+            WebResponse response = responseFromServer("/servlet");
+
+            assertEquals(401, response.getStatusCode());
+
+            assertTrue(
+                "Response did not contain the \"WWW-Authenticate\" header, but should have",
+                response.getResponseHeaderValue("WWW-Authenticate") != null);
+
+            assertDefaultNotAuthenticated(
+                response.getContentAsString());
     }
-    
+
     @Test
     public void testNotAuthenticatedWrongPassword() {
-    	
-      	DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
-    	credentialsProvider.addCredentials("reza", "wrongpassword");
-    	
-    	getWebClient().setCredentialsProvider(credentialsProvider);
-    	
+
+              DefaultCredentialsProvider credentialsProvider = new DefaultCredentialsProvider();
+            credentialsProvider.addCredentials("reza", "wrongpassword");
+
+            getWebClient().setCredentialsProvider(credentialsProvider);
+
         WebResponse response = responseFromServer("/servlet");
-        
+
         assertEquals(401, response.getStatusCode());
-          
+
         assertTrue(
-            "Response did not contain the \"WWW-Authenticate\" header, but should have", 
+            "Response did not contain the \"WWW-Authenticate\" header, but should have",
             response.getResponseHeaderValue("WWW-Authenticate") != null);
-          
+
         assertDefaultNotAuthenticated(
             response.getContentAsString());
     }

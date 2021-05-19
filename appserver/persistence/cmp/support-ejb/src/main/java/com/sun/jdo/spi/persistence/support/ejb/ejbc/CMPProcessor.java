@@ -31,7 +31,7 @@ import org.glassfish.persistence.common.Java2DBProcessorHelper;
  * @author pramodg
  */
 public class CMPProcessor {
-    
+
     private static Logger logger = LogHelperEJBCompiler.getLogger();
 
     private Java2DBProcessorHelper helper = null;
@@ -50,7 +50,7 @@ public class CMPProcessor {
      * Create and execute the files.
      */
     public void process() {
-      
+
         EjbBundleDescriptorImpl bundle = ctx.getModuleMetaData(EjbBundleDescriptorImpl.class);
         ResourceReferenceDescriptor cmpResource = bundle.getCMPResourceReference();
 
@@ -67,14 +67,14 @@ public class CMPProcessor {
         helper.setProcessorType("CMP", bundle.getName()); // NOI18N
         helper.setJndiName(resourceName, bundle.getName());
 
-        // If CLI options are not set, use value from the create-tables-at-deploy 
+        // If CLI options are not set, use value from the create-tables-at-deploy
         // or drop-tables-at-undeploy elements of the sun-ejb-jar.xml
         boolean userCreateTables = cmpResource.isCreateTablesAtDeploy();
         boolean createTables = helper.getCreateTables(userCreateTables);
 
         boolean userDropTables = cmpResource.isDropTablesAtUndeploy();
 
-        if (logger.isLoggable(logger.FINE)) {                
+        if (logger.isLoggable(logger.FINE)) {
             logger.fine("ejb.CMPProcessor.createanddroptables", //NOI18N
                 new Object[] {new Boolean(createTables), new Boolean(userDropTables)});
         }
@@ -83,21 +83,21 @@ public class CMPProcessor {
             // Nothing to do.
             return;
         }
-    
+
         helper.setCreateTablesValue(userCreateTables, bundle.getName());
         helper.setDropTablesValue(userDropTables, bundle.getName());
 
         constructJdbcFileNames(bundle);
         if (logger.isLoggable(logger.FINE)) {
-            logger.fine("ejb.CMPProcessor.createanddropfilenames", 
-                helper.getCreateJdbcFileName(bundle.getName()), 
-                helper.getDropJdbcFileName(bundle.getName())); 
-        }            
+            logger.fine("ejb.CMPProcessor.createanddropfilenames",
+                helper.getCreateJdbcFileName(bundle.getName()),
+                helper.getDropJdbcFileName(bundle.getName()));
+        }
 
         if (createTables) {
             helper.createOrDropTablesInDB(true, "CMP"); // NOI18N
         }
-    }    
+    }
 
     /**
      * Drop files on undeploy
@@ -108,10 +108,10 @@ public class CMPProcessor {
 
         helper.createOrDropTablesInDB(false, "CMP"); // NOI18N
     }
-      
+
     /**
-     * Construct the name of the create and 
-     * drop jdbc ddl files that would be 
+     * Construct the name of the create and
+     * drop jdbc ddl files that would be
      * created. These name would be either
      * obtained from the persistence.xml file
      * (if the user has defined them) or we would
@@ -120,11 +120,11 @@ public class CMPProcessor {
      */
     private void  constructJdbcFileNames(EjbBundleDescriptorImpl ejbBundle) {
         String filePrefix = DeploymentHelper.getDDLNamePrefix(ejbBundle);
-    
-        helper.setCreateJdbcFileName(filePrefix + DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX, 
+
+        helper.setCreateJdbcFileName(filePrefix + DatabaseConstants.CREATE_DDL_JDBC_FILE_SUFFIX,
                 ejbBundle.getName());
-        helper.setDropJdbcFileName(filePrefix + DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX, 
+        helper.setDropJdbcFileName(filePrefix + DatabaseConstants.DROP_DDL_JDBC_FILE_SUFFIX,
                 ejbBundle.getName());
     }
-    
+
 }

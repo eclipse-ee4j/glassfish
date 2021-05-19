@@ -212,7 +212,7 @@ public class CciInteraction implements Interaction {
       }
       cstmt.close();
       return oRec;
-      //  conn.close(); 
+      //  conn.close();
     }
     catch (SQLException ex) {
       throw new ResourceException(ex.getMessage());

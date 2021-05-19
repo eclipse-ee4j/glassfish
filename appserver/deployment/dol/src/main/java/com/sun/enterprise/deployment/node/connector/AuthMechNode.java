@@ -33,35 +33,38 @@ import java.util.Map;
  * This node is responsible for handling the Connector DTD related auth-mechanism XML tag
  *
  * @author  Sheetal Vartak
- * @version 
+ * @version
  */
 public class AuthMechNode extends DeploymentDescriptorNode {
-    
+
     private AuthMechanism auth = null;
-    
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-
-    protected Map getDispatchTable() {    
+     */
+    @Override
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(ConnectorTagNames.CREDENTIAL_INTF, "setCredentialInterface");
         table.put(ConnectorTagNames.AUTH_MECH_TYPE, "setAuthMechVal");
         return table;
-    }  
+    }
+
 
     /**
-    * @return the descriptor instance to associate with this XMLNode
-    */    
+     * @return the descriptor instance to associate with this XMLNode
+     */
+    @Override
     public Object getDescriptor() {
         if (auth == null) {
             auth = (AuthMechanism) DescriptorFactory.getDescriptor(getXMLPath());
-        } 
+        }
         return auth;
-    } 
+    }
+
 
     /**
      * write the descriptor class to a DOM tree and return it
@@ -69,32 +72,31 @@ public class AuthMechNode extends DeploymentDescriptorNode {
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, Descriptor descriptor) {
-
-        if (! (descriptor instanceof OutboundResourceAdapter) &&
-	    ! (descriptor instanceof ConnectorDescriptor)) {
-            throw new IllegalArgumentException(getClass() + " cannot handle descriptors of type " + descriptor.getClass());
+        if (!(descriptor instanceof OutboundResourceAdapter) && !(descriptor instanceof ConnectorDescriptor)) {
+            throw new IllegalArgumentException(
+                getClass() + " cannot handle descriptors of type " + descriptor.getClass());
         }
 
-	Iterator authMechs = null;
+        Iterator authMechs = null;
 
-	if (descriptor instanceof ConnectorDescriptor) {
-	    authMechs = ((ConnectorDescriptor)descriptor).getAuthMechanisms().iterator();
-	} else if (descriptor instanceof OutboundResourceAdapter) {
-	    authMechs = ((OutboundResourceAdapter)descriptor).getAuthMechanisms().iterator();
-	}
+        if (descriptor instanceof ConnectorDescriptor) {
+            authMechs = ((ConnectorDescriptor) descriptor).getAuthMechanisms().iterator();
+        } else if (descriptor instanceof OutboundResourceAdapter) {
+            authMechs = ((OutboundResourceAdapter) descriptor).getAuthMechanisms().iterator();
+        }
 
-	//auth mechanism info
+        // auth mechanism info
         if (authMechs != null) {
-          for (;authMechs.hasNext();) {
-	    AuthMechanism auth = (AuthMechanism) authMechs.next();
-	    Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
-	    appendTextChild(authNode, TagNames.DESCRIPTION, auth.getDescription()); 
-	    appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, auth.getAuthMechType());   
-	    appendTextChild(authNode, ConnectorTagNames.CREDENTIAL_INTF, auth.getCredentialInterface());  
-          }
+            for (; authMechs.hasNext();) {
+                AuthMechanism auth = (AuthMechanism) authMechs.next();
+                Node authNode = appendChild(parent, ConnectorTagNames.AUTH_MECHANISM);
+                appendTextChild(authNode, TagNames.DESCRIPTION, auth.getDescription());
+                appendTextChild(authNode, ConnectorTagNames.AUTH_MECH_TYPE, auth.getAuthMechType());
+                appendTextChild(authNode, ConnectorTagNames.CREDENTIAL_INTF, auth.getCredentialInterface());
+            }
         }
-	return parent;
+        return parent;
     }
 }

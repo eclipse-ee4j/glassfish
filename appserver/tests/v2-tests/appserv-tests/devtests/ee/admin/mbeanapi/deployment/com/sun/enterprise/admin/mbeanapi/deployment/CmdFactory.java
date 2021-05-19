@@ -32,9 +32,9 @@ public class CmdFactory
 
     public ConnectCmd createConnectCmd(Phup phup)
     {
-		return createConnectCmd(phup.user, phup.password, phup.host, phup.port);
-	}
-    public ConnectCmd createConnectCmd(String user, String password, 
+        return createConnectCmd(phup.user, phup.password, phup.host, phup.port);
+    }
+    public ConnectCmd createConnectCmd(String user, String password,
             String host, int port)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -48,7 +48,7 @@ public class CmdFactory
     }
 
     public CreateInstanceCmd createCreateInstanceCmd(
-            String instanceName, String nodeAgentName, 
+            String instanceName, String nodeAgentName,
             String configName, Map optional)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -91,17 +91,17 @@ public class CmdFactory
         return new StopInstanceCmd(cmdEnv);
     }
 
-    public DeployCmd createDeployCmd(String archive, String name, 
+    public DeployCmd createDeployCmd(String archive, String name,
             String contextRoot, boolean enable, String appservTarget)
     {
         return createDeployCmd(archive, name, null, contextRoot, enable,
                 true, true, false, true, false, appservTarget);
     }
 
-    public DeployCmd createDeployCmd(String archive, String name, 
+    public DeployCmd createDeployCmd(String archive, String name,
             String description, String contextRoot, boolean enable,
-            boolean forceDeploy, boolean generateRMIStubs, 
-            boolean availabilityEnabled, boolean cascade, boolean verify, 
+            boolean forceDeploy, boolean generateRMIStubs,
+            boolean availabilityEnabled, boolean cascade, boolean verify,
             String target)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -112,34 +112,34 @@ public class CmdFactory
         final Map deployOptions = new HashMap(10);
 
         deployOptions.put(DeploymentMgr.DEPLOY_OPTION_NAME_KEY, name);
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_DESCRIPTION_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_DESCRIPTION_KEY,
                 description);
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_CONTEXT_ROOT_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_CONTEXT_ROOT_KEY,
                 contextRoot);
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_ENABLE_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_ENABLE_KEY,
                 new Boolean(enable).toString());
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_GENERATE_RMI_STUBS_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_GENERATE_RMI_STUBS_KEY,
                 new Boolean(generateRMIStubs).toString());
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_FORCE_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_FORCE_KEY,
                 new Boolean(forceDeploy).toString());
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_AVAILABILITY_ENABLED_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_AVAILABILITY_ENABLED_KEY,
                 new Boolean(availabilityEnabled).toString());
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_CASCADE_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_CASCADE_KEY,
                 new Boolean(cascade).toString());
-        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_VERIFY_KEY, 
+        deployOptions.put(DeploymentMgr.DEPLOY_OPTION_VERIFY_KEY,
                 new Boolean(verify).toString());
-		
-		try
-		{
-			// FIXME TBD Add to MBAPI...
-			if(new File(archive).isDirectory())
-				//deployOptions.put(DeploymentMgr.DEPLOY_OPTION_DIRECTORY_DEPLOYED_KEY, Boolean.TRUE.toString());
-				deployOptions.put("directorydeployed", Boolean.TRUE.toString());
-		}
-		catch(Exception e)
-		{
-			//
-		}
+
+        try
+        {
+            // FIXME TBD Add to MBAPI...
+            if(new File(archive).isDirectory())
+                //deployOptions.put(DeploymentMgr.DEPLOY_OPTION_DIRECTORY_DEPLOYED_KEY, Boolean.TRUE.toString());
+                deployOptions.put("directorydeployed", Boolean.TRUE.toString());
+        }
+        catch(Exception e)
+        {
+            //
+        }
         cmdEnv.put(DeployCmd.kDeployOptions, deployOptions);
 
         return new DeployCmd(cmdEnv);
@@ -324,24 +324,24 @@ public class CmdFactory
         return new DeleteConnectorResourceCmd(cmdEnv);
     }
 
-    public CreateConnectorConnectionPoolCmd 
+    public CreateConnectorConnectionPoolCmd
     createCreateConnectorConnectionPoolCmd(
-            String name, String resourceAdapterName, 
+            String name, String resourceAdapterName,
             String connectionDefinitionName, Map optional)
     {
         final CmdEnv cmdEnv = new CmdEnv();
 
         cmdEnv.put(CreateConnectorConnectionPoolCmd.kName, name);
-        cmdEnv.put(CreateConnectorConnectionPoolCmd.kResourceAdapterName, 
+        cmdEnv.put(CreateConnectorConnectionPoolCmd.kResourceAdapterName,
                 resourceAdapterName);
-        cmdEnv.put(CreateConnectorConnectionPoolCmd.kConnectionDefinitionName, 
+        cmdEnv.put(CreateConnectorConnectionPoolCmd.kConnectionDefinitionName,
                 connectionDefinitionName);
         cmdEnv.put(CreateConnectorConnectionPoolCmd.kOptional, optional);
 
         return new CreateConnectorConnectionPoolCmd(cmdEnv);
     }
 
-    public DeleteConnectorConnectionPoolCmd 
+    public DeleteConnectorConnectionPoolCmd
     createDeleteConnectorConnectionPoolCmd(String name)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -351,21 +351,21 @@ public class CmdFactory
         return new DeleteConnectorConnectionPoolCmd(cmdEnv);
     }
 
-    public CreateJDBCConnectionPoolCmd 
+    public CreateJDBCConnectionPoolCmd
     createCreateJDBCConnectionPoolCmd(
             String name, String datasourceClassname, Map optional)
     {
         final CmdEnv cmdEnv = new CmdEnv();
 
         cmdEnv.put(CreateJDBCConnectionPoolCmd.kName, name);
-        cmdEnv.put(CreateJDBCConnectionPoolCmd.kDatasourceClassname, 
+        cmdEnv.put(CreateJDBCConnectionPoolCmd.kDatasourceClassname,
                 datasourceClassname);
         cmdEnv.put(CreateJDBCConnectionPoolCmd.kOptional, optional);
 
         return new CreateJDBCConnectionPoolCmd(cmdEnv);
     }
 
-    public DeleteJDBCConnectionPoolCmd 
+    public DeleteJDBCConnectionPoolCmd
     createDeleteJDBCConnectionPoolCmd(String name)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -375,12 +375,12 @@ public class CmdFactory
         return new DeleteJDBCConnectionPoolCmd(cmdEnv);
     }
 
-	public UndeployCmd createUndeployCmd(String name, String target)
+    public UndeployCmd createUndeployCmd(String name, String target)
     {
         final CmdEnv cmdEnv = new CmdEnv();
         final Map undeployOptions = new HashMap(1);
 
-		cmdEnv.put(DeployCmd.kTarget, target);
+        cmdEnv.put(DeployCmd.kTarget, target);
 
         undeployOptions.put(DeploymentMgr.DEPLOY_OPTION_NAME_KEY, name);
         cmdEnv.put(DeployCmd.kDeployOptions, undeployOptions);
@@ -438,7 +438,7 @@ public class CmdFactory
     }
 
     public CreateClusteredInstanceCmd createCreateClusteredInstanceCmd(
-            String instanceName, String clusterName, String nodeAgentName, 
+            String instanceName, String clusterName, String nodeAgentName,
             Map optional)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -461,7 +461,7 @@ public class CmdFactory
         return new DeleteClusteredInstanceCmd(cmdEnv);
     }
 
-    public VirtualServerCmd createVirtualServerCmd(String name, 
+    public VirtualServerCmd createVirtualServerCmd(String name,
             String configName, String hosts, Map optional, String mode)
     {
         final CmdEnv cmdEnv = new CmdEnv();
@@ -484,7 +484,7 @@ public class CmdFactory
         cmdEnv.put(CreateAppRefCmd.kVirtualServers, virtualServers);
         cmdEnv.put(CreateAppRefCmd.kEnabled, new Boolean(enabled));
         cmdEnv.put(CreateAppRefCmd.kLBEnabled, new Boolean(lbEnabled));
-        cmdEnv.put(CreateAppRefCmd.kDisableTimeoutInMinutes, 
+        cmdEnv.put(CreateAppRefCmd.kDisableTimeoutInMinutes,
             new Integer(disableTimeoutInMinutes));
         cmdEnv.put(CreateAppRefCmd.kTarget, target);
 

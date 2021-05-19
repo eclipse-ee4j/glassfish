@@ -45,14 +45,14 @@ import org.hibernate.validator.constraints.*;
 /**
  * This is a sample resource adapter
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
-public class SimpleResourceAdapterImpl 
+public class SimpleResourceAdapterImpl
 implements ResourceAdapter, java.io.Serializable {
 
     private BootstrapContext ctx;
     private WorkManager wm;
-    
+
     private String testName;
 
     private boolean debug = true;
@@ -64,7 +64,7 @@ implements ResourceAdapter, java.io.Serializable {
 
     public void
     start(BootstrapContext ctx) throws ResourceAdapterInternalException{
-        
+
         debug("001. Simple RA start...");
 
         this.ctx = ctx;
@@ -75,12 +75,12 @@ implements ResourceAdapter, java.io.Serializable {
 
         //testing creat timer
         Timer timer = null;
-	  try{
-	      timer = ctx.createTimer();
-	  } catch(UnavailableException ue) {
-	      System.out.println("Error");
-	      throw new ResourceAdapterInternalException("Error form bootstrap");
-	  }
+          try{
+              timer = ctx.createTimer();
+          } catch(UnavailableException ue) {
+              System.out.println("Error");
+              throw new ResourceAdapterInternalException("Error form bootstrap");
+          }
         debug("004. Simple RA start...");
 
         debug("005. Simple RA start...");
@@ -120,13 +120,13 @@ implements ResourceAdapter, java.io.Serializable {
 
     public void
     endpointDeactivation (
-            MessageEndpointFactory endpointFactory, 
+            MessageEndpointFactory endpointFactory,
             ActivationSpec spec) {
         debug ("endpointDeactivation called...");
-        
+
         ((WorkDispatcher) work).stop();
     }
- 
+
     public String getTestName() {
         return testName;
     }
@@ -136,8 +136,8 @@ implements ResourceAdapter, java.io.Serializable {
     public Integer getIntValue(){
       return intValue;
     }
-   
-    @ConfigProperty(type=Integer.class, defaultValue="10") 
+
+    @ConfigProperty(type=Integer.class, defaultValue="10")
     public void setIntValue(Integer intValue){
       this.intValue = intValue;
     }
@@ -153,7 +153,7 @@ implements ResourceAdapter, java.io.Serializable {
             System.out.println("[SimpleResourceAdapterImpl] ==> " + message);
     }
 
-    public XAResource[] getXAResources(ActivationSpec[] specs) 
+    public XAResource[] getXAResources(ActivationSpec[] specs)
         throws ResourceException {
         throw new UnsupportedOperationException();
     }

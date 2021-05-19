@@ -31,7 +31,7 @@
    &commonBuild;
    &commonRun;
    &testProperties;
-    
+
     <target name="all" depends="build, setup, deploy,run, undeploy, unsetup"/>
     <!-- assumes that create-users has been called before -->
     <!-- run-test target added to have a separate setup/unsetup commonly -->
@@ -52,7 +52,7 @@
     </target>
 
     <target name="build" depends="compile">
-<!--	<property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
+<!--    <property name="ejbjar.classes" value="**/*Home*.class,**/*Bean*.class,**/*Data*.class,*.dbschema"/>
 -->
         <antcall target="build-ear-common"/>
     </target>
@@ -66,13 +66,13 @@
       <exec executable="${APPCLIENT}">
         <arg value="-client" />
         <arg value="${assemble.dir}/${appname}AppClient.jar"/>
-	<arg value="-xml"/>
-	<arg value="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
-	<arg value="-textauth"/>
-	<arg value="-user"/>
-	<arg value="j2ee"/>
-	<arg value="-password"/>
-	<arg value="j2ee"/>
+        <arg value="-xml"/>
+        <arg value="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
+        <arg value="-textauth"/>
+        <arg value="-user"/>
+        <arg value="j2ee"/>
+        <arg value="-password"/>
+        <arg value="j2ee"/>
       </exec>
     </target>
 
@@ -95,12 +95,12 @@
 
     <target name="create-user">
         <antcall target="create-user-common">
-	    <param name="user" value="j2ee"/>
-	    <param name="password" value="j2ee"/>
-	    <param name="groups" value="employee"/>
+            <param name="user" value="j2ee"/>
+            <param name="password" value="j2ee"/>
+            <param name="groups" value="employee"/>
        </antcall>
     </target>
- 
+
     <target name="delete-user">
       <!-- remove test users, just cleanup. -->
       <antcall target="delete-user-common">

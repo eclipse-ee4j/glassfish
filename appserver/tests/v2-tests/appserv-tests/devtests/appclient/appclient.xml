@@ -23,9 +23,9 @@
 ]>
 <!--
 
-    All appclient devtests can use the ant import task to include this file. 
+    All appclient devtests can use the ant import task to include this file.
     It defines several useful tasks:
-    
+
         all - clean, build, deploy, run, undeploy
         clean
         compile
@@ -33,12 +33,12 @@
         deploy
         undeploy
         test
-        
+
     This project assumes that all tests include both a stand-alone client jar
     and an embedded one.  If a particular test does not include one or the other
     of these, that test's build.xml can override any of the following targets
     to make them no-ops:
-    
+
         build.ear
         build.client
         deploy.ear
@@ -47,7 +47,7 @@
         undeploy.client
         test.standalone.client
         test.embedded.client
-        
+
 
 -->
 <project name="importedAppclient" default=".">
@@ -56,9 +56,9 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <!-- In this example there are only .java files for the client -->
-    
+
     <target name="compile" depends="init-common">
         <antcall target="compile-common">
             <param name="src" value="client"/>
@@ -67,21 +67,21 @@
 
     <target name="build" depends="init-common">
         <antcall target="build.client"/>
-        <antcall target="build.ear"/> 
-<!-- 
+        <antcall target="build.ear"/>
+<!--
         <antcall target="build.ejb"/>
 -->
     </target>
-    
+
     <target name="build.ear">
         <antcall target="ear-common"/>
-    </target> 
-    
+    </target>
+
 <!--
     <target name="build.ejb">
         <antcall target="ejb-common"/>
     </target>
--->    
+-->
 
 <!--
     The following implementation borrows heavily from the same target in
@@ -94,29 +94,29 @@
       <property name="appclientjar.files" value="${build.classes.dir}"/>
       <property name="appclient.jar" value="${assemble.dir}/${appname}-client.jar"/>
       <property name="manifest.file" value="./client/MANIFEST.MF"/>
-      
-      <echo message="common.xml: Generating appclient-jar inside build directory" 
+
+      <echo message="common.xml: Generating appclient-jar inside build directory"
           level="verbose"/>
       <mkdir dir="${build.classes.dir}/META-INF"/>
-      <copy file="${application-client.xml}" 
-            tofile="${build.classes.dir}/META-INF/application-client.xml" 
+      <copy file="${application-client.xml}"
+            tofile="${build.classes.dir}/META-INF/application-client.xml"
             failonerror="false"
             overwrite="true"/>
       <copy file="${sun-application-client.xml}" tofile="${build.classes.dir}/META-INF/sun-application-client.xml"
             failonerror="false"
             overwrite="true"/>
-      <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}" 
-        update="true" includes ="${appclientjar.classes}" 
-        manifest="${manifest.file}">         
+      <jar jarfile="${appclient.jar}" basedir="${appclientjar.files}"
+        update="true" includes ="${appclientjar.classes}"
+        manifest="${manifest.file}">
         <metainf dir="${build.classes.dir}/META-INF">
           <include name="application-client.xml"/>
           <include name="sun-application-client.xml"/>
         </metainf>
         <fileset dir="${env.APS_HOME}/lib" includes="reporter.jar"/>
-      </jar>    
+      </jar>
     </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy.ear"/>
         <antcall target="deploy.client"/>
@@ -125,18 +125,18 @@
     <target name="deploy.ear" depends="build.ear">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="deploy.client" depends="build.client">
         <antcall target="deploy-common">
             <param name="deployed.app" value="${assemble.dir}/${appname}-client.jar"/>
         </antcall>
     </target>
-    
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy.ear"/>
         <antcall target="undeploy.client"/>
     </target>
-    
+
     <target name="undeploy.ear" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>
@@ -149,7 +149,7 @@
         <antcall target="test.standalone.client"/>
         <antcall target="test.embedded.client"/>
     </target>
-    
+
     <target name="test.standalone.client" depends="init-common">
         <antcall target="test.client">
             <param name="urlpath" value="/${clientname}"/>
@@ -168,7 +168,7 @@
         <property name="generated.appclient.jar" value="${appclient.jar}"/>
         <antcall target="test.client"/>
     </target>
-    
+
     <target name="test.client">
         <property name="appclient.jar" value="${assemble.dir}/${appname}-client.jar"/>
         <property name="generated.appclient.jar" value="${assemble.dir}/${appname}-clientClient.jar"/>
@@ -178,6 +178,6 @@
             <arg line="${appclient.application.args}"/>
         </exec>
     </target>
-    
+
 </project>
 

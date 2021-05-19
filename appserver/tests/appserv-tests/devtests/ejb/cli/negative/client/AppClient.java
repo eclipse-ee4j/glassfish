@@ -23,7 +23,7 @@ import java.util.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /**
- * A simple java client will: 
+ * A simple java client will:
  * <ul>
  * <li>Locates the remote interface of the enterprise bean
  * <li>Invokes business methods
@@ -34,11 +34,11 @@ public class AppClient {
     private SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    public static void main(String[] args) { 
-        AppClient client = new AppClient(); 
+    public static void main(String[] args) {
+        AppClient client = new AppClient();
 
         // run the tests
-        client.runTestClient();   
+        client.runTestClient();
     }
 
     public void runTestClient() {
@@ -57,8 +57,8 @@ public class AppClient {
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/MyBean");
-            MyBeanRemoteIntf mybean = 
-                (MyBeanRemoteIntf) PortableRemoteObject.narrow(objref, 
+            MyBeanRemoteIntf mybean =
+                (MyBeanRemoteIntf) PortableRemoteObject.narrow(objref,
                                                           MyBeanRemoteIntf.class);
             System.out.println("invocation result: "+ mybean.getCount(1));
             stat.addStatus("ejb-cli", stat.FAIL);
@@ -67,5 +67,5 @@ public class AppClient {
             System.err.println("caught expected exception");
             ex.printStackTrace();
         }
-    } 
-} 
+    }
+}

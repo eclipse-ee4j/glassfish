@@ -22,7 +22,7 @@ public class Document {
         System.out.println("Document created with name" + name );
         this.name = name;
     }
-    
+
     public void update(){
         System.out.println("Document:" + name + " updated.");
     }

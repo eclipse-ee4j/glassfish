@@ -25,7 +25,7 @@ import jakarta.servlet.http.*;
 public class ServletTest2 extends HttpServlet {
 
     private ServletContext context;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         context = config.getServletContext();
@@ -35,13 +35,13 @@ public class ServletTest2 extends HttpServlet {
         doPost(request, response);
     }
 
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {        
-      
+    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
         response.setContentType("text/html");
         PrintWriter out = response.getWriter();
-        
+
         RequestDispatcher rd = request.getRequestDispatcher("/ServletTest3");
-        rd.include(request, response);     
+        rd.include(request, response);
     }
 
 }

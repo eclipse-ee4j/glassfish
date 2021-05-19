@@ -20,40 +20,40 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
 
 
 /**
- * This interface defines all information and behaviour 
- * accessible from a particular endpoint. 
+ * This interface defines all information and behaviour
+ * accessible from a particular endpoint.
  *
  * @author Jerome Dochez
  */
-public interface Endpoint {    
-    
-    /** 
-     * @return the endpoint selector as a string. For Http transport endpoing, 
+public interface Endpoint {
+
+    /**
+     * @return the endpoint selector as a string. For Http transport endpoing,
      * this is the URL web service clients use to invoke the endpoint.
      */
     public String getEndpointSelector();
-    
+
     /**
      * @return the endpoint type
      */
     public EndpointType getEndpointType();
-    
+
     /**
      * Returns the transport
      */
     public TransportType getTransport();
-    
+
     /**
      * Returns the Deployment Descriptors associated with this endpoint
      */
     public WebServiceEndpoint getDescriptor();
-    
+
     /**
      * registers a new SOAPMessageListener for this endpoint
      * @param newListener the listener instance to register.
      */
     public void addListener(MessageListener newListener);
-    
+
     /**
      * unregiters a SOAPMessageListener for this endpoint
      * @param listener the listener instance to unregister.

@@ -31,14 +31,14 @@ public class Client extends HttpServlet {
         HelloService service;
 
        public void doGet(HttpServletRequest req, HttpServletResponse resp)
-		throws jakarta.servlet.ServletException {
+                throws jakarta.servlet.ServletException {
            doPost(req, resp);
        }
 
        public void doPost(HttpServletRequest req, HttpServletResponse resp)
               throws jakarta.servlet.ServletException {
            try {
-                
+
                 Hello port = service.getHelloPort();
 
                 String ret = port.sayHello("All");

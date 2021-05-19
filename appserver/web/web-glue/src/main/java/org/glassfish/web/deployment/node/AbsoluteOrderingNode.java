@@ -29,7 +29,7 @@ import org.xml.sax.Attributes;
  * This node is responsible for handling the absolute-ordering xml tree
  *
  * @author  Shing Wai Chan
- * @version 
+ * @version
  */
 public class AbsoluteOrderingNode extends DeploymentDescriptorNode<AbsoluteOrderingDescriptor> {
 
@@ -46,12 +46,12 @@ public class AbsoluteOrderingNode extends DeploymentDescriptorNode<AbsoluteOrder
             descriptor = new AbsoluteOrderingDescriptor();
         }
         return descriptor;
-    }  
+    }
 
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
      */
     @Override
@@ -77,7 +77,7 @@ public class AbsoluteOrderingNode extends DeploymentDescriptorNode<AbsoluteOrder
     /**
      * write the descriptor class to a DOM tree and return it
      *
-     * @param parent node in the DOM tree 
+     * @param parent node in the DOM tree
      * @param nodeName node name for the root element of this xml fragment
      * @param descriptor the descriptor to write
      * @return the DOM tree top node

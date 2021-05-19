@@ -91,7 +91,7 @@ public class InplantedTest {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         } catch (LifecycleException e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        } 
+        }
     }
 
     @Test
@@ -115,7 +115,7 @@ public class InplantedTest {
                 throw e;
             }
         }
-        
-        
+
+
     }
 }

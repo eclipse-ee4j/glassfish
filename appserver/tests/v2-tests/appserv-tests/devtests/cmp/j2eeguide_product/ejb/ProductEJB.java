@@ -42,7 +42,7 @@ public class ProductEJB implements EntityBean {
       return description;
    }
 
-   public String ejbCreate(String productId, String description, 
+   public String ejbCreate(String productId, String description,
       double price) throws CreateException {
 
       if (productId == null) {
@@ -61,7 +61,7 @@ public class ProductEJB implements EntityBean {
       this.context = context;
    }
 
-   public void ejbActivate() { 
+   public void ejbActivate() {
 
       productId = (String)context.getPrimaryKey();
    }
@@ -76,7 +76,7 @@ public class ProductEJB implements EntityBean {
    public void ejbLoad() { }
    public void ejbStore() { }
    public void unsetEntityContext() { }
-   public void ejbPostCreate(String productId, String description, 
+   public void ejbPostCreate(String productId, String description,
       double balance) { }
 
-} // ProductEJB 
+} // ProductEJB

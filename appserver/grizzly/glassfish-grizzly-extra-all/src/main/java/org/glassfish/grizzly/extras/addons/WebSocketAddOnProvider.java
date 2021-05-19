@@ -42,12 +42,12 @@ import org.jvnet.hk2.annotations.Service;
 public class WebSocketAddOnProvider extends WebSocketAddOn implements ConfigAwareElement<Http> {
 
     private Mapper mapper;
-    
+
     @Override
     public void configure(ServiceLocator habitat,
             NetworkListener networkListener, Http configuration) {
         mapper = getMapper(habitat, networkListener);
-        
+
         setTimeoutInSeconds(Long.parseLong(configuration.getWebsocketsTimeoutSeconds()));
     }
 
@@ -58,14 +58,14 @@ public class WebSocketAddOnProvider extends WebSocketAddOn implements ConfigAwar
 
     private static Mapper getMapper(final ServiceLocator habitat,
             final NetworkListener listener) {
-        
+
         final int port;
         try {
             port = Integer.parseInt(listener.getPort());
         } catch (NumberFormatException e) {
             throw new IllegalStateException("Port number is not integer");
         }
-        
+
         for (Mapper m : habitat.<Mapper>getAllServices(Mapper.class)) {
             if (m.getPort() == port &&
                     m instanceof ContextMapper) {
@@ -75,13 +75,13 @@ public class WebSocketAddOnProvider extends WebSocketAddOn implements ConfigAwar
                 }
             }
         }
-        
+
         return null;
     }
-    
+
     private static class GlassfishWebSocketFilter extends WebSocketFilter {
         private final Mapper mapper;
-        
+
         public GlassfishWebSocketFilter(final Mapper mapper,
                 long wsTimeoutInSeconds) {
             super(wsTimeoutInSeconds);

@@ -94,12 +94,12 @@ public final class FileStore extends StoreBase {
      * Name to register for the background thread.
      */
     private static final String threadName = "FileStore";
-    
+
     /**
     * Our write-through cache of session objects
     * HERCULES: addition
     */
-    private Hashtable<String, Session> sessions = new Hashtable<String, Session>();     
+    private Hashtable<String, Session> sessions = new Hashtable<String, Session>();
 
 
     // ------------------------------------------------------------- Properties
@@ -129,7 +129,7 @@ public final class FileStore extends StoreBase {
                                    this.directory);
 
     }
-    
+
 
     /**
      * Return descriptive information about this Store implementation and
@@ -243,14 +243,14 @@ public final class FileStore extends StoreBase {
      */
     public Session load(String id)
         throws ClassNotFoundException, IOException {
-            
+
         //HERCULES:addition
         // Check to see if it's in our cache first
         Session sess = sessions.get(id);
         if ( sess != null ) {
             return sess;
         }
-        //HERCULES:addition            
+        //HERCULES:addition
 
         // Open an input stream to the specified pathname, if any
         File file = file(id);
@@ -310,8 +310,8 @@ public final class FileStore extends StoreBase {
             session.setManager(manager);
             //HERCULES: addition
             // Put it in the cache
-            sessions.put(session.getIdInternal(), session);     
-            //HERCULES: addition            
+            sessions.put(session.getIdInternal(), session);
+            //HERCULES: addition
             return (session);
         } finally {
             // Close the input stream
@@ -347,8 +347,8 @@ public final class FileStore extends StoreBase {
             log(msg);
         }
         //HERCULES: addition
-        // Take it out of the cache 
-        sessions.remove(id);        
+        // Take it out of the cache
+        sessions.remove(id);
         //HERCULES: addition
         if (!file.delete() && log.isLoggable(Level.FINE)) {
             log.log(Level.FINE, "Cannot delete file: " + file);

@@ -41,7 +41,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * @author Jerome Dochez
- * @author Vivek Pandey 
+ * @author Vivek Pandey
  */
 @Service
 public class DefaultConfigParser implements ConfigParser {
@@ -55,7 +55,7 @@ public class DefaultConfigParser implements ConfigParser {
     public <T extends Container> T parseContainerConfig(ServiceLocator habitat, final URL configuration, Class<T> configType) throws IOException {
         // I don't use the GlassFish document here as I don't need persistence
         final DomDocument doc = new DomDocument<GlassFishConfigBean>(habitat) {
-        	@Override
+                @Override
             public Dom make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom, ConfigModel configModel) {
                 // by default, people get the translated view.
                 return new GlassFishConfigBean(habitat,this, dom, configModel, xmlStreamReader);

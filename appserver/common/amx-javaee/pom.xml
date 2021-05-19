@@ -27,9 +27,9 @@
     <artifactId>amx-javaee</artifactId>
     <packaging>glassfish-jar</packaging>
 
-    <name>AMX JavaEE</name>    
+    <name>AMX JavaEE</name>
     <description>AMX Java EE Management (JSR 77) API and Implementation</description>
-	
+
     <developers>
         <developer>
             <id>naman_mehta</id>

@@ -87,15 +87,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the events tests)
-		ant clean (cleans all the events tests)
-		ant build (builds all the events tests)
-		ant setup (sets up all resources for events tests)
-		ant deploy (deploys all the events apps)
-		ant run (Executes all the events tests)
-		ant undeploy (undeploys all the  events apps)
-		ant unsetup (unsets all resources for events tests)
-	</echo>
+        <echo> Usage:
+                ant all (Executes all the events tests)
+                ant clean (cleans all the events tests)
+                ant build (builds all the events tests)
+                ant setup (sets up all resources for events tests)
+                ant deploy (deploys all the events apps)
+                ant run (Executes all the events tests)
+                ant undeploy (undeploys all the  events apps)
+                ant unsetup (unsets all resources for events tests)
+        </echo>
     </target>
 </project>

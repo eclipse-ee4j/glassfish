@@ -29,7 +29,7 @@ public class LifecycleCallbackInterceptor {
 
     private static int prePassivateCallbackCount = 0;
     private static int postActivateCallbackCount = 0;
-    
+
     private int interceptorID;
     private int computedInterceptorID;
 
@@ -38,21 +38,21 @@ public class LifecycleCallbackInterceptor {
 
     @PrePassivate
     void prePassivate(InvocationContext ctx) {
-	prePassivateCallbackCount++;
+        prePassivateCallbackCount++;
     }
 
     @PostActivate
     private void postActivate(InvocationContext ctx) {
-	postActivateCallbackCount++;
+        postActivateCallbackCount++;
     }
 
     @AroundInvoke
     Object aroundInvoke(InvocationContext ctx)
-	        throws Exception {
+                throws Exception {
 
-	System.out.println("In LifecycleCallbackInterceptor:aroundInvoke()");
-	sless.sayHello();
-	System.out.println("caller principal = " + sessionCtx.getCallerPrincipal());
+        System.out.println("In LifecycleCallbackInterceptor:aroundInvoke()");
+        sless.sayHello();
+        System.out.println("caller principal = " + sessionCtx.getCallerPrincipal());
 
         if (ctx.getMethod().getName().equals("setID")) {
             ctx.getContextData().put("LifecycleCallbackInterceptor", this);
@@ -65,30 +65,30 @@ public class LifecycleCallbackInterceptor {
     }
 
     public static void resetLifecycleCallbackCounters() {
-	prePassivateCallbackCount = postActivateCallbackCount = 0;
+        prePassivateCallbackCount = postActivateCallbackCount = 0;
     }
 
     public static int getPrePassivateCallbackCount() {
-	return prePassivateCallbackCount;
+        return prePassivateCallbackCount;
     }
 
     public static int getPostActivateCallbackCount() {
-	return postActivateCallbackCount;
+        return postActivateCallbackCount;
     }
-    
+
 
     void setInterceptorID(int val) {
         this.interceptorID = val;
         this.computedInterceptorID = 2 * val + 1;
     }
-    
+
     int getInterceptorID() {
         return interceptorID;
     }
-    
+
     boolean checkInterceptorID(int val) {
-        return (val == interceptorID) && 
+        return (val == interceptorID) &&
             (computedInterceptorID == 2 * val + 1);
     }
-   
+
 }

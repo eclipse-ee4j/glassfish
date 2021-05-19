@@ -21,7 +21,7 @@ public class SimpleItemReader
     implements jakarta.batch.api.chunk.ItemReader {
 
     private int index = 0;
-    
+
     //EMP-ID, MONTH-YEAR, SALARY, TAX%, MEDICARE%, OTHER
     private String[] items = new String[] {
         "120-01, JAN-2013, 8000, 27, 3, 0",
@@ -33,7 +33,7 @@ public class SimpleItemReader
         "120-07, JAN-2013, 11000, 36, 5, 0",
         "120-08, JAN-2013, 11500, 36, 5, 0",
     };
-    
+
     @Override
     public void open(Serializable e) throws Exception {
     }
@@ -51,5 +51,5 @@ public class SimpleItemReader
     public Serializable checkpointInfo() throws Exception {
         return null;
     }
-    
+
 }

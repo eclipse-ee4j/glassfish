@@ -33,7 +33,7 @@ import java.sql.*;
 public class ServletTest extends HttpServlet implements HttpSessionListener {
 
     private ServletContext context;
-    
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         System.out.println("[Servlet.init]");
@@ -54,7 +54,7 @@ public class ServletTest extends HttpServlet implements HttpSessionListener {
     public void sessionCreated(jakarta.servlet.http.HttpSessionEvent httpSessionEvent) {
         System.out.println("[Servlet.sessionCreated]");
     }
-    
+
     public void sessionDestroyed(jakarta.servlet.http.HttpSessionEvent httpSessionEvent) {
         System.out.println("[Servlet.sessionDestroyed]");
     }

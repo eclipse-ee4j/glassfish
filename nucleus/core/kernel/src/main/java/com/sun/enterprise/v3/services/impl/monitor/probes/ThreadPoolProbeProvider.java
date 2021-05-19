@@ -31,7 +31,7 @@ public class ThreadPoolProbeProvider {
         @ProbeParam("monitoringId") String monitoringId,
         @ProbeParam("threadPoolName") String threadPoolName,
         @ProbeParam("maxNumberOfThreads") int maxNumberOfThreads) {}
-    
+
 
     @Probe(name="setCoreThreadsEvent")
     public void setCoreThreadsEvent(
@@ -40,7 +40,7 @@ public class ThreadPoolProbeProvider {
         @ProbeParam("coreNumberOfThreads") int coreNumberOfThreads) {}
 
     /**
-     * Emits notification that new thread was created and added to the 
+     * Emits notification that new thread was created and added to the
      * thread pool.
      */
     @Probe(name="threadAllocatedEvent")

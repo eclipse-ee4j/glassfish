@@ -22,7 +22,7 @@ import jakarta.ejb.*;
 import javax.naming.*;
 import java.util.Date;
 
-public class MessageBean  
+public class MessageBean
     implements MessageDrivenBean, MessageListener,TimedObject {
     private MessageDrivenContext mdc;
 
@@ -53,7 +53,7 @@ public class MessageBean
                 System.out.println("Sending message " + message);
                 sender.send(message);
                 System.out.println("message sent");
-                
+
             } catch(NamingException e) {
                 e.printStackTrace();
             }
@@ -90,7 +90,7 @@ public class MessageBean
             Date now = new Date();
             Date expire = new Date(now.getTime() + 25000);
             System.out.println("Creating periodic timer at " + now);
-            Timer t = mdc.getTimerService().createTimer(10000, 10000, 
+            Timer t = mdc.getTimerService().createTimer(10000, 10000,
                                                         expire);
             System.out.println("Timer will be cancelled on first expiration after " +
                                expire);
@@ -100,7 +100,7 @@ public class MessageBean
             System.out.println("Sending message " + outMessage);
             sender.send(outMessage);
             System.out.println("message sent");
-            
+
         } catch(Exception e) {
             System.out.println("got exception in message bean");
             e.printStackTrace();
@@ -117,16 +117,16 @@ public class MessageBean
     }
 
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
-	this.mdc = mdc;
-	System.out.println("In MessageDrivenEJB::setMessageDrivenContext !!");
+        this.mdc = mdc;
+        System.out.println("In MessageDrivenEJB::setMessageDrivenContext !!");
     }
 
     public void ejbCreate() throws RemoteException {
-	System.out.println("In MessageDrivenEJB::ejbCreate !!");
+        System.out.println("In MessageDrivenEJB::ejbCreate !!");
     }
 
     public void ejbRemove() {
-	System.out.println("In MessageDrivenEJB::ejbRemove !!");
+        System.out.println("In MessageDrivenEJB::ejbRemove !!");
     }
 
 }

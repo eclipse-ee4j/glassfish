@@ -31,7 +31,7 @@
     <artifactId>lib</artifactId>
     <version>6.1.1-SNAPSHOT</version>
 
-    <name>GlassFish library for PreDestroyScoping test</name>  
+    <name>GlassFish library for PreDestroyScoping test</name>
 
     <dependencies>
         <dependency>

@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
  * @author mmares
  */
 public class ReferenceConstrainClusterTest extends ConfigApiTest {
-    
+
 //    private Logger logger = Logger.getLogger(ReferenceConstrainTest.class.getName());
     private ServiceLocator habitat;
 
@@ -50,7 +50,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
     public ServiceLocator getBaseServiceLocator() {
         return habitat;
     }
-    
+
     private ConstraintViolationException findConstrViolation(Throwable thr) {
         if (thr == null) {
             return null;
@@ -60,12 +60,12 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
         }
         return findConstrViolation(thr.getCause());
     }
-    
+
     @Before
     public void createNewHabitat() {
         this.habitat = Utils.instance.getHabitat(this);
     }
-    
+
     @Test
     public void clusterServerRefInvalid() throws TransactionFailure {
         Cluster cluster = habitat.getService(Cluster.class, "clusterA");
@@ -85,7 +85,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
             assertNotNull(cv);
         }
     }
-    
+
     @Test
     public void clusterServerRefValid() throws TransactionFailure {
         Cluster cluster = habitat.getService(Cluster.class, "clusterA");
@@ -103,7 +103,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
             fail("Can not reach this point");
         }
     }
-    
+
     @Test
     public void clusterConfigRefInvalid() throws TransactionFailure {
         Cluster cluster = habitat.getService(Cluster.class, "clusterA");
@@ -122,7 +122,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
             assertNotNull(cv);
         }
     }
-    
+
     @Test
     public void clusterConfigRefValid() throws TransactionFailure {
         Cluster cluster = habitat.getService(Cluster.class, "clusterA");
@@ -139,5 +139,5 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
             fail("Can not reach this point");
         }
     }
-    
+
 }

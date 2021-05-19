@@ -66,13 +66,13 @@ public abstract class SecuritySupport {
     abstract public KeyStore[] getTrustStores();
 
     /**
-     * @param  token 
+     * @param  token
      * @return a keystore. If token is null, return the the first keystore.
      */
     abstract public KeyStore getKeyStore(String token);
 
     /**
-     * @param  token 
+     * @param  token
      * @return a truststore. If token is null, return the first truststore.
      */
     abstract public KeyStore getTrustStore(String token);
@@ -149,5 +149,5 @@ public abstract class SecuritySupport {
      * @param key
      */
     abstract public void checkPermission(String key);
-    
+
 }

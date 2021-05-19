@@ -25,10 +25,10 @@
         <version>6.1.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    
+
     <artifactId>appserv-rt-pom</artifactId>
     <packaging>pom</packaging>
-    <name>GlassFish appserv-rt Manifest pom</name>  
+    <name>GlassFish appserv-rt Manifest pom</name>
     <modules>
         <module>manifest-jar</module>
         <module>dist-frag</module>

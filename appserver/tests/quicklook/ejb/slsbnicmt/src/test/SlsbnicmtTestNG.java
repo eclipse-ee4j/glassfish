@@ -25,17 +25,17 @@ public class SlsbnicmtTestNG {
 
     private static final String TEST_NAME =
         "ejb-slsbnicmt";
-   
+
     private String strContextRoot="/slsbnicmt";
 
 //    static String result = "";
     String host=System.getProperty("http.host");
     String port=System.getProperty("http.port");
-           
+
 
     @Test(groups = { "init" })
     public void EJBInject() throws Exception{
-        boolean result=false;       
+        boolean result=false;
         try{
             result = test("EJBInject");
             Assert.assertEquals(result, true,"Unexpected Results");
@@ -85,7 +85,7 @@ public class SlsbnicmtTestNG {
         String EXPECTED_RESPONSE = "Test:Pass";
         String TEST_CASE = TEST_NAME + ":" + c;
         boolean result=false;
-        String url = "http://" + host + ":" + port + strContextRoot + 
+        String url = "http://" + host + ":" + port + strContextRoot +
                      "/test?tc=" + c;
         //System.out.println("url="+url);
 
@@ -98,11 +98,11 @@ public class SlsbnicmtTestNG {
             InputStream is = conn.getInputStream();
             BufferedReader input = new BufferedReader(new InputStreamReader(is));
             String line = null;
-	    while ((line = input.readLine()) != null) {
+        while ((line = input.readLine()) != null) {
             if (line.contains(EXPECTED_RESPONSE)) {
                 result = true;
                 break;
-            }	    
+            }
         }  }
         return result;
     }

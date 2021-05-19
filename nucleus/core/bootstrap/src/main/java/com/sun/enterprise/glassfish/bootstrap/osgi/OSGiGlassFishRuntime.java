@@ -48,7 +48,7 @@ public class OSGiGlassFishRuntime extends GlassFishRuntimeDecorator {
         }
         try {
             super.shutdown();
-            
+
             framework.stop();
             framework.waitForStop(0);
         } catch (InterruptedException ex) {

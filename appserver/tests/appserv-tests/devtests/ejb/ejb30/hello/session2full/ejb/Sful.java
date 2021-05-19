@@ -37,16 +37,16 @@ public interface Sful
     // for a method that has @Remove behavior so it needs to work.
     public void remove();
 
-    // Associated with an @Remove method that has retainIfException=true.    
+    // Associated with an @Remove method that has retainIfException=true.
     // If argument is true, the method will throw an exception, which should
     // keep the bean from being removed.  If argument is false, the bean
     // should stll be removed.
-    public void removeRetainIfException(boolean throwException) 
+    public void removeRetainIfException(boolean throwException)
         throws Exception;
 
-    // Associated with an @Remove method that has retainIfException=false.    
+    // Associated with an @Remove method that has retainIfException=false.
     // Whether the argument is true or false, the bean should still be
     // removed.
-    public void removeNotRetainIfException(boolean throwException) 
+    public void removeNotRetainIfException(boolean throwException)
         throws Exception;
 }

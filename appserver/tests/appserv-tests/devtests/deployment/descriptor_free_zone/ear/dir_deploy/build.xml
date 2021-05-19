@@ -54,7 +54,7 @@
                                com/sun/s1asdev/deployment/noappxml/ejb/Sful.class,
                                com/sun/s1asdev/deployment/noappxml/ejb/Sless.class"/>
         </jar>
-        <copy todir="${build}/${testName}/ejb_jar"> 
+        <copy todir="${build}/${testName}/ejb_jar">
             <fileset dir="${build}" includes="com/sun/s1asdev/deployment/noappxml/ejb/**.class"/>
         </copy>
         <copy file="./ejb/MANIFEST.MF" todir="${build}/${testName}/ejb_jar/META-INF"/>
@@ -79,11 +79,11 @@
             <param name="testName" value="${testName}"/>
         </antcall>
     </target>
-    
+
     <target name="runclient" depends="prepare,setOrbPort2">
-        <exec executable="${APPCLIENT}" 
-              resultproperty="result" 
-              failonerror="false" 
+        <exec executable="${APPCLIENT}"
+              resultproperty="result"
+              failonerror="false"
               output="${build}/${log.id}.output.log">
           <arg line="-targetserver ${appclient.targetservers} -client ${appclient.jar}"/>
         </exec>

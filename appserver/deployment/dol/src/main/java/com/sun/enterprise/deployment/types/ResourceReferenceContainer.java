@@ -24,28 +24,28 @@ import java.util.Set;
  * This class defines the behaviour of a descriptor containing resource references
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface ResourceReferenceContainer {
 
-    /** 
+    /**
      * Add a resource reference to the J2EEE component
-     * 
+     *
      * @param the reference descriptor to add
      */
-    public void addResourceReferenceDescriptor(ResourceReferenceDescriptor ejbReference);
-    
+    void addResourceReferenceDescriptor(ResourceReferenceDescriptor ejbReference);
+
     /**
      * Looks up a reference to a resource by its name (getName()). Throws an IllegalArgumentException
      * if no such descriptor is found.
      *
      * @param the name of the resource reference
      */
-    public ResourceReferenceDescriptor getResourceReferenceByName(String name);
-    
+    ResourceReferenceDescriptor getResourceReferenceByName(String name);
+
     /**
     * Return the set of references to resources that I have.
     */
-    public Set getResourceReferenceDescriptors();    
+    Set getResourceReferenceDescriptors();
 }
 

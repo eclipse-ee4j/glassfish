@@ -23,37 +23,37 @@ import org.w3c.dom.Node;
 
 
 /**
- * This node class is responsible for handling all the information 
+ * This node class is responsible for handling all the information
  * related to displayable elements like display-name or icons.
- * 
+ *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public abstract class DisplayableComponentNode<T extends Descriptor> extends DeploymentDescriptorNode<T> {
 
     public DisplayableComponentNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.NAME), LocalizedInfoNode.class);       
-        registerElementHandler(new XMLElement(TagNames.ICON), IconNode.class);           
-        registerElementHandler(new XMLElement(TagNames.SMALL_ICON), IconNode.class);           
-        registerElementHandler(new XMLElement(TagNames.LARGE_ICON), IconNode.class);           
+        registerElementHandler(new XMLElement(TagNames.NAME), LocalizedInfoNode.class);
+        registerElementHandler(new XMLElement(TagNames.ICON), IconNode.class);
+        registerElementHandler(new XMLElement(TagNames.SMALL_ICON), IconNode.class);
+        registerElementHandler(new XMLElement(TagNames.LARGE_ICON), IconNode.class);
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
      * @param parent node for the DOM tree
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
+     */
     public Node writeDescriptor(Node parent, T descriptor) {
-        Node node = super.writeDescriptor(parent, descriptor);        
-        
+        Node node = super.writeDescriptor(parent, descriptor);
+
         // description, display-name, icons...
         writeDisplayableComponentInfo(node, descriptor);
         return node;
-    } 
-    
+    }
+
     /**
      * write the localized descriptions, display-names and icons info
      *
@@ -66,6 +66,6 @@ public abstract class DisplayableComponentNode<T extends Descriptor> extends Dep
         localizedNode.writeLocalizedMap(node, TagNames.NAME, descriptor.getLocalizedDisplayNames());
         IconNode iconNode = new IconNode();
         iconNode.writeLocalizedInfo(node, descriptor);
-        
-    }       
+
+    }
 }

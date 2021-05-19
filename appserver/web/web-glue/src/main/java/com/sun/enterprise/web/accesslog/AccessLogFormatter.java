@@ -181,5 +181,5 @@ public abstract class AccessLogFormatter {
      */
     public boolean needTimeTaken() {
         return needTimeTaken;
-    }    
+    }
 }

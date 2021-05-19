@@ -24,7 +24,7 @@ import javax.naming.NameNotFoundException;
  * Immutable exception to avoid useless object creation by the proxy context.
  * This should be used only by the proxy context. Actual contexts should return
  * properly populated exceptions.
- * 
+ *
  * @author <a href="mailto:remm@apache.org">Remy Maucherat</a>
  * @version $Revision: 1.2 $
  */

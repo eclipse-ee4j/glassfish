@@ -46,7 +46,7 @@ public class EarSniffer extends GenericSniffer {
 
     public String[] getContainersNames() {
         return new String[] { "org.glassfish.javaee.full.deployment.EarContainer"};
-    }                                                                              
+    }
 
     /**
      * Returns true if the passed file or directory is recognized by this
@@ -122,7 +122,7 @@ public class EarSniffer extends GenericSniffer {
     }
 
     /**
-     * Returns the descriptor paths that might exist at the root of the 
+     * Returns the descriptor paths that might exist at the root of the
      * ear.
      *
      * @return list of the deployment descriptor paths

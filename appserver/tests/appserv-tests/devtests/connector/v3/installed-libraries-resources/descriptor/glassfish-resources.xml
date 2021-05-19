@@ -46,4 +46,4 @@
           <property name="booleanWithGetBooleanAccessor" value="true" />
         </connector-connection-pool>
         <connector-resource pool-name="installed-libraries-test-ccp" jndi-name="eis/connector-resource"  />
-</resources> 
+</resources>

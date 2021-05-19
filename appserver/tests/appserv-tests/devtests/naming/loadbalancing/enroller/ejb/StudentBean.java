@@ -59,7 +59,7 @@ ex.printStackTrace();
 
         this.studentId = studentId;
         this.name = name;
-	System.out.println("Created Student with ID " + studentId + " and Name " + name);
+        System.out.println("Created Student with ID " + studentId + " and Name " + name);
         return studentId;
     }
 
@@ -90,13 +90,13 @@ ex.printStackTrace();
 
     public void setEntityContext(EntityContext context) {
         this.context = context;
-	try {
-	    InitialContext ic = new InitialContext();
-	    dataSource = 
-	      (DataSource) ic.lookup("java:comp/env/jdbc/bmp-enrollerDB");
-         } catch (Exception ex) {            
-	     ex.printStackTrace();
-	 }
+        try {
+            InitialContext ic = new InitialContext();
+            dataSource =
+              (DataSource) ic.lookup("java:comp/env/jdbc/bmp-enrollerDB");
+         } catch (Exception ex) {
+             ex.printStackTrace();
+         }
     }
 
     public void unsetEntityContext() {
@@ -227,24 +227,24 @@ ex.printStackTrace();
 
     public String[] getServerHostPort() {
         String orbHost = null, orbPort = null;
-	try {
-	    ServerContext serverContext = ApplicationServer.getServerContext();
-	    
-	    ConfigContext configContext = serverContext.getConfigContext();
-         	    
+        try {
+            ServerContext serverContext = ApplicationServer.getServerContext();
+
+            ConfigContext configContext = serverContext.getConfigContext();
+
             Server serverBean = ServerBeansFactory.getServerBean(configContext);
-        	    
+
             IiopService iiopServiceBean = ServerBeansFactory.getIiopServiceBean(configContext);
 
-	    IiopListener[] iiopListenerBeans = iiopServiceBean.getIiopListener();
-	    Orb orbBean = iiopServiceBean.getOrb();
-       
-	    orbHost = iiopListenerBeans[0].getAddress();
-	    orbPort = iiopListenerBeans[0].getPort();
+            IiopListener[] iiopListenerBeans = iiopServiceBean.getIiopListener();
+            Orb orbBean = iiopServiceBean.getOrb();
+
+            orbHost = iiopListenerBeans[0].getAddress();
+            orbPort = iiopListenerBeans[0].getPort();
         } catch (Exception cfe) {
             cfe.printStackTrace();
-        } 
-	return new String[] {orbHost, orbPort};
+        }
+        return new String[] {orbHost, orbPort};
 
     }
 }

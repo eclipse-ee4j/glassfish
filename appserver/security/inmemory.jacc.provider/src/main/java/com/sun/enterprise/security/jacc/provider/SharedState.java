@@ -35,7 +35,7 @@ import jakarta.security.jacc.PolicyContextException;
  * @author monzillo
  */
 public class SharedState {
-    
+
     private static final Logger logger = Logger.getLogger(SharedState.class.getPackage().getName());
 
     // lock on the shared configTable and linkTable
@@ -44,7 +44,7 @@ public class SharedState {
     private static Lock wLock = rwLock.writeLock();
     private static Map<String, SimplePolicyConfiguration> configTable = new HashMap<>();
     private static Map<String, Set<String>> linkTable = new HashMap<>();
-    
+
 
     static Logger getLogger() {
         return logger;
@@ -74,7 +74,7 @@ public class SharedState {
         } finally {
             wLock.unlock();
         }
-        
+
         return simplePolicyConfiguration;
     }
 
@@ -141,11 +141,11 @@ public class SharedState {
             if (otherLinkSet == null) {
                 throw new RuntimeException("Linked policy configuration (" + otherId + ") does not exist");
             }
-            
+
             for (String nextid : otherLinkSet) {
                 // Add the id to this linkSet
                 linkSet.add(nextid);
-                
+
                 // Replace the linkset mapped to all the contexts being linked
                 // to this context, with this linkset.
                 linkTable.put(nextid, linkSet);
@@ -166,7 +166,7 @@ public class SharedState {
         wLock.lock();
         try { // get the linkSet corresponding to this context.
             Set<String> linkSet = linkTable.get(contextId);
-            
+
             // Remove this context id from the linkSet (which may be shared
             // with other contexts), and unmap the linkSet from this context.
             if (linkSet != null) {

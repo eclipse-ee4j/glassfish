@@ -41,5 +41,5 @@
     <port-component-ref>
       <service-endpoint-interface>stubprops.SimpleServer</service-endpoint-interface>
     </port-component-ref>
-   </service-ref> 
+   </service-ref>
 </web-app>

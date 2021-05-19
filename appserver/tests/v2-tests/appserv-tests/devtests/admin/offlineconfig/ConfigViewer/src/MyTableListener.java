@@ -30,7 +30,7 @@ import javax.swing.table.*;
  */
 public class MyTableListener implements TableModelListener
 {
- NodeViewFrame _frame;   
+ NodeViewFrame _frame;
  boolean _bProperty;
     /** Creates a new instance of MyTableListener */
     public MyTableListener(NodeViewFrame frame, boolean bProperty)
@@ -38,10 +38,10 @@ public class MyTableListener implements TableModelListener
         _frame = frame;
         _bProperty = bProperty;
     }
-    
+
     public void tableChanged(TableModelEvent e) {
         this.
         _frame.tableChanged(e, _bProperty);
     }
-    
+
 }

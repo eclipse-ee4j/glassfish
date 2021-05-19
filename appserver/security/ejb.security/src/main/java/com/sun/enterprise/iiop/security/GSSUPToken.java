@@ -41,7 +41,7 @@ import com.sun.logging.*;
 
 /**
  * GSSUPToken Represents the on the wire username/password credential on the client side and the server side.
- * 
+ *
  * @author Sekhar Vajjhala
  * @author Harpreet Singh
  */
@@ -75,7 +75,7 @@ public class GSSUPToken {
 
     /**
      * Constructs mechanism token from a password credential, called from the client side interceptors
-     * 
+     *
      * @param orb the ORB
      * @param codec the codec for translation
      * @param pwdcred the Password credential, populated with username/password and the realm name
@@ -88,7 +88,7 @@ public class GSSUPToken {
 
     /**
      * Creates a GSSUPToken instance on the server side
-     * 
+     *
      * @param orb the orb
      * @param codec the codec
      * @param authok the authtoken received on the wire.
@@ -149,7 +149,7 @@ public class GSSUPToken {
 
         /*
          * Get the target name from the IOR.
-         * 
+         *
          */
         byte[] target_name = mech.as_context_mech.target_name;
 
@@ -322,7 +322,7 @@ public class GSSUPToken {
 
     /**
      * Returns the GSSToken for the GSSUPToken name that conforms to the GSSUP Mechanism id
-     * 
+     *
      * @return byte[] the byte array representation of the GSSToken
      */
     byte[] getGSSToken() throws GSSException {

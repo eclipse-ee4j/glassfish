@@ -37,8 +37,8 @@ public class AppClientContext extends ResourceContainerContextImpl {
     public ApplicationClientDescriptor getDescriptor() {
         return (ApplicationClientDescriptor)descriptor;
     }
-    
-    public HandlerChainContainer[] 
+
+    public HandlerChainContainer[]
             getHandlerChainContainers(boolean serviceSideHandlerChain, Class declaringClass) {
         if(serviceSideHandlerChain) {
             // We should not come here at all - anyway return null
@@ -48,5 +48,5 @@ public class AppClientContext extends ResourceContainerContextImpl {
             result.addAll(getDescriptor().getServiceReferenceDescriptors());
             return(result.toArray(new HandlerChainContainer[result.size()]));
         }
-    }    
+    }
 }

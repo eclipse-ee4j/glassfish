@@ -73,91 +73,91 @@ public class HelloServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
 
-	System.out.println("In HelloServlet::init");
+        System.out.println("In HelloServlet::init");
 
-	try {
-	    InitialContext ic = new InitialContext();
-	    sb2 = (SingletonBean) ic.lookup("java:module/SingletonBean");
-	    sb3 = (SingletonBean) ic.lookup("java:module/SingletonBean!com.acme.SingletonBean");
+        try {
+            InitialContext ic = new InitialContext();
+            sb2 = (SingletonBean) ic.lookup("java:module/SingletonBean");
+            sb3 = (SingletonBean) ic.lookup("java:module/SingletonBean!com.acme.SingletonBean");
 
-	    sb4 = (SingletonBean) ic.lookup("java:module/ES1");
-	    sb5 = (SingletonBean) ic.lookup("java:module/env/ES2");
+            sb4 = (SingletonBean) ic.lookup("java:module/ES1");
+            sb5 = (SingletonBean) ic.lookup("java:module/env/ES2");
 
-	    slsb = (StatelessBean) ic.lookup("java:module/StatelessBean");
-	    slsb2 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean");
-	    slsb3 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean!com.acme.StatelessBean");
+            slsb = (StatelessBean) ic.lookup("java:module/StatelessBean");
+            slsb2 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean");
+            slsb3 = (StatelessBean) ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/StatelessBean!com.acme.StatelessBean");
 
-	    slsb4 = (StatelessBean) ic.lookup("java:app/EL1");
-	    slsb5 = (StatelessBean) ic.lookup("java:app/env/EL2");
+            slsb4 = (StatelessBean) ic.lookup("java:app/EL1");
+            slsb5 = (StatelessBean) ic.lookup("java:app/env/EL2");
 
-	    foo4 = (FooManagedBean) 
-		ic.lookup("java:module/foomanagedbean");
+            foo4 = (FooManagedBean)
+                ic.lookup("java:module/foomanagedbean");
 
-	    foo5 = (FooManagedBean) 
-		ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/foomanagedbean");
+            foo5 = (FooManagedBean)
+                ic.lookup("java:app/ejb-ejb31-ejblite-javamodule-web/foomanagedbean");
 
-	    foo6 = (FooManagedBean)
-		ic.lookup("java:comp/env/foo2ref");
+            foo6 = (FooManagedBean)
+                ic.lookup("java:comp/env/foo2ref");
 
-	    System.out.println("My AppName = " + 
-			       ic.lookup("java:app/AppName"));
+            System.out.println("My AppName = " +
+                               ic.lookup("java:app/AppName"));
 
-	    System.out.println("My ModuleName = " + 
-			       ic.lookup("java:module/ModuleName"));
+            System.out.println("My ModuleName = " +
+                               ic.lookup("java:module/ModuleName"));
 
-	} catch(Exception e) {
-	    e.printStackTrace();
-	    throw new ServletException(e);
-	}
+        } catch(Exception e) {
+            e.printStackTrace();
+            throw new ServletException(e);
+        }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
     throws ServletException, IOException {
 
-	resp.setContentType("text/html");
+        resp.setContentType("text/html");
         PrintWriter out = resp.getWriter();
 
-	System.out.println("In HelloServlet::doGet");
+        System.out.println("In HelloServlet::doGet");
 
-	foo.foobar("foobar");
+        foo.foobar("foobar");
 
-	simpleSingleton.hello();
+        simpleSingleton.hello();
 
-	simpleStateless.hello();
-	simpleStateless2.hello();
+        simpleStateless.hello();
+        simpleStateless2.hello();
 
-	sb2.hello();
+        sb2.hello();
 
-	sb3.hello();
+        sb3.hello();
 
-	sb4.hello();
+        sb4.hello();
 
-	sb5.hello();
+        sb5.hello();
 
-	slsb.hello();
+        slsb.hello();
 
-	slsb2.hello();
+        slsb2.hello();
 
-	slsb3.hello();
+        slsb3.hello();
 
-	slsb4.hello();
+        slsb4.hello();
 
-	slsb5.hello();
+        slsb5.hello();
 
-	foo.foo();
-	foo.foobar("foobar");
-	foo2.foo();
-	foo3.foo();
-	foo4.foo();
-	foo5.foo();	
-	foo6.foo();
+        foo.foo();
+        foo.foobar("foobar");
+        foo2.foo();
+        foo3.foo();
+        foo4.foo();
+        foo5.foo();
+        foo6.foo();
 
-	out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
+        out.println("<HTML> <HEAD> <TITLE> JMS Servlet Output </TITLE> </HEAD> <BODY BGCOLOR=white>");
             out.println("<CENTER> <FONT size=+1 COLOR=blue>DatabaseServelt :: All information I can give </FONT> </CENTER> <p> " );
-            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" ); 
-            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" ); 
+            out.println("<FONT size=+1 color=red> Context Path :  </FONT> " + req.getContextPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Servlet Path :  </FONT> " + req.getServletPath() + "<br>" );
+            out.println("<FONT size=+1 color=red> Path Info :  </FONT> " + req.getPathInfo() + "<br>" );
             out.println("</BODY> </HTML> ");
 
     }

@@ -21,14 +21,14 @@ package com.sun.appserv.management.client.prefs;
  */
 public class StoreException extends Exception {
  static final long serialVersionUID = 8911126457304139178L;
-    
+
     /**
      * Creates a new instance of <code>StoreException</code> without detail message.
      */
     public StoreException() {
     }
-    
-    
+
+
     /**
      * Constructs an instance of <code>StoreException</code> with the specified detail message.
      * @param msg the detail message.
@@ -36,11 +36,11 @@ public class StoreException extends Exception {
     public StoreException(final String msg) {
         super(msg);
     }
-    
+
     public StoreException(final Throwable t) {
         super(t);
     }
-    
+
     public StoreException(final String msg, final Throwable t) {
         super (msg, t);
     }

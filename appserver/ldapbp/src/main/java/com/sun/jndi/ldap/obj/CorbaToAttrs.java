@@ -16,11 +16,16 @@
 
 package com.sun.jndi.ldap.obj;
 
-import javax.naming.spi.DirStateFactory;
-import javax.naming.*;
-import javax.naming.directory.*;
 import java.util.Hashtable;
-import org.omg.CORBA.portable.ObjectImpl;
+
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NamingException;
+import javax.naming.directory.Attribute;
+import javax.naming.directory.Attributes;
+import javax.naming.directory.BasicAttribute;
+import javax.naming.directory.BasicAttributes;
+import javax.naming.spi.DirStateFactory;
 
 /**
   * A DirStateFactory that returns an Attributes when
@@ -52,29 +57,29 @@ public class CorbaToAttrs implements DirStateFactory {
      * objectclass: add "corbaContainer" as an additional objectclass.
      *
      * @param orig The CORBA object to bind. If not an instance of
-     * 		   org.omg.CORBA.portable.ObjectImpl, return null.
+     *            org.omg.CORBA.portable.ObjectImpl, return null.
      * @param name Ignored
      * @param ctx  Ignored
      * @param env  Ignored
-     * @param inAttrs A possibly null set of attributes that will accompany 
-     * 		this bind. These attributes are combined with those required
-     *		for storing <tt>orig</tt>.
-     * @return {null, attrs} where <tt>attrs</tt> is the union of 
-     * <tt>inAttrs</tt> and attributes that represent the CORBA object 
+     * @param inAttrs A possibly null set of attributes that will accompany
+     *         this bind. These attributes are combined with those required
+     *        for storing <tt>orig</tt>.
+     * @return {null, attrs} where <tt>attrs</tt> is the union of
+     * <tt>inAttrs</tt> and attributes that represent the CORBA object
      * <tt>orig</tt>. null if <tt>orig</tt> is not an instance of
      * <tt>ObjectImpl</tt>.
      * @exception NamingException Not thrown.
      */
-    public DirStateFactory.Result 
-    getStateToBind(Object orig, Name name, Context ctx,
-	Hashtable env, Attributes inAttrs) throws NamingException {
-	    if (orig instanceof org.omg.CORBA.portable.ObjectImpl) {
+    @Override
+    public DirStateFactory.Result getStateToBind(Object orig, Name name, Context ctx, Hashtable env, Attributes inAttrs)
+        throws NamingException {
+        if (orig instanceof org.omg.CORBA.portable.ObjectImpl) {
 
-		// Turn org.omg.CORBA.Object into attrs
-		return new DirStateFactory.Result(null, 
-		    corbaToAttrs((org.omg.CORBA.portable.ObjectImpl)orig, inAttrs));
-	    }
-	    return null; // pass and let next state factory try
+        // Turn org.omg.CORBA.Object into attrs
+        return new DirStateFactory.Result(null,
+            corbaToAttrs((org.omg.CORBA.portable.ObjectImpl)orig, inAttrs));
+        }
+        return null; // pass and let next state factory try
     }
 
     /**
@@ -85,11 +90,10 @@ public class CorbaToAttrs implements DirStateFactory {
      * @param env Ignored
      * @exception NamingException Not thrown
      */
-    public Object getStateToBind(Object orig, Name name, Context ctx,
-	Hashtable env) throws NamingException {
-
-	    // Cannot just return obj; needs to return Attributes
-	    return null;
+    @Override
+    public Object getStateToBind(Object orig, Name name, Context ctx, Hashtable env) throws NamingException {
+        // Cannot just return obj; needs to return Attributes
+        return null;
     }
 
     /**
@@ -101,43 +105,40 @@ public class CorbaToAttrs implements DirStateFactory {
      *
      * @param orig The non-null ObjectImpl from which to get the IOR
      * @param inAttrs The possibly attribute set that is to be merged with the
-     * 		CORBA attributes.
+     *         CORBA attributes.
      * @return A non-null Attributes containing the incoming attribute merged
      * with the CORBA attributes.
      */
     static Attributes
-	corbaToAttrs(org.omg.CORBA.portable.ObjectImpl orig, Attributes inAttrs) {
+    corbaToAttrs(org.omg.CORBA.portable.ObjectImpl orig, Attributes inAttrs) {
 
-	DirStateFactory.Result res;
+        // Get holder for outgoing attributes
+        Attributes outAttrs = (inAttrs != null) ? (Attributes) inAttrs.clone() : new BasicAttributes(true);
 
-	// Get holder for outgoing attributes
-	Attributes outAttrs = (inAttrs != null) ?
-	    (Attributes)inAttrs.clone() : new BasicAttributes(true);
+        // Put IOR
+        String ior = orig._orb().object_to_string(orig);
+        outAttrs.put("corbaIor", ior);
 
-	// Put IOR 
-	String ior = orig._orb().object_to_string(orig);
-	outAttrs.put("corbaIor", ior);
+        // Put appropriate object class
+        Attribute objectClass = outAttrs.get("objectClass");
+        if (objectClass == null && !outAttrs.isCaseIgnored()) {
+            // %%% workaround
+            objectClass = outAttrs.get("objectclass");
+        }
 
-	// Put appropriate object class
-	Attribute objectClass = (Attribute)outAttrs.get("objectClass");
-	if (objectClass == null && !outAttrs.isCaseIgnored()) {
-	    // %%% workaround 
-	    objectClass = (Attribute)outAttrs.get("objectclass");
-	}
+        if (objectClass == null) {
+            // No objectclasses supplied
+            objectClass =  new BasicAttribute("objectClass", "top");
+            objectClass.add("corbaContainer");
+        } else {
+            // Clone existing objectclass
+            objectClass = (Attribute)objectClass.clone();
+        }
 
-	if (objectClass == null) {
-	    // No objectclasses supplied
-	    objectClass =  new BasicAttribute("objectClass", "top");
-	    objectClass.add("corbaContainer");
-	} else {
-	    // Clone existing objectclass
-	    objectClass = (Attribute)objectClass.clone();
-	}
+        objectClass.add("corbaObject");
+        objectClass.add("corbaObjectReference");
+        outAttrs.put(objectClass);
 
-	objectClass.add("corbaObject");
-	objectClass.add("corbaObjectReference");
-	outAttrs.put(objectClass);
-
-	return outAttrs;
+        return outAttrs;
     }
 }

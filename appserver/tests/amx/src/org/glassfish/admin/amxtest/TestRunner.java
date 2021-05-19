@@ -274,7 +274,7 @@ public final class TestRunner {
 
         println("\n--- BEGIN TESTS ---");
         runTests(testClasses, threaded);
-	}
+    }
 }
 
 

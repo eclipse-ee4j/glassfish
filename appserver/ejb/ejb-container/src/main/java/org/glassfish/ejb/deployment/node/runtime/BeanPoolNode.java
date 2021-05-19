@@ -24,10 +24,10 @@ import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import org.w3c.dom.Node;
 
 /**
- * This node handles the bean-pool runtime deployment descriptors 
+ * This node handles the bean-pool runtime deployment descriptors
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class BeanPoolNode extends DeploymentDescriptorNode<BeanPoolDescriptor> {
 
@@ -40,24 +40,24 @@ public class BeanPoolNode extends DeploymentDescriptorNode<BeanPoolDescriptor> {
     }
 
     @Override
-    protected Map getDispatchTable() {  
-	Map dispatchTable = super.getDispatchTable();
-	dispatchTable.put(RuntimeTagNames.STEADY_POOL_SIZE, "setSteadyPoolSize");
-	dispatchTable.put(RuntimeTagNames.POOL_RESIZE_QUANTITY, "setPoolResizeQuantity");
-	dispatchTable.put(RuntimeTagNames.MAX_POOL_SIZE, "setMaxPoolSize");
-	dispatchTable.put(RuntimeTagNames.POOL_IDLE_TIMEOUT_IN_SECONDS, "setPoolIdleTimeoutInSeconds");
-	dispatchTable.put(RuntimeTagNames.MAX_WAIT_TIME_IN_MILLIS, "setMaxWaitTimeInMillis");
-	return dispatchTable;
+    protected Map getDispatchTable() {
+        Map dispatchTable = super.getDispatchTable();
+        dispatchTable.put(RuntimeTagNames.STEADY_POOL_SIZE, "setSteadyPoolSize");
+        dispatchTable.put(RuntimeTagNames.POOL_RESIZE_QUANTITY, "setPoolResizeQuantity");
+        dispatchTable.put(RuntimeTagNames.MAX_POOL_SIZE, "setMaxPoolSize");
+        dispatchTable.put(RuntimeTagNames.POOL_IDLE_TIMEOUT_IN_SECONDS, "setPoolIdleTimeoutInSeconds");
+        dispatchTable.put(RuntimeTagNames.MAX_WAIT_TIME_IN_MILLIS, "setMaxWaitTimeInMillis");
+        return dispatchTable;
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, BeanPoolDescriptor descriptor) {    
-	Node beanpoolNode = super.writeDescriptor(parent, nodeName, descriptor);
-	appendTextChild(beanpoolNode, RuntimeTagNames.STEADY_POOL_SIZE, descriptor.getSteadyPoolSize());
-	appendTextChild(beanpoolNode, RuntimeTagNames.POOL_RESIZE_QUANTITY, descriptor.getPoolResizeQuantity());
-	appendTextChild(beanpoolNode, RuntimeTagNames.MAX_POOL_SIZE, descriptor.getMaxPoolSize());
-	appendTextChild(beanpoolNode, RuntimeTagNames.POOL_IDLE_TIMEOUT_IN_SECONDS, descriptor.getPoolIdleTimeoutInSeconds());
-	appendTextChild(beanpoolNode, RuntimeTagNames.MAX_WAIT_TIME_IN_MILLIS, descriptor.getMaxWaitTimeInMillis());
-	return beanpoolNode;
+    public Node writeDescriptor(Node parent, String nodeName, BeanPoolDescriptor descriptor) {
+        Node beanpoolNode = super.writeDescriptor(parent, nodeName, descriptor);
+        appendTextChild(beanpoolNode, RuntimeTagNames.STEADY_POOL_SIZE, descriptor.getSteadyPoolSize());
+        appendTextChild(beanpoolNode, RuntimeTagNames.POOL_RESIZE_QUANTITY, descriptor.getPoolResizeQuantity());
+        appendTextChild(beanpoolNode, RuntimeTagNames.MAX_POOL_SIZE, descriptor.getMaxPoolSize());
+        appendTextChild(beanpoolNode, RuntimeTagNames.POOL_IDLE_TIMEOUT_IN_SECONDS, descriptor.getPoolIdleTimeoutInSeconds());
+        appendTextChild(beanpoolNode, RuntimeTagNames.MAX_WAIT_TIME_IN_MILLIS, descriptor.getMaxWaitTimeInMillis());
+        return beanpoolNode;
     }
 }

@@ -151,7 +151,7 @@ public class HttpRequest {
         }
 
         public HttpRequest build() {
-            return new HttpRequest(reqPacketBuilder.build(), 
+            return new HttpRequest(reqPacketBuilder.build(),
                 charEncoding, content, trailerFields, connection);
         }
     }

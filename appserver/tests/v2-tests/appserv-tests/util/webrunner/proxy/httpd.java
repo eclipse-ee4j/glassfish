@@ -47,8 +47,8 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		s	The string to be converted
-        * @return		byte[]
+        * @param        s    The string to be converted
+        * @return        byte[]
         */
         private final byte[] toBytes(String s)
         {
@@ -61,9 +61,9 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		out	The output stream
-        * @param		s	The string
-        * @return		void
+        * @param        out    The output stream
+        * @param        s    The string
+        * @return        void
         */
         private void writeString(OutputStream out,String s)
         throws IOException
@@ -75,10 +75,10 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		in	The InputStream
-        * @param		url	The string URL
-        * @param		mh Mimeheader
-        * @return		TempStore
+        * @param        in    The InputStream
+        * @param        url    The string URL
+        * @param        mh Mimeheader
+        * @return        TempStore
         */
         private TempStore loadFile(InputStream in,String url,MimeHeader mh)
         throws IOException
@@ -104,11 +104,11 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		cmd	String
-        * @param		url	The string URL
-        * @param		code integer
+        * @param        cmd    String
+        * @param        url    The string URL
+        * @param        code integer
         * @param        size Integer
-        * @return		void
+        * @return        void
         */
         private void logEntry(String cmd,String url,int code,int size)
         {
@@ -124,10 +124,10 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		in	The InputStream
-        * @param		url	The string URL
-        * @param		mh Mimeheader
-        * @return		TempStore
+        * @param        in    The InputStream
+        * @param        url    The string URL
+        * @param        mh Mimeheader
+        * @return        TempStore
         */
         private String getRawRequest(InputStream in)
         throws IOException
@@ -169,28 +169,28 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		out	The OutputStream
-        * @param		url	The string URL
-        * @param		inmh Mimeheader
-        * @param		in   The input stream
-        * @return		void
+        * @param        out    The OutputStream
+        * @param        url    The string URL
+        * @param        inmh Mimeheader
+        * @param        in   The input stream
+        * @return        void
         */
         private void handleProxy(OutputStream out,String url,MimeHeader inmh,InputStream in) {
             try {
                 int start=url.indexOf("://") +3;
-                
+
                 int path=url.indexOf('/',start);
-                
+
                 String site=url.substring(start,path).toLowerCase();
-                
+
                 String server_url=url.substring(path);
-                
+
                 int colon=site.indexOf(':');
                 if(colon > 0) {
                     port=Integer.parseInt(site.substring(colon+1));
                     site=site.substring(0,colon);
                 }
-                
+
                 FileOutputStream fileout=new FileOutputStream("script.txt",true);
                 //System.out.print("\n Server at port" + port + "\n");
                 Socket server=new Socket(site,port);
@@ -203,13 +203,13 @@ public class httpd implements Runnable,LogMessage
                     byte postbuf[]=new byte[content_length];
                     for (i =0; i < content_length; i++)
                         postbuf[i]=(byte)in.read();
-                    
+
                   String postdata=new String(postbuf,0,i);
                   //  System.out.print("\n POST data without mime header is " + postdata + "\n");
-                    
+
                   String post="POST" + " " + server_url+ " " + "HTTP/1.0" + CRLF + inmh
                   + CRLF + postdata+ CRLF+CRLF;
-                    
+
                   System.out.print("\nPOST request sent is " + post);
                   byte filebuf[]=post.getBytes();
                   for( i=0;i<filebuf.length;i++)
@@ -225,7 +225,7 @@ public class httpd implements Runnable,LogMessage
 
                     first=System.currentTimeMillis();
                     writeString(server_out,post);
-                    
+
                     String raw_request=getRawRequest(server_in);
                     System.out.print("\n Server Response Header is--------------------------\n " + raw_request + "\n");
 
@@ -233,24 +233,24 @@ public class httpd implements Runnable,LogMessage
                     writeString(out,server_response.toString());
                     end=System.currentTimeMillis();
                     //System.out.print("\n Server Response Header is--------------------------\n " + server_response.statusCode + "\n");
-                    
+
                     if(server_response.statusCode==200) {
-                        
+
                         TempStore uce=loadFile(server_in,url,server_response.mh);
                         out.write(uce.data,0,uce.length);
-                        
+
                     /*    byte filebuf[]=post.getBytes();
                         for( i=0;i<filebuf.length;i++)
                             fileout.write(filebuf[i]);
-                        
-                        
+
+
                         String token="!"+"\n"+"!";
                         byte tokenbytes[]=token.getBytes();
                         for(i=0;i<tokenbytes.length;i++)
                             fileout.write(tokenbytes[i]);
-                        
+
                         fileout.close();*/
-                        
+
                         logEntry("POST",site + server_url,200,uce.length);
                     }
                     else if(server_response.statusCode==302 || server_response.statusCode==307) {
@@ -274,59 +274,59 @@ public class httpd implements Runnable,LogMessage
                     //        System.out.println("Chking redirected request response code"+"*******************");
                             TempStore uce1=loadFile(re_in,Host,re_response.mh);
                             out.write(uce1.data,0,uce1.length);
-                            
+
                             logEntry("GET",Host,200,uce1.length);
-                            
+
                             /*byte filebuf[]=redirectreq.getBytes();
                             for( i=0;i<filebuf.length;i++)
                                 fileout.write(filebuf[i]);
-                            
+
                             String token="!"+"\n"+"!";
                             byte tokenbytes[]=token.getBytes();
                             for(i=0;i<tokenbytes.length;i++)
                                 fileout.write(tokenbytes[i]);
-                            
+
                             fileout.close();*/
                         }
                     }
                     else if (server_response.statusCode==304) {
                         System.out.println("*************304 status code************************");
-                        
+
                     }
                 }
                 else {
                     String req=methodSupported + " "  + server_url + " " +"HTTP/1.0" + CRLF + inmh + CRLF + CRLF;
-                    
+
                     System.out.print("\n Request string sent to server\n" + req );
                     byte filebuf2[]=req.getBytes();
                     for(int i=0;i<filebuf2.length;i++)
                         fileout.write(filebuf2[i]);
-                    
+
                     String newtoken="!"+"\n"+"!";
                     byte tokenbytes1[]=newtoken.getBytes();
-                    
+
                     for(int i=0;i<tokenbytes1.length;i++)
                         fileout.write(tokenbytes1[i]);
-                    
+
                     fileout.close();
-                    
+
                     writeString(server_out,req);
                     String raw_request=getRawRequest(server_in);
                     System.out.print("\n Server Response is " + raw_request + "\n");
                     HttpResponse server_response=new HttpResponse(raw_request);
                     writeString(out,server_response.toString());
                     //System.out.print("\n Server Response is " + server_response.statusCode + "\n");
-                    
+
                     if(server_response.statusCode==200) {
                         TempStore uce=loadFile(server_in,url,server_response.mh);
                         out.write(uce.data,0,uce.length);
                     }
-                    
+
                     if(server_response.statusCode==302 || server_response.statusCode==307) {
                         //System.out.println("******Inside Redirection*********");
                         String Host=server_response.mh.get("Location");
                         //System.out.println("New host is"+Host);
-                        
+
                         URL newurl=new URL(Host);
                         String actualhost=newurl.getHost();
                         Socket serversocket=new Socket(actualhost,80);
@@ -352,12 +352,12 @@ public class httpd implements Runnable,LogMessage
                             byte filebuf[]=redirectreq.getBytes();
                             for(int i=0;i<filebuf.length;i++)
                                 fileout.write(filebuf[i]);
-                            
+
                             String token="!"+"\n"+"!";
                             byte tokenbytes[]=token.getBytes();
                             for(int i=0;i<tokenbytes.length;i++)
                                 fileout.write(tokenbytes[i]);
-                            
+
                             fileout.close();
                         }
                     }
@@ -365,9 +365,9 @@ public class httpd implements Runnable,LogMessage
                         System.out.println("*******************************304 status code****************************");
                     }
                 }
-                
+
                 server_out.close();
-                
+
             }
             catch(IOException e) {
                 log.log("Exception" + e);
@@ -386,9 +386,9 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @param		s	Socket
-        * @return		void
-        * @throws 		IOException
+        * @param        s    Socket
+        * @return        void
+        * @throws         IOException
         */
     private void doRequest(Socket s) throws IOException
         {
@@ -430,7 +430,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return		void
+        * @return        void
         *
         */
         public void run()
@@ -465,7 +465,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return		void
+        * @return        void
         *
         */
         public synchronized void start()
@@ -483,7 +483,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return		void
+        * @return        void
         *
         */
         public synchronized void stop()
@@ -498,7 +498,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return		void
+        * @return        void
         *
         */
         public httpd(int p, LogMessage lm)
@@ -513,7 +513,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return		void
+        * @return        void
         *
         */
         public static void main(String args[])
@@ -536,7 +536,7 @@ public class httpd implements Runnable,LogMessage
         *
         * @author       Deepa Singh(deepa.singh@sun.com)
         *
-        * @return		void
+        * @return        void
         *
         */
         public void log(String m)

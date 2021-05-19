@@ -26,10 +26,10 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This class defines a descriptor which can be described
- * with a description 
+ * with a description
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class DescribableDescriptor extends Descriptor {
 
@@ -38,13 +38,13 @@ public class DescribableDescriptor extends Descriptor {
     /** Creates new DescribableDescriptor */
     public DescribableDescriptor() {
     }
-    
+
     public void setDescription(String description) {
         this.description = description;
     }
-    
+
     public String  getDescription() {
         return description;
-    }    
-    
+    }
+
 }

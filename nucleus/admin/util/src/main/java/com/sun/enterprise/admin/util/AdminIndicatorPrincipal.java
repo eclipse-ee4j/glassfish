@@ -21,7 +21,7 @@ import org.glassfish.security.services.api.authorization.AuthorizationAdminConst
 
 /**
  * A simple Principal that indicates that the Subject has been authenticated as another server in the domain.
- * 
+ *
  * @author tjquinn
  */
 public class AdminIndicatorPrincipal implements Principal {

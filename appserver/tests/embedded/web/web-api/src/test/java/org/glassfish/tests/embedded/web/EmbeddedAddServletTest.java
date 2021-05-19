@@ -36,7 +36,7 @@ import org.junit.Test;
 
 /**
  * Tests for Context#addServlet, embedded.createVirtualServer
- * 
+ *
  * @author Amy Roh
  */
 public class EmbeddedAddServletTest {
@@ -63,7 +63,7 @@ public class EmbeddedAddServletTest {
         System.out.println("Added Web with base directory "+root.getAbsolutePath());
         embedded.setConfiguration(config);
     }
-    
+
     @Test
     public void testEmbeddedWebAPIConfig() throws Exception {
         WebListener testListener = embedded.createWebListener("test-listener", HttpListener.class);
@@ -84,7 +84,7 @@ public class EmbeddedAddServletTest {
                 testvs=true;
             }
         }
-        Assert.assertTrue(testvs);    
+        Assert.assertTrue(testvs);
         Context context = (Context) embedded.createContext(root);
         ServletRegistration sr = context.addServlet("NewServlet", "org.glassfish.tests.embedded.web.NewServlet");
         sr.addMapping(new String[] {"/newservlet"});
@@ -103,7 +103,7 @@ public class EmbeddedAddServletTest {
         }
         in.close();
         vs.removeContext(context);
-        
+
      }
 
     @AfterClass
@@ -115,6 +115,6 @@ public class EmbeddedAddServletTest {
             glassfish = null;
         }
     }
-    
-    
+
+
 }

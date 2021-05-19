@@ -24,10 +24,10 @@ public interface DomainsManager {
     /**
      * In SE/EE we need an admin user/password that the DAS can use to authenticate to Node Agents and servers in the
      * domain. This is not the case in PE; hence this flag -- DomainConfig.K_FLAG_START_DOMAIN_NEEDS_ADMIN_USER
-     * 
+     *
      * In SE/EE we need an extra non secure http port to host the Lockhart components which is controlled by --
      * DomainConfig.K_FLAG_CREATE_DOMAIN_NEEDS_ALTERNATE_ADMIN_PORT
-     * 
+     *
      * @return flags toggling SE/EE specific behavior.
      */
     public BitSet getDomainFlags();
@@ -41,7 +41,7 @@ public interface DomainsManager {
     /**
      * Deletes a domain identified by the given name. (Should we stop the DAS and instances administered by this domain
      * before deleting the domain?)
-     * 
+     *
      * @param domainConfig
      * @throws DomainException This exception is thrown if
      * <ul>
@@ -52,23 +52,23 @@ public interface DomainsManager {
 
     /**
      * Starts the Domain Administration Server (DAS) that administers the given domain.
-     * 
+     *
      * @param startParams
      * @throws DomainException
      */
     /*
-    public void startDomain(DomainConfig domainConfig) 
+    public void startDomain(DomainConfig domainConfig)
         throws DomainException;
     */
     /**
      * Stops the Domain Administration Server (DAS) that administers the given domain.
-     * 
+     *
      * @param domainConfig
      * @throws DomainException
      */
 
     /*
-    public void stopDomain(DomainConfig domainConfig) 
+    public void stopDomain(DomainConfig domainConfig)
         throws DomainException;
     */
     /**
@@ -87,7 +87,7 @@ public interface DomainsManager {
      * Changes the master password for the domain
      */
     /*
-    public void changeMasterPassword(DomainConfig domainConfig) 
+    public void changeMasterPassword(DomainConfig domainConfig)
         throws DomainException;
     */
     public void validateDomain(DomainConfig domainConfig, boolean domainExists) throws DomainException;
@@ -101,12 +101,12 @@ public interface DomainsManager {
     */
     /**
      * Stops the Domain Administration Server (DAS) that administers the given domain.
-     * 
+     *
      * @param domainConfig
      * @throws DomainException
      */
     /*
-    public void stopDomainForcibly(DomainConfig domainConfig, int timeout) 
-        throws DomainException;    
+    public void stopDomainForcibly(DomainConfig domainConfig, int timeout)
+        throws DomainException;
      */
 }

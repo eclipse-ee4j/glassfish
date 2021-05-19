@@ -59,15 +59,15 @@ import org.glassfish.api.admin.*;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=Cluster.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jmsdest", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jmsdest",
         description="List JMS Destinations",
         params={
             @RestParam(name="id", value="$parent")
         }),
     @RestEndpoint(configBean=Server.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jmsdest", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jmsdest",
         description="List JMS Destinations",
         params={
             @RestParam(name="id", value="$parent")
@@ -75,29 +75,29 @@ import org.glassfish.api.admin.*;
 })
 public class ListJMSDestinations extends JMSDestination implements AdminCommand {
 
-        private static final Logger logger = Logger.getLogger(LogUtils.JMS_ADMIN_LOGGER);
-        final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJMSDestination.class);
+    private static final Logger logger = Logger.getLogger(LogUtils.JMS_ADMIN_LOGGER);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJMSDestination.class);
 
-        @Param(name="destType", optional=true)
-        String destType;
+    @Param(name="destType", optional=true)
+    String destType;
 
-        @Param(name="property", optional=true, separator=':')
-        Properties props;
+    @Param(name="property", optional=true, separator=':')
+    Properties props;
 
-        @Param(primary=true, optional=true)
-        String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
+    @Param(primary=true, optional=true)
+    String target = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME;
 
-        @Inject
-        com.sun.appserv.connectors.internal.api.ConnectorRuntime connectorRuntime;
+    @Inject
+    com.sun.appserv.connectors.internal.api.ConnectorRuntime connectorRuntime;
 
-        @Inject
-        Domain domain;
+    @Inject
+    Domain domain;
 
-        @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
-        Config config;
+    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    Config config;
 
-        @Inject
-        ServerContext serverContext;
+    @Inject
+    ServerContext serverContext;
 
 
     public void execute(AdminCommandContext context) {
@@ -151,13 +151,12 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
         //MBeanServerConnection  mbsc = getMBeanServerConnection(tgtName);
         try {
             MBeanServerConnection mbsc = mqInfo.getMQMBeanServerConnection();
-            ObjectName on = new ObjectName(
-                DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
+            ObjectName on = new ObjectName(DESTINATION_MANAGER_CONFIG_MBEAN_NAME);
 
             ObjectName [] dests = (ObjectName [])mbsc.invoke(on, "getDestinations", null, null);
             if ((dests != null) && (dests.length > 0)) {
                 List<JMSDestinationInfo> jmsdi = new ArrayList<JMSDestinationInfo>();
-                for (int i=0; i<dests.length; i++) {
+                for (int i = 0; i < dests.length; i++) {
                     on = dests[i];
 
                     String jdiType = toStringLabel(on.getKeyProperty("desttype"));
@@ -176,7 +175,7 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
 
                     JMSDestinationInfo jdi = new JMSDestinationInfo(jdiName, jdiType);
 
-                    if(destType == null) {
+                    if (destType == null) {
                         jmsdi.add(jdi);
                     } else if (destType.equals(JMS_DEST_TYPE_TOPIC)
                             || destType.equals(JMS_DEST_TYPE_QUEUE)) {
@@ -190,29 +189,30 @@ public class ListJMSDestinations extends JMSDestination implements AdminCommand 
                 //(JMSDestinationInfo[]) jmsdi.toArray(new JMSDestinationInfo[]{});
             }
         } catch (Exception e) {
-                    //log JMX Exception trace as WARNING
-                    logAndHandleException(e, "admin.mbeans.rmb.error_listing_jms_dest");
-                } finally {
-                    try {
-                        if(mqInfo != null) {
-                            mqInfo.closeMQMBeanServerConnection();
-                        }
-                    } catch (Exception e) {
-                      handleException(e);
-                    }
+            // log JMX Exception trace as WARNING
+            logAndHandleException(e, "admin.mbeans.rmb.error_listing_jms_dest");
+        } finally {
+            try {
+                if (mqInfo != null) {
+                    mqInfo.closeMQMBeanServerConnection();
                 }
+            } catch (Exception e) {
+                handleException(e);
+            }
+        }
 
         return null;
     }
-    private String toStringLabel(String type)  {
 
-	    if (type.equals(DESTINATION_TYPE_QUEUE))  {
-	        return("queue");
-	    } else if (type.equals(DESTINATION_TYPE_TOPIC))  {
-	        return("topic");
-	    } else  {
-	        return("unknown");
-	    }
+
+    private String toStringLabel(String type) {
+        if (type.equals(DESTINATION_TYPE_QUEUE)) {
+            return ("queue");
+        } else if (type.equals(DESTINATION_TYPE_TOPIC)) {
+            return ("topic");
+        } else {
+            return ("unknown");
+        }
     }
 
-    }
+}

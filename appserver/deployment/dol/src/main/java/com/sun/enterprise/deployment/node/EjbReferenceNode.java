@@ -30,23 +30,23 @@ import org.w3c.dom.Node;
  * This class handles all information in the ejb-reference xml node
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
 
     protected EjbReference descriptor;
-    
+
     public EjbReferenceNode() {
         super();
-        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET), 
-                                InjectionTargetNode.class, "addInjectionTarget");                          
+        registerElementHandler(new XMLElement(TagNames.INJECTION_TARGET),
+                                InjectionTargetNode.class, "addInjectionTarget");
     }
 
     @Override
     public EjbReference getDescriptor() {
         if (descriptor==null) {
             descriptor = new EjbReferenceDescriptor();
-            descriptor.setLocal(false);   
+            descriptor.setLocal(false);
         }
         return descriptor;
     }
@@ -59,7 +59,7 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
         table.put(TagNames.HOME, "setEjbHomeInterface");
         table.put(TagNames.REMOTE, "setEjbInterface");
         table.put(TagNames.LOCAL_HOME, "setEjbHomeInterface");
-        table.put(TagNames.LOCAL, "setEjbInterface");        
+        table.put(TagNames.LOCAL, "setEjbInterface");
         table.put(TagNames.EJB_LINK, "setLinkName");
         table.put(TagNames.MAPPED_NAME, "setMappedName");
         table.put(TagNames.LOOKUP_NAME, "setLookupName");
@@ -67,7 +67,7 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
     }
 
     @Override
-    public Node writeDescriptor(Node parent, String nodeName, EjbReference descriptor) {    
+    public Node writeDescriptor(Node parent, String nodeName, EjbReference descriptor) {
         Node ejbRefNode = appendChild(parent, nodeName);
         if (descriptor instanceof Descriptor) {
             Descriptor ejbRefDesc = (Descriptor)descriptor;
@@ -79,14 +79,14 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
             appendTextChild(ejbRefNode, TagNames.LOCAL_HOME, descriptor.getEjbHomeInterface());
             appendTextChild(ejbRefNode, TagNames.LOCAL, descriptor.getEjbInterface());
         } else {
-            appendTextChild(ejbRefNode, TagNames.HOME, descriptor.getEjbHomeInterface());                
+            appendTextChild(ejbRefNode, TagNames.HOME, descriptor.getEjbHomeInterface());
             appendTextChild(ejbRefNode, TagNames.REMOTE, descriptor.getEjbInterface());
         }
-        appendTextChild(ejbRefNode, TagNames.EJB_LINK, descriptor.getLinkName());        
+        appendTextChild(ejbRefNode, TagNames.EJB_LINK, descriptor.getLinkName());
 
         if( descriptor instanceof EnvironmentProperty) {
             EnvironmentProperty envProp = (EnvironmentProperty)descriptor;
-            appendTextChild(ejbRefNode, TagNames.MAPPED_NAME, envProp.getMappedName()); 
+            appendTextChild(ejbRefNode, TagNames.MAPPED_NAME, envProp.getMappedName());
         }
         if( descriptor.isInjectable() ) {
             InjectionTargetNode ijNode = new InjectionTargetNode();
@@ -100,6 +100,6 @@ public class EjbReferenceNode extends DeploymentDescriptorNode<EjbReference> {
         }
 
         return ejbRefNode;
-    }        
-        
+    }
+
 }

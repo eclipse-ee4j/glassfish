@@ -95,7 +95,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
     AppClientContainerBuilder() {
 
     }
-    
+
     /**
      * Creates a new builder with the specified target servers and client URI.
      *
@@ -111,11 +111,11 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         prepareHabitat();
         Launchable client = Launchable.LaunchableUtil.newLaunchable(
                 ACCModulesManager.getHabitat(), mainClass);
-        AppClientContainer container = createContainer(client, 
+        AppClientContainer container = createContainer(client,
                 callerSpecifiedCallbackHandler, false /* istextAuth */);
         return container;
     }
-    
+
     public AppClientContainer newContainer(final Class mainClass) throws Exception {
         return newContainer(mainClass, null);
 
@@ -144,7 +144,7 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
                 callerSpecifiedAppClientName,
                 ACCModulesManager.getHabitat());
 
-        AppClientContainer container = createContainer(client, 
+        AppClientContainer container = createContainer(client,
                 callerSpecifiedCallbackHandler, isTextAuth);
         return container;
     }
@@ -161,8 +161,8 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
         container.processPermissions();
         container.setClient(client);
         container.setBuilder(this);
-        CallbackHandler callbackHandler = 
-                (callerSuppliedCallbackHandler != null ? 
+        CallbackHandler callbackHandler =
+                (callerSuppliedCallbackHandler != null ?
                     callerSuppliedCallbackHandler : getCallbackHandlerFromDescriptor(client.getDescriptor(classLoader).getCallbackHandler()));
         container.prepareSecurity(targetServers, messageSecurityConfigs, containerProperties,
                 clientCredential, callbackHandler, classLoader, isTextAuth);
@@ -237,11 +237,11 @@ public class AppClientContainerBuilder implements AppClientContainer.Builder {
             if (newPropValue == null) {
                 throw new RuntimeException(localStrings.getLocalString(
                         AppClientContainerBuilder.class,
-                        "appclient.missingValue", 
+                        "appclient.missingValue",
                         "Value for {0} expected but was not configured or assigned",
                         new Object[] {propName}
                         ));
-                        
+
             }
             System.setProperty(propName, newPropValue);
         }

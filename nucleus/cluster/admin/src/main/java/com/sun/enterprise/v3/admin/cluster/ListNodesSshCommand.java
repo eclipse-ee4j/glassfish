@@ -40,8 +40,8 @@ import org.glassfish.hk2.api.PerLookup;
 @I18n("list.nodes.ssh.command")
 @RestEndpoints({
     @RestEndpoint(configBean=Nodes.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-nodes-ssh", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-nodes-ssh",
         description="list-nodes-ssh")
 })
 public class ListNodesSshCommand implements AdminCommand{
@@ -50,12 +50,12 @@ public class ListNodesSshCommand implements AdminCommand{
     Servers servers;
     @Inject
     private Nodes nodes;
-    
+
     @Param(optional = true, defaultValue = "false", name="long", shortName="l")
     private boolean long_opt;
     @Param(optional = true)
     private boolean terse;
-   
+
     private ActionReport report;
     Logger logger;
 
@@ -71,7 +71,7 @@ public class ListNodesSshCommand implements AdminCommand{
         String nodeList = lnh.getNodeList();
 
          report.setMessage(nodeList);
-        
+
         report.setActionExitCode(ExitCode.SUCCESS);
 
     }

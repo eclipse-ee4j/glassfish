@@ -27,21 +27,21 @@ import org.jvnet.hk2.annotations.Service;
 @Service
 @NamespacePrefixes({ JavaCompNamingProxy.IN_APPCLIENT_CONTAINER })
 public final class JavaCompNamingProxy implements NamedNamingObjectProxy {
-	static final String IN_APPCLIENT_CONTAINER = "java:comp/InAppClientContainer";
-	@Inject
-	private ProcessEnvironment processEnv;
+    static final String IN_APPCLIENT_CONTAINER = "java:comp/InAppClientContainer";
+    @Inject
+    private ProcessEnvironment processEnv;
 
-	@Override
-	public Object handle(String name) throws NamingException {
-		if (IN_APPCLIENT_CONTAINER.equals(name)) {
-			Boolean isInAppClientContainer = Boolean.FALSE;
-			if (processEnv.getProcessType() == ProcessEnvironment.ProcessType.ACC) {
-				isInAppClientContainer = Boolean.TRUE;
-			} else if (processEnv.getProcessType() == ProcessEnvironment.ProcessType.Other) {
-				throw new NamingException("Lookup failed for '" + name + "'");
-			}
-			return isInAppClientContainer;
-		}
-		return null;
-	}
+    @Override
+    public Object handle(String name) throws NamingException {
+        if (IN_APPCLIENT_CONTAINER.equals(name)) {
+            Boolean isInAppClientContainer = Boolean.FALSE;
+            if (processEnv.getProcessType() == ProcessEnvironment.ProcessType.ACC) {
+                isInAppClientContainer = Boolean.TRUE;
+            } else if (processEnv.getProcessType() == ProcessEnvironment.ProcessType.Other) {
+                throw new NamingException("Lookup failed for '" + name + "'");
+            }
+            return isInAppClientContainer;
+        }
+        return null;
+    }
 }

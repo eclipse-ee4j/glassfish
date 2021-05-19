@@ -19,7 +19,7 @@ import java.net.*;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * This unit test expects the following Set-Cookie response header, based on 
+ * This unit test expects the following Set-Cookie response header, based on
  * the cookie-properties specified using ServletContext.setSessionCookieConfig
  *
  *   Set-Cookie: JSESSIONID=[...]; Domain=.iplanet.com; Path=/
@@ -64,7 +64,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for ServletContext SessionCookieConfig");
         WebTest webTest = new WebTest(args);
@@ -100,7 +100,7 @@ public class WebTest {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                     fail = true;
                 }
-	    } else {
+            } else {
                 System.err.println("Missing cookie domain");
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;
@@ -115,7 +115,7 @@ public class WebTest {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                     fail = true;
                 }
-	    } else {
+            } else {
                 System.err.println("Missing cookie path");
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;
@@ -130,7 +130,7 @@ public class WebTest {
                     stat.addStatus(TEST_NAME, stat.FAIL);
                     fail = true;
                 }
-	    } else {
+            } else {
                 System.err.println("Missing cookie comment");
                 stat.addStatus(TEST_NAME, stat.FAIL);
                 fail = true;
@@ -157,7 +157,7 @@ public class WebTest {
         }
 
         return;
-        
+
     }
 
     private String getCookieField(String cookie, String field) {

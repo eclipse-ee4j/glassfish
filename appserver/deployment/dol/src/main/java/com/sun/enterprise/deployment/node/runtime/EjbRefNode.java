@@ -35,34 +35,34 @@ import java.util.logging.Level;
  * for ejb-ref
  *
  * @author Jerome Dochez
- * @version 
+ * @version
  */
 public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
 
     EjbReference descriptor=null;
-    
+
    /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
    public EjbReference getDescriptor() {
         return descriptor;
-    }            
-    
+    }
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
-    protected Map getDispatchTable() {    
+     */
+    protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
         table.put(RuntimeTagNames.JNDI_NAME, "setJndiName");
         return table;
     }
-    
+
     /**
      * receives notiification of the value for a particular tag
-     * 
+     *
      * @param element the xml element
      * @param value it's associated value
      */
@@ -83,7 +83,7 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
             }
         } else super.setElementValue(element, value);
     }
-    
+
     /**
      * write the descriptor class to a DOM tree and return it
      *
@@ -91,8 +91,8 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
      * @param node name for the descriptor
      * @param the descriptor to write
      * @return the DOM tree top node
-     */    
-    public Node writeDescriptor(Node parent, String nodeName, EjbReference ejbRef) {        
+     */
+    public Node writeDescriptor(Node parent, String nodeName, EjbReference ejbRef) {
         Node ejbRefNode = appendChild(parent, nodeName);
         appendTextChild(ejbRefNode, RuntimeTagNames.EJB_REFERENCE_NAME, ejbRef.getName());
 
@@ -114,15 +114,15 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
 
         return ejbRefNode;
     }
-    
+
     /**
      * writes all the runtime information for ejb references
-     * 
+     *
      * @param parent node to add the runtime xml info
      * @param the J2EE component containing ejb references
      */
     public static void writeEjbReferences(Node parent, EjbReferenceContainer descriptor) {
-        
+
         // ejb-ref*
         Iterator ejbRefs = descriptor.getEjbReferenceDescriptors().iterator();
         if (ejbRefs.hasNext()) {
@@ -133,6 +133,6 @@ public class EjbRefNode extends DeploymentDescriptorNode<EjbReference> {
                     refNode.writeDescriptor(parent, RuntimeTagNames.EJB_REFERENCE, ejbRef );
                 }
             }
-        }          
-    }    
+        }
+    }
 }

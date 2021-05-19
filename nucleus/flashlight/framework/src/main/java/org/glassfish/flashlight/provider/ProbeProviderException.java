@@ -29,6 +29,6 @@ public class ProbeProviderException
 
     public ProbeProviderException(String msg, Throwable th) {
             super(msg, th);
-    }            
+    }
 
 }

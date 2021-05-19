@@ -39,17 +39,17 @@
         </delete>
         <record name="lazyinit.output" action="start" />
         <ant dir="converter" target="all"/>
-        <ant dir="ejbjar" target="all"/>  
+        <ant dir="ejbjar" target="all"/>
         <!--
-        <ant dir="ejbws" target="all"/>  
+        <ant dir="ejbws" target="all"/>
         -->
-        <ant dir="jms1/simple" target="all"/>  
-        <ant dir="jms2/simple" target="all"/>  
-        <ant dir="jms3/simple" target="all"/>  
-        <ant dir="jmsweb" target="all"/>  
-        <ant dir="mbeans1" target="all"/>  
-        <ant dir="onlygetconnectionservlet" target="all"/>  
-        <ant dir="standalonewar" target="all"/> 
+        <ant dir="jms1/simple" target="all"/>
+        <ant dir="jms2/simple" target="all"/>
+        <ant dir="jms3/simple" target="all"/>
+        <ant dir="jmsweb" target="all"/>
+        <ant dir="mbeans1" target="all"/>
+        <ant dir="onlygetconnectionservlet" target="all"/>
+        <ant dir="standalonewar" target="all"/>
         <ant dir="timer" target="all"/>
         <ant dir="webear" target="all"/>
         <ant dir="jms-txlookup" target="all"/>
@@ -58,9 +58,9 @@
     </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes all the lazyInit tests)
-	</echo>
+    <echo>
+        Usage:
+            ant all (Executes all the lazyInit tests)
+    </echo>
     </target>
 </project>

@@ -88,5 +88,5 @@ public class CustomerCheckingEJB extends CustomerEJB
   }
 
 }
-    
-    
+
+

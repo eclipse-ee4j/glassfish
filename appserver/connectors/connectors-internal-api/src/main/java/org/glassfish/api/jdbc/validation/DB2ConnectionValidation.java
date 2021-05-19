@@ -26,5 +26,5 @@ package org.glassfish.api.jdbc.validation;
  * @author Shalini M
  */
 public class DB2ConnectionValidation extends DefaultConnectionValidation {
-    
+
 }

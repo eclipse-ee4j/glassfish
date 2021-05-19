@@ -31,7 +31,7 @@ import org.apache.felix.service.command.CommandSession;
 /**
  * This delegating class is used to overcome some limitations of the
  * {@link CommandSession} interface when it comes to session management.
- * 
+ *
  * <p>
  * Once implementations are mature enough to not assume environmental behavior
  * this class will become obsolete.
@@ -52,8 +52,8 @@ public class RemoteCommandSession {
 
     /**
      * Get the identifier for this session, which is a UUID of type 4.
-     * 
-     * @return 
+     *
+     * @return
      */
     public String getId() {
         return id;
@@ -62,13 +62,13 @@ public class RemoteCommandSession {
     /**
      * Attached the specified streams to the delegate of this instance and
      * returns the modified delegate.
-     * 
+     *
      * @param in The "stdin" stream for the session
      * @param out The "stdout" stream for the session
      * @param err The "stderr" stream for the session
-     * 
+     *
      * @return The modified {@link CommandSession} delegate
-     * 
+     *
      * @see #detach()
      */
     public CommandSession attach(InputStream in, PrintStream out, PrintStream err) {
@@ -85,7 +85,7 @@ public class RemoteCommandSession {
     /**
      * Detaches all previously attached streams and hence, ensures that there
      * are no stale references left.
-     * 
+     *
      * @see #attach(java.io.InputStream, java.io.PrintStream, java.io.PrintStream)
      */
     public void detach() {

@@ -27,14 +27,14 @@ import java.util.regex.Pattern;
  * @author martinmares
  */
 public class ProgressMessage {
-    
+
     private static final Pattern RGXP = Pattern.compile(" *(\\d+)(%)?:(.+:)?(.*)");
-    
+
     private final int value;
     private final boolean percentage;
     private final String scope;
     private final String message;
-    
+
     public ProgressMessage(String txt) throws IllegalArgumentException {
         Matcher matcher = RGXP.matcher(txt);
         if (!matcher.matches()) {
@@ -45,7 +45,7 @@ public class ProgressMessage {
         this.scope = nvlTrim(matcher.group(3));
         this.message = nvlTrim(matcher.group(4));
     }
-    
+
     private static String nvlTrim(String txt) {
         if (txt != null) {
             txt = txt.trim();
@@ -68,7 +68,7 @@ public class ProgressMessage {
     public String getMessage() {
         return message;
     }
-    
+
     public static List<ProgressMessage> grepProgressMessages(String txt) {
         StringTokenizer stok = new StringTokenizer(txt, "\n\r");
         List<ProgressMessage> result = new ArrayList<ProgressMessage>();
@@ -82,13 +82,13 @@ public class ProgressMessage {
         }
         return result;
     }
-    
+
     /** Unique only that not equal with previous.
      */
     public static String[] uniqueMessages(List<ProgressMessage> pms) {
         List<String> messages = new ArrayList<String>();
         for (ProgressMessage pm : pms) {
-            if (pm.getMessage() != null && 
+            if (pm.getMessage() != null &&
                     (messages.isEmpty() || !pm.getMessage().equals(messages.get(messages.size() - 1)))) {
                 messages.add(pm.getMessage());
             }
@@ -96,7 +96,7 @@ public class ProgressMessage {
         String[] result = new String[messages.size()];
         return messages.toArray(result);
     }
-    
+
     public static boolean isNonDecreasing(List<ProgressMessage> pms) {
         if (pms == null) {
             return false;
@@ -111,5 +111,5 @@ public class ProgressMessage {
         }
         return true;
     }
-    
+
 }

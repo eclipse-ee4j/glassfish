@@ -136,7 +136,7 @@ public class VersioningUtils {
      */
     public static final void checkIdentifier(String appName)
             throws VersioningException {
-        
+
         String identifier = getExpression(appName);
         if (identifier != null && identifier.contains(EXPRESSION_WILDCARD)) {
             throw new VersioningWildcardException(
@@ -267,19 +267,19 @@ public class VersioningUtils {
      * @return a valid repository name
      */
     public static final String getRepositoryName(String appName) {
-        
+
         return appName.replace(EXPRESSION_SEPARATOR, REPOSITORY_DASH);
     }
 
     /**
      * Test if the given application name is an untagged name
-     * 
+     *
      * @param appName the application name
      * @return <code>true</code> is the given application name is not versioned
      * @throws VersioningSyntaxException if getUntaggedName
      * throws exception
      */
-    public static final Boolean isUntagged(String appName) 
+    public static final Boolean isUntagged(String appName)
             throws VersioningSyntaxException {
 
         Boolean isUntagged = false;
@@ -300,7 +300,7 @@ public class VersioningUtils {
      */
     public static final Boolean isVersionExpression(String appName)
             throws VersioningSyntaxException {
-        
+
         Boolean isVersionExpression = false;
         if(appName != null){
             isVersionExpression = !isUntagged(appName);
@@ -334,9 +334,9 @@ public class VersioningUtils {
      * @throws VersioningSyntaxException if isVersionExpression
      * throws exception
      */
-    public static final Boolean isVersionIdentifier(String appName) 
+    public static final Boolean isVersionIdentifier(String appName)
             throws VersioningSyntaxException{
-        
+
         return isVersionExpression(appName) &&
                 !appName.contains(EXPRESSION_WILDCARD);
     }

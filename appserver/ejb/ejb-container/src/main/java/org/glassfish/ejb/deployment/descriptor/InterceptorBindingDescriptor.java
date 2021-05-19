@@ -25,11 +25,11 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * Contains a single interceptor binding entry.
- */ 
+ */
 public class InterceptorBindingDescriptor extends Descriptor
 {
     public enum BindingType {
-        
+
         DEFAULT,
         CLASS,
         METHOD
@@ -45,9 +45,9 @@ public class InterceptorBindingDescriptor extends Descriptor
     // Ordered list of interceptor classes.
     private LinkedList<String> interceptors = new LinkedList<String>();
 
-    // True if interceptor list represents a total ordering.  
+    // True if interceptor list represents a total ordering.
     private boolean isTotalOrdering;
-    
+
     // Only applies to CLASS or METHOD
     private boolean excludeDefaultInterceptors;
 
@@ -96,7 +96,7 @@ public class InterceptorBindingDescriptor extends Descriptor
     public void appendInterceptorClass(String interceptor) {
         interceptors.addLast(interceptor);
     }
-    
+
     public List<String> getInterceptorClasses() {
         return new LinkedList<String>(interceptors);
     }
@@ -124,5 +124,5 @@ public class InterceptorBindingDescriptor extends Descriptor
     public boolean getExcludeClassInterceptors() {
         return excludeClassInterceptors;
     }
-    
+
 }

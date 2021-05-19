@@ -31,8 +31,8 @@ import test.ejb.stateful.SFHello;
 
 @DeclareRoles({"staff"})
 public class ServletTest {
-    private @EJB SFHello sful1; 
-    private @EJB(name="ejb/sfhello") SFHello sful2; 
+    private @EJB SFHello sful1;
+    private @EJB(name="ejb/sfhello") SFHello sful2;
 
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {

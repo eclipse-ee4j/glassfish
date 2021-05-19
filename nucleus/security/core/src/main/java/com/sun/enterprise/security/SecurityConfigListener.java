@@ -50,19 +50,19 @@ import org.glassfish.hk2.api.PostConstruct;
 @Service
 @Singleton
 public class SecurityConfigListener implements ConfigListener, PostConstruct {
-    
+
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     SecurityService securityService;
-    
+
     @Inject
     private Logger logger;
-    
+
     @Inject
     private RealmsManager realmsManager;
 
     @Inject
     BaseAuditManager auditManager;
-    
+
     private String auditEnabled = null;
     private String defaultRealm = null;
     private String jacc = null;
@@ -70,7 +70,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     private String mappedPrincipalClassName = null;
 
     public SecurityConfigListener() {
-        
+
     }
      /**
      * Notification that @Configured objects that were injected have changed
@@ -155,7 +155,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
             }
             return np;
         }
-        
+
         private <T extends ConfigBeanProxy> NotProcessed handleChangeEvent(final T instance) {
             NotProcessed np = null;
             if(instance instanceof AuthRealm){
@@ -173,7 +173,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
                // The only Attrs on securityService whose change in value can affect the
                // security code are those which are stored explicitly
                // they are getAuditEnabled, getDefaultRealm and getAuditModules
-               if (defaultRealm != null && 
+               if (defaultRealm != null &&
                        !defaultRealm.equals(((SecurityService)instance).getDefaultRealm())) {
                    defaultRealm = ((SecurityService)instance).getDefaultRealm();
                    Realm.setDefaultRealm(defaultRealm);
@@ -363,16 +363,16 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         //even defaultPrincipal and defaultPrincipalPassword is directly being
         //read from securityService.
         auditEnabled = securityService.getAuditEnabled();
-        defaultRealm = securityService.getDefaultRealm();        
-        jacc = securityService.getJacc();      
+        defaultRealm = securityService.getDefaultRealm();
+        jacc = securityService.getJacc();
         if(jacc == null) {
             jacc = "default";
         }
         activateDefaultP2RMapping = securityService.getActivateDefaultPrincipalToRoleMapping();
         mappedPrincipalClassName = securityService.getMappedPrincipalClass();
-        
+
     }
-    
+
     /**
      * New audit module created.
      * It is called whenever a AuditModuleEvent with action of
@@ -400,7 +400,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
      * AuditModuleEvent.ACTION_DELETE is received.
      */
     public void auditModuleDeleted(AuditModule instance) {
-       
+
         auditManager.removeAuditModule(instance.getName());
     }
 
@@ -421,7 +421,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
             }
             // we don't have a way to get hold of the Old Module in V3
             // so we would always delete and create new
-           
+
             auditManager.addAuditModule(instance.getName(), instance.getClassname(), properties);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -429,6 +429,6 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
 
-    
+
 
 }

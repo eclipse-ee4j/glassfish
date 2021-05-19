@@ -24,7 +24,7 @@ import com.sun.s1asdev.jdbc.onlygetconnection.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
-    
+
     private SimpleReporterAdapter stat = new SimpleReporterAdapter();
     private String testSuite = "jdbc-onlygetconnection ";
     private NoTxConnTest bean;
@@ -33,22 +33,22 @@ public class Client {
     public static void main(String[] args)
         throws Exception {
 
-// 	SimpleReporterAdapter stat = new SimpleReporterAdapter();
+//         SimpleReporterAdapter stat = new SimpleReporterAdapter();
 //
 //        InitialContext ic = new InitialContext();
 //        Object objRef = ic.lookup("java:comp/env/ejb/NoTxConnTestEJB");
-//	NoTxConnTestHome home = (NoTxConnTestHome)
+//        NoTxConnTestHome home = (NoTxConnTestHome)
 //            javax.rmi.PortableRemoteObject.narrow(objRef, NoTxConnTestHome.class);
 //
 //        NoTxConnTest bean = home.create();
 
 //      if ( bean.test1() ) {
-//	    stat.addStatus(testSuite+" test1 : ", stat.PASS);
-//	} else {
-//	    stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-//	}
-//	stat.printSummary();
-        
+//            stat.addStatus(testSuite+" test1 : ", stat.PASS);
+//        } else {
+//            stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+//        }
+//        stat.printSummary();
+
         if ( args.length == 0 ) {
             (new Client()).runSingleThreaded();
         } else {
@@ -60,35 +60,35 @@ public class Client {
                 (new Client()).runMultiThreaded( numRuns );
             }
         }
-        
+
     }
 
     public Client() throws Exception {
         InitialContext ic = new InitialContext();
         Object objRef = ic.lookup("java:comp/env/ejb/NoTxConnTestEJB");
-	NoTxConnTestHome home = (NoTxConnTestHome)
+        NoTxConnTestHome home = (NoTxConnTestHome)
             javax.rmi.PortableRemoteObject.narrow(objRef, NoTxConnTestHome.class);
 
         bean = home.create();
     }
-   
+
     public void runSingleThreaded() throws Exception {
         if ( bean.test1() ) {
-	    stat.addStatus(testSuite+" test1 : ", stat.PASS);
-	} else {
-	    stat.addStatus(testSuite+" test1 : ", stat.FAIL);
-	}
-	stat.printSummary();
- 
+            stat.addStatus(testSuite+" test1 : ", stat.PASS);
+        } else {
+            stat.addStatus(testSuite+" test1 : ", stat.FAIL);
+        }
+        stat.printSummary();
+
     }
 
-    
+
     public void runMultiThreaded( int numThreads ) throws Exception {
         MTClient[] mtc = new MTClient[ numThreads ];
         boolean result = true;
         int failCount = 0;
 
-        for ( int i = 0; i < numThreads; i++) { 
+        for ( int i = 0; i < numThreads; i++) {
             mtc[i] = new MTClient( i );
             mtc[i].start();
         }
@@ -97,15 +97,15 @@ public class Client {
         for ( int i = 0; i < numThreads; i++ ) {
             mtc[i].join();
         }
-        
+
         for ( int i = 0; i < numThreads; i++ ) {
             result &= mtc[i].result;
             if ( !mtc[i].result ) {
                 failCount++;
             }
-            
+
         }
-        
+
         System.out.println("Total Threads: " + numThreads );
         System.out.println("Total Passed : " + (numThreads - failCount ) );
         System.out.println("Total Failed : " + failCount );
@@ -115,7 +115,7 @@ public class Client {
         } else {
             stat.addStatus( testSuite + " multithreaded-test : " , stat.FAIL );
         }
-        
+
         stat.printSummary();
     }
 
@@ -126,7 +126,7 @@ public class Client {
         MTClient( int id ) {
             id_ = id;
         }
-        
+
         public void run() {
             try {
                 result = bean.test1();

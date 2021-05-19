@@ -38,17 +38,17 @@ public class SimpleMessageBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In "
             + "SimpleMessageBean.setMessageDrivenContext()");
-	this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     public void ejbCreate() {
-	System.out.println("In SimpleMessageBean.ejbCreate()");
+        System.out.println("In SimpleMessageBean.ejbCreate()");
     }
 
     public void onMessage(Message inMessage) {
         TextMessage msg = null;
 
-	updateDB();
+        updateDB();
 
         try {
             if (inMessage instanceof TextMessage) {
@@ -64,7 +64,7 @@ public class SimpleMessageBean implements MessageDrivenBean,
         } catch (Throwable te) {
             te.printStackTrace();
         }
-	throw new RuntimeException("Test exception");
+        throw new RuntimeException("Test exception");
     }  // onMessage
 
     private void updateDB() {
@@ -76,18 +76,18 @@ public class SimpleMessageBean implements MessageDrivenBean,
             java.sql.Connection con = DriverManager.getConnection(url,"dbuser", "dbpassword");
             //java.sql.Connection con = DriverManager.getConnection(url,"connector", "connector");
             ResultSet rs = con.createStatement().executeQuery("select exCount from mq_cmt_excpt");
-	    int count = 0;
-	    while (rs.next()){
-	        count = rs.getInt(1);
-	    }
-	    rs.close();
-	    count++;
-	    String qry = "update mq_cmt_excpt set exCount="+ count ;
-	    con.createStatement().executeUpdate(qry);
-	    con.close();
-	} catch(Exception e) {
+            int count = 0;
+            while (rs.next()){
+                count = rs.getInt(1);
+            }
+            rs.close();
+            count++;
+            String qry = "update mq_cmt_excpt set exCount="+ count ;
+            con.createStatement().executeUpdate(qry);
+            con.close();
+        } catch(Exception e) {
            System.out.println("Error:" + e.getMessage());
-	} 
+        }
     }
 
     public void ejbRemove() {

@@ -34,5 +34,5 @@ public class AppClientPersistenceDependencyAnnotationScanner extends AbstractAnn
         annotationsSet.add("Ljakarta/persistence/PersistenceUnit");
         annotationsSet.add("Ljakarta/persistence/PersistenceUnits");
     }
-    
+
 }

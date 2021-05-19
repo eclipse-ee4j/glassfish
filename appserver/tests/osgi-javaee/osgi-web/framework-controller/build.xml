@@ -61,14 +61,14 @@
     </target>
 
     <target name="unsetup">
-	<antcall target="undeploy-application">
-	  <param name="appname" value="${appname}"/>
-	</antcall>
+    <antcall target="undeploy-application">
+      <param name="appname" value="${appname}"/>
+    </antcall>
     </target>
 
     <target name="runtest">
-	<antcall target="test">
-	  <param name="testURL" value="http://localhost:8080/testREST" />
+    <antcall target="test">
+      <param name="testURL" value="http://localhost:8080/testREST" />
         </antcall>
     </target>
 

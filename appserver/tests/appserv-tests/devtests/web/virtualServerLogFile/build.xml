@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall target="clean-common"/>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -130,7 +130,7 @@
     <target name="deploy" depends="init-common">
       <antcall target="deploy-war-common"/>
     </target>
-    
+
     <target name="run" depends="init-common">
       <java classname="WebTest">
         <arg value="${http.host}"/>
@@ -157,7 +157,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="restore" depends="init-common">
       <delete dir="${env.S1AS_HOME}/domains/domain1/logs/vslogs"/>

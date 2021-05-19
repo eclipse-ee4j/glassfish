@@ -32,33 +32,33 @@ import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * Handles @jakarta.ejb.ApplicationException 
+ * Handles @jakarta.ejb.ApplicationException
  */
 @Service
 @AnnotationHandlerFor(ApplicationException.class)
 public class ApplicationExceptionHandler extends AbstractHandler {
-    
+
     public ApplicationExceptionHandler() {
     }
-    
+
      public HandlerProcessingResult processAnnotation
          (AnnotationInfo ainfo) throws AnnotationProcessorException {
 
         AnnotatedElement ae = ainfo.getAnnotatedElement();
         Annotation annotation = ainfo.getAnnotation();
 
-        AnnotatedElementHandler aeHandler = 
+        AnnotatedElementHandler aeHandler =
             ainfo.getProcessingContext().getHandler();
-        
+
 
         if (aeHandler instanceof EjbBundleContext) {
             EjbBundleContext ejbBundleContext = (EjbBundleContext)aeHandler;
-            
+
             EjbBundleDescriptorImpl ejbBundle = (EjbBundleDescriptorImpl) ejbBundleContext.getDescriptor();
 
             ApplicationException appExcAnn = (ApplicationException) annotation;
 
-            EjbApplicationExceptionInfo appExcInfo = new 
+            EjbApplicationExceptionInfo appExcInfo = new
                 EjbApplicationExceptionInfo();
             Class annotatedClass = (Class) ae;
             appExcInfo.setExceptionClassName(annotatedClass.getName());

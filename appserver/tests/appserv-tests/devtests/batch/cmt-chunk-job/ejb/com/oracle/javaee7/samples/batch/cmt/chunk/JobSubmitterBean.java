@@ -45,75 +45,75 @@ public class JobSubmitterBean
     }
 
     public long submitJob(String jobName) {
-	try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
+        try {
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
 
-	  Properties props = new Properties();
-	  for (int i=0; i<3; i++)
-		props.put(jobName + "-Key-" + i, jobName+"-Value-" + i);
-	  return  jobOperator.start(jobName, props);
+          Properties props = new Properties();
+          for (int i=0; i<3; i++)
+                props.put(jobName + "-Key-" + i, jobName+"-Value-" + i);
+          return  jobOperator.start(jobName, props);
         } catch (Exception ex) {
-	  throw new RuntimeException(ex);
-	}
+          throw new RuntimeException(ex);
+        }
     }
 
     public String getJobExitStatus(long executionId) {
-	try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
-	  JobExecution je =  jobOperator.getJobExecution(executionId);
-	  return je.getExitStatus();
-	} catch (Exception ex) {
-	  throw new RuntimeException(ex);
-	}
+        try {
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
+          JobExecution je =  jobOperator.getJobExecution(executionId);
+          return je.getExitStatus();
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
+        }
 
     }
 
     public Collection<String> listJobs(boolean useLongFormat) {
-	try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
-	  Set<String> jobs = new HashSet<String>();
-	  if (!useLongFormat) {
-	      for (String jobName : jobOperator.getJobNames()) {
-	          StringBuilder sb = new StringBuilder();
-		  sb.append(jobName).append(" ").append(jobOperator.getJobInstanceCount(jobName));
-		  jobs.add(sb.toString());
-	     }
+        try {
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
+          Set<String> jobs = new HashSet<String>();
+          if (!useLongFormat) {
+              for (String jobName : jobOperator.getJobNames()) {
+                  StringBuilder sb = new StringBuilder();
+                  sb.append(jobName).append(" ").append(jobOperator.getJobInstanceCount(jobName));
+                  jobs.add(sb.toString());
+             }
           } else {
-	     int index = 0;
-	     for (String jobName : jobOperator.getJobNames()) {
-		List<JobInstance> exe = jobOperator.getJobInstances(jobName, 0, Integer.MAX_VALUE - 1);
-		if (exe != null) {
-		   for (JobInstance ji : exe) {
-		      for (JobExecution je : jobOperator.getJobExecutions(ji)) {
-	                  StringBuilder sb = new StringBuilder();
+             int index = 0;
+             for (String jobName : jobOperator.getJobNames()) {
+                List<JobInstance> exe = jobOperator.getJobInstances(jobName, 0, Integer.MAX_VALUE - 1);
+                if (exe != null) {
+                   for (JobInstance ji : exe) {
+                      for (JobExecution je : jobOperator.getJobExecutions(ji)) {
+                          StringBuilder sb = new StringBuilder();
                           try {
                               sb.append(index++).append(" ").append(jobName).append(" ").append(((TaggedJobExecution) je).getTagName())
-			      	.append(" ").append(je.getBatchStatus()).append(" ").append(je.getExitStatus());
-	                      jobs.add(sb.toString());
+                                      .append(" ").append(je.getBatchStatus()).append(" ").append(je.getExitStatus());
+                              jobs.add(sb.toString());
                           } catch (Exception ex) {
-	                      jobs.add("Exception : " + sb.toString());
+                              jobs.add("Exception : " + sb.toString());
                           }
                       }
                    }
-		}
-	     }
-	   }
+                }
+             }
+           }
 
-	   return jobs;
-	} catch (Exception ex) {
-	  throw new RuntimeException(ex);
-	}
+           return jobs;
+        } catch (Exception ex) {
+          throw new RuntimeException(ex);
+        }
      }
 
     public Map<String, String> toMap(long executionId) {
        HashMap<String, String> map = new HashMap<String, String>();
        try {
-	  JobOperator jobOperator = BatchRuntime.getJobOperator();
-	  JobExecution je = jobOperator.getJobExecution(executionId);
+          JobOperator jobOperator = BatchRuntime.getJobOperator();
+          JobExecution je = jobOperator.getJobExecution(executionId);
           map.put("jobName", ""+je.getJobName());
           map.put("appName", ""+((TaggedJobExecution) je).getTagName());
 
-	  try {
+          try {
             map.put("instanceCount", ""+jobOperator.getJobInstanceCount(je.getJobName()));
           } catch (Exception ex) {}
 
@@ -129,39 +129,39 @@ public class JobSubmitterBean
 
        return map;
     }
-	
+
     public Collection<String> listJobExecutions(boolean useLongFormat, long... executinIds) {
-	Set<String> jobs = new HashSet<String>();
-	return jobs;
+        Set<String> jobs = new HashSet<String>();
+        return jobs;
     }
 
     public List<Long> getAllExecutionIds(String jobName) {
-	List<Long> list = new LinkedList<Long>();
-	try {
+        List<Long> list = new LinkedList<Long>();
+        try {
         if (jobName != null)
            getAllExecutionIds(jobName, list);
-	else {
-	   JobOperator jobOperator = BatchRuntime.getJobOperator();
-	   for (String jn : jobOperator.getJobNames())
+        else {
+           JobOperator jobOperator = BatchRuntime.getJobOperator();
+           for (String jn : jobOperator.getJobNames())
               getAllExecutionIds(jn, list);
-	}
+        }
         } catch (Exception ex) {
 
-	}
-	return list;
+        }
+        return list;
     }
 
     private void getAllExecutionIds(String jobName, List<Long> list)
-    	throws Exception {
-	JobOperator jobOperator = BatchRuntime.getJobOperator();
-	List<JobInstance> exe = jobOperator.getJobInstances(jobName, 0, Integer.MAX_VALUE - 1);
-	if (exe != null) {
-	   for (JobInstance ji : exe) {
-	      for (JobExecution je : jobOperator.getJobExecutions(ji)) {
+            throws Exception {
+        JobOperator jobOperator = BatchRuntime.getJobOperator();
+        List<JobInstance> exe = jobOperator.getJobInstances(jobName, 0, Integer.MAX_VALUE - 1);
+        if (exe != null) {
+           for (JobInstance ji : exe) {
+              for (JobExecution je : jobOperator.getJobExecutions(ji)) {
                  list.add(je.getExecutionId());
               }
            }
-	}
+        }
      }
 
 }

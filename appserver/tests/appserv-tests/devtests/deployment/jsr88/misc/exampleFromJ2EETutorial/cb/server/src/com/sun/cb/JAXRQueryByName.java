@@ -16,20 +16,20 @@
 
 package com.sun.cb;
 
-import javax.xml.registry.*; 
-import javax.xml.registry.infomodel.*; 
+import javax.xml.registry.*;
+import javax.xml.registry.infomodel.*;
 import java.net.*;
 import java.util.*;
 
 /**
- * The JAXRQueryByName class consists of a main method, a 
- * makeConnection method, an executeQuery method, and some 
- * helper methods. It searches a registry for 
- * information about organizations whose names contain a 
+ * The JAXRQueryByName class consists of a main method, a
+ * makeConnection method, an executeQuery method, and some
+ * helper methods. It searches a registry for
+ * information about organizations whose names contain a
  * user-supplied string.
- * 
- * To run this program, use the command 
- * 
+ *
+ * To run this program, use the command
+ *
  *     ant -Dquery-string=<value> run-query
  *
  * after starting Tomcat and Xindice.
@@ -50,7 +50,7 @@ public class JAXRQueryByName {
         }
         String queryString = new String(args[0]);
         System.out.println("Query string is " + queryString);
-        
+
         JAXRQueryByName jq = new JAXRQueryByName();
 
         connection = jq.makeConnection(queryURL, publishURL);
@@ -61,11 +61,11 @@ public class JAXRQueryByName {
     /**
      * Establishes a connection to a registry.
      *
-     * @param queryUrl	the URL of the query registry
-     * @param publishUrl	the URL of the publish registry
+     * @param queryUrl        the URL of the query registry
+     * @param publishUrl        the URL of the publish registry
      * @return the connection
      */
-    public Connection makeConnection(String queryUrl, 
+    public Connection makeConnection(String queryUrl,
         String publishUrl) {
 
         /*
@@ -78,24 +78,24 @@ public class JAXRQueryByName {
         String httpProxyHost = "";
         String httpProxyPort = "";
 
-        /* 
-         * Define connection configuration properties. 
+        /*
+         * Define connection configuration properties.
          * For simple queries, you need the query URL.
-         * To obtain the connection factory class, set a System 
+         * To obtain the connection factory class, set a System
          *   property.
          */
         Properties props = new Properties();
         props.setProperty("javax.xml.registry.queryManagerURL",
             queryUrl);
-        props.setProperty("com.sun.xml.registry.http.proxyHost", 
+        props.setProperty("com.sun.xml.registry.http.proxyHost",
             httpProxyHost);
-        props.setProperty("com.sun.xml.registry.http.proxyPort", 
+        props.setProperty("com.sun.xml.registry.http.proxyPort",
             httpProxyPort);
 
         try {
-            // Create the connection, passing it the 
+            // Create the connection, passing it the
             // configuration properties
-            ConnectionFactory factory = 
+            ConnectionFactory factory =
                 ConnectionFactory.newInstance();
             factory.setProperties(props);
             connection = factory.createConnection();
@@ -110,11 +110,11 @@ public class JAXRQueryByName {
         }
         return connection;
     }
-    
+
     /**
      * Returns  organizations containing a string.
      *
-     * @param qString	the string argument
+     * @param qString        the string argument
      * @return a collection of organizations
      */
     public Collection executeQuery(String qString) {
@@ -137,25 +137,25 @@ public class JAXRQueryByName {
             //namePatterns.add("%" + qString + "%");
 
             // Find using the name
-            BulkResponse response = 
-                bqm.findOrganizations(findQualifiers, 
+            BulkResponse response =
+                bqm.findOrganizations(findQualifiers,
                     namePatterns, null, null, null, null);
             orgs = response.getCollection();
         } catch (Exception e) {
             e.printStackTrace();
             return null;
-        } 
-        
+        }
+
         return orgs;
     }
 
     /**
      * Returns the name value for a registry object.
      *
-     * @param ro	a RegistryObject
-     * @return		the String value
+     * @param ro        a RegistryObject
+     * @return                the String value
      */
-    public String getName(RegistryObject ro) 
+    public String getName(RegistryObject ro)
         throws JAXRException {
 
         try {
@@ -164,14 +164,14 @@ public class JAXRQueryByName {
             return "No Name";
         }
     }
-    
+
     /**
      * Returns the description value for a registry object.
      *
-     * @param ro	a RegistryObject
-     * @return		the String value
+     * @param ro        a RegistryObject
+     * @return                the String value
      */
-    public String getDescription(RegistryObject ro) 
+    public String getDescription(RegistryObject ro)
         throws JAXRException {
         try {
             return ro.getDescription().getValue();
@@ -179,14 +179,14 @@ public class JAXRQueryByName {
             return "No Description";
         }
     }
-    
+
     /**
      * Returns the key id value for a registry object.
      *
-     * @param ro	a RegistryObject
-     * @return		the String value
+     * @param ro        a RegistryObject
+     * @return                the String value
      */
-    public String getKey(RegistryObject ro) 
+    public String getKey(RegistryObject ro)
         throws JAXRException {
 
         try {

@@ -137,7 +137,7 @@ public class SimpleBMPBean
         Connection conFromDS = null;
         Connection conFromCompareDS = null;
         CallableStatement stmt = null;
-	PreparedStatement stmt1 = null;
+        PreparedStatement stmt1 = null;
         try {
             conFromDS = ds.getConnection();
             conFromCompareDS = compareDs.getConnection();
@@ -150,7 +150,7 @@ public class SimpleBMPBean
             stmt1.executeUpdate();
 
         } catch (SQLException sqe) {
-	    result = false;
+            result = false;
         } finally {
             try {
                 if (stmt1 != null) {

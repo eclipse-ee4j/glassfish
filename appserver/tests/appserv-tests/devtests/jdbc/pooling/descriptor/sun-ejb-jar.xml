@@ -27,15 +27,15 @@
       <jndi-name>com.sun.s1asdev.jdbc.pooling.ejb.SimpleSessionHome</jndi-name>
       <resource-ref>
         <res-ref-name>DataSource</res-ref-name>
-	<jndi-name>jdbc/nonxaresource</jndi-name>
+        <jndi-name>jdbc/nonxaresource</jndi-name>
       </resource-ref>
       <resource-ref>
         <res-ref-name>ContainerDataSource</res-ref-name>
-	<jndi-name>jdbc/nonxaresource-container</jndi-name>
+        <jndi-name>jdbc/nonxaresource-container</jndi-name>
       </resource-ref>
       <resource-ref>
         <res-ref-name>XADataSource</res-ref-name>
-	<jndi-name>jdbc/xaresource</jndi-name>
+        <jndi-name>jdbc/xaresource</jndi-name>
       </resource-ref>
     </ejb>
   </enterprise-beans>

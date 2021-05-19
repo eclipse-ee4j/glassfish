@@ -32,15 +32,15 @@ public class BadRealmException extends Exception
      * @param info describes the problem with the realm
      */
     public BadRealmException (String info) { super (info); }
-    
+
     public BadRealmException() {
         super();
     }
-    
+
     public BadRealmException(Throwable cause) {
         super(cause);
     }
-    
+
     public BadRealmException(String info, Throwable cause) {
         super(info, cause);
     }

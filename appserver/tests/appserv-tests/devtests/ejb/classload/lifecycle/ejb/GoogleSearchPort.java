@@ -21,10 +21,10 @@
 package com.sun.s1asdev.ejb.classload.lifecycle;
 
 public interface GoogleSearchPort extends java.rmi.Remote {
-    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url) throws 
+    public byte[] doGetCachedPage(java.lang.String key, java.lang.String url) throws
          java.rmi.RemoteException;
-    public java.lang.String doSpellingSuggestion(java.lang.String key, java.lang.String phrase) throws 
+    public java.lang.String doSpellingSuggestion(java.lang.String key, java.lang.String phrase) throws
          java.rmi.RemoteException;
-    public com.sun.s1asdev.ejb.classload.lifecycle.GoogleSearchResult doGoogleSearch(java.lang.String key, java.lang.String q, int start, int maxResults, boolean filter, java.lang.String restrict, boolean safeSearch, java.lang.String lr, java.lang.String ie, java.lang.String oe) throws 
+    public com.sun.s1asdev.ejb.classload.lifecycle.GoogleSearchResult doGoogleSearch(java.lang.String key, java.lang.String q, int start, int maxResults, boolean filter, java.lang.String restrict, boolean safeSearch, java.lang.String lr, java.lang.String ie, java.lang.String oe) throws
          java.rmi.RemoteException;
 }

@@ -29,16 +29,16 @@ import com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode;
  *
  * @author Jerome Dochez
  */
-public class ConnectorRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {  
-   
+public class ConnectorRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
      */
     public String getDeploymentDescriptorPath() {
-        return DescriptorConstants.S1AS_RAR_JAR_ENTRY; 
+        return DescriptorConstants.S1AS_RAR_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -46,7 +46,7 @@ public class ConnectorRuntimeDDFile extends ConfigurationDeploymentDescriptorFil
      * @param the descriptor for which we need the node
      */
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-   
+
         if (descriptor instanceof ConnectorDescriptor) {
             return new ConnectorNode((ConnectorDescriptor) descriptor);
         }

@@ -44,14 +44,14 @@ import java.util.logging.Logger;
 
 /**
  * Delete Connector Connection Pool Command
- * 
+ *
  */
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="delete-connector-connection-pool")
 @PerLookup
 @I18n("delete.connector.connection.pool")
 public class DeleteConnectorConnectionPool implements AdminCommand {
-    
+
     final private static LocalStringManagerImpl localStrings =
             new LocalStringManagerImpl(DeleteConnectorConnectionPool.class);
 
@@ -60,13 +60,13 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
 
     @Param(optional=true, defaultValue="false")
     private Boolean cascade;
-    
+
     @Param(name="poolname", primary=true)
     private String poolname;
-    
+
     @Inject
     private Domain domain;
-    
+
     @Inject
     private IterableProvider<Server> servers;
 
@@ -81,7 +81,7 @@ public class DeleteConnectorConnectionPool implements AdminCommand {
      */
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-        
+
         if (poolname == null) {
             report.setMessage(localStrings.getLocalString("delete.connector.connection.pool.noJndiName",
                             "No id defined for connector connection pool."));

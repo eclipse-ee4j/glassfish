@@ -53,7 +53,7 @@ class MyPrintWriter extends PrintWriter {
     }
 
     // our jsp writer only use write char[] off len
-    public void write(char[] cbuf, int off, int len) { 
+    public void write(char[] cbuf, int off, int len) {
         count += len - numOfCR(cbuf, off, len);
         super.write(cbuf, off, len);
     }

@@ -27,7 +27,7 @@ package com.sun.enterprise.deployment;
  * @author  dochez
  */
 public class PoolManagerConstants {
-    
+
     // transaction support levels
     static public final int NO_TRANSACTION = 0;
     static public final int LOCAL_TRANSACTION = 1;
@@ -40,5 +40,5 @@ public class PoolManagerConstants {
     // Credential Interest levels
     static public final String PASSWORD_CREDENTIAL = "jakarta.resource.spi.security.PasswordCredential";
     static public final String GENERIC_CREDENTIAL = "jakarta.resource.spi.security.GenericCredential";
-    
+
 }

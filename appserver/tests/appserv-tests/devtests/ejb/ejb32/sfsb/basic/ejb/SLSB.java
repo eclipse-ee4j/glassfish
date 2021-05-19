@@ -26,13 +26,13 @@ public class SLSB implements Hello2 {
 
     public void testRemove() {
         System.out.println("In SLSB::testRemove()");
-	bean.test("XYZ", 0);
+        bean.test("XYZ", 0);
         bean.testRemove();
         try {
-        	bean.foo();
-        	throw new RuntimeException("Removed bean got invoked!");
+                bean.foo();
+                throw new RuntimeException("Removed bean got invoked!");
         } catch(NoSuchEJBException nse) {
-        	System.out.println("SFSB has been removed, subsequent invocation got exception");
+                System.out.println("SFSB has been removed, subsequent invocation got exception");
         }
     }
 

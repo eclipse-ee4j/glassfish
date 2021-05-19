@@ -36,7 +36,7 @@ public class ClusterHelloworldTest extends AdminBaseDevTest {
         String i1url = "http://localhost:"+port1;
         String i2url = "http://localhost:"+port2;
         static String BASEDIR = System.getProperty("BASEDIR");
-        
+
         public boolean retStatus = false, ret1 = false,ret2 = false;
 
 
@@ -51,7 +51,7 @@ public class ClusterHelloworldTest extends AdminBaseDevTest {
     @Test(dependsOnMethods = { "clusterDeployTest" })
     public void clusterHelloWorldTest() throws Exception{
         System.out.println("Wait extra 5 sec for GF to generate helloworld app.");
-	Thread.currentThread().sleep(5000);
+    Thread.currentThread().sleep(5000);
         report(tn + "getapp1", matchString("Hello", getURL(i1url + "/helloworld/hi.jsp")));
         String s1 = getURL(i2url + "/helloworld/hi.jsp");
 //        System.out.println("output from instance 2:" + s1);

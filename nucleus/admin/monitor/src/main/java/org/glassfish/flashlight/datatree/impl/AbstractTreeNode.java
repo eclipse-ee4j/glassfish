@@ -120,7 +120,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     /**
      * Returns a mutable view of the children
-     * 
+     *
      * @return
      */
     @Override
@@ -130,7 +130,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     /**
      * Returns a mutable view of the children
-     * 
+     *
      * @return
      */
     @Override
@@ -272,7 +272,7 @@ public abstract class AbstractTreeNode implements TreeNode, Comparable<TreeNode>
 
     /**
      * Returns all the nodes under the current tree
-     * 
+     *
      * @return List of all nodes in the current tree
      */
     @Override

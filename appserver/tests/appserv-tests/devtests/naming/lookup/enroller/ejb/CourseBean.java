@@ -105,7 +105,7 @@ public class CourseBean implements EntityBean {
                 (DataSource) ic.lookup("java:comp/env/jdbc/bmp-enrollerDB");
             Context initial = new InitialContext();
             Object objref = initial.lookup("ejb/MyEnroller");
-            enrollerHome = 
+            enrollerHome =
                 (EnrollerHome) PortableRemoteObject.narrow(objref,
                                                            EnrollerHome.class);
         } catch (Exception ex) {

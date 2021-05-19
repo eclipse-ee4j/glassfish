@@ -18,9 +18,9 @@ package org.glassfish.flashlight.client;
 
 
 public interface ProbeClientInvoker {
-    
+
     public int getId();
 
     public void invoke(Object[] params);
-    
+
 }

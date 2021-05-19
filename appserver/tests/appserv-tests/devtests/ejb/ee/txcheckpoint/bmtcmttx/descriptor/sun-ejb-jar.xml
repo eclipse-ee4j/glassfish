@@ -25,7 +25,7 @@
         <jndi-name>ejb/ejb_ee_bmtcmttx_BMTSession</jndi-name>
         <bean-cache>
             <max-cache-size>8</max-cache-size>
-	    <resize-quantity>4</resize-quantity>
+            <resize-quantity>4</resize-quantity>
         </bean-cache>
      </ejb>
      <ejb>
@@ -33,7 +33,7 @@
         <jndi-name>ejb/ejb_ee_bmtcmttx_CMTSession</jndi-name>
         <bean-cache>
             <max-cache-size>8</max-cache-size>
-	    <resize-quantity>4</resize-quantity>
+            <resize-quantity>4</resize-quantity>
         </bean-cache>
      </ejb>
    </enterprise-beans>

@@ -36,7 +36,7 @@ import jakarta.ejb.EntityContext;
 
 /*
  * EJBTimerServiceWrappers is the application-level representation
- * of the EJB timer service. 
+ * of the EJB timer service.
  *
  * @author Kenneth Saks
  */
@@ -52,7 +52,7 @@ public class EJBTimerServiceWrapper implements TimerService {
     private Object timedObjectPrimaryKey_;
 
     public EJBTimerServiceWrapper(EJBTimerService timerService,
-                                  EJBContextImpl ejbContext) 
+                                  EJBContextImpl ejbContext)
     {
         timerService_ = timerService;
         ejbContext_   = ejbContext;
@@ -63,16 +63,16 @@ public class EJBTimerServiceWrapper implements TimerService {
     }
 
     public EJBTimerServiceWrapper(EJBTimerService timerService,
-                                  EntityContext entityContext) 
+                                  EntityContext entityContext)
     {
         this(timerService, ((EJBContextImpl)entityContext));
         entity_       = true;
-        // Delay access of primary key since this might have been called 
+        // Delay access of primary key since this might have been called
         // from ejbCreate
         timedObjectPrimaryKey_   = null;
     }
 
-    public Timer createTimer(long duration, Serializable info) 
+    public Timer createTimer(long duration, Serializable info)
         throws IllegalArgumentException, IllegalStateException, EJBException {
 
         checkCreateTimerCallPermission();
@@ -81,8 +81,8 @@ public class EJBTimerServiceWrapper implements TimerService {
         return createTimerInternal(duration, 0, info);
     }
 
-    public Timer createTimer(long initialDuration, long intervalDuration, 
-                             Serializable info) 
+    public Timer createTimer(long initialDuration, long intervalDuration,
+                             Serializable info)
         throws IllegalArgumentException, IllegalStateException, EJBException {
 
         checkCreateTimerCallPermission();
@@ -91,9 +91,9 @@ public class EJBTimerServiceWrapper implements TimerService {
         return createTimerInternal(initialDuration, intervalDuration, info);
     }
 
-    public Timer createTimer(Date expiration, Serializable info) 
+    public Timer createTimer(Date expiration, Serializable info)
         throws IllegalArgumentException, IllegalStateException, EJBException {
-                             
+
         checkCreateTimerCallPermission();
         checkExpiration(expiration);
 
@@ -101,7 +101,7 @@ public class EJBTimerServiceWrapper implements TimerService {
     }
 
     public Timer createTimer(Date initialExpiration, long intervalDuration,
-                             Serializable info) 
+                             Serializable info)
         throws IllegalArgumentException, IllegalStateException, EJBException {
 
         checkCreateTimerCallPermission();
@@ -172,22 +172,22 @@ public class EJBTimerServiceWrapper implements TimerService {
     }
 
     public Collection<Timer> getTimers() throws IllegalStateException, EJBException {
-        
+
         checkCallPermission();
-        
+
         Collection timerIds = new HashSet();
 
-        if( ejbContext_.isTimedObject() ) {        
+        if( ejbContext_.isTimedObject() ) {
             try {
                 timerIds = timerService_.getTimerIds
                     (ejbDescriptor_.getUniqueId(),  getTimedObjectPrimaryKey());
             } catch(Exception fe) {
                 EJBException ejbEx = new EJBException();
                 ejbEx.initCause(fe);
-                throw ejbEx;                         
+                throw ejbEx;
             }
-        } 
-                                                        
+        }
+
         Collection<Timer> timerWrappers = new HashSet();
 
         for(Iterator iter = timerIds.iterator(); iter.hasNext();) {
@@ -219,7 +219,7 @@ public class EJBTimerServiceWrapper implements TimerService {
         } else {
             synchronized(this) {
                 if( timedObjectPrimaryKey_ == null ) {
-                    timedObjectPrimaryKey_ = 
+                    timedObjectPrimaryKey_ =
                         ((EntityContext) ejbContext_).getPrimaryKey();
                 }
             }
@@ -227,18 +227,18 @@ public class EJBTimerServiceWrapper implements TimerService {
         return timedObjectPrimaryKey_;
     }
 
-    private void checkCreateTimerCallPermission() 
+    private void checkCreateTimerCallPermission()
         throws IllegalStateException {
         if( ejbContext_.isTimedObject() ) {
             checkCallPermission();
         } else {
             throw new IllegalStateException("EJBTimerService.createTimer can "
-                + "only be called from a timed object.  This EJB does not " 
-                + "implement jakarta.ejb.TimedObject");                 
+                + "only be called from a timed object.  This EJB does not "
+                + "implement jakarta.ejb.TimedObject");
         }
     }
 
-    private void checkCallPermission() 
+    private void checkCallPermission()
         throws IllegalStateException {
         ejbContext_.checkTimerServiceMethodAccess();
     }
@@ -265,10 +265,10 @@ public class EJBTimerServiceWrapper implements TimerService {
                     ejbDescriptor_.getApplication().getUniqueId(),
                     getTimedObjectPrimaryKey(),
                 initialDuration, intervalDuration, tc);
-        } catch(CreateException ce) {            
+        } catch(CreateException ce) {
             EJBException ejbEx = new EJBException();
             ejbEx.initCause(ce);
-            throw ejbEx;            
+            throw ejbEx;
         }
 
         return new TimerWrapper(timerId, timerService_);
@@ -296,10 +296,10 @@ public class EJBTimerServiceWrapper implements TimerService {
                     ejbDescriptor_.getApplication().getUniqueId(),
                     getTimedObjectPrimaryKey(),
                 initialExpiration, intervalDuration, tc);
-        } catch(CreateException ce) {            
+        } catch(CreateException ce) {
             EJBException ejbEx = new EJBException();
             ejbEx.initCause(ce);
-            throw ejbEx;            
+            throw ejbEx;
         }
 
         return new TimerWrapper(timerId, timerService_);
@@ -314,23 +314,23 @@ public class EJBTimerServiceWrapper implements TimerService {
                     ejbDescriptor_.getApplication().getUniqueId(),
                     getTimedObjectPrimaryKey(),
                     new EJBTimerSchedule(schedule), tc);
-        } catch(CreateException ce) {            
+        } catch(CreateException ce) {
             EJBException ejbEx = new EJBException();
             ejbEx.initCause(ce);
-            throw ejbEx;            
+            throw ejbEx;
         }
 
         return new TimerWrapper(timerId, timerService_);
     }
 
-    private void checkDuration(long duration) 
+    private void checkDuration(long duration)
             throws IllegalArgumentException {
         if( duration < 0 ) {
             throw new IllegalArgumentException("invalid duration=" + duration);
-        } 
-    } 
+        }
+    }
 
-    private void checkInitialDuration(long initialDuration) 
+    private void checkInitialDuration(long initialDuration)
             throws IllegalArgumentException {
         if( initialDuration < 0 ) {
             throw new IllegalArgumentException("invalid initial duration = " +
@@ -338,28 +338,28 @@ public class EJBTimerServiceWrapper implements TimerService {
         }
     }
 
-    private void checkIntervalDuration(long intervalDuration) 
+    private void checkIntervalDuration(long intervalDuration)
             throws IllegalArgumentException {
         if( intervalDuration < 0 ) {
             throw new IllegalArgumentException("invalid interval duration = " +
                                                intervalDuration);
         }
     }
-                             
-    private void checkScheduleExpression(ScheduleExpression expression) 
+
+    private void checkScheduleExpression(ScheduleExpression expression)
             throws IllegalArgumentException {
         if( expression == null ) {
             throw new IllegalArgumentException("null ScheduleExpression");
-        } 
+        }
     }
-                             
-    private void checkExpiration(Date expiration) 
+
+    private void checkExpiration(Date expiration)
             throws IllegalArgumentException {
         if( expiration == null ) {
             throw new IllegalArgumentException("null expiration");
-        } 
+        }
         if( expiration.getTime() < 0 ) {
             throw new IllegalArgumentException("Negative expiration");
-        } 
+        }
     }
 }

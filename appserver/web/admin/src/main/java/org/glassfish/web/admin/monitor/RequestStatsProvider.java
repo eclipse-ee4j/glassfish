@@ -48,7 +48,7 @@ public class RequestStatsProvider {
         "Cumulative number of requests processed so far";
     private static final String MAX_TIME_DESCRIPTION =
         "Longest response time for a request; not a cumulative value, but the largest response time from among the response times";
-    private static final String PROCESSING_TIME_DESCRIPTION = 
+    private static final String PROCESSING_TIME_DESCRIPTION =
         "Average request processing time";
 
     private CountStatisticImpl errorCount = new CountStatisticImpl("ErrorCount",
@@ -62,7 +62,7 @@ public class RequestStatsProvider {
 
     private TimeStatisticImpl requestProcessTime = new TimeStatisticImpl(0L, 0L, 0L, 0L,
             "", "", "", System.currentTimeMillis(), -1L);
-    
+
     private String virtualServerName = null;
     private String moduleName = null;
 
@@ -129,7 +129,7 @@ public class RequestStatsProvider {
         if (logger.isLoggable(Level.FINEST)) {
             logger.finest(
                 "[TM]requestStartEvent Unprocessed received - virtual-server = " +
-                serverName + ":" + serverPort + 
+                serverName + ":" + serverPort +
                 ": application = " + contextPath +
                 " : servlet = " + servletPath +
                 " : Expecting (vsName, appName) = (" +
@@ -228,7 +228,7 @@ public class RequestStatsProvider {
         }
     }
 
-    
+
     public long getProcessTime() {
         return requestProcessTime.getTotalTime()/requestProcessTime.getCount();
     }
@@ -236,7 +236,7 @@ public class RequestStatsProvider {
     public String getModuleName() {
         return moduleName;
     }
-    
+
     public String getVSName() {
         return virtualServerName;
     }

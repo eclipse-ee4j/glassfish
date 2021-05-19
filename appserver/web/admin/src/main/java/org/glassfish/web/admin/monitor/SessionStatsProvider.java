@@ -59,7 +59,7 @@ public class SessionStatsProvider{
 
     private String moduleName;
     private String vsName;
-    
+
     private RangeStatisticImpl activeSessionsCount;
     private CountStatisticImpl sessionsTotal;
     private CountStatisticImpl expiredSessionsTotal;
@@ -93,7 +93,7 @@ public class SessionStatsProvider{
             "ActivatedSessionsTotal", StatisticImpl.UNIT_COUNT,
             ACTIVATED_SESSIONS_DESCRIPTION);
     }
-    
+
     @ManagedAttribute(id="activesessionscurrent")
     @Description(ACTIVE_SESSIONS_DESCRIPTION)
     public RangeStatistic getActiveSessions() {
@@ -135,7 +135,7 @@ public class SessionStatsProvider{
     public CountStatistic getActivatedSessionsTotal() {
         return activatedSessionsTotal;
     }
-    
+
     @ProbeListener("glassfish:web:session:sessionCreatedEvent")
     public void sessionCreatedEvent(
         @ProbeParam("sessionId") String sessionId,
@@ -143,8 +143,8 @@ public class SessionStatsProvider{
         @ProbeParam("hostName") String hostName){
 
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionCreatedEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionCreatedEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -158,10 +158,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionDestroyedEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionDestroyedEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -175,9 +175,9 @@ public class SessionStatsProvider{
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
 
-        if (logger.isLoggable(Level.FINEST)) {        
-            logger.finest("[TM]sessionRejectedEvent received - max sessions = " + 
-                          maxSessions + ": appname = " + appName + 
+        if (logger.isLoggable(Level.FINEST)) {
+            logger.finest("[TM]sessionRejectedEvent received - max sessions = " +
+                          maxSessions + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -190,10 +190,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionExpiredEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionExpiredEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -206,10 +206,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionPersistedStartEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionPersistedStartEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
     }
@@ -219,10 +219,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionPersistedEndEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionPersistedEndEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -235,10 +235,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionActivatedStartEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionActivatedStartEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
     }
@@ -248,10 +248,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionActivatedEndEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionActivatedEndEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -265,10 +265,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionPassivatedStartEvent  received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionPassivatedStartEvent  received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
     }
@@ -278,10 +278,10 @@ public class SessionStatsProvider{
         @ProbeParam("sessionId") String sessionId,
         @ProbeParam("appName") String appName,
         @ProbeParam("hostName") String hostName){
-        
+
         if (logger.isLoggable(Level.FINEST)) {
-            logger.finest("[TM]sessionPassivatedEndEvent received - session = " + 
-                          sessionId + ": appname = " + appName + 
+            logger.finest("[TM]sessionPassivatedEndEvent received - session = " +
+                          sessionId + ": appname = " + appName +
                           ": hostName = " + hostName);
         }
         if (isValidEvent(appName, hostName)) {
@@ -289,15 +289,15 @@ public class SessionStatsProvider{
             passivatedSessionsTotal.increment();
         }
     }
-    
+
     public String getModuleName() {
         return moduleName;
     }
-    
+
     public String getVSName() {
         return vsName;
     }
-    
+
     private void incrementActiveSessions() {
         synchronized (activeSessionsCount) {
             activeSessionsCount.setCurrent(
@@ -311,7 +311,7 @@ public class SessionStatsProvider{
                 activeSessionsCount.getCurrent() - 1);
         }
     }
-    
+
     private boolean isValidEvent(String mName, String hostName) {
         //Temp fix, get the appname from the context root
         if ((moduleName == null) || (vsName == null)) {

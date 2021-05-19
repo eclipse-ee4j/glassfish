@@ -39,9 +39,9 @@ public abstract class Definition
     /**
      * I18N support
      */
-	protected final static ResourceBundle messages = 
+    protected final static ResourceBundle messages =
             I18NHelper.loadBundle(Definition.class);
-    
+
     /**
      * Scope level of the definition
      */
@@ -85,7 +85,7 @@ public abstract class Definition
     {
         return type;
     }
-	
+
     /**
      * Returns the name of the definition.
      */

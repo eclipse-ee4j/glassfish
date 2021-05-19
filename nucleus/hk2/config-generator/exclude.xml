@@ -23,11 +23,11 @@
         encoding.
     -->
     <Match>
-	<Bug pattern="DM_DEFAULT_ENCODING"/>
+        <Bug pattern="DM_DEFAULT_ENCODING"/>
     </Match>
     <Match>
         <Class name="org.jvnet.hk2.config.generator.maven.ConfigGeneratorMojo"/>
-	<Bug pattern="UWF_UNWRITTEN_FIELD"/>
+        <Bug pattern="UWF_UNWRITTEN_FIELD"/>
     </Match>
     <Match>
         <Class name="org.jvnet.hk2.config.generator.maven.TestConfigGeneratorMojo"/>

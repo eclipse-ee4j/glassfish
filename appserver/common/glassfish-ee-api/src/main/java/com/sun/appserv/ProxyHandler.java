@@ -31,7 +31,7 @@ import jakarta.servlet.http.HttpServletRequest;
  * and makes this information available to the appserver.
  * <p>
  * This allows the appserver to work with any number of 3rd party SSL
- * offloader implementations configured on the front-end web server, for 
+ * offloader implementations configured on the front-end web server, for
  * which a corresponding ProxyHandler implementation has been configured
  * on the backend appserver.
  */

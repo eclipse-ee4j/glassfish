@@ -16,7 +16,7 @@
 
 package com.sun.cb;
 
-import javax.xml.registry.*; 
+import javax.xml.registry.*;
 import java.util.ResourceBundle;
 import java.io.*;
 
@@ -31,15 +31,15 @@ public class OrgPublisher {
         ResourceBundle registryBundle =
            ResourceBundle.getBundle("com.sun.cb.CoffeeRegistry");
 
-        String username = 
+        String username =
             registryBundle.getString("registry.username");
-        String password = 
+        String password =
             registryBundle.getString("registry.password");
         String keyFile = registryBundle.getString("key.file");
 
         JAXRPublisher publisher = new JAXRPublisher();
         publisher.makeConnection(queryURL, publishURL);
-        String key = publisher.executePublish(username, 
+        String key = publisher.executePublish(username,
             password, endpoint);
         try {
             FileWriter out = new FileWriter(keyFile);
@@ -50,5 +50,5 @@ public class OrgPublisher {
             System.out.println(ex.getMessage());
         }
     }
-    
+
 }

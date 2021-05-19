@@ -23,11 +23,11 @@
     Java DB Type 4 Driver
     The JAR file for the Java DB driver is derbyclient.jar.
 
-    The Java DB database is based on the Derby database from Apache. 
+    The Java DB database is based on the Derby database from Apache.
     http://db.apache.org/derby/manuals
 
     The Java DB JDBC driver is included with the Application Server by default.
-    
+
     To learn more on JDBC resources, pl. refer to JDBC resources chapter of admin guide.
     Administration Guide >> JDBC Resources  >> Configurations for Specific JDBC Drivers
     http://docs.sun.com/app/docs/doc/819-3658/6n5s5nklk?a=view
@@ -73,9 +73,9 @@
 -->
 
 <resources>
-    <jdbc-connection-pool 
-        name="javadb_type4_pool" 
-        datasource-classname="org.apache.derby.jdbc.ClientDataSource" 
+    <jdbc-connection-pool
+        name="javadb_type4_pool"
+        datasource-classname="org.apache.derby.jdbc.ClientDataSource"
         res-type="javax.sql.DataSource">
         <property name="user" value="DB_USER"/>
         <property name="password" value="DB_PASSWORD"/>
@@ -85,9 +85,9 @@
         <property name="connectionAttributes" value=";create=true"/>
     </jdbc-connection-pool>
 
-    <jdbc-resource 
-        enabled="true" 
-        jndi-name="jdbc/javadb_type4" 
-        object-type="user" 
+    <jdbc-resource
+        enabled="true"
+        jndi-name="jdbc/javadb_type4"
+        object-type="user"
         pool-name="javadb_type4_pool"/>
-</resources> 
+</resources>

@@ -30,9 +30,8 @@ import java.util.Set;
  *
  * @author Sheetal Vartak
  */
-public class ConnectionDefDescriptor extends Descriptor
-{
-    
+public class ConnectionDefDescriptor extends Descriptor {
+
     private String managedConnectionFactoryImpl = "";
     private Set configProperties;
     private String connectionIntf = "";
@@ -40,113 +39,111 @@ public class ConnectionDefDescriptor extends Descriptor
     private String connectionfactoryImpl = "";
     private String connectionfactoryIntf = "";
 
-    public ConnectionDefDescriptor () 
-    {
-        configProperties    = new OrderedSet();
+    public ConnectionDefDescriptor() {
+        configProperties = new OrderedSet();
     }
 
-    /** 
+
+    /**
      * Gets the value of ManagedconnectionFactoryImpl
      */
-    public String getManagedConnectionFactoryImpl() 
-    {
+    public String getManagedConnectionFactoryImpl() {
         return managedConnectionFactoryImpl;
     }
-    
-    /** 
+
+
+    /**
      * Sets the value of ManagedconnectionFactoryImpl
      */
-    public void setManagedConnectionFactoryImpl(String managedConnectionFactoryImpl) 
-    {
+    public void setManagedConnectionFactoryImpl(String managedConnectionFactoryImpl) {
         this.managedConnectionFactoryImpl = managedConnectionFactoryImpl;
     }
 
-    /** 
+
+    /**
      * Set of ConnectorConfigProperty
      */
-    public Set getConfigProperties() 
-    {
+    public Set getConfigProperties() {
         return configProperties;
     }
-      
-    /** 
+
+
+    /**
      * Add a configProperty to the set
      */
-    public void addConfigProperty(ConnectorConfigProperty configProperty)
-    {
-	configProperties.add(configProperty);
+    public void addConfigProperty(ConnectorConfigProperty configProperty) {
+        configProperties.add(configProperty);
     }
 
-    /** 
+
+    /**
      * Add a configProperty to the set
-     */ 
-    public void removeConfigProperty(ConnectorConfigProperty configProperty)
-    {
-	configProperties.remove(configProperty);
+     */
+    public void removeConfigProperty(ConnectorConfigProperty configProperty) {
+        configProperties.remove(configProperty);
     }
-    
+
+
     /**
      * Get connection factory impl
      */
-    public String getConnectionFactoryImpl()
-    {
+    public String getConnectionFactoryImpl() {
         return connectionfactoryImpl;
     }
 
-    /** 
-     * set connection factory impl 
+
+    /**
+     * set connection factory impl
      */
-    public void setConnectionFactoryImpl(String cf) 
-    {
-	connectionfactoryImpl = cf;
+    public void setConnectionFactoryImpl(String cf) {
+        connectionfactoryImpl = cf;
     }
+
 
     /**
      * Get connection factory intf
      */
-    public String getConnectionFactoryIntf()
-    {
+    public String getConnectionFactoryIntf() {
         return connectionfactoryIntf;
     }
 
-    /** 
+
+    /**
      * set connection factory intf
      */
-    public void setConnectionFactoryIntf(String cf) 
-    {
-	connectionfactoryIntf = cf;
+    public void setConnectionFactoryIntf(String cf) {
+        connectionfactoryIntf = cf;
     }
+
 
     /**
      * Get connection intf
      */
-    public String getConnectionIntf()
-    {
+    public String getConnectionIntf() {
         return connectionIntf;
     }
 
-    /** 
+
+    /**
      * set connection intf
      */
-    public void setConnectionIntf(String con) 
-    {
-	connectionIntf = con;
+    public void setConnectionIntf(String con) {
+        connectionIntf = con;
     }
+
 
     /**
      * Get connection impl
      */
-    public String getConnectionImpl()
-    {
+    public String getConnectionImpl() {
         return connectionImpl;
     }
 
-    /** 
+
+    /**
      * set connection intf
      */
-    public void setConnectionImpl(String con) 
-    {
-	connectionImpl = con;
+    public void setConnectionImpl(String con) {
+        connectionImpl = con;
     }
-
  }

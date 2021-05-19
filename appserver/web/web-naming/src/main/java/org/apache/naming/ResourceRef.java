@@ -41,7 +41,7 @@ public class ResourceRef
     /**
      * Default factory for this reference.
      */
-    public static final String DEFAULT_FACTORY = 
+    public static final String DEFAULT_FACTORY =
         org.apache.naming.factory.Constants.DEFAULT_RESOURCE_FACTORY;
 
 
@@ -68,12 +68,12 @@ public class ResourceRef
 
     /**
      * Resource Reference.
-     * 
+     *
      * @param resourceClass Resource class
      * @param scope Resource scope
      * @param auth Resource authetication
      */
-    public ResourceRef(String resourceClass, String description, 
+    public ResourceRef(String resourceClass, String description,
                        String scope, String auth) {
         this(resourceClass, description, scope, auth, null, null);
     }
@@ -81,12 +81,12 @@ public class ResourceRef
 
     /**
      * Resource Reference.
-     * 
+     *
      * @param resourceClass Resource class
      * @param scope Resource scope
      * @param auth Resource authetication
      */
-    public ResourceRef(String resourceClass, String description, 
+    public ResourceRef(String resourceClass, String description,
                        String scope, String auth, String factory,
                        String factoryLocation) {
         super(resourceClass, factory, factoryLocation);
@@ -113,7 +113,7 @@ public class ResourceRef
 
 
     /**
-     * Retrieves the class name of the factory of the object to which this 
+     * Retrieves the class name of the factory of the object to which this
      * reference refers.
      */
     public String getFactoryClassName() {

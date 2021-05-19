@@ -24,7 +24,7 @@ import java.util.Properties;
 
 /**
  * Implementation of a Payload.Inbound that works with InputStreams
- * 
+ *
  * Usage is like this:
  *
  *      CommandRunner.CommandInvocation ci =

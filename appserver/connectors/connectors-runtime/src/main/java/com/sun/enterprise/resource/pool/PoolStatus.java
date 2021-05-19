@@ -20,19 +20,19 @@ package com.sun.enterprise.resource.pool;
 import org.glassfish.resourcebase.resources.api.PoolInfo;
 
 /**
- * Reflects the current status of the Connection Pool. This class is used to 
- * get the status of the pool specifically the number of connections free or 
+ * Reflects the current status of the Connection Pool. This class is used to
+ * get the status of the pool specifically the number of connections free or
  * used.
- * 
+ *
  * @author Shalini M
  */
 public class PoolStatus {
 
     private PoolInfo poolInfo;
-    
+
     //Number of free connections in the pool
     private int numConnFree;
-    
+
     //Number of connections in the pool that are being used currently.
     private int numConnUsed;
 

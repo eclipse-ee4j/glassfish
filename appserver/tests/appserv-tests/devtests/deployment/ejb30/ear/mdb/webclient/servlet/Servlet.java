@@ -26,26 +26,26 @@ public class Servlet extends HttpServlet {
 
     @Resource(name="FooCF")
     private QueueConnectionFactory queueConFactory;
-    
-    @Resource(name="MsgBeanQueue") 
+
+    @Resource(name="MsgBeanQueue")
     private jakarta.jms.Queue msgBeanQueue;
-    
+
     @Resource(name="ClientQueue")
     private jakarta.jms.Queue clientQueue;
-    
+
     private QueueConnection queueCon;
     private QueueSession queueSession;
     private QueueSender queueSender;
     private QueueReceiver queueReceiver;
 
-    private int numMessages = 1; 
+    private int numMessages = 1;
     // in milli-seconds
     private static long TIMEOUT = 90000;
 
 
 
     public void  init() throws ServletException {
-        
+
         super.init();
         log("init()...");
     }
@@ -60,9 +60,9 @@ public class Servlet extends HttpServlet {
         }
     }
 
-    
+
     public void service ( HttpServletRequest req , HttpServletResponse resp ) throws ServletException, IOException {
-                 
+
         log("service()...");
 
         try {
@@ -76,15 +76,15 @@ public class Servlet extends HttpServlet {
             out.println("<p>");
 
             queueCon = queueConFactory.createQueueConnection();
-        
+
             queueSession = queueCon.createQueueSession
                 (false, Session.AUTO_ACKNOWLEDGE);
-        
+
             // Producer will be specified when actual msg is sent.
             queueSender = queueSession.createSender(null);
-        
+
             queueReceiver = queueSession.createReceiver(clientQueue);
-        
+
             queueCon.start();
 
 
@@ -116,10 +116,10 @@ public class Servlet extends HttpServlet {
             throw new ServletException(ex);
         } finally {
             cleanup();
-        } 
+        }
     }
 
-    
+
     public void cleanup() {
         try {
             if( queueCon != null ) {
@@ -133,8 +133,8 @@ public class Servlet extends HttpServlet {
     public void  destroy() {
         log("destroy()...");
     }
-    
+
     public void log (String message) {
        System.out.println("[webclient Servlet]:: " + message);
-    }  
+    }
 }

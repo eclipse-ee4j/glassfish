@@ -59,15 +59,15 @@ public class HTTPMonitoring extends AMXMonitoringTestBase {
     private static String VS = "VIRTUAL SERVER";
 
     public HTTPMonitoring(final String host, final int port, final String serverName,
-            final String adminUser, final String adminPassword, 
+            final String adminUser, final String adminPassword,
             final boolean useTLS) throws IOException {
         super(host, port, adminUser,adminPassword,useTLS);
         this.serverName = serverName;
     }
-    
-    
+
+
     public void  test() {
-        HTTPServiceMonitor httpService = 
+        HTTPServiceMonitor httpService =
             getServerRootMonitor(serverName).getHTTPServiceMonitor();
         assert (httpService != null) : "The http service monitor is null!";
         Map vsMap = httpService.getHTTPServiceVirtualServerMonitorMap();
@@ -84,7 +84,7 @@ public class HTTPMonitoring extends AMXMonitoringTestBase {
         }
     }
 
-    
+
     /**
      *
      */
@@ -98,14 +98,14 @@ public class HTTPMonitoring extends AMXMonitoringTestBase {
                 System.getProperty("ADMIN_USER", "admin"),
                 System.getProperty("ADMIN_PASSWORD", "adminadmin"),
                 Boolean.getBoolean(System.getProperty("USE_TLS", "false")));
-         
+
             HTTPMonitoring.printArgs(args);
-            
+
             httpMtr.test();
-            
+
         } catch( Throwable t ) {
             ExceptionUtil.getRootCause( t ).printStackTrace();
         }
     }
-    
+
 }

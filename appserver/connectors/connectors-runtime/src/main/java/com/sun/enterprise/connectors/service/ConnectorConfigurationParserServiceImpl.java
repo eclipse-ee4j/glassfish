@@ -182,9 +182,9 @@ public class ConnectorConfigurationParserServiceImpl extends ConnectorService {
         Properties props = getConnectorConfigJavaBeans(
                rarName,connectionDefName,ConnectorConfigParser.MCF);
 /* TODO V3 handle JMS-RA later
-	if (rarName.equals(ConnectorConstants.DEFAULT_JMS_ADAPTER)) {
+    if (rarName.equals(ConnectorConstants.DEFAULT_JMS_ADAPTER)) {
             props.remove(ActiveJmsResourceAdapter.ADDRESSLIST);
-	}
+    }
 */
         return props;
     }

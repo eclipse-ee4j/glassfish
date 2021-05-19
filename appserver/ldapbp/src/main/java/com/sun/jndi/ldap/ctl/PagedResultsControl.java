@@ -48,14 +48,14 @@ final public class PagedResultsControl extends BasicControl {
      */
     public static final String OID = "1.2.840.113556.1.4.319";
 
-    /** 
+    /**
      * The number of entries to return in a page.
      *
      * @serial
      */
     private int pageSize;
 
-    /** 
+    /**
      * A server-generated cookie.
      *
      * @serial
@@ -67,14 +67,14 @@ final public class PagedResultsControl extends BasicControl {
     /**
      * Constructs a paged-results critical control.
      *
-     * @param	pageSize	The number of entries to return in a page.
+     * @param    pageSize    The number of entries to return in a page.
      * @exception IOException If a BER encoding error occurs.
      *
      */
     public PagedResultsControl(int pageSize) throws IOException {
-	super(OID, true, null);
-	this.pageSize = pageSize;
-	super.value = setEncodedValue();
+        super(OID, true, null);
+        this.pageSize = pageSize;
+        super.value = setEncodedValue();
     }
 
     /**
@@ -84,21 +84,21 @@ final public class PagedResultsControl extends BasicControl {
      * to zero and setting the cookie to the last cookie received from the
      * server.
      *
-     * @param	pageSize	The number of entries to return in a page.
-     * @param	cookie		A server-generated cookie.
-     * @param	criticality	The control's criticality setting.
+     * @param    pageSize    The number of entries to return in a page.
+     * @param    cookie        A server-generated cookie.
+     * @param    criticality    The control's criticality setting.
      * @exception IOException If a BER encoding error occurs.
      */
     public PagedResultsControl(int pageSize, byte[] cookie,
-	boolean criticality) throws IOException {
+        boolean criticality) throws IOException {
 
-	super(OID, criticality, null);
-	this.pageSize = pageSize;
-	this.cookie = cookie;
-	super.value = setEncodedValue();
+        super(OID, criticality, null);
+        this.pageSize = pageSize;
+        this.cookie = cookie;
+        super.value = setEncodedValue();
     }
 
-    /*
+    /**
      * Sets the ASN.1 BER encoded value of the paged-results control.
      * The result is the raw BER bytes including the tag and length of
      * the control's value. It does not include the controls OID or criticality.
@@ -109,14 +109,14 @@ final public class PagedResultsControl extends BasicControl {
      */
     private byte[] setEncodedValue() throws IOException {
 
-	// build the ASN.1 encoding
-	BerEncoder ber = new BerEncoder(32);
+        // build the ASN.1 encoding
+        BerEncoder ber = new BerEncoder(32);
 
-	ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-	    ber.encodeInt(pageSize);
-            ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
-	ber.endSeq();
+        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.encodeInt(pageSize);
+        ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
+        ber.endSeq();
 
-	return ber.getTrimmedBuf();
+        return ber.getTrimmedBuf();
     }
 }

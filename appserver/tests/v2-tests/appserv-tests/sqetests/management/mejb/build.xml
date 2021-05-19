@@ -33,16 +33,16 @@
     <target name="run-test" depends="clean,build,deploy,run,undeploy"/>
 
     <target name="setup">
-	<antcall target="create-file-users"/>
+        <antcall target="create-file-users"/>
     </target>
     <target name="unsetup">
-	<antcall target="delete-file-users"/>
+        <antcall target="delete-file-users"/>
     </target>
 
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="client"/>
@@ -51,13 +51,13 @@
 
     <target name="build" depends="compile">
         <antcall target="appclient-jar-common">
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
-        </antcall>  
+        </antcall>
         <antcall target="ear-common"/>
-    </target> 
-    
-    <target name="deploy" 
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -66,12 +66,12 @@
         <antcall target="runclient-common">
         <param name="appclient.application.args" value="${verbose.mode}"/>
         </antcall>
-        
+
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

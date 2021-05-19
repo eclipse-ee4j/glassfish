@@ -71,8 +71,8 @@
             <param name="wsimport.args"
                value="-keep -wsdllocation ${env.APS_HOME}/devtests/webservice/annotations/wsdltojava/HttpTestService.wsdl -b customclient.xml -d ${build.classes.dir}/client HttpTestService.wsdl"/>
         </antcall>
-        <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+        <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="client/**"/>
     </target>
 
@@ -85,14 +85,14 @@
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
     </target>
-    
+
     <target name="runtest">
       <antcall target="run-client">
         <param name="client-class" value="client.Client"/>
         <param name="other-args" value="basic-wsdl-to-java-test-case"/>
       </antcall>
 
-      <!--restore the tokens back in file--> 
+      <!--restore the tokens back in file-->
       <replace file="HttpTestService.wsdl" token="${http.host}" value="HTTP_HOST"/>
       <replace file="HttpTestService.wsdl" token="${http.port}" value="HTTP_PORT"/>
     </target>

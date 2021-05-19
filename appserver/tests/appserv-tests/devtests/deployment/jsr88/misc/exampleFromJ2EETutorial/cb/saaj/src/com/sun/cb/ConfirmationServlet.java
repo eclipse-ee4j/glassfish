@@ -27,7 +27,7 @@ import java.io.*;
 
 public class ConfirmationServlet extends HttpServlet {
     static MessageFactory fac = null;
-    
+
     static {
         try {
             fac = MessageFactory.newInstance();
@@ -36,12 +36,12 @@ public class ConfirmationServlet extends HttpServlet {
         }
     }
 
-    public void init(ServletConfig servletConfig) 
+    public void init(ServletConfig servletConfig)
             throws ServletException {
         super.init(servletConfig);
     }
-    
-    public void doPost( HttpServletRequest req, 
+
+    public void doPost( HttpServletRequest req,
         HttpServletResponse resp)
             throws ServletException, IOException {
         try {
@@ -54,25 +54,25 @@ public class ConfirmationServlet extends HttpServlet {
             // Now internalize the contents of a HTTP request
             // and create a SOAPMessage
             SOAPMessage msg = fac.createMessage(headers, is);
-      
+
             SOAPMessage reply = null;
             reply = onMessage(msg);
 
             if (reply != null) {
-                
-                /* 
-                 * Need to call saveChanges because we're 
-                 * going to use the MimeHeaders to set HTTP 
+
+                /*
+                 * Need to call saveChanges because we're
+                 * going to use the MimeHeaders to set HTTP
                  * response information. These MimeHeaders
                  * are generated as part of the save.
                  */
                 if (reply.saveRequired()) {
-                    reply.saveChanges(); 
+                    reply.saveChanges();
                 }
 
                 resp.setStatus(HttpServletResponse.SC_OK);
                 putHeaders(reply.getMimeHeaders(), resp);
-                    
+
                 // Write out the message on the response stream
                 OutputStream os = resp.getOutputStream();
                 reply.writeTo(os);
@@ -82,7 +82,7 @@ public class ConfirmationServlet extends HttpServlet {
                     HttpServletResponse.SC_NO_CONTENT);
             }
         } catch (Exception ex) {
-            throw new ServletException("SAAJ POST failed: " + 
+            throw new ServletException("SAAJ POST failed: " +
                 ex.getMessage());
         }
     }
@@ -99,14 +99,14 @@ public class ConfirmationServlet extends HttpServlet {
             StringTokenizer values =
                 new StringTokenizer(headerValue, ",");
             while (values.hasMoreTokens()) {
-                headers.addHeader(headerName, 
+                headers.addHeader(headerName,
                     values.nextToken().trim());
             }
         }
         return headers;
     }
 
-    static void putHeaders(MimeHeaders headers, 
+    static void putHeaders(MimeHeaders headers,
             HttpServletResponse res) {
 
         Iterator it = headers.getAllHeaders();
@@ -115,7 +115,7 @@ public class ConfirmationServlet extends HttpServlet {
 
             String[] values = headers.getHeader(header.getName());
             if (values.length == 1) {
-                res.setHeader(header.getName(), 
+                res.setHeader(header.getName(),
                     header.getValue());
             } else {
                 StringBuffer concat = new StringBuffer();
@@ -139,10 +139,10 @@ public class ConfirmationServlet extends HttpServlet {
 
         try {
             // Retrieve orderID from message received
-            SOAPBody sentSB = 
+            SOAPBody sentSB =
                 message.getSOAPPart().getEnvelope().getBody();
             Iterator sentIt = sentSB.getChildElements();
-            SOAPBodyElement sentSBE = 
+            SOAPBodyElement sentSBE =
                 (SOAPBodyElement)sentIt.next();
             Iterator sentIt2 = sentSBE.getChildElements();
             SOAPElement sentSE = (SOAPElement)sentIt2.next();
@@ -156,9 +156,9 @@ public class ConfirmationServlet extends HttpServlet {
             SOAPEnvelope env = sp.getEnvelope();
             SOAPBody sb = env.getBody();
 
-            Name newBodyName = env.createName("confirmation", 
+            Name newBodyName = env.createName("confirmation",
                 "Confirm", "http://sonata.coffeebreak.com");
-            SOAPBodyElement confirm = 
+            SOAPBodyElement confirm =
                 sb.addBodyElement(newBodyName);
 
             // Create the orderID element for confirmation
@@ -169,7 +169,7 @@ public class ConfirmationServlet extends HttpServlet {
 
             // Create ship-date element
             Name shipDateName = env.createName("ship-date");
-            SOAPElement shipDate = 
+            SOAPElement shipDate =
                 confirm.addChildElement(shipDateName);
 
             // Create the shipping date

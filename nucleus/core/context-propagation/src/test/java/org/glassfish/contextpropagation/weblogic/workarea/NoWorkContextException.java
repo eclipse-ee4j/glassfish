@@ -23,14 +23,14 @@ package org.glassfish.contextpropagation.weblogic.workarea;
  * {@link WorkContext}.
  */
 @SuppressWarnings("serial")
-public class NoWorkContextException extends Exception 
+public class NoWorkContextException extends Exception
 {
-  public NoWorkContextException() 
+  public NoWorkContextException()
   {
     super();
   }
-  
-  public NoWorkContextException(String msg) 
+
+  public NoWorkContextException(String msg)
   {
     super(msg);
   }

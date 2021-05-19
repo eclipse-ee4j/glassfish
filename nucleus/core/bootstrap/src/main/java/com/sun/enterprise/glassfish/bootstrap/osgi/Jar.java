@@ -65,7 +65,7 @@ class Jar
         else {
             uri = null;
         }
-        
+
         lastModified = b.getLastModified();
         bundleId = b.getBundleId();
     }
@@ -74,14 +74,14 @@ class Jar
         this.uri = uri.normalize();
         long localLastModified = -1L;
         bundleId = -1L;
-        
+
         try {
             File f = new File(uri);
             localLastModified = f.lastModified();
         } catch (Exception e) {
             // can't help
         }
-        
+
         lastModified = localLastModified;
     }
 
@@ -118,15 +118,15 @@ class Jar
     public boolean equals(Object obj)
     {
         if (obj == null || !(obj instanceof Jar)) return false;
-        
+
         Jar other = (Jar) obj;
-        
+
         if (uri == null) {
             if (other.uri == null) return true;
             return false;
         }
         if (other.uri == null) return false;
-            
+
         // For optimization reason, we use toString.
         // It works, as we anyway use normalize()
         return uri.toString().equals(other.uri.toString());

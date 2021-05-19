@@ -31,7 +31,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
     public static void main (String[] args) {
@@ -40,27 +40,27 @@ public class Client {
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-txprop-cmttimeout");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     public void doTest() {
 
         try {
             Context ic = new InitialContext();
-                
+
             System.out.println("Looking up ejb ref ");
-            // create EJB using factory from container 
+            // create EJB using factory from container
             Object objref = ic.lookup("java:comp/env/ejb/SimpleSLSBHome");
             System.out.println("objref = " + objref);
-                
+
             SimpleSLSBHome  home = (SimpleSLSBHome)PortableRemoteObject.narrow
                 (objref, SimpleSLSBHome.class);
-                                                                     
+
             System.err.println("Narrowed home!!");
-                
-                
+
+
             SimpleSLSB f = home.create();
             System.err.println("Got the EJB!!");
 
@@ -72,7 +72,7 @@ public class Client {
             stat.addStatus("ejbclient main" , stat.FAIL);
         }
     }
-        
+
     private void doTest1(SimpleSLSB ref) {
         try {
             // invoke method on the EJB

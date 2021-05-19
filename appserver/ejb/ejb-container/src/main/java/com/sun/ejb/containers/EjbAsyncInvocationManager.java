@@ -36,7 +36,7 @@ public class EjbAsyncInvocationManager {
     private static final Logger _logger = LogDomains.getLogger(EjbAsyncInvocationManager.class, LogDomains.EJB_LOGGER);
 
     private AtomicLong invCounter = new AtomicLong();
-    
+
     // Map of Remote Future<> tasks.
     private ConcurrentHashMap<Long, EjbFutureTask> remoteTaskMap =
             new ConcurrentHashMap<Long, EjbFutureTask>();
@@ -79,7 +79,7 @@ public class EjbAsyncInvocationManager {
         inv.setInvId(invId);
         inv.setEjbFutureTask(futureTask);
 
-        if( _logger.isLoggable(Level.FINE) ) {          
+        if( _logger.isLoggable(Level.FINE) ) {
             _logger.log(Level.FINE, "Creating new async future task " + inv);
         }
 
@@ -117,7 +117,7 @@ public class EjbAsyncInvocationManager {
         // CallerPrincipal and sets it on the dispatch thread
         // before authorization.
         futureTask.getEjbAsyncTask().initialize(asyncInv);
-        
+
         EjbContainerUtil ejbContainerUtil = EjbContainerUtilImpl.getInstance();
         return ejbContainerUtil.getThreadPoolExecutor(null).submit(futureTask.getEjbAsyncTask());
     }
@@ -171,7 +171,7 @@ public class EjbAsyncInvocationManager {
             // Since the task is done just return the result on this
             // internal remote request.
             result = new RemoteAsyncResult();
-            
+
             result.resultException = task.getResultException();
             result.resultValue = task.getResultValue();
             result.asyncID = asyncTaskID;
@@ -288,7 +288,7 @@ public class EjbAsyncInvocationManager {
             if( _logger.isLoggable(Level.FINE) ) {
                 _logger.log(Level.FINE, "TimeoutException for async task " + asyncTaskID +
                     " : " + task);
-            }   
+            }
 
             throw to;
 
@@ -305,7 +305,7 @@ public class EjbAsyncInvocationManager {
             _logger.log(Level.FINE, "Exit remoteGetWithTimeout for async task " + asyncTaskID +
                     " : " + task);
         }
-        
+
         return result;
     }
 
@@ -317,9 +317,9 @@ public class EjbAsyncInvocationManager {
             _logger.log(Level.FINE, "Could not find async task for ID " + asyncTaskID);
 
             throw new EJBException("Could not find Local Async task corresponding to ID " +
-                asyncTaskID);                             
+                asyncTaskID);
         }
-        
+
         return task;
     }
 }

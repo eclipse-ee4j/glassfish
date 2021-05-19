@@ -39,7 +39,7 @@ import java.util.*;
  *      ...
  *
  *      cdb.computeResult(c); // c can be any fully qualified class name (internal format or java format)
- * 
+ *
  * @author Mahesh Kannan
  */
 public class ClassDependencyBuilder {

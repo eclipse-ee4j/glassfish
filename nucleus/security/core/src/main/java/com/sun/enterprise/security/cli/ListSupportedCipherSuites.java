@@ -47,8 +47,8 @@ import org.glassfish.hk2.api.PerLookup;
 @TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-supported-cipher-suites", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-supported-cipher-suites",
         description="List Supported Cipher Suites")
 })
 @AccessRequired(resource="domain/security-service", action="read")

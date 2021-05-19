@@ -33,7 +33,7 @@ import org.glassfish.jdbc.devtests.v3.util.HtmlUtil;
  */
 public class ConnectionSharingTest implements SimpleTest{
 
-    
+
     Map<String, Boolean> resultsMap = new HashMap<String, Boolean>();
 
     public Map<String, Boolean> runTest(DataSource ds1, PrintWriter out) {
@@ -51,7 +51,7 @@ public class ConnectionSharingTest implements SimpleTest{
         return resultsMap;
     }
 
-    
+
      private boolean testConnectionSharing(DataSource ds1, PrintWriter out) throws SystemException {
         boolean result = false;
         Connection con = null;
@@ -109,7 +109,7 @@ public class ConnectionSharingTest implements SimpleTest{
             } catch (Exception e) {
                 HtmlUtil.printException(e, out);
             }
-            
+
             out.println("<br> Test result : " + result);
             return result;
         }

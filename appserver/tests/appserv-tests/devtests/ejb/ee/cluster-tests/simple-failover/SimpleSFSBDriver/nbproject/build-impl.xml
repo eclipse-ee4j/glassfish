@@ -477,9 +477,9 @@ or ant -Dj2ee.platform.classpath=&lt;server_classpath&gt; (where no properties f
     <target name="-init-taskdefs">
         <fail unless="libs.CopyLibs.classpath">
 The libs.CopyLibs.classpath property is not set up.
-This property must point to 
+This property must point to
 org-netbeans-modules-java-j2seproject-copylibstask.jar file which is part
-of NetBeans IDE installation and is usually located at 
+of NetBeans IDE installation and is usually located at
 &lt;netbeans_installation&gt;/java&lt;version&gt;/ant/extra folder.
 Either open the project in the IDE and make sure CopyLibs library
 exists or setup the property manually. For example like this:
@@ -863,7 +863,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,javadoc-build,javadoc-browse" description="Build Javadoc." name="javadoc"/>
     <!--
-                
+
                 JUNIT COMPILATION SECTION
             -->
     <target depends="init,compile" if="have.tests" name="-pre-pre-compile-test">
@@ -902,7 +902,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile,-pre-pre-compile-test,-pre-compile-test-single,-do-compile-test-single,-post-compile-test-single" name="compile-test-single"/>
     <!--
-                
+
                 JUNIT EXECUTION SECTION
             -->
     <target depends="init" if="have.tests" name="-pre-test-run">
@@ -929,7 +929,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,compile-test-single,-pre-test-run-single,-do-test-run-single,-post-test-run-single" description="Run single unit test." name="test-single"/>
     <!--
-                
+
                 JUNIT DEBUGGING SECTION
             -->
     <target depends="init,compile-test" if="have.tests" name="-debug-start-debuggee-test">
@@ -955,7 +955,7 @@ exists or setup the property manually. For example like this:
     </target>
     <target depends="init,-pre-debug-fix,-do-debug-fix-test" if="netbeans.home" name="debug-fix-test"/>
     <!--
-                
+
                 CLEANUP SECTION
             -->
     <target depends="init" if="no.dist.ear.dir" name="deps-clean" unless="no.deps"/>

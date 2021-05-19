@@ -41,14 +41,16 @@
                         <configuration>
                             <tasks>
                                 <resolveArtifact artifactId="mq-distribution" property="mq-distribution.zip" />
-				<mkdir dir="target/tmp" />
-				<mkdir dir="target/classes/glassfish/lib/install/applications/jmsra" />
-				<unzip src="${mq-distribution.zip}" dest="target/tmp">
+                                <mkdir dir="target/tmp" />
+                                <mkdir dir="target/classes/glassfish/lib/install/applications/jmsra" />
+                                <unzip src="${mq-distribution.zip}" dest="target/tmp">
                                     <patternset>
-					    <include name="mq/lib/imqjmsra.rar" />
-				    </patternset>
-			        </unzip>
-				<unzip src="target/tmp/mq/lib/imqjmsra.rar" dest="target/classes/glassfish/lib/install/applications/jmsra">
+                                        <include name="mq/lib/imqjmsra.rar" />
+                                    </patternset>
+                                </unzip>
+                                <unzip
+                                    src="target/tmp/mq/lib/imqjmsra.rar"
+                                    dest="target/classes/glassfish/lib/install/applications/jmsra">
                                 </unzip>
                             </tasks>
                         </configuration>
@@ -68,12 +70,13 @@
             <organization>Oracle, Inc.</organization>
         </developer>
     </developers>
+
     <dependencies>
         <dependency>
             <groupId>org.glassfish.mq</groupId>
             <artifactId>mq-distribution</artifactId>
             <version>${mq.version}</version>
-	    <type>zip</type>
+            <type>zip</type>
         </dependency>
     </dependencies>
 </project>

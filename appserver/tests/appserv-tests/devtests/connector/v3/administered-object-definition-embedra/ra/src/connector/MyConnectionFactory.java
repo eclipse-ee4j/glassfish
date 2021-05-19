@@ -32,7 +32,7 @@ public class MyConnectionFactory implements ConnectionFactory {
     private ConnectionManager cm;
     private MyManagedConnectionFactory mcf;
     private Reference ref;
-    
+
     public MyConnectionFactory(MyManagedConnectionFactory mcf, ConnectionManager cm) {
         super();
         this.mcf = mcf;

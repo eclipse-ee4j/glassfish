@@ -29,7 +29,7 @@ public class SimpleBMPBean
     private transient jakarta.ejb.SessionContext m_ctx = null;
 
     public void setSessionContext(SessionContext context) {
-	m_ctx = context;
+        m_ctx = context;
     }
 
     public Integer ejbCreate() throws CreateException {
@@ -42,26 +42,26 @@ public class SimpleBMPBean
         Connection conn = null;
         boolean passed = true;
         Context context = null;
-	long startTime = 0, endTime = 0, timeTaken =0;
+        long startTime = 0, endTime = 0, timeTaken =0;
         try {
             context = new InitialContext();
             ds = (DataSource) context.lookup("java:comp/env/jdbc/DataSource");
         } catch(NamingException e) {
              throw new EJBException("cant find datasource");
         }
-        try { 
+        try {
             startTime = System.currentTimeMillis();
             conn = ds.getConnection();
-	    endTime = System.currentTimeMillis();
+            endTime = System.currentTimeMillis();
         } catch (Exception e) {
             e.printStackTrace();
             passed = false;
-        } 
-	timeTaken = (endTime-startTime)/1000;
+        }
+        timeTaken = (endTime-startTime)/1000;
         System.out.println("preparedStmtTest : TimeTaken : " + timeTaken);
-	if(timeTaken > 59) {
-	    passed = false;
-	}
+        if(timeTaken > 59) {
+            passed = false;
+        }
         return passed;
     }
 

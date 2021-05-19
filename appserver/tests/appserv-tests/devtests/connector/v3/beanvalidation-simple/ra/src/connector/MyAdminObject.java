@@ -47,7 +47,7 @@ public class MyAdminObject implements java.io.Serializable, ResourceAdapterAssoc
     public int getIntValue(){
       return intValue;
     }
- 
+
     @ConfigProperty(defaultValue="1", type=java.lang.Integer.class)
     public void setIntValue(int intValue){
       this.intValue = intValue;
@@ -71,13 +71,13 @@ public class MyAdminObject implements java.io.Serializable, ResourceAdapterAssoc
     }
 
     public void initialize() {
-	System.out.println("[MyAdminObject] Initializing the Controls to false:"+resetControl);
+        System.out.println("[MyAdminObject] Initializing the Controls to false:"+resetControl);
         if (resetControl.equals("BEGINNING")) {
             synchronized (Controls.readyLock){
                 Controls.done=false;
             }
-	   System.out.println("[MyAdminObject] Initialized the Controls to false");
-	}
+           System.out.println("[MyAdminObject] Initialized the Controls to false");
+        }
     }
 
     public boolean done() {

@@ -35,7 +35,7 @@ public class ConnectionMonitor implements ConnectionProbe {
         this.grizzlyMonitoring = grizzlyMonitoring;
         this.monitoringId = monitoringId;
     }
-    
+
     @Override
     public void onAcceptEvent(final Connection serverConnection,
             final Connection clientConnection) {

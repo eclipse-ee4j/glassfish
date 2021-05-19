@@ -46,7 +46,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for 4861933");
         WebTest webTest = new WebTest(args);
@@ -54,8 +54,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeServlet();
         } catch (Exception ex) {
             System.out.println(TEST_NAME + " test failed.");
@@ -65,7 +65,7 @@ public class WebTest {
     }
 
     private void invokeServlet() throws Exception {
-        
+
         Socket sock = new Socket(host, new Integer(port).intValue());
         OutputStream os = sock.getOutputStream();
 
@@ -76,7 +76,7 @@ public class WebTest {
         os.write(hostHeader.getBytes());
 
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 

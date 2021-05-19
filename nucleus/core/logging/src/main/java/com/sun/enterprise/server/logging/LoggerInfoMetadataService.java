@@ -53,14 +53,14 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
 
     private static final String RBNAME = "META-INF/loggerinfo/LoggerInfoMetadata";
     private static final Locale BASE_LOCALE = Locale.ROOT;
-        
-    @Inject 
+
+    @Inject
     ModulesRegistry modulesRegistry;
-    
+
     private Map<Locale, LoggersInfoMap> metadataMaps;
     private Set<String> moduleNames;
     private boolean valid;
-    
+
     // Reset valid flag if teh set of modules changes, so meta-data will be recomputed
     private Set<String> currentModuleNames() {
         Set<String> currentNames = new HashSet<String>();
@@ -84,11 +84,11 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
         }
         return currentNames;
     }
-    
+
     private boolean isValid() {
         return (valid && metadataMaps != null);
     }
-    
+
     private synchronized LoggersInfoMap getLoggersInfoMap(Locale locale) {
         moduleNames = currentModuleNames();
         if (!isValid()) {
@@ -102,17 +102,17 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
         valid = true;
         return infos;
     }
-    
+
     @Override
     public String getDescription(String logger) {
         LoggersInfoMap infos = getLoggersInfoMap(BASE_LOCALE);
-        return infos.getDescription(logger);    
+        return infos.getDescription(logger);
     }
-    
+
     @Override
     public String getDescription(String logger, Locale locale) {
         LoggersInfoMap infos = getLoggersInfoMap(locale);
-        return infos.getDescription(logger);   
+        return infos.getDescription(logger);
     }
 
     @Override
@@ -132,17 +132,17 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
         LoggersInfoMap infos = getLoggersInfoMap(BASE_LOCALE);
         return infos.isPublished(logger);
     }
-    
+
     // If a module changed in any way, reset the valid flag so meta-data will be
     // recomputed when subsequently requested.
     public synchronized void changed(HK2Module sender)  {
         valid = false;
     }
-    
+
     private class LoggersInfoMap {
         private Locale locale;
         private Map<String, LoggerInfoData> map;
-        
+
         LoggersInfoMap(Locale locale) {
             this.locale = locale;
             this.map = new HashMap<String, LoggerInfoData>();
@@ -167,12 +167,12 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
             LoggerInfoData info = map.get(logger);
             return (info != null ? info.isPublished() : false);
         }
-        
+
         private void initialize() {
             ClassLoader nullClassLoader = new NullClassLoader();
             for (HK2Module module : modulesRegistry.getModules()) {
                 ModuleDefinition moduleDef = module.getModuleDefinition();
-                // FIXME: We may optimize this by creating a manifest entry in the 
+                // FIXME: We may optimize this by creating a manifest entry in the
                 // jar file(s) to indicate that the jar contains logger infos. Jar files
                 // need not be opened if they don't contain logger infos.
                 URI uris[] = moduleDef.getLocations();
@@ -201,7 +201,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                             li.setSubsystem(value);
                         } else {
                             continue;
-                        } 
+                        }
                     }
                 } catch (MalformedURLException mfe) {
                     //FIXME: log message
@@ -211,7 +211,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
                 }
             }
         }
-        
+
         private LoggerInfoData findOrCreateLoggerInfoMetadata(String loggerName) {
             LoggerInfoData loggerInfoData = null;
             if (map.containsKey(loggerName)) {
@@ -223,7 +223,7 @@ public class LoggerInfoMetadataService implements LoggerInfoMetadata, ModuleChan
             return loggerInfoData;
         }
     }
-    
+
     // Null classloader to avoid delegation to parent classloader(s)
     private static class NullClassLoader extends ClassLoader {
         protected URL findResource(String name) {

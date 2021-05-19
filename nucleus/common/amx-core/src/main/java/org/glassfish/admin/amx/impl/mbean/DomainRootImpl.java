@@ -110,17 +110,17 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
             // start compliance monitoring immediately, even before children are registered
             mCompliance = ComplianceMonitor.getInstance(getDomainRootProxy());
             mCompliance.start();
-        } 
+        }
     }
 
-    public Map<ObjectName, List<String>> getComplianceFailures() {       
+    public Map<ObjectName, List<String>> getComplianceFailures() {
         final Map<ObjectName, List<String>> result = MapUtil.newMap();
         if (mCompliance == null) {
             return result;
         }
         final Map<ObjectName, AMXValidator.ProblemList> failures =
                 mCompliance.getComplianceFailures();
-        
+
         for (final Map.Entry<ObjectName, AMXValidator.ProblemList> me : failures.entrySet()) {
             result.put(me.getKey(), me.getValue().getProblems());
         }
@@ -184,7 +184,7 @@ public class DomainRootImpl extends AMXImplBase // implements DomainRoot
         childObjectName = objectNames.buildChildObjectName(server, extObjectName, Realms.class);
         mbean = new RealmsImpl(extObjectName);
         registerChild(mbean, childObjectName);
-        
+
         // Monitoring MBeans can rely on all the prior MBeans
         childObjectName = objectNames.buildChildObjectName(MonitoringRoot.class);
         mbean = new MonitoringRootImpl(self);

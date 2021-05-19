@@ -40,7 +40,7 @@ public class WebTest {
         port = args[1];
         contextRoot = args[2];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for IT 13129, session without cookie");
         WebTest webTest = new WebTest(args);
@@ -48,8 +48,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             int a = invoke("/index.jsp");
             int b = invoke("/index.jsp;jsessionid=" + sessionId);
             int c = invoke("/;jsessionid=" + sessionId);
@@ -69,7 +69,7 @@ public class WebTest {
      */
     private int invoke(String uri)
             throws Exception {
-        
+
         Integer result = null;
         URL url = new URL("http://" + host  + ":" + port + contextRoot + uri);
         System.out.println("Connecting to: " + url.toString());

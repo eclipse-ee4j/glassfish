@@ -17,7 +17,7 @@
 package com.sun.cb;
 
 import java.util.ResourceBundle;
-import javax.xml.registry.*; 
+import javax.xml.registry.*;
 import javax.xml.registry.infomodel.Key;
 import java.io.*;
 
@@ -35,9 +35,9 @@ public class OrgRemover {
         ResourceBundle registryBundle =
             ResourceBundle.getBundle("com.sun.cb.CoffeeRegistry");
 
-        String username = 
+        String username =
             registryBundle.getString("registry.username");
-        String password = 
+        String password =
             registryBundle.getString("registry.password");
         String keyFile = registryBundle.getString("key.file");
 

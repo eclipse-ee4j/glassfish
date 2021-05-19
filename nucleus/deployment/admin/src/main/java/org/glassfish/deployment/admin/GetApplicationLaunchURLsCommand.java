@@ -67,10 +67,10 @@ public class GetApplicationLaunchURLsCommand implements AdminCommand, AdminComma
     @Inject
     CommandRunner commandRunner;
 
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetApplicationLaunchURLsCommand.class);    
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GetApplicationLaunchURLsCommand.class);
 
     private List<Server> servers;
-    
+
     @Override
     public Collection<? extends AccessCheck> getAccessChecks() {
         final List<AccessCheck> accessChecks = new ArrayList<AccessCheck>();
@@ -94,7 +94,7 @@ public class GetApplicationLaunchURLsCommand implements AdminCommand, AdminComma
         return accessChecks;
     }
 
-    
+
     @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();

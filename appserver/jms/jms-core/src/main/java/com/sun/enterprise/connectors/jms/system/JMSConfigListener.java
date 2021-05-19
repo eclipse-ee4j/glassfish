@@ -52,7 +52,7 @@ public class JMSConfigListener implements ConfigListener{
 
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config serverConfig;
-   
+
     @Inject
     private Servers servers;
 
@@ -242,7 +242,7 @@ public class JMSConfigListener implements ConfigListener{
         try{
             addressList.setup(true);
         }catch(Exception ex){
-            _logger.log(Level.WARNING, JMSLoggerInfo.ADDRESSLIST_SETUP_FAIL, 
+            _logger.log(Level.WARNING, JMSLoggerInfo.ADDRESSLIST_SETUP_FAIL,
                     new Object[]{ex.getLocalizedMessage()});
             ex.printStackTrace();
         }

@@ -55,7 +55,7 @@ public class EmbeddedWebAPITest {
         System.out.println("Starting Web "+embedded);
         embedded.setLogLevel(Level.INFO);
     }
-    
+
     @Test
     public void testEmbeddedWebAPI() throws Exception {
 
@@ -153,5 +153,5 @@ public class EmbeddedWebAPITest {
             glassfish = null;
         }
     }
-    
+
 }

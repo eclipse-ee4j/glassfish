@@ -72,7 +72,7 @@ public class AppClientContainerSecurityHelper {
         this.classLoader = (classLoader == null) ? Thread.currentThread().getContextClassLoader() : classLoader;
 
         initLoginConfig();
-        CallbackHandler callbackHandler = 
+        CallbackHandler callbackHandler =
                 initSecurity(callerSuppliedCallbackHandler, acDesc);
 
         secInfo.initializeSecurity(Arrays.asList(targetServers),
@@ -80,9 +80,9 @@ public class AppClientContainerSecurityHelper {
                 callbackHandler,
                 AppClientSecurityInfo.CredentialType.USERNAME_PASSWORD,
                 (clientCredential == null ? null : clientCredential.getUserName()),
-                (clientCredential == null || 
+                (clientCredential == null ||
                     clientCredential.getPassword() == null ||
-                    clientCredential.getPassword().get() == null 
+                    clientCredential.getPassword().get() == null
                         ? null : clientCredential.getPassword().get()),
                 false /* isJWS */, ! isTextAuth /*useGUIAuth*/);
 
@@ -147,7 +147,7 @@ public class AppClientContainerSecurityHelper {
                 callbackHandler = null;
             }
         }
-        logger.config("Callback handler class = " + 
+        logger.config("Callback handler class = " +
                 (callbackHandler == null ? "(default)" : callbackHandler.getClass().getName()));
         return callbackHandler;
     }
@@ -190,7 +190,7 @@ public class AppClientContainerSecurityHelper {
         Authenticator.setDefault(
                 new HttpAuthenticator(secInfo, loginType));
     }
-    
+
 //    /**
 //     * Creates a Properties object containing the ORB settings and, possibly,
 //     * as a side-effect may assign some system property settings because that
@@ -221,16 +221,16 @@ public class AppClientContainerSecurityHelper {
 //        boolean isLBEnabled = false;
 //        boolean isSSLSpecifiedForATargetServer = false;
 //
-//	    /*
+//        /*
 //         * Although targetServerEndpoints is for user-friendly logging
 //         * we need to compute lb_enabled and also to note if any target-server
 //         * specifies ssl, so the loop is multi-purpose.
 //         */
-//	    StringBuilder targetServerEndpoints = new StringBuilder();
+//        StringBuilder targetServerEndpoints = new StringBuilder();
 //        for (TargetServer tServer : targetServers) {
 //            addEndpoint(targetServerEndpoints, formatEndpoint(tServer.getAddress(), tServer.getport()));
 //            isLBEnabled = true;
-//		    /*
+//            /*
 //             * In the configuration the ssl sub-part is required if the
 //             * security part is present.  So for speed just look for the
 //             * security part under this target server.  That will ensure that
@@ -240,7 +240,7 @@ public class AppClientContainerSecurityHelper {
 //            isSSLSpecifiedForATargetServer |= (tServer.getSecurity() != null);
 //        }
 //
-//		if (isSSLRequired(targetServers, containerProperties)) {
+//        if (isSSLRequired(targetServers, containerProperties)) {
 //            // XXX ORBManager needed
 ////            ORBManager.getCSIv2Props().put(ORBManager.ORB_SSL_CLIENT_REQUIRED, "true");
 //        }
@@ -252,7 +252,7 @@ public class AppClientContainerSecurityHelper {
 ////        loadBalancingPolicy = containerProperties.getProperty(S1ASCtxFactory.LOAD_BALANCING_PROPERTY);
 //        isLBEnabled |= loadBalancingPolicy != null;
 //
-//		logger.fine("targetServerEndpoints = " + targetServerEndpoints.toString());
+//        logger.fine("targetServerEndpoints = " + targetServerEndpoints.toString());
 //
 //        if (isLBEnabled) {
 //        // XXX S1ASCtxFactory needed

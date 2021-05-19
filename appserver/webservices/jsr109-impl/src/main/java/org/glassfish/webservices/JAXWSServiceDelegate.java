@@ -42,7 +42,7 @@ import com.sun.enterprise.deployment.ServiceReferenceDescriptor;
 import com.sun.enterprise.deployment.ServiceRefPortInfo;
 
 /**
- * Used as a delegate to concrete JAXWS 
+ * Used as a delegate to concrete JAXWS
  * Service implementation.
  * @author Bhakti Mehta
  */
@@ -90,7 +90,7 @@ public class JAXWSServiceDelegate extends Service {
         if( serviceRef.hasWsdlFile() ) {
             wsdlLocation = (new WsUtil()).privilegedGetServiceRefWsdl(serviceRef);
             fullWsdl = true;
-        } 
+        }
     }
 
     public void addPort(QName q, String id, String addr) {
@@ -98,13 +98,13 @@ public class JAXWSServiceDelegate extends Service {
         serviceDelegate.addPort(q, id, addr);
         return;
     }
-    
+
     // TODO : To be implemented
     public <T> Dispatch<T> createDispatch(QName qName, Class<T> aClass, Service.Mode mode) {
         checkUnsupportedMethods(CREATE_DISPATCH_CLASS);
         return null;
     }
-                                                                                
+
     // TODO : To be implemented
     public Dispatch<Object> createDispatch(QName qName, JAXBContext jaxbContext, Service.Mode mode) {
         checkUnsupportedMethods(CREATE_DISPATCH_CONTEXT);
@@ -115,27 +115,27 @@ public class JAXWSServiceDelegate extends Service {
         checkUnsupportedMethods(GET_EXECUTOR);
         return serviceDelegate.getExecutor();
     }
-    
+
     public void setExecutor(Executor obj) {
         checkUnsupportedMethods(SET_EXECUTOR);
         serviceDelegate.setExecutor(obj);
         return;
     }
-    
+
     public HandlerResolver getHandlerResolver() {
         checkUnsupportedMethods(GET_HANDLER_RESOLVER);
         return serviceDelegate.getHandlerResolver();
     }
-       
+
     public Object getPort(QName q, Class sei) {
         checkUnsupportedMethods(GET_PORT_CLIENT_MANAGED);
         return serviceDelegate.getPort(q, sei);
     }
-    
+
     public Object getPort(Class sei) {
         checkUnsupportedMethods(GET_PORT_CONTAINER_MANAGED);
         String serviceEndpointInterface = sei.getName();
-        ServiceRefPortInfo portInfo = 
+        ServiceRefPortInfo portInfo =
                 serviceRef.getPortInfo(serviceEndpointInterface);
         Object retVal;
         if( (portInfo != null) && portInfo.hasWsdlPort() ) {
@@ -145,23 +145,23 @@ public class JAXWSServiceDelegate extends Service {
         }
         return retVal;
     }
-    
+
     public Iterator getPorts() {
         checkUnsupportedMethods(GET_PORTS);
         return serviceDelegate.getPorts();
     }
-    
+
     public QName getServiceName() {
         checkUnsupportedMethods(GET_SERVICE_NAME);
         return serviceRef.getServiceName();
     }
-    
+
     public void setHandlerResolver(HandlerResolver resolver) {
         checkUnsupportedMethods(SET_HANDLER_RESOLVER);
         serviceDelegate.setHandlerResolver(resolver);
         return;
     }
-    
+
     public URL getWSDLDocumentLocation() {
         checkUnsupportedMethods(SET_HANDLER_RESOLVER);
         return wsdlLocation;
@@ -187,56 +187,56 @@ public class JAXWSServiceDelegate extends Service {
 
             Method addPort = serviceClass.getDeclaredMethod
                 ("addPort", new Class[] {QName.class, URI.class, String.class});
-            serviceMethodTypes.put(addPort, 
+            serviceMethodTypes.put(addPort,
                                     Integer.valueOf(ADD_PORT));
 
             Method createDispatchClass = serviceClass.getDeclaredMethod
                 ("createDispatch", new Class[] {QName.class, Class.class, Service.Mode.class});
-            serviceMethodTypes.put(createDispatchClass, 
+            serviceMethodTypes.put(createDispatchClass,
                                    Integer.valueOf(CREATE_DISPATCH_CLASS));
 
             Method createDispatchContext = serviceClass.getDeclaredMethod
                 ("createDispatch", new Class[] {QName.class, JAXBContext.class, Service.Mode.class});
-            serviceMethodTypes.put(createDispatchContext, 
+            serviceMethodTypes.put(createDispatchContext,
                                    Integer.valueOf(CREATE_DISPATCH_CONTEXT));
 
             Method getExecutor = serviceClass.getDeclaredMethod
                 ("getExecutor", noParams);
-            serviceMethodTypes.put(getExecutor, 
+            serviceMethodTypes.put(getExecutor,
                                    Integer.valueOf(GET_EXECUTOR));
 
             Method setExecutor = serviceClass.getDeclaredMethod
                 ("setExecutor", new Class[] {Executor.class});
-            serviceMethodTypes.put(setExecutor, 
+            serviceMethodTypes.put(setExecutor,
                                    Integer.valueOf(SET_EXECUTOR));
 
             Method getHandlerResolver = serviceClass.getDeclaredMethod
                 ("getHandlerResolver", noParams);
-            serviceMethodTypes.put(getHandlerResolver, 
+            serviceMethodTypes.put(getHandlerResolver,
                                    Integer.valueOf(GET_HANDLER_RESOLVER));
 
             Method getPortContainerManaged = serviceClass.getDeclaredMethod
                 ("getPort", new Class[] { Class.class });
-            serviceMethodTypes.put(getPortContainerManaged, 
+            serviceMethodTypes.put(getPortContainerManaged,
                                    Integer.valueOf(GET_PORT_CONTAINER_MANAGED));
 
             Method getPortClientManaged = serviceClass.getDeclaredMethod
                 ("getPort", new Class[] { QName.class, Class.class });
-            serviceMethodTypes.put(getPortClientManaged, 
+            serviceMethodTypes.put(getPortClientManaged,
                                    Integer.valueOf(GET_PORT_CLIENT_MANAGED));
-            
+
             Method getPorts = serviceClass.getDeclaredMethod
                 ("getPorts", noParams);
             serviceMethodTypes.put(getPorts, Integer.valueOf(GET_PORTS));
 
             Method getServiceName = serviceClass.getDeclaredMethod
                 ("getServiceName", noParams);
-            serviceMethodTypes.put(getServiceName, 
+            serviceMethodTypes.put(getServiceName,
                                    Integer.valueOf(GET_SERVICE_NAME));
 
             Method setHandlerResolver = serviceClass.getDeclaredMethod
                 ("setHandlerResolver", new Class[] {HandlerResolver.class});
-            serviceMethodTypes.put(setHandlerResolver, 
+            serviceMethodTypes.put(setHandlerResolver,
                                    Integer.valueOf(SET_HANDLER_RESOLVER));
 
             Method getWsdlLocation = serviceClass.getDeclaredMethod
@@ -257,7 +257,7 @@ public class JAXWSServiceDelegate extends Service {
         noWsdlIllegalMethods.add(Integer.valueOf(GENERATED_SERVICE_METHOD));
     }
 
-    private void checkUnsupportedMethods(int methodType) 
+    private void checkUnsupportedMethods(int methodType)
         throws UnsupportedOperationException {
 
         Set illegalMethods = fullWsdl ?
@@ -268,5 +268,5 @@ public class JAXWSServiceDelegate extends Service {
         }
 
         return;
-    }        
+    }
 }

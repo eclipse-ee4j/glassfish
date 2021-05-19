@@ -92,7 +92,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
 
     @Inject
     private Events events;
-    
+
     @Inject
     private ConfigBeansUtilities configBeansUtilities;
 
@@ -139,7 +139,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
         File sourceDir = context.getSourceDir();
         String sourcePath = sourceDir.getAbsolutePath();
         String moduleName = sourceDir.getName();
-        ConnectorDescriptor connDesc = 
+        ConnectorDescriptor connDesc =
             context.getModuleMetaData(ConnectorDescriptor.class);
         if (connDesc != null) {
             connDesc.setClassLoader(context.getClassLoader());
@@ -546,7 +546,7 @@ public class ConnectorDeployer extends JavaEEDeployer<ConnectorContainer, Connec
                         try {
                             reader.close();
                         } catch (Exception e) {
-							//ignore ?
+                            //ignore ?
                         }
                     }
                 }

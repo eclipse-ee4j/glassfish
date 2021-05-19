@@ -33,9 +33,9 @@
 
 
   <target name="run.wscompile">
-	<exec executable="${WSCOMPILE}" failonerror="true" >
-        <arg line="-source 1.1.2 ${wscompile.command}" />        
-	</exec>
+        <exec executable="${WSCOMPILE}" failonerror="true" >
+        <arg line="-source 1.1.2 ${wscompile.command}" />
+        </exec>
   </target>
 
   <target name="compile" depends="">
@@ -43,7 +43,7 @@
       <param name="src" value="client"/>
     </antcall>
     <antcall target="compile-common">
-	<param name="src" value="mejbclient"/>
+        <param name="src" value="mejbclient"/>
     </antcall>
     <antcall target="compile-common">
       <param name="src" value="ejb"/>
@@ -61,11 +61,11 @@
   <target name="wscompile-appclient" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d output -s output -classpath . wscompile_config_appclient.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/google">
-       <fileset dir="output/google" 
+       <fileset dir="output/google"
         includes="DirectoryCategory.class, GoogleSearchResult.class, GoogleSearchService.class, GoogleSearchPort.class, ResultElement.class"/>
     </copy>
     <delete dir="output"/>
@@ -74,11 +74,11 @@
   <target name="wscompile-ejb" depends="init-common">
     <mkdir dir="output"/>
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-import -keep -d output -s output -classpath . wscompile_config_ejb.xml"/>
     </antcall>
     <copy todir="${build.classes.dir}/googleejb">
-       <fileset dir="output/googleejb" 
+       <fileset dir="output/googleejb"
         includes="DirectoryCategory.class, GoogleSearchResult.class, GoogleSearchPort.class, ResultElement.class"/>
     </copy>
     <delete dir="output"/>
@@ -87,35 +87,35 @@
   <target name="assemble" depends="init-common, compile">
     <copy todir="${build.classes.dir}/META-INF/wsdl"
       file="GoogleSearch.wsdl"/>
-    <copy todir="${build.classes.dir}" 
-	 file="GoogleMapping_appclient.xml"/>
+    <copy todir="${build.classes.dir}"
+         file="GoogleMapping_appclient.xml"/>
     <antcall target="appclient-jar-common">
-      <param name="appclientjar.classes" 
+      <param name="appclientjar.classes"
              value="GoogleMapping_appclient.xml,META-INF/wsdl/**,google/*.class" />
 
     </antcall>
-    <copy todir="${build.classes.dir}" 
-	 file="GoogleMapping_ejb.xml"/>
+    <copy todir="${build.classes.dir}"
+         file="GoogleMapping_ejb.xml"/>
     <antcall target="ejb-jar-common">
-      <param name="ejbjar.classes" 
+      <param name="ejbjar.classes"
              value="GoogleMapping_ejb.xml,META-INF/wsdl/**,googleejb/*.class" />
 
     </antcall>
     <antcall target="ear-common" />
-  </target> 
+  </target>
 
-   <target name="build-mejb" depends="init-common, compile">  
+   <target name="build-mejb" depends="init-common, compile">
     <copy file="mejbclient/application-client.xml" tofile="${build.classes.dir}/META-INF/application-client.xml"/>
     <copy file="mejbclient/sun-application-client.xml" tofile="${build.classes.dir}/META-INF/sun-application-client.xml"/>
     <mkdir dir="${assemble.dir}"/>
-    <jar destfile="${assemble.dir}/mejbclient.jar" manifest="mejbclient/MANIFEST.MF">	
-	<fileset dir="${build.classes.dir}"
-		includes="google/MEJBClient.class META-INF/application-client.xml META-INF/sun-application-client.xml"
-	/>
-    </jar> 
+    <jar destfile="${assemble.dir}/mejbclient.jar" manifest="mejbclient/MANIFEST.MF">
+        <fileset dir="${build.classes.dir}"
+                includes="google/MEJBClient.class META-INF/application-client.xml META-INF/sun-application-client.xml"
+        />
+    </jar>
    </target>
 
-    <target name="deploy" 
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -131,13 +131,13 @@
     </target>
 
     <target name="run-mejbclient" depends="init-common">
-  	<exec executable="${APPCLIENT}" failonerror="true">
-    		<arg line="-client ${assemble.dir}/mejbclient.jar"/>
-		<arg line="-textauth"/>
-		<arg line="-user j2ee"/>
-    		<arg line="-password j2ee"/>
-    		<arg line="${appclient.application.args}"/>
-  	</exec>
+          <exec executable="${APPCLIENT}" failonerror="true">
+                    <arg line="-client ${assemble.dir}/mejbclient.jar"/>
+                <arg line="-textauth"/>
+                <arg line="-user j2ee"/>
+                    <arg line="-password j2ee"/>
+                    <arg line="${appclient.application.args}"/>
+          </exec>
     </target>
 
     <target name="run" depends="init-common">
@@ -145,10 +145,10 @@
           <param name="appclient.application.args" value="spellng http://${http.host}:${http.port}/googleejb/GoogleSearch"/>
         </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>  
+    </target>
 
   <target name="contactgoogle">
     <antcall target="runclient-common">
@@ -158,23 +158,23 @@
 
   <target name="gen-mapping-appclient" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping GoogleMapping_appclient.xml wscompile_config_appclient.xml"/>
     </antcall>
   </target>
 
   <target name="gen-mapping-ejb" depends="init-common">
     <antcall target="run.wscompile">
-      <param name="wscompile.command" 
+      <param name="wscompile.command"
        value="-gen -cp . -mapping GoogleMapping_ejb.xml wscompile_config_ejb.xml"/>
     </antcall>
   </target>
 
     <target name="usage">
-	<echo>
-		Usage:
-			ant all (Executes the WebServices test)
-			ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
-	</echo>
+        <echo>
+                Usage:
+                        ant all (Executes the WebServices test)
+                        ant contactgoogle (Executes the appclient contacting the Google.com WebServices)
+        </echo>
     </target>
 </project>

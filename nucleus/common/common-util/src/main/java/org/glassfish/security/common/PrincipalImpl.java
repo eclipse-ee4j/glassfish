@@ -35,14 +35,14 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      * @param user The string form of the principal name.
      */
     public PrincipalImpl(String user) {
-	this.name = user;
+        this.name = user;
     }
 
     /**
-     * This function returns true if the object passed matches 
+     * This function returns true if the object passed matches
      * the principal represented in this implementation
      * @param another the Principal to compare with.
-     * @return true if the Principal passed is the same as that 
+     * @return true if the Principal passed is the same as that
      * encapsulated in this object, false otherwise
      */
     public boolean equals(Object another) {
@@ -52,19 +52,19 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
         if (another instanceof Group) {
             return false;
         } else if (another instanceof PrincipalImpl) {
-	    Principal p = (Principal) another;
-	    return getName().equals(p.getName());
-	} else
-	    return false;
+            Principal p = (Principal) another;
+            return getName().equals(p.getName());
+        } else
+            return false;
     }
-    
+
     /**
      * Prints a stringified version of the principal.
      * @return A java.lang.String object returned by the method getName()
      */
     @Override
     public String toString() {
-	return getName();
+        return getName();
     }
 
     /**
@@ -73,7 +73,7 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      */
     @Override
     public int hashCode() {
-	return name.hashCode();
+        return name.hashCode();
     }
 
     /**
@@ -81,7 +81,7 @@ public class PrincipalImpl implements Principal, java.io.Serializable {
      * @return the name of the principal.
      */
     public String getName() {
-	return name;
+        return name;
     }
 
 }

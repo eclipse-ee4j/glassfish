@@ -17,14 +17,14 @@
 -->
 
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
- 
+
 <suite name="QuickLookTests" verbose="2" >
   <parameter name="admin.url" value="http://localhost:4848/__asadmin"/>
   <parameter name="admin.user" value="admin"/>
   <parameter name="admin.password" value=""/>
   <parameter name="admin.console.url" value="http://localhost:4848/"/>
   <parameter name="resources.xml.relative.path" value="admin/resources/resources.xml"/>
-  
+
   <test name="admincli_tests">
         <classes>
                 <class name="test.admincli.RestartDomainTests"/>
@@ -46,11 +46,11 @@
       <class name="amxtest.AMXOtherTests"/>
     </classes>
   </test>
-  
+
   <test name="adminconsole_tests">
-	<classes>
-		<class name="test.admin.AdminConsoleTests"/>
-	</classes>
+    <classes>
+        <class name="test.admin.AdminConsoleTests"/>
+    </classes>
   </test>
   <test name="rest_tests">
     <classes>
@@ -109,15 +109,15 @@
   </test>
   <test name="ejb_singleton_ear_redeploy">
     <classes>
-	<class name="test.ejb.singleton.SingletonTestNG" />
+    <class name="test.ejb.singleton.SingletonTestNG" />
     </classes>
   </test>
   <test name="ejb_stateful_cmt_ni_war">
     <classes>
-	<class name="test.ejb.slsbnicmt.SlsbnicmtTestNG" />
-	<class name="test.ejb.sfulnoi.SfulnoiTestNG" />
+    <class name="test.ejb.slsbnicmt.SlsbnicmtTestNG" />
+    <class name="test.ejb.sfulnoi.SfulnoiTestNG" />
     </classes>
-  </test> 
+  </test>
   <test name="ejb_cmp_ear">
     <classes>
         <class name="test.CmpRosterTestNG" />
@@ -155,6 +155,6 @@
       <class name="fromjava.client.CheckTesterUITestNG"/>
     </classes>
   </test>
- 
+
 </suite>
 

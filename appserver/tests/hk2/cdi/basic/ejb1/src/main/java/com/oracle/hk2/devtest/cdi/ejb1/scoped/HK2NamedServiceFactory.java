@@ -24,7 +24,7 @@ import org.jvnet.hk2.annotations.Service;
 
 /**
  * There are two factories producing this type, both with different names
- * 
+ *
  * @author jwells
  *
  */
@@ -44,7 +44,7 @@ public class HK2NamedServiceFactory implements Factory<HK2NamedService> {
             public String getName() {
                 return NAMED_SERVICE_NAME;
             }
-            
+
         };
     }
 

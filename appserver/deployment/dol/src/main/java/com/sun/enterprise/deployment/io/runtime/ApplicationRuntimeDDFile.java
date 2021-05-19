@@ -39,8 +39,8 @@ import java.util.Map;
 @ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
 @Service
-public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {  
-   
+public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+
     /**
      * @return the location of the DeploymentDescriptor file for a
      * particular type of J2EE Archive
@@ -48,7 +48,7 @@ public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorF
     public String getDeploymentDescriptorPath() {
         return DescriptorConstants.S1AS_APPLICATION_JAR_ENTRY;
     }
-    
+
     /**
      * @return a RootXMLNode responsible for handling the deployment
      * descriptors associated with this J2EE module
@@ -56,7 +56,7 @@ public class ApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorF
      * @param the descriptor for which we need the node
      */
     public RootXMLNode getRootXMLNode(Descriptor descriptor) {
-   
+
         if (descriptor instanceof Application) {
             return new ApplicationRuntimeNode((Application) descriptor);
         }

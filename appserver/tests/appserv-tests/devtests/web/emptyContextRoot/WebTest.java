@@ -26,7 +26,7 @@ import com.sun.ejte.ccl.reporter.*;
  * sun-web.xml, as follows:
  *
  *  <sun-web-app>
- *    <context-root>/</context-root> 
+ *    <context-root>/</context-root>
  *  </sun-web-app>
  */
 public class WebTest {
@@ -45,7 +45,7 @@ public class WebTest {
         host = args[0];
         port = args[1];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for context-root setting in "
                             + "sun-web.xml");
@@ -54,8 +54,8 @@ public class WebTest {
         stat.printSummary(TEST_NAME);
     }
 
-    public void doTest() {     
-        try { 
+    public void doTest() {
+        try {
             invokeJsp();
             stat.addStatus(TEST_NAME, stat.PASS);
         } catch (Exception ex) {
@@ -108,6 +108,6 @@ public class WebTest {
             } catch (IOException ioe) {
                 // ignore
             }
-        } 
+        }
     }
 }

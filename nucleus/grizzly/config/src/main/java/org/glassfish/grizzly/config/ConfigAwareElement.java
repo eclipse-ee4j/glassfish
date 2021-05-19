@@ -23,7 +23,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
 /**
  * Grizzly config elements like protocols, filters, which implement this
  * interface, will get correspondent dom configuration element.
- * 
+ *
  * @author Alexey Stashok
  */
 public interface ConfigAwareElement<E extends ConfigBeanProxy> {

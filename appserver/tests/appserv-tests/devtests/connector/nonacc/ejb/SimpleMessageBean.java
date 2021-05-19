@@ -34,11 +34,11 @@ public class SimpleMessageBean implements MessageDrivenBean,
     public void setMessageDrivenContext(MessageDrivenContext mdc) {
         System.out.println("In "
             + "SimpleMessageBean.setMessageDrivenContext()");
-	this.mdc = mdc;
+        this.mdc = mdc;
     }
 
     public void ejbCreate() {
-	System.out.println("In SimpleMessageBean.ejbCreate()");
+        System.out.println("In SimpleMessageBean.ejbCreate()");
     }
 
     public void onMessage(Message inMessage) {

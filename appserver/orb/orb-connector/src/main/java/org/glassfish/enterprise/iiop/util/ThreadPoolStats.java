@@ -20,54 +20,58 @@ import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.BoundedRangeStatistic;
 import org.glassfish.external.statistics.RangeStatistic;
 import org.glassfish.external.statistics.Stats;
+
 /**
  * Stats interface for the monitorable attributes of the
  * a generic ThreadPool. This combines the statistics that were exposed in 7.0
  * with the new ones. In 8.0, the generic Thread Pool that can be used by any component
  * in the server runtime is introduced.
+ *
  * @author Kedar Mhaswade
  * @since S1AS8.0
  */
-
 public interface ThreadPoolStats extends Stats {
-    
-    /** Returns the statistical information about the number of Threads in the associated ThreaPool, as an instance of BoundedRangeStatistic.
+
+    /**
+     * Returns the statistical information about the number of Threads in the associated ThreaPool,
+     * as an instance of BoundedRangeStatistic.
      * This returned value gives an idea about how the pool is changing.
-     * @return		an instance of {@link BoundedRangeStatistic}
+     * @return an instance of {@link BoundedRangeStatistic}
      */
-    public BoundedRangeStatistic getCurrentNumberOfThreads();
-    
+    BoundedRangeStatistic getCurrentNumberOfThreads();
+
     /** Returns the total number of available threads, as an instance of {@link CountStatistic}.
-     * @return		an instance of {@link CountStatistic}
+     * @return an instance of {@link CountStatistic}
      */
-    public CountStatistic getNumberOfAvailableThreads();
-    
+    CountStatistic getNumberOfAvailableThreads();
+
     /** Returns the number of busy threads, as an instance of {@link CountStatistic}.
-     * @return		an instance of {@link CountStatistic}
+     * @return an instance of {@link CountStatistic}
      */
-    public CountStatistic getNumberOfBusyThreads();
-    
+    CountStatistic getNumberOfBusyThreads();
+
     /**
      * Returns the statistical information about the average completion time of a work item in milliseconds.
-     * @return	an instance of {@link RangeStatistic}
+     * @return an instance of {@link RangeStatistic}
      */
-    public RangeStatistic getAverageWorkCompletionTime();
-    
-    /** Returns the the total number of work items added so far to the work queue associated with threadpool.
-     * @return		an instance of {@link CountStatistic}
+    RangeStatistic getAverageWorkCompletionTime();
+
+    /**
+     * Returns the the total number of work items added so far to the work queue associated with threadpool.
+     * @return an instance of {@link CountStatistic}
      */
-    public CountStatistic getTotalWorkItemsAdded();
-    
+    CountStatistic getTotalWorkItemsAdded();
+
     /**
      * Returns average time in milliseconds a work item waited in the work queue before getting processed.
-     * @return		an instance of {@link RangeStatistic}
+     * @return an instance of {@link RangeStatistic}
      */
-    public RangeStatistic getAverageTimeInQueue();
-    
+    RangeStatistic getAverageTimeInQueue();
+
     /**
      * Returns the work items in queue
-     * @return	an instance of {@link BoundedRangeStatistic}
+     * @return an instance of {@link BoundedRangeStatistic}
      */
-    public BoundedRangeStatistic getNumberOfWorkItemsInQueue();
-    
+    BoundedRangeStatistic getNumberOfWorkItemsInQueue();
+
 }

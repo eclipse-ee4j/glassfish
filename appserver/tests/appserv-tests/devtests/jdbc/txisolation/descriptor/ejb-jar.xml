@@ -38,7 +38,7 @@
                 <description></description>
                 <use-caller-identity></use-caller-identity>
             </security-identity>
-            
+
             <resource-ref>
                 <res-ref-name>DataSource</res-ref-name>
                 <res-type>javax.sql.DataSource</res-type>
@@ -46,7 +46,7 @@
                 <res-sharing-scope>Shareable</res-sharing-scope>
             </resource-ref>
         </session>
-        
+
     </enterprise-beans>
 
     <assembly-descriptor>

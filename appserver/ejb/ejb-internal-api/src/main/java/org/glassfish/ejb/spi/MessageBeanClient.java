@@ -20,10 +20,10 @@ import org.glassfish.ejb.api.MessageBeanProtocolManager;
 
 /*
  * MessageBeanClient is an interface implemented by clients
- * of the MessageBeanContainer.  It contains lifecycle methods 
+ * of the MessageBeanContainer.  It contains lifecycle methods
  * that allow the container to bootstrap the MessageBeanClient.
  * A MessageBeanClient is some part of the container that needs
- * to deliver messages to a message-driven bean.  
+ * to deliver messages to a message-driven bean.
  *
  * @author Kenneth Saks
  */
@@ -32,7 +32,7 @@ public interface MessageBeanClient {
     /**
      * First method called by MessageBeanContainer during bootstrapping.
      * Allow the MessageBeanClient to initialize itself.  Message delivery
-     * should not begin until start is called.  
+     * should not begin until start is called.
      *
      * @param pm MessageBeanProtocolManager allows the MessageBeanClient to
      * access the services provided by the MessageBeanContainer.

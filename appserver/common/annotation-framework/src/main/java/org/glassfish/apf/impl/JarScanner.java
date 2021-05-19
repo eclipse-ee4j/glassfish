@@ -35,16 +35,16 @@ import org.glassfish.apf.Scanner;
  * @author Jerome Dochez
  */
 public class JarScanner extends JavaEEScanner implements Scanner<Object> {
-    
+
     File jarFile;
     Set<JarEntry> entries = new HashSet<JarEntry>();
     ClassLoader classLoader = null;
-    
-    
+
+
     public  void process(File jarFile, Object bundleDesc, ClassLoader loader) throws java.io.IOException {
         this.jarFile = jarFile;
         JarFile jf = new JarFile(jarFile);
-        
+
         try {
             Enumeration<JarEntry> entriesEnum = jf.entries();
             while(entriesEnum.hasMoreElements()) {
@@ -52,13 +52,13 @@ public class JarScanner extends JavaEEScanner implements Scanner<Object> {
                 if (je.getName().endsWith(".class")) {
                     entries.add(je);
                 }
-            }        
+            }
         } finally {
             jf.close();
         }
         initTypes(jarFile);
-    }    
-    
+    }
+
     public ClassLoader getClassLoader() {
         if (classLoader==null) {
             final URL[] urls = new URL[1];
@@ -77,30 +77,30 @@ public class JarScanner extends JavaEEScanner implements Scanner<Object> {
         }
         return classLoader;
     }
-    
+
     public Set<Class> getElements() {
-        
-        
+
+
         Set<Class> elements = new HashSet<Class>();
         if (getClassLoader()==null) {
             AnnotationUtils.getLogger().severe("Class loader null");
             return elements;
-        }        
+        }
         for (JarEntry je : entries) {
             String fileName = je.getName();
             // convert to a class name...
             String className = fileName.replace(File.separatorChar, '.');
             className = className.substring(0, className.length()-6);
-            try {                
+            try {
                 elements.add(classLoader.loadClass(className));
-                
+
             } catch(ClassNotFoundException cnfe) {
                 cnfe.printStackTrace();
             }
         }
         return elements;
     }
-    
+
 
 
 }

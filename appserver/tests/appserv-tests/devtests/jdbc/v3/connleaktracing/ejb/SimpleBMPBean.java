@@ -28,7 +28,7 @@ public class SimpleBMPBean
     private transient jakarta.ejb.SessionContext m_ctx = null;
 
     public void setSessionContext(SessionContext context) {
-	m_ctx = context;
+        m_ctx = context;
     }
 
     public Integer ejbCreate() throws CreateException {
@@ -36,7 +36,7 @@ public class SimpleBMPBean
     }
 
 
-   
+
 /* Get a single connection and close it */
     public boolean test1() {
         Connection conn = null;

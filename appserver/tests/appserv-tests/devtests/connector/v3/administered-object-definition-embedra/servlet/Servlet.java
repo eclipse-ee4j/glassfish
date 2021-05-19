@@ -64,7 +64,7 @@ import jakarta.transaction.UserTransaction;
                         resourceAdapter="#aod-ra",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
                 ),
-                
+
                 @AdministeredObjectDefinition(
                         description="module-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:module/env/Servlet_AdminObject",
@@ -73,7 +73,7 @@ import jakarta.transaction.UserTransaction;
                         resourceAdapter="#aod-ra",
                         properties = {"org.glassfish.admin-object.resType=connector.MyAdminObject"}
                 ),
-                
+
                 @AdministeredObjectDefinition(
                         description="component-scope resource defined by @AdministeredObjectDefinition",
                         name = "java:comp/env/Servlet_AdminObject",
@@ -91,7 +91,7 @@ public class Servlet extends HttpServlet {
 
     @EJB
     private  Hello helloStateless;
-    
+
     @EJB(beanName = "HelloStatefulEJB")
     private  HelloStateful helloStateful;
 

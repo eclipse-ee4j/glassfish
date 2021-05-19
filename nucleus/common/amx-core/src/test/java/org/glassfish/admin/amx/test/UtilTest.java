@@ -35,7 +35,7 @@ public final class UtilTest {
     @After
     public void tearDown() {
     }
-    
+
     @Test
     public void testTypes() {
         assert Util.deduceType(DomainRoot.class).equals( "domain-root" );

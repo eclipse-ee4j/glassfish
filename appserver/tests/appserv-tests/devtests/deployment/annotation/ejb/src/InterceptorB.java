@@ -28,7 +28,7 @@ public class InterceptorB extends InterceptorA {
     @AroundInvoke
     Object aroundInvokeB(InvocationContext ctx) {
         return null;
-    }  
+    }
 
     @PreDestroy
     void preDestroy() {

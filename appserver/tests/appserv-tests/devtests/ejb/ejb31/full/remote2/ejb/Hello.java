@@ -30,10 +30,10 @@ public interface Hello {
 
     // marked async on bean class
     void fireAndForget();
-	
+
     Future<String> asyncThrowException(String exceptionType);
 
     Future<String> asyncCancel(int seconds) throws Exception;
-    
+
     void throwException(String exceptionType);
 }

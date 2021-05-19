@@ -25,7 +25,7 @@ import org.glassfish.deployment.common.DeploymentProperties;
 /**
  * Parameters for the remote instance deploy command, beyond the ones already
  * defined for the DAS DeployCommand.
- * 
+ *
  * @author Tim Quinn
  */
 public class InstanceDeployCommandParameters extends DeployCommandParameters {

@@ -21,10 +21,9 @@ import org.glassfish.deployment.common.Descriptor;
 
 /**
  * This descriptor represents a specification of a transactional behavior.
- * 
+ *
  * @author Danny Coward
  */
-
 public final class ContainerTransaction extends Descriptor {
     private String transactionAttribute;
     /** Transactions are not supported. */
@@ -39,82 +38,82 @@ public final class ContainerTransaction extends Descriptor {
     public static final String MANDATORY = "Mandatory";
     /** Never supply a transaction. */
     public static final String NEVER = "Never";
-    private static final LocalStringManagerImpl localStrings =
-	    new LocalStringManagerImpl(ContainerTransaction.class);
-    
+    private static final LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ContainerTransaction.class);
+
     /**
      * Copy constructor.
      */
     public ContainerTransaction(ContainerTransaction other) {
-	if (other != null) {
-	    this.transactionAttribute = other.transactionAttribute;
-	    this.setDescription(other.getDescription());
-	}
+        if (other != null) {
+            this.transactionAttribute = other.transactionAttribute;
+            this.setDescription(other.getDescription());
+        }
     }
-    
+
     /**
-     * Create a new transaction descriptor with the given attribute. Throws 
-     * an IllegalArgumentException if the attribute is not an allowed type. 
+     * Create a new transaction descriptor with the given attribute. Throws
+     * an IllegalArgumentException if the attribute is not an allowed type.
      * The allowed types are enumeration ny this class.
      * @param transactionAttribute .
      * @param description .
      */
-    public ContainerTransaction(String transactionAttribute, 
-				String description) {
-	super("a Container Transaction", description);
-	boolean isValidAttribute = (NOT_SUPPORTED.equals(transactionAttribute)
-	    || SUPPORTS.equals(transactionAttribute)
-		|| REQUIRED.equals(transactionAttribute)
-			|| REQUIRES_NEW.equals(transactionAttribute)
-			    || MANDATORY.equals(transactionAttribute)
-				|| NEVER.equals(transactionAttribute) );
-	if (!isValidAttribute && this.isBoundsChecking()) {
-	    throw new IllegalArgumentException(localStrings.getLocalString(
-			"enterprise.deployment.exceptionunknowncontainertxtype",
-			"Unknown ContainerTransaction type: {0}", 
-			new Object[] {transactionAttribute}));
-	} else {
-	    this.transactionAttribute = transactionAttribute;
-	}
+    public ContainerTransaction(String transactionAttribute, String description) {
+        super("a Container Transaction", description);
+        boolean isValidAttribute = (
+            NOT_SUPPORTED.equals(transactionAttribute)
+            || SUPPORTS.equals(transactionAttribute)
+            || REQUIRED.equals(transactionAttribute)
+            || REQUIRES_NEW.equals(transactionAttribute)
+            || MANDATORY.equals(transactionAttribute)
+            || NEVER.equals(transactionAttribute) );
+        if (!isValidAttribute && Descriptor.isBoundsChecking()) {
+            throw new IllegalArgumentException(localStrings.getLocalString(
+                "enterprise.deployment.exceptionunknowncontainertxtype",
+                "Unknown ContainerTransaction type: {0}",
+                new Object[] {transactionAttribute}));
+        } else {
+            this.transactionAttribute = transactionAttribute;
+        }
     }
-    
+
     /**
      * The transaction attribute that I specify.
      * @return the transaction attribute.
      */
     public String getTransactionAttribute() {
-	return this.transactionAttribute;
+        return this.transactionAttribute;
     }
-    
-    /** 
-     * Equality iff the other object is another container transaction with the 
+
+    /**
+     * Equality iff the other object is another container transaction with the
      * same transaction attribute.
      * @return true if the objects are equal, false otherwise.
      */
+    @Override
     public boolean equals(Object other) {
-	if (other != null && other instanceof ContainerTransaction) {
-	    ContainerTransaction otherContainerTransaction = 
-			    (ContainerTransaction) other;
-	    if (otherContainerTransaction.getTransactionAttribute().equals(
-					this.getTransactionAttribute())) {
-		return true;
-	    }
-	}
-	return false;
+        if (other != null && other instanceof ContainerTransaction) {
+            ContainerTransaction otherContainerTransaction = (ContainerTransaction) other;
+            if (otherContainerTransaction.getTransactionAttribute().equals(this.getTransactionAttribute())) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    @Override
     public int hashCode() {
         int result = 17;
-        result = 37*result + getTransactionAttribute().hashCode();
+        result = 37 * result + getTransactionAttribute().hashCode();
         return result;
     }
 
-    
     /**
-     * Returns a formatted String representing my state.
+     * Appends a formatted String representing my state.
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
-	toStringBuffer.append("Container Transaction: ").append(this.getTransactionAttribute()).append("@").append(this.getDescription());
+        toStringBuffer.append("Container Transaction: ").append(getTransactionAttribute()).append("@")
+            .append(getDescription());
     }
 }
 

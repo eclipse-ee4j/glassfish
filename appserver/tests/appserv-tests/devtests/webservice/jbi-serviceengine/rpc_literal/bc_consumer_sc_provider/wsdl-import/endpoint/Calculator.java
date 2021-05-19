@@ -29,12 +29,12 @@ name="Calculator",
         wsdlLocation = "WEB-INF/wsdl/CalculatorService.wsdl"
         )
         @SOAPBinding(style=SOAPBinding.Style.RPC, use=SOAPBinding.Use.LITERAL)
-        
+
         public class Calculator {
-    
+
     public static final String testName = "\nTest :: rpc-literal-bundled-wsdl-bc-consumer-se-provider : ";
     public Calculator() {}
-    
+
     @WebMethod(operationName="add", action="urn:Add")
     public int add(
             @WebParam(name = "int_1", partName = "int_1") int i,
@@ -44,7 +44,7 @@ name="Calculator",
         System.out.println(testName + i + "+" + j +" = " + k);
         return k;
     }
-    
+
     @WebMethod(operationName="calculateIncomeTax", action="urn:CalculateIncomeTax")
     public long calculateIncomeTax(IncomeTaxDetails details
             , IncomeTaxDetails details2
@@ -64,18 +64,18 @@ name="Calculator",
         System.out.println(testName +"Tax to be paid = " + taxToBePaid);
         return taxToBePaid;
     }
-    
+
     @WebMethod(operationName="sayHi", action="urn:SayHi")
     public String sayHi() {
         return testName + "Hi from sayHi()";
     }
-    
+
     @WebMethod(operationName="printHi", action="urn:PrintHi")
     @Oneway
     public void printHi() {
         System.out.println(testName +"Hi from printHi()");
     }
-    
+
     @WebMethod(operationName="printHiToMe", action="urn:PrintHiToMe")
     @Oneway
     public void printHiToMe(String name) {

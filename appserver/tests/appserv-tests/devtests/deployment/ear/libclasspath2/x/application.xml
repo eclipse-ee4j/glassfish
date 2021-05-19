@@ -36,5 +36,5 @@
   <module>
       <java>libdirtest-client.jar</java>
   </module>
-  <library-directory>x</library-directory>  
+  <library-directory>x</library-directory>
 </application>

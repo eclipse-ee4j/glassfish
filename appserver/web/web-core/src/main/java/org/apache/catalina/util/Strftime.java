@@ -26,7 +26,7 @@ import java.util.TimeZone;
 /**
  * Converts dates to strings using the same format specifiers as strftime
  *
- * Note: This does not mimic strftime perfectly.  Certain strftime commands, 
+ * Note: This does not mimic strftime perfectly.  Certain strftime commands,
  *       are not supported, and will convert as if they were literals.
  *
  *       Certain complicated commands, like those dealing with the week of the year
@@ -119,7 +119,7 @@ public class Strftime {
 
     /**
      * Create an instance of this date formatting class
-     * 
+     *
      * @param origFormat the strftime-style formatting string
      * @param locale to use for locale-specific conversions
      */
@@ -197,7 +197,7 @@ public class Strftime {
                         buf.append("'");
                         inside = true;
                     }
-                    
+
                     buf.append(c);
                 }
             }
@@ -225,7 +225,7 @@ public class Strftime {
      * try to get the Java Date/Time formating associated with
      * the C standard provided
      *
-     * @param buf translated StringBuilder 
+     * @param buf translated StringBuilder
      * @param pattern command to translate
      * @param index  first character index
      * @param oldInside whether to close the quotes if inside quote
@@ -238,14 +238,14 @@ public class Strftime {
         //O and E are modifiers, they mean to present an alternative representation of the next char
         //we just handle the next char as if the O or E wasn't there
         if ( firstChar == 'O' || firstChar == 'E' ) {
-            if ( index + 1 < pattern.length() ) {               
+            if ( index + 1 < pattern.length() ) {
                 newInside = translateCommand( buf, pattern, index + 1, oldInside );
             } else {
                 buf.append( quote("%" + firstChar, oldInside ) );
             }
         } else {
             String command = translate.getProperty( String.valueOf( firstChar ) );
-            
+
             //If we don't find a format, treat it as a literal--That's what apache does
             if ( command == null ) {
                 buf.append( quote( "%" + firstChar, oldInside ) );

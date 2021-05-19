@@ -21,7 +21,7 @@ import java.util.*;
 /**
  * collection of messages.
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class Messages {
 
@@ -54,7 +54,7 @@ public class Messages {
        String command  = args[0];
        String destName = args[1];
        String message  = args[2];
-   
+
        if (!"add".equals(command)) {
            System.exit(1);
        }

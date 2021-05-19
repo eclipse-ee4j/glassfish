@@ -22,9 +22,9 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * @author sandeep.shrivastava
- * 
+ *
  * Interface to provide the runtime data in effect for the server logging.
- * 
+ *
  */
 @Contract
 public interface LoggingRuntime {
@@ -34,5 +34,5 @@ public interface LoggingRuntime {
      * @return
      */
     public File getCurrentLogFile();
-    
+
 }

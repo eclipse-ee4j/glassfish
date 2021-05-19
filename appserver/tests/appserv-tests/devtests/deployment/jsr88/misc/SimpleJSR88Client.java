@@ -19,7 +19,7 @@
  *
  *Provides access to the JSR88 API through a convenient command line.
  *<p>
- *This is intended for internal testing use only. 
+ *This is intended for internal testing use only.
  *
  * Created on January 21, 2004, 11:22 AM
  */
@@ -44,7 +44,7 @@ import javax.enterprise.deploy.spi.exceptions.*;
  */
 public class SimpleJSR88Client {
 
-    
+
     private final String J2EE_DEPLOYMENT_MANAGER = "J2EE-DeploymentFactory-Implementation-Class";
 
     private DeploymentFactory deploymentFactory;
@@ -52,15 +52,15 @@ public class SimpleJSR88Client {
     private DeploymentManager deploymentManager;
 
     private String host;
-    
+
     private String port;
-    
+
     private String user;
-    
+
     private String password;
-    
+
     private String uri;
-    
+
     /** Creates a new instance of SimpleJSR88Client */
     public SimpleJSR88Client(String host, String port, String user, String password) {
         this.host = host;
@@ -69,7 +69,7 @@ public class SimpleJSR88Client {
         this.password = password;
         this.uri = "deployer:Sun:AppServer::" + host + ":" + port;
     }
-    
+
     /**
      * @param args the command line arguments
      */
@@ -78,10 +78,10 @@ public class SimpleJSR88Client {
          *Get properties indicating the user, password, host, and port.
          */
         String host = null;
-        String port = null; 
-        String user = null; 
+        String port = null;
+        String user = null;
         String password = null;
-        
+
         if (((host = System.getProperty("jsr88client.host")) == null)
             || ((port = System.getProperty("jsr88client.port")) == null)
             || ((user = System.getProperty("jsr88client.user")) == null)
@@ -89,7 +89,7 @@ public class SimpleJSR88Client {
             System.out.println("The properties jsr88client.host, jsr88client.port, jsr88client.user, and jsr88client.password must be assigned");
             System.exit(-1);
         }
-        
+
         try {
             new SimpleJSR88Client(host, port, user, password).run(args);
             System.exit(0);
@@ -99,19 +99,19 @@ public class SimpleJSR88Client {
             System.exit(1);
         }
     }
-    
+
     public void run(String[] args) throws TargetException, DeploymentManagerCreationException {
         if (args.length == 0) {
             throw new IllegalArgumentException("Specify the JSR88 client command you want to execute as the first command line parameter");
         }
-        
+
         if (args[0].equals("getAvailableAppClientModules") ){
             getAvailableModules(ModuleType.CAR);
         } else {
             throw new IllegalArgumentException("Unrecognized JSR88 client command specified: " + args[0]);
         }
     }
-    
+
     private void getAvailableModules(ModuleType type) throws TargetException, DeploymentManagerCreationException {
         Target targets [] = getDeploymentManager().getTargets();
         TargetModuleID [] moduleIDs = getDeploymentManager().getAvailableModules(type, targets);
@@ -121,7 +121,7 @@ public class SimpleJSR88Client {
         }
         System.out.println();
     }
-    
+
     private DeploymentFactory loadDeploymentFactory() {
         System.out.println("Loading deployment factory");
         Object deploymentFactory = null;
@@ -142,9 +142,9 @@ public class SimpleJSR88Client {
             } catch (ClassNotFoundException cnfe) {
                 cnfe.printStackTrace();
                 System.exit(-1);
-            }   
+            }
 
-            try {   
+            try {
                 deploymentFactory = factory.newInstance();
             } catch (Exception ie) {
                 ie.printStackTrace();
@@ -155,8 +155,8 @@ public class SimpleJSR88Client {
             } else {
                     System.out.println("Expected instance of DeploymentFactory from class loading of " + className + " but got " + deploymentFactory.getClass().getName() + " instead");
                     System.exit(-1);
-            }  
-            
+            }
+
             } catch (Exception ex) {
                 log("Failed to load the deployment factory using URL " + file.getAbsolutePath() + " and class " + className);
                 ex.printStackTrace();
@@ -166,11 +166,11 @@ public class SimpleJSR88Client {
             return (DeploymentFactory) deploymentFactory;
 
     }
-    
+
     private static void log(String message) {
         System.out.println("[" + getJSRClientName() + "]:: " + message);
     }
-    
+
     protected static String getJSRClientName() {
         return "SimpleJSR88Client";
     }
@@ -181,14 +181,14 @@ public class SimpleJSR88Client {
         }
         return this.deploymentFactory;
     }
-    
+
     private DeploymentManager loadDeploymentManager() throws DeploymentManagerCreationException {
         System.out.println("Loading deployment manager using uri " + this.uri + " under user " + this.user);
-        DeploymentManager answer = getDeploymentFactory().getDeploymentManager(this.uri, this.user, this.password); 
+        DeploymentManager answer = getDeploymentFactory().getDeploymentManager(this.uri, this.user, this.password);
         System.out.println("Deployment manager loaded.");
         return answer;
     }
-    
+
     protected DeploymentManager getDeploymentManager() throws DeploymentManagerCreationException {
         if (this.deploymentManager == null) {
             this.deploymentManager = loadDeploymentManager();

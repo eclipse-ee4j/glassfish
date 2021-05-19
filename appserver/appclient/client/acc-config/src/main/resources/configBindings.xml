@@ -52,7 +52,7 @@
 
     <element name="client-container" type="class" root="true">
         <attribute name="send-password" property="SendPassword" convert="boolean"/>
-        
+
     </element>
 
     <element name="ssl" type="class">
@@ -112,7 +112,7 @@
     The following custom bindings would apply to the XSD if there were one.
 -->
 <!--
-<bindings 
+<bindings
     xmlns="http://java.sun.com/xml/ns/jaxb" version="2.1"
     xmlns:xs="http://www.w3.org/2001/XMLSchema">
 

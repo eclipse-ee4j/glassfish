@@ -50,7 +50,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
 
     @Param(name = "dbhome", optional = true)
     private String dbHome;
-    
+
     @Param(name = "jvmoptions", optional = true, separator=' ')
     private String[] jvmoptions;
 
@@ -80,7 +80,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
         cmd.add(dbPort);
         cmd.add("true");
         cmd.add(dbHome);
-        return cmd.toArray(new String[cmd.size()]);  
+        return cmd.toArray(new String[cmd.size()]);
     }
 
 
@@ -195,7 +195,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
                 logger.info(strings.get("StartDatabaseStatus", dbHost, dbPort));
             }
         } catch (IllegalThreadStateException ite) {
-            // IllegalThreadStateException is thrown if the 
+            // IllegalThreadStateException is thrown if the
             // process has not yet teminated and is still running.
             // see http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Process.html#exitValue()
             // This is good since that means the database is up and running.

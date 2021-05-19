@@ -84,15 +84,15 @@
     </target>
 
     <target name="usage">
-	<echo> Usage:
-		ant all (Executes all the prodmeth tests)
-		ant clean (cleans all the prodmeth tests)
-		ant build (builds all the prodmeth tests)
-		ant setup (sets up all resources for prodmeth tests)
-		ant deploy (deploys all the prodmeth apps)
-		ant run (Executes all the prodmeth tests)
-		ant undeploy (undeploys all the  prodmeth apps)
-		ant unsetup (unsets all resources for prodmeth tests)
-	</echo>
+        <echo> Usage:
+                ant all (Executes all the prodmeth tests)
+                ant clean (cleans all the prodmeth tests)
+                ant build (builds all the prodmeth tests)
+                ant setup (sets up all resources for prodmeth tests)
+                ant deploy (deploys all the prodmeth apps)
+                ant run (Executes all the prodmeth tests)
+                ant undeploy (undeploys all the  prodmeth apps)
+                ant unsetup (unsets all resources for prodmeth tests)
+        </echo>
     </target>
 </project>

@@ -140,7 +140,7 @@ public class TranslatedConfigView implements ConfigView {
     /**
      * check if a given property name matches AS alias pattern ${ALIAS=aliasname}. if so, return the aliasname, otherwise
      * return null.
-     * 
+     *
      * @param propName The property name to resolve. ex. ${ALIAS=aliasname}.
      * @return The aliasname or null.
      */

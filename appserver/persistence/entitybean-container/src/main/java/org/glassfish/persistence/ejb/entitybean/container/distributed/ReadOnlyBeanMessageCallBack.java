@@ -64,7 +64,7 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
         }
     }
 
-    public void processNotification(Signal signal) { 
+    public void processNotification(Signal signal) {
         try {
             MessageSignal messageSignal = (MessageSignal) signal;
             byte[] payload = messageSignal.getMessage();
@@ -86,7 +86,7 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
 
     /**
      * This is called by the container after it has called refresh
-     * 
+     *
      * @param ejbID
      *            the ejbID that uniquely identifies the container
      * @param pk
@@ -108,7 +108,7 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
 
     /**
      * This is called by the container after it has called refresh
-     * 
+     *
      * @param ejbID
      *            the ejbID that uniquely identifies the container
      * @param pk
@@ -129,7 +129,7 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
      * Marshal an long to a byte array. The bytes are in BIGENDIAN order. i.e.
      * array[offset] is the most-significant-byte and array[offset+7] is the
      * least-significant-byte.
-     * 
+     *
      * @param array
      *            The array of bytes.
      * @param offset
@@ -150,7 +150,7 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
      * Unmarshal a byte array to an long. Assume the bytes are in BIGENDIAN
      * order. i.e. array[offset] is the most-significant-byte and
      * array[offset+7] is the least-significant-byte.
-     * 
+     *
      * @param array
      *            The array of bytes.
      * @param offset
@@ -169,7 +169,7 @@ public class ReadOnlyBeanMessageCallBack implements CallBack, DistributedReadOnl
      * Unmarshal a byte array to an integer. Assume the bytes are in BIGENDIAN
      * order. i.e. array[offset] is the most-significant-byte and
      * array[offset+3] is the least-significant-byte.
-     * 
+     *
      * @param array
      *            The array of bytes.
      * @param offset

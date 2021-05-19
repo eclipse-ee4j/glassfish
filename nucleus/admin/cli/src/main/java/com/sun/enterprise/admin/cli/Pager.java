@@ -65,7 +65,7 @@ class Pager {
 
     /**
      * Indicate if there are lines left to be copied
-     * 
+     *
      * @return true iff there is at least one line left to be copied
      */
     boolean hasNext() {

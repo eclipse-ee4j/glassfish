@@ -63,7 +63,7 @@
     </target>
 
     <target name="compile-client">
-        <mkdir dir="${build.classes.dir}/client"/> 
+        <mkdir dir="${build.classes.dir}/client"/>
         <antcall target="wsimport">
             <param name="wsimport.args"
                 value="-keep -d ${build.classes.dir}/client http://${http.host}:${http.port}/WssRoles2EjbService/HelloEjb?WSDL"/>
@@ -81,7 +81,7 @@
 
     <target name="build-server" depends="compile-server">
         <mkdir dir="${assemble.dir}"/>
-        <mkdir dir="${build.classes.dir}/META-INF"/> 
+        <mkdir dir="${build.classes.dir}/META-INF"/>
 
         <antcall target="package-ejbjar-common">
             <param name="ejbjar.files" value="${build.classes.dir}/ejbws"/>
@@ -95,11 +95,11 @@
 
         <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
         <antcall target="package-appclientjar-common">
-            <param name="appclientjar.files" 
+            <param name="appclientjar.files"
                 value="${build.classes.dir}/client"/>
-            <param name="appclient.jar" 
+            <param name="appclient.jar"
                 value="${assemble.dir}/${appname}-client.jar"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
                 value="com/sun/**/*.class"/>
         </antcall>
     </target>

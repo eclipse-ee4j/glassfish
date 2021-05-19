@@ -42,18 +42,18 @@
     </path>
 
     <target name="deployApps">
-		<delete dir="${testsRoot}/build/war/servletonly"/>
-		<delete dir="${testsRoot}/build/ejb/statelesshello"/>
-		<delete dir="${testsRoot}/build/ear/wstoejb"/>
+                <delete dir="${testsRoot}/build/war/servletonly"/>
+                <delete dir="${testsRoot}/build/ejb/statelesshello"/>
+                <delete dir="${testsRoot}/build/ear/wstoejb"/>
         <ant dir="../../war/servletonly" target="assemble">
             <property name="build" value="${testsRoot}/build/war/servletonly"/>
         </ant>
         <ant dir="../../ejb/statelesshello" target="assemble">
             <property name="build" value="${testsRoot}/build/ejb/statelesshello"/>
-        </ant>        
+        </ant>
         <ant dir="../../ear/wstoejb" target="build">
             <property name="build" value="${testsRoot}/build/ear/wstoejb"/>
-        </ant>        
+        </ant>
         <antcall target="common.deploy.asadmin">
             <param name="arg.list" value="${testsRoot}/build/war/servletonly/servletonly.war"/>
             <param name="testName" value="servletonly"/>
@@ -126,7 +126,7 @@
             <param name="log" value="${build}/${log.id}.output.log"/>
         </antcall>
     </target>
-    
+
     <target name="runConcurrencyClient" depends="compile">
         <echo message="ConcurrencyClient ${arg.list}"/>
         <java
@@ -198,7 +198,7 @@
 
         <antcall target="undeployApps" />
     </target>
-    
+
     <target name="runConcurrencyTest" depends="init">
         <antcall target="declare-test">
             <param name="description" value="jsr88/apitests Test JSR-88 concurrent usage"/>

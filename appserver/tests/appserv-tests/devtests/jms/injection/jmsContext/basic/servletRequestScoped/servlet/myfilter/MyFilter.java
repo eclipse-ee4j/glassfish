@@ -32,7 +32,7 @@ public class MyFilter implements Filter {
     @JMSConnectionFactory("jms/jms_unit_test_QCF")
     @JMSSessionMode(JMSContext.AUTO_ACKNOWLEDGE)
     private JMSContext jmsContext;
-    
+
     public void init(FilterConfig filterConfig) throws ServletException {
     }
 

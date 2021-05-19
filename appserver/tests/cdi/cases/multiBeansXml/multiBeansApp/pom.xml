@@ -31,7 +31,7 @@
     <packaging>ear</packaging>
 
     <name>HK2 CDI MultiBeansApp EAR</name>
-    
+
     <build>
         <plugins>
             <plugin>

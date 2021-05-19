@@ -27,7 +27,7 @@
         <display-name>UpdateJsp</display-name>
         <servlet-name>UpdateJsp</servlet-name>
         <servlet-class>UpdateJsp</servlet-class>
-    </servlet>  
+    </servlet>
 
    <servlet-mapping>
         <servlet-name>UpdateJsp</servlet-name>

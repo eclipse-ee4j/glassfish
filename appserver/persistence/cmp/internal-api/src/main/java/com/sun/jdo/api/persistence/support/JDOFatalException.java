@@ -22,7 +22,7 @@
 
 package com.sun.jdo.api.persistence.support;
 
-/** 
+/**
  *
  * @author  Craig Russell
  * @version 0.1
@@ -34,7 +34,7 @@ public class JDOFatalException extends JDOException {
    */
   public JDOFatalException() {
   }
-  
+
 
   /**
    * Constructs a new <code>JDOFatalException</code> with the specified detail message.

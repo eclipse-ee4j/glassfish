@@ -64,7 +64,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
         tb_tx.m2();
         if (TransactionInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor [TransactionInterceptor] " +
-            		"invocation on method-level "
+                            "invocation on method-level "
                     + "interceptor annotation count not expected. "
                     + "expected =2, actual="
                     + TransactionInterceptor.aroundInvokeInvocationCount;
@@ -76,7 +76,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
                     + "it shouldn't have been called";
 
         clearInterceptors();
-        
+
         //Just security interceptor
         if (tb_sec == null)
             msg += "Injection of @secure bean failed";
@@ -87,7 +87,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
         tb_sec.m2();
         if (SecurityInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor invocation [SecurityInterceptor]" +
-            		"on method-level "
+                            "on method-level "
                     + "interceptor annotation count not expected. "
                     + "expected =2, actual="
                     + SecurityInterceptor.aroundInvokeInvocationCount;
@@ -109,7 +109,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
             msg += "Business method interceptor [Security Interceptor] aroundInvoke not called";
         if (!TransactionInterceptor.aroundInvokeCalled)
             msg += "Business method interceptor [Transaction Interceptor] aroundInvoke not called";
-        
+
         tb_tx_sec.m2();
         if (SecurityInterceptor.aroundInvokeInvocationCount != 2)
             msg += "Business method interceptor invocation [SecurityInterceptor]" +
@@ -123,7 +123,7 @@ public class StereotypeStackingTestServlet extends HttpServlet {
                     + "interceptor annotation count not expected. "
                     + "expected =2, actual="
                     + TransactionInterceptor.aroundInvokeInvocationCount;
-        
+
         if (!SecurityInterceptor.errorMessage.trim().equals(""))
             msg += SecurityInterceptor.errorMessage;
         if (!TransactionInterceptor.errorMessage.trim().equals(""))

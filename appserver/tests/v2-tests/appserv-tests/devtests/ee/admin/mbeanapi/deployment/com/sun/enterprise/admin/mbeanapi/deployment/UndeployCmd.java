@@ -42,19 +42,19 @@ public class UndeployCmd extends DeployCmd
 
     protected void undeploy() throws Exception
     {
-        final String		appName		= getAppName();
-        final DeploymentMgr	deployMgr	= getDeploymentMgr();
+        final String        appName        = getAppName();
+        final DeploymentMgr    deployMgr    = getDeploymentMgr();
 
         if (!DEFAULT_DEPLOY_TARGET.equals(getTarget()))
         {
-            final DeployedItemRefConfigCR	refMgr = 
+            final DeployedItemRefConfigCR    refMgr =
                 getDeployedItemRefConfigCR();
 
             stopApp();
             refMgr.removeDeployedItemRefConfig(appName);
         }
         final Map statusData = deployMgr.undeploy(appName, null);
-        final DeploymentStatus status	= 
+        final DeploymentStatus status    =
             DeploymentSupport.mapToDeploymentStatus( statusData );
         checkFailed(checkForException(status));
     }

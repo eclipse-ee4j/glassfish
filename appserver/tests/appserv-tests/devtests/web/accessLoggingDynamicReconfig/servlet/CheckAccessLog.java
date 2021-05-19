@@ -27,6 +27,6 @@ public class CheckAccessLog extends HttpServlet {
         String[] files = new File(location + "/domains/domain1/logs/access").list();
         if (files != null && files.length == 2) {
             resp.getWriter().println("SUCCESS!");
-        }    
+        }
     }
 }

@@ -25,7 +25,7 @@ import javax.management.ObjectName;
 public class DottedNamesTest implements RemoteAdminQuicklookTest {
 
     private MBeanServerConnection mbsc;
-    
+
     private static final String DNONS = "com.sun.appserv:name=dotted-name-get-set,type=dotted-name-support";
     private static final String ADMIN_LOG_SERVICE_DN = "server.log-service.module-log-levels.admin";
     private static final String ADMIN_LISTENER_NAME = "admin-listener"; //this is the default name
@@ -58,7 +58,7 @@ public class DottedNamesTest implements RemoteAdminQuicklookTest {
         final String name = this.getClass().getName() + ": Testing admin dotted names";
         return (name);
     }
-    
+
     private void testLogLevelDottedName() throws RuntimeException {
         TestLogLevel set = selectLogLevel();
         System.out.println("Selected value randomly to set: " + set.name());
@@ -106,7 +106,7 @@ public class DottedNamesTest implements RemoteAdminQuicklookTest {
                 //break;
             }
         }
-        if (!exists) 
+        if (!exists)
             throw new RuntimeException("The admin listener does not exist, this is not possible");
     }
     private String[] getListeners() throws Exception {

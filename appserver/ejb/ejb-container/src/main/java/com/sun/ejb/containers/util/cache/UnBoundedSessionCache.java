@@ -26,21 +26,21 @@ import java.util.TimerTask;
 import com.sun.logging.*;
 
 public class UnBoundedSessionCache
-	extends LruSessionCache
+    extends LruSessionCache
 {
 
-    public UnBoundedSessionCache(String cacheName, 
-                                 StatefulSessionContainer container, 
+    public UnBoundedSessionCache(String cacheName,
+                                 StatefulSessionContainer container,
                                  int cacheIdleTime, int removalTime) {
         super(cacheName, container, cacheIdleTime, removalTime);
         threshold = Integer.MAX_VALUE;
     }
-    
-    
+
+
     protected boolean isThresholdReached() {
         return false;
     }
-    
+
     protected CacheItem trimLru() {
         threshold *= 2;
         return null;

@@ -17,14 +17,14 @@
 package com.sun.jdo.spi.persistence.support.sqlstore.ejb;
 
 /**
- * This interface should be implemented by any one interested in receiveing 
+ * This interface should be implemented by any one interested in receiveing
  * lifecycle events.
  * @author Mitesh Meswani
  */
 public interface ApplicationLifeCycleEventListener {
     /**
      * This method is called when an application is unloaded.
-     * @param classLoader classLoader used to load the application 
-     */ 
+     * @param classLoader classLoader used to load the application
+     */
     void notifyApplicationUnloaded(ClassLoader classLoader);
 }

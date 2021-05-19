@@ -23,7 +23,7 @@ import org.glassfish.external.statistics.impl.*;
 import org.glassfish.gmbal.*;
 
 /**
- * Probe listener for the Message-Driven Beans part of the EJB monitoring events. 
+ * Probe listener for the Message-Driven Beans part of the EJB monitoring events.
  *
  * @author Marina Vatkina
  */

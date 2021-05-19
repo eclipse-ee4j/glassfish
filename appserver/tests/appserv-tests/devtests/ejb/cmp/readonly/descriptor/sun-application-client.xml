@@ -18,7 +18,7 @@
 
 -->
 
-<sun-application-client> 
+<sun-application-client>
     <ejb-ref>
       <ejb-ref-name>ejb/SimpleStudent</ejb-ref-name>
       <jndi-name>ejb/ejb_cmp_readonly_ReadOnlyStudent</jndi-name>
@@ -26,5 +26,5 @@
     <ejb-ref>
       <ejb-ref-name>ejb/MutableStudent</ejb-ref-name>
       <jndi-name>ejb/ejb_cmp_readonly_Student</jndi-name>
-    </ejb-ref>   
+    </ejb-ref>
 </sun-application-client>

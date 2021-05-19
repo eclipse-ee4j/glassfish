@@ -156,7 +156,7 @@ public class WebappLoader
 
     /**
      * The Java class name of the ClassLoader implementation to be used.
-     * This class should extend WebappClassLoader, otherwise, a different 
+     * This class should extend WebappClassLoader, otherwise, a different
      * loader implementation must be used.
      */
     private String loaderClass =
@@ -210,7 +210,7 @@ public class WebappLoader
     /**
      * List of packages that may always be overridden, regardless of whether
      * they belong to a protected namespace (i.e., a namespace that may never
-     * be overridden by a webapp)  
+     * be overridden by a webapp)
      */
     private ArrayList<String> overridablePackages;
     // END PE 4985680
@@ -219,7 +219,7 @@ public class WebappLoader
     // START PWC 1.1 6314481
     private boolean ignoreHiddenJarFiles;
     // END PWC 1.1 6314481
-    
+
     private boolean useMyFaces;
 
     // ------------------------------------------------------------- Properties
@@ -410,7 +410,7 @@ public class WebappLoader
     /**
      * Return the set of repositories defined for this class loader.
      * If none are defined, a zero-length array is returned.
-     * For security reason, returns a clone of the Array (since 
+     * For security reason, returns a clone of the Array (since
      * String are immutable).
      */
     public String[] findRepositories() {
@@ -422,7 +422,7 @@ public class WebappLoader
     }
 
 
-    /** 
+    /**
      * Classpath, as set in org.apache.catalina.jsp_classpath context
      * property
      *
@@ -519,7 +519,7 @@ public class WebappLoader
                     String path = ctx.getEncodedPath();
                     if (path.equals("")) {
                         path = "/";
-                    }   
+                    }
                     oname = new ObjectName(ctx.getEngineName() +
                                            ":type=Loader,path=" +
                                            path + ",host=" +
@@ -617,7 +617,7 @@ public class WebappLoader
             for (int i = 0; i < repositories.length; i++) {
                 classLoader.addRepository(repositories[i]);
             }
-            
+
             // START OF PE 4985680
             if (overridablePackages != null){
                 for (int i = 0; i < overridablePackages.size(); i++) {
@@ -821,7 +821,7 @@ public class WebappLoader
      * Configure associated class loader permissions.
      */
     private void setPermissions() {
-        
+
         if (!Globals.IS_SECURITY_ENABLED)
             return;
         if (!(container instanceof Context))
@@ -837,10 +837,10 @@ public class WebappLoader
                 });
             } catch (PrivilegedActionException e) {
                 throw (SecurityException ) e.getException();
-            }        
+            }
     }
-    
-    
+
+
     private void setPermissions_priv() {
 
 
@@ -857,7 +857,7 @@ public class WebappLoader
                 classLoader.addPermission
                     (new FilePermission(workDirPath, "read,write"));
                 classLoader.addPermission
-                    (new FilePermission(workDirPath + File.separator + "-", 
+                    (new FilePermission(workDirPath + File.separator + "-",
                                         "read,write,delete"));
             } catch (IOException e) {
                 // Ignore
@@ -1102,7 +1102,7 @@ public class WebappLoader
             return;
 
         if (container instanceof StandardContext) {
-            String baseClasspath = 
+            String baseClasspath =
                 ((StandardContext) container).getCompilerClasspath();
             if (baseClasspath != null) {
                 servletContext.setAttribute(Globals.CLASS_PATH_ATTR,
@@ -1276,8 +1276,8 @@ public class WebappLoader
        if ( overridablePackages == null){
            overridablePackages = new ArrayList<String>();
        }
-        
-       overridablePackages.add( packageName ); 
+
+       overridablePackages.add( packageName );
     }
     // END OF PE 4985680
 

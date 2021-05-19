@@ -64,7 +64,7 @@
     <junit>
       <classpath refid="global_cp"/>
       <test name="com.sun.enterprise.config.serverbeans.validation.tests.SystemNamespaceTest">
-	<formatter type="plain"/>
+        <formatter type="plain"/>
       </test>
     </junit>
   </target>

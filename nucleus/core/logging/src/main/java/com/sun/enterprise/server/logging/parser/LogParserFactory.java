@@ -28,36 +28,36 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 public class LogParserFactory {
 
-    final private static LocalStringManagerImpl LOCAL_STRINGS = 
+    final private static LocalStringManagerImpl LOCAL_STRINGS =
             new LocalStringManagerImpl(LogParserFactory.class);
 
     static final String NEWLINE = System.getProperty("line.separator");
-    
+
     private static enum LogFormat {
         UNIFORM_LOG_FORMAT,
         ODL_LOG_FORMAT,
         UNKNOWN_LOG_FORMAT
     };
-    
-    private static final String ODL_LINE_HEADER_REGEX = 
+
+    private static final String ODL_LINE_HEADER_REGEX =
         "\\[(\\d){4}\\-(\\d){2}\\-(\\d){2}T(\\d){2}\\:(\\d){2}\\:(\\d){2}\\.(\\d){3}[\\+|\\-](\\d){4}\\].*";
-    
+
     private static final boolean DEBUG = false;
-    
+
     private static class SingletonHolder {
         private static final LogParserFactory SINGLETON = new LogParserFactory();
     }
-    
+
     public static LogParserFactory getInstance() {
         return SingletonHolder.SINGLETON;
     }
 
     private Pattern odlDateFormatPattern = null;
-    
+
     private LogParserFactory() {
         odlDateFormatPattern  = Pattern.compile(ODL_LINE_HEADER_REGEX);
     }
-    
+
     public LogParser createLogParser(File logFile) throws LogParserException, IOException {
         BufferedReader reader=null;
         try {
@@ -79,13 +79,13 @@ public class LogParserFactory {
             if (reader != null) {
                 reader.close();
             }
-        }        
+        }
     }
-    
+
     Pattern getODLDateFormatPattern() {
-        return odlDateFormatPattern;    
+        return odlDateFormatPattern;
     }
-    
+
     private LogFormat detectLogFormat(String line) {
         if (line != null) {
             Matcher m = odlDateFormatPattern.matcher(line);
@@ -96,9 +96,9 @@ public class LogParserFactory {
                 return LogFormat.ODL_LOG_FORMAT;
             } else if (LogFormatHelper.isUniformFormatLogHeader(line)) {
                 return LogFormat.UNIFORM_LOG_FORMAT;
-            }             
-        } 
+            }
+        }
         return LogFormat.UNKNOWN_LOG_FORMAT;
-    }                
-    
+    }
+
 }

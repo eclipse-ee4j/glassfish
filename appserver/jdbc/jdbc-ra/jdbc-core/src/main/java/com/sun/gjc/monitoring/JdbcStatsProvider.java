@@ -169,7 +169,7 @@ public class JdbcStatsProvider {
     public CountStatistic getNumPotentialStatementLeak() {
         return numPotentialStatementLeak;
     }
-    
+
     /**
      * Get the SQLTraceCache associated with this stats provider.
      * @return SQLTraceCache

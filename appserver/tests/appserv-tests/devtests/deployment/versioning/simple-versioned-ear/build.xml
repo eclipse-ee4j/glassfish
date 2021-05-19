@@ -66,20 +66,20 @@
     <target name="assemble" depends="prepare,process.servletName">
         <property name="moduleUntaggedArchive" value="${build}/${moduleUntaggedName}.${modulePackaging}"/>
         <delete file="${moduleUntaggedArchive}" failonerror="false"/>
-	<ant dir="${moduleBuildDir}" target="create.version" inheritAll="false">
+        <ant dir="${moduleBuildDir}" target="create.version" inheritAll="false">
           <property name="versionExpression" value="${versionExpression}"/>
           <property name="xmlVersionIdentifier" value=""/>
         </ant>
         <move file="${build}/${servletAppName}.${modulePackaging}" tofile="${moduleUntaggedArchive}" failonerror="false"/>
         <property name="xmlFile" value="${gfDDDir}/${gfDDFile}"/>
-    	<antcall target="generate.xml.identifier"/>
+            <antcall target="generate.xml.identifier"/>
         <jar destfile="${archiveFile}">
           <fileset dir="." includes="META-INF/*.xml"/>
           <fileset dir="${build}" includes="${moduleUntaggedName}.${modulePackaging}"/>
         </jar>
         <delete file="${moduleUntaggedArchive}" failonerror="false"/>
      </target>
-     
+
 <!--
   Currently, only the scenarios processing test.registred and test.notregistred
   are supported.

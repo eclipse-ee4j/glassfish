@@ -17,12 +17,12 @@
 package org.glassfish.persistence.ejb.entitybean.container.distributed;
 
 /**
- * ReadOnlyBeanRefreshEventHandler defines the methods that can be used to 
- *  implement a distributed ReadOnly beans. An instance of 
+ * ReadOnlyBeanRefreshEventHandler defines the methods that can be used to
+ *  implement a distributed ReadOnly beans. An instance of
  *  ReadOnlyBeanRefreshEventHandler is used to handle requests received from
  *  other server instances. An instance of  DistributedReadOnlyBeanNotifier is used to
  *  notify other server instances.
- *  
+ *
  * @author Mahesh Kannan
  * @see DistributedReadOnlyBeanService
  */
@@ -34,18 +34,18 @@ public interface ReadOnlyBeanRefreshEventHandler {
      * @return the application class loader
      */
     public ClassLoader getClassLoader();
-    
+
     /**
      * Called from DistributedReadOnlyBeanServiceImpl when a refresh message
      *  arrives at this instance
      * @param pk the primary key that needs to be refreshed
      */
     public void handleRefreshRequest(Object pk);
-    
+
     /**
      * Called from DistributedReadOnlyBeanServiceImpl when a refreshAll message
      *  arrives at this instance
      */
     public void handleRefreshAllRequest();
-    
+
 }

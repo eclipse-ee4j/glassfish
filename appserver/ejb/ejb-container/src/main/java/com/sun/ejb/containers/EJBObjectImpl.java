@@ -43,7 +43,7 @@ public abstract class EJBObjectImpl
     extends EJBLocalRemoteObject
     implements EJBObject
 {
-    private static Class[] NO_PARAMS = new Class[] {};    
+    private static Class[] NO_PARAMS = new Class[] {};
     private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(EJBObjectImpl.class);
     private static Method REMOVE_METHOD = null;
@@ -59,30 +59,30 @@ public abstract class EJBObjectImpl
 
     transient private java.rmi.Remote stub;
     transient private java.rmi.Remote ejbObject;
-    transient private Map businessStubs = new HashMap(); 
-    transient private Map businessEJBObjects = new HashMap(); 
+    transient private Map businessStubs = new HashMap();
+    transient private Map businessEJBObjects = new HashMap();
     transient private boolean beingCreated=false;
-    
+
     // True if this object instance represents the RemoteHomeview
     // False if this object instance represents the RemoteBusiness view
-    private boolean isRemoteHomeView;                    
+    private boolean isRemoteHomeView;
 
     protected EJBObjectImpl() throws RemoteException {
     }
-    
+
     final void setStub(java.rmi.Remote stub) {
         this.stub = stub;
     }
-    
+
     /**
      * Stubs are keyed by the name of generated RMI-IIOP version of
      * each remote business interface.
      */
-    final void setStub(String generatedBusinessInterface, 
+    final void setStub(String generatedBusinessInterface,
                        java.rmi.Remote stub) {
         businessStubs.put(generatedBusinessInterface, stub);
     }
-    
+
     public final java.rmi.Remote getStub() {
         return stub;
     }
@@ -120,7 +120,7 @@ public abstract class EJBObjectImpl
         this.ejbObject = ejbObject;
     }
 
-    public void setEJBObject(String generatedBusinessInterface, 
+    public void setEJBObject(String generatedBusinessInterface,
                              java.rmi.Remote ejbObject) {
         businessEJBObjects.put(generatedBusinessInterface, ejbObject);
     }
@@ -128,11 +128,11 @@ public abstract class EJBObjectImpl
     final void setBeingCreated(boolean b) {
         beingCreated = b;
     }
-    
+
     final boolean isBeingCreated() {
         return beingCreated;
     }
-    
+
     /**************************************************************************
     The following are implementations of EJBObject methods.
      **************************************************************************/
@@ -140,27 +140,27 @@ public abstract class EJBObjectImpl
      */
     public boolean isIdentical(EJBObject ejbo) throws RemoteException {
         container.authorizeRemoteMethod(BaseContainer.EJBObject_isIdentical);
-        
+
         return container.isIdentical(this, ejbo);
     }
-    
-    
+
+
     /**
      */
     public Object getPrimaryKey() throws RemoteException {
         container.authorizeRemoteGetPrimaryKey(this);
         return primaryKey;
     }
-    
+
     /**
      *
      */
     public final EJBHome getEJBHome() throws RemoteException {
         container.authorizeRemoteMethod(BaseContainer.EJBObject_getEJBHome);
-        
+
         return container.getEJBHomeStub();
     }
-    
+
     /**
      * This is called when the EJB client does ejbref.remove().
      * or EJBHome/LocalHome.remove(primaryKey).
@@ -173,7 +173,7 @@ public abstract class EJBObjectImpl
 
         container.removeBean(this, REMOVE_METHOD, false);
     }
-    
+
     /**
      * This is called when the EJB client does ejbref.getHandle().
      * Return a serializable implementation of jakarta.ejb.Handle.

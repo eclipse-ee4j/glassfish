@@ -32,7 +32,7 @@ public class ResumeSession extends HttpServlet {
         InitialContext ic = (InitialContext)
             session.getAttribute("JNDIInitialContext");
 
-        boolean passed = false; 
+        boolean passed = false;
         if ("value1".equals(map.get("name1"))
                 && "value2".equals(map.get("name2"))
                 && (ic != null)) {

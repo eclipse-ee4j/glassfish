@@ -22,7 +22,7 @@ package org.glassfish.persistence.ejb.entitybean.container.spi;
  * @author Mahesh Kannan
  */
 public interface ReadOnlyEJBHome
-	extends jakarta.ejb.EJBHome
+    extends jakarta.ejb.EJBHome
 {
 
     public void _refresh_com_sun_ejb_containers_read_only_bean_(Object primaryKey)

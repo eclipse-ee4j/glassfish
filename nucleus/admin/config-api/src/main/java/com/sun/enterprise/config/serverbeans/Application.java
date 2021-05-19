@@ -216,7 +216,7 @@ public interface Application extends ApplicationName, PropertyBag {
      * <p/>
      * <p/>
      * For example, to add a new item, do as follows:
-     * 
+     *
      * <pre>
      * getEngine().add(newItem);
      * </pre>

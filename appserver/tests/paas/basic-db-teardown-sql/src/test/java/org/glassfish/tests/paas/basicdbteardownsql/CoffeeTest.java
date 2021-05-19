@@ -111,7 +111,7 @@ public class CoffeeTest {
             if (appName != null) {
                 deployer.undeploy(appName);
                 System.err.println("Undeployed [" + appName + "]");
-		        testTearDownSql(dbConnectionDetails);
+                testTearDownSql(dbConnectionDetails);
                 System.out.println("Destroying the resources created");
                 //4.1. Delete Shared DB Service.
                 CommandResult deleteResult = commandRunner.run(

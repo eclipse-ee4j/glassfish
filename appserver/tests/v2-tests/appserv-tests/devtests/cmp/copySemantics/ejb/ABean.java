@@ -25,65 +25,65 @@ import javax.naming.*;
 
 
 public abstract class ABean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
     public void setEntityContext(jakarta.ejb.EntityContext aContext) {
         context=aContext;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
     public void ejbRemove() {
         System.out.println("Debug: ABean ejbRemove");
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract Integer getId();
     public abstract void setId(Integer id);
 
@@ -96,7 +96,7 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
     public abstract byte[] getBlb();
     public abstract void setBlb(byte[] b);
 
-    public java.lang.Integer ejbCreate(Integer id, java.lang.String name, java.util.Date date, byte[] b) 
+    public java.lang.Integer ejbCreate(Integer id, java.lang.String name, java.util.Date date, byte[] b)
         throws jakarta.ejb.CreateException {
 
         setId(id);
@@ -106,14 +106,14 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
 
         return null;
     }
-    
-    public void ejbPostCreate(Integer id, java.lang.String name, java.util.Date date, byte[] b) 
+
+    public void ejbPostCreate(Integer id, java.lang.String name, java.util.Date date, byte[] b)
         throws jakarta.ejb.CreateException { }
-    
+
     public void test() {
         java.util.Date d1 = getDate();
         System.out.println("Debug: ABean d1: " + d1);
-        
+
         d1.setYear(2000);
         System.out.println("Debug: ABean d1 after setYear: " + d1);
 
@@ -128,8 +128,8 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
 
         d1 = getDate();
         System.out.println("Debug: ABean d1: " + d1);
-        if (d1.equals(d2)) 
-            throw new EJBException("Same d1 and d2 after set!"); 
+        if (d1.equals(d2))
+            throw new EJBException("Same d1 and d2 after set!");
 
         setDate(null);
         if (getDate() != null)
@@ -139,21 +139,21 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
         System.out.println("Debug: ABean b[0]: " + b[0]);
         b[0] = 90;
 
-        byte[] b1 = getBlb(); 
+        byte[] b1 = getBlb();
         System.out.println("Debug: ABean b[0]: " + b[0]);
         System.out.println("Debug: ABean b1[0]: " + b1[0]);
 
         if (b[0] == b1[0])
-            throw new EJBException("Same b and b1!"); 
- 
+            throw new EJBException("Same b and b1!");
+
         setBlb(b);
-        b1[1] = 90; 
+        b1[1] = 90;
         System.out.println("Debug: ABean b[0]: " + b[0]);
         System.out.println("Debug: ABean b[1]: " + b[1]);
         System.out.println("Debug: ABean b1[0]: " + b1[0]);
         System.out.println("Debug: ABean b1[1]: " + b1[1]);
 
-        b = getBlb();  
+        b = getBlb();
 
         System.out.println("Debug: ABean b[0]: " + b[0]);
         System.out.println("Debug: ABean b[1]: " + b[1]);
@@ -161,7 +161,7 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
         System.out.println("Debug: ABean b1[1]: " + b1[1]);
 
         if (b[1] == b1[1])
-            throw new EJBException("Same b and b1 after set!"); 
+            throw new EJBException("Same b and b1 after set!");
 
         setBlb(null);
         if (getBlb() != null)

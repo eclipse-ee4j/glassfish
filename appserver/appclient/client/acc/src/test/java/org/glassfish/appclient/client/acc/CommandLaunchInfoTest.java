@@ -42,7 +42,7 @@ public class CommandLaunchInfoTest {
     private static final String DIR_CLIENT_NAME = "here/myClient";
     private static final String USER_VALUE = "joe-the-user";
     private static final String PASSWORDFILE_PATH = "/topSecret.stuff";
-    
+
     private static final List<String> expectedCommandArgs = Arrays.asList(FIRST_ACC_ARG, SECOND_ACC_ARG);
 
     public CommandLaunchInfoTest() {

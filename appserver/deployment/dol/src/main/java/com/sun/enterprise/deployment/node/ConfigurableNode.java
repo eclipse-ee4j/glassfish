@@ -25,17 +25,17 @@ package com.sun.enterprise.deployment.node;
 import java.util.Map;
 
 /**
- * ConfigurableNode able to treat dispatch element values to descriptors based 
+ * ConfigurableNode able to treat dispatch element values to descriptors based
  * on initialized values
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class ConfigurableNode extends DeploymentDescriptorNode {
 
     private Map dispatchTable;
     private Object descriptor;
- 
+
     public ConfigurableNode(Object instance, Map dispatchTable) {
         super();
         this.dispatchTable = dispatchTable;
@@ -46,23 +46,23 @@ public class ConfigurableNode extends DeploymentDescriptorNode {
         super();
         this.dispatchTable = dispatchTable;
         this.descriptor = descriptor;
-	super.setXMLRootTag(element);
+    super.setXMLRootTag(element);
     }
 
     /**
     * @return the descriptor instance to associate with this XMLNode
-    */    
+    */
     public Object getDescriptor() {
         return descriptor;
-    }        
-    
+    }
+
     /**
      * all sub-implementation of this class can use a dispatch table to map xml element to
-     * method name on the descriptor class for setting the element value. 
-     *  
+     * method name on the descriptor class for setting the element value.
+     *
      * @return the map with the element name as a key, the setter method as a value
-     */    
+     */
     protected Map getDispatchTable() {
         return dispatchTable;
-    }    
+    }
 }

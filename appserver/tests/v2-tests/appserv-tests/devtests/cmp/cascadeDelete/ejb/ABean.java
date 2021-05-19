@@ -28,14 +28,14 @@ import java.util.*;
 
 
 public abstract class ABean implements jakarta.ejb.EntityBean {
-    
+
     private jakarta.ejb.EntityContext context;
     LocalBHome bhome;
     LocalCHome chome;
     LocalDHome dhome;
 
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#setEntityContext(jakarta.ejb.EntityContext)
      */
@@ -49,24 +49,24 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbActivate()
      */
     public void ejbActivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbPassivate()
      */
     public void ejbPassivate() {
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbRemove()
      */
@@ -79,79 +79,79 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
         for (java.util.Iterator it = bs.iterator(); it.hasNext();) {
             ((LocalB)it.next()).cascadeDeleteFromA();
         }
-        
+
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#unsetEntityContext()
      */
     public void unsetEntityContext() {
         context=null;
     }
-    
-    
+
+
     /**
      * @see jakarta.ejb.EntityBean#ejbLoad()
      */
     public void ejbLoad() {
-        
+
     }
 
-    
+
     /**
      * @see jakarta.ejb.EntityBean#ejbStore()
      */
     public void ejbStore() {
-        
+
     }
-    
+
     public abstract java.lang.Integer getId();
     public abstract void setId(java.lang.Integer id);
-    
+
     public abstract java.lang.String getName();
     public abstract void setName(java.lang.String name);
-    
+
     public abstract java.util.Collection getDs();
-    
+
     public abstract void setDs(java.util.Collection ds);
-    
+
     public abstract java.util.Collection getCs();
-    
+
     public abstract void setCs(java.util.Collection cs);
-    
+
     public abstract java.util.Collection getBs();
-    
+
     public abstract void setBs(java.util.Collection bs);
-    
+
     public java.lang.Integer ejbCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
         setId(id);
         setName(name);
         return null;
     }
-    
+
     public void ejbPostCreate(java.lang.Integer id, java.lang.String name) throws jakarta.ejb.CreateException {
     }
-    
+
     public void addAll() {
         try {
             System.out.println("Debug: A addB");
             Collection bs = bhome.findAll();
             getBs().addAll(bs);
-            
+
             System.out.println("Debug: A addC");
             Collection cs = chome.findAll();
             getCs().addAll(cs);
-            
+
             System.out.println("Debug: A addD");
             Collection ds = dhome.findAll();
             getDs().addAll(ds);
-            
+
             System.out.println("Debug: A addOthers");
             for (Iterator it = bs.iterator(); it.hasNext();) {
                 LocalB b = (LocalB)it.next();
                 Integer pk = b.getId();
-                
+
                 System.out.println("Debug: A add to B " + pk);
                 LocalC c = chome.findByPrimaryKey(pk);
                 b.setC(c);
@@ -166,21 +166,21 @@ public abstract class ABean implements jakarta.ejb.EntityBean {
             throw new EJBException(e.getMessage());
         }
     }
-    
+
     private LocalBHome lookupB() throws NamingException {
         System.out.println("Debug: A lookupB");
         Context initial = new InitialContext();
         Object objref = initial.lookup("java:comp/env/ejb/SimpleB");
         return (LocalBHome) objref;
     }
-    
+
     private LocalCHome lookupC() throws NamingException {
         System.out.println("Debug: A lookupC");
         Context initial = new InitialContext();
         Object objref = initial.lookup("java:comp/env/ejb/SimpleC");
         return (LocalCHome) objref;
     }
-    
+
     private LocalDHome lookupD() throws NamingException {
         System.out.println("Debug: A lookupD");
         Context initial = new InitialContext();

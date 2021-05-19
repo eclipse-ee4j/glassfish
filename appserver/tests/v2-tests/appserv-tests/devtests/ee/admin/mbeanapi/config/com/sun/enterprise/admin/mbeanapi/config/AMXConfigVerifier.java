@@ -39,19 +39,19 @@ import com.sun.appserv.management.util.stringifier.StringifierRegistryImpl;
  * @version $Revision: 1.3 $
  */
 public class AMXConfigVerifier {
-    private final DomainRoot	mDomainRoot;
-    private final MBeanServerConnection	mMBeanServerConnection;
+    private final DomainRoot    mDomainRoot;
+    private final MBeanServerConnection    mMBeanServerConnection;
 
     public AMXConfigVerifier(final String host, final int port, final String adminUser, final String adminPassword, final boolean useTLS) throws Exception
     {
-        final AMXConnector ct	= new AMXConnector( host, port, adminUser, adminPassword, useTLS );
-        mDomainRoot	= ct.getDomainRoot();
+        final AMXConnector ct    = new AMXConnector( host, port, adminUser, adminPassword, useTLS );
+        mDomainRoot    = ct.getDomainRoot();
         mMBeanServerConnection = ct.getAppserverConnectionSource().getMBeanServerConnection(false);
 
         testDomainElements();
         testHttpServiceElements();
     }
-    
+
 
 
     public static void   main( final String[] args )
@@ -89,7 +89,7 @@ public class AMXConfigVerifier {
         }
         return tester;
     }
-    
+
     private void runGenericTest(String str) throws Exception
     {
         runGenericTest(null, str);
@@ -136,13 +136,13 @@ public class AMXConfigVerifier {
         // admin-object-resource test
         runGenericTest( "<admin-object-resource jndi-name=testAdminObjectName res-type=testResType res-adapter=testResourceAdapterName>");
     }
-        
+
     private void testHttpServiceElements() throws Exception
     {
         TestElemRegistry.initRegistry("server-config");
-        
+
         runGenericTest( "<virtual-server id=testVirtualServer hosts=localhost>");
-        
+
         ElemTester virtServer = getElementTester( "<virtual-server id=testVirtualServer2 hosts=localhost>");
         virtServer.createElement();
 

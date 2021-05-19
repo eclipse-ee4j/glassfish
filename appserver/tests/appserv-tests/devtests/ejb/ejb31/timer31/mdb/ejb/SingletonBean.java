@@ -36,17 +36,17 @@ public class SingletonBean {
     public void init() {
         System.out.println("In SingletonBean::init()");
     }
-    
+
     public void test1Passed() {
-	passed1 = true;
+        passed1 = true;
     }
 
     public void test2Passed() {
-	passed2 = true;
+        passed2 = true;
     }
 
     public boolean getTestPassed() {
-	return passed1 && passed2;
+        return passed1 && passed2;
     }
 
     public boolean getAroundTimeoutCalled(String s) {

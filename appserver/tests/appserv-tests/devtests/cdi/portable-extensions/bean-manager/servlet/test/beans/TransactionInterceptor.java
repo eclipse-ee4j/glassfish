@@ -29,23 +29,23 @@ public class TransactionInterceptor {
     public static boolean aroundInvokeCalled = false;
     public static int aroundInvokeInvocationCount = 0;
     public static String errorMessage = "";
-    
+
     @Inject
     TestDependentBean tb;
-    
+
     @Inject
     TransactionInterceptor(MyExtension myex){ //Injection of portable extension in a bean
         if(myex == null) {
             errorMessage += "Portable Extension Injection in Interceptor failed";
         }
     }
-    
-    
+
+
     @AroundInvoke
     public Object manageTransaction(InvocationContext ctx) throws Exception {
         System.out.println("TransactionInterceptor::AroundInvoke");
         if (tb == null) errorMessage += "Dependency Injection " +
-        		"into TransactionInterceptor failed";
+                        "into TransactionInterceptor failed";
         aroundInvokeCalled = true;
         aroundInvokeInvocationCount ++;
         return ctx.proceed();

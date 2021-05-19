@@ -31,7 +31,7 @@ import org.glassfish.hk2.api.Proxiable;
  * It is silly to have a proxiable singleton scope since the instance
  * never changes.  This is done just to ensure that we can go through
  * a proxy in the nucleus environment
- * 
+ *
  * @author jwells
  *
  */

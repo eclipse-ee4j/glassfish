@@ -42,10 +42,10 @@ public class LBCommandsBase {
 
     @Inject
     Domain domain;
-    
+
     final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(LBCommandsBase.class);
-    
+
     Map<String,Integer> getInstanceWeightsMap(String weights) throws CommandException
     {
         HashMap<String,Integer> map = new HashMap();
@@ -72,7 +72,7 @@ public class LBCommandsBase {
 
     void updateLBForCluster(ActionReport report, String clusterName, String value, String timeout) {
         Cluster c = domain.getClusterNamed(clusterName);
-        if ( c == null ) {            
+        if ( c == null ) {
             report.setMessage("Cluster not defined");
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;

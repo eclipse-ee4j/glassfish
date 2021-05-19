@@ -19,32 +19,32 @@ package org.glassfish.connectors.config.validators;
 import com.sun.enterprise.util.i18n.StringManager;
 
 /**
- * Enum containing the different custom validation failures for a connection 
- * pool. The message strings for the different validation scenarios are 
- * used for interpolation and display when there is a failure in 
+ * Enum containing the different custom validation failures for a connection
+ * pool. The message strings for the different validation scenarios are
+ * used for interpolation and display when there is a failure in
  * custom validation.
- * 
+ *
  * @author Shalini M
  */
 public enum ConnectionPoolErrorMessages {
 
     MAX_STEADY_INVALID ("connpool.maxpoolsize.invalid"),
-    
+
     STMT_WRAPPING_DISABLED ("connpool.stmtwrapping.disabled"),
-    
+
     RES_TYPE_MANDATORY ("connpool.restype.mandatory"),
 
     TABLE_NAME_MANDATORY ("connpool.validation.table.name.mandatory"),
-    
+
     CUSTOM_VALIDATION_CLASS_NAME_MANDATORY("connpool.custom.validation.classname.mandatory");
-    
+
     private final StringManager localStrings = StringManager.getManager(getClass());
 
     private ConnectionPoolErrorMessages(String messagekey) {
         this.message = localStrings.getString(messagekey);
     }
-    private final String message;    
-    
+    private final String message;
+
     public String toString() {
         return message;
     }

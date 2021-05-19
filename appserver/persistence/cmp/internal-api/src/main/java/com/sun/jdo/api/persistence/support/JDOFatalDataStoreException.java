@@ -22,7 +22,7 @@
 
 package com.sun.jdo.api.persistence.support;
 
-/** 
+/**
  *
  * @author  clr
  * @version 0.1
@@ -34,7 +34,7 @@ public class JDOFatalDataStoreException extends JDOFatalException {
    */
   public JDOFatalDataStoreException() {
   }
-  
+
 
   /**
    * Constructs a new <code>JDOFatalDataStoreException</code> with the specified detail message.

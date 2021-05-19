@@ -41,7 +41,7 @@ import jakarta.servlet.http.HttpServletMapping;
 
 
 /**
- * Facade class that wraps a Coyote request object.  
+ * Facade class that wraps a Coyote request object.
  * All methods are delegated to the wrapped request.
  *
  * @author Craig R. McClanahan
@@ -49,32 +49,32 @@ import jakarta.servlet.http.HttpServletMapping;
  * @author Jean-Francois Arcand
  * @version $Revision: 1.7 $ $Date: 2007/08/01 19:04:28 $
  */
-public class RequestFacade 
+public class RequestFacade
     implements HttpServletRequest {
 
     private static final ResourceBundle rb = LogFacade.getLogger().getResourceBundle();
 
-        
+
     // ----------------------------------------------------------- DoPrivileged
-    
+
     private final class GetAttributePrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
-        
+
         public Enumeration<String> run() {
             return request.getAttributeNames();
-        }            
+        }
     }
-     
-    
+
+
     private final class GetParameterMapPrivilegedAction
             implements PrivilegedAction<Map<String, String[]>> {
-        
+
         public Map<String, String[]> run() {
             return request.getParameterMap();
-        }        
-    }    
-    
-    
+        }
+    }
+
+
     private final class GetRequestDispatcherPrivilegedAction
             implements PrivilegedAction<RequestDispatcher> {
 
@@ -83,13 +83,13 @@ public class RequestFacade
         public GetRequestDispatcherPrivilegedAction(String path){
             this.path = path;
         }
-        
-        public RequestDispatcher run() {   
+
+        public RequestDispatcher run() {
             return request.getRequestDispatcher(path);
-        }           
-    }    
-    
-    
+        }
+    }
+
+
     private final class GetParameterPrivilegedAction
             implements PrivilegedAction<String> {
 
@@ -99,21 +99,21 @@ public class RequestFacade
             this.name = name;
         }
 
-        public String run() {       
+        public String run() {
             return request.getParameter(name);
-        }           
-    }    
-    
-     
+        }
+    }
+
+
     private final class GetParameterNamesPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
-        
-        public Enumeration<String> run() {          
+
+        public Enumeration<String> run() {
             return request.getParameterNames();
-        }           
-    } 
-    
-    
+        }
+    }
+
+
     private final class GetParameterValuePrivilegedAction
             implements PrivilegedAction<String[]> {
 
@@ -123,30 +123,30 @@ public class RequestFacade
             this.name = name;
         }
 
-        public String[] run() {       
+        public String[] run() {
             return request.getParameterValues(name);
-        }           
-    }    
-  
-    
+        }
+    }
+
+
     private final class GetCookiesPrivilegedAction
             implements PrivilegedAction<Cookie[]> {
-        
-        public Cookie[] run() {       
+
+        public Cookie[] run() {
             return request.getCookies();
-        }           
-    }      
-    
-    
+        }
+    }
+
+
     private final class GetCharacterEncodingPrivilegedAction
             implements PrivilegedAction<String> {
-        
-        public String run() {       
+
+        public String run() {
             return request.getCharacterEncoding();
-        }           
-    }   
-        
-    
+        }
+    }
+
+
     private final class GetHeadersPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
@@ -155,51 +155,51 @@ public class RequestFacade
         public GetHeadersPrivilegedAction(String name){
             this.name = name;
         }
-        
-        public Enumeration<String> run() {       
+
+        public Enumeration<String> run() {
             return request.getHeaders(name);
-        }           
-    }    
-        
-    
+        }
+    }
+
+
     private final class GetHeaderNamesPrivilegedAction
             implements PrivilegedAction<Enumeration<String>> {
 
-        public Enumeration<String> run() {       
+        public Enumeration<String> run() {
             return request.getHeaderNames();
-        }           
-    }  
-            
-    
+        }
+    }
+
+
     private final class GetLocalePrivilegedAction
             implements PrivilegedAction<Locale> {
 
-        public Locale run() {       
+        public Locale run() {
             return request.getLocale();
-        }           
-    }    
-            
-    
+        }
+    }
+
+
     private final class GetLocalesPrivilegedAction
             implements PrivilegedAction<Enumeration<Locale>> {
 
-        public Enumeration<Locale> run() {       
+        public Enumeration<Locale> run() {
             return request.getLocales();
-        }           
-    }    
-    
+        }
+    }
+
     private final class GetSessionPrivilegedAction
             implements PrivilegedAction<HttpSession> {
 
         private boolean create;
-        
+
         public GetSessionPrivilegedAction(boolean create){
             this.create = create;
         }
-                
-        public HttpSession run() {  
+
+        public HttpSession run() {
             return request.getSession(create);
-        }           
+        }
     }
 
     private final class ChangeSessionIdPrivilegedAction
@@ -268,11 +268,11 @@ public class RequestFacade
     private boolean maskDefaultContextMapping = false;
 
     private RequestFacadeHelper reqFacHelper = null;
- 
+
 
     // --------------------------------------------------------- Public Methods
-   
-    
+
+
     /**
     * Prevent cloning the facade.
     */
@@ -280,8 +280,8 @@ public class RequestFacade
         throws CloneNotSupportedException {
         throw new CloneNotSupportedException();
     }
-    
-    
+
+
     /**
      * Clear facade.
      */
@@ -297,7 +297,7 @@ public class RequestFacade
     RequestFacadeHelper getRequestFacadeHelper() {
         return reqFacHelper;
     }
-    
+
 
     // ------------------------------------------------- ServletRequest Methods
 
@@ -320,7 +320,7 @@ public class RequestFacade
 
         if (SecurityUtil.isPackageProtectionEnabled()){
             return AccessController.doPrivileged(
-                new GetAttributePrivilegedAction());        
+                new GetAttributePrivilegedAction());
         } else {
             return request.getAttributeNames();
         }
@@ -338,7 +338,7 @@ public class RequestFacade
                 new GetCharacterEncodingPrivilegedAction());
         } else {
             return request.getCharacterEncoding();
-        }         
+        }
     }
 
     @Override
@@ -391,7 +391,7 @@ public class RequestFacade
 
         return request.getInputStream();
     }
-    
+
     public HttpServletMapping getHttpServletMapping() {
 
         if (request == null) {
@@ -400,7 +400,7 @@ public class RequestFacade
 
         return request.getHttpServletMapping();
     }
-    
+
     public String getParameter(String name) {
 
         if (request == null) {
@@ -465,7 +465,7 @@ public class RequestFacade
 
         if (SecurityUtil.isPackageProtectionEnabled()){
             return AccessController.doPrivileged(
-                new GetParameterMapPrivilegedAction());        
+                new GetParameterMapPrivilegedAction());
         } else {
             return request.getParameterMap();
         }
@@ -573,7 +573,7 @@ public class RequestFacade
                 new GetLocalePrivilegedAction());
         } else {
             return request.getLocale();
-        }        
+        }
     }
 
     @Override
@@ -588,7 +588,7 @@ public class RequestFacade
                 new GetLocalesPrivilegedAction());
         } else {
             return request.getLocales();
-        }        
+        }
     }
 
     @Override
@@ -694,7 +694,7 @@ public class RequestFacade
                 new GetHeadersPrivilegedAction(name));
         } else {
             return request.getHeaders(name);
-        }         
+        }
     }
 
     @Override
@@ -709,7 +709,7 @@ public class RequestFacade
                 new GetHeaderNamesPrivilegedAction());
         } else {
             return request.getHeaderNames();
-        }             
+        }
     }
 
     @Override
@@ -1032,7 +1032,7 @@ public class RequestFacade
         }
         return request.startAsync(sreq, sresp);
     }
-        
+
 
     /**
      * Checks whether async processing has started on this request.

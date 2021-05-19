@@ -16,18 +16,20 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.PrintStream;
 
 /**
  * A really simple class with printing utilities
  */
 
 class ClassPrint {
-  /**
-   * Print 'nspaces' spaces to the print stream
-   */
-  public static void spaces(PrintStream ps, int nspaces) {
-    while (nspaces-- > 0)
-      ps.print(' ');
-  }
+
+    /**
+     * Print 'nspaces' spaces to the print stream
+     */
+    public static void spaces(PrintStream ps, int nspaces) {
+        while (nspaces-- > 0) {
+            ps.print(' ');
+        }
+    }
 }

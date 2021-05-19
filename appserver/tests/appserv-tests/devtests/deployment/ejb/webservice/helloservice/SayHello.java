@@ -15,11 +15,11 @@
  */
 
 package helloservice;
- 
+
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface SayHello  extends Remote {
-	public String sayHello(String name) throws RemoteException;
+        public String sayHello(String name) throws RemoteException;
 }
-  	
+

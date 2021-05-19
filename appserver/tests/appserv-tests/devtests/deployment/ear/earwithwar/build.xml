@@ -165,7 +165,7 @@
             <param name="log.id" value="${log.id}"/>
         </antcall>
     </target>
-    
+
     <target name="runclient" depends="init">
         <javaWithResult
             fork="true"
@@ -211,13 +211,13 @@
         <antcall target="run.negative">
             <param name="log.id" value="3"/>
             <param name="desc" value="ear/earwithwar Test asadmin disable"/>
-        </antcall> 
+        </antcall>
 
         <antcall target="enable.asadmin"/>
         <antcall target="run.positive">
             <param name="log.id" value="4"/>
             <param name="desc" value="ear/earwithwar Test asadmin enable"/>
-        </antcall> 
+        </antcall>
 
         <antcall target="undeploy.asadmin"/>
 

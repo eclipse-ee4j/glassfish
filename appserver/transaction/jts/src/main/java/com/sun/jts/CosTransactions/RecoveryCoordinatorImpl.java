@@ -70,13 +70,13 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
     private static POA poa = null;
     private RecoveryCoordinator thisRef = null;
     private int internalSeq = 0;
-	/*
-		Logger to log transaction messages
-	*/  
+    /*
+        Logger to log transaction messages
+    */
     static Logger _logger = LogDomains.getLogger(RecoveryCoordinatorImpl.class, LogDomains.TRANSACTION_LOGGER);
     GlobalTID globalTID = null;
 
-	RecoveryCoordinatorImpl() {}
+    RecoveryCoordinatorImpl() {}
 
     /**
      * Sets up the RecoveryCoordinator with the global identifier.
@@ -131,12 +131,12 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
      * @see
      */
     public Status replay_completion(Resource res) throws NotPrepared {
-	
-		if(_logger.isLoggable(Level.FINE))
+
+        if(_logger.isLoggable(Level.FINE))
         {
-			 _logger.logp(Level.FINE,"RecoveryCoordinatorImpl",
-			 		"replay_completion()","replay_completion on Resource:"+
-					res);
+             _logger.logp(Level.FINE,"RecoveryCoordinatorImpl",
+                     "replay_completion()","replay_completion on Resource:"+
+                    res);
         }
 
 
@@ -245,11 +245,11 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
 
     // same as replay_completion(res) : added for delegated recovery support
     public Status replay_completion(Resource res, String logPath) throws NotPrepared {
-	
+
         if(_logger.isLoggable(Level.FINE))
         {
-	     _logger.logp(Level.FINE,"RecoveryCoordinatorImpl",
-			"replay_completion()","replay_completion on Resource:"+ res);
+         _logger.logp(Level.FINE,"RecoveryCoordinatorImpl",
+            "replay_completion()","replay_completion on Resource:"+ res);
         }
 
         Status result = Status.StatusRolledBack;
@@ -385,7 +385,7 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
             if (exc instanceof HeuristicCommit ||
                     exc instanceof HeuristicMixed ||
                     exc instanceof HeuristicHazard) {
-				_logger.log(Level.WARNING,"jts.heuristic_exception",exc.toString());
+                _logger.log(Level.WARNING,"jts.heuristic_exception",exc.toString());
             } else {}
         }
 
@@ -422,7 +422,7 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
         // previously, an source and destination array was wrong.
         //System.arraycopy(tidBytes, 0, key, 4, tidBytes.length);
         System.arraycopy(key, 4, tidBytes, 0, tidBytes.length);
-        
+
         globalTID = new GlobalTID(tidBytes);
 
         // Ensure that recovery has completed so that
@@ -480,10 +480,10 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
                     //thisRef = (RecoveryCoordinator)this;
                 }
             } catch(Exception exc) {
-				_logger.log(Level.SEVERE,"jts.create_recoverycoordinator_error");
-				 String msg = LogFormatter.getLocalizedMessage(_logger,
-				 						"jts.create_recoverycoordinator_error");
-				  throw  new org.omg.CORBA.INTERNAL(msg);
+                _logger.log(Level.SEVERE,"jts.create_recoverycoordinator_error");
+                 String msg = LogFormatter.getLocalizedMessage(_logger,
+                                         "jts.create_recoverycoordinator_error");
+                  throw  new org.omg.CORBA.INTERNAL(msg);
             }
         }
 
@@ -527,7 +527,7 @@ class RecoveryCoordinatorImpl extends RecoveryCoordinatorPOA {
                 }
             }
         } catch( Exception exc ) {
-				_logger.log(Level.WARNING,"jts.object_destroy_error","RecoveryCoordinator");
+                _logger.log(Level.WARNING,"jts.object_destroy_error","RecoveryCoordinator");
         }
 
         globalTID = null;

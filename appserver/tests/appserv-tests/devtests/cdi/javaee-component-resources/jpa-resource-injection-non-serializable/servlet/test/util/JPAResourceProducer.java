@@ -28,10 +28,10 @@ import test.beans.artifacts.TestDatabase;
 @Singleton
 public class JPAResourceProducer {
     @Produces @PersistenceUnit(unitName="pu2")
-    @TestDatabase 
+    @TestDatabase
     EntityManagerFactory customerDatabasePersistenceUnit;
 
     @Produces @PersistenceContext(unitName="pu2")
-    @TestDatabase 
+    @TestDatabase
     EntityManager customerDatabasePersistenceContext;
 }

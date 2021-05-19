@@ -21,7 +21,7 @@ package org.jvnet.hk2.config;
  *
  * <p>
  * This is an user error, so must be reported nicely.
- *  
+ *
  * @author Kohsuke Kawaguchi
  */
 public class TranslationException extends ConfigurationException {

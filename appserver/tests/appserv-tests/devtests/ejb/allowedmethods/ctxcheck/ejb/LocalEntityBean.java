@@ -99,7 +99,7 @@ public class LocalEntityBean
         courseIds = new ArrayList();
         try {
             InitialContext ic = new InitialContext();
-            dataSource = 
+            dataSource =
                 (DataSource) ic.lookup("java:comp/env/jdbc/devtestDS");
             Context initial = new InitialContext();
         } catch (Exception ex) {
@@ -112,7 +112,7 @@ public class LocalEntityBean
     public void localEntityGetEJBObject() {
         context.getEJBObject();
     }
-          
+
     public void localEntityGetEJBLocalObject() {
         context.getEJBLocalObject();
     }

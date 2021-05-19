@@ -26,11 +26,11 @@ import org.junit.Test;
  * @author mmares
  */
 public class AdminCacheWeakReferenceTest extends AdminCacheTstBase {
-    
+
     public AdminCacheWeakReferenceTest() {
         super(AdminCacheWeakReference.getInstance());
     }
-    
+
     @Test
     public void testWithFileDelete() {
         if (isSkipThisTest()) {
@@ -47,5 +47,5 @@ public class AdminCacheWeakReferenceTest extends AdminCacheTstBase {
         assertEquals(floyd1, getCache().get(floyd1Key, String.class));
         System.out.println(this.getClass().getName() + ".testWithFileDelete(): Done");
     }
-    
+
 }

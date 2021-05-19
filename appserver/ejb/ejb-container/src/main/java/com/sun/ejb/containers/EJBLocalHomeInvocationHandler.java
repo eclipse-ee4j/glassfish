@@ -33,13 +33,13 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Logger;
 
-/** 
+/**
  * Handler for EJBLocalHome invocations through EJBLocalHome proxy.
  *
  * @author Kenneth Saks
- */    
+ */
 
-public class EJBLocalHomeInvocationHandler 
+public class EJBLocalHomeInvocationHandler
     extends EJBLocalHomeImpl implements InvocationHandler {
 
     private static final Logger logger = EjbContainerUtilImpl.getLogger();
@@ -59,7 +59,7 @@ public class EJBLocalHomeInvocationHandler
     // container.  It's populated during container initialization and
     // passed in when the InvocationHandler is created.  This avoids the
     // overhead of building the method info each time a LocalHome proxy
-    // is created.  
+    // is created.
     private MethodMap invocationInfoMap_;
 
     protected EJBLocalHomeInvocationHandler(EjbDescriptor ejbDescriptor,
@@ -67,7 +67,7 @@ public class EJBLocalHomeInvocationHandler
         throws Exception {
 
         if( ejbDescriptor instanceof EjbSessionDescriptor ) {
-            isStatelessSession_ = 
+            isStatelessSession_ =
                 ((EjbSessionDescriptor)ejbDescriptor).isStateless();
         } else {
             isStatelessSession_ = false;
@@ -75,7 +75,7 @@ public class EJBLocalHomeInvocationHandler
 
         localHomeIntfClass_ = localHomeIntf;
 
-        // NOTE : Container is not set on super-class until after 
+        // NOTE : Container is not set on super-class until after
         // constructor is called.
     }
 
@@ -94,7 +94,7 @@ public class EJBLocalHomeInvocationHandler
     /**
      * Called by EJBLocalHome proxy.
      */
-    public Object invoke(Object proxy, Method method, Object[] args) 
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
 
         ClassLoader originalClassLoader = null;
@@ -102,7 +102,7 @@ public class EJBLocalHomeInvocationHandler
         // NOTE : be careful with "args" parameter.  It is null
         //        if method signature has 0 arguments.
         try {
-        ((BaseContainer) getContainer()).onEnteringContainer();
+            getContainer().onEnteringContainer();
 
             // In some cases(e.g. CDI + OSGi combination) ClassLoader
             // is accessed from the current Thread. In those cases we need to set
@@ -116,130 +116,130 @@ public class EJBLocalHomeInvocationHandler
                     (getContainer().getClassLoader());
             }
 
-        Class methodClass = method.getDeclaringClass();
+            Class methodClass = method.getDeclaringClass();
 
-        if( methodClass == java.lang.Object.class )  {
-            return InvocationHandlerUtil.invokeJavaObjectMethod
-                (this, method, args);    
-        } else if( methodClass == IndirectlySerializable.class ) {
-            return this.getSerializableObjectFactory();
-        } else if( handleSpecialEJBLocalHomeMethod(method, methodClass) ) {
-            return invokeSpecialEJBLocalHomeMethod(method, methodClass, args);
-        }
-
-        // Use optimized version of get that takes param count as an argument.
-        InvocationInfo invInfo = (InvocationInfo)
-            invocationInfoMap_.get(method, ((args != null) ? args.length : 0) );
-            
-        if( invInfo == null ) {
-            throw new IllegalStateException("Unknown method :" + method);
-        } 
-
-        if( (methodClass == jakarta.ejb.EJBLocalHome.class) ||
-            invInfo.ejbIntfOverride ) {
-            // There is only one method on jakarta.ejb.EJBLocalHome
-            super.remove(args[0]);
-            return null;
-
-        } else if(methodClass == GenericEJBLocalHome.class) {
-
-            // This is a creation request through the EJB 3.0
-            // client view, so just create a local business object and 
-            // return it.
-            EJBLocalObjectImpl localImpl = 
-                createEJBLocalBusinessObjectImpl((String) args[0]);
-            return localImpl.getClientObject((String) args[0]);
-            
-        } 
-
-        // Process finder, create method, or home method.
-        EJBLocalObjectImpl localObjectImpl = null;
-        Object returnValue = null;
-
-        if( invInfo.startsWithCreate ) {
-            localObjectImpl = createEJBLocalObjectImpl();
-            if (localObjectImpl != null) {
-                returnValue = localObjectImpl.getClientObject();
-            }
-        }
- 
-        if( !isStatelessSession_ ) {
-
-            if( invInfo.targetMethod1 == null ) {
-
-                Object [] params = new Object[] 
-                    { invInfo.ejbName, "LocalHome", 
-                      invInfo.method.toString() };
-                String errorMsg = localStrings.getLocalString
-                    ("ejb.bean_class_method_not_found", "", params);
-                throw new EJBException(errorMsg);
+            if( methodClass == java.lang.Object.class )  {
+                return InvocationHandlerUtil.invokeJavaObjectMethod
+                    (this, method, args);
+            } else if( methodClass == IndirectlySerializable.class ) {
+                return this.getSerializableObjectFactory();
+            } else if( handleSpecialEJBLocalHomeMethod(method, methodClass) ) {
+                return invokeSpecialEJBLocalHomeMethod(method, methodClass, args);
             }
 
-            EjbInvocation inv = ((BaseContainer) getContainer()).createEjbInvocation();
+            // Use optimized version of get that takes param count as an argument.
+            InvocationInfo invInfo = (InvocationInfo)
+                invocationInfoMap_.get(method, ((args != null) ? args.length : 0) );
 
-            inv.isLocal = true;
-            inv.isHome  = true;
-            inv.method  = method;
-
-            inv.clientInterface = localHomeIntfClass_;
-
-            // Set cached invocation params.  This will save additional lookups
-            // in BaseContainer.
-            inv.transactionAttribute = invInfo.txAttr;
-            inv.invocationInfo = invInfo;
-
-            if( localObjectImpl != null && invInfo.startsWithCreate ) {
-                inv.ejbObject = (EJBLocalRemoteObject) localObjectImpl;
+            if( invInfo == null ) {
+                throw new IllegalStateException("Unknown method :" + method);
             }
 
-            try {
+            if( (methodClass == jakarta.ejb.EJBLocalHome.class) ||
+                invInfo.ejbIntfOverride ) {
+                // There is only one method on jakarta.ejb.EJBLocalHome
+                super.remove(args[0]);
+                return null;
 
-                container.preInvoke(inv);
+            } else if(methodClass == GenericEJBLocalHome.class) {
 
-                if( invInfo.startsWithCreate ) {
+                // This is a creation request through the EJB 3.0
+                // client view, so just create a local business object and
+                // return it.
+                EJBLocalObjectImpl localImpl =
+                    createEJBLocalBusinessObjectImpl((String) args[0]);
+                return localImpl.getClientObject((String) args[0]);
 
-                    Object ejbCreateReturnValue = invokeTargetBeanMethod(container,
-                        invInfo.targetMethod1, inv, inv.ejb, args);
-                    postCreate(container, inv, invInfo, ejbCreateReturnValue, args);
-                    if( inv.ejbObject != null ) {
-                        returnValue = ((EJBLocalObjectImpl)inv.ejbObject)
-                            .getClientObject();
-                    } 
-                } else if (invInfo.startsWithFindByPrimaryKey) {
-		    returnValue = container.invokeFindByPrimaryKey(
-			invInfo.targetMethod1, inv, args);
-                } else if ( invInfo.startsWithFind ) {
+            }
 
-                    Object pKeys = invokeTargetBeanMethod(container, invInfo.targetMethod1,
-                                      inv, inv.ejb, args);
-                    returnValue = container.postFind(inv, pKeys, null);
-                } else {
+            // Process finder, create method, or home method.
+            EJBLocalObjectImpl localObjectImpl = null;
+            Object returnValue = null;
 
-                    returnValue = invokeTargetBeanMethod(container, invInfo.targetMethod1,
-                                      inv, inv.ejb, args);
-
+            if( invInfo.startsWithCreate ) {
+                localObjectImpl = createEJBLocalObjectImpl();
+                if (localObjectImpl != null) {
+                    returnValue = localObjectImpl.getClientObject();
                 }
-            } catch(InvocationTargetException ite) {
-                inv.exception = ite.getCause();           
-            } catch(Throwable c) {
-                inv.exception = c;
-            } finally {
-                container.postInvoke(inv);
             }
 
-            if (inv.exception != null) {
-                InvocationHandlerUtil.throwLocalException
+            if( !isStatelessSession_ ) {
+
+                if( invInfo.targetMethod1 == null ) {
+
+                    Object [] params = new Object[]
+                        { invInfo.ejbName, "LocalHome",
+                            invInfo.method.toString() };
+                    String errorMsg = localStrings.getLocalString
+                        ("ejb.bean_class_method_not_found", "", params);
+                    throw new EJBException(errorMsg);
+                }
+
+                EjbInvocation inv = ((BaseContainer) getContainer()).createEjbInvocation();
+
+                inv.isLocal = true;
+                inv.isHome  = true;
+                inv.method  = method;
+
+                inv.clientInterface = localHomeIntfClass_;
+
+                // Set cached invocation params.  This will save additional lookups
+                // in BaseContainer.
+                inv.transactionAttribute = invInfo.txAttr;
+                inv.invocationInfo = invInfo;
+
+                if( localObjectImpl != null && invInfo.startsWithCreate ) {
+                    inv.ejbObject = (EJBLocalRemoteObject) localObjectImpl;
+                }
+
+                try {
+
+                    container.preInvoke(inv);
+
+                    if( invInfo.startsWithCreate ) {
+
+                        Object ejbCreateReturnValue = invokeTargetBeanMethod(container,
+                            invInfo.targetMethod1, inv, inv.ejb, args);
+                        postCreate(container, inv, invInfo, ejbCreateReturnValue, args);
+                        if( inv.ejbObject != null ) {
+                            returnValue = ((EJBLocalObjectImpl)inv.ejbObject)
+                                .getClientObject();
+                        }
+                    } else if (invInfo.startsWithFindByPrimaryKey) {
+                        returnValue = container.invokeFindByPrimaryKey(
+                            invInfo.targetMethod1, inv, args);
+                    } else if ( invInfo.startsWithFind ) {
+
+                        Object pKeys = invokeTargetBeanMethod(container, invInfo.targetMethod1,
+                            inv, inv.ejb, args);
+                        returnValue = container.postFind(inv, pKeys, null);
+                    } else {
+
+                        returnValue = invokeTargetBeanMethod(container, invInfo.targetMethod1,
+                            inv, inv.ejb, args);
+
+                    }
+                } catch(InvocationTargetException ite) {
+                    inv.exception = ite.getCause();
+                } catch(Throwable c) {
+                    inv.exception = c;
+                } finally {
+                    container.postInvoke(inv);
+                }
+
+                if (inv.exception != null) {
+                    InvocationHandlerUtil.throwLocalException
                     (inv.exception, method.getExceptionTypes());
+                }
             }
-        }
 
-        return returnValue;
+            return returnValue;
         } finally {
             if( originalClassLoader != null ) {
                 Utility.setContextClassLoader(originalClassLoader);
             }
 
-            ((BaseContainer) getContainer()).onLeavingContainer();
+            getContainer().onLeavingContainer();
         }
     }
 
@@ -261,7 +261,7 @@ public class EJBLocalHomeInvocationHandler
     }
 
     // allow subclasses to execute a protected method in BaseContainer
-    protected Object invokeTargetBeanMethod(BaseContainer container, 
+    protected Object invokeTargetBeanMethod(BaseContainer container,
             Method beanClassMethod, EjbInvocation inv, Object target, Object[] params)
             throws Throwable {
 

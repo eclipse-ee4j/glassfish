@@ -31,11 +31,11 @@ import org.apache.catalina.LifecycleException;
  */
 public class PEHADBHealthChecker implements HealthChecker {
 
-    
+
     /** Creates a new instance of PEHADBHealthChecker */
-    public PEHADBHealthChecker(WebContainer webContainer) {          
-    }    
-        
+    public PEHADBHealthChecker(WebContainer webContainer) {
+    }
+
     /**
      * Prepare for the beginning of active use of the public methods of this
      * component.  This method should be called after <code>configure()</code>,
@@ -49,8 +49,8 @@ public class PEHADBHealthChecker implements HealthChecker {
     public void start() throws LifecycleException {
         //no op
     }
-        
-    
+
+
     /**
      * Gracefully terminate the active use of the public methods of this
      * component.  This method should be the last one called on a given
@@ -62,6 +62,6 @@ public class PEHADBHealthChecker implements HealthChecker {
      */
     public void stop() throws LifecycleException {
         //no op
-    }       
-            
+    }
+
 }

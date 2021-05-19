@@ -25,7 +25,7 @@ import java.util.Set;
 /**
  * State file for annotaton processor, 1 per service type, maintains
  * the list of implementors of that service type.
- * 
+ *
  */
 final class ServiceFileInfo {
 

@@ -32,10 +32,10 @@ public class SessionBeanDefault implements SessionBeanDefaultRemote {
 
     @Resource(name="myCF0", lookup="jms/__defaultConnectionFactory")
     private ConnectionFactory cf0;
-    
+
     @Resource(name="myCF1", lookup="java:comp/DefaultJMSConnectionFactory")
     private ConnectionFactory cf1;
-    
+
     @Resource(name="myCF2")
     private ConnectionFactory cf2;
 
@@ -67,7 +67,7 @@ public class SessionBeanDefault implements SessionBeanDefaultRemote {
             }
             if (conn != null) {
                 try {
-                    
+
                     conn.close();
                 } catch (Exception e) {
                     throw new EJBException(e);

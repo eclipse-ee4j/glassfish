@@ -19,64 +19,63 @@ package org.apache.naming;
 
 /**
  * Naming MBean interface.
- * 
+ *
  * @author <a href="mailto:remm@apache.org">Remy Maucherat</a>
  * @version $Revision: 1.2 $
  */
 
 public interface NamingServiceMBean {
-    
-    
+
+
     // -------------------------------------------------------------- Constants
-    
-    
-    public static enum State { STOPPED, STOPPING, STARTING, STARTED }
-    
-    
+
+
+    public enum State { STOPPED, STOPPING, STARTING, STARTED }
+
+
     /**
      * Component name.
      */
-    public static final String NAME = "Apache JNDI Naming Service";
-    
-    
+    String NAME = "Apache JNDI Naming Service";
+
+
     /**
      * Object name.
      */
-    public static final String OBJECT_NAME = ":service=Naming";
-    
-    
+    String OBJECT_NAME = ":service=Naming";
+
+
     // ------------------------------------------------------ Interface Methods
-    
-    
+
+
     /**
      * Retruns the JNDI component name.
      */
-    public String getName();
-    
-    
+    String getName();
+
+
     /**
      * Returns the state.
      */
-    public State getState();
-    
-    
+    State getState();
+
+
     /**
      * Start the servlet container.
      */
-    public void start()
-        throws Exception;
-    
-    
+    void start() throws Exception;
+
+
     /**
      * Stop the servlet container.
      */
-    public void stop();
-    
-    
+    void stop();
+
+
     /**
      * Destroy servlet container (if any is running).
      */
-    public void destroy();
-    
-    
+    void destroy();
+
+
 }

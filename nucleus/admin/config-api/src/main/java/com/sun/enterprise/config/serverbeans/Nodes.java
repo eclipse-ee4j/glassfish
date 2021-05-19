@@ -81,7 +81,7 @@ public interface Nodes extends ConfigBeanProxy {
 
     /**
      * Can we create a node?
-     * 
+     *
      * @param node
      * @return true if node creation is allowed, else false
      */

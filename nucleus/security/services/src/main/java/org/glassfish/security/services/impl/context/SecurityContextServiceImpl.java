@@ -28,10 +28,10 @@ import org.jvnet.hk2.annotations.Service;
 @Singleton
 public class SecurityContextServiceImpl implements SecurityContextService {
 
-	private Attributes envAttributes = new AttributesImpl();
-	
-	public Attributes getEnvironmentAttributes() {
-		return envAttributes;
-	}
+        private Attributes envAttributes = new AttributesImpl();
+
+        public Attributes getEnvironmentAttributes() {
+                return envAttributes;
+        }
 
 }

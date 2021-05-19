@@ -33,7 +33,7 @@ public class SlessEJB implements Foo {
         if (testBean != null) {
             return "hello";
         }
-        
+
         return null;
     }
 

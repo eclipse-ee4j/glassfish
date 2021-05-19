@@ -46,9 +46,9 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <!-- In this example there are only .java files for the client -->
-    
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="client"/>
@@ -58,7 +58,7 @@
     <target name="build">
         <antcall target="build.ear"/> <!-- also builds the client -->
     </target>
-    
+
     <target name="build.ear" depends="build.clients,build.other.jar">
         <antcall target="spc-ear-common">
 <!--
@@ -66,7 +66,7 @@
 -->
             <param name="application.xml" value="ear/application-with-client-2-at-subdir.xml"/>
         </antcall>
-    </target> 
+    </target>
 
    <!--
        other.jar contains a class used from the client.  We package it
@@ -176,7 +176,7 @@
     <target name="deploy.ear" depends="build.ear">
         <antcall target="deploy-common"/>
     </target>
-    
+
     <target name="deploy.client" depends="build.client">
         <antcall target="deploy-common">
             <param name="deployed.app" value="${assemble.dir}/${appname}-client.jar"/>
@@ -193,12 +193,12 @@
     <arg line="${assemble.dir}/${appname}-client2.jar"/>
   </exec>
     </target>
-    
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy.ear"/>
 <!--        <antcall target="undeploy.clients"/>-->
     </target>
-    
+
     <target name="undeploy.ear" depends="init-common">
         <antcall target="undeploy-common"/>
     </target>
@@ -219,17 +219,17 @@
     <target name="init-report">
         <delete failonerror="false" file="${summaryFilePath}"/>
     </target>
-    
+
     <target name="report">
         <concat>
             <fileset dir="." includes="${summaryFilePath}"/>
         </concat>
     </target>
-    
+
     <target name="run" depends="init-common">
 <!--        <antcall target="test.standalone.client"/>-->
         <antcall target="test.embedded.clients"/>
-        
+
     </target>
 
     <target name="test.standalone.client">
@@ -275,8 +275,8 @@
         <delete file="${clientOutputFile}"/>
     </target>
 
-    
-    
+
+
     <target name="usage">
         <antcall target="usage-common"/>
     </target>

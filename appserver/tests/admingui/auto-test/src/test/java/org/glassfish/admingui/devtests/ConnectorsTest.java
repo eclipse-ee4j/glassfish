@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.Select;
 
 import static org.junit.Assert.assertEquals;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -47,7 +47,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         Select select = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:resAdapterProp:db")));
         select.selectByVisibleText("jmsra");
         sleep(1000);
-        
+
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db")));
         select1.selectByVisibleText("jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
@@ -57,10 +57,10 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         Select select2 = new Select(driver.findElement(By.id("propertyForm:propertySheet:poolPropertySheet:transprop:trans")));
         select2.selectByVisibleText("NoTransaction");
         clickAndWait("propertyForm:propertyContentPage:topButtons:finishButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:poolTable", testPool, "col1");
         assertEquals(testPool, getText(prefix + "col1:link"));
-        
+
         // Create new connector resource which uses this new pool
         clickAndWait("treeForm:tree:resources:Connectors:connectorResources:connectorResources_link");
 
@@ -72,19 +72,19 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
 
         clickAndWait("form:propertyContentPage:topButtons:newButton");
 
-        
+
         //test disable button
         String connectorPrefix = getTableRowByValue("propertyForm:resourcesTable", testConnector, "col1");
         isElementPresent("propertyForm:resourcesTable:topActionsGroup1:newButton");
         String selectId = connectorPrefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button2");
-        
+
         // Delete connector resource
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button1");
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", testConnector);
@@ -112,7 +112,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         Select select = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:resAdapterProp:db")));
         select.selectByVisibleText("jmsra");
         sleep(1000);
-        
+
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db")));
         select1.selectByVisibleText("jakarta.jms.QueueConnectionFactory");
         waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
@@ -122,7 +122,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         Select select2 = new Select(driver.findElement(By.id("propertyForm:propertySheet:poolPropertySheet:transprop:trans")));
         select2.selectByVisibleText("NoTransaction");
         clickAndWait("propertyForm:propertyContentPage:topButtons:finishButton");
-        
+
         String prefix = getTableRowByValue("propertyForm:poolTable", testPool, "col1");
         assertEquals(testPool, getText(prefix + "col1:link"));
 
@@ -137,7 +137,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         setFieldValue("form:propertySheet:propertSectionTextField:jndiTextProp:jnditext", testConnector);
         Select select3 = new Select(driver.findElement(By.id("form:propertySheet:propertSectionTextField:poolNameProp:PoolName")));
         select3.selectByVisibleText(testPool);
-        
+
         int count = addTableRow("form:basicTable", "form:basicTable:topActionsGroup1:addSharedTableButton");
         setFieldValue("form:basicTable:rowGroup1:0:col2:col1St", "property" + generateRandomString());
         setFieldValue("form:basicTable:rowGroup1:0:col3:col1St", "value");
@@ -152,7 +152,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
 
         String connectorPrefix = getTableRowByValue("propertyForm:resourcesTable", testConnector, "col1");
         assertEquals(testConnector, getText(connectorPrefix + "col1:link"));
-        
+
         String clickId = connectorPrefix + "col1:link";
         clickByIdAction(clickId);
         assertTableRowCount("propertyForm:basicTable", count);
@@ -164,7 +164,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         String selectId = connectorPrefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
@@ -180,7 +180,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         select5.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
-        
+
 
         // Delete connector resource
         clickAndWait("treeForm:tree:resources:Connectors:connectorResources:connectorResources_link");
@@ -195,7 +195,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
         deleteRow("propertyForm:instancesTable:topActionsGroup1:button1", "propertyForm:instancesTable", instanceName);
     }
 
-    
+
 //    //This tests need to be finished and retested after the GLASSFISH-20812 has been resolved!
 //    @Test
 //    public void testConnectorSecurityMaps() {
@@ -215,7 +215,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
 //        Select select = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:resAdapterProp:db")));
 //        select.selectByVisibleText("jmsra");
 //        sleep(1000);
-//        
+//
 //        Select select1 = new Select(driver.findElement(By.id("propertyForm:propertySheet:generalPropertySheet:connectionDefProp:db")));
 //        select1.selectByVisibleText("jakarta.jms.QueueConnectionFactory");
 //        waitForButtonEnabled("propertyForm:title:topButtons:nextButton");
@@ -225,7 +225,7 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
 //        Select select2 = new Select(driver.findElement(By.id("propertyForm:propertySheet:poolPropertySheet:transprop:trans")));
 //        select2.selectByVisibleText("NoTransaction");
 //        clickAndWait("propertyForm:propertyContentPage:topButtons:finishButton");
-//        
+//
 //        String prefix = getTableRowByValue("propertyForm:poolTable", testPool, "col1");
 //        assertEquals(testPool, getText(prefix + "col1:link"));
 //
@@ -252,6 +252,6 @@ public class ConnectorsTest extends BaseSeleniumTestClass {
 //
 //        // Delete connector connection pool
 //        clickAndWait("treeForm:tree:resources:Connectors:connectorConnectionPools:connectorConnectionPools_link");
-//        deleteRow("propertyForm:poolTable:topActionsGroup1:button1", "propertyForm:poolTable", testPool);        
+//        deleteRow("propertyForm:poolTable:topActionsGroup1:button1", "propertyForm:poolTable", testPool);
 //    }
 }

@@ -46,7 +46,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * modules may be ha enabled. Finer-grained control exists at lower levels.
      * If this attribute is missing, it "inherits" the value of the global
      * availability-enabled under availability-service.  Default is "true".
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -66,7 +66,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      *
      * Specifies the session persistence mechanism for web applications that
      * have availability enabled. Default is "replicated".
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -87,7 +87,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * The persistence frequency used by the session persistence framework,
      * when persistence-type = "ha". Values may be "time-based" or "web-event"
      * If it is missing, then the persistence-type will revert to "memory".
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -109,7 +109,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * persistence-type = "ha". Values may be "session", "modified-session",
      * "modified-attribute". If it is missing, then the persistence-type will
      * revert to "memory".
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -130,7 +130,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * Deprecated. This attribute has no effect. If you wish to control
      * enabling/disabling HADB health check, refer to store-healthcheck-enabled
      * attribute in the availability-service element.
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -150,7 +150,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * Gets the value of the ssoFailoverEnabled property.
      *
      * Controls whether Single-Sign-On state will be made available for failover
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */
@@ -172,7 +172,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * Session Persistence Framework. If missing, internal code will default it
      * to value of store-pool-name under availability-service
      * (ultimately "jdbc/hastore").
-     * 
+     *
      * @return possible object is
      *         {@link String }
      */

@@ -16,66 +16,66 @@
 
 package com.sun.jdo.api.persistence.enhancer.classfile;
 
-import java.io.*;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * Class representing a unicode string value in the constant pool
  */
 
-/* 
+/*
  * Note: evidence suggests that this is no longer part of the java VM
  * spec.
  */
 
 public class ConstUnicode extends ConstBasic {
-  /* The tag associated with ConstClass entries */
-  public static final int MyTag = CONSTANTUnicode;
- 
-  /* The unicode string of interest */
-  private String stringValue;
+    /* The tag associated with ConstClass entries */
+    public static final int MyTag = CONSTANTUnicode;
 
-  /* public accessors */
+    /* The unicode string of interest */
+    private String stringValue;
 
-  /**
-   * The tag of this constant entry
-   */
-  public int tag () { return MyTag; }
+    /* public accessors */
 
-  /**
-   * return the value associated with the entry
-   */
-  public String asString() {
-    return stringValue;
-  }
+    /**
+     * The tag of this constant entry
+     */
+    public int tag () { return MyTag; }
 
-  /**
-   * A printable representation
-   */
-  public String toString () {
-      return "CONSTANTUnicode(" + indexAsString() + "): " + stringValue;//NOI18N
-  }
-
-  /* package local methods */
-
-  ConstUnicode (String s) {
-    stringValue = s;
-  }
-
-  void formatData (DataOutputStream b) throws IOException {
-    b.writeBytes(stringValue);
-  }
-
-  static ConstUnicode read (DataInputStream input) throws IOException {
-    int count = input.readShort(); // Is this chars or bytes?
-    StringBuffer b = new StringBuffer();
-    for (int i=0; i < count; i++) { 
-      b.append(input.readChar());
+    /**
+     * return the value associated with the entry
+     */
+    public String asString() {
+        return stringValue;
     }
-    return new ConstUnicode (b.toString());
-  }
 
-  void resolve (ConstantPool p) {
-  }
+    /**
+     * A printable representation
+     */
+    public String toString () {
+        return "CONSTANTUnicode(" + indexAsString() + "): " + stringValue;//NOI18N
+    }
+
+    /* package local methods */
+
+    ConstUnicode (String s) {
+        stringValue = s;
+    }
+
+    void formatData (DataOutputStream b) throws IOException {
+        b.writeBytes(stringValue);
+    }
+
+    static ConstUnicode read (DataInputStream input) throws IOException {
+        int count = input.readShort(); // Is this chars or bytes?
+        StringBuffer b = new StringBuffer();
+        for (int i=0; i < count; i++) {
+            b.append(input.readChar());
+        }
+        return new ConstUnicode (b.toString());
+    }
+
+    void resolve (ConstantPool p) {
+    }
 }
-
-

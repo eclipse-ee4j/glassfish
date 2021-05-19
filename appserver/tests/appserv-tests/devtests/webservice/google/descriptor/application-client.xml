@@ -32,6 +32,6 @@
     <wsdl-file>META-INF/wsdl/GoogleSearch.wsdl</wsdl-file>
     <jaxrpc-mapping-file>GoogleMapping_appclient.xml</jaxrpc-mapping-file>
     <service-qname xmlns:servicens="urn:GoogleSearch">servicens:GoogleSearchService
-    </service-qname>               
+    </service-qname>
   </service-ref>
 </application-client>

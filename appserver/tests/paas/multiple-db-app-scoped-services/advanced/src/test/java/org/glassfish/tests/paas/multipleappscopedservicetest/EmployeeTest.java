@@ -52,7 +52,7 @@ public class EmployeeTest {
     public void test() throws Exception {
 
         // 1. Bootstrap GlassFish DAS in embedded mode.
-	GlassFishProperties glassFishProperties = new GlassFishProperties();
+    GlassFishProperties glassFishProperties = new GlassFishProperties();
         glassFishProperties.setInstanceRoot(System.getenv("S1AS_HOME")
                 + "/domains/domain1");
         glassFishProperties.setConfigFileReadOnly(false);

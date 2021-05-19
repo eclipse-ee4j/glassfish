@@ -68,7 +68,7 @@ public class AdminObjectManager implements ResourceManager {
 
     private static final String DESCRIPTION = ServerTags.DESCRIPTION;
 
-    final private static LocalStringManagerImpl localStrings = 
+    final private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(AdminObjectManager.class);
 
     private String resType = null;
@@ -195,7 +195,7 @@ public class AdminObjectManager implements ResourceManager {
         description = (String) attributes.get(DESCRIPTION);
         raName = (String) attributes.get(RES_ADAPTER);
     }
-    
+
      //TODO Error checking taken from v2, need to refactor for v3
     private ResourceStatus isValidAdminObject() {
         // Check if the restype is valid -

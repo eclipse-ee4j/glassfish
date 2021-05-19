@@ -30,19 +30,19 @@ public enum EntityManagerMethod {
             return "persist(Object entity)";
         }
     },
-    
+
     MERGE {
         public String toString() {
             return "merge(<T> entity)";
         }
     },
-    
+
     REMOVE {
         public String toString() {
             return "remove(Object entity)";
         }
     },
-    
+
     FIND_CLASS_OBJECT_MAP {
         public String toString() {
             return "find(Class<T> entityClass, Object primaryKey, Map<String, Object> properties)";
@@ -72,19 +72,19 @@ public enum EntityManagerMethod {
             return "getReference(Class<T> entityClass, Object primaryKey)";
         }
     },
-    
+
     FLUSH {
         public String toString() {
             return "flush()";
         }
     },
-  
+
     SET_FLUSH_MODE {
         public String toString() {
             return "setFlushMode(FlushModeType flushMode)";
         }
     },
-    
+
     GET_FLUSH_MODE {
         public String toString() {
             return "getFlushMode()";
@@ -138,7 +138,7 @@ public enum EntityManagerMethod {
             return "contains(Object entity)";
         }
     },
-    
+
     GET_LOCK_MODE {
         public String toString() {
             return "getLockMode()";
@@ -162,7 +162,7 @@ public enum EntityManagerMethod {
             return "createQuery(String qlString)";
         }
     },
-    
+
     CREATE_QUERY_STRING_CLASS {
         public String toString() {
             return "createQuery(String qlString, Class<T> resultClass)";
@@ -180,7 +180,7 @@ public enum EntityManagerMethod {
             return "createNamedQuery(String name)";
         }
     },
-    
+
     CREATE_NAMED_QUERY_STRING_CLASS {
         public String toString() {
             return "createNamedQuery(String name, Class<T> resultClass)";
@@ -192,19 +192,19 @@ public enum EntityManagerMethod {
             return "createNativeQuery(String sqlString)";
         }
     },
-    
+
     CREATE_NATIVE_QUERY_STRING_CLASS {
         public String toString() {
             return "createNativeQuery(String sqlString, Class resultClass)";
         }
     },
-    
+
     CREATE_NATIVE_QUERY_STRING_STRING {
         public String toString() {
             return "createNativeQuery(String sqlString, String resultSetMapping)";
         }
     },
-    
+
     JOIN_TRANSACTION {
         public String toString() {
             return "joinTransaction()";
@@ -222,13 +222,13 @@ public enum EntityManagerMethod {
             return "close()";
         }
     },
-    
+
     IS_OPEN {
         public String toString() {
             return "isOpen()";
         }
     },
-    
+
     GET_TRANSACTION {
         public String toString() {
             return "getTransaction()";

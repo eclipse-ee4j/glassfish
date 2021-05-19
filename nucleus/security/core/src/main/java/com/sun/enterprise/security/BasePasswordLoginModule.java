@@ -60,7 +60,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
     protected String _password;
     protected char[] _passwd;
     protected Realm _currentRealm;
-    
+
     // the authentication status
     protected boolean _succeeded = false;
     protected boolean _commitSucceeded = false;
@@ -73,7 +73,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
     protected final static StringManager sm =
         StringManager.getManager(LoginCallbackHandler.class);
     private LoginModule userDefinedLoginModule = null;
-    
+
     /**
      * Initialize this login module.
      *
@@ -116,7 +116,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
     {
         //Extract the username and password
         extractCredentials();
-        
+
         // Delegate the actual authentication to subclass.
         authenticateUser();
         if(_logger.isLoggable(Level.FINE)){
@@ -124,7 +124,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
         }
         return true;
     }
-    
+
 
     /**
      * Commit the authentication.
@@ -147,7 +147,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
         String realm_name = _currentRealm.getName();
         PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
         if (factory != null)
-            _userPrincipal = 
+            _userPrincipal =
                 factory.getPrincipalInstance(getUsername(),realm_name);
         else
             _userPrincipal = new PrincipalImpl(getUsername());
@@ -170,12 +170,12 @@ public abstract class BasePasswordLoginModule implements LoginModule
                 if(!principalSet.contains(g)){
                     principalSet.add(g);
                 }
-                
+
                 // cleaning the slate
                 _groupsList[i] = null;
             }
         }
-        
+
         // In any case, clean out state.
         _groupsList = null;
         setUsername(null);
@@ -198,7 +198,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
         if(_logger.isLoggable(Level.FINE)){
             _logger.log(Level.FINE,"JAAS authentication aborted.");
         }
-        
+
         if (_succeeded == false) {
             return false;
         } else if (_succeeded == true && _commitSucceeded == false) {
@@ -234,7 +234,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
         _subject.getPrincipals().clear();
         _subject.getPublicCredentials().clear();
         _subject.getPrivateCredentials().clear();
-        
+
         _succeeded = false;
         _commitSucceeded = false;
         setUsername(null);
@@ -249,18 +249,18 @@ public abstract class BasePasswordLoginModule implements LoginModule
         return true;
     }
 
-    
+
     /**
      *
      * <P>This is a convenience method which can be used by subclasses
      *
      * <P>Note that this method is called after the authentication
      * has succeeded. If authentication failed do not call this method.
-     * 
+     *
      * Global instance field succeeded is set to true by this method.
      *
      * @param groups String array of group memberships for user (could be
-     *     empty). 
+     *     empty).
      */
     public final void commitUserAuthentication (final String[] groups)
     {
@@ -285,7 +285,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
     {
         return _subject;
     }
-    
+
     /**
      * Method to extract container-provided username and password
      * @throws javax.security.auth.login.LoginException
@@ -338,7 +338,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
         setPassword(new String(pwdCred.getPassword()));
     }
 
-    
+
     /**
      * Perform authentication decision.
      *
@@ -348,32 +348,32 @@ public abstract class BasePasswordLoginModule implements LoginModule
      *
      */
     protected abstract void authenticateUser() throws LoginException;
-    
+
     public void setLoginModuleForAuthentication(LoginModule userDefinedLoginModule) {
         this.userDefinedLoginModule = userDefinedLoginModule;
     }
 
     /**
-     * @return the username sent by container - is made available to the custom 
+     * @return the username sent by container - is made available to the custom
      * login module using the protected _username field.
      * Use Case: A custom login module could use the username to validate against
      * a realm of users
      */
-    
+
     public String getUsername() {
         return _username;
     }
 
    /**
-    * Used for setting the username obtained from the container internally, to 
+    * Used for setting the username obtained from the container internally, to
     * be made available to the custom login module implementation
     * @param username
-    */ 
+    */
     private void setUsername(String username) {
         this._username = username;
     }
 
-    
+
     /**
      * Deprecated - password is preferred to be a char[]
      */
@@ -392,7 +392,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
 
 
 
-    
+
     /**
      * @return the password sent by container - is made available to the custom
      * login module using the protected _password field.
@@ -405,7 +405,7 @@ public abstract class BasePasswordLoginModule implements LoginModule
     public char[] getPasswordChar() {
         return Arrays.copyOf(_passwd, _passwd.length);
     }
-    
+
   /**
     * Used for setting the password obtained from the container internally, to
     * be made available to the custom login module implementation
@@ -415,35 +415,35 @@ public abstract class BasePasswordLoginModule implements LoginModule
     private void setPasswordChar(char[] password) {
         this._passwd = password;
     }
-    
+
     /**
      * @return the currentRealm - for backward compatability
      */
     public Realm getCurrentRealm() {
         return _currentRealm;
     }
-    
+
     /**
      * @return the succeeded state - for backward compatability
      */
     public boolean isSucceeded() {
         return _succeeded;
     }
-    
+
     /**
      * @return the commitsucceeded state - for backward compatability
      */
     public boolean isCommitSucceeded() {
         return _commitSucceeded;
     }
-    
+
     /**
      * @return the UserPrincipal - for backward compatability
      */
     public PrincipalImpl getUserPrincipal() {
         return _userPrincipal;
     }
-    
+
      /**
      * @return the groupList - for backward compatability
      */

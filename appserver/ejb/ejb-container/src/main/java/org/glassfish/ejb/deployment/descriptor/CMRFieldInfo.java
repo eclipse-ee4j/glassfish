@@ -20,7 +20,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 
 
-/** 
+/**
  * This class stores information about CMR fields
  * Note: the "field" variable is only available at runtime.
  *
@@ -33,5 +33,5 @@ public final class CMRFieldInfo implements Serializable {
     public transient Class type = null;
     public RelationRoleDescriptor role;
     // foreign key fields corresponding to this CMR field
-    public PersistentFieldInfo[] fkeyFields; 
+    public PersistentFieldInfo[] fkeyFields;
 }

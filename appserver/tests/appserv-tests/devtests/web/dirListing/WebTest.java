@@ -24,9 +24,9 @@ import com.sun.ejte.ccl.reporter.*;
  * Bug 6172839
  */
 public class WebTest {
-    
+
     private static int EXPECTED_COUNT = 1;
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -34,7 +34,7 @@ public class WebTest {
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("Standalone Session Invalid war test");
 
         String host = args[0];
@@ -43,10 +43,10 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             boolean ok = goGet(host, port, "", contextRoot + "/" );
-            
+
             stat.addStatus("web-directoryListing",
                     ((ok)? stat.PASS : stat.FAIL));
         } catch (Throwable t) {
@@ -69,7 +69,7 @@ public class WebTest {
             os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
             os.write("Authorization: Basic ajJlZTpqMmVl\n".getBytes());
             os.write("\n".getBytes());
-            
+
             InputStream is = s.getInputStream();
             BufferedReader bis = new BufferedReader(new InputStreamReader(is));
             String line = null;
@@ -86,11 +86,11 @@ public class WebTest {
                 lineNum++;
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         }
 
         return (count == EXPECTED_COUNT);
    }
-  
+
 }

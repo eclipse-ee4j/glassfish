@@ -75,7 +75,7 @@
         <antcall target="undeploy-war-common"/>
         <antcall target="undeploy-jbi-component-su"/>
     </target>
-    
+
     <target name="configure-webservice-management" depends="init-common">
       <antcall target="asadmin-common">
         <param name="admin.command" value="configure-webservice-management"/>

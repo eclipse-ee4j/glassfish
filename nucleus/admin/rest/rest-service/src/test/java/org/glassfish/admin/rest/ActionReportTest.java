@@ -34,13 +34,13 @@ import org.testng.annotations.Test;
  */
 public class ActionReportTest {
     private ActionReportJson2Provider provider = new ActionReportJson2Provider();
-    
+
     private String marshall(RestActionReporter ar) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         provider.writeTo(ar, ar.getClass(), ActionReporter.class, null, new MediaType("application", "actionreport"), null, baos);
         return baos.toString("UTF-8");
     }
-    
+
     private String basicMarshallingTest(RestActionReporter ar) throws IOException {
         String str = marshall(ar);
         assertNotNull(str);
@@ -48,7 +48,7 @@ public class ActionReportTest {
         //System.out.println(str);
         return str;
     }
-    
+
     @Test
     public void actionReportMarshallingTest() throws IOException {
         RestActionReporter ar = new RestActionReporter();
@@ -97,5 +97,5 @@ public class ActionReportTest {
         ar3.setFailureCause(new Exception("Some exception message"));
         basicMarshallingTest(ar);
     }
-    
+
 }

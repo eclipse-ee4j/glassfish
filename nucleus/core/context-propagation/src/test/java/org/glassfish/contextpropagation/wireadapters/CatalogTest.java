@@ -37,7 +37,7 @@ public class CatalogTest {
     assertEquals((byte) 2, bytes[4]);
     assertEquals((byte) 0xFF, bytes[5]);
   }
-  
+
   @Test public void testSetMeta() {
     Catalog cat = new Catalog();
     cat.setMeta(0xABCD1234);

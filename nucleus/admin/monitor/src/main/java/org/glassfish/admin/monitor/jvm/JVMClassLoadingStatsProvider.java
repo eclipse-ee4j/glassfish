@@ -27,7 +27,7 @@ import org.glassfish.gmbal.ManagedObject;
 
 /* jvm.class-loading-system */
 // v2: com.sun.appserv:name=class-loading-system,type=class-loading-system,category=monitor,server=server
-// v3: 
+// v3:
 @AMXMetadata(type = "class-loading-system-mon", group = "monitoring")
 @ManagedObject
 @Description("JVM Class Loading Statistics")

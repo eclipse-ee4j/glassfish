@@ -38,20 +38,20 @@ public class SymbolTable
      * The actual scope level.
      */
     protected int actualScope = 0;
-    
+
     /**
      * Stack of old definitions.
      */
     protected Stack nestings = new Stack();
-    
+
     /**
      * The table of declared identifier (symbols).
      */
     protected Hashtable symbols = new Hashtable();
 
     /**
-     * Opens a new scope. 
-     * Prepare everything to handle old definitions when 
+     * Opens a new scope.
+     * Prepare everything to handle old definitions when
      * a identifier declaration is hidden.
      */
     public void enterScope()
@@ -74,24 +74,24 @@ public class SymbolTable
      * Returns the level of the actual scope.
      * @return actual scope level.
      */
-	public int getActualScope()
-	{
-		return actualScope;
-	}
-	
-	/**
-	 * Add identifier to the actual scope.
+    public int getActualScope()
+    {
+        return actualScope;
+    }
+
+    /**
+     * Add identifier to the actual scope.
      * If the identifier was already declared in the actual
      * scope the symbol table is NOT changed and the old definition
-     * is returned. Otherwise a possible definition of a lower 
-     * level scope is saved in the actual nesting and the new definition 
+     * is returned. Otherwise a possible definition of a lower
+     * level scope is saved in the actual nesting and the new definition
      * is stored in the symbol table. This allows to reinstall the old
      * definition when the sctaul scope is closed.
      * @param   ident   identifier to be declared
      * @param   def new definition of identifier
-     * @return  the old definition if the identifier was already declared 
-	 *          in the actual scope; null otherwise
-	 */
+     * @return  the old definition if the identifier was already declared
+     *          in the actual scope; null otherwise
+     */
     public Definition declare(String ident, Definition def)
     {
         Definition old = (Definition)symbols.get(ident);
@@ -101,7 +101,7 @@ public class SymbolTable
             Nesting nest = (Nesting)nestings.peek();
             nest.add(ident, old); // save old definition in nesting
             symbols.put(ident, def); // install new definition as actual definition
-			return null;
+            return null;
         }
         else
         {
@@ -110,9 +110,9 @@ public class SymbolTable
     }
 
     /**
-     * Checks whether the specified identifier is declared.  
+     * Checks whether the specified identifier is declared.
      * @param ident the name of identifier to be tested
-     * @return true if the identifier is declared; 
+     * @return true if the identifier is declared;
      * false otherwise.
      */
     public boolean isDeclared(String ident)
@@ -121,8 +121,8 @@ public class SymbolTable
     }
 
     /**
-     * Checks the symbol table for the actual definition 
-     * of the specified identifier. If the identifier is 
+     * Checks the symbol table for the actual definition
+     * of the specified identifier. If the identifier is
      * declared the definition is returned, otherwise null.
      * @param ident the name of identifier
      * @return the actual definition of ident is declared;
@@ -132,12 +132,12 @@ public class SymbolTable
     {
         return (Definition)symbols.get(ident);
     }
-	
+
     /**
-     * Internal method to reinstall the old definitions. 
-     * The method is called when a scope is closed. 
-     * For all identifier that were declared in the 
-     * closed scope their former definition (that was hidden) 
+     * Internal method to reinstall the old definitions.
+     * The method is called when a scope is closed.
+     * For all identifier that were declared in the
+     * closed scope their former definition (that was hidden)
      * is reinstalled.
      * @param nesting list of hidden definitions
      */

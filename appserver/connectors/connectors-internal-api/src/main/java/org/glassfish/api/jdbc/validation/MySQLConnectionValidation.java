@@ -18,11 +18,11 @@ package org.glassfish.api.jdbc.validation;
 
 /**
  * Provide custom implementation of connection validation for mysql dbvendor.
- * 
- * Provides a custom connection validation 
- * mechanism for MySQL dbVendor if custom-validation is chosen as the 
+ *
+ * Provides a custom connection validation
+ * mechanism for MySQL dbVendor if custom-validation is chosen as the
  * connection-validation-method.
- * 
+ *
  * @author Shalini M
  */
 public class MySQLConnectionValidation extends DefaultConnectionValidation {

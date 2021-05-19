@@ -29,49 +29,47 @@ import java.util.Set;
  * <!ELEMENT inbound-resourceadapter (messageadapter?)>
  * <!ELEMENT messageadapter (messagelistener+)>
  *
- * @author	Qingqing Ouyang
+ * @author    Qingqing Ouyang
  */
-public class InboundResourceAdapter extends Descriptor
-{
+public class InboundResourceAdapter extends Descriptor {
+
     private Set messageListeners;
 
-    public InboundResourceAdapter () 
-    {
+    public InboundResourceAdapter() {
         messageListeners = new OrderedSet();
     }
-    
-    public Set
-    getMessageListeners()
-    {
+
+
+    public Set getMessageListeners() {
         return messageListeners;
     }
-    
-    public void
-    addMessageListener (MessageListener listener)
-    {
+
+
+    public void addMessageListener(MessageListener listener) {
         messageListeners.add(listener);
     }
 
-    public void 
-    removeMessageListener (MessageListener listener) 
-    {
-	messageListeners.remove(listener);
+
+    public void removeMessageListener(MessageListener listener) {
+        messageListeners.remove(listener);
     }
 
-    public boolean hasMessageListenerType(String msgListenerType){
-        for(Object messageListenerObject : messageListeners){
+
+    public boolean hasMessageListenerType(String msgListenerType) {
+        for (Object messageListenerObject : messageListeners) {
             MessageListener ml = (MessageListener) messageListenerObject;
-            if(ml.getMessageListenerType().equals(msgListenerType)){
+            if (ml.getMessageListenerType().equals(msgListenerType)) {
                 return true;
             }
         }
         return false;
     }
 
-    public MessageListener getMessageListener(String msgListenerType){
-        for(Object messageListenerObject : messageListeners){
+
+    public MessageListener getMessageListener(String msgListenerType) {
+        for (Object messageListenerObject : messageListeners) {
             MessageListener ml = (MessageListener) messageListenerObject;
-            if(ml.getMessageListenerType().equals(msgListenerType)){
+            if (ml.getMessageListenerType().equals(msgListenerType)) {
                 return ml;
             }
         }

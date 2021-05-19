@@ -44,8 +44,8 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 @RestEndpoints({
     @RestEndpoint(configBean=Application.class,
-        opType=RestEndpoint.OpType.POST, 
-        path="set-web-context-param", 
+        opType=RestEndpoint.OpType.POST,
+        path="set-web-context-param",
         description="set-web-context-param",
         params={
             @RestParam(name="id", value="$parent")

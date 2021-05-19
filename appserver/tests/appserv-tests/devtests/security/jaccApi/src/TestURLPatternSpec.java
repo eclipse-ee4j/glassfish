@@ -30,25 +30,25 @@ public class TestURLPatternSpec {
     private static boolean test_constructor(
             String p, boolean expectedToSucceed) {
         boolean result = expectedToSucceed;
-       
+
         try {
             URLPatternSpec u = new URLPatternSpec(p);
 
             if (expectedToSucceed) {
-                System.out.println("constructor( ): " + expectedToSucceed + 
+                System.out.println("constructor( ): " + expectedToSucceed +
                     " succeded " + u.toString());
             } else {
-                System.out.println("constructor( ): " + expectedToSucceed + 
+                System.out.println("constructor( ): " + expectedToSucceed +
                     " failed   " + u.toString());
                 result = false;
             }
         } catch (Throwable t) {
-            if (!expectedToSucceed) { 
-                System.out.println("constructor(e): " + expectedToSucceed + 
+            if (!expectedToSucceed) {
+                System.out.println("constructor(e): " + expectedToSucceed +
                      " succeded " + p);
             } else {
                 result = false;
-                System.out.println("constructor(e): " + expectedToSucceed + 
+                System.out.println("constructor(e): " + expectedToSucceed +
                      " failed   " + p);
                 t.printStackTrace();
             }
@@ -71,7 +71,7 @@ public class TestURLPatternSpec {
             System.out.println("getURLPattern: succeded " + expected + " " +
                     result + " " + s);
         } else {
-            System.out.println("getURLPattern: failed  " + expected + " " + 
+            System.out.println("getURLPattern: failed  " + expected + " " +
                     result + " " + s);
         }
     }
@@ -88,8 +88,8 @@ public class TestURLPatternSpec {
 
         if (result == inverse) {
             if (result == true && (!u1.implies(u2) || !u2.implies(u1))) {
-                System.out.println("equals(<->): " + expected + " " + 
-                        result + " failed    " + 
+                System.out.println("equals(<->): " + expected + " " +
+                        result + " failed    " +
                         "\t" + u1.implies(u2) + u2.implies(u1)+" "+
                         "\t" + u2 + "\t" + u1);
                 stat.addStatus(description, stat.FAIL);
@@ -97,13 +97,13 @@ public class TestURLPatternSpec {
                 System.out.println("equals(-->): " + expected + " " +
                         result + " succeded " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.PASS);
-            } else { 
-                System.out.println("equals(-->): " + expected + " " + 
+            } else {
+                System.out.println("equals(-->): " + expected + " " +
                         result + " failed    " + u1 + "\t" + u2);
                 stat.addStatus(description, stat.FAIL);
             }
         } else {
-            System.out.println("equals(<--): " + result + " " + 
+            System.out.println("equals(<--): " + result + " " +
                     inverse + " failed    " + u2 + "\t" + u1);
             stat.addStatus(description, stat.FAIL);
         }
@@ -149,7 +149,7 @@ public class TestURLPatternSpec {
 
         URLPatternSpec u2 = new URLPatternSpec(s2.toString());
         int other = u2.hashCode();
-        if (result == again && result == other) { 
+        if (result == again && result == other) {
             System.out.println("hashCode: " + result + " " +
                     again + " " + other + " succeded " + s1 +
                     " " + u2.toString());
@@ -173,15 +173,15 @@ public class TestURLPatternSpec {
         boolean inverse = u2.implies(u1);
 
         if (result != expected) {
-     	    System.out.println("implies(->): " + expected + " " + result + 
+                 System.out.println("implies(->): " + expected + " " + result +
                     " succeded " + u1 + "\t" + u2);
             stat.addStatus(description, stat.FAIL);
         } else if (inverse != expectedInverse) {
-            System.out.println("implies(<-): " + expectedInverse + " " + 
+            System.out.println("implies(<-): " + expectedInverse + " " +
                     inverse + " failed    " + u2 + "\t" + u1);
             stat.addStatus(description, stat.FAIL);
         } else {
-            System.out.println("implies(->): " + expected + " " + result + 
+            System.out.println("implies(->): " + expected + " " + result +
                     " failed    " + u1 + "\t" + u2);
             stat.addStatus(description, stat.PASS);
         }
@@ -194,7 +194,7 @@ public class TestURLPatternSpec {
             "/a/c",
             "/a/b/c.jsp",
             "/a/c/*",
-            "/a/*", 
+            "/a/*",
             "/*",
             /* COMMENTED OUT! "//*",*/
             "*.jsp",
@@ -228,21 +228,21 @@ public class TestURLPatternSpec {
             test_getURLPattern(s.toString());
             test_hashCode(s.toString());
 
-            URLPattern ui = new URLPattern(pArray[i]); 
- 
+            URLPattern ui = new URLPattern(pArray[i]);
+
             for (int j=0; j<pArray.length; j++) {
 
                 boolean result = false;
 
                 URLPattern uj = new URLPattern(pArray[j]);
 
-                if (j==i || uj.implies(ui)) { 
-                    result = test_constructor(s.toString() + ":" + 
+                if (j==i || uj.implies(ui)) {
+                    result = test_constructor(s.toString() + ":" +
                                      pArray[j],false);
                 } else {
                     switch(pTypeArray[i]) {
                     case URLPattern.PT_EXACT:
-                        result = test_constructor(s.toString() + ":" + 
+                        result = test_constructor(s.toString() + ":" +
                                 pArray[j],false);
                         break;
                     case URLPattern.PT_DEFAULT:
@@ -251,18 +251,18 @@ public class TestURLPatternSpec {
                         break;
                     case URLPattern.PT_EXTENSION:
                         if (pTypeArray[j] == URLPattern.PT_PREFIX) {
-                            result = test_constructor(s.toString() + ":" + 
+                            result = test_constructor(s.toString() + ":" +
                                     pArray[j],true);
                         } else if (pTypeArray[j] == URLPattern.PT_EXACT) {
-                            if (pArray[j].endsWith(pArray[i].substring(1))) { 
-                                result = test_constructor(s.toString() + ":" + 
+                            if (pArray[j].endsWith(pArray[i].substring(1))) {
+                                result = test_constructor(s.toString() + ":" +
                                         pArray[j],true);
                             } else {
-                                result = test_constructor(s.toString() + ":" + 
+                                result = test_constructor(s.toString() + ":" +
                                         pArray[j],false);
                             }
-                        } else { 
-                            result = test_constructor(s.toString() + ":" + 
+                        } else {
+                            result = test_constructor(s.toString() + ":" +
                                     pArray[j],false);
                         }
                         break;
@@ -271,14 +271,14 @@ public class TestURLPatternSpec {
                                 pTypeArray[j] == URLPattern.PT_PREFIX) {
 
                             if (ui.implies(uj)) {
-                                result = test_constructor(s.toString() + ":" + 
-                                        pArray[j],true); 
+                                result = test_constructor(s.toString() + ":" +
+                                        pArray[j],true);
                             } else {
-                                result = test_constructor(s.toString() + ":" + 
+                                result = test_constructor(s.toString() + ":" +
                                         pArray[j],false);
                             }
                         } else {
-                            result = test_constructor(s.toString() + ":" + 
+                            result = test_constructor(s.toString() + ":" +
                                     pArray[j],false);
                         }
                         break;

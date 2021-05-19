@@ -21,11 +21,11 @@ import java.nio.ByteBuffer;
 import java.nio.channels.ReadableByteChannel;
 
 /**
- * This class is encapsulating binary .class file information as 
- * defined at 
+ * This class is encapsulating binary .class file information as
+ * defined at
  * http://java.sun.com/docs/books/vmspec/2nd-edition/html/ClassFile.doc.html
  *
- * This is used by the annotation frameworks to quickly scan .class files 
+ * This is used by the annotation frameworks to quickly scan .class files
  * for the presence of annotations. This avoid the annotation framework having
  * to load each .class file in the class loader.
  *
@@ -36,7 +36,7 @@ import java.nio.channels.ReadableByteChannel;
  * @author Jerome Dochez
  */
 public class ClassFile {
-    
+
     ByteBuffer header;
     ConstantPoolInfo constantPoolInfo;
 
@@ -95,46 +95,46 @@ public class ClassFile {
             method_info methods[methods_count];
             u2 attributes_count;
             attribute_info attributes[attributes_count];
-        }        
+        }
          **/
-                
+
         if (headerBuffer.getInt()!=magic) {
             return false;
         }
-        
+
         headerBuffer.getShort(); // major version
         headerBuffer.getShort(); // minor version
         int constantPoolSize = headerBuffer.getShort();
 
         return constantPoolInfo.containsAnnotation(constantPoolSize, headerBuffer);
-        
+
     }
-    
-    public ConstantPoolInfo	constantPool[];
-    public short	        accessFlags;
-    public ConstantPoolInfo	thisClass;
-    public ConstantPoolInfo	superClass;
-    public ConstantPoolInfo	interfaces[];
+
+    public ConstantPoolInfo    constantPool[];
+    public short            accessFlags;
+    public ConstantPoolInfo    thisClass;
+    public ConstantPoolInfo    superClass;
+    public ConstantPoolInfo    interfaces[];
     /**
      * bunch of stuff I really don't care too much for now.
      *
-    FieldInfo		    fields[];
-    MethodInfo		    methods[];
-    AttributeInfo	    attributes[];
+    FieldInfo            fields[];
+    MethodInfo            methods[];
+    AttributeInfo        attributes[];
      */
 
     private static final int magic = 0xCAFEBABE;
-    
-    public static final int ACC_PUBLIC 		= 0x1;
-    public static final int ACC_PRIVATE 	= 0x2;
-    public static final int ACC_PROTECTED 	= 0x4;
-    public static final int ACC_STATIC 		= 0x8;
-    public static final int ACC_FINAL 		= 0x10;
-    public static final int ACC_SYNCHRONIZED 	= 0x20;
-    public static final int ACC_THREADSAFE 	= 0x40;
-    public static final int ACC_TRANSIENT 	= 0x80;
-    public static final int ACC_NATIVE 		= 0x100;
-    public static final int ACC_INTERFACE 	= 0x200;
-    public static final int ACC_ABSTRACT 	= 0x400;
-    
+
+    public static final int ACC_PUBLIC         = 0x1;
+    public static final int ACC_PRIVATE     = 0x2;
+    public static final int ACC_PROTECTED     = 0x4;
+    public static final int ACC_STATIC         = 0x8;
+    public static final int ACC_FINAL         = 0x10;
+    public static final int ACC_SYNCHRONIZED     = 0x20;
+    public static final int ACC_THREADSAFE     = 0x40;
+    public static final int ACC_TRANSIENT     = 0x80;
+    public static final int ACC_NATIVE         = 0x100;
+    public static final int ACC_INTERFACE     = 0x200;
+    public static final int ACC_ABSTRACT     = 0x400;
+
 }

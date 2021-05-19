@@ -36,7 +36,7 @@ import java.security.PrivilegedActionException;
 
 import com.sun.logging.LogDomains;
 
-/** 
+/**
  * @author Mitesh Meswani
  * This class provides helper to load reources into property object.
  *
@@ -78,13 +78,13 @@ public class PropertyHelper {
     /**
      * Loads properties list from the specified resource
      * into specified Properties object.
-     * @param resourceName	Name of resource. 
+     * @param resourceName    Name of resource.
      *                      If loadFromFile  is true, this is fully qualified path name to a file.
      *                      param classLoader is ignored.
-     *                      If loadFromFile  is false,this is resource name. 
+     *                      If loadFromFile  is false,this is resource name.
      * @param classLoader   The class loader that should be used to load the resource. If null,primordial
      *                      class loader is used.
-     * @param properties	Properties object to load
+     * @param properties    Properties object to load
      * @param loadFromFile  true if resourcename is to be treated as file name.
      */
     private static void load(Properties properties, final String resourceName,
@@ -101,7 +101,7 @@ public class PropertyHelper {
                     messages, "database.PropertyHelper.load",items)); // NOI18N
         }
 
-        in =  loadFromFile ? openFileInputStream(resourceName) : 
+        in =  loadFromFile ? openFileInputStream(resourceName) :
                                 openResourceInputStream(resourceName,classLoader);
         if (in == null) {
             throw new IOException(I18NHelper.getMessage(messages,
@@ -118,7 +118,7 @@ public class PropertyHelper {
             }
         }
     }
-    
+
     /**
      * Open fileName as input stream inside doPriviledged block
      */
@@ -137,13 +137,13 @@ public class PropertyHelper {
             // PrivilegedActionException.
             throw (FileNotFoundException) e.getException();
         }
-    
+
     }
 
     /**
      * Open resourcenName as input stream inside doPriviledged block
      */
-    private static InputStream openResourceInputStream(final String resourceName, final ClassLoader classLoader) 
+    private static InputStream openResourceInputStream(final String resourceName, final ClassLoader classLoader)
                                                                         throws java.io.FileNotFoundException  {
         return (InputStream) AccessController.doPrivileged(
             new PrivilegedAction() {

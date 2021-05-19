@@ -39,34 +39,34 @@ public class Order {
     @Id(generate=AUTO)
     public Long getId() {
         return id;
-    } 
-    public void setId(Long id) { 
-        this.id = id; 
-    } 
-    @Version 
-    protected int getVersion() { 
-        return version; 
-    } 
-    protected void setVersion(int version) { 
-        this.version = version; 
-    } 
-    @Basic 
-    public int getItemId() { 
-        return itemId; 
-    } 
-    public void setItemId(int itemId) { 
-        this.itemId = itemId; 
-    } 
-    @Basic public int getQuantity() { 
-        return quantity; 
-    } 
-    public void setQuantity(int quantity) { 
-        this.quantity = quantity; 
-    } 
-    @ManyToOne public Customer getCustomer() { 
-        return customer; 
-    } 
-    public void setCustomer(Customer cust) { 
-        this.customer = cust; 
-    } 
+    }
+    public void setId(Long id) {
+        this.id = id;
+    }
+    @Version
+    protected int getVersion() {
+        return version;
+    }
+    protected void setVersion(int version) {
+        this.version = version;
+    }
+    @Basic
+    public int getItemId() {
+        return itemId;
+    }
+    public void setItemId(int itemId) {
+        this.itemId = itemId;
+    }
+    @Basic public int getQuantity() {
+        return quantity;
+    }
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+    @ManyToOne public Customer getCustomer() {
+        return customer;
+    }
+    public void setCustomer(Customer cust) {
+        this.customer = cust;
+    }
 }

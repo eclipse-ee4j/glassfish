@@ -33,7 +33,7 @@ public class TestServlet extends HttpServlet {
                 !"VALUE_3".equals(req.getAttribute("ATTR_3"))) {
             throw new ServletException("Missing request attributes");
 */
-        if (!"VALUE_1".equals(req.getAttribute("ATTR_1"))) { 
+        if (!"VALUE_1".equals(req.getAttribute("ATTR_1"))) {
             throw new ServletException("Missing request attributes");
         } else {
             res.getWriter().print(true);

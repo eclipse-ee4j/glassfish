@@ -208,9 +208,9 @@ public interface JmsService extends ConfigExtension, PropertyBag, Container {
      *
      * Determines broker selection from imqAddressList.
      * random
-	 *      causes selection to be performed randomly
+     *      causes selection to be performed randomly
      * priority
-	 *      causes selection to be performed sequentially
+     *      causes selection to be performed sequentially
      *
      * @return possible object is
      *         {@link String }

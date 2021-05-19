@@ -23,14 +23,14 @@
 
 <project name="ejb30" default="all" basedir=".">
 
-	&commonBuild;
+        &commonBuild;
 
-	<target name="private-all">
-		<ant dir="jsp" target="private-all">
-			<property name="build" value="${build}/jsp"/>
-		</ant>
-		<ant dir="servlet" target="private-all">
-			<property name="build" value="${build}/servlet"/>
-		</ant>
-	</target>
+        <target name="private-all">
+                <ant dir="jsp" target="private-all">
+                        <property name="build" value="${build}/jsp"/>
+                </ant>
+                <ant dir="servlet" target="private-all">
+                        <property name="build" value="${build}/servlet"/>
+                </ant>
+        </target>
 </project>

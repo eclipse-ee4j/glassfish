@@ -38,10 +38,10 @@ import java.util.logging.Logger;
 
 /**
  * This class decorates all <code>com.sun.enterprise.deployment.*</code>
- * objects in order to make them usuable by the Catalina container. 
+ * objects in order to make them usuable by the Catalina container.
  * This avoid having duplicate memory representation of the web.xml (as well
  * as parsing the web.xml twice)
- * 
+ *
  * @author Jean-Francois Arcand
  */
 public class TomcatDeploymentConfig {
@@ -54,18 +54,18 @@ public class TomcatDeploymentConfig {
      * contained in <code>WebBundleDescriptor</code>. This astatic void calling
      * Tomcat 5 internal deployment mechanism by re-using the DOL objects.
      */
-    public static void configureWebModule(WebModule webModule, 
+    public static void configureWebModule(WebModule webModule,
         WebBundleDescriptorImpl webModuleDescriptor)
-            throws LifecycleException { 
+            throws LifecycleException {
 
         // When context root = "/"
         if ( webModuleDescriptor == null ){
             return;
         }
-        
+
         webModule.setDisplayName(webModuleDescriptor.getDisplayName());
         webModule.setDistributable(webModuleDescriptor.isDistributable());
-        webModule.setReplaceWelcomeFiles(true);        
+        webModule.setReplaceWelcomeFiles(true);
         configureStandardContext(webModule,webModuleDescriptor);
         configureContextParam(webModule,webModuleDescriptor);
         configureApplicationListener(webModule,webModuleDescriptor);
@@ -84,10 +84,10 @@ public class TomcatDeploymentConfig {
         configureSecurityRoles(webModule, webModuleDescriptor);
     }
 
-    
+
     /**
      * Configures EJB resource reference for a web application, as
-     * represented in a <code>&lt;ejb-ref&gt;</code> and 
+     * represented in a <code>&lt;ejb-ref&gt;</code> and
      * <code>&lt;ejb-local-ref&gt;</code>element in the
      * deployment descriptor.
      */
@@ -101,37 +101,37 @@ public class TomcatDeploymentConfig {
             } else {
                 configureContextEjb(webModule,
                     (EjbReferenceDescriptor) ejbDescriptor);
-            }           
-        }                                                        
+            }
+        }
     }
-    
-     
+
+
     /**
      * Configures EJB resource reference for a web application, as
      * represented in a <code>&lt;ejb-ref&gt;</code> in the
      * deployment descriptor.
-     */    
+     */
     protected static void configureContextLocalEjb(WebModule webModule,
                                         EjbReferenceDescriptor ejbDescriptor) {
-        ContextLocalEjbDecorator decorator = 
+        ContextLocalEjbDecorator decorator =
                                 new ContextLocalEjbDecorator(ejbDescriptor);
         webModule.addLocalEjb(decorator);
-    
+
     }
 
-    
+
     /**
      * Configures EJB resource reference for a web application, as
      * represented in a <code>&lt;ejb-local-ref&gt;</code>element in the
      * deployment descriptor.
-     */    
+     */
     protected static void configureContextEjb(WebModule webModule,
                                        EjbReferenceDescriptor ejbDescriptor) {
         ContextEjbDecorator decorator = new ContextEjbDecorator(ejbDescriptor);
-        webModule.addEjb(decorator);        
+        webModule.addEjb(decorator);
     }
 
-    
+
     /**
      * Configure application environment entry, as represented by
      * an <code>&lt;env-entry&gt;</code> element in the deployment descriptor.
@@ -144,7 +144,7 @@ public class TomcatDeploymentConfig {
         }
     }
 
-    
+
     /**
      * Configure error page element for a web application,
      * as represented by a <code>&lt;error-page&gt;</code> element in the
@@ -152,41 +152,41 @@ public class TomcatDeploymentConfig {
      */
     protected static void configureErrorPage(WebModule webModule,
                                       WebBundleDescriptorImpl wmd) {
-            
+
         Enumeration<ErrorPageDescriptor> e =
             wmd.getErrorPageDescriptors();
         while (e.hasMoreElements()){
             webModule.addErrorPage(new ErrorPageDecorator(e.nextElement()));
-        }                                     
+        }
     }
-    
-    
+
+
     /**
      * Configure filter definition for a web application, as represented
      * by a <code>&lt;filter&gt;</code> element in the deployment descriptor.
      */
     protected static void configureFilterDef(WebModule webModule,
                                              WebBundleDescriptorImpl wmd) {
-                                                        
+
        Vector vector = wmd.getServletFilters();
-       
+
        FilterDefDecorator filterDef;
        ServletFilter servletFilter;
-       
+
        for (int i=0; i < vector.size(); i++)  {
            servletFilter = (ServletFilter)vector.get(i);
            filterDef = new FilterDefDecorator(servletFilter);
-          
-           webModule.addFilterDef(filterDef);          
-       }                                                    
+
+           webModule.addFilterDef(filterDef);
+       }
     }
-        
-    
+
+
     /**
      * Configure filter mapping for a web application, as represented
      * by a <code>&lt;filter-mapping&gt;</code> element in the deployment
      * descriptor.  Each filter mapping must contain a filter name plus either
-     * a URL pattern or a servlet name.    
+     * a URL pattern or a servlet name.
      */
     protected static void configureFilterMap(WebModule webModule,
                                              WebBundleDescriptorImpl wmd) {
@@ -195,27 +195,27 @@ public class TomcatDeploymentConfig {
             webModule.addFilterMap((ServletFilterMapping)vector.get(i));
         }
     }
-    
-    
+
+
     /**
      * Configure context initialization parameter that is configured
      * in the server configuration file, rather than the application deployment
      * descriptor.  This is convenient for establishing default values (which
      * may be configured to allow application overrides or not) without having
-     * to modify the application deployment descriptor itself.  
-     */             
+     * to modify the application deployment descriptor itself.
+     */
     protected static void configureApplicationListener(
             WebModule webModule, WebBundleDescriptorImpl wmd) {
-        
+
         Vector vector = wmd.getAppListenerDescriptors();
         for (int i=0; i < vector.size() ; i++){
-            webModule.addApplicationListener( 
+            webModule.addApplicationListener(
                         ((AppListenerDescriptor)vector.get(i)).getListener() );
         }
-         
+
     }
-    
-    
+
+
     /**
      * Configure <code>jsp-config</code> element contained in the deployment
      * descriptor
@@ -235,12 +235,12 @@ public class TomcatDeploymentConfig {
         }
     }
 
-        
+
     /**
      * Configure a login configuration element for a web application,
      * as represented by a <code>&lt;login-config&gt;</code> element in the
      * deployment descriptor.
-     */ 
+     */
     protected static void configureLoginConfig(WebModule webModule,
                                                WebBundleDescriptorImpl wmd) {
         LoginConfiguration loginConf = wmd.getLoginConfiguration();
@@ -249,10 +249,10 @@ public class TomcatDeploymentConfig {
         }
 
         LoginConfigDecorator decorator = new LoginConfigDecorator(loginConf);
-        webModule.setLoginConfig(decorator);         
+        webModule.setLoginConfig(decorator);
     }
-    
-    
+
+
     /**
      * Configure mime-mapping defined in the deployment descriptor.
      */
@@ -263,23 +263,23 @@ public class TomcatDeploymentConfig {
         while (enumeration.hasMoreElements()){
             mimeMapping = (MimeMapping)enumeration.nextElement();
             webModule.addMimeMapping(mimeMapping.getExtension(),
-                                     mimeMapping.getMimeType());            
+                                     mimeMapping.getMimeType());
         }
     }
-    
-    
+
+
     /**
      * Configure resource-reference defined in the deployment descriptor.
      */
     protected static void configureResourceRef(WebModule webModule,
                                                WebBundleDescriptorImpl wmd) {
         for (EnvironmentEntry envEntry : wmd.getEnvironmentProperties()) {
-            webModule.addResourceEnvRef(envEntry.getName(), 
+            webModule.addResourceEnvRef(envEntry.getName(),
                                         envEntry.getType());
-        }                                                                     
+        }
     }
-    
-    
+
+
     /**
      * Configure context parameter defined in the deployment descriptor.
      */
@@ -287,7 +287,7 @@ public class TomcatDeploymentConfig {
                                                 WebBundleDescriptorImpl wmd) {
         for (ContextParameter ctxParam : wmd.getContextParametersSet()) {
             if ("com.sun.faces.injectionProvider".equals(
-                            ctxParam.getName()) && 
+                            ctxParam.getName()) &&
                     "com.sun.faces.vendor.GlassFishInjectionProvider".equals(
                             ctxParam.getValue())) {
                 // Ignore, see IT 9641
@@ -296,23 +296,23 @@ public class TomcatDeploymentConfig {
             webModule.addParameter(ctxParam.getName(), ctxParam.getValue());
         }
     }
-    
-    
+
+
     /**
      * Configure of a message destination for a web application, as
      * represented in a <code>&lt;message-destination&gt;</code> element
      * in the deployment descriptor.
-     */    
+     */
     protected static void configureMessageDestination(
             WebModule webModule, WebBundleDescriptorImpl wmd) {
         for (MessageDestinationDescriptor msgDrd :
                 wmd.getMessageDestinations()) {
             webModule.addMessageDestination(
                 new MessageDestinationDecorator(msgDrd));
-        }                                              
+        }
     }
 
-    
+
     /**
      * Representation of a message destination reference for a web application,
      * as represented by a <code>&lt;message-destination-ref&gt;</code> element
@@ -321,38 +321,38 @@ public class TomcatDeploymentConfig {
     protected static void configureMessageDestinationRef(
             WebModule webModule, WebBundleDescriptorImpl wmd) {
         for (MessageDestinationReferenceDescriptor msgDrd :
-                wmd.getMessageDestinationReferenceDescriptors()) {            
+                wmd.getMessageDestinationReferenceDescriptors()) {
             webModule.addMessageDestinationRef(
                 new MessageDestinationRefDecorator(msgDrd));
-        }                                                             
+        }
     }
-    
-        
+
+
     /**
      * Configure a resource reference for a web application, as
      * represented in a <code>&lt;resource-ref&gt;</code> element in the
      * deployment descriptor.
-     */    
+     */
     protected static void configureContextResource(WebModule webModule,
                                                    WebBundleDescriptorImpl wmd) {
         for (ResourceReferenceDescriptor resRefDesc :
                 wmd.getResourceReferenceDescriptors()) {
-            webModule.addResource(new ContextResourceDecorator(resRefDesc)); 
+            webModule.addResource(new ContextResourceDecorator(resRefDesc));
         }
     }
-   
-    
+
+
     /**
-     * Configure the <code>WebModule</code> instance by creating 
+     * Configure the <code>WebModule</code> instance by creating
      * <code>StandardWrapper</code> using the information contained
      * in the deployment descriptor (Welcome Files, JSP, Servlets etc.)
      */
     protected static void configureStandardContext(WebModule webModule,
                                                    WebBundleDescriptorImpl wmd) {
-        StandardWrapper wrapper;    
+        StandardWrapper wrapper;
         Enumeration enumeration;
         SecurityRoleReference securityRoleReference;
-       
+
         for (WebComponentDescriptor webComponentDesc :
                 wmd.getWebComponentDescriptors()) {
 
@@ -373,7 +373,7 @@ public class TomcatDeploymentConfig {
             }
 
             /*
-             * Add the wrapper only after we have set its 
+             * Add the wrapper only after we have set its
              * servletClassName, so we know whether we're dealing with
              * a JSF app
              */
@@ -419,7 +419,7 @@ public class TomcatDeploymentConfig {
                 wrapper.setMultipartFileSizeThreshold(mpConfig.getFileSizeThreshold());
             }
         }
-       
+
         SessionConfig sessionConfig = wmd.getSessionConfig();
 
         // <session-config><session-timeout>
@@ -430,7 +430,7 @@ public class TomcatDeploymentConfig {
         if (cookieConfig != null) {
             SessionCookieConfig sessionCookieConfig =
                 webModule.getSessionCookieConfig();
-            /* 
+            /*
              * Unlike a cookie's domain, path, and comment, its name
              * will be empty (instead of null) if left unspecified
              * inside <session-config><cookie-config>
@@ -494,12 +494,12 @@ public class TomcatDeploymentConfig {
         while (enumeration.hasMoreElements()){
             webModule.addWelcomeFile((String)enumeration.nextElement());
         }
-        
-        LocaleEncodingMappingListDescriptor lemds = 
+
+        LocaleEncodingMappingListDescriptor lemds =
                             wmd.getLocaleEncodingMappingListDescriptor();
         if (lemds != null) {
             for (LocaleEncodingMappingDescriptor lemd :
-                    lemds.getLocaleEncodingMappingSet()) { 
+                    lemds.getLocaleEncodingMappingSet()) {
                 webModule.addLocaleEncodingMappingParameter(
                     lemd.getLocale(), lemd.getEncoding());
             }
@@ -517,11 +517,11 @@ public class TomcatDeploymentConfig {
             Integer.parseInt(majorMinorVersions[1]));
     }
 
-    
+
     /**
      * Configure security constraint element for a web application,
-     * as represented by a <code>&lt;security-constraint&gt;</code> element in 
-     * the deployment descriptor.    
+     * as represented by a <code>&lt;security-constraint&gt;</code> element in
+     * the deployment descriptor.
      *
      * Configure a web resource collection for a web application's security
      * constraint, as represented by a
@@ -531,7 +531,7 @@ public class TomcatDeploymentConfig {
      */
     protected static void configureSecurityConstraint(
             WebModule webModule, WebBundleDescriptor wmd) {
-        Enumeration<com.sun.enterprise.deployment.web.SecurityConstraint> enumeration = wmd.getSecurityConstraints(); 
+        Enumeration<com.sun.enterprise.deployment.web.SecurityConstraint> enumeration = wmd.getSecurityConstraints();
         com.sun.enterprise.deployment.web.SecurityConstraint securityConstraint;
         SecurityConstraintDecorator decorator;
         SecurityCollectionDecorator secCollDecorator;
@@ -542,13 +542,13 @@ public class TomcatDeploymentConfig {
             for (WebResourceCollection wrc:
                     securityConstraint.getWebResourceCollections()) {
                 secCollDecorator = new SecurityCollectionDecorator(wrc);
-                decorator.addCollection(secCollDecorator);           
+                decorator.addCollection(secCollDecorator);
             }
             webModule.addConstraint(decorator);
-        }                                        
+        }
     }
-    
-    
+
+
     /**
      * Validate the usage of security role names in the web application
      * deployment descriptor.  If any problems are found, issue warning
@@ -568,7 +568,7 @@ public class TomcatDeploymentConfig {
 
         // Check role names used in <security-constraint> elements
         Iterator<org.apache.catalina.deploy.SecurityConstraint> iter =
-            webModule.getConstraints().iterator(); 
+            webModule.getConstraints().iterator();
         while (iter.hasNext()) {
             String[] roles = iter.next().findAuthRoles();
             for (int j = 0; j < roles.length; j++) {

@@ -26,34 +26,34 @@ import java.util.jar.Manifest;
 /**
  *  Representation of a Manifest file and its available extensions and
  *  required extensions
- *  
+ *
  * @author Greg Murray
  * @author Justyna Horwat
  * @version $Revision: 1.2 $ $Date: 2005/12/08 01:28:18 $
- * 
+ *
  */
 public class ManifestResource {
-    
+
     // ------------------------------------------------------------- Properties
 
     // These are the resource types for determining effect error messages
     public static final int SYSTEM = 1;
     public static final int WAR = 2;
     public static final int APPLICATION = 3;
-    
+
     private HashMap<String, Extension> availableExtensions = null;
     private ArrayList<Extension> requiredExtensions = null;
-    
+
     private String resourceName = null;
     private int resourceType = -1;
-        
-    public ManifestResource(String resourceName, Manifest manifest, 
+
+    public ManifestResource(String resourceName, Manifest manifest,
                             int resourceType) {
         this.resourceName = resourceName;
         this.resourceType = resourceType;
         processManifest(manifest);
     }
-    
+
     /**
      * Gets the name of the resource
      *
@@ -71,16 +71,16 @@ public class ManifestResource {
     public HashMap<String, Extension> getAvailableExtensions() {
         return availableExtensions;
     }
-    
+
     /**
      * Gets the list of required extensions
      *
      * @return List of required extensions
      */
     public ArrayList<Extension> getRequiredExtensions() {
-        return requiredExtensions;   
+        return requiredExtensions;
     }
-    
+
     // --------------------------------------------------------- Public Methods
 
     /**
@@ -91,7 +91,7 @@ public class ManifestResource {
     public int getAvailableExtensionCount() {
         return (availableExtensions != null) ? availableExtensions.size() : 0;
     }
-    
+
     /**
      * Gets the number of required extensions
      *
@@ -100,7 +100,7 @@ public class ManifestResource {
     public int getRequiredExtensionCount() {
         return (requiredExtensions != null) ? requiredExtensions.size() : 0;
     }
-    
+
     /**
      * Convenience method to check if this <code>ManifestResource</code>
      * has an requires extensions.
@@ -110,7 +110,7 @@ public class ManifestResource {
     public boolean requiresExtensions() {
         return (requiredExtensions != null) ? true : false;
     }
-    
+
     /**
      * Convenience method to check if this <code>ManifestResource</code>
      * has an extension available.
@@ -123,7 +123,7 @@ public class ManifestResource {
         return (availableExtensions != null) ?
                 availableExtensions.containsKey(key) : false;
     }
-    
+
     /**
      * Returns <code>true</code> if all required extension dependencies
      * have been meet for this <code>ManifestResource</code> object.
@@ -137,11 +137,11 @@ public class ManifestResource {
         Iterator<Extension> it = requiredExtensions.iterator();
         while (it.hasNext()) {
             Extension ext = it.next();
-            if (!ext.isFulfilled()) return false;            
+            if (!ext.isFulfilled()) return false;
         }
         return true;
     }
-    
+
     public String toString() {
 
         StringBuilder sb = new StringBuilder("ManifestResource[");
@@ -170,7 +170,7 @@ public class ManifestResource {
         availableExtensions = getAvailableExtensions(manifest);
         requiredExtensions = getRequiredExtensions(manifest);
     }
-    
+
     /**
      * Return the set of <code>Extension</code> objects representing optional
      * packages that are required by the application associated with the
@@ -217,7 +217,7 @@ public class ManifestResource {
         }
         return extensionList;
     }
-    
+
     /**
      * Return the set of <code>Extension</code> objects representing optional
      * packages that are bundled with the application associated with the
@@ -256,5 +256,5 @@ public class ManifestResource {
 
         return extensionMap;
     }
-    
+
 }

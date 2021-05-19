@@ -24,27 +24,32 @@ import org.glassfish.external.arc.Taxonomy;
 import javax.management.ObjectName;
 
 /**
-    @deprecated MBean implementations can 'implements AMX_SPI', though it is only behavior
-    via MBeanInfo and attributes that is actually required.
+ * @deprecated MBean implementations can 'implements AMX_SPI', though it is only behavior
+ *             via MBeanInfo and attributes that is actually required.
  */
 @Taxonomy(stability = Stability.COMMITTED)
 @Deprecated
 public interface AMX_SPI {
-    /** the unencoded name, which could differ from the value of the 'name' property in the ObjectName */
+
+    /**
+     * @return the unencoded name, which could differ from the value of the 'name' property in the ObjectName
+     */
     @ManagedAttribute
     @Description("Name of this MBean, can differ from name in ObjectName")
-    public String getName();
-    
-    /** Return the ObjectName of the parent.  Must not be null (except for DomainRoot) */
+    String getName();
+
+
+    /** @return the ObjectName of the parent. Must not be null (except for DomainRoot) */
     @ManagedAttribute
     @Description("Parent of this MBean, non-null except for DomainRoot")
-    public ObjectName getParent();
-    
+    ObjectName getParent();
+
+
     /**
-        If no children are possible (a leaf node), an AttributeNotFoundException should be thrown.
+     * If no children are possible (a leaf node), an AttributeNotFoundException should be thrown.
      */
     @ManagedAttribute
     @Description("Children of this MBean, in no particular order")
-    public ObjectName[] getChildren();
+    ObjectName[] getChildren();
 }
 

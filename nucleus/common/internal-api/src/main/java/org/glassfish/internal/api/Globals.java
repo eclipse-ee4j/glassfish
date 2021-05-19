@@ -39,21 +39,21 @@ public class Globals {
     private static volatile ServiceLocator defaultHabitat;
 
     private static Object staticLock = new Object();
-    
+
     // dochez : remove this once we can get rid of ConfigBeanUtilities class
     @SuppressWarnings("unused")
     @Inject
     private ConfigBeansUtilities utilities;
-    
+
     @Inject
     private Globals(ServiceLocator habitat) {
         defaultHabitat = habitat;
     }
 
     public static ServiceLocator getDefaultBaseServiceLocator() {
-    	return getDefaultHabitat();
+            return getDefaultHabitat();
     }
-    
+
     public static ServiceLocator getDefaultHabitat() {
         return defaultHabitat;
     }
@@ -67,9 +67,9 @@ public class Globals {
     }
 
     public static ServiceLocator getStaticBaseServiceLocator() {
-    	return getStaticHabitat();
+            return getStaticHabitat();
     }
-    
+
     public static ServiceLocator getStaticHabitat() {
         if (defaultHabitat == null) {
             synchronized (staticLock) {
@@ -82,14 +82,14 @@ public class Globals {
 
         return defaultHabitat;
     }
-    
+
     /**
      * The point of this service is to ensure that the Globals
      * service is properly initialized by the RunLevelService
      * at the InitRunLevel.  However, Globals itself must be
      * of scope Singleton because it us used in contexts where
      * the RunLevelService is not there
-     * 
+     *
      * @author jwells
      *
      */

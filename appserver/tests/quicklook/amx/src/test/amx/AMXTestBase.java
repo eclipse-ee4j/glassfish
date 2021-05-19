@@ -87,13 +87,13 @@ public class AMXTestBase
     {
         System.out.println("" + s);
     }
-    
+
     protected static void println(final String s)
     {
         System.out.println("" + s);
     }
-    
-    
+
+
     protected static void warning(final String s)
     {
         System.out.println("" + s);
@@ -136,10 +136,10 @@ public class AMXTestBase
     {
         private final MBeanServerConnection mServer;
         private final String                mDomain;
-        
+
         private final List<ObjectName> mRegistered = Collections.synchronizedList(new ArrayList<ObjectName>());
         private final List<ObjectName> mUnregistered = Collections.synchronizedList(new ArrayList<ObjectName>());
-        
+
         public MBeansListener(final MBeanServerConnection server, final String domain)
         {
             mServer  = server;
@@ -157,10 +157,10 @@ public class AMXTestBase
                 throw new RuntimeException(e);
             }
         }
-        
+
         public void handleNotification(
             final Notification notif,
-            final Object handback) 
+            final Object handback)
         {
             if ( ! (notif instanceof MBeanServerNotification) )
             {
@@ -183,7 +183,7 @@ public class AMXTestBase
             }
         }
     }
-    
+
     private static MBeansListener sMBeansListener = null;
     protected synchronized void getMBeansListener() throws Exception
     {
@@ -193,9 +193,9 @@ public class AMXTestBase
             sMBeansListener.startListening();
         }
     }
-    
+
     private static boolean sEnabledMonitoring = false;
-    
+
     /**
     Subclasses may override if desired.  AMX will have been started
     and initialized already.
@@ -217,7 +217,7 @@ public class AMXTestBase
             //debug( "AMXTestBase.setup(): millis to boot AMX: " + timing.elapsedMillis() );
             mQueryMgr = getDomainRootProxy().getQueryMgr();
             //debug( "AMXTestBase.setup(): millis to get QueryMgr: " + timing.elapsedMillis() );
-            
+
             getMBeansListener();
         }
         catch (Exception e)
@@ -239,7 +239,7 @@ public class AMXTestBase
     {
         final Set<AMXProxy> allAMX = getQueryMgr().queryAll();
         assert allAMX.size() >= 30;
-        return allAMX;  
+        return allAMX;
     }
 
     protected <T> Set<T> getAll(final Class<T> intf)
@@ -268,7 +268,7 @@ public class AMXTestBase
 
 
     protected ProxyFactory getProxyFactory() { return mProxyFactory; }
-    
+
     protected final DomainRoot _getDomainRoot(final MBeanServerConnection conn)
             throws MalformedURLException, IOException, java.net.MalformedURLException
     {
@@ -278,7 +278,7 @@ public class AMXTestBase
     }
 
     protected final MBeanServerConnection getMBeanServerConnection() { return mMBeanServerConnection; }
-    
+
     private final MBeanServerConnection _getMBeanServerConnection()
             throws MalformedURLException, IOException
     {
@@ -288,7 +288,7 @@ public class AMXTestBase
         //
         // final String urlStr = "service:jmx:jmxmp://" + mHost + ":" + mPort;
         final String urlStr = "service:jmx:rmi:///jndi/rmi://" + mHost + ":" + mPort + "/jmxrmi";
-        
+
         final long start = System.currentTimeMillis();
 
         final JMXServiceURL url = new JMXServiceURL(urlStr);
@@ -296,7 +296,7 @@ public class AMXTestBase
         final JMXConnector jmxConn = JMXConnectorFactory.connect(url);
         //debug( "BaseAMXTest: connecting to: " + url );
         final MBeanServerConnection conn = jmxConn.getMBeanServerConnection();
-        conn.getDomains();	// sanity check
+        conn.getDomains();    // sanity check
         try
         {
             final ObjectName domainRootObjectName = AMXGlassfish.DEFAULT.bootAMX(conn);
@@ -325,8 +325,8 @@ public class AMXTestBase
         final String result = buf.toString();
         return result;
     }
-    
-    
+
+
 
     /** subclass can override to add more */
     protected Interfaces getInterfaces()
@@ -334,14 +334,14 @@ public class AMXTestBase
         return haveJSR77() ? new InterfacesGlassfish() : new Interfaces();
     }
 
-    
+
     /** must be checked dynamically because it's not in the web distribution */
     protected static final Class<? extends AMXProxy> getJ2EEDomainClass()
         throws ClassNotFoundException
     {
         return Class.forName( "org.glassfish.admin.amx.j2ee.J2EEDomain" ).asSubclass(AMXProxy.class);
     }
-    
+
     /** return true if we have the JSR 77 classes */
     protected boolean haveJSR77()
     {
@@ -357,8 +357,8 @@ public class AMXTestBase
         }
         return false;
     }
-    
-    
+
+
     protected Set<AMXProxy> findAllContainingType( final String type )
     {
         final Set<AMXProxy> all = getQueryMgr().queryAll();
@@ -373,15 +373,15 @@ public class AMXTestBase
         }
         return parentsWith;
     }
-    
+
     protected <T extends AMXProxy> List<T> getAllDescendents( final AMXProxy top, final Class<T> clazz)
     {
         final AMXProxy[]  a = getQueryMgr().queryDescendants( top.objectName() );
         final List<AMXProxy>  list = ListUtil.newListFromArray(a);
-        
+
         return Util.asProxyList( list, clazz );
     }
-    
+
     List<AMXProxy> getAllMonitoring()
     {
         return getAllDescendents( getDomainRootProxy().getMonitoringRoot(), AMXProxy.class);

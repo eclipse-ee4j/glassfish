@@ -109,16 +109,16 @@ public final class HealthHistory implements ConfigListener {
 
     /**
      * Used when no time information is known, for instance at
-     * cluster startup before an instance has started. 
+     * cluster startup before an instance has started.
      */
     public static final long NOTIME = -1l;
-    
+
     private final ConcurrentMap<String, InstanceHealth> healthMap;
 
     /*
      * Creates a health history that knows about the expected
      * list of instances. This is called from the GMS adapter
-     * during initialization, before 
+     * during initialization, before
      */
     public HealthHistory(Cluster cluster) {
         healthMap = new ConcurrentHashMap<String, InstanceHealth>(
@@ -161,7 +161,7 @@ public final class HealthHistory implements ConfigListener {
     }
 
     /**
-     * Returns a copy of the instance names. 
+     * Returns a copy of the instance names.
      */
     public Set<String> getInstances() {
         return Collections.unmodifiableSet(healthMap.keySet());

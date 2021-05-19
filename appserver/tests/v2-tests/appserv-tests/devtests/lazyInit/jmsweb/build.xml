@@ -36,7 +36,7 @@
     <target name="clean" depends="init-common">
       <antcall  target="clean-common"/>
     </target>
- 
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="client"/>
@@ -47,28 +47,28 @@
     </target>
 
     <target name="build-war">
-	 <mkdir dir="${assemble.dir}/a/b"/>
-  	<antcall target="package-war-common">
-    		<param name="war.classes" value="${build.classes.dir}"/>
-    		<param name="war.file" value="${assemble.dir}/a/b/${appname}-web.war"/>
-  	</antcall>
+        <mkdir dir="${assemble.dir}/a/b"/>
+        <antcall target="package-war-common">
+            <param name="war.classes" value="${build.classes.dir}"/>
+            <param name="war.file" value="${assemble.dir}/a/b/${appname}-web.war"/>
+        </antcall>
    </target>
 
     <target name="build" depends="compile, build-war">
         <antcall target="build-ear-common">
-            <param name="war.classes" 
+            <param name="war.classes"
               value="**/*Servlet*.class" />
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/*Client*.class" />
         </antcall>
-	<ear earfile="${assemble.dir}/${appname}App.ear" update="true">
-    		<fileset dir="${assemble.dir}">
-      			<include name="a/b/*.war"/>
-    		</fileset>
-	</ear>
-    </target> 
-    
-    <target name="deploy" 
+        <ear earfile="${assemble.dir}/${appname}App.ear" update="true">
+            <fileset dir="${assemble.dir}">
+                  <include name="a/b/*.war"/>
+            </fileset>
+        </ear>
+    </target>
+
+    <target name="deploy"
             depends="init-common">
         <antcall target="deploy-common"/>
     </target>
@@ -78,7 +78,7 @@
           <param name="asadmin.file" value="create_resources.asadmin"/>
         </antcall>
     </target>
-    
+
     <target name="delete-resources" depends="init-common">
         <antcall target="asadmin-batch-common">
           <param name="asadmin.file" value="delete_resources.asadmin"/>
@@ -91,14 +91,14 @@
           <param name="appclient.application.args" value="${http.host} ${http.port}"/>
         </antcall>
     </target>
- 
+
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>
-        <echo>         
+        <echo>
           ant create-resources Create all destinations and connection factories
           ant delete-resources Delete all destinations and connection factories
         </echo>

@@ -28,7 +28,7 @@ import jakarta.inject.Qualifier;
  * <code>ConfigBean</code>s in another module. In such instances, it is undesirable that metadata (e.g., default values,
  * min/max, etc) be repeated. This annotation allows a model author to refer to the property on the related
  * <code>ConfigBean</code> from which the system should pull metadata.
- * 
+ *
  * @author jdlee
  */
 @Qualifier

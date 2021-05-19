@@ -35,25 +35,25 @@ public class StatefulBean implements RemoteAsync2, RemoteAsync3 {
 
     @Asynchronous
     public Future<String> helloAsync() {
-	return new AsyncResult<String>("hello, world\n");
+        return new AsyncResult<String>("hello, world\n");
     }
 
     @Asynchronous
     @Remove
     public Future<String> removeAfterCalling() {
-	System.out.println("In StatefulBean::removeAfterCalling()");
-	return new AsyncResult<String>("removed");
+        System.out.println("In StatefulBean::removeAfterCalling()");
+        return new AsyncResult<String>("removed");
     }
 
     @Asynchronous
-	public Future<String> throwException(String exception) throws CreateException {
-	if( exception.equals("jakarta.ejb.CreateException") ) {
-	    throw new CreateException();
-	} else if ( exception.equals("jakarta.ejb.EJBException") ) {
-	    throw new EJBException();
-	}
+        public Future<String> throwException(String exception) throws CreateException {
+        if( exception.equals("jakarta.ejb.CreateException") ) {
+            throw new CreateException();
+        } else if ( exception.equals("jakarta.ejb.EJBException") ) {
+            throw new EJBException();
+        }
 
-	return new AsyncResult<String>("unsupported exception type");
+        return new AsyncResult<String>("unsupported exception type");
     }
 
     @PreDestroy

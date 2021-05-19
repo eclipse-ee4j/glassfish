@@ -27,10 +27,10 @@ import java.lang.reflect.Method;
  * This class is used as a "proxy" or adapter between the business interface
  *  proxy and the EJBLocalObjectInvocationHandler. An instance of this class
  *  is created for each business interface of a bean. All java.lang.Object
- *  methods and mthods of IndirectlySerializable are handled by this 
+ *  methods and mthods of IndirectlySerializable are handled by this
  *  InvocationHandler itself while the business interface methods are delegated
- *  to the delegate (which is the EJBLocalObjectInvocaionHandler). 
- *   
+ *  to the delegate (which is the EJBLocalObjectInvocaionHandler).
+ *
  * @author Mahesh Kannan
  *
  */
@@ -41,7 +41,7 @@ public class EJBLocalObjectInvocationHandlerDelegate
     private long containerId;
     private EJBLocalObjectInvocationHandler delegate;
     private boolean isOptionalLocalBusinessView;
-    
+
     EJBLocalObjectInvocationHandlerDelegate(Class intfClass, long containerId,
             EJBLocalObjectInvocationHandler delegate) {
         this.intfClass = intfClass;
@@ -49,10 +49,10 @@ public class EJBLocalObjectInvocationHandlerDelegate
         this.delegate = delegate;
         this.isOptionalLocalBusinessView = delegate.isOptionalLocalBusinessView();
     }
-    
-    public Object invoke(Object proxy, Method method, Object[] args) 
+
+    public Object invoke(Object proxy, Method method, Object[] args)
         throws Throwable {
-        
+
         Class methodClass = method.getDeclaringClass();
         Object result = null;
         if( methodClass == java.lang.Object.class ) {
@@ -63,21 +63,21 @@ public class EJBLocalObjectInvocationHandlerDelegate
         }else {
             result = delegate.invoke(intfClass, method, args);
         }
-        
+
         return result;
     }
 
     EJBLocalObjectInvocationHandler getDelegate() {
         return delegate;
     }
-    
+
     public int hashCode() {
         return (int) containerId;
     }
-    
+
     public boolean equals(Object other) {
         boolean result = false;
-        
+
         if ((other != null)
         && (other instanceof EJBLocalObjectInvocationHandlerDelegate)) {
             EJBLocalObjectInvocationHandlerDelegate otherDelegate
@@ -91,24 +91,24 @@ public class EJBLocalObjectInvocationHandlerDelegate
                     : (otherHandler.getKey() == null);
             }
         }
-        
+
         return result;
     }
 
     public String toString() {
         return intfClass.getName() + "_" + System.identityHashCode(this);
     }
-    
+
     public SerializableObjectFactory getSerializableObjectFactory() {
         // Note: for stateful SessionBeans, the EJBLocalObjectImpl contains
         // a pointer to the EJBContext. We should not serialize it here.
-        
+
         return new SerializableLocalObjectDelegate(
             containerId, intfClass.getName(), delegate.getKey(),
             isOptionalLocalBusinessView,
             delegate.getSfsbClientVersion());
     }
-    
+
     private static final class SerializableLocalObjectDelegate
         implements SerializableObjectFactory
     {
@@ -117,8 +117,8 @@ public class EJBLocalObjectInvocationHandlerDelegate
         private Object primaryKey;
         private boolean isOptionalLocalBusinessView;
         private long version = 0L; //Used only for SFSBs
-        
-        SerializableLocalObjectDelegate(long containerId, 
+
+        SerializableLocalObjectDelegate(long containerId,
                 String intfClassName, Object primaryKey, boolean isOptionalLocalBusView, long version) {
             this.containerId = containerId;
             this.intfClassName = intfClassName;
@@ -126,7 +126,7 @@ public class EJBLocalObjectInvocationHandlerDelegate
             this.isOptionalLocalBusinessView = isOptionalLocalBusView;
             this.version = version;
         }
-        
+
         public Object createObject()
             throws IOException
         {

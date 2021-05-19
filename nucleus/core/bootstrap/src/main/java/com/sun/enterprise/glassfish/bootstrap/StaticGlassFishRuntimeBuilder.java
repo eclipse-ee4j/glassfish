@@ -125,7 +125,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
                 }
             }
         }
-        
+
         File modulesDir = new File(installRoot, "modules/");
         final File autostartModulesDir = new File(modulesDir, "autostart/");
         final List<URL> moduleJarURLs = new ArrayList<URL>();
@@ -159,7 +159,7 @@ public class StaticGlassFishRuntimeBuilder implements RuntimeBuilder {
         }
         return true;
     }
-    
+
     private static class StaticClassLoader extends URLClassLoader {
         public StaticClassLoader(ClassLoader parent, List<URL> moduleJarURLs) {
             super(moduleJarURLs.toArray(new URL[moduleJarURLs.size()]), parent);

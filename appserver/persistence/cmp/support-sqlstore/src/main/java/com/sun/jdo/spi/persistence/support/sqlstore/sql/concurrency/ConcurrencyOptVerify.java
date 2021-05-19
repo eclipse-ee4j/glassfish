@@ -60,7 +60,7 @@ public class ConcurrencyOptVerify extends ConcurrencyCheckDirty {
 
                 if ((f instanceof LocalFieldDesc) &&
                         (f.sqlProperties & FieldDesc.PROP_IN_CONCURRENCY_CHECK) > 0) {
- 
+
                     // In the case of a deleted instance with no modified fields
                     // we use the present fields in the before image to perform
                     // the concurrency check.

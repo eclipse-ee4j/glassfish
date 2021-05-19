@@ -23,10 +23,10 @@ import java.util.Collections;
 import java.util.List;
 
 
-/** 
- * This interface contains all the constants referenced and used in the 
+/**
+ * This interface contains all the constants referenced and used in the
  * connector module.
- * As a design principal all the constants needs to be placed here. 
+ * As a design principal all the constants needs to be placed here.
  * This will enable tracking all the constants easily.
  */
 
@@ -42,17 +42,17 @@ public interface ConnectorConstants extends ResourceConstants {
      */
     public static final String JAXR_RA_NAME = "jaxr-ra";
 
-    /** 
+    /**
      *  JDBC datasource  system resource adapter name.
      */
     public static final String JDBCDATASOURCE_RA_NAME = "__ds_jdbc_ra";
-    
-    /** 
+
+    /**
      *  JDBC connectionpool datasource  system resource adapter name.
      */
     public static final String JDBCCONNECTIONPOOLDATASOURCE_RA_NAME = "__cp_jdbc_ra";
-    
-    /** 
+
+    /**
      *  JDBC XA datasource  system resource adapter name.
      */
     public static final String JDBCXA_RA_NAME = "__xa_jdbc_ra";
@@ -62,7 +62,7 @@ public interface ConnectorConstants extends ResourceConstants {
      */
     public static final String JDBCDRIVER_RA_NAME = "__dm_jdbc_ra";
 
-    /** 
+    /**
      *  JMS datasource  system resource adapter name.
      */
     public static final String DEFAULT_JMS_ADAPTER = "jmsra";
@@ -80,7 +80,7 @@ public interface ConnectorConstants extends ResourceConstants {
 
 
     /**
-     * List of system resource adapter names 
+     * List of system resource adapter names
      */
     public static final List<String> systemRarNames = Collections.unmodifiableList(
             Arrays.asList(
@@ -106,11 +106,11 @@ public interface ConnectorConstants extends ResourceConstants {
      */
     public static final String HIDDEN_CLI_NAME_VALUE_PAIR_DELIMITER="=";
 
-    
-    /** 
-     *  Reserver JNDI context under which sub contexts for default resources 
+
+    /**
+     *  Reserver JNDI context under which sub contexts for default resources
      *  and all connector connection pools are created
-     *  Subcontext for connector descriptors bounding is also done under 
+     *  Subcontext for connector descriptors bounding is also done under
      *  this context.
      */
     public static String RESERVE_PREFIX = "__SYSTEM";
@@ -121,12 +121,12 @@ public interface ConnectorConstants extends ResourceConstants {
     public static final String DD_PREFIX= RESERVE_PREFIX+"/descriptors/";
 
     /**
-     * Token used for generation of poolname pertaining to sun-ra.xml. 
-     * Generated pool name will be 
+     * Token used for generation of poolname pertaining to sun-ra.xml.
+     * Generated pool name will be
      * rarName+POOLNAME_APPENDER+connectionDefName+SUN_RA_POOL.
-     * SUNRA connector connections pools are are named and bound after 
-     * this name. Pool object will be bound under POOLS_JNDINAME_PREFIX 
-     * subcontext. To lookup a pool the jndi name should be 
+     * SUNRA connector connections pools are are named and bound after
+     * this name. Pool object will be bound under POOLS_JNDINAME_PREFIX
+     * subcontext. To lookup a pool the jndi name should be
      * POOLS_JNDINAME_PREFIX/rarName+POOLNAME_APPENDER+connectionDefName
      * +SUN_RA_POOL
      */
@@ -139,19 +139,19 @@ public interface ConnectorConstants extends ResourceConstants {
      */
     public static String SECURITYMAPMETACHAR="*";
 
-    /** 
-     * Token used for default poolname generation. Generated pool name will be 
+    /**
+     * Token used for default poolname generation. Generated pool name will be
      * rarName+POOLNAME_APPENDER+connectionDefName.Default connector connections
      * pools are are named and bound after this name. Pool object will be bound
      * under POOLS_JNDINAME_PREFIX subcontext. To lookup a pool the jndi name
-     * should be 
+     * should be
      * POOLS_JNDINAME_PREFIX/rarName+POOLNAME_APPENDER+connectionDefName
      */
     public static String POOLNAME_APPENDER="#";
 
-    /** 
+    /**
      * Token used for default connector resource generation.Generated connector
-     * resource  name and JNDI names will be 
+     * resource  name and JNDI names will be
      * RESOURCE_JNDINAME_PREFIX+rarName+RESOURCENAME_APPENDER+connectionDefName
      * This name should be used to lookup connector resource.
      */
@@ -186,44 +186,44 @@ public interface ConnectorConstants extends ResourceConstants {
     public static String POOLS_JNDINAME_PREFIX=RESERVE_PREFIX+"/pools/";
 
     /**
-     *  Reserved sub-context where connector resource objects are bound with 
+     *  Reserved sub-context where connector resource objects are bound with
      *  generated names.
      */
     public static String RESOURCE_JNDINAME_PREFIX=RESERVE_PREFIX+"/resource/";
     public static String USERGROUPDISTINGUISHER="#";
     public static String CAUTION_MESSAGE="Please add the following permissions to the " +
             "server.policy file and restart the appserver.";
-    
+
     /**
-     * Property name for distinguishing the transaction exceptions 
+     * Property name for distinguishing the transaction exceptions
      * propagation capability.
      */
     public final static String THROW_TRANSACTED_EXCEPTIONS_PROP
         = "resourceadapter.throw.transacted.exceptions";
- 
+
     /**
-     * System Property value for distinguishing the transaction exceptions 
+     * System Property value for distinguishing the transaction exceptions
      * propagation capability.
      */
     static String sysThrowExcp
         = System.getProperty(THROW_TRANSACTED_EXCEPTIONS_PROP);
 
     /**
-     * Property value for distinguishing the transaction exceptions 
+     * Property value for distinguishing the transaction exceptions
      * propagation capability.
      */
     public static boolean THROW_TRANSACTED_EXCEPTIONS
         = sysThrowExcp != null && !(sysThrowExcp.trim().equals("true")) ?
           false : true;
-    
+
     public static final int DEFAULT_RESOURCE_ADAPTER_SHUTDOWN_TIMEOUT = 30;
-    
+
     public String JAVAX_SQL_DATASOURCE = "javax.sql.DataSource";
-    
+
     public String JAVAX_SQL_CONNECTION_POOL_DATASOURCE = "javax.sql.ConnectionPoolDataSource";
-    
+
     public String JAVAX_SQL_XA_DATASOURCE = "javax.sql.XADataSource";
-    
+
     public String JAVA_SQL_DRIVER = "java.sql.Driver";
 
    /**
@@ -231,38 +231,38 @@ public interface ConnectorConstants extends ResourceConstants {
      * a connector-connection-pool
      */
     public String NO_TRANSACTION_TX_SUPPORT_STRING = "NoTransaction";
-                                                                                                              
+
     /**
      * Property value for defining LocalTransaction transaction-support in
      * a connector-connection-pool
      */
     public String LOCAL_TRANSACTION_TX_SUPPORT_STRING = "LocalTransaction";
-                                                                                                              
+
     /**
      * Property value for defining XATransaction transaction-support in
      * a connector-connection-pool
      */
     public String XA_TRANSACTION_TX_SUPPORT_STRING = "XATransaction";
-                                                                                                              
+
     /**
      * Property value defining the NoTransaction transaction-support value
      * as an integer
      */
-                                                                                                              
+
     public int NO_TRANSACTION_INT = 0;
     /**
      * Property value defining the LocalTransaction transaction-support value
      * as an integer
      */
-                                                                                                              
+
     public int LOCAL_TRANSACTION_INT = 1;
-                                                                                                              
+
     /**
      * Property value defining the XATransaction transaction-support value
      * as an integer
      */
     public int XA_TRANSACTION_INT = 2;
-                                                                                                              
+
     /**
      * Property value defining an undefined transaction-support value
      * as an integer
@@ -278,7 +278,7 @@ public interface ConnectorConstants extends ResourceConstants {
      * Min pool size for JMS connection pools.
      */
     public static int JMS_POOL_MAXSIZE = 250;
-    
+
     public static enum PoolType {
 
         ASSOCIATE_WITH_THREAD_POOL, STANDARD_POOL, PARTITIONED_POOL, POOLING_DISABLED
@@ -289,11 +289,11 @@ public interface ConnectorConstants extends ResourceConstants {
     public static String NON_TX_JNDI_SUFFIX = "__nontx" ;
 
     /**
-     * Name of the JNDI environment property that can be provided so that the 
+     * Name of the JNDI environment property that can be provided so that the
      * <code>ObjectFactory</code> can decide which type of datasource create.
      */
     public static String JNDI_SUFFIX_PROPERTY = "com.sun.enterprise.connectors.jndisuffix";
-   
+
     /**
      * Valid values that can be provided to the JNDI property.
      */

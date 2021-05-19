@@ -30,14 +30,14 @@ public class SingletonBean {
     public void init() {
         System.out.println("In SingletonBean::init()");
 
-	try {
-	    HelloRemote hr = helloHome.create();
-	    System.out.println("HellohelloRemote.hello() says " + hr.hello());
+    try {
+        HelloRemote hr = helloHome.create();
+        System.out.println("HellohelloRemote.hello() says " + hr.hello());
 
-	    System.out.println("Hello.hello() says " + hello.hello());
-	} catch(Exception e) {
-	    e.printStackTrace();
-	}
+        System.out.println("Hello.hello() says " + hello.hello());
+    } catch(Exception e) {
+        e.printStackTrace();
+    }
 
     }
 

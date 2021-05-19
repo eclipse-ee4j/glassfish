@@ -21,7 +21,7 @@ import java.io.*;
 
 
 /**
- * Contains commonly needed I/O-related methods 
+ * Contains commonly needed I/O-related methods
  *
  * @author Dan Sandberg
  */
@@ -40,7 +40,7 @@ public class IOTools {
      * @param writer the writer to write to.
      * @param buf the char array to use as a buffer
      */
-    public static void flow( Reader reader, Writer writer, char[] buf ) 
+    public static void flow( Reader reader, Writer writer, char[] buf )
         throws IOException {
         int numRead;
         while ( (numRead = reader.read(buf) ) >= 0) {
@@ -51,32 +51,32 @@ public class IOTools {
     /**
      * @see flow( Reader, Writer, char[] )
      */
-    public static void flow( Reader reader, Writer writer ) 
+    public static void flow( Reader reader, Writer writer )
         throws IOException {
         char[] buf = new char[DEFAULT_BUFFER_SIZE];
         flow( reader, writer, buf );
     }
 
     /**
-     * Read input from input stream and write it to output stream 
+     * Read input from input stream and write it to output stream
      * until there is no more input from input stream.
      *
      * @param input stream the input stream to read from.
      * @param output stream the output stream to write to.
      * @param buf the byte array to use as a buffer
      */
-    public static void flow( InputStream is, OutputStream os, byte[] buf ) 
+    public static void flow( InputStream is, OutputStream os, byte[] buf )
         throws IOException {
         int numRead;
         while ( (numRead = is.read(buf) ) >= 0) {
             os.write(buf, 0, numRead);
         }
-    }  
+    }
 
     /**
      * @see flow( Reader, Writer, byte[] )
-     */ 
-    public static void flow( InputStream is, OutputStream os ) 
+     */
+    public static void flow( InputStream is, OutputStream os )
         throws IOException {
         byte[] buf = new byte[DEFAULT_BUFFER_SIZE];
         flow( is, os, buf );

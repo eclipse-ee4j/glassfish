@@ -31,6 +31,6 @@ public class ConnectorInternalObjectsProxy implements NamingObjectProxy {
     }
 
     public Object create(Context ic) throws NamingException {
-        return actualObject;        
+        return actualObject;
     }
 }

@@ -31,33 +31,33 @@ import jakarta.persistence.PersistenceContextType;
 import jakarta.persistence.EntityManager;
 
 public class Client {
-    
+
     private String host;
     private String port;
 
     private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    @PersistenceUnit 
+    @PersistenceUnit
         private static EntityManagerFactory emf1;
 
-    @PersistenceUnit(name="myemf", unitName="foo") 
+    @PersistenceUnit(name="myemf", unitName="foo")
         private static EntityManagerFactory emf2;
 
     public Client (String[] args) {
         host = ( args.length > 0) ? args[0] : "localhost";
         port = ( args.length > 1) ? args[1] : "4848";
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("ejb-ejb30-hello-session3client");
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("ejb-ejb30-hello-session3ID");
     }
-    
+
     public void doTest() {
-        
+
         String env = null;
         try {
 
@@ -81,11 +81,11 @@ public class Client {
             }
 
 
-            String url = "http://" + host + ":" + port + 
+            String url = "http://" + host + ":" + port +
                 "/ejb-ejb30-hello-session3/servlet";
             System.out.println("invoking webclient servlet at " + url);
             int code = invokeServlet(url);
-            
+
             if(code != 200) {
                 System.out.println("Incorrect return code: " + code);
                 stat.addStatus("webclient main", stat.FAIL);
@@ -97,15 +97,15 @@ public class Client {
             stat.addStatus("webclient main", stat.FAIL);
             ex.printStackTrace();
         }
-        
+
         return;
-        
+
     }
 
     private int invokeServlet(String url) throws Exception {
-            
+
         URL u = new URL(url);
-        
+
         HttpURLConnection c1 = (HttpURLConnection)u.openConnection();
         int code = c1.getResponseCode();
         InputStream is = c1.getInputStream();
@@ -118,6 +118,6 @@ public class Client {
         }
         return code;
     }
-    
+
 }
 

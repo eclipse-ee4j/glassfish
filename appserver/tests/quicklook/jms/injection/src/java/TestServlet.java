@@ -45,10 +45,10 @@ public class TestServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         boolean status = false;
 
-	    try {
+        try {
             String testcase = request.getParameter("tc");
             out.println("testcase = " + testcase);
-            out.println("TestServlet");  
+            out.println("TestServlet");
             out.println("contextPath=" + request.getContextPath ());
 
             if (testcase != null) {
@@ -60,7 +60,7 @@ public class TestServlet extends HttpServlet {
             }
         } catch (Throwable th) {
             th.printStackTrace(out);
-        } finally { 
+        } finally {
             if (status){
                 out.println("Test:Pass");
             } else {
@@ -68,12 +68,12 @@ public class TestServlet extends HttpServlet {
             }
             out.close();
         }
-    } 
+    }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {

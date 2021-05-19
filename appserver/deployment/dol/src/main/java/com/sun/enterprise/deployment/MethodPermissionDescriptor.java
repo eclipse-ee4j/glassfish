@@ -27,45 +27,45 @@ import java.util.Iterator;
 import java.util.Vector;
 
 /**
- * This class defines a method permission information in the assembly 
+ * This class defines a method permission information in the assembly
  * descriptor
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class MethodPermissionDescriptor extends DescribableDescriptor {
-         
+
     Vector methods = new Vector();
     Vector mps = new Vector() ;
-    
+
     /** Creates new MethodPermissionDescriptor */
-    public MethodPermissionDescriptor() {        
+    public MethodPermissionDescriptor() {
     }
-    
+
     public void addMethod(MethodDescriptor aMethod) {
         methods.add(aMethod);
     }
-    
+
     public void addMethods(Collection methods) {
         this.methods.addAll(methods);
     }
-    
+
     public void addMethodPermission(MethodPermission mp) {
         mps.add(mp);
     }
-    
+
     public MethodDescriptor[] getMethods() {
         MethodDescriptor[] array = new MethodDescriptor[methods.size()];
         methods.copyInto(array);
-        return array;        
+        return array;
     }
-    
+
     public MethodPermission[] getMethodPermissions() {
         MethodPermission[] array = new MethodPermission[mps.size()];
         mps.copyInto(array);
-        return array;        
+        return array;
     }
-        
+
     public void print(StringBuffer toStringBuffer) {
         StringBuffer buffer = toStringBuffer;
         buffer.append("Method Permission " + (getDescription()==null?"":getDescription()) );

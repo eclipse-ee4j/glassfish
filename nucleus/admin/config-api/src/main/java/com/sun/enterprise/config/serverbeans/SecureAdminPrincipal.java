@@ -103,7 +103,7 @@ public interface SecureAdminPrincipal extends ConfigBeanProxy {
      * <p>
      * This resolver also allows the caller to specify an alias instead of the name (the DN) itself, in which case the
      * resolver maps the alias to the corresponding cert's DN and uses that as the name.
-     * 
+     *
      * @author Tim Quinn
      */
 

@@ -33,5 +33,5 @@ public interface LocalLeague extends EJBLocalObject {
     public LocalTeam getTeamByCity(String city) throws FinderException;
     public String getTeamsNameByCity(String city) throws FinderException;
     public Set getPlayersFromLeague() throws FinderException;
-    
+
 }

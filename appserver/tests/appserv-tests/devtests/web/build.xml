@@ -57,7 +57,7 @@
         <ant dir="jspConfigIncludeChain" target="all"/>
         <ant dir="jspConfigJavacSource" target="build-publish-war"/>
         <ant dir="jspConfigJspFile" target="all"/>
-        <ant dir="jspConfigModificationTestInterval" target="all"/>        
+        <ant dir="jspConfigModificationTestInterval" target="all"/>
         <ant dir="jspConfigUndeclaredNS" target="all"/>
         <ant dir="jspConfigUsePrecompiled" target="all"/>
         <ant dir="jspConfigUsePrecompiled2" target="all"/>
@@ -81,15 +81,15 @@
         <ant dir="jspNullFragment" target="all"/>
         <ant dir="jspPoundSyntax" target="all"/>
         <ant dir="jspPrecompileConsiderDomainLibJarFilesAndClasses" target="all"/>
-        <ant dir="jspPrecompileDeployDashDashLibraries" target="all"/>    
+        <ant dir="jspPrecompileDeployDashDashLibraries" target="all"/>
         <ant dir="jspPrecompileIgnoreFragmentErrors" target="all"/>
         <ant dir="jspReloadGeneratedServletIfUpdated" target="all"/>
         <ant dir="jspResourceInjectionContextListener" target="all"/>
         <ant dir="jspResourceInjectionSimpleTagHandler" target="all"/>
         <ant dir="jspResourceInjectionTagHandler" target="all"/>
         <ant dir="jspResourceInjectionTagHandlerPoolingDisabled" target="all"/>
-        <ant dir="jspRuntimeCompileConsiderDomainLibJarFilesAndClasses" target="all"/>  
-        <ant dir="jspRuntimeDeployDashDashLibraries" target="all"/>  
+        <ant dir="jspRuntimeCompileConsiderDomainLibJarFilesAndClasses" target="all"/>
+        <ant dir="jspRuntimeDeployDashDashLibraries" target="all"/>
         <ant dir="jspScriptlessTagBodyJspDocument" target="all"/>
         <ant dir="jspScriptletAfterScriptlessTag" target="all"/>
         <ant dir="jspScriptletDeclNestedInCustomAction" target="all"/>
@@ -145,7 +145,7 @@
         <ant dir="cacheFilterMappingDispatcher" target="all"/>
         <ant dir="cacheHelperRef" target="all"/>
         <ant dir="contentlength" target="all"/>
-        <ant dir="cookiePropertiesSunWebXml" target="all"/>  
+        <ant dir="cookiePropertiesSunWebXml" target="all"/>
         <ant dir="defaultCharset" target="all"/>
         <ant dir="dirListing" target="all"/>
         <ant dir="defaultServletWithSubdirectoryMapping" target="all"/>
@@ -153,8 +153,8 @@
         <ant dir="errorPageExceptionTypeWrapper" target="all"/>
         <ant dir="errorPageHandlingForError" target="all"/>
         <ant dir="servletInitBeforeGetServletConfig" target="all"/>
-        <ant dir="listenerFilterServletInit" target="all"/>  
-        <ant dir="filterMultipleInit" target="all"/>  
+        <ant dir="listenerFilterServletInit" target="all"/>
+        <ant dir="filterMultipleInit" target="all"/>
         <ant dir="filterURIMapping" target="all"/>
         <ant dir="forwardWithQueryString" target="all"/>
         <ant dir="getAttributeAfterForward" target="all"/>
@@ -210,7 +210,7 @@
         <ant dir="servlet-3.0/asyncTimeoutNoListener" target="all"/>
         <ant dir="servlet-3.0/asyncDelayDispatchAndComplete" target="all"/>
         <ant dir="servlet-3.0/dispatchForwardAsyncDispatch" target="all"/>
-        <ant dir="servlet-3.0/cookieHttpOnly" target="all"/>  
+        <ant dir="servlet-3.0/cookieHttpOnly" target="all"/>
         <ant dir="servlet-3.0/defaultErrorPage" target="all"/>
         <ant dir="servlet-3.0/javaxServletContextOrderedLibs" target="all"/>
         <ant dir="servlet-3.0/multiWebFragments" target="all"/>
@@ -306,9 +306,9 @@
         <ant dir="sessionSetMaxInactiveIntervalExpire" target="all"/>
         <ant dir="sessionSetMaxInactiveIntervalToZeroAndInvalidate" target="all"/>
         <ant dir="setMultiValuedResponseHeader" target="all"/>
-        <ant dir="standalonewar" target="all"/>  
-        <ant dir="sessionWithoutCookie" target="all"/>  
-        <ant dir="createSessionInServletRequestListener" target="all"/>  
+        <ant dir="standalonewar" target="all"/>
+        <ant dir="sessionWithoutCookie" target="all"/>
+        <ant dir="createSessionInServletRequestListener" target="all"/>
         <ant dir="servlet-3.1/networkPathReference" target="all"/>
         <ant dir="servlet-3.1/nonBlockingOutput" target="all"/>
         <ant dir="servlet-3.1/nonBlockingInput" target="all"/>
@@ -355,13 +355,13 @@
         <ant dir="contextPathXmlConfig" target="all"/>
         <ant dir="contextRoot" target="all"/>
         <ant dir="contextValveSetRequestedSessionCookiePath" target="all"/>
-        <ant dir="contextXmlConfig" target="all"/> 
+        <ant dir="contextXmlConfig" target="all"/>
         <ant dir="contextXmlLifecycleListener" target="all"/>
         <ant dir="contextXmlLifecycleListenerGlobal" target="all"/>
         <ant dir="contextXmlRemoteHostValve" target="all"/>
         <ant dir="cookieValueWithEquals" target="all"/>
         <ant dir="cookieValueWithSpaces" target="all"/>
-        <ant dir="crossContextDispatchLongestContextRootMatch" target="all"/> 
+        <ant dir="crossContextDispatchLongestContextRootMatch" target="all"/>
         <ant dir="delegate" target="all"/>
         <ant dir="disableDefaultErrorPage" target="all"/>
         <ant dir="emptyContextRoot" target="all"/>

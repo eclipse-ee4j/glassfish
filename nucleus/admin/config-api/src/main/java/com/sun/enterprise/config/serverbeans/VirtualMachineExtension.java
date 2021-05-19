@@ -20,7 +20,7 @@ import org.jvnet.hk2.config.Configured;
 
 /**
  * Tag interface for VirtualMachine configuration.
- * 
+ *
  * @author Jerome Dochez
  */
 @Configured

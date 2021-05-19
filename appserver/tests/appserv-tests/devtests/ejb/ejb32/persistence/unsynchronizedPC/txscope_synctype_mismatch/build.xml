@@ -46,17 +46,17 @@
 
     <target name="build" depends="compile">
         <mkdir dir="${assemble.dir}/lib"/>
-        <jar destfile="${assemble.dir}/lib/${appname}-lib.jar" 
+        <jar destfile="${assemble.dir}/lib/${appname}-lib.jar"
              basedir="${build.classes.dir}"
              includes="**/Person.class">
-        </jar>        
+        </jar>
         <jar destfile="${assemble.dir}/lib/${appname}-par.jar">
              <metainf file="descriptor/persistence.xml"/>
         </jar>
         <antcall target="build-ear-common">
-            <param name="ejbjar.classes" 
+            <param name="ejbjar.classes"
               value="**/Finder.class,**/*ynchPC*.class,**/Tester.class"/>
-            <param name="appclientjar.classes" 
+            <param name="appclientjar.classes"
               value="**/Client.class,**/Tester.class"/>
         </antcall>
         <jar destfile="${assemble.dir}/${appname}App.ear" update="yes"

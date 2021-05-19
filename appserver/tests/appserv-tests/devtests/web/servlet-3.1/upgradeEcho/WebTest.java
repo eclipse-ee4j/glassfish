@@ -22,7 +22,7 @@ import java.util.StringTokenizer;
 import com.sun.ejte.ccl.reporter.*;
 
 /*
- * Unit test for upgrade echo 
+ * Unit test for upgrade echo
  */
 public class WebTest {
 
@@ -84,7 +84,7 @@ public class WebTest {
                 System.out.format("Sleeping %d sec\n", sleepInSeconds);
                 Thread.sleep(sleepInSeconds * 1000);
                 writeChunk(output, "World");
-                
+
                 // read data without using readLine
                 long startTime = System.currentTimeMillis();
                 System.out.println("Consuming results");
@@ -95,7 +95,7 @@ public class WebTest {
                     boolean hasError = sb.toString().contains("WrongClassLoader");
                     if (hasInfo || hasError || System.currentTimeMillis() - startTime > 20 * 1000) {
                         break;
-                    } 
+                    }
                 }
 
                 System.out.println(sb.toString());

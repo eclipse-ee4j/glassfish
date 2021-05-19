@@ -53,7 +53,7 @@
             <param name="user" value="${testuser}"/>
         </antcall>
     </target>
-       
+
     <target name="compile" depends="clean">
         <antcall target="compile-common">
             <param name="src" value="servlet"/>
@@ -71,7 +71,7 @@
                 <pathelement location="${env.APS_HOME}/lib/webtest.jar"/>
             </classpath>
         </javac>
-    </target> 
+    </target>
 
     <target name="deploy" depends="init-common">
         <antcall target="deploy-war-common"/>
@@ -96,7 +96,7 @@
 
     <target name="undeploy" depends="init-common">
         <antcall target="undeploy-war-common"/>
-    </target>   
+    </target>
 
     <target name="usage">
         <antcall target="usage-common"/>

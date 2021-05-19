@@ -75,7 +75,7 @@ public final class SSLUtils implements PostConstruct {
     private KeyStore mergedTrustStore = null;
     private AppClientSSL appclientSsl = null;
     private SSLContext ctx = null;
-    
+
     public void postConstruct() {
         try {
             //TODO: To check the right implementation once we support EE.
@@ -172,7 +172,7 @@ public final class SSLUtils implements PostConstruct {
     public KeyManager[] getKeyManagers(String algorithm) throws IOException,
             KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException{
         return secSupp.getKeyManagers(algorithm);
-    } 
+    }
     public TrustManager[] getTrustManagers() throws Exception{
         return getTrustManagers(null);
     }
@@ -181,7 +181,7 @@ public final class SSLUtils implements PostConstruct {
         return secSupp.getTrustManagers(algorithm);
     }
 
-    
+
     public void setAppclientSsl(AppClientSSL ssl){
         appclientSsl = ssl;
     }
@@ -210,7 +210,7 @@ public final class SSLUtils implements PostConstruct {
      * where alias is an key entry.
      * @param certNickname
      * @return boolean
-     */ 
+     */
     public boolean isTokenKeyAlias(String certNickname) throws Exception {
         boolean isTokenKeyAlias = false;
         if (certNickname != null) {
@@ -248,7 +248,7 @@ public final class SSLUtils implements PostConstruct {
      * [&lt;TokenName&gt;:]alias where alias is an key entry.
      * @param certNickname
      * @return PrivateKeyEntry
-     */ 
+     */
     public PrivateKeyEntry getPrivateKeyEntryFromTokenAlias(
             String certNickname) throws Exception {
         checkPermission(SecuritySupport.KEYSTORE_PASS_PROP);
@@ -311,12 +311,12 @@ public final class SSLUtils implements PostConstruct {
             throw new AccessControlException(message, perm);
         }
     }
-    
+
     public String[] getSupportedCipherSuites() {
          //postConstruct is already setting this.
          return  HttpsURLConnection.getDefaultSSLSocketFactory().getSupportedCipherSuites();
     }
-    
+
     private KeyStore mergingTrustStores(KeyStore[] trustStores)
             throws IOException, KeyStoreException,
             NoSuchAlgorithmException, CertificateException {
@@ -357,7 +357,7 @@ public final class SSLUtils implements PostConstruct {
      }
 
     /**
-     * 
+     *
      *
      * @param alias  the admin key alias
      * @param protocol the protocol or null, uses "TLS" if this argument is null.

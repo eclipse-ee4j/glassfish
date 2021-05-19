@@ -55,7 +55,7 @@ public class EjbInWarArchivist extends ExtensionsArchivist {
 
     @Inject
     ServiceLocator serviceLocator;
-    
+
     @Inject
     Provider<EjbInWarScanner> scanner;
 
@@ -78,7 +78,7 @@ public class EjbInWarArchivist extends ExtensionsArchivist {
     public List<ConfigurationDeploymentDescriptorFile> getConfigurationDDFiles(RootDeploymentDescriptor descriptor) {
         if (confDDFiles == null) {
             confDDFiles = DOLUtils.getConfigurationDeploymentDescriptorFiles(serviceLocator,
-            		EjbContainerUtil.EJB_CONTAINER_NAME);
+                    EjbContainerUtil.EJB_CONTAINER_NAME);
         }
         return confDDFiles;
     }

@@ -30,7 +30,7 @@
     <artifactId>runner</artifactId>
 
     <name>CDI Negative Tests Runner</name>
-    
+
     <build>
         <plugins>
             <plugin>

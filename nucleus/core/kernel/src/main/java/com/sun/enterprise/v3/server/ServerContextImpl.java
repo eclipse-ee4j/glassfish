@@ -66,7 +66,7 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
             args[i++] = entry.getValue().toString();
         }
     }
-    
+
     public File getInstanceRoot() {
         return instanceRoot;
     }
@@ -94,7 +94,7 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
     }
 
     public InitialContext getInitialContext() {
-        GlassfishNamingManager gfNamingManager = 
+        GlassfishNamingManager gfNamingManager =
             services.getService(GlassfishNamingManager.class);
         return (InitialContext)gfNamingManager.getInitialContext();
     }
@@ -124,6 +124,6 @@ public class ServerContextImpl implements ServerContext, PostConstruct {
      */
     public ServiceLocator getDefaultServices() {
         return services;
-        
+
     }
 }

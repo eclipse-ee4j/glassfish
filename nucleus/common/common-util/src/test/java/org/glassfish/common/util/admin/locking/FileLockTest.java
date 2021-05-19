@@ -32,7 +32,7 @@ import java.util.concurrent.locks.Lock;
 
 /**
  * Tests for ManagedFile.writeLock and ManagedFile.readLock.
- * 
+ *
  */
 public class FileLockTest {
 
@@ -87,7 +87,7 @@ public class FileLockTest {
                         return Boolean.TRUE;
                     }
                 }));
-                
+
             }
             Thread.sleep(100);
             mainWriteState = States.RELEASED;
@@ -249,7 +249,7 @@ public class FileLockTest {
              FileWriter fw = new FileWriter(f);
              fw.append("FileLockTest reading passed !");
              fw.close();
-             
+
              final ManagedFile managed = new ManagedFile(f, 1000, 1000);
              Lock fl = managed.accessRead();
              FileReader fr = new FileReader(f);
@@ -293,7 +293,7 @@ public class FileLockTest {
                  int length=fr.read(chars);
                  fr.close();
                  System.out.println(new String(chars, 0, length));
-                 
+
              } catch(IOException unexpected) {
                  System.out.println("Failed, got an exception reading : " + unexpected.getMessage());
                  throw unexpected;
@@ -313,7 +313,7 @@ public class FileLockTest {
 
              fl.unlock();
 
-             
+
              if (f.length()==0) {
                  System.out.println("The write lock was an advisory lock, file content was deleted !");
                  return;
@@ -359,7 +359,7 @@ public class FileLockTest {
             fr.close();
             f.delete();
             System.out.println(new String(chars,0,length));
-            
+
         } catch(Exception e) {
             e.printStackTrace();
         }
@@ -383,7 +383,7 @@ public class FileLockTest {
 
 
             if (dest.exists()) {
-                System.out.println("File is there...");    
+                System.out.println("File is there...");
             }
             dest.delete();
 
@@ -391,7 +391,7 @@ public class FileLockTest {
             e.printStackTrace();
         }
     }
-    
+
     public File getFile() throws IOException {
         Enumeration<URL> urls = getClass().getClassLoader().getResources("adminport.xml");
         if (urls.hasMoreElements()) {

@@ -30,11 +30,11 @@ public class Client {
         System.out.println("ejb-ejb30-hello-session");
         Client client = new Client(args);
         client.doTest();
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
-    
+
     private static @EJB Sful sful;
     private static @EJB Sless sless;
 
@@ -60,8 +60,8 @@ public class Client {
             e.printStackTrace();
             System.exit(-1);
         }
-        
-    	return;
+
+            return;
     }
 
     @PostConstruct

@@ -95,7 +95,7 @@ public class CreateManagedThreadFactory implements AdminCommand {
         attrList.put(ResourceConstants.JNDI_NAME, jndiName);
         attrList.put(ResourceConstants.CONTEXT_INFO_ENABLED, contextinfoenabled.toString());
         attrList.put(ResourceConstants.CONTEXT_INFO, contextinfo);
-        attrList.put(ResourceConstants.THREAD_PRIORITY, 
+        attrList.put(ResourceConstants.THREAD_PRIORITY,
             threadpriority.toString());
         attrList.put(ServerTags.DESCRIPTION, description);
         attrList.put(ResourceConstants.ENABLED, enabled.toString());

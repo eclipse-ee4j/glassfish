@@ -228,7 +228,7 @@
           </method-params>
         </query-method>
         <ejb-ql>select distinct t.name from Team t where LOCATE(?1, t.name) &gt; 0 AND LOCATE(?1, t.name) &lt; LENGTH(t.name)</ejb-ql>
-      </query>      
+      </query>
     </entity>
     <entity>
       <display-name>PlayerEJB</display-name>
@@ -268,7 +268,7 @@
           <method-name>findNotOnTeam</method-name>
           <method-params />
         </query-method>
-        <ejb-ql>select object(p) from Player p 
+        <ejb-ql>select object(p) from Player p
 where p.teams is empty</ejb-ql>
       </query>
       <query>
@@ -454,7 +454,7 @@ where p.name = ?1</ejb-ql>
           </method-params>
         </query-method>
         <ejb-ql>select object(p) from Player p where p.salary = SQRT(?1)</ejb-ql>
-      </query>      
+      </query>
     </entity>
   </enterprise-beans>
   <relationships>

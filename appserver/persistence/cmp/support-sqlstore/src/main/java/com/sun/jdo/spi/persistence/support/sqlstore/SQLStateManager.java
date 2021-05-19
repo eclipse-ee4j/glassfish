@@ -1916,9 +1916,9 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
         // Attach the object(s) we got back to our managed object.
         // There are three cases:
-        //		1) The foreign field contains a collection
-        //		2) The foreign object doesn't exist (NIL)
-        //		3) The foreign field is a reference to a single object
+        //        1) The foreign field contains a collection
+        //        2) The foreign object doesn't exist (NIL)
+        //        3) The foreign field is a reference to a single object
         if (foreignField.getComponentType() != null) {
             // Instantiate and populate a dynamic array, namely Collection.
             // NOTE: queryResult is null, if we didn't execute the retrieval!
@@ -2088,7 +2088,7 @@ public class SQLStateManager implements Cloneable, StateManager, TestStateManage
 
             if (debug) {
                 logger.fine("sqlstore.sqlstatemanager.getbeforeimage", // NOI18N
-							persistenceConfig.getPersistenceCapableClass().getName());
+                            persistenceConfig.getPersistenceCapableClass().getName());
             }
 
             try {

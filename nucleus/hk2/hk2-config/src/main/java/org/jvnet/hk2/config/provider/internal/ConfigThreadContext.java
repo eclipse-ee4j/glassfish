@@ -27,7 +27,7 @@ public class ConfigThreadContext {
     private static final ThreadLocal<ConfigThreadContext> tlc = new ThreadLocal<ConfigThreadContext>();
 
     private AccessControlContext acc;
-    
+
     /**
      * Performs a runnable action while managing the callers AccessControlContext in thread local storage
      */
@@ -38,15 +38,15 @@ public class ConfigThreadContext {
         runnable.run();
         return;
       }
-      
+
       boolean created = (null == ts);
       if (created) {
         ts = new ConfigThreadContext();
         tlc.set(ts);
       }
-      
+
       ts.acc = AccessController.getContext();
-      
+
       try {
         runnable.run();
       } finally {

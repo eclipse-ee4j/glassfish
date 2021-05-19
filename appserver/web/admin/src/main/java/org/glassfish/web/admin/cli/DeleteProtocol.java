@@ -50,7 +50,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Delete Protocol command
- * 
+ *
  */
 @Service(name="delete-protocol")
 @PerLookup
@@ -64,18 +64,18 @@ public class DeleteProtocol implements AdminCommand {
 
     @Param(name="protocolname", primary=true)
     String protocolName;
-    
+
     @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     String target;
 
     Protocol protocol = null;
-    
+
     @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     Config config;
 
     @Inject
     ServiceLocator services;
-    
+
     @Inject
     Domain domain;
 
@@ -126,7 +126,7 @@ public class DeleteProtocol implements AdminCommand {
                     return protocol;
                 }
             }, protocols);
-            
+
         } catch(TransactionFailure e) {
             report.setMessage(
                     MessageFormat.format(

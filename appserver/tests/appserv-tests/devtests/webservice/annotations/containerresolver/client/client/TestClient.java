@@ -46,7 +46,7 @@ public class TestClient {
         try {
             int code = invokeServlet(url);
             report(code);
-	} catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             fail();
         }
@@ -63,11 +63,11 @@ public class TestClient {
         while ((line = input.readLine()) != null) {
             log(line);
             if(line.indexOf("So the RESULT OF SERVICE IS") != -1)
-		found1 = true;
+                found1 = true;
             if(line.indexOf("[WebSvcTest-Hello2 Hi]") != -1)
-		found2 = true;
+                found2 = true;
             if(line.indexOf("[WebSvcTest-Hello1 Hi]") != -1)
-		found2 = true;
+                found2 = true;
         }
         return code;
     }

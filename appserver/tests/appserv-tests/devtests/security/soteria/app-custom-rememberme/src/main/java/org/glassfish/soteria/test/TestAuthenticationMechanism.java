@@ -49,7 +49,7 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
 
     @Inject
     private RememberMeConfigBean rememberMeConfigBean;
-    
+
     @Inject
     private IdentityStoreHandler identityStoreHandler;
 
@@ -57,7 +57,7 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
 
         request.setAttribute("authentication-mechanism-called", "true");
-        
+
         if (request.getParameter("name") != null && request.getParameter("password") != null) {
 
             // Get the (caller) name and password from the request
@@ -74,27 +74,27 @@ public class TestAuthenticationMechanism implements HttpAuthenticationMechanism 
 
             if (result.getStatus() == VALID) {
                 // Communicate the details of the authenticated user to the
-                // container. In many cases the underlying handler will just store the details 
-                // and the container will actually handle the login after we return from 
+                // container. In many cases the underlying handler will just store the details
+                // and the container will actually handle the login after we return from
                 // this method.
                 return httpMessageContext.notifyContainerAboutLogin(
                     result.getCallerPrincipal(), result.getCallerGroups());
             } else {
                 return httpMessageContext.responseUnauthorized();
             }
-        } 
+        }
 
         return httpMessageContext.doNothing();
     }
-    
+
     public Boolean isRememberMe(HttpMessageContext httpMessageContext) {
         return httpMessageContext.getRequest().getParameter("rememberme") != null;
     }
-    
+
     // Workaround for possible CDI bug; at least in Weld 2.3.2 default methods don't seem to be intercepted
     @Override
     public void cleanSubject(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) {
-    	HttpAuthenticationMechanism.super.cleanSubject(request, response, httpMessageContext);
+            HttpAuthenticationMechanism.super.cleanSubject(request, response, httpMessageContext);
     }
-    
+
 }

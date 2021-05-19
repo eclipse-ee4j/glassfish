@@ -39,7 +39,7 @@ import org.glassfish.concurrent.runtime.deployer.DefaultManagedScheduledExecutor
 
 /**
  * List Managed Scheduled Executor Service Resources command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @ExecuteOn(value={RuntimeType.DAS})
@@ -49,17 +49,17 @@ import org.glassfish.concurrent.runtime.deployer.DefaultManagedScheduledExecutor
 @I18n("list.managed.scheduled.executor.service")
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-managed-scheduled-executor-services", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-managed-scheduled-executor-services",
         description="List Managed Scheduled Executor Services")
 })
 public class ListManagedScheduledExecutorServices implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListManagedScheduledExecutorServices.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListManagedScheduledExecutorServices.class);
 
     @Param(primary = true, optional = true, defaultValue = SystemPropertyConstants.DAS_SERVER_NAME)
     private String target ;
-    
+
     @Inject
     private Domain domain;
 

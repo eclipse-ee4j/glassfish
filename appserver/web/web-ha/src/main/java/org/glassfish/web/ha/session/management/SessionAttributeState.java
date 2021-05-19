@@ -26,12 +26,12 @@ package org.glassfish.web.ha.session.management;
  *
  * @author  lwhite
  * @author Rajiv Mordani
- * 
+ *
  * SessionAttributeState represents the state (with regards to persistence
  * activity) of each attribute in a session.
  *
  * Invariants:
- * 1. newly added attribute (not yet persistent) 
+ * 1. newly added attribute (not yet persistent)
  *      not persistent
  *      not dirty
  *      not deleted
@@ -45,66 +45,66 @@ package org.glassfish.web.ha.session.management;
  *      deleted
  */
 public class SessionAttributeState {
-        
+
     /** Creates a new instance of SessionAttributeState */
     public SessionAttributeState() {
     }
-    
+
     /**
      * create an instance of SessionAttributeState
      * representing a persistent attribute
-     */     
+     */
     public static SessionAttributeState createPersistentAttribute() {
         SessionAttributeState result = new SessionAttributeState();
         result.setPersistent(true);
         return result;
     }
-    
+
     /**
      * return isDirty
-     */     
+     */
     public boolean isDirty() {
         return _dirtyFlag;
     }
-    
+
     /**
      * set isDirty
      * @param value
-     */    
+     */
     public void setDirty(boolean value) {
         _dirtyFlag = value;
     }
-    
+
     /**
      * return isPersistent
-     */      
+     */
     public boolean isPersistent() {
         return _persistentFlag;
     }
-    
+
     /**
      * set persistentFlag
      * @param value
-     */     
+     */
     public void setPersistent(boolean value) {
         _persistentFlag = value;
-    }    
-    
+    }
+
     /**
      * return isDeleted
-     */     
+     */
     public boolean isDeleted() {
         return _deletedFlag;
     }
-    
+
     /**
      * set deletedFlag
      * @param value
-     */     
+     */
     public void setDeleted(boolean value) {
         _deletedFlag = value;
     }
-    
+
     public String toString() {
         StringBuffer sb = new StringBuffer();
         sb.append("SessionAttributeState");
@@ -113,9 +113,9 @@ public class SessionAttributeState {
         sb.append("\n_deletedFlag = " + _deletedFlag);
         return sb.toString();
     }
-    
+
     boolean _dirtyFlag = false;
     boolean _persistentFlag = false;
-    boolean _deletedFlag = false;    
-    
+    boolean _deletedFlag = false;
+
 }

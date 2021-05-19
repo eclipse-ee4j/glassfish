@@ -21,14 +21,14 @@
     <property file="build.properties"/>
     <property file="./gfproject/${deploy.platform}-config.properties"/>
     <property file="./gfproject/${db.type}.properties"/>
-    
+
     <description>Builds, tests, and runs the project Hello JSP Application</description>
-    <import file="./gfproject/build-impl.xml"/>   
+    <import file="./gfproject/build-impl.xml"/>
     <import file="./gfproject/${deploy.platform}-targets.xml"/>
-    <import file="./gfproject/db-targets.xml"/>    
-    
-   
-    
+    <import file="./gfproject/db-targets.xml"/>
+
+
+
  <description>Builds, tests, and runs the project Hello JSP Application</description>
 <!-- <import file="nbproject/build-impl.xml"/>-->
 <target name="all" depends="start-server"/>
@@ -39,7 +39,7 @@
     <echo message="ant -f run.xml stop-server for stopping  server"/>
     <echo message="ant -f run.xml startDerby for starting database"/>
     <echo message="ant -f run.xml stopDerby for stoping database"/>
-    
+
 </target>
 
 </project>

@@ -30,10 +30,10 @@ import java.lang.reflect.Method;
 
 public class Client {
 
-    private static SimpleReporterAdapter stat = 
+    private static SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    private static final QName PORT_QNAME = 
+    private static final QName PORT_QNAME =
         new QName("urn:GoogleSearch", "GoogleSearchPort");
     private static final QName OPERATION_QNAME =
         new QName("urn:GoogleSearch", "doSpellingSuggestion");
@@ -44,12 +44,12 @@ public class Client {
 
     public static void main (String[] args) {
 
-        stat.addDescription("googleserver appclient");	
+        stat.addDescription("googleserver appclient");
         Client client = new Client(args);
         client.doTest();
         stat.printSummary("googleserver-applientID");
     }
-    
+
     public Client(String[] args) {
         word = (args.length > 0) ? args[0] : "spellng";
         targetEndpointAddress = (args.length > 1) ? args[1] : null;
@@ -58,8 +58,8 @@ public class Client {
 
     public void doTest() {
 
-        
-    	try {
+
+            try {
             Context ic = new InitialContext();
             String googleKey = (String)
                 ic.lookup("java:comp/env/googlekey");
@@ -76,7 +76,7 @@ public class Client {
             Method helloOneWay = foo.getClass().getMethod("helloOneWay",
                                                           new Class[] { java.lang.String.class });
             helloOneWay.invoke(foo, new Object[] { "1000" } );
-                                                                   
+
             try {
                 googleSearchService.getHandlerRegistry();
             } catch(java.lang.UnsupportedOperationException uoe) {
@@ -95,7 +95,7 @@ public class Client {
 
             doDynamicProxyTest(googleSearchService, googleKey);
 
-            GoogleSearchPort googleSearchPort = 
+            GoogleSearchPort googleSearchPort =
                 googleSearchService.getGoogleSearchPort();
             doSpellingSuggestion(googleSearchPort, googleKey,
                                  targetEndpointAddress);
@@ -121,7 +121,7 @@ public class Client {
                 partialWsdlServiceGeneric.getPort(GoogleSearchPort.class);
             googleSearch.doSpellingSuggestion(googleKey, word);
 
-/**            GoogleSearchService partialWsdlServiceGenerated = 
+/**            GoogleSearchService partialWsdlServiceGenerated =
                 (GoogleSearchService)
                 ic.lookup("java:comp/env/service/partialGenerated");
             googleSearch = partialWsdlServiceGenerated.getGoogleSearchPort();
@@ -130,17 +130,17 @@ public class Client {
             stat.addStatus("appclient " + testName, stat.PASS);
 
 
-    	} catch (Exception ex) {
+            } catch (Exception ex) {
             System.out.println("google client test failed");
             ex.printStackTrace();
             stat.addStatus("appclient " + testName, stat.FAIL);
-	} 
+        }
 
     }
 
     private void doSpellingSuggestion(GoogleSearchPort googleSearchPort,
                                       String googleKey,
-                                      String endpointAddress) 
+                                      String endpointAddress)
         throws Exception {
 
         if( endpointAddress != null ) {
@@ -157,7 +157,7 @@ public class Client {
 
         System.out.println("Contacting google for spelling " +
                            "suggestion at " + endpointAddress);
-        
+
         String spellingSuggestion =
             googleSearchPort.doSpellingSuggestion(googleKey, word);
         System.out.println("Gave google the word '" + word + "' ... " +
@@ -170,21 +170,21 @@ public class Client {
         Call c1 = service.createCall();
         Call c2 = service.createCall(PORT_QNAME);
         Call c3 = service.createCall(PORT_QNAME, OPERATION_QNAME);
-        Call c4 = service.createCall(PORT_QNAME, 
+        Call c4 = service.createCall(PORT_QNAME,
                                      OPERATION_QNAME.getLocalPart());
         Call[] calls = service.getCalls(PORT_QNAME);
 
         if( targetEndpointAddress != null ) {
-            c3.setTargetEndpointAddress(targetEndpointAddress);            
-        } 
+            c3.setTargetEndpointAddress(targetEndpointAddress);
+        }
         Object params[] = new Object[] {googleKey, "hello" };
         String response = (String) c3.invoke(params);
         System.out.println("Response = " + response);
 
         // container-managed port selection
-        GoogleSearchPort sei = (GoogleSearchPort) 
+        GoogleSearchPort sei = (GoogleSearchPort)
             service.getPort(GoogleSearchPort.class);
-        sei = (GoogleSearchPort) 
+        sei = (GoogleSearchPort)
             service.getPort(PORT_QNAME, GoogleSearchPort.class);
 
         QName serviceName = service.getServiceName();
@@ -197,18 +197,18 @@ public class Client {
         System.out.println("Calling oneway operation");
         Call oneway = service.createCall(PORT_QNAME, "helloOneWay");
         if( targetEndpointAddress != null ) {
-            oneway.setTargetEndpointAddress(targetEndpointAddress);            
-        } 
+            oneway.setTargetEndpointAddress(targetEndpointAddress);
+        }
 
         long oneWayMethodWaitTimeInMillis = 4000;
 
-        Date before = new Date();        
-        oneway.invokeOneWay(new Object[] 
+        Date before = new Date();
+        oneway.invokeOneWay(new Object[]
                { oneWayMethodWaitTimeInMillis + "" });
         Date after = new Date();
         long elapsedTime = after.getTime() - before.getTime();
-        System.out.println("one way operation began at " + before + 
-                           " and returned at " + after + 
+        System.out.println("one way operation began at " + before +
+                           " and returned at " + after +
                            " and took " +  elapsedTime + " milli-seconds");
         if( elapsedTime > oneWayMethodWaitTimeInMillis ) {
             throw new Exception("one way operation blocked for too long ");
@@ -219,7 +219,7 @@ public class Client {
         // to undeploy, but the endpoint is still executing its
         // oneway operation.
         long sleepTime = (oneWayMethodWaitTimeInMillis - elapsedTime);
-                          
+
         System.out.println("now sleeping for " + sleepTime + " milli secs");
         Thread.sleep(sleepTime);
         System.out.println("returning from doDynamicProxyTest");
@@ -275,7 +275,7 @@ public class Client {
             System.out.println("Successfully caught unsupported operation " +
                                "for Service.getPort(SEI)");
         }
-        
+
         try {
             Remote remote = service.getPort(PORT_QNAME, GoogleSearchPort.class);
         } catch(java.lang.UnsupportedOperationException uoe) {

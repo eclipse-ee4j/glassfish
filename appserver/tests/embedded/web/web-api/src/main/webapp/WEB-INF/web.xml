@@ -18,11 +18,11 @@
 
 -->
 
-<web-app> 
+<web-app>
 
     <display-name>toto</display-name>
     <description>this a dummy web app</description>
-        
+
     <listener>
         <listener-class>org.glassfish.tests.webapi.TestListener</listener-class>
     </listener>
@@ -38,15 +38,15 @@
         <description>Test GF secondary servlet</description>
         <servlet-class>org.glassfish.tests.webapi.TestServlet</servlet-class>
     </servlet>
-    
+
     <servlet-mapping>
         <servlet-name>TestGF</servlet-name>
         <url-pattern>/testgf</url-pattern>
     </servlet-mapping>
-            
+
     <servlet-mapping>
         <servlet-name>TestGF2</servlet-name>
         <url-pattern>/toto/testgf2</url-pattern>
-    </servlet-mapping>        
-    
+    </servlet-mapping>
+
 </web-app>

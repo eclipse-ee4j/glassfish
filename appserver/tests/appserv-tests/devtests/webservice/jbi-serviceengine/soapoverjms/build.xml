@@ -56,7 +56,7 @@
         <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
        </antcall>
     </target>
-    
+
     <target name="compile" depends="init-common">
       <antcall target="compile-common">
         <param name="src" value="provider/endpoint"/>
@@ -98,7 +98,7 @@
                value="-keep -d ${build.classes.dir}/webclient/WEB-INF/classes http://localhost:8080/jsr208-integration-web-client/CalculatorService?WSDL"/>
       </antcall>
       <javac srcdir="consumer" destdir="${build.classes.dir}/webclient/WEB-INF/classes"
-            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar" 
+            classpath="${env.APS_HOME}/lib/reporter.jar:${env.S1AS_HOME}/lib/j2ee.jar:${env.S1AS_HOME}/lib/webservices-rt.jar:${env.S1AS_HOME}/lib/webservices-tools.jar"
             includes="webclient/**"/>
       <copy file="./consumer/client-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/web.xml"/>
       <copy file="./consumer/client-sun-web.xml" tofile="${build.classes.dir}/webclient/WEB-INF/sun-web.xml"/>
@@ -176,12 +176,12 @@
         <arg line="${appname}-web"/>
       </exec>
     </target>
-    
+
     <target name="runtest" depends="init-common">
       <echo message="Running the test client"/>
       <mkdir dir="${build.classes.dir}/client"/>
-      <javac srcdir="." destdir="${build.classes.dir}/client" 
-            classpath="${env.APS_HOME}/lib/reporter.jar" 
+      <javac srcdir="." destdir="${build.classes.dir}/client"
+            classpath="${env.APS_HOME}/lib/reporter.jar"
             includes="consumer/client/**"/>
       <unjar src="${env.APS_HOME}/lib/reporter.jar" dest="${build.classes.dir}/client"/>
       <java classname="client.TestClient">

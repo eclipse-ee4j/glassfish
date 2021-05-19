@@ -50,9 +50,9 @@ author: jagadesh munta
 </target>
 
 <target name="create-message-security-provider">
-	<antcall target="create-server-message-security-provider"/>
-	<antcall target="create-client-message-security-provider"/>
-		
+    <antcall target="create-server-message-security-provider"/>
+    <antcall target="create-client-message-security-provider"/>
+
 </target>
 
 <target name="enable-wss-message-security-provider" depends="init-common">
@@ -83,12 +83,12 @@ author: jagadesh munta
 
 
 <target name="delete-message-security-provider">
-        <antcall target="delete-message-security-provider-common">
-		<param name="wss.provider.name" value="${wss.server.provider.name}"/>
-	</antcall>
-        <antcall target="delete-message-security-provider-common">
-		<param name="wss.provider.name" value="${wss.client.provider.name}"/>
-	</antcall>
+    <antcall target="delete-message-security-provider-common">
+        <param name="wss.provider.name" value="${wss.server.provider.name}"/>
+    </antcall>
+    <antcall target="delete-message-security-provider-common">
+        <param name="wss.provider.name" value="${wss.client.provider.name}"/>
+    </antcall>
 
 </target>
 
@@ -147,16 +147,16 @@ author: jagadesh munta
 
 <!-- Configure NSS for IIOP -->
 <target name="config-nss-iiop" depends="init-common">
-	<antcall target="set-jvm-option">
-	   <param name="jvm.option" value="-DNSS_USE_FOR_IIOP=true"/>
-        </antcall>
+    <antcall target="set-jvm-option">
+       <param name="jvm.option" value="-DNSS_USE_FOR_IIOP=true"/>
+    </antcall>
 </target>
 
 <!-- Remove NSS config for IIOP -->
 <target name="remove-nss-iiop" depends="init-common">
-	<antcall target="unset-jvm-option">
-	   <param name="jvm.option" value="-DNSS_USE_FOR_IIOP=true"/>
-        </antcall>
+    <antcall target="unset-jvm-option">
+       <param name="jvm.option" value="-DNSS_USE_FOR_IIOP=true"/>
+    </antcall>
 </target>
 
 <!-- Get certificate from NSS db to JKS format -->
@@ -167,7 +167,7 @@ author: jagadesh munta
         <arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
       </exec>
       <concat>
-    	<filelist dir="${admin.domain.dir}/${admin.domain}/config" files="certdb.rfc"/>
+        <filelist dir="${admin.domain.dir}/${admin.domain}/config" files="certdb.rfc"/>
       </concat>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${cert.nickname}"/>
@@ -182,7 +182,7 @@ author: jagadesh munta
         <arg line="-d ${admin.domain.dir}/${admin.domain}/config -a"/>
       </exec>
       <concat>
-    	<filelist dir="${admin.domain.dir}/${admin.domain}/config" files="certdb.rfc"/>
+        <filelist dir="${admin.domain.dir}/${admin.domain}/config" files="certdb.rfc"/>
       </concat>
       <antcall target="import-cert-jks">
          <param name="cert.alias" value="${token.name}:${cert.nickname}"/>
@@ -406,7 +406,7 @@ author: jagadesh munta
                 <param name="keystore.pass" value="changeit"/>
                 <param name="key.pass" value="changeit"/>
                 <param name="key.alias" value="s1as"/>
- 		<param name="dname" value="CN=S1AS, OU=Sun Java System, O=Sun Microsystems, L=Santa Clara, ST=California, C=US"/>
+                <param name="dname" value="CN=S1AS, OU=Sun Java System, O=Sun Microsystems, L=Santa Clara, ST=California, C=US"/>
         </antcall>
         <antcall target="list-cert-jks">
                 <param name="keystore.file" value="s1as.jks"/>
@@ -472,8 +472,8 @@ author: jagadesh munta
 </target>
 
 
-<!-- 
-Hardware Accelerator setup related targets 
+<!--
+Hardware Accelerator setup related targets
 -->
 <target name="add-pkcs11-module-token" depends="init-common">
     <echo message="Adding PKCS11 Module or token to NSS Certdb..."/>
@@ -517,7 +517,7 @@ Hardware Accelerator setup related targets
         <arg line="-L"/>
         <arg line="-d ${admin.domain.dir}/${admin.domain}/config"/>
         <arg line="-h ${token.name}"/>
-	<arg line="-f passfile"/>
+        <arg line="-f passfile"/>
       </exec>
 </target>
 
@@ -525,18 +525,18 @@ Hardware Accelerator setup related targets
 <!-- Log related -->
 <target name="set-client-log-level" depends="init-common">
   <echo message="Setting client default log level WARNING to ${log.level}"/>
-  <replace 
-    token="WARNING" 
+  <replace
+    token="WARNING"
     value="${log.level}"
-    file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>      
+    file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
 </target>
 
 <target name="set-client-default-log-level" depends="init-common">
   <echo message="Setting client default log level WARNING from ${log.level}"/>
-  <replace 
-    token="${log.level}" 
+  <replace
+    token="${log.level}"
     value="WARNING"
-    file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>      
+    file="${admin.domain.dir}/${admin.domain}/config/glassfish-acc.xml"/>
 </target>
 
 <target name="set-server-security-log-level" depends="init-common">
@@ -563,10 +563,10 @@ Hardware Accelerator setup related targets
 </target>
 
 <target name="set-Props-MacOS" if="isMac" depends="init-common">
-	<property name="java.lib.path" value="${env.JAVA_HOME}/lib"/>
+    <property name="java.lib.path" value="${env.JAVA_HOME}/lib"/>
 </target>
 <target name="set-Props-nonMacOS" unless="isMac" depends="init-common">
-	<property name="java.lib.path" value="${env.JAVA_HOME}/jre/lib"/>
+    <property name="java.lib.path" value="${env.JAVA_HOME}/jre/lib"/>
 </target>
 
 <target name="import-cert-jks" depends="init-common">

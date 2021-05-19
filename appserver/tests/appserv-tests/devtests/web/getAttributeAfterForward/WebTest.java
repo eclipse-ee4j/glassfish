@@ -21,7 +21,7 @@ import com.sun.ejte.ccl.reporter.*;
 public class WebTest {
 
     private static final String TEST_NAME = "get-attribute-after-forward";
-    
+
     private static final SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -40,7 +40,7 @@ public class WebTest {
         stat.addDescription("Get attribute after forward");
 
         WebTest webTest = new WebTest(args);
-        
+
         try {
             webTest.doTest(
                 "/forward.jsp?forward=include.jsp&include=process.jsp" );
@@ -63,5 +63,5 @@ public class WebTest {
             throw new Exception("Wrong response code. Expected: 200" +
                                 ", received: " + responseCode);
         }
-    }  
+    }
 }

@@ -27,6 +27,6 @@
     <wsdl-file>META-INF/wsdl/faultcode.wsdl</wsdl-file>
     <jaxrpc-mapping-file>FaultCodeMapping_appclient.xml</jaxrpc-mapping-file>
     <service-qname xmlns:servicens="urn:test">servicens:TestService
-    </service-qname>               
+    </service-qname>
   </service-ref>
 </application-client>

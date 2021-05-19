@@ -151,7 +151,7 @@ public class DynamicSyncBrokerListTest extends AdminBaseDevTest {
     public Object jmxCall(String jmsProviderPort, String objectName){
 /*
  * Commented out because building this code depends on having GlassFish already downloaded.
- * The admin devtest must build without having GlassFish present. 
+ * The admin devtest must build without having GlassFish present.
      try{
         AdminConnectionFactory acf = new AdminConnectionFactory();
         acf.setProperty(AdminConnectionConfiguration.imqAddress,    "localhost:" + jmsProviderPort);

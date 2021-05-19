@@ -30,7 +30,7 @@ public interface StateTaxIF extends Remote{
         /*
          * Interface to declare one business method - getFedTax method.
          */
-	public double getStateTax(double income, double deductions)
+    public double getStateTax(double income, double deductions)
             throws RemoteException;
 
 }

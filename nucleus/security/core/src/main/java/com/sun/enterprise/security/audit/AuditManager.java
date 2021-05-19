@@ -21,7 +21,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * Defines the behavior for audit manager implementations.
- * 
+ *
  * @author tjquinn
  */
 @Contract
@@ -30,30 +30,30 @@ public interface AuditManager {
      * Loads all audit modules.
      */
     public void loadAuditModules();
-    
+
     /**
      * Reports authentication events to registered audit modules.
-     * 
+     *
      * @param user
      * @param realm
-     * @param success 
+     * @param success
      */
     public void authentication(String user, String realm, boolean success);
-    
+
     /**
      * Reports server start-up event to registered audit modules.
      */
     public void serverStarted();
-    
+
     /**
      * Reports server shutdown event to registered audit modules.
      */
     public void serverShutdown();
-    
+
     /**
      * Returns whether auditing is turned on.
-     * 
-     * @return 
+     *
+     * @return
      */
     public boolean isAuditOn();
 }

@@ -42,7 +42,7 @@ public class BaseBean {
         if (method == null) {
             if (name != null) throw new RuntimeException("In " + getClass().getName() + " expected method name: " + name + " got null");
         } else {
-            if (!method.getName().equals(name)) 
+            if (!method.getName().equals(name))
                 throw new RuntimeException("In " + getClass().getName() + " expected method name: " + name + " got: " + method.getName());
         }
     }

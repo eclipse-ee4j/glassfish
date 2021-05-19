@@ -17,26 +17,25 @@
 package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
-import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
 /**
- * A Stats interface, to expose the monitoring information 
+ * A Stats interface, to expose the monitoring information
  * about the JVM Compilation subsystem
  * @since 8.1
  */
 public interface JVMCompilationStats extends Stats {
-    
+
     /**
      * Returns the name of the JIT Compiler
      * @return StringStatistic  The name of the JIT compiler
      */
-    public StringStatistic getName();
-    
+    StringStatistic getName();
+
     /**
      * Returns the accumulated time in milliseconds, that was spent
      * in compilation
      * @return CountStatistic   Compilation time in milliseconds
      */
-    public CountStatistic getTotalCompilationTime();
-    
+    CountStatistic getTotalCompilationTime();
+
 }

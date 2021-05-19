@@ -27,7 +27,7 @@
     <name>GlassFish javaee.jar distribution fragment</name>
     <artifactId>javaee-frag</artifactId>
     <packaging>distribution-fragment</packaging>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -59,8 +59,8 @@
         <dependency>
             <groupId>org.glassfish.main.extras</groupId>
             <artifactId>javaee</artifactId>
-	    <version>${project.version}</version>
-	    <optional>true</optional>
+            <version>${project.version}</version>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

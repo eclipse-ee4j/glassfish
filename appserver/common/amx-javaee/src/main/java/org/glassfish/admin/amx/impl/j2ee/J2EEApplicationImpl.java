@@ -32,7 +32,7 @@ public final class J2EEApplicationImpl
         super(parentObjectName, meta, INTF);
     }
 
-    private static final Set<String> MODULE_TYPES	= SetUtil.newUnmodifiableStringSet(
+    private static final Set<String> MODULE_TYPES    = SetUtil.newUnmodifiableStringSet(
         WEB_MODULE,
         EJB_MODULE,
         APP_CLIENT_MODULE,

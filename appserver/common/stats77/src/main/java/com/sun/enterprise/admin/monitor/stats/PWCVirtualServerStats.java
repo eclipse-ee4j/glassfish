@@ -21,36 +21,35 @@ package com.sun.enterprise.admin.monitor.stats;
  * @author  nsegura
  */
 import org.glassfish.j2ee.statistics.Stats;
-import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
-/** 
- * Statistical information relevant to a virtual server 
+/**
+ * Statistical information relevant to a virtual server
  */
 public interface PWCVirtualServerStats extends Stats {
-    
-    /** 
+
+    /**
      * Returns the virtual server ID
      * @return virtual server ID
-     */    
-    public StringStatistic getId();
+     */
+    StringStatistic getId();
 
-    /** 
+    /**
      * Returns the current virtual server mode:
      * unknown/active
      * @return virtual server mode
-     */    
-    public StringStatistic getMode();
-    
-    /** 
+     */
+    StringStatistic getMode();
+
+    /**
      * Returns the hosts related to this virtual server
      * @return hosts
-     */    
-    public StringStatistic getHosts();
-    
-    /** 
+     */
+    StringStatistic getHosts();
+
+    /**
      * Returns the interfaces related to this virtual server
      * @return interfaces
-     */    
-    public StringStatistic getInterfaces();
-    
+     */
+    StringStatistic getInterfaces();
+
 }

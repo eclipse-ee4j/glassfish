@@ -39,24 +39,24 @@ import java.util.logging.Logger;
 
 /**
  * Delete JDBC Connection Pool Command
- * 
+ *
  */
 @ExecuteOn(RuntimeType.ALL)
 @Service(name="delete-jdbc-connection-pool")
 @PerLookup
 @I18n("delete.jdbc.connection.pool")
 public class DeleteJdbcConnectionPool implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteJdbcConnectionPool.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteJdbcConnectionPool.class);
 
     @Param(optional=true, defaultValue="false")
     private Boolean cascade;
-    
+
     @Param(name="jdbc_connection_pool_id", primary=true)
     private String poolName;
 
     @Param(optional=true, obsolete = true)
-    private String target = SystemPropertyConstants.DAS_SERVER_NAME; 
+    private String target = SystemPropertyConstants.DAS_SERVER_NAME;
 
     @Inject
     private Domain domain;
@@ -81,24 +81,24 @@ public class DeleteJdbcConnectionPool implements AdminCommand {
             ResourceStatus rs = jdbcConnMgr.delete(servers, clusters, domain.getResources(), cascade.toString(), poolName);
             if (rs.getMessage() != null) report.setMessage(rs.getMessage());
             if (rs.getStatus() == ResourceStatus.SUCCESS) {
-                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);       
+                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             } else {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 if (rs.getException()!= null) {
                     report.setFailureCause(rs.getException());
-                    Logger.getLogger(DeleteJdbcConnectionPool.class.getName()).log(Level.SEVERE, 
+                    Logger.getLogger(DeleteJdbcConnectionPool.class.getName()).log(Level.SEVERE,
                             "Something went wrong in delete-jdbc-connection-pool", rs.getException());
                 }
             }
         } catch(Exception e) {
-            Logger.getLogger(DeleteJdbcConnectionPool.class.getName()).log(Level.SEVERE, 
+            Logger.getLogger(DeleteJdbcConnectionPool.class.getName()).log(Level.SEVERE,
                     "Something went wrong in delete-jdbc-connection-pool", e);
-            String msg = e.getMessage() != null ? e.getMessage() : 
-                localStrings.getLocalString("delete.jdbc.connection.pool.fail", 
+            String msg = e.getMessage() != null ? e.getMessage() :
+                localStrings.getLocalString("delete.jdbc.connection.pool.fail",
                     "{0} delete failed ", poolName);
             report.setMessage(msg);
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
-        }        
+        }
     }
 }

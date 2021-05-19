@@ -28,11 +28,11 @@ import com.sun.enterprise.deployment.types.MessageDestinationReferencer;
 import org.glassfish.deployment.common.DescriptorVisitor;
 
 /**
- * This class defines the protocol for visiting J2EE Component DOL  
- * related classes 
+ * This class defines the protocol for visiting J2EE Component DOL
+ * related classes
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface ComponentVisitor extends DescriptorVisitor {
 

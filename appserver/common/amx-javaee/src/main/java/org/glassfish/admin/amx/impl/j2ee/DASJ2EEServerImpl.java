@@ -47,25 +47,25 @@ public class DASJ2EEServerImpl extends J2EEServerImpl
     registerChildren()
     {
         super.registerChildren();
-        
+
         final ObjectNameBuilder builder = getObjectNames();
 
         final JVMImpl jvm = new JVMImpl( getObjectName(), defaultChildMetadata() );
         final ObjectName jvmObjectName = builder.buildChildObjectName( J2EETypes.JVM, null);
         registerChild( jvm, jvmObjectName );
     }
-    
+
     /*
-    static private final Class[]	DOMAIN_STATUS_INTERFACES	=
+    static private final Class[]    DOMAIN_STATUS_INTERFACES    =
     new Class[] { DomainStatusMBean.class };
 
     protected DomainStatusMBean
     getDomainStatus()
     {
-    DomainStatusMBean	domainStatus	= null;
+    DomainStatusMBean    domainStatus    = null;
     try {
-    final MBeanServer	mbeanServer = getMBeanServer();
-    final Set<ObjectName>	candidates	= QueryMgrImpl.queryPatternObjectNameSet(
+    final MBeanServer    mbeanServer = getMBeanServer();
+    final Set<ObjectName>    candidates    = QueryMgrImpl.queryPatternObjectNameSet(
     mbeanServer, JMXUtil.newObjectNamePattern(
     "*", DomainStatusMBean.DOMAIN_STATUS_PROPS ) );
     final ObjectName on = SetUtil.getSingleton( candidates );

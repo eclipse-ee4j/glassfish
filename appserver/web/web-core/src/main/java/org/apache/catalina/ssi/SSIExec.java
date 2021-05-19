@@ -27,7 +27,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 /**
  * Implements the Server-side #exec command
- * 
+ *
  * @author Bip Thelin
  * @author Amy Roh
  * @author Paul Speed
@@ -55,8 +55,8 @@ public class SSIExec implements SSICommand {
         String substitutedValue = ssiMediator.substituteVariables(paramValue);
         if (paramName.equalsIgnoreCase("cgi")) {
             lastModified = ssiInclude.process(ssiMediator, "include",
-                    			new String[]{"virtual"}, new String[]{substitutedValue},
-								writer);
+                                new String[]{"virtual"}, new String[]{substitutedValue},
+                                writer);
         } else if (paramName.equalsIgnoreCase("cmd")) {
             boolean foundProgram = false;
             try {
@@ -71,7 +71,7 @@ public class SSIExec implements SSICommand {
                 IOTools.flow(stdErrReader, writer, buf);
                 IOTools.flow(stdOutReader, writer, buf);
                 proc.waitFor();
-                lastModified = System.currentTimeMillis();                
+                lastModified = System.currentTimeMillis();
             } catch (InterruptedException e) {
                 ssiMediator.log("Couldn't exec file: " + substitutedValue, e);
                 writer.write(HtmlEntityEncoder.encodeXSS(configErrMsg));

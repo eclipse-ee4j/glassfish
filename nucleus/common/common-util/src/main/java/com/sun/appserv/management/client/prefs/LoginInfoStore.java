@@ -28,7 +28,7 @@ import java.util.Collection;
  * @since Appserver 9.0
  */
 public interface LoginInfoStore {
-    
+
     /**
      * Returns a {@link LoginInfo} corresponding to the given host and port, from this store.
      * The host may not be null. For a given host and port, there can be at most
@@ -40,11 +40,11 @@ public interface LoginInfoStore {
      * @throws IllegalArgumentException if the parameter host is null
      */
     public LoginInfo read(final String host, final int port) throws StoreException;
-    
+
     /**
      * Removes the {@link LoginInfo} corresponding to the given host and port, from this store.
      * The host may not be null. If no such LoginInfo exists, StoreException results.
-     * The caller thus must ensure if such a LoginInfo exists before calling this method. 
+     * The caller thus must ensure if such a LoginInfo exists before calling this method.
      * Upon successful return, size of this store decreases by one.
      * @param host a non null String representing host name
      * @param port an integer specifying the port number
@@ -53,7 +53,7 @@ public interface LoginInfoStore {
      * @throws IllegalArgumentException if the parameter host is null
      */
     public void remove(final String host, final int port) throws StoreException;
-    
+
     /**
      * Stores the given LoginInfo in this store. Given LoginInfo may not be null.
      * Upon successful return, the size of this store increases by one. An exception is thrown
@@ -64,7 +64,7 @@ public interface LoginInfoStore {
      * @throws IllegalArgumentException if the given LoginInfo is null
      */
     public void store(final LoginInfo login) throws StoreException;
-    
+
     /**
      * Stores the given LoginInfo in this store. Given LoginInfo may not be null.
      * Upon successful return, the size of this store increases by one. An exception is thrown
@@ -78,7 +78,7 @@ public interface LoginInfoStore {
      * @throws IllegalArgumentException if the given LoginInfo is null
      */
     public void store(final LoginInfo login, final boolean overwrite) throws StoreException;
-    
+
    /**
      * Checks whether a LoginInfo for given host and port exists in this store.
      * @param host a non null String representing host name
@@ -86,7 +86,7 @@ public interface LoginInfoStore {
      * @throws StoreException if there's any problem reading the store
      */
     public boolean exists(final String host, final int port) throws StoreException;
-    
+
     /**
      * A convenience method that returns the Collection of LoginInfo instances stored in this store.
      * An empty Collection is returned when there are no LoginInfo items stored.
@@ -94,7 +94,7 @@ public interface LoginInfoStore {
      * @throws StoreException if there's any problem reading the store
      */
     public Collection<LoginInfo> list() throws StoreException;
-    
+
     /**
      * A convenience method that returns the number of LoginInfo instances stored in this store.
      * Zero is returned when no login information is stored.
@@ -102,8 +102,8 @@ public interface LoginInfoStore {
      * @throws StoreException if there's any problem reading the store
      */
     public int size() throws StoreException;
-    
-    /** Returns the name of the store. 
+
+    /** Returns the name of the store.
      * This is any name that the store implementation wants to use for identification, for instance.
      */
     public String getName();

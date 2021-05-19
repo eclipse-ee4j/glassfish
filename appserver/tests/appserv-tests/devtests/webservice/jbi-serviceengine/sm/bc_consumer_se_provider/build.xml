@@ -27,24 +27,24 @@
 ]>
 
 <project name="warservice" default="all" basedir=".">
-    
+
     &commonSetup;
     &commonBuild;
     &testproperties;
     &jaxwsTools;
     &jbicommon;
     &jbiproperties;
-    <target name="all" depends="clean, deploy, runtest, undeploy, clean"/> 
-    
+    <target name="all" depends="clean, deploy, runtest, undeploy, clean"/>
+
     <target name="clean" depends="init-common">
         <antcall target="clean-common"/>
         <delete file="${basedir}/service_assembly/${appname}.war"/>
         <delete file="${basedir}/service_assembly/${http-soap-bc-su}.jar"/>
         <delete file="${basedir}/service_assembly/${jbi-component-su-assembly}.zip"/>
     </target>
-    
+
     <target name="assemble" depends="init-common, compile">
-        
+
         <!-- Step1. Build the provider service unit -->
         <echo message="classes dir = ${build.classes.dir}"/>
         <echo message="assemble.dir = ${assemble.dir}/${appname}.war"/>
@@ -63,7 +63,7 @@
         </jar>
         <!-- Copy the JavaEE app to the service assembly -->
         <copy file="${assemble.dir}/${appname}.war" todir="${basedir}/service_assembly"/>
-        
+
         <!-- Step2. Build the consumer service unit -->
         <jar jarfile="${basedir}/service_assembly/${http-soap-bc-su}.jar">
             <fileset dir="${basedir}/service_assembly/service_units/soap-bc-su">
@@ -73,64 +73,64 @@
                 <include name="CalculatorService_schema1.xsd"/>
             </fileset>
         </jar>
-        
+
         <!-- Step2. Build the service assembly -->
         <zip destfile="${basedir}/service_assembly/${jbi-component-su-assembly}.zip" basedir="${basedir}/service_assembly">
             <include name="META-INF/jbi.xml"/>
             <include name="${http-soap-bc-su}.jar"/>
             <include name="${javaee-se-su}.war"/>
         </zip>
-        
+
     </target>
 
-	<target name="install" depends="init-common">
-		<copy file="${env.S1AS_HOME}/jbi/sharedlibraries/wsdl/installer/wsdlsl.jar" todir="${servicemix-autodeploy-dir}"/>
-		<echo message="Installing SunWSDLSharedLibrary..."/>
-		<sleep seconds="10"/>
-		<copy file="${env.S1AS_HOME}/jbi/components/javaeeserviceengine/installer/appserv-jbise.jar" todir="${servicemix-autodeploy-dir}"/>
-		<echo message="Installing Java EE Service Engine..."/>
-		<sleep seconds="15"/>
-	</target>   
-	
-	<target name="uninstall" depends="init-common">
-		<delete file="${servicemix-autodeploy-dir}/appserv-jbise.jar"/>
-		<echo message="Uninstalling Java EE Service Engine..."/>
-		<sleep seconds="10"/>
-		<delete file="${servicemix-autodeploy-dir}/wsdlsl.jar"/>
-		<echo message="Uninstalling SunWSDLSharedLibrary..."/>
-		<sleep seconds="10"/>
-	</target>   
-      
-	<target name="deploy" depends="assemble">
-		<copy file="${basedir}/service_assembly/${jbi-component-su-assembly}.zip" todir="${servicemix-autodeploy-dir}"/>
-		<sleep seconds="15"/>
-	</target>   
+        <target name="install" depends="init-common">
+                <copy file="${env.S1AS_HOME}/jbi/sharedlibraries/wsdl/installer/wsdlsl.jar" todir="${servicemix-autodeploy-dir}"/>
+                <echo message="Installing SunWSDLSharedLibrary..."/>
+                <sleep seconds="10"/>
+                <copy file="${env.S1AS_HOME}/jbi/components/javaeeserviceengine/installer/appserv-jbise.jar" todir="${servicemix-autodeploy-dir}"/>
+                <echo message="Installing Java EE Service Engine..."/>
+                <sleep seconds="15"/>
+        </target>
 
-	<target name="undeploy">
-		<delete file="${servicemix-autodeploy-dir}/${jbi-component-su-assembly}.zip"/>
-		<sleep seconds="15"/>
-	</target>   
+        <target name="uninstall" depends="init-common">
+                <delete file="${servicemix-autodeploy-dir}/appserv-jbise.jar"/>
+                <echo message="Uninstalling Java EE Service Engine..."/>
+                <sleep seconds="10"/>
+                <delete file="${servicemix-autodeploy-dir}/wsdlsl.jar"/>
+                <echo message="Uninstalling SunWSDLSharedLibrary..."/>
+                <sleep seconds="10"/>
+        </target>
+
+        <target name="deploy" depends="assemble">
+                <copy file="${basedir}/service_assembly/${jbi-component-su-assembly}.zip" todir="${servicemix-autodeploy-dir}"/>
+                <sleep seconds="15"/>
+        </target>
+
+        <target name="undeploy">
+                <delete file="${servicemix-autodeploy-dir}/${jbi-component-su-assembly}.zip"/>
+                <sleep seconds="15"/>
+        </target>
 
     <target name="compile" depends="init-common">
         <antcall target="compile-common">
             <param name="src" value="endpoint"/>
         </antcall>
     </target>
-    
+
     <target name="assemble-web" depends="init-common, compile">
         <antcall target="pkg-war">
             <param name="war.classes" value="${build.classes.dir}"/>
             <param name="war.file" value="${assemble.dir}/${appname}-web.war"/>
         </antcall>
     </target>
-    
+
     <target name="assemble-client" depends="init-common">
         <antcall target="compile-client">
             <param name="test-wsdl-uri" value="provider/webservice/CalculatorService?WSDL"/>
             <param name="client-src" value="client"/>
         </antcall>
     </target>
-    
+
     <target name="runtest" depends="assemble-client">
         <echo message="Running SOAP Binding client"/>
         <antcall target="run-client">

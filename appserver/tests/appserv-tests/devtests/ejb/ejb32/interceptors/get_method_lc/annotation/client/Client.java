@@ -24,21 +24,21 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 public class Client {
 
- 	private static SimpleReporterAdapter stat = 
-  		new SimpleReporterAdapter("appserv-tests");
+         private static SimpleReporterAdapter stat =
+                  new SimpleReporterAdapter("appserv-tests");
 
-	private static String appName;
+        private static String appName;
 
     public static void main (String[] args) {
 
-	appName = args[0];
+        appName = args[0];
 
         stat.addDescription(appName);
         Client client = new Client(args);
-   	client.doTest();
+           client.doTest();
         stat.printSummary(appName + "ID");
-    }  
-    
+    }
+
     public Client (String[] args) {
     }
 

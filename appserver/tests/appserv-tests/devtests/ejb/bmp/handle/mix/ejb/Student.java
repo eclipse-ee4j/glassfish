@@ -22,9 +22,9 @@ import java.rmi.RemoteException;
 
 
 public interface Student extends EJBObject {
- 
+
   /**
-   * Returns the CourseIds that a student is enrolled in. 
+   * Returns the CourseIds that a student is enrolled in.
    * @param studentId primary key of the student object
    * @param courseId primary key of the course object
    * @exception RemoteException

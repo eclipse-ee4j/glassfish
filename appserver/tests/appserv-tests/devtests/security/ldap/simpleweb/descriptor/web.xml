@@ -21,12 +21,12 @@
 
 
 <web-app>
-  
+
   <servlet>
     <servlet-name>TestJSP</servlet-name>
     <jsp-file>/TestJSP.jsp</jsp-file>
   </servlet>
- 
+
   <servlet>
     <servlet-name>TestServlet</servlet-name>
     <servlet-class>com.sun.security.devtests.ldap.simple.TestServlet</servlet-class>
@@ -40,7 +40,7 @@
     <servlet-name>TestServlet</servlet-name>
     <url-pattern>/TestServlet</url-pattern>
   </servlet-mapping>
-  
+
   <session-config>
     <session-timeout>
             30

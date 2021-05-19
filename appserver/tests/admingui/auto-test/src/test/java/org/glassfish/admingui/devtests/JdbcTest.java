@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 /**
- * 
+ *
  * @author Jeremy Lv
  *
  */
@@ -32,7 +32,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
 
     public static final String ID_JDBC_TABLE = "propertyForm:poolTable";
     public static final String ID_RESOURCE_TABLE = "propertyForm:resourcesTable";
-    
+
     @Test
     public void testPoolPing() {
         gotoDasPage();
@@ -54,14 +54,14 @@ public class JdbcTest extends BaseSeleniumTestClass {
         setFieldValue("propertyForm:propertyContentPage:propertySheet:generalPropertySheet:jndiProp:name", poolName);
         Select select = new Select(driver.findElement(By.id("propertyForm:propertyContentPage:propertySheet:generalPropertySheet:resTypeProp:resType")));
         select.selectByVisibleText("javax.sql.DataSource");
-        
+
         Select select1 = new Select(driver.findElement(By.id("propertyForm:propertyContentPage:propertySheet:generalPropertySheet:dbProp:db")));
         select1.selectByVisibleText("Derby");
         clickAndWait("propertyForm:propertyContentPage:topButtons:nextButton");
 
         setFieldValue("form2:sheet:generalSheet:descProp:desc", description);
         clickAndWait("form2:propertyContentPage:topButtons:finishButton");
-        
+
         String prefix = getTableRowByValue(ID_JDBC_TABLE, poolName, "col1");
         assertEquals(poolName, getText(prefix + "col1:link"));
         assertEquals(description, getText(prefix + "col4:typeDesc"));
@@ -89,7 +89,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
         setFieldValue("form2:sheet:generalSheet:descProp:desc", description);
         setFieldValue("form2:sheet:generalSheet:dsProp:datasourceField", poolName + "DataSource");
         clickAndWait("form2:propertyContentPage:topButtons:finishButton");
-        
+
         String prefix = getTableRowByValue(ID_JDBC_TABLE, poolName, "col1");
         assertEquals(poolName, getText(prefix + "col1:link"));
         assertEquals(description, getText(prefix + "col4:typeDesc"));
@@ -107,7 +107,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
         ClusterTest clusterTest = new ClusterTest();
         standaloneTest.deleteAllStandaloneInstances();
         clusterTest.deleteAllCluster();
-       
+
         clickAndWait("treeForm:tree:resources:JDBC:jdbcResources:jdbcResources_link");
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:newButton");
 
@@ -131,14 +131,14 @@ public class JdbcTest extends BaseSeleniumTestClass {
 
         //test disable button
         testDisableBtn(clickId);
-        
+
         //test enable button
         testEnableBtn(clickId);
-        
+
         //disable the jdbc resource so that it can be delete successfully
         clickByIdAction(clickId);
         testDisableBtn(clickId);
-        
+
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", ID_RESOURCE_TABLE, jndiName);
     }
 
@@ -173,7 +173,7 @@ public class JdbcTest extends BaseSeleniumTestClass {
         String prefix = getTableRowByValue(ID_RESOURCE_TABLE, jndiName, "col1");
         assertEquals(jndiName, getText(prefix + "col1:link"));
         assertEquals(description, getText(prefix + "col4:typeDesc"));
-        
+
         String clickId = prefix + "col1:link";
         clickByIdAction(clickId);
         assertTableRowCount("propertyForm:basicTable", count);
@@ -185,8 +185,8 @@ public class JdbcTest extends BaseSeleniumTestClass {
         String selectId = prefix + "col0:select";
         clickByIdAction(selectId);
         clickAndWait("propertyForm:resourcesTable:topActionsGroup1:button3");
-        
-        
+
+
         //test enable button
         waitforBtnDisable("propertyForm:resourcesTable:topActionsGroup1:button2");
         clickByIdAction(selectId);
@@ -202,11 +202,11 @@ public class JdbcTest extends BaseSeleniumTestClass {
         select1.selectByVisibleText("server");
         clickByIdAction("form:targetSection:targetSectionId:addRemoveProp:commonAddRemove:commonAddRemove_removeButton");
         clickByIdAction("form:propertyContentPage:topButtons:saveButton");
-        
+
         //delete jdbc resource
         clickAndWait("treeForm:tree:resources:JDBC:jdbcResources:jdbcResources_link");
         deleteRow("propertyForm:resourcesTable:topActionsGroup1:button1", "propertyForm:resourcesTable", jndiName);
-        
+
         //Delete the instance
         clickAndWait("treeForm:tree:standaloneTreeNode:standaloneTreeNode_link");
         deleteRow("propertyForm:instancesTable:topActionsGroup1:button1", "propertyForm:instancesTable", instanceName);
@@ -264,8 +264,8 @@ public class JdbcTest extends BaseSeleniumTestClass {
             assertFalse(isTextPresent(prefix, target, "propertyForm:clustersTable"));
         }
     }
-    
-    
+
+
 
     private void testDisableBtn(String clickId) {
         isElementPresent("propertyForm:propertyContentPage:topButtons:saveButton");

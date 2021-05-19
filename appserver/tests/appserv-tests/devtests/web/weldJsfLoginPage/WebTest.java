@@ -45,7 +45,7 @@ public class WebTest {
         keyStorePath = args[4];
         trustStorePath = args[5];
     }
-    
+
     public static void main(String[] args) {
         stat.addDescription("Unit test for IT 11504");
         WebTest webTest = new WebTest(args);
@@ -70,7 +70,7 @@ public class WebTest {
         URLConnection conn = url.openConnection();
         String redirectLocation = conn.getHeaderField("Location");
         System.out.println("Location: " + redirectLocation);
-        
+
         String expectedRedirectLocation = "https://" + host + ":" + httpsPort +
                 contextRoot + "/protected.txt";
         if (!expectedRedirectLocation.equals(redirectLocation)) {
@@ -112,7 +112,7 @@ public class WebTest {
             String trustStorePath) throws Exception {
         SSLContext ctx = SSLContext.getInstance("TLS");
 
-        // Keystore 
+        // Keystore
         KeyStore ks = KeyStore.getInstance("JKS");
         char[] passphrase = "changeit".toCharArray();
         ks.load(new FileInputStream(keyStorePath), passphrase);
@@ -128,7 +128,7 @@ public class WebTest {
         tmf.init(trustStore);
 
         ctx.init(kmf.getKeyManagers(),tmf.getTrustManagers(), null);
- 
+
         return ctx.getSocketFactory();
     }
 

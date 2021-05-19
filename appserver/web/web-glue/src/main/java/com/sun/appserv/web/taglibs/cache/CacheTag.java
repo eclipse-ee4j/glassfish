@@ -36,11 +36,11 @@ import org.glassfish.web.LogFacade;
  * or not.
  *
  * Usage Example:
- * <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %> 
+ * <%@ taglib prefix="ias" uri="Sun ONE Application Server Tags" %>
  * <ias:cache key="<%= cacheKey %>" usecached="<%= useCached %>"
- *            refresh="<%= reload %>" timeout="3600"> 
+ *            refresh="<%= reload %>" timeout="3600">
  *   ... expensive operation ...
- * </ias:cache> 
+ * </ias:cache>
  */
 public class CacheTag extends BodyTagSupport
 {
@@ -160,7 +160,7 @@ public class CacheTag extends BodyTagSupport
                     } catch (java.io.IOException ex) {
                         throw new JspException(ex);
                     }
-                         
+
                     // since cached response is already written, skip
                     // evaluation of the tag body. This also means that
                     // doAfterBody wont get called

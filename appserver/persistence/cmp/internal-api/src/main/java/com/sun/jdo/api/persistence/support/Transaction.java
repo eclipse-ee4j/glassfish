@@ -19,7 +19,7 @@
  *
  * Created on February 25, 2000
  */
- 
+
 package com.sun.jdo.api.persistence.support;
 import jakarta.transaction.*;
 
@@ -47,11 +47,11 @@ public interface Transaction
    * is assigned to this Transaction
    */
     void begin();
-    
+
     /** Commit the current transaction.
      */
     void commit();
-    
+
     /** Roll back the current transaction.
      */
     void rollback();
@@ -60,51 +60,51 @@ public interface Transaction
      * @return boolean
      */
     boolean isActive();
-    
+
     /** If true, at commit instances retain their values and the instances
      * transition to persistent-nontransactional.
      * <P>Setting this flag also sets the NontransactionalRead flag.
      * @param retainValues the value of the retainValues property
      */
     void setRetainValues(boolean retainValues);
-    
+
     /** If true, at commit time instances retain their field values.
      * @return the value of the retainValues property
      */
     boolean getRetainValues();
-    
+
     /** If true, at rollback instances restore their values and the instances
      * transition to persistent-nontransactional.
      * @param restoreValues the value of the restoreValues property
      */
     void setRestoreValues(boolean restoreValues);
-    
+
     /** If true, at rollback time instances restore their field values.
      * @return the value of the restoreValues property
      */
     boolean getRestoreValues();
-    
+
     /** Optimistic transactions do not hold data store locks until commit time.
      * @param optimistic the value of the Optimistic flag.
      */
     void setOptimistic(boolean optimistic);
-    
+
     /** Optimistic transactions do not hold data store locks until commit time.
      * @return the value of the Optimistic property.
      */
     boolean getOptimistic();
 
-    /** If this flag is set to true, then queries and navigation are allowed 
+    /** If this flag is set to true, then queries and navigation are allowed
      * without an active transaction
-     * @param flag	 the value of the nontransactionalRead property.
+     * @param flag     the value of the nontransactionalRead property.
      */
     void setNontransactionalRead (boolean flag);
-    
-    /** If this flag is set to true, then queries and navigation are allowed 
+
+    /** If this flag is set to true, then queries and navigation are allowed
      * without an active transaction
      * @return the value of the nontransactionalRead property.
      */
-    boolean getNontransactionalRead (); 
+    boolean getNontransactionalRead ();
 
     /** The user can specify a Synchronization instance to be notified on
      * transaction completions.  The beforeCompletion method is called prior
@@ -115,8 +115,8 @@ public interface Transaction
      * @param sync the Synchronization instance to be notified; null for none
      */
     void setSynchronization(Synchronization sync);
-    
-    /** The user-specified Synchronization instance for this Transaction instance.    
+
+    /** The user-specified Synchronization instance for this Transaction instance.
      * @return the user-specified Synchronization instance.
      */
     Synchronization getSynchronization();
@@ -134,14 +134,14 @@ public interface Transaction
     * @return      timout value in seconds; zero means unlimited
     */
    int getQueryTimeout ();
-   
+
    /**
     * Sets the number of seconds to wait for an update statement
     * to execute in the datastore associated with this  Transaction instance
     * @param timeout          new timout value in seconds; zero means unlimited
     */
    void setUpdateTimeout (int timeout);
-   
+
    /**
     * Gets the number of seconds to wait for an update statement
     * to execute in the datastore associated with this  Transaction instance

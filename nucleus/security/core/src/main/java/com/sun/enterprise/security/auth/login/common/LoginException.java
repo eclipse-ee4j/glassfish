@@ -20,7 +20,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 /**
  * LoginException is thrown by the LoginContext class whenever
  * the following happens: <UL>
- * <LI> If the client is unable to authenticate successfully with the 
+ * <LI> If the client is unable to authenticate successfully with the
  * </UL>
  * @see com.sun.enterprise.security.auth.AuthenticationStatus
  * @author Harish Prabandham
@@ -29,7 +29,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 public class LoginException extends SecurityException {
 
-    private static LocalStringManagerImpl localStrings = 
+    private static LocalStringManagerImpl localStrings =
         new LocalStringManagerImpl(LoginException.class);
 
     private boolean status = false;
@@ -40,29 +40,29 @@ public class LoginException extends SecurityException {
      * @param The message indicating why authentication failed.
      */
     public LoginException(String message) {
-	super(message);
+        super(message);
     }
 
-    
+
     /**
      * Create a new LoginException object with the given authentication
      * value.
      * @param The AuthenticationStatus object
      */
     public LoginException(boolean as){
-	super(localStrings.getLocalString("enterprise.security.login_failed", 
-					   "Login Failed."));
-	status = as;
+        super(localStrings.getLocalString("enterprise.security.login_failed",
+                                           "Login Failed."));
+        status = as;
     }
 
-    
+
     /**
      * Returns the status of the Authentication.
      */
     public boolean getStatus(){
-	return status;
+        return status;
     }
-    
+
 }
 
 

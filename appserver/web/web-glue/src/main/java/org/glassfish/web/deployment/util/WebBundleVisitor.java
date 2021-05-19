@@ -23,7 +23,7 @@ import com.sun.enterprise.deployment.util.ComponentVisitor;
  * This interface defines the visitor APIs for the web application descriptor
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public interface WebBundleVisitor extends ComponentVisitor {
 

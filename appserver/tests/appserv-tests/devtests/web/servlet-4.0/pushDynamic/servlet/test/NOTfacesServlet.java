@@ -56,7 +56,7 @@ public class NOTfacesServlet extends HttpServlet {
                             req.getServletContext().log("Should have ln parameter.  Does not.");
                             res.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
                             return;
-                            
+
                     }
             }
             res.getWriter().println("foo: bar");

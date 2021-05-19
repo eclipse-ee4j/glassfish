@@ -27,7 +27,7 @@ import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 
 public class RosterClient {
-    
+
     private static SimpleReporterAdapter status =
         new SimpleReporterAdapter("appserv-tests");
 
@@ -37,8 +37,8 @@ public class RosterClient {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleRoster");
 
-            RosterHome home = 
-                (RosterHome)PortableRemoteObject.narrow(objref, 
+            RosterHome home =
+                (RosterHome)PortableRemoteObject.narrow(objref,
                                                         RosterHome.class);
 
             Roster myRoster = home.create();
@@ -112,7 +112,7 @@ public class RosterClient {
             playerList = myRoster.getPlayersByPosition("defender");
             playerList = myRoster.getAllPlayers();
             playerList = myRoster.getPlayersNotOnTeam();
-            playerList = myRoster.getPlayersByPositionAndName("power forward", 
+            playerList = myRoster.getPlayersByPositionAndName("power forward",
                                                               "Jack Patterson");
             playerList = myRoster.getPlayersByCity("Truckee");
             playerList = myRoster.getPlayersBySport("Soccer");
@@ -159,7 +159,7 @@ public class RosterClient {
 
             myRoster.createTeamInLeague(new TeamDetails(
                 "T2", "Gophers", "Manteca"), "L1");
-           
+
             myRoster.createTeamInLeague(new TeamDetails(
                 "T3", "Deer", "Bodie"), "L2");
 
@@ -277,7 +277,7 @@ public class RosterClient {
             // Players, no team
             myRoster.createPlayer(new PlayerDetails(
                 "P26", "Hobie Jackson", "pitcher", 582.00));
-          
+
             myRoster.createPlayer(new PlayerDetails(
                 "P27", "Melinda Kendall", "catcher", 677.00));
 

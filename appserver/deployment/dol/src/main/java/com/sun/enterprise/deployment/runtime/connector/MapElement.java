@@ -15,9 +15,9 @@
  */
 
 /**
-*	This generated bean class MapElement matches the DTD element map-element
+*    This generated bean class MapElement matches the DTD element map-element
 *
-*	Generated on Mon May 13 13:36:49 PDT 2002
+*    Generated on Mon May 13 13:36:49 PDT 2002
 */
 
 package com.sun.enterprise.deployment.runtime.connector;
@@ -25,96 +25,94 @@ package com.sun.enterprise.deployment.runtime.connector;
 import com.sun.enterprise.deployment.runtime.RuntimeDescriptor;
 
 /**
-* This class was based on the schema2beans generated one modified
-* to remove its dependencies on schema2beans libraries.
+ * This class was based on the schema2beans generated one modified
+ * to remove its dependencies on schema2beans libraries.
+ *
+ * @author Jerome Dochez
+ * @version
+ */
+public class MapElement extends RuntimeDescriptor {
 
-* @author  Jerome Dochez
-* @version 
-*/
+    static public final String PRINCIPAL = "Principal"; // NOI18N
+    static public final String BACKEND_PRINCIPAL = "BackendPrincipal"; // NOI18N
 
-public class MapElement extends RuntimeDescriptor
-{
-    
-    static public final String PRINCIPAL = "Principal";	// NOI18N
-    static public final String BACKEND_PRINCIPAL = "BackendPrincipal";	// NOI18N
-    
     Principal backendPrincipal = null;
-    
+
     // copy constructor
-    public MapElement(MapElement other)
-    {
-	super(other);
+    public MapElement(MapElement other) {
+        super(other);
     }
+
 
     // constructor
-    public MapElement()
-    {
-	super();
+    public MapElement() {
+        super();
     }
 
+
     // This attribute is an array containing at least one element
-    public void setPrincipal(int index, Principal value)
-    {
-	this.setValue(PRINCIPAL, index, value);
+    public void setPrincipal(int index, Principal value) {
+        this.setValue(PRINCIPAL, index, value);
     }
-    
+
+
     //
-    public Principal getPrincipal(int index)
-    {
-	return (Principal)this.getValue(PRINCIPAL, index);
+    public Principal getPrincipal(int index) {
+        return (Principal) this.getValue(PRINCIPAL, index);
     }
-    
+
+
     // This attribute is an array containing at least one element
-    public void setPrincipal(Principal[] value)
-    {
-	this.setValue(PRINCIPAL, value);
+    public void setPrincipal(Principal[] value) {
+        this.setValue(PRINCIPAL, value);
     }
-    
+
+
     //
-    public Principal[] getPrincipal()
-    {
-	return (Principal[])this.getValues(PRINCIPAL);
+    public Principal[] getPrincipal() {
+        return (Principal[]) this.getValues(PRINCIPAL);
     }
-    
+
+
     // Return the number of properties
-    public int sizePrincipal()
-    {
-	return this.size(PRINCIPAL);
+    public int sizePrincipal() {
+        return this.size(PRINCIPAL);
     }
-    
+
+
     // Add a new element returning its index in the list
-    public int addPrincipal(Principal value)
-    {
-	return this.addValue(PRINCIPAL, value);
+    public int addPrincipal(Principal value) {
+        return this.addValue(PRINCIPAL, value);
     }
-    
+
+
     //
     // Remove an element using its reference
     // Returns the index the element had in the list
     //
-    public int removePrincipal(Principal value)
-    {
-	return this.removeValue(PRINCIPAL, value);
+    public int removePrincipal(Principal value) {
+        return this.removeValue(PRINCIPAL, value);
     }
-    
+
+
     // This attribute is mandatory
-    public void setBackendPrincipal(boolean value)
-    {
-	this.setValue(BACKEND_PRINCIPAL, Boolean.valueOf(value));
+    public void setBackendPrincipal(boolean value) {
+        this.setValue(BACKEND_PRINCIPAL, Boolean.valueOf(value));
     }
-    
+
+
     //
-    public boolean isBackendPrincipal()
-    {
-	Boolean ret = (Boolean)this.getValue(BACKEND_PRINCIPAL);
-	if (ret == null)
-	    return false;
-	return ret.booleanValue();
+    public boolean isBackendPrincipal() {
+        Boolean ret = (Boolean) this.getValue(BACKEND_PRINCIPAL);
+        if (ret == null) {
+            return false;
+        }
+        return ret.booleanValue();
     }
-    
+
+
     // This method verifies that the mandatory properties are set
-    public boolean verify()
-    {
-	return true;
+    public boolean verify() {
+        return true;
     }
 }

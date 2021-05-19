@@ -56,9 +56,9 @@ import org.glassfish.config.support.TargetType;
 
 /**
  * List File Users Command
- * Usage: list-file-users [--terse=false] [--echo=false] [--interactive=true] 
- * [--host localhost] [--port 4848|4849] [--secure | -s] [--user admin_user] 
- * [--passwordfile file_name] [--authrealmname authrealm_name] 
+ * Usage: list-file-users [--terse=false] [--echo=false] [--interactive=true]
+ * [--host localhost] [--port 4848|4849] [--secure | -s] [--user admin_user]
+ * [--passwordfile file_name] [--authrealmname authrealm_name]
  * [target(Default server)]
  * @author Nandini Ektare
  */
@@ -72,21 +72,21 @@ import org.glassfish.config.support.TargetType;
     CommandTarget.CLUSTERED_INSTANCE,CommandTarget.CONFIG})
 @RestEndpoints({
     @RestEndpoint(configBean=AuthRealm.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-users", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-users",
         description="List Users",
         params={
             @RestParam(name="authrealmname", value="$parent")
         })
 })
 public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preauthorization {
-    
-    final private static LocalStringManagerImpl localStrings = 
-        new LocalStringManagerImpl(ListFileUser.class);    
+
+    final private static LocalStringManagerImpl localStrings =
+        new LocalStringManagerImpl(ListFileUser.class);
 
     @Param(name="authrealmname", optional=true)
     private String authRealmName;
-    
+
     @Param(name = "target", primary=true, optional = true, defaultValue =
     SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
@@ -102,7 +102,7 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
 
     @AccessRequired.To("read")
     private AuthRealm fileAuthRealm;
-    
+
     private SecurityService securityService;
 
     @Override
@@ -119,7 +119,7 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
                 "list.file.user.filerealmnotfound",
                 "File realm {0} does not exist", authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return false;                                            
+            return false;
         }
         /*
          * The realm might have been defaulted, so capture the actual name.
@@ -128,7 +128,7 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
         return true;
     }
 
-    
+
     /**
      * Executes the command with the command parameters passed as Properties
      * where the keys are the paramter names and the values the parameter values
@@ -136,23 +136,23 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
      * @param context information
      */
     public void execute(AdminCommandContext context) {
-        
+
         final ActionReport report = context.getActionReport();
 
         // Get FileRealm class name, match it with what is expected.
         String fileRealmClassName = fileAuthRealm.getClassname();
-        
+
         // Report error if provided impl is not the one expected
-        if (fileRealmClassName != null && 
+        if (fileRealmClassName != null &&
             !fileRealmClassName.equals(
                 "com.sun.enterprise.security.auth.realm.file.FileRealm")) {
             report.setMessage(
                 localStrings.getLocalString(
                     "list.file.user.realmnotsupported",
-                    "Configured file realm {0} is not supported.", 
+                    "Configured file realm {0} is not supported.",
                     fileRealmClassName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                
+            return;
         }
 
         // ensure we have the file associated with the authrealm
@@ -164,10 +164,10 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
         if (keyFile == null) {
             report.setMessage(
                 localStrings.getLocalString("list.file.user.keyfilenotfound",
-                "There is no physical file associated with this file realm {0} ", 
+                "There is no physical file associated with this file realm {0} ",
                 authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            return;                                            
+            return;
         }
 
         boolean exists = (new File(keyFile)).exists();
@@ -179,7 +179,7 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return;
         }
-        // We have the right impl so let's try to remove one 
+        // We have the right impl so let's try to remove one
         FileRealm fr = null;
         try {
             realmsManager.createRealms(config);
@@ -204,7 +204,7 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
         try {
             Enumeration users = fr.getUserNames();
             List userList = new ArrayList();
-            
+
             while (users.hasMoreElements()) {
                 final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                 String userName = (String) users.nextElement();
@@ -230,6 +230,6 @@ public class ListFileUser implements AdminCommand, AdminCommandSecurity.Preautho
                 "  " + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
-        }        
+        }
     }
 }

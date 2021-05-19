@@ -29,10 +29,10 @@ public interface ImpersonationService {
     /**
      * Impersonate a user, specifying the user and group principal names that
      * should be established in the resulting Subject.
-     * 
+     *
      * Note that, that this method always behaves as if <bold>virtual</bold> were true in the case
      * that the underlying user store provider does not support user lookup.
-     * 
+     *
      * @param user The username.
      * @param groups An array of group names.  If <bold>virtual</bold> is true, group principals will be created
      * using this array.  If <bold>virtual</bold> is false and groups is non-null, it will be used to filter the
@@ -42,9 +42,9 @@ public interface ImpersonationService {
      * @param virtual  If true, simply create a subject with the given user and group names.  If false, configured
      * UserStoreProvider will be queried for the given username and a Subject created only if the user exists.  Groups
      * will be populated with the intersection of the groups parameter and the groups returned by the UserStoreProvider.
-     * 
+     *
      * @return A Subject representing the impersonated user.
-     * 
+     *
      * @throws LoginException
      */
     public Subject impersonate(String user, String[] groups, Subject subject, boolean virtual)

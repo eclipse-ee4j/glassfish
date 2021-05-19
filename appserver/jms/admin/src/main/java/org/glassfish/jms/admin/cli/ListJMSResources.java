@@ -53,8 +53,8 @@ import org.jvnet.hk2.annotations.Service;
 @TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.DOMAIN,CommandTarget.CLUSTERED_INSTANCE})
 @RestEndpoints({
     @RestEndpoint(configBean=Resources.class,
-        opType=RestEndpoint.OpType.GET, 
-        path="list-jms-resources", 
+        opType=RestEndpoint.OpType.GET,
+        path="list-jms-resources",
         description="list-jms-resources")
 })
 public class ListJMSResources implements AdminCommand {
@@ -93,7 +93,7 @@ public class ListJMSResources implements AdminCommand {
         Properties extraProperties = new Properties();
 
         Collection adminObjectResourceList = domain.getResources().getResources(AdminObjectResource.class);
-        Collection connectorResourcesList = domain.getResources().getResources(ConnectorResource.class);       
+        Collection connectorResourcesList = domain.getResources().getResources(ConnectorResource.class);
 
         Object [] connectorResources = connectorResourcesList.toArray();
         Object [] adminObjectResources = adminObjectResourceList.toArray();
@@ -158,11 +158,11 @@ public class ListJMSResources implements AdminCommand {
             }
       }
         if (!list.isEmpty()) {
-            List<Map<String,String>> resourceList = 
+            List<Map<String,String>> resourceList =
                 CommandTarget.DOMAIN.isValid(habitat, target) ? list : filterListForTarget(list);
 
             List<DefaultResourceProxy> drps = habitat.getAllServices(DefaultResourceProxy.class);
-            
+
             for (Map<String,String> m : resourceList) {
                 String jndiName = m.get("name");
                 final ActionReport.MessagePart part = report.getTopMessagePart().addChild();
@@ -170,7 +170,7 @@ public class ListJMSResources implements AdminCommand {
                 String logicalName = DefaultResourceProxy.Util.getLogicalName(drps, jndiName);
                 if (logicalName != null) {
                     m.put("logical-jndi-name", logicalName);
-                } 
+                }
             }
             extraProperties.put("jmsResources", resourceList);
         }
@@ -193,7 +193,7 @@ public class ListJMSResources implements AdminCommand {
             }
             if (resourceRefs != null && !resourceRefs.isEmpty()) {
                 for (Map<String,String> m : list) {
-                    String jndiName = m.get("name"); 
+                    String jndiName = m.get("name");
                     for (ResourceRef resource : resourceRefs) {
                         if (jndiName.equals(resource.getRef())) {
                             resourceList.add(m);

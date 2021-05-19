@@ -22,5 +22,5 @@ import jakarta.jws.WebService;
 targetNamespace="http://endpoint/ejb")
 public interface Hello {
 
-	public String sayHello(String who);
+        public String sayHello(String who);
 }

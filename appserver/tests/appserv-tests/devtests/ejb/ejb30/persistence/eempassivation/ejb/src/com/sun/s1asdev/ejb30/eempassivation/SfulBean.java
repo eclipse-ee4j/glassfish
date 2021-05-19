@@ -50,7 +50,7 @@ public class SfulBean implements Sful {
             String lookupName = "java:comp/env/ejb/SfulBean";
             InitialContext initCtx = new InitialContext();
             delegate = (SfulDelegate) initCtx.lookup(lookupName);
-            
+
             System.out.println("**EEM Delegate: " + extendedEM.getDelegate().getClass().getName());
         } catch (Exception ex) {
             throw new EJBException(ex);

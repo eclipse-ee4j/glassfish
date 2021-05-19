@@ -24,14 +24,14 @@ import com.sun.enterprise.deployment.WebServiceEndpoint;
  * This interface is the contract for the service WebServiceEjbEndpointRegistry
  * which will lie in the webservices module
  * The StatelessSessionContainer will use this to lookup for the service to
- * register the endpoint 
+ * register the endpoint
  * @author Bhakti Mehta
  */
 
 @Contract
 public interface WSEjbEndpointRegistry {
 
-    
+
     /**
      * This method will register an endpoint the EjbEndpointRegistry
      */

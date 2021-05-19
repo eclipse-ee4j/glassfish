@@ -45,7 +45,7 @@ public class AsadminTrustManager implements X509TrustManager {
 
     /**
      * Creates an instance of the AsadminTrustManager
-     * 
+     *
      * @param alias The toString() of the alias object concatenated with a date/time stamp is used as the alias of the
      * trusted server certificate in the client side trust store. When null, only a date / timestamp is used as an alias.
      */
@@ -74,7 +74,7 @@ public class AsadminTrustManager implements X509TrustManager {
 
     /**
      * Checks if client is trusted given the certificate chain and authorization type string, e.g., "RSA".
-     * 
+     *
      * @throws {@link CertificateException}
      * @throws {@link UnsupportedOperationException}
      */
@@ -85,7 +85,7 @@ public class AsadminTrustManager implements X509TrustManager {
 
     /**
      * Checs if the server is trusted.
-     * 
+     *
      * @param chain The server certificate to be validated.
      * @param authType
      * @throws CertificateException
@@ -125,7 +125,7 @@ public class AsadminTrustManager implements X509TrustManager {
 
     /**
      * Displays the certificate and prompts the user whether or not it is trusted.
-     * 
+     *
      * @param c
      * @throws IOException
      * @return true if the user trusts the certificate
@@ -143,7 +143,7 @@ public class AsadminTrustManager implements X509TrustManager {
 
     private String getAliasName() {
         String aliasName = _alias != null ? _alias.toString() : "";
-        // We append a timestamp to the alias to ensure that it is unqiue.    
+        // We append a timestamp to the alias to ensure that it is unqiue.
         DateFormat f = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG);
         aliasName += ":" + f.format(new Date());
         return aliasName;
@@ -151,7 +151,7 @@ public class AsadminTrustManager implements X509TrustManager {
 
     /**
      * This function validates the cert and ensures that it is trusted.
-     * 
+     *
      * @param chain
      * @throws RuntimeException
      * @throws CertificateException

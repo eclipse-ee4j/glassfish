@@ -50,7 +50,7 @@
     <target name="assemble" depends="compile">
        <jar destfile="${ejb.jar}">
             <metainf file="descriptor/sun-ejb-jar.xml"/>
-            <fileset dir="${build}" excludes="**/Servlet.class, **/TestClient.class"/>   
+            <fileset dir="${build}" excludes="**/Servlet.class, **/TestClient.class"/>
         </jar>
 
         <war destfile="${web.war}" webxml="descriptor/web.xml">
@@ -129,19 +129,19 @@
     <target name="deploy.jms.queues" depends="prepare">
         <antcall target="common.create.jms.connection">
             <param name="jms.factory.type" value="jakarta.jms.QueueConnectionFactory"/>
-            <param name="jms.factory.name" value="jms/ejb_ejb30_hello_mdb_QCF"/>           
+            <param name="jms.factory.name" value="jms/ejb_ejb30_hello_mdb_QCF"/>
         </antcall>
         <antcall target="common.create.jms.resource">
             <param name="dest.type" value="queue"/>
             <param name="dest.name" value="ejb_ejb30_hello_mdb_InQueue"/>
             <param name="res.type" value="jakarta.jms.Queue"/>
-            <param name="jms.resource.name" value="jms/ejb_ejb30_hello_mdb_InQueue"/>  
+            <param name="jms.resource.name" value="jms/ejb_ejb30_hello_mdb_InQueue"/>
         </antcall>
         <antcall target="common.create.jms.resource">
             <param name="dest.type" value="queue"/>
             <param name="dest.name" value="ejb_ejb30_hello_mdb_OutQueue"/>
             <param name="res.type" value="jakarta.jms.Queue"/>
-            <param name="jms.resource.name" value="jms/ejb_ejb30_hello_mdb_OutQueue"/>     
+            <param name="jms.resource.name" value="jms/ejb_ejb30_hello_mdb_OutQueue"/>
         </antcall>
     </target>
 

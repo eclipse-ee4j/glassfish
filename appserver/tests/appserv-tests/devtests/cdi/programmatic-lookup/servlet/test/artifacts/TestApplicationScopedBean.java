@@ -23,7 +23,7 @@ import jakarta.inject.Inject;
 public class TestApplicationScopedBean {
     @Inject
     TestSessionScopedBean tsb;
-    
+
     public TestSessionScopedBean getSessionScopedBean(){
         return tsb;
     }

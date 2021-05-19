@@ -32,16 +32,16 @@ import org.jvnet.hk2.config.provider.internal.ConfigThreadContext;
 
 /**
  * Simple helper for managing work sent to a foreign executor service.
- * 
+ *
  * <p/>
  * Has similarities to Fork and Join.
- * 
+ *
  * <p/>
  * The implementation is designed such that Tasks-1 are sent to the executor
  * service for possibly another thread to handle.  The last task is executed
  * by the caller thread so that all threads are attempted to be fully utilized
  * for processing including the caller's thread.
- * 
+ *
  * @author Jeff Trent
  */
 public class WorkManager implements Executor {
@@ -51,22 +51,22 @@ public class WorkManager implements Executor {
   private volatile int count;
   private final AtomicInteger workInProgressCount;
   private volatile ArrayList<Exception> errors;
-  
+
   public WorkManager(Executor exec) {
     this.exec = exec;
     this.workInProgressCount = new AtomicInteger();
   }
-  
+
   public WorkManager(Executor exec, int tasksToDo) {
     this.exec = exec;
     this.workInProgressCount = new AtomicInteger();
     this.tasksToDo = tasksToDo;
   }
-  
+
   public int getWorkInProgressCount() {
     return workInProgressCount.get();
   }
-  
+
   public void awaitCompletion() {
     //synchronized (workInProgressCount) {
       if (workInProgressCount.get() > 0) {
@@ -93,14 +93,14 @@ public class WorkManager implements Executor {
           throw new TimeoutException();
         }
       }
-      
+
       awaitCompletionResults();
     //}
   }
-  
+
   private void awaitCompletionResults() {
     assert(0 == workInProgressCount.get());
-    
+
     if (null != errors && !errors.isEmpty()) {
       ArrayList<Exception> errors = new ArrayList<Exception>(this.errors);
       this.errors.clear();
@@ -108,7 +108,7 @@ public class WorkManager implements Executor {
           ? (ConfigurationException)errors.get(0) : new ExecutionException(errors);
     }
   }
-  
+
   protected void completed(Watcher<?> watcher, Exception e) {
 //    System.out.print(watcher.toString() + " mark completed on thread " + Thread.currentThread() + "...");
     assert(null != watcher);
@@ -124,11 +124,11 @@ public class WorkManager implements Executor {
       if (val <= 0) {
         workInProgressCount.notifyAll();
       }
-      
+
 //      System.out.println("done: " + val);
     //}
   }
-  
+
   @SuppressWarnings("unchecked")
   public <V> Collection<Future<V>> submitAll(Collection<Callable<V>> tasks) {
     workInProgressCount.addAndGet(tasks.size());
@@ -139,26 +139,26 @@ public class WorkManager implements Executor {
 
       Watcher watcherTask = new Watcher(task);
       futures.add(watcherTask);
-      
+
       if (++count == tasksToDo) {
         watcherTask.runNow();
       } else {
         exec.execute(watcherTask);
       }
     }
-    
+
     return futures;
   }
 
   @SuppressWarnings("unchecked")
   public void executeAll(Collection<Runnable> tasks) {
     workInProgressCount.addAndGet(tasks.size());
-    
+
     for (Runnable task : tasks) {
       assert(null != task);
 
       Watcher watcherTask = new Watcher(task, null);
-      
+
       if (++count == tasksToDo) {
         watcherTask.runNow();
       } else {
@@ -166,25 +166,25 @@ public class WorkManager implements Executor {
       }
     }
   }
-  
+
   @SuppressWarnings({ "unused", "unchecked" })
   public <V> Future<V> submit(Callable<V> task) {
     assert(null != task);
     workInProgressCount.incrementAndGet();
 
     //    System.out.print("adding more: " + task + "; count=" + work);
-    
+
     Watcher watcherTask = new Watcher(task);
-    
+
     if (++count == tasksToDo) {
       watcherTask.runNow();
     } else {
       exec.execute(watcherTask);
     }
-    
+
     return watcherTask;
   }
-  
+
   @SuppressWarnings("unchecked")
   @Override
   public void execute(Runnable task) {
@@ -192,14 +192,14 @@ public class WorkManager implements Executor {
     workInProgressCount.incrementAndGet();
 
     Watcher watcherTask = new Watcher(task, null);
-    
+
     if (++count == tasksToDo) {
       watcherTask.runNow();
     } else {
       exec.execute(watcherTask);
     }
   }
-  
+
 
   private final class Watcher<V> extends FutureTask<V> {
     public Watcher(Callable<V> task) {
@@ -220,7 +220,7 @@ public class WorkManager implements Executor {
       };
       ConfigThreadContext.captureACCandRun(runnable);
     }
-    
+
     private void runNow() {
       try {
         super.run();
@@ -232,7 +232,7 @@ public class WorkManager implements Executor {
     }
   }
 
-  
+
   @SuppressWarnings("serial")
   public static final class ExecutionException extends ConfigurationException {
     private List<? extends Throwable> cause;
@@ -241,7 +241,7 @@ public class WorkManager implements Executor {
       super(t.getMessage(), t);
       this.cause = Collections.singletonList(t);
     }
-    
+
     public ExecutionException(ExecutionException e) {
       super(e.getMessage(), e.getCause());
       this.cause = Collections.singletonList(e);
@@ -260,7 +260,7 @@ public class WorkManager implements Executor {
       }
       return null;
     }
-    
+
   }
 
 }

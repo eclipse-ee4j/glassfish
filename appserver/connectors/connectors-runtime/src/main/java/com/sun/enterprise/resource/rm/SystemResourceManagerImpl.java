@@ -31,7 +31,7 @@ import com.sun.enterprise.resource.*;
  * SystemResourceManagerImpl manages the resource requests from system
  *
  * @author Binod PG
- */ 
+ */
 public class SystemResourceManagerImpl implements ResourceManager {
 
 
@@ -60,77 +60,77 @@ public class SystemResourceManagerImpl implements ResourceManager {
     /**
      * Return null for System Resource.
      */
-    public Object getComponent() {        
+    public Object getComponent() {
         return null;
     }
-    
+
     /**
      * Register the <code>ResourceHandle</code> in the transaction
      *
-     * @param handle	<code>ResourceHandle</code> object
-     * @exception <code>PoolingException</code> If there is any error while 
+     * @param handle    <code>ResourceHandle</code> object
+     * @exception <code>PoolingException</code> If there is any error while
      *        enlisting.
-     */    
+     */
     public void enlistResource(ResourceHandle handle) throws PoolingException{
         try {
             JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
             Transaction tran = tm.getTransaction();
-	    if (tran != null) {
+        if (tran != null) {
                 tm.enlistResource(tran, handle);
             }
-	} catch (Exception ex) {
+    } catch (Exception ex) {
             _logger.log(Level.SEVERE,"poolmgr.unexpected_exception",ex);
             throw new PoolingException(ex.toString(), ex);
-        }           
-    }                
+        }
+    }
 
     /**
      * Dont do any thing for System Resource.
      */
-    public void registerResource(ResourceHandle handle) 
+    public void registerResource(ResourceHandle handle)
          throws PoolingException {
     }
-    
+
     public void rollBackTransaction() {
         try {
             JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
             Transaction tran = tm.getTransaction();
-	    if ( tran != null ) {
+        if ( tran != null ) {
                 tran.setRollbackOnly();
-	    }
+        }
         } catch (SystemException ex) {
             _logger.log(Level.WARNING,"poolmgr.system_exception",ex);
         } catch (IllegalStateException ex) {
             // ignore
-        }    
+        }
     }
-   
+
     /**
      * delist the <code>ResourceHandle</code> from the transaction
      *
-     * @param h	<code>ResourceHandle</code> object
+     * @param h    <code>ResourceHandle</code> object
      * @param xaresFlag flag indicating transaction success. This can
-     *        be XAResource.TMSUCCESS or XAResource.TMFAIL     
+     *        be XAResource.TMSUCCESS or XAResource.TMFAIL
      * @exception <code>PoolingException</code>
-     */       
+     */
     public void delistResource(ResourceHandle h, int xaresFlag) {
         try {
         JavaEETransactionManager tm = ConnectorRuntime.getRuntime().getTransactionManager();
             Transaction tran = tm.getTransaction();
-	    if (tran != null) {
+        if (tran != null) {
                 tm.delistResource(tran, h, xaresFlag);
-            }		
+            }
         } catch (SystemException ex) {
             _logger.log(Level.WARNING,"poolmgr.system_exception",ex);
         } catch (IllegalStateException ex) {
             // ignore
-        }            
-    }   
-    
+        }
+    }
+
     /**
      * Dont do any thing for System Resource.
      */
     public void unregisterResource(ResourceHandle resource,
-                                   int xaresFlag) {        
+                                   int xaresFlag) {
     }
 }

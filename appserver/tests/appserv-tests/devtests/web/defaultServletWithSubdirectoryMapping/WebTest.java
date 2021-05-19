@@ -24,9 +24,9 @@ import com.sun.ejte.ccl.reporter.*;
  * Issue: GLASSFISH-17413
  */
 public class WebTest {
-    
+
     private static final String TEST_NAME = "web-default-servlet-with-subdirectory-mapping";
-    
+
     static SimpleReporterAdapter stat=
         new SimpleReporterAdapter("appserv-tests");
 
@@ -34,7 +34,7 @@ public class WebTest {
 
         // The stat reporter writes out the test info and results
         // into the top-level quicklook directory during a run.
-      
+
         stat.addDescription("DefaultServlet with sub-directory mapping.");
 
         String host = args[0];
@@ -43,11 +43,11 @@ public class WebTest {
 
         int port = new Integer(portS).intValue();
         String name;
-        
+
         try {
             boolean ok = goGet(host, port, "From index.jsp", contextRoot + "/index.jsp" );
             ok = ok && goGet(host, port, "From test.txt", contextRoot + "/static/test.txt");
-            
+
             stat.addStatus(TEST_NAME,
                     ((ok)? stat.PASS : stat.FAIL));
         } catch (Throwable t) {
@@ -69,7 +69,7 @@ public class WebTest {
             System.out.println(("GET " + contextPath + " HTTP/1.0\n"));
             os.write(("GET " + contextPath + " HTTP/1.0\n").getBytes());
             os.write("\n".getBytes());
-            
+
             InputStream is = s.getInputStream();
             BufferedReader bis = new BufferedReader(new InputStreamReader(is));
             String line = null;
@@ -85,11 +85,11 @@ public class WebTest {
                 }
             }
         } catch( Exception ex){
-            ex.printStackTrace();   
+            ex.printStackTrace();
             throw new Exception("Test UNPREDICTED-FAILURE");
         }
 
         return ok;
    }
-  
+
 }

@@ -36,14 +36,14 @@ public class InterceptorsTestServlet extends HttpServlet {
     @Inject
     @Preferred
     TestBean tb;
-    
+
     public void service(HttpServletRequest req, HttpServletResponse res)
             throws IOException, ServletException {
 
         PrintWriter writer = res.getWriter();
         writer.write("Hello from Servlet 3.0.");
         String msg = "";
-        
+
         tb.m1();
         if (!TransactionInterceptor.aroundInvokeCalled)
             msg +="TransactionInterceptor aroundInvoke method not called";
@@ -51,12 +51,12 @@ public class InterceptorsTestServlet extends HttpServlet {
             msg +="SecureInterceptor aroundInvoke method not called";
         if ((TransactionInterceptor.aroundInvokeInvocationCount != 1))
             msg +="TransactionInterceptor aroundInvoke invocation count is " +
-                    "not expected 1 but" + 
+                    "not expected 1 but" +
                     TransactionInterceptor.aroundInvokeInvocationCount;
         tb.m2();
         if ((SecureInterceptor.aroundInvokeInvocationCount != 2))
             msg +="SecureInterceptor aroundInvoke invocation count is " +
-                    "not expected 2 but" + 
+                    "not expected 2 but" +
                     SecureInterceptor.aroundInvokeInvocationCount;
 
         writer.write(msg + "\n");

@@ -20,12 +20,12 @@ import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 
 /**
-	Interface which can be applied over the CompositeData returned
-	from {@link LogQuery#queryServerLog}.
-	
-	@since AS 9.0
-	@see LogQueryEntry
-	@see LogQuery
+        Interface which can be applied over the CompositeData returned
+        from {@link LogQuery#queryServerLog}.
+
+        @since AS 9.0
+        @see LogQueryEntry
+        @see LogQuery
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
 public interface LogQueryResult
@@ -38,7 +38,7 @@ public interface LogQueryResult
         the PRODUCT_NAME or '#' columns.
      */
     public String[]    getFieldNames();
-    
+
     /**
         Return all log entries found by the query <b>not including the field headers</b>.
      */

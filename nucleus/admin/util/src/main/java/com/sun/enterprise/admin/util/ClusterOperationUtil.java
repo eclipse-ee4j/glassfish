@@ -74,7 +74,7 @@ public class ClusterOperationUtil {
      * <p>
      * If intermediateDownloadDir is non-null, then any files returned from the instances in the payload of the HTTP
      * response will be stored in a directory tree like this:
-     * 
+     *
      * <pre>
      * ${intermediateDownloadDir}/
      *     ${instanceA}/
@@ -83,7 +83,7 @@ public class ClusterOperationUtil {
      *         file(s) returned from instance B
      *     ...
      * </pre>
-     * 
+     *
      * where ${instanceA}, ${instanceB}, etc. are the names of the instances to which the command was replicated. This
      * method does no further processing on the downloaded files but leaves that to the calling command.
      */
@@ -100,7 +100,7 @@ public class ClusterOperationUtil {
             for (Server svr : instancesForReplication) {
                 if (instanceState.getState(svr.getName()) == InstanceState.StateType.NEVER_STARTED) {
                     // Do not replicate commands to instances that have never been started.
-                    // For certain commands, warn about the failure to replicate even if 
+                    // For certain commands, warn about the failure to replicate even if
                     // the instance has never been started.
                     ActionReport.ExitCode finalResult = FailurePolicy.applyFailurePolicy(neverStartedPolicy, ActionReport.ExitCode.FAILURE);
                     if (!finalResult.equals(ActionReport.ExitCode.SUCCESS)) {
@@ -269,7 +269,7 @@ public class ClusterOperationUtil {
      * <p>
      * If intermediateDownloadDir is non-null, then any files returned from the instances in the payload of the HTTP
      * response will be stored in a directory tree like this:
-     * 
+     *
      * <pre>
      * ${intermediateDownloadDir}/
      *     ${instanceA}/
@@ -278,7 +278,7 @@ public class ClusterOperationUtil {
      *         file(s) returned from instance B
      *     ...
      * </pre>
-     * 
+     *
      * where ${instanceA}, ${instanceB}, etc. are the names of the instances to which the command was replicated. This
      * method does no further processing on the downloaded files but leaves that to the calling command.
      */

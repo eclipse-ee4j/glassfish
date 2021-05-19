@@ -57,7 +57,7 @@ public class TestServlet extends HttpServlet {
             System.out.println("--> onDataAvailable");
             int len = -1;
             byte b[] = new byte[1024];
-            while (input.isReady() 
+            while (input.isReady()
                     && (len = input.read(b)) != -1) {
                 String data = new String(b, 0, len);
                 System.out.println("--> " + data);

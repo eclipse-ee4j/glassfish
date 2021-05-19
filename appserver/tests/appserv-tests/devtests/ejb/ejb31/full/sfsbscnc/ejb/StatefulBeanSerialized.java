@@ -32,14 +32,14 @@ public class StatefulBeanSerialized extends StatefulBeanSuper implements Statefu
     }
 
     public void attemptLoopback() {
-	System.out.println("In StatefulBeanSerialized::attemptLoopback");
-	StatefulCncSuperIntf me = sessionCtx.getBusinessObject(StatefulCncLocal.class);
-	try {
-	    me.hello();
-	    throw new EJBException("Should have received loopback ex");
-	} catch(IllegalLoopbackException ile) {
-	    System.out.println("Successfully received loopback exception");
-	}
+        System.out.println("In StatefulBeanSerialized::attemptLoopback");
+        StatefulCncSuperIntf me = sessionCtx.getBusinessObject(StatefulCncLocal.class);
+        try {
+            me.hello();
+            throw new EJBException("Should have received loopback ex");
+        } catch(IllegalLoopbackException ile) {
+            System.out.println("Successfully received loopback exception");
+        }
     }
 
     @PreDestroy

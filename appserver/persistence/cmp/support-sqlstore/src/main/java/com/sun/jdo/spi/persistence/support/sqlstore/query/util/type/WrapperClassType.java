@@ -22,7 +22,7 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.query.util.type;
 
-/** 
+/**
  *
  * @author  Michael Bouschen
  * @version 0.1
@@ -39,13 +39,13 @@ public class WrapperClassType
     /**
      *
      */
-    public WrapperClassType(String name, Class clazz, int enumType, 
+    public WrapperClassType(String name, Class clazz, int enumType,
                             PrimitiveType primitiveType, TypeTable typetab)
     {
         super(name, clazz, enumType, typetab);
         this.primitiveType = primitiveType;
     }
-    
+
     /**
      *
      */
@@ -53,5 +53,5 @@ public class WrapperClassType
     {
         return primitiveType;
     }
-    
+
 }

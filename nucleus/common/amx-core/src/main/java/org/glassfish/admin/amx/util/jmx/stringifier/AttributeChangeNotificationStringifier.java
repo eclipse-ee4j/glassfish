@@ -20,7 +20,7 @@ import javax.management.AttributeChangeNotification;
 import org.glassfish.admin.amx.util.stringifier.SmartStringifier;
 
 public class AttributeChangeNotificationStringifier
-        extends NotificationStringifier 
+        extends NotificationStringifier
 {
     public static final AttributeChangeNotificationStringifier DEFAULT =
             new AttributeChangeNotificationStringifier();

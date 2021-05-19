@@ -29,10 +29,10 @@ import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.xml.TagNames;
 
 /**
- * This class is responsible for handling the ejb-relationships xml element 
+ * This class is responsible for handling the ejb-relationships xml element
  *
  * @author  Jerome Dochez
- * @version 
+ * @version
  */
 public class RelationshipsNode extends DeploymentDescriptorNode {
 
@@ -62,7 +62,7 @@ public class RelationshipsNode extends DeploymentDescriptorNode {
 
     public Node writeDescriptor(Node parent, String nodeName, EjbBundleDescriptorImpl descriptor) {
         Node relationshipsNode = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(relationshipsNode, TagNames.DESCRIPTION, descriptor.getRelationshipsDescription()); 
+        appendTextChild(relationshipsNode, TagNames.DESCRIPTION, descriptor.getRelationshipsDescription());
         EjbRelationNode subNode = new EjbRelationNode();
         for (RelationshipDescriptor rd : descriptor.getRelationships()) {
             subNode.writeDescriptor(relationshipsNode, EjbTagNames.EJB_RELATION, rd);

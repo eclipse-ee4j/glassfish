@@ -30,6 +30,6 @@ public interface EjbContainerProvider<K, V> {
     @Probe(name="entry")
         public void namedEntry(
             @ProbeParam("method") Method m, @ProbeParam("beanName") String beanName);
-    
+
 
 }

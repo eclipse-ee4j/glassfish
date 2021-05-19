@@ -34,7 +34,7 @@ import jakarta.inject.Inject;
 
 /**
  * Delete JDBC Resource command
- * 
+ *
  */
 @TargetType(value={CommandTarget.DAS,CommandTarget.DOMAIN, CommandTarget.CLUSTER, CommandTarget.STANDALONE_INSTANCE })
 @RestEndpoints({
@@ -49,12 +49,12 @@ import jakarta.inject.Inject;
 @PerLookup
 @I18n("delete.jdbc.resource")
 public class DeleteJdbcResource implements AdminCommand {
-    
-    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteJdbcResource.class);    
+
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteJdbcResource.class);
 
     @Param(optional=true)
     private String target = SystemPropertyConstants.DAS_SERVER_NAME;
-    
+
     @Param(name="jdbc_resource_name", primary=true)
     private String jndiName;
 
@@ -79,7 +79,7 @@ public class DeleteJdbcResource implements AdminCommand {
                 report.setMessage(rs.getMessage());
             }
             if (rs.getStatus() == ResourceStatus.SUCCESS) {
-                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);       
+                report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
             } else {
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 if (rs.getException() != null)

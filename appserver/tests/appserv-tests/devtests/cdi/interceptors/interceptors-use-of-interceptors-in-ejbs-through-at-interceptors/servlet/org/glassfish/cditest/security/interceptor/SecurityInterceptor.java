@@ -32,26 +32,26 @@ import org.glassfish.cditest.security.api.Secure;
 
 /**
  * Realizes security for EJBs.
- * 
+ *
  * @author ifischer
- * 
+ *
  */
 @Secure
 @Interceptor
 public class SecurityInterceptor implements Serializable
 {
     private static final Logger LOG = Logger.getLogger(SecurityInterceptor.class.getName());
-    
+
     public static boolean aroundInvokeCalled = false;
-    
+
     @Resource
     private EJBContext ejbCtx;
-    
+
     /**
      * Perform lookup for permissions.
      * Does the caller has the permission to call the method?
      * TODO: implement lookup
-     * 
+     *
      * @param InvocationContext of intercepted method
      * @return
      * @throws Exception
@@ -61,18 +61,18 @@ public class SecurityInterceptor implements Serializable
     {
         Principal p = ejbCtx.getCallerPrincipal();
         Method interfaceMethod = ctx.getMethod();
-        
+
         LOG.log(Level.INFO, "EJB Method called [Full]:\"{0}\" by Principal:{1}", new Object[]{getFullEJBClassName(interfaceMethod), p.toString()});
         LOG.log(Level.INFO, "EJB Method called [Methodonly]:{0} by Principal:{1}", new Object[]{interfaceMethod.getName(), p.toString()});
-        
+
         SecurityInterceptor.aroundInvokeCalled = true;
         return ctx.proceed();
     }
-    
+
     /**
-     * The EJBContext interface doesn't provide convenient methods to get the name of the EJB class, 
+     * The EJBContext interface doesn't provide convenient methods to get the name of the EJB class,
      * so the classname has to be extracted from the method.
-     * 
+     *
      * @param the method whose classname is needed
      * @return classname (fully qualified) of given method, e.g. "com.profitbricks.user.api.UserService"
      */
@@ -80,15 +80,15 @@ public class SecurityInterceptor implements Serializable
         // extract className from methodName
         // methodName format example:"public void com.profitbricks.user.api.UserService.testMe()"
         String methodName = method.toString();
-        
+
         int start = methodName.lastIndexOf(' ') + 1;
         int end = methodName.lastIndexOf('.');
-        
+
         String className = methodName.substring(start, end);
-        
+
         return className;
     }
-    
+
     public static void reset(){
         //reset invocation status
         SecurityInterceptor.aroundInvokeCalled = false;

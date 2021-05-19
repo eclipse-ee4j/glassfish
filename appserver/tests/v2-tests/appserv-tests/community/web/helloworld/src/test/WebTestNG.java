@@ -33,7 +33,7 @@ public class WebTestNG {
 
     private static final String EXPECTED_RESPONSE =
         "JSP Test Page";
-    
+
     private String strContextRoot="hellojsp";
 
     static String result = "";
@@ -48,7 +48,7 @@ public class WebTestNG {
     @Test(groups ={ "pulse"} ) // test method
     //public void webtest(String host, String port, String contextroot) throws Exception{
     public void webtest() throws Exception{
-        
+
         try{
             String host=System.getProperty("host");
             String port=System.getProperty("port");
@@ -69,30 +69,30 @@ public class WebTestNG {
 
         String line = null;
         boolean result=false;
-        String testLine = null;        
+        String testLine = null;
         while ((line = input.readLine()) != null) {
             if(line.indexOf(EXPECTED_RESPONSE)!=-1){
                 result=true;
              testLine = line;
            System.out.println(testLine);
             }
-          
-        }        
-                
+
+        }
+
         Assert.assertEquals(result, true,"Unexpected HTML");
-               
-        
+
+
         }catch(Exception e){
             e.printStackTrace();
             throw new Exception(e);
         }
 
     }
-    
+
     @Test(groups ={ "pulse"} ) // test method
     public void dummyTest(){
         Assert.assertEquals(false, true,"Dummy Failure");
-        
+
     }
 
     public static void echo(String msg) {

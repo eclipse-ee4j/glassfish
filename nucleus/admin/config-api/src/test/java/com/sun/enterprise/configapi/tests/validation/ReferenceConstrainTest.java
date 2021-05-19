@@ -37,7 +37,7 @@ import static org.junit.Assert.*;
  * @author mmares
  */
 public class ReferenceConstrainTest extends ConfigApiTest {
-    
+
 //    private Logger logger = Logger.getLogger(ReferenceConstrainTest.class.getName());
     private ServiceLocator habitat;
 
@@ -50,7 +50,7 @@ public class ReferenceConstrainTest extends ConfigApiTest {
     public ServiceLocator getBaseServiceLocator() {
         return habitat;
     }
-    
+
     private ConstraintViolationException findConstrViolation(Throwable thr) {
         if (thr == null) {
             return null;
@@ -60,12 +60,12 @@ public class ReferenceConstrainTest extends ConfigApiTest {
         }
         return findConstrViolation(thr.getCause());
     }
-    
+
     @Before
     public void createNewHabitat() {
         this.habitat = Utils.instance.getHabitat(this);
     }
-    
+
     @Test
     public void serverConfigRefInvalid() throws TransactionFailure {
         Server server = habitat.getService(Server.class, "server");
@@ -84,7 +84,7 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             assertNotNull(cv);
         }
     }
-    
+
     @Test
     public void serverConfigRefValid() throws TransactionFailure {
         Server server = habitat.getService(Server.class, "server");
@@ -101,7 +101,7 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             fail("Can not reach this point");
         }
     }
-    
+
     @Test
     public void jmxConnectorAuthRealmRefInvalid() throws TransactionFailure {
         JmxConnector jmxConnector = habitat.getService(JmxConnector.class, "system");
@@ -120,7 +120,7 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             assertNotNull(cv);
         }
     }
-    
+
     @Test
     public void jmxConnectorAuthRealmRefValid() throws TransactionFailure {
         JmxConnector jmxConnector = habitat.getService(JmxConnector.class, "system");
@@ -137,5 +137,5 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             fail("Can not reach this point");
         }
     }
-    
+
 }

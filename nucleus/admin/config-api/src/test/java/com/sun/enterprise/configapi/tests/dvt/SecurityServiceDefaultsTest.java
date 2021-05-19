@@ -31,7 +31,7 @@ import static org.junit.Assert.*;
 public class SecurityServiceDefaultsTest extends ConfigApiTest {
 
     SecurityService ss = null;
-    
+
     public SecurityServiceDefaultsTest() {
     }
 

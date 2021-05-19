@@ -53,7 +53,7 @@ public class SlessEJB2 implements Sless, SessionBean
     public String getId() {
 
         try {
-            // Proprietary way to look up tx manager.  
+            // Proprietary way to look up tx manager.
             TransactionManager tm = (TransactionManager)
                 new InitialContext().lookup("java:appserver/TransactionManager");
             // Use an implementation-specific check to ensure that there
@@ -75,7 +75,7 @@ public class SlessEJB2 implements Sless, SessionBean
 
         return "SlessEJB2";
     }
-    
+
     public Sless roundTrip(Sless s) {
         System.out.println("In SlessEJB2::roundTrip " + s);
         System.out.println("input Sless.getId() = " + s.getId());
@@ -83,12 +83,12 @@ public class SlessEJB2 implements Sless, SessionBean
     }
 
     public Collection roundTrip2(Collection collectionOfSless) {
-        System.out.println("In SlessEJB2::roundTrip2 " + 
+        System.out.println("In SlessEJB2::roundTrip2 " +
                            collectionOfSless);
 
         if( collectionOfSless.size() > 0 ) {
             Sless sless = (Sless) collectionOfSless.iterator().next();
-            System.out.println("input Sless.getId() = " + sless.getId());  
+            System.out.println("input Sless.getId() = " + sless.getId());
         }
 
         return collectionOfSless;
@@ -103,10 +103,10 @@ public class SlessEJB2 implements Sless, SessionBean
         sc_ = sc;
     }
 
-    public void ejbRemove() 
+    public void ejbRemove()
     {}
 
-    public void ejbActivate() 
+    public void ejbActivate()
     {}
 
     public void ejbPassivate()

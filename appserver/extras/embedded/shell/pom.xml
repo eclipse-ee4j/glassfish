@@ -33,7 +33,7 @@
 
 
     <packaging>pom</packaging>
-    <name>Embedded GlassFish Shell Jars </name>  
+    <name>Embedded GlassFish Shell Jars </name>
     <modules>
         <module>glassfish-embedded-shell</module>
         <module>glassfish-embedded-shell-frag</module>

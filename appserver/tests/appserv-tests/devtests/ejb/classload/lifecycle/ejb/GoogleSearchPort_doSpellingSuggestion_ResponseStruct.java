@@ -23,18 +23,18 @@ package com.sun.s1asdev.ejb.classload.lifecycle;
 
 public class GoogleSearchPort_doSpellingSuggestion_ResponseStruct {
     protected java.lang.String _return;
-    
+
     public GoogleSearchPort_doSpellingSuggestion_ResponseStruct() {
     }
-    
+
     public GoogleSearchPort_doSpellingSuggestion_ResponseStruct(java.lang.String _return) {
         this._return = _return;
     }
-    
+
     public java.lang.String get_return() {
         return _return;
     }
-    
+
     public void set_return(java.lang.String _return) {
         this._return = _return;
     }

@@ -30,8 +30,8 @@
 
   <target name="all" depends="init-common" >
     <antcall target="compile-common">
-	<param name="build.classes.dir" value="classes" />
-	<param name="src" value="connector" />
+        <param name="build.classes.dir" value="classes" />
+        <param name="src" value="connector" />
     </antcall>
     <jar jarfile="../threadpooltest-ra.jar" basedir="classes"
          includes="connector/*.class" />

@@ -40,7 +40,7 @@ public class WebTestNG {
         System.out.println(get);
         os.write(get.getBytes());
         os.write("\n".getBytes());
-        
+
         InputStream is = sock.getInputStream();
         BufferedReader bis = new BufferedReader(new InputStreamReader(is));
 
@@ -63,7 +63,7 @@ public class WebTestNG {
         conn.connect();
         int responseCode = conn.getResponseCode();
 
-	assert responseCode == 200;
+        assert responseCode == 200;
 
         bis = new BufferedReader(new InputStreamReader(conn.getInputStream()));
         while ((line = bis.readLine()) != null) {

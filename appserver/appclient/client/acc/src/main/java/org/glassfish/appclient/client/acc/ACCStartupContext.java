@@ -29,7 +29,7 @@ import jakarta.inject.Singleton;
 /**
  * Start-up context for the ACC.  Note that this context is used also for
  * Java Web Start launches.
- * 
+ *
  * @author tjquinn
  */
 @Service

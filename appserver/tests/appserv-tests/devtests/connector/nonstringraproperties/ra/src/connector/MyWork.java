@@ -27,7 +27,7 @@ import jakarta.resource.spi.work.ExecutionContext;
 
 /**
  *
- * @author	Qingqing Ouyang
+ * @author        Qingqing Ouyang
  */
 public class MyWork implements Work {
 
@@ -35,7 +35,7 @@ public class MyWork implements Work {
     private boolean stop = false;
     private MessageEndpointFactory factory;
     private WorkManager wm;
-    
+
     public MyWork(
             String name, MessageEndpointFactory factory, WorkManager wm) {
         this.factory = factory;
@@ -53,7 +53,7 @@ public class MyWork implements Work {
             try {
 
                 Method onMessage = getOnMessageMethod();
-                System.out.println("isDeliveryTransacted = " + 
+                System.out.println("isDeliveryTransacted = " +
                                       factory.isDeliveryTransacted(onMessage));
 
                 /*
@@ -70,7 +70,7 @@ public class MyWork implements Work {
                 ex.printStackTrace();
             }
         }
-        
+
         debug("LEAVE...");
     }
 
@@ -85,14 +85,14 @@ public class MyWork implements Work {
     }
 
     public Method getOnMessageMethod() {
-        
+
         Method onMessageMethod = null;
         try {
             Class msgListenerClass = connector.MyMessageListener.class;
             Class[] paramTypes = { java.lang.String.class };
-            onMessageMethod = 
+            onMessageMethod =
                 msgListenerClass.getMethod("onMessage", paramTypes);
-            
+
         } catch (NoSuchMethodException ex) {
             ex.printStackTrace();
         }

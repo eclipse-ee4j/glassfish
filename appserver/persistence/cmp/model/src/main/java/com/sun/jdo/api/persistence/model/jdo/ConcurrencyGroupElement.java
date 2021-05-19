@@ -22,40 +22,40 @@
 
 package com.sun.jdo.api.persistence.model.jdo;
 
-/** 
+/**
  *
  * @author raccah
  * @version %I%
  */
 public class ConcurrencyGroupElement extends FieldGroupElement
 {
-	/** Create new ConcurrencyGroupElement with no implementation. 
-	 * This constructor should only be used for cloning and archiving.
-	 */
-	public ConcurrencyGroupElement ()
-	{
-		this(null, null);
-	}
+    /** Create new ConcurrencyGroupElement with no implementation.
+     * This constructor should only be used for cloning and archiving.
+     */
+    public ConcurrencyGroupElement ()
+    {
+        this(null, null);
+    }
 
-	/** Create new ConcurrencyGroupElement with the provided implementation. 
-	 * The implementation is responsible for storing all properties of the 
-	 * object.
-	 * @param impl the implementation to use
-	 * @param declaringClass the class to attach to
-	 */
-	public ConcurrencyGroupElement (ConcurrencyGroupElement.Impl impl,
-		PersistenceClassElement declaringClass)
-	{
-		super(impl, declaringClass);
-	}
+    /** Create new ConcurrencyGroupElement with the provided implementation.
+     * The implementation is responsible for storing all properties of the
+     * object.
+     * @param impl the implementation to use
+     * @param declaringClass the class to attach to
+     */
+    public ConcurrencyGroupElement (ConcurrencyGroupElement.Impl impl,
+        PersistenceClassElement declaringClass)
+    {
+        super(impl, declaringClass);
+    }
 
-	/** @return implemetation factory for this concurrency group
-	 */
-	final Impl getConcurrencyGroupImpl () { return (Impl)getImpl(); }
+    /** @return implemetation factory for this concurrency group
+     */
+    final Impl getConcurrencyGroupImpl () { return (Impl)getImpl(); }
 
-	/** Pluggable implementation of concurrency group elements.
-	 * @see ConcurrencyGroupElement
-	 */
-	public interface Impl extends FieldGroupElement.Impl { }
+    /** Pluggable implementation of concurrency group elements.
+     * @see ConcurrencyGroupElement
+     */
+    public interface Impl extends FieldGroupElement.Impl { }
 }
 

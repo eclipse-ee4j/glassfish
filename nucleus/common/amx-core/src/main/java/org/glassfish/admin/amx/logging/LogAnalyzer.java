@@ -27,132 +27,133 @@ import org.glassfish.external.arc.Taxonomy;
 
 
 /**
-	Provides summary information about important logging events.
-	<big>PRELIMINARY--SUBJECT TO CHANGES/ADDITIONS</big>
-	
-	@since AS 9.0
+ * Provides summary information about important logging events.
+ * <big>PRELIMINARY--SUBJECT TO CHANGES/ADDITIONS</big>
+ *
+ * @since AS 9.0
  */
 @Taxonomy(stability = Stability.EXPERIMENTAL)
-public interface LogAnalyzer
-{
-	/**
-		Key into any Map returned from {@link #getErrorInfo}.
-		value is of type Long.
-	*/
-	public static final String TIMESTAMP_KEY		= "TimeStamp";
-	
-	/**
-		Key into any Map returned from {@link #getErrorInfo}.
-		value is of type Long.
-	*/
-	public static final String SEVERE_COUNT_KEY		= "SevereCount";
-	
-	/**
-		Key into any Map returned from {@link #getErrorInfo}.
-		value is of type Long.
-	*/
-	public static final String WARNING_COUNT_KEY	= "WarningCount";
-	
-	/**
-		Key into any Map returned from {@link #getErrorDistribution}.
-		value is of type String.
-	*/
-	public static final String MODULE_NAME_KEY	= "ModuleName";
-	
-	
-	/**
-		Get a summary of the {@link Level#SEVERE} and {@link Level#WARNING} log
-		entries for the known history. Each entry in the resulting array is a
-		Map with the following keys:
-		<ul>
-		<li>{@link #TIMESTAMP_KEY} of type Long</li>
-		<li>{@link #SEVERE_COUNT_KEY} of type Integer</li>
-		<li>{@link #WARNING_COUNT_KEY} of type Integer</li>
-		</ul>
-		The entries are arranged from oldest to newest with the last entry being
-		the most recent.
-		<p>
-		The timestamp obtained from each Map may be used as the timestamp when
-		calling {@link #getErrorDistribution}. For example:<br>
-<code>
-final Map<String,Number>[]	infos	= logging.getErrorInfo();<br>
-for( int i = 0; i < infos.length; ++i ) {<br>
-	final Map<String,Object>	info	= infos[ i ];<br>
-	final long timestamp	= ((Long)info.get( TIMESTAMP_KEY )).longValue();<br>
-	<br>
-	Map<String,Number>	counts	= getErrorDistribution( timestamp );<br>
-}
-</code>
-		
-		@return Map<String,Number>
-	 */
+public interface LogAnalyzer {
+
+    /**
+     * Key into any Map returned from {@link #getErrorInfo}.
+     * value is of type Long.
+     */
+    String TIMESTAMP_KEY = "TimeStamp";
+
+    /**
+     * Key into any Map returned from {@link #getErrorInfo}.
+     * value is of type Long.
+     */
+    String SEVERE_COUNT_KEY = "SevereCount";
+
+    /**
+     * Key into any Map returned from {@link #getErrorInfo}.
+     * value is of type Long.
+     */
+    String WARNING_COUNT_KEY = "WarningCount";
+
+    /**
+     * Key into any Map returned from {@link #getErrorDistribution}.
+     * value is of type String.
+     */
+    String MODULE_NAME_KEY = "ModuleName";
+
+
+    /**
+     * Get a summary of the {@link Level#SEVERE} and {@link Level#WARNING} log
+     * entries for the known history. Each entry in the resulting array is a
+     * Map with the following keys:
+     * <ul>
+     * <li>{@link #TIMESTAMP_KEY} of type Long</li>
+     * <li>{@link #SEVERE_COUNT_KEY} of type Integer</li>
+     * <li>{@link #WARNING_COUNT_KEY} of type Integer</li>
+     * </ul>
+     * The entries are arranged from oldest to newest with the last entry being
+     * the most recent.
+     * <p>
+     * The timestamp obtained from each Map may be used as the timestamp when
+     * calling {@link #getErrorDistribution}. For example:<br>
+     * <code>
+    final Map<String,Number>[] infos = logging.getErrorInfo();<br>
+    for (int i = 0; i < infos.length; ++i) {<br>
+            final Map<String,Object> info = infos[i];<br>
+            final long timestamp = ((Long)info.get( TIMESTAMP_KEY )).longValue();<br>
+            <br>
+            Map<String,Number> counts = getErrorDistribution( timestamp );<br>
+    }
+    </code>
+     *
+     * @return Map<String,Number>
+     */
     @ManagedAttribute
-	public Map<String,Number>[]	getErrorInfo();
-	
-	
-	/**
-		Get the number of log entries for a particular timestamp of a particular {@link Level}
-		for all modules.  SEVERE and WARNING are the only levels supported.
-		<p>
-		The resulting Map is keyed by the module ID, which may be any of the values
-		found in {@link LogModuleNames} or any valid Logger name.
-		The corresponding value
-		is the count for that module of the requested level.
-		<p>
-		
-		@param timestamp a timestamp as obtained using TIME_STAMP_KEY from one of the Maps
-		returned by {@link #getErrorInfo}.  Note that it is a 'long' not a 'Long' and is required.
-		@param level
-		@return Map<String,Integer>
-	 */
-    @ManagedOperation
-	public Map<String,Integer>	getErrorDistribution(
+    Map<String,Number>[] getErrorInfo();
+
+
+    /**
+     * Get the number of log entries for a particular timestamp of a particular {@link Level}
+     * for all modules. SEVERE and WARNING are the only levels supported.
+     * <p>
+     * The resulting Map is keyed by the module ID, which may be any of the values
+     * found in {@link LogModuleNames} or any valid Logger name.
+     * The corresponding value
+     * is the count for that module of the requested level.
+     * <p>
+     *
+     * @param timestamp a timestamp as obtained using TIME_STAMP_KEY from one of the Maps
+     *            returned by {@link #getErrorInfo}. Note that it is a 'long' not a 'Long' and is
+     *            required.
+     * @param level
+     * @return Map<String,Integer>
+     */
+    @ManagedOperation Map<String,Integer>
+    getErrorDistribution(
         @Param(name="timestamp") long timestamp,
         @Param(name="level") String level);
-	
-	/**
-	    @return all the logger names currently in use
-	 */
-    @ManagedAttribute
-	public String[] getLoggerNames();
-	
-	/**
-	    @return all the logger names currently in use under this logger.
-	 */
-    @ManagedOperation(impact=MBeanOperationInfo.INFO)
-    public String[]   getLoggerNamesUnder( @Param(name="loggerName") String loggerName );
-    
-    /**
-        Set the number of intervals error statistics should be maintained.
-     
-        @param numIntervals number of intervals
-     */
-    @ManagedAttribute
-    public void setKeepErrorStatisticsForIntervals( @Param(name="numIntervals") final int numIntervals );
-    
-    /*
-        See {@link #setErrorStatisticsIntervals}.
-     */
-    @ManagedAttribute
-    public int  getKeepErrorStatisticsForIntervals();
+
 
     /**
-        Set the duration of an interval.
-    
-        @param minutes The duration of an interval in minutes.
+     * @return all the logger names currently in use
      */
     @ManagedAttribute
-    public void setErrorStatisticsIntervalMinutes( @Param(name="minutes") final long minutes);
-    
-    /*
-        See {@link #setErrorStatisticsIntervalMinutes}.
+    String[] getLoggerNames();
+
+
+    /**
+     * @return all the logger names currently in use under this logger.
+     */
+    @ManagedOperation(impact = MBeanOperationInfo.INFO)
+    String[] getLoggerNamesUnder(@Param(name = "loggerName") String loggerName);
+
+
+    /**
+     * Set the number of intervals error statistics should be maintained.
+     *
+     * @param numIntervals number of intervals
      */
     @ManagedAttribute
-    public long getErrorStatisticsIntervalMinutes(); 
+    void setKeepErrorStatisticsForIntervals(@Param(name = "numIntervals") final int numIntervals);
+
+
+    /**
+     * See {@link #setKeepErrorStatisticsForIntervals(int)}.
+     */
+    @ManagedAttribute
+    int getKeepErrorStatisticsForIntervals();
+
+
+    /**
+     * Set the duration of an interval.
+     *
+     * @param minutes The duration of an interval in minutes.
+     */
+    @ManagedAttribute
+    void setErrorStatisticsIntervalMinutes(@Param(name = "minutes") final long minutes);
+
+
+    /**
+     * See {@link #setErrorStatisticsIntervalMinutes}.
+     */
+    @ManagedAttribute
+    long getErrorStatisticsIntervalMinutes();
 }
-
-
-
-
-
-

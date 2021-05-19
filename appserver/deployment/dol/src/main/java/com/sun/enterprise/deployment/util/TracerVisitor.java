@@ -29,7 +29,7 @@ import org.glassfish.deployment.common.DescriptorVisitor;
 /**
  *
  * @author  dochez
- * @version 
+ * @version
  */
 public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisitor {
 
@@ -67,20 +67,23 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
         }
     }
 
+
     /**
      * visit an application object
+     *
      * @param the application descriptor
      */
     @Override
     public void accept(Application application) {
-	DOLUtils.getDefaultLogger().info("Application");
-	DOLUtils.getDefaultLogger().info("name " + application.getName());
-	DOLUtils.getDefaultLogger().info("smallIcon " + application.getSmallIconUri());
+        DOLUtils.getDefaultLogger().info("Application");
+        DOLUtils.getDefaultLogger().info("name " + application.getName());
+        DOLUtils.getDefaultLogger().info("smallIcon " + application.getSmallIconUri());
     }
 
 
     /**
-     * visits an ejb reference  for the last J2EE component visited
+     * visits an ejb reference for the last J2EE component visited
+     *
      * @param the ejb reference
      */
     @Override
@@ -88,41 +91,47 @@ public class TracerVisitor extends DefaultDOLVisitor implements ApplicationVisit
         DOLUtils.getDefaultLogger().info(ejbRef.toString());
     }
 
+
     @Override
     protected void accept(MessageDestinationReferencer referencer) {
         DOLUtils.getDefaultLogger().info(referencer.getMessageDestinationLinkName());
     }
-    
+
+
     protected void accept(WebService webService) {
         DOLUtils.getDefaultLogger().info(webService.getName());
     }
+
 
     @Override
     protected void accept(ServiceReferenceDescriptor serviceRef) {
         DOLUtils.getDefaultLogger().info(serviceRef.getName());
     }
 
+
     protected void accept(EnvironmentProperty envEntry) {
-        DOLUtils.getDefaultLogger().info( envEntry.toString());
+        DOLUtils.getDefaultLogger().info(envEntry.toString());
     }
+
 
     /**
      * visits a J2EE descriptor
-     * @param the descriptor
      */
     @Override
     public void accept(Descriptor descriptor) {
         DOLUtils.getDefaultLogger().info(descriptor.toString());
-    } 
+    }
+
 
     /**
      * get the visitor for its sub descriptor
-     * @param sub descriptor to return visitor for
+     *
+     * @param subDescriptor sub descriptor to return visitor for
      */
     @Override
     public DescriptorVisitor getSubDescriptorVisitor(Descriptor subDescriptor) {
         if (subDescriptor instanceof BundleDescriptor) {
-            DescriptorVisitor tracerVisitor = ((BundleDescriptor)subDescriptor).getTracerVisitor();
+            DescriptorVisitor tracerVisitor = ((BundleDescriptor) subDescriptor).getTracerVisitor();
             if (tracerVisitor == null) {
                 return this;
             }

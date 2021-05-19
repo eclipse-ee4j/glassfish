@@ -46,14 +46,14 @@ final public class DirSyncControl extends BasicControl {
      */
     public static final String OID = "1.2.840.113556.1.4.841";
 
-    /** 
+    /**
      * Parent entries are returned before their children when value is set to 1.
      *
      * @serial
      */
     private int parentsFirst = 1;
 
-    /** 
+    /**
      * The maximum length (in bytes) to be returned in a control response.
      * Must be greater than zero for any data to be returned.
      *
@@ -61,7 +61,7 @@ final public class DirSyncControl extends BasicControl {
      */
     private int maxReturnLength = Integer.MAX_VALUE;
 
-    /** 
+    /**
      * A server-generated cookie.
      *
      * @serial
@@ -76,47 +76,46 @@ final public class DirSyncControl extends BasicControl {
      * @exception IOException If a BER encoding error occurs.
      */
     public DirSyncControl() throws IOException {
-
-	super(OID, true, null);
-	super.value = setEncodedValue();
+        super(OID, true, null);
+        super.value = setEncodedValue();
     }
 
     /**
      * Constructs a dir-sync control.
      *
-     * @param	criticality  The control's criticality setting.
+     * @param    criticality  The control's criticality setting.
      * @exception IOException If a BER encoding error occurs.
      */
     public DirSyncControl(boolean criticality) throws IOException {
 
-	super(OID, criticality, null);
-	super.value = setEncodedValue();
+        super(OID, criticality, null);
+        super.value = setEncodedValue();
     }
 
     /**
      * Constructs a dir-sync control.
      *
-     * @param	parentsFirst	  Parent entries are returned before their
-     *				  children when value is set to 1.
-     * @param	maxReturnLength   The maximum length (in bytes) to be returned
-     *				  in a control response. Must be greater than
-     *				  zero for any data to be returned.
-     * @param	cookie		  A server-generated cookie.
-     * @param	criticality	  The control's criticality setting.
-     * @exception IOException	  If a BER encoding error occurs.
+     * @param parentsFirst Parent entries are returned before their
+     *            children when value is set to 1.
+     * @param maxReturnLength The maximum length (in bytes) to be returned
+     *            in a control response. Must be greater than
+     *            zero for any data to be returned.
+     * @param cookie A server-generated cookie.
+     * @param criticality The control's criticality setting.
+     * @exception IOException If a BER encoding error occurs.
      */
     public DirSyncControl(int parentsFirst, int maxReturnLength,
-	byte[] cookie, boolean criticality) throws IOException {
+        byte[] cookie, boolean criticality) throws IOException {
 
-	super(OID, criticality, null);
+        super(OID, criticality, null);
 
-	this.parentsFirst = parentsFirst;
-	this.maxReturnLength = maxReturnLength;
-	this.cookie = cookie;
-	super.value = setEncodedValue();
+        this.parentsFirst = parentsFirst;
+        this.maxReturnLength = maxReturnLength;
+        this.cookie = cookie;
+        super.value = setEncodedValue();
     }
 
-    /*
+    /**
      * Sets the ASN.1 BER encoded value of the dir-sync control.
      * The result is the raw BER bytes including the tag and length of
      * the control's value. It does not include the controls OID or criticality.
@@ -127,15 +126,15 @@ final public class DirSyncControl extends BasicControl {
      */
     private byte[] setEncodedValue() throws IOException {
 
-	// build the ASN.1 encoding
-	BerEncoder ber = new BerEncoder(64);
+        // build the ASN.1 encoding
+        BerEncoder ber = new BerEncoder(64);
 
-	ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
-	    ber.encodeInt(parentsFirst);
-	    ber.encodeInt(maxReturnLength);
-	    ber.encodeOctetString(cookie, ber.ASN_OCTET_STR);
-	ber.endSeq();
+        ber.beginSeq(Ber.ASN_SEQUENCE | Ber.ASN_CONSTRUCTOR);
+        ber.encodeInt(parentsFirst);
+        ber.encodeInt(maxReturnLength);
+        ber.encodeOctetString(cookie, Ber.ASN_OCTET_STR);
+        ber.endSeq();
 
-	return ber.getTrimmedBuf();
+        return ber.getTrimmedBuf();
     }
 }

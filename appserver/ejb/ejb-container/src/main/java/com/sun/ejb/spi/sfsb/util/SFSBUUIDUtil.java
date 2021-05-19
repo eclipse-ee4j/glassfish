@@ -20,25 +20,25 @@ import java.io.Serializable;
 
 /**
  *
- * An instance of this class will be used by the Stateful SessionBean 
+ * An instance of this class will be used by the Stateful SessionBean
  *  Container to create sessionIDs whenever home.create(..) is called
  *
  * @author Mahesh Kannan
  */
 public interface SFSBUUIDUtil<T> {
-    
+
    /**
     * Create and return the sessionKey.
     * @return the sessionKey object
     */
     public T createSessionKey();
-    
+
    /**
     * Called from the Container before publishing an IOR. The method must convert the sessionKey into a byte[]
     * @return A byte[] representation of the key. The byte[] could be created using serialization.
     */
     public byte[] keyToByteArray(T sessionKey);
-    
+
     /**
      * Return the sessionKey that represents the sessionKey. This has to be super efficient as the container
      *    calls this method on every invocation. Two objects obtained from identical byte[] must
@@ -46,5 +46,5 @@ public interface SFSBUUIDUtil<T> {
      * @return the sessionKey object
      */
      public T byteArrayToKey(byte[] array, int startIndex, int len);
-    
+
 }

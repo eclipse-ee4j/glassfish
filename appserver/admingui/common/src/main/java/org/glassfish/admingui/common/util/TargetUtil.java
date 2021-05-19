@@ -59,7 +59,7 @@ public class TargetUtil {
             if (extraProps == null){
                 return result;
             }
-            List<Map<String, String>> props = (List<Map<String, String>>) extraProps.get("instanceList");            
+            List<Map<String, String>> props = (List<Map<String, String>>) extraProps.get("instanceList");
             if (props == null){
                 return result;
             }

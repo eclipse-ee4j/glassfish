@@ -34,15 +34,15 @@ import org.jvnet.hk2.testing.junit.HK2Runner;
 import org.glassfish.security.services.spi.authorization.AuthorizationProvider;
 
 public class SimpleAtzProviderTest extends HK2Runner {
-    
+
     private AuthorizationProvider simpleAtzPrv = null;
     private SecurityContextService contextService = null;
-    
-    
+
+
     @Before
     public void before() {
         super.before();
-        
+
         String pf = System.getProperty("java.security.policy");
         System.out.println("policy file = " + pf);
         String bd = System.getProperty("build.dir");
@@ -59,11 +59,11 @@ public class SimpleAtzProviderTest extends HK2Runner {
 
         Assert.assertNotNull(simpleAtzPrv);
         Assert.assertNotNull(contextService);
-        
+
         contextService.getEnvironmentAttributes().addAttribute(
                 AuthorizationAdminConstants.ISDAS_ATTRIBUTE, "true", true);
     }
-    
+
     @Test
     public void testService() throws Exception {
         final AuthorizationService authorizationService = new AuthorizationServiceImpl();
@@ -81,13 +81,13 @@ public class SimpleAtzProviderTest extends HK2Runner {
                 env,
                 null
               );
-        
+
         AzResult.Decision ds = rt.getDecision();
-        
+
         Assert.assertEquals(AzResult.Decision.PERMIT, ds);
 
     }
-    
+
     private Subject adminSubject() {
         final Subject result = new Subject();
         result.getPrincipals().add(new PrincipalImpl("asadmin"));

@@ -28,7 +28,7 @@ package com.sun.appserv.ha.util;
  * @author lwhite
  */
 public interface PersistenceTypeResolver {
-    
+
     public String resolvePersistenceType(String persistenceType);
-    
+
 }

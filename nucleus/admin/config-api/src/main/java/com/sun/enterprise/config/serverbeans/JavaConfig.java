@@ -53,7 +53,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * Gets the value of the javaHome property.
      *
      * Specifies the installation directory for Java runtime. JDK 1.4 or higher is supported.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "${com.sun.aas.javaRoot}")
@@ -70,7 +70,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * Gets the value of the debugEnabled property.
      *
      * If set to true, the server starts up in debug mode ready for attaching with a JPDA based debugger
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "false", dataType = Boolean.class)
@@ -87,7 +87,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * Gets the value of the debugOptions property.
      *
      * JPDA based debugging options string
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=n")
@@ -155,7 +155,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * Gets the value of the classpathSuffix property.
      *
      * A java classpath string that is appended to server-classpath
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -174,7 +174,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * A java classpath string that specifies the classes needed by the Application server. Do not expect users to change
      * this under normal conditions. The shared application server classloader forms the final classpath by concatenating
      * classpath-prefix, ${INSTALL_DIR}/lib, server-classpath, and classpath-suffix
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -213,7 +213,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * Internally, the native library path is automatically constructed to be a concatenation of Application Server
      * installation relative path for its native shared libraries, standard JRE native library path, the shell environment
      * setting (LD-LIBRARY-PATH on Unix) and any path that may be specified in the profile element.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -230,7 +230,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * Gets the value of the nativeLibraryPathSuffix property.
      *
      * Appended to the native library path, which is constructed as described above
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -249,7 +249,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * A comma separated list of classnames, each of which must implement the com.sun.appserv.BytecodePreprocessor
      * interface. Each of the specified preprocessor class will be called in the order specified. At the moment the
      * comelling use is for a 3rd party Performance Profiling tool.
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute
@@ -268,7 +268,7 @@ public interface JavaConfig extends ConfigBeanProxy, PropertyBag, JvmOptionBag {
      * If set to false, the CLASSPATH environment variable will be read and appended to the Application Server classpath,
      * which is constructed as described above. The CLASSPATH environment variable will be added after the classpath-suffix,
      * at the very end
-     * 
+     *
      * @return possible object is {@link String }
      */
     @Attribute(defaultValue = "true", dataType = Boolean.class)

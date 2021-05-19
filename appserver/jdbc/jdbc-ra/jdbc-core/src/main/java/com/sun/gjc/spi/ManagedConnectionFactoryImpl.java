@@ -58,7 +58,7 @@ import java.util.logging.Logger;
  */
 
 public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.spi.ManagedConnectionFactory,
-        jakarta.resource.spi.ValidatingManagedConnectionFactory, 
+        jakarta.resource.spi.ValidatingManagedConnectionFactory,
         MCFLifecycleListener, ResourceAdapterAssociation,
         java.io.Serializable, Externalizable {
 
@@ -148,7 +148,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
      * @param other <code>ManagedConnectionFactoryImpl</code> object for checking equality with
      * @return true    if the property sets of both the
      *         <code>ManagedConnectionFactoryImpl</code> objects are the same
-     *         false	otherwise
+     *         false    otherwise
      */
     public abstract boolean equals(Object other);
 
@@ -303,22 +303,22 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
             throw new ResourceException("The validation method is not proper");
         }
     }
-    
+
     /**
      * Checks if a <code>java.sql.Connection</code> is valid or not
      * by doing a custom validation using the validation class name specified.
      *
      * @param con <code>java.sql.Connection</code> to be validated
      * @throws ResourceException if the connection is not valid
-     */    
-    protected void isValidByCustomValidation(java.sql.Connection con, 
+     */
+    protected void isValidByCustomValidation(java.sql.Connection con,
             String validationClassName) throws ResourceException {
         boolean isValid = false;
         if (con == null) {
             throw new ResourceException("The connection is not valid as "
                     + "the connection is null");
         }
-        
+
         try {
             Class validationClass = Thread.currentThread().getContextClassLoader().loadClass(validationClassName);
             ConnectionValidation valClass = (ConnectionValidation) validationClass.newInstance();
@@ -521,19 +521,19 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
         //Check for sql-trace-listeners attribute.
         String sqlTraceListeners = getSqlTraceListeners();
         String delimiter = ",";
-        
+
         if(sqlTraceListeners != null && !sqlTraceListeners.equals("null")) {
             sqlTraceDelegator = new SQLTraceDelegator(getPoolName(), getApplicationName(), getModuleName());
             StringTokenizer st = new StringTokenizer(sqlTraceListeners, delimiter);
             while (st.hasMoreTokens()) {
-                String sqlTraceListener = st.nextToken().trim();            
+                String sqlTraceListener = st.nextToken().trim();
                 if(!sqlTraceListener.equals("")) {
                     Class listenerClass = null;
                     SQLTraceListener listener = null;
                     Constructor[] constructors = null;
-                    Class[] parameterTypes = null;                    
+                    Class[] parameterTypes = null;
                     Object[] initargs = null;
-                    //Load the listener class 
+                    //Load the listener class
                     try {
                         listenerClass = Thread.currentThread().getContextClassLoader().loadClass(sqlTraceListener);
                     } catch (ClassNotFoundException ex) {
@@ -637,7 +637,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
                 }
                 //ignore
             }
-        } 
+        }
     }
 
     /**
@@ -1073,19 +1073,19 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     public void setTimeToKeepQueriesInMinutes(String timeToKeepQueries) {
         spec.setDetail(DataSourceSpec.TIMETOKEEPQUERIESINMINUTES, timeToKeepQueries);
     }
-    
+
     public String getInitSql() {
         return spec.getDetail(DataSourceSpec.INITSQL);
     }
 
     public void setInitSql(String initSql) {
         //TODO remove case where "null" is checked. Might be a CLI/GUI bug.
-        if(initSql != null && !initSql.equalsIgnoreCase("null") && 
+        if(initSql != null && !initSql.equalsIgnoreCase("null") &&
                 !initSql.equals("")) {
             spec.setDetail(DataSourceSpec.INITSQL, initSql);
         }
     }
-    
+
     /**
      * Set StatementTimeout value
      *
@@ -1105,7 +1105,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
     public String getStatementTimeout() {
         return spec.getDetail(DataSourceSpec.STATEMENTTIMEOUT);
     }
-    
+
     public String getSqlTraceListeners() {
         return spec.getDetail(DataSourceSpec.SQLTRACELISTENERS);
     }
@@ -1116,7 +1116,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
             detectSqlTraceListeners();
         }
     }
-    
+
     /**
      * Sets the description.
      *

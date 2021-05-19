@@ -40,7 +40,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 /**
  * Creates a JAR file containing the runtime bits required to run app clients remotely, on a system without a full
  * GlassFish installation.
- * 
+ *
  * <p>
  * The resulting file will contain:
  * <ul>
@@ -51,7 +51,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
  *   <li>the specified sun-acc.xml file (the one from domains/domain1/config if unspecified)
  *   <li>the handful of other config files to which sun-acc.xml refers
  * </ul>
- * 
+ *
  * <p>
  * Optional command-line options:
  * <ul>
@@ -76,8 +76,8 @@ public class PackageAppClient {
     private final static String ACC_CONFIG_FILE_DEFAULT_OLD = "/sun-acc.xml";
 
     /* DIRS_TO_COPY entries are all relative to the installation directory */
-    private final static String[] DIRS_TO_COPY = new String[] { 
-        GLASSFISH_LIB + "/dtds", 
+    private final static String[] DIRS_TO_COPY = new String[] {
+        GLASSFISH_LIB + "/dtds",
         GLASSFISH_LIB + "/schemas",
         GLASSFISH_LIB + "/appclient" };
 
@@ -109,16 +109,16 @@ public class PackageAppClient {
     private final static String ASENV_CONF = GLASSFISH_CONFIG + "/asenv.conf";
     private final static String ASENV_BAT = GLASSFISH_CONFIG + "/asenv.bat";
 
-    private final static String[] SINGLE_FILES_TO_COPY = { 
-        IMQJMSRA_APP, 
-        IMQ_JAR, 
-        IMQADMIN_JAR, 
-        IMQUTIL_JAR, 
-        FSCONTEXT_JAR, 
+    private final static String[] SINGLE_FILES_TO_COPY = {
+        IMQJMSRA_APP,
+        IMQ_JAR,
+        IMQADMIN_JAR,
+        IMQUTIL_JAR,
+        FSCONTEXT_JAR,
         WIN_SCRIPT,
-        WIN_JS, 
-        NONWIN_SCRIPT, 
-        ASENV_CONF, 
+        WIN_JS,
+        NONWIN_SCRIPT,
+        ASENV_CONF,
         ASENV_BAT };
 
     /* default output file */
@@ -145,7 +145,7 @@ public class PackageAppClient {
         File thisJarFile = findCurrentJarFile();
         File installDir = findInstallDir(thisJarFile);
         File modulesDir = new File(installDir.toURI().resolve("glassfish/modules/"));
-        
+
         /*
          * Write the new JAR to a temp file in the install directory. Then we can simply rename the file to the correct name.
          * (Rename does not work on Windows systems across volumes.)
@@ -207,11 +207,11 @@ public class PackageAppClient {
         } else {
             System.out.println(strings.get("creatingFile", outputFile.getAbsolutePath()));
         }
-        
+
         if (isVerbose) {
             System.out.println(strings.get("moving", tempFile.getAbsolutePath(), outputFile.getAbsolutePath()));
         }
-        
+
         if (!tempFile.renameTo(outputFile)) {
             throw new RuntimeException(strings.get("errRenaming", tempFile.getAbsolutePath(), outputFile.getAbsolutePath()));
         }
@@ -219,7 +219,7 @@ public class PackageAppClient {
 
     /**
      * Adds all endorsed JAR files in the app server's endorsed directory to the output JAR file.
-     * 
+     *
      * @param os
      * @param installDirURI
      * @param endorsedDirURI
@@ -233,7 +233,7 @@ public class PackageAppClient {
     /**
      * Adds a single file to the output JAR, avoiding the output file itself (if by some chance the user is creating the
      * output JAR in one of the places from which we gather input).
-     * 
+     *
      * @param os
      * @param installDirURI
      * @param absoluteURIToAdd
@@ -245,7 +245,7 @@ public class PackageAppClient {
             if (isVerbose) {
                 System.err.println(indent + strings.get("addingFile", absoluteURIToAdd));
             }
-            
+
             File fileToCopy = new File(absoluteURIToAdd);
             if (fileToCopy.equals(outputFile)) {
                 return;
@@ -287,7 +287,7 @@ public class PackageAppClient {
 
     /**
      * Add all the files from the specified directory, recursing to lower-level subdirectories.
-     * 
+     *
      * @param os
      * @param installDirURI
      * @param absoluteDirURIToAdd
@@ -296,7 +296,7 @@ public class PackageAppClient {
      */
     private void addDir(JarOutputStream os, URI installDirURI, URI absoluteDirURIToAdd, File outputFile, String indent) throws IOException {
         addDir(
-            os, installDirURI, absoluteDirURIToAdd, 
+            os, installDirURI, absoluteDirURIToAdd,
             null /* with null filter File.listFiles accepts all files and directories */,
             outputFile, indent);
     }
@@ -321,11 +321,11 @@ public class PackageAppClient {
              */
             return;
         }
-        
+
         if (isVerbose) {
             System.err.println(indent + strings.get("addingDir", dirFile.getAbsolutePath()));
         }
-        
+
         for (File fileToAdd : matchingFiles) {
             if (fileToAdd.isFile()) {
                 addFile(os, installDirURI, fileToAdd.toURI(), outputFile, indent + INDENT);
@@ -337,7 +337,7 @@ public class PackageAppClient {
 
     /**
      * Copies the contents of a given file to the output stream.
-     * 
+     *
      * @param os
      * @param uriToCopy
      * @throws java.io.FileNotFoundException
@@ -367,7 +367,7 @@ public class PackageAppClient {
 
     /**
      * Returns a file, either a default value or one explicitly set via a user-provided option on the command line.
-     * 
+     *
      * @param option
      * @param defaultRelativeURI
      * @param installDir
@@ -382,13 +382,13 @@ public class PackageAppClient {
         if (optionValue != null) {
             return new File(optionValue);
         }
-        
+
         return new File(installDir.toURI().resolve(defaultRelativeURI));
     }
 
     /**
      * Returns the user-specified or default *-acc.xml config files.
-     * 
+     *
      * @param installDir
      * @param args
      * @return
@@ -424,13 +424,13 @@ public class PackageAppClient {
                 return true;
             }
         }
-        
+
         return false;
     }
 
     /**
      * Returns the value for the specified option.
-     * 
+     *
      * @param option option name to search the args for
      * @param args   args to search
      * @return token after the specified optionon the command line, if any;
@@ -441,12 +441,12 @@ public class PackageAppClient {
             if (args[i].equals(option)) {
                 if (i + 1 < args.length) {
                     return args[i + 1];
-                } 
-                
+                }
+
                 throw new IllegalArgumentException(option);
             }
         }
-        
+
         return null;
     }
 
@@ -461,11 +461,11 @@ public class PackageAppClient {
                                    .getCodeSource()
                                    .getLocation()
                                    .toURI();
-        
-        URI thisJarFileBasedURI = (thisJarURI.getScheme().startsWith("jar")) ? 
-            URI.create("file:" + thisJarURI.getRawSchemeSpecificPart()) : 
+
+        URI thisJarFileBasedURI = (thisJarURI.getScheme().startsWith("jar")) ?
+            URI.create("file:" + thisJarURI.getRawSchemeSpecificPart()) :
             thisJarURI;
-        
+
         /*
          * One getParent gives the modules directory; the second gives the installation directory.
          */
@@ -474,7 +474,7 @@ public class PackageAppClient {
 
     /**
      * Returns the Class-Path setting for the specified File, presumed to be a JAR.
-     * 
+     *
      * @param currentJarFile
      * @return
      * @throws java.io.IOException

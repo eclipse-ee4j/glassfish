@@ -47,19 +47,19 @@ import jakarta.annotation.Resource;
 import java.util.Collection;
 
 @TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
-@MessageDriven(messageListenerInterface=MessageListener.class) 
+@MessageDriven(messageListenerInterface=MessageListener.class)
 public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
     @EJB(name="hello1") private Hello1 hello1;
     @EJB private Hello2 hello2;
-    
+
     boolean onMessageInterceptorCalled = false;
     boolean timeoutInterceptorCalled = false;
 
     @Resource jakarta.ejb.MessageDrivenContext ctx;
     @Resource jakarta.ejb.TimerService injectedTimerService;
 
-    @Resource(name="jms/MyQueueConnectionFactory") 
+    @Resource(name="jms/MyQueueConnectionFactory")
         QueueConnectionFactory qcFactory;
 
     // Values for these will be specified in the standard deployment descriptor
@@ -81,7 +81,7 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
     @Resource int intValue2 = 1;
     @Resource Integer integerValue2 = new Integer(1);
 
-    // corresponding env-entry is specified in ejb-jar.xml, 
+    // corresponding env-entry is specified in ejb-jar.xml,
     // but there is no value so no injection should happen and
     // the default value should be used.
     int intValue3 = 3;
@@ -143,7 +143,7 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
             } else {
                 throw new Exception("wrong value for intValue3 = " +
                                     intValue3);
-            } 
+            }
 
             if( stringValue1.equals("undefined") ||
                 (intValue1 == 1) || (integerValue1.intValue() == 1) ||
@@ -160,8 +160,8 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
                 (intValue2 != 1) || (integerValue2.intValue() != 1) ) {
                 throw new Exception("env-entry @Resource override error");
             }
-            
-            // Proprietary way to look up tx manager.  
+
+            // Proprietary way to look up tx manager.
             TransactionManager tm = (TransactionManager)
                 new InitialContext().lookup("java:appserver/TransactionManager");
             // Use an implementation-specific check to ensure that there
@@ -176,7 +176,7 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
                 throw new Exception("Invalid tx status for TX_NOT_SUPPORTED" +
                                     " method " + txStatus);
             }
-            
+
             System.out.println("Calling hello1 stateless bean");
             hello1.hello("local ejb3.0 stateless");
 
@@ -203,11 +203,11 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
 
             System.out.println("creating timer");
-            TimerService timerService = (TimerService) 
+            TimerService timerService = (TimerService)
                 new InitialContext().lookup("java:comp/TimerService");
-                
+
             timerService.createTimer(7000, "created timer");
-            
+
             Collection timers = injectedTimerService.getTimers();
             if( timers.size() != 1 ) {
                 throw new IllegalStateException("invalid timer count = " +
@@ -222,7 +222,7 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
     @Timeout private void timeout(jakarta.ejb.Timer t) {
 
-        QueueConnection connection = null;        
+        QueueConnection connection = null;
 
         try {
             System.out.println("In MessageBean.  Got timeout callback");
@@ -246,7 +246,7 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
             InitialContext ic = new InitialContext();
 
-            // Proprietary way to look up tx manager.  
+            // Proprietary way to look up tx manager.
             TransactionManager tm = (TransactionManager)
                 ic.lookup("java:appserver/TransactionManager");
             // Use an implementation-specific check to ensure that there
@@ -289,9 +289,9 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
 
     @AroundInvoke
     public Object intercept(InvocationContext inv)
-	throws Exception
+        throws Exception
     {
-	System.out.println("[mdb] Interceptor invoked...");
+        System.out.println("[mdb] Interceptor invoked...");
         System.out.println("method = " + inv.getMethod());
         System.out.println("params = " + inv.getParameters());
         int i = 0;
@@ -309,8 +309,8 @@ public class MessageBean implements jakarta.ejb.MessageDrivenBean {
         }
 
 
-	Object o = inv.proceed();
-	System.out.println("[mdb] Interceptor after proceed()...");
+        Object o = inv.proceed();
+        System.out.println("[mdb] Interceptor after proceed()...");
 
         return o;
     }

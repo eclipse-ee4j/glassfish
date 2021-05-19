@@ -24,7 +24,7 @@ import com.sun.s1asdev.ejb.bmp.finder.ejb.*;
 import com.sun.ejte.ccl.reporter.SimpleReporterAdapter;
 
 /**
- * A simple java client will: 
+ * A simple java client will:
  * <ul>
  * <li>Locates the home interface of the enterprise bean
  * <li>Gets a reference to the remote interface
@@ -36,11 +36,11 @@ public class FinderClient {
     private SimpleReporterAdapter stat =
         new SimpleReporterAdapter("appserv-tests");
 
-    public static void main(String[] args) { 
-        FinderClient client = new FinderClient(); 
+    public static void main(String[] args) {
+        FinderClient client = new FinderClient();
 
         // run the tests
-        client.runTestClient();   
+        client.runTestClient();
     }
 
     public void runTestClient() {
@@ -60,12 +60,12 @@ public class FinderClient {
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleCourse");
-            CourseHome cHome = 
-                (CourseHome) PortableRemoteObject.narrow(objref, 
+            CourseHome cHome =
+                (CourseHome) PortableRemoteObject.narrow(objref,
                                                          CourseHome.class);
             objref = initial.lookup("java:comp/env/ejb/SimpleStudent");
-            StudentHome sHome = 
-                (StudentHome) PortableRemoteObject.narrow(objref, 
+            StudentHome sHome =
+                (StudentHome) PortableRemoteObject.narrow(objref,
                                                           StudentHome.class);
 
             Course intro = cHome.findByPrimaryKey("777");
@@ -76,14 +76,14 @@ public class FinderClient {
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         }
-    } 
+    }
 
     private void test02() {
         try {
             Context initial = new InitialContext();
             Object objref = initial.lookup("java:comp/env/ejb/SimpleCourse");
-            CourseHome cHome = 
-                (CourseHome) PortableRemoteObject.narrow(objref, 
+            CourseHome cHome =
+                (CourseHome) PortableRemoteObject.narrow(objref,
                                                          CourseHome.class);
 
             ArrayList list = cHome.findAllCourses();
@@ -94,6 +94,6 @@ public class FinderClient {
             System.err.println("Caught an unexpected exception!");
             ex.printStackTrace();
         }
-    } 
+    }
 
-} 
+}

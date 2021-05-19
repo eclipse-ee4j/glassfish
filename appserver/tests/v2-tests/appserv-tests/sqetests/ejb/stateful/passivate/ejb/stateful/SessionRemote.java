@@ -27,18 +27,18 @@ import java.util.HashMap;
  * @author dsingh
  */
 
-public interface SessionRemote extends jakarta.ejb.EJBObject {    
-    
-    public void badMethod() throws RemoteException;   
-    
+public interface SessionRemote extends jakarta.ejb.EJBObject {
+
+    public void badMethod() throws RemoteException;
+
     public String getMessage() throws RemoteException;
-    
+
     public String txMethod() throws RemoteException;
-    
+
     public boolean afterActivationBusinessMethod() throws RemoteException;
-    
-    public HashMap getEJBRecorder() throws RemoteException;    
-    
-    
+
+    public HashMap getEJBRecorder() throws RemoteException;
+
+
 }
 

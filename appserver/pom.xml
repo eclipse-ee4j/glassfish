@@ -138,9 +138,9 @@
         <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
-        <jsonp-api.version>2.0.0</jsonp-api.version>
-        <jsonp-ri.version>2.0.0</jsonp-ri.version>
-        <jsonp-jaxrs.version>2.0.0</jsonp-jaxrs.version>
+        <jsonp-api.version>2.0.1</jsonp-api.version>
+        <jsonp-ri.version>2.0.1</jsonp-ri.version>
+        <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
         <json.bind-api.version>2.0.0</json.bind-api.version>
         <yasson.version>2.0.1</yasson.version>
 

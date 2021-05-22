@@ -24,7 +24,7 @@
   <parent>
     <groupId>org.glassfish.main.extras</groupId>
     <artifactId>glassfish-embedded-common</artifactId>
-    <version>6.1.0-SNAPSHOT</version>
+    <version>6.1.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.glassfish.main.core</groupId>
             <artifactId>glassfish</artifactId>
-            <version>6.1.0-SNAPSHOT</version>
+            <version>6.1.0</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

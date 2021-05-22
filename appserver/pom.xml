@@ -161,6 +161,10 @@
         <weld.version>4.0.1.SP1</weld.version>
         <jboss.classfilewriter.version>1.2.4.Final</jboss.classfilewriter.version>
 
+        <!-- Jakarta MVC -->
+        <mvc-api.version>2.0.0</mvc-api.version>
+        <krazo.version>2.0.1</krazo.version>
+
         <!-- Admin console components -->
         <jsftemplating.version>3.0.0</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
@@ -498,6 +502,22 @@
                 <version>${jboss.classfilewriter.version}</version>
             </dependency>
 
+            <!-- Jakarta MVC -->
+            <dependency>
+                <groupId>jakarta.mvc</groupId>
+                <artifactId>jakarta.mvc-api</artifactId>
+                <version>${mvc-api.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.krazo</groupId>
+                <artifactId>krazo-core</artifactId>
+                <version>${krazo.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.krazo</groupId>
+                <artifactId>krazo-jersey</artifactId>
+                <version>${krazo.version}</version>
+            </dependency>
 
             <!-- Admin console components -->
             <dependency>

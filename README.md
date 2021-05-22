@@ -10,7 +10,7 @@ Building
 
 Prerequisites:
 
-* JDK8+
+* JDK11+
 * Maven 3.0.3+
 
 Currently in the master branch artifacts are being pulled from OSSRH staging.

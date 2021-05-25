@@ -9,6 +9,13 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## May 25, 2021 -- Eclipse GlassFish 6.1 Available
+
+We are happy to announce the final release of Eclipse GlassFish 6.1. This release provides implementations
+of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links are available from the [GlassFish Download page](https://eclipse-ee4j.github.io/glassfish/download). Eclipse GlassFish 6.1 implements the Jakarta EE 9.1 specification ([Jakarta EE 9.1 Platform](https://jakarta.ee/specifications/platform/9.1/), [Jakarta EE 9 Web Profile](https://jakarta.ee/specifications/webprofile/9.1/)).
+
+Note this release requires JDK 11.
+
 
 ## April 14, 2021 -- Eclipse GlassFish 6.1 RC1 Available
 

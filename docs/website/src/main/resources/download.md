@@ -1,18 +1,18 @@
 # Eclipse GlassFish Downloads
 
-## Eclipse GlasFish 6.1 RC1
+## Eclipse GlasFish 6.1
 
 Release Candidate build of Eclipse GlassFish is available for trial usage. This release will be certified compatible with
 Jakarta EE 9.1. This release supports JDK 11.
-You can find more details about the Platform changes at [Jakarta EE Platform 9.1](https://jakarta.ee/specifications/platform/9.1/) and [9.1 Platform Web Profile 9.1](https://jakarta.ee/specifications/webprofile/9.1/). Other than bug-fixes, the major change is support for JDK 11.
-Anyone wishing to experiement and provide feedback
-on this new release is encouraged to give it a try and let us know what your experience is.
-If you encounter any problems, please let us know by e-mailing us on the [GlassFish Developer e-mail list](mailto:glassfish-dev@eclipse.org), or you may file an issue on the [Eclipse GlassFish issue tracker](https://github.com/eclipse-ee4j/glassfish/issues). 
-Your feedback is very important and a crucial element of our release process.
-We hope to hear from you!
 
-* [Eclipse GlassFish 6.1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0-RC1.zip) -- compatible with forthcoming Jakarta EE 9.1 Platform
-* [Eclispe GlassFish 6.1 Web Profile]((https://download.eclipse.org/ee4j/glassfish/web-6.1.0-RC1.zip) -- compatible with forthcoming Jakarta EE 9.1 Platform, Web Profile
+The latest stable release for Eclipse GlassFish 6.1. It is functionally complete and meets the compatibility requirements of the approved final version of the Jakarta EE 9.1 Specification. Downloads are provided for both Jakarta EE Platform 9.1 and Jakarta EE Web Profile 9.1.
+For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/). 
+
+Other than bug-fixes, the major change is support for JDK 11.
+
+
+* [Eclipse GlassFish 6.1.0, Jakarta EE Platform, 9.1](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0.zip), - [info](https://download.eclipse.org/ee4j/glassfish/glassfish-6.1.0.info)
+* [Eclipse GlassFish 6.1.0, Jakarta EE Web Profile, 9.1](https://download.eclipse.org/ee4j/glassfish/web-6.1.0.zip), - [info](https://download.eclipse.org/ee4j/glassfish/web-6.1.0.info)
 
 ## Eclipse GlassFish 6
 
@@ -22,7 +22,7 @@ For more details on Jakarta EE 9, please see the [Jakarte EE Platform Specificat
 NOTE: Users upgrading from Jakarta EE 8 to Jakarta EE 9 may want to review the Spec. changes describing how to upgrade an EE 8 application to EE 9 (for example, you might start by watching [this video](https://youtu.be/3ClvncBrKJw?t=405)).
 
 * [Eclipse GlassFish 6.0.0, Jakarta EE Platform, 9](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0.zip), - [info](https://download.eclipse.org/ee4j/glassfish/glassfish-6.0.0.info)
-* [Eclipse Glassfish 6.0.0, Jakarta EE Web Profile, 9](https://download.eclipse.org/ee4j/glassfish/web-6.0.0.zip), - [info](https://download.eclipse.org/ee4j/glassfish/web-6.0.0.info)
+* [Eclipse GlassFish 6.0.0, Jakarta EE Web Profile, 9](https://download.eclipse.org/ee4j/glassfish/web-6.0.0.zip), - [info](https://download.eclipse.org/ee4j/glassfish/web-6.0.0.info)
 
 We welcome your feedback! Please include the details provided in the **info** link when reporting any [issues](https://github.com/eclipse-ee4j/glassfish/issues).
 

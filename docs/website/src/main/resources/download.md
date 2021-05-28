@@ -1,6 +1,6 @@
 # Eclipse GlassFish Downloads
 
-## Eclipse GlasFish 6.1
+## Eclipse GlassFish 6.1
 
 Release Candidate build of Eclipse GlassFish is available for trial usage. This release will be certified compatible with
 Jakarta EE 9.1. This release supports JDK 11.

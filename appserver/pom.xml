@@ -96,7 +96,7 @@
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
-        <mojarra.version>3.0.0</mojarra.version>
+        <mojarra.version>3.0.1</mojarra.version>
 
         <!-- Jakarta WebSocket -->
         <websocket-api.version>2.0.0</websocket-api.version>
@@ -715,7 +715,7 @@
                             </artifact>
                             <nonFinal>false</nonFinal>
                             <jarType>impl</jarType>
-                            <specVersion>2.2</specVersion>
+                            <specVersion>3.0</specVersion>
                             <implVersion>${mojarra.version}</implVersion>
                             <apiPackage>jakarta.faces</apiPackage>
                             <implNamespace>org.glassfish</implNamespace>

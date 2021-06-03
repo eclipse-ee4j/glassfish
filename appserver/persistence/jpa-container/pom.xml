@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence</groupId>
         <artifactId>persistence</artifactId>
-        <version>6.1.1-SNAPSHOT</version>
+        <version>6.2.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>jpa-container</artifactId>

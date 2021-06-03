@@ -26,7 +26,6 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>glassfish-embedded-web</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
     <name>Embedded GlassFish Web</name>
     <packaging>jar</packaging>
 

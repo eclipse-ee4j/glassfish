@@ -29,7 +29,6 @@
     <artifactId>gf-jms-injection</artifactId>
     <packaging>glassfish-jar</packaging>
     <name>JMS Injection Module for Runtime</name>
-    <version>6.1.1-SNAPSHOT</version>
 
     <developers>
         <developer>

@@ -27,8 +27,6 @@
     </parent>
     <artifactId>jms-admin</artifactId>
     <packaging>glassfish-jar</packaging>
-
-    <version>6.1.1-SNAPSHOT</version>
     <name>JMS admin</name>
 
     <developers>

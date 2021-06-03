@@ -27,9 +27,7 @@
         <relativePath>parent/pom.xml</relativePath>
     </parent>
 
-    <groupId>org.glassfish.main</groupId>
     <artifactId>glassfish-nucleus-parent</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <name>GlassFish Nucleus Project</name>

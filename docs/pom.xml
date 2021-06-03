@@ -27,7 +27,6 @@
     </parent>
     <groupId>org.glassfish.docs</groupId>
     <artifactId>docs</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Eclipse GlassFish Documentation</name>
 

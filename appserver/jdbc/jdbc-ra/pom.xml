@@ -29,7 +29,6 @@
     <artifactId>jdbc-ra</artifactId>
     <name>JDBC Resource Adapter</name>
     <packaging>pom</packaging>
-    <version>6.1.1-SNAPSHOT</version>
     <build>
         <plugins>
             <plugin>

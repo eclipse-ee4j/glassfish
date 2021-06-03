@@ -28,7 +28,6 @@
 
     <groupId>org.glassfish.main.tests</groupId>
     <artifactId>utils-ng</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
 
     <name>nucleus.tests.utils-ng</name>
 

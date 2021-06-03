@@ -18,26 +18,25 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-    <groupId>org.glassfish.main.extras</groupId>
-    <artifactId>extras</artifactId>
-    <version>6.1.1-SNAPSHOT</version>
-    <relativePath>../../pom.xml</relativePath>
-  </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.glassfish.main.extras</groupId>
+        <artifactId>extras</artifactId>
+        <version>6.2.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
+    </parent>
 
-  <artifactId>glassfish-embedded-common</artifactId>
-  <packaging>pom</packaging>
-  <name>Embedded GlassFish Common</name>
-  <version>6.1.1-SNAPSHOT</version>
+    <artifactId>glassfish-embedded-common</artifactId>
+    <packaging>pom</packaging>
+    <name>Embedded GlassFish Common</name>
 
-  <modules>
-    <module>installroot-builder</module>
-    <module>instanceroot-builder</module>
-    <module>osgi-modules-uninstaller</module>
-    <module>osgi-main</module>
-    <module>bootstrap</module>
-  </modules>
+    <modules>
+        <module>installroot-builder</module>
+        <module>instanceroot-builder</module>
+        <module>osgi-modules-uninstaller</module>
+        <module>osgi-main</module>
+        <module>bootstrap</module>
+    </modules>
 
 </project>
 

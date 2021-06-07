@@ -9,7 +9,7 @@ if [ "${version}" == "" ]; then
     exit 1;
 fi
 
-oldVersion="$(xmllint --xpath "//*[local-name()='project']/*[local-name()='version']/text()" ./pom.xml)"
+oldVersion="$(mvn help:evaluate -Dexpression=project.version -N -q -DforceStdout)"
 implicitVersionParams="-DgenerateBackupPoms=false -DprocessAllModules=true -DoldVersion=${oldVersion}"
 
 # change version of the aggregator and keep consistency
@@ -24,4 +24,3 @@ find "./appserver/tests" -type f -name "pom.xml" -print0 | while IFS= read -r -d
     mv "${file}.temporary" "${file}";
     chmod $fileMode "${file}";
 done
-

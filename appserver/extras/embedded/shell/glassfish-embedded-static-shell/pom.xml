@@ -18,6 +18,7 @@
 -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
@@ -29,8 +30,6 @@
     <artifactId>glassfish-embedded-static-shell</artifactId>
     <name>Embedded GlassFish Static Shell</name>
     <packaging>jar</packaging>
-    <modelVersion>4.0.0</modelVersion>
-
 
     <properties>
         <classpath.file>${project.build.directory}/tmp/classpath.txt</classpath.file>
@@ -69,44 +68,44 @@
               </executions>
           </plugin>
 
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-jar-plugin</artifactId>
-                    <configuration>
-                       <archive>
-                            <manifest>
-                                <addClasspath>true</addClasspath>
-                                <classpathLayoutType>custom</classpathLayoutType>
-                                <customClasspathLayout>../../modules/$${artifact.artifactId}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout>
-                            </manifest>
-                        </archive>
-                    </configuration>
-          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathLayoutType>custom</classpathLayoutType>
+                            <customClasspathLayout>../../modules/$${artifact.artifactId}$${dashClassifier?}.$${artifact.extension}</customClasspathLayout>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
 
-          <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-antrun-plugin</artifactId>
-              <executions>
-                  <execution>
-                      <id>fixup-jar-classpath</id>
-                      <phase>package</phase>
-                      <goals>
-                          <goal>run</goal>
-                      </goals>
-                      <configuration>
-                          <target>
-                              <ant antfile="../fixup.xml">
-                                  <property name="output.file" value="${project.build.finalName}.jar" />
-                                  <property name="output.dir" value="${project.build.directory}" />
-                                  <property name="stage.dir" value="${project.build.directory}/stage" />
-                                  <property name="classpath.file" value="${classpath.file}" />
-                                  <property name="bundlename" value="org.glassfish.embedded.static-shell" />
-                              </ant>
-                          </target>
-                      </configuration>
-                  </execution>
-              </executions>
-          </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>fixup-jar-classpath</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <ant antfile="../fixup.xml">
+                                    <property name="output.file" value="${project.build.finalName}.jar" />
+                                    <property name="output.dir" value="${project.build.directory}" />
+                                    <property name="stage.dir" value="${project.build.directory}/stage" />
+                                    <property name="classpath.file" value="${classpath.file}" />
+                                    <property name="bundlename" value="org.glassfish.embedded.static-shell" />
+                                </ant>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -447,55 +446,46 @@
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
             <artifactId>aopalliance-repackaged</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-analysis</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-commons</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-util</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-core</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>osgi-resource-locator</artifactId>
-            <version>${osgi-resource-locator.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-api</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -507,31 +497,26 @@
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-runlevel</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-locator</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>class-model</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-utils</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -771,25 +756,21 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.asm</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -801,19 +782,16 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.dbws</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>

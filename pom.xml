@@ -74,6 +74,19 @@
                 <module>appserver</module>
             </modules>
         </profile>
+        <profile>
+            <id>set-version-id</id>
+            <modules>
+                <module>qa</module>
+                <module>nucleus</module>
+                <module>appserver</module>
+                <module>nucleus/hk2/config-generator</module>
+                <module>docs</module>
+                <module>appserver/admingui/devtests</module>
+                <module>appserver/extras/embedded/common</module>
+                <module>nucleus/tests</module>
+            </modules>
+        </profile>
     </profiles>
 
     <!--

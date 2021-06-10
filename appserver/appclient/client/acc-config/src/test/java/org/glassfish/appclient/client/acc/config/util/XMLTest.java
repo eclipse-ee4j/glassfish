@@ -16,31 +16,37 @@
 
 package org.glassfish.appclient.client.acc.config.util;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
 import javax.xml.parsers.ParserConfigurationException;
-import org.xml.sax.EntityResolver;
-import javax.xml.transform.sax.SAXSource;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Properties;
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
+import javax.xml.transform.sax.SAXSource;
+
 import org.glassfish.appclient.client.acc.config.ClientContainer;
 import org.glassfish.appclient.client.acc.config.TargetServer;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import static org.junit.Assert.*;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Unmarshaller;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -109,18 +115,12 @@ public class XMLTest {
             throws JAXBException, FileNotFoundException, ParserConfigurationException, SAXException, IOException {
         ClientContainer result = null;
         InputStream is = XMLTest.class.getResourceAsStream(configPath);
+        assertNotNull("cannot locate test file " + configPath, configPath);
         try {
-            if (is == null) {
-                fail("cannot locate test file " + configPath);
-            }
             JAXBContext jc = JAXBContext.newInstance(ClientContainer.class );
-
             Unmarshaller u = jc.createUnmarshaller();
-
             final SAXSource src = setUpToUseLocalDTDs(is);
-
             result = (ClientContainer) u.unmarshal(src);
-
             return result;
         } finally {
             is.close();
@@ -147,7 +147,7 @@ public class XMLTest {
      */
     private static class LocalEntityResolver implements EntityResolver {
 
-        private static enum ACC_INFO {
+        private enum ACC_INFO {
             SUN_ACC(
                 "-//Sun Microsystems Inc.//DTD Application Server 8.0 Application Client Container//EN",
                 "dtds/sun-application-client-container_1_2.dtd"),
@@ -185,7 +185,7 @@ public class XMLTest {
                 initPublicIdToLocalPathMap();
 
         private static Map<String,String> initPublicIdToLocalPathMap() {
-            final Map<String,String> result = new HashMap<String,String>();
+            final Map<String,String> result = new HashMap<>();
             for (ACC_INFO accInfo : ACC_INFO.values()) {
                 result.put(accInfo.publicID, accInfo.uri.toASCIIString());
             }

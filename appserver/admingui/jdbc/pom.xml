@@ -31,27 +31,6 @@
     <name>Admin Console JDBC Plugin</name>
     <description>JDBC plugin bundle for GlassFish Admin Console</description>
 
-    <developers>
-        <!-- See parent POM -->
-    </developers>
-
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>auto-clean</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>clean</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>

@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.cluster</groupId>
         <artifactId>cluster</artifactId>
-        <version>6.2.0</version>
+        <version>6.2.1</version>
     </parent>
 
     <artifactId>gms-adapter</artifactId>

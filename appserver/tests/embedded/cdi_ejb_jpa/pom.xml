@@ -22,7 +22,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish.tests.embedded.basic</groupId>
     <artifactId>cdi_ejb_jpa</artifactId>
-    <version>6.2.0</version>
+    <version>6.2.1</version>
     <name>CDI, EJB, JPA integration test</name>
     <build>
         <finalName>cdi_ejb_jpa</finalName>

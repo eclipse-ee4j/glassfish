@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>appserv-rt-pom</artifactId>
-        <version>6.2.0-SNAPSHOT</version>
+        <version>6.2.1-SNAPSHOT</version>
     </parent>
     <name>GlassFish appserv-rt distribution fragment</name>
     <artifactId>appserv-rt-frag</artifactId>

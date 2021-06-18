@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests</groupId>
         <artifactId>hk2</artifactId>
-        <version>6.2.0-SNAPSHOT</version>
+        <version>6.2.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.glassfish.tests.hk2</groupId>

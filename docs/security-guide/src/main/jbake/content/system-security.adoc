@@ -2205,7 +2205,7 @@ named testJACC on the default server target. +
 [source,oac_no_warn]
 ----
 asadmin> create-jacc-provider
-       --policyproviderclass com.sun.enterprise.security.jacc.provider.SimplePolicyProvider
+       --policyproviderclass org.glassfish.exousia.modules.locked.SimplePolicyProvider
        --policyconfigfactoryclass com.sun.enterprise.security.provider.PolicyCon
 figurationFactoryImpl
        testJACC

@@ -16,35 +16,37 @@
 
 package org.glassfish.ejb.security.application;
 
-import com.sun.ejb.EjbInvocation;
-import com.sun.logging.LogDomains;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType;
 import org.glassfish.api.invocation.ComponentInvocationHandler;
-import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.glassfish.api.invocation.InvocationException;
 import org.glassfish.api.invocation.InvocationManager;
-import jakarta.inject.Inject;
-
+import org.glassfish.api.invocation.RegisteredComponentInvocationHandler;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.ejb.EjbInvocation;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
-@Service(name="ejbSecurityCIH")
+@Service(name = "ejbSecurityCIH")
 @Singleton
-public class EjbSecurityComponentInvocationHandler implements  RegisteredComponentInvocationHandler {
+public class EjbSecurityComponentInvocationHandler implements RegisteredComponentInvocationHandler {
 
-    private static final Logger _logger =
-            LogDomains.getLogger(EjbSecurityComponentInvocationHandler.class, LogDomains.EJB_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(EjbSecurityComponentInvocationHandler.class, LogDomains.EJB_LOGGER);
 
     @Inject
     private InvocationManager invManager;
 
     private ComponentInvocationHandler ejbSecurityCompInvHandler = new ComponentInvocationHandler() {
 
-        public void beforePreInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation newInv) throws InvocationException {
+        @Override
+        public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv)
+            throws InvocationException {
             if (invType == ComponentInvocationType.EJB_INVOCATION) {
                 assert (newInv instanceof EjbInvocation);
                 try {
@@ -52,22 +54,25 @@ public class EjbSecurityComponentInvocationHandler implements  RegisteredCompone
                         ((EjbInvocation) newInv).getEjbSecurityManager().preInvoke(newInv);
                     }
                 } catch (Exception ex) {
-                    _logger.log(Level.SEVERE, "ejb.security_preinvoke_exception",ex);
+                    _logger.log(Level.SEVERE, "ejb.security_preinvoke_exception", ex);
                     throw new InvocationException(ex);
                 }
             }
         }
 
-        public void afterPreInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        @Override
+        public void afterPreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
+            throws InvocationException {
         }
 
-        public void beforePostInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        @Override
+        public void beforePostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
+            throws InvocationException {
         }
 
-        public void afterPostInvoke(ComponentInvocationType invType,
-                ComponentInvocation prevInv, ComponentInvocation curInv) throws InvocationException {
+        @Override
+        public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
+            throws InvocationException {
             if (invType == ComponentInvocationType.EJB_INVOCATION) {
                 assert (curInv instanceof EjbInvocation);
                 try {
@@ -80,10 +85,12 @@ public class EjbSecurityComponentInvocationHandler implements  RegisteredCompone
         }
     };
 
+    @Override
     public ComponentInvocationHandler getComponentInvocationHandler() {
         return ejbSecurityCompInvHandler;
     }
 
+    @Override
     public void register() {
         invManager.registerComponentInvocationHandler(ComponentInvocationType.EJB_INVOCATION, this);
     }

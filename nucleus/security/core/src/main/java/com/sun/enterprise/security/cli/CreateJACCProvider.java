@@ -57,7 +57,7 @@ import org.jvnet.hk2.config.TransactionFailure;
  *
  *
  * domain.xml element example
- *   <jacc-provider policy-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyProvider" name="default" policy-configuration-factory-provider="com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory">
+ *   <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
  *         <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy" />
  *   </jacc-provider>
  *

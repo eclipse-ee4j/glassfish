@@ -16,7 +16,6 @@
 
 package org.glassfish.deployment.common;
 
-import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -30,34 +29,35 @@ public interface SecurityRoleMapperFactory {
      * Returns a RoleMapper corresponding to the AppName.
      * @param The Application Name of this RoleMapper.
      */
-    public SecurityRoleMapper getRoleMapper(String appName);
+    SecurityRoleMapper getRoleMapper(String appName);
 
     /**
      * remove the RoleMapping associated with this application
      * @param the application name for this RoleMapper
      */
-    public void removeRoleMapper(String appName);
+    void removeRoleMapper(String appName);
 
     /**
      * Sets a new RoleMapper for a particular Application
      * @param the application name
      * @param the new role mapper
      */
-    public void setRoleMapper(String appName, SecurityRoleMapper rmap);
+    void setRoleMapper(String appName, SecurityRoleMapper rmap);
 
     /**
      * Returns the appname for this particular context id. Used in
      * context of a web application
      */
-    public String getAppNameForContext(String contextId);
+    String getAppNameForContext(String contextId);
+
     /**
      * stores the appname for this particular context id. Used in the
      * context of a web application
      */
-    public void setAppNameForContext(String appName, String contextId);
+    void setAppNameForContext(String appName, String contextId);
 
     /**
      * removes the link between contextId and the appname
      */
-    public void removeAppNameForContext(String contextId);
+    void removeAppNameForContext(String contextId);
 }

@@ -16,30 +16,29 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.security.integration.AppServSecurityContext;
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.common.AbstractSecurityContext;
-import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import java.util.Iterator;
-import java.util.Set;
-
-import java.security.Principal;
-import java.security.PrivilegedExceptionAction;
-import java.security.PrivilegedAction;
-import javax.security.auth.Subject;
-
-import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.PrincipalImpl;
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
 //V3:Comment import com.sun.enterprise.server.ApplicationServer;
 import java.security.AccessController;
-import org.glassfish.api.admin.ServerEnvironment;
+import java.security.Principal;
+import java.security.PrivilegedAction;
+import java.security.PrivilegedExceptionAction;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import org.jvnet.hk2.annotations.Service;
+import javax.security.auth.Subject;
+
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.security.common.PrincipalImpl;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.common.AbstractSecurityContext;
+import com.sun.enterprise.security.common.AppservAccessController;
+import com.sun.enterprise.security.integration.AppServSecurityContext;
 
 /**
 * This  class that extends AbstractSecurityContext that gets
@@ -101,6 +100,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         final Subject sub = s;
         this.subject = (Subject)
             AppservAccessController.doPrivileged(new PrivilegedAction(){
+                @Override
                 public java.lang.Object run() {
                     sub.getPrincipals().add(initiator);
                     return sub;
@@ -126,6 +126,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         this.subject = subject;
         this.initiator = (Principal)
             AppservAccessController.doPrivileged(new PrivilegedAction(){
+                @Override
                 public java.lang.Object run() {
                     Principal prin = null;
                     for (Object obj : fsub.getPublicCredentials()) {
@@ -171,6 +172,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         final Subject sub = s;
         this.subject = (Subject)
             AppservAccessController.doPrivileged(new PrivilegedAction(){
+                @Override
                 public java.lang.Object run() {
                     sub.getPrincipals().add(initiator);
                     return sub;
@@ -228,6 +230,7 @@ public class SecurityContext extends AbstractSecurityContext  {
                 try {
                     guestUser = (String)
                         AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+                                @Override
                                 public java.lang.Object run() throws Exception {
                                     SecurityService securityService = SecurityServicesUtil.getInstance().getHabitat().getService(SecurityService.class,
                                             ServerEnvironment.DEFAULT_INSTANCE_NAME);
@@ -254,6 +257,7 @@ public class SecurityContext extends AbstractSecurityContext  {
             try{
                 return (SecurityContext)
                     AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+                            @Override
                             public java.lang.Object run() throws Exception{
                                 return new SecurityContext();
                             }
@@ -355,22 +359,25 @@ public class SecurityContext extends AbstractSecurityContext  {
      * can be inferred by inspecting the Credentials of the caller.
      * @return The caller Principal.
      */
+    @Override
     public Principal getCallerPrincipal() {
         return this == defaultSecurityContext ? getDefaultCallerPrincipal() : initiator;
     }
 
 
+    @Override
     public Subject getSubject() {
         return subject;
     }
 
 
+    @Override
     public String toString() {
         return "SecurityContext[ " + "Initiator: " +
             initiator + "Subject " + subject + " ]";
     }
 
-    public Set getPrincipalSet() {
+    public Set<Principal> getPrincipalSet() {
         return subject.getPrincipals();
     }
 
@@ -378,6 +385,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         initDefaultCallerPrincipal();
     }
 
+    @Override
     public AppServSecurityContext newInstance(String userName, Subject subject, String realm) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "SecurityContext: newInstance method called");
@@ -385,6 +393,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         return new SecurityContext(userName, subject, realm);
     }
 
+    @Override
     public AppServSecurityContext newInstance(String userName, Subject subject) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "SecurityContext: newInstance method called");
@@ -392,6 +401,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         return new SecurityContext(userName, subject);
     }
 
+    @Override
     public void setCurrentSecurityContext(AppServSecurityContext context) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "SecurityContext: setCurrentSecurityContext method called");
@@ -407,6 +417,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         throw new IllegalArgumentException("Expected SecurityContext, found " + context);
     }
 
+    @Override
     public AppServSecurityContext getCurrentSecurityContext() {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "SecurityContext: getCurrent() method called");
@@ -414,6 +425,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         return getCurrent();
     }
 
+    @Override
     public void setUnauthenticatedSecurityContext() {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "SecurityContext: setUnauthenticatedSecurityContext method called");
@@ -421,6 +433,7 @@ public class SecurityContext extends AbstractSecurityContext  {
         setUnauthenticatedContext();
     }
 
+    @Override
     public void setSecurityContextWithPrincipal(Principal principal) {
         SecurityContext ctx = getSecurityContextForPrincipal(principal);
         setCurrent(ctx);
@@ -434,6 +447,7 @@ public class SecurityContext extends AbstractSecurityContext  {
             return ((SecurityContextProxy) p).getSecurityContext();
         } else {
             return AccessController.doPrivileged(new PrivilegedAction<SecurityContext>() {
+                @Override
                 public SecurityContext run() {
                     Subject s = new Subject();
                     s.getPrincipals().add(p);

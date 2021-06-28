@@ -17,21 +17,25 @@
 package com.sun.enterprise.deployment.web;
 
 import java.util.Set;
-import com.sun.enterprise.deployment.MetadataSource;
-    /** Objects exhibiting this interface represent a security constraint on the web application
-    * that owns them. */
 
+/**
+ * Objects exhibiting this interface represent a security constraint on the web application that owns them.
+ */
 public interface SecurityConstraint {
 
     /** The collection of URL pattern plus HTTP methods that are constrained. */
-    public Set<WebResourceCollection> getWebResourceCollections();
-    public void addWebResourceCollection(WebResourceCollection webResourceCollection);
+    Set<WebResourceCollection> getWebResourceCollections();
+
+    void addWebResourceCollection(WebResourceCollection webResourceCollection);
+
     /** The authorization constraint. */
-    public AuthorizationConstraint getAuthorizationConstraint();
-    public void setAuthorizationConstraint(AuthorizationConstraint authorizationConstraint);
+    AuthorizationConstraint getAuthorizationConstraint();
+
+    void setAuthorizationConstraint(AuthorizationConstraint authorizationConstraint);
 
     /** The user data constraint. */
-    public UserDataConstraint getUserDataConstraint();
-    public void setUserDataConstraint(UserDataConstraint userDataConstraint);
+    UserDataConstraint getUserDataConstraint();
+
+    void setUserDataConstraint(UserDataConstraint userDataConstraint);
 
 }

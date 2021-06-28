@@ -16,16 +16,15 @@
 
 package org.glassfish.ejb.api;
 
-
 import java.lang.reflect.Method;
+
 import jakarta.ejb.EJBContext;
 
 /**
- * This interface provides access to the exported portions of the
- * ejb invocation object.
+ * This interface provides access to the exported portions of the ejb invocation object.
+ *
  * @author Kenneth Saks
  */
-
 
 public interface EJBInvocation {
 
@@ -33,13 +32,15 @@ public interface EJBInvocation {
 
     /**
      * This is for EJB JAXWS only.
+     *
      * @return the JAXWS message
      */
     public Object getMessage();
 
     /**
      * This is for EJB JAXWS only.
-     * @param message  an unconsumed message
+     *
+     * @param message an unconsumed message
      */
     public <T> void setMessage(T message);
 
@@ -61,27 +62,28 @@ public interface EJBInvocation {
     public Object[] getMethodParams();
 
     /**
-     * Used by JACC implementation to get an enterprise bean
-     * instance for the EnterpriseBean policy handler.  The jacc
-     * implementation should use this method rather than directly
-     * accessing the ejb field.
+     * Used by JACC implementation to get an enterprise bean instance for the EnterpriseBean policy handler. The jacc implementation
+     * should use this method rather than directly accessing the ejb field.
      */
     public Object getJaccEjb();
 
     /**
      * Use the underlying container to authorize this invocation
+     *
      * @return true if the invocation was authorized by the underlying container
      * @throws java.lang.Exception TODO, change this to throw some subclass
      */
     public boolean authorizeWebService(Method m) throws Exception;
 
-/**
-    *
-    * @return true if the SecurityManager reports that the caller is in role
-    */
-   public boolean isCallerInRole(String role);
+    /**
+     *
+     * @return true if the SecurityManager reports that the caller is in role
+     */
+    public boolean isCallerInRole(String role);
 
     public void setWebServiceMethod(Method method);
+
     public Method getWebServiceMethod();
+
     public void setWebServiceContext(Object webServiceContext);
 }

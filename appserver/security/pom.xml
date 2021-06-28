@@ -38,7 +38,6 @@
         <module>webintegration</module>
         <module>core-ee</module>
         <module>security-all</module>
-        <module>inmemory.jacc.provider</module>
         <module>webservices.security</module>
         <module>ejb.security</module>
         <module>appclient.security</module>

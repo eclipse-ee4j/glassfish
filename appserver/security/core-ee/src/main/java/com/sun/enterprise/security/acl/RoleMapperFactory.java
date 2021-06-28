@@ -16,9 +16,8 @@
 
 package com.sun.enterprise.security.acl;
 
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.glassfish.deployment.common.SecurityRoleMapper;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
@@ -33,12 +32,10 @@ import jakarta.inject.Singleton;
 @Service
 @Singleton
 public class RoleMapperFactory implements SecurityRoleMapperFactory {
-    private Map CONTEXT_TO_APPNAME = new HashMap();
-    private Hashtable ROLEMAPPER = new Hashtable();
 
-    /** Creates a new instance of RoleMapperFactory */
-    public RoleMapperFactory() {
-    }
+    private Map<String, String> contextToAppName = new ConcurrentHashMap<>();
+    private Map<String, SecurityRoleMapper> appNameToRoleMapper = new ConcurrentHashMap<>();
+
 
     /**
      * Returns a RoleMapper corresponding to the AppName.
@@ -48,50 +45,35 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      */
     @Override
     public SecurityRoleMapper getRoleMapper(String appName) {
-        // if the appName is not appname but contextid for
+        // If the appName is not appname but contextid for
         // web apps then get the appname
         String contextId = appName;
         String appname = getAppNameForContext(appName);
-        SecurityRoleMapper srm = null;
+
+        SecurityRoleMapper securityRoleMapper = null;
         if (appname != null) {
-            srm = getRoleMapper(appname, this);
+            securityRoleMapper = getRoleMapper(appname, this);
         }
-        if (srm == null) {
-            srm = getRoleMapper(contextId, this);
+        if (securityRoleMapper == null) {
+            securityRoleMapper = getRoleMapper(contextId, this);
         }
-        return srm;
+
+        return securityRoleMapper;
     }
-
-    /**
-     * remove the RoleMapping associated with this application
-     *
-     * @param the application name for this RoleMapper
-     *
-     * public void removeRoleMapper(String appName) { RoleMapper.removeRoleMapper(appName); }
-     */
-
-    /**
-     * Sets a new RoleMapper for a particular Application
-     *
-     * @param the application name
-     * @param the new role mapper
-     *
-     * public void setRoleMapper(String appName, SecurityRoleMapper rmap) { RoleMapper.setRoleMapper(appName, rmap); }
-     */
 
     @Override
     public String getAppNameForContext(String contextId) {
-        return (String) CONTEXT_TO_APPNAME.get(contextId);
+        return contextToAppName.get(contextId);
     }
 
     @Override
     public void setAppNameForContext(String appName, String contextId) {
-        CONTEXT_TO_APPNAME.put(contextId, appName);
+        contextToAppName.put(contextId, appName);
     }
 
     @Override
     public void removeAppNameForContext(String contextId) {
-        CONTEXT_TO_APPNAME.remove(contextId);
+        contextToAppName.remove(contextId);
     }
 
     /**
@@ -100,24 +82,19 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      * @param appName Application Name of this RoleMapper.
      * @return SecurityRoleMapper for the application
      */
-    public RoleMapper getRoleMapper(String appName, SecurityRoleMapperFactory fact) {
-        RoleMapper r = (RoleMapper) ROLEMAPPER.get(appName);
-        if (r == null) {
-            r = new RoleMapper(appName);
-            ROLEMAPPER.put(appName, r);
-        }
-        return r;
+    public SecurityRoleMapper getRoleMapper(String appName, SecurityRoleMapperFactory securityRoleMapperFactory) {
+        return appNameToRoleMapper.computeIfAbsent(appName, RoleMapper::new);
     }
 
     /**
      * Set a RoleMapper for the application
      *
      * @param appName Application or module name
-     * @param rmap <I>SecurityRoleMapper</I> for the application or the module
+     * @param securityRoleMapper <I>SecurityRoleMapper</I> for the application or the module
      */
     @Override
-    public void setRoleMapper(String appName, SecurityRoleMapper rmap) {
-        ROLEMAPPER.put(appName, rmap);
+    public void setRoleMapper(String appName, SecurityRoleMapper securityRoleMapper) {
+        appNameToRoleMapper.put(appName, securityRoleMapper);
     }
 
     /**
@@ -125,8 +102,8 @@ public class RoleMapperFactory implements SecurityRoleMapperFactory {
      */
     @Override
     public void removeRoleMapper(String appName) {
-        if (ROLEMAPPER.containsKey(appName)) {
-            ROLEMAPPER.remove(appName);
+        if (appNameToRoleMapper.containsKey(appName)) {
+            appNameToRoleMapper.remove(appName);
         }
     }
 }

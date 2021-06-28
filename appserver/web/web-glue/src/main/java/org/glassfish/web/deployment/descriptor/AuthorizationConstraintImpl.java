@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -13,32 +13,33 @@
  *
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
-
 package org.glassfish.web.deployment.descriptor;
 
-import com.sun.enterprise.deployment.SecurityRoleDescriptor;
-import com.sun.enterprise.deployment.web.AuthorizationConstraint;
-import com.sun.enterprise.deployment.web.SecurityRole;
-import org.glassfish.deployment.common.Descriptor;
+import static java.util.Collections.enumeration;
 
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.Vector;
+
+import org.glassfish.deployment.common.Descriptor;
+
+import com.sun.enterprise.deployment.SecurityRoleDescriptor;
+import com.sun.enterprise.deployment.web.AuthorizationConstraint;
+import com.sun.enterprise.deployment.web.SecurityRole;
 
 /**
- * This descriptor represents an authorization contraint on a security
- * constraint in a web application.
+ * This descriptor represents an authorization contraint on a security constraint in a web application.
  *
  * @author Danny Coward
  */
 public class AuthorizationConstraintImpl extends Descriptor implements AuthorizationConstraint {
 
+    private static final long serialVersionUID = 1L;
+
     private Set<SecurityRole> securityRoles;
 
     /**
-     * Default constructor that creates an AuthorizationConstraint
-     * with no roles.
+     * Default constructor that creates an AuthorizationConstraint with no roles.
      */
     public AuthorizationConstraintImpl() {
     }
@@ -54,50 +55,55 @@ public class AuthorizationConstraintImpl extends Descriptor implements Authoriza
      * Return the set of roles.
      */
     private Set<SecurityRole> getSecurityRoleSet() {
-        if (this.securityRoles == null) {
-            this.securityRoles = new HashSet<>();
+        if (securityRoles == null) {
+            securityRoles = new HashSet<>();
         }
-        return this.securityRoles;
+
+        return securityRoles;
     }
 
     /**
-     * Return the security roles involved in this constraint. The
-     * enumeration is empty if there are none.
+     * Return the security roles involved in this constraint. The enumeration is empty if there are none.
+     *
      * @return the enumeration of security roles in this constraint.
      */
     @Override
-    public Enumeration getSecurityRoles() {
-        if (this.securityRoles == null) {
-            this.securityRoles = new HashSet<>();
+    public Enumeration<SecurityRole> getSecurityRoles() {
+        if (securityRoles == null) {
+            securityRoles = new HashSet<>();
         }
-        return (new Vector<>(this.getSecurityRoleSet())).elements();
+
+        return enumeration(getSecurityRoleSet());
     }
 
     /**
      * Adds a role to the authorization constraint.
+     *
      * @param the role to be added.
      */
     @Override
     public void addSecurityRole(SecurityRole securityRole) {
-        this.getSecurityRoleSet().add(securityRole);
+        getSecurityRoleSet().add(securityRole);
     }
 
     /**
      * Adds a role to the authorization constraint
+     *
      * @param the role name to be added
      */
     public void addSecurityRole(String roleName) {
-        SecurityRoleDescriptor sr = new SecurityRoleDescriptor();
-        sr.setName(roleName);
-        addSecurityRole(sr);
+        SecurityRoleDescriptor securityRoleDescriptor = new SecurityRoleDescriptor();
+        securityRoleDescriptor.setName(roleName);
+        addSecurityRole(securityRoleDescriptor);
     }
 
     /**
-     * Removes the given role from the autrhorization constraint.
+     * Removes the given role from the authorization constraint.
+     *
      * @param the role to be removed.
      */
     public void removeSecurityRole(SecurityRole securityRole) {
-        this.getSecurityRoleSet().remove(securityRole);
+        getSecurityRoleSet().remove(securityRole);
     }
 
     /**

@@ -14,11 +14,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
- package com.sun.enterprise.deployment;
+package com.sun.enterprise.deployment;
 
-import com.sun.enterprise.deployment.web.SecurityRole;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.security.common.Role;
+
+import com.sun.enterprise.deployment.web.SecurityRole;
 
 /**
  * I am an abstract role..
@@ -27,13 +28,14 @@ import org.glassfish.security.common.Role;
  */
 public class SecurityRoleDescriptor extends Descriptor implements SecurityRole {
 
+    private static final long serialVersionUID = 1L;
+
     /**
      * Construct a SecurityRoleDescriptor from the given role name and description.
      */
     public SecurityRoleDescriptor(String name, String description) {
         super(name, description);
     }
-
 
     /**
      * Construct a SecurityRoleDescriptor from the given role object.
@@ -42,35 +44,31 @@ public class SecurityRoleDescriptor extends Descriptor implements SecurityRole {
         super(role.getName(), role.getDescription());
     }
 
-
     /**
      * Default constructor.
      */
     public SecurityRoleDescriptor() {
     }
 
-
     /**
      * Equality on rolename.
      */
     @Override
     public boolean equals(Object other) {
-        if (other instanceof SecurityRoleDescriptor
-            && this.getName().equals(((SecurityRoleDescriptor) other).getName())) {
+        if (other instanceof SecurityRoleDescriptor && this.getName().equals(((SecurityRoleDescriptor) other).getName())) {
             return true;
         }
+
         return false;
     }
-
 
     /**
      * My hashcode.
      */
     @Override
     public int hashCode() {
-        return this.getName().hashCode();
+        return getName().hashCode();
     }
-
 
     /**
      * Formatted string representing my state.

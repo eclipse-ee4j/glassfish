@@ -123,8 +123,8 @@ The following example shows how to create a JACC provider named
 [source,oac_no_warn]
 ----
 asadmin> create-jacc-provider
---policyproviderclass com.sun.enterprise.security.jacc.provider.SimplePolicyProvider
---policyconfigfactoryclass com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory
+--policyproviderclass org.glassfish.exousia.modules.locked.SimplePolicyProvider
+--policyconfigfactoryclass org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory
 testJACC
 
 Command create-jacc-provider executed successfully.

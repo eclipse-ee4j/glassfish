@@ -24,8 +24,9 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Column;
 
 @Entity
-@Table(name="JPABEAN")
+@Table(name = "JPABEAN")
 public class JpaBean {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
@@ -45,7 +46,6 @@ public class JpaBean {
     public void setName(String name) {
         this.name = name;
     }
-
 
     public String toString() {
         return "[JpaBean id=" + id + ", name=" + name + "]";

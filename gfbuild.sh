@@ -55,6 +55,10 @@ merge_junits(){
   sed -i "s/\bclassname=\"/classname=\"${test_id}./g" ${jud}
 }
 
+bundles(){
+  archive_bundles
+}
+
 archive_bundles(){
   mkdir -p ${WORKSPACE}/bundles
   cp appserver/distributions/glassfish/target/*.zip ${WORKSPACE}/bundles

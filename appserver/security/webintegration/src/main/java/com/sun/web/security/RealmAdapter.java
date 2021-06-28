@@ -17,6 +17,9 @@
 package com.sun.web.security;
 
 import static com.sun.enterprise.security.auth.digest.api.Constants.A1;
+import static com.sun.enterprise.security.web.integration.WebSecurityManager.getContextID;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -95,7 +98,6 @@ import com.sun.enterprise.security.auth.login.DigestCredentials;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
-import com.sun.enterprise.security.ee.SecurityUtil;
 import com.sun.enterprise.security.integration.RealmInitializer;
 import com.sun.enterprise.security.jmac.config.HttpServletConstants;
 import com.sun.enterprise.security.jmac.config.HttpServletHelper;
@@ -320,10 +322,10 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     public WebSecurityManager getWebSecurityManager(boolean logNull) {
         if (webSecurityManager == null) {
             synchronized (this) {
-                webSecurityManager = webSecurityManagerFactory.getManager(CONTEXT_ID, null, false);
+                webSecurityManager = webSecurityManagerFactory.getManager(CONTEXT_ID);
             }
             if (webSecurityManager == null && logNull) {
-                _logger.log(Level.WARNING, "realmAdapter.noWebSecMgr", CONTEXT_ID);
+                _logger.log(WARNING, "realmAdapter.noWebSecMgr", CONTEXT_ID);
             }
         }
 
@@ -420,7 +422,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                         subject = new Subject();
                     }
                     if (subject.isReadOnly()) {
-                        _logger.log(Level.WARNING, "Read-only subject found during logout processing");
+                        _logger.log(WARNING, "Read-only subject found during logout processing");
                     }
                     try {
                         req.getContext().fireContainerEvent(ContainerEvent.BEFORE_LOGOUT, null);
@@ -569,8 +571,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             throw new RuntimeException("No key found in parameters");
 
         } catch (Exception le) {
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "web.login.failed", le.toString());
+            if (_logger.isLoggable(WARNING)) {
+                _logger.log(WARNING, "web.login.failed", le.toString());
             }
         }
         return null;
@@ -651,8 +653,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             success = true;
         } catch (Exception le) {
             success = false;
-            if (_logger.isLoggable(Level.WARNING)) {
-                _logger.log(Level.WARNING, "web.login.failed", le.toString());
+            if (_logger.isLoggable(WARNING)) {
+                _logger.log(WARNING, "web.login.failed", le.toString());
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, "Exception", le);
                 }
@@ -881,7 +883,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         } catch (IOException iex) {
             throw iex;
         } catch (Throwable ex) {
-            _logger.log(Level.SEVERE, "web_server.excep_authenticate_realmadapter", ex);
+            _logger.log(SEVERE, "web_server.excep_authenticate_realmadapter", ex);
             ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             response.setDetailMessage(rb.getString("realmBase.forbidden"));
             return isGranted;
@@ -1047,7 +1049,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             // end the request after getting IllegalArgumentException while checking
             // user data permission
             String msgWithId = rb.getString("realmAdapter.badRequestWithId");
-            _logger.log(Level.WARNING, msgWithId, e);
+            _logger.log(WARNING, msgWithId, e);
             String msg = rb.getString("realmAdapter.badRequest");
             ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_BAD_REQUEST, msg);
             return false;
@@ -1343,7 +1345,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
         } catch (IOException iex) {
             throw iex;
         } catch (Throwable ex) {
-            _logger.log(Level.SEVERE, "web_server.excep_authenticate_realmadapter", ex);
+            _logger.log(SEVERE, "web_server.excep_authenticate_realmadapter", ex);
             ((HttpServletResponse) response.getResponse()).sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
             response.setDetailMessage(rb.getString("realmBase.forbidden"));
             return Realm.AUTHENTICATED_NOT_AUTHORIZED;
@@ -1511,11 +1513,11 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      */
     private String getAppContextID(final ServletContext servletContext) {
         if (!servletContext.getVirtualServerName().equals(this.virtualServer.getName())) {
-            _logger.log(Level.WARNING, "Virtual server name from ServletContext: {0} differs from name from virtual.getName(): {1}",
+            _logger.log(WARNING, "Virtual server name from ServletContext: {0} differs from name from virtual.getName(): {1}",
                     new Object[] { servletContext.getVirtualServerName(), virtualServer.getName() });
         }
         if (!servletContext.getContextPath().equals(webDesc.getContextRoot())) {
-            _logger.log(Level.WARNING, "Context path from ServletContext: {0} differs from path from bundle: {1}",
+            _logger.log(WARNING, "Context path from ServletContext: {0} differs from path from bundle: {1}",
                     new Object[] { servletContext.getContextPath(), webDesc.getContextRoot() });
         }
         return servletContext.getVirtualServerName() + " " + servletContext.getContextPath();
@@ -1595,7 +1597,7 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
                         request.setUserPrincipal(wp);
                     }
                 } catch (LifecycleException le) {
-                    _logger.log(Level.SEVERE, "[Web-Security] unable to register session", le);
+                    _logger.log(SEVERE, "[Web-Security] unable to register session", le);
 
                 }
             } else {
@@ -1803,20 +1805,20 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
     }
 
     /**
-     * Generate the JSR 115 policy file for a web application, bundled within a ear or deployed as a standalone war file.
+     * Commit the Jakarta Authorization module, bringing the policy into service.
      *
-     * Implementation note: If the generated file doesn't contains all the permission, the role mapper is probably broken.
+     * Implementation note: If the committed policy doesn't contains all the permissions, the role mapper is probably broken.
      */
-    protected void configureSecurity(WebBundleDescriptor wbd, boolean isSystem) {
+    protected void configureSecurity(WebBundleDescriptor webBundleDescriptor, boolean isSystem) {
         try {
-            webSecurityManagerFactory.createManager(wbd, true, serverContext);
-            String context = WebSecurityManager.getContextID(wbd);
-            SecurityUtil.generatePolicyFile(context);
-            if (isSystem && context.equals("__admingui/__admingui")) {
-                websecurityProbeProvider.policyCreationEvent(context);
+            webSecurityManagerFactory.createManager(webBundleDescriptor, true, serverContext).commitPolicy();
+
+            String contextId = getContextID(webBundleDescriptor);
+            if (isSystem && contextId.equals("__admingui/__admingui")) {
+                websecurityProbeProvider.policyCreationEvent(contextId);
             }
         } catch (Exception ce) {
-            _logger.log(Level.SEVERE, "policy.configure", ce);
+            _logger.log(SEVERE, "policy.configure", ce);
             throw new RuntimeException(ce);
         }
     }

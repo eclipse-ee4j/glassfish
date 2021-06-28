@@ -159,7 +159,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         try {
             List<JaccProvider> jaccProviders = securityService.getJaccProvider();
             for (JaccProvider jacc : jaccProviders) {
-                if ("com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory".equals(jacc.getPolicyConfigurationFactoryProvider())) {
+                if ("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory".equals(jacc.getPolicyConfigurationFactoryProvider())) {
                     //simple policy provider already present
                     return;
                 }
@@ -170,8 +170,8 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                     JaccProvider jacc = secServ.createChild(JaccProvider.class);
                     //add the simple provider to the domain's security service
                     jacc.setName("simple");
-                    jacc.setPolicyConfigurationFactoryProvider("com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory");
-                    jacc.setPolicyProvider("com.sun.enterprise.security.jacc.provider.SimplePolicyProvider");
+                    jacc.setPolicyConfigurationFactoryProvider("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory");
+                    jacc.setPolicyProvider("org.glassfish.exousia.modules.locked.SimplePolicyProvider");
                     secServ.getJaccProvider().add(jacc);
                     return secServ;
                 }

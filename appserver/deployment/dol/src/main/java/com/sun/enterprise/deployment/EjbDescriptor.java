@@ -17,16 +17,18 @@
 package com.sun.enterprise.deployment;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import org.glassfish.security.common.Role;
 
 import com.sun.enterprise.deployment.types.EjbReferenceContainer;
 import com.sun.enterprise.deployment.types.MessageDestinationReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceEnvReferenceContainer;
 import com.sun.enterprise.deployment.types.ResourceReferenceContainer;
 import com.sun.enterprise.deployment.types.ServiceReferenceContainer;
-import org.glassfish.security.common.Role;
 
 public interface EjbDescriptor extends NamedDescriptor,
         WritableJndiNameEnvironment,
@@ -78,9 +80,9 @@ public interface EjbDescriptor extends NamedDescriptor,
 
     String getLocalClassName();
 
-    Set getMethodDescriptors();
+    Set<MethodDescriptor> getMethodDescriptors();
 
-    Map getMethodPermissionsFromDD();
+    Map<MethodPermission, ArrayList<MethodDescriptor>> getMethodPermissionsFromDD();
 
     String getEjbClassName();
 

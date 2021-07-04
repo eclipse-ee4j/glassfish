@@ -143,7 +143,7 @@
         <jsonp-ri.version>2.0.1</jsonp-ri.version>
         <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
         <json.bind-api.version>2.0.0</json.bind-api.version>
-        <yasson.version>2.0.1</yasson.version>
+        <yasson.version>2.0.2</yasson.version>
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0</jsp-api.version>

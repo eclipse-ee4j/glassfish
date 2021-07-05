@@ -120,7 +120,12 @@
             <artifactId>cluster-common</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
-        </dependencies>
+
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>

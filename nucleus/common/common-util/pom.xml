@@ -73,6 +73,10 @@
             <artifactId>osgi.enterprise</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

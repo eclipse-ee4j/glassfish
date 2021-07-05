@@ -49,15 +49,19 @@
 
         <!-- hk2-config tests use hibernate-validator which requires jakarta.el-api -->
         <dependency>
-          <groupId>jakarta.el</groupId>
-          <artifactId>jakarta.el-api</artifactId>
-          <scope>test</scope>
-       </dependency>
-       <dependency>
-          <groupId>org.glassfish</groupId>
-          <artifactId>jakarta.el</artifactId>
-          <scope>test</scope>
-       </dependency>
+            <groupId>jakarta.el</groupId>
+            <artifactId>jakarta.el-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>jakarta.el</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

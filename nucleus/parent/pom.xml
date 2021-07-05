@@ -145,7 +145,7 @@
         <jackson.version>2.12.3</jackson.version>
         <jettison.version>1.4.1</jettison.version>
         <mimepull.version>1.9.13</mimepull.version>
-        <asm.version>9.1</asm.version>
+        <asm.version>9.2</asm.version>
 
         <testng.version>7.4.0</testng.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>

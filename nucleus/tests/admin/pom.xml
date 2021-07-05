@@ -116,12 +116,10 @@ of COPY_LIB map constant.)
         <dependency>
             <groupId>jakarta.xml.bind</groupId>
             <artifactId>jakarta.xml.bind-api</artifactId>
-            <version>${jakarta.jaxb-api.version}</version>
         </dependency>
         <dependency>
             <groupId>com.sun.xml.bind</groupId>
             <artifactId>jaxb-osgi</artifactId>
-            <version>${jakarta.jaxb-impl.version}</version>
         </dependency>
     </dependencies>
 
@@ -156,7 +154,6 @@ of COPY_LIB map constant.)
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M4</version>
                 <configuration>
                     <properties>
                         <runOrder>alphabetical</runOrder>

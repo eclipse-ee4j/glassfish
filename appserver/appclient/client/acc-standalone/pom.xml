@@ -150,7 +150,6 @@ this or the downstream JARs and so attempts to find things fail.
           </plugin>
 
           <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-antrun-plugin</artifactId>
               <executions>
                   <execution>

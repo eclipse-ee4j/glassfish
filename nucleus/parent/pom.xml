@@ -273,7 +273,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>4.6.0</version>
+                <version>4.6.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -511,12 +511,12 @@
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.fileinstall</artifactId>
-               <version>3.6.8</version>
+               <version>3.7.0</version>
             </dependency>
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.configadmin</artifactId>
-               <version>1.9.20</version>
+               <version>1.9.22</version>
             </dependency>
             <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that.
                  Since Felix Core doesn't export these packages, we have to deploy them
@@ -525,7 +525,7 @@
             <dependency>
                <groupId>org.apache.felix</groupId>
                <artifactId>org.apache.felix.scr</artifactId>
-               <version>2.1.24</version>
+               <version>2.1.28</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>

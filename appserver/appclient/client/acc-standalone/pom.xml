@@ -93,7 +93,6 @@
                 reformat the contents of the file so it's useful in the manifest.
             -->
             <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
               <artifactId>maven-dependency-plugin</artifactId>
               <executions>
                   <execution>
@@ -117,7 +116,6 @@
           </plugin>
 
           <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-jar-plugin</artifactId>
             <configuration>
 

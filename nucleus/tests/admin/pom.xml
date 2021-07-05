@@ -126,7 +126,6 @@ of COPY_LIB map constant.)
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-invoker-plugin</artifactId>
                 <configuration>
                     <pomIncludes>
@@ -152,7 +151,6 @@ of COPY_LIB map constant.)
             </plugin>
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <properties>

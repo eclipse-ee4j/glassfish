@@ -102,7 +102,6 @@
                 a temp file. The "generate" phase will use it to create JAXB classes. Unit
                 tests use both DTDs for parse testing. -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>

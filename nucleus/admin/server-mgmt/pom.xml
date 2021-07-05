@@ -96,7 +96,6 @@
                 root to the build ourselves... -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.sun.xml.bind</groupId>

@@ -77,7 +77,6 @@
         <plugins>
             <!-- JDK 8u171+, PasswordAliasTest fails due to serialization issue Using forked process helps the tests to pass -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <forkCount>1</forkCount>

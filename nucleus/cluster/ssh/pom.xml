@@ -35,7 +35,6 @@
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>jsch</artifactId>
-            <version>${jsch.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>

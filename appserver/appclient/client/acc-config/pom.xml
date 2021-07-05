@@ -102,7 +102,6 @@
                 a temp file. The "generate" phase will use it to create JAXB classes. Unit
                 tests use both DTDs for parse testing. -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -137,7 +136,6 @@
             -->
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>com.sun.xml.bind</groupId>

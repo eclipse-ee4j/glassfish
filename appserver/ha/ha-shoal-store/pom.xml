@@ -56,7 +56,6 @@
         <dependency>
             <groupId>org.glassfish.shoal</groupId>
             <artifactId>shoal-cache</artifactId>
-            <version>${shoal.version}</version>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.common</groupId>

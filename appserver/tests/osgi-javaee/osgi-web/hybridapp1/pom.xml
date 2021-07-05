@@ -36,7 +36,6 @@
             </plugin>
             <plugin> <!-- Need to use this plugin to build war files -->
                 <artifactId>maven-war-plugin</artifactId>
-                <groupId>org.apache.maven.plugins</groupId>
                 <version>2.0</version>
                 <configuration>
                     <archive>

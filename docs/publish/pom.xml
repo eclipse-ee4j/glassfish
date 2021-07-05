@@ -152,7 +152,6 @@
                         released version of the docs.
                     -->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
@@ -181,7 +180,6 @@
                         Publish the entire web site to the gh-pages branch.
                     -->
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-scm-publish-plugin</artifactId>
                         <executions>
                             <execution>

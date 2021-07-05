@@ -24,7 +24,6 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.glassfish.main.jdbc</groupId>
     <artifactId>jdbc-config</artifactId>
     <packaging>glassfish-jar</packaging>
     <name>JDBC Config Module</name>

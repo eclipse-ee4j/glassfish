@@ -33,7 +33,6 @@
         <defaultGoal>install</defaultGoal>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
@@ -610,55 +609,46 @@
         <dependency>
             <groupId>org.glassfish.hk2.external</groupId>
             <artifactId>aopalliance-repackaged</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-analysis</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-commons</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-tree</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-util</artifactId>
-            <version>${asm.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-core</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>osgi-resource-locator</artifactId>
-            <version>${osgi-resource-locator.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-api</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -670,31 +660,26 @@
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-runlevel</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-locator</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>class-model</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.hk2</groupId>
             <artifactId>hk2-utils</artifactId>
-            <version>${hk2.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -941,49 +926,41 @@
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.asm</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.core</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.jpql</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.jpa.modelgen.processor</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.moxy</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.dbws</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.eclipse.persistence</groupId>
             <artifactId>org.eclipse.persistence.oracle</artifactId>
-            <version>${eclipselink.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -1560,7 +1537,6 @@
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>derby</artifactId>
-            <version>${derby.version}</version>
             <type>zip</type>
             <optional>true</optional>
         </dependency>
@@ -1705,7 +1681,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-jar-plugin</artifactId>
                         <executions>
                             <execution>

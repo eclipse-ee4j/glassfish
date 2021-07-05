@@ -37,7 +37,6 @@
         <finalName>hk2-isolation-web-${project.artifactId}</finalName>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
             </plugin>
         </plugins>

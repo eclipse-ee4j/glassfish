@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,47 +16,56 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import static org.testng.Assert.assertEquals;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 
-import org.testng.Assert;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Unit test class for {@link RadixTree}.
  */
-public class TestRadixTree {
+@TestMethodOrder(OrderAnnotation.class)
+public class RadixTreeTest {
 
-    private RadixTree _tree;
+    private RadixTree tree;
 
-    @BeforeClass
+    @BeforeEach
     public void init() {
-        _tree = new RadixTree();
+        tree = new RadixTree();
         populateTree();
     }
 
     /**
      * Test insertion of null key in tree.
      */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testInsertionForNullKey() {
-        _tree.insert(null, "value");
+        assertThrows(IllegalArgumentException.class, () -> tree.insert(null, "value"));
     }
 
     /**
      * Test insertion of null key in tree.
      */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testInsertionForEmptyKey() {
-        _tree.insert(null, "value");
+        assertThrows(IllegalArgumentException.class, () -> tree.insert(null, "value"));
     }
 
     /**
      * Test the tree structure.
      */
     @Test
+    @Order(1)
     public void testTreeStructure() {
-        RadixTreeNode rootNode = _tree.getRootNode();
+        RadixTreeNode rootNode = tree.getRootNode();
 
         // Validate root node
         assertEquals(rootNode.getKey(), "");
@@ -66,11 +75,11 @@ public class TestRadixTree {
         // Validate first child node of rootNode.
         assertEquals(rootNode.getChildNodes().size(), 2);
         RadixTreeNode firstNode = rootNode.getChildNode('a');
-        RadixTreeNode secondNode = rootNode.getChildNode('s');;
+        RadixTreeNode secondNode = rootNode.getChildNode('s');
 
-        Assert.assertNotNull(firstNode);
+        assertNotNull(firstNode);
         assertEquals(firstNode.getParentNode(), rootNode);
-        Assert.assertNull(firstNode.getValue());
+        assertNull(firstNode.getValue());
         RadixTreeNode firstNodeFirstChild = firstNode.getChildNode('b');
         assertEquals(firstNodeFirstChild.getValue(), "abVal");
         assertEquals(firstNodeFirstChild.getParentNode(), firstNode);
@@ -82,7 +91,7 @@ public class TestRadixTree {
         assertEquals(node.getValue(), "abaitVal");
         assertEquals(node.getKey(), "ait");
         assertEquals(node.getParentNode(), firstNodeFirstChild);
-        Assert.assertTrue(node.getChildNodes().isEmpty());
+        assertTrue(node.getChildNodes().isEmpty());
         RadixTreeNode firstNodeSecondChild = firstNode.getChildNode('c');
         assertEquals(firstNodeSecondChild.getValue(), "acidVal");
         assertEquals(firstNodeSecondChild.getParentNode(), firstNode);
@@ -91,10 +100,10 @@ public class TestRadixTree {
         node = firstNodeSecondChild.getChildNode('i');
         assertEquals(node.getValue(), "acidicVal");
         assertEquals(node.getParentNode(), firstNodeSecondChild);
-        Assert.assertTrue(node.getChildNodes().isEmpty());
+        assertTrue(node.getChildNodes().isEmpty());
 
         assertEquals(secondNode.getParentNode(), rootNode);
-        Assert.assertNull(secondNode.getValue());
+        assertNull(secondNode.getValue());
         RadixTreeNode secondNodeFirstChild = secondNode.getChildNode('i');
         assertEquals(secondNodeFirstChild.getValue(), "sickVal");
         assertEquals(secondNodeFirstChild.getParentNode(), secondNode);
@@ -117,23 +126,24 @@ public class TestRadixTree {
      * Test-case depends on another method as this method changes the tree
      * structure which may cause the failure for other tests.
      */
-    @Test(dependsOnMethods = {"testTreeStructure"})
+    @Test
+    @Order(2)
     public void testInsertExistingKey() {
-        _tree.insert("sick", "newValue");
-        assertEquals(_tree.getRootNode().getChildNode('s').getChildNode('i').getValue(), "newValue");
+        tree.insert("sick", "newValue");
+        assertEquals(tree.getRootNode().getChildNode('s').getChildNode('i').getValue(), "newValue");
     }
 
     /**
      * Populate tree.
      */
     private void populateTree() {
-        _tree.insert("acid", "acidVal");
-        _tree.insert("son", "sonVal");
-        _tree.insert("abet", "abetVal");
-        _tree.insert("ab", "abVal");
-        _tree.insert("sick", "sickVal");
-        _tree.insert("abait", "abaitVal");
-        _tree.insert("soft", "softVal");
-        _tree.insert("acidic", "acidicVal");
+        tree.insert("acid", "acidVal");
+        tree.insert("son", "sonVal");
+        tree.insert("abet", "abetVal");
+        tree.insert("ab", "abVal");
+        tree.insert("sick", "sickVal");
+        tree.insert("abait", "abaitVal");
+        tree.insert("soft", "softVal");
+        tree.insert("acidic", "acidicVal");
     }
 }

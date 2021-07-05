@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,18 +18,17 @@ package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
 import java.util.Map;
 
-import org.testng.annotations.Test;
-
 import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
 
 /**
- * Unit test class for {@link RadixTreeSubstitutionAlgo}.
+ * Unit test class for {@link StringReplacementAlgo}.
+ * Class provides the algorithm to be used for test case execution
+ * defined in {@link AbstractSubstitutionAlgo} class.
  */
-@Test
-public class TestRadixTreeSubstitutionAlgorithm extends AbstractSubstitutionAlgo {
+public class StringReplacementAlgorithmTest extends AbstractSubstitutionAlgo {
 
-  @Override
-  protected SubstitutionAlgorithm getAlgorithm(Map<String, String> substitutionMap) {
-    return new RadixTreeSubstitutionAlgo(substitutionMap);
-  }
+    @Override
+    protected SubstitutionAlgorithm getAlgorithm(Map<String, String> substitutionMap) {
+        return new StringReplacementAlgo(substitutionMap);
+    }
 }

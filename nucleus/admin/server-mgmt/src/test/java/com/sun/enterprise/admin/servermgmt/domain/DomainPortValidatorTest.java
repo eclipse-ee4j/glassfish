@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,56 +18,62 @@ package com.sun.enterprise.admin.servermgmt.domain;
 
 import java.util.Properties;
 
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.sun.enterprise.admin.servermgmt.DomainConfig;
 import com.sun.enterprise.admin.servermgmt.DomainException;
 
-public class TestDomainPortValidator {
+public class DomainPortValidatorTest {
 
-    private DomainPortValidator _portValidator = null;
+    private DomainPortValidator portValidator;
 
-    @Test (expectedExceptions = DomainException.class)
+    @Test
     public void testForNullPorts() throws Exception {
         DomainConfig domainConfig = new DomainConfig("test", null);
         domainConfig.add(DomainConfig.K_VALIDATE_PORTS, Boolean.TRUE);
-        _portValidator = new DomainPortValidator(domainConfig, new Properties());
-        _portValidator.validateAndSetPorts();
+        portValidator = new DomainPortValidator(domainConfig, new Properties());
+        assertThrows(DomainException.class, () -> portValidator.validateAndSetPorts());
     }
 
-    @Test (expectedExceptions = DomainException.class)
+
+    @Test
     public void testForNonNumericPort() throws Exception {
         DomainConfig domainConfig = new DomainConfig("test", null);
         domainConfig.add(DomainConfig.K_VALIDATE_PORTS, Boolean.TRUE);
         domainConfig.add(DomainConfig.K_ADMIN_PORT, "admin2");
-        _portValidator = new DomainPortValidator(domainConfig, new Properties());
-        _portValidator.validateAndSetPorts();
+        portValidator = new DomainPortValidator(domainConfig, new Properties());
+        assertThrows(DomainException.class, () -> portValidator.validateAndSetPorts());
     }
 
-    @Test (expectedExceptions = DomainException.class)
+
+    @Test
     public void testForNegativePort() throws Exception {
         DomainConfig domainConfig = new DomainConfig("test", null);
         domainConfig.add(DomainConfig.K_VALIDATE_PORTS, Boolean.TRUE);
         domainConfig.add(DomainConfig.K_ADMIN_PORT, "-2");
-        _portValidator = new DomainPortValidator(domainConfig, new Properties());
-        _portValidator.validateAndSetPorts();
+        portValidator = new DomainPortValidator(domainConfig, new Properties());
+        assertThrows(DomainException.class, () -> portValidator.validateAndSetPorts());
     }
 
-    @Test (expectedExceptions = DomainException.class)
+
+    @Test
     public void testForPortValueZero() throws Exception {
         DomainConfig domainConfig = new DomainConfig("test", null);
         domainConfig.add(DomainConfig.K_VALIDATE_PORTS, Boolean.TRUE);
         domainConfig.add(DomainConfig.K_ADMIN_PORT, "0");
-        _portValidator = new DomainPortValidator(domainConfig, new Properties());
-        _portValidator.validateAndSetPorts();
+        portValidator = new DomainPortValidator(domainConfig, new Properties());
+        assertThrows(DomainException.class, () -> portValidator.validateAndSetPorts());
     }
 
-    @Test (expectedExceptions = DomainException.class)
+
+    @Test
     public void testForMaxPort() throws Exception {
         DomainConfig domainConfig = new DomainConfig("test", null);
         domainConfig.add(DomainConfig.K_VALIDATE_PORTS, Boolean.TRUE);
         domainConfig.add(DomainConfig.K_ADMIN_PORT, String.valueOf((DomainPortValidator.PORT_MAX_VAL + 1)));
-        _portValidator = new DomainPortValidator(domainConfig, new Properties());
-        _portValidator.validateAndSetPorts();
+        portValidator = new DomainPortValidator(domainConfig, new Properties());
+        assertThrows(DomainException.class, () -> portValidator.validateAndSetPorts());
     }
 }

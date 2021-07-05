@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,21 +16,24 @@
 
 package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-import static org.testng.Assert.assertEquals;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.MethodName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit test class for {@link RadixTreeSubstitution}.
  */
-@Test
-public class TestRadixTreeSubstitution {
+@TestMethodOrder(MethodName.class)
+public class RadixTreeSubstitutionTest {
 
     private RadixTree _tree;
     private RadixTreeSubstitution _substitution;
 
-    @BeforeClass
+    @BeforeEach
     public void init() {
         _tree = new RadixTree();
         _substitution = new RadixTreeSubstitution(_tree);
@@ -40,9 +43,9 @@ public class TestRadixTreeSubstitution {
     /**
      * Test algorithm instance for null tree.
      */
-    @Test(expectedExceptions = IllegalArgumentException.class)
+    @Test
     public void testSubstitutionForNullTree() {
-        new RadixTreeSubstitution(null);
+        assertThrows(IllegalArgumentException.class, () -> new RadixTreeSubstitution(null));
     }
 
     /**
@@ -50,8 +53,8 @@ public class TestRadixTreeSubstitution {
      */
     @Test
     public void testInputExtendedMatch() {
-        assertEquals(callSubstitution("abe"), "abVale");
-        assertEquals(callSubstitution("acidic acidi"), "acidicVal acidVali");
+        assertEquals("abVale", callSubstitution("abe"));
+        assertEquals("acidicVal acidVali", callSubstitution("acidic acidi"));
     }
 
     /**
@@ -59,7 +62,7 @@ public class TestRadixTreeSubstitution {
      */
     @Test
     public void testLastWordExactlyMatched() {
-        assertEquals(callSubstitution("  aci so abet ... &&& soft"), "  aci so abetVal ... &&& softVal");
+        assertEquals("  aci so abetVal ... &&& softVal", callSubstitution("  aci so abet ... &&& soft"));
     }
 
     /**
@@ -67,7 +70,7 @@ public class TestRadixTreeSubstitution {
      */
     @Test
     public void testInputWithoutSpace() {
-        assertEquals(callSubstitution("acidysonacidyso"), "acidValysonValacidValyso");
+        assertEquals("acidValysonValacidValyso", callSubstitution("acidysonacidyso"));
     }
 
     /**
@@ -75,7 +78,7 @@ public class TestRadixTreeSubstitution {
      */
     @Test
     public void testLastWordPartiallyMatched() {
-        assertEquals(callSubstitution("acidic abet softy"), "acidicVal abetVal softValy");
+        assertEquals("acidicVal abetVal softValy", callSubstitution("acidic abet softy"));
     }
 
     /**
@@ -83,7 +86,7 @@ public class TestRadixTreeSubstitution {
      */
     @Test
     public void testUnmatchedInput() {
-        assertEquals(callSubstitution("@##ttt {{}:P"), "@##ttt {{}:P");
+        assertEquals("@##ttt {{}:P", callSubstitution("@##ttt {{}:P"));
     }
 
     /**
@@ -95,23 +98,22 @@ public class TestRadixTreeSubstitution {
      * <p>Test-case depends on another methods as this method changes the tree reference
      *  which will cause the failure for other test cases.</p>
      */
-    @Test(dependsOnMethods = {"testLastWordPartiallyMatched", "testLastWordExactlyMatched",
-            "testInputWithoutSpace", "testInputExtendedMatch"})
-    public void testBackTrack() {
+    @Test
+    public void zzzTestBackTrack() {
         _tree = new RadixTree();
         _tree.insert("acidicity", "acidicityVal");
         _tree.insert("acidical", "acidicalVal");
         _tree.insert("acid", "acidVal");
         _substitution = new RadixTreeSubstitution(_tree);
-        assertEquals(callSubstitution("acidicit acidicit"), "acidValicit acidValicit");
+        assertEquals("acidValicit acidValicit", callSubstitution("acidicit acidicit"));
         _tree.insert("c", "cVal");
-        assertEquals(callSubstitution("acidicit acidicit"), "acidValicValit acidValicValit");
+        assertEquals("acidValicValit acidValicValit", callSubstitution("acidicit acidicit"));
         _tree.insert("ci", "ciVal");
-        assertEquals(callSubstitution("acidicit acidicit"), "acidValiciValt acidValiciValt");
+        assertEquals("acidValiciValt acidValiciValt", callSubstitution("acidicit acidicit"));
         _tree.insert("t", "tVal");
-        assertEquals(callSubstitution("acidicit"), "acidValiciValtVal");
+        assertEquals("acidValiciValtVal", callSubstitution("acidicit"));
         _tree.insert("icit", "icitVal");
-        assertEquals(callSubstitution("acidicit acidicit"), "acidValicitVal acidValicitVal");
+        assertEquals("acidValicitVal acidValicitVal", callSubstitution("acidicit acidicit"));
     }
 
     /**
@@ -122,7 +124,7 @@ public class TestRadixTreeSubstitution {
      * @return substituted string.
      */
     private String callSubstitution(String input) {
-        StringBuffer outputBuffer = new StringBuffer();
+        StringBuilder outputBuffer = new StringBuilder();
         String substitution = null;
         for (char c : input.toCharArray()) {
             substitution = _substitution.substitute(c);

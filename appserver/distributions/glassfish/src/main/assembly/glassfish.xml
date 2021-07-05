@@ -73,7 +73,16 @@
         <!-- mq -->
         <fileSet>
             <directory>${temp.dir}/mq-distribution/mq</directory>
+            <excludes>
+                <exclude>etc/imqenv.conf</exclude>
+            </excludes>
             <outputDirectory>${install.dir.name}/mq</outputDirectory>
+        </fileSet>
+
+        <!-- mq customized config -->
+        <fileSet>
+            <directory>src/main/mq-etc</directory>
+            <outputDirectory>${install.dir.name}/mq/etc</outputDirectory>
         </fileSet>
 
         <!-- javadb -->

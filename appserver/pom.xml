@@ -150,7 +150,7 @@
         <wasp.version>3.0.1</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>6.2.4</woodstox.version>
+        <woodstox.version>6.2.6</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->

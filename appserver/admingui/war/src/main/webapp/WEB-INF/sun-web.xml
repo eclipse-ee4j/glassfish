@@ -37,5 +37,5 @@
     </locale-charset-info>
     <class-loader
         delegate="true"
-        extra-class-path="WEB-INF/extra/woodstock-webui-jsf-suntheme-5.0.0.jar:WEB-INF/extra/dojo-ajax-nodemo-1.12.4.jar:WEB-INF/extra/woodstock-webui-jsf-5.0.0.jar:WEB-INF/extra/json-2.0.jar:WEB-INF/extra/prototype-1.7.3.jar:WEB-INF/extra/commons-io-2.8.0.jar" />
+        extra-class-path="WEB-INF/extra/woodstock-webui-jsf-suntheme-${woodstock.version}.jar:WEB-INF/extra/dojo-ajax-nodemo-${woodstock-dojo-ajax-nodemo.version}.jar:WEB-INF/extra/woodstock-webui-jsf-${woodstock.version}.jar:WEB-INF/extra/json-${woodstock-json.version}.jar:WEB-INF/extra/prototype-${woodstock-prototype.version}.jar:WEB-INF/extra/commons-io-${commons-io.version}.jar" />
 </sun-web-app>

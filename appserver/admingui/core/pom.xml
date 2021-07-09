@@ -32,86 +32,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.glassfish.main.admingui</groupId>
-            <artifactId>console-plugin-service</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Woodstock dependency -->
-        <dependency>
-            <groupId>org.glassfish.woodstock</groupId>
-            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.woodstock</groupId>
             <artifactId>woodstock-webui-jsf</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.sun.faces.extensions</groupId>
-                    <artifactId>jsf-extensions-common</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.faces.extensions</groupId>
-                    <artifactId>jsf-extensions-dynamic-faces</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.woodstock.dependlibs</groupId>
-                    <artifactId>jh</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.woodstock.dependlibs</groupId>
-                    <artifactId>jhall</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.woodstock.dependlibs</groupId>
-                    <artifactId>jhbasic</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.woodstock.dependlibs</groupId>
-                    <artifactId>portlet</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-beanutils</groupId>
-                    <artifactId>commons-beanutils</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-collections</groupId>
-                    <artifactId>commons-collections</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-digester</groupId>
-                    <artifactId>commons-digester</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-logging</groupId>
-                    <artifactId>commons-logging</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.sun.woodstock.dependlibs</groupId>
-                    <artifactId>dataprovider</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>json</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>dojo-ajax-nodemo</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>prototype</artifactId>
-            <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.security</groupId>
@@ -127,27 +49,9 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admingui</groupId>
-            <artifactId>dataprovider</artifactId>
+            <artifactId>console-plugin-service</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.admingui.connector</groupId>
-            <artifactId>gf-admingui-connector</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency> <!-- for FindBugs -->
-            <groupId>jakarta.ws.rs</groupId>
-            <artifactId>jakarta.ws.rs-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency> <!-- for FindBugs -->
-            <groupId>org.glassfish.jersey.media</groupId>
-            <artifactId>jersey-media-json-jackson</artifactId>
-            <scope>provided</scope>
-        </dependency>
-
-
     </dependencies>
 </project>

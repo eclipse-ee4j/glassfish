@@ -136,8 +136,8 @@
         <!-- 3rd party dependencies -->
         <stax-api.version>1.0-2</stax-api.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <javassist.version>3.28.0-GA</javassist.version>
         <jboss.logging.version>3.4.1.Final</jboss.logging.version>
+        <javassist.version>3.28.0-GA</javassist.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <jsch.version>0.1.56</jsch.version>
         <antlr.version>2.7.8</antlr.version>
@@ -146,6 +146,8 @@
         <jettison.version>1.4.1</jettison.version>
         <mimepull.version>1.9.13</mimepull.version>
         <asm.version>9.2</asm.version>
+
+        <commons-io.version>2.10.0</commons-io.version>
 
         <testng.version>7.4.0</testng.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
@@ -354,11 +356,6 @@
                 <version>${mimepull.version}</version>
             </dependency>
             <dependency>
-                <groupId>javax.help</groupId>
-                <artifactId>javahelp</artifactId>
-                <version>2.0.05</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.corba</groupId>
                 <artifactId>glassfish-corba-orb</artifactId>
                 <version>${glassfish-corba.version}</version>
@@ -441,7 +438,7 @@
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>2.10.0</version>
+                <version>${commons-io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.external</groupId>

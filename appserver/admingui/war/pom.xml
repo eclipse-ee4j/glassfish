@@ -34,61 +34,59 @@
         <!-- See parent POM -->
     </developers>
 
+    <properties>
+        <dependencies.extra.directory>${project.build.directory}/extra-dependencies</dependencies.extra.directory>
+    </properties>
+
     <build>
         <finalName>admingui</finalName>
         <plugins>
             <plugin>
-                <artifactId>maven-war-plugin</artifactId>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>package</phase>
+                        <id>prepare-extra-dependencies</id>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <phase>prepare-package</phase>
                         <configuration>
-                            <archive>
-                                <manifestEntries>
-                                    <Glassfish-require-services>org.glassfish.api.admingui.ConsoleProvider</Glassfish-require-services>
-                                    <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
-                                </manifestEntries>
-                            </archive>
+                            <outputDirectory>${dependencies.extra.directory}</outputDirectory>
+                            <includeArtifactIds>
+                                commons-io,
+                                dojo-ajax-nodemo,json,prototype,
+                                woodstock-webui-jsf,woodstock-webui-jsf-suntheme
+                            </includeArtifactIds>
+                            <includeScope>provided</includeScope>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>package</phase>
-                        <configuration>
-                            <target>
-                                <unzip src="target/admingui.war" dest="target/temp" >
-                                  <patternset>
-                                    <exclude name="**/.gitkeep_empty_dir"/>
-                                  </patternset>
-                                </unzip>
-                                <delete file="target/admingui.war" />
-                                <mkdir dir="target/temp/WEB-INF/extra" />
-                                <move todir="target/temp/WEB-INF/extra">
-                                    <fileset dir="target/admingui/WEB-INF/lib" includes="**/*.jar" excludes="console-core*.jar" />
-                                </move>
-                                <delete>
-                                    <fileset dir="target/temp/WEB-INF/lib" includes="**/*.jar" excludes="console-core*.jar" />
-                                </delete>
-                               <jar jarfile="target/admingui.war" basedir="target/temp">
-                                    <manifest>
-                                      <attribute name="Glassfish-require-services" value="org.glassfish.api.admingui.ConsoleProvider" />
-                                      <attribute name="HK2-Import-Bundles" value="org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider" />
-                                    </manifest>
-                                </jar>
-                                <delete dir="target/temp" />
-
-                            </target>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceExcludes>WEB-INF/sun-web.xml</warSourceExcludes>
+                    <webResources>
+                        <resource>
+                            <directory>src/main/webapp</directory>
+                            <filtering>true</filtering>
+                            <includes>
+                                <include>WEB-INF/sun-web.xml</include>
+                            </includes>
+                        </resource>
+                        <resource>
+                            <directory>${dependencies.extra.directory}</directory>
+                            <targetPath>WEB-INF/extra</targetPath>
+                        </resource>
+                    </webResources>
+                    <archive>
+                        <manifestEntries>
+                            <Glassfish-require-services>org.glassfish.api.admingui.ConsoleProvider</Glassfish-require-services>
+                            <HK2-Import-Bundles>org.glassfish.main.admingui.console-common,org.glassfish.hk2.hk2,org.glassfish.main.admingui.console-plugin-service, jakarta.servlet-api, jakarta.servlet.jsp-api, jakarta.el-api, org.glassfish.jakarta.el, org.glassfish.jsftemplating, org.glassfish.main.admingui.dataprovider</HK2-Import-Bundles>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -98,6 +96,44 @@
             <groupId>${project.groupId}</groupId>
             <artifactId>console-core</artifactId>
             <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- following provided scopes are to avoid maven-war-plugin's resolution of libs directory, -->
+        <!-- because we need these dependencies in extra directory -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>dojo-ajax-nodemo</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>json</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>prototype</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.woodstock</groupId>
+            <artifactId>woodstock-webui-jsf</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.woodstock</groupId>
+            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

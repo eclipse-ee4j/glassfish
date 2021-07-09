@@ -170,7 +170,10 @@
         <jsftemplating.version>3.0.0</jsftemplating.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>5.0.0</woodstock.version>
-
+        <woodstock-dataprovider.version>1.0</woodstock-dataprovider.version>
+        <woodstock-dojo-ajax-nodemo.version>1.12.4</woodstock-dojo-ajax-nodemo.version>
+        <woodstock-json.version>2.0</woodstock-json.version>
+        <woodstock-prototype.version>1.7.3</woodstock-prototype.version>
 
         <!-- Other -->
         <dbschema.version>6.7</dbschema.version>
@@ -548,20 +551,23 @@
                 <version>${jsftemplating.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.faces.extensions</groupId>
-                <artifactId>jsf-extensions-dynamic-faces</artifactId>
-                <version>${jsf-ext.version}</version>
-                <classifier>jsftemplating</classifier>
-            </dependency>
-            <dependency>
-                <groupId>com.sun.faces.extensions</groupId>
-                <artifactId>jsf-extensions-common</artifactId>
-                <version>${jsf-ext.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
                 <artifactId>woodstock-webui-jsf</artifactId>
                 <version>${woodstock.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.sun.faces.extensions</groupId>
+                        <artifactId>jsf-extensions-common</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>com.sun.faces.extensions</groupId>
+                        <artifactId>jsf-extensions-dynamic-faces</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>javax.help</groupId>
+                        <artifactId>javahelp</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.woodstock</groupId>
@@ -571,22 +577,22 @@
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>json</artifactId>
-                <version>2.0</version>
+                <version>${woodstock-json.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>dojo-ajax-nodemo</artifactId>
-                <version>1.12.4</version>
+                <version>${woodstock-dojo-ajax-nodemo.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>prototype</artifactId>
-                <version>1.7.3</version>
+                <version>${woodstock-prototype.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.woodstock.dependlibs</groupId>
                 <artifactId>dataprovider</artifactId>
-                <version>1.0</version>
+                <version>${woodstock-dataprovider.version}</version>
             </dependency>
 
             <!-- HK2 -->

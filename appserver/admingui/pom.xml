@@ -128,8 +128,8 @@
             <resource>
                 <directory>src/main/help</directory>
             </resource>
-      </resources>
-      </build>
+        </resources>
+    </build>
 
     <dependencies>
         <dependency>

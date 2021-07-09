@@ -144,7 +144,7 @@
         <ant.version>1.10.2</ant.version>
         <jackson.version>2.12.3</jackson.version>
         <jettison.version>1.4.1</jettison.version>
-        <mimepull.version>1.9.13</mimepull.version>
+        <mimepull.version>1.9.14</mimepull.version>
         <asm.version>9.2</asm.version>
 
         <commons-io.version>2.10.0</commons-io.version>

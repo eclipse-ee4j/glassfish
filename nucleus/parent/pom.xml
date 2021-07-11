@@ -845,7 +845,7 @@
                             <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
                             </includeOnlyProperties>
-                        <runOnlyOnce>true</runOnlyOnce>
+                        <runOnlyOnce>false</runOnlyOnce>
                         <skipPoms>false</skipPoms>
                     </configuration>
                 </plugin>

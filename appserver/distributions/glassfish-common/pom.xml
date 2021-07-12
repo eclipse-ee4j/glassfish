@@ -89,6 +89,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-invoker-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <cloneProjectsTo>${project.build.directory}/its</cloneProjectsTo>
+                    <streamLogs>true</streamLogs>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 </project>

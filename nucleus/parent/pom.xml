@@ -824,9 +824,9 @@
                     <version>${replacer.plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>pl.project13.maven</groupId>
-                    <artifactId>git-commit-id-plugin</artifactId>
-                    <version>4.0.4</version>
+                    <groupId>io.github.git-commit-id</groupId>
+                    <artifactId>git-commit-id-maven-plugin</artifactId>
+                    <version>5.0.0</version>
                     <executions>
                         <execution>
                             <id>get-the-git-infos</id>

@@ -844,7 +844,6 @@
                             <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
                             </includeOnlyProperties>
                         <runOnlyOnce>false</runOnlyOnce>
-                        <skipPoms>false</skipPoms>
                     </configuration>
                 </plugin>
             </plugins>

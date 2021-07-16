@@ -89,11 +89,6 @@
         <update_version>1</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 
-        <javaee.major_version>9</javaee.major_version>
-        <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
-        <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
-
-
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>
         <mojarra.version>3.0.1</mojarra.version>

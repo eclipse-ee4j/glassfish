@@ -70,8 +70,6 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- on Hudson and RE, this gets replaced by real build ID -->
-        <build.id>${git.branch}-b${git.closest.tag.commit.count}-g${git.commit.id.abbrev} ${git.build.time}</build.id>
         <findbugs.skip>false</findbugs.skip>
         <findbugs.threshold>High</findbugs.threshold>
         <findbugs.common>exclude-common.xml</findbugs.common>
@@ -845,7 +843,6 @@
                             <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
                             </includeOnlyProperties>
-                        <runOnlyOnce>true</runOnlyOnce>
                     </configuration>
                 </plugin>
             </plugins>
@@ -1119,19 +1116,6 @@
                 <configuration>
                     <isFailureFatal>${command.security.maven.plugin.isFailureFatal}</isFailureFatal>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>pl.project13.maven</groupId>
-                <artifactId>git-commit-id-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>get-the-git-infos</id>
-                        <goals>
-                            <goal>revision</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

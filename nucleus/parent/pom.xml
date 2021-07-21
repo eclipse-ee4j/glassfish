@@ -139,7 +139,7 @@
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <jsch.version>0.1.56</jsch.version>
         <antlr.version>2.7.8</antlr.version>
-        <ant.version>1.10.11</ant.version>
+        <ant.version>1.10.2</ant.version>
         <jackson.version>2.12.3</jackson.version>
         <jettison.version>1.4.1</jettison.version>
         <mimepull.version>1.9.14</mimepull.version>

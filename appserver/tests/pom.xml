@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
 
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
@@ -17,22 +18,95 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>6.2.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>org.glassfish.main.tests</groupId>
     <artifactId>tests</artifactId>
     <packaging>pom</packaging>
+
     <name>GlassFish Tests related modules</name>
+
     <modules>
+        <module>tck</module>
         <!-- module>quicklook</module -->
     </modules>
+
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>findbugs-maven-plugin</artifactId>
+                    <configuration>
+                        <skip>true</skip>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.glassfish.copyright</groupId>
+                    <artifactId>glassfish-copyright-maven-plugin</artifactId>
+                    <version>${copyright-plugin.version}</version>
+                    <configuration>
+                        <scm>git</scm>
+                        <scmOnly>true</scmOnly>
+                        <exclude combine.children="append">
+                            <pattern>/build.properties</pattern>
+                            <pattern>.token</pattern>
+                            <pattern>/REAEME</pattern>
+                            <pattern>.asadmin</pattern>
+                            <pattern>.rar</pattern>
+                            <pattern>.pub</pattern>
+                            <pattern>.html</pattern>
+                            <pattern>.shtml</pattern>
+                            <pattern>.HTML</pattern>
+                            <pattern>.xyz</pattern>
+                            <pattern>/gating</pattern>
+                            <pattern>.jsp</pattern>
+                            <pattern>.css</pattern>
+                            <pattern>.tag</pattern>
+                            <pattern>.skip</pattern>
+                            <pattern>.default</pattern>
+                            <pattern>.ldif</pattern>
+                            <pattern>/descriptor/web.xml</pattern>
+                            <pattern>/jndi.properties.cosnaming</pattern>
+                            <pattern>/jndi.properties.s1as8_default</pattern>
+                            <pattern>.ini</pattern>
+                            <pattern>.service</pattern>
+                            <pattern>.Extension</pattern>
+                            <pattern>appserv-tests/devtests/admin/cli/apps/MonApp/MonApp</pattern>
+                            <pattern>/id_dsa</pattern>
+                            <pattern>/pwdfile</pattern>
+                            <pattern>appserv-tests/devtests/cluster/hosted-node</pattern>
+                            <pattern>/ReadMe</pattern>
+                            <pattern>v2-tests/</pattern>
+                            <pattern>.model</pattern>
+                            <pattern>/CVS/</pattern>
+                            <pattern>.templat</pattern>
+                            <pattern>appserv-tests/devtests/security/web-mutual-ssl/certificate/testca.rfc</pattern>
+                            <pattern>appserv-tests/devtests/security/authConf/conffile/auth.conf</pattern>
+                            <pattern>.policy</pattern>
+                            <pattern>appserv-tests/devtests/admin/cli/mac</pattern>
+                            <pattern>appserv-tests/devtests/admin/cli/resources/ssh/identity</pattern>
+                            <pattern>appserv-tests/devtests/security/web-mutual-ssl/certificate/testcert1.p12</pattern>
+                            <pattern>appserv-tests/devtests/web/servlet-3.0/servletContainerInitializerAddRestrictedServletContextListener/descriptor/services/jakarta.servlet.ServletContainerInitializer</pattern>
+                            <pattern>appserv-tests/devtests/jdbc/JdbcCommon.properties</pattern>
+                            <pattern>appserv-tests/devtests/connector/testdb</pattern>
+                            <pattern>appserv-tests/devtests/connector/connector1.5/ra/src/${admin.password.file}</pattern>
+                            <pattern>appserv-tests/devtests/connector/connector1.5/${admin.password.file}</pattern>
+                            <pattern>appserv-tests/devtests/connector/connector1.5/app/src/${admin.password.file}</pattern>
+                            <pattern>appserv-tests/devtests/connector/connector1.5/app/${admin.password.file}</pattern>
+                        </exclude>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -47,73 +121,5 @@
                 </configuration>
             </plugin>
         </plugins>
-    <pluginManagement>
-        <plugins>
-        <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>findbugs-maven-plugin</artifactId>
-            <configuration>
-            <skip>true</skip>
-            </configuration>
-        </plugin>
-        <plugin>
-            <groupId>org.glassfish.copyright</groupId>
-            <artifactId>glassfish-copyright-maven-plugin</artifactId>
-            <version>${copyright-plugin.version}</version>
-            <configuration>
-                <scm>git</scm>
-                <scmOnly>true</scmOnly>
-                <exclude  combine.children="append">
-                    <pattern>/build.properties</pattern>
-                    <pattern>.token</pattern>
-                    <pattern>/REAEME</pattern>
-                    <pattern>.asadmin</pattern>
-                    <pattern>.rar</pattern>
-                    <pattern>.pub</pattern>
-                    <pattern>.html</pattern>
-                    <pattern>.shtml</pattern>
-                    <pattern>.HTML</pattern>
-                    <pattern>.xyz</pattern>
-                    <pattern>/gating</pattern>
-                    <pattern>.jsp</pattern>
-                    <pattern>.css</pattern>
-                    <pattern>.tag</pattern>
-                    <pattern>.skip</pattern>
-                    <pattern>.default</pattern>
-                    <pattern>.ldif</pattern>
-                    <pattern>/descriptor/web.xml</pattern>
-                    <pattern>/jndi.properties.cosnaming</pattern>
-                    <pattern>/jndi.properties.s1as8_default</pattern>
-                    <pattern>.ini</pattern>
-                    <pattern>.service</pattern>
-                    <pattern>.Extension</pattern>
-                    <pattern>appserv-tests/devtests/admin/cli/apps/MonApp/MonApp</pattern>
-                    <pattern>/id_dsa</pattern>
-                    <pattern>/pwdfile</pattern>
-                    <pattern>appserv-tests/devtests/cluster/hosted-node</pattern>
-                    <pattern>/ReadMe</pattern>
-                    <pattern>v2-tests/</pattern>
-                    <pattern>.model</pattern>
-                    <pattern>/CVS/</pattern>
-                    <pattern>.templat</pattern>
-                    <pattern>appserv-tests/devtests/security/web-mutual-ssl/certificate/testca.rfc</pattern>
-                    <pattern>appserv-tests/devtests/security/authConf/conffile/auth.conf</pattern>
-                    <pattern>.policy</pattern>
-                    <pattern>appserv-tests/devtests/admin/cli/mac</pattern>
-                    <pattern>appserv-tests/devtests/admin/cli/resources/ssh/identity</pattern>
-                    <pattern>appserv-tests/devtests/security/web-mutual-ssl/certificate/testcert1.p12</pattern>
-                    <pattern>appserv-tests/devtests/web/servlet-3.0/servletContainerInitializerAddRestrictedServletContextListener/descriptor/services/jakarta.servlet.ServletContainerInitializer</pattern>
-                    <pattern>appserv-tests/devtests/jdbc/JdbcCommon.properties</pattern>
-            <pattern>appserv-tests/devtests/connector/testdb</pattern>
-            <pattern>appserv-tests/devtests/connector/connector1.5/ra/src/${admin.password.file}</pattern>
-            <pattern>appserv-tests/devtests/connector/connector1.5/${admin.password.file}</pattern>
-            <pattern>appserv-tests/devtests/connector/connector1.5/app/src/${admin.password.file}</pattern>
-            <pattern>appserv-tests/devtests/connector/connector1.5/app/${admin.password.file}</pattern>
-                </exclude>
-            </configuration>
-        </plugin>
-        </plugins>
-    </pluginManagement>
     </build>
-
 </project>

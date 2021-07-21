@@ -33,20 +33,19 @@
 
     <properties>
         <ant.home>${project.build.directory}/ant</ant.home>
-        <TCK_HOME>${project.build.directory}/tck</TCK_HOME>
-        <glassfish.home>${TCK_HOME}/glassfish6</glassfish.home>
-        <test.home>${TCK_HOME}/src/com/sun/ts/tests</test.home>
+        <tck.home>${project.build.directory}/tck</tck.home>
+        <glassfish.home>${tck.home}/glassfish6</glassfish.home>
+        <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
     </properties>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>Grab-Glassfish</id>
-                        <phase>initialize</phase>
+                        <phase>pre-integration-test</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>
@@ -57,7 +56,7 @@
                                     <artifactId>glassfish</artifactId>
                                     <version>${project.version}</version>
                                     <type>zip</type>
-                                    <outputDirectory>${TCK_HOME}</outputDirectory>
+                                    <outputDirectory>${tck.home}</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
                         </configuration>
@@ -67,14 +66,13 @@
 
 
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
                 <version>3.0.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.ant</groupId>
                         <artifactId>ant</artifactId>
-                        <version>1.10.11</version>
+                        <version>${ant.version}</version>
                     </dependency>
                     <dependency>
                         <groupId>ant-contrib</groupId>
@@ -92,7 +90,7 @@
                 <executions>
                     <execution>
                         <id>Grab-TCK-ANT-Configure-ts</id>
-                        <phase>validate</phase>
+                        <phase>pre-integration-test</phase>
                         <configuration>
                             <target>
                             
@@ -112,29 +110,29 @@
                                     tofile="${project.build.directory}/ant" />
                                 <chmod dir="${ant.home}/bin" perm="ugo+rx" includes="*" />
 
-                                <copy file="${TCK_HOME}/bin/ts.jte.jdk11" tofile="${TCK_HOME}/bin/ts.jte" overwrite="true"  />
+                                <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
 
                                 <!-- Configure ts.jte  -->
 
-                                <replaceregexp file="${TCK_HOME}/bin/ts.jte" match="orb\.port=.*"
+                                <replaceregexp file="${tck.home}/bin/ts.jte" match="orb\.port=.*"
                                     replace="orb\.port=3699" byline="true" />
-                                <replaceregexp file="${TCK_HOME}/bin/ts.jte" match="javaee\.level=.*"
+                                <replaceregexp file="${tck.home}/bin/ts.jte" match="javaee\.level=.*"
                                     replace="javaee\.level=full" byline="true" />
-                                <replaceregexp file="${TCK_HOME}/bin/ts.jte" match="jacc\.home=.*"
-                                    replace="jacc\.home=${TCK_HOME}/glassfish6/glassfish" byline="true" />
-                                <replaceregexp file="${TCK_HOME}/bin/ts.jte" match="report\.dir=.*"
-                                    replace="report\.dir=${TCK_HOME}/jacctckreport/jacctck" byline="true" />
-                                <replaceregexp file="${TCK_HOME}/bin/ts.jte" match="work\.dir=.*"
-                                    replace="work\.dir=${TCK_HOME}/jacctckwork/jacctck" byline="true" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" match="jacc\.home=.*"
+                                    replace="jacc\.home=${tck.home}/glassfish6/glassfish" byline="true" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" match="report\.dir=.*"
+                                    replace="report\.dir=${tck.home}/jacctckreport/jacctck" byline="true" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" match="work\.dir=.*"
+                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" byline="true" />
                                     
-                                <replaceregexp file="${TCK_HOME}/bin/build.xml" byline="true" 
+                                <replaceregexp file="${tck.home}/bin/build.xml" byline="true" 
                                     match="&lt;/project&gt;" 
                                     replace="&lt;property name=&quot;all.test.dir&quot; value=&quot;com/sun/ts/tests/jacc/,com/sun/ts/tests/signaturetest/jacc,com/sun/ts/tests/common/vehicle/&quot; /&gt; &lt;/project&gt;" />
                             
                                 <!-- Create directory where the report is written to.  -->
                             
-                                <mkdir dir="${TCK_HOME}/jacctckreport"/>
-                                <mkdir dir="${TCK_HOME}/jacctckreport/jacctck"/>
+                                <mkdir dir="${tck.home}/jacctckreport"/>
+                                <mkdir dir="${tck.home}/jacctckreport/jacctck"/>
                             </target>
                         </configuration>
                         <goals>
@@ -156,14 +154,14 @@
                                     <arg value="start-domain"/>
                                 </exec>
 
-                                <exec executable="${ant.home}/bin/ant" dir="${TCK_HOME}/bin">
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi" />
-                                    <env key="TCK_HOME" value="${TCK_HOME}"/>
+                                    <env key="tck.home" value="${tck.home}"/>
                                 </exec>
 
-                                <exec executable="${ant.home}/bin/ant" dir="${TCK_HOME}/bin">
+                                <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="enable.jacc"  />
-                                    <env key="TCK_HOME" value="${TCK_HOME}"/>
+                                    <env key="tck.home" value="${tck.home}"/>
                                 </exec>
                             </target>
                         </configuration>
@@ -196,7 +194,7 @@
                             
                                 <!-- Run all the tests -->
                                 <exec executable="${ant.home}/bin/ant"
-                                      dir="${test.home}" resultproperty="testResult">
+                                      dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="deploy"/>
                                     <arg value="run.all"/>
                                     <env key="LC_ALL" value="C" />
@@ -214,6 +212,7 @@
                                     </then>
                                 </if>
 
+                                <!-- Stop the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin" dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain" />
                                 </exec>

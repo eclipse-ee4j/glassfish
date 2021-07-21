@@ -199,6 +199,7 @@
                                       dir="${test.home}" resultproperty="testResult">
                                     <arg value="deploy"/>
                                     <arg value="run.all"/>
+                                    <env key="LC_ALL" value="C" />
                                 </exec>
 
                                 <if>

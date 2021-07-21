@@ -211,13 +211,12 @@
                                         
                                         <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
                                         <echo message="${contents}" />
-                                
-                                        <exec executable="${glassfish.home}/glassfish/bin/asadmin"
-                                            dir="${glassfish.home}/glassfish/bin">
-                                            <arg value="stop-domain"/>
-                                        </exec>
                                     </then>
                                 </if>
+
+                                <exec executable="${glassfish.home}/glassfish/bin/asadmin" dir="${glassfish.home}/glassfish/bin">
+                                    <arg value="stop-domain" />
+                                </exec>
                             </target>
 
                            

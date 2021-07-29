@@ -23,12 +23,14 @@ import static java.util.logging.Level.INFO;
 
 import java.util.logging.Logger;
 
+import com.sun.enterprise.transaction.TransactionManagerHelper;
 import jakarta.annotation.Priority;
 import jakarta.interceptor.AroundInvoke;
 import jakarta.interceptor.Interceptor;
 import jakarta.interceptor.InvocationContext;
 import jakarta.transaction.Transactional;
 import jakarta.transaction.TransactionalException;
+import jakarta.transaction.TransactionManager;
 
 /**
  * Transactional annotation Interceptor class for Required transaction type, ie
@@ -61,6 +63,10 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
                 _logger.log(INFO, CDI_JTA_MBREQUIRED);
                 try {
                     getTransactionManager().begin();
+                    TransactionManager tm = getTransactionManager();
+                    if(tm instanceof TransactionManagerHelper){
+                        ((TransactionManagerHelper)tm).preInvokeTx(true);
+                    }
                 } catch (Exception exception) {
                     _logger.log(INFO, CDI_JTA_MBREQUIREDBT, exception);
                     throw new TransactionalException(
@@ -77,6 +83,10 @@ public class TransactionalInterceptorRequired extends TransactionalInterceptorBa
             } finally {
                 if (isTransactionStarted) {
                     try {
+                        TransactionManager tm = getTransactionManager();
+                        if(tm instanceof TransactionManagerHelper){
+                            ((TransactionManagerHelper)tm).postInvokeTx(false, true);
+                        }
                         // Exception handling for proceed method call above can set TM/TRX as setRollbackOnly
                         if (getTransactionManager().getTransaction().getStatus() == STATUS_MARKED_ROLLBACK) {
                             getTransactionManager().rollback();

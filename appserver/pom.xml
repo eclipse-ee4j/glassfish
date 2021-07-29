@@ -109,7 +109,7 @@
         <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
         <soteria.version>2.0.1</soteria.version>
-        <exousia.version>1.0.0-M1</exousia.version>
+        <exousia.version>1.0.0-M2</exousia.version>
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0</jms-api.version>

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.security.web.integration;
 
+import static com.sun.enterprise.security.authorize.PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST;
 import static com.sun.enterprise.security.ee.PermissionCacheFactory.createPermissionCache;
 import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getConstraintsFromBundle;
 import static com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle;
@@ -30,7 +31,6 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.security.CodeSource;
 import java.security.Permission;
-import java.security.Policy;
 import java.security.Principal;
 import java.security.cert.Certificate;
 import java.util.Collections;
@@ -57,7 +57,6 @@ import com.sun.enterprise.security.SecurityRoleMapperFactoryGen;
 import com.sun.enterprise.security.SecurityServicesUtil;
 import com.sun.enterprise.security.WebSecurityDeployerProbeProvider;
 import com.sun.enterprise.security.audit.AuditManager;
-import com.sun.enterprise.security.authorize.PolicyContextHandlerImpl;
 import com.sun.enterprise.security.ee.CachedPermission;
 import com.sun.enterprise.security.ee.CachedPermissionImpl;
 import com.sun.enterprise.security.ee.PermissionCache;
@@ -65,8 +64,6 @@ import com.sun.enterprise.security.ee.PermissionCacheFactory;
 import com.sun.enterprise.security.ee.SecurityUtil;
 import com.sun.enterprise.security.ee.audit.AppServerAuditManager;
 
-import jakarta.security.jacc.PolicyConfiguration;
-import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
 import jakarta.security.jacc.WebResourcePermission;
 import jakarta.security.jacc.WebUserDataPermission;
@@ -93,9 +90,6 @@ public class WebSecurityManager {
 
     private static final String RESOURCE = "hasResourcePermission";
     private static final String USERDATA = "hasUserDataPermission";
-    private static final String ROLEREF = "hasRoleRefPermission";
-
-    private static final String DEFAULT_PATTERN = "/";
     private static final String EMPTY_STRING = "";
 
     // The context ID associated with this instance. This is the name
@@ -103,11 +97,7 @@ public class WebSecurityManager {
     private String contextId;
     private String codebase;
 
-    // The JACC policy provider.
-    protected Policy policy = Policy.getPolicy();
-    protected PolicyConfiguration pc = null;
-    protected PolicyConfigurationFactory pcf = null;
-    protected CodeSource codesource = null;
+    protected CodeSource codesource;
 
     // protection domain cache
     private Map protectionDomainCache = Collections.synchronizedMap(new WeakHashMap());
@@ -156,11 +146,12 @@ public class WebSecurityManager {
 
         authorizationService = new AuthorizationService(
             getContextID(webBundleDescriptor),
-            () -> (HttpServletRequest) webSecurityManagerFactory.pcHandlerImpl.getHandlerData().get(PolicyContextHandlerImpl.HTTP_SERVLET_REQUEST) ,
             () -> SecurityContext.getCurrent().getSubject(),
             null);
 
         authorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
+        authorizationService.setRequestSupplier(
+            () -> (HttpServletRequest) webSecurityManagerFactory.pcHandlerImpl.getHandlerData().get(HTTP_SERVLET_REQUEST));
 
         authorizationService.addConstraintsToPolicy(
             getConstraintsFromBundle(webBundleDescriptor),

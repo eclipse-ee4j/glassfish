@@ -38,6 +38,15 @@
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.distributions</groupId>
+            <artifactId>glassfish</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

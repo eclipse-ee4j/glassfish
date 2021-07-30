@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import org.glassfish.admin.rest.client.utils.MarshallingUtils;
 import org.glassfish.admin.rest.provider.ActionReportResultHtmlProvider;
 import org.glassfish.admin.rest.provider.ActionReportResultJsonProvider;
@@ -32,8 +33,13 @@ import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.ActionReport.MessagePart;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.aMapWithSize;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 /**
  *
@@ -46,11 +52,13 @@ public class EncodingTest {
         ActionReportResultJsonProvider provider = new ActionReportResultJsonProvider();
         ActionReportResult result = new ActionReportResult("test", ar);
         String json = provider.getContent(result);
-        Map responseMap = MarshallingUtils.buildMapFromDocument(json);
-        assertEquals(7, responseMap.size());
-        assertEquals(4, ((Map)responseMap.get("extraProperties")).size());
-        assertTrue(responseMap.get("children") instanceof List);
-        assertTrue(responseMap.get("subReports") instanceof List);
+        Map<?, ?> responseMap = MarshallingUtils.buildMapFromDocument(json);
+        assertAll(
+            () -> assertThat(responseMap, aMapWithSize(7)),
+            () -> assertThat((Map<?, ?>) responseMap.get("extraProperties"), aMapWithSize(4)),
+            () -> assertThat(responseMap.get("children"), instanceOf(List.class)),
+            () -> assertThat(responseMap.get("subReports"), instanceOf(List.class))
+        );
     }
 
     @Test
@@ -59,12 +67,13 @@ public class EncodingTest {
         ActionReportResultXmlProvider provider = new ActionReportResultXmlProvider();
         ActionReportResult result = new ActionReportResult("test", ar);
         String xml = provider.getContent(result);
-
-        Map responseMap = MarshallingUtils.buildMapFromDocument(xml);
-        assertEquals(7, responseMap.size());
-        assertEquals(4, ((Map)responseMap.get("extraProperties")).size());
-        assertTrue(responseMap.get("children") instanceof List);
-        assertTrue(responseMap.get("subReports") instanceof List);
+        Map<?, ?> responseMap = MarshallingUtils.buildMapFromDocument(xml);
+        assertAll(
+            () -> assertThat(responseMap, aMapWithSize(7)),
+            () -> assertThat((Map<?, ?>) responseMap.get("extraProperties"), aMapWithSize(4)),
+            () -> assertThat(responseMap.get("children"), instanceOf(List.class)),
+            () -> assertThat(responseMap.get("subReports"), instanceOf(List.class))
+        );
     }
 
     @Test
@@ -73,7 +82,12 @@ public class EncodingTest {
         ActionReportResultHtmlProvider provider = new ActionReportResultHtmlProvider();
         ActionReportResult result = new ActionReportResult("test", ar);
         String html = provider.getContent(result);
-        // How to test this?
+        assertThat(html, stringContainsInOrder(
+            "<html><head>",
+            "<h3>test message",
+            "sub report 1 message",
+            "sub report 2 message</h3></div></body></html>"
+        ));
     }
 
     private RestActionReporter buildActionReport() {

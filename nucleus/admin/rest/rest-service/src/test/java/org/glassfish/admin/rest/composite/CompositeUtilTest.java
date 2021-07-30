@@ -18,18 +18,26 @@ package org.glassfish.admin.rest.composite;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.customvalidators.ReferenceConstraint;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Set;
-import jakarta.validation.ConstraintViolation;
 
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
-import org.glassfish.admin.rest.composite.metadata.AttributeReference;
 import org.glassfish.admin.rest.model.BaseModel;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import jakarta.validation.ConstraintViolation;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -42,7 +50,7 @@ public class CompositeUtilTest {
     @Test
     public void modelGeneration() {
         BaseModel model = CompositeUtil.instance().getModel(BaseModel.class);
-        Assert.assertNotNull(model);
+        assertNotNull(model);
     }
 
     @Test
@@ -51,9 +59,11 @@ public class CompositeUtilTest {
         JSONObject o = new JSONObject(json);
         BaseModel model = CompositeUtil.instance().unmarshallClass(locale, BaseModel.class, o);
 
-        Assert.assertEquals(model.getName(), "testModel");
-        Assert.assertEquals(model.getRelated().size(), 2);
-        Assert.assertTrue(model.getRelated().get(0).getDescription().startsWith("description "));
+        assertAll(
+            () -> assertEquals(model.getName(), "testModel"),
+            () -> assertEquals(model.getRelated().size(), 2)
+        );
+        assertThat(model.getRelated().get(0).getDescription(), startsWith("description "));
     }
 
     @Test
@@ -66,7 +76,7 @@ public class CompositeUtilTest {
         model.setConfigRef(null); // Not null. Validation pulled in from the ConfigBean
 
         Set<ConstraintViolation<BaseModel>> violations = cu.validateRestModel(locale, model);
-        Assert.assertEquals(3, violations.size());
+        assertEquals(3, violations.size());
     }
 
     @Test
@@ -80,8 +90,8 @@ public class CompositeUtilTest {
         Annotation[] fromCluster = clusterMethod.getAnnotations();
         Annotation[] fromRestModel = modelMethod.getAnnotations();
 
-        Assert.assertEquals(fromCluster.length, fromRestModel.length);
-        Assert.assertEquals(clusterMethod.getAnnotation(ReferenceConstraint.RemoteKey.class).message(),
+        assertEquals(fromCluster.length, fromRestModel.length);
+        assertEquals(clusterMethod.getAnnotation(ReferenceConstraint.RemoteKey.class).message(),
                             modelMethod.getAnnotation(ReferenceConstraint.RemoteKey.class).message());
     }
 
@@ -90,11 +100,13 @@ public class CompositeUtilTest {
         Locale locale = null;
         JSONObject o = new JSONObject(json);
         BaseModel model = CompositeUtil.instance().unmarshallClass(locale, BaseModel.class, o);
-        RestModel rmi = (RestModel)model;
+        RestModel<?> rmi = model;
 
-        Assert.assertTrue(rmi.isSet("name"));
-        Assert.assertTrue(rmi.isSet("count"));
-        Assert.assertTrue(rmi.isSet("related"));
-        Assert.assertFalse(rmi.isSet("size"));
+        assertAll(
+            () -> assertTrue(rmi.isSet("name"), "name"),
+            () -> assertTrue(rmi.isSet("count"), "count"),
+            () -> assertTrue(rmi.isSet("related"), "related"),
+            () -> assertFalse(rmi.isSet("size"), "size")
+        );
     }
 }

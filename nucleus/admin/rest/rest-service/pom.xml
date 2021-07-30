@@ -117,14 +117,14 @@
             <artifactId>jersey-media-multipart</artifactId>
             <scope>provided</scope>
         </dependency>
-        <!-- <dependency> <groupId>org.glassfish.jersey.media</groupId> <artifactId>jersey-media-json-jackson</artifactId>
-            <scope>provided</scope> </dependency> -->
 
-
-        <dependency><!-- for FindBugs -->
-            <groupId>org.osgi</groupId>
-            <artifactId>osgi.core</artifactId>
-            <scope>provided</scope>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.el</groupId>

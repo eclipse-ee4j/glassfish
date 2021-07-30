@@ -20,8 +20,10 @@ import org.codehaus.jettison.json.JSONException;
 import org.glassfish.admin.rest.composite.metadata.RestResourceMetadata;
 import org.glassfish.admin.rest.composite.resource.DummiesResource;
 import org.glassfish.admin.rest.composite.resource.DummyResource;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -31,13 +33,13 @@ public class ResourceMetadataTest  {
     @Test
     public void testMetadata() throws JSONException {
         RestResourceMetadata rrmd = new RestResourceMetadata(new DummiesResource());
-        Assert.assertNotNull(rrmd);
-        Assert.assertEquals(rrmd.getResourceMethods().size(), 3);
-        Assert.assertEquals(rrmd.getSubResources().size(), 1);
+        assertNotNull(rrmd);
+        assertEquals(rrmd.getResourceMethods().size(), 3);
+        assertEquals(rrmd.getSubResources().size(), 1);
 
         rrmd = new RestResourceMetadata(new DummyResource());
-        Assert.assertNotNull(rrmd);
-        Assert.assertEquals(rrmd.getResourceMethods().size(), 3);
-        Assert.assertEquals(rrmd.getSubResources().size(), 0);
+        assertNotNull(rrmd);
+        assertEquals(rrmd.getResourceMethods().size(), 3);
+        assertEquals(rrmd.getSubResources().size(), 0);
     }
 }

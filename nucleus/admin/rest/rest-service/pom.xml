@@ -141,17 +141,20 @@
     <build>
         <plugins>
             <plugin>
+                <!-- The services directory must be processed after compilation,
+                     it would be used in compilation otherwise and the build would fail  -->
                 <artifactId>maven-resources-plugin</artifactId>
                 <executions>
                     <execution>
                         <id>default-resources</id>
-                        <phase>test</phase>
+                        <phase>process-classes</phase>
                         <goals>
                             <goal>resources</goal>
                         </goals>
                     </execution>
                 </executions>
             </plugin>
+            <!-- Test classes from this module are used elsewhere -->
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>

@@ -147,7 +147,6 @@
 
         <commons-io.version>2.10.0</commons-io.version>
 
-        <testng.version>7.4.0</testng.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <javadoc.skip>false</javadoc.skip>
         <deploy.skip>false</deploy.skip>

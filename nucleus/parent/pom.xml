@@ -155,6 +155,22 @@
         <javaee.version.new>9</javaee.version.new>
         <jmockit.version>1.49</jmockit.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
+
+        <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
+        <maven.test.jvmoptions.memory.sizes>-Xss512k -Xms256m -Xmx1g -XX:MaxDirectMemorySize=512m</maven.test.jvmoptions.memory.sizes>
+        <maven.test.jvmoptions.memory.gc>-verbose:gc -XX:+UseG1GC -XX:+UseStringDeduplication</maven.test.jvmoptions.memory.gc>
+        <maven.test.jvmoptions.display>-Djava.awt.headless=true</maven.test.jvmoptions.display>
+        <maven.test.jvmoptions.locale>-Duser.language=en -Duser.region=US</maven.test.jvmoptions.locale>
+        <maven.test.jvmoptions.custom></maven.test.jvmoptions.custom>
+        <maven.test.jvmoptions>
+          ${maven.test.jvmoptions.memory.sizes}
+          ${maven.test.jvmoptions.memory.gc}
+          ${maven.test.jvmoptions.display}
+          ${maven.test.jvmoptions.locale}
+          ${maven.test.jvmoptions.add-opens}
+          ${maven.test.jvmoptions.custom}
+        </maven.test.jvmoptions>
+        <surefire.argLine>${maven.test.jvmoptions}</surefire.argLine>
     </properties>
 
     <dependencyManagement>
@@ -703,11 +719,12 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-surefire-plugin</artifactId>
-                    <version>3.0.0-M4</version>
+                    <version>3.0.0-M5</version>
                     <configuration>
-                        <argLine>--add-opens java.base/java.lang=ALL-UNNAMED</argLine>
+                        <argLine>${surefire.argLine}</argLine>
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkCount>1</forkCount>
+                        <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -1273,6 +1290,52 @@
                 </plugins>
             </build>
         </profile>
+        <profile>
+            <id>jacoco</id>
+            <properties>
+                <jacoco.report.outputDirectory>${project.build.directory}/jacoco</jacoco.report.outputDirectory>
+                <jacoco.version>0.8.7</jacoco.version>
+                <maven.test.failure.ignore>true</maven.test.failure.ignore>
+                <surefire.argLine>${maven.test.jvmoptions} @{argLine}</surefire.argLine>
+            </properties>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.jacoco</groupId>
+                            <artifactId>jacoco-maven-plugin</artifactId>
+                            <version>${jacoco.version}</version>
+                            <configuration>
+                                <includes>
+                                    <include>org.glassfish.*</include>
+                                </includes>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>agent-for-unit-tests</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>agent-for-integration-tests</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
         <profile>
             <id>edit-manPages-javaEEVersion</id>
             <build>

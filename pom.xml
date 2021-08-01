@@ -87,6 +87,39 @@
                 <module>nucleus/tests</module>
             </modules>
         </profile>
+
+        <profile>
+            <id>jacoco-merge</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.8.7</version>
+                        <executions>
+                            <execution>
+                                <id>jacoco-merge</id>
+                                <phase>verify</phase>
+                                <inherited>false</inherited>
+                                <goals>
+                                    <goal>merge</goal>
+                                </goals>
+                                <configuration>
+                                    <fileSets>
+                                        <fileSet>
+                                            <directory>${basedir}</directory>
+                                            <includes>
+                                                <include>**/*.exec</include>
+                                            </includes>
+                                        </fileSet>
+                                    </fileSets>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 
     <!--
@@ -117,7 +150,6 @@
                 </executions>
             </plugin>
         </plugins>
-
 
         <pluginManagement>
             <plugins>

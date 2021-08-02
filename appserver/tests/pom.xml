@@ -34,10 +34,21 @@
 
     <name>GlassFish Tests related modules</name>
 
-    <modules>
-        <module>tck</module>
-        <!-- module>quicklook</module -->
-    </modules>
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>tck</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>fastest</id>
+            <modules />
+        </profile>
+    </profiles>
 
     <build>
         <pluginManagement>

@@ -31,5 +31,5 @@
 
     <modules>
         <module>authorization</module>
-  </modules>
+    </modules>
 </project>

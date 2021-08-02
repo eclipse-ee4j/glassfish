@@ -156,17 +156,19 @@
                         </goals>
                         <configuration>
                             <target>
-                                <!-- start the server -->
-                                <exec executable="${glassfish.home}/glassfish/bin/asadmin"
-                                    dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="start-domain"/>
-                                </exec>
-
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <!-- If domain fails to start, we don't want to wait 10 minutes -->
+                                <limit maxwait="30" failonerror="true">
+                                    <exec executable="${glassfish.home}/glassfish/bin/asadmin"
+                                        dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                    </exec>
+                                </limit>
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi" />
                                     <env key="tck.home" value="${tck.home}"/>
                                 </exec>
-
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="enable.jacc"  />
                                     <env key="tck.home" value="${tck.home}"/>
@@ -185,22 +187,16 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-
-                                <!-- Stop the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin"
                                     dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain"/>
                                 </exec>
-
-                                <!-- Start the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin"
                                     dir="${glassfish.home}/glassfish/bin">
                                     <arg value="start-domain"/>
                                 </exec>
 
                                 <echo message="Start running all tests" />
-
-                                <!-- Run all the tests -->
                                 <exec executable="${ant.home}/bin/ant"
                                       dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="deploy"/>
@@ -219,19 +215,14 @@
                                     </then>
                                 </if>
 
-                                <!-- Stop the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin" dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain" />
                                 </exec>
                             </target>
-
-
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

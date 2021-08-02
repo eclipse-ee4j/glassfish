@@ -29,7 +29,7 @@
     <artifactId>glassfish-external-tck-authorization</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish - External - TCK - Authorization</name>
+    <name>GlassFish Tests - TCK - Authorization</name>
 
     <properties>
         <ant.home>${project.build.directory}/ant</ant.home>

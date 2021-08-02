@@ -32,7 +32,7 @@
     <artifactId>tests</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish Tests related modules</name>
+    <name>GlassFish Tests</name>
 
     <profiles>
         <profile>

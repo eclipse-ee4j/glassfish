@@ -62,7 +62,7 @@ of COPY_LIB map constant.)
     <groupId>org.glassfish.tests</groupId>
     <artifactId>nucleus-admin</artifactId>
 
-    <name>Nucleus Admin Devtests</name>
+    <name>Nucleus Tests - Admin</name>
     <description>This pom describes how to run admin developer tests on the Nucleus Bundle</description>
 
     <dependencies>

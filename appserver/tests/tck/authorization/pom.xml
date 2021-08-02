@@ -33,10 +33,12 @@
 
     <properties>
         <ant.home>${project.build.directory}/ant</ant.home>
+        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
         <tck.home>${project.build.directory}/tck</tck.home>
         <glassfish.home>${tck.home}/glassfish6</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+        <tck.tests.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authorization-tck-2.0.1.zip</tck.tests.url>
     </properties>
 
     <dependencies>
@@ -102,16 +104,13 @@
                         <configuration>
                             <target>
                                 <!-- Grab TCK - download, unzip and rename TCK -->
-                                <get
-                                    src="https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authorization-tck-2.0.1.zip"
-                                    dest="${project.build.directory}/tck.zip" skipexisting="true" />
+                                <get src="${tck.tests.url}" dest="${project.build.directory}/tck.zip" skipexisting="true" />
                                 <unzip src="${project.build.directory}/tck.zip" dest="${project.build.directory}" />
                                 <move file="${project.build.directory}/authorization-tck"
                                     tofile="${project.build.directory}/tck" />
 
-                                <!-- Grab ANT - download, unzip, rename and chmod Ant 1.10.9 -->
-                                <get src="https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip"
-                                    dest="${project.build.directory}/ant.zip" skipexisting="true" />
+                                <!-- Grab ANT - download, unzip, rename and chmod Ant -->
+                                <get src="${ant.zip.url}" dest="${project.build.directory}/ant.zip" skipexisting="true" />
                                 <unzip src="${project.build.directory}/ant.zip" dest="${project.build.directory}" />
                                 <move file="${project.build.directory}/apache-ant-${ant.version}"
                                     tofile="${project.build.directory}/ant" />

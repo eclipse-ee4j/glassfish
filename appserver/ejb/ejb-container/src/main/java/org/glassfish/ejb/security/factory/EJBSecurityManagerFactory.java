@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,7 +54,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
     private static Logger _logger = LogDomains.getLogger(EJBSecurityManagerFactory.class, LogDomains.SECURITY_LOGGER);
 
     @Inject
-    InvocationManager invMgr;
+    InvocationManager invocationManager;
 
     @Inject
     AppServerAuditManager auditManager;
@@ -103,7 +103,7 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
         if (manager == null || !register) {
             try {
                 probeProvider.securityManagerCreationStartedEvent(ejbName);
-                manager = new EJBSecurityManager(ejbDescriptor, this.invMgr, this);
+                manager = new EJBSecurityManager(ejbDescriptor, this.invocationManager, this);
                 probeProvider.securityManagerCreationEndedEvent(ejbName);
                 if (register) {
 
@@ -121,6 +121,6 @@ public final class EJBSecurityManagerFactory extends SecurityManagerFactory {
     }
 
     public final AppServerAuditManager getAuditManager() {
-        return this.auditManager;
+        return auditManager;
     }
 }

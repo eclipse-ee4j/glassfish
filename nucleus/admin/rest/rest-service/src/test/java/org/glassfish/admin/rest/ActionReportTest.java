@@ -17,23 +17,27 @@
 package org.glassfish.admin.rest;
 
 import com.sun.enterprise.v3.common.ActionReporter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Properties;
-import jakarta.ws.rs.core.MediaType;
+
 import org.glassfish.admin.rest.provider.ActionReportJson2Provider;
 import org.glassfish.admin.rest.utils.xml.RestActionReporter;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.MessagePart;
-import static org.testng.Assert.*;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import jakarta.ws.rs.core.MediaType;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- *
  * @author mmares
  */
 public class ActionReportTest {
-    private ActionReportJson2Provider provider = new ActionReportJson2Provider();
+    private final ActionReportJson2Provider provider = new ActionReportJson2Provider();
 
     private String marshall(RestActionReporter ar) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();

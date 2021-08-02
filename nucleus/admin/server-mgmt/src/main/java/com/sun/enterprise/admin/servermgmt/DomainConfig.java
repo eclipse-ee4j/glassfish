@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,7 +81,9 @@ public class DomainConfig extends RepositoryConfig {
             // net to get fully qualified host, not just hostname
             ASenvPropertyReader pr = new ASenvPropertyReader();
             Map<String, String> envProperties = pr.getProps();
-            put(K_HOST_NAME, envProperties.get(SystemPropertyConstants.HOST_NAME_PROPERTY));
+            if (envProperties != null) {
+                put(K_HOST_NAME, envProperties.get(SystemPropertyConstants.HOST_NAME_PROPERTY));
+            }
         } catch (Exception ex) {
             throw new DomainException(ex);
         }

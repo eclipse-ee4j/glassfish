@@ -16,21 +16,25 @@
 
 package org.glassfish.admin.rest.composite;
 
-import org.glassfish.admin.rest.composite.metadata.RestModelMetadata;
 import java.util.Map;
 import java.util.Set;
-import static org.testng.AssertJUnit.*;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+
+import org.glassfish.admin.rest.composite.metadata.RestModelMetadata;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author jdlee
  */
 public class RestCollectionTest {
     private RestCollection<TestModel> rc;
 
-    @BeforeMethod(alwaysRun=true)
+    @BeforeEach
     public void setUp() {
         rc = new RestCollection();
     }
@@ -136,7 +140,7 @@ public class RestCollectionTest {
     }
 
     public interface TestModel extends RestModel {
-        public String getName();
-        public void setName(String name);
+        String getName();
+        void setName(String name);
     }
 }

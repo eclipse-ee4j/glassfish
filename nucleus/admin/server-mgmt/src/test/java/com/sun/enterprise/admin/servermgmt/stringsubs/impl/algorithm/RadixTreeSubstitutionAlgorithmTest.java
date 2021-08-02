@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,6 +14,19 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.nucleus.quicklook;
+package com.sun.enterprise.admin.servermgmt.stringsubs.impl.algorithm;
 
-public class NucleusStartStopTest extends org.glassfish.tests.utils.NucleusStartStopTest { }
+import java.util.Map;
+
+import com.sun.enterprise.admin.servermgmt.stringsubs.SubstitutionAlgorithm;
+
+/**
+ * Unit test class for {@link RadixTreeSubstitutionAlgo}.
+ */
+public class RadixTreeSubstitutionAlgorithmTest extends AbstractSubstitutionAlgo {
+
+    @Override
+    protected SubstitutionAlgorithm getAlgorithm(Map<String, String> substitutionMap) {
+        return new RadixTreeSubstitutionAlgo(substitutionMap);
+    }
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -58,7 +58,6 @@ public class StringSubstitutionEngine implements StringSubstitutor {
     private static final Logger _logger = SLogger.getLogger();
 
     private static final LocalStringsImpl _strings = new LocalStringsImpl(StringSubstitutionEngine.class);
-    private InputStream _configInputStream = null;
 
     //Root of JAXB parsed string-subs configuration
     private StringsubsDefinition _root = null;
@@ -78,8 +77,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
         if (inputStream == null) {
             throw new StringSubstitutionException("InputStream is null");
         }
-        _configInputStream = inputStream;
-        _root = StringSubstitutionParser.parse(_configInputStream);
+        _root = StringSubstitutionParser.parse(inputStream);
     }
 
     @Override
@@ -106,7 +104,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
         if (type == null) {
             return defaults.getProperty();
         }
-        List<Property> props = new ArrayList<Property>();
+        List<Property> props = new ArrayList<>();
         for (Property prop : defaults.getProperty()) {
             if (prop.getType().equals(type)) {
                 props.add(prop);
@@ -199,7 +197,7 @@ public class StringSubstitutionEngine implements StringSubstitutor {
             groupMode = modeType.value();
         }
         buildChangePairsMap();
-        Map<String, String> substitutionMap = new HashMap<String, String>();
+        Map<String, String> substitutionMap = new HashMap<>();
         for (ChangePairRef ref : refList) {
             String name = ref.getName();
             String localMode = ref.getMode();
@@ -271,14 +269,14 @@ public class StringSubstitutionEngine implements StringSubstitutor {
             if (defaults != null) {
                 List<Property> properties = defaults.getProperty();
                 if (!properties.isEmpty()) {
-                    _defaultProperties = new HashMap<String, Property>(properties.size(), 1);
+                    _defaultProperties = new HashMap<>(properties.size(), 1);
                     for (Property prop : properties) {
                         _defaultProperties.put(prop.getKey(), prop);
                     }
                 }
             }
             List<? extends ChangePair> changePairList = _root.getChangePair();
-            _changePairsMap = new HashMap<String, Pair>(changePairList.size());
+            _changePairsMap = new HashMap<>(changePairList.size());
             for (ChangePair pair : _root.getChangePair()) {
                 String id = pair.getId();
                 String beforeValue = pair.getBefore();

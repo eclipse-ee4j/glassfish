@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,13 +51,12 @@ public class StringSubstitutionParser {
     private final static String DEFAULT_SCHEMA = "xsd/schema/stringsubs.xsd";
 
     /**
-     * Parse the configuration stream against the string-subs schema.
+     * Parse the configuration stream against the string-subs schema and then closes the stream.
      *
      * @param configStream InputStream of stringsubs.xml file.
      * @return Parsed Object.
      * @throws StringSubstitutionException If any error occurs in parsing.
      */
-    @SuppressWarnings("rawtypes")
     public static StringsubsDefinition parse(InputStream configStream) throws StringSubstitutionException {
         // If schema information is missing
         if (configStream == null) {
@@ -73,20 +72,19 @@ public class StringSubstitutionParser {
             InputSource is = new InputSource(configStream);
             SAXSource source = new SAXSource(is);
             Object obj = unmarshaller.unmarshal(source);
-            return obj instanceof JAXBElement ? (StringsubsDefinition) ((JAXBElement) obj).getValue() : (StringsubsDefinition) obj;
+            return obj instanceof JAXBElement
+                ? (StringsubsDefinition) ((JAXBElement<?>) obj).getValue()
+                : (StringsubsDefinition) obj;
         } catch (SAXException se) {
             throw new StringSubstitutionException(_strings.get("failedToParse", DEFAULT_SCHEMA), se);
         } catch (JAXBException jaxbe) {
             throw new StringSubstitutionException(_strings.get("failedToParse", DEFAULT_SCHEMA), jaxbe);
         } finally {
-            if (configStream != null) {
-                try {
-                    configStream.close();
-                    configStream = null;
-                } catch (IOException e) {
-                    if (_logger.isLoggable(Level.FINER)) {
-                        _logger.log(Level.FINER, _strings.get("errorInClosingStream"));
-                    }
+            try {
+                configStream.close();
+            } catch (IOException e) {
+                if (_logger.isLoggable(Level.FINER)) {
+                    _logger.log(Level.FINER, _strings.get("errorInClosingStream"));
                 }
             }
         }

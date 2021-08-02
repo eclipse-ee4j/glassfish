@@ -118,9 +118,7 @@
             <artifactId>management-api</artifactId>
         </dependency>
 
-
         <!-- TEST dependencies -->
-
         <dependency>
             <groupId>org.glassfish.main.cluster</groupId>
             <artifactId>cluster-admin</artifactId>
@@ -148,6 +146,10 @@
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.el</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
         </dependency>
     </dependencies>
 

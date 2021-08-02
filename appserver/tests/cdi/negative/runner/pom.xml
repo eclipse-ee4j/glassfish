@@ -53,17 +53,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.tests</groupId>
-            <artifactId>utils-ng</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.appclient</groupId>
             <artifactId>gf-client</artifactId>
             <version>${project.version}</version>

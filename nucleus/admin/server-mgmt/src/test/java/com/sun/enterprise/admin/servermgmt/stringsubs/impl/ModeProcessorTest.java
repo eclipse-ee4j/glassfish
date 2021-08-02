@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2018-2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,15 +18,18 @@ package com.sun.enterprise.admin.servermgmt.stringsubs.impl;
 
 import java.io.File;
 
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.sun.enterprise.admin.servermgmt.xml.stringsubs.ModeType;
 
 /**
  * Unit test for {@link ModeProcessor} functionality.
  */
-public class TestModeProcessor {
+public class ModeProcessorTest {
 
     /**
      * Test for <code>null</code> input string.
@@ -34,7 +37,7 @@ public class TestModeProcessor {
     @Test
     public void testNullInput() {
         String outputStr = ModeProcessor.processModeType(ModeType.DOUBLE, null);
-        Assert.assertNull(outputStr);
+        assertNull(outputStr);
     }
 
     /**
@@ -43,7 +46,7 @@ public class TestModeProcessor {
     @Test
     public void testInvalidMode() {
         String inputStr = "TEST";
-        Assert.assertEquals(inputStr, ModeProcessor.processModeType(null, inputStr));
+        assertEquals(inputStr, ModeProcessor.processModeType(null, inputStr));
     }
 
     /**
@@ -52,7 +55,7 @@ public class TestModeProcessor {
     @Test
     public void testEmptyInput() {
         String outputStr = ModeProcessor.processModeType(ModeType.DOUBLE, "");
-        Assert.assertTrue(outputStr.isEmpty());
+        assertTrue(outputStr.isEmpty());
     }
 
     /**
@@ -63,7 +66,7 @@ public class TestModeProcessor {
         String inputStr = "First Slash \\ Second Double Slash \\\\";
         String expectedOutput = "First Slash / Second Double Slash //";
         String outputStr = ModeProcessor.processModeType(ModeType.FORWARD, inputStr);
-        Assert.assertEquals(outputStr, expectedOutput);
+        assertEquals(outputStr, expectedOutput);
     }
 
     /**
@@ -74,7 +77,7 @@ public class TestModeProcessor {
         String inputStr = "First Slash \\ First Colon : Second Double Slash \\\\ Second Double Colon ::";
         String expectedOutput = "First Slash \\\\ First Colon \\: Second Double Slash \\\\\\\\ Second Double Colon \\:\\:";
         String outputStr = ModeProcessor.processModeType(ModeType.DOUBLE, inputStr);
-        Assert.assertEquals(outputStr, expectedOutput);
+        assertEquals(outputStr, expectedOutput);
     }
 
     /**
@@ -90,6 +93,6 @@ public class TestModeProcessor {
         builder.append(File.separator);
         String expectedOutput = "First Separator ${/} Second Double Separator ${/}${/}";
         String outputStr = ModeProcessor.processModeType(ModeType.POLICY, builder.toString());
-        Assert.assertEquals(outputStr, expectedOutput);
+        assertEquals(outputStr, expectedOutput);
     }
 }

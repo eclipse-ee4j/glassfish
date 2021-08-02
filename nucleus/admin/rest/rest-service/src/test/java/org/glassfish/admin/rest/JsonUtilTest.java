@@ -17,14 +17,21 @@
 package org.glassfish.admin.rest;
 
 import java.util.Locale;
+
 import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 import org.glassfish.admin.rest.composite.CompositeUtil;
 import org.glassfish.admin.rest.model.BaseModel;
 import org.glassfish.admin.rest.utils.JsonUtil;
-import org.testng.Assert;
-import org.testng.annotations.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -37,18 +44,17 @@ public class JsonUtilTest {
         BaseModel model = CompositeUtil.instance().getModel(BaseModel.class);
         model.setStringArray(new String[] {"one", "two"});
         JSONObject json = (JSONObject)JsonUtil.getJsonObject(model);
-        Assert.assertNotNull(json);
+        assertNotNull(json);
         Object o = json.get("stringArray");
-        Assert.assertTrue(o instanceof JSONArray);
+        assertThat(o, instanceOf(JSONArray.class));
         JSONArray array = (JSONArray)o;
-        Assert.assertEquals(array.length(), 2);
-        Assert.assertTrue(contains(array, "one"));
-        Assert.assertTrue(contains(array, "two"));
+        assertEquals(array.length(), 2);
+        assertTrue(contains(array, "one"));
+        assertTrue(contains(array, "two"));
 
         BaseModel model2 = CompositeUtil.instance().unmarshallClass(locale, BaseModel.class, json);
-        Assert.assertNotNull(model2);
-        Assert.assertNotNull(model2.getStringArray());
-        Assert.assertEquals(2, model2.getStringArray().length);
+        assertNotNull(model2);
+        assertThat(model2.getStringArray(), arrayWithSize(2));
     }
 
     private boolean contains(JSONArray array, String text) throws JSONException {

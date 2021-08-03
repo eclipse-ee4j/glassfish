@@ -30,7 +30,7 @@
     <artifactId>nucleus-tests</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish Tests related modules</name>
+    <name>Nucleus Tests</name>
 
     <modules>
         <module>admin</module>

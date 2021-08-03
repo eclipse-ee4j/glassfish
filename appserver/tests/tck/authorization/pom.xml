@@ -29,21 +29,25 @@
     <artifactId>glassfish-external-tck-authorization</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish - External - TCK - Authorization</name>
+    <name>GlassFish Tests - TCK - Authorization</name>
 
     <properties>
         <ant.home>${project.build.directory}/ant</ant.home>
+        <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
         <tck.home>${project.build.directory}/tck</tck.home>
         <glassfish.home>${tck.home}/glassfish6</glassfish.home>
+        <glassfish.version>${project.version}</glassfish.version>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
+        <tck.tests.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authorization-tck-2.0.1.zip</tck.tests.url>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
-            <version>${project.version}</version>
+            <version>${glassfish.version}</version>
             <type>zip</type>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -63,7 +67,7 @@
                                 <artifactItem>
                                     <groupId>org.glassfish.main.distributions</groupId>
                                     <artifactId>glassfish</artifactId>
-                                    <version>${project.version}</version>
+                                    <version>${glassfish.version}</version>
                                     <type>zip</type>
                                     <outputDirectory>${tck.home}</outputDirectory>
                                 </artifactItem>
@@ -73,10 +77,8 @@
                 </executions>
             </plugin>
 
-
             <plugin>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>3.0.0</version>
                 <dependencies>
                     <dependency>
                         <groupId>org.apache.ant</groupId>
@@ -95,51 +97,48 @@
                         </exclusions>
                     </dependency>
                 </dependencies>
-                
                 <executions>
                     <execution>
                         <id>Grab-TCK-ANT-Configure-ts</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
                             <target>
-                            
                                 <!-- Grab TCK - download, unzip and rename TCK -->
-                                <get
-                                    src="https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authorization-tck-2.0.1.zip"
-                                    dest="${project.build.directory}/tck.zip" skipexisting="true" />
+                                <get src="${tck.tests.url}" dest="${project.build.directory}/tck.zip" skipexisting="true" />
                                 <unzip src="${project.build.directory}/tck.zip" dest="${project.build.directory}" />
                                 <move file="${project.build.directory}/authorization-tck"
                                     tofile="${project.build.directory}/tck" />
 
-                                <!-- Grab ANT - download, unzip, rename and chmod Ant 1.10.9 -->
-                                <get src="https://archive.apache.org/dist/ant/binaries/apache-ant-1.10.9-bin.zip"
-                                    dest="${project.build.directory}/ant.zip" skipexisting="true" />
+                                <!-- Grab ANT - download, unzip, rename and chmod Ant -->
+                                <get src="${ant.zip.url}" dest="${project.build.directory}/ant.zip" skipexisting="true" />
                                 <unzip src="${project.build.directory}/ant.zip" dest="${project.build.directory}" />
-                                <move file="${project.build.directory}/apache-ant-1.10.9"
+                                <move file="${project.build.directory}/apache-ant-${ant.version}"
                                     tofile="${project.build.directory}/ant" />
                                 <chmod dir="${ant.home}/bin" perm="ugo+rx" includes="*" />
 
+                                <!-- Change configuration -->
                                 <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="orb\.port=.*"
+                                    replace="orb\.port=3699" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="javaee\.level=.*"
+                                    replace="javaee\.level=full" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="jacc\.home=.*"
+                                    replace="jacc\.home=${tck.home}/glassfish6/glassfish" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="report\.dir=.*"
+                                    replace="report\.dir=${tck.home}/jacctckreport/jacctck" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="work\.dir=.*"
+                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" />
 
-                                <!-- Configure ts.jte  -->
-
-                                <replaceregexp file="${tck.home}/bin/ts.jte" match="orb\.port=.*"
-                                    replace="orb\.port=3699" byline="true" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" match="javaee\.level=.*"
-                                    replace="javaee\.level=full" byline="true" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" match="jacc\.home=.*"
-                                    replace="jacc\.home=${tck.home}/glassfish6/glassfish" byline="true" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" match="report\.dir=.*"
-                                    replace="report\.dir=${tck.home}/jacctckreport/jacctck" byline="true" />
-                                <replaceregexp file="${tck.home}/bin/ts.jte" match="work\.dir=.*"
-                                    replace="work\.dir=${tck.home}/jacctckwork/jacctck" byline="true" />
-                                    
-                                <replaceregexp file="${tck.home}/bin/build.xml" byline="true" 
-                                    match="&lt;/project&gt;" 
+                                <!-- Run just selected subset tests -->
+                                <replaceregexp file="${tck.home}/bin/build.xml" byline="true"
+                                    match="&lt;/project&gt;"
                                     replace="&lt;property name=&quot;all.test.dir&quot; value=&quot;com/sun/ts/tests/jacc/,com/sun/ts/tests/signaturetest/jacc,com/sun/ts/tests/common/vehicle/&quot; /&gt; &lt;/project&gt;" />
-                            
-                                <!-- Create directory where the report is written to.  -->
-                            
+
                                 <mkdir dir="${tck.home}/jacctckreport"/>
                                 <mkdir dir="${tck.home}/jacctckreport/jacctck"/>
                             </target>
@@ -157,17 +156,19 @@
                         </goals>
                         <configuration>
                             <target>
-                                <!-- start the server -->
-                                <exec executable="${glassfish.home}/glassfish/bin/asadmin"
-                                    dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="start-domain"/>
-                                </exec>
-
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
+                                <!-- If domain fails to start, we don't want to wait 10 minutes -->
+                                <limit maxwait="30" failonerror="true">
+                                    <exec executable="${glassfish.home}/glassfish/bin/asadmin"
+                                        dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                    </exec>
+                                </limit>
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="config.vi" />
                                     <env key="tck.home" value="${tck.home}"/>
                                 </exec>
-
                                 <exec executable="${ant.home}/bin/ant" dir="${tck.home}/bin">
                                     <arg value="enable.jacc"  />
                                     <env key="tck.home" value="${tck.home}"/>
@@ -175,7 +176,7 @@
                             </target>
                         </configuration>
                     </execution>
-                    
+
                      <execution>
                         <id>Run-TCK-tests</id>
                         <phase>integration-test</phase>
@@ -186,22 +187,16 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                            
-                                <!-- Stop the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin"
                                     dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain"/>
                                 </exec>
-                            
-                                <!-- Start the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin"
                                     dir="${glassfish.home}/glassfish/bin">
                                     <arg value="start-domain"/>
                                 </exec>
-                            
+
                                 <echo message="Start running all tests" />
-                            
-                                <!-- Run all the tests -->
                                 <exec executable="${ant.home}/bin/ant"
                                       dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="deploy"/>
@@ -215,25 +210,19 @@
                                     </not>
                                     <then>
                                         <echo message="Running tests failed." />
-                                        
                                         <loadfile property="contents" srcFile="${glassfish.home}/glassfish/domains/domain1/logs/server.log" />
                                         <echo message="${contents}" />
                                     </then>
                                 </if>
 
-                                <!-- Stop the server -->
                                 <exec executable="${glassfish.home}/glassfish/bin/asadmin" dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain" />
                                 </exec>
                             </target>
-
-                           
                         </configuration>
                     </execution>
-
                 </executions>
             </plugin>
-
         </plugins>
     </build>
 </project>

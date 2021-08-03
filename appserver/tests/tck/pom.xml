@@ -29,7 +29,9 @@
     <artifactId>tests.tck</artifactId>
     <packaging>pom</packaging>
 
+    <name>GlassFish Tests - TCK</name>
+
     <modules>
         <module>authorization</module>
-  </modules>
+    </modules>
 </project>

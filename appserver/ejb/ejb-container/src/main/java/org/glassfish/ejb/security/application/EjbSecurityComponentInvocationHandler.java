@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +16,9 @@
 
 package org.glassfish.ejb.security.application;
 
-import java.util.logging.Level;
+import static java.util.logging.Level.SEVERE;
+import static org.glassfish.api.invocation.ComponentInvocation.ComponentInvocationType.EJB_INVOCATION;
+
 import java.util.logging.Logger;
 
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -40,21 +42,21 @@ public class EjbSecurityComponentInvocationHandler implements RegisteredComponen
     private static final Logger _logger = LogDomains.getLogger(EjbSecurityComponentInvocationHandler.class, LogDomains.EJB_LOGGER);
 
     @Inject
-    private InvocationManager invManager;
+    private InvocationManager invocationManager;
 
     private ComponentInvocationHandler ejbSecurityCompInvHandler = new ComponentInvocationHandler() {
 
         @Override
         public void beforePreInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation newInv)
             throws InvocationException {
-            if (invType == ComponentInvocationType.EJB_INVOCATION) {
+            if (invType == EJB_INVOCATION) {
                 assert (newInv instanceof EjbInvocation);
                 try {
                     if (!newInv.isPreInvokeDone()) {
                         ((EjbInvocation) newInv).getEjbSecurityManager().preInvoke(newInv);
                     }
                 } catch (Exception ex) {
-                    _logger.log(Level.SEVERE, "ejb.security_preinvoke_exception", ex);
+                    _logger.log(SEVERE, "ejb.security_preinvoke_exception", ex);
                     throw new InvocationException(ex);
                 }
             }
@@ -73,12 +75,12 @@ public class EjbSecurityComponentInvocationHandler implements RegisteredComponen
         @Override
         public void afterPostInvoke(ComponentInvocationType invType, ComponentInvocation prevInv, ComponentInvocation curInv)
             throws InvocationException {
-            if (invType == ComponentInvocationType.EJB_INVOCATION) {
+            if (invType == EJB_INVOCATION) {
                 assert (curInv instanceof EjbInvocation);
                 try {
                     ((EjbInvocation) curInv).getEjbSecurityManager().postInvoke(curInv);
                 } catch (Exception ex) {
-                    _logger.log(Level.SEVERE, "ejb.security_postinvoke_exception", ex);
+                    _logger.log(SEVERE, "ejb.security_postinvoke_exception", ex);
                     ((EjbInvocation) curInv).exception = ex;
                 }
             }
@@ -92,7 +94,7 @@ public class EjbSecurityComponentInvocationHandler implements RegisteredComponen
 
     @Override
     public void register() {
-        invManager.registerComponentInvocationHandler(ComponentInvocationType.EJB_INVOCATION, this);
+        invocationManager.registerComponentInvocationHandler(EJB_INVOCATION, this);
     }
 
 }

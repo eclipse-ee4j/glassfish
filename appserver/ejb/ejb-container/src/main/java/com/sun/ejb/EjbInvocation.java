@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -303,17 +303,13 @@ public class EjbInvocation extends ComponentInvocation
         return newInv;
     }
 
-    /**
-     * Used by JACC implementation to get an enterprise bean instance for the EnterpriseBean policy handler. The jacc implementation
-     * should use this method rather than directly accessing the ejb field.
-     */
     @Override
     public Object getJaccEjb() {
-        Object bean = null;
-        if (container != null) {
-            bean = ((Container) container).getJaccEjb(this);
+        if (container == null) {
+            return null;
         }
-        return bean;
+
+        return ((Container) container).getJaccEjb(this);
     }
 
     /**

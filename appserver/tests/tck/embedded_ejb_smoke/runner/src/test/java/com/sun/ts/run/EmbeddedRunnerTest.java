@@ -88,7 +88,9 @@ public class EmbeddedRunnerTest {
                 "--add-opens=java.base/sun.net.www.protocol.jrt=ALL-UNNAMED",
                 "--add-opens=java.base/java.lang=ALL-UNNAMED",
                 "--add-opens=java.base/java.util=ALL-UNNAMED",
-                "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED");
+                "--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED",
+                "--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED")
+            ;
 
         if (System.getProperty("maven.tck.debug") != null && !System.getProperty("maven.tck.debug").isEmpty()) {
             javaOptions = new ArrayList<>(javaOptions);

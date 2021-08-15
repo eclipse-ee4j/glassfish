@@ -22,17 +22,18 @@
 
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>tests</artifactId>
+        <artifactId>tests.tck</artifactId>
         <version>6.2.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tests.tck</artifactId>
+    <artifactId>embedded_ejb_smoke</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish Tests - TCK</name>
+    <name>GlassFish Tests - TCK - Embedded EJB - Smoke</name>
 
     <modules>
-        <module>authorization</module>
-        <module>embedded_ejb_smoke</module>
+        <module>installer</module>
+        <module>ejb_lite_basic</module>
+        <module>runner</module>
     </modules>
 </project>

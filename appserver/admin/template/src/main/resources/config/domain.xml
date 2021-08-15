@@ -213,6 +213,7 @@
         <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>
         <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
+        <jvm-options>--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</jvm-options>
       </java-config>
       <network-config>
         <protocols>
@@ -401,6 +402,7 @@
              <jvm-options>--add-opens=java.base/java.lang=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.base/java.util=ALL-UNNAMED</jvm-options>
              <jvm-options>--add-opens=java.rmi/sun.rmi.transport=ALL-UNNAMED</jvm-options>
+             <jvm-options>--add-opens=java.naming/javax.naming.spi=ALL-UNNAMED</jvm-options>
          </java-config>
          <availability-service>
              <web-container-availability/>

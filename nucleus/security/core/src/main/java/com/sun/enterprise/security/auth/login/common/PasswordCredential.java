@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,14 +19,13 @@ package com.sun.enterprise.security.auth.login.common;
 import java.util.Arrays;
 
 /**
- * This class holds the user password for the shared password realm and the
- * realm name. This credential is added as a private credential to the
- * JAAS subject.
+ * This class holds the user password for the shared password realm and the realm name. This credential is added as a private
+ * credential to the JAAS subject.
  */
 
 public class PasswordCredential {
     private String username;
- //   private String password;
+    //   private String password;
     private char[] password;
     private String realm;
     private boolean readOnly = false;
@@ -37,11 +36,11 @@ public class PasswordCredential {
 
     /**
      * Construct a credential with the specified password and realm name.
+     * 
      * @param the password.
      * @param the realm name. The only value supported for now is "default".
      */
-    public PasswordCredential(String user, char[] password, String realm)
-    {
+    public PasswordCredential(String user, char[] password, String realm) {
         this.username = user;
         //Copy the password to another reference before storing it to the
         //instance field.
@@ -49,61 +48,64 @@ public class PasswordCredential {
         this.password = passwordCopy;
         this.realm = realm;
 
-        if (this.username == null ) { this.username = ""; }
-        if (this.password == null ) { this.password = new char[]{}; }
-        if (this.realm == null ) { this.realm = ""; }
+        if (this.username == null) {
+            this.username = "";
+        }
+        if (this.password == null) {
+            this.password = new char[] {};
+        }
+        if (this.realm == null) {
+            this.realm = "";
+        }
     }
 
-
     /**
-     * called by SecServerRequestInterceptor
-     * The object if created on the server side is readonly
+     * called by SecServerRequestInterceptor The object if created on the server side is readonly
      */
-    public PasswordCredential(String user, char[] password,
-                              String realm, byte[] target_name)
-    {
+    public PasswordCredential(String user, char[] password, String realm, byte[] target_name) {
         this(user, password, realm);
         this.target_name = target_name;
         readOnly = true;
     }
 
-
     /**
      * Return the realm name.
+     * 
      * @return the realm name. Only value supported for now is "default".
      */
     public String getRealm() {
         return realm;
     }
 
-
     /**
      * Return the username.
+     * 
      * @return the user name.
      */
     public String getUser() {
         return username;
     }
 
-    public void setRealm(String realm){
-        if(!readOnly){
+    public void setRealm(String realm) {
+        if (!readOnly) {
             this.realm = realm;
         }
     }
 
     /**
      * Return the password.
+     * 
      * @return the password.
      */
     public char[] getPassword() {
-       //Copy the password to another reference before returning it
+        //Copy the password to another reference before returning it
         char[] passwordCopy = (password == null) ? null : Arrays.copyOf(password, password.length);
         return passwordCopy;
     }
 
-
     /**
      * Return the target_name
+     * 
      * @return the target_name
      */
     public byte[] getTargetName() {
@@ -111,32 +113,29 @@ public class PasswordCredential {
     }
 
     /**
-     * Compare two instances of the credential and return true if they are
-     * the same and false otherwise.
+     * Compare two instances of the credential and return true if they are the same and false otherwise.
+     * 
      * @param the object that this instance is being compared to.
      * @return true if the instances are equal, false otherwise
      */
     public boolean equals(Object o) {
-        if(o instanceof PasswordCredential) {
+        if (o instanceof PasswordCredential) {
             PasswordCredential pc = (PasswordCredential) o;
-            if(pc.getUser().equals(username) &&
-                Arrays.equals(pc.getPassword(),password) &&
-                pc.getRealm().equals(realm)) {
+            if (pc.getUser().equals(username) && Arrays.equals(pc.getPassword(), password) && pc.getRealm().equals(realm)) {
                 return true;
             }
         }
         return false;
     }
 
-
     /**
      * Return the hashCode computed from the password and realm name.
+     * 
      * @return the hash code.
      */
     public int hashCode() {
         return username.hashCode() + Arrays.hashCode(password) + realm.hashCode();
     }
-
 
     /**
      * The string representation of the credential.

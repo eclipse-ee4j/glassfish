@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,15 +21,16 @@ import java.util.Properties;
 
 /**
  *
- *  Enables formatting of principal retrieved from message eg: P-Asserted-Identity  values.
- * eg: "Cullen Jennings" <sip:fluffy@cisco.com> value can be mapped/formatted to
- *      "CullenJ".
+ * Enables formatting of principal retrieved from message eg: P-Asserted-Identity values. eg: "Cullen Jennings"
+ * <sip:fluffy@cisco.com> value can be mapped/formatted to "CullenJ".
+ * 
  * @author k.venugopal@sun.com
  */
 
 public interface PrincipalMapper {
 
     public void initialize(Properties props);
+
     /**
      *
      * converts values in to a format understood by the container/container backend eg: database, ldap etc.

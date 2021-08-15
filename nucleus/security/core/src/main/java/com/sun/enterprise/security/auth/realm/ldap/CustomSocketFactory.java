@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,13 +32,12 @@ import java.net.InetAddress;
 
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.SharedSecureRandom;
+
 /**
  * Custom socket factory for ldaps (SSL).
  *
- * The comparator only works in JDK 1.6 onwards. Due to a bug in JDK 1.6
- * compare method invocation fails with a classcast exception. The caller is
- * trying to pass java.lang.String when it should have passed
- * javax.net.SocketFactory
+ * The comparator only works in JDK 1.6 onwards. Due to a bug in JDK 1.6 compare method invocation fails with a classcast
+ * exception. The caller is trying to pass java.lang.String when it should have passed javax.net.SocketFactory
  *
  * @see com.sun.enterprise.security.auth.realm.ldap.LDAPRealm
  *
@@ -47,13 +46,11 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     private SocketFactory socketFactory;
 
     public static final String SSL = "SSL";
-    protected static final Logger _logger =
-        SecurityLoggerInfo.getLogger();
-    protected static final StringManager sm =
-        StringManager.getManager(CustomSocketFactory.class);
-    private static final  CustomSocketFactory customSocketFactory = new CustomSocketFactory();
+    protected static final Logger _logger = SecurityLoggerInfo.getLogger();
+    protected static final StringManager sm = StringManager.getManager(CustomSocketFactory.class);
+    private static final CustomSocketFactory customSocketFactory = new CustomSocketFactory();
 
-    public  CustomSocketFactory() {
+    public CustomSocketFactory() {
         SSLUtils sslUtils = Globals.getDefaultHabitat().getService(SSLUtils.class);
         SSLContext sc = null;
         try {
@@ -68,8 +65,7 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     /**
      * @see javax.net.SocketFactory#createSocket(java.lang.String, int)
      */
-    public Socket createSocket(String arg0, int arg1) throws IOException,
-            UnknownHostException {
+    public Socket createSocket(String arg0, int arg1) throws IOException, UnknownHostException {
         return socketFactory.createSocket(arg0, arg1);
     }
 
@@ -81,20 +77,16 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     }
 
     /**
-     * @see javax.net.SocketFactory#createSocket(java.lang.String, int,
-     *      java.net.InetAddress, int)
+     * @see javax.net.SocketFactory#createSocket(java.lang.String, int, java.net.InetAddress, int)
      */
-    public Socket createSocket(String arg0, int arg1, InetAddress arg2, int arg3)
-    throws IOException, UnknownHostException {
+    public Socket createSocket(String arg0, int arg1, InetAddress arg2, int arg3) throws IOException, UnknownHostException {
         return socketFactory.createSocket(arg0, arg1, arg2, arg3);
     }
 
     /**
-     * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int,
-     *      java.net.InetAddress, int)
+     * @see javax.net.SocketFactory#createSocket(java.net.InetAddress, int, java.net.InetAddress, int)
      */
-    public Socket createSocket(InetAddress arg0, int arg1, InetAddress arg2,
-            int arg3) throws IOException {
+    public Socket createSocket(InetAddress arg0, int arg1, InetAddress arg2, int arg3) throws IOException {
         return socketFactory.createSocket(arg0, arg1, arg2, arg3);
     }
 
@@ -105,6 +97,5 @@ public class CustomSocketFactory extends SocketFactory implements Comparator<Soc
     public static SocketFactory getDefault() {
         return customSocketFactory;
     }
-
 
 }

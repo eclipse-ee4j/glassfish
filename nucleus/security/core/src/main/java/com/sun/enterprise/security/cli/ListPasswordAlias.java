@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,51 +38,40 @@ import jakarta.inject.Inject;
 /**
  * List Password Aliases Command
  *
- * Usage: list-password-aliases [--terse=false] [--echo=false]
- *        [--interactive=true] [--host localhost] [--port 4848|4849]
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
+ * Usage: list-password-aliases [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849]
+ * [--secure | -s] [--user admin_user] [--passwordfile file_name]
  *
- * Result of the command is that:
- * <domain-dir>/<domain-name>/config/domain-passwords file gets appended with
- * the entry of the form: aliasname=<password encrypted with masterpassword>
+ * Result of the command is that: <domain-dir>/<domain-name>/config/domain-passwords file gets appended with the entry of the
+ * form: aliasname=<password encrypted with masterpassword>
  *
- * A user can use this aliased password now in setting passwords in domin.xml.
- * Benefit is it is in NON-CLEAR-TEXT
+ * A user can use this aliased password now in setting passwords in domin.xml. Benefit is it is in NON-CLEAR-TEXT
  *
  * domain.xml example entry is:
- * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule"
- *                  provider-id="XWS_ClientProvider" provider-type="client">
- *      <property name="password" value="${ALIAS=myalias}/>
- * </provider-config>
+ * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type
+ * ="client"> <property name="password" value="${ALIAS=myalias}/> </provider-config>
  *
  * @author Nandini Ektare
  */
 
-@Service(name="list-password-aliases")
+@Service(name = "list-password-aliases")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.password.alias")
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS,CommandTarget.DOMAIN})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.DOMAIN })
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-password-aliases",
-        description="list-password-aliases")
-})
-@AccessRequired(resource="domain/passwordAliases", action="read")
+    @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.GET, path = "list-password-aliases", description = "list-password-aliases") })
+@AccessRequired(resource = "domain/passwordAliases", action = "read")
 public class ListPasswordAlias implements AdminCommand {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(ListPasswordAlias.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListPasswordAlias.class);
 
     @Inject
     private DomainScopedPasswordAliasStore domainPasswordAliasStore;
 
-
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
@@ -92,23 +81,19 @@ public class ListPasswordAlias implements AdminCommand {
         try {
             final Iterator<String> it = domainPasswordAliasStore.keys();
 
-            if (! it.hasNext()) {
+            if (!it.hasNext()) {
                 report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-                report.setMessage(localStrings.getLocalString(
-                    "list.password.alias.nothingtolist",
-                    "Nothing to list"));
+                report.setMessage(localStrings.getLocalString("list.password.alias.nothingtolist", "Nothing to list"));
             }
 
             while (it.hasNext()) {
-                ActionReport.MessagePart part =
-                    report.getTopMessagePart().addChild();
+                ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                 part.setMessage(it.next());
             }
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            report.setMessage(localStrings.getLocalString(
-               "list.password.alias.fail", "Listing of Password Alias failed"));
+            report.setMessage(localStrings.getLocalString("list.password.alias.fail", "Listing of Password Alias failed"));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(ex);
             return;

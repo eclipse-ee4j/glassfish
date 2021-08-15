@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,11 +43,8 @@ import jakarta.inject.Singleton;
 import org.jvnet.hk2.config.types.Property;
 
 /**
- * Utility file to copy the security related config files
- * from the passed non-embedded instanceDir to the embedded
- * server instance's config.
- * This is a service that is protected. This implements
- * the Contract EmbeddedSecurity
+ * Utility file to copy the security related config files from the passed non-embedded instanceDir to the embedded server
+ * instance's config. This is a service that is protected. This implements the Contract EmbeddedSecurity
  *
  * @author Nithya Subramanian
  */
@@ -78,7 +75,8 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
         try {
 
             //Add FileRealm keyfiles to the list
-            fileNames.addAll(new EmbeddedSecurityUtil().new DomainXmlSecurityParser(domainXml).getAbsolutePathKeyFileNames(fromInstanceDir));
+            fileNames
+                .addAll(new EmbeddedSecurityUtil().new DomainXmlSecurityParser(domainXml).getAbsolutePathKeyFileNames(fromInstanceDir));
 
             //Add keystore and truststore files
 
@@ -101,7 +99,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
             File toConfigDir = new File(toInstanceDir, "config");
             if (!toConfigDir.exists()) {
-                if(!toConfigDir.mkdir()) {
+                if (!toConfigDir.mkdir()) {
                     throw new IOException();
                 }
             }
@@ -110,13 +108,11 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
             for (String fileName : fileNames) {
                 FileUtils.copyFile(new File(fileName), new File(toConfigDir, parseFileName(fileName)));
             }
-        }catch(IOException e) {
+        } catch (IOException e) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.ioError, e);
-        }catch(XMLStreamException e) {
+        } catch (XMLStreamException e) {
             _logger.log(Level.WARNING, SecurityLoggerInfo.xmlStreamingError, e);
         }
-
-
 
     }
 
@@ -159,11 +155,8 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
     class DomainXmlSecurityParser {
 
         XMLStreamReader xmlReader;
-        XMLInputFactory xif =
-                (XMLInputFactory.class.getClassLoader() == null)
-                ? XMLInputFactory.newInstance()
-                : XMLInputFactory.newInstance(XMLInputFactory.class.getName(),
-                XMLInputFactory.class.getClassLoader());
+        XMLInputFactory xif = (XMLInputFactory.class.getClassLoader() == null) ? XMLInputFactory.newInstance()
+            : XMLInputFactory.newInstance(XMLInputFactory.class.getName(), XMLInputFactory.class.getClassLoader());
 
         private static final String AUTH_REALM = "auth-realm";
         private static final String CONFIG = "config";
@@ -185,6 +178,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
             return StringUtils.replace(keyFileName, INSTANCE_DIR_PLACEHOLDER, fromInstanceDir);
 
         }
+
         //Obtain the keyfile names for the server-config (the first appearing config in domain.xml
         List<String> getAbsolutePathKeyFileNames(File fromInstanceDir) throws XMLStreamException {
             List<String> keyFileNames = new ArrayList<String>();
@@ -195,7 +189,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
                         if (FILE.equals(xmlReader.getAttributeValue(null, NAME))) {
                             String keyFileName = xmlReader.getAttributeValue(null, VALUE);
                             //Replace the Placeholder in the keyfile names
-                            keyFileNames.add(replaceInstanceDir(fromInstanceDir.getAbsolutePath(),keyFileName ));
+                            keyFileNames.add(replaceInstanceDir(fromInstanceDir.getAbsolutePath(), keyFileName));
 
                         }
                     }

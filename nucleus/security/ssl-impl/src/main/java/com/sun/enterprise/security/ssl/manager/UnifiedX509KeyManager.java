@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,6 +26,7 @@ import javax.net.ssl.X509KeyManager;
 
 /**
  * This class combines an array of X509KeyManagers into one.
+ * 
  * @author Shing Wai Chan
  **/
 public class UnifiedX509KeyManager implements X509KeyManager /* extends X509ExtendedKeyManager*/ {
@@ -48,8 +49,7 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     }
 
     // ---------- implements X509KeyManager ----------
-    public String chooseClientAlias(String[] keyType, Principal[] issuers,
-            Socket socket) {
+    public String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket) {
         String alias = null;
         for (int i = 0; i < mgrs.length; i++) {
             alias = mgrs[i].chooseClientAlias(keyType, issuers, socket);
@@ -60,8 +60,7 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return alias;
     }
 
-    public String chooseServerAlias(String keyType, Principal[] issuers,
-            Socket socket) {
+    public String chooseServerAlias(String keyType, Principal[] issuers, Socket socket) {
         String alias = null;
         for (int i = 0; i < mgrs.length; i++) {
             alias = mgrs[i].chooseServerAlias(keyType, issuers, socket);
@@ -94,12 +93,11 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
             }
         }
 
-        return (clientAliases.size() == 0) ? null :
-            (String[])clientAliases.toArray(new String[clientAliases.size()]);
+        return (clientAliases.size() == 0) ? null : (String[]) clientAliases.toArray(new String[clientAliases.size()]);
     }
 
     public PrivateKey getPrivateKey(String alias) {
-        PrivateKey privKey  = null;
+        PrivateKey privKey = null;
         for (int i = 0; i < mgrs.length; i++) {
             privKey = mgrs[i].getPrivateKey(alias);
             if (privKey != null) {
@@ -120,8 +118,7 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
             }
         }
 
-        return (serverAliases.size() == 0) ? null :
-            (String[])serverAliases.toArray(new String[serverAliases.size()]);
+        return (serverAliases.size() == 0) ? null : (String[]) serverAliases.toArray(new String[serverAliases.size()]);
     }
 
     // ---------- end of implements X509KeyManager ----------
@@ -138,12 +135,11 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return tokens;
     }
 
-
     public String chooseEngineClientAlias(String[] keyType, Principal[] issuers, SSLEngine engine) {
         return chooseClientAlias(keyType, issuers, null);
     }
 
     public String chooseEngineServerAlias(String keyType, Principal[] issuers, SSLEngine engine) {
-        return chooseServerAlias(keyType, issuers,null);
+        return chooseServerAlias(keyType, issuers, null);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,26 +27,26 @@ public class AssertedCredentials {
     private String userName = "";
     private Object info = null;
 
-    public AssertedCredentials(String realmName,String userName) {
+    public AssertedCredentials(String realmName, String userName) {
         this.realmName = realmName;
         this.userName = userName;
     }
 
-    public AssertedCredentials(String realmName,String userName,Object info) {
+    public AssertedCredentials(String realmName, String userName, Object info) {
         this.realmName = realmName;
         this.userName = userName;
         this.info = info;
     }
 
-    public String getRealmName(){
+    public String getRealmName() {
         return realmName;
     }
 
-    public String getUserName(){
+    public String getUserName() {
         return userName;
     }
 
-    public Object getInfo(){
+    public Object getInfo() {
         return info;
     }
 }

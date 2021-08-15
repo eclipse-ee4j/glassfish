@@ -35,7 +35,6 @@ public class SecurityRoleMapperFactoryGen {
 
     private static WeakReference<SecurityRoleMapperFactory> securityRoleMapperFactory = new WeakReference<SecurityRoleMapperFactory>(null);
 
-
     public static SecurityRoleMapperFactory getSecurityRoleMapperFactory() {
         if (securityRoleMapperFactory.get() != null) {
             return securityRoleMapperFactory.get();
@@ -52,4 +51,3 @@ public class SecurityRoleMapperFactoryGen {
         return securityRoleMapperFactory.get();
     }
 }
-

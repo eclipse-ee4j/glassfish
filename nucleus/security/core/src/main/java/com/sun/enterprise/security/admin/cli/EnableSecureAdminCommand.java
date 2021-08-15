@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,12 +45,10 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.TransactionFailure;
 
 /**
- * Records that secure admin is to be used and adjusts each admin listener
- * configuration in the domain to use secure admin.
+ * Records that secure admin is to be used and adjusts each admin listener configuration in the domain to use secure admin.
  *
- * The command changes the admin-listener set-up within each separate
- * configuration as if by running
- * these commands:
+ * The command changes the admin-listener set-up within each separate configuration as if by running these commands:
+ * 
  * <pre>
  * {@code
         ###
@@ -86,14 +84,10 @@ import org.jvnet.hk2.config.TransactionFailure;
 @Service(name = "enable-secure-admin")
 @PerLookup
 @I18n("enable.secure.admin.command")
-@ExecuteOn({RuntimeType.DAS,RuntimeType.INSTANCE})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST,
-        path="enable-secure-admin",
-        description="enable-secure-admin")
-})
-@AccessRequired(resource="domain/secure-admin", action="enable")
+    @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.POST, path = "enable-secure-admin", description = "enable-secure-admin") })
+@AccessRequired(resource = "domain/secure-admin", action = "enable")
 public class EnableSecureAdminCommand extends SecureAdminCommand {
 
     @Param(optional = true, defaultValue = SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS)
@@ -119,7 +113,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
         } catch (Exception ex) {
             throw new TransactionFailure((ex.getMessage() != null ? ex.getMessage() : ""));
         }
-            super.run();
+        super.run();
     }
 
     private void ensureNoAdminUsersWithEmptyPassword() throws SecureAdminCommandException {
@@ -135,7 +129,6 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
 
     }
 
-
     @Override
     Iterator<Work<TopLevelContext>> secureAdminSteps() {
         return stepsIterator(secureAdminSteps);
@@ -148,12 +141,13 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
 
     /**
      * Iterator which returns array elements from front to back.
+     * 
      * @param <T>
      * @param steps
      * @return
      */
-    private <T  extends SecureAdminCommand.Context> Iterator<Work<T>> stepsIterator(Step<T>[] steps) {
-        return new Iterator<Work<T>> () {
+    private <T extends SecureAdminCommand.Context> Iterator<Work<T>> stepsIterator(Step<T>[] steps) {
+        return new Iterator<Work<T>>() {
             private Step<T>[] steps;
             private int nextSlot;
 
@@ -174,7 +168,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
 
             Iterator<Work<T>> init(Step<T>[] values) {
                 this.steps = values;
-                nextSlot  = 0;
+                nextSlot = 0;
                 return this;
             }
 
@@ -182,8 +176,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
     }
 
     @Override
-    protected boolean updateSecureAdminSettings(
-            final SecureAdmin secureAdmin_w) {
+    protected boolean updateSecureAdminSettings(final SecureAdmin secureAdmin_w) {
         /*
          * Apply the values for the aliases.  We do this whether the user
          * gave explicit values or not, because we need to do some work
@@ -191,19 +184,14 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
          */
         try {
             final List<String> badAliases = new ArrayList<String>();
-            secureAdmin_w.setDasAlias(processAlias(adminalias,
-                    SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS,
-                    secureAdmin_w, badAliases));
-            secureAdmin_w.setInstanceAlias(processAlias(instancealias,
-                    SecureAdmin.Duck.DEFAULT_INSTANCE_ALIAS,
-                    secureAdmin_w, badAliases));
+            secureAdmin_w.setDasAlias(processAlias(adminalias, SecureAdmin.Duck.DEFAULT_ADMIN_ALIAS, secureAdmin_w, badAliases));
+            secureAdmin_w.setInstanceAlias(processAlias(instancealias, SecureAdmin.Duck.DEFAULT_INSTANCE_ALIAS, secureAdmin_w, badAliases));
 
             ensureSpecialAdminIndicatorIsUnique(secureAdmin_w);
 
             if (badAliases.size() > 0) {
                 throw new SecureAdminCommandException(
-                        Strings.get("enable.secure.admin.badAlias",
-                        badAliases.size(), badAliases.toString()));
+                    Strings.get("enable.secure.admin.badAlias", badAliases.size(), badAliases.toString()));
             }
             ensureSpecialAdminIndicatorIsUnique(secureAdmin_w);
             return true;
@@ -212,8 +200,8 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
         }
     }
 
-    private String processAlias(String alias, final String defaultAlias, final SecureAdmin secureAdmin_w,
-            Collection<String> badAliases) throws IOException, KeyStoreException {
+    private String processAlias(String alias, final String defaultAlias, final SecureAdmin secureAdmin_w, Collection<String> badAliases)
+        throws IOException, KeyStoreException {
         boolean isAliasOK;
         /*
          * Do not validate the default aliases.  The user might be using
@@ -224,7 +212,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
             isAliasOK = true;
         } else {
             isAliasOK = validateAlias(alias);
-            if ( ! isAliasOK) {
+            if (!isAliasOK) {
                 badAliases.add(alias);
             }
         }
@@ -233,8 +221,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
              * If there is no SecureAdminPrincipal for the DN corresponding
              * to the specified alias then add one now.
              */
-            ensureSecureAdminPrincipalForAlias(alias,
-                    secureAdmin_w);
+            ensureSecureAdminPrincipalForAlias(alias, secureAdmin_w);
         }
         return alias;
     }
@@ -249,21 +236,19 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
             /*
              * Set the special admin indicator to a unique identifier.
              */
-             final UUID uuid = UUID.randomUUID();
-             secureAdmin_w.setSpecialAdminIndicator(uuid.toString());
+            final UUID uuid = UUID.randomUUID();
+            secureAdmin_w.setSpecialAdminIndicator(uuid.toString());
         }
     }
 
     /**
-     * Makes sure there is a SecureAdminPrincipal entry for the specified
-     * alias.  If not, one is added in the context of the current
+     * Makes sure there is a SecureAdminPrincipal entry for the specified alias. If not, one is added in the context of the current
      * transaction.
      *
      * @param alias the alias to check for
      * @param secureAdmin_w SecureAdmin instance (already in a transaction)
      */
-    private void ensureSecureAdminPrincipalForAlias(final String alias,
-            final SecureAdmin secureAdmin_w) {
+    private void ensureSecureAdminPrincipalForAlias(final String alias, final SecureAdmin secureAdmin_w) {
         SecureAdminPrincipal p = getSecureAdminPrincipalForAlias(alias, secureAdmin_w);
         if (p != null) {
             return;
@@ -281,8 +266,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
         }
     }
 
-    private SecureAdminPrincipal getSecureAdminPrincipalForAlias(final String alias,
-            final SecureAdmin secureAdmin_w) {
+    private SecureAdminPrincipal getSecureAdminPrincipalForAlias(final String alias, final SecureAdmin secureAdmin_w) {
         try {
             final String dnForAlias = secureAdminHelper.getDN(alias, true);
             for (SecureAdminPrincipal p : secureAdmin_w.getSecureAdminPrincipal()) {
@@ -303,7 +287,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
         return keystore;
     }
 
-    private boolean validateAlias(final String alias) throws IOException, KeyStoreException  {
+    private boolean validateAlias(final String alias) throws IOException, KeyStoreException {
         return keyStore().containsAlias(alias);
     }
 }

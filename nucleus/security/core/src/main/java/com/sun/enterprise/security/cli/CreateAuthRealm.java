@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,54 +56,44 @@ import org.glassfish.config.support.PropertyResolver;
 import org.glassfish.config.support.TargetType;
 import org.glassfish.internal.api.RelativePathResolver;
 
-
 /**
  * CLI command to create JACC Provider
  *
- * Usage: create-auth-realm --classname realm_class [--terse=false]
- *        [--interactive=true] [--host localhost] [--port 4848|4849]
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
- *        [--property (name=value)[:name=value]*]
- *        [--echo=false] [--target target(Default server)] auth_realm_name
+ * Usage: create-auth-realm --classname realm_class [--terse=false] [--interactive=true] [--host localhost] [--port 4848|4849]
+ * [--secure | -s] [--user admin_user] [--passwordfile file_name] [--property (name=value)[:name=value]*] [--echo=false]
+ * [--target target(Default server)] auth_realm_name
  *
- * domain.xml element example
- * <auth-realm name="file"
- *   classname="com.sun.enterprise.security.auth.realm.file.FileRealm">
- *   <property name="file" value="${com.sun.aas.instanceRoot}/config/keyfile"/>
- *   <property name="jaas-context" value="fileRealm"/>
- * </auth-realm>
- *       Or
- * <auth-realm name="certificate"
- *   classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm">
- * </auth-realm>
+ * domain.xml element example <auth-realm name="file" classname="com.sun.enterprise.security.auth.realm.file.FileRealm">
+ * <property name="file" value="${com.sun.aas.instanceRoot}/config/keyfile"/> <property name="jaas-context" value="fileRealm"/>
+ * </auth-realm> Or
+ * <auth-realm name="certificate" classname="com.sun.enterprise.security.auth.realm.certificate.CertificateRealm"> </auth-realm>
  *
  * @author Nandini Ektare
  */
 
-@Service(name="create-auth-realm")
+@Service(name = "create-auth-realm")
 @PerLookup
 @I18n("create.auth.realm")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(CreateAuthRealm.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateAuthRealm.class);
 
-    @Param(name="classname")
+    @Param(name = "classname")
     private String className;
 
-    @Param(name="authrealmname", primary=true)
+    @Param(name = "authrealmname", primary = true)
     private String authRealmName;
 
-    @Param(optional=true, name="property", separator=':')
+    @Param(optional = true, name = "property", separator = ':')
     private Properties properties;
 
-    @Param(name = "target", optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
@@ -118,7 +108,7 @@ public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
     @Inject
     private Util util;
 
-    @AccessRequired.NewChild(type=AuthRealm.class)
+    @AccessRequired.NewChild(type = AuthRealm.class)
     private SecurityService securityService;
 
     @Override
@@ -128,16 +118,15 @@ public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
             return false;
         }
         securityService = config.getSecurityService();
-        if ( ! ensureRealmIsNew(context.getActionReport())) {
+        if (!ensureRealmIsNew(context.getActionReport())) {
             return false;
         }
         return true;
     }
 
-
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
@@ -148,9 +137,8 @@ public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
-                public Object run(SecurityService param)
-                throws PropertyVetoException, TransactionFailure {
-                AuthRealm newAuthRealm = param.createChild(AuthRealm.class);
+                public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
+                    AuthRealm newAuthRealm = param.createChild(AuthRealm.class);
                     populateAuthRealmElement(newAuthRealm);
                     param.getAuthRealm().add(newAuthRealm);
                     //In case of cluster instances, this is required to
@@ -160,10 +148,9 @@ public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
 
                 }
             }, securityService);
-        } catch(TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString("create.auth.realm.fail",
-                    "Creation of Authrealm {0} failed", authRealmName) +
-                              "  " + e.getLocalizedMessage() );
+        } catch (TransactionFailure e) {
+            report.setMessage(localStrings.getLocalString("create.auth.realm.fail", "Creation of Authrealm {0} failed", authRealmName)
+                + "  " + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
             return;
@@ -172,12 +159,11 @@ public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
         report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 
-    private void populateAuthRealmElement(AuthRealm newAuthRealm)
-    throws PropertyVetoException, TransactionFailure {
+    private void populateAuthRealmElement(AuthRealm newAuthRealm) throws PropertyVetoException, TransactionFailure {
         newAuthRealm.setName(authRealmName);
         newAuthRealm.setClassname(className);
         if (properties != null) {
-            for (Object propname: properties.keySet()) {
+            for (Object propname : properties.keySet()) {
                 Property newprop = newAuthRealm.createChild(Property.class);
                 newprop.setName((String) propname);
                 String propValue = properties.getProperty((String) propname);
@@ -187,12 +173,10 @@ public class CreateAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
         }
     }
 
-    private boolean ensureRealmIsNew(final ActionReport report){
-        if ( ! CLIUtil.isRealmNew(securityService, authRealmName)) {
-            report.setMessage(localStrings.getLocalString(
-                "create.auth.realm.duplicatefound",
-                "Authrealm named {0} exists. Cannot add duplicate AuthRealm.",
-                authRealmName));
+    private boolean ensureRealmIsNew(final ActionReport report) {
+        if (!CLIUtil.isRealmNew(securityService, authRealmName)) {
+            report.setMessage(localStrings.getLocalString("create.auth.realm.duplicatefound",
+                "Authrealm named {0} exists. Cannot add duplicate AuthRealm.", authRealmName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }

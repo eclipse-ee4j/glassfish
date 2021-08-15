@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -53,22 +53,16 @@ import org.jvnet.hk2.config.TransactionFailure;
 /**
  * Provides common behavior for the enable and disable secure admin commands.
  * <p>
- * This class, and the concrete subclasses EnableSecureAdminCommand and
- * DisableSecureAdminComment, define what must be done in terms of steps.
- * Each step has enable work and disable work.  This class builds
- * arrays of steps, one array which operates at the domain level and one which
- * operates at the config level.  The enable work of these steps is run in order through
- * the array to fully
- * enable secure admin, and the disable work of these steps are run in REVERSE
- * order to fully disable secure admin.
+ * This class, and the concrete subclasses EnableSecureAdminCommand and DisableSecureAdminComment, define what must be done in
+ * terms of steps. Each step has enable work and disable work. This class builds arrays of steps, one array which operates at the
+ * domain level and one which operates at the config level. The enable work of these steps is run in order through the array to
+ * fully enable secure admin, and the disable work of these steps are run in REVERSE order to fully disable secure admin.
  * <p>
- * I have defined the steps and their enable and disable work here, together
- * in some inner classes, rather than separately in the EnableSecureAdminCommand
- * and DisableSecureAdminCommand classes to try to keep common details together.
- * The concrete subclasses can override a few methods, in particular overriding
- * methods which return an Iterator over the steps to be performed.  This way we
- * have a single array of all the steps, with each class returning a forward-running
- * or reverse-running iterator over those steps.
+ * I have defined the steps and their enable and disable work here, together in some inner classes, rather than separately in the
+ * EnableSecureAdminCommand and DisableSecureAdminCommand classes to try to keep common details together. The concrete subclasses
+ * can override a few methods, in particular overriding methods which return an Iterator over the steps to be performed. This way
+ * we have a single array of all the steps, with each class returning a forward-running or reverse-running iterator over those
+ * steps.
  *
  * @author Tim Quinn
  */
@@ -82,23 +76,19 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
     static final Logger logger = SecurityLoggerInfo.getLogger();
 
-
     @Inject
     protected Domain domain;
 
     /**
-     * Applies changes other than whether secure admin is enabled or disabled
-     * to the secure-admin element.
+     * Applies changes other than whether secure admin is enabled or disabled to the secure-admin element.
      * <p>
-     * This method is primarily for the enable processing to apply the
-     * admin and/or instance alias values, if specified on the enable-secure-admin
-     * command, to the secure-admin element.
+     * This method is primarily for the enable processing to apply the admin and/or instance alias values, if specified on the
+     * enable-secure-admin command, to the secure-admin element.
      *
      * @param secureAdmin_w
      * @return
      */
-    boolean updateSecureAdminSettings(
-            final SecureAdmin secureAdmin_w) throws TransactionFailure {
+    boolean updateSecureAdminSettings(final SecureAdmin secureAdmin_w) throws TransactionFailure {
         /*
          * Default implementation - currently used by DisableSecureAdminCommand
          * and overridden by EnableSecureAdminCommand.
@@ -111,6 +101,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
     /**
      * Work to be performed - either for enable or disable - in a step.
+     * 
      * @param <T>
      */
     interface Work<T extends Context> {
@@ -120,46 +111,45 @@ public abstract class SecureAdminCommand implements AdminCommand {
     /**
      * A step to be performed during enabling or disabling secure admin.
      *
-     * @param <T> either TopLevelContext or ConfigLevelContext, depending on
-     * whether the step applies per-domain or per-config.
+     * @param <T> either TopLevelContext or ConfigLevelContext, depending on whether the step applies per-domain or per-config.
      */
     interface Step<T extends Context> {
         Work<T> enableWork();
+
         Work<T> disableWork();
     }
 
-//    interface TopLevelStep {
-//        TopLevelWork enableWork();
-//        TopLevelWork disableWork();
-//    }
+    //    interface TopLevelStep {
+    //        TopLevelWork enableWork();
+    //        TopLevelWork disableWork();
+    //    }
 
-//    /**
-//     * The contract for performing the work associate with a single step of
-//     * enabling or disabling secure admin.
-//     */
-//    interface SecureAdminWork<T> {
-//        boolean run(
-//                Transaction t,
-//                AdminCommandContext context,
-//                T writeableConfigBean) throws TransactionFailure;
-//    }
-//
-//    /**
-//     * Enabling or disabling secure admin each involves multiple steps.
-//     * Each step has some logic run during enable and some logic run during disable
-//     * @param <T>
-//     */
-//    interface SecureAdminStep<T> {
-//        SecureAdminWork<T> enableWork();
-//        SecureAdminWork<T> disableWork();
-//    }
+    //    /**
+    //     * The contract for performing the work associate with a single step of
+    //     * enabling or disabling secure admin.
+    //     */
+    //    interface SecureAdminWork<T> {
+    //        boolean run(
+    //                Transaction t,
+    //                AdminCommandContext context,
+    //                T writeableConfigBean) throws TransactionFailure;
+    //    }
+    //
+    //    /**
+    //     * Enabling or disabling secure admin each involves multiple steps.
+    //     * Each step has some logic run during enable and some logic run during disable
+    //     * @param <T>
+    //     */
+    //    interface SecureAdminStep<T> {
+    //        SecureAdminWork<T> enableWork();
+    //        SecureAdminWork<T> disableWork();
+    //    }
 
     static class AbstractContext implements Context {
     }
 
     /**
-     * Keeps track of whether we've found writable versions of various
-     * ConfigBeans.
+     * Keeps track of whether we've found writable versions of various ConfigBeans.
      */
     static class TopLevelContext extends AbstractContext {
 
@@ -169,13 +159,10 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         private SecureAdmin secureAdmin_w = null;
 
-        TopLevelContext(
-                final Transaction t,
-                final Domain d) {
+        TopLevelContext(final Transaction t, final Domain d) {
             this.t = t;
             this.d = d;
         }
-
 
         Domain writableDomain() throws TransactionFailure {
             if (d_w == null) {
@@ -224,23 +211,19 @@ public abstract class SecureAdminCommand implements AdminCommand {
         private final TopLevelContext topLevelContext;
 
         private Protocols protocols_w = null;
-        private Map<String,Protocol> namedProtocols_w = new
-                HashMap<String,Protocol>();
+        private Map<String, Protocol> namedProtocols_w = new HashMap<String, Protocol>();
 
         private JmxConnector jmxConnector_w = null;
         private Ssl jmxConnectorSsl_w = null;
 
-        ConfigLevelContext(
-                final TopLevelContext topLevelContext,
-                final Config config_w) {
+        ConfigLevelContext(final TopLevelContext topLevelContext, final Config config_w) {
             this.topLevelContext = topLevelContext;
             this.t = topLevelContext.t;
             this.config_w = config_w;
         }
 
         /**
-         * Prepares a given Ssl configuration instance so the connection
-         * represented by the Ssl's parent configuration object operates
+         * Prepares a given Ssl configuration instance so the connection represented by the Ssl's parent configuration object operates
          * securely, using SSL.
          *
          * @param ssl_w writeable Ssl instance to be modified
@@ -256,10 +239,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return ssl_w;
         }
 
-        private static String chooseCertNickname(
-                final String configName,
-                final String dasAlias,
-                final String instanceAlias) throws TransactionFailure {
+        private static String chooseCertNickname(final String configName, final String dasAlias, final String instanceAlias)
+            throws TransactionFailure {
             return (configName.equals(DAS_CONFIG_NAME) ? dasAlias : instanceAlias);
         }
 
@@ -295,6 +276,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             }
             return jmxConnectorSsl_w;
         }
+
         private Protocols writableProtocols() throws TransactionFailure {
             if (protocols_w == null) {
                 final NetworkConfig nc = config_w.getNetworkConfig();
@@ -307,8 +289,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return protocols_w;
         }
 
-        private Protocol writableProtocol(final String protocolName,
-                final boolean isSecure) throws TransactionFailure {
+        private Protocol writableProtocol(final String protocolName, final boolean isSecure) throws TransactionFailure {
             Protocol p_w = namedProtocols_w.get(protocolName);
             if (p_w == null) {
                 /*
@@ -344,34 +325,30 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return ps.findProtocol(protocolName);
         }
 
-        private void deleteProtocol(
-                    final String protocolName) throws TransactionFailure {
-                final Protocols ps_w = writableProtocols();
-                if (ps_w == null) {
-                    return;
-                }
-                final Protocol doomedProtocol = ps_w.findProtocol(protocolName);
-                if (doomedProtocol != null) {
-                    ps_w.getProtocol().remove(doomedProtocol);
-                }
+        private void deleteProtocol(final String protocolName) throws TransactionFailure {
+            final Protocols ps_w = writableProtocols();
+            if (ps_w == null) {
+                return;
             }
+            final Protocol doomedProtocol = ps_w.findProtocol(protocolName);
+            if (doomedProtocol != null) {
+                ps_w.getProtocol().remove(doomedProtocol);
+            }
+        }
     }
 
     /**
      * Updates the secure-admin element itself.
      * <p>
-     * The concrete command implementation classes implement updateSecureAdminSettings
-     * differently but they expose the same method signature, so onEnable and
-     * onDisable just invoke the same method.
+     * The concrete command implementation classes implement updateSecureAdminSettings differently but they expose the same method
+     * signature, so onEnable and onDisable just invoke the same method.
      */
     private Step<TopLevelContext> perDomainStep = new Step<TopLevelContext>() {
 
         /**
          * Sets enabled=true/false on the secure-admin element.
          */
-        private void updateSecureAdminEnabledSetting(
-                final SecureAdmin secureAdmin_w,
-                final boolean newEnabledValue) {
+        private void updateSecureAdminEnabledSetting(final SecureAdmin secureAdmin_w, final boolean newEnabledValue) {
             secureAdmin_w.setEnabled(Boolean.toString(newEnabledValue));
         }
 
@@ -391,8 +368,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             @Override
             public boolean run(final TopLevelContext context) throws TransactionFailure {
                 final SecureAdmin secureAdmin_w = context.writableSecureAdmin();
-                updateSecureAdminEnabledSetting(
-                        secureAdmin_w, newEnabledState);
+                updateSecureAdminEnabledSetting(secureAdmin_w, newEnabledState);
                 /*
                  * The subclass might have overridden updateSecureAdminSettings.
                  * Give it a change to run logic specific to enable or disable.
@@ -404,7 +380,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
         @Override
         public Work<TopLevelContext> enableWork() {
             return new TopLevelWork(true);
-            };
+        };
 
         @Override
         public Work<TopLevelContext> disableWork() {
@@ -418,8 +394,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
     private Step<ConfigLevelContext> jmxConnectorStep = new Step<ConfigLevelContext>() {
 
         /**
-         * Sets the jmx-connector security-enabled to true and creates and
-         * initializes the child ssl element.
+         * Sets the jmx-connector security-enabled to true and creates and initializes the child ssl element.
          */
         @Override
         public Work<ConfigLevelContext> enableWork() {
@@ -439,8 +414,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
                     try {
                         jmxConnector_w.setSecurityEnabled("true");
                         final Ssl ssl_w = context.writeableJmxSSL();
-                        ConfigLevelContext.initSsl(ssl_w, ConfigLevelContext.chooseCertNickname(
-                                context.config_w.getName(),
+                        ConfigLevelContext.initSsl(ssl_w,
+                            ConfigLevelContext.chooseCertNickname(context.config_w.getName(),
                                 context.topLevelContext.writableSecureAdmin().dasAlias(),
                                 context.topLevelContext.writableSecureAdmin().instanceAlias()));
                         return true;
@@ -486,8 +461,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
         private static final String AUTH_LAYER_NAME = "HttpServlet";
         private static final String PROVIDER_ID_VALUE = "GFConsoleAuthModule";
 
-        private Http writeableHttpWithFileCacheChild(final Transaction t,
-                final Protocol secAdminListenerProtocol_w) throws TransactionFailure {
+        private Http writeableHttpWithFileCacheChild(final Transaction t, final Protocol secAdminListenerProtocol_w)
+            throws TransactionFailure {
             /*
              * Because of the calling context, the secAdminListenerProtocol is already
              * writeable -- it was just created moments ago and has not yet
@@ -505,15 +480,14 @@ public abstract class SecureAdminCommand implements AdminCommand {
             http_w.setEncodedSlashEnabled("true");
 
             final FileCache cache = http_w.createChild(FileCache.class);
-//            cache.setEnabled("false");
+            //            cache.setEnabled("false");
             http_w.setFileCache(cache);
 
             return http_w;
         }
 
-        private Ssl writeableSsl(final Transaction t,
-                final Protocol secAdminListenerProtocol_w,
-                final String certNickname) throws TransactionFailure {
+        private Ssl writeableSsl(final Transaction t, final Protocol secAdminListenerProtocol_w, final String certNickname)
+            throws TransactionFailure {
             Ssl ssl_w = null;
             Ssl ssl = secAdminListenerProtocol_w.getSsl();
             if (ssl == null) {
@@ -534,9 +508,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
                     /*
                      * Get an existing or new writeable sec-admin-listener protocol.
                      */
-                    final Protocol secAdminListenerProtocol_w =
-                            context.writableProtocol(SEC_ADMIN_LISTENER_PROTOCOL_NAME,
-                            true);
+                    final Protocol secAdminListenerProtocol_w = context.writableProtocol(SEC_ADMIN_LISTENER_PROTOCOL_NAME, true);
 
                     /*
                      * It seems possible to create configs without network listeners
@@ -558,10 +530,9 @@ public abstract class SecureAdminCommand implements AdminCommand {
                      * we're working on or an instance's.
                      */
                     writeableSsl(context.t, secAdminListenerProtocol_w,
-                            ConfigLevelContext.chooseCertNickname(
-                                context.config_w.getName(),
-                                context.topLevelContext.writableSecureAdmin().dasAlias(),
-                                context.topLevelContext.writableSecureAdmin().instanceAlias()));
+                        ConfigLevelContext.chooseCertNickname(context.config_w.getName(),
+                            context.topLevelContext.writableSecureAdmin().dasAlias(),
+                            context.topLevelContext.writableSecureAdmin().instanceAlias()));
 
                     return true;
                 }
@@ -574,7 +545,6 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
-
 
                     context.deleteProtocol(SEC_ADMIN_LISTENER_PROTOCOL_NAME);
 
@@ -609,10 +579,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         private final static String PROTOCOL_FINDER_CLASSNAME = "org.glassfish.grizzly.config.portunif.HttpProtocolFinder";
 
-
-        private HttpRedirect writeableHttpRedirect(
-                final Transaction t,
-                final Protocol adminHttpRedirectProtocol_w) throws TransactionFailure {
+        private HttpRedirect writeableHttpRedirect(final Transaction t, final Protocol adminHttpRedirectProtocol_w)
+            throws TransactionFailure {
             HttpRedirect redirect = adminHttpRedirectProtocol_w.getHttpRedirect();
             HttpRedirect redirect_w;
             if (redirect == null) {
@@ -625,9 +593,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return redirect_w;
         }
 
-        private PortUnification writeablePortUnification(
-                final Transaction t,
-                final Protocol protocol_w) throws TransactionFailure {
+        private PortUnification writeablePortUnification(final Transaction t, final Protocol protocol_w) throws TransactionFailure {
             PortUnification pu_w;
             PortUnification pu = protocol_w.getPortUnification();
             if (pu == null) {
@@ -639,10 +605,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return pu_w;
         }
 
-        private ProtocolFinder writeableProtocolFinder(
-                final Transaction t,
-                final PortUnification pu_w,
-                final ProtocolFinderInfo finderInfo) throws TransactionFailure {
+        private ProtocolFinder writeableProtocolFinder(final Transaction t, final PortUnification pu_w, final ProtocolFinderInfo finderInfo)
+            throws TransactionFailure {
             ProtocolFinder pf_w = null;
             for (ProtocolFinder pf : pu_w.getProtocolFinder()) {
                 if (pf.getName().equals(finderInfo.name)) {
@@ -660,10 +624,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return pf_w;
         }
 
-        private NetworkListener writableNetworkListener(
-                final Transaction t,
-                final Config config_w,
-                final String listenerName) throws TransactionFailure {
+        private NetworkListener writableNetworkListener(final Transaction t, final Config config_w, final String listenerName)
+            throws TransactionFailure {
             NetworkListener nl_w = null;
             final NetworkConfig nc = config_w.getNetworkConfig();
             if (nc == null) {
@@ -678,12 +640,8 @@ public abstract class SecureAdminCommand implements AdminCommand {
             return nl_w;
         }
 
-
-
-        private void assignAdminListenerProtocol(
-                final Transaction t,
-                final Config config_w,
-                final String protocolName) throws TransactionFailure {
+        private void assignAdminListenerProtocol(final Transaction t, final Config config_w, final String protocolName)
+            throws TransactionFailure {
             final NetworkListener nl_w = writableNetworkListener(t, config_w, ADMIN_LISTENER_NAME);
             if (nl_w != null) {
                 nl_w.setProtocol(protocolName);
@@ -700,30 +658,21 @@ public abstract class SecureAdminCommand implements AdminCommand {
                      * Get an existing or new writeable admin-http-redirect protocol.
                      */
 
-                    final Protocol adminHttpRedirectProtocol_w =
-                            context.writableProtocol(
-                            REDIRECT_PROTOCOL_NAME,
-                            false);
+                    final Protocol adminHttpRedirectProtocol_w = context.writableProtocol(REDIRECT_PROTOCOL_NAME, false);
 
                     if (adminHttpRedirectProtocol_w == null) {
                         return true;
                     }
 
-                    writeableHttpRedirect(
-                            context.t, adminHttpRedirectProtocol_w);
+                    writeableHttpRedirect(context.t, adminHttpRedirectProtocol_w);
 
-                    final Protocol puProtocol_w = context.writableProtocol(
-                            PORT_UNIF_PROTOCOL_NAME,
-                            false);
+                    final Protocol puProtocol_w = context.writableProtocol(PORT_UNIF_PROTOCOL_NAME, false);
 
-                    final PortUnification portUnif_w = writeablePortUnification(
-                            context.t, puProtocol_w);
+                    final PortUnification portUnif_w = writeablePortUnification(context.t, puProtocol_w);
 
-                    writeableProtocolFinder(
-                            context.t, portUnif_w, ProtocolFinderInfo.HTTP_FINDER);
+                    writeableProtocolFinder(context.t, portUnif_w, ProtocolFinderInfo.HTTP_FINDER);
 
-                    writeableProtocolFinder(
-                            context.t, portUnif_w, ProtocolFinderInfo.ADMIN_HTTP_REDIRECT_FINDER);
+                    writeableProtocolFinder(context.t, portUnif_w, ProtocolFinderInfo.ADMIN_HTTP_REDIRECT_FINDER);
 
                     assignAdminListenerProtocol(context.t, context.config_w, PORT_UNIF_PROTOCOL_NAME);
 
@@ -736,7 +685,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
         public Work<ConfigLevelContext> disableWork() {
             return new Work<ConfigLevelContext>() {
 
-            @Override
+                @Override
                 public boolean run(final ConfigLevelContext context) throws TransactionFailure {
                     final Config config_w = context.config_w;
                     final Transaction t = context.t;
@@ -752,99 +701,90 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
     };
 
-//    /**
-//     * Details for managing the protocol associated directly with the
-//     * admin listener.  This logic takes care of creating
-//     * the sec-admin-listener protocol and assoociating it with
-//     * the admin listener, or deleting the sec-admin-listener protocol and
-//     * associating the admin listener back with the original protocol.
-//     */
-//    private SecureAdminWork adminListenerProtocolSetting = new SecureAdminWork<Config>() {
-//
-//        private final static String ADMIN_LISTENER_NETWORK_LISTENER_NAME = "admin-listener";
-//        private final static String ORIGINAL_ADMIN_LISTENER_PROTOCOL_NAME = "admin-listener";
-//
-//
-//        @Override
-//        public boolean onEnable(
-//                final Transaction t,
-//                final AdminCommandContext context,
-//                final Config tConfig) throws TransactionFailure {
-//            writeableAdminNetworkListener(tConfig).
-//                    setProtocol(SEC_ADMIN_LISTENER_PROTOCOL_NAME);
-//            return true;
-//        }
-//
-//        @Override
-//        public boolean onDisable(
-//                final Transaction t,
-//                final AdminCommandContext context,
-//                final Config tConfig
-//                ) throws TransactionFailure {
-//            writeableAdminNetworkListener(tConfig).
-//                    setProtocol(ORIGINAL_ADMIN_LISTENER_PROTOCOL_NAME);
-//            return true;
-//        }
-//
-//        private NetworkListener writeableAdminNetworkListener(
-//                final Config tConfig) throws TransactionFailure {
-//            return tConfig.getNetworkConfig().
-//                    getNetworkListener(ADMIN_LISTENER_NETWORK_LISTENER_NAME);
-//        }
+    //    /**
+    //     * Details for managing the protocol associated directly with the
+    //     * admin listener.  This logic takes care of creating
+    //     * the sec-admin-listener protocol and assoociating it with
+    //     * the admin listener, or deleting the sec-admin-listener protocol and
+    //     * associating the admin listener back with the original protocol.
+    //     */
+    //    private SecureAdminWork adminListenerProtocolSetting = new SecureAdminWork<Config>() {
+    //
+    //        private final static String ADMIN_LISTENER_NETWORK_LISTENER_NAME = "admin-listener";
+    //        private final static String ORIGINAL_ADMIN_LISTENER_PROTOCOL_NAME = "admin-listener";
+    //
+    //
+    //        @Override
+    //        public boolean onEnable(
+    //                final Transaction t,
+    //                final AdminCommandContext context,
+    //                final Config tConfig) throws TransactionFailure {
+    //            writeableAdminNetworkListener(tConfig).
+    //                    setProtocol(SEC_ADMIN_LISTENER_PROTOCOL_NAME);
+    //            return true;
+    //        }
+    //
+    //        @Override
+    //        public boolean onDisable(
+    //                final Transaction t,
+    //                final AdminCommandContext context,
+    //                final Config tConfig
+    //                ) throws TransactionFailure {
+    //            writeableAdminNetworkListener(tConfig).
+    //                    setProtocol(ORIGINAL_ADMIN_LISTENER_PROTOCOL_NAME);
+    //            return true;
+    //        }
+    //
+    //        private NetworkListener writeableAdminNetworkListener(
+    //                final Config tConfig) throws TransactionFailure {
+    //            return tConfig.getNetworkConfig().
+    //                    getNetworkListener(ADMIN_LISTENER_NETWORK_LISTENER_NAME);
+    //        }
 
-//        private NetworkListener writeableAdminNetworkListener(
-//                final Transaction t,
-//                final Config tConfig) throws TransactionFailure {
-//            ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
-//                @Override
-//                public Object run(NetworkListener nl) throws PropertyVetoException, TransactionFailure {
-//
-//                    try {
-//
-//                        for (Config c : configs.getConfig()) {
-//                            final MessagePart partForThisConfig = report.getTopMessagePart().addChild();
-//
-//                            /*
-//                             * Again, delegate to update the admin
-//                             * listener configuration.
-//                             */
-//                            updateAdminListenerConfig(context, t, c, partForThisConfig);
-//                        }
-//
-//                        t.commit();
-//                    } catch (RetryableException ex) {
-//                        throw new RuntimeException(ex);
-//                    }
-//
-//                    return Boolean.TRUE;
-//                }
-//            }, tConfig.getNetworkConfig().getNetworkListener(ADMIN_LISTENER_NETWORK_LISTENER_NAME));
-//        }
-//
-//    };
+    //        private NetworkListener writeableAdminNetworkListener(
+    //                final Transaction t,
+    //                final Config tConfig) throws TransactionFailure {
+    //            ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
+    //                @Override
+    //                public Object run(NetworkListener nl) throws PropertyVetoException, TransactionFailure {
+    //
+    //                    try {
+    //
+    //                        for (Config c : configs.getConfig()) {
+    //                            final MessagePart partForThisConfig = report.getTopMessagePart().addChild();
+    //
+    //                            /*
+    //                             * Again, delegate to update the admin
+    //                             * listener configuration.
+    //                             */
+    //                            updateAdminListenerConfig(context, t, c, partForThisConfig);
+    //                        }
+    //
+    //                        t.commit();
+    //                    } catch (RetryableException ex) {
+    //                        throw new RuntimeException(ex);
+    //                    }
+    //
+    //                    return Boolean.TRUE;
+    //                }
+    //            }, tConfig.getNetworkConfig().getNetworkListener(ADMIN_LISTENER_NETWORK_LISTENER_NAME));
+    //        }
+    //
+    //    };
 
     /**
      * Tasks executed once per enable or disable.
      */
-    final Step<TopLevelContext>[] secureAdminSteps =
-            new Step[] {
-        perDomainStep
-    };
-
+    final Step<TopLevelContext>[] secureAdminSteps = new Step[] { perDomainStep };
 
     /**
      * Tasks executed once per config during an enable or disable.
      */
-    final Step<ConfigLevelContext>[] perConfigSteps =
-            new Step[] {
-        secAdminListenerProtocolStep,
-        secAdminPortUnifAndRedirectStep,
-        jmxConnectorStep
-    };
+    final Step<ConfigLevelContext>[] perConfigSteps = new Step[] { secAdminListenerProtocolStep, secAdminPortUnifAndRedirectStep,
+        jmxConnectorStep };
 
     /**
-     * Returns the error key for finding a message describing an error
-     * during the operation - either enable or disable.
+     * Returns the error key for finding a message describing an error during the operation - either enable or disable.
      * <p>
      * Each concrete subclass overrides this to supply the relevant message key.
      *
@@ -853,17 +793,15 @@ public abstract class SecureAdminCommand implements AdminCommand {
     protected abstract String transactionErrorMessageKey();
 
     /**
-     * Returns an Iterator over the work (enable work for enable-secure-admin,
-     * disable for disable-secure-admin) for the steps related to
-     * just the top-level secure-admin element.
+     * Returns an Iterator over the work (enable work for enable-secure-admin, disable for disable-secure-admin) for the steps
+     * related to just the top-level secure-admin element.
      *
      * @return
      */
     abstract Iterator<Work<TopLevelContext>> secureAdminSteps();
 
     /**
-     * Returna an Iterator over the work related to each configuration that
-     * has to be modified.
+     * Returna an Iterator over the work related to each configuration that has to be modified.
      *
      * @return
      */
@@ -872,8 +810,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
     /**
      * Performs the enable/disable logic for secure admin.
      * <p>
-     * This is separate from the execute method so it can be invoked during
-     * upgrade.
+     * This is separate from the execute method so it can be invoked during upgrade.
      *
      * @throws TransactionFailure
      */
@@ -884,16 +821,15 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
                 // get the transaction
                 final Transaction t = Transaction.getTransaction(domain_w);
-                final TopLevelContext topLevelContext =
-                        new TopLevelContext(t, domain_w);
-                if (t!=null) {
+                final TopLevelContext topLevelContext = new TopLevelContext(t, domain_w);
+                if (t != null) {
 
                     /*
                      * Do the work on just the secure-admin element.
                      */
                     for (Iterator<Work<TopLevelContext>> it = secureAdminSteps(); it.hasNext();) {
                         final Work<TopLevelContext> step = it.next();
-                        if ( ! step.run(topLevelContext) ) {
+                        if (!step.run(topLevelContext)) {
                             t.rollback();
                             return Boolean.FALSE;
                         }
@@ -910,11 +846,10 @@ public abstract class SecureAdminCommand implements AdminCommand {
                     final Configs configs = domain_w.getConfigs();
                     for (Config c : configs.getConfig()) {
                         final Config c_w = t.enroll(c);
-                        ConfigLevelContext configLevelContext =
-                                new ConfigLevelContext(topLevelContext, c_w);
+                        ConfigLevelContext configLevelContext = new ConfigLevelContext(topLevelContext, c_w);
                         for (Iterator<Work<ConfigLevelContext>> it = perConfigSteps(); it.hasNext();) {
                             final Work<ConfigLevelContext> step = it.next();
-                            if ( ! step.run(configLevelContext)) {
+                            if (!step.run(configLevelContext)) {
                                 t.rollback();
                                 return Boolean.FALSE;
                             }
@@ -926,8 +861,10 @@ public abstract class SecureAdminCommand implements AdminCommand {
             }
         }, domain);
     }
+
     /**
      * Executes the particular xxx-secure-admin command (enable or disable).
+     * 
      * @param context
      */
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,10 +29,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * Utility contact to copy the security related config files
- * from the passed non-embedded instanceDir to the embedded
- * server instance's config.
- * This is implemented by the EmbeddedSecurityUtil class
+ * Utility contact to copy the security related config files from the passed non-embedded instanceDir to the embedded server
+ * instance's config. This is implemented by the EmbeddedSecurityUtil class
  *
  * @author Nithya Subramanian
  */

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -34,28 +34,21 @@ import org.glassfish.hk2.api.PerLookup;
 /**
  * author - Nithya Subramanian
  *
- * Usage: list-supported-cipher-suites
- *         [--help] [--user admin_user] [--passwordfile file_name]
- *         [target_name(default server)]
+ * Usage: list-supported-cipher-suites [--help] [--user admin_user] [--passwordfile file_name] [target_name(default server)]
  **/
 
 @Service(name = "list-supported-cipher-suites")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.supported.cipher.suites")
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTERED_INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-supported-cipher-suites",
-        description="List Supported Cipher Suites")
-})
-@AccessRequired(resource="domain/security-service", action="read")
+    @RestEndpoint(configBean = SecurityService.class, opType = RestEndpoint.OpType.GET, path = "list-supported-cipher-suites", description = "List Supported Cipher Suites") })
+@AccessRequired(resource = "domain/security-service", action = "read")
 public class ListSupportedCipherSuites implements AdminCommand {
 
-    final private static LocalStringManagerImpl localStrings =
-            new LocalStringManagerImpl(ListSupportedCipherSuites.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListSupportedCipherSuites.class);
     @Inject
     SSLUtils sslutils;
 
@@ -64,7 +57,6 @@ public class ListSupportedCipherSuites implements AdminCommand {
     private String target;*/
     @Param(optional = true, primary = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
-
 
     @Override
     public void execute(AdminCommandContext context) {

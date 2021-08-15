@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,6 +23,7 @@ import org.omg.CORBA.ORB;
 
 /**
  * Just a Base class to make exporting remote objects a bit easier...
+ * 
  * @author Harish Prabandham
  */
 
@@ -33,8 +34,7 @@ public class RemoteObject {
         //TODO:V3 commented, uncomment later orb = ORBManager.getORB();
     }
 
-    protected void exportObject(java.rmi.Remote remote)
-    throws java.rmi.RemoteException {
+    protected void exportObject(java.rmi.Remote remote) throws java.rmi.RemoteException {
         // create servant and tie
         PortableRemoteObject.exportObject(remote);
         Tie servantsTie = javax.rmi.CORBA.Util.getTie(remote);
@@ -45,13 +45,7 @@ public class RemoteObject {
         servantsTie.orb(orb);
     }
 
-    java.rmi.Remote getStub(java.rmi.Remote remote)
-    throws java.rmi.RemoteException {
+    java.rmi.Remote getStub(java.rmi.Remote remote) throws java.rmi.RemoteException {
         return PortableRemoteObject.toStub(remote);
     }
 }
-
-
-
-
-

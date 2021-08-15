@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -39,7 +39,6 @@ import jakarta.inject.Named;
 import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommandSecurity;
 
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -49,54 +48,50 @@ import org.jvnet.hk2.config.TransactionFailure;
 /**
  * Create Jacc Provider Command
  *
- * Usage: create-jacc-provider   --policyconfigfactoryclass pc_factory_class
- *         --policyproviderclass pol_provider_class
- *         [--help] [--user admin_user] [--passwordfile file_name]
- *         [ --property (name=value)[:name=value]*]
- *         [ --target  target_name] jacc_provider_name
+ * Usage: create-jacc-provider --policyconfigfactoryclass pc_factory_class --policyproviderclass pol_provider_class [--help]
+ * [--user admin_user] [--passwordfile file_name] [ --property (name=value)[:name=value]*] [ --target target_name]
+ * jacc_provider_name
  *
  *
  * domain.xml element example
- *   <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default" policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
- *         <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy" />
- *   </jacc-provider>
+ * <jacc-provider policy-provider="org.glassfish.exousia.modules.locked.SimplePolicyProvider" name="default"
+ * policy-configuration-factory-provider="org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory">
+ * <property name="repository" value="${com.sun.aas.instanceRoot}/generated/policy" /> </jacc-provider>
  *
  */
-@Service(name="create-jacc-provider")
+@Service(name = "create-jacc-provider")
 @PerLookup
 @I18n("create.jacc.provider")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(CreateJACCProvider.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateJACCProvider.class);
 
-    @Param(name="policyconfigfactoryclass", alias="policyConfigurationFactoryProvider")
+    @Param(name = "policyconfigfactoryclass", alias = "policyConfigurationFactoryProvider")
     private String polConfFactoryClass;
 
-    @Param(name="policyproviderclass", alias="policyProvider")
+    @Param(name = "policyproviderclass", alias = "policyProvider")
     private String polProviderClass;
 
-    @Param(name="jaccprovidername", primary=true)
+    @Param(name = "jaccprovidername", primary = true)
     private String jaccProviderName;
 
-    @Param(optional=true, name="property", separator=':')
+    @Param(optional = true, name = "property", separator = ':')
     private Properties properties;
 
-    @Param(name = "target", optional = true,  defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
     private Domain domain;
 
-    @AccessRequired.NewChild(type=JaccProvider.class)
+    @AccessRequired.NewChild(type = JaccProvider.class)
     private SecurityService securityService;
-
 
     @Override
     public boolean preAuthorization(AdminCommandContext context) {
@@ -108,10 +103,8 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
         JaccProvider jaccProvider = CLIUtil.findJaccProvider(securityService, jaccProviderName);
         if (jaccProvider != null) {
             final ActionReport report = context.getActionReport();
-            report.setMessage(localStrings.getLocalString(
-                    "create.jacc.provider.duplicatefound",
-                    "JaccProvider named {0} exists. Cannot add duplicate JaccProvider.",
-                    jaccProviderName));
+            report.setMessage(localStrings.getLocalString("create.jacc.provider.duplicatefound",
+                "JaccProvider named {0} exists. Cannot add duplicate JaccProvider.", jaccProviderName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
@@ -120,14 +113,13 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
 
     @Override
     public void execute(AdminCommandContext context) {
-       final ActionReport report = context.getActionReport();
+        final ActionReport report = context.getActionReport();
 
         // No duplicate auth realms found. So add one.
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
-                public Object run(SecurityService param)
-                        throws PropertyVetoException, TransactionFailure {
+                public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     JaccProvider newJacc = param.createChild(JaccProvider.class);
                     newJacc.setName(jaccProviderName);
                     newJacc.setPolicyConfigurationFactoryProvider(polConfFactoryClass);
@@ -137,10 +129,9 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
                 }
             }, securityService);
 
-        } catch(TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString("create.auth.realm.fail",
-                    "Creation of Authrealm {0} failed", jaccProviderName) +
-                              "  " + e.getLocalizedMessage() );
+        } catch (TransactionFailure e) {
+            report.setMessage(localStrings.getLocalString("create.auth.realm.fail", "Creation of Authrealm {0} failed", jaccProviderName)
+                + "  " + e.getLocalizedMessage());
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
             return;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +18,9 @@ package com.sun.enterprise.security.auth;
 
 import java.rmi.*;
 
-
 /**
  * This method provides an implementation a Privilege
+ * 
  * @author Harish Prabandham
  */
 
@@ -44,6 +44,7 @@ public class PrivilegeImpl implements Privilege {
 
     /**
      * Returns the name of the name of the Privilege.
+     * 
      * @return The name of the name of the Privilege.
      */
     public String getName() {
@@ -54,7 +55,7 @@ public class PrivilegeImpl implements Privilege {
      * Compares equality...
      */
     public boolean equals(Object obj) {
-        if(obj instanceof Privilege) {
+        if (obj instanceof Privilege) {
             Privilege priv = (Privilege) obj;
             return getName().equals(priv.getName());
         } else {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,8 +30,8 @@ import javax.net.ssl.TrustManager;
 import org.jvnet.hk2.annotations.Contract;
 
 /**
- * SecuritySupport is part of PluggableFeature that provides access to
- * internal services managed by application server.
+ * SecuritySupport is part of PluggableFeature that provides access to internal services managed by application server.
+ * 
  * @author Shing Wai Chan
  */
 @Contract
@@ -53,10 +53,8 @@ public abstract class SecuritySupport {
         return defaultInstance;
     }
 
-
     /**
-     * This method returns an array of keystores containing keys and
-     * certificates.
+     * This method returns an array of keystores containing keys and certificates.
      */
     abstract public KeyStore[] getKeyStores();
 
@@ -66,13 +64,13 @@ public abstract class SecuritySupport {
     abstract public KeyStore[] getTrustStores();
 
     /**
-     * @param  token
+     * @param token
      * @return a keystore. If token is null, return the the first keystore.
      */
     abstract public KeyStore getKeyStore(String token);
 
     /**
-     * @param  token
+     * @param token
      * @return a truststore. If token is null, return the first truststore.
      */
     abstract public KeyStore getTrustStore(String token);
@@ -82,8 +80,8 @@ public abstract class SecuritySupport {
      * @param index
      * @return load a null keystore of given type.
      */
-    abstract public KeyStore loadNullStore(String type, int index) throws KeyStoreException,
-            IOException, NoSuchAlgorithmException, CertificateException;
+    abstract public KeyStore loadNullStore(String type, int index)
+        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException;
 
     /**
      * @param masterPass
@@ -99,8 +97,8 @@ public abstract class SecuritySupport {
      * @throws NoSuchAlgorithmException
      * @throws UnrecoverableKeyException
      */
-    abstract public KeyManager[] getKeyManagers(String algorithm) throws IOException,
-            KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
+    abstract public KeyManager[] getKeyManagers(String algorithm)
+        throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
 
     /**
      * @param algorithm
@@ -109,12 +107,10 @@ public abstract class SecuritySupport {
      * @throws KeyStoreException
      * @throws NoSuchAlgorithmException
      */
-    abstract public TrustManager[] getTrustManagers(String algorithm) throws IOException,
-            KeyStoreException, NoSuchAlgorithmException;
+    abstract public TrustManager[] getTrustManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException;
 
     /**
-     * Gets the PrivateKey for specified alias from the corresponding keystore
-     * indicated by the index.
+     * Gets the PrivateKey for specified alias from the corresponding keystore indicated by the index.
      *
      * @param alias Alias for which the PrivateKey is desired.
      * @param keystoreIndex Index of the keystore.
@@ -124,28 +120,27 @@ public abstract class SecuritySupport {
      * @throws UnrecoverableKeyException
      */
     abstract public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex)
-            throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
+        throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
 
     /**
-     * This method returns an array of token names in order corresponding to
-     * array of keystores.
+     * This method returns an array of token names in order corresponding to array of keystores.
      */
     abstract public String[] getTokenNames();
 
     /**
      * This method synchronize key file for given realm.
+     * 
      * @param config the ConfigContextx
      * @param fileRealmName
-     * @exception if fail to synchronize, a known exception is
-     *            com.sun.enterprise.ee.synchronization.SynchronizationException
+     * @exception if fail to synchronize, a known exception is com.sun.enterprise.ee.synchronization.SynchronizationException
      */
     /** TODO:V3:Cluster ConfigContext is no longer present so find out what this needs to be */
     //public void synchronizeKeyFile(ConfigContext config, String fileRealmName)
-    abstract public void synchronizeKeyFile(Object configContext, String fileRealmName)
-        throws Exception;
+    abstract public void synchronizeKeyFile(Object configContext, String fileRealmName) throws Exception;
 
     /**
      * Check permission for the given key.
+     * 
      * @param key
      */
     abstract public void checkPermission(String key);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,22 +16,21 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-
 /**
- * Exception thrown when a Realm is found to be corrupted for some reason.
- * This usually reflects some sort of problem with data structures such
- * as those holding information about users, groups, or ACLs.
+ * Exception thrown when a Realm is found to be corrupted for some reason. This usually reflects some sort of problem with data
+ * structures such as those holding information about users, groups, or ACLs.
  *
  * @author Harish Prabandham
  */
-public class BadRealmException extends Exception
-{
+public class BadRealmException extends Exception {
     /**
      * Constructs the exception, with descriptive information.
      *
      * @param info describes the problem with the realm
      */
-    public BadRealmException (String info) { super (info); }
+    public BadRealmException(String info) {
+        super(info);
+    }
 
     public BadRealmException() {
         super();

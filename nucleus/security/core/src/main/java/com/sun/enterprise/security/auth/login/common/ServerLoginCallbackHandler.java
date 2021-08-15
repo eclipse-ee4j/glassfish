@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,18 +22,15 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import javax.security.auth.callback.*;
 
-
 /**
- * This is the default callback handler provided by the application
- * client container. The container tries to use the application specified
- * callback handler (if provided). If there is no callback handler or if
- * the handler cannot be instantiated then this default handler is used.
+ * This is the default callback handler provided by the application client container. The container tries to use the application
+ * specified callback handler (if provided). If there is no callback handler or if the handler cannot be instantiated then this
+ * default handler is used.
  */
-public class ServerLoginCallbackHandler implements CallbackHandler
-{
-    private static final String GP_CB="jakarta.security.auth.message.callback.GroupPrincipalCallback";
+public class ServerLoginCallbackHandler implements CallbackHandler {
+    private static final String GP_CB = "jakarta.security.auth.message.callback.GroupPrincipalCallback";
     private static final String GPCBH_UTIL = "com.sun.enterprise.security.jmac.callback.ServerLoginCBHUtil";
-    private static final String GPCBH_UTIL_METHOD="processGroupPrincipal";
+    private static final String GPCBH_UTIL_METHOD = "processGroupPrincipal";
     private String username = null;
     private char[] password = null;
     private String moduleID = null;
@@ -49,14 +46,14 @@ public class ServerLoginCallbackHandler implements CallbackHandler
         this.moduleID = moduleID;
     }
 
-    public ServerLoginCallbackHandler(){
+    public ServerLoginCallbackHandler() {
     }
 
-    public void setUsername(String user){
+    public void setUsername(String user) {
         username = user;
     }
 
-    public void setPassword(char[] pass){
+    public void setPassword(char[] pass) {
         password = pass;
     }
 
@@ -64,26 +61,23 @@ public class ServerLoginCallbackHandler implements CallbackHandler
         this.moduleID = moduleID;
     }
 
-
     /**
-     * This is the callback method called when authentication data is
-     * required. It either pops up a dialog box to request authentication
-     * data or use text input.
+     * This is the callback method called when authentication data is required. It either pops up a dialog box to request
+     * authentication data or use text input.
+     * 
      * @param the callback object instances supported by the login module.
      */
-    public void handle(Callback[] callbacks) throws IOException,
-                                        UnsupportedCallbackException
-    {
+    public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         for (int i = 0; i < callbacks.length; i++) {
-            if (callbacks[i] instanceof NameCallback){
-                NameCallback nme = (NameCallback)callbacks[i];
+            if (callbacks[i] instanceof NameCallback) {
+                NameCallback nme = (NameCallback) callbacks[i];
                 nme.setName(username);
-            } else if (callbacks[i] instanceof PasswordCallback){
-                PasswordCallback pswd = (PasswordCallback)callbacks[i];
+            } else if (callbacks[i] instanceof PasswordCallback) {
+                PasswordCallback pswd = (PasswordCallback) callbacks[i];
                 pswd.setPassword(password);
-            } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback){
+            } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback) {
                 ((CertificateRealm.AppContextCallback) callbacks[i]).setModuleID(moduleID);
-            } else if (GP_CB.equals(callbacks[i].getClass().getName())){
+            } else if (GP_CB.equals(callbacks[i].getClass().getName())) {
                 processGroupPrincipal(callbacks[i]);
             } else {
                 throw new UnsupportedCallbackException(callbacks[i]);
@@ -108,11 +102,9 @@ public class ServerLoginCallbackHandler implements CallbackHandler
         } catch (SecurityException ex) {
             throw new UnsupportedCallbackException(callback);
         } catch (ClassNotFoundException ex) {
-             throw new UnsupportedCallbackException(callback);
+            throw new UnsupportedCallbackException(callback);
         }
 
     }
 
-
 }
-

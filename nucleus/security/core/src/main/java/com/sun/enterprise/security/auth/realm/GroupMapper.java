@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,7 +31,7 @@ public class GroupMapper {
 
     public void parse(String mappingStr) {
         StringTokenizer tokenizer = new StringTokenizer(mappingStr, ";");
-        while(tokenizer.hasMoreElements()) {
+        while (tokenizer.hasMoreElements()) {
             String mapping = tokenizer.nextToken();
             String[] mappingGroups = mapping.split(",");
             String mappedGroup = null;
@@ -68,11 +68,11 @@ public class GroupMapper {
         if (mappedGrps == null || mappedGrps.isEmpty()) {
             return;
         }
-        addUnique(result,mappedGrps);
+        addUnique(result, mappedGrps);
         //look for transitive closure
         ArrayList<String> result1 = new ArrayList<String>();
         for (String str : mappedGrps) {
-            getMappedGroups(group, str,result1);
+            getMappedGroups(group, str, result1);
         }
         addUnique(result, result1);
     }
@@ -84,6 +84,7 @@ public class GroupMapper {
             }
         }
     }
+
     /*
     public void traverse() {
         Iterator<String> it = groupMappingTable.keySet().iterator();
@@ -103,13 +104,10 @@ public class GroupMapper {
     }*/
     /**
      * @param args the command line arguments
-
-    public static void main(String[] args) {
-        // TODO code application logic here
-        GroupMapper mapper = new GroupMapper();
-        mapper.parse(mappingStr);
-        mapper.traverse();
-    }*/
+     * 
+     * public static void main(String[] args) { // TODO code application logic here GroupMapper mapper = new GroupMapper();
+     * mapper.parse(mappingStr); mapper.traverse(); }
+     */
 
     private void getMappedGroups(String group, String str, ArrayList<String> result) {
 
@@ -120,9 +118,9 @@ public class GroupMapper {
         if (mappedGrps.contains(group)) {
             throw new RuntimeException("Illegal Mapping: cycle detected with group'" + group);
         }
-        addUnique(result,mappedGrps);
+        addUnique(result, mappedGrps);
         for (String str1 : mappedGrps) {
-            getMappedGroups(group, str1,result);
+            getMappedGroups(group, str1, result);
         }
     }
 

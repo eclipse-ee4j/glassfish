@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -31,8 +31,8 @@ import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 
 /**
- * Adjusts the DAS configuration to turn off secure admin, as if by
- * executing these commands:
+ * Adjusts the DAS configuration to turn off secure admin, as if by executing these commands:
+ * 
  * <pre>
  * {@code
 
@@ -48,14 +48,10 @@ asadmin -s delete-protocol pu-protocol
 @Service(name = "disable-secure-admin")
 @PerLookup
 @I18n("disable.secure.admin.command")
-@ExecuteOn({RuntimeType.DAS,RuntimeType.INSTANCE})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST,
-        path="disable-secure-admin",
-        description="disable-secure-admin")
-})
-@AccessRequired(resource="domain/secure-admin", action="disable")
+    @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.POST, path = "disable-secure-admin", description = "disable-secure-admin") })
+@AccessRequired(resource = "domain/secure-admin", action = "disable")
 public class DisableSecureAdminCommand extends SecureAdminCommand {
 
     @Override
@@ -75,12 +71,13 @@ public class DisableSecureAdminCommand extends SecureAdminCommand {
 
     /**
      * Iterator which returns array elements from back to front.
+     * 
      * @param <T>
      * @param steps
      * @return
      */
     private <T extends SecureAdminCommand.Context> Iterator<Work<T>> reverseStepsIterator(Step<T>[] steps) {
-        return new Iterator<Work<T>> () {
+        return new Iterator<Work<T>>() {
             private Step<T>[] steps;
             private int nextSlot;
 
@@ -90,8 +87,7 @@ public class DisableSecureAdminCommand extends SecureAdminCommand {
             }
 
             /**
-             * Returns the disable work associated with the next step we should
-             * process for disabling secure admin.
+             * Returns the disable work associated with the next step we should process for disabling secure admin.
              */
             @Override
             public Work<T> next() {

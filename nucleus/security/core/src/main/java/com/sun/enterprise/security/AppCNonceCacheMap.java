@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,14 +23,12 @@ import java.util.Map;
 import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
 
-
-
 /**
  *
  * @author vbkumarjayanti
  */
 @Service
 @Singleton
-public class AppCNonceCacheMap extends HashMap<String,CNonceCache> {
+public class AppCNonceCacheMap extends HashMap<String, CNonceCache> {
 
 }

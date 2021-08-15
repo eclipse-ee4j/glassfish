@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,12 +27,9 @@ import org.glassfish.security.common.PrincipalImpl;
 import java.util.logging.*;
 import com.sun.logging.*;
 
-
 /**
- * This class represents the security context on the client side.
- * For usage of the IIOP_CLIENT_PER_THREAD_FLAG flag, see
- * UsernamePasswordStore. When set to false, the volatile
- * field sharedCsc is used to store the context.
+ * This class represents the security context on the client side. For usage of the IIOP_CLIENT_PER_THREAD_FLAG flag, see
+ * UsernamePasswordStore. When set to false, the volatile field sharedCsc is used to store the context.
  *
  * @see UsernamePasswordStore
  * @author Harpreet Singh
@@ -42,53 +39,44 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    public static final String IIOP_CLIENT_PER_THREAD_FLAG =
-        "com.sun.appserv.iiopclient.perthreadauth";
+    public static final String IIOP_CLIENT_PER_THREAD_FLAG = "com.sun.appserv.iiopclient.perthreadauth";
 
     // Bug Id: 4787940
-    private static final boolean isPerThreadAuth =
-            Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG);
+    private static final boolean isPerThreadAuth = Boolean.getBoolean(IIOP_CLIENT_PER_THREAD_FLAG);
 
     // either the thread local or shared version will be used
-    private static ThreadLocal localCsc =
-        isPerThreadAuth ? new ThreadLocal() : null;
+    private static ThreadLocal localCsc = isPerThreadAuth ? new ThreadLocal() : null;
     private static volatile ClientSecurityContext sharedCsc;
 
     /**
      * This creates a new ClientSecurityContext object.
+     * 
      * @param The name of the user.
      * @param The Credentials of the user.
      */
-    public ClientSecurityContext(String userName,
-                                 Subject s) {
+    public ClientSecurityContext(String userName, Subject s) {
 
         this.initiator = new PrincipalImpl(userName);
-        this.subject = s ;
+        this.subject = s;
     }
 
     /**
-     * Initialize the SecurityContext & handle the unauthenticated
-     * principal case
+     * Initialize the SecurityContext & handle the unauthenticated principal case
+     * 
+     * public static ClientSecurityContext init() { ClientSecurityContext sc = getCurrent(); if (sc == null) { // there is no current
+     * security context // create a default one if sc = generateDefaultSecurityContext(); } return sc; }
+     */
 
-    public static ClientSecurityContext init() {
-        ClientSecurityContext sc = getCurrent();
-        if (sc == null) { // there is no current security context
-            // create a default one if
-            sc = generateDefaultSecurityContext();
-        }
-        return sc;
-    }*/
-
-   /*
+    /*
     private static ClientSecurityContext generateDefaultSecurityContext() {
         final String PRINCIPAL_NAME = "auth.default.principal.name";
         final String PRINCIPAL_PASS = "auth.default.principal.password";
-
-
+    
+    
         //ServerConfiguration config = ServerConfiguration.getConfiguration();
         //String username = config.getProperty(PRINCIPAL_NAME, "guest");
         //String password = config.getProperty(PRINCIPAL_PASS, "guest123");
-
+    
         //Temporary hardcoding to make V3 code for WebProfile compile
         String username ="guest";
         char[] password = new char[]{'g','e','t','s','t','1','2','3'};
@@ -120,13 +108,10 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     */
 
     /**
-     * This method gets the SecurityContext stored here.  If using a
-     * per-thread authentication model, it gets the context from
-     * Thread Local Store (TLS) of the current thread. If not using a
-     * per-thread authentication model, it gets the singleton context.
+     * This method gets the SecurityContext stored here. If using a per-thread authentication model, it gets the context from Thread
+     * Local Store (TLS) of the current thread. If not using a per-thread authentication model, it gets the singleton context.
      *
-     * @return The current Security Context stored here. It returns
-     *      null if SecurityContext could not be found.
+     * @return The current Security Context stored here. It returns null if SecurityContext could not be found.
      */
     public static ClientSecurityContext getCurrent() {
         if (isPerThreadAuth) {
@@ -150,9 +135,8 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     }
 
     /**
-     * This method returns the caller principal.
-     * This information may be redundant since the same information
-     * can be inferred by inspecting the Credentials of the caller.
+     * This method returns the caller principal. This information may be redundant since the same information can be inferred by
+     * inspecting the Credentials of the caller.
      *
      * @return The caller Principal.
      */
@@ -160,14 +144,12 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
         return initiator;
     }
 
-
     public Subject getSubject() {
         return subject;
     }
 
     public String toString() {
-        return "ClientSecurityContext[ " + "Initiator: " + initiator +
-            "Subject " + subject + " ]";
+        return "ClientSecurityContext[ " + "Initiator: " + initiator + "Subject " + subject + " ]";
     }
 
     //added for CR:6620388
@@ -196,14 +178,14 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
 
     public void setCurrentSecurityContext(AppServSecurityContext context) {
         if (context instanceof ClientSecurityContext) {
-            setCurrent((ClientSecurityContext)context);
+            setCurrent((ClientSecurityContext) context);
             return;
         }
         throw new IllegalArgumentException("Expected ClientSecurityContext, found " + context);
     }
 
     public AppServSecurityContext getCurrentSecurityContext() {
-         return getCurrent();
+        return getCurrent();
     }
 
     public void setUnauthenticatedSecurityContext() {
@@ -214,12 +196,4 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
         throw new UnsupportedOperationException("Not supported yet in V3.");
     }
 
-
 }
-
-
-
-
-
-
-

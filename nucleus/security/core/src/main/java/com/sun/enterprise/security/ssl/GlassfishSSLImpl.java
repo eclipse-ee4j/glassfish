@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -29,8 +29,8 @@ import org.jvnet.hk2.annotations.Service;
  *
  * @author Sudarsan Sridhar
  */
-@Service(name="com.sun.enterprise.security.ssl.GlassfishSSLImpl")
-@ContractsProvided({GlassfishSSLImpl.class, SSLImplementation.class})
+@Service(name = "com.sun.enterprise.security.ssl.GlassfishSSLImpl")
+@ContractsProvided({ GlassfishSSLImpl.class, SSLImplementation.class })
 public class GlassfishSSLImpl extends SSLImplementation {
     public GlassfishSSLImpl() {
     }
@@ -44,8 +44,8 @@ public class GlassfishSSLImpl extends SSLImplementation {
     }
 
     public SSLSupport getSSLSupport(Socket socket) {
-        if(socket instanceof SSLSocket) {
-            return new GlassfishSSLSupport((SSLSocket)socket);
+        if (socket instanceof SSLSocket) {
+            return new GlassfishSSLSupport((SSLSocket) socket);
         }
         return null;
     }

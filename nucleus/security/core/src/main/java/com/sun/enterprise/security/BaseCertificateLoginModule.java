@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -40,8 +40,8 @@ import org.glassfish.security.common.Group;
 /**
  * Abstract base class for certificate-based login modules.
  *
- * <P>Subclasses need to implement the authenticateUser() method and later
- * call commitUserAuthentication().
+ * <P>
+ * Subclasses need to implement the authenticateUser() method and later call commitUserAuthentication().
  *
  */
 public abstract class BaseCertificateLoginModule implements LoginModule {
@@ -58,8 +58,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     /**
      * System Logger.
      */
-    protected static final Logger _logger =
-            SecurityLoggerInfo.getLogger();
+    protected static final Logger _logger = SecurityLoggerInfo.getLogger();
     private CallbackHandler callbackHandler;
     private boolean success = false;
     private String[] groups = null;
@@ -68,15 +67,13 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     private X500Principal x500Principal;
     private String appName = null;
 
-    public final void initialize(Subject subject, CallbackHandler callbackHandler
-            , Map<String, ?> sharedState, Map<String, ?> options) {
+    public final void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
         this.subject = subject;
         this._sharedState = sharedState;
         this._options = options;
         this.callbackHandler = callbackHandler;
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.log(Level.FINE, "Login module initialized: {0}"
-                    , this.getClass().toString());
+            _logger.log(Level.FINE, "Login module initialized: {0}", this.getClass().toString());
         }
     }
 
@@ -99,8 +96,8 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         Set<Principal> principalSet = subject.getPrincipals();
         for (int i = 0; i < groups.length; i++) {
             if (groups[i] != null) {
-                Group g = Globals.getDefaultHabitat().<PrincipalGroupFactory>getService(PrincipalGroupFactory.class).
-                        getGroupInstance(groups[i], CertificateRealm.AUTH_TYPE);
+                Group g = Globals.getDefaultHabitat().<PrincipalGroupFactory>getService(PrincipalGroupFactory.class)
+                    .getGroupInstance(groups[i], CertificateRealm.AUTH_TYPE);
                 principalSet.add(g);
             }
             groups[i] = null;
@@ -193,7 +190,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         // Callback to get the application name.
         CertificateRealm.AppContextCallback appContext = new CertificateRealm.AppContextCallback();
         try {
-            callbackHandler.handle(new Callback[]{appContext});
+            callbackHandler.handle(new Callback[] { appContext });
             appName = appContext.getModuleID();
         } catch (Exception ex) {
         }
@@ -201,16 +198,15 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
 
     /**
      *
-     * <P>This is a convenience method which can be used by subclasses
+     * <P>
+     * This is a convenience method which can be used by subclasses
      *
-     * <P>Note that this method is called after the authentication
-     * has succeeded. If authentication failed do not call this method.
+     * <P>
+     * Note that this method is called after the authentication has succeeded. If authentication failed do not call this method.
      *
-     * This method sets the authentication status to success if the
-     * groups parameter is non-null.
+     * This method sets the authentication status to success if the groups parameter is non-null.
      *
-     * @param groups String array of group memberships for user (could be
-     *     empty).
+     * @param groups String array of group memberships for user (could be empty).
      */
     protected final void commitUserAuthentication(final String[] groups) {
         this.groups = groups;
@@ -220,10 +216,11 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     /**
      * Perform authentication decision.
      *
-     * Method returns silently on success and returns a LoginException
-     * on failure.
+     * Method returns silently on success and returns a LoginException on failure.
      *
-     * <p>Must be overridden to add custom functionality.
+     * <p>
+     * Must be overridden to add custom functionality.
+     * 
      * @throws LoginException on authentication failure.
      *
      */
@@ -232,8 +229,8 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     /**
      * Get the application name.
      *
-     * <p> This may be useful when a single LoginModule has to handle
-     * multiple applications that use certificates.
+     * <p>
+     * This may be useful when a single LoginModule has to handle multiple applications that use certificates.
      *
      * @return the application name. Non-null only for web container.
      */
@@ -251,15 +248,12 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     }
 
     /**
-     * Returns the subject (subject distinguished name) value from the
-     * first certificate, in the client certificate chain, as an
-     * <code>X500Principal</code>. If the subject value is empty, then
-     * the <code>getName()</code> method of the returned
+     * Returns the subject (subject distinguished name) value from the first certificate, in the client certificate chain, as an
+     * <code>X500Principal</code>. If the subject value is empty, then the <code>getName()</code> method of the returned
      * <code>X500Principal</code> object returns an empty string ("").
      *
-     * @return an <code>X500Principal</code> representing the subject
-     *                distinguished name from thr first certificate, in the
-     *          client certificate chain;
+     * @return an <code>X500Principal</code> representing the subject distinguished name from thr first certificate, in the client
+     * certificate chain;
      */
     protected X500Principal getX500Principal() {
         return x500Principal;

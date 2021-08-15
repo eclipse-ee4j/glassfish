@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,19 +33,17 @@ import org.glassfish.api.ActionReport;
  */
 public class CLIUtil {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(CLIUtil.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CLIUtil.class);
 
     /**
-     * Selects a config of interest from the domain, based on the target.
-     * (Eliminates duplicated code formerly in Create, Delete, and ListAuthRealm).
+     * Selects a config of interest from the domain, based on the target. (Eliminates duplicated code formerly in Create, Delete, and
+     * ListAuthRealm).
      *
      * @param domain
      * @param target
      * @return
      */
-    static Config chooseConfig(final Domain domain,
-            final String target) {
+    static Config chooseConfig(final Domain domain, final String target) {
         Config config = null;
         Config tmp = null;
         try {
@@ -67,21 +65,16 @@ public class CLIUtil {
         return config;
     }
 
-    static Config chooseConfig(final Domain domain,
-            final String target,
-            final ActionReport report) {
+    static Config chooseConfig(final Domain domain, final String target, final ActionReport report) {
         final Config config = chooseConfig(domain, target);
         if (config == null) {
-            report.setMessage(localStrings.getLocalString(
-                "util.noconfigfortarget",
-                "Configuration for target {0} not found.", target));
+            report.setMessage(localStrings.getLocalString("util.noconfigfortarget", "Configuration for target {0} not found.", target));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
         }
         return config;
     }
 
-    static boolean isRealmNew(final SecurityService securityService,
-            final String authRealmName) {
+    static boolean isRealmNew(final SecurityService securityService, final String authRealmName) {
 
         // check if there exists an auth realm byt he specified name
         // if so return failure.
@@ -94,8 +87,7 @@ public class CLIUtil {
         return true;
     }
 
-    static AuthRealm findRealm(final SecurityService securityService,
-            String authRealmName) {
+    static AuthRealm findRealm(final SecurityService securityService, String authRealmName) {
         // ensure we have the file authrealm
 
         if (authRealmName == null) {
@@ -110,8 +102,7 @@ public class CLIUtil {
         return null;
     }
 
-    static JaccProvider findJaccProvider(final SecurityService securityService,
-            final String jaccProviderName) {
+    static JaccProvider findJaccProvider(final SecurityService securityService, final String jaccProviderName) {
         final List<JaccProvider> jaccProviders = securityService.getJaccProvider();
         for (JaccProvider jaccProv : jaccProviders) {
             if (jaccProv.getName().equals(jaccProviderName)) {
@@ -121,11 +112,10 @@ public class CLIUtil {
         return null;
     }
 
-    static MessageSecurityConfig findMessageSecurityConfig(final SecurityService securityService,
-            final String authLayer) {
+    static MessageSecurityConfig findMessageSecurityConfig(final SecurityService securityService, final String authLayer) {
         List<MessageSecurityConfig> mscs = securityService.getMessageSecurityConfig();
 
-        for (MessageSecurityConfig  msc : mscs) {
+        for (MessageSecurityConfig msc : mscs) {
             if (msc.getAuthLayer().equals(authLayer)) {
                 return msc;
             }

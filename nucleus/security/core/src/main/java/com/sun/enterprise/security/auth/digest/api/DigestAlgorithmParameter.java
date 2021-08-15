@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,6 +20,7 @@ import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * Interface to Digest algorithm parameters
+ * 
  * @author K.Venugopal@sun.com
  */
 public interface DigestAlgorithmParameter extends AlgorithmParameterSpec {
@@ -27,19 +28,22 @@ public interface DigestAlgorithmParameter extends AlgorithmParameterSpec {
      * @returns the delimiter to be used while performing digest calculation, null otherwise.
      *
      */
-     public byte[] getDelimiter();
-     /**
-      *
-      * @returns the parameter value.
-      */
-     public byte[] getValue() ;
-     /**
-      * @returns the digest algorithm to be used.eg: MD5,MD5-sess etc..
-      *
-      */
-     public String getAlgorithm();
-     /**
-      * @returns the name of the parameter, null if no name is present.
-      */
-     public String getName();
+    public byte[] getDelimiter();
+
+    /**
+     *
+     * @returns the parameter value.
+     */
+    public byte[] getValue();
+
+    /**
+     * @returns the digest algorithm to be used.eg: MD5,MD5-sess etc..
+     *
+     */
+    public String getAlgorithm();
+
+    /**
+     * @returns the name of the parameter, null if no name is present.
+     */
+    public String getName();
 }

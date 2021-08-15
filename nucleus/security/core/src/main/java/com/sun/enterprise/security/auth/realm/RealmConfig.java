@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -26,19 +26,19 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * RealmConfig usable by standalone : Admin CLI for creating Realms
- * It has a subset of functionality defined in com.sun.enterprise.security.RealmConfig
+ * RealmConfig usable by standalone : Admin CLI for creating Realms It has a subset of functionality defined in
+ * com.sun.enterprise.security.RealmConfig
  */
 public class RealmConfig {
 
-    private static Logger logger =
-            SecurityLoggerInfo.getLogger();
+    private static Logger logger = SecurityLoggerInfo.getLogger();
 
     public static void createRealms(String defaultRealm, List<AuthRealm> realms) {
         createRealms(defaultRealm, realms, null);
     }
+
     public static void createRealms(String defaultRealm, List<AuthRealm> realms, String configName) {
-        assert(realms != null);
+        assert (realms != null);
 
         String goodRealm = null; // need at least one good realm
 
@@ -65,8 +65,7 @@ public class RealmConfig {
                     goodRealm = realmName;
                 }
             } catch (Exception e) {
-                logger.log(Level.WARNING,
-                           SecurityLoggerInfo.realmConfigDisabledError, realmName);
+                logger.log(Level.WARNING, SecurityLoggerInfo.realmConfigDisabledError, realmName);
                 logger.log(Level.WARNING, SecurityLoggerInfo.securityExceptionError, e);
             }
         }

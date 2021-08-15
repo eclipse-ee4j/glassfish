@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -52,35 +52,33 @@ import org.jvnet.hk2.config.ConfigListener;
 /**
  * Delete Message Security Provider Command
  *
- * Usage: delete-message-security-provider --layer message_layer [--terse=false]
- *        [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849]
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
- *        [--target target(Defaultserver)] provider_name
+ * Usage: delete-message-security-provider --layer message_layer [--terse=false] [--echo=false] [--interactive=true] [--host
+ * localhost] [--port 4848|4849] [--secure | -s] [--user admin_user] [--passwordfile file_name] [--target target(Defaultserver)]
+ * provider_name
  *
  * @author Nandini Ektare
  */
-@Service(name="delete-message-security-provider")
+@Service(name = "delete-message-security-provider")
 @PerLookup
 @I18n("delete.message.security.provider")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(DeleteMessageSecurityProvider.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteMessageSecurityProvider.class);
 
-    @Param(name="providername", primary=true)
+    @Param(name = "providername", primary = true)
     String providerId;
 
     // auth-layer can only be SOAP | HttpServlet
-    @Param(name="layer",defaultValue="SOAP")
+    @Param(name = "layer", defaultValue = "SOAP")
     String authLayer;
 
-    @Param(name = "target", optional = true, defaultValue =
-        SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
@@ -103,10 +101,8 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
         msgSecCfg = CLIUtil.findMessageSecurityConfig(secService, authLayer);
         if (msgSecCfg == null) {
             final ActionReport report = context.getActionReport();
-            report.setMessage(localStrings.getLocalString(
-                "delete.message.security.provider.confignotfound",
-                "A Message security config does not exist for the layer {0}",
-                authLayer));
+            report.setMessage(localStrings.getLocalString("delete.message.security.provider.confignotfound",
+                "A Message security config does not exist for the layer {0}", authLayer));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
         }
@@ -114,8 +110,8 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
     }
 
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
@@ -128,21 +124,16 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
             if (pc.getProviderId().equals(providerId)) {
                 thePC = pc;
                 try {
-                    ConfigSupport.apply(
-                        new SingleConfigCode<MessageSecurityConfig>() {
+                    ConfigSupport.apply(new SingleConfigCode<MessageSecurityConfig>() {
 
-                        public Object run(MessageSecurityConfig param)
-                        throws PropertyVetoException, TransactionFailure {
+                        public Object run(MessageSecurityConfig param) throws PropertyVetoException, TransactionFailure {
 
-                            if ((param.getDefaultProvider() != null) &&
-                                param.getDefaultProvider().equals(
-                                    thePC.getProviderId())) {
+                            if ((param.getDefaultProvider() != null) && param.getDefaultProvider().equals(thePC.getProviderId())) {
                                 param.setDefaultProvider(null);
                             }
 
-                            if ((param.getDefaultClientProvider() != null) &&
-                                 param.getDefaultClientProvider().equals(
-                                    thePC.getProviderId())) {
+                            if ((param.getDefaultClientProvider() != null)
+                                && param.getDefaultClientProvider().equals(thePC.getProviderId())) {
                                 param.setDefaultClientProvider(null);
                             }
 
@@ -150,12 +141,10 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
                             return null;
                         }
                     }, msgSecCfg);
-                } catch(TransactionFailure e) {
+                } catch (TransactionFailure e) {
                     e.printStackTrace();
-                    report.setMessage(localStrings.getLocalString(
-                        "delete.message.security.provider.fail",
-                        "Deletion of message security provider named {0} failed",
-                        providerId));
+                    report.setMessage(localStrings.getLocalString("delete.message.security.provider.fail",
+                        "Deletion of message security provider named {0} failed", providerId));
                     report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                     report.setFailureCause(e);
                     return;

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -102,8 +102,8 @@ public class SecurityManagerFactory {
      * @param remove boolean indicating whether the corresponding mappings are to be removed from the app2iDmap and aiD2sMmap.
      * @return a non-empty ArrayList containing the selected managers, or null.
      */
-    public <T> ArrayList<T> getManagersForApp(Map<String, Map<String, T>> iD2sMmap, Map<String, ArrayList<String>> app2iDmap, String appName,
-        boolean remove) {
+    public <T> ArrayList<T> getManagersForApp(Map<String, Map<String, T>> iD2sMmap, Map<String, ArrayList<String>> app2iDmap,
+        String appName, boolean remove) {
 
         ArrayList<T> managerList = null;
         String[] ctxIds = getContextsForApp(app2iDmap, appName, remove);
@@ -162,8 +162,8 @@ public class SecurityManagerFactory {
      * @param appName the application name
      * @param manager the SecurityManager
      */
-    public <T> void addManagerToApp(Map<String, Map<String, T>> iD2sMmap, Map<String, ArrayList<String>> app2iDmap, String ctxId, String name,
-        String appName, T manager) {
+    public <T> void addManagerToApp(Map<String, Map<String, T>> iD2sMmap, Map<String, ArrayList<String>> app2iDmap, String ctxId,
+        String name, String appName, T manager) {
 
         synchronized (iD2sMmap) {
 

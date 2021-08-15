@@ -77,7 +77,7 @@ public class RealmsManager {
 
     /**
      * Checks if the given realm name is loaded/valid.
-     * 
+     *
      * @param name of the realm to check.
      * @return true if realm present, false otherwise.
      */
@@ -91,7 +91,7 @@ public class RealmsManager {
 
     /**
      * Checks if the given realm name is loaded/valid.
-     * 
+     *
      * @param name of the realm to check.
      * @return true if realm present, false otherwise.
      */
@@ -105,7 +105,7 @@ public class RealmsManager {
 
     /**
      * Returns the names of accessible realms.
-     * 
+     *
      * @return set of realm names
      */
     public Enumeration<String> getRealmNames() {
@@ -164,7 +164,7 @@ public class RealmsManager {
 
     /**
      * Returns names of predefined AuthRealms' classes supported by security service.
-     * 
+     *
      * @returns array of predefind AuthRealms' classes
      *
      */
@@ -178,7 +178,7 @@ public class RealmsManager {
                "com.sun.enterprise.security.auth.realm.solaris.SolarisRealm"};*/
         ServiceLocator habitat = Globals.getDefaultHabitat();
         List<ActiveDescriptor<?>> collection = habitat.getDescriptors(BuilderHelper.createContractFilter(Realm.class.getName()));
-        List<String> arr = new ArrayList<String>();
+        List<String> arr = new ArrayList<>();
         for (ActiveDescriptor<?> it : collection) {
             arr.add(it.getImplementation());
         }
@@ -288,7 +288,7 @@ public class RealmsManager {
     public void putIntoLoadedRealms(String configName, String realmName, Realm realm) {
         Hashtable<String, Realm> containedRealms = loadedRealms.get(configName);
         if (containedRealms == null) {
-            containedRealms = new Hashtable<String, Realm>();
+            containedRealms = new Hashtable<>();
             if (configName == null) {
                 configName = config.getName();
             }
@@ -305,9 +305,7 @@ public class RealmsManager {
                 if (realm != null) {
                     realm.refresh(configName);
                 }
-            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
-                //            _logger.fine("Realm: "+realmName+" is not configured");
-            } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
+            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException | com.sun.enterprise.security.auth.realm.BadRealmException bre) {
                 //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }

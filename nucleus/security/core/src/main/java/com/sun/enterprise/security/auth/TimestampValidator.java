@@ -21,14 +21,14 @@ import java.util.concurrent.TimeoutException;
 
 /**
  * validate Timestamp received in messages.
- * 
+ *
  * @author k.venugopal@sun.com
  */
 public interface TimestampValidator {
 
     /**
      * validate given time against current time.
-     * 
+     *
      * @param created created time
      * @param maxClockSkew maximum difference allowed between the system clocks of the sender and recipient.
      * @param freshnessLimit maximum duration of time after which the Timestamp becomes stale

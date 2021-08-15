@@ -36,7 +36,7 @@ public class PasswordCredential {
 
     /**
      * Construct a credential with the specified password and realm name.
-     * 
+     *
      * @param the password.
      * @param the realm name. The only value supported for now is "default".
      */
@@ -70,7 +70,7 @@ public class PasswordCredential {
 
     /**
      * Return the realm name.
-     * 
+     *
      * @return the realm name. Only value supported for now is "default".
      */
     public String getRealm() {
@@ -79,7 +79,7 @@ public class PasswordCredential {
 
     /**
      * Return the username.
-     * 
+     *
      * @return the user name.
      */
     public String getUser() {
@@ -94,7 +94,7 @@ public class PasswordCredential {
 
     /**
      * Return the password.
-     * 
+     *
      * @return the password.
      */
     public char[] getPassword() {
@@ -105,7 +105,7 @@ public class PasswordCredential {
 
     /**
      * Return the target_name
-     * 
+     *
      * @return the target_name
      */
     public byte[] getTargetName() {
@@ -114,10 +114,11 @@ public class PasswordCredential {
 
     /**
      * Compare two instances of the credential and return true if they are the same and false otherwise.
-     * 
+     *
      * @param the object that this instance is being compared to.
      * @return true if the instances are equal, false otherwise
      */
+    @Override
     public boolean equals(Object o) {
         if (o instanceof PasswordCredential) {
             PasswordCredential pc = (PasswordCredential) o;
@@ -130,9 +131,10 @@ public class PasswordCredential {
 
     /**
      * Return the hashCode computed from the password and realm name.
-     * 
+     *
      * @return the hash code.
      */
+    @Override
     public int hashCode() {
         return username.hashCode() + Arrays.hashCode(password) + realm.hashCode();
     }
@@ -140,6 +142,7 @@ public class PasswordCredential {
     /**
      * The string representation of the credential.
      */
+    @Override
     public String toString() {
         String s = "Realm=" + realm;
         s = s + " Username=" + username;

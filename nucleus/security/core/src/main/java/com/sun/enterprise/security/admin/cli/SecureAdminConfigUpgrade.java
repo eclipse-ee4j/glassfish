@@ -118,7 +118,7 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
     @Inject
     private MasterPassword masterPassword;
 
-    private Map<String, Config> writableConfigs = new HashMap<String, Config>();
+    private Map<String, Config> writableConfigs = new HashMap<>();
 
     @Override
     public void postConstruct() {
@@ -353,14 +353,8 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
     private void reload(final KeyStore keystore, final File keystoreFile, final String pw)
         throws FileNotFoundException, IOException, NoSuchAlgorithmException, CertificateException {
 
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(keystoreFile));
+        try (InputStream is = new BufferedInputStream(new FileInputStream(keystoreFile))) {
             keystore.load(is, pw.toCharArray());
-        } finally {
-            if (is != null) {
-                is.close();
-            }
         }
     }
 
@@ -386,14 +380,9 @@ public class SecureAdminConfigUpgrade extends SecureAdminUpgradeHelper implement
 
     private Properties pwProps(final String pwFilePath) throws IOException {
         Properties result = new Properties();
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(pwFilePath));
+        try (InputStream is = new BufferedInputStream(new FileInputStream(pwFilePath))) {
             result.load(is);
         } finally {
-            if (is != null) {
-                is.close();
-            }
             return result;
         }
     }

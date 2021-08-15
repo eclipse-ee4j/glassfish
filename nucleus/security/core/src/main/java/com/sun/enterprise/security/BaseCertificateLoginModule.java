@@ -17,8 +17,6 @@
 package com.sun.enterprise.security;
 
 import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
-import com.sun.enterprise.security.PrincipalGroupFactory;
-import com.sun.enterprise.security.PrincipalGroupFactory;
 import java.security.Principal;
 import java.security.cert.X509Certificate;
 import java.util.Iterator;
@@ -67,6 +65,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
     private X500Principal x500Principal;
     private String appName = null;
 
+    @Override
     public final void initialize(Subject subject, CallbackHandler callbackHandler, Map<String, ?> sharedState, Map<String, ?> options) {
         this.subject = subject;
         this._sharedState = sharedState;
@@ -77,6 +76,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         }
     }
 
+    @Override
     public final boolean login() throws LoginException {
         //Extract the certificates from the subject.
         extractCredentials();
@@ -89,6 +89,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         return true;
     }
 
+    @Override
     public final boolean commit() throws LoginException {
         if (!success) {
             return false;
@@ -110,6 +111,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
         return true;
     }
 
+    @Override
     final public boolean abort() throws LoginException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "JAAS authentication aborted.");
@@ -140,6 +142,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
 
     }
 
+    @Override
     final public boolean logout() throws LoginException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "JAAS logout for: {0}", subject.toString());
@@ -220,7 +223,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
      *
      * <p>
      * Must be overridden to add custom functionality.
-     * 
+     *
      * @throws LoginException on authentication failure.
      *
      */

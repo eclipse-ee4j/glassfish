@@ -106,11 +106,13 @@ public class DeleteAuthRealm implements AdminCommand, AdminCommandSecurity.Preau
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         ActionReport report = context.getActionReport();
 
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
+                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     param.getAuthRealm().remove(authRealm);
                     //temporary fix - since the SecurityConfigListener is  not being called on an realm delete.

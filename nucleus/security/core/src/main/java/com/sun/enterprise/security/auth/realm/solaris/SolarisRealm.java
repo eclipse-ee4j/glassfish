@@ -21,6 +21,7 @@ import java.util.*;
 import java.util.logging.Level;
 
 import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.security.BaseRealm;
 import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
@@ -70,9 +71,10 @@ public final class SolarisRealm extends IASRealm {
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      *
      */
+    @Override
     public synchronized void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
-        String jaasCtx = props.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(BaseRealm.JAAS_CONTEXT_PARAM);
         if (jaasCtx == null) {
             if (_logger.isLoggable(Level.WARNING)) {
                 _logger.warning("realmconfig.noctx");
@@ -81,10 +83,10 @@ public final class SolarisRealm extends IASRealm {
             throw new BadRealmException(msg);
         }
 
-        this.setProperty(IASRealm.JAAS_CONTEXT_PARAM, jaasCtx);
+        this.setProperty(BaseRealm.JAAS_CONTEXT_PARAM, jaasCtx);
 
         if (_logger.isLoggable(Level.FINE)) {
-            _logger.fine("SolarisRealm : " + IASRealm.JAAS_CONTEXT_PARAM + "=" + jaasCtx);
+            _logger.fine("SolarisRealm : " + BaseRealm.JAAS_CONTEXT_PARAM + "=" + jaasCtx);
         }
 
         groupCache = new HashMap();
@@ -97,6 +99,7 @@ public final class SolarisRealm extends IASRealm {
      *
      * @return Description of the kind of authentication that is directly supported by this realm.
      */
+    @Override
     public String getAuthType() {
         return AUTH_TYPE;
     }
@@ -110,6 +113,7 @@ public final class SolarisRealm extends IASRealm {
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
      * support this operation.
      */
+    @Override
     public Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
         Vector v = (Vector) groupCache.get(username);
         if (v == null) {
@@ -134,8 +138,8 @@ public final class SolarisRealm extends IASRealm {
 
         } else {
             v = new Vector(groups.length + 1);
-            for (int i = 0; i < groups.length; i++) {
-                v.add(groups[i]);
+            for (String group : groups) {
+                v.add(group);
             }
         }
 

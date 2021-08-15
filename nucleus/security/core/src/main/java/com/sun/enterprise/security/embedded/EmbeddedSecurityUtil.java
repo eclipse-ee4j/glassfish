@@ -55,6 +55,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
+    @Override
     public void copyConfigFiles(ServiceLocator habitat, File fromInstanceDir, File domainXml) {
         //For security reasons, permit only an embedded server instance to carry out the copy operations
         ServerEnvironment se = habitat.getService(ServerEnvironment.class);
@@ -68,7 +69,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
         File toInstanceDir = habitat.<ServerEnvironmentImpl>getService(ServerEnvironmentImpl.class).getInstanceRoot();
 
-        List<String> fileNames = new ArrayList<String>();
+        List<String> fileNames = new ArrayList<>();
 
         //Handling the exception here, since it is causing CTS failure - CR 6981191
 
@@ -116,6 +117,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
     }
 
+    @Override
     public String parseFileName(String fullFilePath) {
         if (fullFilePath == null) {
             return null;
@@ -125,6 +127,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
     }
 
+    @Override
     public boolean isEmbedded(ServerEnvironment se) {
         if (se.getRuntimeType() == RuntimeType.EMBEDDED) {
             return true;
@@ -132,8 +135,9 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
         return false;
     }
 
+    @Override
     public List<String> getKeyFileNames(SecurityService securityService) {
-        List<String> keyFileNames = new ArrayList<String>();
+        List<String> keyFileNames = new ArrayList<>();
 
         List<AuthRealm> authRealms = securityService.getAuthRealm();
         for (AuthRealm authRealm : authRealms) {
@@ -181,7 +185,7 @@ public class EmbeddedSecurityUtil implements EmbeddedSecurity {
 
         //Obtain the keyfile names for the server-config (the first appearing config in domain.xml
         List<String> getAbsolutePathKeyFileNames(File fromInstanceDir) throws XMLStreamException {
-            List<String> keyFileNames = new ArrayList<String>();
+            List<String> keyFileNames = new ArrayList<>();
             while (skipToStartButNotPast(AUTH_REALM, CONFIG)) {
                 String realmClass = xmlReader.getAttributeValue(null, CLASSNAME);
                 if (realmClass.equals(FILE_REALM_CLASS)) {

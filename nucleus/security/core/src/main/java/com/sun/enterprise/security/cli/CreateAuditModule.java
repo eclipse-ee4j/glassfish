@@ -33,12 +33,10 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.config.serverbeans.AuditModule;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.SecurityConfigListener;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -111,6 +109,7 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
@@ -130,6 +129,7 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
+                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     AuditModule newAuditModule = param.createChild(AuditModule.class);
                     populateAuditModuleElement(newAuditModule);

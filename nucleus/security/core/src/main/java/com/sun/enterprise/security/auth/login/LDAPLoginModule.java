@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import com.sun.enterprise.security.auth.login.PasswordLoginModule;
 import javax.security.auth.login.*;
 
 import com.sun.enterprise.security.auth.realm.ldap.LDAPRealm;
@@ -54,6 +53,7 @@ public class LDAPLoginModule extends PasswordLoginModule {
      * Performs authentication for the current user.
      *
      */
+    @Override
     protected void authenticate() throws LoginException {
         if (!(_currentRealm instanceof LDAPRealm)) {
             String msg = sm.getString("ldaplm.badrealm");

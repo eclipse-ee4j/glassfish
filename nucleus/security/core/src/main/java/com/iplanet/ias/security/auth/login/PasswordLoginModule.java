@@ -30,12 +30,13 @@ import javax.security.auth.login.LoginException;
 public abstract class PasswordLoginModule extends BasePasswordLoginModule {
     /**
      * authenticateUser calls authenticate which is implemented by the implementation of this subclass
-     * 
+     *
      * @throws LoginException
      */
+    @Override
     protected final void authenticateUser() throws LoginException {
         AuthenticationStatus as = authenticate();
-        if (as.getStatus() == as.AUTH_SUCCESS)
+        if (as.getStatus() == AuthenticationStatus.AUTH_SUCCESS)
             return;
         else {
             throw new LoginException();
@@ -49,7 +50,7 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule {
 
     /**
      * Called at the end of the authenticate method by the user
-     * 
+     *
      * @return AuthenticationStatus indicating success/failure
      */
     public final AuthenticationStatus commitAuthentication(String username, char[] password, Realm theRealm, String[] groups) {

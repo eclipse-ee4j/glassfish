@@ -20,7 +20,7 @@ import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * Interface representing nested DigestAlgorithm parameter values
- * 
+ *
  * @author K.Venugopal@sun.com
  */
 public interface NestedDigestAlgoParam extends DigestAlgorithmParameter {

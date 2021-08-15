@@ -16,12 +16,7 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import java.util.*;
 import java.util.logging.Level;
-import javax.security.auth.*;
-import javax.security.auth.callback.*;
-import javax.security.auth.login.*;
-import javax.security.auth.spi.*;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import javax.security.auth.login.LoginException;
 
@@ -43,6 +38,7 @@ public class FileLoginModule extends PasswordLoginModule {
      * @throws LoginException If login fails (JAAS login() behavior).
      *
      */
+    @Override
     protected void authenticate() throws LoginException {
         if (!(_currentRealm instanceof FileRealm)) {
             String msg = sm.getString("filelm.badrealm");

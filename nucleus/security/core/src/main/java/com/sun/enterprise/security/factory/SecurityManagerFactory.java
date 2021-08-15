@@ -114,7 +114,7 @@ public class SecurityManagerFactory {
                     managers = getManagers(iD2sMmap, id, remove);
                     if (managers != null) {
                         if (managerList == null) {
-                            managerList = new ArrayList<T>();
+                            managerList = new ArrayList<>();
                         }
                         managerList.addAll(managers);
                     }
@@ -170,7 +170,7 @@ public class SecurityManagerFactory {
             Map<String, T> managerMap = iD2sMmap.get(ctxId);
 
             if (managerMap == null) {
-                managerMap = new HashMap<String, T>();
+                managerMap = new HashMap<>();
                 iD2sMmap.put(ctxId, managerMap);
             }
 
@@ -180,7 +180,7 @@ public class SecurityManagerFactory {
             ArrayList<String> ctxList = app2iDmap.get(appName);
 
             if (ctxList == null) {
-                ctxList = new ArrayList<String>();
+                ctxList = new ArrayList<>();
                 app2iDmap.put(appName, ctxList);
             }
 

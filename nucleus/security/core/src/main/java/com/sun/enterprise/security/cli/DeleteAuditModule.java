@@ -18,7 +18,6 @@ package com.sun.enterprise.security.cli;
 
 import com.sun.enterprise.config.serverbeans.AuditModule;
 import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -35,7 +34,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.SecurityConfigListener;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -99,6 +97,7 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         ActionReport report = context.getActionReport();
@@ -112,6 +111,7 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
             }
 
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
+                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
 
                     param.getAuditModule().remove(auditModule);

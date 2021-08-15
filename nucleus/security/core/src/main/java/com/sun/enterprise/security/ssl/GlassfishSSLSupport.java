@@ -64,6 +64,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         }
     }
 
+    @Override
     public String getCipherSuite() throws IOException {
         if (session == null) {
             return null;
@@ -71,10 +72,12 @@ public class GlassfishSSLSupport implements SSLSupport {
         return session.getCipherSuite();
     }
 
+    @Override
     public Object[] getPeerCertificateChain() throws IOException {
         return getPeerCertificateChain(false);
     }
 
+    @Override
     public Object[] getPeerCertificateChain(boolean force) throws IOException {
         if (session == null) {
             return null;
@@ -97,6 +100,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         return getX509Certs();
     }
 
+    @Override
     public Integer getKeySize() throws IOException {
         if (session == null) {
             return null;
@@ -117,6 +121,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         return keySize;
     }
 
+    @Override
     public String getSessionId() throws IOException {
         if (session == null) {
             return null;

@@ -26,7 +26,7 @@ import java.util.Properties;
 
 /**
  * Base class that should be extended by all classes that wish to provide their own Audit support.
- * 
+ *
  * @author Harpreet Singh
  * @version
  */
@@ -36,7 +36,7 @@ public abstract class BaseAuditModule {
     /**
      * Method is invoked at server startup, during AuditModule initialization. If method returns without any exception then S1AS
      * assumes that the module is ready to serve any requests.
-     * 
+     *
      * @param props the properties for the AuditModule. These properties are defined in the domain.xml
      */
     public void init(Properties props) {
@@ -45,7 +45,7 @@ public abstract class BaseAuditModule {
 
     /**
      * Invoked post authentication request for a user in a given realm
-     * 
+     *
      * @param user username for whom the authentication request was made
      * @param realm the realm name under which the user is authenticated.
      * @param success the status of the authentication

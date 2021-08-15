@@ -16,10 +16,13 @@
 
 package com.sun.enterprise.security;
 
-import java.util.*;
+import java.util.Enumeration;
 
-import com.sun.enterprise.security.auth.realm.*;
-
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.User;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.i18n.StringManager;
 
@@ -36,22 +39,9 @@ import com.sun.enterprise.util.i18n.StringManager;
 public abstract class BaseRealm extends Realm {
     public static final String JAAS_CONTEXT_PARAM = "jaas-context";
 
-    protected static final StringManager sm = StringManager.getManager(IASRealm.class);
+    private static final String OPERATION_NOT_SUPPORTED = "Operation not supported.";
 
-    /**
-     * Returns an AuthenticationHandler object which can be used to authenticate within this realm.
-     *
-     * <P>
-     * This method return null always, since AuthenticationHandlers are generally not supported by iAS realms. Subclass can override
-     * if necessary.
-     *
-     * @return An AuthenticationHandler object for this realm (always null)
-     *
-     */
-    public AuthenticationHandler getAuthenticationHandler() {
-        _logger.warning("iasrealm.noauth");
-        return null;
-    }
+    protected static final StringManager sm = StringManager.getManager(IASRealm.class);
 
     /**
      * Returns names of all the users in this particular realm.
@@ -64,9 +54,9 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
-    public Enumeration getUserNames() throws BadRealmException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+    @Override
+    public Enumeration<String> getUserNames() throws BadRealmException {
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
@@ -82,9 +72,9 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
+    @Override
     public User getUser(String name) throws NoSuchUserException, BadRealmException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
@@ -98,9 +88,9 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
-    public Enumeration getGroupNames() throws BadRealmException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+    @Override
+    public Enumeration<String> getGroupNames() throws BadRealmException {
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
@@ -113,9 +103,9 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
+    @Override
     public void refresh() throws BadRealmException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
@@ -127,20 +117,17 @@ public abstract class BaseRealm extends Realm {
      * @throws BadRealmException If there are problems adding user.
      *
      */
+    @Override
     public void addUser(String name, char[] password, String[] groupList) throws BadRealmException, IASSecurityException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
      * Adds new user to file realm. User cannot exist already.
      *
-     * Deprecated - User of the overloaded method with char[] password is encouraged
      */
-    @Deprecated
     public void addUser(String name, String password, String[] groupList) throws BadRealmException, IASSecurityException {
         addUser(name, password.toCharArray(), groupList);
-
     }
 
     /**
@@ -150,21 +137,16 @@ public abstract class BaseRealm extends Realm {
      * @throws NoSuchUserException If user does not exist.
      *
      */
+    @Override
     public void removeUser(String name) throws NoSuchUserException, BadRealmException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
-     * Update data for an existing user. User must exist. Deprecated - User of the overloaded method with char[] password is
-     * encouraged
-     *
+     * Update data for an existing user. User must exist.
      */
-    @Deprecated
-    public void updateUser(String name, String newName, String password, String[] groups)
-        throws NoSuchUserException, BadRealmException, IASSecurityException {
+    public void updateUser(String name, String newName, String password, String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException {
         updateUser(name, newName, (password == null) ? null : password.toCharArray(), groups);
-
     }
 
     /**
@@ -180,15 +162,15 @@ public abstract class BaseRealm extends Realm {
      * @throws NoSuchUserException If user does not exist.
      *
      */
-    public void updateUser(String name, String newName, char[] password, String[] groups)
-        throws NoSuchUserException, BadRealmException, IASSecurityException {
-        String msg = sm.getString("iasrealm.notsupported");
-        throw new BadRealmException(msg);
+    @Override
+    public void updateUser(String name, String newName, char[] password, String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException {
+        throw new BadRealmException(OPERATION_NOT_SUPPORTED);
     }
 
     /**
      * @return true if the realm implementation support User Management (add,remove,update user)
      */
+    @Override
     public boolean supportsUserManagement() {
         //false by default.
         return false;
@@ -196,9 +178,10 @@ public abstract class BaseRealm extends Realm {
 
     /**
      * Persist the realm data to permanent storage
-     * 
+     *
      * @throws com.sun.enterprise.security.auth.realm.BadRealmException
      */
+    @Override
     public void persist() throws BadRealmException {
         //NOOP for realms that do not support UserManagement
     }

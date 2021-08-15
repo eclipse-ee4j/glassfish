@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,30 +16,25 @@
 
 package com.sun.enterprise.security.integration;
 
-import java.security.CodeSource;
 import java.security.PermissionCollection;
-import java.security.Permission;
-
 
 public interface DDPermissionsLoader {
 
-    public static final String SET_EE_POLICY = "createPolicy.eepermissions";
+    String SET_EE_POLICY = "createPolicy.eepermissions";
 
     /**
      * Pass the declared permission collection from the module handler to the classloader
-     * @param declaredPc  the declared permission collection obtained from permissions.xml file
-     * throws AccessControlException if caller has no privilege
+     *
+     * @param declaredPc the declared permission collection obtained from permissions.xml file throws AccessControlException if
+     * caller has no privilege
      */
-    void addDeclaredPermissions(PermissionCollection declaredPc
-            ) throws SecurityException;
-
+    void addDeclaredPermissions(PermissionCollection declaredPc) throws SecurityException;
 
     /**
      * Pass the EE permission to the classloader
-     * @param eePc EE permissions
-     * throws AccessControlException if caller has no privilege
+     *
+     * @param eePc EE permissions throws AccessControlException if caller has no privilege
      */
     void addEEPermissions(PermissionCollection eePc) throws SecurityException;
-
 
 }

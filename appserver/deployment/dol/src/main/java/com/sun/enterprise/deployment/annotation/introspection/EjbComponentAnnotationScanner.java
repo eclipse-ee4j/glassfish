@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,58 +16,45 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
-
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Singleton;
-
 import java.util.HashSet;
 import java.util.Set;
 
+import org.jvnet.hk2.annotations.Service;
+
+import jakarta.inject.Singleton;
+
 /**
- * This class contains the following annotation type:
- * jakarta.ejb.Stateless
- * jakarta.ejb.Stateful
- * jakarta.ejb.MessageDriven
+ * This class contains the following annotation type: jakarta.ejb.Stateless jakarta.ejb.Stateful jakarta.ejb.MessageDriven
  *
  * @author Qingqing Ouyang
  */
-@Service(name="ejb")
+@Service(name = "ejb")
 @Singleton
 public class EjbComponentAnnotationScanner implements AnnotationScanner {
 
-    private Set<String> annotations=null;
+    private Set<String> annotations;
 
-    /** Creates a new instance of DefaultAnnotationScanner */
-    public EjbComponentAnnotationScanner() {}
-
-    /**
-     * Test if the passed constant pool string is a reference to
-     * a Type.TYPE annotation of a J2EE component
-     *
-     * @String the constant pool info string
-     * @return true if it is a J2EE annotation reference
-     */
+    @Override
     public boolean isAnnotation(String value) {
-        if (annotations==null) {
-            synchronized(EjbComponentAnnotationScanner.class) {
-                if (annotations==null)
-                   init();
+        if (annotations == null) {
+            synchronized (EjbComponentAnnotationScanner.class) {
+                if (annotations == null)
+                    init();
             }
         }
         return annotations.contains(value);
     }
 
+    @Override
+    public Set<String> getAnnotations() {
+        return AbstractAnnotationScanner.constantPoolToFQCN(annotations);
+    }
+
     private void init() {
-        annotations = new HashSet();
+        annotations = new HashSet<>();
         annotations.add("Ljakarta/ejb/Stateless;");
         annotations.add("Ljakarta/ejb/Stateful;");
         annotations.add("Ljakarta/ejb/MessageDriven;");
         annotations.add("Ljakarta/ejb/Singleton;");
-    }
-
-    @Override
-    public Set<String> getAnnotations() {
-
-        return AbstractAnnotationScanner.constantPoolToFQCN(annotations);
     }
 }

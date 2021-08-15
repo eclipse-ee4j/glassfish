@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,34 +27,24 @@ import java.util.Set;
 public abstract class AbstractAnnotationScanner implements AnnotationScanner {
 
     /** holds the annotations of interest to the specific type of scanner */
-    protected volatile Set<String> annotations=null;
-
-    /** Creates a new instance of AbstractAnnotationScanner */
-    public AbstractAnnotationScanner() {
-    }
+    protected volatile Set<String> annotations;
 
     /**
      * Invoked so the concrete subclass can populate the annotations set.
      * <p>
-     * Concrete implementations of this method should add to the set one or more Strings
-     * corresponding to the annotations of interest.
+     * Concrete implementations of this method should add to the set one or more Strings corresponding to the annotations of
+     * interest.
      *
      * @param annotationsSet the Set object to be populated
      */
     protected abstract void init(Set<String> annotationsSet);
 
-    /**
-     * Test if the passed constant pool string is a reference to
-     * a Type.TYPE annotation of a J2EE component
-     *
-     * @String the constant pool info string
-     * @return true if it is an annotation reference of interest to this scanner
-     */
+    @Override
     public boolean isAnnotation(String value) {
-        if (annotations==null) {
-            synchronized(this) {
+        if (annotations == null) {
+            synchronized (this) {
                 if (annotations == null) {
-                    annotations = new HashSet();
+                    annotations = new HashSet<>();
                     init(annotations);
                 }
             }
@@ -69,12 +59,12 @@ public abstract class AbstractAnnotationScanner implements AnnotationScanner {
 
     public static Set<String> constantPoolToFQCN(Set<String> annotations) {
         // for now I transform ConstantPoolInfo type in FQCN
-        Set<String> fqcns = new HashSet<String>();
+        Set<String> fqcns = new HashSet<>();
         for (String annotation : annotations) {
-            String fqcn = annotation.substring(1, annotation.length()-1).replaceAll("/",".");
+            String fqcn = annotation.substring(1, annotation.length() - 1).replaceAll("/", ".");
             fqcns.add(fqcn);
         }
+
         return fqcns;
     }
 }
-

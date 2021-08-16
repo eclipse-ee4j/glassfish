@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,8 +41,7 @@ public class SecurityServicesUtil {
 
     private static ServiceLocator habitat = Globals.getDefaultHabitat();
 
-    private static final LocalStringManagerImpl _localStrings =
-            new LocalStringManagerImpl(SecurityServicesUtil.class);
+    private static final LocalStringManagerImpl _localStrings = new LocalStringManagerImpl(SecurityServicesUtil.class);
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
     // Using SharedSecureRandom from internal-api instead.
     // SecureRandom number used for HTTPS and IIOP/SSL.
@@ -59,100 +58,98 @@ public class SecurityServicesUtil {
     @Inject
     private AuditManager auditManager;
 
-//    static {
-//        secureRandom.setSeed(System.currentTimeMillis());
-//    }
+    //    static {
+    //        secureRandom.setSeed(System.currentTimeMillis());
+    //    }
 
     //the appclient CBH
     private CallbackHandler callbackHandler;
 
     /**
-     * replacing all of this with SharedSecureRandom
-     * So on restart, all your seed material comes from a new time that varies
-     * little from something guessable, plus something you repeat every run?
-     * Seems weak to me.  Why do you want to keep the seed around?
-     * There are some situations where this might be needed,
-     * but if you're just looking for as random numbers as possible,
-     * I don't think this is not a good way to achieve it.
-     * code moved from J2EEServer.run()
+     * replacing all of this with SharedSecureRandom So on restart, all your seed material comes from a new time that varies little
+     * from something guessable, plus something you repeat every run? Seems weak to me. Why do you want to keep the seed around?
+     * There are some situations where this might be needed, but if you're just looking for as random numbers as possible, I don't
+     * think this is not a good way to achieve it. code moved from J2EEServer.run()
      */
-//    public void initSecureSeed() {
-//
-//        File secureSeedFile = null;
-//        if (Util.isEmbeddedServer()) {
-//            try {
-//                secureSeedFile = Util.writeConfigFileToTempDir("secure.seed");
-//
-//            } catch (IOException ex) {
-//                String errmsg =
-//                        "IOException while constructing embedded config file";
-//                _logger.log(Level.WARNING, errmsg);
-//            }
-//        } else {
-//            secureSeedFile = new File(env.getConfigDirPath(), "secure.seed");
-//        }
-//
-//        // read the secure random from the file
-//        long seed = readSecureSeed(secureSeedFile);
-//        secureRandom.setSeed(seed);
-//        // generate a new one for the next startup
-//        seed = secureRandom.nextLong();
-//        writeSecureSeed(secureSeedFile, seed);
-//        secureSeedFile = null;
-//    }
+    //    public void initSecureSeed() {
+    //
+    //        File secureSeedFile = null;
+    //        if (Util.isEmbeddedServer()) {
+    //            try {
+    //                secureSeedFile = Util.writeConfigFileToTempDir("secure.seed");
+    //
+    //            } catch (IOException ex) {
+    //                String errmsg =
+    //                        "IOException while constructing embedded config file";
+    //                _logger.log(Level.WARNING, errmsg);
+    //            }
+    //        } else {
+    //            secureSeedFile = new File(env.getConfigDirPath(), "secure.seed");
+    //        }
+    //
+    //        // read the secure random from the file
+    //        long seed = readSecureSeed(secureSeedFile);
+    //        secureRandom.setSeed(seed);
+    //        // generate a new one for the next startup
+    //        seed = secureRandom.nextLong();
+    //        writeSecureSeed(secureSeedFile, seed);
+    //        secureSeedFile = null;
+    //    }
 
-    /** read the secure random number from the file.
-     *  If the seed is not present, the default expensive SecureRandom seed
-     *  generation algorithm is invoked to return a new seed number
-     *  @param fname the file to be read - here secure.seed file.
+    /**
+     * read the secure random number from the file. If the seed is not present, the default expensive SecureRandom seed generation
+     * algorithm is invoked to return a new seed number
+     *
+     * @param fname the file to be read - here secure.seed file.
      */
-//    private long readSecureSeed(File fname) {
-//        byte[] seed;
-//        try {
-//            BufferedReader fis = new BufferedReader(new FileReader(fname));
-//            try {
-//                String line = fis.readLine();
-//                fis.close();
-//                // returning a long value.
-//                Long lseed = new Long(line);
-//                return lseed.longValue();
-//            } catch (IOException e) {
-//                if (fis != null) {
-//                    fis.close();
-//                }
-//            }
-//        } catch (Throwable e) {  // IASRI 4666401 if all fails just create new
-//        }
-//        // BEGIN IASRI 4703002
-//        // In order to work around JVM bug 4709460 avoid internal seeding.
-//        // (Call setSeed again (see static block) to attempt to add some
-//        // minimal randomness; setSeed calls are cumulative)
-//
-//        secureRandom.setSeed(System.currentTimeMillis());
-//        long newSeed = secureRandom.nextLong();
-//        return newSeed;
-//    }
+    //    private long readSecureSeed(File fname) {
+    //        byte[] seed;
+    //        try {
+    //            BufferedReader fis = new BufferedReader(new FileReader(fname));
+    //            try {
+    //                String line = fis.readLine();
+    //                fis.close();
+    //                // returning a long value.
+    //                Long lseed = new Long(line);
+    //                return lseed.longValue();
+    //            } catch (IOException e) {
+    //                if (fis != null) {
+    //                    fis.close();
+    //                }
+    //            }
+    //        } catch (Throwable e) {  // IASRI 4666401 if all fails just create new
+    //        }
+    //        // BEGIN IASRI 4703002
+    //        // In order to work around JVM bug 4709460 avoid internal seeding.
+    //        // (Call setSeed again (see static block) to attempt to add some
+    //        // minimal randomness; setSeed calls are cumulative)
+    //
+    //        secureRandom.setSeed(System.currentTimeMillis());
+    //        long newSeed = secureRandom.nextLong();
+    //        return newSeed;
+    //    }
 
-    /** write the new secure seed to the secure.seed file to speed up
-     * startup the next time the server is started.
+    /**
+     * write the new secure seed to the secure.seed file to speed up startup the next time the server is started.
+     *
      * @param fname secure.seed file
      * @param seed seed the value of the 8 byte seed.
      */
-//    private void writeSecureSeed(File fname, long seed) {
-//        try {
-//            FileOutputStream fos = new FileOutputStream(fname);
-//            String sseed = Long.toString(seed);
-//            fos.write(sseed.getBytes());
-//            fos.close();
-//        } catch (IOException e) {
-//            String errmsg =
-//                    _localStrings.getLocalString("j2ee.startupslow",
-//                    "Cannot write the seed file for fast startup. The next startup will be slow.");
-//
-//            _logger.log(Level.WARNING, errmsg);
-//        }
-//
-//    }
+    //    private void writeSecureSeed(File fname, long seed) {
+    //        try {
+    //            FileOutputStream fos = new FileOutputStream(fname);
+    //            String sseed = Long.toString(seed);
+    //            fos.write(sseed.getBytes());
+    //            fos.close();
+    //        } catch (IOException e) {
+    //            String errmsg =
+    //                    _localStrings.getLocalString("j2ee.startupslow",
+    //                    "Cannot write the seed file for fast startup. The next startup will be slow.");
+    //
+    //            _logger.log(Level.WARNING, errmsg);
+    //        }
+    //
+    //    }
 
     public ServiceLocator getHabitat() {
         return habitat;
@@ -177,9 +174,11 @@ public class SecurityServicesUtil {
     public boolean isACC() {
         return processEnv.getProcessType().equals(ProcessType.ACC);
     }
+
     public boolean isServer() {
         return processEnv.getProcessType().isServer();
     }
+
     public boolean isNotServerOrACC() {
         return processEnv.getProcessType().equals(ProcessType.Other);
     }

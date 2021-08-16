@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,30 +16,29 @@
 
 package com.sun.enterprise.security.auth.realm.file;
 
-import java.util.*;
+import java.util.Enumeration;
+import java.util.Hashtable;
+
+import org.glassfish.security.common.FileRealmHelper;
 
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.User;
-import org.glassfish.security.common.FileRealmHelper;
-
 
 /**
  * Represents a FileRealm user.
  *
- *
  */
-public class FileRealmUser implements User
-{
+public class FileRealmUser implements User {
     FileRealmHelper.User user;
-    Hashtable attributes = new Hashtable();
+    Hashtable<String, Object> attributes = new Hashtable<>();
     String realm;
+
     /**
      * Constructor.
      *
      */
-    public FileRealmUser(FileRealmHelper.User user, String realm)
-    {
+    public FileRealmUser(FileRealmHelper.User user, String realm) {
         this.user = user;
         this.realm = realm;
     }
@@ -52,34 +51,33 @@ public class FileRealmUser implements User
      * Returns the realm with which this user is associated
      *
      * @return Realm name.
-     * @exception NoSuchRealmException if the realm associated this user
-     *            no longer exist
+     * @exception NoSuchRealmException if the realm associated this user no longer exist
      *
      */
     @Override
-    public Realm getRealm() throws NoSuchRealmException
-    {
+    public Realm getRealm() throws NoSuchRealmException {
         return Realm.getInstance(realm);
     }
 
     /**
      * Return the requested attribute for the user.
-     * <P>Not really needed.
+     * <P>
+     * Not really needed.
      *
      * @param key string identifies the attribute.
      */
     @Override
-    public Object getAttribute (String key)
-    {
+    public Object getAttribute(String key) {
         return attributes.get(key);
     }
 
     /**
      * Return the names of the supported attributes for this user.
-     * <P>Not really needed.
+     * <P>
+     * Not really needed.
      */
     @Override
-    public Enumeration getAttributeNames () {
+    public Enumeration<String> getAttributeNames() {
         return attributes.keys();
     }
 

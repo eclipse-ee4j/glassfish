@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,35 +23,28 @@ import java.security.Permissions;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 
-
 public class PermsHolder {
-
 
     /**
      * The PermissionCollection for each CodeSource
      */
-    private ConcurrentHashMap<String, PermissionCollection> loaderPC =
-        new ConcurrentHashMap<String, PermissionCollection>();
-
+    private ConcurrentHashMap<String, PermissionCollection> loaderPC = new ConcurrentHashMap<>();
 
     /**
-     * EE permissions for  a module
+     * EE permissions for a module
      */
-    private PermissionCollection eePermissionCollection = null;
+    private PermissionCollection eePermissionCollection;
 
     /**
-     * declared permissions in  a module
+     * declared permissions in a module
      */
-    private PermissionCollection declaredPermissionCollection = null;
+    private PermissionCollection declaredPermissionCollection;
 
     public PermsHolder() {
 
     }
 
-    public PermsHolder(PermissionCollection eePC,
-            PermissionCollection declPC,
-            PermissionCollection restrictPC) {
-
+    public PermsHolder(PermissionCollection eePC, PermissionCollection declPC, PermissionCollection restrictPC) {
         setEEPermissions(eePC);
         setDeclaredPermissions(declPC);
         setRestrictPermissions(restrictPC);
@@ -61,65 +54,59 @@ public class PermsHolder {
         eePermissionCollection = eePc;
     }
 
-
     public void setDeclaredPermissions(PermissionCollection declaredPc) {
         declaredPermissionCollection = declaredPc;
     }
 
     public void setRestrictPermissions(PermissionCollection restrictPC) {
     }
+
     public PermissionCollection getCachedPerms(CodeSource codesource) {
-
-        if (codesource == null)
+        if (codesource == null) {
             return null;
+        }
 
-        String codeUrl = codesource.getLocation().toString();
-
-        return loaderPC.get(codeUrl);
+        return loaderPC.get(codesource.getLocation().toString());
     }
 
-    public PermissionCollection getPermissions(CodeSource codesource,
-            PermissionCollection parentPC ) {
-
+    public PermissionCollection getPermissions(CodeSource codesource, PermissionCollection parentPC) {
         String codeUrl = codesource.getLocation().toString();
         PermissionCollection cachedPermissons = loaderPC.get(codeUrl);
 
-        if (cachedPermissons != null)
+        if (cachedPermissons != null) {
             return cachedPermissons;
-        else
-            cachedPermissons = new Permissions();
+        }
 
-        PermissionCollection pc = parentPC;
+        cachedPermissons = new Permissions();
 
-        if (pc != null) {
-            Enumeration<Permission> perms =  pc.elements();
-            while (perms.hasMoreElements()) {
-                Permission p = perms.nextElement();
-                cachedPermissons.add(p);
+
+        PermissionCollection permissionCollection = parentPC;
+
+        if (permissionCollection != null) {
+            Enumeration<Permission> permissions = permissionCollection.elements();
+            while (permissions.hasMoreElements()) {
+                cachedPermissons.add(permissions.nextElement());
             }
         }
 
-
         if (declaredPermissionCollection != null) {
-            Enumeration<Permission> dperms =  this.declaredPermissionCollection.elements();
-            while (dperms.hasMoreElements()) {
-                Permission p = dperms.nextElement();
-                cachedPermissons.add(p);
+            Enumeration<Permission> declaredPermissions = declaredPermissionCollection.elements();
+            while (declaredPermissions.hasMoreElements()) {
+                cachedPermissons.add(declaredPermissions.nextElement());
             }
         }
 
         if (eePermissionCollection != null) {
-            Enumeration<Permission> eeperms =  eePermissionCollection.elements();
-            while (eeperms.hasMoreElements()) {
-                Permission p = eeperms.nextElement();
-                cachedPermissons.add(p);
+            Enumeration<Permission> eePermissions = eePermissionCollection.elements();
+            while (eePermissions.hasMoreElements()) {
+                cachedPermissons.add(eePermissions.nextElement());
             }
 
         }
 
-        PermissionCollection tmpPc = loaderPC.putIfAbsent(codeUrl, cachedPermissons);
-        if (tmpPc != null) {
-            cachedPermissons = tmpPc;
+        PermissionCollection tmpPermissionCollection = loaderPC.putIfAbsent(codeUrl, cachedPermissons);
+        if (tmpPermissionCollection != null) {
+            cachedPermissons = tmpPermissionCollection;
         }
 
         return cachedPermissons;

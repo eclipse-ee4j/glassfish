@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,15 +41,13 @@ import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.integration.AppServSecurityContext;
 
 /**
-* This  class that extends AbstractSecurityContext that gets
- * stored in Thread Local Storage. If the current thread creates
- * child threads, the SecurityContext stored in the current
- * thread is automatically propagated to the child threads.
+ * This class that extends AbstractSecurityContext that gets stored in Thread Local Storage. If the current thread creates child
+ * threads, the SecurityContext stored in the current thread is automatically propagated to the child threads.
  *
- * This class is used on the server side to represent the
- * security context.
+ * This class is used on the server side to represent the security context.
  *
  * Thread Local Storage is a concept introduced in JDK1.2.
+ *
  * @see java.lang.ThreadLocal
  * @see java.lang.InheritableThreadLocal
  *
@@ -58,24 +56,20 @@ import com.sun.enterprise.security.integration.AppServSecurityContext;
  */
 @Service
 @PerLookup
-public class SecurityContext extends AbstractSecurityContext  {
+public class SecurityContext extends AbstractSecurityContext {
 
-    private static Logger _logger=null;
+    private static Logger _logger = null;
     static {
-        _logger=SecurityLoggerInfo.getLogger();
+        _logger = SecurityLoggerInfo.getLogger();
     }
 
-    private static InheritableThreadLocal<SecurityContext> currentSecCtx =
-        new InheritableThreadLocal<SecurityContext>();
-    private static SecurityContext defaultSecurityContext =
-        generateDefaultSecurityContext();
+    private static InheritableThreadLocal<SecurityContext> currentSecCtx = new InheritableThreadLocal<>();
+    private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
 
-    private static javax.security.auth.AuthPermission doAsPrivilegedPerm =
-         new javax.security.auth.AuthPermission("doAsPrivileged");
+    private static javax.security.auth.AuthPermission doAsPrivilegedPerm = new javax.security.auth.AuthPermission("doAsPrivileged");
 
     // Did the client log in as or did the server generate the context
     private boolean SERVER_GENERATED_SECURITY_CONTEXT = false;
-
 
     /* This creates a new SecurityContext object.
      * Note: that the docs for Subject state that the internal sets
@@ -98,20 +92,18 @@ public class SecurityContext extends AbstractSecurityContext  {
         }
         this.initiator = new PrincipalImpl(userName);
         final Subject sub = s;
-        this.subject = (Subject)
-            AppservAccessController.doPrivileged(new PrivilegedAction(){
-                @Override
-                public java.lang.Object run() {
-                    sub.getPrincipals().add(initiator);
-                    return sub;
-                }
-            });
+        this.subject = (Subject) AppservAccessController.doPrivileged(new PrivilegedAction() {
+            @Override
+            public java.lang.Object run() {
+                sub.getPrincipals().add(initiator);
+                return sub;
+            }
+        });
     }
 
     /**
-     * Create a SecurityContext with given subject having
-     * DistinguishedPrincipalCredential.
-     * This is used for JMAC environment.
+     * Create a SecurityContext with given subject having DistinguishedPrincipalCredential. This is used for JMAC environment.
+     *
      * @param subject
      */
     public SecurityContext(Subject subject) {
@@ -124,35 +116,33 @@ public class SecurityContext extends AbstractSecurityContext  {
 
         final Subject fsub = subject;
         this.subject = subject;
-        this.initiator = (Principal)
-            AppservAccessController.doPrivileged(new PrivilegedAction(){
-                @Override
-                public java.lang.Object run() {
-                    Principal prin = null;
-                    for (Object obj : fsub.getPublicCredentials()) {
-                        if (obj instanceof DistinguishedPrincipalCredential) {
-                            DistinguishedPrincipalCredential dpc =
-                                    (DistinguishedPrincipalCredential) obj;
-                            prin = dpc.getPrincipal();
-                            break;
-                        }
+        this.initiator = (Principal) AppservAccessController.doPrivileged(new PrivilegedAction() {
+            @Override
+            public java.lang.Object run() {
+                Principal prin = null;
+                for (Object obj : fsub.getPublicCredentials()) {
+                    if (obj instanceof DistinguishedPrincipalCredential) {
+                        DistinguishedPrincipalCredential dpc = (DistinguishedPrincipalCredential) obj;
+                        prin = dpc.getPrincipal();
+                        break;
                     }
-                    // for old auth module
-                    if (prin == null) {
-                        Iterator<Principal> prinIter = fsub.getPrincipals().iterator();
-                        if (prinIter.hasNext()) {
-                            prin = prinIter.next();
-                        }
-                    }
-                    return prin;
                 }
-            });
+                // for old auth module
+                if (prin == null) {
+                    Iterator<Principal> prinIter = fsub.getPrincipals().iterator();
+                    if (prinIter.hasNext()) {
+                        prin = prinIter.next();
+                    }
+                }
+                return prin;
+            }
+        });
 
-            postConstruct();
+        postConstruct();
     }
 
     private void initDefaultCallerPrincipal() {
-         if (this.initiator == null) {
+        if (this.initiator == null) {
             this.initiator = getDefaultCallerPrincipal();
         }
     }
@@ -165,19 +155,18 @@ public class SecurityContext extends AbstractSecurityContext  {
                 _logger.warning(SecurityLoggerInfo.nullSubjectWarning);
             }
         }
-    PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
-    if (factory!=null) {
+        PrincipalGroupFactory factory = Globals.getDefaultHabitat().getService(PrincipalGroupFactory.class);
+        if (factory != null) {
             this.initiator = factory.getPrincipalInstance(userName, realm);
-    }
+        }
         final Subject sub = s;
-        this.subject = (Subject)
-            AppservAccessController.doPrivileged(new PrivilegedAction(){
-                @Override
-                public java.lang.Object run() {
-                    sub.getPrincipals().add(initiator);
-                    return sub;
-                }
-            });
+        this.subject = (Subject) AppservAccessController.doPrivileged(new PrivilegedAction() {
+            @Override
+            public java.lang.Object run() {
+                sub.getPrincipals().add(initiator);
+                return sub;
+            }
+        });
     }
 
     /* private constructor for constructing default security context
@@ -186,12 +175,12 @@ public class SecurityContext extends AbstractSecurityContext  {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "Default CTOR of SecurityContext called");
         }
-         this.subject = new Subject();
+        this.subject = new Subject();
         // delay assignment of caller principal until it is requested
-         this.initiator = null;
-         this.setServerGeneratedCredentials();
+        this.initiator = null;
+        this.setServerGeneratedCredentials();
         // read only is only done for guest logins.
-        AppservAccessController.doPrivileged(new PrivilegedAction(){
+        AppservAccessController.doPrivileged(new PrivilegedAction() {
             @Override
             public Object run() {
                 subject.setReadOnly();
@@ -201,46 +190,44 @@ public class SecurityContext extends AbstractSecurityContext  {
     }
 
     /**
-     * Initialize the SecurityContext and handle the unauthenticated
-     * principal case
+     * Initialize the SecurityContext and handle the unauthenticated principal case
      */
-    public static SecurityContext init(){
+    public static SecurityContext init() {
         SecurityContext sc = currentSecCtx.get();
-        if(sc == null) { // there is no current security context...
+        if (sc == null) { // there is no current security context...
             sc = defaultSecurityContext;
         }
         return sc;
     }
 
-    public static SecurityContext getDefaultSecurityContext(){
+    public static SecurityContext getDefaultSecurityContext() {
         //unauthen. Security Context.
         return defaultSecurityContext;
     }
 
-    public static Subject getDefaultSubject(){
+    public static Subject getDefaultSubject() {
         //Subject of unauthen. Security Context.
         return defaultSecurityContext.subject;
     }
 
     // get caller principal of unauthenticated Security Context
-    public static Principal getDefaultCallerPrincipal(){
-        synchronized(SecurityContext.class) {
+    public static Principal getDefaultCallerPrincipal() {
+        synchronized (SecurityContext.class) {
             if (defaultSecurityContext.initiator == null) {
                 String guestUser = null;
                 try {
-                    guestUser = (String)
-                        AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
-                                @Override
-                                public java.lang.Object run() throws Exception {
-                                    SecurityService securityService = SecurityServicesUtil.getInstance().getHabitat().getService(SecurityService.class,
-                                            ServerEnvironment.DEFAULT_INSTANCE_NAME);
-                                    if(securityService==null)   return null;
-                                    return securityService.getDefaultPrincipal();
-                                }
-                            });
+                    guestUser = (String) AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+                        @Override
+                        public java.lang.Object run() throws Exception {
+                            SecurityService securityService = SecurityServicesUtil.getInstance().getHabitat()
+                                .getService(SecurityService.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+                            if (securityService == null)
+                                return null;
+                            return securityService.getDefaultPrincipal();
+                        }
+                    });
                 } catch (Exception e) {
-                    _logger.log(Level.SEVERE,
-                                SecurityLoggerInfo.defaultUserLoginError, e);
+                    _logger.log(Level.SEVERE, SecurityLoggerInfo.defaultUserLoginError, e);
                 } finally {
                     if (guestUser == null) {
                         guestUser = "ANONYMOUS";
@@ -254,17 +241,15 @@ public class SecurityContext extends AbstractSecurityContext  {
 
     private static SecurityContext generateDefaultSecurityContext() {
         synchronized (SecurityContext.class) {
-            try{
-                return (SecurityContext)
-                    AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
-                            @Override
-                            public java.lang.Object run() throws Exception{
-                                return new SecurityContext();
-                            }
-                        });
-            } catch(Exception e){
-                _logger.log(Level.SEVERE,
-                            SecurityLoggerInfo.defaultSecurityContextError,e);
+            try {
+                return (SecurityContext) AppservAccessController.doPrivileged(new PrivilegedExceptionAction() {
+                    @Override
+                    public java.lang.Object run() throws Exception {
+                        return new SecurityContext();
+                    }
+                });
+            } catch (Exception e) {
+                _logger.log(Level.SEVERE, SecurityLoggerInfo.defaultSecurityContextError, e);
             }
         }
         return null;
@@ -273,90 +258,83 @@ public class SecurityContext extends AbstractSecurityContext  {
     /**
      * No need to unmarshall the unauthenticated principal....
      */
-    public static void reset(SecurityContext sc){
+    public static void reset(SecurityContext sc) {
         setCurrent(sc);
     }
 
-
     /**
-     * This method gets the SecurityContext stored in the
-     * Thread Local Store (TLS) of the current thread.
-     * @return The current Security Context stored in TLS. It returns
-     * null if SecurityContext could not be found in the current thread.
+     * This method gets the SecurityContext stored in the Thread Local Store (TLS) of the current thread.
+     *
+     * @return The current Security Context stored in TLS. It returns null if SecurityContext could not be found in the current
+     * thread.
      */
     public static SecurityContext getCurrent() {
         SecurityContext sc = currentSecCtx.get();
-         if (sc == null) {
+        if (sc == null) {
             sc = defaultSecurityContext;
         }
-         return sc;
+        return sc;
     }
-
 
     /**
      * This method sets the SecurityContext stored in the TLS.
-     * @param sc
-     * The Security Context that should be stored in TLS.
-     * This public static method needs to be protected
-     * such that it can only be called by container code. Otherwise
-     * it can be called by application code to set its subject (which the
-     * EJB security manager will use to create a domain combiner,
-     * and then everything the ejb does will be run as the
-     * corresponding subject.
+     *
+     * @param sc The Security Context that should be stored in TLS. This public static method needs to be protected such that it can
+     * only be called by container code. Otherwise it can be called by application code to set its subject (which the EJB security
+     * manager will use to create a domain combiner, and then everything the ejb does will be run as the corresponding subject.
      */
     public static void setCurrent(SecurityContext sc) {
 
-         if (sc != null && sc != defaultSecurityContext) {
+        if (sc != null && sc != defaultSecurityContext) {
 
-             SecurityContext current = currentSecCtx.get();
+            SecurityContext current = currentSecCtx.get();
 
-             if (sc != current) {
+            if (sc != current) {
 
-                 boolean permitted = false;
+                boolean permitted = false;
 
-                 try {
+                try {
                     java.lang.SecurityManager sm = System.getSecurityManager();
                     if (sm != null) {
-                        if(_logger.isLoggable(Level.FINE)){
+                        if (_logger.isLoggable(Level.FINE)) {
                             _logger.fine("permission check done to set SecurityContext");
                         }
                         sm.checkPermission(doAsPrivilegedPerm);
                     }
-                     permitted = true;
-                 } catch (java.lang.SecurityException se) {
-                     _logger.log(Level.SEVERE, SecurityLoggerInfo.securityContextPermissionError, se);
-                 } catch (Throwable t) {
-                     _logger.log(Level.SEVERE, SecurityLoggerInfo.securityContextUnexpectedError, t);
-                 }
+                    permitted = true;
+                } catch (java.lang.SecurityException se) {
+                    _logger.log(Level.SEVERE, SecurityLoggerInfo.securityContextPermissionError, se);
+                } catch (Throwable t) {
+                    _logger.log(Level.SEVERE, SecurityLoggerInfo.securityContextUnexpectedError, t);
+                }
 
-                 if (permitted) {
+                if (permitted) {
                     currentSecCtx.set(sc);
                 } else {
-                     _logger.severe(SecurityLoggerInfo.securityContextNotChangedError);
-                 }
-             }
-         } else {
+                    _logger.severe(SecurityLoggerInfo.securityContextNotChangedError);
+                }
+            }
+        } else {
             currentSecCtx.set(sc);
         }
     }
 
     public static void setUnauthenticatedContext() {
-         currentSecCtx.set(defaultSecurityContext);
+        currentSecCtx.set(defaultSecurityContext);
     }
 
-    public boolean didServerGenerateCredentials (){
+    public boolean didServerGenerateCredentials() {
         return SERVER_GENERATED_SECURITY_CONTEXT;
     }
 
-    private void setServerGeneratedCredentials(){
+    private void setServerGeneratedCredentials() {
         SERVER_GENERATED_SECURITY_CONTEXT = true;
     }
 
-
     /**
-     * This method returns the caller principal.
-     * This information may be redundant since the same information
-     * can be inferred by inspecting the Credentials of the caller.
+     * This method returns the caller principal. This information may be redundant since the same information can be inferred by
+     * inspecting the Credentials of the caller.
+     *
      * @return The caller Principal.
      */
     @Override
@@ -364,17 +342,14 @@ public class SecurityContext extends AbstractSecurityContext  {
         return this == defaultSecurityContext ? getDefaultCallerPrincipal() : initiator;
     }
 
-
     @Override
     public Subject getSubject() {
         return subject;
     }
 
-
     @Override
     public String toString() {
-        return "SecurityContext[ " + "Initiator: " +
-            initiator + "Subject " + subject + " ]";
+        return "SecurityContext[ " + "Initiator: " + initiator + "Subject " + subject + " ]";
     }
 
     public Set<Principal> getPrincipalSet() {
@@ -411,7 +386,7 @@ public class SecurityContext extends AbstractSecurityContext  {
             return;
         }
         if (context instanceof SecurityContext) {
-            setCurrent((SecurityContext)context);
+            setCurrent((SecurityContext) context);
             return;
         }
         throw new IllegalArgumentException("Expected SecurityContext, found " + context);

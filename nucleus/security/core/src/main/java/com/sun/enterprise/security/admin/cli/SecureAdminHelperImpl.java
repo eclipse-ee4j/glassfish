@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,7 +38,6 @@ import org.glassfish.api.admin.ServerEnvironment;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 
@@ -54,20 +53,19 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
     private static final char[] emptyPassword = new char[0];
     private final static String DOMAIN_ADMIN_GROUP_NAME = "asadmin";
 
-
     @Inject
     private SSLUtils sslUtils;
 
     @Inject
     private DomainScopedPasswordAliasStore domainPasswordAliasStore;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private volatile AdminService as;
 
     /**
-     * Returns the correct DN to use for a given secure admin principal, mapping
-     * the alias (if it's an alias specified) to the DN for the corresponding
-     * cert in the key store.
+     * Returns the correct DN to use for a given secure admin principal, mapping the alias (if it's an alias specified) to the DN for
+     * the corresponding cert in the key store.
      *
      * @param value user-provided value (alias name or the actual DN)
      * @param isAlias whether the value is an alias
@@ -87,7 +85,7 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
             if (cert == null) {
                 throw new IllegalArgumentException(Strings.get("noAlias", value));
             }
-            if ( ! (cert instanceof X509Certificate)) {
+            if (!(cert instanceof X509Certificate)) {
                 throw new IllegalArgumentException(Strings.get("certNotX509Certificate", value));
             }
             return (((X509Certificate) cert).getSubjectX500Principal().getName());
@@ -97,10 +95,8 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
     }
 
     /**
-     * Makes sure the username is a valid admin username and that the password
-     * alias is defined.  This method does NOT make sure that the password
-     * associated with the username and the password associated with the
-     * password alias are the same.
+     * Makes sure the username is a valid admin username and that the password alias is defined. This method does NOT make sure that
+     * the password associated with the username and the password associated with the password alias are the same.
      *
      * @param username user-provided username
      * @param passwordAlias name of the password alias
@@ -118,7 +114,7 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
     private void validateUser(final String username) throws BadRealmException, NoSuchRealmException {
         final FileRealm fr = adminRealm();
         try {
-            FileRealmUser fru = (FileRealmUser)fr.getUser(username);
+            FileRealmUser fru = (FileRealmUser) fr.getUser(username);
             if (isInAdminGroup(fru)) {
                 return;
             }
@@ -148,13 +144,13 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
     }
 
     private void validatePasswordAlias(final String passwordAlias)
-            throws CertificateException, NoSuchAlgorithmException,
-            KeyStoreException, NoSuchAlgorithmException, IOException {
+        throws CertificateException, NoSuchAlgorithmException, KeyStoreException, NoSuchAlgorithmException, IOException {
 
-        if ( ! domainPasswordAliasStore.containsKey(passwordAlias)) {
+        if (!domainPasswordAliasStore.containsKey(passwordAlias)) {
             throw new RuntimeException(Strings.get("noAlias", passwordAlias));
         }
     }
+
     private FileRealm adminRealm() throws BadRealmException, NoSuchRealmException {
         final AuthRealm ar = as.getAssociatedAuthRealm();
         if (FileRealm.class.getName().equals(ar.getClassname())) {
@@ -184,7 +180,7 @@ public class SecureAdminHelperImpl implements SecureAdminHelper {
         if (adminRealm == null) {
             return false;
         }
-        for (final Enumeration<String> e = adminRealm.getUserNames(); e.hasMoreElements(); ) {
+        for (final Enumeration<String> e = adminRealm.getUserNames(); e.hasMoreElements();) {
             final String username = e.nextElement();
             /*
                 * Try to authenticate this user with an empty password.  If it

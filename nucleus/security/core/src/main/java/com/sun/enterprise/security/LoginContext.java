@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,20 +24,18 @@ import com.sun.enterprise.security.auth.login.ClientPasswordLoginModule;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.SecurityConstants;
 import java.util.logging.*;
-import com.sun.logging.*;
 
 /**
- * This class is kept for CTS. Ideally we should move away from it.
- * The login can be done via the following call:
+ * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:
+ *
  * <pre>
  * // Initialize the ORB.
  * try {
- *   LoginContext lc = new LoginContext();
- *   lc.login("john", "john123");
+ *     LoginContext lc = new LoginContext();
+ *     lc.login("john", "john123");
  * } catch (LoginException le) {
- *   le.printStackTrace();
+ *     le.printStackTrace();
  * }
- *
  *
  * </PRE>
  *
@@ -48,10 +46,10 @@ import com.sun.logging.*;
 
 public final class LoginContext {
 
-    private static Logger _logger=null;
-    static{
-       _logger = SecurityLoggerInfo.getLogger();
-   }
+    private static Logger _logger = null;
+    static {
+        _logger = SecurityLoggerInfo.getLogger();
+    }
 
     private boolean guiAuth = false;
 
@@ -62,42 +60,37 @@ public final class LoginContext {
     /**
      * Creates the LoginContext with the defauly callback handler
      */
-    public LoginContext () {
+    public LoginContext() {
         handler = new com.sun.enterprise.security.auth.login.LoginCallbackHandler(guiAuth);
     }
 
     /**
      * Login method to login username and password
      */
-    public void login(String user, String pass) throws LoginException{
+    public void login(String user, String pass) throws LoginException {
         final String username = user;
         final String password = pass;
         AppservAccessController.doPrivileged(new PrivilegedAction() {
+            @Override
             public java.lang.Object run() {
 
-                System.setProperty(ClientPasswordLoginModule.LOGIN_NAME,
-                                   username);
-                System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD,
-                                   password);
+                System.setProperty(ClientPasswordLoginModule.LOGIN_NAME, username);
+                System.setProperty(ClientPasswordLoginModule.LOGIN_PASSWORD, password);
 
-                    return null;
-                }
-            });
+                return null;
+            }
+        });
         // Since this is  a private api and the user is not supposed to use
         // this. We use the default the LoginCallbackHandler.
-        LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD,handler);
+        LoginContextDriver.doClientLogin(SecurityConstants.USERNAME_PASSWORD, handler);
     }
 
-    /** This method has been provided to satisfy the CTS Porting Package
-     * requirement for logging in a certificate
+    /**
+     * This method has been provided to satisfy the CTS Porting Package requirement for logging in a certificate
      */
-    public void login(String username, byte[] authData)
-        throws LoginException{
+    public void login(String username, byte[] authData) throws LoginException {
 
-            // do nothing
+        // do nothing
     }
 
 }
-
-
-

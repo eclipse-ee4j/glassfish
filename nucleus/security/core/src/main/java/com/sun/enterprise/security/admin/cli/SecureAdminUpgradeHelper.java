@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -43,9 +43,8 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 
 /**
- * Common logic for formal upgrade (i.e., start-domain --upgrade) and
- * silent upgrade (starting a newer version of GlassFish using an older version's
- * domain.xml).
+ * Common logic for formal upgrade (i.e., start-domain --upgrade) and silent upgrade (starting a newer version of GlassFish using
+ * an older version's domain.xml).
  *
  * @author Tim Quinn
  */
@@ -73,7 +72,6 @@ public class SecureAdminUpgradeHelper {
     private SSLUtils sslUtils = null;
 
     private Properties startupArgs = null;
-
 
     final protected Transaction transaction() {
         if (t == null) {
@@ -147,8 +145,7 @@ public class SecureAdminUpgradeHelper {
              */
             writableSecureAdmin().setSpecialAdminIndicator(specialAdminIndicator());
         }
-        if (secureAdmin().getSecureAdminPrincipal().isEmpty() &&
-            secureAdmin().getSecureAdminInternalUser().isEmpty()) {
+        if (secureAdmin().getSecureAdminPrincipal().isEmpty() && secureAdmin().getSecureAdminInternalUser().isEmpty()) {
             /*
              * Add principal(s) for the aliases.
              */
@@ -176,7 +173,7 @@ public class SecureAdminUpgradeHelper {
 
     final protected void ensureNonDASConfigsReady() throws TransactionFailure {
         for (Config c : domain.getConfigs().getConfig()) {
-            if ( ! c.getName().equals(SecureAdminCommand.DAS_CONFIG_NAME)) {
+            if (!c.getName().equals(SecureAdminCommand.DAS_CONFIG_NAME)) {
                 if (!ensureConfigReady(c)) {
                     break;
                 }
@@ -208,11 +205,10 @@ public class SecureAdminUpgradeHelper {
         }
         final EnableSecureAdminCommand enableCmd = new EnableSecureAdminCommand();
         final Config c_w = transaction().enroll(c);
-        ConfigLevelContext configLevelContext =
-                new ConfigLevelContext(topLevelContext(), c_w);
+        ConfigLevelContext configLevelContext = new ConfigLevelContext(topLevelContext(), c_w);
         for (Iterator<Work<ConfigLevelContext>> it = enableCmd.perConfigSteps(); it.hasNext();) {
             final Work<ConfigLevelContext> step = it.next();
-            if ( ! step.run(configLevelContext)) {
+            if (!step.run(configLevelContext)) {
                 rollback();
                 return false;
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,8 +22,8 @@ import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 
 /**
- * This class provides an optimization for some methods in
- * java.security.AccessController.
+ * This class provides an optimization for some methods in java.security.AccessController.
+ *
  * @author Shing Wai Chan
  */
 public final class AppservAccessController {
@@ -40,13 +40,12 @@ public final class AppservAccessController {
         }
     }
 
-    public static Object doPrivileged(PrivilegedExceptionAction action)
-             throws PrivilegedActionException {
+    public static Object doPrivileged(PrivilegedExceptionAction action) throws PrivilegedActionException {
 
         if (isSecMgrOff) {
             try {
                 return action.run();
-            } catch(Exception e) {
+            } catch (Exception e) {
                 throw new PrivilegedActionException(e);
             }
         } else {

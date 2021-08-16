@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,12 +33,10 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
-import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.config.serverbeans.AuditModule;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.SecurityConfigListener;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -55,44 +53,39 @@ import org.glassfish.config.support.TargetType;
 /**
  * Create Audit Module Command
  *
- * Usage: create-audit-module --classname classnme [--terse=false]
- *        [--echo=false] [--interactive=true] [--host localhost]
- *        [--port 4848|4849] [--secure | -s] [--user admin_user]
- *        [--passwordfile file_name] [--property (name=value)
- *        [:name=value]*] [--target target(Default server)] audit_module_name
+ * Usage: create-audit-module --classname classnme [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port
+ * 4848|4849] [--secure | -s] [--user admin_user] [--passwordfile file_name] [--property (name=value) [:name=value]*] [--target
+ * target(Default server)] audit_module_name
  *
- * domain.xml element example
- * <audit-module classname="com.foo.security.Audit" name="AM">
- *     <property name="auditOn" value="false"/>
- * </audit-module>
+ * domain.xml element example <audit-module classname="com.foo.security.Audit" name="AM">
+ * <property name="auditOn" value="false"/> </audit-module>
  *
  * @author Nandini Ektare
  */
 
-@Service(name="create-audit-module")
+@Service(name = "create-audit-module")
 @PerLookup
 @I18n("create.audit.module")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(CreateAuditModule.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateAuditModule.class);
 
-    @Param(name="classname")
+    @Param(name = "classname")
     String className;
 
-    @Param(name="auditmodulename", primary=true)
+    @Param(name = "auditmodulename", primary = true)
     String auditModuleName;
 
-    @Param(optional=true, name="property", separator=':')
+    @Param(optional = true, name = "property", separator = ':')
     java.util.Properties properties;
 
-    @Param(name = "target", optional = true, defaultValue =
-        SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
@@ -101,7 +94,7 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
     @Inject
     SecurityConfigListener securityConfigListener;
 
-    @AccessRequired.NewChild(type=AuditModule.class)
+    @AccessRequired.NewChild(type = AuditModule.class)
     private SecurityService securityService = null;
 
     @Override
@@ -110,26 +103,23 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         return (securityService != null);
     }
 
-
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
-
 
         // check if there exists an audit module by the specified name
         // if so return failure.
         List<AuditModule> ams = securityService.getAuditModule();
         for (AuditModule am : ams) {
             if (am.getName().equals(auditModuleName)) {
-                report.setMessage(localStrings.getLocalString(
-                    "create.audit.module.duplicatefound",
-                    "AuditModule named {0} exists. " +
-                    "Cannot add duplicate AuditModule.", auditModuleName));
+                report.setMessage(localStrings.getLocalString("create.audit.module.duplicatefound",
+                    "AuditModule named {0} exists. " + "Cannot add duplicate AuditModule.", auditModuleName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
@@ -139,18 +129,18 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
-                public Object run(SecurityService param)
-                throws PropertyVetoException, TransactionFailure {
-                AuditModule newAuditModule = param.createChild(AuditModule.class);
+                @Override
+                public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
+                    AuditModule newAuditModule = param.createChild(AuditModule.class);
                     populateAuditModuleElement(newAuditModule);
                     param.getAuditModule().add(newAuditModule);
                     return newAuditModule;
                 }
             }, securityService);
 
-        } catch(TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString("create.audit.module.fail",
-                    "Creation of AuditModule {0} failed", auditModuleName));
+        } catch (TransactionFailure e) {
+            report
+                .setMessage(localStrings.getLocalString("create.audit.module.fail", "Creation of AuditModule {0} failed", auditModuleName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
             return;
@@ -168,12 +158,11 @@ public class CreateAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         return config.getSecurityService();
     }
 
-    private void populateAuditModuleElement(AuditModule newAuditModule)
-    throws PropertyVetoException, TransactionFailure {
+    private void populateAuditModuleElement(AuditModule newAuditModule) throws PropertyVetoException, TransactionFailure {
         newAuditModule.setName(auditModuleName);
         newAuditModule.setClassname(className);
         if (properties != null) {
-            for (Object propname: properties.keySet()) {
+            for (Object propname : properties.keySet()) {
                 Property newprop = newAuditModule.createChild(Property.class);
                 newprop.setName((String) propname);
                 newprop.setValue(properties.getProperty((String) propname));

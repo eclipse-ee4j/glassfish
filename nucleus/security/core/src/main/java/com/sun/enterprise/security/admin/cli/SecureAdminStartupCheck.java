@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,17 +20,16 @@ import org.glassfish.api.StartupRunLevel;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
+
 /**
  *
- * Starting in GlassFish 3.1.2, the DAS uses SSL to send admin requests to
- * instances regardless of whether the user has enabled secure admin.  For this to
- * work correctly when upgrading from earlier 3.x releases, there are some changes
- * to the configuration that must be in place.  This start-up service makes
- * sure that the config is correct as quickly as possible to avoid degrading
- * start-up performance. (Upgrades from 2.x are handled by the SecureAdminConfigUpgrade
- * upgrade service.)
+ * Starting in GlassFish 3.1.2, the DAS uses SSL to send admin requests to instances regardless of whether the user has enabled
+ * secure admin. For this to work correctly when upgrading from earlier 3.x releases, there are some changes to the configuration
+ * that must be in place. This start-up service makes sure that the config is correct as quickly as possible to avoid degrading
+ * start-up performance. (Upgrades from 2.x are handled by the SecureAdminConfigUpgrade upgrade service.)
  * <p>
  * For 3.1.2 and later the configuration needs to include:
+ *
  * <pre>
  * {@code
  * <secure-admin special-admin-indicator="xxx">
@@ -41,10 +40,9 @@ import org.jvnet.hk2.annotations.Service;
  * }
  * </pre>
  *
- * Further, the sec-admin-listener set-up needs to be added (if not already there)
- * for the non-DAS configurations.  Note that the work to configure the
- * listeners and related protocols are already implemented by SecureAdminCommand,
- * so this class delegates much of its work to that logic.
+ * Further, the sec-admin-listener set-up needs to be added (if not already there) for the non-DAS configurations. Note that the
+ * work to configure the listeners and related protocols are already implemented by SecureAdminCommand, so this class delegates
+ * much of its work to that logic.
  *
  * @author Tim Quinn
  */

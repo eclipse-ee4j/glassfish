@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,9 @@ package com.sun.enterprise.security.admin.cli;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 
 /**
- * Strings -- Get your Strings here.
- * One file with Strings
- * So one class for messing with them!
- * Nothing in here is public protected.  Only for use by this one java package.
+ * Strings -- Get your Strings here. One file with Strings So one class for messing with them! Nothing in here is public
+ * protected. Only for use by this one java package.
+ *
  * @author Byron Nevins
  */
 

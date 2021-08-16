@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,8 +36,7 @@ import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 /**
- * Tracks changes to secure admin configuration, basically so it can report
- * restart-required.
+ * Tracks changes to secure admin configuration, basically so it can report restart-required.
  *
  * @author Tim Quinn
  */
@@ -57,37 +56,32 @@ public class SecureAdminConfigMonitor implements ConfigListener {
 
     private Logger logger = SecurityLoggerInfo.getLogger();
 
-
     @Override
     public UnprocessedChangeEvents changed(final PropertyChangeEvent[] events) {
-        return ConfigSupport.sortAndDispatch(
-            events, new Changed() {
-                @Override
-                public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type,
-                    Class<T> tClass, T t) {
-                    if (t instanceof Domain) {
-                        return processDomain(type, (Domain) t, events);
-                    } else if (t instanceof SecureAdmin) {
-                        return processSecureAdmin(type, (SecureAdmin) t, events);
-                    }
-                    return null;
+        return ConfigSupport.sortAndDispatch(events, new Changed() {
+            @Override
+            public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> tClass, T t) {
+                if (t instanceof Domain) {
+                    return processDomain(type, (Domain) t, events);
+                } else if (t instanceof SecureAdmin) {
+                    return processSecureAdmin(type, (SecureAdmin) t, events);
                 }
-            }, logger);
+                return null;
+            }
+        }, logger);
     }
 
-    private NotProcessed processDomain(final TYPE type, final Domain d,
-            final PropertyChangeEvent[] events) {
+    private NotProcessed processDomain(final TYPE type, final Domain d, final PropertyChangeEvent[] events) {
         for (PropertyChangeEvent event : events) {
-            if (   (event.getOldValue() instanceof SecureAdmin && type == Changed.TYPE.REMOVE)
-                || (event.getNewValue() instanceof SecureAdmin && type == Changed.TYPE.ADD) ) {
+            if ((event.getOldValue() instanceof SecureAdmin && type == Changed.TYPE.REMOVE)
+                || (event.getNewValue() instanceof SecureAdmin && type == Changed.TYPE.ADD)) {
                 return new NotProcessed(restartRequiredMsg);
             }
         }
         return null;
     }
 
-    private NotProcessed processSecureAdmin(final TYPE type, final SecureAdmin sa,
-            final PropertyChangeEvent[] events) {
+    private NotProcessed processSecureAdmin(final TYPE type, final SecureAdmin sa, final PropertyChangeEvent[] events) {
         /*
          * Any change to the secure admin config requires a restart.
          */

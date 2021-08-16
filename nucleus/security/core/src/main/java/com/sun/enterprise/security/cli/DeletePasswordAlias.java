@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -27,49 +27,39 @@ import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 import jakarta.inject.Inject;
 
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 
 /**
  * Delete Password Alias Command
  *
- * Usage: delete-password-alias [--terse=false] [--echo=false]
- *        [--interactive=true] [--host localhost] [--port 4848|4849]
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name] aliasname
+ * Usage: delete-password-alias [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849]
+ * [--secure | -s] [--user admin_user] [--passwordfile file_name] aliasname
  *
- * Result of the command is that:
- * The entry of the form: aliasname=<password-encrypted-with-masterpassword>
- * in <domain-dir>/<domain-name>/config/domain-passwords file is removed
+ * Result of the command is that: The entry of the form: aliasname=<password-encrypted-with-masterpassword> in
+ * <domain-dir>/<domain-name>/config/domain-passwords file is removed
  *
  * domain.xml example entry is:
- * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule"
- *                  provider-id="XWS_ClientProvider" provider-type="client">
- *      <property name="password" value="${ALIAS=myalias}/>
- * </provider-config>
+ * <provider-config class-name="com.sun.xml.wss.provider.ClientSecurityAuthModule" provider-id="XWS_ClientProvider" provider-type
+ * ="client"> <property name="password" value="${ALIAS=myalias}/> </provider-config>
  *
  * @author Nandini Ektare
  */
 
-@Service(name="delete-password-alias")
+@Service(name = "delete-password-alias")
 @PerLookup
 @I18n("delete.password.alias")
 @ExecuteOn(RuntimeType.ALL)
-@TargetType({CommandTarget.DAS,CommandTarget.DOMAIN})
-@RestEndpoints({
-    @RestEndpoint(configBean=Domain.class,
-        opType=RestEndpoint.OpType.POST, // TODO: Should be DELETE
-        path="delete-password-alias",
-        description="delete-password-alias")
-})
+@TargetType({ CommandTarget.DAS, CommandTarget.DOMAIN })
+@RestEndpoints({ @RestEndpoint(configBean = Domain.class, opType = RestEndpoint.OpType.POST, // TODO: Should be DELETE
+    path = "delete-password-alias", description = "delete-password-alias") })
 
-@AccessRequired(resource="domain/passwordAliases/passwordAlias/$aliasName", action="delete")
+@AccessRequired(resource = "domain/passwordAliases/passwordAlias/$aliasName", action = "delete")
 public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(DeletePasswordAlias.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeletePasswordAlias.class);
 
-    @Param(name="aliasname", primary=true)
+    @Param(name = "aliasname", primary = true)
     private String aliasName;
 
     @Inject
@@ -79,11 +69,9 @@ public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.P
     public boolean preAuthorization(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
         try {
-            if ( ! domainPasswordAliasStore.containsKey(aliasName)) {
-                report.setMessage(localStrings.getLocalString(
-                    "delete.password.alias.notfound",
-                    "Password alias for the alias {0} does not exist.",
-                    aliasName));
+            if (!domainPasswordAliasStore.containsKey(aliasName)) {
+                report.setMessage(localStrings.getLocalString("delete.password.alias.notfound",
+                    "Password alias for the alias {0} does not exist.", aliasName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return false;
             }
@@ -94,14 +82,13 @@ public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.P
         return true;
     }
 
-
-
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 
@@ -119,12 +106,9 @@ public class DeletePasswordAlias implements AdminCommand, AdminCommandSecurity.P
             aliasName));*/
     }
 
-    private void reportFailure(final ActionReport report,
-            final Exception ex) {
-        report.setMessage(localStrings.getLocalString(
-                "delete.password.alias.fail",
-                "Deletion of Password Alias {0} failed", aliasName));
-            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
-            report.setFailureCause(ex);
+    private void reportFailure(final ActionReport report, final Exception ex) {
+        report.setMessage(localStrings.getLocalString("delete.password.alias.fail", "Deletion of Password Alias {0} failed", aliasName));
+        report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+        report.setFailureCause(ex);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,25 +16,18 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-
 /**
- * Exception thrown when an operation is requested to remove a group that has
- * a list of users.
+ * Exception thrown when an operation is requested to remove a group that has a list of users.
  *
  * @author Harpreet Singh
  */
-public class GroupNotEmptyException extends Exception
-{
+public class GroupNotEmptyException extends Exception {
     /**
      * Constructs the exception, with descriptive information.
      *
      * @param info describes the user which does not exist
      */
-    public GroupNotEmptyException (String info) { super (info); }
+    public GroupNotEmptyException(String info) {
+        super(info);
+    }
 }
-
-
-
-
-
-

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -41,15 +41,15 @@ import org.jvnet.hk2.annotations.Service;
  */
 
 @Service
-public class EmbeddedSecurityLifeCycle
-        implements EmbeddedLifecycle{
+public class EmbeddedSecurityLifeCycle implements EmbeddedLifecycle {
 
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
     @Inject
     private EmbeddedSecurity embeddedSecurity;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private SecurityService securityService;
 
     @Override
@@ -67,7 +67,7 @@ public class EmbeddedSecurityLifeCycle
         try {
             //Get the keyfile names from the security service
             List<String> keyFileNames = embeddedSecurity.getKeyFileNames(securityService);
-            for(String keyFileName:keyFileNames) {
+            for (String keyFileName : keyFileNames) {
                 //Copy the keyfiles in instanceRoot/config. If file is already present, then exit (handled by getManagedFile)
                 FileUtils.getManagedFile("config" + File.separator + embeddedSecurity.parseFileName(keyFileName), instanceRoot);
             }
@@ -87,8 +87,8 @@ public class EmbeddedSecurityLifeCycle
             }
             System.setProperty(SecuritySupport.keyStoreProp, keystoreFile);
             System.setProperty(SecuritySupport.trustStoreProp, truststoreFile);
-        }catch(IOException ioEx) {
-           _logger.log(Level.WARNING, SecurityLoggerInfo.copyingSecurityConfigFilesIOError, ioEx);
+        } catch (IOException ioEx) {
+            _logger.log(Level.WARNING, SecurityLoggerInfo.copyingSecurityConfigFilesIOError, ioEx);
         }
     }
 

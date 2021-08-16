@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,10 +21,8 @@ import java.security.Principal;
 import javax.security.auth.Subject;
 
 /**
- * This base class defines the methods that Security Context should exhibit.
- * There are two places where a derived class are used. They are on the
- * appclient side and ejb side. The derived classes can use thread local
- * storage to store the security contexts.
+ * This base class defines the methods that Security Context should exhibit. There are two places where a derived class are used.
+ * They are on the appclient side and ejb side. The derived classes can use thread local storage to store the security contexts.
  *
  * @author Harpreet Singh
  */
@@ -34,26 +32,19 @@ public abstract class AbstractSecurityContext implements AppServSecurityContext,
     protected Subject subject = null;
 
     /**
-     * This method should  be implemented by the subclasses to
-     * return the caller principal. This information may be redundant
-     * since the same information can be inferred by inspecting the
-     * Credentials of the caller.
+     * This method should be implemented by the subclasses to return the caller principal. This information may be redundant since
+     * the same information can be inferred by inspecting the Credentials of the caller.
+     *
      * @return The caller Principal.
      */
+    @Override
     abstract public Principal getCallerPrincipal();
 
     /**
-     * This method should be implemented by the subclasses to return
-     * the Credentials of the caller principal.
-     * @return A credentials object associated with the current client
-     * invocation.
+     * This method should be implemented by the subclasses to return the Credentials of the caller principal.
+     *
+     * @return A credentials object associated with the current client invocation.
      */
+    @Override
     abstract public Subject getSubject();
 }
-
-
-
-
-
-
-

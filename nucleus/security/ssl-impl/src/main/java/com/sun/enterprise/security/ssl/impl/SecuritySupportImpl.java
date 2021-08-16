@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,57 +16,59 @@
 
 package com.sun.enterprise.security.ssl.impl;
 
-import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
-import com.sun.enterprise.security.ssl.manager.UnifiedX509TrustManager;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
-import java.security.UnrecoverableKeyException;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.security.KeyStore;
-import java.security.Provider;
-
-//V3:Commented import com.sun.enterprise.config.ConfigContext;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
+import java.security.PrivateKey;
+import java.security.Provider;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.PropertyPermission;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
+
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.embedded.Server;
 import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.embedded.Server;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
-
-import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
 
+import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
+import com.sun.enterprise.security.ssl.manager.UnifiedX509TrustManager;
+//V3:Commented import com.sun.enterprise.config.ConfigContext;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
+
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
  * This implements SecuritySupport used in PluggableFeatureFactory.
+ *
  * @author Shing Wai Chan
  */
 // TODO: when we have two SecuritySupport implementations,
@@ -83,14 +85,9 @@ public class SecuritySupportImpl extends SecuritySupport {
     @LoggerInfo(subsystem = "SECURITY - SSL", description = "Security - SSL", publish = true)
     public static final String SEC_SSL_LOGGER = "jakarta.enterprise.system.security.ssl";
 
-    protected static final Logger _logger =
-        Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
+    protected static final Logger _logger = Logger.getLogger(SEC_SSL_LOGGER, SHARED_LOGMESSAGE_RESOURCE);
 
-    @LogMessageInfo(
-        message = "The SSL certificate has expired: {0}",
-        level = "SEVERE",
-        cause = "Certificate expired.",
-        action = "Check the expiration date of the certicate.")
+    @LogMessageInfo(message = "The SSL certificate has expired: {0}", level = "SEVERE", cause = "Certificate expired.", action = "Check the expiration date of the certicate.")
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
     private static boolean initialized = false;
@@ -152,21 +149,14 @@ public class SecuritySupportImpl extends SecuritySupport {
                 keyStorePass = keyStorePassOverride.toCharArray();
             }
             final String trustStorePassOverride = System.getProperty(TRUSTSTORE_PASS_PROP, DEFAULT_TRUSTSTORE_PASS);
-            if (trustStorePassOverride != null){
+            if (trustStorePassOverride != null) {
                 trustStorePass = trustStorePassOverride.toCharArray();
             }
         }
 
         if (!initialized) {
-            loadStores(
-                    null,
-                    null,
-                    keyStoreFileName,
-                    keyStorePass,
-                    System.getProperty(KEYSTORE_TYPE_PROP, KeyStore.getDefaultType()),
-                    trustStoreFileName,
-                    trustStorePass,
-                    System.getProperty(TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType()));
+            loadStores(null, null, keyStoreFileName, keyStorePass, System.getProperty(KEYSTORE_TYPE_PROP, KeyStore.getDefaultType()),
+                trustStoreFileName, trustStorePass, System.getProperty(TRUSTSTORE_TYPE_PROP, KeyStore.getDefaultType()));
             Arrays.fill(keyStorePass, ' ');
             Arrays.fill(trustStorePass, ' ');
             initialized = true;
@@ -190,8 +180,8 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     /**
-     * This method will load keystore and truststore and add into
-     * corresponding list.
+     * This method will load keystore and truststore and add into corresponding list.
+     *
      * @param tokenName
      * @param provider
      * @param keyStorePass
@@ -205,21 +195,12 @@ public class SecuritySupportImpl extends SecuritySupport {
     String storeType, Provider provider,
     String keyStoreFile, String keyStorePass,
     String trustStoreFile, String trustStorePass) {*/
-    protected synchronized static void loadStores(
-            String tokenName,
-            Provider provider,
-            String keyStoreFile,
-            char[] keyStorePass,
-            String keyStoreType,
-            String trustStoreFile,
-            char[] trustStorePass,
-            String trustStoreType) {
+    protected synchronized static void loadStores(String tokenName, Provider provider, String keyStoreFile, char[] keyStorePass,
+        String keyStoreType, String trustStoreFile, char[] trustStorePass, String trustStoreType) {
 
         try {
-            KeyStore keyStore = loadKS(keyStoreType, provider, keyStoreFile,
-                    keyStorePass);
-            KeyStore trustStore = loadKS(trustStoreType, provider, trustStoreFile,
-                    trustStorePass);
+            KeyStore keyStore = loadKS(keyStoreType, provider, keyStoreFile, keyStorePass);
+            KeyStore trustStore = loadKS(trustStoreType, provider, trustStoreFile, trustStorePass);
             keyStores.add(keyStore);
             trustStores.add(trustStore);
             keyStorePasswords.add(Arrays.copyOf(keyStorePass, keyStorePass.length));
@@ -230,18 +211,16 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     /**
-     * This method load keystore with given keystore file and
-     * keystore password for a given keystore type and provider.
-     * It always return a non-null keystore.
+     * This method load keystore with given keystore file and keystore password for a given keystore type and provider. It always
+     * return a non-null keystore.
+     *
      * @param keyStoreType
      * @param provider
      * @param keyStoreFile
      * @param keyStorePass
      * @retun keystore loaded
      */
-    private static KeyStore loadKS(String keyStoreType, Provider provider,
-            String keyStoreFile, char[] keyStorePass)
-            throws Exception {
+    private static KeyStore loadKS(String keyStoreType, Provider provider, String keyStoreFile, char[] keyStorePass) throws Exception {
         KeyStore ks = null;
         if (provider != null) {
             ks = KeyStore.getInstance(keyStoreType, provider);
@@ -255,8 +234,7 @@ public class SecuritySupportImpl extends SecuritySupport {
         try {
             if (keyStoreFile != null) {
                 if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "Loading keystoreFile = {0}, keystorePass = {1}",
-                            new Object[]{keyStoreFile, keyStorePass});
+                    _logger.log(Level.FINE, "Loading keystoreFile = {0}, keystorePass = {1}", new Object[] { keyStoreFile, keyStorePass });
                 }
                 istream = new FileInputStream(keyStoreFile);
                 bstream = new BufferedInputStream(istream);
@@ -276,28 +254,30 @@ public class SecuritySupportImpl extends SecuritySupport {
 
     // --- implements SecuritySupport ---
     /**
-     * This method returns an array of keystores containing keys and
-     * certificates.
+     * This method returns an array of keystores containing keys and certificates.
      */
+    @Override
     public KeyStore[] getKeyStores() {
         return keyStores.toArray(new KeyStore[keyStores.size()]);
     }
 
-    public KeyStore loadNullStore(String type, int index) throws KeyStoreException,
-            IOException, NoSuchAlgorithmException, CertificateException {
+    @Override
+    public KeyStore loadNullStore(String type, int index)
+        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore ret = KeyStore.getInstance(type);
         ret.load(null, keyStorePasswords.get(index));
         return ret;
     }
 
-    public KeyManager[] getKeyManagers(String algorithm) throws IOException,
-            KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+    @Override
+    public KeyManager[] getKeyManagers(String algorithm)
+        throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         KeyStore[] kstores = getKeyStores();
         ArrayList<KeyManager> keyManagers = new ArrayList<KeyManager>();
         for (int i = 0; i < kstores.length; i++) {
             checkCertificateDates(kstores[i]);
-            KeyManagerFactory kmf = KeyManagerFactory.getInstance(
-                    (algorithm != null) ? algorithm : KeyManagerFactory.getDefaultAlgorithm());
+            KeyManagerFactory kmf = KeyManagerFactory
+                .getInstance((algorithm != null) ? algorithm : KeyManagerFactory.getDefaultAlgorithm());
             kmf.init(kstores[i], keyStorePasswords.get(i));
             KeyManager[] kmgrs = kmf.getKeyManagers();
             if (kmgrs != null) {
@@ -305,20 +285,18 @@ public class SecuritySupportImpl extends SecuritySupport {
             }
         }
 
-        KeyManager keyManager = new UnifiedX509KeyManager(
-                keyManagers.toArray(new X509KeyManager[keyManagers.size()]),
-                getTokenNames());
-        return new KeyManager[]{keyManager};
+        KeyManager keyManager = new UnifiedX509KeyManager(keyManagers.toArray(new X509KeyManager[keyManagers.size()]), getTokenNames());
+        return new KeyManager[] { keyManager };
     }
 
-    public TrustManager[] getTrustManagers(String algorithm) throws IOException,
-            KeyStoreException, NoSuchAlgorithmException {
+    @Override
+    public TrustManager[] getTrustManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException {
         KeyStore[] tstores = getTrustStores();
         ArrayList<TrustManager> trustManagers = new ArrayList<TrustManager>();
         for (KeyStore tstore : tstores) {
             checkCertificateDates(tstore);
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(
-                    (algorithm != null) ? algorithm : TrustManagerFactory.getDefaultAlgorithm());
+            TrustManagerFactory tmf = TrustManagerFactory
+                .getInstance((algorithm != null) ? algorithm : TrustManagerFactory.getDefaultAlgorithm());
             tmf.init(tstore);
             TrustManager[] tmgrs = tmf.getTrustManagers();
             if (tmgrs != null) {
@@ -331,14 +309,13 @@ public class SecuritySupportImpl extends SecuritySupport {
         } else {
             trustManager = new UnifiedX509TrustManager(trustManagers.toArray(new X509TrustManager[trustManagers.size()]));
         }
-        return new TrustManager[]{trustManager};
+        return new TrustManager[] { trustManager };
     }
     /*
      * Check X509 certificates in a store for expiration.
      */
 
-    private void checkCertificateDates(KeyStore store)
-            throws KeyStoreException {
+    private void checkCertificateDates(KeyStore store) throws KeyStoreException {
 
         Enumeration<String> aliases = store.aliases();
         while (aliases.hasMoreElements()) {
@@ -354,26 +331,29 @@ public class SecuritySupportImpl extends SecuritySupport {
     /**
      * This method returns an array of truststores containing certificates.
      */
+    @Override
     public KeyStore[] getTrustStores() {
         return trustStores.toArray(new KeyStore[trustStores.size()]);
     }
 
+    @Override
     public boolean verifyMasterPassword(final char[] masterPass) {
         return Arrays.equals(masterPass, keyStorePasswords.get(0));
     }
 
     /**
-     * This method returns an array of token names in order corresponding to
-     * array of keystores.
+     * This method returns an array of token names in order corresponding to array of keystores.
      */
+    @Override
     public String[] getTokenNames() {
         return tokenNames.toArray(new String[tokenNames.size()]);
     }
 
     /**
-     * @param  token
+     * @param token
      * @return a keystore
      */
+    @Override
     public KeyStore getKeyStore(String token) {
         int idx = getTokenIndex(token);
         if (idx < 0) {
@@ -383,9 +363,10 @@ public class SecuritySupportImpl extends SecuritySupport {
     }
 
     /**
-     * @param  token
+     * @param token
      * @return a truststore
      */
+    @Override
     public KeyStore getTrustStore(String token) {
         int idx = getTokenIndex(token);
         if (idx < 0) {
@@ -408,15 +389,16 @@ public class SecuritySupportImpl extends SecuritySupport {
         return idx;
     }
 
+    @Override
     public void synchronizeKeyFile(Object configContext, String fileRealmName) throws Exception {
         //throw new UnsupportedOperationException("Not supported yet in V3.");
     }
 
+    @Override
     public void checkPermission(String key) {
         try {
             // Checking a random permission to check if it is server.
-            if(isEmbeddedServer() || habitat == null
-                    || isACC() || isNotServerORACC()){
+            if (isEmbeddedServer() || habitat == null || isACC() || isNotServerORACC()) {
                 return;
             }
             Permission perm = new RuntimePermission("SSLPassword");
@@ -439,7 +421,9 @@ public class SecuritySupportImpl extends SecuritySupport {
         return penv.getProcessType().equals(ProcessType.Other);
     }
 
-    public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
+    @Override
+    public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex)
+        throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         checkPermission(KEYSTORE_PASS_PROP);
         Key key = keyStores.get(keystoreIndex).getKey(alias, keyStorePasswords.get(keystoreIndex));
         if (key instanceof PrivateKey) {

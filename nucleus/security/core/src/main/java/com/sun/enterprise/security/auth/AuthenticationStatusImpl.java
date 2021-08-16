@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +18,7 @@ package com.sun.enterprise.security.auth;
 
 /**
  * This class implements an AuthenticationStatus object.
+ *
  * @author Harish Prabandham
  */
 
@@ -29,14 +30,13 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This constructs a new AuthenticationStatus object.
+     *
      * @param The name of the principal
      * @param The name of the realm that authenticated the principal
      * @param The method used for authenticating the principal
      * @param The status of the authentication
      */
-    public AuthenticationStatusImpl(String principalName, String authMethod,
-                                    String realm,
-                                    int status) {
+    public AuthenticationStatusImpl(String principalName, String authMethod, String realm, int status) {
         this.principalName = principalName;
         this.authMethod = authMethod;
         this.status = status;
@@ -45,33 +45,39 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This method returns the status of the authentication
+     *
      * @return An integer value indicating the status of the authentication
      */
+    @Override
     public int getStatus() {
         return status;
     }
 
     /**
-     * This method returns a byte array of zero length, since there's
-     * no continuation data needed for passphrase based authentication.
+     * This method returns a byte array of zero length, since there's no continuation data needed for passphrase based
+     * authentication.
+     *
      * @return A byte array of zero length.
      */
+    @Override
     public byte[] getContinuationData() {
         return new byte[0];
     }
 
     /**
-     * This method returns a byte array of zero length, since there's
-     * no auth specific data needed for passphrase based authentication.
+     * This method returns a byte array of zero length, since there's no auth specific data needed for passphrase based
+     * authentication.
+     *
      * @return A byte array of zero length.
      */
+    @Override
     public byte[] getAuthSpecificData() {
         return new byte[0];
     }
 
     /**
-     * This method returns the name of realm where the authentication was
-     * performed.
+     * This method returns the name of realm where the authentication was performed.
+     *
      * @return A java.lang.String representation of the realm.
      */
     public String getRealmName() {
@@ -80,16 +86,17 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This method returns the "method" used to perform authentication
-     * @return A java.lang.String representation of the method used. In
-     * passphrase based authentication it returns the string "password".
+     *
+     * @return A java.lang.String representation of the method used. In passphrase based authentication it returns the string
+     * "password".
      */
     public String getAuthMethod() {
         return authMethod;
     }
 
     /**
-     * This method returns the string representation of the principal
-     * that was authenticated.
+     * This method returns the string representation of the principal that was authenticated.
+     *
      * @return A java.lang.String representation of the Principal.
      */
     public String getPrincipalName() {

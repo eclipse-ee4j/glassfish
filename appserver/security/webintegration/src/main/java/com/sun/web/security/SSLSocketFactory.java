@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +16,12 @@
 
 package com.sun.web.security;
 
+import static java.util.logging.Level.FINEST;
+import static java.util.logging.Level.SEVERE;
+
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -57,12 +59,12 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
     private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(SSLSocketFactory.class);
 
-    private SSLContext context = null;
-    private javax.net.ssl.SSLServerSocketFactory factory = null;
+    private SSLContext context;
+    private javax.net.ssl.SSLServerSocketFactory factory;
     private String cipherSuites[];
 
-    private static KeyManager[] keyManagers = null;
-    private static TrustManager[] trustManagers = null;
+    private static KeyManager[] keyManagers;
+    private static TrustManager[] trustManagers;
 
     // XXX initStoresAtStartup may call more than once, should clean up later
     // copied from SSLUtils : V3 to break dependency of this SSLUtils on this Class.
@@ -76,6 +78,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
             if (keyManagers == null || trustManagers == null) {
                 initStoresAtStartup();
             }
+
             context = SSLContext.getInstance("TLS");
             context.init(keyManagers, trustManagers, SharedSecureRandomImpl.get());
 
@@ -83,13 +86,11 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
             cipherSuites = factory.getSupportedCipherSuites();
 
             for (String cipherSuite : cipherSuites) {
-                if (_logger.isLoggable(Level.FINEST)) {
-                    _logger.log(Level.FINEST, "Suite: " + cipherSuite);
-                }
+                _logger.log(FINEST, () -> "Suite: " + cipherSuite);
             }
 
         } catch (Exception e) {
-            _logger.log(Level.SEVERE, "web_security.excep_sslsockfact", e.getMessage());
+            _logger.log(SEVERE, "web_security.excep_sslsockfact", e.getMessage());
         }
     }
 
@@ -153,6 +154,7 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
         if (initialized) {
             return;
         }
+
         ServiceLocator habitat = Globals.getDefaultHabitat();
         SSLUtils sslUtils = habitat.getService(SSLUtils.class);
 
@@ -161,16 +163,16 @@ public class SSLSocketFactory implements org.apache.catalina.net.ServerSocketFac
 
         // Creating a default SSLContext and HttpsURLConnection for clients
         // that use Https
-        SSLContext ctx = SSLContext.getInstance("TLS");
+        SSLContext sslContext = SSLContext.getInstance("TLS");
         String keyAlias = System.getProperty(SSLUtils.HTTPS_OUTBOUND_KEY_ALIAS);
-        KeyManager[] kMgrs = sslUtils.getKeyManagers();
-        if (keyAlias != null && keyAlias.length() > 0 && kMgrs != null) {
-            for (int i = 0; i < kMgrs.length; i++) {
-                kMgrs[i] = new J2EEKeyManager((X509KeyManager) kMgrs[i], keyAlias);
+        KeyManager[] keyManagers = sslUtils.getKeyManagers();
+        if (keyAlias != null && keyAlias.length() > 0 && keyManagers != null) {
+            for (int i = 0; i < keyManagers.length; i++) {
+                keyManagers[i] = new J2EEKeyManager((X509KeyManager) keyManagers[i], keyAlias);
             }
         }
-        ctx.init(kMgrs, sslUtils.getTrustManagers(), null);
-        HttpsURLConnection.setDefaultSSLSocketFactory(ctx.getSocketFactory());
+        sslContext.init(keyManagers, sslUtils.getTrustManagers(), null);
+        HttpsURLConnection.setDefaultSSLSocketFactory(sslContext.getSocketFactory());
         initialized = true;
     }
 }

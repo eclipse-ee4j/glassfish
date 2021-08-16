@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,11 +17,8 @@
 package com.sun.enterprise.security;
 
 /**
- * LoginManager needs implementations of this class for accessing the
- * username and passwords.
- * Implementations of LoginDialog can use either character based terminal,
- * GUI, or any other form of querying to get hold of the username & password
- * from the user.
+ * LoginManager needs implementations of this class for accessing the username and passwords. Implementations of LoginDialog can
+ * use either character based terminal, GUI, or any other form of querying to get hold of the username & password from the user.
  *
  * @author Harish Prabandham
  */
@@ -30,8 +27,9 @@ public interface LoginDialog {
      * @return The username of the user.
      */
     public String getUserName();
+
     /**
-     *@return The password of the user in plain text...
+     * @return The password of the user in plain text...
      */
     public char[] getPassword();
 }

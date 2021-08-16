@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,7 +18,6 @@ package com.sun.enterprise.security.cli;
 
 import com.sun.enterprise.config.serverbeans.AuditModule;
 import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -35,7 +34,6 @@ import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.SecurityConfigListener;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
@@ -52,37 +50,34 @@ import org.glassfish.config.support.TargetType;
 /**
  * Delete Audit Module Command
  *
-* Usage: delete-audit-module [--terse=false] [--echo=false]
- *        [--interactive=true] [--host localhost] [--port 4848|4849]
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
- *        [--target target(Default server)] auth_realm_name
+ * Usage: delete-audit-module [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port 4848|4849] [--secure
+ * | -s] [--user admin_user] [--passwordfile file_name] [--target target(Default server)] auth_realm_name
  *
  * @author Nandini Ektare
  */
-@Service(name="delete-audit-module")
+@Service(name = "delete-audit-module")
 @PerLookup
 @I18n("delete.audit.module")
-@ExecuteOn({RuntimeType.DAS, RuntimeType.INSTANCE})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(DeleteAuditModule.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteAuditModule.class);
 
-    @Param(name="auditmodulename", primary=true)
+    @Param(name = "auditmodulename", primary = true)
     String auditModuleName;
 
-    @Param(name = "target", optional = true, defaultValue =
-        SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
     private Domain domain;
 
-    @AccessRequired.To(value="delete")
+    @AccessRequired.To(value = "delete")
     private AuditModule auditModule = null;
 
     @Inject
@@ -97,36 +92,35 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
     }
 
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         ActionReport report = context.getActionReport();
 
         try {
             if (auditModule == null) {
-                report.setMessage(localStrings.getLocalString(
-                    "delete.audit.module.notfound",
-                    "Specified Audit Module {0} not found", auditModuleName));
+                report.setMessage(
+                    localStrings.getLocalString("delete.audit.module.notfound", "Specified Audit Module {0} not found", auditModuleName));
                 report.setActionExitCode(ActionReport.ExitCode.FAILURE);
                 return;
             }
 
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-                public Object run(SecurityService param)
-                throws PropertyVetoException, TransactionFailure {
+                @Override
+                public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
 
                     param.getAuditModule().remove(auditModule);
                     return null;
                 }
             }, securityService);
-        } catch(TransactionFailure e) {
-            report.setMessage(localStrings.getLocalString(
-                "delete.audit.module.fail", "Deletion of Audit Module {0} failed",
-                auditModuleName));
+        } catch (TransactionFailure e) {
+            report.setMessage(
+                localStrings.getLocalString("delete.audit.module.fail", "Deletion of Audit Module {0} failed", auditModuleName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             report.setFailureCause(e);
         }
@@ -143,9 +137,9 @@ public class DeleteAuditModule implements AdminCommand, AdminCommandSecurity.Pre
         }
         securityService = config.getSecurityService();
         for (AuditModule am : securityService.getAuditModule()) {
-                if (am.getName().equals(auditModuleName)) {
-                    return am;
-                }
+            if (am.getName().equals(auditModuleName)) {
+                return am;
+            }
         }
         return null;
     }

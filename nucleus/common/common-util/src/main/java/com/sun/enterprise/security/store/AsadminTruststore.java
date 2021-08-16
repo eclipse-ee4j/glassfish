@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,69 +16,57 @@
 
 package com.sun.enterprise.security.store;
 
-import com.sun.enterprise.util.SystemPropertyConstants;
+import static com.sun.enterprise.util.SystemPropertyConstants.CLIENT_TRUSTSTORE_PROPERTY;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.security.cert.Certificate;
-
+import java.security.cert.CertificateException;
 
 /**
  * This class implements an adapter for password manipulation a JCEKS.
  * <p>
- * This class delegates the work of actually opening the trust store to
- * AsadminSecurityUtil.
+ * This class delegates the work of actually opening the trust store to AsadminSecurityUtil.
  *
  * @author Shing Wai Chan
  */
 public class AsadminTruststore {
     private static final String ASADMIN_TRUSTSTORE = "truststore";
-    private KeyStore _keyStore = null;
-    private File _keyFile = null;
-    private char[] _password = null;
+    private KeyStore _keyStore;
+    private File _keyFile;
+    private char[] _password;
 
-    public static File getAsadminTruststore()
-    {
-        String location = System.getProperty(SystemPropertyConstants.CLIENT_TRUSTSTORE_PROPERTY);
+    public static File getAsadminTruststore() {
+        String location = System.getProperty(CLIENT_TRUSTSTORE_PROPERTY);
         if (location == null) {
             return new File(AsadminSecurityUtil.getDefaultClientDir(), ASADMIN_TRUSTSTORE);
-        } else {
-            return new File(location);
         }
+
+        return new File(location);
     }
 
-    public static AsadminTruststore newInstance()
-            throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        return AsadminSecurityUtil
-                .getInstance(true /* isPromptable */)
-                .getAsadminTruststore();
+    public static AsadminTruststore newInstance() throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
+        return AsadminSecurityUtil.getInstance(true /* isPromptable */).getAsadminTruststore();
     }
 
     public static AsadminTruststore newInstance(final char[] password)
-            throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
-        return AsadminSecurityUtil
-                .getInstance(password, true /* isPromptable */)
-                .getAsadminTruststore();
+        throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
+        return AsadminSecurityUtil.getInstance(password, true /* isPromptable */).getAsadminTruststore();
     }
 
-    AsadminTruststore(final char[] password) throws CertificateException, IOException,
-        KeyStoreException, NoSuchAlgorithmException
-    {
+    AsadminTruststore(final char[] password) throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
         init(getAsadminTruststore(), password);
     }
 
     private void init(File keyfile, final char[] password)
-        throws CertificateException, IOException,
-        KeyStoreException, NoSuchAlgorithmException
-    {
+        throws CertificateException, IOException, KeyStoreException, NoSuchAlgorithmException {
         _keyFile = keyfile;
         _keyStore = KeyStore.getInstance("JKS");
         _password = password;
@@ -94,47 +82,42 @@ public class AsadminTruststore {
                 bInput = null;
             }
         } finally {
-             if (bInput != null) {
-                 try {
-                     bInput.close();
-                 } catch(Exception ex) {
-                     //ignore we are cleaning up
-                 }
-             }
+            if (bInput != null) {
+                try {
+                    bInput.close();
+                } catch (Exception ex) {
+                    //ignore we are cleaning up
+                }
+            }
         }
     }
 
-    public boolean certificateExists(Certificate cert) throws KeyStoreException
-    {
+    public boolean certificateExists(Certificate cert) throws KeyStoreException {
         return (_keyStore.getCertificateAlias(cert) == null ? false : true);
     }
 
-    public void addCertificate(String alias, Certificate cert) throws KeyStoreException, IOException,
-        NoSuchAlgorithmException, CertificateException
-    {
+    public void addCertificate(String alias, Certificate cert)
+        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         _keyStore.setCertificateEntry(alias, cert);
         writeStore();
     }
 
-    public void writeStore() throws KeyStoreException, IOException,
-        NoSuchAlgorithmException, CertificateException
-    {
-         BufferedOutputStream boutput = null;
+    public void writeStore() throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
+        BufferedOutputStream boutput = null;
 
-         try {
-             boutput = new BufferedOutputStream(
-                     new FileOutputStream(_keyFile));
-             _keyStore.store(boutput, _password);
-             boutput.close();
-             boutput = null;
-         } finally {
-             if (boutput != null) {
-                 try {
-                     boutput.close();
-                 } catch(Exception ex) {
-                     //ignore we are cleaning up
-                 }
-             }
-         }
+        try {
+            boutput = new BufferedOutputStream(new FileOutputStream(_keyFile));
+            _keyStore.store(boutput, _password);
+            boutput.close();
+            boutput = null;
+        } finally {
+            if (boutput != null) {
+                try {
+                    boutput.close();
+                } catch (Exception ex) {
+                    //ignore we are cleaning up
+                }
+            }
+        }
     }
 }

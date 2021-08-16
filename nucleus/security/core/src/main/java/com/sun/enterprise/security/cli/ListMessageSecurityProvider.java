@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,7 +15,6 @@
  */
 
 package com.sun.enterprise.security.cli;
-
 
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -39,46 +38,40 @@ import com.sun.enterprise.util.SystemPropertyConstants;
 import org.glassfish.api.admin.*;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
+
 /**
  * List Message Security Providers Command
  *
- * Usage: list-message-security-providers [--terse=false] [--echo=false]
- *        [--interactive=true] [--host localhost] [--port 4848|4849]
- *        [--secure | -s] [--user admin_user] [--passwordfile file_name]
- *        [--layer message_layer] [target(Default server)]
+ * Usage: list-message-security-providers [--terse=false] [--echo=false] [--interactive=true] [--host localhost] [--port
+ * 4848|4849] [--secure | -s] [--user admin_user] [--passwordfile file_name] [--layer message_layer] [target(Default server)]
  *
  * @author Nandini Ektare
  */
 
-@Service(name="list-message-security-providers")
+@Service(name = "list-message-security-providers")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.message.security.provider")
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS,CommandTarget.CLUSTERED_INSTANCE,
-CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER,
+    CommandTarget.CONFIG })
 @RestEndpoints({
-    @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-message-security-providers",
-        description="list-message-security-providers")
-})
+    @RestEndpoint(configBean = SecurityService.class, opType = RestEndpoint.OpType.GET, path = "list-message-security-providers", description = "list-message-security-providers") })
 public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(ListMessageSecurityProvider.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListMessageSecurityProvider.class);
 
-    @Param(name = "target", primary=true, optional = true, defaultValue =
-        SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
     private Domain domain;
     // auth-layer can only be SOAP | HttpServlet
-    @Param(name="layer", acceptableValues="SOAP,HttpServlet", optional=true)
+    @Param(name = "layer", acceptableValues = "SOAP,HttpServlet", optional = true)
     String authLayer;
 
     @AccessRequired.To("read")
@@ -95,11 +88,12 @@ public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSe
     }
 
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -107,23 +101,19 @@ public class ListMessageSecurityProvider implements AdminCommand, AdminCommandSe
         secService.getMessageSecurityConfig();
 
         report.getTopMessagePart().setMessage(
-            localStrings.getLocalString(
-                "list.message.security.provider.success",
-                "list-message-security-providers successful"));
+            localStrings.getLocalString("list.message.security.provider.success", "list-message-security-providers successful"));
         report.getTopMessagePart().setChildrenType("");
 
         for (MessageSecurityConfig msc : secService.getMessageSecurityConfig()) {
             if (authLayer == null) {
                 for (ProviderConfig pc : msc.getProviderConfig()) {
-                    ActionReport.MessagePart part =
-                        report.getTopMessagePart().addChild();
+                    ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                     part.setMessage(pc.getProviderId());
                 }
             } else {
                 if (msc.getAuthLayer().equals(authLayer)) {
                     for (ProviderConfig pc : msc.getProviderConfig()) {
-                        ActionReport.MessagePart part =
-                            report.getTopMessagePart().addChild();
+                        ActionReport.MessagePart part = report.getTopMessagePart().addChild();
                         part.setMessage(pc.getProviderId());
                     }
                 }

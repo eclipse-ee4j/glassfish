@@ -35,8 +35,7 @@ import jakarta.inject.Singleton;
 
 /**
  *
- * @author venu
- * TODO: need to change this class, it needs to be similar to SecurityServicesUtil
+ * @author venu TODO: need to change this class, it needs to be similar to SecurityServicesUtil
  */
 @Service
 @Singleton
@@ -45,7 +44,6 @@ public class Util {
 
     @Inject
     private ProcessEnvironment penv;
-
 
     //stuff required for AppClient
     private CallbackHandler callbackHandler;
@@ -65,9 +63,11 @@ public class Util {
     public boolean isACC() {
         return penv.getProcessType().equals(ProcessType.ACC);
     }
+
     public boolean isServer() {
         return penv.getProcessType().isServer();
     }
+
     public boolean isNotServerOrACC() {
         return penv.getProcessType().equals(ProcessType.Other);
     }
@@ -107,7 +107,7 @@ public class Util {
         //Parent directories until the fileName exist, so create the file that has been provided
         if (filePath.getParentFile() != null && filePath.getParentFile().exists()) {
             localFile = filePath;
-            if(!localFile.createNewFile()) {
+            if (!localFile.createNewFile()) {
                 throw new IOException();
             }
 
@@ -118,14 +118,13 @@ public class Util {
             String userHome = System.getProperty("user.home");
 
             String embeddedServerName = getCurrentEmbeddedServerName();
-            File tempDir = new File(userHome + File.separator + ".glassfish6-"+embeddedServerName+File.separator + "config");
+            File tempDir = new File(userHome + File.separator + ".glassfish6-" + embeddedServerName + File.separator + "config");
             boolean mkDirSuccess = true;
             if (!tempDir.exists()) {
                 mkDirSuccess = tempDir.mkdirs();
             }
 
-            localFile = new File(tempDir.getAbsolutePath()+File.separator + fileName);
-
+            localFile = new File(tempDir.getAbsolutePath() + File.separator + fileName);
 
             if (mkDirSuccess && !localFile.exists()) {
                 localFile.createNewFile();
@@ -144,7 +143,7 @@ public class Util {
             if (oStream != null) {
                 oStream.close();
             }
-            if  (iStream != null) {
+            if (iStream != null) {
                 iStream.close();
             }
 

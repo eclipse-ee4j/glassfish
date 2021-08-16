@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,11 +21,9 @@ import com.sun.enterprise.security.BaseRealm;
 /**
  * Parent class for iAS Realm classes.
  *
- *  This class no longer implements the methods of Realm, instead it extends
- *  from BaseRealm and now is only a place holder for migration and is a
- *  candidate for deprecation.
- *  This class is provided for migration of realms written for 7.0 to 8.x
+ * This class no longer implements the methods of Realm, instead it extends from BaseRealm and now is only a place holder for
+ * migration and is a candidate for deprecation. This class is provided for migration of realms written for 7.0 to 8.x
  */
 
-public abstract class IASRealm extends BaseRealm{
+public abstract class IASRealm extends BaseRealm {
 }

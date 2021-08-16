@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -32,14 +32,11 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
 
-
 /**
- *The only thing that needs to added Extra for SecurityService migration
- * is the addition of the new JACC provider. This would be required when
- * migrating from V2, for V3-Prelude it is already present.
+ * The only thing that needs to added Extra for SecurityService migration is the addition of the new JACC provider. This would be
+ * required when migrating from V2, for V3-Prelude it is already present.
  *
- * The rest of the security related upgrade is handled implicitly by the actions of the
- * upgrade service itself.
+ * The rest of the security related upgrade is handled implicitly by the actions of the upgrade service itself.
  *
  */
 
@@ -56,15 +53,15 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     private static final String DIR_CONFIG = "config";
     private static final String JKS = ".jks";
     private static final String NSS = ".db";
-  //  private static final String KEYSTORE = "keystore.jks";
-  //  private static final String TRUSTSTORE = "cacerts.jks";
+    //  private static final String KEYSTORE = "keystore.jks";
+    //  private static final String TRUSTSTORE = "cacerts.jks";
 
     private static final String JDBC_REALM_CLASSNAME = "com.sun.enterprise.security.ee.auth.realm.jdbc.JDBCRealm";
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-
-    public void postConstruct()  {
+    @Override
+    public void postConstruct() {
         for (Config config : configs.getConfig()) {
             SecurityService service = config.getSecurityService();
             if (service != null) {
@@ -75,10 +72,10 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         //Clear up the old policy files for applications
         String instanceRoot = env.getInstanceRoot().getAbsolutePath();
         File genPolicyDir = new File(instanceRoot, DIR_GENERATED_POLICY);
-        if(genPolicyDir != null) {
+        if (genPolicyDir != null) {
             File[] applicationDirs = genPolicyDir.listFiles();
-            if(applicationDirs != null) {
-                for(File policyDir:applicationDirs) {
+            if (applicationDirs != null) {
+                for (File policyDir : applicationDirs) {
                     deleteFile(policyDir);
                 }
             }
@@ -102,6 +99,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                             }
                         } else {
                             ConfigSupport.apply(new SingleConfigCode<AuthRealm>() {
+                                @Override
                                 public Object run(AuthRealm updatedAuthRealm) throws PropertyVetoException, TransactionFailure {
                                     Property prop1 = updatedAuthRealm.createChild(Property.class);
                                     prop1.setName(PARAM_DIGEST_ALGORITHM);
@@ -113,11 +111,8 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                         }
                     }
                 }
-            } catch (PropertyVetoException pve) {
-                _logger.log(Level.SEVERE, SecurityLoggerInfo.securityUpgradeServiceException, pve);
-                throw new RuntimeException(pve);
-            } catch (TransactionFailure tf) {
-               _logger.log(Level.SEVERE, SecurityLoggerInfo.securityUpgradeServiceException, tf);
+            } catch (PropertyVetoException | TransactionFailure tf) {
+                _logger.log(Level.SEVERE, SecurityLoggerInfo.securityUpgradeServiceException, tf);
                 throw new RuntimeException(tf);
 
             }
@@ -132,7 +127,6 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
 
     }
 
-
     /*
      * Method to detect an NSS install.
      */
@@ -143,14 +137,13 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         File configDir = new File(instanceRoot, "config");
         //default KS password
 
-
         if (configDir.isDirectory()) {
             for (File configFile : configDir.listFiles()) {
-                    if (configFile.getName().endsWith(NSS)) {
-                        return true;
-                    }
+                if (configFile.getName().endsWith(NSS)) {
+                    return true;
                 }
             }
+        }
 
         return false;
     }
@@ -159,7 +152,8 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
         try {
             List<JaccProvider> jaccProviders = securityService.getJaccProvider();
             for (JaccProvider jacc : jaccProviders) {
-                if ("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory".equals(jacc.getPolicyConfigurationFactoryProvider())) {
+                if ("org.glassfish.exousia.modules.locked.SimplePolicyConfigurationFactory"
+                    .equals(jacc.getPolicyConfigurationFactoryProvider())) {
                     //simple policy provider already present
                     return;
                 }
@@ -183,24 +177,22 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
 
     }
 
-
     private boolean deleteFile(File path) {
         if (path != null && path.exists()) {
             if (path.isDirectory()) {
                 File[] files = path.listFiles();
-                for(File file:files) {
-                    if(file.isDirectory()){
+                for (File file : files) {
+                    if (file.isDirectory()) {
                         deleteFile(file);
-                        if(file.delete())
+                        if (file.delete())
                             continue;
-                    }
-                    else {
-                        if(file.delete())
+                    } else {
+                        if (file.delete())
                             continue;
                     }
                 }
             }
-            if(!path.delete()) {
+            if (!path.delete()) {
                 return false;
             }
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,19 +16,18 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-
 /**
- * Exception thrown when an operation is requested on a realm which
- * does not exist.
+ * Exception thrown when an operation is requested on a realm which does not exist.
  *
  * @author Harish Prabandham
  */
-public class NoSuchRealmException extends Exception
-{
+public class NoSuchRealmException extends Exception {
     /**
      * Constructs the exception, with descriptive information.
      *
      * @param info describes the realm which does not exist
      */
-    public NoSuchRealmException (String info) { super (info); }
+    public NoSuchRealmException(String info) {
+        super(info);
+    }
 }

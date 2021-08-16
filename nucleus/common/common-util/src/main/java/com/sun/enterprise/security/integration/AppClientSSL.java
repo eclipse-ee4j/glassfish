@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -33,18 +33,16 @@ public class AppClientSSL {
     /**
      * Gets the value of the certNickname property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
-    public String getCertNickname(){
+    public String getCertNickname() {
         return this.certNickName;
     }
 
     /**
      * Sets the value of the certNickname property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setCertNickname(String value) {
         this.certNickName = value;
@@ -53,8 +51,7 @@ public class AppClientSSL {
     /**
      * Gets the value of the ssl2Enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public boolean getSsl2Enabled() {
         return this.ssl2Enabled;
@@ -63,12 +60,12 @@ public class AppClientSSL {
     /**
      * Sets the value of the ssl2Enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setSsl2Enabled(String value) {
         this.ssl2Enabled = Boolean.parseBoolean(value);
     }
+
     public void setSsl2Enabled(boolean value) {
         this.ssl2Enabled = value;
     }
@@ -76,29 +73,25 @@ public class AppClientSSL {
     /**
      * Gets the value of the ssl2Ciphers property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public String getSsl2Ciphers() {
         return ssl2Ciphers;
     }
 
     /**
-     * Sets the value of the ssl2Ciphers property.
-     * Values:  rc4, rc4export, rc2, rc2export, idea, des, desede3.
+     * Sets the value of the ssl2Ciphers property. Values: rc4, rc4export, rc2, rc2export, idea, des, desede3.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
-    public void setSsl2Ciphers(String value)  {
+    public void setSsl2Ciphers(String value) {
         this.ssl2Ciphers = value;
     }
 
     /**
      * Gets the value of the ssl3Enabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public boolean getSsl3Enabled() {
         return this.ssl3Enabled;
@@ -107,8 +100,7 @@ public class AppClientSSL {
     /**
      * Sets the value of the ssl3Enabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setSsl3Enabled(String value) {
         this.ssl3Enabled = Boolean.parseBoolean(value);
@@ -119,12 +111,10 @@ public class AppClientSSL {
     }
 
     /**
-     A comma-separated list of the SSL3 ciphers used, with the prefix + to enable or - to
-        disable, for example +SSL_RSA_WITH_RC4_128_MD5 . Allowed values are
-        SSL_RSA_WITH_RC4_128_MD5, SSL_RSA_WITH_3DES_EDE_CBC_SHA, SSL_RSA_WITH_DES_CBC_SHA,
-        SSL_RSA_EXPORT_WITH_RC4_40_MD5, SSL_RSA_WITH_NULL_MD5, SSL_RSA_WITH_RC4_128_SHA, and
-        SSL_RSA_WITH_NULL_SHA. Values available in previous releases are supported for backward
-        compatibility.
+     * A comma-separated list of the SSL3 ciphers used, with the prefix + to enable or - to disable, for example
+     * +SSL_RSA_WITH_RC4_128_MD5 . Allowed values are SSL_RSA_WITH_RC4_128_MD5, SSL_RSA_WITH_3DES_EDE_CBC_SHA,
+     * SSL_RSA_WITH_DES_CBC_SHA, SSL_RSA_EXPORT_WITH_RC4_40_MD5, SSL_RSA_WITH_NULL_MD5, SSL_RSA_WITH_RC4_128_SHA, and
+     * SSL_RSA_WITH_NULL_SHA. Values available in previous releases are supported for backward compatibility.
      */
     public String getSsl3TlsCiphers() {
         return ssl3TlsCiphers;
@@ -133,8 +123,7 @@ public class AppClientSSL {
     /**
      * Sets the value of the ssl3TlsCiphers property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setSsl3TlsCiphers(String value) {
         this.ssl3TlsCiphers = value;
@@ -143,8 +132,7 @@ public class AppClientSSL {
     /**
      * Gets the value of the tlsEnabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public boolean getTlsEnabled() {
         return this.tlsEnabled;
@@ -153,8 +141,7 @@ public class AppClientSSL {
     /**
      * Sets the value of the tlsEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setTlsEnabled(String value) {
         this.tlsEnabled = Boolean.parseBoolean(value);
@@ -167,8 +154,7 @@ public class AppClientSSL {
     /**
      * Gets the value of the tlsRollbackEnabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public boolean getTlsRollbackEnabled() {
         return this.tlsRollbackEnabled;
@@ -177,12 +163,12 @@ public class AppClientSSL {
     /**
      * Sets the value of the tlsRollbackEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setTlsRollbackEnabled(String value) {
         this.tlsRollbackEnabled = Boolean.parseBoolean(value);
     }
+
     public void setTlsRollbackEnabled(boolean value) {
         this.tlsRollbackEnabled = value;
     }
@@ -190,8 +176,7 @@ public class AppClientSSL {
     /**
      * Gets the value of the clientAuthEnabled property.
      *
-     * @return possible object is
-     *         {@link String }
+     * @return possible object is {@link String }
      */
     public boolean getClientAuthEnabled() {
         return this.clientAuthEnabled;
@@ -200,12 +185,12 @@ public class AppClientSSL {
     /**
      * Sets the value of the clientAuthEnabled property.
      *
-     * @param value allowed object is
-     *              {@link String }
+     * @param value allowed object is {@link String }
      */
     public void setClientAuthEnabled(String value) {
         this.clientAuthEnabled = Boolean.parseBoolean(value);
     }
+
     public void setClientAuthEnabled(boolean value) {
         this.clientAuthEnabled = value;
     }

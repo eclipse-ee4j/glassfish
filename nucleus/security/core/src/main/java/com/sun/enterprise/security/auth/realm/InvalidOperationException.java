@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,19 +16,19 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-
 /**
- * Exception thrown when an operation is invoked on a realm that does not
- * support it.
- * e.g. Invoking getGroups (username) is not supported by a certificate realm.
+ * Exception thrown when an operation is invoked on a realm that does not support it. e.g. Invoking getGroups (username) is not
+ * supported by a certificate realm.
+ *
  * @author Harpreet Singh
  */
-public class InvalidOperationException extends Exception
-{
+public class InvalidOperationException extends Exception {
     /**
      * Constructs the exception, with descriptive information.
      *
      * @param info describes the problem with the realm
      */
-    public InvalidOperationException (String info) { super (info); }
+    public InvalidOperationException(String info) {
+        super(info);
+    }
 }

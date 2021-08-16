@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2011, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,8 +25,8 @@ import org.jvnet.hk2.annotations.Contract;
  */
 @Contract
 public interface CNonceCacheFactory {
-    public static final String CLUSTER_NAME_PROP="cluster_name";
-    public static final String INSTANCE_NAME_PROP="instance_name";
-    public CNonceCache createCNonceCache(String appName, String clusterName,
-            String instanceName, String storeName);
+    public static final String CLUSTER_NAME_PROP = "cluster_name";
+    public static final String INSTANCE_NAME_PROP = "instance_name";
+
+    public CNonceCache createCNonceCache(String appName, String clusterName, String instanceName, String storeName);
 }

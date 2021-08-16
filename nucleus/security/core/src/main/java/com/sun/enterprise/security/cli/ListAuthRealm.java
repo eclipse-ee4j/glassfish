@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,10 +15,6 @@
  */
 
 package com.sun.enterprise.security.cli;
-
-
-
-
 
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -43,39 +39,31 @@ import org.glassfish.api.admin.*;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
 
-
 /**
- * List Auth Realms Command
- * Usage: list-auth-realms [--terse=false] [--echo=false] [--interactive=true]
- *        [--host localhost] [--port 4848|4849] [--secure | -s]
- *        [--user admin_user] [--passwordfile file_name] [target(Default server)]
+ * List Auth Realms Command Usage: list-auth-realms [--terse=false] [--echo=false] [--interactive=true] [--host localhost]
+ * [--port 4848|4849] [--secure | -s] [--user admin_user] [--passwordfile file_name] [target(Default server)]
  *
  * @author Nandini Ektare
  */
 
-@Service(name="list-auth-realms")
+@Service(name = "list-auth-realms")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.auth.realm")
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,
-CommandTarget.CLUSTER, CommandTarget.CONFIG,CommandTarget.CLUSTERED_INSTANCE})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG,
+    CommandTarget.CLUSTERED_INSTANCE })
 @RestEndpoints({
-    @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-auth-realms",
-        description="List Auth Realms")
-})
+    @RestEndpoint(configBean = SecurityService.class, opType = RestEndpoint.OpType.GET, path = "list-auth-realms", description = "List Auth Realms") })
 public class ListAuthRealm implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(ListAuthRealm.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(ListAuthRealm.class);
 
-    @Param(name = "target", primary=true, optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
@@ -96,23 +84,23 @@ public class ListAuthRealm implements AdminCommand, AdminCommandSecurity.Preauth
         return true;
     }
 
-
     /**
-     * Executes the command with the command parameters passed as Properties
-     * where the keys are the paramter names and the values the parameter values
+     * Executes the command with the command parameters passed as Properties where the keys are the paramter names and the values the
+     * parameter values
      *
      * @param context information
      */
+    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
 
-//        Enumeration realms = Realm.getRealmNames();
-//
-//        if ( realms == null || !realms.hasMoreElements()) {
-//            //Create realms
-//            realmsManager.createRealms(securityService);
-//        }
+        //        Enumeration realms = Realm.getRealmNames();
+        //
+        //        if ( realms == null || !realms.hasMoreElements()) {
+        //            //Create realms
+        //            realmsManager.createRealms(securityService);
+        //        }
 
         for (AuthRealm authRealm : securityService.getAuthRealm()) {
             ActionReport.MessagePart part = report.getTopMessagePart().addChild();

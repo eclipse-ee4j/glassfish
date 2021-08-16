@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,18 +18,23 @@ package com.sun.enterprise.security.auth.digest.api;
 
 /**
  * represents plain text password and pre hashed(username+realmname+password) password.
+ *
  * @author K.Venuopal@sun.com
  */
 public interface Password {
-    public static final int PLAIN_TEXT= 0;
+    public static final int PLAIN_TEXT = 0;
     public static final int HASHED = 1;
+
     /**
      * returns PLAIN_TEXT or HASHED.
+     *
      * @returns int
      */
     public int getType();
+
     /**
      * returns password.
+     *
      * @returns byte[]
      */
     public byte[] getValue();

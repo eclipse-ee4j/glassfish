@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JaccProvider;
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import java.util.List;
@@ -34,39 +33,31 @@ import org.glassfish.config.support.TargetType;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
-
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
 
 /**
- *Usage: list-jacc-providers
- *         [--help] [--user admin_user] [--passwordfile file_name]
- *         [target(Default server)]
+ * Usage: list-jacc-providers [--help] [--user admin_user] [--passwordfile file_name] [target(Default server)]
  *
  */
-@Service(name="list-jacc-providers")
+@Service(name = "list-jacc-providers")
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("list.jacc.provider")
-@ExecuteOn({RuntimeType.DAS})
-@TargetType({CommandTarget.DAS,CommandTarget.CLUSTERED_INSTANCE,
-CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER, CommandTarget.CONFIG})
+@ExecuteOn({ RuntimeType.DAS })
+@TargetType({ CommandTarget.DAS, CommandTarget.CLUSTERED_INSTANCE, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER,
+    CommandTarget.CONFIG })
 @RestEndpoints({
-    @RestEndpoint(configBean=SecurityService.class,
-        opType=RestEndpoint.OpType.GET,
-        path="list-jacc-providers",
-        description="list-jacc-providers")
-})
+    @RestEndpoint(configBean = SecurityService.class, opType = RestEndpoint.OpType.GET, path = "list-jacc-providers", description = "list-jacc-providers") })
 public class ListJaccProviders implements AdminCommand, AdminCommandSecurity.Preauthorization {
 
-    final private static LocalStringManagerImpl localStrings =
-        new LocalStringManagerImpl(DeleteJaccProvider.class);
+    final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(DeleteJaccProvider.class);
 
-    @Param(name = "target", primary=true, optional = true, defaultValue =
-    SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
+    @Param(name = "target", primary = true, optional = true, defaultValue = SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
     private String target;
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     private Config config;
 
     @Inject
@@ -88,8 +79,6 @@ public class ListJaccProviders implements AdminCommand, AdminCommandSecurity.Pre
         securityService = config.getSecurityService();
         return true;
     }
-
-
 
     @Override
     public void execute(AdminCommandContext context) {

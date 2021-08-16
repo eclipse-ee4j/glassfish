@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,13 +22,12 @@
 package com.sun.enterprise.common.iiop.security;
 
 /**
- * This class is part of the interface between J2EE RI and security
- * interceptors. This class is used to assert anonymous identities.
+ * This class is part of the interface between J2EE RI and security interceptors. This class is used to assert anonymous
+ * identities.
  *
- * @author    Sekhar Vajjhala
+ * @author Sekhar Vajjhala
  */
 
 public class AnonCredential {
 
 }
-

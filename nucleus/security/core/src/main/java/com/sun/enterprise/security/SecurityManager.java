@@ -90,5 +90,4 @@ public interface SecurityManager {
      */
     Object doAsPrivileged(PrivilegedExceptionAction<Object> pea) throws Throwable;
 
-
 }

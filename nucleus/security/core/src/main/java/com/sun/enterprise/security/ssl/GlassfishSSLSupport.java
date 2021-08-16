@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -38,22 +38,13 @@ public class GlassfishSSLSupport implements SSLSupport {
     private final static Logger logger = SecurityLoggerInfo.getLogger();
 
     /**
-     * A mapping table to determine the number of effective bits in the key
-     * when using a cipher suite containing the specified cipher name.  The
-     * underlying data came from the TLS Specification (RFC 2246), Appendix C.
+     * A mapping table to determine the number of effective bits in the key when using a cipher suite containing the specified cipher
+     * name. The underlying data came from the TLS Specification (RFC 2246), Appendix C.
      */
-    private static final CipherData ciphers[] = {
-        new CipherData("_WITH_NULL_", 0),
-        new CipherData("_WITH_IDEA_CBC_", 128),
-        new CipherData("_WITH_RC2_CBC_40_", 40),
-        new CipherData("_WITH_RC4_40_", 40),
-        new CipherData("_WITH_RC4_128_", 128),
-        new CipherData("_WITH_DES40_CBC_", 40),
-        new CipherData("_WITH_DES_CBC_", 56),
-        new CipherData("_WITH_3DES_EDE_CBC_", 168),
-        new CipherData("_WITH_AES_128_", 128),
-        new CipherData("_WITH_AES_256_", 256)
-    };
+    private static final CipherData ciphers[] = { new CipherData("_WITH_NULL_", 0), new CipherData("_WITH_IDEA_CBC_", 128),
+        new CipherData("_WITH_RC2_CBC_40_", 40), new CipherData("_WITH_RC4_40_", 40), new CipherData("_WITH_RC4_128_", 128),
+        new CipherData("_WITH_DES40_CBC_", 40), new CipherData("_WITH_DES_CBC_", 56), new CipherData("_WITH_3DES_EDE_CBC_", 168),
+        new CipherData("_WITH_AES_128_", 128), new CipherData("_WITH_AES_256_", 256) };
 
     private final SSLSocket socket;
     private final SSLEngine engine;
@@ -68,11 +59,12 @@ public class GlassfishSSLSupport implements SSLSupport {
     public GlassfishSSLSupport(SSLEngine engine) {
         this.socket = null;
         this.engine = engine;
-        if(engine != null) {
+        if (engine != null) {
             session = engine.getSession();
         }
     }
 
+    @Override
     public String getCipherSuite() throws IOException {
         if (session == null) {
             return null;
@@ -80,10 +72,12 @@ public class GlassfishSSLSupport implements SSLSupport {
         return session.getCipherSuite();
     }
 
+    @Override
     public Object[] getPeerCertificateChain() throws IOException {
         return getPeerCertificateChain(false);
     }
 
+    @Override
     public Object[] getPeerCertificateChain(boolean force) throws IOException {
         if (session == null) {
             return null;
@@ -106,6 +100,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         return getX509Certs();
     }
 
+    @Override
     public Integer getKeySize() throws IOException {
         if (session == null) {
             return null;
@@ -126,6 +121,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         return keySize;
     }
 
+    @Override
     public String getSessionId() throws IOException {
         if (session == null) {
             return null;
@@ -164,21 +160,18 @@ public class GlassfishSSLSupport implements SSLSupport {
         if (certs == null) {
             certs = new X509Certificate[0];
         }
-        java.security.cert.X509Certificate[] x509Certs =
-                new java.security.cert.X509Certificate[certs.length];
+        java.security.cert.X509Certificate[] x509Certs = new java.security.cert.X509Certificate[certs.length];
         for (int i = 0; i < x509Certs.length; i++) {
             try {
                 byte buffer[] = certs[i].getEncoded();
-                CertificateFactory cf =
-                        CertificateFactory.getInstance("X.509");
-                ByteArrayInputStream stream =
-                        new ByteArrayInputStream(buffer);
+                CertificateFactory cf = CertificateFactory.getInstance("X.509");
+                ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
                 x509Certs[i] = (java.security.cert.X509Certificate) cf.generateCertificate(stream);
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINE, "Cert #{0} = {1}", new Object[]{i, x509Certs[i]});
+                    logger.log(Level.FINE, "Cert #{0} = {1}", new Object[] { i, x509Certs[i] });
                 }
             } catch (Exception ex) {
-                logger.log(Level.INFO, SecurityLoggerInfo.convertingCertError, new Object[] {certs[i], ex.toString()});
+                logger.log(Level.INFO, SecurityLoggerInfo.convertingCertError, new Object[] { certs[i], ex.toString() });
                 return null;
             }
         }

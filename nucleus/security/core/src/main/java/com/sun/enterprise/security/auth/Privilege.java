@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +16,16 @@
 
 package com.sun.enterprise.security.auth;
 
-import java.rmi.*;
-
 /**
- * This remote interface enables the deployment tool to query the
- * details of the Privilege.
+ * This remote interface enables the deployment tool to query the details of the Privilege.
+ *
  * @author Harish Prabandham
  */
 public interface Privilege extends java.io.Serializable {
     /**
      * Returns the name of the name of the Privilege.
+     *
      * @return The name of the name of the Privilege.
      */
     public String getName();
 }
-
-
-

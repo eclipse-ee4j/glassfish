@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,10 +19,11 @@ package com.sun.enterprise.security.auth.digest.api;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
- * Interface representing  nested DigestAlgorithm parameter values
+ * Interface representing nested DigestAlgorithm parameter values
+ *
  * @author K.Venugopal@sun.com
  */
-public interface NestedDigestAlgoParam extends DigestAlgorithmParameter{
+public interface NestedDigestAlgoParam extends DigestAlgorithmParameter {
     /**
      * @returns array of parameter values.
      */

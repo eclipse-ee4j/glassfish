@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -51,7 +51,8 @@ import org.glassfish.hk2.api.PostConstruct;
 @Singleton
 public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
-    @Inject @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
+    @Inject
+    @Named(ServerEnvironment.DEFAULT_INSTANCE_NAME)
     SecurityService securityService;
 
     @Inject
@@ -72,144 +73,144 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     public SecurityConfigListener() {
 
     }
-     /**
+
+    /**
      * Notification that @Configured objects that were injected have changed
      *
      * @param events list of changes
      */
-public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
-    // I am not so interested with the list of events, just sort who got added or removed for me.
-    ConfigSupport.sortAndDispatch(events, new Changed() {
-        /**
-         * Notification of a change on a configuration object
-         *
-         * @param type            type of change : ADD mean the changedInstance was added to the parent
-         *                        REMOVE means the changedInstance was removed from the parent, CHANGE means the
-         *                        changedInstance has mutated.
-         * @param changedType     type of the configuration object
-         * @param changedInstance changed instance.
-         */
-        public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
-            NotProcessed np = null;
-            switch(type) {
-                case ADD : logger.fine("A new " + changedType.getName() + " was added : " + changedInstance);
+    @Override
+    public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
+        // I am not so interested with the list of events, just sort who got added or removed for me.
+        ConfigSupport.sortAndDispatch(events, new Changed() {
+            /**
+             * Notification of a change on a configuration object
+             *
+             * @param type type of change : ADD mean the changedInstance was added to the parent REMOVE means the changedInstance was
+             * removed from the parent, CHANGE means the changedInstance has mutated.
+             * @param changedType type of the configuration object
+             * @param changedInstance changed instance.
+             */
+            @Override
+            public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
+                NotProcessed np = null;
+                switch (type) {
+                case ADD:
+                    logger.fine("A new " + changedType.getName() + " was added : " + changedInstance);
                     np = handleAddEvent(changedInstance);
                     break;
 
-                case CHANGE : logger.fine("A " + changedType.getName() + " was changed : " + changedInstance);
+                case CHANGE:
+                    logger.fine("A " + changedType.getName() + " was changed : " + changedInstance);
                     np = handleChangeEvent(changedInstance);
                     break;
 
-                case REMOVE : logger.fine("A " + changedType.getName() + " was removed : " + changedInstance);
+                case REMOVE:
+                    logger.fine("A " + changedType.getName() + " was removed : " + changedInstance);
                     np = handleRemoveEvent(changedInstance);
                     break;
+                }
+                return np;
             }
-            return np;
-        }
 
-        private <T extends ConfigBeanProxy> NotProcessed handleAddEvent( T instance) {
-            NotProcessed np = null;
-            if(instance instanceof AuthRealm){
-                authRealmCreated((AuthRealm)instance);
-            }else if (instance instanceof JaccProvider){
-                np = new NotProcessed( "Cannot change JACC provider once installed, restart required" );
-                //inject PolicyLoader and try to call loadPolicy
-                //but policyLoader in V2 does not allow reloading of policy provider
-                //once installed. The only option is restart the server
-            }else if (instance instanceof AuditModule){
-                auditModuleCreated((AuditModule)instance);
-            }else if (instance instanceof MessageSecurityConfig){
-                // do nothing since we have a Message security config listener
-            } else if (instance instanceof SecurityService) {
-               //since everything exists the only thing that can be added
-               // in terms of Attrs is the defaultPrincipal and defaultPrinPassword
-               // but they are directly used from securityService in core/security
+            private <T extends ConfigBeanProxy> NotProcessed handleAddEvent(T instance) {
+                NotProcessed np = null;
+                if (instance instanceof AuthRealm) {
+                    authRealmCreated((AuthRealm) instance);
+                } else if (instance instanceof JaccProvider) {
+                    np = new NotProcessed("Cannot change JACC provider once installed, restart required");
+                    //inject PolicyLoader and try to call loadPolicy
+                    //but policyLoader in V2 does not allow reloading of policy provider
+                    //once installed. The only option is restart the server
+                } else if (instance instanceof AuditModule) {
+                    auditModuleCreated((AuditModule) instance);
+                } else if (instance instanceof MessageSecurityConfig) {
+                    // do nothing since we have a Message security config listener
+                } else if (instance instanceof SecurityService) {
+                    //since everything exists the only thing that can be added
+                    // in terms of Attrs is the defaultPrincipal and defaultPrinPassword
+                    // but they are directly used from securityService in core/security
+                } else {
+                    np = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+                }
+                return np;
             }
-            else {
-                np = new NotProcessed( "unimplemented: unknown instance: " + instance.getClass().getName() );
-            }
-            return np;
-        }
 
-        private <T extends ConfigBeanProxy> NotProcessed handleRemoveEvent(final T instance) {
-            NotProcessed np = null;
-            if(instance instanceof AuthRealm){
-                authRealmDeleted((AuthRealm)instance);
-            }else if (instance instanceof JaccProvider){
-                np = new NotProcessed( "Cannot change JACC provider once installed, restart required" );
-                //inject PolicyLoader and try to call loadPolicy
-                //but policyLoader in V2 does not allow reloading of policy provider
-                //once installed. The only option is restart the server
-            }else if (instance instanceof AuditModule){
-                auditModuleDeleted((AuditModule)instance);
-            }else if (instance instanceof MessageSecurityConfig){
-               //do nothing since we have a message security config listener
-            } else if (instance instanceof SecurityService) {
-               // The only Attrs on securityService whose removal can affect the
-               // security code are those which are stored explicitly
-               // they are getAuditEnabled, getDefaultRealm and getAuditModules
-               // not sure what the effect of removing getDefaultRealm
+            private <T extends ConfigBeanProxy> NotProcessed handleRemoveEvent(final T instance) {
+                NotProcessed np = null;
+                if (instance instanceof AuthRealm) {
+                    authRealmDeleted((AuthRealm) instance);
+                } else if (instance instanceof JaccProvider) {
+                    np = new NotProcessed("Cannot change JACC provider once installed, restart required");
+                    //inject PolicyLoader and try to call loadPolicy
+                    //but policyLoader in V2 does not allow reloading of policy provider
+                    //once installed. The only option is restart the server
+                } else if (instance instanceof AuditModule) {
+                    auditModuleDeleted((AuditModule) instance);
+                } else if (instance instanceof MessageSecurityConfig) {
+                    //do nothing since we have a message security config listener
+                } else if (instance instanceof SecurityService) {
+                    // The only Attrs on securityService whose removal can affect the
+                    // security code are those which are stored explicitly
+                    // they are getAuditEnabled, getDefaultRealm and getAuditModules
+                    // not sure what the effect of removing getDefaultRealm
+                } else {
+                    np = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+                }
+                return np;
             }
-            else {
-                np = new NotProcessed( "unimplemented: unknown instance: " + instance.getClass().getName() );
-            }
-            return np;
-        }
 
-        private <T extends ConfigBeanProxy> NotProcessed handleChangeEvent(final T instance) {
-            NotProcessed np = null;
-            if(instance instanceof AuthRealm){
-                authRealmUpdated((AuthRealm)instance);
-            }else if (instance instanceof JaccProvider){
-                np = new NotProcessed( "Cannot change JACC provider once installed, restart required" );
-                //inject PolicyLoader and try to call loadPolicy
-                //but policyLoader in V2 does not allow reloading of policy provider
-                //once installed. The only option is restart the server
-            }else if (instance instanceof AuditModule){
-                auditModuleUpdated((AuditModule)instance);
-            }else if (instance instanceof MessageSecurityConfig){
-               //do nothing since we have a message security config listener
-            } else if (instance instanceof SecurityService) {
-               // The only Attrs on securityService whose change in value can affect the
-               // security code are those which are stored explicitly
-               // they are getAuditEnabled, getDefaultRealm and getAuditModules
-               if (defaultRealm != null &&
-                       !defaultRealm.equals(((SecurityService)instance).getDefaultRealm())) {
-                   defaultRealm = ((SecurityService)instance).getDefaultRealm();
-                   Realm.setDefaultRealm(defaultRealm);
-               }
-               if ((auditEnabled != null) &&
-                       !auditEnabled.equals(((SecurityService)instance).getAuditEnabled())) {
-                   boolean auditON = Boolean.parseBoolean(((SecurityService)instance).getAuditEnabled());
-                   auditManager.setAuditOn(auditON);
-               }
-               if (!jacc.equals(((SecurityService)instance).getJacc())) {
-                   np = new NotProcessed( "Cannot change JACC provider once installed, restart required" );
-               }
-               if ((mappedPrincipalClassName != null) && !mappedPrincipalClassName.equals(((SecurityService)instance).getMappedPrincipalClass())) {
-                   np = new NotProcessed( "MappedPrincipalClassname changes for existing applications requires restart and redeployment" );
-               }
-               if (!activateDefaultP2RMapping.equals(((SecurityService)instance).getActivateDefaultPrincipalToRoleMapping())) {
-                   np = new NotProcessed( "DefaultP2R changes for existng applications requires restart and redeployment" );
-               }
+            private <T extends ConfigBeanProxy> NotProcessed handleChangeEvent(final T instance) {
+                NotProcessed np = null;
+                if (instance instanceof AuthRealm) {
+                    authRealmUpdated((AuthRealm) instance);
+                } else if (instance instanceof JaccProvider) {
+                    np = new NotProcessed("Cannot change JACC provider once installed, restart required");
+                    //inject PolicyLoader and try to call loadPolicy
+                    //but policyLoader in V2 does not allow reloading of policy provider
+                    //once installed. The only option is restart the server
+                } else if (instance instanceof AuditModule) {
+                    auditModuleUpdated((AuditModule) instance);
+                } else if (instance instanceof MessageSecurityConfig) {
+                    //do nothing since we have a message security config listener
+                } else if (instance instanceof SecurityService) {
+                    // The only Attrs on securityService whose change in value can affect the
+                    // security code are those which are stored explicitly
+                    // they are getAuditEnabled, getDefaultRealm and getAuditModules
+                    if (defaultRealm != null && !defaultRealm.equals(((SecurityService) instance).getDefaultRealm())) {
+                        defaultRealm = ((SecurityService) instance).getDefaultRealm();
+                        Realm.setDefaultRealm(defaultRealm);
+                    }
+                    if ((auditEnabled != null) && !auditEnabled.equals(((SecurityService) instance).getAuditEnabled())) {
+                        boolean auditON = Boolean.parseBoolean(((SecurityService) instance).getAuditEnabled());
+                        auditManager.setAuditOn(auditON);
+                    }
+                    if (!jacc.equals(((SecurityService) instance).getJacc())) {
+                        np = new NotProcessed("Cannot change JACC provider once installed, restart required");
+                    }
+                    if ((mappedPrincipalClassName != null)
+                        && !mappedPrincipalClassName.equals(((SecurityService) instance).getMappedPrincipalClass())) {
+                        np = new NotProcessed(
+                            "MappedPrincipalClassname changes for existing applications requires restart and redeployment");
+                    }
+                    if (!activateDefaultP2RMapping.equals(((SecurityService) instance).getActivateDefaultPrincipalToRoleMapping())) {
+                        np = new NotProcessed("DefaultP2R changes for existng applications requires restart and redeployment");
+                    }
+                } else {
+                    np = new NotProcessed("unimplemented: unknown instance: " + instance.getClass().getName());
+                }
+                return np;
             }
-            else {
-                np = new NotProcessed( "unimplemented: unknown instance: " + instance.getClass().getName() );
-            }
-            return np;
-        }
-    }, logger);
-     return null;
-}
+        }, logger);
+        return null;
+    }
 
     /**
-     * New auth realm created.
-     * It is called whenever a AuthRealmEvent with action of
-     * AuthRealmEvent.ACTION_CREATE is received.
-     * @throws AdminEventListenerException when the listener is unable to
-     *         process the event.
+     * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is received.
+     *
+     * @throws AdminEventListenerException when the listener is unable to process the event.
      */
-    public static void authRealmCreated(AuthRealm instance){
+    public static void authRealmCreated(AuthRealm instance) {
         try {
             createRealm(instance);
         } catch (Exception ex) {
@@ -218,13 +219,11 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * New auth realm created.
-     * It is called whenever a AuthRealmEvent with action of
-     * AuthRealmEvent.ACTION_CREATE is received.
-     * @throws AdminEventListenerException when the listener is unable to
-     *         process the event.
+     * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is received.
+     *
+     * @throws AdminEventListenerException when the listener is unable to process the event.
      */
-    public static void authRealmCreated(Config config, AuthRealm instance){
+    public static void authRealmCreated(Config config, AuthRealm instance) {
         try {
             createRealm(config, instance);
         } catch (Exception ex) {
@@ -233,11 +232,9 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * Auth realm deleted.
-     * It is called whenever a AuthRealmEvent with action of
-     * AuthRealmEvent.ACTION_DELETE is received.
-     * @throws AdminEventListenerException when the listener is unable to
-     *         process the event.
+     * Auth realm deleted. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_DELETE is received.
+     *
+     * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public static void authRealmDeleted(Config config, AuthRealm instance) {
         try {
@@ -255,13 +252,10 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         }
     }
 
-
     /**
-     * Auth realm deleted.
-     * It is called whenever a AuthRealmEvent with action of
-     * AuthRealmEvent.ACTION_DELETE is received.
-     * @throws AdminEventListenerException when the listener is unable to
-     *         process the event.
+     * Auth realm deleted. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_DELETE is received.
+     *
+     * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public static void authRealmDeleted(AuthRealm instance) {
         try {
@@ -280,11 +274,10 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * Auth realm updated (attributes change).
-     * It is called whenever a AuthRealmEvent with action of
-     * AuthRealmEvent.ACTION_UPDATE is received.
-     * @throws AdminEventListenerException when the listener is unable to
-     *         process the event.
+     * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_UPDATE is
+     * received.
+     *
+     * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public void authRealmUpdated(AuthRealm instance) {
         try {
@@ -296,15 +289,14 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * Auth realm updated (attributes change).
-     * It is called whenever a AuthRealmEvent with action of
-     * AuthRealmEvent.ACTION_UPDATE is received.
-     * @throws AdminEventListenerException when the listener is unable to
-     *         process the event.
+     * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_UPDATE is
+     * received.
+     *
+     * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public void authRealmUpdated(Config config, AuthRealm instance) {
         try {
-            realmsManager.removeFromLoadedRealms(config.getName(),instance.getName());
+            realmsManager.removeFromLoadedRealms(config.getName(), instance.getName());
             createRealm(config, instance);
         } catch (Exception ex) {
             throw new RuntimeException(ex);
@@ -312,11 +304,10 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * This method will create or replace existing realm with a new one
-     * in cache.
+     * This method will create or replace existing realm with a new one in cache.
+     *
      * @param event
-     * @exception for instance, BadRealmException, ConfigException,
-     *            SynchronizationException
+     * @exception for instance, BadRealmException, ConfigException, SynchronizationException
      */
     private static void createRealm(AuthRealm authRealm) throws Exception {
         //authRealm cannot be null here
@@ -333,11 +324,10 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * This method will create or replace existing realm with a new one
-     * in cache.
+     * This method will create or replace existing realm with a new one in cache.
+     *
      * @param event
-     * @exception for instance, BadRealmException, ConfigException,
-     *            SynchronizationException
+     * @exception for instance, BadRealmException, ConfigException, SynchronizationException
      */
     private static void createRealm(Config config, AuthRealm authRealm) throws Exception {
         //authRealm cannot be null here
@@ -353,6 +343,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         Configuration.getConfiguration().refresh();
     }
 
+    @Override
     public void postConstruct() {
         if (securityService == null) {
             //should never happen
@@ -365,7 +356,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         auditEnabled = securityService.getAuditEnabled();
         defaultRealm = securityService.getDefaultRealm();
         jacc = securityService.getJacc();
-        if(jacc == null) {
+        if (jacc == null) {
             jacc = "default";
         }
         activateDefaultP2RMapping = securityService.getActivateDefaultPrincipalToRoleMapping();
@@ -374,9 +365,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * New audit module created.
-     * It is called whenever a AuditModuleEvent with action of
-     * AuditModuleEvent.ACTION_CREATE is received.
+     * New audit module created. It is called whenever a AuditModuleEvent with action of AuditModuleEvent.ACTION_CREATE is received.
      */
     public void auditModuleCreated(AuditModule instance) {
         try {
@@ -395,9 +384,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * Audit module deleted.
-     * It is called whenever a AuditModuleEvent with action of
-     * AuditModuleEvent.ACTION_DELETE is received.
+     * Audit module deleted. It is called whenever a AuditModuleEvent with action of AuditModuleEvent.ACTION_DELETE is received.
      */
     public void auditModuleDeleted(AuditModule instance) {
 
@@ -405,8 +392,7 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
     }
 
     /**
-     * Audit module updated (attributes change).
-     * It is called whenever a AuditModuleEvent with action of
+     * Audit module updated (attributes change). It is called whenever a AuditModuleEvent with action of
      * AuditModuleEvent.ACTION_UPDATE is received.
      */
     public void auditModuleUpdated(AuditModule instance) {
@@ -427,8 +413,5 @@ public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
             throw new RuntimeException(ex);
         }
     }
-
-
-
 
 }

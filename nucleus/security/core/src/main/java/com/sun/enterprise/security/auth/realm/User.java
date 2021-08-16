@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,20 +20,16 @@ import java.security.Principal;
 
 import java.util.Enumeration;
 
-
 /**
- * All users are principals ... perhaps in the native OS, perhaps
- * not.
+ * All users are principals ... perhaps in the native OS, perhaps not.
  *
- * <P> Users always have authentication information, which is used
- * to validate a user's proferred credentials.  Different kinds of
- * realms use different kinds of authentication information.  For
- * example, realms could use X.509 public key certificates, shared
- * passphrases, encrypted passwords, smart cards, or biometric data
- * to figure out if the user's credentials are valid.
+ * <P>
+ * Users always have authentication information, which is used to validate a user's proferred credentials. Different kinds of
+ * realms use different kinds of authentication information. For example, realms could use X.509 public key certificates, shared
+ * passphrases, encrypted passwords, smart cards, or biometric data to figure out if the user's credentials are valid.
  *
- * <P> Users typically have attributes that identify privileges
- * granted/possesed by the user.
+ * <P>
+ * Users typically have attributes that identify privileges granted/possesed by the user.
  *
  * @author Harish Prabandham
  */
@@ -44,20 +40,16 @@ public interface User extends Principal {
      */
     Realm getRealm() throws NoSuchRealmException;
 
-
     /**
      * Returns the single requested attribute for the user.
      *
      * @param name string identifying the attribute.
-     * @return value of that attribute, or null if no value
-     *         has been defined
+     * @return value of that attribute, or null if no value has been defined
      */
     Object getAttribute(String name);
 
-
     /**
-     * Returns an enumeration of the keys for the attributes
-     * supported for this user.
+     * Returns an enumeration of the keys for the attributes supported for this user.
      */
     Enumeration getAttributeNames();
 }

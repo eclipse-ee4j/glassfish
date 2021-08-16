@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,7 +22,8 @@ package com.sun.enterprise.security.integration;
  */
 public interface SecurityConstants {
     //TODO: Not a very good idea, revisit.
-    public static final String WEB_PRINCIPAL_CLASS="com.sun.enterprise.security.web.integration.WebPrincipal";
+    String WEB_PRINCIPAL_CLASS = "com.sun.enterprise.security.web.integration.WebPrincipal";
+
     //TODO V3: Temporary till we have AppContainer integration design sorted out
-    public static final int APPCONTAINER_CERTIFICATE = 2;
+    int APPCONTAINER_CERTIFICATE = 2;
 }

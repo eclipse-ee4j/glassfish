@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -107,7 +107,8 @@ public class PolicyLoader {
         // TEMP TEMP TEMP
 
         if (System.getProperty("simple.jacc.provider.JACCRoleMapper.class") == null) {
-            System.setProperty("simple.jacc.provider.JACCRoleMapper.class", "com.sun.enterprise.security.web.integration.GlassfishRoleMapper");
+            System.setProperty("simple.jacc.provider.JACCRoleMapper.class",
+                "com.sun.enterprise.security.web.integration.GlassfishRoleMapper");
         }
 
         // Now install the policy provider if one was identified
@@ -142,12 +143,10 @@ public class PolicyLoader {
         }
     }
 
-    private Policy loadPolicy(String javaPolicyClassName) throws ClassNotFoundException, InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
-        Object javaPolicyInstance = Thread.currentThread()
-                                          .getContextClassLoader()
-                                          .loadClass(javaPolicyClassName)
-                                          .getDeclaredConstructor()
-                                          .newInstance();
+    private Policy loadPolicy(String javaPolicyClassName) throws ClassNotFoundException, InstantiationException, IllegalAccessException,
+        IllegalArgumentException, InvocationTargetException, NoSuchMethodException, SecurityException {
+        Object javaPolicyInstance = Thread.currentThread().getContextClassLoader().loadClass(javaPolicyClassName).getDeclaredConstructor()
+            .newInstance();
 
         if (!(javaPolicyInstance instanceof Policy)) {
             throw new RuntimeException(SM.getString("enterprise.security.plcyload.not14"));
@@ -196,8 +195,8 @@ public class PolicyLoader {
      * Set internal properties based on domain.xml configuration.
      *
      * <P>
-     * The POLICY_CONF_FACTORY property is consumed by the jacc-api as documented in the Jakarta Authorization specification.
-     * It's value is set here to the value given in domain.xml <i>unless</i> it is already set in which case the value is not modified.
+     * The POLICY_CONF_FACTORY property is consumed by the jacc-api as documented in the Jakarta Authorization specification. It's
+     * value is set here to the value given in domain.xml <i>unless</i> it is already set in which case the value is not modified.
      *
      * <P>
      * Then and properties associated with this authorization module from domain.xml are set as internal properties prefixed with

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,40 +21,37 @@ import org.glassfish.external.statistics.impl.CountStatisticImpl;
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
 
-
 import org.glassfish.gmbal.*;
+
 /**
  *
  * @author nithyasubramanian
  */
-@AMXMetadata(type="security-realm-mon", group="monitoring", isSingleton=false)
+@AMXMetadata(type = "security-realm-mon", group = "monitoring", isSingleton = false)
 @ManagedObject
-@Description( "Security Realm Statistics" )
+@Description("Security Realm Statistics")
 public class RealmStatsProvider {
 
     private CountStatisticImpl realmCount;
 
-
     public RealmStatsProvider() {
-        realmCount = new CountStatisticImpl("RealmCount", "realm","No of Realms");
+        realmCount = new CountStatisticImpl("RealmCount", "realm", "No of Realms");
     }
 
     @ManagedAttribute
-    @Description( "Security Realm Count" )
+    @Description("Security Realm Count")
     public CountStatistic getRealmCount() {
         return realmCount;
     }
 
     @ProbeListener("glassfish:security:realm:realmAddedEvent")
-    public void realmAddedEvent(@ProbeParam("realmName")String realmName){
-       realmCount.increment();
+    public void realmAddedEvent(@ProbeParam("realmName") String realmName) {
+        realmCount.increment();
     }
 
-   @ProbeListener("glassfish:security:realm:realmRemovedEvent")
-    public void realmRemovedEvent(@ProbeParam("realmName")String realmName){
-       realmCount.decrement();
+    @ProbeListener("glassfish:security:realm:realmRemovedEvent")
+    public void realmRemovedEvent(@ProbeParam("realmName") String realmName) {
+        realmCount.decrement();
     }
-
-
 
 }

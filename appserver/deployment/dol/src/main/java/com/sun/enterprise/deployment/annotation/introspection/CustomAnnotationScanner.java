@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,11 +24,10 @@ package com.sun.enterprise.deployment.annotation.introspection;
 public interface CustomAnnotationScanner {
 
     /**
-     * Test if the passed constant pool string is a reference to
-     * a Type.TYPE annotation of a component defined in this scanner
+     * Test if the passed constant pool string is a reference to a Type.TYPE annotation of a component defined in this scanner
      *
      * @String the constant pool info string
      * @return true if it is an annotation reference
      */
-    public boolean isAnnotation(String value);
+    boolean isAnnotation(String value);
 }

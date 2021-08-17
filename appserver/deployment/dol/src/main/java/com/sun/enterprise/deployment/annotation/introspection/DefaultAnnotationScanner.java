@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2006, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2006, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,59 +16,52 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
-import com.sun.enterprise.deployment.annotation.factory.SJSASFactory;
-import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PostConstruct;
-import jakarta.inject.Singleton;
-
 import java.util.Set;
 
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.deployment.annotation.factory.SJSASFactory;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 
 /**
- * This class contains the list of all annotations types name
- * which can be present at the class level (Type.TYPE).
+ * This class contains the list of all annotations types name which can be present at the class level (Type.TYPE).
  *
  * @author Jerome Dochez
  */
-@Service(name="default")
+@Service(name = "default")
 @Singleton
-public class DefaultAnnotationScanner implements AnnotationScanner,
-    PostConstruct {
+public class DefaultAnnotationScanner implements AnnotationScanner, PostConstruct {
 
     @Inject
     SJSASFactory factory;
 
-    private Set<String> annotations=null;
-    private Set<String> annotationsMetaDataComplete=null;
+    private Set<String> annotations;
+    private Set<String> annotationsMetaDataComplete;
 
-    /**
-     * Test if the passed constant pool string is a reference to
-     * a Type.TYPE annotation of a J2EE component
-     *
-     * @String the constant pool info string
-     * @return true if it is a J2EE annotation reference
-     */
+    @Override
     public boolean isAnnotation(String value) {
         return annotations.contains(value);
     }
 
+    @Override
     public void postConstruct() {
         annotations = factory.getAnnotations(false);
         annotationsMetaDataComplete = factory.getAnnotations(true);
     }
 
-    public Set<String> getAnnotations(boolean isMetaDataComplete) {
-        if (!isMetaDataComplete) {
-            return AbstractAnnotationScanner.constantPoolToFQCN(annotations);
-        } else {
-            return AbstractAnnotationScanner.constantPoolToFQCN(annotationsMetaDataComplete);
-        }
-    }
-
     @Override
     public Set<String> getAnnotations() {
         return getAnnotations(false);
+    }
+
+    public Set<String> getAnnotations(boolean isMetaDataComplete) {
+        if (!isMetaDataComplete) {
+            return AbstractAnnotationScanner.constantPoolToFQCN(annotations);
+        }
+
+        return AbstractAnnotationScanner.constantPoolToFQCN(annotationsMetaDataComplete);
     }
 }

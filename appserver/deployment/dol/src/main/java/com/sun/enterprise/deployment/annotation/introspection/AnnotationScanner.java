@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.deployment.annotation.introspection;
 
-import org.jvnet.hk2.annotations.Contract;
-
 import java.util.Set;
+
+import org.jvnet.hk2.annotations.Contract;
 
 /**
  * This interface allows custom annotation scanner to be created.
@@ -29,19 +29,18 @@ import java.util.Set;
 public interface AnnotationScanner {
 
     /**
-     * Test if the passed constant pool string is a reference to
-     * a Type.TYPE annotation of a component defined in this scanner
+     * Test if the passed constant pool string is a reference to a Type.TYPE annotation of a component defined in this scanner
      *
      * @String the constant pool info string
      * @return true if it is an annotation reference
      */
-    public boolean isAnnotation(String value);
+    boolean isAnnotation(String value);
 
     /**
      * Returns a list of FQCN of annotations we are interested in.
      *
      * @return a list of fully qualified class name list of annotations.
      */
-    public Set<String> getAnnotations();
+    Set<String> getAnnotations();
 
 }

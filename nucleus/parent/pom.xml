@@ -134,7 +134,7 @@
         <!-- 3rd party dependencies -->
         <stax-api.version>1.0-2</stax-api.version>
         <jboss.logging.annotation.version>2.2.1.Final</jboss.logging.annotation.version>
-        <jboss.logging.version>3.4.1.Final</jboss.logging.version>
+        <jboss.logging.version>3.4.2.Final</jboss.logging.version>
         <javassist.version>3.28.0-GA</javassist.version>
         <fasterxml.classmate.version>1.5.1</fasterxml.classmate.version>
         <jsch.version>0.1.56</jsch.version>

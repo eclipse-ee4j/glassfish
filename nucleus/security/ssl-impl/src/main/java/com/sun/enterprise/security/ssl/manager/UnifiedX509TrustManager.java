@@ -24,12 +24,12 @@ import javax.net.ssl.X509TrustManager;
 
 /**
  * This class combines an array of X509TrustManagers into one.
- * 
+ *
  * @author Shing Wai Chan
  **/
 public class UnifiedX509TrustManager implements X509TrustManager {
-    private X509TrustManager[] mgrs = null;
-    private X509Certificate[] issuers = {};
+    private final X509TrustManager[] mgrs;
+    private final X509Certificate[] issuers;
 
     public UnifiedX509TrustManager(X509TrustManager[] mgrs) {
         if (mgrs == null) {
@@ -38,11 +38,11 @@ public class UnifiedX509TrustManager implements X509TrustManager {
         this.mgrs = mgrs;
 
         HashSet tset = new HashSet(); //for uniqueness
-        for (int i = 0; i < mgrs.length; i++) {
-            X509Certificate[] tcerts = mgrs[i].getAcceptedIssuers();
+        for (X509TrustManager mgr : mgrs) {
+            X509Certificate[] tcerts = mgr.getAcceptedIssuers();
             if (tcerts != null && tcerts.length > 0) {
-                for (int j = 0; j < tcerts.length; j++) {
-                    tset.add(tcerts[j]);
+                for (X509Certificate tcert : tcerts) {
+                    tset.add(tcert);
                 }
             }
         }
@@ -54,12 +54,13 @@ public class UnifiedX509TrustManager implements X509TrustManager {
     }
 
     // ---------- implements X509TrustManager -----------
+    @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         CertificateException cex = null;
-        for (int i = 0; i < mgrs.length; i++) {
+        for (X509TrustManager mgr : mgrs) {
             try {
                 cex = null; //reset exception status
-                mgrs[i].checkClientTrusted(chain, authType);
+                mgr.checkClientTrusted(chain, authType);
                 break;
             } catch (CertificateException ex) {
                 cex = ex;
@@ -70,12 +71,13 @@ public class UnifiedX509TrustManager implements X509TrustManager {
         }
     }
 
+    @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         CertificateException cex = null;
-        for (int i = 0; i < mgrs.length; i++) {
+        for (X509TrustManager mgr : mgrs) {
             try {
                 cex = null; //reset exception status
-                mgrs[i].checkServerTrusted(chain, authType);
+                mgr.checkServerTrusted(chain, authType);
                 break;
             } catch (CertificateException ex) {
                 cex = ex;
@@ -86,6 +88,7 @@ public class UnifiedX509TrustManager implements X509TrustManager {
         }
     }
 
+    @Override
     public X509Certificate[] getAcceptedIssuers() {
         return issuers;
     }

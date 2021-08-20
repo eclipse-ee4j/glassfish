@@ -77,7 +77,7 @@ public class RealmsManager {
 
     /**
      * Checks if the given realm name is loaded/valid.
-     * 
+     *
      * @param name of the realm to check.
      * @return true if realm present, false otherwise.
      */
@@ -91,7 +91,7 @@ public class RealmsManager {
 
     /**
      * Checks if the given realm name is loaded/valid.
-     * 
+     *
      * @param name of the realm to check.
      * @return true if realm present, false otherwise.
      */
@@ -105,7 +105,7 @@ public class RealmsManager {
 
     /**
      * Returns the names of accessible realms.
-     * 
+     *
      * @return set of realm names
      */
     public Enumeration<String> getRealmNames() {
@@ -164,7 +164,7 @@ public class RealmsManager {
 
     /**
      * Returns names of predefined AuthRealms' classes supported by security service.
-     * 
+     *
      * @returns array of predefind AuthRealms' classes
      *
      */

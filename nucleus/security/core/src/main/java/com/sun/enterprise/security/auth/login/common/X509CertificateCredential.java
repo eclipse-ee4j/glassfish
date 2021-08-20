@@ -31,7 +31,7 @@ public class X509CertificateCredential {
 
     /**
      * Construct a credential with the specified X509Certificate certificate chain, realm name and alias.
-     * 
+     *
      * @param the X509Certificate.
      * @param the alias for the certificate
      * @param the realm name. The only value supported for now is "certificate".
@@ -45,7 +45,7 @@ public class X509CertificateCredential {
 
     /**
      * Return the alias for the certificate.
-     * 
+     *
      * @return the alias.
      */
     public String getAlias() {
@@ -54,7 +54,7 @@ public class X509CertificateCredential {
 
     /**
      * Return the realm name.
-     * 
+     *
      * @return the realm name. Only value supported for now is "certificate".
      */
     public String getRealm() {
@@ -63,7 +63,7 @@ public class X509CertificateCredential {
 
     /**
      * Return the chain of certificates.
-     * 
+     *
      * @return the chain of X509Certificates.
      */
     public X509Certificate[] getX509CertificateChain() {
@@ -72,7 +72,7 @@ public class X509CertificateCredential {
 
     /**
      * Compare two instances of the credential and return true if they are the same and false otherwise.
-     * 
+     *
      * @return true if the instances are equal, false otherwise.
      */
     public boolean equals(Object o) {
@@ -93,7 +93,7 @@ public class X509CertificateCredential {
 
     /**
      * Return the hashCode computed from the certificate, realm and alias.
-     * 
+     *
      * @return the hash code.
      */
     public int hashCode() {

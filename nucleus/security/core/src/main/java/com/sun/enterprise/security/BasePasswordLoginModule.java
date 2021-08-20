@@ -263,7 +263,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
 
     /**
      * Method to extract container-provided username and password
-     * 
+     *
      * @throws javax.security.auth.login.LoginException
      */
     final public void extractCredentials() throws LoginException {
@@ -318,7 +318,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * Perform authentication decision.
      *
      * Method returns silently on success and returns a LoginException on failure.
-     * 
+     *
      * @throws LoginException on authentication failure.
      *
      */
@@ -340,7 +340,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     /**
      * Used for setting the username obtained from the container internally, to be made available to the custom login module
      * implementation
-     * 
+     *
      * @param username
      */
     private void setUsername(String username) {
@@ -376,7 +376,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     /**
      * Used for setting the password obtained from the container internally, to be made available to the custom login module
      * implementation Password is preferred to be a char[] instead of a string
-     * 
+     *
      * @param password
      */
     private void setPasswordChar(char[] password) {

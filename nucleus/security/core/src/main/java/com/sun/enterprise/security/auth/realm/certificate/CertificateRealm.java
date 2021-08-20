@@ -109,11 +109,11 @@ public final class CertificateRealm extends IASRealm {
             Util.debug(log, "CertificateRealm: No "+PARAM_NAMEFIELD+
                        " provided, will use X.500 name.");
         } else {
-        
+
             StringTokenizer st = new StringTokenizer(nameLink, LINK_SEP);
             int n = st.countTokens();
             nameFields = new String[n];
-        
+
             for (int i=0; i<n; i++) {
                 nameFields[i] = (String)st.nextToken();
             }

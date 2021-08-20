@@ -31,7 +31,7 @@ import org.jvnet.hk2.annotations.Contract;
 
 /**
  * SecuritySupport is part of PluggableFeature that provides access to internal services managed by application server.
- * 
+ *
  * @author Shing Wai Chan
  */
 @Contract
@@ -44,7 +44,7 @@ public abstract class SecuritySupport {
     public static final String keyStoreProp = "javax.net.ssl.keyStore";
     public static final String trustStoreProp = "javax.net.ssl.trustStore";
 
-    private static volatile SecuritySupport defaultInstance = null;
+    private static volatile SecuritySupport defaultInstance;
 
     public static SecuritySupport getDefaultInstance() {
         if (defaultInstance == null) {
@@ -129,7 +129,7 @@ public abstract class SecuritySupport {
 
     /**
      * This method synchronize key file for given realm.
-     * 
+     *
      * @param config the ConfigContextx
      * @param fileRealmName
      * @exception if fail to synchronize, a known exception is com.sun.enterprise.ee.synchronization.SynchronizationException
@@ -140,7 +140,7 @@ public abstract class SecuritySupport {
 
     /**
      * Check permission for the given key.
-     * 
+     *
      * @param key
      */
     abstract public void checkPermission(String key);

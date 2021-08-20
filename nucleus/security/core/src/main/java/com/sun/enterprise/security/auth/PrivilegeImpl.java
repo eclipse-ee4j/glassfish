@@ -20,7 +20,7 @@ import java.rmi.*;
 
 /**
  * This method provides an implementation a Privilege
- * 
+ *
  * @author Harish Prabandham
  */
 
@@ -44,7 +44,7 @@ public class PrivilegeImpl implements Privilege {
 
     /**
      * Returns the name of the name of the Privilege.
-     * 
+     *
      * @return The name of the name of the Privilege.
      */
     public String getName() {

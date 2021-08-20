@@ -163,7 +163,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
 
     /**
      * Add the given audit module to the list of loaded audit module. Adding the same name twice will override previous one.
-     * 
+     *
      * @param name of auditModule
      * @param am an instance of a class extending BaseAuditModule that has been successfully loaded into the system.
      * @exception
@@ -203,7 +203,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
 
     /**
      * Remove the audit module of given name from the loaded list.
-     * 
+     *
      * @param name of auditModule
      */
     public BaseAuditModule removeAuditModule(String name) {
@@ -222,7 +222,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
 
     /**
      * Get the audit module of given name from the loaded list.
-     * 
+     *
      * @param name of auditModule
      */
     BaseAuditModule getAuditModule(String name) {
@@ -231,7 +231,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
 
     /**
      * This method return auditModule with given classname and properties.
-     * 
+     *
      * @param classname
      * @param props
      * @exception
@@ -256,7 +256,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
 
     /**
      * logs the authentication call for all the loaded modules.
-     * 
+     *
      * @see com.sun.appserv.security.BaseAuditModule.authentication
      */
     public void authentication(final String user, final String realm, final boolean success) {

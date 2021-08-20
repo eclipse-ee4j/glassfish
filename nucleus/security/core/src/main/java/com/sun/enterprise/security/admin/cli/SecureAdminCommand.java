@@ -101,7 +101,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
     /**
      * Work to be performed - either for enable or disable - in a step.
-     * 
+     *
      * @param <T>
      */
     interface Work<T extends Context> {
@@ -864,7 +864,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
     /**
      * Executes the particular xxx-secure-admin command (enable or disable).
-     * 
+     *
      * @param context
      */
     @Override

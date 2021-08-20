@@ -18,7 +18,7 @@ package com.sun.enterprise.security.auth.digest.api;
 
 /**
  * represents plain text password and pre hashed(username+realmname+password) password.
- * 
+ *
  * @author K.Venuopal@sun.com
  */
 public interface Password {
@@ -27,14 +27,14 @@ public interface Password {
 
     /**
      * returns PLAIN_TEXT or HASHED.
-     * 
+     *
      * @returns int
      */
     public int getType();
 
     /**
      * returns password.
-     * 
+     *
      * @returns byte[]
      */
     public byte[] getValue();

@@ -27,7 +27,7 @@ public class WebSecurityDeployerProbeProvider {
     public void webDeploymentStartedEvent(
             @ProbeParam("appName") String appName) {
     }
-    
+
     @Probe(name = "webDeploymentEndedEvent")
     public void webDeploymentEndedEvent(
             @ProbeParam("appName") String appName) {
@@ -45,7 +45,7 @@ public class WebSecurityDeployerProbeProvider {
     public void webUndeploymentStartedEvent(
             @ProbeParam("appName") String appName) {
     }
-    
+
     @Probe(name = "webUndeploymentEndedEvent")
     public void webUndeploymentEndedEvent(
             @ProbeParam("appName") String appName) {

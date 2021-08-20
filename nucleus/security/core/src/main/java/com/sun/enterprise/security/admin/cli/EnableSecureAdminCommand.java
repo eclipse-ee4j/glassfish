@@ -48,7 +48,7 @@ import org.jvnet.hk2.config.TransactionFailure;
  * Records that secure admin is to be used and adjusts each admin listener configuration in the domain to use secure admin.
  *
  * The command changes the admin-listener set-up within each separate configuration as if by running these commands:
- * 
+ *
  * <pre>
  * {@code
         ###
@@ -141,7 +141,7 @@ public class EnableSecureAdminCommand extends SecureAdminCommand {
 
     /**
      * Iterator which returns array elements from front to back.
-     * 
+     *
      * @param <T>
      * @param steps
      * @return

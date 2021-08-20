@@ -104,7 +104,7 @@ public class GroupMapper {
     }*/
     /**
      * @param args the command line arguments
-     * 
+     *
      * public static void main(String[] args) { // TODO code application logic here GroupMapper mapper = new GroupMapper();
      * mapper.parse(mappingStr); mapper.traverse(); }
      */

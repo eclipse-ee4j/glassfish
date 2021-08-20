@@ -31,7 +31,7 @@ import org.glassfish.internal.api.Globals;
 
 /**
  * An implementation of a LoginDialog that presents a swing based GUI for querying username and password.
- * 
+ *
  * @author Harish Prabandham
  * @author Harpreet Singh
  */

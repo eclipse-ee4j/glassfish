@@ -20,7 +20,7 @@ import java.security.spec.AlgorithmParameterSpec;
 
 /**
  * Interface to Digest algorithm parameters
- * 
+ *
  * @author K.Venugopal@sun.com
  */
 public interface DigestAlgorithmParameter extends AlgorithmParameterSpec {

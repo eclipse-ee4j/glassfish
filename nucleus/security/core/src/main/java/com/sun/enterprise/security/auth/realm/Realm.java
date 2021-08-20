@@ -201,7 +201,7 @@ public abstract class Realm implements Comparable {
     /**
      * Instantiate a Realm with the given name, loading properties from the given file. This method is only used by RI and is not
      * called anywhere in iAS. Note : this method stands unused in V3.1 but keeping it since it is a public method.
-     * 
+     *
      * @deprecated
      * @param realmName Name of the new realm.
      * @param f File containing Properties for the new realm.
@@ -393,7 +393,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Remove realm with given name from cache.
-     * 
+     *
      * @param realmName
      * @exception NoSuchRealmException
      */
@@ -411,7 +411,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Remove realm with given name from cache.
-     * 
+     *
      * @param realmName
      * @exception NoSuchRealmException
      */
@@ -512,7 +512,7 @@ public abstract class Realm implements Comparable {
     /**
      * This is a private method for getting realm instance. If realm does not exist, then it will not return null rather than throw
      * exception.
-     * 
+     *
      * @param name identifies the realm
      * @return the requested realm
      */
@@ -528,7 +528,7 @@ public abstract class Realm implements Comparable {
     /**
      * This is a private method for getting realm instance. If realm does not exist, then it will not return null rather than throw
      * exception.
-     * 
+     *
      * @param name identifies the realm
      * @return the requested realm
      */
@@ -543,7 +543,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Returns the names of accessible realms.
-     * 
+     *
      * @return set of realm names
      */
     public static synchronized Enumeration getRealmNames() {
@@ -614,7 +614,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Checks if the given realm name is loaded/valid.
-     * 
+     *
      * @param String name of the realm to check.
      * @return true if realm present, false otherwise.
      */
@@ -628,7 +628,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Checks if the given realm name is loaded/valid.
-     * 
+     *
      * @param String name of the realm to check.
      * @return true if realm present, false otherwise.
      */
@@ -642,7 +642,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Add assign groups to given Vector of groups. To be used by getGroupNames.
-     * 
+     *
      * @param grps
      */
     protected String[] addAssignGroups(String[] grps) {
@@ -719,7 +719,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Returns the name of all the groups that this user belongs to
-     * 
+     *
      * @param username name of the user in this realm whose group listing is needed.
      * @return enumeration of group names (strings)
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
@@ -786,7 +786,7 @@ public abstract class Realm implements Comparable {
 
     /**
      * Persist the realm data to permanent storage
-     * 
+     *
      * @throws com.sun.enterprise.security.auth.realm.BadRealmException
      */
     public abstract void persist() throws BadRealmException;

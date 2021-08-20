@@ -23,7 +23,7 @@ import org.omg.CORBA.ORB;
 
 /**
  * Just a Base class to make exporting remote objects a bit easier...
- * 
+ *
  * @author Harish Prabandham
  */
 

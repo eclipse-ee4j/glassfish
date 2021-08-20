@@ -20,13 +20,13 @@ import java.rmi.*;
 
 /**
  * This remote interface enables the deployment tool to query the details of the Privilege.
- * 
+ *
  * @author Harish Prabandham
  */
 public interface Privilege extends java.io.Serializable {
     /**
      * Returns the name of the name of the Privilege.
-     * 
+     *
      * @return The name of the name of the Privilege.
      */
     public String getName();

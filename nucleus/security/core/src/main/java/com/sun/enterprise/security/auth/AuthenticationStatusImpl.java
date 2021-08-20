@@ -18,7 +18,7 @@ package com.sun.enterprise.security.auth;
 
 /**
  * This class implements an AuthenticationStatus object.
- * 
+ *
  * @author Harish Prabandham
  */
 
@@ -30,7 +30,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This constructs a new AuthenticationStatus object.
-     * 
+     *
      * @param The name of the principal
      * @param The name of the realm that authenticated the principal
      * @param The method used for authenticating the principal
@@ -45,7 +45,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This method returns the status of the authentication
-     * 
+     *
      * @return An integer value indicating the status of the authentication
      */
     public int getStatus() {
@@ -55,7 +55,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
     /**
      * This method returns a byte array of zero length, since there's no continuation data needed for passphrase based
      * authentication.
-     * 
+     *
      * @return A byte array of zero length.
      */
     public byte[] getContinuationData() {
@@ -65,7 +65,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
     /**
      * This method returns a byte array of zero length, since there's no auth specific data needed for passphrase based
      * authentication.
-     * 
+     *
      * @return A byte array of zero length.
      */
     public byte[] getAuthSpecificData() {
@@ -74,7 +74,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This method returns the name of realm where the authentication was performed.
-     * 
+     *
      * @return A java.lang.String representation of the realm.
      */
     public String getRealmName() {
@@ -83,7 +83,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This method returns the "method" used to perform authentication
-     * 
+     *
      * @return A java.lang.String representation of the method used. In passphrase based authentication it returns the string
      * "password".
      */
@@ -93,7 +93,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
 
     /**
      * This method returns the string representation of the principal that was authenticated.
-     * 
+     *
      * @return A java.lang.String representation of the Principal.
      */
     public String getPrincipalName() {

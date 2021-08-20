@@ -67,7 +67,7 @@ import jakarta.inject.Singleton;
 
 /**
  * This implements SecuritySupport used in PluggableFeatureFactory.
- * 
+ *
  * @author Shing Wai Chan
  */
 // TODO: when we have two SecuritySupport implementations,
@@ -90,13 +90,13 @@ public class SecuritySupportImpl extends SecuritySupport {
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
     private static boolean initialized = false;
-    protected static final List<KeyStore> keyStores = new ArrayList<KeyStore>();
-    protected static final List<KeyStore> trustStores = new ArrayList<KeyStore>();
-    protected static final List<char[]> keyStorePasswords = new ArrayList<char[]>();
-    protected static final List<String> tokenNames = new ArrayList<String>();
+    protected static final List<KeyStore> keyStores = new ArrayList<>();
+    protected static final List<KeyStore> trustStores = new ArrayList<>();
+    protected static final List<char[]> keyStorePasswords = new ArrayList<>();
+    protected static final List<String> tokenNames = new ArrayList<>();
     private MasterPasswordImpl masterPasswordHelper = null;
     private static boolean instantiated = false;
-    private Date initDate = new Date();
+    private final Date initDate = new Date();
 
     @Inject
     private ServiceLocator habitat;
@@ -180,7 +180,7 @@ public class SecuritySupportImpl extends SecuritySupport {
 
     /**
      * This method will load keystore and truststore and add into corresponding list.
-     * 
+     *
      * @param tokenName
      * @param provider
      * @param keyStorePass
@@ -212,7 +212,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     /**
      * This method load keystore with given keystore file and keystore password for a given keystore type and provider. It always
      * return a non-null keystore.
-     * 
+     *
      * @param keyStoreType
      * @param provider
      * @param keyStoreFile
@@ -255,10 +255,12 @@ public class SecuritySupportImpl extends SecuritySupport {
     /**
      * This method returns an array of keystores containing keys and certificates.
      */
+    @Override
     public KeyStore[] getKeyStores() {
         return keyStores.toArray(new KeyStore[keyStores.size()]);
     }
 
+    @Override
     public KeyStore loadNullStore(String type, int index)
         throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException {
         KeyStore ret = KeyStore.getInstance(type);
@@ -266,10 +268,11 @@ public class SecuritySupportImpl extends SecuritySupport {
         return ret;
     }
 
+    @Override
     public KeyManager[] getKeyManagers(String algorithm)
         throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         KeyStore[] kstores = getKeyStores();
-        ArrayList<KeyManager> keyManagers = new ArrayList<KeyManager>();
+        ArrayList<KeyManager> keyManagers = new ArrayList<>();
         for (int i = 0; i < kstores.length; i++) {
             checkCertificateDates(kstores[i]);
             KeyManagerFactory kmf = KeyManagerFactory
@@ -285,9 +288,10 @@ public class SecuritySupportImpl extends SecuritySupport {
         return new KeyManager[] { keyManager };
     }
 
+    @Override
     public TrustManager[] getTrustManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException {
         KeyStore[] tstores = getTrustStores();
-        ArrayList<TrustManager> trustManagers = new ArrayList<TrustManager>();
+        ArrayList<TrustManager> trustManagers = new ArrayList<>();
         for (KeyStore tstore : tstores) {
             checkCertificateDates(tstore);
             TrustManagerFactory tmf = TrustManagerFactory
@@ -326,10 +330,12 @@ public class SecuritySupportImpl extends SecuritySupport {
     /**
      * This method returns an array of truststores containing certificates.
      */
+    @Override
     public KeyStore[] getTrustStores() {
         return trustStores.toArray(new KeyStore[trustStores.size()]);
     }
 
+    @Override
     public boolean verifyMasterPassword(final char[] masterPass) {
         return Arrays.equals(masterPass, keyStorePasswords.get(0));
     }
@@ -337,6 +343,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     /**
      * This method returns an array of token names in order corresponding to array of keystores.
      */
+    @Override
     public String[] getTokenNames() {
         return tokenNames.toArray(new String[tokenNames.size()]);
     }
@@ -345,6 +352,7 @@ public class SecuritySupportImpl extends SecuritySupport {
      * @param token
      * @return a keystore
      */
+    @Override
     public KeyStore getKeyStore(String token) {
         int idx = getTokenIndex(token);
         if (idx < 0) {
@@ -357,6 +365,7 @@ public class SecuritySupportImpl extends SecuritySupport {
      * @param token
      * @return a truststore
      */
+    @Override
     public KeyStore getTrustStore(String token) {
         int idx = getTokenIndex(token);
         if (idx < 0) {
@@ -379,10 +388,12 @@ public class SecuritySupportImpl extends SecuritySupport {
         return idx;
     }
 
+    @Override
     public void synchronizeKeyFile(Object configContext, String fileRealmName) throws Exception {
         //throw new UnsupportedOperationException("Not supported yet in V3.");
     }
 
+    @Override
     public void checkPermission(String key) {
         try {
             // Checking a random permission to check if it is server.
@@ -409,6 +420,7 @@ public class SecuritySupportImpl extends SecuritySupport {
         return penv.getProcessType().equals(ProcessType.Other);
     }
 
+    @Override
     public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex)
         throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         checkPermission(KEYSTORE_PASS_PROP);

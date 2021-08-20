@@ -29,7 +29,7 @@ import org.jvnet.hk2.annotations.Service;
  * start-up performance. (Upgrades from 2.x are handled by the SecureAdminConfigUpgrade upgrade service.)
  * <p>
  * For 3.1.2 and later the configuration needs to include:
- * 
+ *
  * <pre>
  * {@code
  * <secure-admin special-admin-indicator="xxx">

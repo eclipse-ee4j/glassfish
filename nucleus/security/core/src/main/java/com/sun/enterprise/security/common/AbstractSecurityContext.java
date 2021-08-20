@@ -34,14 +34,14 @@ public abstract class AbstractSecurityContext implements AppServSecurityContext,
     /**
      * This method should be implemented by the subclasses to return the caller principal. This information may be redundant since
      * the same information can be inferred by inspecting the Credentials of the caller.
-     * 
+     *
      * @return The caller Principal.
      */
     abstract public Principal getCallerPrincipal();
 
     /**
      * This method should be implemented by the subclasses to return the Credentials of the caller principal.
-     * 
+     *
      * @return A credentials object associated with the current client invocation.
      */
     abstract public Subject getSubject();

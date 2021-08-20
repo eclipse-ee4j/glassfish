@@ -50,7 +50,7 @@ import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
 /**
  * This a J2EE specific Key Manager class that is used to select user certificates for SSL client authentication. It delegates
  * most of the functionality to the provider specific KeyManager class.
- * 
+ *
  * @author Vivek Nagar
  * @author Harpreet Singh
  */
@@ -94,7 +94,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Choose the client alias that will be used to select the client certificate for SSL client auth.
-     * 
+     *
      * @param the keytype
      * @param the certificate issuers.
      * @param the socket used for this connection. This parameter can be null, in which case the method will return the most generic
@@ -151,7 +151,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Choose the server alias that will be used to select the server certificate for SSL server auth.
-     * 
+     *
      * @param the keytype
      * @param the certificate issuers.
      * @param the socket used for this connection. This parameter can be null, in which case the method will return the most generic
@@ -174,7 +174,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return the certificate chain for the specified alias.
-     * 
+     *
      * @param the alias.
      * @return the chain of X509 Certificates.
      */
@@ -193,7 +193,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return all the available client aliases for the specified key type.
-     * 
+     *
      * @param the keytype
      * @param the certificate issuers.
      * @return the array of aliases.
@@ -207,7 +207,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return all the available server aliases for the specified key type.
-     * 
+     *
      * @param the keytype
      * @param the certificate issuers.
      * @return the array of aliases.
@@ -221,7 +221,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return the private key for the specified alias.
-     * 
+     *
      * @param the alias.
      * @return the private key.
      */
@@ -240,7 +240,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Find the corresponding X509KeyManager associated to token in alias. It returns null if there is n
-     * 
+     *
      * @param tokenAlias of the form &lt;tokenName&gt;:&lt;aliasName&gt;
      */
     private X509KeyManager getManagerFromToken(String tokenAlias) {
@@ -259,7 +259,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
     /**
      * Perform login on the client side. It just simulates the login on the client side. The method uses the callback handlers and
      * generates correct credential information that will be later sent to the server
-     * 
+     *
      * @param int type whether it is <i> username_password</i> or <i> certificate </i> based login.
      * @param CallbackHandler the callback handler to gather user information.
      * @exception LoginException the exception thrown by the callback handler.
@@ -395,7 +395,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Sets the security context on the appclient side. It sets the relevant information into the TLS
-     * 
+     *
      * @param String username is the user who authenticated
      * @param Subject is the subject representation of the user
      * @param Credentials the credentials that the server associated with it

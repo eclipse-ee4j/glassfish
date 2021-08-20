@@ -54,7 +54,7 @@ import jakarta.inject.Singleton;
 
 /**
  * Handy class containing static functions.
- * 
+ *
  * @author Harpreet Singh
  * @author Vivek Nagar
  * @author Shing Wai Chan
@@ -207,7 +207,7 @@ public final class SSLUtils implements PostConstruct {
 
     /**
      * Check whether given String is of the form [&lt;TokenName&gt;:]alias where alias is an key entry.
-     * 
+     *
      * @param certNickname
      * @return boolean
      */
@@ -245,7 +245,7 @@ public final class SSLUtils implements PostConstruct {
 
     /**
      * Get a PrivateKeyEntry with certNickName is of the form [&lt;TokenName&gt;:]alias where alias is an key entry.
-     * 
+     *
      * @param certNickname
      * @return PrivateKeyEntry
      */

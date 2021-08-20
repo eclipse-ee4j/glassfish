@@ -41,7 +41,7 @@ import org.jvnet.hk2.config.ConfigListener;
 /**
  * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup for the
  * server.
- * 
+ *
  * @author Shing Wai Chan
  */
 @Service

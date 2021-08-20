@@ -686,7 +686,7 @@ public final class LDAPRealm extends IASRealm {
 
     /**
      * Escape special chars in search filter, according to RFC2254
-     * 
+     *
      * @param inName
      * @return
      */

@@ -196,7 +196,7 @@ public abstract class BaseRealm extends Realm {
 
     /**
      * Persist the realm data to permanent storage
-     * 
+     *
      * @throws com.sun.enterprise.security.auth.realm.BadRealmException
      */
     public void persist() throws BadRealmException {

@@ -220,7 +220,7 @@ public abstract class BaseCertificateLoginModule implements LoginModule {
      *
      * <p>
      * Must be overridden to add custom functionality.
-     * 
+     *
      * @throws LoginException on authentication failure.
      *
      */

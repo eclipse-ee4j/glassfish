@@ -28,7 +28,7 @@ import com.sun.logging.*;
 
 /**
  * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:
- * 
+ *
  * <pre>
  * // Initialize the ORB.
  * try {

@@ -226,7 +226,7 @@ public final class FileRealm extends IASRealm {
 
     /**
      * Returns the name of all the groups that this user belongs to.
-     * 
+     *
      * @param username Name of the user in this realm whose group listing is needed.
      * @return Enumeration of group names (strings).
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
@@ -275,7 +275,7 @@ public final class FileRealm extends IASRealm {
      * A new FileRealm instance is created and initialized from the keyfile on disk. The new instance is installed in the Realm
      * registry so future Realm.getInstance() calls will obtain the new data. Any existing references to this instance (e.g. in
      * active LoginModule sessions) are unaffected.
-     * 
+     *
      * @param config
      * @exception BadRealmException if realm data structures are bad
      *
@@ -381,7 +381,7 @@ public final class FileRealm extends IASRealm {
 
     /**
      * Persist the realm data to permanent storage
-     * 
+     *
      * @throws com.sun.enterprise.security.auth.realm.BadRealmException
      */
     @Override

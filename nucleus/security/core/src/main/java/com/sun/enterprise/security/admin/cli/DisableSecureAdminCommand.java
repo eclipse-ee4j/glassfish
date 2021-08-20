@@ -32,7 +32,7 @@ import org.glassfish.hk2.api.PerLookup;
 
 /**
  * Adjusts the DAS configuration to turn off secure admin, as if by executing these commands:
- * 
+ *
  * <pre>
  * {@code
 
@@ -71,7 +71,7 @@ public class DisableSecureAdminCommand extends SecureAdminCommand {
 
     /**
      * Iterator which returns array elements from back to front.
-     * 
+     *
      * @param <T>
      * @param steps
      * @return

@@ -16,16 +16,15 @@
 
 package com.sun.enterprise.security.ssl.manager;
 
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
 import java.util.HashSet;
 import java.util.Iterator;
-
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
 import javax.net.ssl.X509TrustManager;
 
 /**
  * This class combines an array of X509TrustManagers into one.
- *
+ * 
  * @author Shing Wai Chan
  **/
 public class UnifiedX509TrustManager implements X509TrustManager {
@@ -55,7 +54,6 @@ public class UnifiedX509TrustManager implements X509TrustManager {
     }
 
     // ---------- implements X509TrustManager -----------
-    @Override
     public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         CertificateException cex = null;
         for (int i = 0; i < mgrs.length; i++) {
@@ -72,7 +70,6 @@ public class UnifiedX509TrustManager implements X509TrustManager {
         }
     }
 
-    @Override
     public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
         CertificateException cex = null;
         for (int i = 0; i < mgrs.length; i++) {
@@ -89,7 +86,6 @@ public class UnifiedX509TrustManager implements X509TrustManager {
         }
     }
 
-    @Override
     public X509Certificate[] getAcceptedIssuers() {
         return issuers;
     }

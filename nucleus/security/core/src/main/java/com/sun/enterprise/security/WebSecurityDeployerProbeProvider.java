@@ -23,6 +23,16 @@ import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 @ProbeProvider(moduleProviderName = "glassfish", moduleName = "security", probeProviderName = "web")
 public class WebSecurityDeployerProbeProvider {
 
+    /*@Probe(name = "webDeploymentStartedEvent")
+    public void webDeploymentStartedEvent(
+            @ProbeParam("appName") String appName) {
+    }
+    
+    @Probe(name = "webDeploymentEndedEvent")
+    public void webDeploymentEndedEvent(
+            @ProbeParam("appName") String appName) {
+    }*/
+
     @Probe(name = "policyCreationStartedEvent")
     public void policyCreationStartedEvent(@ProbeParam("appName") String appName) {
     }
@@ -30,6 +40,16 @@ public class WebSecurityDeployerProbeProvider {
     @Probe(name = "policyCreationEndedEvent")
     public void policyCreationEndedEvent(@ProbeParam("appName") String appName) {
     }
+
+    /*    @Probe(name = "webUndeploymentStartedEvent")
+    public void webUndeploymentStartedEvent(
+            @ProbeParam("appName") String appName) {
+    }
+    
+    @Probe(name = "webUndeploymentEndedEvent")
+    public void webUndeploymentEndedEvent(
+            @ProbeParam("appName") String appName) {
+    }*/
 
     @Probe(name = "policyDestructionStartedEvent")
     public void policyDestructionStartedEvent(@ProbeParam("appName") String appName) {

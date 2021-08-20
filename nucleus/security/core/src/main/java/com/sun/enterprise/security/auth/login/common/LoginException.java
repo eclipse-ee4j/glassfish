@@ -23,7 +23,7 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
  * <UL>
  * <LI>If the client is unable to authenticate successfully with the
  * </UL>
- *
+ * 
  * @see com.sun.enterprise.security.auth.AuthenticationStatus
  * @author Harish Prabandham
  * @author Harpreet Singh
@@ -37,7 +37,7 @@ public class LoginException extends SecurityException {
 
     /**
      * Create a new LoginException object with the given message
-     *
+     * 
      * @param The message indicating why authentication failed.
      */
     public LoginException(String message) {
@@ -46,7 +46,7 @@ public class LoginException extends SecurityException {
 
     /**
      * Create a new LoginException object with the given authentication value.
-     *
+     * 
      * @param The AuthenticationStatus object
      */
     public LoginException(boolean as) {

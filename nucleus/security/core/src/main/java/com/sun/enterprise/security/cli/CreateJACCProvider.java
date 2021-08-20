@@ -119,7 +119,6 @@ public class CreateJACCProvider implements AdminCommand, AdminCommandSecurity.Pr
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
-                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     JaccProvider newJacc = param.createChild(JaccProvider.class);
                     newJacc.setName(jaccProviderName);

@@ -36,11 +36,12 @@ import jakarta.inject.Inject;
 
 import org.jvnet.hk2.annotations.Service;
 import jakarta.inject.Singleton;
+import org.jvnet.hk2.config.ConfigListener;
 
 /**
  * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup for the
  * server.
- *
+ * 
  * @author Shing Wai Chan
  */
 @Service

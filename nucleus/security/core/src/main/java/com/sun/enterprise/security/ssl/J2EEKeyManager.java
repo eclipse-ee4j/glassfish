@@ -40,6 +40,7 @@ import com.sun.enterprise.security.common.SecurityConstants;
 import com.sun.enterprise.security.common.Util;
 
 import java.util.logging.*;
+import com.sun.logging.*;
 import java.security.PrivilegedAction;
 import java.util.Set;
 import javax.net.ssl.X509ExtendedKeyManager;
@@ -49,7 +50,7 @@ import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
 /**
  * This a J2EE specific Key Manager class that is used to select user certificates for SSL client authentication. It delegates
  * most of the functionality to the provider specific KeyManager class.
- *
+ * 
  * @author Vivek Nagar
  * @author Harpreet Singh
  */
@@ -73,7 +74,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
             X509KeyManager[] mgrs = umgr.getX509KeyManagers();
             String[] tokenNames = umgr.getTokenNames();
 
-            tokenName2MgrMap = new HashMap<>();
+            tokenName2MgrMap = new HashMap<String, X509KeyManager>();
             for (int i = 0; i < mgrs.length; i++) {
                 if (tokenNames[i] != null) {
                     tokenName2MgrMap.put(tokenNames[i], mgrs[i]);
@@ -83,26 +84,23 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
         }
     }
 
-    @Override
     public String chooseEngineClientAlias(String[] keyType, Principal[] issuers, SSLEngine engine) {
         return mgr.chooseClientAlias(keyType, issuers, null);
     }
 
-    @Override
     public String chooseEngineServerAlias(String keyType, Principal[] issuers, SSLEngine engine) {
         return alias;
     }
 
     /**
      * Choose the client alias that will be used to select the client certificate for SSL client auth.
-     *
+     * 
      * @param the keytype
      * @param the certificate issuers.
      * @param the socket used for this connection. This parameter can be null, in which case the method will return the most generic
      * alias to use.
      * @return the alias.
      */
-    @Override
     public String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket) {
 
         String clientAlias = null;
@@ -153,14 +151,13 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Choose the server alias that will be used to select the server certificate for SSL server auth.
-     *
+     * 
      * @param the keytype
      * @param the certificate issuers.
      * @param the socket used for this connection. This parameter can be null, in which case the method will return the most generic
      * alias to use.
      * @return the alias
      */
-    @Override
     public String chooseServerAlias(String keyType, Principal[] issuers, Socket socket) {
 
         String serverAlias = null;
@@ -177,11 +174,10 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return the certificate chain for the specified alias.
-     *
+     * 
      * @param the alias.
      * @return the chain of X509 Certificates.
      */
-    @Override
     public X509Certificate[] getCertificateChain(String alias) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "Getting certificate chain");
@@ -197,12 +193,11 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return all the available client aliases for the specified key type.
-     *
+     * 
      * @param the keytype
      * @param the certificate issuers.
      * @return the array of aliases.
      */
-    @Override
     public String[] getClientAliases(String keyType, Principal[] issuers) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "Getting client aliases");
@@ -212,12 +207,11 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return all the available server aliases for the specified key type.
-     *
+     * 
      * @param the keytype
      * @param the certificate issuers.
      * @return the array of aliases.
      */
-    @Override
     public String[] getServerAliases(String keyType, Principal[] issuers) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "Getting server aliases");
@@ -227,11 +221,10 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Return the private key for the specified alias.
-     *
+     * 
      * @param the alias.
      * @return the private key.
      */
-    @Override
     public PrivateKey getPrivateKey(String alias) {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "Getting private key for alias:{0}", alias);
@@ -247,7 +240,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Find the corresponding X509KeyManager associated to token in alias. It returns null if there is n
-     *
+     * 
      * @param tokenAlias of the form &lt;tokenName&gt;:&lt;aliasName&gt;
      */
     private X509KeyManager getManagerFromToken(String tokenAlias) {
@@ -266,7 +259,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
     /**
      * Perform login on the client side. It just simulates the login on the client side. The method uses the callback handlers and
      * generates correct credential information that will be later sent to the server
-     *
+     * 
      * @param int type whether it is <i> username_password</i> or <i> certificate </i> based login.
      * @param CallbackHandler the callback handler to gather user information.
      * @exception LoginException the exception thrown by the callback handler.
@@ -282,7 +275,6 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
         //V3:Commented : TODO uncomment later for Appcontainer
         if (type == SecurityConstants.USERNAME_PASSWORD) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
@@ -298,7 +290,6 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
             return subject;
         } else if (type == SecurityConstants.CERTIFICATE) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE, subject, handler);
@@ -314,7 +305,6 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
             return subject;
         } else if (type == SecurityConstants.ALL) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lgup = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
@@ -334,7 +324,6 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
             return subject;
         } else {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
@@ -362,7 +351,6 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
         final Class<?> clas = clazz;
         final Subject fs = subject;
         Set credset = (Set) AppservAccessController.doPrivileged(new PrivilegedAction<Set>() {
-            @Override
             public Set run() {
                 if (_logger.isLoggable(Level.FINEST)) {
                     _logger.log(Level.FINEST, "LCD post login subject :{0}", fs);
@@ -375,7 +363,6 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
             Object obj = null;
             try {
                 obj = AppservAccessController.doPrivileged(new PrivilegedAction() {
-                    @Override
                     public java.lang.Object run() {
                         return iter.next();
                     }
@@ -408,7 +395,7 @@ public final class J2EEKeyManager /*implements X509KeyManager */ extends X509Ext
 
     /**
      * Sets the security context on the appclient side. It sets the relevant information into the TLS
-     *
+     * 
      * @param String username is the user who authenticated
      * @param Subject is the subject representation of the user
      * @param Credentials the credentials that the server associated with it

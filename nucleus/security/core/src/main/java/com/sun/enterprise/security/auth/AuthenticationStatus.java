@@ -18,7 +18,7 @@ package com.sun.enterprise.security.auth;
 
 /**
  * This interface stores the status of the authentication.
- *
+ * 
  * @author Harish Prabandham
  */
 
@@ -30,7 +30,7 @@ public interface AuthenticationStatus extends java.io.Serializable {
 
     /**
      * This method returns the status of the authentication
-     *
+     * 
      * @return An integer value indicating the status of the authentication
      */
     public int getStatus();

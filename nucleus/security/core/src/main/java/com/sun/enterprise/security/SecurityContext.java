@@ -47,7 +47,7 @@ import com.sun.enterprise.security.integration.AppServSecurityContext;
  * This class is used on the server side to represent the security context.
  *
  * Thread Local Storage is a concept introduced in JDK1.2.
- *
+ * 
  * @see java.lang.ThreadLocal
  * @see java.lang.InheritableThreadLocal
  *
@@ -63,7 +63,7 @@ public class SecurityContext extends AbstractSecurityContext {
         _logger = SecurityLoggerInfo.getLogger();
     }
 
-    private static InheritableThreadLocal<SecurityContext> currentSecCtx = new InheritableThreadLocal<>();
+    private static InheritableThreadLocal<SecurityContext> currentSecCtx = new InheritableThreadLocal<SecurityContext>();
     private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
 
     private static javax.security.auth.AuthPermission doAsPrivilegedPerm = new javax.security.auth.AuthPermission("doAsPrivileged");
@@ -103,7 +103,7 @@ public class SecurityContext extends AbstractSecurityContext {
 
     /**
      * Create a SecurityContext with given subject having DistinguishedPrincipalCredential. This is used for JMAC environment.
-     *
+     * 
      * @param subject
      */
     public SecurityContext(Subject subject) {
@@ -264,7 +264,7 @@ public class SecurityContext extends AbstractSecurityContext {
 
     /**
      * This method gets the SecurityContext stored in the Thread Local Store (TLS) of the current thread.
-     *
+     * 
      * @return The current Security Context stored in TLS. It returns null if SecurityContext could not be found in the current
      * thread.
      */
@@ -278,7 +278,7 @@ public class SecurityContext extends AbstractSecurityContext {
 
     /**
      * This method sets the SecurityContext stored in the TLS.
-     *
+     * 
      * @param sc The Security Context that should be stored in TLS. This public static method needs to be protected such that it can
      * only be called by container code. Otherwise it can be called by application code to set its subject (which the EJB security
      * manager will use to create a domain combiner, and then everything the ejb does will be run as the corresponding subject.
@@ -334,7 +334,7 @@ public class SecurityContext extends AbstractSecurityContext {
     /**
      * This method returns the caller principal. This information may be redundant since the same information can be inferred by
      * inspecting the Credentials of the caller.
-     *
+     * 
      * @return The caller Principal.
      */
     @Override

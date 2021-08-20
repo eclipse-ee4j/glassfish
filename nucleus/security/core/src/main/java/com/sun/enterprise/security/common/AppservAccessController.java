@@ -23,7 +23,7 @@ import java.security.PrivilegedExceptionAction;
 
 /**
  * This class provides an optimization for some methods in java.security.AccessController.
- *
+ * 
  * @author Shing Wai Chan
  */
 public final class AppservAccessController {

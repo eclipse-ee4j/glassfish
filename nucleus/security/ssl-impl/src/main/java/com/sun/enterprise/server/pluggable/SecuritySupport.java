@@ -16,6 +16,7 @@
 
 package com.sun.enterprise.server.pluggable;
 
+import com.sun.enterprise.security.ssl.impl.SecuritySupportImpl;
 import java.io.IOException;
 import java.security.KeyStore;
 //V3:Commented import com.sun.enterprise.config.ConfigContext;
@@ -24,17 +25,13 @@ import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.TrustManager;
-
 import org.jvnet.hk2.annotations.Contract;
-
-import com.sun.enterprise.security.ssl.impl.SecuritySupportImpl;
 
 /**
  * SecuritySupport is part of PluggableFeature that provides access to internal services managed by application server.
- *
+ * 
  * @author Shing Wai Chan
  */
 @Contract
@@ -47,13 +44,12 @@ public abstract class SecuritySupport {
     public static final String keyStoreProp = "javax.net.ssl.keyStore";
     public static final String trustStoreProp = "javax.net.ssl.trustStore";
 
-    private static volatile SecuritySupport defaultInstance;
+    private static volatile SecuritySupport defaultInstance = null;
 
     public static SecuritySupport getDefaultInstance() {
         if (defaultInstance == null) {
             defaultInstance = new SecuritySupportImpl();
         }
-
         return defaultInstance;
     }
 
@@ -84,7 +80,8 @@ public abstract class SecuritySupport {
      * @param index
      * @return load a null keystore of given type.
      */
-    abstract public KeyStore loadNullStore(String type, int index) throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException;
+    abstract public KeyStore loadNullStore(String type, int index)
+        throws KeyStoreException, IOException, NoSuchAlgorithmException, CertificateException;
 
     /**
      * @param masterPass
@@ -100,7 +97,8 @@ public abstract class SecuritySupport {
      * @throws NoSuchAlgorithmException
      * @throws UnrecoverableKeyException
      */
-    abstract public KeyManager[] getKeyManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
+    abstract public KeyManager[] getKeyManagers(String algorithm)
+        throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
 
     /**
      * @param algorithm
@@ -121,7 +119,8 @@ public abstract class SecuritySupport {
      * @throws NoSuchAlgorithmException
      * @throws UnrecoverableKeyException
      */
-    abstract public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex) throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
+    abstract public PrivateKey getPrivateKeyForAlias(String alias, int keystoreIndex)
+        throws KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException;
 
     /**
      * This method returns an array of token names in order corresponding to array of keystores.
@@ -130,16 +129,18 @@ public abstract class SecuritySupport {
 
     /**
      * This method synchronize key file for given realm.
-     *
+     * 
      * @param config the ConfigContextx
      * @param fileRealmName
      * @exception if fail to synchronize, a known exception is com.sun.enterprise.ee.synchronization.SynchronizationException
      */
+    /** TODO:V3:Cluster ConfigContext is no longer present so find out what this needs to be */
+    //public void synchronizeKeyFile(ConfigContext config, String fileRealmName)
     abstract public void synchronizeKeyFile(Object configContext, String fileRealmName) throws Exception;
 
     /**
      * Check permission for the given key.
-     *
+     * 
      * @param key
      */
     abstract public void checkPermission(String key);

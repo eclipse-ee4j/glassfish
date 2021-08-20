@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.logging.Logger;
 import java.util.logging.Level;
 
+import com.sun.enterprise.security.PrincipalGroupFactory;
 import com.sun.enterprise.util.i18n.StringManager;
 import javax.security.auth.*;
 import javax.security.auth.callback.*;
@@ -79,7 +80,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * @param options - options specified in the login Configuration for this particular LoginModule.
      *
      */
-    @Override
     final public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
         _subject = subject;
         _sharedState = sharedState;
@@ -101,7 +101,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * @throws LoginException Thrown if login failed, or on other problems.
      *
      */
-    @Override
     final public boolean login() throws LoginException {
         //Extract the username and password
         extractCredentials();
@@ -124,7 +123,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * @throws LoginException If commit fails.
      *
      */
-    @Override
     public boolean commit() throws LoginException {
         if (_succeeded == false) {
             return false;
@@ -179,7 +177,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * Abort the authentication process.
      *
      */
-    @Override
     final public boolean abort() throws LoginException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "JAAS authentication aborted.");
@@ -210,7 +207,6 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * Log out the subject.
      *
      */
-    @Override
     final public boolean logout() throws LoginException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "JAAS logout for: " + _subject.toString());
@@ -267,7 +263,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
 
     /**
      * Method to extract container-provided username and password
-     *
+     * 
      * @throws javax.security.auth.login.LoginException
      */
     final public void extractCredentials() throws LoginException {
@@ -322,7 +318,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * Perform authentication decision.
      *
      * Method returns silently on success and returns a LoginException on failure.
-     *
+     * 
      * @throws LoginException on authentication failure.
      *
      */
@@ -344,7 +340,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     /**
      * Used for setting the username obtained from the container internally, to be made available to the custom login module
      * implementation
-     *
+     * 
      * @param username
      */
     private void setUsername(String username) {
@@ -380,7 +376,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
     /**
      * Used for setting the password obtained from the container internally, to be made available to the custom login module
      * implementation Password is preferred to be a char[] instead of a string
-     *
+     * 
      * @param password
      */
     private void setPasswordChar(char[] password) {

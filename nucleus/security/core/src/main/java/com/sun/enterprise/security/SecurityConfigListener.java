@@ -79,7 +79,6 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      *
      * @param events list of changes
      */
-    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         // I am not so interested with the list of events, just sort who got added or removed for me.
         ConfigSupport.sortAndDispatch(events, new Changed() {
@@ -91,7 +90,6 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
              * @param changedType type of the configuration object
              * @param changedInstance changed instance.
              */
-            @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
                 NotProcessed np = null;
                 switch (type) {
@@ -207,7 +205,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
     /**
      * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is received.
-     *
+     * 
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public static void authRealmCreated(AuthRealm instance) {
@@ -220,7 +218,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
     /**
      * New auth realm created. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_CREATE is received.
-     *
+     * 
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public static void authRealmCreated(Config config, AuthRealm instance) {
@@ -233,7 +231,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
     /**
      * Auth realm deleted. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_DELETE is received.
-     *
+     * 
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public static void authRealmDeleted(Config config, AuthRealm instance) {
@@ -254,7 +252,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
     /**
      * Auth realm deleted. It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_DELETE is received.
-     *
+     * 
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public static void authRealmDeleted(AuthRealm instance) {
@@ -276,7 +274,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     /**
      * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_UPDATE is
      * received.
-     *
+     * 
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public void authRealmUpdated(AuthRealm instance) {
@@ -291,7 +289,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
     /**
      * Auth realm updated (attributes change). It is called whenever a AuthRealmEvent with action of AuthRealmEvent.ACTION_UPDATE is
      * received.
-     *
+     * 
      * @throws AdminEventListenerException when the listener is unable to process the event.
      */
     public void authRealmUpdated(Config config, AuthRealm instance) {
@@ -305,7 +303,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
     /**
      * This method will create or replace existing realm with a new one in cache.
-     *
+     * 
      * @param event
      * @exception for instance, BadRealmException, ConfigException, SynchronizationException
      */
@@ -325,7 +323,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
 
     /**
      * This method will create or replace existing realm with a new one in cache.
-     *
+     * 
      * @param event
      * @exception for instance, BadRealmException, ConfigException, SynchronizationException
      */
@@ -343,7 +341,6 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
         Configuration.getConfiguration().refresh();
     }
 
-    @Override
     public void postConstruct() {
         if (securityService == null) {
             //should never happen

@@ -71,10 +71,9 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule {
 
     /**
      * Older implementations can implement authenticate. While new implementation calls authenticateUser
-     *
+     * 
      * @throws LoginException
      */
-    @Override
     protected final void authenticateUser() throws LoginException {
         authenticate();
     }
@@ -82,7 +81,7 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule {
     /**
      * Perform authentication decision. Method returns silently on success and returns a LoginException on failure. To be implmented
      * by sub-classes
-     *
+     * 
      * @return void authenticate returns silently on successful authentication.
      * @throws com.sun.enterprise.security.LoginException on authentication failure.
      *

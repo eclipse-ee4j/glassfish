@@ -33,6 +33,7 @@ import com.sun.enterprise.security.integration.AppClientSSL;
 import org.glassfish.security.common.PrincipalImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.logging.*;
+import com.sun.logging.*;
 import org.glassfish.internal.api.Globals;
 
 /**
@@ -100,7 +101,6 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @param options options specified in the login <code>Configuration</code> for this particular <code>LoginModule</code>.
      */
-    @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
 
         this.subject = subject;
@@ -122,7 +122,6 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @exception LoginException if this <code>LoginModule</code> is unable to perform the authentication.
      */
-    @Override
     public boolean login() throws LoginException {
 
         // prompt for a username and password
@@ -156,8 +155,8 @@ public class ClientCertificateLoginModule implements LoginModule {
             if (debug) {
                 if (_logger.isLoggable(Level.FINE)) {
                     _logger.log(Level.FINE, "\t\t[ClientCertificateLoginModule] " + "user entered certificate: ");
-                    for (int element : idx) {
-                        _logger.log(Level.FINE, aliasString[element]);
+                    for (int i = 0; i < idx.length; i++) {
+                        _logger.log(Level.FINE, aliasString[idx[i]]);
                     }
                 }
             }
@@ -176,6 +175,8 @@ public class ClientCertificateLoginModule implements LoginModule {
             }
             succeeded = true;
             return true;
+        } catch (java.io.IOException ioe) {
+            throw new LoginException(ioe.toString());
         } catch (UnsupportedCallbackException uce) {
             throw new LoginException(
                 "Error: " + uce.getCallback().toString() + " not available to garner authentication information " + "from the user");
@@ -201,7 +202,6 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @return true if this LoginModule's own login and commit attempts succeeded, or false otherwise.
      */
-    @Override
     public boolean commit() throws LoginException {
         if (succeeded == false) {
             return false;
@@ -253,7 +253,6 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @return false if this LoginModule's own login and/or commit attempts failed, and true otherwise.
      */
-    @Override
     public boolean abort() throws LoginException {
         if (succeeded == false) {
             return false;
@@ -282,7 +281,6 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.
      */
-    @Override
     public boolean logout() throws LoginException {
         // unset the alias
         ssl = null;

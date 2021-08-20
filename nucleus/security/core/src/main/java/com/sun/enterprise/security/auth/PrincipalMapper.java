@@ -23,7 +23,7 @@ import java.util.Properties;
  *
  * Enables formatting of principal retrieved from message eg: P-Asserted-Identity values. eg: "Cullen Jennings"
  * <sip:fluffy@cisco.com> value can be mapped/formatted to "CullenJ".
- *
+ * 
  * @author k.venugopal@sun.com
  */
 

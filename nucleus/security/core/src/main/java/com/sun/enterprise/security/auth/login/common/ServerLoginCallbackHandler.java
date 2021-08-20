@@ -64,24 +64,23 @@ public class ServerLoginCallbackHandler implements CallbackHandler {
     /**
      * This is the callback method called when authentication data is required. It either pops up a dialog box to request
      * authentication data or use text input.
-     *
+     * 
      * @param the callback object instances supported by the login module.
      */
-    @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
-        for (Callback callback : callbacks) {
-            if (callback instanceof NameCallback) {
-                NameCallback nme = (NameCallback) callback;
+        for (int i = 0; i < callbacks.length; i++) {
+            if (callbacks[i] instanceof NameCallback) {
+                NameCallback nme = (NameCallback) callbacks[i];
                 nme.setName(username);
-            } else if (callback instanceof PasswordCallback) {
-                PasswordCallback pswd = (PasswordCallback) callback;
+            } else if (callbacks[i] instanceof PasswordCallback) {
+                PasswordCallback pswd = (PasswordCallback) callbacks[i];
                 pswd.setPassword(password);
-            } else if (callback instanceof CertificateRealm.AppContextCallback) {
-                ((CertificateRealm.AppContextCallback) callback).setModuleID(moduleID);
-            } else if (GP_CB.equals(callback.getClass().getName())) {
-                processGroupPrincipal(callback);
+            } else if (callbacks[i] instanceof CertificateRealm.AppContextCallback) {
+                ((CertificateRealm.AppContextCallback) callbacks[i]).setModuleID(moduleID);
+            } else if (GP_CB.equals(callbacks[i].getClass().getName())) {
+                processGroupPrincipal(callbacks[i]);
             } else {
-                throw new UnsupportedCallbackException(callback);
+                throw new UnsupportedCallbackException(callbacks[i]);
             }
         }
     }
@@ -92,7 +91,17 @@ public class ServerLoginCallbackHandler implements CallbackHandler {
             Class clazz = loader.loadClass(GPCBH_UTIL);
             Method meth = clazz.getMethod(GPCBH_UTIL_METHOD, Callback.class);
             meth.invoke(null, callback);
-        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException ex) {
+        } catch (IllegalAccessException ex) {
+            throw new UnsupportedCallbackException(callback);
+        } catch (IllegalArgumentException ex) {
+            throw new UnsupportedCallbackException(callback);
+        } catch (InvocationTargetException ex) {
+            throw new UnsupportedCallbackException(callback);
+        } catch (NoSuchMethodException ex) {
+            throw new UnsupportedCallbackException(callback);
+        } catch (SecurityException ex) {
+            throw new UnsupportedCallbackException(callback);
+        } catch (ClassNotFoundException ex) {
             throw new UnsupportedCallbackException(callback);
         }
 

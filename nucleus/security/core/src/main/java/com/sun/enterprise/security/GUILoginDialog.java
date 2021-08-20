@@ -25,12 +25,13 @@ import com.sun.enterprise.util.LocalStringManagerImpl;
 
 import java.util.logging.*;
 
+import com.sun.logging.*;
 import java.util.Arrays;
 import org.glassfish.internal.api.Globals;
 
 /**
  * An implementation of a LoginDialog that presents a swing based GUI for querying username and password.
- *
+ * 
  * @author Harish Prabandham
  * @author Harpreet Singh
  */
@@ -70,7 +71,6 @@ public final class GUILoginDialog implements LoginDialog {
     /**
      * @return The username of the user.
      */
-    @Override
     public String getUserName() {
         return passphraseDialog.username;
     }
@@ -78,7 +78,6 @@ public final class GUILoginDialog implements LoginDialog {
     /**
      * @return The password of the user in plain text...
      */
-    @Override
     public final char[] getPassword() {
         char[] temp = passphraseDialog.passphrase;
         return (temp == null) ? null : Arrays.copyOf(temp, temp.length);
@@ -143,13 +142,13 @@ class PassphraseDialog extends JDialog {
         this.frame = frame;
         super.dialogInit();
 
-        for (Callback callback : callbacks) {
-            if (callback instanceof NameCallback) {
-                nameCallback = (NameCallback) callback;
-            } else if (callback instanceof PasswordCallback) {
-                passwordCallback = (PasswordCallback) callback;
-            } else if (callback instanceof ChoiceCallback) {
-                choiceCallback = (ChoiceCallback) callback;
+        for (int i = 0; i < callbacks.length; i++) {
+            if (callbacks[i] instanceof NameCallback) {
+                nameCallback = (NameCallback) callbacks[i];
+            } else if (callbacks[i] instanceof PasswordCallback) {
+                passwordCallback = (PasswordCallback) callbacks[i];
+            } else if (callbacks[i] instanceof ChoiceCallback) {
+                choiceCallback = (ChoiceCallback) callbacks[i];
             }
         }
         initbox();
@@ -219,7 +218,6 @@ class PassphraseDialog extends JDialog {
             okForKP.setActionCommand("ok");
 
             okForKP.addActionListener(new ActionListener() {
-                @Override
                 public void actionPerformed(ActionEvent ae) {
                     char[] passKPFromUser = keystorePassword.getPassword();
                     if (sslUtils.verifyMasterPassword(passKPFromUser)) {
@@ -242,7 +240,6 @@ class PassphraseDialog extends JDialog {
 
             cancelForKP.setActionCommand("cancel");
             cancelForKP.addActionListener(new ActionListener() {
-                @Override
                 public void actionPerformed(ActionEvent ae) {
                     if (choiceCallback != null)
                         choiceCallback.setSelectedIndex(-1);
@@ -278,7 +275,6 @@ class PassphraseDialog extends JDialog {
         // XXX I18N
         okButton.setActionCommand("ok");
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent ae) {
                 username = userField.getText();
                 if (username.trim().length() > 0)
@@ -303,7 +299,6 @@ class PassphraseDialog extends JDialog {
         cancelButton = new JButton(localStrings.getLocalString("enterprise.security.cancel", "Cancel"));
         cancelButton.setActionCommand("cancel");
         cancelButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent ae) {
                 if (choiceCallback != null) {
                     choiceCallback.setSelectedIndex(-1);
@@ -318,7 +313,6 @@ class PassphraseDialog extends JDialog {
         });
 
         super.addWindowListener(new WindowAdapter() {
-            @Override
             public void windowClosing(WindowEvent we) {
                 //System.out.println("IN WINDOW CLOSING");
                 //_logger.log(Level.FINE,"IN WINDOW CLOSING");
@@ -445,7 +439,6 @@ class CertificateDialog extends JDialog {
         okButton = new JButton(localStrings.getLocalString("enterprise.security.ok", " OK ")); // XXX I18N
         okButton.setActionCommand("ok");
         okButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent ae) {
                 // System.out.println("OK Action");
                 //_logger.log(Level.FINE,"OK Action");
@@ -461,7 +454,6 @@ class CertificateDialog extends JDialog {
         cancelButton = new JButton(localStrings.getLocalString("enterprise.security.cancel", "Cancel")); // XXX I18N
         cancelButton.setActionCommand("cancel");
         cancelButton.addActionListener(new ActionListener() {
-            @Override
             public void actionPerformed(ActionEvent ae) {
                 // System.out.println("Cancel Action");
                 // _logger.log(Level.FINE,"Cancel Action");
@@ -473,7 +465,6 @@ class CertificateDialog extends JDialog {
         });
 
         super.addWindowListener(new WindowAdapter() {
-            @Override
             public void windowClosing(WindowEvent we) {
                 // System.out.println("IN WINDOW CLOSING");
                 // _logger.log(Level.FINE,"IN WINDOW CLOSING");

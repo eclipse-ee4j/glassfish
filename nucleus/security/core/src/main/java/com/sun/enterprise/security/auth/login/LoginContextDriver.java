@@ -110,7 +110,6 @@ public class LoginContextDriver {
         final PasswordCredential pc = new PasswordCredential(username, password, realmName);
 
         AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
             public java.lang.Object run() {
                 fs.getPrivateCredentials().add(pc);
                 return fs;
@@ -231,7 +230,6 @@ public class LoginContextDriver {
         final GSSUPName name = new GSSUPName(username, realmName);
 
         AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
             public java.lang.Object run() {
                 s.getPrincipals().add(p);
                 s.getPublicCredentials().add(name);
@@ -352,7 +350,7 @@ public class LoginContextDriver {
      * will succeed in the given realm. It does not set the result of the authentication in the appserver runtime environment A
      * silent return from this method means that the given user succeeding in authenticating with the given password in the given
      * realm
-     *
+     * 
      * @param subject
      * @param username
      * @param password
@@ -372,7 +370,6 @@ public class LoginContextDriver {
         final PasswordCredential pc = new PasswordCredential(username, password, realmName);
 
         AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
             public java.lang.Object run() {
                 fs.getPrivateCredentials().add(pc);
                 return fs;
@@ -436,7 +433,6 @@ public class LoginContextDriver {
             userName = x500Principal.getName();
 
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     fs.getPublicCredentials().add(x500Principal);
                     return fs;
@@ -495,7 +491,6 @@ public class LoginContextDriver {
             if (groups != null && groups.hasMoreElements()) {
                 AppservAccessController.doPrivileged(new PrivilegedAction() {
 
-                    @Override
                     public java.lang.Object run() {
                         while (groups.hasMoreElements()) {
                             String grp = (String) groups.nextElement();
@@ -668,7 +663,6 @@ public class LoginContextDriver {
         Object obj = null;
         try {
             obj = AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     return iter.next();
                 }
@@ -696,7 +690,6 @@ public class LoginContextDriver {
         final Class<?> cl = cls;
 
         final Set credset = (Set) AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
             public java.lang.Object run() {
                 return s.getPrivateCredentials(cl);
             }
@@ -716,7 +709,6 @@ public class LoginContextDriver {
         Object obj = null;
         try {
             obj = AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     return iter.next();
                 }
@@ -734,7 +726,7 @@ public class LoginContextDriver {
 
     /**
      * This method sets the security context on the current Thread Local Storage
-     *
+     * 
      * @param String username is the user who authenticated
      * @param Subject is the subject representation of the user
      * @param Credentials the credentials that the server associated with it
@@ -756,7 +748,7 @@ public class LoginContextDriver {
     /**
      * Perform login on the client side. It just simulates the login on the client side. The method uses the callback handlers and
      * generates correct credential information that will be later sent to the server
-     *
+     * 
      * @param int type whether it is <i> username_password</i> or <i> certificate </i> based login.
      * @param CallbackHandler the callback handler to gather user information.
      * @exception LoginException the exception thrown by the callback handler.
@@ -772,7 +764,6 @@ public class LoginContextDriver {
 
         if (type == SecurityConstants.USERNAME_PASSWORD) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
@@ -788,7 +779,6 @@ public class LoginContextDriver {
             return subject;
         } else if (type == SecurityConstants.CERTIFICATE) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_CERTIFICATE, subject, handler);
@@ -804,7 +794,6 @@ public class LoginContextDriver {
             return subject;
         } else if (type == SecurityConstants.ALL) {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lgup = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
@@ -824,7 +813,6 @@ public class LoginContextDriver {
             return subject;
         } else {
             AppservAccessController.doPrivileged(new PrivilegedAction() {
-                @Override
                 public java.lang.Object run() {
                     try {
                         LoginContext lg = new LoginContext(SecurityConstants.CLIENT_JAAS_PASSWORD, subject, handler);
@@ -842,7 +830,7 @@ public class LoginContextDriver {
 
     /**
      * Perform logout on the client side.
-     *
+     * 
      * @exception LoginException
      */
     public static void doClientLogout() throws LoginException {
@@ -905,7 +893,6 @@ public class LoginContextDriver {
         final Class<?> clas = clazz;
         final Subject fs = subject;
         Set credset = (Set) AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
             public java.lang.Object run() {
                 if (_logger.isLoggable(Level.FINEST)) {
                     _logger.log(Level.FINEST, "LCD post login subject :" + fs);
@@ -918,7 +905,6 @@ public class LoginContextDriver {
             Object obj = null;
             try {
                 obj = AppservAccessController.doPrivileged(new PrivilegedAction() {
-                    @Override
                     public java.lang.Object run() {
                         return iter.next();
                     }
@@ -951,7 +937,7 @@ public class LoginContextDriver {
 
     /**
      * Sets the security context on the appclient side. It sets the relevant information into the TLS
-     *
+     * 
      * @param String username is the user who authenticated
      * @param Subject is the subject representation of the user
      * @param Credentials the credentials that the server associated with it

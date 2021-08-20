@@ -17,22 +17,21 @@
 package com.sun.enterprise.security.ssl.manager;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509KeyManager;
 
 /**
  * This class combines an array of X509KeyManagers into one.
- *
+ * 
  * @author Shing Wai Chan
  **/
 public class UnifiedX509KeyManager implements X509KeyManager /* extends X509ExtendedKeyManager*/ {
-    private X509KeyManager[] mgrs;
-    private String[] tokenNames;
+    private X509KeyManager[] mgrs = null;
+    private String[] tokenNames = null;
 
     /**
      * @param mgrs
@@ -50,7 +49,6 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     }
 
     // ---------- implements X509KeyManager ----------
-    @Override
     public String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket) {
         String alias = null;
         for (int i = 0; i < mgrs.length; i++) {
@@ -62,7 +60,6 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return alias;
     }
 
-    @Override
     public String chooseServerAlias(String keyType, Principal[] issuers, Socket socket) {
         String alias = null;
         for (int i = 0; i < mgrs.length; i++) {
@@ -74,7 +71,6 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return alias;
     }
 
-    @Override
     public X509Certificate[] getCertificateChain(String alias) {
         X509Certificate[] chain = null;
         for (int i = 0; i < mgrs.length; i++) {
@@ -86,7 +82,6 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return chain;
     }
 
-    @Override
     public String[] getClientAliases(String keyType, Principal[] issuers) {
         ArrayList clientAliases = new ArrayList();
         for (int i = 0; i < mgrs.length; i++) {
@@ -101,7 +96,6 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return (clientAliases.size() == 0) ? null : (String[]) clientAliases.toArray(new String[clientAliases.size()]);
     }
 
-    @Override
     public PrivateKey getPrivateKey(String alias) {
         PrivateKey privKey = null;
         for (int i = 0; i < mgrs.length; i++) {
@@ -113,7 +107,6 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
         return privKey;
     }
 
-    @Override
     public String[] getServerAliases(String keyType, Principal[] issuers) {
         ArrayList serverAliases = new ArrayList();
         for (int i = 0; i < mgrs.length; i++) {

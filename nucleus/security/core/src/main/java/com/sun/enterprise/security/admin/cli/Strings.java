@@ -21,7 +21,7 @@ import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 /**
  * Strings -- Get your Strings here. One file with Strings So one class for messing with them! Nothing in here is public
  * protected. Only for use by this one java package.
- *
+ * 
  * @author Byron Nevins
  */
 

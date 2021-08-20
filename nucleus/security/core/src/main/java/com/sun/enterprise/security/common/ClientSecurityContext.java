@@ -25,6 +25,7 @@ import org.glassfish.security.common.PrincipalImpl;
 //V3:Comment import com.sun.enterprise.ServerConfiguration;
 
 import java.util.logging.*;
+import com.sun.logging.*;
 
 /**
  * This class represents the security context on the client side. For usage of the IIOP_CLIENT_PER_THREAD_FLAG flag, see
@@ -49,7 +50,7 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
 
     /**
      * This creates a new ClientSecurityContext object.
-     *
+     * 
      * @param The name of the user.
      * @param The Credentials of the user.
      */
@@ -61,7 +62,7 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
 
     /**
      * Initialize the SecurityContext & handle the unauthenticated principal case
-     *
+     * 
      * public static ClientSecurityContext init() { ClientSecurityContext sc = getCurrent(); if (sc == null) { // there is no current
      * security context // create a default one if sc = generateDefaultSecurityContext(); } return sc; }
      */
@@ -70,12 +71,12 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
     private static ClientSecurityContext generateDefaultSecurityContext() {
         final String PRINCIPAL_NAME = "auth.default.principal.name";
         final String PRINCIPAL_PASS = "auth.default.principal.password";
-
-
+    
+    
         //ServerConfiguration config = ServerConfiguration.getConfiguration();
         //String username = config.getProperty(PRINCIPAL_NAME, "guest");
         //String password = config.getProperty(PRINCIPAL_PASS, "guest123");
-
+    
         //Temporary hardcoding to make V3 code for WebProfile compile
         String username ="guest";
         char[] password = new char[]{'g','e','t','s','t','1','2','3'};
@@ -139,17 +140,14 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
      *
      * @return The caller Principal.
      */
-    @Override
     public Principal getCallerPrincipal() {
         return initiator;
     }
 
-    @Override
     public Subject getSubject() {
         return subject;
     }
 
-    @Override
     public String toString() {
         return "ClientSecurityContext[ " + "Initiator: " + initiator + "Subject " + subject + " ]";
     }
@@ -169,18 +167,15 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
         return false;
     }
 
-    @Override
     public AppServSecurityContext newInstance(String userName, Subject subject, String realm) {
         //TODO:V3 ignoring realm in this case
         return new ClientSecurityContext(userName, subject);
     }
 
-    @Override
     public AppServSecurityContext newInstance(String userName, Subject subject) {
         return new ClientSecurityContext(userName, subject);
     }
 
-    @Override
     public void setCurrentSecurityContext(AppServSecurityContext context) {
         if (context instanceof ClientSecurityContext) {
             setCurrent((ClientSecurityContext) context);
@@ -189,17 +184,14 @@ public final class ClientSecurityContext extends AbstractSecurityContext {
         throw new IllegalArgumentException("Expected ClientSecurityContext, found " + context);
     }
 
-    @Override
     public AppServSecurityContext getCurrentSecurityContext() {
         return getCurrent();
     }
 
-    @Override
     public void setUnauthenticatedSecurityContext() {
         throw new UnsupportedOperationException("Not supported yet in V3.");
     }
 
-    @Override
     public void setSecurityContextWithPrincipal(Principal principal) {
         throw new UnsupportedOperationException("Not supported yet in V3.");
     }

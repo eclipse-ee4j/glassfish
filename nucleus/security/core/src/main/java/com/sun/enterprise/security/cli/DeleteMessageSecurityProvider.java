@@ -47,6 +47,7 @@ import org.glassfish.api.admin.RuntimeType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.config.support.CommandTarget;
 import org.glassfish.config.support.TargetType;
+import org.jvnet.hk2.config.ConfigListener;
 
 /**
  * Delete Message Security Provider Command
@@ -114,7 +115,6 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
      *
      * @param context information
      */
-    @Override
     public void execute(AdminCommandContext context) {
 
         ActionReport report = context.getActionReport();
@@ -126,7 +126,6 @@ public class DeleteMessageSecurityProvider implements AdminCommand, AdminCommand
                 try {
                     ConfigSupport.apply(new SingleConfigCode<MessageSecurityConfig>() {
 
-                        @Override
                         public Object run(MessageSecurityConfig param) throws PropertyVetoException, TransactionFailure {
 
                             if ((param.getDefaultProvider() != null) && param.getDefaultProvider().equals(thePC.getProviderId())) {

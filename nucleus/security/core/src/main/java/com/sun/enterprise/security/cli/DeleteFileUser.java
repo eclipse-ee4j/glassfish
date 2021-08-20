@@ -30,11 +30,13 @@ import org.glassfish.hk2.api.PerLookup;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Configs;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.BadRealmException;
 import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import java.beans.PropertyVetoException;
@@ -118,7 +120,6 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
      *
      * @param context information
      */
-    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -161,7 +162,6 @@ public class DeleteFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
         //hypothetically ?.
         try {
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     try {
                         realmsManager.createRealms(config);

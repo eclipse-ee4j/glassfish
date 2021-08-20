@@ -16,6 +16,8 @@
 
 package com.sun.enterprise.security.util;
 
+import java.lang.*;
+
 /**
  * General exception class for iAS security failures.
  *
@@ -71,7 +73,6 @@ public class IASSecurityException extends Exception {
      * @return Message containing information about the exception.
      *
      */
-    @Override
     public String getMessage() {
         StringBuffer sb = new StringBuffer();
         sb.append(super.getMessage());

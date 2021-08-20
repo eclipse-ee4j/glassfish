@@ -27,6 +27,7 @@ import java.util.logging.*;
 import javax.security.auth.callback.*;
 
 import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.logging.*;
 import java.io.InputStream;
 import java.io.PushbackInputStream;
 import org.glassfish.internal.api.Globals;
@@ -49,9 +50,9 @@ public final class TextLoginDialog implements LoginDialog {
 
     public TextLoginDialog(Callback[] callbacks) {
         try {
-            for (Callback callback : callbacks) {
-                if (callback instanceof NameCallback) {
-                    NameCallback nc = (NameCallback) callback;
+            for (int i = 0; i < callbacks.length; i++) {
+                if (callbacks[i] instanceof NameCallback) {
+                    NameCallback nc = (NameCallback) callbacks[i];
                     System.err.print(nc.getPrompt());
                     if (nc.getDefaultName() != null) {
                         System.err.print("[" + nc.getDefaultName() + "]: ");
@@ -66,8 +67,8 @@ public final class TextLoginDialog implements LoginDialog {
                     }
                     nc.setName(username);
 
-                } else if (callback instanceof PasswordCallback) {
-                    PasswordCallback pc = (PasswordCallback) callback;
+                } else if (callbacks[i] instanceof PasswordCallback) {
+                    PasswordCallback pc = (PasswordCallback) callbacks[i];
                     char[] passwd = null;
                     Object consoleObj = null;
                     Method readPasswordMethod = null;
@@ -90,8 +91,8 @@ public final class TextLoginDialog implements LoginDialog {
                         pc.setPassword(passwd);
                         Arrays.fill(passwd, ' ');
                     }
-                } else if (callback instanceof ChoiceCallback) {
-                    ChoiceCallback cc = (ChoiceCallback) callback;
+                } else if (callbacks[i] instanceof ChoiceCallback) {
+                    ChoiceCallback cc = (ChoiceCallback) callbacks[i];
                     /* Get the keystore password to see if the user is
                      * authorized to see the list of certificates
                      */
@@ -143,7 +144,6 @@ public final class TextLoginDialog implements LoginDialog {
     /**
      * @return The username of the user.
      */
-    @Override
     public String getUserName() {
         return username;
     }
@@ -151,7 +151,6 @@ public final class TextLoginDialog implements LoginDialog {
     /**
      * @return The password of the user in plain text...
      */
-    @Override
     public final char[] getPassword() {
         return (password == null) ? null : Arrays.copyOf(password, password.length);
     }

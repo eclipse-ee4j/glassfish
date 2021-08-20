@@ -77,7 +77,6 @@ public class CreatePasswordAlias implements AdminCommand {
      *
      * @param context information
      */
-    @Override
     public void execute(AdminCommandContext context) {
         final ActionReport report = context.getActionReport();
 

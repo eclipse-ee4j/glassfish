@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.security;
 
-import java.util.Arrays;
-
 import com.sun.enterprise.security.common.ClientSecurityContext;
+import java.util.logging.*;
+import com.sun.logging.*;
+import java.util.Arrays;
 
 /**
  * This class is used to share information between either of the following scenarios 1. Different points of execution of a single
@@ -30,6 +31,9 @@ import com.sun.enterprise.security.common.ClientSecurityContext;
  * one thread is global and visible to all threads.
  */
 public final class UsernamePasswordStore {
+
+    private static final Logger _logger = SecurityLoggerInfo.getLogger();
+
     private static final boolean isPerThreadAuth = Boolean.getBoolean(ClientSecurityContext.IIOP_CLIENT_PER_THREAD_FLAG);
 
     private static ThreadLocal localUpc = isPerThreadAuth ? new ThreadLocal() : null;
@@ -45,11 +49,12 @@ public final class UsernamePasswordStore {
      * @param password
      */
     private UsernamePasswordStore(String username, char[] password) {
-        // Copy the password to another reference before storing it to the
-        // instance field.
+        //Copy the password to another reference before storing it to the
+        //instance field.
         char[] passwordCopy = (password == null) ? null : Arrays.copyOf(password, password.length);
         this.password = passwordCopy;
         this.username = username;
+
     }
 
     /**
@@ -61,10 +66,10 @@ public final class UsernamePasswordStore {
     private static UsernamePasswordStore get() {
         if (isPerThreadAuth) {
             return (UsernamePasswordStore) localUpc.get();
-        }
-
-        synchronized (UsernamePasswordStore.class) {
-            return sharedUpc;
+        } else {
+            synchronized (UsernamePasswordStore.class) {
+                return sharedUpc;
+            }
         }
     }
 
@@ -112,12 +117,11 @@ public final class UsernamePasswordStore {
      * @return The username set previously or null if not set
      */
     public static String getUsername() {
-        UsernamePasswordStore usernamePasswordStore = UsernamePasswordStore.get();
-        if (usernamePasswordStore == null) {
+        UsernamePasswordStore ups = UsernamePasswordStore.get();
+        if (ups != null)
+            return ups.username;
+        else
             return null;
-        }
-
-        return usernamePasswordStore.username;
     }
 
     /**
@@ -126,13 +130,13 @@ public final class UsernamePasswordStore {
      * @return The password set previously or null if not set
      */
     public static char[] getPassword() {
-        UsernamePasswordStore usernamePasswordStore = UsernamePasswordStore.get();
-        if (usernamePasswordStore == null) {
+        UsernamePasswordStore ups = UsernamePasswordStore.get();
+        if (ups != null) {
+            //Copy the password to another reference before returning it
+            char[] passwordCopy = (ups.password == null) ? null : Arrays.copyOf(ups.password, ups.password.length);
+            return passwordCopy;
+        } else
             return null;
-        }
-
-        // Copy the password to another reference before returning it
-        return usernamePasswordStore.password == null ? null : Arrays.copyOf(usernamePasswordStore.password, usernamePasswordStore.password.length);
     }
 
 }

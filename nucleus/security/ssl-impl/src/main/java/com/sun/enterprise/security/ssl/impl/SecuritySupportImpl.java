@@ -16,54 +16,53 @@
 
 package com.sun.enterprise.security.ssl.impl;
 
+import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
+import com.sun.enterprise.security.ssl.manager.UnifiedX509TrustManager;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.UnrecoverableKeyException;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.security.KeyStore;
+import java.security.Provider;
+
+//V3:Commented import com.sun.enterprise.config.ConfigContext;
+import com.sun.enterprise.server.pluggable.SecuritySupport;
 import java.io.IOException;
 import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Key;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
-import java.security.PrivateKey;
-import java.security.Provider;
-import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.PropertyPermission;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509KeyManager;
 import javax.net.ssl.X509TrustManager;
-
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.embedded.Server;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
-import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.security.ssl.manager.UnifiedX509KeyManager;
-import com.sun.enterprise.security.ssl.manager.UnifiedX509TrustManager;
-//V3:Commented import com.sun.enterprise.config.ConfigContext;
-import com.sun.enterprise.server.pluggable.SecuritySupport;
 
 import jakarta.inject.Inject;
+import org.jvnet.hk2.annotations.Service;
+
 import jakarta.inject.Singleton;
 
 /**
@@ -91,13 +90,13 @@ public class SecuritySupportImpl extends SecuritySupport {
     private static final String SSL_CERT_EXPIRED = "NCLS-SECURITY-05054";
 
     private static boolean initialized = false;
-    protected static final List<KeyStore> keyStores = new ArrayList<KeyStore>();
-    protected static final List<KeyStore> trustStores = new ArrayList<KeyStore>();
-    protected static final List<char[]> keyStorePasswords = new ArrayList<char[]>();
-    protected static final List<String> tokenNames = new ArrayList<String>();
+    protected static final List<KeyStore> keyStores = new ArrayList<>();
+    protected static final List<KeyStore> trustStores = new ArrayList<>();
+    protected static final List<char[]> keyStorePasswords = new ArrayList<>();
+    protected static final List<String> tokenNames = new ArrayList<>();
     private MasterPasswordImpl masterPasswordHelper = null;
     private static boolean instantiated = false;
-    private Date initDate = new Date();
+    private final Date initDate = new Date();
 
     @Inject
     private ServiceLocator habitat;
@@ -273,7 +272,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     public KeyManager[] getKeyManagers(String algorithm)
         throws IOException, KeyStoreException, NoSuchAlgorithmException, UnrecoverableKeyException {
         KeyStore[] kstores = getKeyStores();
-        ArrayList<KeyManager> keyManagers = new ArrayList<KeyManager>();
+        ArrayList<KeyManager> keyManagers = new ArrayList<>();
         for (int i = 0; i < kstores.length; i++) {
             checkCertificateDates(kstores[i]);
             KeyManagerFactory kmf = KeyManagerFactory
@@ -292,7 +291,7 @@ public class SecuritySupportImpl extends SecuritySupport {
     @Override
     public TrustManager[] getTrustManagers(String algorithm) throws IOException, KeyStoreException, NoSuchAlgorithmException {
         KeyStore[] tstores = getTrustStores();
-        ArrayList<TrustManager> trustManagers = new ArrayList<TrustManager>();
+        ArrayList<TrustManager> trustManagers = new ArrayList<>();
         for (KeyStore tstore : tstores) {
             checkCertificateDates(tstore);
             TrustManagerFactory tmf = TrustManagerFactory

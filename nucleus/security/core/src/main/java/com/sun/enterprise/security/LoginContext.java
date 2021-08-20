@@ -24,6 +24,7 @@ import com.sun.enterprise.security.auth.login.ClientPasswordLoginModule;
 import com.sun.enterprise.security.auth.login.LoginContextDriver;
 import com.sun.enterprise.security.common.SecurityConstants;
 import java.util.logging.*;
+import com.sun.logging.*;
 
 /**
  * This class is kept for CTS. Ideally we should move away from it. The login can be done via the following call:
@@ -71,7 +72,6 @@ public final class LoginContext {
         final String username = user;
         final String password = pass;
         AppservAccessController.doPrivileged(new PrivilegedAction() {
-            @Override
             public java.lang.Object run() {
 
                 System.setProperty(ClientPasswordLoginModule.LOGIN_NAME, username);

@@ -33,7 +33,7 @@ import org.glassfish.internal.api.Globals;
  */
 public class SecurityRoleMapperFactoryGen {
 
-    private static WeakReference<SecurityRoleMapperFactory> securityRoleMapperFactory = new WeakReference<>(null);
+    private static WeakReference<SecurityRoleMapperFactory> securityRoleMapperFactory = new WeakReference<SecurityRoleMapperFactory>(null);
 
     public static SecurityRoleMapperFactory getSecurityRoleMapperFactory() {
         if (securityRoleMapperFactory.get() != null) {
@@ -45,7 +45,7 @@ public class SecurityRoleMapperFactoryGen {
 
     private static synchronized SecurityRoleMapperFactory _getSecurityRoleMapperFactory() {
         if (securityRoleMapperFactory.get() == null) {
-            securityRoleMapperFactory = new WeakReference<>(Globals.get(SecurityRoleMapperFactory.class));
+            securityRoleMapperFactory = new WeakReference<SecurityRoleMapperFactory>(Globals.get(SecurityRoleMapperFactory.class));
         }
 
         return securityRoleMapperFactory.get();

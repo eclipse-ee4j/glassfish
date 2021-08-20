@@ -17,11 +17,10 @@
 package com.sun.enterprise.security.ssl.manager;
 
 import java.net.Socket;
+import java.util.ArrayList;
 import java.security.Principal;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
-import java.util.ArrayList;
-
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.X509KeyManager;
 
@@ -31,8 +30,8 @@ import javax.net.ssl.X509KeyManager;
  * @author Shing Wai Chan
  **/
 public class UnifiedX509KeyManager implements X509KeyManager /* extends X509ExtendedKeyManager*/ {
-    private X509KeyManager[] mgrs;
-    private String[] tokenNames;
+    private final X509KeyManager[] mgrs;
+    private final String[] tokenNames;
 
     /**
      * @param mgrs
@@ -53,8 +52,8 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     @Override
     public String chooseClientAlias(String[] keyType, Principal[] issuers, Socket socket) {
         String alias = null;
-        for (int i = 0; i < mgrs.length; i++) {
-            alias = mgrs[i].chooseClientAlias(keyType, issuers, socket);
+        for (X509KeyManager mgr : mgrs) {
+            alias = mgr.chooseClientAlias(keyType, issuers, socket);
             if (alias != null) {
                 break;
             }
@@ -65,8 +64,8 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     @Override
     public String chooseServerAlias(String keyType, Principal[] issuers, Socket socket) {
         String alias = null;
-        for (int i = 0; i < mgrs.length; i++) {
-            alias = mgrs[i].chooseServerAlias(keyType, issuers, socket);
+        for (X509KeyManager mgr : mgrs) {
+            alias = mgr.chooseServerAlias(keyType, issuers, socket);
             if (alias != null) {
                 break;
             }
@@ -77,8 +76,8 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     @Override
     public X509Certificate[] getCertificateChain(String alias) {
         X509Certificate[] chain = null;
-        for (int i = 0; i < mgrs.length; i++) {
-            chain = mgrs[i].getCertificateChain(alias);
+        for (X509KeyManager mgr : mgrs) {
+            chain = mgr.getCertificateChain(alias);
             if (chain != null) {
                 break;
             }
@@ -89,11 +88,11 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     @Override
     public String[] getClientAliases(String keyType, Principal[] issuers) {
         ArrayList clientAliases = new ArrayList();
-        for (int i = 0; i < mgrs.length; i++) {
-            String[] clAliases = mgrs[i].getClientAliases(keyType, issuers);
+        for (X509KeyManager mgr : mgrs) {
+            String[] clAliases = mgr.getClientAliases(keyType, issuers);
             if (clAliases != null && clAliases.length > 0) {
-                for (int j = 0; j < clAliases.length; j++) {
-                    clientAliases.add(clAliases[j]);
+                for (String element : clAliases) {
+                    clientAliases.add(element);
                 }
             }
         }
@@ -104,8 +103,8 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     @Override
     public PrivateKey getPrivateKey(String alias) {
         PrivateKey privKey = null;
-        for (int i = 0; i < mgrs.length; i++) {
-            privKey = mgrs[i].getPrivateKey(alias);
+        for (X509KeyManager mgr : mgrs) {
+            privKey = mgr.getPrivateKey(alias);
             if (privKey != null) {
                 break;
             }
@@ -116,11 +115,11 @@ public class UnifiedX509KeyManager implements X509KeyManager /* extends X509Exte
     @Override
     public String[] getServerAliases(String keyType, Principal[] issuers) {
         ArrayList serverAliases = new ArrayList();
-        for (int i = 0; i < mgrs.length; i++) {
-            String[] serAliases = mgrs[i].getServerAliases(keyType, issuers);
+        for (X509KeyManager mgr : mgrs) {
+            String[] serAliases = mgr.getServerAliases(keyType, issuers);
             if (serAliases != null && serAliases.length > 0) {
-                for (int j = 0; j < serAliases.length; j++) {
-                    serverAliases.add(serAliases[j]);
+                for (String element : serAliases) {
+                    serverAliases.add(element);
                 }
             }
         }

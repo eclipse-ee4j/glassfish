@@ -211,7 +211,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
         private final TopLevelContext topLevelContext;
 
         private Protocols protocols_w = null;
-        private Map<String, Protocol> namedProtocols_w = new HashMap<>();
+        private Map<String, Protocol> namedProtocols_w = new HashMap<String, Protocol>();
 
         private JmxConnector jmxConnector_w = null;
         private Ssl jmxConnectorSsl_w = null;
@@ -343,7 +343,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
      * The concrete command implementation classes implement updateSecureAdminSettings differently but they expose the same method
      * signature, so onEnable and onDisable just invoke the same method.
      */
-    private Step<TopLevelContext> perDomainStep = new Step<>() {
+    private Step<TopLevelContext> perDomainStep = new Step<TopLevelContext>() {
 
         /**
          * Sets enabled=true/false on the secure-admin element.
@@ -391,14 +391,14 @@ public abstract class SecureAdminCommand implements AdminCommand {
     /**
      * Manages the jmx-connector settings.
      */
-    private Step<ConfigLevelContext> jmxConnectorStep = new Step<>() {
+    private Step<ConfigLevelContext> jmxConnectorStep = new Step<ConfigLevelContext>() {
 
         /**
          * Sets the jmx-connector security-enabled to true and creates and initializes the child ssl element.
          */
         @Override
         public Work<ConfigLevelContext> enableWork() {
-            return new Work<>() {
+            return new Work<ConfigLevelContext>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -429,7 +429,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> disableWork() {
-            return new Work<>() {
+            return new Work<ConfigLevelContext>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -454,7 +454,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
     /**
      * Manages the sec-admin-listener protocol.
      */
-    private Step<ConfigLevelContext> secAdminListenerProtocolStep = new Step<>() {
+    private Step<ConfigLevelContext> secAdminListenerProtocolStep = new Step<ConfigLevelContext>() {
 
         private static final String ASADMIN_VIRTUAL_SERVER_NAME = "__asadmin";
 
@@ -501,7 +501,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> enableWork() {
-            return new Work<>() {
+            return new Work<ConfigLevelContext>() {
 
                 @Override
                 public boolean run(final ConfigLevelContext context) throws TransactionFailure {
@@ -541,7 +541,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> disableWork() {
-            return new Work<>() {
+            return new Work<ConfigLevelContext>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -569,7 +569,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
     }
 
-    private Step<ConfigLevelContext> secAdminPortUnifAndRedirectStep = new Step<>() {
+    private Step<ConfigLevelContext> secAdminPortUnifAndRedirectStep = new Step<ConfigLevelContext>() {
 
         private final static String PORT_UNIF_PROTOCOL_NAME = "pu-protocol";
         private final static String UNSECURE_ADMIN_LISTENER_PROTOCOL_NAME = "admin-listener";
@@ -650,7 +650,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> enableWork() {
-            return new Work<>() {
+            return new Work<ConfigLevelContext>() {
 
                 @Override
                 public boolean run(ConfigLevelContext context) throws TransactionFailure {
@@ -683,7 +683,7 @@ public abstract class SecureAdminCommand implements AdminCommand {
 
         @Override
         public Work<ConfigLevelContext> disableWork() {
-            return new Work<>() {
+            return new Work<ConfigLevelContext>() {
 
                 @Override
                 public boolean run(final ConfigLevelContext context) throws TransactionFailure {

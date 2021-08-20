@@ -116,7 +116,6 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
 
             final JaccProvider jaccprov = jprov;
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     param.getJaccProvider().remove(jaccprov);
                     return null;

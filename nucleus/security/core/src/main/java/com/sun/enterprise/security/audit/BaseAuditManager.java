@@ -24,6 +24,7 @@ package com.sun.enterprise.security.audit;
 
 import com.sun.enterprise.security.BaseAuditModule;
 import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.config.serverbeans.AuditModule;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
@@ -85,8 +86,8 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     // just a copy of names of the audit classes - helpful for log messages
     // since we will not have a lot of audit classes, keeping a duplicate copy
     // seems reasonable.
-    private Map<BaseAuditModule, String> moduleToNameMap = new HashMap<>();
-    private Map<String, BaseAuditModule> nameToModuleMap = new HashMap<>();
+    private Map<BaseAuditModule, String> moduleToNameMap = new HashMap<BaseAuditModule, String>();
+    private Map<String, BaseAuditModule> nameToModuleMap = new HashMap<String, BaseAuditModule>();
     // make this accessible to the containers so that the cost of non-audit case,
     // is just a comparision.
     protected boolean auditOn = false;
@@ -187,14 +188,14 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     }
 
     private <U extends BaseAuditModule> List<U> copyAndAdd(final List<U> orig, final U am) {
-        final List<U> list = new ArrayList<>();
+        final List<U> list = new ArrayList<U>();
         Collections.copy(orig, list);
         list.add(am);
         return list;
     }
 
     private <U extends BaseAuditModule> List<U> copyAndRemove(final List<U> orig, final U am) {
-        final List<U> list = new ArrayList<>();
+        final List<U> list = new ArrayList<U>();
         Collections.copy(orig, list);
         list.remove(am);
         return list;
@@ -258,7 +259,6 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
      *
      * @see com.sun.appserv.security.BaseAuditModule.authentication
      */
-    @Override
     public void authentication(final String user, final String realm, final boolean success) {
         if (auditOn) {
             for (BaseAuditModule am : instances) {
@@ -274,7 +274,6 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
         }
     }
 
-    @Override
     public void serverStarted() {
         if (auditOn) {
             for (BaseAuditModule am : instances) {
@@ -290,7 +289,6 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
         }
     }
 
-    @Override
     public void serverShutdown() {
         if (auditOn) {
             for (BaseAuditModule am : instances) {
@@ -310,7 +308,6 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
         this.auditOn = auditOn;
     }
 
-    @Override
     public boolean isAuditOn() {
         return auditOn;
     }
@@ -320,7 +317,7 @@ public class BaseAuditManager<T extends BaseAuditModule> implements AuditManager
     }
 
     protected List<T> instances(final Class<T> c) {
-        final List<T> result = new ArrayList<>();
+        final List<T> result = new ArrayList<T>();
         for (BaseAuditModule am : instances) {
             if (c.isAssignableFrom(c)) {
                 result.add((T) am);

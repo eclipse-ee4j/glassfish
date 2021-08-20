@@ -63,7 +63,7 @@ public class SecurityContext extends AbstractSecurityContext {
         _logger = SecurityLoggerInfo.getLogger();
     }
 
-    private static InheritableThreadLocal<SecurityContext> currentSecCtx = new InheritableThreadLocal<>();
+    private static InheritableThreadLocal<SecurityContext> currentSecCtx = new InheritableThreadLocal<SecurityContext>();
     private static SecurityContext defaultSecurityContext = generateDefaultSecurityContext();
 
     private static javax.security.auth.AuthPermission doAsPrivilegedPerm = new javax.security.auth.AuthPermission("doAsPrivileged");

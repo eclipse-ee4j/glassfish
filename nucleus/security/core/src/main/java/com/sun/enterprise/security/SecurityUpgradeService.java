@@ -60,7 +60,6 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
-    @Override
     public void postConstruct() {
         for (Config config : configs.getConfig()) {
             SecurityService service = config.getSecurityService();
@@ -99,7 +98,6 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                             }
                         } else {
                             ConfigSupport.apply(new SingleConfigCode<AuthRealm>() {
-                                @Override
                                 public Object run(AuthRealm updatedAuthRealm) throws PropertyVetoException, TransactionFailure {
                                     Property prop1 = updatedAuthRealm.createChild(Property.class);
                                     prop1.setName(PARAM_DIGEST_ALGORITHM);
@@ -111,7 +109,10 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                         }
                     }
                 }
-            } catch (PropertyVetoException | TransactionFailure tf) {
+            } catch (PropertyVetoException pve) {
+                _logger.log(Level.SEVERE, SecurityLoggerInfo.securityUpgradeServiceException, pve);
+                throw new RuntimeException(pve);
+            } catch (TransactionFailure tf) {
                 _logger.log(Level.SEVERE, SecurityLoggerInfo.securityUpgradeServiceException, tf);
                 throw new RuntimeException(tf);
 

@@ -16,22 +16,21 @@
 
 package com.sun.enterprise.security.auth.realm.file;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
-
-import org.glassfish.security.common.FileRealmHelper;
+import java.util.*;
 
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.User;
+import org.glassfish.security.common.FileRealmHelper;
 
 /**
  * Represents a FileRealm user.
  *
+ *
  */
 public class FileRealmUser implements User {
     FileRealmHelper.User user;
-    Hashtable<String, Object> attributes = new Hashtable<>();
+    Hashtable attributes = new Hashtable();
     String realm;
 
     /**
@@ -77,7 +76,7 @@ public class FileRealmUser implements User {
      * Not really needed.
      */
     @Override
-    public Enumeration<String> getAttributeNames() {
+    public Enumeration getAttributeNames() {
         return attributes.keys();
     }
 

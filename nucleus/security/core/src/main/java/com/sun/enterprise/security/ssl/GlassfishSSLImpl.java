@@ -35,17 +35,14 @@ public class GlassfishSSLImpl extends SSLImplementation {
     public GlassfishSSLImpl() {
     }
 
-    @Override
     public String getImplementationName() {
         return "Glassfish";
     }
 
-    @Override
     public ServerSocketFactory getServerSocketFactory() {
         return new GlassfishServerSocketFactory();
     }
 
-    @Override
     public SSLSupport getSSLSupport(Socket socket) {
         if (socket instanceof SSLSocket) {
             return new GlassfishSSLSupport((SSLSocket) socket);
@@ -53,7 +50,6 @@ public class GlassfishSSLImpl extends SSLImplementation {
         return null;
     }
 
-    @Override
     public SSLSupport getSSLSupport(SSLEngine ssle) {
         return new GlassfishSSLSupport(ssle);
     }

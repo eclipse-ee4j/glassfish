@@ -19,6 +19,7 @@ package com.sun.enterprise.security.ssl;
 import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.common.Util;
 import java.io.IOException;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStoreException;
@@ -39,6 +40,7 @@ import com.sun.enterprise.server.pluggable.SecuritySupport;
 //V3:Commented import com.sun.web.security.SSLSocketFactory;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import java.util.logging.*;
+import com.sun.logging.*;
 import java.security.AccessControlException;
 import java.security.AccessController;
 import java.security.Permission;
@@ -74,7 +76,6 @@ public final class SSLUtils implements PostConstruct {
     private AppClientSSL appclientSsl = null;
     private SSLContext ctx = null;
 
-    @Override
     public void postConstruct() {
         try {
             //TODO: To check the right implementation once we support EE.

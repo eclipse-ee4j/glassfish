@@ -20,6 +20,7 @@ import com.sun.enterprise.security.SecurityLoggerInfo;
 import com.sun.enterprise.security.common.Util;
 import java.util.*;
 import java.util.logging.*;
+import com.sun.logging.*;
 
 /**
  * This class implements the GSSAPI exported name functionality as required by CSIV2.
@@ -225,7 +226,6 @@ public class GSSUPName {
         return username;
     }
 
-    @Override
     public boolean equals(Object o) {
         if (o instanceof GSSUPName) {
             GSSUPName nm = (GSSUPName) o;
@@ -236,13 +236,11 @@ public class GSSUPName {
     }
 
     /* Return the hashCode. */
-    @Override
     public int hashCode() {
         return username.hashCode() + realm.hashCode();
     }
 
     /* String representation of the GSSUPname */
-    @Override
     public String toString() {
         String s = "Username = " + username;
         s = s + " Realm = " + realm;

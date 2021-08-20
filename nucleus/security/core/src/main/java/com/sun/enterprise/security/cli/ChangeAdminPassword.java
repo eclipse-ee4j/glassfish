@@ -17,6 +17,7 @@
 package com.sun.enterprise.security.cli;
 
 import com.sun.enterprise.config.serverbeans.AdminService;
+import java.lang.annotation.Annotation;
 import java.util.Enumeration;
 
 import org.glassfish.api.admin.AdminCommand;
@@ -38,12 +39,18 @@ import com.sun.enterprise.security.auth.realm.file.FileRealm;
 import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
 import org.jvnet.hk2.config.types.Property;
 import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.util.SystemPropertyConstants;
 import java.util.List;
 import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.AdminCommandSecurity;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.internal.api.Target;
 
 /**
  * Change Admin Password Command
@@ -130,7 +137,6 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
      *
      * @param context information
      */
-    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();

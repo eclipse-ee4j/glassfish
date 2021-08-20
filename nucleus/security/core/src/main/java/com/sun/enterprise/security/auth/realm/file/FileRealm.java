@@ -16,32 +16,23 @@
 
 package com.sun.enterprise.security.auth.realm.file;
 
-import static java.util.logging.Level.FINE;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-
+import java.util.*;
+import java.util.logging.Level;
+import java.io.*;
+import com.sun.enterprise.security.auth.realm.User;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.util.IASSecurityException;
 import org.glassfish.internal.api.RelativePathResolver;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.User;
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.util.IASSecurityException;
 
 /**
  * Realm wrapper for supporting file password authentication.
@@ -79,6 +70,9 @@ public final class FileRealm extends IASRealm {
     FileRealmHelper helper;
 
     /**
+     * Constructor.
+     *
+     * <P>
      * The created FileRealm instance is not registered in the Realm registry. This constructor can be used by admin tools to create
      * a FileRealm instance which can be edited by adding or removing users and then saved to disk, without affecting the installed
      * realm instance.
@@ -95,13 +89,11 @@ public final class FileRealm extends IASRealm {
      *
      */
     public FileRealm(String keyfile) throws BadRealmException, NoSuchRealmException {
-        Properties properties = new Properties();
-
+        Properties p = new Properties();
         // The original keyfile is stored here for use in the init and refresh methods
-        properties.setProperty(PARAM_KEYFILE, keyfile);
-        properties.setProperty(JAAS_CONTEXT_PARAM, "ignore");
-
-        init(properties);
+        p.setProperty(PARAM_KEYFILE, keyfile);
+        p.setProperty(IASRealm.JAAS_CONTEXT_PARAM, "ignore");
+        this.init(p);
     }
 
     /*
@@ -118,7 +110,7 @@ public final class FileRealm extends IASRealm {
      * @return a list of the file names for all files realms in the config
      */
     public static List<String> getRealmFileNames(Config config) {
-        List<String> files = new ArrayList<>();
+        List<String> files = new ArrayList<String>();
         SecurityService securityService = config.getSecurityService();
         for (AuthRealm authRealm : securityService.getAuthRealm()) {
             String fileRealmClassName = authRealm.getClassname();
@@ -159,16 +151,15 @@ public final class FileRealm extends IASRealm {
 
         this.setProperty(PARAM_KEYFILE, file);
 
-        String jaasCtx = props.getProperty(JAAS_CONTEXT_PARAM);
+        String jaasCtx = props.getProperty(IASRealm.JAAS_CONTEXT_PARAM);
         if (jaasCtx == null) {
             String msg = sm.getString("filerealm.nomodule");
             throw new BadRealmException(msg);
         }
+        this.setProperty(IASRealm.JAAS_CONTEXT_PARAM, jaasCtx);
 
-        setProperty(JAAS_CONTEXT_PARAM, jaasCtx);
-
-        _logger.log(FINE, "FileRealm : " + PARAM_KEYFILE + "={0}", file);
-        _logger.log(FINE, "FileRealm : " + JAAS_CONTEXT_PARAM + "={0}", jaasCtx);
+        _logger.log(Level.FINE, "FileRealm : " + PARAM_KEYFILE + "={0}", file);
+        _logger.log(Level.FINE, "FileRealm : " + IASRealm.JAAS_CONTEXT_PARAM + "={0}", jaasCtx);
         try {
             if (Util.isEmbeddedServer()) {
                 String embeddedFilePath = Util.writeConfigFileToTempDir(file).getAbsolutePath();
@@ -176,7 +167,8 @@ public final class FileRealm extends IASRealm {
             }
             helper = new FileRealmHelper(file);
         } catch (IOException ioe) {
-            throw new BadRealmException(sm.getString("filerealm.noaccess", ioe.toString()));
+            String msg = sm.getString("filerealm.noaccess", ioe.toString());
+            throw new BadRealmException(msg);
         }
     }
 
@@ -212,12 +204,13 @@ public final class FileRealm extends IASRealm {
      */
     @Override
     public User getUser(String name) throws NoSuchUserException {
-        FileRealmHelper.User user = helper.getUser(name);
-        if (user == null) {
-            throw new NoSuchUserException(sm.getString("filerealm.nouser", name));
-        }
 
-        return new FileRealmUser(user, null);
+        FileRealmHelper.User u = helper.getUser(name);
+        if (u == null) {
+            String msg = sm.getString("filerealm.nouser", name);
+            throw new NoSuchUserException(msg);
+        }
+        return new FileRealmUser(u, null);
     }
 
     /**
@@ -227,7 +220,7 @@ public final class FileRealm extends IASRealm {
      * @exception BadRealmException if realm data structures are bad
      */
     @Override
-    public Enumeration<String> getGroupNames() throws BadRealmException {
+    public Enumeration getGroupNames() throws BadRealmException {
         return Collections.enumeration(helper.getGroupNames());
     }
 
@@ -240,7 +233,7 @@ public final class FileRealm extends IASRealm {
      * support this operation.
      */
     @Override
-    public Enumeration<String> getGroupNames(String username) throws NoSuchUserException {
+    public Enumeration getGroupNames(String username) throws NoSuchUserException {
         String groups[] = helper.getGroupNames(username);
         if (groups == null) {
             groups = new String[] {};
@@ -262,7 +255,9 @@ public final class FileRealm extends IASRealm {
      */
     @Override
     public void refresh() throws BadRealmException {
-        _logger.fine("Reloading file realm data.");
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("Reloading file realm data.");
+        }
 
         try {
             FileRealm newRealm = new FileRealm(getProperty(PARAM_KEYFILE));
@@ -287,12 +282,14 @@ public final class FileRealm extends IASRealm {
      */
     @Override
     public void refresh(String configName) throws BadRealmException {
-        _logger.fine("Reloading file realm data.");
+        if (_logger.isLoggable(Level.FINE)) {
+            _logger.fine("Reloading file realm data.");
+        }
 
         try {
             FileRealm newRealm = new FileRealm(getProperty(PARAM_KEYFILE));
             newRealm.init(getProperties());
-            Realm.updateInstance(configName, newRealm, getName());
+            Realm.updateInstance(configName, newRealm, this.getName());
         } catch (Exception e) {
             throw new BadRealmException(e.toString());
         }
@@ -362,7 +359,6 @@ public final class FileRealm extends IASRealm {
         if (groups != null) {
             groups = addAssignGroups(groups);
         }
-
         return groups;
     }
 
@@ -379,7 +375,7 @@ public final class FileRealm extends IASRealm {
      */
     @Override
     public boolean supportsUserManagement() {
-        // File Realm supports UserManagement
+        //File Realm supports UserManagement
         return true;
     }
 

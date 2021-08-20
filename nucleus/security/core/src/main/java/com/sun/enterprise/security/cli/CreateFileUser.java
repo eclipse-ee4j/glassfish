@@ -72,7 +72,7 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
     final private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(CreateFileUser.class);
 
     @Param(name = "groups", optional = true, separator = ':')
-    private List<String> groups = new ArrayList<>(0); //by default, an empty list is better than a null
+    private List<String> groups = new ArrayList<String>(0); //by default, an empty list is better than a null
 
     //TODO: this is still a String, need to convert to char[]
     @Param(name = "userpassword", password = true)
@@ -138,7 +138,6 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
      *
      * @param context information
      */
-    @Override
     public void execute(AdminCommandContext context) {
 
         final ActionReport report = context.getActionReport();
@@ -203,7 +202,6 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
             //hypothetically ?.
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
 
-                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     try {
                         realmsManager.createRealms(config);
@@ -284,7 +282,9 @@ public class CreateFileUser implements /*UndoableCommand*/ AdminCommand, AdminCo
                 if (realm != null) {
                     realm.refresh(configName);
                 }
-            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException | com.sun.enterprise.security.auth.realm.BadRealmException bre) {
+            } catch (com.sun.enterprise.security.auth.realm.NoSuchRealmException nre) {
+                //            _logger.fine("Realm: "+realmName+" is not configured");
+            } catch (com.sun.enterprise.security.auth.realm.BadRealmException bre) {
                 //            _logger.fine("Realm: "+realmName+" is not configured");
             }
         }

@@ -79,7 +79,6 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      *
      * @param events list of changes
      */
-    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         // I am not so interested with the list of events, just sort who got added or removed for me.
         ConfigSupport.sortAndDispatch(events, new Changed() {
@@ -91,7 +90,6 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
              * @param changedType type of the configuration object
              * @param changedInstance changed instance.
              */
-            @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
                 NotProcessed np = null;
                 switch (type) {
@@ -343,7 +341,6 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
         Configuration.getConfiguration().refresh();
     }
 
-    @Override
     public void postConstruct() {
         if (securityService == null) {
             //should never happen

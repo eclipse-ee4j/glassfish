@@ -27,7 +27,7 @@ import java.util.StringTokenizer;
  */
 public class GroupMapper {
 
-    private Map<String, ArrayList<String>> groupMappingTable = new HashMap<>();
+    private Map<String, ArrayList<String>> groupMappingTable = new HashMap<String, ArrayList<String>>();
 
     public void parse(String mappingStr) {
         StringTokenizer tokenizer = new StringTokenizer(mappingStr, ";");
@@ -52,7 +52,7 @@ public class GroupMapper {
                 }
                 ArrayList<String> mappedGroupList = groupMappingTable.get(theGroup);
                 if (mappedGroupList == null) {
-                    mappedGroupList = new ArrayList<>();
+                    mappedGroupList = new ArrayList<String>();
                 }
                 mappedGroupList.add(mappedGroup);
                 groupMappingTable.put(theGroup, mappedGroupList);
@@ -70,7 +70,7 @@ public class GroupMapper {
         }
         addUnique(result, mappedGrps);
         //look for transitive closure
-        ArrayList<String> result1 = new ArrayList<>();
+        ArrayList<String> result1 = new ArrayList<String>();
         for (String str : mappedGrps) {
             getMappedGroups(group, str, result1);
         }

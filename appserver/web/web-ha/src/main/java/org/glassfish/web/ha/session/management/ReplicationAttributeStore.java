@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -25,6 +26,7 @@ import org.apache.catalina.session.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
@@ -392,7 +394,7 @@ public class ReplicationAttributeStore extends ReplicationStore {
             }
         }
         if(_logger.isLoggable(Level.FINE)) {
-            _logger.fine("ReplicationAttributeStore>>createCompositeMetadata:trunkState=" + trunkState);
+            _logger.fine("ReplicationAttributeStore>>createCompositeMetadata:trunkState=" + Arrays.toString(trunkState));
         }
 
         List<SessionAttributeMetadata> entries = new ArrayList<SessionAttributeMetadata>();

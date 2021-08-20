@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -181,7 +182,7 @@ class TransactionFactoryImpl extends TransactionFactoryPOA implements Transactio
             {
                 _logger.logp(Level.FINE,"TransactionFactoryImpl","localCreate()",
                         "Control object :" + result +
-                        " corresponding to this transaction has been created"+
+                        " corresponding to this transaction has been created, "+
                         "GTID is : "+
                         ((TopCoordinator)coordinator).superInfo.globalTID.toString());
             }

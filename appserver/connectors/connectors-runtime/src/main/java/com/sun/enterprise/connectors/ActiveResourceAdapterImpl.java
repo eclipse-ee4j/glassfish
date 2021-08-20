@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -166,7 +167,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             //connector pool and resource creation fails.
             _logger.log(Level.SEVERE, "rardeployment.defaultpoolresourcecreation.failed", cre);
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Error while trying to create the default connector" +
+                _logger.log(Level.FINE, "Error while trying to create the default connector, " +
                     "connection pool and resource", cre);
             }
         } catch (Exception e) {
@@ -174,7 +175,7 @@ public class ActiveResourceAdapterImpl implements ActiveResourceAdapter {
             //connector pool and resource creation fails.
             _logger.log(Level.SEVERE, "rardeployment.defaultpoolresourcecreation.failed", e);
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Error while trying to create the default connector" +
+                _logger.log(Level.FINE, "Error while trying to create the default connector, " +
                     "connection pool and resource", e);
             }
         }

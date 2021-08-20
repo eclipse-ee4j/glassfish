@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -94,7 +95,7 @@ public class ListConnectorWorkSecurityMaps implements AdminCommand {
             if (!foundWSM) {
                  report.setMessage(localStrings.getLocalString(
                         "list.connector.work.security.maps.workSecurityMapNotFound",
-                        "Nothing to list. Either the resource adapter {0} does not exist or the" +
+                        "Nothing to list. Either the resource adapter {0} does not exist or the " +
                                 "resource adapter {0} is not associated with any work security map.", raName));
             }
 

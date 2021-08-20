@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -269,13 +270,13 @@ public class ConnectorDDTransformUtils {
         } catch (IOException e) {
             _logger.info(e.getMessage());
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Error while trying to read connector" +
+                _logger.log(Level.FINE, "Error while trying to read connector " +
                     "descriptor to get resource-adapter properties", e);
             }
         } catch (SAXException e) {
             _logger.info(e.getMessage());
             if(_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Error while trying to read connector" +
+                _logger.log(Level.FINE, "Error while trying to read connector " +
                     "descriptor to get resource-adapter properties", e);
             }
         }

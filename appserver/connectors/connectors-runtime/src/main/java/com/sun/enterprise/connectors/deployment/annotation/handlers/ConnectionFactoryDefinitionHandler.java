@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -101,7 +102,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
                     context instanceof EjbContext ||
                     context instanceof EjbInterceptorContext )) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing as the class is" +
+                    logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing as the class is " +
                             "an EJB class and context is not one of EJBContext");
                 }
                 return false;
@@ -113,7 +114,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
             if (ejbDescriptor == null || ejbDescriptor.length == 0) {
                 if (logger.isLoggable(Level.FINEST)) {
                     logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing as the class " +
-                            "[ " + annotatedClass + " ] is" +
+                            "[ " + annotatedClass + " ] is " +
                             "not an EJB class and the context is EJBContext");
                 }
                 return false;
@@ -122,7 +123,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
             if (!(context instanceof WebBundleContext || context instanceof WebComponentsContext
                     || context instanceof WebComponentContext )) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing as the class is" +
+                    logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing as the class is " +
                             "an Web class and context is not one of WebContext");
                 }
                 return false;
@@ -138,7 +139,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
                     if(ejbDescs != null && ejbDescs.length > 0){
                         if (logger.isLoggable(Level.FINEST)) {
                             logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing as the class " +
-                                    "[ " + annotatedClass + " ] is" +
+                                    "[ " + annotatedClass + " ] is " +
                                     "not an Web class and the context is WebContext");
                         }
                         return false;
@@ -146,7 +147,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
                             if (logger.isLoggable(Level.FINEST)) {
                                 logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing " +
                                         "as the class " +
-                                        "[ " + annotatedClass + " ] is" +
+                                        "[ " + annotatedClass + " ] is " +
                                         "not an Web class and the context is WebContext");
                             }
                             return false;
@@ -161,7 +162,7 @@ public class ConnectionFactoryDefinitionHandler extends AbstractResourceHandler 
                                     if (logger.isLoggable(Level.FINEST)) {
                                         logger.log(Level.FINEST, "Ignoring @ConnectionFactoryDefinition annotation processing " +
                                                 "as the class " +
-                                                "[ " + annotatedClass + " ] is" +
+                                                "[ " + annotatedClass + " ] is " +
                                                 "not an Web class, an interceptor and the context is WebContext");
                                     }
                                     return false;

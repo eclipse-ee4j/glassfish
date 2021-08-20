@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -175,7 +176,7 @@ public class PoolTxHelper {
             set.add(resource);
         } catch (ClassCastException e) {
             if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Pool [ " + poolInfo + " ]: resourceEnlisted:"
+                _logger.log(Level.FINE, "Pool [ " + poolInfo + " ]: resourceEnlisted: "
                         + "transaction is not J2EETransaction but a " + tran.getClass().getName(), e);
             }
         }

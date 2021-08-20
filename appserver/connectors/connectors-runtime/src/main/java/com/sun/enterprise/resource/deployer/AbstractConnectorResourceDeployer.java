@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -128,7 +129,7 @@ public abstract class AbstractConnectorResourceDeployer extends GlobalResourceDe
                         //check whether these RARs are referenced by app-scoped-resources ?
                         if (ResourceUtil.getActualModuleNameWithExtension(module.getName()).equals(embeddedRARName)) {
                             throw new ResourceConflictException("Existing resources refer RAR " +
-                                    "[ " + embeddedRARName + " ] which is" +
+                                    "[ " + embeddedRARName + " ] which is " +
                                     "not present in the re-deployed application ["+appName+"] anymore. " +
                                     "re-deploy the application after resolving the conflicts");
                         }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -50,7 +51,7 @@ public class AdminLoggerInfo {
     @LogMessageInfo(message = "unable to read instance state file {0}, recreating", level = "FINE")
     final static String mISScannotread = LOGMSG_PREFIX + "-00003";
 
-    @LogMessageInfo(message = "unable to create instance state file: {0}, exception: {1}", cause = "The instance state file is missing and the system is trying to"
+    @LogMessageInfo(message = "unable to create instance state file: {0}, exception: {1}", cause = "The instance state file is missing and the system is trying to "
             + "recreated it but and exception was raised.", action = "Check the server logs and contact Oracle support", publish = true, level = "SEVERE")
     final static String mISScannotcreate = LOGMSG_PREFIX + "-00004";
 

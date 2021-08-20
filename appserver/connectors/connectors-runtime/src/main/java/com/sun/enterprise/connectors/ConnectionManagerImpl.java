@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -207,7 +208,7 @@ public class ConnectionManagerImpl implements ConnectionManager, Serializable {
                 if (prin == null) {
                     if (getLogger().isLoggable(Level.FINE)) {
                         getLogger().log(Level.FINE, "default-resource-principal not"
-                                + "specified for " + jndiNameToUse + ". Defaulting to"
+                                + " specified for " + jndiNameToUse + ". Defaulting to"
                                 + " user/password specified in the pool");
                     }
                     prin = defaultPrin;

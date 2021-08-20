@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -789,7 +790,7 @@ public abstract class ManagedConnectionFactoryImpl implements jakarta.resource.s
             } else {
                 //Validation Failed
                 _logger.log(Level.SEVERE, "jdbc.set_custom_validation_class_name_failure", className);
-                throw new ResourceException("The Custom validation class name is" +
+                throw new ResourceException("The Custom validation class name is " +
                         "not valid as it does not implement " +
                         ConnectionValidation.class.getName());
             }

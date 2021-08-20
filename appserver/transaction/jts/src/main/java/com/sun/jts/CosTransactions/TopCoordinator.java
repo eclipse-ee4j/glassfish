@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 1995-1997 IBM Corp. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -1242,7 +1243,7 @@ public class TopCoordinator extends CoordinatorImpl {
             numRes = participants.addRes(res);
             if (_logger.isLoggable(Level.FINEST)) {
                 _logger.logp(Level.FINEST,"TopCoordinator","register_resource()",
-                    "OTSResource " + res +" has been registered"+"GTID is:"+
+                    "OTSResource " + res +" has been registered, GTID is:"+
                         superInfo.globalTID.toString());
             }
 
@@ -2736,7 +2737,7 @@ public class TopCoordinator extends CoordinatorImpl {
         PropagationContext result = new PropagationContext(timeout, current, new TransIdentity[0], emptyData);
         if (_logger.isLoggable(Level.FINEST)) {
             _logger.logp(Level.FINEST,"TopCoordinator","get_txcontext()",
-                "Obtained PropagationContext"+"GTID is: "+
+                "Obtained PropagationContext, GTID is: "+
                     superInfo.globalTID.toString());
         }
 

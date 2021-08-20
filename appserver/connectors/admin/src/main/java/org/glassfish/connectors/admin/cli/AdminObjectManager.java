@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -250,7 +251,7 @@ public class AdminObjectManager implements ResourceManager {
                                  "ConnectorRuntime for resource adapter.", cre);
                  String msg = localStrings.getLocalString(
                          "admin.mbeans.rmb.ao_intf_impl_check_failed",
-                         "Could not determine admin object resource information of Resource Adapter [ {0} ] for" +
+                         "Could not determine admin object resource information of Resource Adapter [ {0} ] for " +
                                  "resType [ {1} ] and classname [ {2} ] ",
                          raName, resType, className) + " " + cre.getLocalizedMessage();
                  return new ResourceStatus(ResourceStatus.FAILURE, msg);

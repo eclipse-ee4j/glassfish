@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -108,7 +109,7 @@ public class ConfigApiLoggerInfo {
     @LogMessageInfo(message = "Existing default-config detected during upgrade. No need to create default-config.", level = "INFO")
     public final static String existingDefaultConfig = LOGMSG_PREFIX + "-00022";
 
-    @LogMessageInfo(message = "System Property com.sun.aas.installRoot is null. We could be running in unit tests."
+    @LogMessageInfo(message = "System Property com.sun.aas.installRoot is null. We could be running in unit tests. "
             + "Exiting DefaultConfigUpgrade", level = "INFO")
     public final static String installRootIsNull = LOGMSG_PREFIX + "-00023";
 

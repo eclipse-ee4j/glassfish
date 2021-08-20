@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -321,7 +322,7 @@ public class DelegatedRecoveryManager {
                         // no CoordinatorTerm in recovery, we must do it here.
                         if(_logger.isLoggable(Level.FINE)) {
                             _logger.logp(Level.FINE,"DelegatedRecoveryManager","resync()",
-                            "Before invoking commit on the reconstructed coordinator"+
+                            "Before invoking commit on the reconstructed coordinator, "+
                             "GTID is: "+
                             ((TopCoordinator)coord).superInfo.globalTID.toString());
 

@@ -16,6 +16,21 @@
 
 package com.sun.enterprise.security.admin.cli;
 
+import java.io.IOException;
+import java.security.KeyStoreException;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.UUID;
+
+import org.glassfish.grizzly.config.dom.NetworkConfig;
+import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.RetryableException;
+import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SecureAdmin;
@@ -26,21 +41,8 @@ import com.sun.enterprise.security.admin.cli.SecureAdminCommand.ConfigLevelConte
 import com.sun.enterprise.security.admin.cli.SecureAdminCommand.TopLevelContext;
 import com.sun.enterprise.security.admin.cli.SecureAdminCommand.Work;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import java.io.IOException;
-import java.security.KeyStoreException;
-import java.util.Iterator;
-import java.util.Properties;
-import java.util.UUID;
-import org.glassfish.grizzly.config.dom.NetworkConfig;
-import org.glassfish.grizzly.config.dom.Protocol;
-import jakarta.inject.Inject;
 
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.RetryableException;
-import org.jvnet.hk2.config.Transaction;
-import org.jvnet.hk2.config.TransactionFailure;
+import jakarta.inject.Inject;
 
 /**
  * Common logic for formal upgrade (i.e., start-domain --upgrade) and silent upgrade (starting a newer version of GlassFish using

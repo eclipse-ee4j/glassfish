@@ -16,16 +16,11 @@
 
 package com.sun.enterprise.security.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.SecureAdmin;
-import com.sun.enterprise.security.SecurityLoggerInfo;
 import java.beans.PropertyChangeEvent;
 import java.util.logging.Logger;
 
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.internal.api.PostStartupRunLevel;
-import jakarta.inject.Inject;
-
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Changed;
 import org.jvnet.hk2.config.Changed.TYPE;
@@ -34,6 +29,12 @@ import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.SecureAdmin;
+import com.sun.enterprise.security.SecurityLoggerInfo;
+
+import jakarta.inject.Inject;
 
 /**
  * Tracks changes to secure admin configuration, basically so it can report restart-required.

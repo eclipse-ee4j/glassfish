@@ -16,9 +16,10 @@
 
 package com.sun.enterprise.security.auth.login;
 
+import javax.security.auth.login.LoginException;
+
 import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.realm.Realm;
-import javax.security.auth.login.LoginException;
 
 /**
  * Abstract base class for password-based login modules. This class is provided for backward compatibility and is a candidate for
@@ -74,6 +75,7 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule {
      *
      * @throws LoginException
      */
+    @Override
     protected final void authenticateUser() throws LoginException {
         authenticate();
     }

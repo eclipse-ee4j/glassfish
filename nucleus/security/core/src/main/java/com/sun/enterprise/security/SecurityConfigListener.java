@@ -16,32 +16,38 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.Property;
-
-import jakarta.inject.Singleton;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-
-import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.config.serverbeans.AuthRealm;
-import com.sun.enterprise.config.serverbeans.JaccProvider;
-import com.sun.enterprise.config.serverbeans.AuditModule;
-import com.sun.enterprise.config.serverbeans.Config;
-import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
-
-import com.sun.enterprise.security.audit.BaseAuditManager;
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.realm.RealmsManager;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 import java.util.Properties;
 import java.util.logging.Logger;
-import jakarta.inject.Named;
+
 import javax.security.auth.login.Configuration;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.Changed;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.NotProcessed;
+import org.jvnet.hk2.config.UnprocessedChangeEvents;
+import org.jvnet.hk2.config.types.Property;
+
+import com.sun.enterprise.config.serverbeans.AuditModule;
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+import com.sun.enterprise.security.audit.BaseAuditManager;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /**
  *
@@ -79,6 +85,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
      *
      * @param events list of changes
      */
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         // I am not so interested with the list of events, just sort who got added or removed for me.
         ConfigSupport.sortAndDispatch(events, new Changed() {
@@ -90,6 +97,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
              * @param changedType type of the configuration object
              * @param changedInstance changed instance.
              */
+            @Override
             public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
                 NotProcessed np = null;
                 switch (type) {
@@ -341,6 +349,7 @@ public class SecurityConfigListener implements ConfigListener, PostConstruct {
         Configuration.getConfiguration().refresh();
     }
 
+    @Override
     public void postConstruct() {
         if (securityService == null) {
             //should never happen

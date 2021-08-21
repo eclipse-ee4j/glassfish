@@ -16,11 +16,11 @@
 
 package com.sun.enterprise.security;
 
-import org.glassfish.security.common.CNonceCache;
 import java.util.HashMap;
-import java.util.Map;
 
+import org.glassfish.security.common.CNonceCache;
 import org.jvnet.hk2.annotations.Service;
+
 import jakarta.inject.Singleton;
 
 /**

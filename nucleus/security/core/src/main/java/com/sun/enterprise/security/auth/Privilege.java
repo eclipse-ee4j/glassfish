@@ -16,8 +16,6 @@
 
 package com.sun.enterprise.security.auth;
 
-import java.rmi.*;
-
 /**
  * This remote interface enables the deployment tool to query the details of the Privilege.
  *

@@ -15,8 +15,8 @@
  */
 package com.sun.enterprise.security;
 
-import java.util.Enumeration;
 import java.security.Principal;
+import java.util.Enumeration;
 
 /**
  * A group of principals.

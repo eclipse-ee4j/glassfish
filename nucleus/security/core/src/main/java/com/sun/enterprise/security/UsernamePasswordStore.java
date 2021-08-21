@@ -16,10 +16,10 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.security.common.ClientSecurityContext;
-import java.util.logging.*;
-import com.sun.logging.*;
 import java.util.Arrays;
+import java.util.logging.Logger;
+
+import com.sun.enterprise.security.common.ClientSecurityContext;
 
 /**
  * This class is used to share information between either of the following scenarios 1. Different points of execution of a single

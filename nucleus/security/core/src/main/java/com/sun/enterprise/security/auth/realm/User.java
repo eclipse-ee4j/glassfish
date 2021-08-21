@@ -17,7 +17,6 @@
 package com.sun.enterprise.security.auth.realm;
 
 import java.security.Principal;
-
 import java.util.Enumeration;
 
 /**

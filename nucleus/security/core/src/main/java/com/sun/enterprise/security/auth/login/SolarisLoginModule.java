@@ -16,25 +16,11 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import java.util.*;
-
-import java.util.logging.Logger;
 import java.util.logging.Level;
 
-import javax.security.auth.*;
-import javax.security.auth.callback.*;
-import javax.security.auth.login.*;
-import javax.security.auth.spi.*;
+import javax.security.auth.login.LoginException;
 
 import com.sun.enterprise.security.auth.realm.solaris.SolarisRealm;
-
-// limit RI imports
-import com.sun.enterprise.security.auth.Privilege;
-import com.sun.enterprise.security.auth.PrivilegeImpl;
-
-import com.sun.enterprise.security.auth.realm.Realm;
-import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import javax.security.auth.login.LoginException;
 
 /**
  * Solaris realm login module.
@@ -54,6 +40,7 @@ public class SolarisLoginModule extends PasswordLoginModule {
      * @throws LoginException If login fails (JAAS login() behavior).
      *
      */
+    @Override
     protected void authenticate() throws LoginException {
         if (!(_currentRealm instanceof SolarisRealm)) {
             String msg = sm.getString("solarislm.badrealm");

@@ -16,9 +16,6 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-import java.security.Principal;
-import com.sun.enterprise.security.auth.*;
-
 /**
  * This interface is used by the Authentication Service to have the Principal authenticated by the realm. A realm provides an
  * implementation of this interface.

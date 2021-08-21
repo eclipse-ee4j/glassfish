@@ -16,34 +16,36 @@
 
 package com.sun.enterprise.security.cli;
 
+import java.beans.PropertyVetoException;
+import java.util.List;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.I18n;
+import org.glassfish.api.Param;
+import org.glassfish.api.admin.AccessRequired;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandSecurity;
+import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JaccProvider;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-import java.beans.PropertyVetoException;
-import java.util.List;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.I18n;
-import org.glassfish.api.Param;
-import org.glassfish.api.admin.AdminCommand;
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.config.support.CommandTarget;
-import org.glassfish.config.support.TargetType;
+
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
-import org.glassfish.api.admin.AccessRequired;
-import org.glassfish.api.admin.AdminCommandSecurity;
-
-import org.jvnet.hk2.annotations.Service;
-import org.glassfish.hk2.api.PerLookup;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
 
 /**
  * Usage: delete-jacc-provider [--help] [--user admin_user] [--passwordfile file_name] [ --target target_name] jacc_provider_name
@@ -116,6 +118,7 @@ public class DeleteJaccProvider implements AdminCommand, AdminCommandSecurity.Pr
 
             final JaccProvider jaccprov = jprov;
             ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
+                @Override
                 public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
                     param.getJaccProvider().remove(jaccprov);
                     return null;

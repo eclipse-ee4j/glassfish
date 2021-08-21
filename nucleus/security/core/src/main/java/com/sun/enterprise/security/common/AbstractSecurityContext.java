@@ -16,9 +16,11 @@
 
 package com.sun.enterprise.security.common;
 
-import com.sun.enterprise.security.integration.AppServSecurityContext;
 import java.security.Principal;
+
 import javax.security.auth.Subject;
+
+import com.sun.enterprise.security.integration.AppServSecurityContext;
 
 /**
  * This base class defines the methods that Security Context should exhibit. There are two places where a derived class are used.
@@ -37,6 +39,7 @@ public abstract class AbstractSecurityContext implements AppServSecurityContext,
      *
      * @return The caller Principal.
      */
+    @Override
     abstract public Principal getCallerPrincipal();
 
     /**
@@ -44,5 +47,6 @@ public abstract class AbstractSecurityContext implements AppServSecurityContext,
      *
      * @return A credentials object associated with the current client invocation.
      */
+    @Override
     abstract public Subject getSubject();
 }

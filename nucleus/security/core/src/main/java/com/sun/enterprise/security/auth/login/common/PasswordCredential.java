@@ -118,6 +118,7 @@ public class PasswordCredential {
      * @param the object that this instance is being compared to.
      * @return true if the instances are equal, false otherwise
      */
+    @Override
     public boolean equals(Object o) {
         if (o instanceof PasswordCredential) {
             PasswordCredential pc = (PasswordCredential) o;
@@ -133,6 +134,7 @@ public class PasswordCredential {
      *
      * @return the hash code.
      */
+    @Override
     public int hashCode() {
         return username.hashCode() + Arrays.hashCode(password) + realm.hashCode();
     }
@@ -140,6 +142,7 @@ public class PasswordCredential {
     /**
      * The string representation of the credential.
      */
+    @Override
     public String toString() {
         String s = "Realm=" + realm;
         s = s + " Username=" + username;

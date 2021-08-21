@@ -16,17 +16,17 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.config.serverbeans.SecurityService;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
+import javax.xml.stream.XMLStreamException;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 import org.jvnet.hk2.annotations.Contract;
+
+import com.sun.enterprise.config.serverbeans.SecurityService;
 
 /**
  * Utility contact to copy the security related config files from the passed non-embedded instanceDir to the embedded server

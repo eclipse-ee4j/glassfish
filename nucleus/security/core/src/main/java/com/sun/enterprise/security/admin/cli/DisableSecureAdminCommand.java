@@ -16,19 +16,19 @@
 
 package com.sun.enterprise.security.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.security.SecurityLoggerInfo;
-
 import java.util.Iterator;
+
 import org.glassfish.api.I18n;
 import org.glassfish.api.admin.AccessRequired;
 import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
-
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.security.SecurityLoggerInfo;
 
 /**
  * Adjusts the DAS configuration to turn off secure admin, as if by executing these commands:

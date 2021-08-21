@@ -16,25 +16,30 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
-import java.util.Map;
-import java.util.Enumeration;
 import java.security.KeyStore;
 import java.security.cert.X509Certificate;
-import javax.security.auth.*;
-import javax.security.auth.callback.*;
+import java.util.Enumeration;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.ChoiceCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
+
+import org.glassfish.internal.api.Globals;
+import org.glassfish.security.common.PrincipalImpl;
+
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.auth.login.common.X509CertificateCredential;
+import com.sun.enterprise.security.integration.AppClientSSL;
 //V3:Commented import com.sun.enterprise.config.clientbeans.Ssl;
 import com.sun.enterprise.security.ssl.SSLUtils;
-import com.sun.enterprise.security.integration.AppClientSSL;
-
-import org.glassfish.security.common.PrincipalImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.util.logging.*;
-import com.sun.logging.*;
-import org.glassfish.internal.api.Globals;
 
 /**
  * <p>
@@ -101,6 +106,7 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @param options options specified in the login <code>Configuration</code> for this particular <code>LoginModule</code>.
      */
+    @Override
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
 
         this.subject = subject;
@@ -122,6 +128,7 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @exception LoginException if this <code>LoginModule</code> is unable to perform the authentication.
      */
+    @Override
     public boolean login() throws LoginException {
 
         // prompt for a username and password
@@ -202,6 +209,7 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @return true if this LoginModule's own login and commit attempts succeeded, or false otherwise.
      */
+    @Override
     public boolean commit() throws LoginException {
         if (succeeded == false) {
             return false;
@@ -253,6 +261,7 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @return false if this LoginModule's own login and/or commit attempts failed, and true otherwise.
      */
+    @Override
     public boolean abort() throws LoginException {
         if (succeeded == false) {
             return false;
@@ -281,6 +290,7 @@ public class ClientCertificateLoginModule implements LoginModule {
      *
      * @return true in all cases since this <code>LoginModule</code> should not be ignored.
      */
+    @Override
     public boolean logout() throws LoginException {
         // unset the alias
         ssl = null;

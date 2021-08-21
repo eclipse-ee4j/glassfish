@@ -16,27 +16,26 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.security.audit.AuditManager;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.jvnet.hk2.annotations.Optional;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.PreDestroy;
-import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.security.auth.realm.RealmsManager;
-import com.sun.enterprise.security.common.Util;
-import com.sun.enterprise.security.ssl.SSLUtils;
-import org.glassfish.internal.api.ServerContext;
 import org.glassfish.api.event.EventListener;
 import org.glassfish.api.event.EventTypes;
 import org.glassfish.api.event.Events;
-import jakarta.inject.Inject;
-
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.PreDestroy;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.ServerContext;
+import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.audit.AuditManager;
+import com.sun.enterprise.security.auth.realm.RealmsManager;
+import com.sun.enterprise.security.common.Util;
+import com.sun.enterprise.security.ssl.SSLUtils;
+
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
-import org.jvnet.hk2.config.ConfigListener;
 
 /**
  * This class extends default implementation of ServerLifecycle interface. It provides security initialization and setup for the

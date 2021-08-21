@@ -17,8 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.deployment</groupId>
         <artifactId>jsr-88</artifactId>
@@ -26,7 +27,6 @@
     </parent>
 
     <artifactId>sun-as-jsr88-dm-frag</artifactId>
-    <name>JSR-88 dist. fragment</name>
     <!--
       This packaging specifies that it's a package that contains files to be added to
       the distribution.
@@ -50,8 +50,18 @@
     -->
     <packaging>distribution-fragment</packaging>
 
-    <build>
-        <!--
+    <name>JSR-88 dist. fragment</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>sun-as-jsr88-dm</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build><!--
          In this module, all the files are statically stored as-is in the Subversion repository,
          so the simple copying from src/main/resources to target/classes that Maven does by default
          is suffice.
@@ -82,13 +92,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>sun-as-jsr88-dm</artifactId>
-            <version>${project.version}</version>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 </project>

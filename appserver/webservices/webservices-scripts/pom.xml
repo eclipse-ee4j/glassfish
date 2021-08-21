@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
@@ -16,9 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.webservices</groupId>
         <artifactId>webservices</artifactId>
@@ -26,8 +27,6 @@
     </parent>
 
     <artifactId>webservices-scripts</artifactId>
-    <name>GlassFish webservices scripts</name>
-
     <!--
         The comments below were copied from the appclient-scripts module.
         They are very helpful so it seemed like a good idea to leave them here also.
@@ -53,10 +52,10 @@
       is bundled in GF, the corresponding fragment will be also added, thanks to
       the transitive dependency handling in Maven.
     -->
-
     <packaging>distribution-fragment</packaging>
 
-<!--
+    <name>GlassFish webservices scripts</name>
+    <!--
 
     <packaging>pom</packaging>
 -->
@@ -70,5 +69,4 @@
 
          The following section shows how you can do this.
        -->
-
 </project>

@@ -17,8 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.admingui</groupId>
         <artifactId>admingui</artifactId>
@@ -26,11 +27,21 @@
     </parent>
 
     <artifactId>dist-fragment</artifactId>
-    <name>Admin Console Install Fragment for Web distro</name>
     <packaging>distribution-fragment</packaging>
 
-    <build>
-        <!--
+    <name>Admin Console Install Fragment for Web distro</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>war</artifactId>
+            <version>${project.version}</version>
+            <type>war</type>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
+    <build><!--
          In this module, all the files are statically stored as-is in the Subversion repository,
          so the simple copying from src/main/resources to target/classes that Maven does by default
          is suffice.
@@ -62,14 +73,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>war</artifactId>
-            <version>${project.version}</version>
-            <type>war</type>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 </project>

@@ -17,7 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
@@ -28,8 +30,8 @@
     <!-- version 4.0 means this is the dataprovider used in Woodstock 4.2 release -->
     <groupId>org.glassfish.main.admingui</groupId>
     <artifactId>dataprovider</artifactId>
+
     <name>DataProvider</name>
-    <modelVersion>4.0.0</modelVersion>
     <description>DataProvider Repackaged as OSGi bundle for GlassFish</description>
 
     <properties>
@@ -40,10 +42,17 @@
         <findbugs.skip>true</findbugs.skip>
     </properties>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>dataprovider</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
-            <plugin>
-                <!-- Configure maven-bundle-plugin which takes care of
+            <plugin><!-- Configure maven-bundle-plugin which takes care of
                      OSGi packaging -->
                 <!-- We need to override the plugin settings -->
                 <groupId>org.apache.felix</groupId>
@@ -80,13 +89,6 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>dataprovider</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 
     <profiles>
         <profile>
@@ -117,4 +119,3 @@
         </profile>
     </profiles>
 </project>
-

@@ -17,8 +17,7 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -427,14 +426,12 @@
             </dependency>
 
             <!-- Jakarta XML Web Services -->
-            <dependency>
-                <!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
+            <dependency><!-- Contains jakarta.jws, jakarta.xml.soap, jakarta.xml.ws -->
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>webservices-api-osgi</artifactId>
                 <version>${webservices.version}</version>
             </dependency>
-            <dependency>
-                <!-- This is actually Metro -->
+            <dependency><!-- This is actually Metro -->
                 <groupId>org.glassfish.metro</groupId>
                 <artifactId>webservices-osgi</artifactId>
                 <version>${webservices.version}</version>

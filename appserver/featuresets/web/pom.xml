@@ -17,16 +17,19 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.featuresets</groupId>
         <artifactId>featuresets</artifactId>
         <version>6.2.1-SNAPSHOT</version>
     </parent>
+
     <artifactId>web</artifactId>
-    <name>Glassfish Web Featureset</name>
     <packaging>pom</packaging>
+
+    <name>Glassfish Web Featureset</name>
     <description>This pom defines the set of packages for GlassFish Web distribution</description>
 
     <dependencies>
@@ -42,7 +45,7 @@
            <groupId>org.glassfish.main.admin</groupId>
            <artifactId>appserver-domain</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -139,9 +142,9 @@
 
         <!-- shoal -->
          <dependency>
-              <groupId>org.glassfish.shoal</groupId>
-              <artifactId>shoal-gms-api</artifactId>
-            <exclusions>
+             <groupId>org.glassfish.shoal</groupId>
+             <artifactId>shoal-gms-api</artifactId>
+             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -149,9 +152,9 @@
             </exclusions>
           </dependency>
           <dependency>
-              <groupId>org.glassfish.shoal</groupId>
-              <artifactId>shoal-gms-impl</artifactId>
-            <exclusions>
+             <groupId>org.glassfish.shoal</groupId>
+             <artifactId>shoal-gms-impl</artifactId>
+             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -603,6 +606,38 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
+         <!-- Jakarta Security -->
+        <dependency>
+            <groupId>jakarta.security.enterprise</groupId>
+            <artifactId>jakarta.security.enterprise-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency> 
+        <dependency>
+            <groupId>org.glassfish.soteria</groupId>
+            <artifactId>jakarta.security.enterprise</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.soteria</groupId>
+            <artifactId>soteria.spi.bean.decorator.weld</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
         <dependency>
             <groupId>jakarta.authentication</groupId>
             <artifactId>jakarta.authentication-api</artifactId>
@@ -633,6 +668,7 @@
                 </exclusion>
             </exclusions>
         </dependency>
+        
         <dependency>
             <groupId>org.glassfish.main.transaction</groupId>
             <artifactId>transaction-internal-api</artifactId>
@@ -718,10 +754,10 @@
 
         <!-- glassfish-ha -->
           <dependency>
-              <groupId>org.glassfish.main.ha</groupId>
-              <artifactId>ha-shoal-cache-bootstrap</artifactId>
-              <version>${project.version}</version>
-            <exclusions>
+             <groupId>org.glassfish.main.ha</groupId>
+             <artifactId>ha-shoal-cache-bootstrap</artifactId>
+             <version>${project.version}</version>
+             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1220,31 +1256,6 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.soteria</groupId>
-            <artifactId>jakarta.security.enterprise</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.soteria</groupId>
-            <artifactId>soteria.spi.bean.decorator.weld</artifactId>
-            <exclusions><exclusion><groupId>*</groupId><artifactId>*</artifactId></exclusion></exclusions>
-        </dependency>
-        <dependency>
-            <groupId>jakarta.security.enterprise</groupId>
-            <artifactId>jakarta.security.enterprise-api</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
 
         <!-- glassfish-jdbc -->
         <dependency>
@@ -1273,11 +1284,11 @@
             </exclusions>
         </dependency>
         <dependency>
-          <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-ra-distribution</groupId>
-            <artifactId>jdbc-ra</artifactId>
-            <version>${project.parent.version}</version>
-            <type>zip</type>
-            <exclusions>
+           <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-ra-distribution</groupId>
+           <artifactId>jdbc-ra</artifactId>
+           <version>${project.parent.version}</version>
+           <type>zip</type>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1288,7 +1299,7 @@
            <groupId>org.glassfish.main.jdbc</groupId>
            <artifactId>jdbc-admin</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1299,7 +1310,7 @@
            <groupId>org.glassfish.main.jdbc</groupId>
            <artifactId>jdbc-runtime</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1312,7 +1323,7 @@
            <groupId>org.glassfish.main.persistence</groupId>
            <artifactId>jpa-container</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1323,7 +1334,7 @@
            <groupId>org.glassfish.main.persistence</groupId>
            <artifactId>gf-jpa-connector</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1334,7 +1345,7 @@
            <groupId>org.glassfish.main.persistence</groupId>
            <artifactId>persistence-common</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1345,7 +1356,7 @@
            <groupId>org.glassfish.main.persistence</groupId>
            <artifactId>glassfish-oracle-jdbc-driver-packages</artifactId>
            <version>${project.version}</version>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1496,7 +1507,7 @@
        <dependency>
            <groupId>org.glassfish</groupId>
            <artifactId>jakarta.faces</artifactId>
-            <exclusions>
+           <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
                     <artifactId>*</artifactId>
@@ -1528,7 +1539,7 @@
             </exclusions>
         </dependency>
         <dependency>
-              <groupId>org.glassfish.main.web</groupId>
+            <groupId>org.glassfish.main.web</groupId>
             <artifactId>gf-weld-connector</artifactId>
             <version>${project.version}</version>
             <exclusions>

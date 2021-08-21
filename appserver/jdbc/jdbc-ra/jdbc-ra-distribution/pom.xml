@@ -17,18 +17,43 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>jdbc-ra</artifactId>
         <groupId>org.glassfish.main.jdbc.jdbc-ra</groupId>
+        <artifactId>jdbc-ra</artifactId>
         <version>6.2.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-ra-distribution</groupId>
     <artifactId>jdbc-ra</artifactId>
-    <name>Distribution Module for JDBC Resource Adapter</name>
     <packaging>distribution-fragment</packaging>
+
+    <name>Distribution Module for JDBC Resource Adapter</name>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
+            <artifactId>jdbc-core</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc40</groupId>
+            <artifactId>jdbc40</artifactId>
+            <version>${project.parent.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.jdbc</groupId>
+            <artifactId>templates</artifactId>
+            <version>${project.parent.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
@@ -72,24 +97,4 @@
             </plugin>
         </plugins>
     </build>
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
-            <artifactId>jdbc-core</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc40</groupId>
-            <artifactId>jdbc40</artifactId>
-            <version>${project.parent.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.jdbc</groupId>
-            <artifactId>templates</artifactId>
-            <version>${project.parent.version}</version>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
 </project>

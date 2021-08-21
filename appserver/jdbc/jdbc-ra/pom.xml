@@ -17,34 +17,22 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>6.2.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.glassfish.main.jdbc.jdbc-ra</groupId>
     <artifactId>jdbc-ra</artifactId>
-    <name>JDBC Resource Adapter</name>
     <packaging>pom</packaging>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.glassfish.build</groupId>
-                <artifactId>glassfishbuild-maven-plugin</artifactId>
-                <configuration>
-                    <!-- configuration for the run mojo -->
-                    <distribution>
-                        <groupId>org.glassfish.main.distributions</groupId>
-                        <artifactId>web</artifactId>
-                        <version>${project.version}</version>
-                    </distribution>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+
+    <name>JDBC Resource Adapter</name>
+
     <developers>
         <developer>
             <id>sm157516</id>
@@ -66,9 +54,27 @@
             </roles>
         </developer>
     </developers>
+
     <modules>
         <module>jdbc-core</module>
         <module>jdbc40</module>
         <module>jdbc-ra-distribution</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.glassfish.build</groupId>
+                <artifactId>glassfishbuild-maven-plugin</artifactId>
+                <configuration>
+                    <!-- configuration for the run mojo -->
+                    <distribution>
+                        <groupId>org.glassfish.main.distributions</groupId>
+                        <artifactId>web</artifactId>
+                        <version>${project.version}</version>
+                    </distribution>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -24,7 +24,7 @@
         <groupId>org.eclipse.ee4j</groupId>
         <artifactId>project</artifactId>
         <version>1.0.6</version>
-        <relativePath/>
+        <relativePath />
     </parent>
 
     <groupId>org.glassfish.main</groupId>
@@ -50,18 +50,18 @@
 
     <mailingLists>
         <mailingList>
-          <name>Glassfish dev mailing list</name>
-          <post>glassfish-dev@eclipse.org</post>
-          <subscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</subscribe>
-          <unsubscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</unsubscribe>
-          <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
+            <name>Glassfish dev mailing list</name>
+            <post>glassfish-dev@eclipse.org</post>
+            <subscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</subscribe>
+            <unsubscribe>https://dev.eclipse.org/mailman/listinfo/glassfish-dev</unsubscribe>
+            <archive>https://dev.eclipse.org/mhonarc/lists/glassfish-dev</archive>
         </mailingList>
     </mailingLists>
 
     <scm>
-      <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
-      <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
-      <url>https://github.com/eclipse-ee4j/glassfish</url>
+        <connection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</connection>
+        <developerConnection>scm:git:git://github.com/eclipse-ee4j/glassfish.git</developerConnection>
+        <url>https://github.com/eclipse-ee4j/glassfish</url>
     </scm>
     <issueManagement>
         <system>IssueTracker</system>
@@ -163,12 +163,12 @@
         <maven.test.jvmoptions.locale>-Duser.language=en -Duser.region=US</maven.test.jvmoptions.locale>
         <maven.test.jvmoptions.custom></maven.test.jvmoptions.custom>
         <maven.test.jvmoptions>
-          ${maven.test.jvmoptions.memory.sizes}
-          ${maven.test.jvmoptions.memory.gc}
-          ${maven.test.jvmoptions.display}
-          ${maven.test.jvmoptions.locale}
-          ${maven.test.jvmoptions.add-opens}
-          ${maven.test.jvmoptions.custom}
+            ${maven.test.jvmoptions.memory.sizes}
+            ${maven.test.jvmoptions.memory.gc}
+            ${maven.test.jvmoptions.display}
+            ${maven.test.jvmoptions.locale}
+            ${maven.test.jvmoptions.add-opens}
+            ${maven.test.jvmoptions.custom}
         </maven.test.jvmoptions>
         <surefire.argLine>${maven.test.jvmoptions}</surefire.argLine>
     </properties>
@@ -197,7 +197,7 @@
                 <artifactId>hibernate-validator</artifactId>
                 <version>${hibernate-validator.version}</version>
             </dependency>
-           <dependency>
+            <dependency>
                 <groupId>org.hibernate.validator</groupId>
                 <artifactId>hibernate-validator-cdi</artifactId>
                 <version>${hibernate-validator.version}</version>
@@ -306,7 +306,7 @@
                 <artifactId>jakarta.el-api</artifactId>
                 <version>${jakarta.el-api.version}</version>
             </dependency>
-             <dependency>
+            <dependency>
                 <groupId>jakarta.ws.rs</groupId>
                 <artifactId>jakarta.ws.rs-api</artifactId>
                 <version>${jax-rs-api.impl.version}</version>
@@ -530,33 +530,31 @@
                 <version>1.1.4</version>
             </dependency>
             <dependency>
-               <groupId>org.apache.felix</groupId>
-               <artifactId>org.apache.felix.gogo.shell</artifactId>
-               <version>1.1.4</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.gogo.shell</artifactId>
+                <version>1.1.4</version>
             </dependency>
             <dependency>
-               <groupId>org.apache.felix</groupId>
-               <artifactId>org.apache.felix.gogo.command</artifactId>
-               <version>1.1.2</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.gogo.command</artifactId>
+                <version>1.1.2</version>
             </dependency>
             <dependency>
-               <groupId>org.apache.felix</groupId>
-               <artifactId>org.apache.felix.fileinstall</artifactId>
-               <version>3.7.0</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.fileinstall</artifactId>
+                <version>3.7.0</version>
             </dependency>
             <dependency>
-               <groupId>org.apache.felix</groupId>
-               <artifactId>org.apache.felix.configadmin</artifactId>
-               <version>1.9.22</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.configadmin</artifactId>
+                <version>1.9.22</version>
             </dependency>
-            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that.
-                 Since Felix Core doesn't export these packages, we have to deploy them
-                 together with Felix SCR.
-            -->
+            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that. Since Felix Core doesn't export 
+                these packages, we have to deploy them together with Felix SCR. -->
             <dependency>
-               <groupId>org.apache.felix</groupId>
-               <artifactId>org.apache.felix.scr</artifactId>
-               <version>2.1.28</version>
+                <groupId>org.apache.felix</groupId>
+                <artifactId>org.apache.felix.scr</artifactId>
+                <version>2.1.28</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
@@ -724,7 +722,8 @@
                         <argLine>${surefire.argLine}</argLine>
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkCount>1</forkCount>
-                        <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                        <forkNode
+                            implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
                     </configuration>
                 </plugin>
                 <plugin>
@@ -737,10 +736,8 @@
                         <skip>${checkstyle.skip}</skip>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*</excludes>
-                        <!--
-                         build-helper-plugin adds the root as a resource path, but checkstyle overrides
-                         the filter and adds all property files in the tree
-                        -->
+                        <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and 
+                            adds all property files in the tree -->
                         <resourceExcludes>
                             **/appserver/**/src/main/resources/**/*,
                             **/deployment/**/src/main/resources/**/*,
@@ -878,7 +875,7 @@
                             <includeOnlyProperty>git.build.time</includeOnlyProperty>
                             <includeOnlyProperty>git.commit.id.abbrev</includeOnlyProperty>
                             <includeOnlyProperty>git.closest.tag.commit.count</includeOnlyProperty>
-                            </includeOnlyProperties>
+                        </includeOnlyProperties>
                     </configuration>
                 </plugin>
             </plugins>
@@ -905,33 +902,12 @@
                 </executions>
             </plugin>
 
-            <!-- force cleaning of the local repository
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>purge-local-dependencies</id>
-                        <phase>initialize</phase>
-                        <goals>
-                            <goal>purge-local-repository</goal>
-                        </goals>
-                        <configuration>
-                            <resolutionFuzziness>groupId</resolutionFuzziness>
-                            <includes>
-                                <include>jakarta.ejb</include>
-                                <include>jakarta.transaction</include>
-                                <include>jakarta.resource</include>
-                                <include>jakarta.enterprise.concurrent</include>
-                                <include>jakarta.ws.rs</include>
-                                <include>javax.xml.registry</include>
-                                <include>jakarta.websocket</include>
-                                <include>org.glassfish.jersey</include>
-                            </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            -->
+            <!-- force cleaning of the local repository <plugin> <artifactId>maven-dependency-plugin</artifactId> <executions> 
+                <execution> <id>purge-local-dependencies</id> <phase>initialize</phase> <goals> <goal>purge-local-repository</goal> </goals> 
+                <configuration> <resolutionFuzziness>groupId</resolutionFuzziness> <includes> <include>jakarta.ejb</include> <include>jakarta.transaction</include> 
+                <include>jakarta.resource</include> <include>jakarta.enterprise.concurrent</include> <include>jakarta.ws.rs</include> <include>javax.xml.registry</include> 
+                <include>jakarta.websocket</include> <include>org.glassfish.jersey</include> </includes> </configuration> </execution> </executions> 
+                </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
@@ -1038,11 +1014,13 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo>Generating manifest for ${project.build.outputDirectory}/META-INF for ${project.artifactId}</echo>
+                                <echo>Generating manifest for ${project.build.outputDirectory}/META-INF for
+                                    ${project.artifactId}</echo>
                                 <echo file="${basedir}/target/MANIFEST.MF">Manifest-Version: 1.0</echo>
                                 <copy toDir="${project.build.outputDirectory}/META-INF" overwrite="false">
                                     <fileset dir="${basedir}/target" includes="MANIFEST.MF">
-                                        <present targetdir="${project.build.outputDirectory}/META-INF" present="srconly" />
+                                        <present targetdir="${project.build.outputDirectory}/META-INF"
+                                            present="srconly" />
                                     </fileset>
                                 </copy>
                             </target>
@@ -1091,11 +1069,9 @@
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgiversion-maven-plugin</artifactId>
-                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear
-                in package version attribute, we use the following goal to
-                populate a project property with an OSGi version which is
-                equivalent to maven version without qualifier and then use that
-                property in osgi.bundle while exporting. -->
+                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the 
+                    following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier 
+                    and then use that property in osgi.bundle while exporting. -->
                 <configuration>
                     <dropVersionComponent>qualifier</dropVersionComponent>
                     <versionPropertyName>project.osgi.version</versionPropertyName>

@@ -86,10 +86,8 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <!--
-            We install fileinstall bundle which monitors modules dir and autodeploy dir for
-            addition/removal/updation of bundles
-        -->
+        <!-- We install fileinstall bundle which monitors modules dir and autodeploy dir for addition/removal/updation of 
+            bundles -->
         <dependency>
             <groupId>org.apache.felix</groupId>
             <artifactId>org.apache.felix.fileinstall</artifactId>

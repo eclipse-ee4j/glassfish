@@ -17,17 +17,20 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>6.2.1-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
+
     <groupId>org.glassfish.main.admingui</groupId>
     <artifactId>war</artifactId>
     <packaging>war</packaging>
+
     <name>Admin Console WAR</name>
 
     <developers>
@@ -37,6 +40,52 @@
     <properties>
         <dependencies.extra.directory>${project.build.directory}/extra-dependencies</dependencies.extra.directory>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>${project.groupId}</groupId>
+            <artifactId>console-core</artifactId>
+            <version>${project.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <!-- following provided scopes are to avoid maven-war-plugin's resolution of libs directory, -->
+        <!-- because we need these dependencies in extra directory -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>dojo-ajax-nodemo</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>json</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.woodstock.dependlibs</groupId>
+            <artifactId>prototype</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.woodstock</groupId>
+            <artifactId>woodstock-webui-jsf</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.woodstock</groupId>
+            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <finalName>admingui</finalName>
@@ -90,50 +139,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>${project.groupId}</groupId>
-            <artifactId>console-core</artifactId>
-            <version>${project.version}</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <!-- following provided scopes are to avoid maven-war-plugin's resolution of libs directory, -->
-        <!-- because we need these dependencies in extra directory -->
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>dojo-ajax-nodemo</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>json</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.sun.woodstock.dependlibs</groupId>
-            <artifactId>prototype</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.woodstock</groupId>
-            <artifactId>woodstock-webui-jsf</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.woodstock</groupId>
-            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
 </project>

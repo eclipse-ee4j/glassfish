@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2012, 2021 Oracle and/or its affiliates. All rights reserved.
@@ -16,40 +17,20 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.jdbc</groupId>
         <artifactId>jdbc</artifactId>
         <version>6.2.1-SNAPSHOT</version>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <artifactId>jdbc-runtime</artifactId>
     <packaging>glassfish-jar</packaging>
 
     <name>JDBC Runtime Module</name>
 
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-<probe-provider-class-names>org.glassfish.jdbc.pool.monitor.JdbcConnPoolProbeProvider,org.glassfish.jdbc.pool.monitor.JdbcConnPoolAppProbeProvider</probe-provider-class-names>
-                        </manifestEntries>
-                    </archive>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <classpathDependencyExcludes>
-                        <classpathDependencyExcludes>org.glassfish.main.core:kernel</classpathDependencyExcludes>
-                    </classpathDependencyExcludes>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.connectors</groupId>
@@ -82,4 +63,27 @@
             <artifactId>hamcrest</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifestEntries>
+<probe-provider-class-names>org.glassfish.jdbc.pool.monitor.JdbcConnPoolProbeProvider,org.glassfish.jdbc.pool.monitor.JdbcConnPoolAppProbeProvider</probe-provider-class-names>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <classpathDependencyExcludes>
+                        <classpathDependencyExcludes>org.glassfish.main.core:kernel</classpathDependencyExcludes>
+                    </classpathDependencyExcludes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

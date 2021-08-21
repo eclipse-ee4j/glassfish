@@ -17,17 +17,20 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
         <version>6.2.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <groupId>org.glassfish.main.admingui</groupId>
     <artifactId>admingui</artifactId>
     <packaging>pom</packaging>
+
     <name>Admin Console Packages</name>
 
     <developers>
@@ -98,38 +101,6 @@
         <module>war</module>
         <module>dist-fragment</module>
     </modules>
-    <build>
-        <plugins>
-          <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>unpack-dependencies</id>
-                <goals>
-                  <goal>unpack-dependencies</goal>
-                </goals>
-                <configuration>
-                  <includeGroupIds>org.glassfish.docs.help</includeGroupIds>
-                  <excludeTransitive>true</excludeTransitive>
-                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <excludes>
-                    <exclude>**/*.jar</exclude>
-                    <exclude>**/.gitkeep_empty_dir</exclude>
-                </excludes>
-            </resource>
-            <resource>
-                <directory>src/main/help</directory>
-            </resource>
-        </resources>
-    </build>
 
     <dependencies>
         <dependency>
@@ -158,4 +129,37 @@
             <scope>provided</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>**/*.jar</exclude>
+                    <exclude>**/.gitkeep_empty_dir</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>src/main/help</directory>
+            </resource>
+        </resources>
+        <plugins>
+          <plugin>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>unpack-dependencies</id>
+                <goals>
+                  <goal>unpack-dependencies</goal>
+                </goals>
+                <configuration>
+                  <includeGroupIds>org.glassfish.docs.help</includeGroupIds>
+                  <excludeTransitive>true</excludeTransitive>
+                  <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+    </build>
 </project>

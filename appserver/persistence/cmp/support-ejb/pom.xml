@@ -17,14 +17,16 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
         <version>6.2.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
+
     <artifactId>cmp-support-ejb</artifactId>
     <packaging>glassfish-jar</packaging>
 
@@ -46,32 +48,6 @@
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
 
-    <build>
-        <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <includes>
-                    <include>**/*.properties</include>
-                </includes>
-            </resource>
-        </resources>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>antlr-maven-plugin</artifactId>
-                <configuration>
-                    <grammars>EJBQL.g, JDOQLCodeGeneration.g, Semantic.g</grammars>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <groupId>org.glassfish.main.persistence.cmp</groupId>
@@ -113,17 +89,44 @@
             <artifactId>antlr</artifactId>
             <version>${antlr.version}</version>
         </dependency>
-        <dependency>
-        <!-- We depend on repackaged antlr, but antlr-maven-plugin checks for this dependency to be present -->
+        <dependency><!-- We depend on repackaged antlr, but antlr-maven-plugin checks for this dependency to be present -->
             <groupId>antlr</groupId>
             <artifactId>antlr</artifactId>
-            <optional>true</optional> <!-- This ensures that antlr:antlr does not get packaged -->
+            <optional>true</optional>
+            <!-- This ensures that antlr:antlr does not get packaged -->
         </dependency>
         <dependency>
             <groupId>org.glassfish.external</groupId>
             <artifactId>schema2beans</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
+            </resource>
+        </resources>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>antlr-maven-plugin</artifactId>
+                <configuration>
+                    <grammars>EJBQL.g, JDOQLCodeGeneration.g, Semantic.g</grammars>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
     <!--
         Findbugs needs org.netbeans.external:ddl,

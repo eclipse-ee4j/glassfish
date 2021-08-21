@@ -17,22 +17,33 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
-        <artifactId>jdbc-ra</artifactId>
         <groupId>org.glassfish.main.jdbc.jdbc-ra</groupId>
+        <artifactId>jdbc-ra</artifactId>
         <version>6.2.1-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
+
     <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc40</groupId>
     <artifactId>jdbc40</artifactId>
     <packaging>glassfish-jar</packaging>
+
     <name>JDBC 40 related classes for JDBC Resource Adapter</name>
 
     <properties>
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
+            <artifactId>jdbc-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <resources>
@@ -44,20 +55,11 @@
             </resource>
         </resources>
         <plugins>
-            <plugin>
-                <!--
+            <plugin><!--
                   Use JDBC 4.0 API regardless of which JDK we are building with.
                 -->
                 <artifactId>maven-compiler-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
-            <artifactId>jdbc-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 </project>

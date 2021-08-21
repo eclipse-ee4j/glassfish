@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
 
     Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
@@ -19,8 +20,9 @@
 <!--
   This module is meant to serve as the example of how to add additional files to the GlassFish distribution.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.batch</groupId>
         <artifactId>batch</artifactId>
@@ -28,7 +30,6 @@
     </parent>
 
     <artifactId>batch-databases</artifactId>
-    <name>Batch database init scripts for GlassFish</name>
     <!--
       This packaging specifies that it's a package that contains files to be added to
       the distribution.
@@ -52,5 +53,5 @@
     -->
     <packaging>distribution-fragment</packaging>
 
-
+    <name>Batch database init scripts for GlassFish</name>
 </project>

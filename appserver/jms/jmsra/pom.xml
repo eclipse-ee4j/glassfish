@@ -17,7 +17,9 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
     <parent>
         <groupId>org.glassfish.main.jms</groupId>
         <artifactId>jms</artifactId>
@@ -25,10 +27,27 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <modelVersion>4.0.0</modelVersion>
     <artifactId>jmsra</artifactId>
     <packaging>distribution-fragment</packaging>
+
     <name>JMS GlassFish System RA Assembly</name>
+
+    <developers>
+        <developer>
+            <id>snjezana</id>
+            <name>Snjezana Sevo-Zenzerovic</name>
+            <organization>Oracle, Inc.</organization>
+        </developer>
+    </developers>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.mq</groupId>
+            <artifactId>mq-distribution</artifactId>
+            <version>${mq.version}</version>
+            <type>zip</type>
+        </dependency>
+    </dependencies>
 
     <build>
         <plugins>
@@ -62,21 +81,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <developers>
-        <developer>
-            <id>snjezana</id>
-            <name>Snjezana Sevo-Zenzerovic</name>
-            <organization>Oracle, Inc.</organization>
-        </developer>
-    </developers>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.glassfish.mq</groupId>
-            <artifactId>mq-distribution</artifactId>
-            <version>${mq.version}</version>
-            <type>zip</type>
-        </dependency>
-    </dependencies>
 </project>

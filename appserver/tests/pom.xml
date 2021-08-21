@@ -34,22 +34,6 @@
 
     <name>GlassFish Tests</name>
 
-    <profiles>
-        <profile>
-            <id>default</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <modules>
-                <module>tck</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>fastest</id>
-            <modules />
-        </profile>
-    </profiles>
-
     <build>
         <pluginManagement>
             <plugins>
@@ -133,4 +117,20 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>tck</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>fastest</id>
+            <modules />
+        </profile>
+    </profiles>
 </project>

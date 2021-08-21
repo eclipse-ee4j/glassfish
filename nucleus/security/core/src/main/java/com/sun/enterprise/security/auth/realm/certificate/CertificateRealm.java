@@ -16,25 +16,27 @@
 
 package com.sun.enterprise.security.auth.realm.certificate;
 
-import com.sun.enterprise.security.SecurityContext;
-import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
-import java.util.*;
+import java.security.Principal;
+import java.util.Enumeration;
+import java.util.Properties;
+import java.util.Set;
+import java.util.Vector;
 import java.util.logging.Level;
 
 import javax.security.auth.Subject;
-
-import org.glassfish.security.common.Group;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import java.security.Principal;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.x500.X500Principal;
 
+import org.glassfish.security.common.Group;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.SecurityContext;
+import com.sun.enterprise.security.auth.login.DistinguishedPrincipalCredential;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.security.auth.realm.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting certificate authentication.
@@ -87,6 +89,7 @@ public final class CertificateRealm extends IASRealm {
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      *
      */
+    @Override
     protected void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
         String[] groups = addAssignGroups(null);
@@ -138,6 +141,7 @@ public final class CertificateRealm extends IASRealm {
      *
      * @return Description of the kind of authentication that is directly supported by this realm.
      */
+    @Override
     public String getAuthType() {
         return AUTH_TYPE;
     }
@@ -151,6 +155,7 @@ public final class CertificateRealm extends IASRealm {
      * support this operation.
      *
      */
+    @Override
     public Enumeration getGroupNames(String username) throws NoSuchUserException, InvalidOperationException {
         // This is called during web container role check, not during
         // EJB container role cheks... fix RI for consistency.

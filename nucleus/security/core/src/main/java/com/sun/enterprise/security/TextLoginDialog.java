@@ -16,21 +16,26 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.security.ssl.SSLUtils;
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PushbackInputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 import java.util.Arrays;
-import java.util.logging.*;
-import javax.security.auth.callback.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.logging.*;
-import java.io.InputStream;
-import java.io.PushbackInputStream;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.ChoiceCallback;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
+
 import org.glassfish.internal.api.Globals;
+
+import com.sun.enterprise.security.ssl.SSLUtils;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This implementation of LoginDialog If these are not set, then it queries the user in the command window.
@@ -144,6 +149,7 @@ public final class TextLoginDialog implements LoginDialog {
     /**
      * @return The username of the user.
      */
+    @Override
     public String getUserName() {
         return username;
     }
@@ -151,6 +157,7 @@ public final class TextLoginDialog implements LoginDialog {
     /**
      * @return The password of the user in plain text...
      */
+    @Override
     public final char[] getPassword() {
         return (password == null) ? null : Arrays.copyOf(password, password.length);
     }

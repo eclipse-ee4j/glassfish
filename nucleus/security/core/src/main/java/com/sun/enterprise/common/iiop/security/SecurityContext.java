@@ -20,7 +20,7 @@
 
 package com.sun.enterprise.common.iiop.security;
 
-import javax.security.auth.*;
+import javax.security.auth.Subject;
 
 /*
  * This interface is part of the contract between CSIV2 interceptors

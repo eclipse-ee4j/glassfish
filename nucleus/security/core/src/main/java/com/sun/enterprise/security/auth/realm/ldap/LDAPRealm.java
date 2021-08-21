@@ -16,8 +16,16 @@
 
 package com.sun.enterprise.security.auth.realm.ldap;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
 import java.util.logging.Level;
+import java.util.regex.Matcher;
+
 import javax.naming.CompositeName;
 import javax.naming.Context;
 import javax.naming.InvalidNameException;
@@ -28,19 +36,18 @@ import javax.naming.directory.DirContext;
 import javax.naming.directory.InitialDirContext;
 import javax.naming.directory.SearchControls;
 import javax.naming.directory.SearchResult;
-import javax.security.auth.login.LoginException;
-import com.sun.enterprise.security.auth.realm.BadRealmException;
-import com.sun.enterprise.security.auth.realm.NoSuchUserException;
-import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
-import com.sun.enterprise.security.auth.realm.InvalidOperationException;
-
-import com.sun.enterprise.security.auth.realm.IASRealm;
-import java.lang.StringBuffer;
-import java.util.regex.Matcher;
 import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
+import javax.security.auth.login.LoginException;
+
 import org.glassfish.internal.api.RelativePathResolver;
 import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.security.auth.realm.InvalidOperationException;
+import com.sun.enterprise.security.auth.realm.NoSuchRealmException;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
 
 /**
  * Realm wrapper for supporting LDAP authentication.
@@ -151,6 +158,7 @@ public final class LDAPRealm extends IASRealm {
      * @exception NoSuchRealmException If the configuration parameters specify a realm which doesn't exist.
      *
      */
+    @Override
     public synchronized void init(Properties props) throws BadRealmException, NoSuchRealmException {
         super.init(props);
         String url = props.getProperty(PARAM_DIRURL);
@@ -275,6 +283,7 @@ public final class LDAPRealm extends IASRealm {
      *
      * @return Description of the kind of authentication that is directly supported by this realm.
      */
+    @Override
     public String getAuthType() {
         return AUTH_TYPE;
     }
@@ -372,6 +381,7 @@ public final class LDAPRealm extends IASRealm {
      * @exception InvalidOperationException thrown if the realm does not support this operation - e.g. Certificate realm does not
      * support this operation.
      */
+    @Override
     public Enumeration getGroupNames(String username) throws InvalidOperationException, NoSuchUserException {
         Vector v = (Vector) groupCache.get(username);
         if (v == null) {

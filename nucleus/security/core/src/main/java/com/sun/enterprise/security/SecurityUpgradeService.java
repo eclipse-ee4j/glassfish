@@ -16,21 +16,28 @@
 
 package com.sun.enterprise.security;
 
-import com.sun.enterprise.config.serverbeans.*;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
-import jakarta.inject.Inject;
-import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;
+
+import com.sun.enterprise.config.serverbeans.AuthRealm;
+import com.sun.enterprise.config.serverbeans.Config;
+import com.sun.enterprise.config.serverbeans.Configs;
+import com.sun.enterprise.config.serverbeans.JaccProvider;
+import com.sun.enterprise.config.serverbeans.SecurityService;
+
+import jakarta.inject.Inject;
 
 /**
  * The only thing that needs to added Extra for SecurityService migration is the addition of the new JACC provider. This would be
@@ -60,6 +67,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
     public static final String PARAM_DIGEST_ALGORITHM = "digest-algorithm";
     private static final Logger _logger = SecurityLoggerInfo.getLogger();
 
+    @Override
     public void postConstruct() {
         for (Config config : configs.getConfig()) {
             SecurityService service = config.getSecurityService();
@@ -98,6 +106,7 @@ public class SecurityUpgradeService implements ConfigurationUpgrade, PostConstru
                             }
                         } else {
                             ConfigSupport.apply(new SingleConfigCode<AuthRealm>() {
+                                @Override
                                 public Object run(AuthRealm updatedAuthRealm) throws PropertyVetoException, TransactionFailure {
                                     Property prop1 = updatedAuthRealm.createChild(Property.class);
                                     prop1.setName(PARAM_DIGEST_ALGORITHM);

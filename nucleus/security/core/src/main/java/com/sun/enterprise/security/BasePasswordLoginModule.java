@@ -16,24 +16,27 @@
 
 package com.sun.enterprise.security;
 
-import java.util.*;
-import java.util.logging.Logger;
+import java.security.Principal;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.enterprise.security.PrincipalGroupFactory;
-import com.sun.enterprise.util.i18n.StringManager;
-import javax.security.auth.*;
-import javax.security.auth.callback.*;
-import javax.security.auth.login.*;
-import javax.security.auth.spi.*;
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.login.LoginException;
+import javax.security.auth.spi.LoginModule;
 
 import org.glassfish.internal.api.Globals;
-import org.glassfish.security.common.PrincipalImpl;
 import org.glassfish.security.common.Group;
+import org.glassfish.security.common.PrincipalImpl;
+
 import com.sun.enterprise.security.auth.login.LoginCallbackHandler;
-import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.login.common.PasswordCredential;
-import java.security.Principal;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.util.i18n.StringManager;
 
 /**
  * Abstract base class for password-based login modules.
@@ -80,6 +83,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * @param options - options specified in the login Configuration for this particular LoginModule.
      *
      */
+    @Override
     final public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
         _subject = subject;
         _sharedState = sharedState;
@@ -101,6 +105,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * @throws LoginException Thrown if login failed, or on other problems.
      *
      */
+    @Override
     final public boolean login() throws LoginException {
         //Extract the username and password
         extractCredentials();
@@ -123,6 +128,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * @throws LoginException If commit fails.
      *
      */
+    @Override
     public boolean commit() throws LoginException {
         if (_succeeded == false) {
             return false;
@@ -177,6 +183,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * Abort the authentication process.
      *
      */
+    @Override
     final public boolean abort() throws LoginException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "JAAS authentication aborted.");
@@ -207,6 +214,7 @@ public abstract class BasePasswordLoginModule implements LoginModule {
      * Log out the subject.
      *
      */
+    @Override
     final public boolean logout() throws LoginException {
         if (_logger.isLoggable(Level.FINE)) {
             _logger.log(Level.FINE, "JAAS logout for: " + _subject.toString());

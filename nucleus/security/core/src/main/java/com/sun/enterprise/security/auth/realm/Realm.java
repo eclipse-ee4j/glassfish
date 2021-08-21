@@ -16,20 +16,30 @@
 
 package com.sun.enterprise.security.auth.realm;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.util.IASSecurityException;
-import java.io.*;
-import java.util.*;
-import com.sun.enterprise.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import org.glassfish.external.probe.provider.PluginPoint;
 import org.glassfish.external.probe.provider.StatsProviderManager;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.ClassLoaderHierarchy;
 import org.glassfish.internal.api.Globals;
 import org.jvnet.hk2.annotations.Contract;
+
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.util.IASSecurityException;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * javadoc
@@ -119,6 +129,7 @@ public abstract class Realm implements Comparable {
      * objects (i.e. there's only a partial order defined, in the case that those other objects compare themselves "before" a realm
      * object).
      */
+    @Override
     public int compareTo(Object realm) {
         if (!(realm instanceof Realm)) {
             return 1;
@@ -206,6 +217,7 @@ public abstract class Realm implements Comparable {
      * @param realmName Name of the new realm.
      * @param f File containing Properties for the new realm.
      */
+    @Deprecated
     public static synchronized Realm instantiate(String realmName, File f)
         throws NoSuchRealmException, BadRealmException, FileNotFoundException {
 

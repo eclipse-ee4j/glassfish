@@ -16,18 +16,20 @@
 
 package com.sun.enterprise.security.ssl;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import org.glassfish.grizzly.ssl.SSLSupport;
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.cert.CertificateFactory;
 import java.util.logging.Level;
-import javax.security.cert.X509Certificate;
 import java.util.logging.Logger;
+
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
+import javax.security.cert.X509Certificate;
+
+import org.glassfish.grizzly.ssl.SSLSupport;
+
+import com.sun.enterprise.security.SecurityLoggerInfo;
 
 /**
  *
@@ -64,6 +66,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         }
     }
 
+    @Override
     public String getCipherSuite() throws IOException {
         if (session == null) {
             return null;
@@ -71,10 +74,12 @@ public class GlassfishSSLSupport implements SSLSupport {
         return session.getCipherSuite();
     }
 
+    @Override
     public Object[] getPeerCertificateChain() throws IOException {
         return getPeerCertificateChain(false);
     }
 
+    @Override
     public Object[] getPeerCertificateChain(boolean force) throws IOException {
         if (session == null) {
             return null;
@@ -97,6 +102,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         return getX509Certs();
     }
 
+    @Override
     public Integer getKeySize() throws IOException {
         if (session == null) {
             return null;
@@ -117,6 +123,7 @@ public class GlassfishSSLSupport implements SSLSupport {
         return keySize;
     }
 
+    @Override
     public String getSessionId() throws IOException {
         if (session == null) {
             return null;

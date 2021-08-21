@@ -16,40 +16,41 @@
 
 package com.sun.enterprise.security.ssl;
 
-import com.sun.enterprise.security.SecurityLoggerInfo;
-import com.sun.enterprise.security.common.Util;
 import java.io.IOException;
-import java.security.Key;
+import java.security.AccessControlException;
+import java.security.AccessController;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.Permission;
 import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.util.Enumeration;
-import java.security.cert.Certificate;
+import java.util.PropertyPermission;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
 import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509KeyManager;
 
-//V3:Commented import com.sun.enterprise.config.clientbeans.Ssl
-import com.sun.enterprise.server.pluggable.SecuritySupport;
+import org.glassfish.hk2.api.PostConstruct;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.security.SecurityLoggerInfo;
+import com.sun.enterprise.security.common.Util;
 //V3:Commented import com.sun.web.security.SSLSocketFactory;
 import com.sun.enterprise.security.integration.AppClientSSL;
-import java.util.logging.*;
-import com.sun.logging.*;
-import java.security.AccessControlException;
-import java.security.AccessController;
-import java.security.Permission;
-import java.util.PropertyPermission;
-import javax.net.ssl.SSLSocketFactory;
-import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-import org.glassfish.hk2.api.PostConstruct;
+//V3:Commented import com.sun.enterprise.config.clientbeans.Ssl
+import com.sun.enterprise.server.pluggable.SecuritySupport;
 
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 
 /**
@@ -76,6 +77,7 @@ public final class SSLUtils implements PostConstruct {
     private AppClientSSL appclientSsl = null;
     private SSLContext ctx = null;
 
+    @Override
     public void postConstruct() {
         try {
             //TODO: To check the right implementation once we support EE.

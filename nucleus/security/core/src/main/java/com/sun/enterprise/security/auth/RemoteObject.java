@@ -16,9 +16,9 @@
 
 package com.sun.enterprise.security.auth;
 
-import com.sun.enterprise.util.*;
 import javax.rmi.PortableRemoteObject;
 import javax.rmi.CORBA.Tie;
+
 import org.omg.CORBA.ORB;
 
 /**

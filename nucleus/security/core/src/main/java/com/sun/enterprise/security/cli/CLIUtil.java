@@ -16,6 +16,10 @@
 
 package com.sun.enterprise.security.cli;
 
+import java.util.List;
+
+import org.glassfish.api.ActionReport;
+
 import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
@@ -24,8 +28,6 @@ import com.sun.enterprise.config.serverbeans.MessageSecurityConfig;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import java.util.List;
-import org.glassfish.api.ActionReport;
 
 /**
  *

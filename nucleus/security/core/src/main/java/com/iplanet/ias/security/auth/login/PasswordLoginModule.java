@@ -16,12 +16,12 @@
 
 package com.iplanet.ias.security.auth.login;
 
+import javax.security.auth.login.LoginException;
+
 import com.sun.enterprise.security.BasePasswordLoginModule;
 import com.sun.enterprise.security.auth.AuthenticationStatus;
 import com.sun.enterprise.security.auth.AuthenticationStatusImpl;
 import com.sun.enterprise.security.auth.realm.Realm;
-
-import javax.security.auth.login.LoginException;
 
 /**
  * Provided for backward compatibility with SunOne 7.0 Newer implementations should extend
@@ -33,6 +33,7 @@ public abstract class PasswordLoginModule extends BasePasswordLoginModule {
      *
      * @throws LoginException
      */
+    @Override
     protected final void authenticateUser() throws LoginException {
         AuthenticationStatus as = authenticate();
         if (as.getStatus() == as.AUTH_SUCCESS)

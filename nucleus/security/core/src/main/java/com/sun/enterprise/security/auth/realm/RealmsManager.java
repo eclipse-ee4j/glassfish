@@ -27,10 +27,6 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import jakarta.inject.Inject;
-import jakarta.inject.Named;
-import jakarta.inject.Singleton;
-
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -43,6 +39,10 @@ import com.sun.enterprise.config.serverbeans.AuthRealm;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.SecurityService;
 import com.sun.enterprise.security.SecurityLoggerInfo;
+
+import jakarta.inject.Inject;
+import jakarta.inject.Named;
+import jakarta.inject.Singleton;
 
 /**
  *

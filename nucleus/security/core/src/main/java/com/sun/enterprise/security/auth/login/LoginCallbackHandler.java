@@ -16,12 +16,16 @@
 
 package com.sun.enterprise.security.auth.login;
 
-import java.io.*;
-import javax.security.auth.callback.*;
+import java.io.IOException;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.security.TextLoginDialog;
+import javax.security.auth.callback.Callback;
+import javax.security.auth.callback.CallbackHandler;
+import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.UnsupportedCallbackException;
+
 import com.sun.enterprise.security.GUILoginDialog;
+import com.sun.enterprise.security.TextLoginDialog;
+import com.sun.enterprise.util.LocalStringManagerImpl;
 
 /**
  * This is the default callback handler provided by the application client container. The container tries to use the application
@@ -62,6 +66,7 @@ public class LoginCallbackHandler implements CallbackHandler {
      *
      * @param the callback object instances supported by the login module.
      */
+    @Override
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         if (isGUI) {
             String user = localStrings.getLocalString("login.user", "user");

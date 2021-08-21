@@ -48,6 +48,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      *
      * @return An integer value indicating the status of the authentication
      */
+    @Override
     public int getStatus() {
         return status;
     }
@@ -58,6 +59,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      *
      * @return A byte array of zero length.
      */
+    @Override
     public byte[] getContinuationData() {
         return new byte[0];
     }
@@ -68,6 +70,7 @@ public class AuthenticationStatusImpl implements AuthenticationStatus {
      *
      * @return A byte array of zero length.
      */
+    @Override
     public byte[] getAuthSpecificData() {
         return new byte[0];
     }

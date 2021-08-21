@@ -16,10 +16,14 @@
 
 package com.sun.enterprise.security;
 
-import java.util.*;
+import java.util.Enumeration;
 
-import com.sun.enterprise.security.auth.realm.*;
-
+import com.sun.enterprise.security.auth.realm.AuthenticationHandler;
+import com.sun.enterprise.security.auth.realm.BadRealmException;
+import com.sun.enterprise.security.auth.realm.IASRealm;
+import com.sun.enterprise.security.auth.realm.NoSuchUserException;
+import com.sun.enterprise.security.auth.realm.Realm;
+import com.sun.enterprise.security.auth.realm.User;
 import com.sun.enterprise.security.util.IASSecurityException;
 import com.sun.enterprise.util.i18n.StringManager;
 
@@ -48,6 +52,7 @@ public abstract class BaseRealm extends Realm {
      * @return An AuthenticationHandler object for this realm (always null)
      *
      */
+    @Override
     public AuthenticationHandler getAuthenticationHandler() {
         _logger.warning("iasrealm.noauth");
         return null;
@@ -64,6 +69,7 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
+    @Override
     public Enumeration getUserNames() throws BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
@@ -82,6 +88,7 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
+    @Override
     public User getUser(String name) throws NoSuchUserException, BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
@@ -98,6 +105,7 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
+    @Override
     public Enumeration getGroupNames() throws BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
@@ -113,6 +121,7 @@ public abstract class BaseRealm extends Realm {
      * @exception com.sun.enterprise.security.auth.realm.BadRealmException if realm data structures are bad
      *
      */
+    @Override
     public void refresh() throws BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
@@ -127,6 +136,7 @@ public abstract class BaseRealm extends Realm {
      * @throws BadRealmException If there are problems adding user.
      *
      */
+    @Override
     public void addUser(String name, char[] password, String[] groupList) throws BadRealmException, IASSecurityException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
@@ -150,6 +160,7 @@ public abstract class BaseRealm extends Realm {
      * @throws NoSuchUserException If user does not exist.
      *
      */
+    @Override
     public void removeUser(String name) throws NoSuchUserException, BadRealmException {
         String msg = sm.getString("iasrealm.notsupported");
         throw new BadRealmException(msg);
@@ -180,6 +191,7 @@ public abstract class BaseRealm extends Realm {
      * @throws NoSuchUserException If user does not exist.
      *
      */
+    @Override
     public void updateUser(String name, String newName, char[] password, String[] groups)
         throws NoSuchUserException, BadRealmException, IASSecurityException {
         String msg = sm.getString("iasrealm.notsupported");
@@ -189,6 +201,7 @@ public abstract class BaseRealm extends Realm {
     /**
      * @return true if the realm implementation support User Management (add,remove,update user)
      */
+    @Override
     public boolean supportsUserManagement() {
         //false by default.
         return false;
@@ -199,6 +212,7 @@ public abstract class BaseRealm extends Realm {
      *
      * @throws com.sun.enterprise.security.auth.realm.BadRealmException
      */
+    @Override
     public void persist() throws BadRealmException {
         //NOOP for realms that do not support UserManagement
     }

@@ -16,7 +16,6 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
-import java.lang.Exception;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;

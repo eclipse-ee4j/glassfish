@@ -23,7 +23,6 @@ import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;
 
 import java.util.logging.*;
 import java.util.*;
-import java.lang.*;
 
 /**
  *  This is message listener configuration parser. It parses the

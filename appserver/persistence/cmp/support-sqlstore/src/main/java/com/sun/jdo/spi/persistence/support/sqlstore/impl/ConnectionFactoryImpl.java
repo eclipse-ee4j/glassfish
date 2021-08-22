@@ -22,7 +22,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore.impl;
 
-import java.lang.String;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;

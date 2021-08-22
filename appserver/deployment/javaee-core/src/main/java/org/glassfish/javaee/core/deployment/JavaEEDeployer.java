@@ -33,7 +33,6 @@ import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.deployment.common.DeploymentProperties;
 import com.sun.enterprise.config.serverbeans.ServerTags;
 import org.jvnet.hk2.annotations.Optional;
-import org.glassfish.hk2.api.ServiceLocator;
 
 import java.io.File;
 import java.io.IOException;

@@ -24,7 +24,6 @@ import java.io.FileWriter;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.util.Map;
-import com.sun.enterprise.admin.cli.CLIUtil;
 import org.glassfish.api.admin.CommandException;
 
 

@@ -36,8 +36,6 @@ import org.glassfish.web.admin.monitor.RequestProbeProvider;
 import javax.management.Notification;
 import jakarta.servlet.http.HttpServletRequest;
 import java.io.*;
-import java.lang.Object;
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.Enumeration;
 import java.util.Properties;

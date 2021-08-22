@@ -22,7 +22,6 @@ package com.sun.enterprise.glassfish.bootstrap;
 
 import static org.junit.Assert.*;
 import org.junit.Test;
-import com.sun.enterprise.glassfish.bootstrap.MainHelper;
 import java.io.*;
 import java.util.*;
 

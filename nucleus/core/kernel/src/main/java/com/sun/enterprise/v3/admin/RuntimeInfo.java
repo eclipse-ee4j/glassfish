@@ -23,7 +23,6 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 import java.util.Properties;
 import org.glassfish.internal.api.Globals;
-import static com.sun.enterprise.util.StringUtils.ok;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.OS;
 import org.glassfish.api.ActionReport;

@@ -21,7 +21,6 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.jdbc.config.JdbcResource;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import org.jvnet.hk2.config.TransactionFailure;

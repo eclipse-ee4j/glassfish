@@ -22,7 +22,6 @@
 
 package com.sun.jdo.api.persistence.support;
 
-import java.lang.String;
 import java.io.PrintWriter;
 import java.sql.Connection;
 

@@ -23,8 +23,6 @@
 
 package com.sun.jdo.spi.persistence.support.sqlstore;
 
-import com.sun.jdo.spi.persistence.support.sqlstore.StateManager;
-
 /**
  */
 public interface UpdateObjectDesc extends ActionDesc {

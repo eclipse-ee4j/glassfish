@@ -25,7 +25,6 @@ import com.sun.enterprise.util.StringUtils;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.io.ServerDirs;
 import java.io.File;
-import java.lang.String;
 import java.util.*;
 import java.util.ArrayList;
 import java.util.LinkedList;

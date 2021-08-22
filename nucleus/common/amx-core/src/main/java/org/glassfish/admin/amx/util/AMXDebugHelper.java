@@ -16,9 +16,6 @@
 
 package org.glassfish.admin.amx.util;
 
-import org.glassfish.admin.amx.util.Output;
-import org.glassfish.admin.amx.util.StringUtil;
-
 /**
 Convenient wrapper around {@link AMXDebug}.
 Can be made non-final if necessary; declared as 'final' until needed.

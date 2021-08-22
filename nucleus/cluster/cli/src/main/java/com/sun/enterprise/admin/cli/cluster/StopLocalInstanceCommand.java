@@ -18,7 +18,6 @@ package com.sun.enterprise.admin.cli.cluster;
 
 import java.util.logging.Level;
 import com.sun.enterprise.admin.cli.*;
-import com.sun.enterprise.admin.cli.cluster.Strings;
 import com.sun.enterprise.admin.cli.remote.RemoteCLICommand;
 import com.sun.enterprise.universal.process.ProcessUtils;
 import com.sun.enterprise.util.HostAndPort;

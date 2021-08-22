@@ -17,7 +17,6 @@
 package com.sun.enterprise.admin.monitor.stats;
 import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.j2ee.statistics.CountStatistic;
-import com.sun.enterprise.admin.monitor.stats.StringStatistic;
 
 /**
  * A Stats interface, to expose the monitoring information

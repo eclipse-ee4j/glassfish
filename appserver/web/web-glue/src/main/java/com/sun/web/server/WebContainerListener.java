@@ -28,7 +28,6 @@ import org.glassfish.web.LogFacade;
 
 import javax.naming.NamingException;
 import jakarta.validation.ValidatorFactory;
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.ResourceBundle;

@@ -31,7 +31,6 @@ import java.util.Map;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.HashMap;
 
 import org.glassfish.admin.amx.base.Sample;
 import org.glassfish.admin.amx.util.jmx.JMXUtil;

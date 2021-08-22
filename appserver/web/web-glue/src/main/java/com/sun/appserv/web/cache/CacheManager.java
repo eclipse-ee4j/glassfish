@@ -22,7 +22,6 @@ import org.apache.catalina.LifecycleException;
 import org.glassfish.web.LogFacade;
 
 import jakarta.servlet.ServletContext;
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;

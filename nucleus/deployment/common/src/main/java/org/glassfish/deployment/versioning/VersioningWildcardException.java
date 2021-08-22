@@ -16,8 +16,6 @@
 
 package org.glassfish.deployment.versioning;
 
-import org.glassfish.deployment.versioning.VersioningException;
-
 /**
  * This class is an exception used when application name that complies
  * with versioning incorporates critical pattern.

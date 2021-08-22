@@ -19,8 +19,6 @@ package com.sun.jdo.spi.persistence.utility.logging;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
-import java.lang.StringBuffer;
-
 /**
  * This class is used with JDK 1.4 (and higher) programs to log messages from
  * jdo components.  It extends a java.util.logging.Logger which does

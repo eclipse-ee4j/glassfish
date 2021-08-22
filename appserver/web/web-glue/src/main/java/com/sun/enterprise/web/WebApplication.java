@@ -36,7 +36,6 @@ import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
 import org.glassfish.web.deployment.runtime.SessionManager;
 import org.glassfish.web.deployment.runtime.SunWebAppImpl;
 
-import java.lang.String;
 import java.lang.reflect.Method;
 import java.text.MessageFormat;
 import java.util.*;

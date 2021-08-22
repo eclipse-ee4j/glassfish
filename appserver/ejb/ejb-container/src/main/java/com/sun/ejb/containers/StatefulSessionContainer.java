@@ -101,7 +101,6 @@ import jakarta.ejb.SessionBean;
 import jakarta.ejb.SessionSynchronization;
 import java.util.HashMap;
 import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
-import org.glassfish.ejb.LogFacade;
 
 /**
  * This class provides container functionality specific to stateful

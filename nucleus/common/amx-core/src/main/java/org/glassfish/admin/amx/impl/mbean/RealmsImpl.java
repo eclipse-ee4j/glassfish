@@ -45,7 +45,6 @@ import com.sun.enterprise.security.auth.realm.RealmsManager;
 import com.sun.enterprise.security.auth.realm.Realm;
 import com.sun.enterprise.security.auth.realm.User;
 import org.glassfish.admin.amx.base.Realms;
-import org.glassfish.admin.amx.impl.mbean.AMXImplBase;
 import org.glassfish.admin.amx.util.CollectionUtil;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.api.admin.ServerEnvironment;

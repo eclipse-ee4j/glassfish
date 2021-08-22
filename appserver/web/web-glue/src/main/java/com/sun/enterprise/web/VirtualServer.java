@@ -100,7 +100,6 @@ import org.glassfish.internal.deployment.ExtendedDeploymentContext;
 import org.glassfish.web.loader.WebappClassLoader;
 import org.glassfish.web.valve.GlassFishValve;
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.types.Property;

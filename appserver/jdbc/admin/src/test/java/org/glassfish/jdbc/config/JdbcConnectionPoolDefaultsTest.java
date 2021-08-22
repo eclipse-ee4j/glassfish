@@ -16,7 +16,6 @@
 
 package org.glassfish.jdbc.config;
 
-import org.glassfish.jdbc.config.JdbcConnectionPool;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

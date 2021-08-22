@@ -16,8 +16,6 @@
 
 package org.glassfish.config.support;
 
-import org.glassfish.config.support.TypedChangeEvent;
-
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeSupport;
 

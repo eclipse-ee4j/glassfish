@@ -16,7 +16,6 @@
 
 package org.glassfish.deployment.common;
 
-import org.glassfish.deployment.common.RootDeploymentDescriptor;
 import org.glassfish.security.common.Role;
 
 import java.security.Principal;

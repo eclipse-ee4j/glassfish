@@ -35,8 +35,6 @@ import com.sun.jdo.api.persistence.enhancer.classfile.ClassFile;
 
 import com.sun.jdo.api.persistence.enhancer.meta.JDOMetaData;
 
-import com.sun.jdo.api.persistence.enhancer.impl.ClassControl;
-import com.sun.jdo.api.persistence.enhancer.impl.Environment;
 //@olsen: disabled feature
 /*
 import com.sun.jdo.api.persistence.enhancer.impl.FieldMap;

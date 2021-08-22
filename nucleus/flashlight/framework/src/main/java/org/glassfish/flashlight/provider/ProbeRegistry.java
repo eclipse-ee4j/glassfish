@@ -19,7 +19,6 @@ package org.glassfish.flashlight.provider;
 import java.util.Collection;
 import java.util.ArrayList;
 
-import org.glassfish.flashlight.provider.FlashlightProbe;
 import org.glassfish.flashlight.impl.core.*;
 
 import org.jvnet.hk2.annotations.Service;

@@ -22,7 +22,6 @@ import com.sun.logging.LogDomains;
 
 import java.util.logging.*;
 import java.util.*;
-import java.lang.*;
 
 import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.appserv.connectors.internal.api.ConnectorRuntimeException;

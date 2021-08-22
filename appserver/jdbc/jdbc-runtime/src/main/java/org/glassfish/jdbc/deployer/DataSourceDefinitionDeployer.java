@@ -28,8 +28,6 @@ import org.glassfish.jdbc.config.JdbcResource;
 import com.sun.logging.LogDomains;
 import org.glassfish.deployment.common.Descriptor;
 import org.glassfish.deployment.common.RootDeploymentDescriptor;
-import org.glassfish.jdbc.config.JdbcConnectionPool;
-import org.glassfish.jdbc.config.JdbcResource;
 import org.glassfish.resourcebase.resources.api.ResourceConflictException;
 import org.glassfish.resourcebase.resources.api.ResourceDeployer;
 import org.glassfish.resourcebase.resources.api.ResourceDeployerInfo;

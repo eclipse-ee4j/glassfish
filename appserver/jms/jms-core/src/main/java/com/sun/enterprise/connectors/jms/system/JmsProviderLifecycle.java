@@ -20,7 +20,6 @@ package com.sun.enterprise.connectors.jms.system;
 //import org.glassfish.jms.admin.monitor.config.JmsServiceMI;
 import com.sun.enterprise.connectors.jms.config.JmsService;
 import com.sun.enterprise.connectors.jms.config.JmsHost;
-import com.sun.enterprise.connectors.jms.system.ActiveJmsResourceAdapter;
 import org.jvnet.hk2.annotations.Service;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;

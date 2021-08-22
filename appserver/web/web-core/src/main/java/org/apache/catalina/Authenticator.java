@@ -17,9 +17,6 @@
 
 package org.apache.catalina;
 
-
-import org.apache.catalina.HttpRequest;
-
 import jakarta.servlet.ServletException;
 
 /**

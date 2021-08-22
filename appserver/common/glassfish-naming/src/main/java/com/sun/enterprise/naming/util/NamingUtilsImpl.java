@@ -18,7 +18,6 @@ package com.sun.enterprise.naming.util;
 
 import com.sun.enterprise.naming.spi.NamingObjectFactory;
 import com.sun.enterprise.naming.spi.NamingUtils;
-import com.sun.enterprise.naming.util.JndiInitializationNamingObjectFactory;
 
 import org.glassfish.logging.annotation.LogMessageInfo;
 

@@ -16,7 +16,6 @@
 
 package org.glassfish.internal.api;
 
-import org.glassfish.internal.api.DelegatingClassLoader;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.jvnet.hk2.annotations.Contract;
 

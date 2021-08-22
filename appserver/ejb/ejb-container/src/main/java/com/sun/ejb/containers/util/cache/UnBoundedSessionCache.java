@@ -23,7 +23,6 @@ import java.util.logging.*;
 import com.sun.logging.*;
 
 import java.util.TimerTask;
-import com.sun.logging.*;
 
 public class UnBoundedSessionCache
     extends LruSessionCache

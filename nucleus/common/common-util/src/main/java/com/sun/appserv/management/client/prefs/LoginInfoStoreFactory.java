@@ -17,8 +17,6 @@
 package com.sun.appserv.management.client.prefs;
 
 import java.util.Arrays;
-import com.sun.appserv.management.client.prefs.LoginInfo;
-import com.sun.appserv.management.client.prefs.LoginInfoStoreFactory;
 
 /** A factory class to create instances of LoginInfoStore.
  * @since Appserver 9.0

@@ -17,7 +17,6 @@
 package com.sun.enterprise.admin.servermgmt;
 
 import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.enterprise.admin.servermgmt.InvalidConfigException;
 
 import java.util.HashMap;
 

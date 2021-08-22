@@ -16,7 +16,6 @@
 
 package com.sun.enterprise.container.common.spi.util;
 
-import com.sun.enterprise.container.common.spi.util.CallFlowAgent;
 import org.glassfish.api.invocation.InvocationManager;
 import org.jvnet.hk2.annotations.Contract;
 

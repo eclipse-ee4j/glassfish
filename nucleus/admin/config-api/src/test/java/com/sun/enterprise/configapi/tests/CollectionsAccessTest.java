@@ -27,7 +27,6 @@ import com.sun.enterprise.config.serverbeans.Application;
 
 import java.util.List;
 import java.beans.PropertyVetoException;
-import org.glassfish.api.admin.config.ApplicationName;
 
 /**
  * User: Jerome Dochez

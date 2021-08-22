@@ -40,7 +40,6 @@ import com.sun.enterprise.util.i18n.StringManager;
 import com.sun.logging.LogDomains;
 import org.glassfish.api.admin.ServerEnvironment;
 
-import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.BuilderHelper;
 import org.jvnet.hk2.config.types.Property;
 

@@ -20,7 +20,6 @@ import com.sun.corba.ee.spi.folb.GroupInfoService;
 import org.glassfish.api.naming.NamingClusterInfo;
 import org.glassfish.api.naming.NamingObjectsProvider;
 import org.glassfish.hk2.api.ServiceHandle;
-import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.internal.api.ORBLocator;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LoggerInfo;

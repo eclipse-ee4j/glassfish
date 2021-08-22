@@ -16,8 +16,6 @@
 
 package org.glassfish.webservices;
 
-import java.lang.UnsupportedOperationException;
-
 import java.net.URL;
 import java.net.URI;
 

@@ -26,7 +26,6 @@ import org.glassfish.contextpropagation.PropagationMode;
 import org.glassfish.contextpropagation.internal.Utils;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
 import org.glassfish.contextpropagation.spi.ContextMapPropagator;
-import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;

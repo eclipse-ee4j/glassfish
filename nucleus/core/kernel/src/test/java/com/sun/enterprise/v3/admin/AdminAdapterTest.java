@@ -20,7 +20,6 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 import org.junit.Before;
 import org.glassfish.api.admin.ParameterMap;
-import com.sun.enterprise.v3.admin.AdminAdapter;
 import java.util.Properties;
 
 

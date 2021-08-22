@@ -24,7 +24,6 @@ package com.sun.jdo.spi.persistence.support.sqlstore;
 
 import com.sun.jdo.api.persistence.support.JDOUnsupportedOptionException;
 import com.sun.jdo.api.persistence.support.JDOUserException;
-import com.sun.jdo.spi.persistence.support.sqlstore.PersistenceManager;
 import com.sun.jdo.api.persistence.model.Model;
 import org.glassfish.persistence.common.I18NHelper;
 

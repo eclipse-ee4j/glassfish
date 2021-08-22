@@ -16,8 +16,6 @@
 
 package org.glassfish.jdbc.config;
 
-import org.glassfish.jdbc.config.JdbcConnectionPool;
-
 import java.beans.PropertyVetoException;
 import org.junit.After;
 import org.junit.Before;

@@ -15,7 +15,6 @@
  */
 
 package com.sun.jts.CosTransactions;
-import java.lang.InterruptedException;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 import java.util.logging.Level;

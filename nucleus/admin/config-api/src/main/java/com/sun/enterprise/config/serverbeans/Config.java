@@ -18,7 +18,6 @@ package com.sun.enterprise.config.serverbeans;
 
 import com.sun.common.util.logging.LoggingConfigImpl;
 import com.sun.enterprise.config.modularity.parser.ModuleConfigurationLoader;
-import com.sun.enterprise.config.serverbeans.GroupManagementService;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotDuplicateTargetName;
 import com.sun.enterprise.config.serverbeans.customvalidators.NotTargetKeyword;
 import com.sun.enterprise.config.util.ServerHelper;

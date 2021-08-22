@@ -21,7 +21,6 @@ import org.glassfish.sse.api.ServerSentEventHandler;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.servlet.AsyncContext;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.enterprise.context.spi.CreationalContext;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 

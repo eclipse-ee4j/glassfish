@@ -25,7 +25,6 @@ import org.glassfish.web.LogFacade;
 import org.glassfish.web.deployment.runtime.SessionManager;
 import org.jvnet.hk2.annotations.Service;
 
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.logging.Level;
 

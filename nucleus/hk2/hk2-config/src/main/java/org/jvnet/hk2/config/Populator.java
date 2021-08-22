@@ -17,7 +17,6 @@
 package org.jvnet.hk2.config;
 
 import org.jvnet.hk2.annotations.Contract;
-import org.jvnet.hk2.config.ConfigParser;
 
 /**
  * Populates {@link Habitat}.

@@ -29,7 +29,6 @@ import org.glassfish.j2ee.statistics.Stats;
 import org.glassfish.web.LogFacade;
 
 import javax.management.ObjectName;
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.ResourceBundle;

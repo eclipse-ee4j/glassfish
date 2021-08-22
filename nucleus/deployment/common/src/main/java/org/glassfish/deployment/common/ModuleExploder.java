@@ -17,7 +17,6 @@
 package org.glassfish.deployment.common;
 
 
-import org.glassfish.deployment.common.DeploymentException;
 import org.glassfish.api.deployment.archive.Archive;
 import java.io.*;
 import java.util.Enumeration;

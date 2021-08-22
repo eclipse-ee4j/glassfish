@@ -33,7 +33,6 @@ import org.glassfish.web.LogFacade;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.String;
 import java.nio.BufferOverflowException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;

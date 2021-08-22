@@ -45,7 +45,6 @@ import org.glassfish.contextpropagation.weblogic.workarea.PropertyReadOnlyExcept
 import org.glassfish.contextpropagation.wireadapters.AbstractWireAdapter;
 import org.glassfish.contextpropagation.wireadapters.Catalog;
 import org.glassfish.contextpropagation.wireadapters.WireAdapter;
-import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
 import org.glassfish.contextpropagation.wireadapters.wls.MyWLSContext;
 import org.glassfish.contextpropagation.wireadapters.wls.WLSWireAdapter;
 import org.junit.Before;

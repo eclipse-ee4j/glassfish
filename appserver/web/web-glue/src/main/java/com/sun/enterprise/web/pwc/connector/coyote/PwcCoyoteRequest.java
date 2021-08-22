@@ -29,7 +29,6 @@ import jakarta.servlet.http.Cookie;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.lang.String;
 import java.nio.charset.Charset;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;

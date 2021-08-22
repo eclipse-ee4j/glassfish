@@ -44,7 +44,6 @@ import org.jvnet.hk2.annotations.Service;
 import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleDefinition;
-import com.sun.enterprise.module.HK2Module;
 import com.sun.enterprise.module.ModuleChangeListener;
 
 @Service

@@ -16,8 +16,6 @@
 
 package org.glassfish.admin.amx.util;
 
-import org.glassfish.admin.amx.util.ExceptionUtil;
-
 import javax.management.MBeanServer;
 import java.util.HashMap;
 import java.util.Map;

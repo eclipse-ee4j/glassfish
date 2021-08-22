@@ -19,7 +19,6 @@ package com.sun.enterprise.deployment.util;
 import com.sun.enterprise.deployment.annotation.introspection.AnnotationScanner;
 import com.sun.enterprise.deployment.annotation.introspection.ClassFile;
 import com.sun.enterprise.deployment.annotation.introspection.ConstantPoolInfo;
-import com.sun.enterprise.deployment.util.DOLUtils;
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.hk2.classmodel.reflect.*;
 

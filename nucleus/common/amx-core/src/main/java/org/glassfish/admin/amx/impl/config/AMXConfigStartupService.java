@@ -35,7 +35,6 @@ import javax.management.StandardMBean;
 import org.glassfish.external.arc.Stability;
 import org.glassfish.external.arc.Taxonomy;
 import org.glassfish.admin.amx.config.AMXConfigConstants;
-import org.glassfish.admin.amx.impl.config.AMXConfigLoader;
 import org.glassfish.admin.amx.impl.util.ImplUtil;
 import org.glassfish.admin.amx.impl.util.InjectedValues;
 import org.glassfish.admin.amx.util.AMXLoggerInfo;

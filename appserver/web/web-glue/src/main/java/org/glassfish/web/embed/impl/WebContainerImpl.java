@@ -19,7 +19,6 @@ package org.glassfish.web.embed.impl;
 import java.beans.PropertyVetoException;
 import java.io.File;
 
-import java.lang.System;
 import java.util.*;
 import java.util.logging.*;
 

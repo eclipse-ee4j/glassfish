@@ -23,7 +23,6 @@
 package com.sun.jdo.api.persistence.support;
 import java.util.Collection;
 import java.util.Properties;
-import java.lang.Class;
 
 /** PersistenceManager is the primary interface for JDO-aware application
  * components.  It is the factory for Query and Transaction instances,

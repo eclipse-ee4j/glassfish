@@ -18,7 +18,6 @@ package org.glassfish.admin.amx.impl.mbean;
 
 import javax.management.ObjectName;
 import org.glassfish.admin.amx.base.ServerRuntime;
-import org.glassfish.admin.amx.impl.mbean.AMXImplBase;
 
 /**
  * Parent for all runtime-related MBeans for a particular server

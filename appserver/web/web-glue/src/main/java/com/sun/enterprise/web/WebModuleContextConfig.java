@@ -36,7 +36,6 @@ import org.glassfish.web.LogFacade;
 import org.glassfish.web.valve.GlassFishValve;
 
 import javax.naming.NamingException;
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.*;
 import java.util.logging.Level;

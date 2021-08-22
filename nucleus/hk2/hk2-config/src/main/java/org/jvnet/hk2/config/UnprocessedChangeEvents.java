@@ -16,7 +16,6 @@
 
 package org.jvnet.hk2.config;
 
-import java.lang.StringBuffer;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Collection;

@@ -18,7 +18,6 @@
 package com.sun.enterprise.web.connector;
 
 import javax.management.*;
-import java.lang.String;
 import java.text.MessageFormat;
 import java.util.ResourceBundle;
 import java.util.concurrent.ConcurrentHashMap;

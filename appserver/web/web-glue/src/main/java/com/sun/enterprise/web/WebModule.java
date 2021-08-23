@@ -55,8 +55,14 @@ import org.glassfish.web.admin.monitor.ServletProbeProvider;
 import org.glassfish.web.admin.monitor.SessionProbeProvider;
 import org.glassfish.web.admin.monitor.WebModuleProbeProvider;
 import org.glassfish.web.deployment.descriptor.*;
+import org.glassfish.web.deployment.runtime.CookieProperties;
+import org.glassfish.web.deployment.runtime.LocaleCharsetInfo;
+import org.glassfish.web.deployment.runtime.LocaleCharsetMap;
 import org.glassfish.web.deployment.runtime.SessionConfig;
-import org.glassfish.web.deployment.runtime.*;
+import org.glassfish.web.deployment.runtime.SessionManager;
+import org.glassfish.web.deployment.runtime.SessionProperties;
+import org.glassfish.web.deployment.runtime.SunWebAppImpl;
+import org.glassfish.web.deployment.runtime.WebProperty;
 import org.glassfish.web.loader.ServletContainerInitializerUtil;
 import org.glassfish.web.valve.GlassFishValve;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -379,7 +385,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         Loader loader = getLoader();
         if (loader != null) {
-            java.lang.ClassLoader classLoader = loader.getClassLoader();
+            ClassLoader classLoader = loader.getClassLoader();
             if (classLoader != null) {
                 try {
                     ois = javaEEIOUtils.createObjectInputStream(
@@ -1594,7 +1600,7 @@ public class WebModule extends PwcWebModule implements Context {
      * instantiated
      */
     @Override
-    protected EventListener loadListener(java.lang.ClassLoader loader,
+    protected EventListener loadListener(ClassLoader loader,
                                          String listenerClassName)
             throws Exception {
         try {
@@ -2241,14 +2247,14 @@ public class WebModule extends PwcWebModule implements Context {
 
 class V3WebappLoader extends WebappLoader {
 
-    final java.lang.ClassLoader cl;
+    final ClassLoader cl;
 
-    V3WebappLoader(java.lang.ClassLoader cl) {
+    V3WebappLoader(ClassLoader cl) {
         this.cl = cl;
     }
 
     @Override
-    protected java.lang.ClassLoader createClassLoader() throws Exception {
+    protected ClassLoader createClassLoader() throws Exception {
         return cl;
     }
 

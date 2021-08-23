@@ -18,7 +18,6 @@ package org.glassfish.grizzly.config;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Socket;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.List;
@@ -27,6 +26,8 @@ import org.glassfish.grizzly.Transport;
 import org.glassfish.grizzly.config.dom.NetworkAddressValidator;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
+import org.glassfish.grizzly.config.test.example.DummySelectionKeyHandler;
 import org.glassfish.grizzly.http.server.HttpHandler;
 import org.glassfish.grizzly.http.server.Request;
 import org.glassfish.grizzly.http.server.Response;
@@ -36,18 +37,25 @@ import org.glassfish.grizzly.memory.MemoryManager;
 import org.glassfish.grizzly.nio.NIOTransport;
 import org.glassfish.grizzly.strategies.SameThreadIOStrategy;
 import org.glassfish.grizzly.strategies.WorkerThreadIOStrategy;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 
 /**
  * Created Jan 5, 2009
  *
  * @author <a href="mailto:justin.d.lee@oracle.com">Justin Lee</a>
  */
-@SuppressWarnings({"IOResourceOpenedButNotSafelyClosed"})
-public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
+public class GrizzlyConfigTest {
+
+    private static final GrizzlyConfigTestHelper helper = new GrizzlyConfigTestHelper(GrizzlyConfigTest.class);
+
     @Test
     public void processConfig() throws IOException, InstantiationException {
         GrizzlyConfig grizzlyConfig = null;
@@ -56,14 +64,14 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             grizzlyConfig.setupNetwork();
             int count = 0;
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
-                addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
+                helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
-            final String content = getContent(new URL("http://localhost:38082").openConnection());
-            final String content2 = getContent(new URL("http://localhost:38083").openConnection());
-            final String content3 = getContent(new URL("http://localhost:38084").openConnection());
-            Assert.assertEquals("<html><body>You've found the server on port 38082</body></html>", content);
-            Assert.assertEquals("<html><body>You've found the server on port 38083</body></html>", content2);
-            Assert.assertEquals("<html><body>You've found the server on port 38084</body></html>", content3);
+            final String content = helper.getContent(new URL("http://localhost:38082").openConnection());
+            final String content2 = helper.getContent(new URL("http://localhost:38083").openConnection());
+            final String content3 = helper.getContent(new URL("http://localhost:38084").openConnection());
+            assertEquals("<html><body>You've found the server on port 38082</body></html>", content);
+            assertEquals("<html><body>You've found the server on port 38083</body></html>", content2);
+            assertEquals("<html><body>You've found the server on port 38084</body></html>", content3);
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -82,17 +90,17 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             for (NetworkListener ref : listener.findProtocol().findNetworkListeners()) {
                 found |= ref.getName().equals(listener.getName());
             }
-            assertTrue("Should find the NetworkListener in the list of references from Protocol", found);
+            assertTrue(found, "Should find the NetworkListener in the list of references from Protocol");
             found = false;
             for (NetworkListener ref : listener.findTransport().findNetworkListeners()) {
                 found |= ref.getName().equals(listener.getName());
             }
-            assertTrue("Should find the NetworkListener in the list of references from Transport", found);
+            assertTrue(found, "Should find the NetworkListener in the list of references from Transport");
             found = false;
             for (NetworkListener ref : listener.findThreadPool().findNetworkListeners()) {
                 found |= ref.getName().equals(listener.getName());
             }
-            assertTrue("Should find the NetworkListener in the list of references from ThreadPool", found);
+            assertTrue(found, "Should find the NetworkListener in the list of references from ThreadPool");
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -106,7 +114,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
         try {
             grizzlyConfig = new GrizzlyConfig("grizzly-config.xml");
             final ThreadPool threadPool = grizzlyConfig.getConfig().getNetworkListeners().getThreadPool().get(0);
-            Assert.assertEquals("5", threadPool.getMaxThreadPoolSize());
+            assertEquals("5", threadPool.getMaxThreadPoolSize());
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -122,7 +130,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             grizzlyConfig = new GrizzlyConfig("grizzly-config.xml");
             grizzlyConfig.setupNetwork();
             final String bufferType = grizzlyConfig.getConfig().getNetworkListeners().getNetworkListener().get(0).findTransport().getByteBufferType();
-            Assert.assertEquals("heap", bufferType);
+            assertEquals("heap", bufferType);
             GenericGrizzlyListener genericGrizzlyListener =
                     (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
             MemoryManager mm = genericGrizzlyListener.getTransport().getMemoryManager();
@@ -163,7 +171,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             grizzlyConfig = new GrizzlyConfig("grizzly-direct-buffer.xml");
             grizzlyConfig.setupNetwork();
             final String bufferType = grizzlyConfig.getConfig().getNetworkListeners().getNetworkListener().get(0).findTransport().getByteBufferType();
-            Assert.assertEquals("direct", bufferType);
+            assertEquals("direct", bufferType);
             GenericGrizzlyListener genericGrizzlyListener =
                                            (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
             MemoryManager mm = genericGrizzlyListener.getTransport().getMemoryManager();
@@ -225,17 +233,17 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             grizzlyConfig.setupNetwork();
             int count = 0;
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
-                addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
+                helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
 
-            Assert.assertEquals("<html><body>You've found the server on port 38082</body></html>",
-                    getContent(new URL("https://localhost:38082").openConnection()));
-            Assert.assertEquals("<html><body>You've found the server on port 38083</body></html>",
-                    getContent(new URL("https://localhost:38083").openConnection()));
-            Assert.assertEquals("<html><body>You've found the server on port 38084</body></html>",
-                    getContent(new URL("https://localhost:38084").openConnection()));
-            Assert.assertEquals("<html><body>You've found the server on port 38085</body></html>",
-                    getContent(new URL("https://localhost:38085").openConnection()));
+            assertEquals("<html><body>You've found the server on port 38082</body></html>",
+                helper.getContent(new URL("https://localhost:38082").openConnection()));
+            assertEquals("<html><body>You've found the server on port 38083</body></html>",
+                helper.getContent(new URL("https://localhost:38083").openConnection()));
+            assertEquals("<html><body>You've found the server on port 38084</body></html>",
+                helper.getContent(new URL("https://localhost:38084").openConnection()));
+            assertEquals("<html><body>You've found the server on port 38085</body></html>",
+                helper.getContent(new URL("https://localhost:38085").openConnection()));
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -245,27 +253,36 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
 
     private void configure() throws URISyntaxException {
         ClassLoader cl = getClass().getClassLoader();
-        System
-            .setProperty("javax.net.ssl.trustStore", new File(cl.getResource("cacerts.jks").toURI()).getAbsolutePath());
+        System.setProperty("javax.net.ssl.trustStore",
+            new File(cl.getResource("cacerts.jks").toURI()).getAbsolutePath());
         System.setProperty("javax.net.ssl.trustStorePassword", "changeit");
-        System
-            .setProperty("javax.net.ssl.keyStore", new File(cl.getResource("keystore.jks").toURI()).getAbsolutePath());
+        System.setProperty("javax.net.ssl.keyStore",
+            new File(cl.getResource("keystore.jks").toURI()).getAbsolutePath());
         System.setProperty("javax.net.ssl.keyStorePassword", "changeit");
     }
 
-//    @Test(expected = GrizzlyConfigException.class)
+    @Test
+    @Disabled(
+        "Fails with UnknownHostException, but should probably result in GrizzlyConfigException."
+        + " Or it should not try to resolve the address and simply respect it."
+        + " That may be useful for environments with strict networking, where admin instance"
+        + " doesn't have access to a network used by worker instances."
+    )
     public void badConfig() throws IOException {
-        GrizzlyConfig grizzlyConfig = null;
-        try {
-            grizzlyConfig = new GrizzlyConfig("grizzly-config-bad.xml");
-            grizzlyConfig.setupNetwork();
-        } finally {
-            if (grizzlyConfig != null) {
-                grizzlyConfig.shutdown();
+        assertThrows(GrizzlyConfigException.class, () -> {
+            GrizzlyConfig grizzlyConfig = null;
+            try {
+                grizzlyConfig = new GrizzlyConfig("grizzly-config-bad.xml");
+                grizzlyConfig.setupNetwork();
+            } finally {
+                if (grizzlyConfig != null) {
+                    grizzlyConfig.shutdown();
+                }
             }
-        }
+        });
     }
 
+    @Test
     public void timeoutDisabled() throws IOException, InstantiationException {
         GrizzlyConfig grizzlyConfig = null;
         try {
@@ -297,16 +314,12 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
         try {
             grizzlyConfig = new GrizzlyConfig("grizzly-config-io-strategies.xml");
             grizzlyConfig.setupNetwork();
-            GenericGrizzlyListener genericGrizzlyListener1 =
-                    (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
 
-            Assert.assertEquals(SameThreadIOStrategy.class, genericGrizzlyListener1.getTransport().getIOStrategy().getClass());
+            GenericGrizzlyListener genericGrizzlyListener1 = (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-1");
+            assertEquals(SameThreadIOStrategy.class, genericGrizzlyListener1.getTransport().getIOStrategy().getClass());
 
-            GenericGrizzlyListener genericGrizzlyListener2 =
-                    (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-2");
-
-            Assert.assertEquals(WorkerThreadIOStrategy.class, genericGrizzlyListener2.getTransport().getIOStrategy().getClass());
-
+            GenericGrizzlyListener genericGrizzlyListener2 = (GenericGrizzlyListener) getListener(grizzlyConfig, "http-listener-2");
+            assertEquals(WorkerThreadIOStrategy.class, genericGrizzlyListener2.getTransport().getIOStrategy().getClass());
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -321,7 +334,7 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
             grizzlyConfig = new GrizzlyConfig("grizzly-config-scheme-override.xml");
             grizzlyConfig.setupNetwork();
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
-                setHttpHandler((GenericGrizzlyListener) listener, new HttpHandler() {
+                helper.setHttpHandler((GenericGrizzlyListener) listener, new HttpHandler() {
 
                     @Override
                     public void service(Request request, Response response) throws Exception {
@@ -330,11 +343,11 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
                 });
             }
 
-            final String content = getContent(new URL("http://localhost:38082").openConnection());
-            final String content2 = getContent(new URL("http://localhost:38083").openConnection());
+            final String content = helper.getContent(new URL("http://localhost:38082").openConnection());
+            final String content2 = helper.getContent(new URL("http://localhost:38083").openConnection());
 
-            Assert.assertEquals("http", content);
-            Assert.assertEquals("https", content2);
+            assertEquals("http", content);
+            assertEquals("https", content2);
         } finally {
             if (grizzlyConfig != null) {
                 grizzlyConfig.shutdown();
@@ -342,8 +355,8 @@ public class GrizzlyConfigTest extends BaseTestGrizzlyConfig {
         }
     }
 
-    private static GrizzlyListener getListener(GrizzlyConfig grizzlyConfig,
-            String listenerName) {
+
+    private static GrizzlyListener getListener(GrizzlyConfig grizzlyConfig, String listenerName) {
         for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
             GenericGrizzlyListener genericGrizzlyListener = (GenericGrizzlyListener) listener;
             if (listenerName.equals(genericGrizzlyListener.getName())) {

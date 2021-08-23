@@ -14,10 +14,10 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.grizzly.config;
+package org.glassfish.grizzly.config.test.example;
 
 import java.io.IOException;
-import java.nio.charset.Charset;
+
 import org.glassfish.grizzly.Connection;
 import org.glassfish.grizzly.EmptyCompletionHandler;
 import org.glassfish.grizzly.filterchain.BaseFilter;
@@ -26,20 +26,20 @@ import org.glassfish.grizzly.filterchain.NextAction;
 import org.glassfish.grizzly.memory.Buffers;
 import org.glassfish.grizzly.memory.MemoryManager;
 
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
+
 /**
  *
  * @author oleksiys
  */
 public class XProtocolFilter extends BaseFilter {
-    public static final Charset CHARSET = Charset.forName("ISO-8859-1");
-
     @Override
     public NextAction handleRead(final FilterChainContext ctx) throws IOException {
-        final Connection connection = ctx.getConnection();
-        final MemoryManager memoryManager = connection.getTransport().getMemoryManager();
-        ctx.write(Buffers.wrap(memoryManager, "X-Protocol-Response", CHARSET));
+        final Connection<?> connection = ctx.getConnection();
+        final MemoryManager<?> memoryManager = connection.getTransport().getMemoryManager();
+        ctx.write(Buffers.wrap(memoryManager, "X-Protocol-Response", ISO_8859_1));
 
-        ctx.flush(new EmptyCompletionHandler() {
+        ctx.flush(new EmptyCompletionHandler<>() {
 
             @Override
             public void completed(Object result) {

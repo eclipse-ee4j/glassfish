@@ -14,12 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.grizzly.config;
+package org.glassfish.grizzly.config.test.example;
 
 import org.glassfish.grizzly.Buffer;
 import org.glassfish.grizzly.filterchain.FilterChainContext;
 import org.glassfish.grizzly.portunif.PUContext;
 import org.glassfish.grizzly.portunif.ProtocolFinder;
+
+import static java.nio.charset.StandardCharsets.ISO_8859_1;
 
 /**
  *
@@ -28,7 +30,7 @@ import org.glassfish.grizzly.portunif.ProtocolFinder;
 public class XProtocolFinder implements ProtocolFinder {
 
     private final static String name = "X-protocol";
-    private byte[] signature = name.getBytes(XProtocolFilter.CHARSET);
+    private final byte[] signature = name.getBytes(ISO_8859_1);
 
 
     @Override

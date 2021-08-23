@@ -14,15 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.grizzly.config;
+package org.glassfish.grizzly.config.test.example;
+
+import java.io.IOException;
+import java.nio.channels.SelectionKey;
 
 import org.glassfish.grizzly.IOEvent;
 import org.glassfish.grizzly.nio.DefaultSelectionKeyHandler;
 import org.glassfish.grizzly.nio.NIOConnection;
 import org.glassfish.grizzly.nio.SelectionKeyHandler;
-
-import java.io.IOException;
-import java.nio.channels.SelectionKey;
 
 public class DummySelectionKeyHandler implements SelectionKeyHandler {
 

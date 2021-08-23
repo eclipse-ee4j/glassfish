@@ -1282,9 +1282,14 @@
                             <artifactId>jacoco-maven-plugin</artifactId>
                             <version>${jacoco.version}</version>
                             <configuration>
+                                <outputDirectory>${project.build.directory}</outputDirectory>
                                 <includes>
-                                    <include>org.glassfish.*</include>
+                                    <include>org/glassfish/**</include>
+                                    <include>com/sun/enterprise/**</include>
                                 </includes>
+                                <formats>
+                                    <format>XML</format>
+                                </formats>
                             </configuration>
                         </plugin>
                     </plugins>
@@ -1304,6 +1309,20 @@
                                 <id>agent-for-integration-tests</id>
                                 <goals>
                                     <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report-integration</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report-integration</goal>
                                 </goals>
                             </execution>
                         </executions>

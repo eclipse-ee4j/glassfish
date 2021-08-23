@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +18,7 @@
 package org.glassfish.admin.payload;
 
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -33,16 +35,17 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.Payload;
-import org.junit.After;
-import org.junit.AfterClass;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author Tim Quinn
  */
 public class PayloadImplTest {
@@ -71,54 +74,34 @@ public class PayloadImplTest {
     private static final FileInfo ORIGINAL_FILE_X =
             new FileInfo("x.txt", SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2, "old x");
 
-    private static final FileInfo ORIGINAL_FILE_Y =
-            new FileInfo("y.txt", SUBDIR_LEVEL_1, "old y");
+    private static final FileInfo ORIGINAL_FILE_Y = new FileInfo("y.txt", SUBDIR_LEVEL_1, "old y");
 
+    private static final FileInfo[] ORIGINAL_FILES = {ORIGINAL_FILE_X, ORIGINAL_FILE_Y};
 
-    private static final FileInfo[] ORIGINAL_FILES = {
-        ORIGINAL_FILE_X, ORIGINAL_FILE_Y};
+    private static final FileInfo ADDED_FILE_Z = new FileInfo("z.txt", SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2, "new z");
 
-    private static final FileInfo ADDED_FILE_Z =
-            new FileInfo("z.txt", SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2,
-            "new z");
-
-    private static final FileInfo REPLACED_FILE_X =
-            new FileInfo(ORIGINAL_FILE_X.name, ORIGINAL_FILE_X.pathPrefix, "replaced x");
+    private static final FileInfo REPLACED_FILE_X = new FileInfo(ORIGINAL_FILE_X.name, ORIGINAL_FILE_X.pathPrefix,
+        "replaced x");
 
     private static final String REPL_SUBDIR_LEVEL_1 = "repl-a";
     private static final String REPL_SUBDIR_LEVEL_2 = "repl-a1";
 
-    private static final FileInfo REPLACEMENT_FILE_A =
-            new FileInfo("r-a.txt", REPL_SUBDIR_LEVEL_1, "replacement a");
-    private static final FileInfo REPLACEMENT_FILE_B =
-            new FileInfo("r-b.txt", null, "replacement b");
-    private static final FileInfo REPLACEMENT_FILE_C =
-            new FileInfo("r-c.txt", REPL_SUBDIR_LEVEL_1 + '/' + REPL_SUBDIR_LEVEL_2, "replacement c");
-    private static final FileInfo[] REPLACEMENT_FILES = {
-        REPLACEMENT_FILE_A, REPLACEMENT_FILE_B, REPLACEMENT_FILE_C};
+    private static final FileInfo REPLACEMENT_FILE_A = new FileInfo("r-a.txt", REPL_SUBDIR_LEVEL_1, "replacement a");
+    private static final FileInfo REPLACEMENT_FILE_B = new FileInfo("r-b.txt", null, "replacement b");
+    private static final FileInfo REPLACEMENT_FILE_C = new FileInfo("r-c.txt",
+        REPL_SUBDIR_LEVEL_1 + '/' + REPL_SUBDIR_LEVEL_2, "replacement c");
+    private static final FileInfo[] REPLACEMENT_FILES = {REPLACEMENT_FILE_A, REPLACEMENT_FILE_B, REPLACEMENT_FILE_C};
 
     /** The path of the original file that is replaced but the name and content of the replacement file */
-    private static final FileInfo REPLACED_FILE_C =
-            new FileInfo(REPLACEMENT_FILE_C.name, SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2,
-                REPLACEMENT_FILE_C.content);
+    private static final FileInfo REPLACED_FILE_C = new FileInfo(REPLACEMENT_FILE_C.name,
+        SUBDIR_LEVEL_1 + '/' + SUBDIR_LEVEL_2, REPLACEMENT_FILE_C.content);
 
     private static final String LINE_SEP = System.getProperty("line.separator");
 
-    private File workingDir = null;
-    private File replDir = null;
+    private File workingDir;
+    private File replDir;
 
-    public PayloadImplTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
         try {
             workingDir = createAndPopulateWorkingDir();
@@ -130,7 +113,7 @@ public class PayloadImplTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         cleanDir(workingDir);
         log("  Working dir cleaned");
@@ -176,19 +159,16 @@ public class PayloadImplTest {
     }
 
     private void checkFile(final FileInfo fileInfo, final File f) throws FileNotFoundException, IOException {
-        assertTrue("Expected output file " + fileInfo.path + " does not exist",
-                f.exists());
-        assertEquals("Expected file contents for " + fileInfo.path + " not correct",
-                fileInfo.content, readFromFile(f));
+        assertTrue(f.exists(), "Expected output file " + fileInfo.path + " does not exist");
+        assertEquals(fileInfo.content, readFromFile(f), "Expected file contents for " + fileInfo.path + " not correct");
     }
 
     private void checkNoFile(final FileInfo fileInfo, final File f) {
-        assertFalse("File " + fileInfo.path + " not expected but exists",
-                f.exists());
+        assertFalse(f.exists(), "File " + fileInfo.path + " not expected but exists");
     }
 
     @Test
-    public void testSingleFileReplaceRequest() {
+    public void testSingleFileReplaceRequest() throws Exception {
         System.out.println("testSingleFileReplaceRequest");
         File newVersion = null;
         File zipFile = null;
@@ -201,24 +181,15 @@ public class PayloadImplTest {
                     null, newVersion, false);
             zipFile = writePayloadToFile(outboundPayload, File.createTempFile("payloadZip", ".zip"));
 
-            boolean isFileProcessed = false;
-
             for (Map.Entry<File,Properties> entry : preparePFM(zipFile).entrySet()) {
                 final File processedFile = entry.getKey();
                 if (processedFile.toURI().getPath().endsWith(REPLACED_FILE_X.path)) {
-                    isFileProcessed = true;
-                    /*
-                     * Make sure the file exists and contains the new content.
-                     */
-                    assertTrue("Expected original output file " + REPLACED_FILE_X.path + " does not exist",
-                            processedFile.exists());
-                    assertEquals("Expected new file contents for " + REPLACED_FILE_X.path + " not correct",
-                            REPLACED_FILE_X.content, readFromFile(processedFile));
+                    assertTrue(processedFile.exists(),
+                        "Expected original output file " + REPLACED_FILE_X.path + " does not exist");
+                    assertEquals(REPLACED_FILE_X.content, readFromFile(processedFile),
+                        "Expected new file contents for " + REPLACED_FILE_X.path + " not correct");
                 }
             }
-
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
         } finally {
             deleteAndLogFailure(newVersion);
             deleteAndLogFailure(zipFile);
@@ -234,7 +205,7 @@ public class PayloadImplTest {
     }
 
     @Test
-    public void testAddFiles() {
+    public void testAddFiles() throws Exception {
         System.out.println("testAddFiles");
         File fileToBeAddedToPayload = null;
         File zipFile = null;
@@ -264,35 +235,24 @@ public class PayloadImplTest {
 
         // XXX consume the map; check for the new file and contents
             boolean isFileProcessed = false;
-
             for (Map.Entry<File,Properties> entry : preparePFM(zipFile).entrySet()) {
                 final File processedFile = entry.getKey();
                 if (processedFile.toURI().getPath().endsWith(ADDED_FILE_Z.path)) {
                     isFileProcessed = true;
-                    /*
-                     * Make sure the file exists and contains what we expect.
-                     */
-                    assertTrue("Expected output file " + ADDED_FILE_Z.path + " does not exist",
-                            processedFile.exists());
-                    assertEquals("Expected new file contents for " + ADDED_FILE_Z.path + "not correct",
-                            ADDED_FILE_Z.content, readFromFile(processedFile));
+                    assertTrue(processedFile.exists(), "Expected output file " + ADDED_FILE_Z.path + " does not exist");
+                    assertEquals(ADDED_FILE_Z.content, readFromFile(processedFile),
+                        "Expected new file contents for " + ADDED_FILE_Z.path + "not correct");
                 }
             }
-            assertTrue("Added file " + ADDED_FILE_Z.path + " did not appear in the processed output",
-                    isFileProcessed);
+            assertTrue(isFileProcessed, "Added file " + ADDED_FILE_Z.path + " did not appear in the processed output");
 
             /*
              * Make sure the original file still exists and contains what it should.
              */
             final File originalFile = new File(workingDir.toURI().resolve(ORIGINAL_FILE_X.path));
-            assertTrue("Original file " + ORIGINAL_FILE_X.path + " no longer exists but it should",
-                    originalFile.exists());
-            assertEquals("Original file " + ORIGINAL_FILE_X.path +
-                    " exists as expected but no longer contains what it should",
-                    ORIGINAL_FILE_X.content, readFromFile(originalFile));
-
-        } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            assertTrue(originalFile.exists(), "Original file " + ORIGINAL_FILE_X.path + " no longer exists but it should");
+            assertEquals(ORIGINAL_FILE_X.content, readFromFile(originalFile),
+                "Original file " + ORIGINAL_FILE_X.path + " exists as expected but no longer contains what it should");
         } finally {
             deleteAndLogFailure(fileToBeAddedToPayload);
             deleteAndLogFailure(zipFile);

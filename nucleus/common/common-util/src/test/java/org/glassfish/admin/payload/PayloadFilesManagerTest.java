@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,6 +18,7 @@
 package org.glassfish.admin.payload;
 
 import com.sun.enterprise.util.io.FileUtils;
+
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
@@ -40,17 +42,17 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
 import org.glassfish.api.admin.Payload;
 import org.glassfish.api.admin.Payload.Inbound;
 import org.glassfish.api.admin.Payload.Outbound;
 import org.glassfish.api.admin.Payload.Part;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -58,34 +60,11 @@ import static org.junit.Assert.*;
  */
 public class PayloadFilesManagerTest {
 
-    private Logger defaultLogger = Logger.getAnonymousLogger();
-
-    public PayloadFilesManagerTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of getOutputFileURI method, of class PayloadFilesManager.
      */
     @Test
     public void testGetOutputFileURI() throws Exception {
-        ////System.out.println("getOutputFileURI");
-
         PayloadFilesManager.Temp instance = new PayloadFilesManager.Temp(Logger.getAnonymousLogger());
         try {
             String originalPath = "way/over/there/myApp.ear";
@@ -101,8 +80,6 @@ public class PayloadFilesManagerTest {
 
     @Test
     public void testBraces() throws Exception {
-        ////System.out.println("testBraces");
-
         final File tmpDir = File.createTempFile("gfpayl{braces}", "tmp");
         tmpDir.delete();
         tmpDir.mkdir();
@@ -147,7 +124,7 @@ public class PayloadFilesManagerTest {
                         success &= (parent.equals(f.getParentFile()));
                     }
                 }
-                assertTrue("Failed because the temp files should have had the same parent", success);
+                assertTrue(success, "Failed because the temp files should have had the same parent");
             }
 
         }.run("diffFilesFromSamePath");
@@ -169,16 +146,15 @@ public class PayloadFilesManagerTest {
                 List<File> files = instance.processParts(ib);
                 boolean success = true;
                 String fileName = null;
-                List<File> parents = new ArrayList<File>();
+                List<File> parents = new ArrayList<>();
                 for (File f : files) {
                     if (fileName == null) {
                         fileName= f.getName();
                     } else {
                         success &= (f.getName().equals(fileName)) && ( ! parents.contains(f.getParentFile()));
                     }
-                    ////System.out.println("  " + f.toURI().toASCIIString());
                 }
-                assertTrue("Failed because temp file names did not match or at least two had a parent in common", success);
+                assertTrue(success, "Failed because temp file names did not match or at least two had a parent in common");
             }
 
         }.run("sameFilesInDiffPaths");
@@ -201,13 +177,10 @@ public class PayloadFilesManagerTest {
             @Override
             protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
                 List<File> files = instance.processParts(ib);
-                ////System.out.println("  Original: " + originalFile.toURI().toASCIIString());
 
                 for (File f : files) {
-                    ////System.out.println("  Temp file: " + f.toURI().toASCIIString());
-                    if (f.equals(originalFile)) {
-                        fail("Temp file was created at original top-level path; should have been in a temp dir");
-                    }
+                    assertNotEquals(originalFile, f,
+                        "Temp file was created at original top-level path; should have been in a temp dir");
                 }
             }
         }.run("testLeadingSlashes");
@@ -232,26 +205,11 @@ public class PayloadFilesManagerTest {
                     if (f.getName().equals("flat.txt")) {
                         success &= (f.getParentFile().equals(instance.getTargetDir()));
                     }
-                    ////System.out.println("  " + f.toURI().toASCIIString());
                 }
-                ////System.out.println("  Done");
-                assertTrue("Flat file was not deposited in top-level temp directory", success);
+                assertTrue(success, "Flat file was not deposited in top-level temp directory");
             }
         }.run("testPathlessFile");
     }
-
-//    @Test
-//    public void testWindowsPath() throws Exception {
-//        //System.out.println("testWindowsPath");
-//        testForBadChars("C:\\Program Files\\someDir");
-//    }
-//
-//    @Test
-//    public void testNonWindowsPath() throws Exception {
-//        //System.out.println("testNonWindowsPath");
-//        testForBadChars("/Users/whoever/someDir");
-//
-//    }
 
     @Test
     public void simplePermanentTransferTest() throws Exception {
@@ -260,22 +218,16 @@ public class PayloadFilesManagerTest {
         final String FILE_B_PREFIX = "x/y/z";
         final String FILE_B_NAME = "fileB.txt";
 
-        final Set<File> desiredResults = new HashSet<File>();
+        final Set<File> desiredResults = new HashSet<>();
 
-        /*
-         * Create a directory into which we'll transfer some small files.
-         */
+         // Create a directory into which we'll transfer some small files.
         final File origDir = File.createTempFile("pfm", "");
         origDir.delete();
 
         File targetDir = null;
 
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
@@ -316,19 +268,16 @@ public class PayloadFilesManagerTest {
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     instance.processParts(ib);
 
-                    final Set<File> missing = new HashSet<File>();
+                    final Set<File> missing = new HashSet<>();
                     for (File f : desiredResults) {
                         if ( ! f.exists()) {
                             missing.add(f);
                         }
                     }
-                    assertEquals("Unexpected missing files after extraction", Collections.EMPTY_SET, missing);
-
+                    assertEquals(Collections.EMPTY_SET, missing, "Unexpected missing files after extraction");
                 }
 
                 @Override
@@ -356,23 +305,16 @@ public class PayloadFilesManagerTest {
         final String FILE_C_PREFIX = FILE_B_PREFIX;
         final String FILE_C_NAME = "fileC.txt";
 
-        final Set<File> desiredPresent = new HashSet<File>();
-        final Set<File> desiredAbsent = new HashSet<File>();
+        final Set<File> desiredPresent = new HashSet<>();
+        final Set<File> desiredAbsent = new HashSet<>();
 
-        /*
-         * Create a directory into which we'll transfer some small files.
-         */
+        // Create a directory into which we'll transfer some small files.
         final File origDir = File.createTempFile("pfm", "");
         origDir.delete();
 
         File targetDir = null;
-
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
@@ -383,11 +325,9 @@ public class PayloadFilesManagerTest {
             writeFile(fileA, "This is File A", "and another line");
             desiredPresent.add(new File(targetDir.toURI().resolve(FILE_A_PREFIX + FILE_A_NAME)));
 
-            /*
-             * In this test result, we want file B to be absent after we transfer
-             * it (with files A and C) and then use a second PayloadFilesManager
-             * to request B's removal.
-             */
+            // In this test result, we want file B to be absent after we transfer
+            // it (with files A and C) and then use a second PayloadFilesManager
+            // to request B's removal.
             final File fileB = new File(origDir, FILE_B_NAME);
             desiredAbsent.add(new File(targetDir.toURI().resolve(FILE_B_PREFIX + FILE_B_NAME)));
             writeFile(fileB, "Here is File B", "which has an", "additional line");
@@ -427,16 +367,10 @@ public class PayloadFilesManagerTest {
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     instance.processParts(ib);
 
-                    /*
-                     * Now ask another PayloadFilesManager to remove one of the
-                     * just-extracted files.
-                     */
-
+                    // Now ask another PayloadFilesManager to remove one of the just-extracted files.
                     Payload.Outbound ob = PayloadImpl.Outbound.newInstance();
                     ob.requestFileRemoval(
                             URI.create(FILE_B_PREFIX + FILE_B_NAME),
@@ -456,22 +390,22 @@ public class PayloadFilesManagerTest {
 
                     remover.processParts(removerIB);
 
-                    final Set<File> missing = new HashSet<File>();
+                    final Set<File> missing = new HashSet<>();
                     for (File f : desiredPresent) {
                         if ( ! f.exists()) {
                             missing.add(f);
                         }
                     }
-                    assertEquals("Unexpected missing files after extraction", Collections.EMPTY_SET, missing);
+                    assertEquals(Collections.EMPTY_SET, missing, "Unexpected missing files after extraction");
 
-                    final Set<File> unexpectedlyPresent = new HashSet<File>();
+                    final Set<File> unexpectedlyPresent = new HashSet<>();
                     for (File f : desiredAbsent) {
                         if (f.exists()) {
                             unexpectedlyPresent.add(f);
                         }
                     }
-                    assertEquals("Unexpected files remain after removal request",
-                            Collections.EMPTY_SET, unexpectedlyPresent);
+                    assertEquals(Collections.EMPTY_SET, unexpectedlyPresent,
+                        "Unexpected files remain after removal request");
                 }
 
                 @Override
@@ -493,15 +427,12 @@ public class PayloadFilesManagerTest {
     @Test
     public void simplePermanentDirWithNoSlashRemovalTest() throws Exception {
         final String DIR = "x/";
-        final String DIR_WITH_NO_SLASH = "x";
-
         final String FILE_A_PREFIX = DIR;
         final String FILE_A_NAME = "fileA.txt";
+        final String DIR_WITH_NO_SLASH = "x";
 
-        final Set<File> desiredAbsent = new HashSet<File>();
-        /*
-         * Create a directory into which we'll copy some small files.
-         */
+        final Set<File> desiredAbsent = new HashSet<>();
+        // Create a directory into which we'll copy some small files.
         final File origDir = File.createTempFile("pfm", "");
         origDir.delete();
         origDir.mkdir();
@@ -516,11 +447,7 @@ public class PayloadFilesManagerTest {
         File targetDir = null;
 
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
@@ -549,17 +476,10 @@ public class PayloadFilesManagerTest {
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     instance.processParts(ib);
 
-//                    listDir("After creation, before deletion", myTargetDir);
-                    /*
-                     * Now ask another PayloadFilesManager to remove a directory
-                     * recursively.
-                     */
-
+                    // Now ask another PayloadFilesManager to remove a directory recursively.
                     Payload.Outbound ob = PayloadImpl.Outbound.newInstance();
                     ob.requestFileRemoval(
                             URI.create(DIR_WITH_NO_SLASH),
@@ -585,16 +505,14 @@ public class PayloadFilesManagerTest {
 
                     remover.processParts(removerIB);
 
-//                    listDir("After deletion" , myTargetDir);
-
-                    final Set<File> unexpectedlyPresent = new HashSet<File>();
+                    final Set<File> unexpectedlyPresent = new HashSet<>();
                     for (File f : desiredAbsent) {
                         if (f.exists()) {
                             unexpectedlyPresent.add(f);
                         }
                     }
-                    assertEquals("Unexpected files remain after removal request",
-                            Collections.EMPTY_SET, unexpectedlyPresent);
+                    assertEquals(Collections.EMPTY_SET, unexpectedlyPresent,
+                        "Unexpected files remain after removal request");
                 }
 
                 @Override
@@ -618,10 +536,8 @@ public class PayloadFilesManagerTest {
     @Test
     public void recursiveReplacementTest() throws Exception {
 
-        /*
-         * Populate the target directory with a subdirectory containing a file,
-         * then replace the subdirectory via a replacement request in a Payload.
-         */
+        // Populate the target directory with a subdirectory containing a file,
+        // then replace the subdirectory via a replacement request in a Payload.
         final String DIR = "x/";
 
         final String FILE_A_PREFIX = DIR;
@@ -630,8 +546,8 @@ public class PayloadFilesManagerTest {
         final String FILE_B_PREFIX = DIR;
         final String FILE_B_NAME = "fileB.txt";
 
-        final Set<File> desiredAbsent = new HashSet<File>();
-        final Set<File> desiredPresent = new HashSet<File>();
+        final Set<File> desiredAbsent = new HashSet<>();
+        final Set<File> desiredPresent = new HashSet<>();
 
         final File targetDir = File.createTempFile("tgt", "");
         targetDir.delete();
@@ -682,31 +598,26 @@ public class PayloadFilesManagerTest {
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
 
                     listDir("After creation, before deletion", myTargetDir);
-
-                    /*
-                     * Process files.
-                     */
                     instance.processParts(ib);
-
                     listDir("After deletion" , myTargetDir);
 
-                    final Set<File> unexpectedlyPresent = new HashSet<File>();
+                    final Set<File> unexpectedlyPresent = new HashSet<>();
                     for (File f : desiredAbsent) {
                         if (f.exists()) {
                             unexpectedlyPresent.add(f);
                         }
                     }
-                    assertEquals("Unexpected files remain after replacement request",
-                            Collections.EMPTY_SET, unexpectedlyPresent);
+                    assertEquals(Collections.EMPTY_SET, unexpectedlyPresent,
+                        "Unexpected files remain after replacement request");
 
-                    final Set<File> unexpectedlyAbsent = new HashSet<File>();
+                    final Set<File> unexpectedlyAbsent = new HashSet<>();
                     for (File f : desiredPresent) {
                         if ( ! f.exists()) {
                             unexpectedlyAbsent.add(f);
                         }
                     }
-                    assertEquals("Unexpected files absent after replacement request",
-                            Collections.EMPTY_SET, unexpectedlyAbsent);
+                    assertEquals(Collections.EMPTY_SET, unexpectedlyAbsent,
+                        "Unexpected files absent after replacement request");
                 }
 
                 @Override
@@ -721,27 +632,21 @@ public class PayloadFilesManagerTest {
 
             }.init(targetDir).run("replacementTest");
         } finally {
-            if (targetDir != null) {
-                FileUtils.whack(targetDir);
-            }
+            FileUtils.whack(targetDir);
         }
     }
 
     private static void listDir(final String title, final File dir) {
-        ////System.out.println(title);
         listDir(dir);
-        ////System.out.println();
     }
 
     private static void listDir(final File dir) {
-        if ( ! dir.exists()) {
-            //System.out.println("Directory  " + dir.getAbsolutePath() + " does not exist");
-        } else {
-            for (File f : dir.listFiles()) {
-                //System.out.println((f.isDirectory() ? "dir " : "    ") + f.getAbsolutePath());
-                if (f.isDirectory()) {
-                    listDir(f);
-                }
+        if (!dir.exists()) {
+            return;
+        }
+        for (File f : dir.listFiles()) {
+            if (f.isDirectory()) {
+                listDir(f);
             }
         }
     }
@@ -752,33 +657,25 @@ public class PayloadFilesManagerTest {
         final String FILE_PREFIX = "x/y/z/";
         final String FILE_NAME = "fileB.txt";
 
-        final Set<File> desiredResults = new HashSet<File>();
+        final Set<File> desiredResults = new HashSet<>();
 
-        /*
-         * Create a directory into which we'll transfer some small files.
-         */
+        // Create a directory into which we'll transfer some small files.
         final File origDir = File.createTempFile("pfm", "");
         origDir.delete();
 
         File targetDir = null;
 
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
 
             origDir.mkdir();
 
-            /*
-             * Add the directory first, then add a file in the directory.  That
-             * will let us check to make sure the PayloadFileManager set the
-             * lastModified time on the directory correctly.
-             */
+            // Add the directory first, then add a file in the directory.
+            // That will let us check to make sure the PayloadFileManager
+            // set the lastModified time on the directory correctly.
             final URI dirURI = URI.create(DIR);
             final File dir = new File(origDir, DIR);
             dir.mkdirs();
@@ -815,18 +712,15 @@ public class PayloadFilesManagerTest {
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     instance.processParts(ib);
 
                     final URI extractedDirURI = myTargetDir.toURI().resolve(dirURI);
                     final File extractedDir = new File(extractedDirURI);
                     final long extractedLastModified = extractedDir.lastModified();
 
-                    assertEquals("Directory lastModified mismatch after extraction",
-                            dirCreationTime, extractedLastModified);
-
+                    assertEquals(dirCreationTime, extractedLastModified,
+                        "Directory lastModified mismatch after extraction");
                 }
 
                 @Override
@@ -856,11 +750,9 @@ public class PayloadFilesManagerTest {
         final String FILE_B_PREFIX = DIR + Y_SUBDIR + Z_SUBDIR;
         final String FILE_B_NAME = "fileB.txt";
 
-        final Set<File> desiredResults = new HashSet<File>();
+        final Set<File> desiredResults = new HashSet<>();
 
-        /*
-         * Create a directory into which we'll copy some small files.
-         */
+        // Create a directory into which we'll copy some small files.
         final File origDir = File.createTempFile("pfm", "");
         origDir.delete();
         origDir.mkdir();
@@ -881,11 +773,7 @@ public class PayloadFilesManagerTest {
         File targetDir = null;
 
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
@@ -893,17 +781,12 @@ public class PayloadFilesManagerTest {
             desiredResults.add(new File(targetDir.toURI().resolve(FILE_A_PREFIX + FILE_A_NAME)));
             desiredResults.add(new File(targetDir.toURI().resolve(FILE_B_PREFIX + FILE_B_NAME)));
 
-            /*
-             * Add the original directory recursively.
-             */
-
-
+            // Add the original directory recursively.
             new CommonPermTest() {
 
                 @Override
                 protected CommonPermTest init(File targetDir) {
                     super.init(targetDir);
-
                     return this;
                 }
 
@@ -915,25 +798,20 @@ public class PayloadFilesManagerTest {
                             "test-xfer",
                             dir,
                             true /* isRecursive */);
-
                 }
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     final List<File> files = instance.processParts(ib);
 
-                    final Set<File> missing = new HashSet<File>();
+                    final Set<File> missing = new HashSet<>();
                     for (File f : desiredResults) {
                         if ( ! f.exists()) {
                             missing.add(f);
                         }
                     }
-                    assertEquals("Unexpected missing files after extraction", Collections.EMPTY_SET, missing);
-
-
+                    assertEquals(Collections.EMPTY_SET, missing, "Unexpected missing files after extraction");
                 }
 
                 @Override
@@ -958,7 +836,7 @@ public class PayloadFilesManagerTest {
         final String Y_SUBDIR = "y/";
         final String Z_SUBDIR = "z/";
 
-        final Set<File> desiredResults = new HashSet<File>();
+        final Set<File> desiredResults = new HashSet<>();
 
         /*
          * Create a directory into which we'll copy some small files.
@@ -977,11 +855,7 @@ public class PayloadFilesManagerTest {
         File targetDir = null;
 
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
@@ -990,11 +864,7 @@ public class PayloadFilesManagerTest {
             desiredResults.add(new File(targetDir.toURI().resolve(DIR + Y_SUBDIR)));
             desiredResults.add(new File(targetDir.toURI().resolve(DIR + Y_SUBDIR + Z_SUBDIR)));
 
-            /*
-             * Add the original directory recursively.
-             */
-
-
+            // Add the original directory recursively.
             new CommonPermTest() {
 
                 @Override
@@ -1017,20 +887,16 @@ public class PayloadFilesManagerTest {
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     instance.processParts(ib);
 
-                    final Set<File> missing = new HashSet<File>();
+                    final Set<File> missing = new HashSet<>();
                     for (File f : desiredResults) {
                         if ( ! f.exists()) {
                             missing.add(f);
                         }
                     }
-                    assertEquals("Unexpected missing files after extraction", Collections.EMPTY_SET, missing);
-
-
+                    assertEquals(Collections.EMPTY_SET, missing, "Unexpected missing files after extraction");
                 }
 
                 @Override
@@ -1055,7 +921,7 @@ public class PayloadFilesManagerTest {
         final String Y_SUBDIR = "y/";
         final String Z_SUBDIR = "z/";
 
-        final List<String> desiredResultsNamePrefixes = new ArrayList<String>();
+        final List<String> desiredResultsNamePrefixes = new ArrayList<>();
 
         /*
          * Create a directory into which we'll copy some small files.
@@ -1074,11 +940,7 @@ public class PayloadFilesManagerTest {
         File targetDir = null;
 
         try {
-            /*
-             * Choose the directory into which we want the PayloadFilesManager to
-             * deliver the files.
-             */
-
+            // Choose the directory into which we want the PayloadFilesManager to deliver the files.
             targetDir = File.createTempFile("tgt", "");
             targetDir.delete();
             targetDir.mkdir();
@@ -1087,11 +949,7 @@ public class PayloadFilesManagerTest {
             desiredResultsNamePrefixes.add("/x/y");
             desiredResultsNamePrefixes.add("/x/y/z");
 
-            /*
-             * Add the original directory recursively.
-             */
-
-
+            // Add the original directory recursively.
             new CommonTempTest() {
 
                 @Override
@@ -1102,14 +960,11 @@ public class PayloadFilesManagerTest {
                             "test-xfer",
                             dir,
                             true /* isRecursive */);
-
                 }
 
                 @Override
                 protected void checkResults(Inbound ib, PayloadFilesManager instance) throws Exception {
-                    /*
-                     * Extract files to where we want them.
-                     */
+                    // Extract files to where we want them.
                     final List<File> files = instance.processParts(ib);
 
                   checkNextFile:
@@ -1124,9 +979,8 @@ public class PayloadFilesManagerTest {
                         }
                     }
 
-                    assertEquals("Unexpected missing files after extraction", Collections.EMPTY_LIST, desiredResultsNamePrefixes);
-
-
+                    assertEquals(Collections.EMPTY_LIST, desiredResultsNamePrefixes,
+                        "Unexpected missing files after extraction");
                 }
 
                 @Override
@@ -1249,7 +1103,7 @@ public class PayloadFilesManagerTest {
 
     private abstract class CommonTempTest extends CommonTest {
 
-        private List<PayloadFilesManager.Temp> tempInstances = new ArrayList<PayloadFilesManager.Temp>();
+        private final List<PayloadFilesManager.Temp> tempInstances = new ArrayList<>();
 
         @Override
         protected PayloadFilesManager instance() throws IOException {

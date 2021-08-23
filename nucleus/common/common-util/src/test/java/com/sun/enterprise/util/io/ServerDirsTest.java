@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,26 +17,31 @@
 
 package com.sun.enterprise.util.io;
 
-import com.sun.enterprise.util.ObjectAnalyzer;
 import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author bnevins
  */
 public class ServerDirsTest {
-    public ServerDirsTest() {
-    }
+    private static File childFile;
+    private static File parentFile;
+    private static File grandParentFile;
+    private static File userTopLevelFile;
+    private static File userNextToTopLevelFile;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
         final ClassLoader cl = ServerDirsTest.class.getClassLoader();
         childFile = new File(cl.getResource("grandparent/parent/child").toURI());
@@ -54,36 +60,15 @@ public class ServerDirsTest {
      * It is not allowed to use a dir that has no parent...
      * @throws Exception
      */
-    @Test(expected = IOException.class)
+    @Test
     public void testNoParent() throws Exception {
         assertNotNull(userTopLevelFile);
         assertTrue(userTopLevelFile.isDirectory());
         assertNull(userTopLevelFile.getParentFile());
-
-        try {
-            ServerDirs sd = new ServerDirs(userTopLevelFile);
-        }
-        catch (IOException e) {
-            throw e;
-        }
+        assertThrows(IOException.class, () -> new ServerDirs(userTopLevelFile));
     }
 
-    /**
-     * Test is no good anymore -- the ServerDirs now always look for "config" dir
-     * and domain name.
-     *
-    @Test
-    public void testNoGrandParent() throws Exception {
-    assertNotNull(userNextToTopLevelFile);
-    assertTrue(userNextToTopLevelFile.isDirectory());
-    File parent = userNextToTopLevelFile.getParentFile();
-    assertNotNull(parent);
-    assertNull(parent.getParentFile());
-    assertEquals(parent, userTopLevelFile);
 
-    ServerDirs sd = new ServerDirs(userNextToTopLevelFile);
-    }
-     **/
     @Test
     public void testSpecialFiles() throws IOException {
         ServerDirs sd = new ServerDirs(childFile);
@@ -106,23 +91,17 @@ public class ServerDirsTest {
         // we need this info to simulate an illegal condition like
         // specifying a directory that has no parent and/or grandparent
 
-        Stack<File> stack = new Stack<File>();
+        Stack<File> stack = new Stack<>();
         File f = childFile;  // guaranteed to have a valid parent and grandparent
 
         do {
             stack.push(f);
             f = f.getParentFile();
-        }
-        while(f != null);
+        } while (f != null);
 
         // the first pop has the top-level
         // the next pop has the next-to-top-level
         userTopLevelFile = stack.pop();
         userNextToTopLevelFile = stack.pop();
     }
-    private static File childFile;
-    private static File parentFile;
-    private static File grandParentFile;
-    private static File userTopLevelFile;
-    private static File userNextToTopLevelFile;
 }

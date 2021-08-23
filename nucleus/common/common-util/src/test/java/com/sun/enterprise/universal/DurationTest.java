@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,12 +17,9 @@
 
 package com.sun.enterprise.universal;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -29,24 +27,6 @@ import static org.junit.Assert.*;
  */
 public class DurationTest {
 
-    public DurationTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
     @Test
     public void test1() {
         long msec = Duration.MSEC_PER_WEEK * 3 +

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,15 +18,15 @@
 package com.sun.enterprise.universal.process;
 
 import com.sun.enterprise.util.OS;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -33,25 +34,12 @@ import static org.junit.Assert.*;
  */
 public class ProcessManagerTest {
 
-    public ProcessManagerTest() {
-    }
+    private static String textfile;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
         textfile = new File(ProcessManagerTest.class.getClassLoader().getResource("process/lots_o_text.txt").getPath()).getAbsolutePath();
         assertTrue(textfile != null && textfile.length() > 0);
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
     }
 
     /**
@@ -65,10 +53,11 @@ public class ProcessManagerTest {
         System.out.println("If it is FROZEN RIGHT NOW -- then Houston, we have a problem!");
         System.out.println("ProcessManager must have the write to stdin before the reader threads have started!");
 
-        if (OS.isWindows())
+        if (OS.isWindows()) {
             pm = new ProcessManager("cmd", "/c", "type", textfile);
-        else
+        } else {
             pm = new ProcessManager("cat", textfile);
+        }
 
         pm.setStdinLines(hugeInput());
         pm.setEcho(false);
@@ -76,12 +65,12 @@ public class ProcessManagerTest {
     }
 
     private List<String> hugeInput() {
-        List<String> l = new ArrayList<String>();
+        List<String> l = new ArrayList<>();
 
-        for (int i = 0; i < 50000; i++)
+        for (int i = 0; i < 50000; i++) {
             l.add("line number " + i + "here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
 
         return l;
     }
-    private static String textfile;
 }

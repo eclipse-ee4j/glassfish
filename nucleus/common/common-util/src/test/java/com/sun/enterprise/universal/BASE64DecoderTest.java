@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,17 +19,21 @@ package com.sun.enterprise.universal;
 
 import java.io.IOException;
 import java.util.Base64;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+
 
 /**
- *
  * @author bnevins
  */
 public class BASE64DecoderTest {
-    /*
-     * make sure the Universal base64 works
-     */
+
+    private static final String[] ss = new String[] {"foo", "QQ234bbVVc", "\n\n\r\f\n"};
+
     @Test
     public void testEncodeDecode() throws IOException{
         GFBase64Encoder encoder = new GFBase64Encoder();
@@ -37,21 +42,17 @@ public class BASE64DecoderTest {
         for(String s : ss) {
             byte[] stringAsByteBuf = s.getBytes();
             String enc = encoder.encode(stringAsByteBuf);
-            assertFalse(enc.equals(s));
+            assertNotEquals(s, enc);
             byte[] decodedByteBuf = decoder.decodeBuffer(enc);
             String dec = new String(decodedByteBuf);
             assertEquals(dec, s);
         }
     }
 
-    /* make sure the Universal base64 results match sun.misc
-     */
     @Test
     public void testEncodeDecodeAgainstSun() throws IOException{
-        com.sun.enterprise.universal.GFBase64Encoder gfEncoder =
-                new com.sun.enterprise.universal.GFBase64Encoder();
-        com.sun.enterprise.universal.GFBase64Decoder gfDecoder =
-                new com.sun.enterprise.universal.GFBase64Decoder();
+        GFBase64Encoder gfEncoder = new GFBase64Encoder();
+        GFBase64Decoder gfDecoder = new GFBase64Decoder();
         Base64.Decoder jdkDecoder = Base64.getDecoder();
         Base64.Encoder jdkEncoder = Base64.getEncoder();
 
@@ -65,10 +66,7 @@ public class BASE64DecoderTest {
             byte[] gfDecodedByteBuf = gfDecoder.decodeBuffer(gfEnc);
             byte[] sunDecodedByteBuf = jdkDecoder.decode(sunEnc);
 
-            assertTrue(gfDecodedByteBuf.length == sunDecodedByteBuf.length);
-
-            for(int i = 0; i < gfDecodedByteBuf.length; i++)
-                assertEquals(gfDecodedByteBuf[i], sunDecodedByteBuf[i]);
+            assertArrayEquals(gfDecodedByteBuf, sunDecodedByteBuf);
 
             String gfDec = new String(gfDecodedByteBuf);
             String sunDec = new String(sunDecodedByteBuf);
@@ -77,8 +75,4 @@ public class BASE64DecoderTest {
         }
     }
 
-    private static final String[] ss = new String[]
-    {
-        "foo", "QQ234bbVVc", "\n\n\r\f\n"
-    };
 }

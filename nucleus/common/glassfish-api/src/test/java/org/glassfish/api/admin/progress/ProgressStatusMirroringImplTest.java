@@ -17,11 +17,13 @@
 package org.glassfish.api.admin.progress;
 
 import org.glassfish.api.admin.ProgressStatus;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.BeforeClass;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -31,18 +33,7 @@ public class ProgressStatusMirroringImplTest {
 
     private DummyParent parent;
 
-    public ProgressStatusMirroringImplTest() {
-    }
-
-//    @BeforeClass
-//    public static void setUpClass() throws Exception {
-//    }
-//
-//    @AfterClass
-//    public static void tearDownClass() throws Exception {
-//    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
         parent = new DummyParent();
     }

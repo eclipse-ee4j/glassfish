@@ -14,14 +14,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.api.tests;
+package org.glassfish.api.event;
 
-import org.junit.Test;
-import junit.framework.Assert;
-import org.glassfish.api.event.EventTypes;
+import org.junit.jupiter.api.Test;
 
-public class ImmutableTest {
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
+public class EventTypesTest {
 
     @Test
     public void test1() {
@@ -30,11 +30,7 @@ public class ImmutableTest {
         EventTypes evt2 = EventTypes.create("foo");
         EventTypes evt3 = EventTypes.create("foo34");
 
-        Assert.assertNotSame(evt1, evt3);
-        Assert.assertEquals(evt1, evt2);
-
-        Assert.assertTrue(evt1==evt2);
-        Assert.assertFalse(evt1==evt3);
+        assertNotSame(evt1, evt3);
+        assertSame(evt1, evt2);
     }
-
 }

@@ -22,10 +22,12 @@ import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.BuilderHelper;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigInjector;
 import org.jvnet.hk2.config.types.HK2DomConfigTypesUtilities;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests for specialized config types
@@ -41,7 +43,7 @@ public class ConfigTypesTest {
     public void testConfigTypesUtilities() {
         ServiceLocator locator = ServiceLocatorFactory.getInstance().create(null);
 
-        Assert.assertNull(locator.getService(ConfigInjector.class));
+        assertNull(locator.getService(ConfigInjector.class));
 
         HK2DomConfigTypesUtilities.enableHK2DomConfigurationConfigTypes(locator, null);
 
@@ -49,10 +51,10 @@ public class ConfigTypesTest {
         HK2DomConfigTypesUtilities.enableHK2DomConfigurationConfigTypes(locator, null);
 
         List<ActiveDescriptor<?>> injectors = locator.getDescriptors(BuilderHelper.createContractFilter(ConfigInjector.class.getName()));
-        Assert.assertEquals(1, injectors.size());
+        assertEquals(1, injectors.size());
 
         ActiveDescriptor<?> propInjectDesc = injectors.get(0);
 
-        Assert.assertEquals("org.jvnet.hk2.config.types.PropertyInjector", propInjectDesc.getImplementation());
+        assertEquals("org.jvnet.hk2.config.types.PropertyInjector", propInjectDesc.getImplementation());
     }
 }

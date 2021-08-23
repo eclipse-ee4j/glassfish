@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,20 +14,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
+package org.jvnet.hk2.config.test.example;
 
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
-import org.jvnet.hk2.config.Element;
+import org.glassfish.hk2.api.ErrorInformation;
+import org.glassfish.hk2.api.ErrorService;
+import org.glassfish.hk2.api.MultiException;
 
-@Configured
-public interface GenericConfig extends ConfigBeanProxy {
-    @Attribute(key = true)
-    String getName();
-    void setName(String name);
+import jakarta.inject.Singleton;
 
-    @Element
-    GenericConfig getGenericConfig();
-    void setGenericConfig(GenericConfig genericConfig);
+/**
+ * @author jwells
+ */
+@Singleton
+public class ConfigErrorService implements ErrorService {
+
+    @Override
+    public void onFailure(ErrorInformation errorInformation) throws MultiException {
+        if (errorInformation.getAssociatedException() != null) {
+            throw errorInformation.getAssociatedException();
+        }
+    }
 }

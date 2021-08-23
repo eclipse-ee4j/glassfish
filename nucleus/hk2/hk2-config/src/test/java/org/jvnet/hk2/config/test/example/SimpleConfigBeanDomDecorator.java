@@ -14,17 +14,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
+package org.jvnet.hk2.config.test.example;
 
+import javax.xml.stream.XMLStreamReader;
+
+import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.InjectionTarget;
-import org.jvnet.hk2.config.NoopConfigInjector;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDecorator;
+import org.jvnet.hk2.config.DomDocument;
 
-@Service(name = "simple-connector", metadata = "target=org.jvnet.hk2.config.test.SimpleConnector,@port=optional,@port=default:8080,@port=datatype:java.lang.String,@port=leaf,<ejb-container-availability>=org.jvnet.hk2.config.test.EjbContainerAvailability,<web-container-availability>=org.jvnet.hk2.config.test.WebContainerAvailability,<*>=collection:org.jvnet.hk2.config.test.GenericContainer")
-@InjectionTarget(SimpleConnector.class)
-public class SimpleConnectorInjector
-    extends NoopConfigInjector
-{
+@Service
+public class SimpleConfigBeanDomDecorator
+    implements DomDecorator<SimpleConfigBeanWrapper> {
 
-
+    @Override
+    public Dom decorate(ServiceLocator habitat, DomDocument document, SimpleConfigBeanWrapper parent, ConfigModel model, XMLStreamReader in) {
+        return new SimpleConfigBeanWrapper(habitat, document, parent, model, in);
+    }
 }

@@ -14,9 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
+package org.jvnet.hk2.config.test.example;
 
-import jakarta.inject.Singleton;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
@@ -35,8 +39,7 @@ import org.jvnet.hk2.config.InjectionTarget;
 import org.jvnet.hk2.config.Populator;
 import org.jvnet.hk2.config.Transactions;
 
-
-import java.util.*;
+import jakarta.inject.Singleton;
 
 /**
  * TODO:  This should be done via auto-depends (via Service and contract
@@ -83,11 +86,11 @@ public class ConfigModule {
                 .to(Populator.class).in(Singleton.class.getName())
                 .build());
         configurator.addActiveDescriptor(ConfigErrorService.class);
-        bindInjector(configurator, "simple-connector", SimpleConnector.class, SimpleConnectorInjector.class);
+        bindInjector(configurator, "simple-connector",           SimpleConnector.class,          SimpleConnectorInjector.class);
         bindInjector(configurator, "ejb-container-availability", EjbContainerAvailability.class, EjbContainerAvailabilityInjector.class);
         bindInjector(configurator, "web-container-availability", WebContainerAvailability.class, WebContainerAvailabilityInjector.class);
         bindInjector(configurator, "generic-container",          GenericContainer.class,         GenericContainerInjector.class);
-        bindInjector(configurator, "generic-config",          GenericConfig.class,         GenericConfigInjector.class);
+        bindInjector(configurator, "generic-config",             GenericConfig.class,            GenericConfigInjector.class);
 
     }
 
@@ -99,7 +102,7 @@ public class ConfigModule {
                 named(elementName).andLoadWith(new MyHk2Loader(clz.getClassLoader()));
 
         String metaData = ((Service) clz.getAnnotation(Service.class)).metadata();
-        Map<String, List<String>> metaMap = new HashMap<String, List<String>>();
+        Map<String, List<String>> metaMap = new HashMap<>();
         for (StringTokenizer st = new StringTokenizer(metaData, ","); st.hasMoreTokens(); ) {
             String tok = st.nextToken();
             int index = tok.indexOf('=');
@@ -108,7 +111,7 @@ public class ConfigModule {
                 String value = tok.substring(index + 1);
                 List<String> lst = metaMap.get(key);
                 if (lst == null) {
-                    lst = new LinkedList<String>();
+                    lst = new LinkedList<>();
                     metaMap.put(key, lst);
                 }
                 lst.add(value);
@@ -129,7 +132,7 @@ public class ConfigModule {
         implements HK2Loader {
 
 
-        private ClassLoader loader;
+        private final ClassLoader loader;
 
         MyHk2Loader(ClassLoader cl) {
             loader = cl;

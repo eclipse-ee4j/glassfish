@@ -31,7 +31,6 @@ import org.jvnet.hk2.config.types.HK2DomConfigTypesUtilities;
  * Tests for specialized config types
  *
  * @author jwells
- *
  */
 public class ConfigTypesTest {
 

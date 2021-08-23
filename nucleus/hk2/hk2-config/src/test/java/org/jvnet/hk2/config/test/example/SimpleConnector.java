@@ -14,15 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
-
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Element;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.Configured;
+package org.jvnet.hk2.config.test.example;
 
 import java.beans.PropertyVetoException;
 import java.util.List;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
+import org.jvnet.hk2.config.Element;
 
 
 /**
@@ -36,12 +36,12 @@ import java.util.List;
 
 @Configured
 public interface SimpleConnector extends ConfigBeanProxy {
-    public static final int DEFAULT_THREAD_CORE_POOL_SIZE = 16;
-    public static final int DEFAULT_THREAD_MAX_POOL_SIZE = 32;
-    public static final long DEFAULT_THREAD_KEEP_ALIVE_SECONDS = 60;
-    public static final int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
-    public static final boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
-    public static final boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
+    int DEFAULT_THREAD_CORE_POOL_SIZE = 16;
+    int DEFAULT_THREAD_MAX_POOL_SIZE = 32;
+    long DEFAULT_THREAD_KEEP_ALIVE_SECONDS = 60;
+    int DEFAULT_THREAD_QUEUE_CAPACITY = Integer.MAX_VALUE;
+    boolean DEFAULT_ALLOW_CORE_THREAD_TIMEOUT = false;
+    boolean DEFAULT_PRESTART_ALL_CORE_THREADS = false;
 
     /**
      * Gets the value of the steadyPoolSize property.
@@ -76,13 +76,11 @@ public interface SimpleConnector extends ConfigBeanProxy {
      */
     void setPort(String value) throws PropertyVetoException;
 
-    @Element
-    public EjbContainerAvailability getEjbContainerAvailability();
+    @Element EjbContainerAvailability getEjbContainerAvailability();
 
     void setEjbContainerAvailability(EjbContainerAvailability v);
 
-    @Element
-    public WebContainerAvailability getWebContainerAvailability();
+    @Element WebContainerAvailability getWebContainerAvailability();
 
     void setWebContainerAvailability(WebContainerAvailability v);
 

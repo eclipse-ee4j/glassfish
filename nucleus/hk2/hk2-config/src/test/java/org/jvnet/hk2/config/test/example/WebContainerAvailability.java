@@ -14,15 +14,13 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
-
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
-
-import org.jvnet.hk2.config.Attribute;
-import org.jvnet.hk2.config.Configured;
+package org.jvnet.hk2.config.test.example;
 
 import java.beans.PropertyVetoException;
+
+import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.Configured;
 
 /**
  * web-container-availability SE/EE only
@@ -50,8 +48,8 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="true")
-    public String getAvailabilityEnabled();
+    @Attribute(defaultValue="true")
+    String getAvailabilityEnabled();
 
     /**
      * Sets the value of the availabilityEnabled property.
@@ -59,7 +57,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setAvailabilityEnabled(String value) throws PropertyVetoException;
+    void setAvailabilityEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceType property.
@@ -70,8 +68,8 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="replicated")
-    public String getPersistenceType();
+    @Attribute(defaultValue="replicated")
+    String getPersistenceType();
 
     /**
      * Sets the value of the persistenceType property.
@@ -79,7 +77,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setPersistenceType(String value) throws PropertyVetoException;
+    void setPersistenceType(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceFrequency property.
@@ -91,8 +89,8 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="web-method")
-    public String getPersistenceFrequency();
+    @Attribute(defaultValue="web-method")
+    String getPersistenceFrequency();
 
     /**
      * Sets the value of the persistenceFrequency property.
@@ -100,7 +98,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setPersistenceFrequency(String value) throws PropertyVetoException;
+    void setPersistenceFrequency(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceScope property.
@@ -113,8 +111,8 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="session")
-    public String getPersistenceScope();
+    @Attribute(defaultValue="session")
+    String getPersistenceScope();
 
     /**
      * Sets the value of the persistenceScope property.
@@ -122,7 +120,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setPersistenceScope(String value) throws PropertyVetoException;
+    void setPersistenceScope(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the persistenceStoreHealthCheckEnabled property.
@@ -135,8 +133,8 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      *         {@link String }
      */
     @Deprecated
-    @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getPersistenceStoreHealthCheckEnabled();
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getPersistenceStoreHealthCheckEnabled();
 
     /**
      * Sets the value of the persistenceStoreHealthCheckEnabled property.
@@ -144,7 +142,7 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setPersistenceStoreHealthCheckEnabled(String value) throws PropertyVetoException;
+    void setPersistenceStoreHealthCheckEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the ssoFailoverEnabled property.
@@ -154,8 +152,8 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getSsoFailoverEnabled();
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getSsoFailoverEnabled();
 
     /**
      * Sets the value of the ssoFailoverEnabled property.
@@ -163,11 +161,10 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      * @param value allowed object is
      *              {@link String }
      */
-    public void setSsoFailoverEnabled(String value) throws PropertyVetoException;
+    void setSsoFailoverEnabled(String value) throws PropertyVetoException;
 
     /**
      * Gets the value of the httpSessionStorePoolName property.
-     *
      * This is the jndi-name for the JDBC Connection Pool used by the HTTP
      * Session Persistence Framework. If missing, internal code will default it
      * to value of store-pool-name under availability-service
@@ -178,31 +175,31 @@ public interface WebContainerAvailability extends ConfigBeanProxy {
      */
     @Deprecated
     @Attribute
-    public String getHttpSessionStorePoolName();
+    String getHttpSessionStorePoolName();
 
     /**
      * Sets the value of the httpSessionStorePoolName property.
      *
      * @param value allowed object is
-     *              {@link String }
+     *            {@link String }
      */
-    public void setHttpSessionStorePoolName(String value) throws PropertyVetoException;
+    void setHttpSessionStorePoolName(String value) throws PropertyVetoException;
 
     /**
      * Gets thevalue of disableJreplica property.
-     *
      * This is the property used to disable setting the JREPLICA cookie
      *
      * @return returns the string representation of the boolean value
      */
-    @Attribute (defaultValue="false",dataType=Boolean.class)
-    public String getDisableJreplica();
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getDisableJreplica();
 
     /**
      * Sets the disableJreplica property
+     *
      * @param value allowed object is {@link String}
      * @throws PropertyVetoException
      */
-    public void setDisableJreplica(String value) throws PropertyVetoException;
+    void setDisableJreplica(String value) throws PropertyVetoException;
 
 }

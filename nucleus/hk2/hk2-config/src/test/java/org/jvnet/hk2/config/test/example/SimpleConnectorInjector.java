@@ -14,17 +14,24 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
+package org.jvnet.hk2.config.test.example;
 
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.InjectionTarget;
 import org.jvnet.hk2.config.NoopConfigInjector;
 
-@Service(name = "generic-config", metadata = "target=org.jvnet.hk2.config.test.GenericConfig,@name=optional,@name=datatype:java.lang.String,@name=leaf,key=@name,keyed-as=org.jvnet.hk2.config.test.GenericConfig,<generic-config>=org.jvnet.hk2.config.test.GenericConfig")
-@InjectionTarget(GenericConfig.class)
-public class GenericConfigInjector
-    extends NoopConfigInjector
-{
-
+@Service(
+    name = "simple-connector",
+    metadata = "target=org.jvnet.hk2.config.test.example.SimpleConnector,"
+        + "@port=optional,"
+        + "@port=default:8080,"
+        + "@port=datatype:java.lang.String,"
+        + "@port=leaf,"
+        + "<ejb-container-availability>=org.jvnet.hk2.config.test.example.EjbContainerAvailability,"
+        + "<web-container-availability>=org.jvnet.hk2.config.test.example.WebContainerAvailability,"
+        + "<*>=collection:org.jvnet.hk2.config.test.example.GenericContainer"
+)
+@InjectionTarget(SimpleConnector.class)
+public class SimpleConnectorInjector extends NoopConfigInjector {
 
 }

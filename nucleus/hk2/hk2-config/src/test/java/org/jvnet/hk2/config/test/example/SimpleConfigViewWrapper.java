@@ -14,15 +14,15 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
+package org.jvnet.hk2.config.test.example;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigView;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-
-import java.util.regex.Pattern;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.util.regex.Pattern;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigView;
 
 
 /**
@@ -100,8 +100,9 @@ public class SimpleConfigViewWrapper implements ConfigView {
            int lastIdx = propName.length() - 1;
            if (lastIdx > 1) {
               propName = propName.substring(0,lastIdx);
-              if (propName!=null)
-                 aliasName = propName.trim();
+              if (propName!=null) {
+                aliasName = propName.trim();
+            }
            }
        }
        return aliasName;

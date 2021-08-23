@@ -14,13 +14,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.jvnet.hk2.config.test;
+package org.jvnet.hk2.config.test.example;
 
 import java.lang.reflect.Proxy;
+
 import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.*;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.ConfigView;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.Transformer;
 
 /**
  * Translated view of a configured objects where values can be represented
@@ -40,6 +47,7 @@ public final class SimpleConfigBeanWrapper extends ConfigBean {
     public static <T  extends ConfigBeanProxy> T getRawView(T s) {
 
         Transformer rawTransformer = new Transformer() {
+            @Override
             @SuppressWarnings("unchecked")
             public <T  extends ConfigBeanProxy> T transform(T source) {
                     final ConfigView handler = (ConfigView) Proxy.getInvocationHandler(source);
@@ -84,6 +92,7 @@ public final class SimpleConfigBeanWrapper extends ConfigBean {
         super.initializationCompleted();
     }
 
+    @Override
     public String toString() {
         //final Set<String> attrNames = getAttributeNames();
         return "GlassFishConfigBean." + getProxyType().getName();

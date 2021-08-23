@@ -72,9 +72,6 @@ import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.ServletSecurity;
 import jakarta.servlet.http.HttpSession;
 import java.io.*;
-import java.lang.ClassLoader;
-import java.lang.Object;
-import java.lang.String;
 import java.lang.reflect.Method;
 import java.net.*;
 import java.text.MessageFormat;
@@ -382,7 +379,7 @@ public class WebModule extends PwcWebModule implements Context {
 
         Loader loader = getLoader();
         if (loader != null) {
-            ClassLoader classLoader = loader.getClassLoader();
+            java.lang.ClassLoader classLoader = loader.getClassLoader();
             if (classLoader != null) {
                 try {
                     ois = javaEEIOUtils.createObjectInputStream(
@@ -1597,7 +1594,7 @@ public class WebModule extends PwcWebModule implements Context {
      * instantiated
      */
     @Override
-    protected EventListener loadListener(ClassLoader loader,
+    protected EventListener loadListener(java.lang.ClassLoader loader,
                                          String listenerClassName)
             throws Exception {
         try {
@@ -2244,14 +2241,14 @@ public class WebModule extends PwcWebModule implements Context {
 
 class V3WebappLoader extends WebappLoader {
 
-    final ClassLoader cl;
+    final java.lang.ClassLoader cl;
 
-    V3WebappLoader(ClassLoader cl) {
+    V3WebappLoader(java.lang.ClassLoader cl) {
         this.cl = cl;
     }
 
     @Override
-    protected ClassLoader createClassLoader() throws Exception {
+    protected java.lang.ClassLoader createClassLoader() throws Exception {
         return cl;
     }
 

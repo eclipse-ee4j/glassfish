@@ -21,7 +21,15 @@ import com.sun.enterprise.deployment.annotation.handlers.*;
 import com.sun.enterprise.deployment.*;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 
-import jakarta.resource.spi.*;
+import jakarta.resource.spi.Activation;
+import jakarta.resource.spi.ActivationSpec;
+import jakarta.resource.spi.AdministeredObject;
+import jakarta.resource.spi.ConfigProperty;
+import jakarta.resource.spi.ConnectionDefinition;
+import jakarta.resource.spi.ConnectionDefinitions;
+import jakarta.resource.spi.Connector;
+import jakarta.resource.spi.ManagedConnectionFactory;
+import jakarta.resource.spi.ResourceAdapter;
 import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
@@ -507,7 +515,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
             if (property != null) {
                 String result = validateMethod(m, property);
                 if (!result.equals(SUCCESS)) {
-                    throw new java.lang.IllegalStateException(result);
+                    throw new IllegalStateException(result);
                 }
                 String defaultValue = property.defaultValue();
                 Class type = getType(property, m.getParameterTypes()[0]);
@@ -523,7 +531,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
             if (property != null) {
                 String status = validateField(f, property);
                 if(!status.equals(SUCCESS)){
-                    throw new java.lang.IllegalStateException(status);
+                    throw new IllegalStateException(status);
                 }
                 String defaultValue = property.defaultValue();
 

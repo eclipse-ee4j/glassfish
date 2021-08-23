@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -15,8 +16,6 @@
  */
 
 package org.glassfish.tests.utils;
-
-// import com.sun.enterprise.module.bootstrap.Populator;
 
 import java.net.URL;
 import java.util.HashMap;
@@ -86,13 +85,14 @@ public class Utils {
         return sl;
     }
 
+
     public static ServiceLocator getNewHabitat() {
-        final String root =  Utils.class.getResource("/").getPath();
+        final String root = Utils.class.getResource("/").getPath();
         return getNewHabitat(root);
     }
 
-    public static ServiceLocator getNewHabitat(String root) {
 
+    public static ServiceLocator getNewHabitat(String root) {
         Properties p = new Properties();
         p.put(com.sun.enterprise.glassfish.bootstrap.Constants.INSTALL_ROOT_PROP_NAME, root);
         p.put(com.sun.enterprise.glassfish.bootstrap.Constants.INSTANCE_ROOT_PROP_NAME, root);
@@ -101,8 +101,8 @@ public class Utils {
         return defaultSL;
     }
 
-    public void shutdownServiceLocator(
-        final ConfigApiTest test) {
+
+    public void shutdownServiceLocator(final ConfigApiTest test) {
         String fileName = test.getFileName();
 
         if (habitats.containsKey(fileName))  {

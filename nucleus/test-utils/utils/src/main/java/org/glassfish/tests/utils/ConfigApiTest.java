@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -22,26 +23,24 @@ import java.security.Principal;
 import java.security.PrivilegedAction;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 import javax.xml.stream.XMLStreamReader;
 
 import org.glassfish.hk2.api.Filter;
+import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.Ignore;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
-import static org.junit.Assert.*;
 
-import java.util.logging.Logger;
-import org.glassfish.hk2.api.Descriptor;
-import org.glassfish.hk2.api.ServiceHandle;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Super class for all config-api related tests, give access to a configured habitat
  */
-@Ignore
 public abstract class ConfigApiTest {
 
     public static final Logger logger = Logger.getAnonymousLogger();
@@ -51,44 +50,19 @@ public abstract class ConfigApiTest {
     private Subject prepareAdminSubject() {
         final ServiceLocator locator = getBaseServiceLocator();
         if (locator != null) {
-            final List<ServiceHandle<? extends Object>> adminIdentities =
-/*
-                    (List<ServiceHandle<? extends Object>>) getBaseServiceLocator().getAllServices(
-                    new Filter() {
-
-                @Override
-                public boolean matches(Descriptor d) {
-                    if (d == null) {
-                        return false;
-                    }
-                    final Set<String> contracts = d.getAdvertisedContracts();
-                    return (contracts == null ? false : contracts.contains("org.glassfish.internal.api.InternalSystemAdmin"));
+            final Filter filter = d -> {
+                if (d == null) {
+                    return false;
                 }
-            });
-*/
-                AccessController.doPrivileged(new PrivilegedAction<List<ServiceHandle<? extends Object>>>() {
-                    public List<ServiceHandle<? extends Object>> run() {
-
-                        List<ServiceHandle<? extends Object>> identities = (List<ServiceHandle<? extends Object>>)getBaseServiceLocator().getAllServices(
-                           new Filter() {
-
-                                @Override
-                                public boolean matches(Descriptor d) {
-                                   if (d == null) {
-                                   return false;
-                                }
-                                final Set<String> contracts = d.getAdvertisedContracts();
-                                return (contracts == null ? false : contracts.contains("org.glassfish.internal.api.InternalSystemAdmin"));
-                              }
-                           });
-
-                        return identities;
-
-                    }
-                });
-
-
-            if ( ! adminIdentities.isEmpty()) {
+                final Set<String> contracts = d.getAdvertisedContracts();
+                return (contracts == null ? false
+                    : contracts.contains("org.glassfish.internal.api.InternalSystemAdmin"));
+            };
+            final PrivilegedAction<List<ServiceHandle<? extends Object>>> privilegedAction = () -> {
+                return (List<ServiceHandle<? extends Object>>) getBaseServiceLocator().getAllServices(filter);
+            };
+            final List<ServiceHandle<? extends Object>> adminIdentities = AccessController.doPrivileged(privilegedAction);
+            if (!adminIdentities.isEmpty()) {
                 final Object adminIdentity = adminIdentities.get(0);
                 try {
                     final Method getSubjectMethod = adminIdentity.getClass().getDeclaredMethod("getSubject", Subject.class);
@@ -138,8 +112,8 @@ public abstract class ConfigApiTest {
      */
     public ServiceLocator getHabitat() {
         ServiceLocator habitat = Utils.instance.getHabitat(this);
-
-        assertNotNull("Transactions service from Configuration subsystem is null", habitat.getService(Transactions.class));
+        assertNotNull(habitat.getService(Transactions.class),
+            "Transactions service from Configuration subsystem is null");
         return habitat;
     }
 
@@ -171,9 +145,11 @@ public abstract class ConfigApiTest {
         }
     }
 
-    /*
+    /**
      * Decorate the habitat after parsing.  This is called on the habitat
      * just after parsing of the XML file is complete.
      */
-    public void decorate(ServiceLocator habitat) {}
+    public void decorate(ServiceLocator locator) {
+        // override it
+    }
 }

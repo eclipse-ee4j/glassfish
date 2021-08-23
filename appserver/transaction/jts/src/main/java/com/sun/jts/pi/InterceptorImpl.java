@@ -16,7 +16,6 @@
 
 package com.sun.jts.pi;
 
-import java.lang.Object;
 import java.lang.reflect.Method;
 
 import org.omg.IOP.Codec;
@@ -71,11 +70,11 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     public static final int NO_REPLY_SLOT = 0;
     public static final int NULL_CTX_SLOT = 1;
 
-    public static final Object PROPER_CTX = new Object();
-    public static final Object NULL_CTX = new Object();
+    public static final java.lang.Object PROPER_CTX = new java.lang.Object();
+    public static final java.lang.Object NULL_CTX = new java.lang.Object();
 
-    public static final Object REPLY = new Object();
-    public static final Object NO_REPLY = new Object();
+    public static final java.lang.Object REPLY = new java.lang.Object();
+    public static final java.lang.Object NO_REPLY = new java.lang.Object();
 
     public static final String CLIENT_POLICY_CHECKING =
         "com.sun.jts.pi.CLIENT_POLICY_CHECKING";
@@ -91,7 +90,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     public static final ThreadLocal otsThreadLocal =
         new ThreadLocal() {
             protected java.lang.Object initialValue() {
-                Object[] threadLocalState = new Object[2];
+                java.lang.Object[] threadLocalState = new java.lang.Object[2];
                 // IASRI 4698847 START
                 //threadLocalState[NO_REPLY_SLOT] = new Stack();
                 //threadLocalState[NULL_CTX_SLOT] = new Stack();
@@ -697,7 +696,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
 
         // see if a reply ctx needs to be sent.
 
-        Object no_reply = getThreadLocalData(NO_REPLY_SLOT);
+        java.lang.Object no_reply = getThreadLocalData(NO_REPLY_SLOT);
 
         if (no_reply == NO_REPLY) {
             return;
@@ -767,7 +766,7 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
     // helper static methods.
 
     public static boolean isTxCtxtNull() {
-        Object[] threadLocalState = (Object[]) otsThreadLocal.get();
+        java.lang.Object[] threadLocalState = (java.lang.Object[]) otsThreadLocal.get();
         // IASRI 4698847 START
         //Stack stack = (Stack) threadLocalState[NULL_CTX_SLOT];
         /*
@@ -796,16 +795,16 @@ public class InterceptorImpl extends org.omg.CORBA.LocalObject
         return (proceed && isNullContext(ctx) && ctx.timeout == -1);
     }
 
-    public static void setThreadLocalData(int slot, Object data) {
-        Object[] threadLocalState = (Object[]) otsThreadLocal.get();
+    public static void setThreadLocalData(int slot, java.lang.Object data) {
+        java.lang.Object[] threadLocalState = (java.lang.Object[]) otsThreadLocal.get();
         // IASRI 4698847 START
         //((Stack) threadLocalState[slot]).push(data);
         ((ArrayListStack) threadLocalState[slot]).push(data);
         // IASRI 4698847 END
     }
 
-    public static Object getThreadLocalData(int slot) {
-        Object[] threadLocalState = (Object[]) otsThreadLocal.get();
+    public static java.lang.Object getThreadLocalData(int slot) {
+        java.lang.Object[] threadLocalState = (java.lang.Object[]) otsThreadLocal.get();
         // IASRI 4698847 START
         //return (Integer) ((Stack) threadLocalState[slot]).pop();
         return ((ArrayListStack) threadLocalState[slot]).pop();

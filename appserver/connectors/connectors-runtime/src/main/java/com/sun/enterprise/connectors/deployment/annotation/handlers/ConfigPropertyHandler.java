@@ -27,7 +27,6 @@ import java.lang.annotation.ElementType;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.lang.IllegalStateException;
 import java.util.Locale;
 import java.util.Set;
 import java.util.List;
@@ -508,7 +507,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
             if (property != null) {
                 String result = validateMethod(m, property);
                 if (!result.equals(SUCCESS)) {
-                    throw new IllegalStateException(result);
+                    throw new java.lang.IllegalStateException(result);
                 }
                 String defaultValue = property.defaultValue();
                 Class type = getType(property, m.getParameterTypes()[0]);
@@ -524,7 +523,7 @@ public class ConfigPropertyHandler extends AbstractHandler {
             if (property != null) {
                 String status = validateField(f, property);
                 if(!status.equals(SUCCESS)){
-                    throw new IllegalStateException(status);
+                    throw new java.lang.IllegalStateException(status);
                 }
                 String defaultValue = property.defaultValue();
 

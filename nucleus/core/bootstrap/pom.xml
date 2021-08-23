@@ -69,8 +69,8 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Although we package simple-glassfish-api bundle's content in glassfish.jar, in standalone mode, we have to create 
-            a launcher classloader that has the launching APIs and OSGi APIs in same level. SO, we need this jar to be part of distribution. 
+        <!-- Although we package simple-glassfish-api bundle's content in glassfish.jar, in standalone mode, we have to create
+            a launcher classloader that has the launching APIs and OSGi APIs in same level. SO, we need this jar to be part of distribution.
             Making it a compile scoped dependency forces this jar to be part of all distribution. -->
         <dependency>
             <groupId>org.glassfish.main.common</groupId>
@@ -95,6 +95,10 @@
         </dependency>
 
         <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>
@@ -116,7 +120,7 @@
                 </configuration>
             </plugin>
 
-            <!-- We package simple-glassfish-api classes in this bundle for embedded scenario, we expect user to just bootstrap 
+            <!-- We package simple-glassfish-api classes in this bundle for embedded scenario, we expect user to just bootstrap
                 the runtime by installing glassfish.jar alone. -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>

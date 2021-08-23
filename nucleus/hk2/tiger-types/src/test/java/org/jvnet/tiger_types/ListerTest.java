@@ -16,25 +16,34 @@
 
 package org.jvnet.tiger_types;
 
-import junit.framework.TestCase;
-
 import java.net.Proxy.Type;
 import java.util.EnumSet;
 import java.util.Set;
 
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 /**
  * @author Kohsuke Kawaguchi
  */
-public class ListerTest extends TestCase {
+public class ListerTest {
 
+    // is used in the test method
     public EnumSet<Type> set;
 
+    @Test
     public void testEnumSet() throws Exception {
-        Lister l = Lister.create(getClass().getDeclaredField("set").getGenericType());
-        l.add(Type.HTTP);
-        l.add(Type.SOCKS);
-        Set col = (Set)l.toCollection();
-        assertTrue(col instanceof EnumSet);
-        assertTrue(col.contains(Type.HTTP));
+        final Lister<?> lister = Lister.create(getClass().getDeclaredField("set").getGenericType());
+        lister.add(Type.HTTP);
+        lister.add(Type.SOCKS);
+        final Set<?> col = (Set<?>) lister.toCollection();
+        assertAll(
+            () -> assertThat(col, instanceOf(EnumSet.class)),
+            () -> assertThat(col, containsInAnyOrder(Type.HTTP, Type.SOCKS))
+        );
     }
 }

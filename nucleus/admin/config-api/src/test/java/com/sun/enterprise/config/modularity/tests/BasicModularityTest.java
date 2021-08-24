@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,17 +24,21 @@ import com.sun.enterprise.config.modularity.customization.PortTypeDetails;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.configapi.tests.ConfigApiTest;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.runlevel.RunLevelController;
-import org.glassfish.server.ServerEnvironmentImpl;
-import org.glassfish.tests.utils.Utils;
-import org.junit.Test;
-import org.jvnet.hk2.config.ConfigBeanProxy;
-import org.jvnet.hk2.config.types.Property;
 
 import java.util.List;
 
-import static org.junit.Assert.*;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.hk2.runlevel.RunLevelController;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.Test;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.types.Property;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Testing Basic Functionality of Config Modularity API
@@ -42,7 +47,7 @@ import static org.junit.Assert.*;
  */
 public class BasicModularityTest extends ConfigApiTest {
 
-    private ServiceLocator habitat = Utils.instance.getHabitat(this);
+    private final ServiceLocator habitat = Utils.instance.getHabitat(this);
 
     ConfigModularityUtils configModularityUtils = habitat.getService(ConfigModularityUtils.class);
 
@@ -56,117 +61,140 @@ public class BasicModularityTest extends ConfigApiTest {
 
         // This part passes as the configuration for the class is present in the domain.xml
         Class clz = configModularityUtils.getClassForFullName(ConfigExtensionZero.class.getName());
-        assertNotNull("Cannot get config bean class using the class name", clz);
-        assertEquals("The mapped class is not the same as the provided class name", ConfigExtensionZero.class.getName(), clz.getName());
+        assertNotNull(clz, "Cannot get config bean class using the class name");
+        assertEquals(ConfigExtensionZero.class.getName(), clz.getName(), "The mapped class is not the same as the provided class name");
 
         // this part fails as the configuration is not present in domain.xml which was is a regression somewhere
         clz = configModularityUtils.getClassForFullName(ConfigExtensionTwo.class.getName());
-        assertNotNull("Cannot get config bean class using the class name", clz);
-        assertEquals("The mapped class is not the same as the provided class name", ConfigExtensionTwo.class.getName(), clz.getName());
+        assertNotNull(clz, "Cannot get config bean class using the class name");
+        assertEquals(ConfigExtensionTwo.class.getName(), clz.getName(), "The mapped class is not the same as the provided class name");
     }
 
     @Test
     public void locationTest() {
         String location = "domain/configs/config[$CURRENT_INSTANCE_CONFIG_NAME]/config-extension-one/property[prop.foo]";
         Class owningClass = configModularityUtils.getOwningClassForLocation(location);
-        assertNotNull("Cannot find owning class for: " + location, owningClass);
-        assertEquals("Cannot find the right owning class for location", Property.class.getName(), owningClass.getName());
+        assertNotNull(owningClass, "Cannot find owning class for: " + location);
+        assertEquals(Property.class.getName(), owningClass.getName(), "Cannot find the right owning class for location");
     }
 
     @Test
     public void owningObjectTest() {
         String location = "domain/configs/config[$CURRENT_INSTANCE_CONFIG_NAME]/config-extension-one/property[prop.foo]";
         ConfigBeanProxy obj = configModularityUtils.getOwningObject(location);
-        assertNotNull("Cannot find owning object for: " + location, obj);
-        assertEquals("Getting Owning object for location is not right", "prop.foo.value.custom", ((Property) obj).getValue());
+        assertNotNull(obj, "Cannot find owning object for: " + location);
+        assertEquals("prop.foo.value.custom", ((Property) obj).getValue(), "Getting Owning object for location is not right");
     }
 
     @Test
     public void moduleConfigurationXmlParserTest() {
         List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils.getDefaultConfigurations(SimpleExtensionTypeOne.class, "admin-");
-        assertEquals("Incorrect number of config bean configuration read ", 2, values.size());
+        assertEquals(2, values.size(), "Incorrect number of config bean configuration read ");
         ConfigCustomizationToken token = configModularityUtils.getDefaultConfigurations(SimpleExtensionTypeOne.class, "embedded-").get(0).getCustomizationTokens().get(0);
-        assertEquals("Customization Token reading broken ", "CUSTOM_TOKEN", token.getName());
-        assertEquals("Customization Token reading broken ", "token-default-value", token.getValue());
+        assertEquals("CUSTOM_TOKEN", token.getName(), "Customization Token reading broken ");
+        assertEquals("token-default-value", token.getValue(), "Customization Token reading broken ");
     }
 
 
     @Test
     public void serializeConfigBean() {
-        Config config = habitat.<Config>getService(Config.class, ServerEnvironmentImpl.DEFAULT_INSTANCE_NAME);
-        ConfigBeanProxy prox = (ConfigBeanProxy) config.getExtensionByType(ConfigExtensionZero.class);
+        Config config = habitat.<Config>getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        ConfigBeanProxy prox = config.getExtensionByType(ConfigExtensionZero.class);
         String content = configModularityUtils.serializeConfigBean(prox);
-        assertEquals("Cannot serialize config beans properly", "<config-extension-zero dummy=\"dummy-value\"></config-extension-zero>", content);
+        assertEquals("<config-extension-zero dummy=\"dummy-value\"></config-extension-zero>", content,
+            "Cannot serialize config beans properly");
 
     }
 
     @Test
     public void serializeConfigBeanByType() {
         String content = configModularityUtils.serializeConfigBeanByType(ConfigExtensionOne.class);
-        assertEquals("Cannot serialize config beans from type", "<config-extension-one custom-token=\"${CUSTOM_TOKEN}\">\n" +
+        assertEquals("<config-extension-one custom-token=\"${CUSTOM_TOKEN}\">\n" +
                 "  <property name=\"prop.foo\" value=\"prop.foo.value.custom\"></property>\n" +
-                "</config-extension-one>", content);
+                "</config-extension-one>", content, "Cannot serialize config beans from type");
     }
 
 
     @Test
     public void testConfigExtensionPatternImpl() {
-        Config config = habitat.<Config>getService(Config.class, ServerEnvironmentImpl.DEFAULT_INSTANCE_NAME);
+        Config config = habitat.<Config>getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         SimpleConfigExtension simpleConfigExtension = config.getExtensionByType(SimpleConfigExtension.class);
         SimpleExtensionTypeTwo typeTwo = simpleConfigExtension.getExtensionByType(SimpleExtensionTypeTwo.class);
-        assertNotNull("cannot get extension using extensionmethod", typeTwo);
-        assertEquals("Retrieved extension is not from the right type... ", "attribute.two", typeTwo.getAttributeTwo());
+        assertNotNull(typeTwo, "cannot get extension using extensionmethod");
+        assertEquals("attribute.two", typeTwo.getAttributeTwo(), "Retrieved extension is not from the right type... ");
     }
 
     @Test
     public void testLoadingAndApplyingModuleConfigurationFile() {
-        Config config = habitat.<Config>getService(Config.class, ServerEnvironmentImpl.DEFAULT_INSTANCE_NAME);
+        Config config = habitat.<Config>getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         ConfigExtensionTwo ext = config.getExtensionByType(ConfigExtensionTwo.class);
-        assertEquals("The system property is overridden while it should have not", "user.customized.value", config.getSystemProperty("CUSTOM_TOKEN").getValue());
-        assertTrue("Failed to add the extension from module configuration file: ", config.checkIfExtensionExists(ConfigExtensionTwo.class));
+        assertNotNull(ext);
+        assertEquals("user.customized.value", config.getSystemProperty("CUSTOM_TOKEN").getValue(),
+            "The system property is overridden while it should have not");
+        assertTrue(config.checkIfExtensionExists(ConfigExtensionTwo.class),
+            "Failed to add the extension from module configuration file: ");
     }
 
 
     @Test
     public void testHasNoCustomization() {
-        Config config = habitat.<Config>getService(Config.class, ServerEnvironmentImpl.DEFAULT_INSTANCE_NAME);
-        assertNull("The @HasNocustomization annotation is broken", config.getExtensionByType(ConfigExtensionThree.class));
+        Config config = habitat.<Config>getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        assertNull(config.getExtensionByType(ConfigExtensionThree.class), "The @HasNocustomization annotation is broken");
     }
 
     @Test
     public void getCurrentConfigurationForConfigBean() throws Exception {
-        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils.getDefaultConfigurations(SimpleExtensionTypeOne.class, "admin-");
-        com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue def = configModularityUtils.getDefaultConfigurations(SimpleExtensionTypeOne.class, "embedded-").get(0);
+        com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue def = configModularityUtils
+            .getDefaultConfigurations(SimpleExtensionTypeOne.class, "embedded-").get(0);
         SimpleExtensionTypeOne simple = configModularityUtils.getCurrentConfigBeanForDefaultValue(def);
-        assertNotNull("Cannot get config bean of a module based on the default module configuration information", simple);
+        assertNotNull(simple,
+            "Cannot get config bean of a module based on the default module configuration information");
     }
 
 
     @Test
     public void testLoadingAdminFile() throws Exception {
-        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils.getDefaultConfigurations(ConfigExtensionTwo.class, "admin");
-        assertEquals("Incorrect customization type loaded ", ConfigCustomizationToken.CustomizationType.FILE, values.get(0).getCustomizationTokens().get(0).getCustomizationType());
-        assertEquals("Incorrect customization details value ", FileTypeDetails.FileExistCondition.MUST_EXIST, ((FileTypeDetails) values.get(0).getCustomizationTokens().get(0).getTokenTypeDetails()).getExistCondition());
+        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils
+            .getDefaultConfigurations(ConfigExtensionTwo.class, "admin");
+        assertEquals(ConfigCustomizationToken.CustomizationType.FILE,
+            values.get(0).getCustomizationTokens().get(0).getCustomizationType(),
+            "Incorrect customization type loaded ");
+        assertEquals(FileTypeDetails.FileExistCondition.MUST_EXIST,
+            ((FileTypeDetails) values.get(0).getCustomizationTokens().get(0).getTokenTypeDetails()).getExistCondition(),
+            "Incorrect customization details value ");
     }
+
 
     @Test
     public void testLoadingEmbeddedFile() throws Exception {
-        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = values = configModularityUtils.getDefaultConfigurations(ConfigExtensionTwo.class, "embedded");
-        assertEquals("Incorrect customization type loaded ", ConfigCustomizationToken.CustomizationType.PORT, values.get(0).getCustomizationTokens().get(0).getCustomizationType());
-        assertEquals("Incorrect customization details value ", "1000", ((PortTypeDetails) values.get(0).getCustomizationTokens().get(0).getTokenTypeDetails()).getBaseOffset());
-        assertEquals("validation expression is returned incorrectly ", "[a-zA-Z0-9]+", values.get(0).getCustomizationTokens().get(0).getValidationExpression());
+        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils
+            .getDefaultConfigurations(ConfigExtensionTwo.class, "embedded");
+        assertEquals(ConfigCustomizationToken.CustomizationType.PORT,
+            values.get(0).getCustomizationTokens().get(0).getCustomizationType(),
+            "Incorrect customization type loaded ");
+        assertEquals("1000",
+            ((PortTypeDetails) values.get(0).getCustomizationTokens().get(0).getTokenTypeDetails()).getBaseOffset(),
+            "Incorrect customization details value ");
+        assertEquals("[a-zA-Z0-9]+", values.get(0).getCustomizationTokens().get(0).getValidationExpression(),
+            "validation expression is returned incorrectly ");
     }
+
 
     @Test
     public void testLoadingDefaultFile() throws Exception {
-        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils.getDefaultConfigurations(ConfigExtensionTwo.class, "non-existing-runtime-type");
-        assertEquals("validation expression is returned incorrectly ", ".*[0-9]{10}.*", values.get(0).getCustomizationTokens().get(0).getValidationExpression());
+        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils
+            .getDefaultConfigurations(ConfigExtensionTwo.class, "non-existing-runtime-type");
+        assertEquals(".*[0-9]{10}.*", values.get(0).getCustomizationTokens().get(0).getValidationExpression(),
+            "validation expression is returned incorrectly ");
     }
+
 
     @Test
     public void tesOnTheFlyConfigurationGenerationMethod() {
-        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils.getDefaultConfigurations(SimpleExtensionThree.class, "non-existing-runtime-type");
-        assertEquals("On the fly config generation/reading is broken", "<xml-doc></xml-doc>", values.get(0).getXmlConfiguration());
+        List<com.sun.enterprise.config.modularity.customization.ConfigBeanDefaultValue> values = configModularityUtils
+            .getDefaultConfigurations(SimpleExtensionThree.class, "non-existing-runtime-type");
+        assertEquals("<xml-doc></xml-doc>", values.get(0).getXmlConfiguration(),
+            "On the fly config generation/reading is broken");
     }
 
 
@@ -174,10 +202,10 @@ public class BasicModularityTest extends ConfigApiTest {
     public void testRanking() {
         Domain d = habitat.<Domain>getService(Domain.class);
         RankedConfigBean rankedConfigBean = d.getExtensionByType(RankedConfigBean.class);
-        assertEquals("invalid current value",  "simple-value-zero",rankedConfigBean.getSimpleAttribute());
+        assertEquals("simple-value-zero",rankedConfigBean.getSimpleAttribute(), "invalid current value");
         ensureRunLevel(4);
          rankedConfigBean = d.getExtensionByType(RankedConfigBean.class);
-        assertEquals("invalid current value", "simple-value-one", rankedConfigBean.getSimpleAttribute() );
+        assertEquals("simple-value-one", rankedConfigBean.getSimpleAttribute() , "invalid current value");
     }
 
     //TODO add more tests to cover token processing and i18n support

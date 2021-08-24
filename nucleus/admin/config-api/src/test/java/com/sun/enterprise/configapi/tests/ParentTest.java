@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,9 +19,10 @@ package com.sun.enterprise.configapi.tests;
 
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * test the getParentAPI.
@@ -29,7 +31,7 @@ import org.jvnet.hk2.config.ConfigBeanProxy;
  */
 public class ParentTest extends ConfigApiTest {
 
-
+    @Override
     public String getFileName() {
         return "DomainTest";
     }

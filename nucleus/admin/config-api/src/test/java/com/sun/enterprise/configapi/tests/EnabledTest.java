@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +17,15 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import java.util.List;
+
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.util.List;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * HttpListener.getEnabled() API test
@@ -31,13 +33,15 @@ import java.util.List;
  * User: Jerome Dochez Date: Feb 21, 2008 Time: 2:06:44 PM
  */
 public class EnabledTest extends ConfigApiTest {
+    private List<NetworkListener> listeners;
+
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    List<NetworkListener> listeners = null;
 
-    @Before
+    @BeforeEach
     public void setup() {
         NetworkConfig service = getHabitat().getService(NetworkConfig.class);
         assertTrue(service != null);
@@ -47,12 +51,11 @@ public class EnabledTest extends ConfigApiTest {
     @Test
     public void enabled() {
         for (NetworkListener listener : listeners) {
-            logger.fine("Listener " + listener.getName() + " enabled "
-                + listener.getEnabled());
+            logger.fine("Listener " + listener.getName() + " enabled " + listener.getEnabled());
             if ("http-listener-2".equals(listener.getName())) {
-                assertFalse(new Boolean(listener.getEnabled()));
+                assertFalse(Boolean.parseBoolean(listener.getEnabled()));
             } else {
-                assertTrue(new Boolean(listener.getEnabled()));
+                assertTrue(Boolean.parseBoolean(listener.getEnabled()));
             }
         }
     }

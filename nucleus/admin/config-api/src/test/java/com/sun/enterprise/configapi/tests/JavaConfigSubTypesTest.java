@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +17,23 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.junit.Test;
-import org.junit.Assert;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.ConfigBean;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.List;
-import java.beans.PropertyVetoException;
+import java.util.logging.Logger;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.Test;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * User: Jerome Dochez
@@ -38,26 +42,7 @@ import java.beans.PropertyVetoException;
  */
 public class JavaConfigSubTypesTest extends ConfigPersistence {
 
-
-    @Test
-    public void testSubTypesOfDomain() {
-        JavaConfig config = super.getHabitat().getService(JavaConfig.class);
-        try {
-            Class<?>[] subTypes = ConfigSupport.getSubElementsTypes((ConfigBean) ConfigBean.unwrap(config));
-            boolean found=false;
-            for (Class subType : subTypes) {
-                Logger.getAnonymousLogger().fine("Found class " + subType);
-                if (subType.getName().equals(List.class.getName())) {
-                    found=true;
-                }
-            }
-            Assert.assertTrue(found);;
-        } catch(ClassNotFoundException e) {
-            logger.log(Level.SEVERE, e.getMessage(), e);
-        }
-    }
-
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
+    private final ServiceLocator habitat = Utils.instance.getHabitat(this);
 
     /**
      * Returns the file name without the .xml extension to load the test configuration
@@ -65,38 +50,54 @@ public class JavaConfigSubTypesTest extends ConfigPersistence {
      *
      * @return the configuration file name
      */
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
+
 
     @Override
     public ServiceLocator getBaseServiceLocator() {
         return habitat;
     }
 
+
     @Override
     public ServiceLocator getHabitat() {
-            return getBaseServiceLocator();
+        return getBaseServiceLocator();
     }
 
+
+    @Override
     @Test
     public void doTest() throws TransactionFailure {
-
-
         JavaConfig javaConfig = habitat.getService(JavaConfig.class);
+        SingleConfigCode<JavaConfig> configCode = (SingleConfigCode<JavaConfig>) jvm -> {
+            List<String> jvmOptions = jvm.getJvmOptions();
+            jvmOptions.add("-XFooBar=true");
+            return jvmOptions;
+        };
+        ConfigSupport.apply(configCode, javaConfig);
+    }
 
-        ConfigSupport.apply(new SingleConfigCode<JavaConfig>() {
-            public Object run(JavaConfig param) throws PropertyVetoException, TransactionFailure {
-                List<String> jvmOptions = param.getJvmOptions();
-                jvmOptions.add("-XFooBar=true");
-                return jvmOptions;
+
+    @Override
+    public void assertResult(String xml) {
+        assertThat(xml, stringContainsInOrder("-XFooBar"));
+    }
+
+
+    @Test
+    public void testSubTypesOfDomain() throws Exception {
+        JavaConfig config = super.getHabitat().getService(JavaConfig.class);
+        Class<?>[] subTypes = ConfigSupport.getSubElementsTypes((ConfigBean) Dom.unwrap(config));
+        boolean found = false;
+        for (Class<?> subType : subTypes) {
+            Logger.getAnonymousLogger().fine("Found class " + subType);
+            if (subType.getName().equals(List.class.getName())) {
+                found = true;
             }
-        }, javaConfig);
-
+        }
+        assertTrue(found);
     }
-
-    public boolean assertResult(String s) {
-        return s.indexOf("-XFooBar")!=-1;
-    }
-
 }

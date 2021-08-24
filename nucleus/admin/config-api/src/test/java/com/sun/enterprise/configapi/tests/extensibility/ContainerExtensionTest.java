@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,16 +18,25 @@
 package com.sun.enterprise.configapi.tests.extensibility;
 
 import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.tests.utils.Utils;
-import org.glassfish.api.admin.config.Container;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.sun.enterprise.configapi.tests.ConfigApiTest;
+import com.sun.enterprise.configapi.tests.example.AnApplicationExtension;
+import com.sun.enterprise.configapi.tests.example.RandomContainer;
+import com.sun.enterprise.configapi.tests.example.RandomElement;
+import com.sun.enterprise.configapi.tests.example.RandomExtension;
 
 import java.util.List;
+
+import org.glassfish.api.admin.config.Container;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Jerome Dochez
@@ -43,10 +53,9 @@ public class ContainerExtensionTest extends ConfigApiTest {
 
     @Test
     public void existenceTest() {
-
         Config config = habitat.<Domain>getService(Domain.class).getConfigs().getConfig().get(0);
         List<Container> containers = config.getContainers();
-        assertTrue(containers.size()==2);
+        assertThat(containers, hasSize(2));
         RandomContainer container = (RandomContainer) containers.get(0);
         assertEquals("random", container.getName());
         assertEquals("1243", container.getNumberOfRuntime());
@@ -67,6 +76,6 @@ public class ContainerExtensionTest extends ConfigApiTest {
     public void applicationExtensionTest() {
         Application a = habitat.getService(Application.class);
         List<AnApplicationExtension> taes = a.getExtensionsByType(AnApplicationExtension.class);
-        assertEquals(taes.size(), 2);
+        assertThat(taes, hasSize(2));
     }
 }

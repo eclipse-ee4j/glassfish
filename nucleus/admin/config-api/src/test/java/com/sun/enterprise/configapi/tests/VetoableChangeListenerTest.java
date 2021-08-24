@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,19 +17,25 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.jvnet.hk2.config.*;
-import org.jvnet.hk2.config.types.*;
-import org.jvnet.hk2.component.*;
-import org.junit.*;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.VirtualServer;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyVetoException;
+import java.beans.VetoableChangeListener;
 
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.*;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.ConstrainedBeanListener;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
-import com.sun.enterprise.config.serverbeans.*;
-
-import java.beans.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * This test registers an vetoable change listener on a config bean and vetoes
@@ -38,96 +45,58 @@ import java.beans.*;
  */
 public class VetoableChangeListenerTest extends ConfigApiTest implements VetoableChangeListener {
 
-    ServiceLocator habitat;
-    boolean result = false;
+    private ServiceLocator locator;
 
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
-        habitat = Utils.instance.getHabitat(this);
+        locator = Utils.instance.getHabitat(this);
     }
 
     @Test
     public void propertyChangeEventReceptionTest() throws TransactionFailure {
-
-        HttpService httpService = habitat.getService(HttpService.class);
-        assertNotNull(httpService);
-
-       // let's find a acceptable target.
-        VirtualServer target =null;
-        for (VirtualServer vs : httpService.getVirtualServer()) {
-            if (!vs.getProperty().isEmpty()) {
-                target = vs;
-                break;
-            }
-        }
-
+        final VirtualServer target = findTargetWithProperties();
         assertNotNull(target);
 
+        SingleConfigCode<VirtualServer> configCode = vs -> {
+            vs.setId("foo");
+            vs.setAccessLog("Foo");
+            return null;
+        };
         ((ConfigBean) ConfigSupport.getImpl(target)).getOptionalFeature(ConstrainedBeanListener.class).addVetoableChangeListener(this);
-
-        try {
-            ConfigSupport.apply(new SingleConfigCode<VirtualServer>() {
-
-                public Object run(VirtualServer param) throws PropertyVetoException, TransactionFailure {
-                    param.setId("foo");
-                    param.setAccessLog("Foo");
-                    return null;
-                }
-            }, target);
-        } catch(TransactionFailure e) {
-            //e.printStackTrace();
-            System.out.println("Got exception: " + e.getClass().getName() + " as expected, with message: " + e.getMessage());
-            result=true;
-        }
-
-        assertTrue(result);
-
-        result=false;
+        assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, target));
         // let's do it again.
-        try {
-            ConfigSupport.apply(new SingleConfigCode<VirtualServer>() {
-
-                public Object run(VirtualServer param) throws PropertyVetoException, TransactionFailure {
-                    param.setId("foo");
-                    param.setAccessLog("Foo");
-                    return null;
-                }
-            }, target);
-        } catch(TransactionFailure e) {
-            //e.printStackTrace();
-            System.out.println("Got exception: " + e.getClass().getName() + " as expected, with message: " + e.getMessage());
-            result=true;
-        }
-
+        assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, target));
         ((ConfigBean) ConfigSupport.getImpl(target)).getOptionalFeature(ConstrainedBeanListener.class).removeVetoableChangeListener(this);
-        assertTrue(result);
 
-
-        // this time it should work !
-        try {
-            ConfigSupport.apply(new SingleConfigCode<VirtualServer>() {
-
-                public Object run(VirtualServer param) throws PropertyVetoException, TransactionFailure {
-                    // first one is fine...
-                    param.setAccessLog("Foo");
-                    return null;
-                }
-            }, target);
-        } catch(TransactionFailure e) {
-            //e.printStackTrace();
-            System.out.println("Got exception: " + e.getClass().getName() + " as expected, with message: " + e.getMessage());
-            result=false;
-        }
-
-        assertTrue(result);
+        // this time it should work!
+        SingleConfigCode<VirtualServer> configCode2 = vs -> {
+            // first one is fine...
+            vs.setAccessLog("Foo");
+            return null;
+        };
+        ConfigSupport.apply(configCode2, target);
     }
 
 
+    @Override
     public void vetoableChange(PropertyChangeEvent evt) throws PropertyVetoException {
         throw new PropertyVetoException("I don't think so !", evt);
+    }
+
+
+    private VirtualServer findTargetWithProperties() {
+        HttpService httpService = locator.getService(HttpService.class);
+        assertNotNull(httpService);
+        for (VirtualServer vs : httpService.getVirtualServer()) {
+            if (!vs.getProperty().isEmpty()) {
+                return vs;
+            }
+        }
+        return null;
     }
 }

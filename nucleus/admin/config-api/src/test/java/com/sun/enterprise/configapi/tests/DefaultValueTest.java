@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,43 +17,44 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.glassfish.grizzly.config.dom.*;
-import static org.junit.Assert.assertEquals;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.grizzly.config.dom.Http;
+import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.grizzly.config.dom.NetworkListeners;
+import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.grizzly.config.dom.Protocols;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Dom;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test attribute and raw attribute access *
  */
 public class DefaultValueTest extends ConfigApiTest {
 
-    NetworkListener listener;
+    private NetworkListener listener;
 
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         NetworkListeners httpService = getHabitat().getService(NetworkListeners.class);
         listener = httpService.getNetworkListener().get(0);
-
     }
 
     @Test
     public void rawAttributeTest() throws NoSuchMethodException {
-
         String address = listener.getAddress();
-
         Dom raw = Dom.unwrap(listener);
         Attribute attr = raw.getProxyType().getMethod("getAddress").getAnnotation(Attribute.class);
-        assertEquals(attr.defaultValue(), address);
-
-        assertEquals(raw.attribute("address"), address);
-        assertEquals(raw.rawAttribute("address"), address);
-
+        assertEquals(address, attr.defaultValue());
+        assertEquals(address, raw.attribute("address"));
+        assertEquals(address, raw.rawAttribute("address"));
     }
 
     @Test
@@ -60,9 +62,7 @@ public class DefaultValueTest extends ConfigApiTest {
         Protocols protocols = getHabitat().getService(Protocols.class);
         for (Protocol protocol : protocols.getProtocol()) {
             Http http = protocol.getHttp();
-            System.out.println(http.getCompressableMimeType());
+            assertEquals(Http.COMPRESSABLE_MIME_TYPE, http.getCompressableMimeType());
         }
-
     }
-
 }

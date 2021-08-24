@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,13 +17,17 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.junit.Test;
-import org.junit.Before;
-import static org.junit.Assert.*;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 
 import java.io.File;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Simple test for translated values access
@@ -31,11 +36,12 @@ import java.io.File;
  */
 public class TranslatedValuesTest extends ConfigApiTest {
 
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
         System.setProperty("com.sun.aas.instanceRoot", "cafebabe");
         System.setProperty("com.sun.aas.javaRoot", System.getProperty("user.home"));
@@ -54,9 +60,8 @@ public class TranslatedValuesTest extends ConfigApiTest {
         if (System.getProperty("user.home").contains(File.separator)) {
             JavaConfig config = getHabitat().getService(JavaConfig.class);
             String javaRoot = config.getJavaHome();
-            assertTrue(javaRoot.indexOf(File.separatorChar)!=-1);
+            assertThat(javaRoot, stringContainsInOrder(File.separator));
         }
-        assertTrue(true);
     }
 
 }

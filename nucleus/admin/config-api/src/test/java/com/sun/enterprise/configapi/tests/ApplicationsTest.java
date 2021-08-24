@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +17,23 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
-import org.glassfish.api.admin.config.ApplicationName;
-import org.jvnet.hk2.config.*;
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
 
 import java.util.List;
-import java.beans.*;
+
+import org.glassfish.api.admin.config.ApplicationName;
+import org.junit.jupiter.api.Test;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Applications related tests
@@ -31,7 +41,7 @@ import java.beans.*;
  */
 public class ApplicationsTest extends ConfigApiTest {
 
-
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
@@ -39,48 +49,41 @@ public class ApplicationsTest extends ConfigApiTest {
     @Test
     public void appsExistTest() {
         Applications apps = getHabitat().getService(Applications.class);
-        assertTrue(apps!=null);
+        assertNotNull(apps);
+        assertThat(apps.getApplications(), hasSize(1));
     }
 
     @Test
     public void getModulesTest() {
         Applications apps = getHabitat().getService(Applications.class);
         List<ApplicationName> modules = apps.getModules();
-        for (ApplicationName module : modules) {
-            logger.fine("Module = " + module.getName());
-        }
-        assertTrue(modules!=null);
+        assertThat(modules, hasSize(1));
     }
 
     @Test
     public void getApplicationTest() {
         Applications apps = getHabitat().getService(Applications.class);
         Application app = apps.getApplication("simple");
-        assertTrue(app != null);
+        assertNotNull(app);
     }
 
     /**
      * Test which is expecting an UnsupportedOperationException since we are
      * operating on a copy list of the original getModules() list.
-     *
-     * @throws TransactionFailure
      */
-    @Test(expected = UnsupportedOperationException.class)
-    public void removalTest() throws Throwable {
-        Applications apps = getHabitat().getService(Applications.class);
-        try {
-            ConfigSupport.apply(new SingleConfigCode<Applications>() {
-                public Object run(Applications param) throws PropertyVetoException, TransactionFailure {
-                    List<Application> appList = param.getApplications();
-                    for (Application application : param.getApplicationsWithSnifferType("web")) {
-                        assertTrue(appList.remove(application));
-                    }
-                    return null;
-                }
-            }, apps);
-        } catch(TransactionFailure e) {
-            // good, an exception was thrown, hopfully the right one !
-            throw e.getCause();
-        }
+    @Test
+    public void removalTest() {
+        final Applications apps = getHabitat().getService(Applications.class);
+        final SingleConfigCode<Applications> configCode = param -> {
+            List<Application> appList = param.getApplications();
+            for (Application application : param.getApplicationsWithSnifferType("web")) {
+                assertTrue(appList.remove(application));
+            }
+            return null;
+        };
+        final TransactionFailure failure = assertThrows(TransactionFailure.class, () -> {
+            ConfigSupport.apply(configCode, apps);
+        });
+        assertThat(failure.getCause(), instanceOf(UnsupportedOperationException.class));
     }
 }

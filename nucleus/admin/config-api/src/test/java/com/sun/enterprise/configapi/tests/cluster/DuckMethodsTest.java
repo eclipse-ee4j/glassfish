@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +17,18 @@
 
 package com.sun.enterprise.configapi.tests.cluster;
 
+import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.configapi.tests.ConfigApiTest;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.tests.utils.Utils;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test a number of cluster related {@link org.jvnet.hk2.config.DuckTyped}
@@ -35,24 +37,25 @@ import static org.junit.Assert.assertTrue;
  * @author Jerome Dochez
  */
 public class DuckMethodsTest extends ConfigApiTest {
-    ServiceLocator habitat;
+    private ServiceLocator locator;
 
+    @Override
     public String getFileName() {
         return "ClusterDomain";
     }
 
-    @Before
+    @BeforeEach
     public void setup() {
-        habitat = Utils.instance.getHabitat(this);
+        locator = Utils.instance.getHabitat(this);
     }
 
 
     @Test
     public void getClusterFromServerTest() {
-        Domain d = habitat.getService(Domain.class);
+        Domain d = locator.getService(Domain.class);
         Server server = d.getServerNamed("server");
-        assertTrue(server!=null);
+        assertNotNull(server);
         Cluster cluster = server.getCluster();
-        System.out.println("Cluster name is " + cluster.getName());
+        assertEquals("clusterA", cluster.getName());
     }
 }

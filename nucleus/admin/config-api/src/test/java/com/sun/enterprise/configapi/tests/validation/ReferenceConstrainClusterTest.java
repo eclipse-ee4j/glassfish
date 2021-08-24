@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,27 +20,30 @@ package com.sun.enterprise.configapi.tests.validation;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.ServerRef;
 import com.sun.enterprise.configapi.tests.ConfigApiTest;
+
 import java.util.HashMap;
 import java.util.Map;
-import jakarta.validation.ConstraintViolationException;
-import org.junit.Test;
-import org.junit.Before;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import static org.junit.Assert.*;
+import jakarta.validation.ConstraintViolationException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- *
  * @author mmares
  */
 public class ReferenceConstrainClusterTest extends ConfigApiTest {
 
-//    private Logger logger = Logger.getLogger(ReferenceConstrainTest.class.getName());
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
 
     @Override
     public String getFileName() {
@@ -48,7 +52,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
 
     @Override
     public ServiceLocator getBaseServiceLocator() {
-        return habitat;
+        return locator;
     }
 
     private ConstraintViolationException findConstrViolation(Throwable thr) {
@@ -61,19 +65,33 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
         return findConstrViolation(thr.getCause());
     }
 
-    @Before
+    @BeforeEach
     public void createNewHabitat() {
-        this.habitat = Utils.instance.getHabitat(this);
+        this.locator = Utils.instance.getHabitat(this);
+    }
+
+    @Test
+    public void clusterServerRefValid() throws TransactionFailure {
+        Cluster cluster = locator.getService(Cluster.class, "clusterA");
+        assertNotNull(cluster);
+        ServerRef sref = cluster.getServerRef().get(0);
+        ConfigBean serverConfig = (ConfigBean) Dom.unwrap(sref);
+        Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+        Map<String, String> configChanges = new HashMap<>();
+        configChanges.put("ref", "server");
+        changes.put(serverConfig, configChanges);
+        ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
+        cs.apply(changes);
     }
 
     @Test
     public void clusterServerRefInvalid() throws TransactionFailure {
-        Cluster cluster = habitat.getService(Cluster.class, "clusterA");
+        Cluster cluster = locator.getService(Cluster.class, "clusterA");
         assertNotNull(cluster);
         ServerRef sref = cluster.getServerRef().get(0);
-        ConfigBean serverConfig = (ConfigBean) ConfigBean.unwrap(sref);
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-        Map<String, String> configChanges = new HashMap<String, String>();
+        ConfigBean serverConfig = (ConfigBean) Dom.unwrap(sref);
+        Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+        Map<String, String> configChanges = new HashMap<>();
         configChanges.put("ref", "server-nonexist");
         changes.put(serverConfig, configChanges);
         try {
@@ -87,30 +105,25 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
     }
 
     @Test
-    public void clusterServerRefValid() throws TransactionFailure {
-        Cluster cluster = habitat.getService(Cluster.class, "clusterA");
+    public void clusterConfigRefValid() throws TransactionFailure {
+        Cluster cluster = locator.getService(Cluster.class, "clusterA");
         assertNotNull(cluster);
-        ServerRef sref = cluster.getServerRef().get(0);
-        ConfigBean serverConfig = (ConfigBean) ConfigBean.unwrap(sref);
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-        Map<String, String> configChanges = new HashMap<String, String>();
-        configChanges.put("ref", "server");
+        ConfigBean serverConfig = (ConfigBean) Dom.unwrap(cluster);
+        Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+        Map<String, String> configChanges = new HashMap<>();
+        configChanges.put("config-ref", "server-config");
         changes.put(serverConfig, configChanges);
-        try {
-            ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
-            cs.apply(changes);
-        } catch (TransactionFailure tf) {
-            fail("Can not reach this point");
-        }
+        ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
+        cs.apply(changes);
     }
 
     @Test
     public void clusterConfigRefInvalid() throws TransactionFailure {
-        Cluster cluster = habitat.getService(Cluster.class, "clusterA");
+        Cluster cluster = locator.getService(Cluster.class, "clusterA");
         assertNotNull(cluster);
-        ConfigBean serverConfig = (ConfigBean) ConfigBean.unwrap(cluster);
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-        Map<String, String> configChanges = new HashMap<String, String>();
+        ConfigBean serverConfig = (ConfigBean) Dom.unwrap(cluster);
+        Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+        Map<String, String> configChanges = new HashMap<>();
         configChanges.put("config-ref", "server-config-nonexist");
         changes.put(serverConfig, configChanges);
         try {
@@ -122,22 +135,4 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
             assertNotNull(cv);
         }
     }
-
-    @Test
-    public void clusterConfigRefValid() throws TransactionFailure {
-        Cluster cluster = habitat.getService(Cluster.class, "clusterA");
-        assertNotNull(cluster);
-        ConfigBean serverConfig = (ConfigBean) ConfigBean.unwrap(cluster);
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-        Map<String, String> configChanges = new HashMap<String, String>();
-        configChanges.put("config-ref", "server-config");
-        changes.put(serverConfig, configChanges);
-        try {
-            ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
-            cs.apply(changes);
-        } catch (TransactionFailure tf) {
-            fail("Can not reach this point");
-        }
-    }
-
 }

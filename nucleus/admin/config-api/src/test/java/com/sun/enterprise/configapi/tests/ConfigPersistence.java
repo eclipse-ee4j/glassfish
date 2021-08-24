@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +17,6 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,11 +28,10 @@ import javax.xml.stream.XMLStreamWriter;
 
 import org.glassfish.config.support.ConfigurationPersistence;
 import org.glassfish.tests.utils.Utils;
-import org.junit.After;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
@@ -45,67 +43,62 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
  */
 public abstract class ConfigPersistence extends ConfigApiTest {
 
-    @After
+    public abstract void doTest() throws Exception;
+
+    public abstract void assertResult(String resultingXml);
+
+    @AfterEach
     public void tearDown() {
-            Utils.instance.shutdownServiceLocator(this);
+        Utils.instance.shutdownServiceLocator(this);
     }
 
-    @Test
-    public void test() throws TransactionFailure {
 
+    @Test
+    public void test() throws Exception {
         final DomDocument document = getDocument(getHabitat());
 
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.reset();
 
-        final ConfigurationPersistence testPersistence =  new ConfigurationPersistence() {
-            public void save(DomDocument doc) throws IOException, XMLStreamException {
-                XMLOutputFactory factory = XMLOutputFactory.newInstance();
-                XMLStreamWriter writer = factory.createXMLStreamWriter(baos);
+        final ConfigurationPersistence testPersistence = doc -> {
+            XMLOutputFactory factory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(baos);
+            try {
                 doc.writeTo(new IndentingXMLStreamWriter(writer));
+            } finally {
                 writer.close();
             }
         };
 
         TransactionListener testListener = new TransactionListener() {
+
+            @Override
             public void transactionCommited(List<PropertyChangeEvent> changes) {
                 try {
                     testPersistence.save(document);
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } catch (XMLStreamException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (IOException | XMLStreamException e) {
+                    e.printStackTrace();
                 }
             }
 
-            public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
 
+            @Override
+            public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
             }
         };
         Transactions transactions = getHabitat().getService(Transactions.class);
 
         try {
             transactions.addTransactionsListener(testListener);
-
             doTest();
-        } catch(TransactionFailure f) {
-            f.printStackTrace();
-            throw f;
-
         } finally {
             transactions.waitForDrain();
             transactions.removeTransactionsListener(testListener);
         }
 
         // now check if we persisted correctly...
-
         final String resultingXml = baos.toString();
-
         logger.fine(resultingXml);
-        assertTrue("assertResult from " + getClass().getName() + " was false from " + resultingXml, assertResult(resultingXml));
+        assertResult(resultingXml);
     }
-
-    public abstract void doTest() throws TransactionFailure;
-
-    public abstract boolean assertResult(String resultingXml);
 }

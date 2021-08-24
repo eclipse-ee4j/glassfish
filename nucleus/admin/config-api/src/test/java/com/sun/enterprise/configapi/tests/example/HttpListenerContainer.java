@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,15 +15,12 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.configapi.tests;
+package com.sun.enterprise.configapi.tests.example;
 
 import java.beans.PropertyChangeEvent;
 
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.PerLookup;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
@@ -30,20 +28,25 @@ import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
  * Simple container code that is interested in getting notification of injected model changes
  *
  * @author Jerome Dochez
  */
-@Service @PerLookup
+@Service
+@PerLookup
 public class HttpListenerContainer implements ConfigListener {
 
     @Inject
     @Named("http-listener-1")
-    NetworkListener httpListener;
+    public NetworkListener httpListener;
 
-    volatile boolean received=false;
+    public volatile boolean received = false;
 
+    @Override
     public synchronized UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
         if (received) {
             // I am alredy happy

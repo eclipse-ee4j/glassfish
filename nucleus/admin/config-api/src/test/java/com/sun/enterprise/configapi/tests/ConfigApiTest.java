@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,9 +22,10 @@ import com.sun.enterprise.config.serverbeans.Server;
 import org.glassfish.config.support.GlassFishDocument;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.jvnet.hk2.config.DomDocument;
+
+import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
@@ -39,36 +41,39 @@ public abstract class ConfigApiTest extends org.glassfish.tests.utils.ConfigApiT
     @Override
     public DomDocument getDocument(ServiceLocator habitat) {
         DomDocument doc = habitat.getService(GlassFishDocument.class);
-        if (doc==null) {
+        if (doc == null) {
             return new GlassFishDocument(habitat, Executors.newCachedThreadPool(new ThreadFactory() {
 
-                        public Thread newThread(Runnable r) {
-                            Thread t = Executors.defaultThreadFactory().newThread(r);
-                            t.setDaemon(true);
-                            return t;
-                        }
+                @Override
+                public Thread newThread(Runnable r) {
+                    Thread t = Executors.defaultThreadFactory().newThread(r);
+                    t.setDaemon(true);
+                    return t;
+                }
 
-                    }));
+            }));
         }
         return doc;
     }
 
+
     @Override
-    public void decorate(ServiceLocator habitat) {
-        Server server = habitat.getService(Server.class, "server");
-        if (server != null) {
-            ActiveDescriptor<Server> serverDescriptor = BuilderHelper.createConstantDescriptor(server,
-                    ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
-            ServiceLocatorUtilities.addOneDescriptor(habitat, serverDescriptor);
+    public void decorate(ServiceLocator locator) {
+        Server server = locator.getService(Server.class, "server");
+        if (server == null) {
+            return;
+        }
+        ActiveDescriptor<Server> serverDescriptor
+            = createConstantDescriptor(server, ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
+        ServiceLocatorUtilities.addOneDescriptor(locator, serverDescriptor);
 
-            server.getConfig().addIndex(habitat, ServerEnvironment.DEFAULT_INSTANCE_NAME);
+        server.getConfig().addIndex(locator, ServerEnvironment.DEFAULT_INSTANCE_NAME);
 
-            Cluster c = server.getCluster();
-            if (c != null) {
-                ActiveDescriptor<Cluster> clusterDescriptor = BuilderHelper.createConstantDescriptor(c,
-                        ServerEnvironment.DEFAULT_INSTANCE_NAME, Cluster.class);
-                ServiceLocatorUtilities.addOneDescriptor(habitat, clusterDescriptor);
-            }
+        Cluster c = server.getCluster();
+        if (c != null) {
+            ActiveDescriptor<Cluster> clusterDescriptor
+                = createConstantDescriptor(c, ServerEnvironment.DEFAULT_INSTANCE_NAME, Cluster.class);
+            ServiceLocatorUtilities.addOneDescriptor(locator, clusterDescriptor);
         }
     }
 }

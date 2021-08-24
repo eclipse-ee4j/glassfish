@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,26 +18,26 @@
 package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.jvnet.hk2.config.types.Property;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
-import org.jvnet.hk2.config.Changed;
+
+import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigBean;
-import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+import org.jvnet.hk2.config.types.Property;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * User: Jerome Dochez
@@ -45,20 +46,27 @@ import java.util.Map;
  */
 public class AddPropertyTest extends ConfigApiTest {
 
+    private List<PropertyChangeEvent> events;
+
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    List<PropertyChangeEvent> events = null;
 
     @Test
     public void transactionEvents() throws TransactionFailure {
         final Domain domain = getHabitat().getService(Domain.class);
+        assertNotNull(domain);
         final TransactionListener listener = new TransactionListener() {
-                public void transactionCommited(List<PropertyChangeEvent> changes) {
-                    events = changes;
-                }
 
+            @Override
+            public void transactionCommited(List<PropertyChangeEvent> changes) {
+                events = changes;
+            }
+
+
+            @Override
             public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
             }
         };
@@ -68,28 +76,21 @@ public class AddPropertyTest extends ConfigApiTest {
         try {
 
             transactions.addTransactionsListener(listener);
-            assertTrue(domain!=null);
 
-            ConfigSupport.apply(new SingleConfigCode<Domain>() {
-
-                public Object run(Domain domain) throws PropertyVetoException, TransactionFailure {
-                    Property prop = domain.createChild(Property.class);
-                    domain.getProperty().add(prop);
-                    prop.setName("Jerome");
-                    prop.setValue("was here");
-                    return prop;
-                }
-            }, domain);
+            SingleConfigCode<Domain> configCode = (SingleConfigCode<Domain>) domain1 -> {
+                Property prop = domain1.createChild(Property.class);
+                domain1.getProperty().add(prop);
+                prop.setName("Jerome");
+                prop.setValue("was here");
+                return prop;
+            };
+            ConfigSupport.apply(configCode, domain);
             transactions.waitForDrain();
 
-            assertTrue(events!=null);
-            logger.fine("Number of events " + events.size());
-            assertTrue(events.size()==3);
-            for (PropertyChangeEvent event : events) {
-                logger.fine(event.toString());
-            }
+            assertNotNull(events);
+            assertThat(events, hasSize(3));
 
-            Map<String, String> configChanges = new HashMap<String, String>();
+            Map<String, String> configChanges = new HashMap<>();
             configChanges.put("name", "julien");
             configChanges.put("value", "petit clown");
             ConfigBean domainBean = (ConfigBean) Dom.unwrap(domain);
@@ -98,28 +99,8 @@ public class AddPropertyTest extends ConfigApiTest {
 
             transactions.waitForDrain();
 
-            assertTrue(events!=null);
-            logger.fine("Number of events " + events.size());
-            assertTrue(events.size()==3);
-            for (PropertyChangeEvent event : events) {
-                logger.fine(event.toString());
-            }
-
-            final UnprocessedChangeEvents unprocessed =
-                ConfigSupport.sortAndDispatch(events.toArray(new PropertyChangeEvent[0]), new Changed() {
-                /**
-                 * Notification of a change on a configuration object
-                 *
-                 * @param type            type of change : ADD mean the changedInstance was added to the parent
-                 *                        REMOVE means the changedInstance was removed from the parent, CHANGE means the
-                 *                        changedInstance has mutated.
-                 * @param changedType     type of the configuration object
-                 * @param changedInstance changed instance.
-                 */
-                public <T extends ConfigBeanProxy> NotProcessed changed(TYPE type, Class<T> changedType, T changedInstance) {
-                    return new NotProcessed("unimplemented by AddPropertyTest");
-                }
-            }, logger);
+            assertNotNull(events);
+            assertThat(events, hasSize(3));
         } finally {
             transactions.removeTransactionsListener(listener);
         }

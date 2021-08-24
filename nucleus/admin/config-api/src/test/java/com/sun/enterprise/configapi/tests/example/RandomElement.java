@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,19 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.configapi.tests.extensibility;
+package com.sun.enterprise.configapi.tests.example;
 
-import org.glassfish.api.admin.config.ConfigExtension;
 import org.jvnet.hk2.config.Attribute;
+import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.Configured;
 
 /**
- * Simple configuration
+ * @author Jerome Dochez
  */
 @Configured
-public interface RandomExtension extends ConfigExtension {
+public interface RandomElement extends ConfigBeanProxy {
 
     @Attribute
-    String getSomeAttribute();
-    void setSomeAttribute(String value);
+    String getAttr1();
+
+    void setAttr1(String string);
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,11 +18,14 @@
 package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.HttpService;
+
+import java.beans.PropertyChangeEvent;
+import java.util.List;
+
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
@@ -29,35 +33,44 @@ import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import java.beans.PropertyChangeEvent;
-import java.util.List;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * Created by IntelliJ IDEA.
  * User: dochez
  * Date: Jan 23, 2008
  * Time: 10:48:55 PM
  */
 public class TransactionListenerTest extends ConfigApiTest {
+
+    private HttpService httpService;
+    private List<PropertyChangeEvent> events;
+
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    HttpService httpService = null;
-    List<PropertyChangeEvent> events = null;
 
     @Test
     public void transactionEvents() throws Exception, TransactionFailure {
         httpService = getHabitat().getService(HttpService.class);
-        NetworkConfig networkConfig = getHabitat().getService(NetworkConfig.class);
-        final NetworkListener netListener = networkConfig.getNetworkListeners()
-            .getNetworkListener().get(0);
+        final NetworkConfig networkConfig = getHabitat().getService(NetworkConfig.class);
+        final NetworkListener netListener = networkConfig.getNetworkListeners().getNetworkListener().get(0);
         final Http http = netListener.findHttpProtocol().getHttp();
         final TransactionListener listener = new TransactionListener() {
-                public void transactionCommited(List<PropertyChangeEvent> changes) {
-                    events = changes;
-                }
 
+            @Override
+            public void transactionCommited(List<PropertyChangeEvent> changes) {
+                events = changes;
+            }
+
+
+            @Override
             public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
             }
         };
@@ -66,41 +79,34 @@ public class TransactionListenerTest extends ConfigApiTest {
 
         try {
             transactions.addTransactionsListener(listener);
-            assertTrue(httpService!=null);
+            assertNotNull(httpService);
             logger.fine("Max connections = " + http.getMaxConnections());
-            ConfigSupport.apply(new SingleConfigCode<Http>() {
-
-                public Object run(Http param) {
-                    param.setMaxConnections("500");
-                    return null;
-                }
-            }, http);
+            SingleConfigCode<Http> configCode = httpConfig -> {
+                httpConfig.setMaxConnections("500");
+                return null;
+            };
+            ConfigSupport.apply(configCode, http);
             assertTrue("500".equals(http.getMaxConnections()));
 
             transactions.waitForDrain();
 
-            assertTrue(events!=null);
-            logger.fine("Number of events " + events.size());
-            assertTrue(events.size()==1);
+            assertNotNull(events);
+            assertThat(events, hasSize(1));
             PropertyChangeEvent event = events.iterator().next();
-            assertTrue("max-connections".equals(event.getPropertyName()));
-            assertTrue("500".equals(event.getNewValue().toString()));
-            assertTrue("250".equals(event.getOldValue().toString()));
-        } catch(Exception t) {
-            t.printStackTrace();
-            throw t;
-        }finally {
+            assertAll(
+                () -> assertEquals("max-connections", event.getPropertyName()),
+                () -> assertEquals("500", event.getNewValue().toString()),
+                () -> assertEquals("250", event.getOldValue().toString())
+            );
+        } finally {
             transactions.removeTransactionsListener(listener);
         }
 
         // put back the right values in the domain to avoid test collisions
-        ConfigSupport.apply(new SingleConfigCode<Http>() {
-
-            public Object run(Http param) {
-                param.setMaxConnections("250");
-                return null;
-            }
-        }, http);
-
+        SingleConfigCode<Http> configCode = httpConfig -> {
+            httpConfig.setMaxConnections("250");
+            return null;
+        };
+        ConfigSupport.apply(configCode, http);
     }
 }

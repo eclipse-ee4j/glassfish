@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,31 +17,33 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * User: Jerome Dochez Date: Mar 4, 2008 Time: 2:44:59 PM
  */
 public class Ssl2EnabledTest extends ConfigApiTest {
+
+    @Override
     public String getFileName() {
         return "DomainTest";
     }
 
-    NetworkConfig config = null;
+    private NetworkConfig config;
 
-    @Before
+    @BeforeEach
     public void setup() {
         config = getHabitat().getService(NetworkConfig.class);
-        assertTrue(config != null);
-
+        assertNotNull(config);
     }
 
     @Test
@@ -50,13 +53,9 @@ public class Ssl2EnabledTest extends ConfigApiTest {
             if (httpProtocol != null) {
                 Ssl ssl = httpProtocol.getSsl();
                 if (ssl != null) {
-                    try {
-                        logger.fine("SSL2 ENABLED = " + ssl.getSsl2Enabled());
-                        assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
-                        assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
+                    assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
+                    assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
+                    assertTrue(Boolean.parseBoolean(ssl.getTlsEnabled()));
                 }
             }
         }

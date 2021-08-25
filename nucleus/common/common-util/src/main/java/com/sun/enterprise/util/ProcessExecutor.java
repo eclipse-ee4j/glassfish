@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,22 +16,17 @@
 
 package com.sun.enterprise.util;
 
-//JDK imports
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.OutputStream;
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.PrintWriter;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
-import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.FileReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
 
@@ -41,6 +36,7 @@ import java.util.ArrayList;
  * @version 1.0
  * @deprecated Use ProcessManager instead
  */
+@Deprecated
 public class ProcessExecutor {
     public static final long kDefaultTimeoutMillis = 600000;
     public static final long kSleepTime = 2000;
@@ -120,7 +116,7 @@ public class ProcessExecutor {
                 mCmdStrings[i] = mCmdStrings[i].replace(fwdSlashChar, backSlashChar);
             }
         }
-        mTimeoutMilliseconds = (long) timeoutSeconds * 1000;
+        mTimeoutMilliseconds = timeoutSeconds * 1000;
     }
 
     /**
@@ -628,6 +624,7 @@ class FlusherThread extends Thread {
         mOutStream = out;
     }
 
+    @Override
     public void run() {
         // check for null stream
         if (mInStream == null)
@@ -642,7 +639,7 @@ class FlusherThread extends Thread {
                     mOutStream.write(buffer, 0, byteCnt);
                     mOutStream.flush();
                 }
-                yield();
+                Thread.yield();
             }
         }
         catch (IOException e) {

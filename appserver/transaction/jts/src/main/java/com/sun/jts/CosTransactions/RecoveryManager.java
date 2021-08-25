@@ -31,12 +31,6 @@
 
 package com.sun.jts.CosTransactions;
 
-import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
-import com.sun.jts.codegen.jtsxa.OTSResource;
-import com.sun.jts.jtsxa.OTSResourceImpl;
-import com.sun.jts.utils.LogFormatter;
-import com.sun.logging.LogDomains;
-
 import java.io.File;
 import java.io.RandomAccessFile;
 import java.util.ArrayList;
@@ -58,6 +52,12 @@ import org.omg.CORBA.COMM_FAILURE;
 import org.omg.CORBA.SystemException;
 import org.omg.CORBA.TRANSIENT;
 import org.omg.CosTransactions.Status;
+
+import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
+import com.sun.jts.codegen.jtsxa.OTSResource;
+import com.sun.jts.jtsxa.OTSResourceImpl;
+import com.sun.jts.utils.LogFormatter;
+import com.sun.logging.LogDomains;
 /**
  * This class manages information required for recovery, and also general
  * state regarding transactions in a process.
@@ -563,7 +563,7 @@ public class RecoveryManager {
                             _logger.logp(Level.FINE,"RecoveryManager","resync()",
                                 "Before invoking commit on the reconstructed coordinator, "+
                                     "GTID is: "+
-                                    ((TopCoordinator)coord).superInfo.globalTID.toString());
+                                    coord.superInfo.globalTID.toString());
 
                         }
 
@@ -596,7 +596,7 @@ public class RecoveryManager {
                                     "Before invoking rollback on the"+
                                         "reconstructed coordinator :"+
                                         "GTID is : "+
-                                        ((TopCoordinator)coord).superInfo.globalTID.toString());
+                                        coord.superInfo.globalTID.toString());
 
                             }
                             coord.rollback(true);
@@ -1782,12 +1782,14 @@ public class RecoveryManager {
 
         private final Semaphore semaphore = new Semaphore(1, true);
 
+        @Override
         public void start() {
         }
 
         /**
          * {@inheritDoc}
          */
+        @Override
         public void raiseFence() {
             try {
                 semaphore.acquire();
@@ -1799,6 +1801,7 @@ public class RecoveryManager {
         /**
          * {@inheritDoc}
          */
+        @Override
         public void lowerFence() {
             semaphore.release();
         }
@@ -1851,8 +1854,9 @@ class ResyncThread extends Thread  {
      *
      * @see
      */
+    @Override
     public void run() {
-        yield();
+        Thread.yield();
 
         if (_logger.isLoggable(Level.FINE)) {
             _logger.logp(Level.FINE,"ResyncThread","run()","Before invoking RecoveryManager.recover()");

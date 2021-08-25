@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,23 +17,23 @@
 
 package com.sun.enterprise.admin.util;
 
-import jakarta.xml.bind.DatatypeConverter;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- *
  * @author mmares
  */
 public class CachedCommandModelTest {
 
-    public CachedCommandModelTest() {
-    }
-
     public static CachedCommandModel createBeateles() {
         CachedCommandModel result = new CachedCommandModel("TheBeatles");
         result.dashOk = true;
-        CommandModelData.ParamModelData prm = new CommandModelData.ParamModelData("Lennon", String.class, false, "John Winston Ono Lennon", "J", false, null);
+        CommandModelData.ParamModelData prm = new CommandModelData.ParamModelData("Lennon", String.class, false,
+            "John Winston Ono Lennon", "J", false, null);
         prm.param._primary = true;
         prm.param._multiple = true;
         result.add(prm);
@@ -51,9 +52,9 @@ public class CachedCommandModelTest {
         assertEquals(beatles1.getETag(), beatles2.getETag());
         CachedCommandModel beatles3 = createBeateles();
         beatles3.add(new CommandModelData.ParamModelData("Sutcliffe", String.class, true, "R.I.P.", null, true, "Stuart"));
-        assertFalse(beatles1.getETag().equals(beatles3.getETag()));
+        assertNotEquals(beatles1.getETag(), beatles3.getETag());
         CachedCommandModel beatles4 = createBeateles();
         beatles4.dashOk = false;
-        assertFalse(beatles1.getETag().equals(beatles4.getETag()));
+        assertNotEquals(beatles1.getETag(), beatles4.getETag());
     }
 }

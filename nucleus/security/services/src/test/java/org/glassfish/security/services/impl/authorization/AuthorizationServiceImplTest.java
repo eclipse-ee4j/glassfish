@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,188 +17,167 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import org.glassfish.security.services.api.authorization.*;
-import org.glassfish.security.services.api.common.Attribute;
-import org.glassfish.security.services.impl.common.AttributeImpl;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
-import javax.security.auth.Subject;
 import java.net.URI;
 import java.security.AllPermission;
 import java.util.ArrayList;
 import java.util.List;
 
-import static junit.framework.Assert.*;
-import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.*;
+import javax.security.auth.Subject;
+
+import org.glassfish.security.services.api.authorization.AzAction;
+import org.glassfish.security.services.api.authorization.AzAttributeResolver;
+import org.glassfish.security.services.api.authorization.AzAttributes;
+import org.glassfish.security.services.api.authorization.AzEnvironment;
+import org.glassfish.security.services.api.common.Attribute;
+import org.glassfish.security.services.impl.common.AttributeImpl;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.FAILED_INIT;
+import static org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl.InitializationState.NOT_INITIALIZED;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @see AuthorizationServiceImpl
  */
 public class AuthorizationServiceImplTest {
+
     private AuthorizationServiceImpl impl;
 
-
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         impl = new AuthorizationServiceImpl();
     }
 
-    @After
+
+    @AfterEach
     public void tearDown() throws Exception {
         impl = null;
     }
 
+
     @Test
     public void testInitialize() throws Exception {
-
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-
-        try {
-            impl.initialize(null);
-            fail( "Expected initialize to fail." );
-        } catch ( RuntimeException e ) {
-        }
-
-        assertSame( "FAILED_INIT", FAILED_INIT, impl.getInitializationState() );
-        assertNotNull( "getReasonInitializationFailed", impl.getReasonInitializationFailed() );
-    }
-
-    @Test
-    public void testIsPermissionGranted() throws Exception {
-
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-
-        // Does not require service initialization
-        impl.isPermissionGranted( new Subject(), new AllPermission() );
-    }
-
-    @Test
-    public void testIsAuthorized() throws Exception {
-
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-
-        try {
-            impl.isAuthorized(
-                new Subject(),
-                new URI( "admin:///tenants/tenant/mytenant" ),
-                "update" );
-            fail( "Expected fail not initialized." );
-        } catch ( RuntimeException e ) {
-        }
-
-        assertSame("NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState());
-        assertNotNull( "getReasonInitializationFailed", impl.getReasonInitializationFailed() );
-    }
-
-    @Test
-    public void testGetAuthorizationDecision() throws Exception {
-
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-
-        try {
-            impl.getAuthorizationDecision(
-                new AzSubjectImpl( new Subject() ),
-                new AzResourceImpl( new URI( "admin:///tenants/tenant/mytenant" ) ),
-                new AzActionImpl( "update" ) );
-            fail( "Expected fail not initialized." );
-        } catch ( RuntimeException e ) {
-        }
-
-        assertSame("NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState());
-        assertNotNull( "getReasonInitializationFailed", impl.getReasonInitializationFailed() );
-    }
-
-    @Test
-    public void testMakeAzSubject() throws Exception {
-        try {
-            impl.makeAzSubject(null);
-            fail( "Expected fail with null." );
-        } catch ( IllegalArgumentException e ) {
-        }
-
-        Subject s = new Subject();
-        assertSame("Subject", s, impl.makeAzSubject(s).getSubject());
-    }
-
-    @Test
-    public void testMakeAzResource() throws Exception {
-        try {
-            impl.makeAzResource(null);
-            fail( "Expected fail with null." );
-        } catch ( IllegalArgumentException e ) {
-        }
-
-        URI u = new URI( "admin:///" );
-        assertSame("URI", u, impl.makeAzResource(u).getUri());
-    }
-
-    @Test
-    public void testMakeAzAction() throws Exception {
-        AzAction azAction;
-
-        azAction = impl.makeAzAction( null );
-        assertNotNull( azAction );
-        assertNull( "Null", azAction.getAction() );
-
-
-        String action = "update";
-        azAction = impl.makeAzAction( action );
-        assertNotNull(azAction);
-        assertEquals("action", action, azAction.getAction());
-    }
-
-    @Test
-    public void testFindOrCreateDeploymentContext() throws Exception {
-
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-
-        try {
-            impl.findOrCreateDeploymentContext("foo");
-            fail( "Expected fail not initialized." );
-        } catch ( RuntimeException e ) {
-        }
-
-        assertSame("NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState());
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertThrows(RuntimeException.class, () -> impl.initialize(null));
+        assertSame(FAILED_INIT, impl.getInitializationState(), "FAILED_INIT");
         assertNotNull("getReasonInitializationFailed", impl.getReasonInitializationFailed());
     }
 
+
     @Test
-    public void testAttributeResolvers() throws Exception {
-        assertEquals( "initial", 0 , impl.getAttributeResolvers().size() );
-
-        final AzAttributeResolver testAr1 = new TestAttributeResolver( new AttributeImpl("1") );
-        final AzAttributeResolver testAr2 = new TestAttributeResolver( new AttributeImpl("2") );
-
-        assertTrue( "append 1", impl.appendAttributeResolver( testAr1 ) );
-        assertFalse( "append 1", impl.appendAttributeResolver( testAr1 ) );
-        assertTrue( "append 2", impl.appendAttributeResolver( testAr2 ) );
-        assertFalse( "append 2", impl.appendAttributeResolver( testAr2 ) );
-
-        List<AzAttributeResolver> arList = impl.getAttributeResolvers();
-        assertEquals( "size after append", 2, arList.size());
-        assertEquals( "append 1", "1", arList.get(0).resolve(null,null,null).getName() );
-        assertEquals( "append 2", "2", arList.get(1).resolve(null,null,null).getName() );
-
-        final AzAttributeResolver testAr3 = new TestAttributeResolver( new AttributeImpl("3") );
-        final AzAttributeResolver testAr4 = new TestAttributeResolver( new AttributeImpl("4") );
-        List<AzAttributeResolver> tempList = new ArrayList<AzAttributeResolver>();
-        tempList.add(testAr3);
-        tempList.add(testAr4);
-        impl.setAttributeResolvers( tempList );
-
-        List<AzAttributeResolver> arList2 = impl.getAttributeResolvers();
-        assertEquals("after get list 2", 2, arList2.size());
-        assertEquals("append 3", "3", arList2.get(0).resolve(null, null, null).getName());
-        assertEquals( "append 4", "4", arList2.get(1).resolve(null,null,null).getName() );
-
-        assertTrue( "removeAllAttributeResolvers", impl.removeAllAttributeResolvers() );
-        assertFalse( "removeAllAttributeResolvers", impl.removeAllAttributeResolvers() );
-
-        assertEquals( "final", 0 , impl.getAttributeResolvers().size() );
+    public void testIsPermissionGranted() throws Exception {
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        // Does not require service initialization
+        impl.isPermissionGranted(new Subject(), new AllPermission());
     }
 
+
+    @Test
+    public void testIsAuthorized() throws Exception {
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertThrows(RuntimeException.class,
+            () -> impl.isAuthorized(new Subject(), new URI("admin:///tenants/tenant/mytenant"), "update"));
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertNotNull(impl.getReasonInitializationFailed(), "getReasonInitializationFailed");
+    }
+
+
+    @Test
+    public void testGetAuthorizationDecision() throws Exception {
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        final AzSubjectImpl subject = new AzSubjectImpl(new Subject());
+        final AzResourceImpl resource = new AzResourceImpl(new URI("admin:///tenants/tenant/mytenant"));
+        final AzActionImpl action = new AzActionImpl("update");
+        assertThrows(RuntimeException.class, () -> impl.getAuthorizationDecision(subject, resource, action));
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertNotNull(impl.getReasonInitializationFailed(), "getReasonInitializationFailed");
+    }
+
+
+    @Test
+    public void testMakeAzSubject() throws Exception {
+        assertThrows(RuntimeException.class, () -> impl.makeAzSubject(null));
+        Subject subject = new Subject();
+        assertSame(subject, impl.makeAzSubject(subject).getSubject(), "Subject");
+    }
+
+
+    @Test
+    public void testMakeAzResource() throws Exception {
+        assertThrows(RuntimeException.class, () -> impl.makeAzResource(null));
+        final URI uri = new URI("admin:///");
+        assertSame(uri, impl.makeAzResource(uri).getUri(), "URI");
+    }
+
+
+    @Test
+    public void testMakeAzAction() throws Exception {
+        {
+            AzAction azAction = impl.makeAzAction(null);
+            assertNotNull(azAction);
+            assertNull(azAction.getAction());
+        }
+        {
+            String action = "update";
+            AzAction azAction = impl.makeAzAction(action);
+            assertNotNull(azAction);
+            assertEquals(action, azAction.getAction(), "action");
+        }
+    }
+
+
+    @Test
+    public void testFindOrCreateDeploymentContext() throws Exception {
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertThrows(RuntimeException.class, () -> impl.findOrCreateDeploymentContext("foo"));
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertNotNull("getReasonInitializationFailed", impl.getReasonInitializationFailed());
+    }
+
+
+    @Test
+    public void testAttributeResolvers() throws Exception {
+        assertEquals(0, impl.getAttributeResolvers().size(), "initial");
+
+        final AzAttributeResolver testAr1 = new TestAttributeResolver(new AttributeImpl("1"));
+        final AzAttributeResolver testAr2 = new TestAttributeResolver(new AttributeImpl("2"));
+
+        assertTrue(impl.appendAttributeResolver(testAr1), "append 1");
+        assertFalse(impl.appendAttributeResolver(testAr1), "append 1");
+        assertTrue(impl.appendAttributeResolver(testAr2), "append 2");
+        assertFalse(impl.appendAttributeResolver(testAr2), "append 2");
+
+        List<AzAttributeResolver> arList = impl.getAttributeResolvers();
+        assertThat("size after append", arList, hasSize(2));
+        assertEquals("1", arList.get(0).resolve(null, null, null).getName(), "append 1");
+        assertEquals("2", arList.get(1).resolve(null, null, null).getName(), "append 2");
+
+        final AzAttributeResolver testAr3 = new TestAttributeResolver(new AttributeImpl("3"));
+        final AzAttributeResolver testAr4 = new TestAttributeResolver(new AttributeImpl("4"));
+        List<AzAttributeResolver> tempList = new ArrayList<>();
+        tempList.add(testAr3);
+        tempList.add(testAr4);
+        impl.setAttributeResolvers(tempList);
+
+        List<AzAttributeResolver> arList2 = impl.getAttributeResolvers();
+        assertThat("after get list 2", arList2, hasSize(2));
+        assertEquals("3", arList2.get(0).resolve(null, null, null).getName(), "append 3");
+        assertEquals("4", arList2.get(1).resolve(null, null, null).getName(), "append 4");
+
+        assertTrue(impl.removeAllAttributeResolvers(), "removeAllAttributeResolvers");
+        assertFalse(impl.removeAllAttributeResolvers(), "removeAllAttributeResolvers");
+        assertThat("final", impl.getAttributeResolvers(), hasSize(0));
+    }
 
     /**
      * Fake test class

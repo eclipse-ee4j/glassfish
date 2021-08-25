@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,15 +18,21 @@
 package org.glassfish.security.services.impl.authorization;
 
 import java.net.URI;
+
 import javax.security.auth.Subject;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static junit.framework.Assert.*;
-
 import org.glassfish.security.services.api.authorization.AuthorizationService;
-import static org.glassfish.security.services.impl.authorization.RoleMappingServiceImpl.InitializationState.*;
+import org.glassfish.security.services.api.authorization.AzResource;
+import org.glassfish.security.services.api.authorization.AzSubject;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.glassfish.security.services.impl.authorization.RoleMappingServiceImpl.InitializationState.FAILED_INIT;
+import static org.glassfish.security.services.impl.authorization.RoleMappingServiceImpl.InitializationState.NOT_INITIALIZED;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @see RoleMappingServiceImpl
@@ -36,128 +43,79 @@ public class RoleMappingServiceImplTest {
     private final AuthorizationService authorizationService = new AuthorizationServiceImpl();
     private RoleMappingServiceImpl impl;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
         impl = new RoleMappingServiceImpl();
     }
 
-    @After
+
+    @AfterEach
     public void tearDown() throws Exception {
         impl = null;
     }
 
+
     @Test
     public void testInitialize() throws Exception {
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-        try {
-            impl.initialize(null);
-        } catch ( RuntimeException e ) {
-            fail( "Expected service to allow no specified configuration" );
-        }
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        impl.initialize(null);
 
-        try {
-            impl.isUserInRole("test",
-                authorizationService.makeAzSubject(new Subject()),
-                authorizationService.makeAzResource(URI.create("test://test")),
-                "aRole");
-            fail( "Expected fail illegal state exception." );
-        } catch ( IllegalStateException e ) {
-            assertNotNull("Service fails at run-time", e);
-        }
+        AzSubject azSubject = authorizationService.makeAzSubject(new Subject());
+        AzResource azResource = authorizationService.makeAzResource(URI.create("test://test"));
+        assertThrows(IllegalStateException.class, () -> impl.isUserInRole("test", azSubject, azResource, "aRole"));
 
         // The service will fail internally to prevent method calls
-        assertSame( "FAILED_INIT", FAILED_INIT, impl.getInitializationState() );
-        assertNotNull( "getReasonInitializationFailed", impl.getReasonInitializationFailed() );
+        assertSame(FAILED_INIT, impl.getInitializationState(), "FAILED_INIT");
+        assertNotNull(impl.getReasonInitializationFailed(), "getReasonInitializationFailed");
     }
+
 
     @Test
     public void testIsUserRole() throws Exception {
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-        try {
-            impl.isUserInRole("test",
-                authorizationService.makeAzSubject(new Subject()),
-                authorizationService.makeAzResource(URI.create("test://test")),
-                "aRole");
-            fail( "Expected fail not initialized." );
-        } catch ( RuntimeException e ) {
-        }
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        AzSubject azSubject = authorizationService.makeAzSubject(new Subject());
+        AzResource azResource = authorizationService.makeAzResource(URI.create("test://test"));
+        assertThrows(RuntimeException.class, () -> impl.isUserInRole("test", azSubject, azResource, "aRole"));
 
-        assertSame("NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState());
-        assertNotNull( "getReasonInitializationFailed", impl.getReasonInitializationFailed() );
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertNotNull(impl.getReasonInitializationFailed(), "getReasonInitializationFailed");
     }
+
 
     @Test
     public void testIsUserRoleNoAzArgs() throws Exception {
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-        try {
-            impl.isUserInRole("test",
-                new Subject(),
-                URI.create("test://test"),
-                "aRole");
-            fail( "Expected fail not initialized." );
-        } catch ( RuntimeException e ) {
-        }
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertThrows(RuntimeException.class,
+            () -> impl.isUserInRole("test", new Subject(), URI.create("test://test"), "aRole"));
 
-        assertSame("NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState());
-        assertNotNull( "getReasonInitializationFailed", impl.getReasonInitializationFailed() );
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertNotNull(impl.getReasonInitializationFailed(), "getReasonInitializationFailed");
     }
+
 
     @Test
     public void testIsUserRoleNullArgs() throws Exception {
-        // Arguments checked before service state
-        try {
-            impl.isUserInRole("test",
-                null,
-                authorizationService.makeAzResource(URI.create("test://test")),
-                "aRole");
-            fail( "Expected fail illegal argument." );
-        } catch ( IllegalArgumentException e ) {
-            assertNotNull("Subject null test", e);
-        }
-        try {
-            impl.isUserInRole("test",
-                authorizationService.makeAzSubject(new Subject()),
-                null,
-                "aRole");
-            fail( "Expected fail illegal argument." );
-        } catch ( IllegalArgumentException e ) {
-            assertNotNull("Resource null test", e);
-        }
+        assertThrows(IllegalArgumentException.class,
+            () -> impl.isUserInRole("test", null, authorizationService.makeAzResource(URI.create("test://test")), "aRole"));
+        assertThrows(IllegalArgumentException.class,
+            () -> impl.isUserInRole("test", authorizationService.makeAzSubject(new Subject()), null, "aRole"));
     }
+
 
     @Test
     public void testIsUserRoleNoAzArgsNullArgs() throws Exception {
-        // Arguments checked before service state
-        try {
-            impl.isUserInRole("test",
-                null,
-                URI.create("test://test"),
-                "aRole");
-            fail( "Expected fail illegal argument." );
-        } catch ( IllegalArgumentException e ) {
-            assertNotNull("Subject null test", e);
-        }
-        try {
-            impl.isUserInRole("test",
-                new Subject(),
-                null,
-                "aRole");
-            fail( "Expected fail illegal argument." );
-        } catch ( IllegalArgumentException e ) {
-            assertNotNull("Subject null test", e);
-        }
+        assertThrows(IllegalArgumentException.class,
+            () -> impl.isUserInRole("test", null, URI.create("test://test"), "aRole"));
+        assertThrows(IllegalArgumentException.class,
+            () -> impl.isUserInRole("test", new Subject(), null, "aRole"));
     }
+
 
     @Test
     public void testFindOrCreateDeploymentContext() throws Exception {
-        assertSame( "NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState() );
-        try {
-            impl.findOrCreateDeploymentContext("test");
-            fail( "Expected fail not initialized." );
-        } catch ( RuntimeException e ) {
-        }
-
-        assertSame("NOT_INITIALIZED", NOT_INITIALIZED, impl.getInitializationState());
-        assertNotNull("getReasonInitializationFailed", impl.getReasonInitializationFailed());
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertThrows(RuntimeException.class, () -> impl.findOrCreateDeploymentContext("test"));
+        assertSame(NOT_INITIALIZED, impl.getInitializationState(), "NOT_INITIALIZED");
+        assertNotNull(impl.getReasonInitializationFailed(), "getReasonInitializationFailed");
     }
 }

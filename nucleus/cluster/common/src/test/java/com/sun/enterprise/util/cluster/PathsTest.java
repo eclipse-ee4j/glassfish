@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,25 +21,25 @@ import com.sun.enterprise.config.serverbeans.ApplicationRef;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.ResourceRef;
 import com.sun.enterprise.config.serverbeans.SshConnector;
+
 import java.beans.PropertyVetoException;
 import java.util.List;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 /**
- *
  * @author wnevins
  */
 public class PathsTest {
-    private static String SPECIFIED_INSTALL_DIR = "D:/glassfish6";
-    private static String NODE_NAME = "thenode";
-    private static String SPECIFIED_NODES_DIR = SPECIFIED_INSTALL_DIR + "/glassfish/mynodes";
-    private static String SPECIFIED_NODE_DIR = SPECIFIED_NODES_DIR + "/" + NODE_NAME;
-    private static String INSTANCE_NAME = "instance1";
+    private static final String SPECIFIED_INSTALL_DIR = "D:/glassfish6";
+    private static final String NODE_NAME = "thenode";
+    private static final String SPECIFIED_NODES_DIR = SPECIFIED_INSTALL_DIR + "/glassfish/mynodes";
+    private static final String SPECIFIED_NODE_DIR = SPECIFIED_NODES_DIR + "/" + NODE_NAME;
+    private static final String INSTANCE_NAME = "instance1";
 
 
 
@@ -47,13 +48,12 @@ public class PathsTest {
      */
     @Test
     public void testGetNodeDir() {
-
         String nodedir1 = Paths.getNodeDir(new NodeWithNodeDir());
         String nodedir2 = Paths.getNodeDir(new NodeWithoutNodeDir());
         System.out.println("User-specified Node Dir: " + nodedir1);
         System.out.println("Default Node Dir: " + nodedir2);
-        assertEquals(nodedir2, SPECIFIED_INSTALL_DIR + "/glassfish/nodes/" + NODE_NAME);
-        assertEquals(nodedir1, SPECIFIED_NODE_DIR);
+        assertEquals(SPECIFIED_INSTALL_DIR + "/glassfish/nodes/" + NODE_NAME, nodedir2);
+        assertEquals(SPECIFIED_NODE_DIR, nodedir1);
     }
 
     /**
@@ -78,8 +78,8 @@ public class PathsTest {
         String d2 = Paths.getInstanceDirPath(new NodeWithoutNodeDir(), INSTANCE_NAME);
         System.out.println("User-specified Instance Dir: " + d1);
         System.out.println("Default Node Dir Instance Dir: " + d2);
-        assertEquals(d2, SPECIFIED_INSTALL_DIR + "/glassfish/nodes/" + NODE_NAME + "/" + INSTANCE_NAME);
-        assertEquals(d1, SPECIFIED_NODE_DIR + "/" + INSTANCE_NAME);
+        assertEquals(SPECIFIED_INSTALL_DIR + "/glassfish/nodes/" + NODE_NAME + "/" + INSTANCE_NAME, d2);
+        assertEquals(SPECIFIED_NODE_DIR + "/" + INSTANCE_NAME, d1);
     }
 
 

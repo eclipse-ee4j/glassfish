@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.ha</groupId>
         <artifactId>ha</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.1</version>
     </parent>
 
     <artifactId>ha-shoal-cache-store</artifactId>

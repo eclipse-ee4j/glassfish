@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.tests</groupId>
         <artifactId>tests.tck</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.1</version>
     </parent>
 
     <artifactId>glassfish-external-tck-authorization</artifactId>

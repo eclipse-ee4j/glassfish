@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>admin</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.1</version>
     </parent>
 
     <artifactId>appserver-domain</artifactId>

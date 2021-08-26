@@ -23,13 +23,13 @@
     <parent>
         <groupId>org.glassfish.tests.cdi.cases</groupId>
         <artifactId>multiBeansXml</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <groupId>org.glassfish.tests.cdi.cases.multiBeansXml</groupId>
     <artifactId>ejb1</artifactId>
-    <version>6.2.1-SNAPSHOT</version>
+    <version>6.2.1</version>
 
     <name>GlassFish Ejb1 With Specific beans.xml</name>
 

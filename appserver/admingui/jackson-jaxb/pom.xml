@@ -144,30 +144,42 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <!-- Creates the OSGi MANIFEST.MF file -->
             <plugin>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>maven-bundle-plugin</artifactId>
                 <extensions>true</extensions>
+                <executions>
+                    <execution>
+                        <id>osgi-bundle</id>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>manifest</goal>
+                        </goals>
+                    </execution>
+                </executions>
                 <configuration>
                     <supportedProjectTypes>
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
                     <instructions>
-                        <Embed-Dependency>artifactId=jackson-module-jaxb-annotations;inline=true;</Embed-Dependency>
-                        <Export-Package>*</Export-Package>
                         <Import-Package>com.fasterxml.jackson.annotation,com.fasterxml.jackson.core.*,com.fasterxml.jackson.databind.*,jakarta.activation,jakarta.xml.bind,jakarta.xml.bind.annotation,jakarta.xml.bind.annotation.adapters,javax.xml.parsers,org.w3c.dom</Import-Package>
+                        <Export-Package>com.fasterxml.jackson.module.jaxb.*</Export-Package>
                     </instructions>
-                    <unpackBundle>true</unpackBundle>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>osgi-bundle</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>bundle</goal>
-                        </goals>
-                    </execution>
-                </executions>
+            </plugin>
+            
+             <!-- Adds the manifest file created by the org.apache.felix:maven-bundle-plugin -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <archive>
+                        <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -47,6 +47,38 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>export-package-regexp</id>
+                        <goals>
+                            <goal>regex-property</goal>
+                        </goals>
+                        <configuration>
+                            <name>osgi.export.packages</name>
+                            <regex>\s+</regex>
+                            <replacement> </replacement>
+                            <value>
+                                org.jboss.weld.literal,
+                                org.jboss.weld.logging,
+                                org.jboss.weld.logging.messages,
+                                org.jboss.metadata.validation,
+                                org.jboss.weld.bean.interceptor,
+                                org.jboss.weld.metadata,
+                                org.jboss.weld.metadata.cache,
+                                org.jboss.weld.resources,
+                                org.jboss.weld.test,
+                                org.jboss.weld.tests,
+                                org.jboss.weld.tests.extensions,
+                                org.jboss.weld.tests.extensions.injectionTarget,
+                                org.jboss.weld.exceptions
+                            </value>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
                 <configuration>
                     <archive>
@@ -54,21 +86,7 @@
                             <Bundle-SymbolicName>${project.groupId}.${project.artifactId}</Bundle-SymbolicName>
                             <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
                             <Fragment-Host>org.jboss.weld.osgi-bundle</Fragment-Host>
-                            <Export-Package>
-org.jboss.weld.literal,
-org.jboss.weld.logging,
-org.jboss.weld.logging.messages,
-org.jboss.metadata.validation,
-org.jboss.weld.bean.interceptor,
-org.jboss.weld.metadata,
-org.jboss.weld.metadata.cache,
-org.jboss.weld.resources,
-org.jboss.weld.test,
-org.jboss.weld.tests,
-org.jboss.weld.tests.extensions,
-org.jboss.weld.tests.extensions.injectionTarget,
-org.jboss.weld.exceptions,
-                            </Export-Package>
+                            <Export-Package>${osgi.export.packages}</Export-Package>
                             <Bundle-Description>${project.description}</Bundle-Description>
                         </manifestEntries>
                     </archive>

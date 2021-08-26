@@ -24,7 +24,6 @@
         <groupId>org.glassfish.main.core</groupId>
         <artifactId>core</artifactId>
         <version>6.2.1-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>api-exporter-fragment</artifactId>
@@ -54,6 +53,12 @@
         <plugins>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
+                <!-- 
+                    Decades long workaround for http://jira.codehaus.org/browse/MJAR-153 (which nobody remembers)
+                    
+                    3.2.0 breaks the Import-Package formatting 
+                -->
+                <version>2.3</version>
                 <configuration>
                     <archive>
                         <manifestEntries>
@@ -62,7 +67,7 @@
                             <Fragment-Host>GlassFish-Application-Common-Module</Fragment-Host>
                             <Bundle-Name>${project.name}</Bundle-Name>
                             <!-- This is the most important attribute of this bundle
-                                 We currently import all EE8 APIs. We could include some appserver pkgs as well.
+                                 We currently import all EE APIs. We could include some appserver pkgs as well.
                                  Tune this as per performance requirement.
                             -->
                             <Import-Package>

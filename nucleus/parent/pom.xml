@@ -999,7 +999,6 @@
                         <supportedProjectType>glassfish-jar</supportedProjectType>
                         <supportedProjectType>jar</supportedProjectType>
                     </supportedProjectTypes>
-                    <niceManifest>true</niceManifest>
                 </configuration>
             </plugin>
 

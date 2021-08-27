@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,10 +17,12 @@
 
 package com.sun.enterprise.security.perms;
 
+import java.io.File;
 import java.io.FilePermission;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.security.CodeSource;
 import java.security.NoSuchAlgorithmException;
 import java.security.Permission;
@@ -29,72 +32,66 @@ import java.security.URIParameter;
 import java.security.cert.Certificate;
 import java.util.Enumeration;
 
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SMGlobalPolicyUtilTest {
 
     private static final String plfile = "server.policy";
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpBeforeClass() throws Exception {
-        URL serverPF = SMGlobalPolicyUtilTest.class.getResource(plfile);
-        System.out.println("policy file url = " + serverPF + ", path = " + serverPF.getPath());
-        System.setProperty(SMGlobalPolicyUtil.SYS_PROP_JAVA_SEC_POLICY, serverPF.getPath());
+        String absolutePath = getFile(plfile).getAbsolutePath();
+        System.out.println("policy path = " + absolutePath);
+        System.setProperty(SMGlobalPolicyUtil.SYS_PROP_JAVA_SEC_POLICY, absolutePath);
     }
 
+    private static File getFile(final String fileName) throws URISyntaxException {
+        final URL url = SMGlobalPolicyUtilTest.class.getResource(fileName);
+        assertNotNull(url, "url");
+        assertEquals("file", url.getProtocol(), "url.protocol");
+        final File file = Paths.get(url.toURI()).toFile();
+        assertTrue(file.exists(), "File doesn't exist: " + file);
+        return file;
+    }
 
     @Test
     public void testSystemPolicyPath() {
         System.out.println("path= " + SMGlobalPolicyUtil.domainCfgFolder);
 
-        Assert.assertNotNull(SMGlobalPolicyUtil.domainCfgFolder);
+        assertNotNull(SMGlobalPolicyUtil.domainCfgFolder);
     }
 
     @Test
     public void testTYpeConvert() {
         SMGlobalPolicyUtil.CommponentType componentType = SMGlobalPolicyUtil.convertComponentType("ejb");
         System.out.println("Converted type = " + componentType);
-        Assert.assertEquals("Converted type should be Ejb", SMGlobalPolicyUtil.CommponentType.ejb, componentType);
+        assertEquals(SMGlobalPolicyUtil.CommponentType.ejb, componentType, "Converted type should be Ejb");
 
         componentType = SMGlobalPolicyUtil.convertComponentType("ear");
         System.out.println("Converted type = " + componentType);
-        Assert.assertEquals("Converted type should be ear", SMGlobalPolicyUtil.CommponentType.ear, componentType);
+        assertEquals(SMGlobalPolicyUtil.CommponentType.ear, componentType, "Converted type should be ear");
 
         componentType = SMGlobalPolicyUtil.convertComponentType("war");
         System.out.println("Converted type = " + componentType);
-        Assert.assertEquals("Converted type should be web", SMGlobalPolicyUtil.CommponentType.war, componentType);
+        assertEquals(SMGlobalPolicyUtil.CommponentType.war, componentType, "Converted type should be web");
 
         componentType = SMGlobalPolicyUtil.convertComponentType("rar");
         System.out.println("Converted type = " + componentType);
-        Assert.assertEquals("Converted type should be rar", SMGlobalPolicyUtil.CommponentType.rar, componentType);
+        assertEquals(SMGlobalPolicyUtil.CommponentType.rar, componentType, "Converted type should be rar");
 
         componentType = SMGlobalPolicyUtil.convertComponentType("car");
         System.out.println("Converted type = " + componentType);
-        Assert.assertEquals("Converted type should be car", SMGlobalPolicyUtil.CommponentType.car, componentType);
+        assertEquals(SMGlobalPolicyUtil.CommponentType.car, componentType, "Converted type should be car");
 
-
-        try {
-            componentType = SMGlobalPolicyUtil.convertComponentType("");
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-
-        }
-
-        try {
-            componentType = SMGlobalPolicyUtil.convertComponentType("bla");
-            Assert.fail();
-        } catch (IllegalArgumentException e) {
-
-        }
-
-        try {
-            componentType = SMGlobalPolicyUtil.convertComponentType(null);
-            Assert.fail();
-        } catch (NullPointerException e) {
-
-        }
+        assertThrows(IllegalArgumentException.class, () -> SMGlobalPolicyUtil.convertComponentType(""));
+        assertThrows(IllegalArgumentException.class, () -> SMGlobalPolicyUtil.convertComponentType("bla"));
+        assertThrows(NullPointerException.class, () -> SMGlobalPolicyUtil.convertComponentType(null));
     }
 
 
@@ -102,53 +99,53 @@ public class SMGlobalPolicyUtilTest {
     public void testPolicyLoading() throws NoSuchAlgorithmException, MalformedURLException, URISyntaxException {
         System.out.println("Starting testDefPolicy loading - ee");
 
-        PermissionCollection defaultPC =
-            Policy.getInstance("JavaPolicy", new URIParameter(SMGlobalPolicyUtilTest.class.getResource("nobody.policy").toURI()))
-                  .getPermissions(new CodeSource(new URL("file:/module/ALL"), (Certificate[])null ));
+        PermissionCollection defaultPC = Policy.getInstance("JavaPolicy",
+                new URIParameter(SMGlobalPolicyUtilTest.class.getResource("nobody.policy").toURI()))
+            .getPermissions(new CodeSource(new URL("file:/module/ALL"), (Certificate[]) null));
 
         int defaultCount = dumpPermissions("Grant", "ALL", defaultPC);
-
+        assertEquals(4, defaultCount);
         PermissionCollection defEjbGrantededPC
             = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.ejb);
         int count = dumpPermissions("Grant", "Ejb", defEjbGrantededPC);
-        Assert.assertEquals(5, count - defaultCount);
+        assertEquals(5, count - defaultCount);
 
         PermissionCollection defWebGrantededPC
             = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.war);
         count = dumpPermissions("Grant", "Web", defWebGrantededPC);
-        Assert.assertEquals(6, count - defaultCount);
+        assertEquals(6, count - defaultCount);
 
         PermissionCollection defRarGrantededPC
             = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.rar);
         count = dumpPermissions("Grant", "Rar", defRarGrantededPC);
-        Assert.assertEquals(5, count - defaultCount);
+        assertEquals(5, count - defaultCount);
 
         PermissionCollection defClientGrantededPC
             = SMGlobalPolicyUtil.getEECompGrantededPerms(SMGlobalPolicyUtil.CommponentType.car);
         count = dumpPermissions("Grant", "Client", defClientGrantededPC);
-        Assert.assertEquals(10, count - defaultCount);
+        assertEquals(10, count - defaultCount);
 
         System.out.println("Starting testDefPolicy loading - ee restrict");
 
         PermissionCollection defEjbRestrictedPC
             = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.ejb);
         count = dumpPermissions("Restricted", "Ejb", defEjbRestrictedPC);
-        Assert.assertEquals(2, count - defaultCount);
+        assertEquals(2, count - defaultCount);
 
         PermissionCollection defWebRestrictedPC
             = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.war);
         count = dumpPermissions("Restricted", "Web", defWebRestrictedPC);
-        Assert.assertEquals(2, count - defaultCount);
+        assertEquals(2, count - defaultCount);
 
         PermissionCollection defRarRestrictedPC
             = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.rar);
         count = dumpPermissions("Restricted", "Rar", defRarRestrictedPC);
-        Assert.assertEquals(1, count - defaultCount);
+        assertEquals(1, count - defaultCount);
 
         PermissionCollection defClientRestrictedPC
             = SMGlobalPolicyUtil.getCompRestrictedPerms(SMGlobalPolicyUtil.CommponentType.car);
         count = dumpPermissions("Restricted", "Client", defClientRestrictedPC);
-        Assert.assertEquals(2, count - defaultCount);
+        assertEquals(2, count - defaultCount);
 
     }
 
@@ -160,31 +157,31 @@ public class SMGlobalPolicyUtilTest {
         FilePermission fp1 = new FilePermission("-", "delete");
         FilePermission fp2 = new FilePermission("a/file.txt", "delete");
 
-        Assert.assertTrue(fp1.implies(fp2));
+        assertTrue(fp1.implies(fp2));
 
         FilePermission fp3 = new FilePermission("*", "delete");
         FilePermission fp4 = new FilePermission("file.txt", "delete");
 
-        Assert.assertTrue(fp3.implies(fp4));
+        assertTrue(fp3.implies(fp4));
 
 
         FilePermission fp5 = new FilePermission("/scratch/xyz/*", "delete");
         FilePermission fp6 = new FilePermission("/scratch/xyz/deleteit.txt", "delete");
 
-        Assert.assertTrue(fp5.implies(fp6));
+        assertTrue(fp5.implies(fp6));
 
 
         FilePermission fp7 = new FilePermission("/scratch/xyz/", "delete");
         FilePermission fp8 = new FilePermission("/scratch/xyz", "delete");
 
-        Assert.assertTrue(fp7.implies(fp8));
+        assertTrue(fp7.implies(fp8));
 
 
         Permission fp9 = new java.security.UnresolvedPermission("VoidPermission", "", "", null);
         Permission fp10 = new java.security.AllPermission();
 
-        Assert.assertTrue(fp10.implies(fp9));
-        Assert.assertTrue(!fp9.implies(fp10));
+        assertTrue(fp10.implies(fp9));
+        assertTrue(!fp9.implies(fp10));
     }
 
     private int dumpPermissions(String type, String component, PermissionCollection permissionCollection) {

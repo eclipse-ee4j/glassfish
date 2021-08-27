@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,29 +17,32 @@
 
 package org.jvnet.libpam;
 
-import org.junit.*;
-import junit.framework.Assert;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class UnixUserTest {
-    private UnixUser user = null;
+    private UnixUser user;
 
-    @Before
+    @BeforeEach
     public void setUp() throws PAMException {
         user = new UnixUser("root");
     }
 
     @Test
     public void testGetUserName() {
-        Assert.assertEquals("root", user.getUserName());
+        assertEquals("root", user.getUserName());
     }
 
     @Test
     public void testGetDir() {
-        Assert.assertNotNull(user.getDir());
+        assertNotNull(user.getDir());
     }
 
     @Test
     public void testGetUID() {
-        Assert.assertEquals(0, user.getUID());
+        assertEquals(0, user.getUID());
     }
 }

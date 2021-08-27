@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +17,6 @@
 
 package com.sun.enterprise.server.logging;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -32,9 +31,13 @@ import org.glassfish.api.logging.LogHelper;
 import org.glassfish.logging.annotation.LogMessageInfo;
 import org.glassfish.logging.annotation.LogMessagesResourceBundle;
 import org.glassfish.logging.annotation.LoggerInfo;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author sanshriv
@@ -82,7 +85,7 @@ public class LoggingAnnotationsTest {
 
     private static ConsoleHandler consoleHandler;
 
-    @BeforeClass
+    @BeforeAll
     public static void initializeLoggingAnnotationsTest() throws Exception {
         File basePath = new File(BASE_PATH);
         basePath.mkdirs();
@@ -127,13 +130,17 @@ public class LoggingAnnotationsTest {
     public void testFineLevelMessageWithSourceInfo() throws IOException {
         LOGGER.fine(FINE_TEST_MESSAGE_ID);
         String testMessage = "FINE Level test message";
-        String[] ulfContents = new String[] {testMessage,
+        String[] ulfContents = new String[] {
                 "ClassName=com.sun.enterprise.server.logging.LoggingAnnotationsTest;",
-                "MethodName=testFineLevelMessageWithSourceInfo;"};
+                "MethodName=testFineLevelMessageWithSourceInfo;",
+                testMessage,
+            };
         validateLogContents(ULF_LOG, ulfContents);
-        String[] odlContents = new String[] {testMessage,
+        String[] odlContents = new String[] {
                 "[CLASSNAME: com.sun.enterprise.server.logging.LoggingAnnotationsTest]",
-                "[METHODNAME: testFineLevelMessageWithSourceInfo]"};
+                "[METHODNAME: testFineLevelMessageWithSourceInfo]",
+                testMessage,
+            };
         validateLogContents(ODL_LOG, odlContents);
         System.out.println("Test passed successfully.");
     }
@@ -175,10 +182,8 @@ public class LoggingAnnotationsTest {
                 buf.append(LINE_SEP);
             }
             String contents = buf.toString();
-            for (String msg : messages) {
-                assertEquals("File " + file + " does not contain expected log message:" + msg,
-                        true, contents.contains(msg));
-            }
+            assertThat("File " + file + " does not contain expected log messages", contents,
+                stringContainsInOrder(messages));
             return contents;
         } finally {
             if (reader != null) {
@@ -187,7 +192,7 @@ public class LoggingAnnotationsTest {
         }
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanupLoggingAnnotationsTest() throws Exception {
         LOGGER.removeHandler(consoleHandler);
         LOGGER.removeHandler(uniformFormatHandler);

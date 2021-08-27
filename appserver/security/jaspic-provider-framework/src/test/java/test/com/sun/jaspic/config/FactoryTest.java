@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,27 +17,33 @@
 
 package test.com.sun.jaspic.config;
 
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.Future;
-import java.util.concurrent.Callable;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ExecutorService;
-import java.util.ArrayList;
-import java.util.List;
-import com.sun.jaspic.config.factory.EntryInfo;
 import com.sun.jaspic.config.factory.AuthConfigFileFactory;
 import com.sun.jaspic.config.factory.BaseAuthConfigFactory;
+import com.sun.jaspic.config.factory.EntryInfo;
 import com.sun.jaspic.config.factory.RegStoreFileParser;
+
+import java.security.PrivilegedExceptionAction;
 import java.security.Security;
-import org.junit.After;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.StringTokenizer;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
 import javax.security.auth.Subject;
 import javax.security.auth.callback.CallbackHandler;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import jakarta.security.auth.message.AuthException;
 import jakarta.security.auth.message.MessageInfo;
 import jakarta.security.auth.message.config.AuthConfigFactory;
@@ -48,12 +55,18 @@ import jakarta.security.auth.message.config.RegistrationListener;
 import jakarta.security.auth.message.config.ServerAuthConfig;
 import jakarta.security.auth.message.config.ServerAuthContext;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.hamcrest.Matchers.greaterThan;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- *
  * @author Ron Monzillo
  */
 public class FactoryTest {
@@ -64,8 +77,7 @@ public class FactoryTest {
     // private static final String DEFAULT_TEST_FACTORY_CLASS_NAME = "com.sun.enterprise.security.jmac.config.SaveAuthConfigFactory";
     private static final String DEFAULT_TEST_FACTORY_CLASS_NAME = AuthConfigFileFactory.class.getName();
     private static String testFactoryClassName = DEFAULT_TEST_FACTORY_CLASS_NAME;
-    public static final String DEFAULT_FACTORY_SECURITY_PROPERTY =
-            "authconfigprovider.factory";
+    public static final String DEFAULT_FACTORY_SECURITY_PROPERTY = "authconfigprovider.factory";
     public static final String USER_DIR_PROPERTY = "user.dir";
     static final String THREAD_COUNT_KEY = "test.thread.count";
     static final String MAX_JOIN_SECONDS_KEY = "test.max.join.seconds";
@@ -75,7 +87,7 @@ public class FactoryTest {
     static final Logger logger = Logger.getLogger(FactoryTest.class.getName());
     private static String defaultFactoryClassName;
     private static AuthConfigFactory testFactory;
-    static HashMap<String, String> options = new HashMap<String, String>();
+    static HashMap<String, String> options = new HashMap<>();
     private static ExecutorService threadPool;
     static int consumerCount;
     static int activeConsumers;
@@ -94,9 +106,6 @@ public class FactoryTest {
         }
     }
     static AuthConfigProvider[] providers = new AuthConfigProvider[4];
-
-    public FactoryTest() {
-    }
 
     public static String getStringOption(String key, String defaultValue) {
         String s = options == null ? null : (String) options.get(key);
@@ -130,82 +139,28 @@ public class FactoryTest {
     }
 
     static Map<String, String> getProviderProperties() {
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     static AuthConfigFactory loadFactory(final String className) {
         AuthConfigFactory factory = null;
         try {
-            factory = (AuthConfigFactory) java.security.AccessController.doPrivileged(new java.security.PrivilegedExceptionAction() {
-
-                @Override
-                public Object run()
-                        throws ClassNotFoundException,
-                        InstantiationException,
-                        IllegalAccessException {
-                    ClassLoader loader =
-                            Thread.currentThread().
-                            getContextClassLoader();
-
-                    Class clazz = Class.forName(className, true, loader);
-                    return clazz.newInstance();
-                }
-            });
+            PrivilegedExceptionAction action = () -> {
+                ClassLoader loader = Thread.currentThread().getContextClassLoader();
+                Class clazz = Class.forName(className, true, loader);
+                return clazz.newInstance();
+            };
+            factory = (AuthConfigFactory) java.security.AccessController.doPrivileged(action);
         } catch (java.security.PrivilegedActionException pae) {
             throw new SecurityException(pae.getException());
         } finally {
-            assertNotNull("loadFactory returned null", factory);
+            assertNotNull(factory, "loadFactory returned null");
         }
         return factory;
     }
 
-    public static void main(String[] args) {
 
-        for (String s : args) {
-            StringTokenizer tokenizer = new StringTokenizer(s, "=");
-            if (tokenizer.countTokens() == 2) {
-                String key = tokenizer.nextToken();
-                String value = tokenizer.nextToken();
-                System.out.println("key: " + key + " value: " + value);
-                options.put(key, value);
-            }
-        }
-
-        testFactoryClassName = getStringOption(TEST_FACTORY_CLASS_NAME_KEY,
-                DEFAULT_TEST_FACTORY_CLASS_NAME);
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().testSetFactory();
-        new FactoryTest().afterTest();
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().testOverrideForDefaultEntries();
-        new FactoryTest().afterTest();
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().testRemoveRegistration();
-        new FactoryTest().afterTest();
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().testListeners();
-        new FactoryTest().afterTest();
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().stressFactory(
-                getIntOption(THREAD_COUNT_KEY, DEFAULT_THREAD_COUNT),
-                getIntOption(MAX_JOIN_SECONDS_KEY, DEFAULT_MAX_JOIN_SECONDS));
-        new FactoryTest().afterTest();
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().testRegistrationWithNonStringProperty();
-        new FactoryTest().afterTest();
-
-        new FactoryTest().beforeTest();
-        new FactoryTest().testRegistrationWithNonStringPropertyAndPreviousRegistration();
-        new FactoryTest().afterTest();
-    }
-
-    @Before
+    @BeforeEach
     public void beforeTest() {
         try {
             defaultFactoryClassName = Security.getProperty(DEFAULT_FACTORY_SECURITY_PROPERTY);
@@ -221,10 +176,10 @@ public class FactoryTest {
             logger.log(Level.SEVERE, "Exception in test setup", t);
             fail("exception in test setup: " + t.toString());
         }
-        assertNotNull("at exit of beforeTest getFactory returns null",AuthConfigFactory.getFactory());
+        assertNotNull(AuthConfigFactory.getFactory(), "at exit of beforeTest getFactory returns null");
     }
 
-    @After
+    @AfterEach
     public void afterTest() {
         AuthConfigFactory.setFactory(null);
     }
@@ -264,11 +219,11 @@ public class FactoryTest {
         try {
             regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
         } catch (IllegalArgumentException iae) {
-            assertNull("Failed Registration Should Have Resulted in a NULL RegistrationID returned but did not.", regId);
+            assertNull(regId, "Failed Registration Should Have Resulted in a NULL RegistrationID returned but did not.");
         }
         AuthConfigProvider acp = null;
         acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
-        assertNull("Registration Should Have Failed and Therefore No ACP Should Have been Found.", acp);
+        assertNull(acp, "Registration Should Have Failed and Therefore No ACP Should Have been Found.");
     }
 
     @Test
@@ -277,38 +232,30 @@ public class FactoryTest {
         Security.setProperty(DEFAULT_FACTORY_SECURITY_PROPERTY, testFactoryClassName);
 
         // first register a valid acp configuration
-        String className = _AuthConfigProvider.class.getName();
-        HashMap properties = null;
-        String layer = "HttpServlet";
-        String appContext = "context";
-        String description = null;
-        String regId = null;
-        regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
-        assertNotNull("Registration Should Have Succeeded returning a nonNULL RegistrationID but did not.", regId);
-        AuthConfigProvider previousAcp = null;
-        previousAcp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
-        assertNotNull("Registration Should Have Succeeded returning a nonNULL ACP but did not.", previousAcp);
-        String previousRegId = regId;
+        final String className = _AuthConfigProvider.class.getName();
+        final String layer = "HttpServlet";
+        final String appContext = "context";
+        final String description = null;
+        final String regId
+            = AuthConfigFactory.getFactory().registerConfigProvider(className, null, layer, appContext, description);
+        assertNotNull(regId, "Registration Should Have Succeeded returning a nonNULL RegistrationID but did not.");
+        final AuthConfigProvider previousAcp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
+        assertNotNull(previousAcp, "Registration Should Have Succeeded returning a nonNULL ACP but did not.");
+        final String previousRegId = regId;
 
         // now for an invalid configuration
-        properties = new HashMap();
-        ArrayList list = new ArrayList();
+        final Map<String, List<String>> properties = new HashMap<>();
+        final ArrayList<String> list = new ArrayList<>();
         list.add("larry was here");
         properties.put("test", list);
-        layer = "HttpServlet";
-        appContext = "context";
-        description = null;
-        regId = null;
-        try {
-            regId = AuthConfigFactory.getFactory().registerConfigProvider(className, properties, layer, appContext, description);
-        } catch (IllegalArgumentException iae) {
-            assertNull("Failed Registration Should Have Resulted in a NULL RegistrationID returned but did not.", regId);
-        }
+        assertThrows(IllegalArgumentException.class, () -> AuthConfigFactory.getFactory()
+            .registerConfigProvider(className, properties, layer, appContext, description));
         AuthConfigProvider acp = null;
         acp = AuthConfigFactory.getFactory().getConfigProvider(layer, appContext, null);
-        assertTrue("Registration Should Have Failed for Invalid Config and Therefore returned the Previously Registered ACP", previousAcp == acp);
-
-        assertTrue("Failed to remove the previously registered provider.", AuthConfigFactory.getFactory().removeRegistration(previousRegId));
+        assertSame(previousAcp, acp,
+            "Registration Should Have Failed for Invalid Config and Therefore returned the Previously Registered ACP");
+        assertTrue(AuthConfigFactory.getFactory().removeRegistration(previousRegId),
+            "Failed to remove the previously registered provider.");
     }
 
     @Test
@@ -345,7 +292,7 @@ public class FactoryTest {
             try {
                 if (regStore == null) {
                     EntryInfo e = new EntryInfo(_AuthConfigProvider.class.getName(),null);
-                    List<EntryInfo> defaultEntries = new ArrayList<EntryInfo>();
+                    List<EntryInfo> defaultEntries = new ArrayList<>();
                     defaultEntries.add(e);
                     regStore = new RegStoreFileParser(userDir,
                             BaseAuthConfigFactory.CONF_FILE_NAME,defaultEntries);
@@ -396,7 +343,7 @@ public class FactoryTest {
             try {
                 if (regStore == null) {
                     EntryInfo e = new EntryInfo(_AuthConfigProvider.class.getName(),null);
-                    List<EntryInfo> defaultEntries = new ArrayList<EntryInfo>();
+                    List<EntryInfo> defaultEntries = new ArrayList<>();
                     defaultEntries.add(e);
                     regStore = new RegStoreFileParser(userDir,
                             BaseAuthConfigFactory.CONF_FILE_NAME,defaultEntries);
@@ -430,46 +377,45 @@ public class FactoryTest {
         RegistrationContext rc;
         String[] rids = f.getRegistrationIDs(p);
         boolean removed;
-        assertTrue("provider did not self register", rids != null && rids.length > 0);
+        assertThat("provider did not self register", rids, arrayWithSize(greaterThan(0)));
         for (String i : rids) {
             rc = f.getRegistrationContext(i);
             removed = f.removeRegistration(i);
-            assertTrue("expected true from removeRegistration - rid: " + i,
-                    rc != null && removed);
+            assertNotNull(rc);
+            assertTrue(removed, "expected true from removeRegistration - rid: " + i);
         }
         for (String i : rids) {
             rc = f.getRegistrationContext(i);
             removed = f.removeRegistration(i);
-            assertTrue("expected false from removeRegistration - rid: " + i,
-                    rc == null && !removed);
+            assertNull(rc);
+            assertFalse(removed, "expected false from removeRegistration - rid: " + i);
         }
 
-        //testing registration and removal of null provider;
+        // testing registration and removal of null provider;
         String rid = f.registerConfigProvider(null, null, null, "null registration");
         rc = f.getRegistrationContext(rid);
         removed = f.removeRegistration(rid);
-        assertTrue("testing null provider - expected true from removeRegistration - rid: " + rid,
-                rc != null && removed);
-        //testing for interferece with null provider
+        assertNotNull(rc);
+        assertTrue(removed, "testing null provider - expected true from removeRegistration - rid: " + rid);
+        // testing for interferece with null provider
         rc = f.getRegistrationContext(rid);
         removed = f.removeRegistration(rid);
-        assertTrue("testing null provider - expected false from removeRegistration - rid: " + rid,
-                rc == null && !removed);
+        assertNull(rc);
+        assertFalse(removed, "testing null provider - expected false from removeRegistration - rid: " + rid);
         rid = f.registerConfigProvider(null, null, null, "null registration");
-        //temporary to force call to decomposeRegId in getEffectedListeners
-        p = f.getConfigProvider(null, null, new _Listener(null, null, false));
+        // temporary to force call to decomposeRegId in getEffectedListeners
+        f.getConfigProvider(null, null, new _Listener(null, null, false));
         rc = f.getRegistrationContext(rid);
-        assertTrue("testing null provider - getRegistrationContext - rid: " + rid,
-                rid != null);
+        assertNotNull(rid, "testing null provider - getRegistrationContext - rid: " + rid);
         String badRid = "someInvalidId";
         rc = f.getRegistrationContext(badRid);
         removed = f.removeRegistration(badRid);
-        assertTrue("expected false from removeRegistration - rid: " + badRid,
-                rc == null && !removed);
+        assertNull(rc);
+        assertFalse(removed, "expected false from removeRegistration - rid: " + badRid);
         rc = f.getRegistrationContext(rid);
         removed = f.removeRegistration(rid);
-        assertTrue("testing null provider - expected true from removeRegistration - rid: " + rid,
-                rc != null && removed);
+        assertNotNull(rc);
+        assertTrue(removed, "testing null provider - expected true from removeRegistration - rid: " + rid);
     }
 
     @Test
@@ -506,8 +452,8 @@ public class FactoryTest {
             }
         }
 
-        for (int i = 0; i < rid.length; i++) {
-            f.removeRegistration(rid[i]);
+        for (String element : rid) {
+            f.removeRegistration(element);
         }
 
 
@@ -517,8 +463,8 @@ public class FactoryTest {
         f.detachListener(listener[3], listener[3].getLayer(), listener[3].getAppContext());
 
         //should not find any left to detach
-        for (int i = 0; i < listener.length; i++) {
-            f.detachListener(listener[i], listener[i].getLayer(), listener[i].getAppContext());
+        for (_Listener element : listener) {
+            f.detachListener(element, element.getLayer(), element.getAppContext());
         }
 
         for (int i = 0; i < rid.length; i++) {
@@ -534,16 +480,15 @@ public class FactoryTest {
             }
         }
         for (int i = 0; i < rid.length; i++) {
-            for (int j = 0; j < listener.length; j++) {
-                if (listener[j].notified) {
-                    assertTrue("Test Setup Failure - listener could not be registered",
-                            listener[j].register());
+            for (_Listener element : listener) {
+                if (element.notified) {
+                    assertTrue(element.register(), "Test Setup Failure - listener could not be registered");
                 }
             }
             f.removeRegistration(rid[i]);
 
-            for (int j = 0; j < listener.length; j++) {
-                listener[j].check(ridLayer[i], ridContext[i]);
+            for (_Listener element : listener) {
+                element.check(ridLayer[i], ridContext[i]);
             }
         }
 
@@ -561,16 +506,15 @@ public class FactoryTest {
             }
         }
         for (int i = 0; i < rid.length; i++) {
-            for (int j = 0; j < listener.length; j++) {
-                if (listener[j].notified) {
-                    assertTrue("Test Setup Failure - listener could not be registered",
-                            listener[j].register());
+            for (_Listener element : listener) {
+                if (element.notified) {
+                    assertTrue(element.register(), "Test Setup Failure - listener could not be registered");
                 }
             }
             f.removeRegistration(rid[i]);
 
-            for (int j = 0; j < listener.length; j++) {
-                listener[j].check(ridLayer[i], ridContext[i]);
+            for (_Listener element : listener) {
+                element.check(ridLayer[i], ridContext[i]);
             }
         }
     }
@@ -619,11 +563,11 @@ public class FactoryTest {
             if (shouldHaveBeenNotified) {
                 String msg = "listener at layer,context: " + layer + "," + appContext + " should have been notified at: "
                         + l + "," + c;
-                assertTrue(msg, notified());
+                assertTrue(notified(), msg);
             } else {
                 String msg = "listener at layer,context: " + layer + "," + appContext + " should NOT have been notified at: "
                         + l + "," + c;
-                assertFalse(msg, notified());
+                assertFalse(notified(), msg);
             }
         }
 
@@ -635,7 +579,7 @@ public class FactoryTest {
             boolean validNotification = (layer == l || layer.equals(l))
                     && (appContext == c || appContext.equals(c));
             String msg = "listener notified at wrong layer: " + l + " or context: " + c;
-            assertTrue(msg, validNotification);
+            assertTrue(validNotification, msg);
             if (validNotification && reRegister) {
                 register();
             }
@@ -663,7 +607,7 @@ public class FactoryTest {
             consumerCount = threadCount;
         }
 
-        ArrayList<Callable<_ResultCarrier>> tasks = new ArrayList<Callable<_ResultCarrier>>();
+        ArrayList<Callable<_ResultCarrier>> tasks = new ArrayList<>();
 
         for (int i = 0; i < threadCount; i++) {
             _ResultCarrier carrier = new _ResultCarrier();
@@ -759,104 +703,106 @@ public class FactoryTest {
             else if (runAsConsumer) {
                 doConsumer(f, layers[random.nextInt(layers.length)],
                             contexts[random.nextInt(contexts.length)]);
-            } else while (true) {
+            } else {
+                while (true) {
 
-                synchronized (_Thread.class) {
-                    if (activeConsumers == 0) {
-                        setResult(null);
-                        return;
-                    }
-                }
-
-                switch (random.nextInt(5)) {
-                    case 0:
-                        if (random.nextInt(25) == 1) {
-                            try {
-                                f.refresh();
-                            } catch (Exception e) {
-                                String msg = "producer thread(refresh): " + getId() + " caught exception: ";
-                                logger.log(Level.SEVERE, msg, e);
-                                setResult(msg + e.toString());
-                                return;
-                            }
+                    synchronized (_Thread.class) {
+                        if (activeConsumers == 0) {
+                            setResult(null);
+                            return;
                         }
-                        break;
-                    case 1:
-                        if (random.nextInt(1000) == 1) {
-                            try {
-                                f = AuthConfigFactory.getFactory();
-                                if (f == null) {
-                                    String msg = "producer thread(get/set): " + getId() + " found null factory";
-                                    logger.log(Level.SEVERE, msg);
-                                    setResult(msg);
+                    }
+
+                    switch (random.nextInt(5)) {
+                        case 0:
+                            if (random.nextInt(25) == 1) {
+                                try {
+                                    f.refresh();
+                                } catch (Exception e) {
+                                    String msg = "producer thread(refresh): " + getId() + " caught exception: ";
+                                    logger.log(Level.SEVERE, msg, e);
+                                    setResult(msg + e.toString());
                                     return;
                                 }
-                                AuthConfigFactory.setFactory(f);
+                            }
+                            break;
+                        case 1:
+                            if (random.nextInt(1000) == 1) {
+                                try {
+                                    f = AuthConfigFactory.getFactory();
+                                    if (f == null) {
+                                        String msg = "producer thread(get/set): " + getId() + " found null factory";
+                                        logger.log(Level.SEVERE, msg);
+                                        setResult(msg);
+                                        return;
+                                    }
+                                    AuthConfigFactory.setFactory(f);
+                                } catch (Exception e) {
+                                    String msg = "producer thread(get/setFactory): " + getId() + " caught exception: ";
+                                    logger.log(Level.SEVERE, msg, e);
+                                    setResult(msg + e.toString());
+                                    return;
+                                }
+                            }
+                            break;
+                        case 2:
+                            try {
+                                f.registerConfigProvider(
+                                        _AuthConfigProvider.class.getName(),
+                                        getProviderProperties(),
+                                        layers[random.nextInt(layers.length)],
+                                        contexts[random.nextInt(contexts.length)],
+                                        "persistent registration");
                             } catch (Exception e) {
-                                String msg = "producer thread(get/setFactory): " + getId() + " caught exception: ";
+                                String msg = "producer thread(register persistent): " + getId() + " caught exception: ";
                                 logger.log(Level.SEVERE, msg, e);
                                 setResult(msg + e.toString());
                                 return;
                             }
-                        }
-                        break;
-                    case 2:
-                        try {
-                            f.registerConfigProvider(
-                                    _AuthConfigProvider.class.getName(),
-                                    getProviderProperties(),
-                                    layers[random.nextInt(layers.length)],
-                                    contexts[random.nextInt(contexts.length)],
-                                    "persistent registration");
-                        } catch (Exception e) {
-                            String msg = "producer thread(register persistent): " + getId() + " caught exception: ";
-                            logger.log(Level.SEVERE, msg, e);
-                            setResult(msg + e.toString());
-                            return;
-                        }
-                        break;
-                    case 3:
-                        try {
-                            f.registerConfigProvider(
-                                    providers[random.nextInt(providers.length)],
-                                    layers[random.nextInt(layers.length)],
-                                    contexts[random.nextInt(contexts.length)],
-                                    "transient registration");
-                        } catch (Exception e) {
-                            String msg = "producer thread(register transient): " + getId() + " caught exception: ";
-                            logger.log(Level.SEVERE, msg, e);
-                            setResult(msg + e.toString());
-                            return;
-                        }
-                        break;
-                    case 4:
-                        try {
-                            String[] rids = f.getRegistrationIDs(
-                                    providers[random.nextInt(providers.length)]);
-                            int length = rids.length;
-                            boolean removeNext = true;
-                            for (String rid : rids) {
-                                RegistrationContext rc = f.getRegistrationContext(rid);
-                                if (rc == null) {
-                                    removeNext = true;
-                                } else if (removeNext) {
-                                    f.removeRegistration(rid);
-                                    removeNext = false;
-                                } else {
-                                    removeNext = true;
-                                }
+                            break;
+                        case 3:
+                            try {
+                                f.registerConfigProvider(
+                                        providers[random.nextInt(providers.length)],
+                                        layers[random.nextInt(layers.length)],
+                                        contexts[random.nextInt(contexts.length)],
+                                        "transient registration");
+                            } catch (Exception e) {
+                                String msg = "producer thread(register transient): " + getId() + " caught exception: ";
+                                logger.log(Level.SEVERE, msg, e);
+                                setResult(msg + e.toString());
+                                return;
                             }
-                        } catch (Exception e) {
-                            String msg = "producer thread(remove registration): " + getId() + " caught exception: ";
-                            logger.log(Level.SEVERE, msg, e);
-                            setResult(msg + e.toString());
-                            return;
+                            break;
+                        case 4:
+                            try {
+                                String[] rids = f.getRegistrationIDs(
+                                        providers[random.nextInt(providers.length)]);
+                                int length = rids.length;
+                                boolean removeNext = true;
+                                for (String rid : rids) {
+                                    RegistrationContext rc = f.getRegistrationContext(rid);
+                                    if (rc == null) {
+                                        removeNext = true;
+                                    } else if (removeNext) {
+                                        f.removeRegistration(rid);
+                                        removeNext = false;
+                                    } else {
+                                        removeNext = true;
+                                    }
+                                }
+                            } catch (Exception e) {
+                                String msg = "producer thread(remove registration): " + getId() + " caught exception: ";
+                                logger.log(Level.SEVERE, msg, e);
+                                setResult(msg + e.toString());
+                                return;
+
+                            }
+                            break;
 
                         }
-                        break;
-
                     }
-                }
+            }
         }
 
         public void doConsumer(AuthConfigFactory f, String layer, String context) {
@@ -892,6 +838,7 @@ public class FactoryTest {
             }
         }
 
+        @Override
         public void notify(String layer, String context) {
             if (random.nextInt(100) == 1) {
                 synchronized (_Thread.class) {
@@ -924,66 +871,81 @@ public class FactoryTest {
             }
         }
 
+        @Override
         public ClientAuthConfig getClientAuthConfig(final String layer,
                 final String appCtxt, CallbackHandler ch) throws AuthException {
 
             return new ClientAuthConfig() {
 
+                @Override
                 public ClientAuthContext getAuthContext(String string, Subject sbjct, Map map) throws AuthException {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public String getMessageLayer() {
                     return layer;
                 }
 
+                @Override
                 public String getAppContext() {
                     return appCtxt;
                 }
 
+                @Override
                 public String getAuthContextID(MessageInfo mi) {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public void refresh() {
                 }
 
+                @Override
                 public boolean isProtected() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
+        @Override
         public ServerAuthConfig getServerAuthConfig(final String layer,
                 final String appCtxt, CallbackHandler ch) throws AuthException {
 
             return new ServerAuthConfig() {
 
+                @Override
                 public ServerAuthContext getAuthContext(String string, Subject sbjct, Map map) throws AuthException {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public String getMessageLayer() {
                     return layer;
                 }
 
+                @Override
                 public String getAppContext() {
                     return appCtxt;
                 }
 
+                @Override
                 public String getAuthContextID(MessageInfo mi) {
                     throw new UnsupportedOperationException();
                 }
 
+                @Override
                 public void refresh() {
                 }
 
+                @Override
                 public boolean isProtected() {
                     throw new UnsupportedOperationException();
                 }
             };
         }
 
+        @Override
         public void refresh() {
         }
     }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,11 +19,7 @@ package com.sun.enterprise.admin.tests;
 
 import org.glassfish.config.support.GlassFishDocument;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.DomDocument;
-import org.junit.Ignore;
-
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 /**
  * User: Jerome Dochez
@@ -32,18 +29,14 @@ import java.util.concurrent.ThreadFactory;
 public abstract class ConfigApiTest extends org.glassfish.tests.utils.ConfigApiTest {
 
     @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
-        DomDocument doc = habitat.getService(GlassFishDocument.class);
-        if (doc==null) {
-            return new GlassFishDocument(habitat, Executors.newCachedThreadPool(new ThreadFactory() {
-
-                        public Thread newThread(Runnable r) {
-                            Thread t = Executors.defaultThreadFactory().newThread(r);
-                            t.setDaemon(true);
-                            return t;
-                        }
-
-                    }));
+    public GlassFishDocument getDocument(ServiceLocator locator) {
+        GlassFishDocument doc = locator.getService(GlassFishDocument.class);
+        if (doc == null) {
+            return new GlassFishDocument(locator, Executors.newCachedThreadPool(runnable -> {
+                Thread thread = Executors.defaultThreadFactory().newThread(runnable);
+                thread.setDaemon(true);
+                return thread;
+            }));
         }
         return doc;
     }

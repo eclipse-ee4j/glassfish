@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -143,7 +144,7 @@ public class ConsolePluginService {
         if (locale == null) {
             locale = "en"; // Use this as the default...
         }
-        TOC mergedTOC = helpSetMap.get(locale);
+        TOC mergedTOC = null;
         if (mergedTOC != null) {
             // Already calculated...
             return mergedTOC;
@@ -211,7 +212,7 @@ public class ConsolePluginService {
         if (locale == null) {
             locale = "en"; // Use this as the default...
         }
-        Index mergedIndex = helpSetIndexMap.get(locale);
+        Index mergedIndex = null;
         if (mergedIndex != null) {
             // Already calculated...
             return mergedIndex;
@@ -457,12 +458,4 @@ public class ConsolePluginService {
      */
     private Map<ClassLoader, String> classLoaderModuleMap =
             new HashMap<ClassLoader, String>();
-
-    /**
-     *
-     */
-    private Map<String, TOC> helpSetMap = new HashMap<String, TOC>();
-
-    private Map<String, Index> helpSetIndexMap = new HashMap<String, Index>();
-
 }

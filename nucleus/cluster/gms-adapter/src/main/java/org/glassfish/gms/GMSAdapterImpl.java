@@ -1186,12 +1186,6 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
 
     @Override
     public void removeGroupLeadershipLNotificationistener(CallBack callback){
-         if (gms != null) {
-            GroupLeadershipNotificationActionFactory glnf = null;
-            if (glnf != null)  {
-                gms.removeActionFactory(glnf);
-            }
-        }
     }
 
     @Override

@@ -1185,7 +1185,7 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
     }
 
     @Override
-    public void removeGroupLeadershipLNotificationistener(CallBack callback){
+    public void removeGroupLeadershipNotificationListener(CallBack callback){
     }
 
     @Override

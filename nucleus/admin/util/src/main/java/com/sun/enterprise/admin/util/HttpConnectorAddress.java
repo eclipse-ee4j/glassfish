@@ -127,7 +127,7 @@ public final class HttpConnectorAddress {
     private SSLSocketFactory createAdminSSLSocketFactory(String alias, String protocol) {
         try {
             if (protocol == null) {
-                protocol = "TLSv1";
+                protocol = "TLS";
             }
             SSLContext cntxt = SSLContext.getInstance(protocol);
             /*

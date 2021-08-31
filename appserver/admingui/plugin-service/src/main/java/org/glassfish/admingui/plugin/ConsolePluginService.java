@@ -144,11 +144,6 @@ public class ConsolePluginService {
         if (locale == null) {
             locale = "en"; // Use this as the default...
         }
-        TOC mergedTOC = null;
-        if (mergedTOC != null) {
-            // Already calculated...
-            return mergedTOC;
-        }
 
         // TOC
         Map<String, List<URL>> mapUrls = getResources(locale + "/help/toc.xml");
@@ -157,7 +152,7 @@ public class ConsolePluginService {
         ConfigParser parser = new ConfigParser(habitat);
 
         // Setup a new "merged" TOC...
-        mergedTOC = new TOC();
+        var mergedTOC = new TOC();
         mergedTOC.setTOCItems(new ArrayList<TOCItem>());
         mergedTOC.setVersion("2.0");
 
@@ -212,11 +207,6 @@ public class ConsolePluginService {
         if (locale == null) {
             locale = "en"; // Use this as the default...
         }
-        Index mergedIndex = null;
-        if (mergedIndex != null) {
-            // Already calculated...
-            return mergedIndex;
-        }
 
         // TOC
         Map<String, List<URL>> mapUrls = getResources(locale + "/help/index.xml");
@@ -225,7 +215,7 @@ public class ConsolePluginService {
         ConfigParser parser = new ConfigParser(habitat);
 
         // Setup a new "merged" TOC...
-        mergedIndex = new Index();
+        var mergedIndex = new Index();
         mergedIndex.setIndexItems(new ArrayList<IndexItem>());
         mergedIndex.setVersion("2.0");
 

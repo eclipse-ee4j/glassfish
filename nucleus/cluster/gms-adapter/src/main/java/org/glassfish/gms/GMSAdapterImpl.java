@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -124,8 +125,6 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
             new ConcurrentHashMap<CallBack, FailureNotificationActionFactory>();
     private ConcurrentHashMap<CallBack, FailureSuspectedActionFactory> callbackFailureSuspectedActionFactoryMapping =
             new ConcurrentHashMap<CallBack, FailureSuspectedActionFactory>();
-    private ConcurrentHashMap<CallBack, GroupLeadershipNotificationActionFactory> callbackGroupLeadershipActionFactoryMapping =
-            new ConcurrentHashMap<CallBack, GroupLeadershipNotificationActionFactory>();
     private ConcurrentHashMap<CallBack, PlannedShutdownActionFactory> callbackPlannedShutdownActionFactoryMapping =
             new ConcurrentHashMap<CallBack, PlannedShutdownActionFactory>();
     private EventListener glassfishEventListener = null;
@@ -1187,12 +1186,6 @@ public class GMSAdapterImpl implements GMSAdapter, PostConstruct, CallBack {
 
     @Override
     public void removeGroupLeadershipLNotificationistener(CallBack callback){
-         if (gms != null) {
-            GroupLeadershipNotificationActionFactory glnf = callbackGroupLeadershipActionFactoryMapping.get(callback);
-            if (glnf != null)  {
-                gms.removeActionFactory(glnf);
-            }
-        }
     }
 
     @Override

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -143,11 +144,6 @@ public class ConsolePluginService {
         if (locale == null) {
             locale = "en"; // Use this as the default...
         }
-        TOC mergedTOC = helpSetMap.get(locale);
-        if (mergedTOC != null) {
-            // Already calculated...
-            return mergedTOC;
-        }
 
         // TOC
         Map<String, List<URL>> mapUrls = getResources(locale + "/help/toc.xml");
@@ -156,7 +152,7 @@ public class ConsolePluginService {
         ConfigParser parser = new ConfigParser(habitat);
 
         // Setup a new "merged" TOC...
-        mergedTOC = new TOC();
+        var mergedTOC = new TOC();
         mergedTOC.setTOCItems(new ArrayList<TOCItem>());
         mergedTOC.setVersion("2.0");
 
@@ -211,11 +207,6 @@ public class ConsolePluginService {
         if (locale == null) {
             locale = "en"; // Use this as the default...
         }
-        Index mergedIndex = helpSetIndexMap.get(locale);
-        if (mergedIndex != null) {
-            // Already calculated...
-            return mergedIndex;
-        }
 
         // TOC
         Map<String, List<URL>> mapUrls = getResources(locale + "/help/index.xml");
@@ -224,7 +215,7 @@ public class ConsolePluginService {
         ConfigParser parser = new ConfigParser(habitat);
 
         // Setup a new "merged" TOC...
-        mergedIndex = new Index();
+        var mergedIndex = new Index();
         mergedIndex.setIndexItems(new ArrayList<IndexItem>());
         mergedIndex.setVersion("2.0");
 
@@ -457,12 +448,4 @@ public class ConsolePluginService {
      */
     private Map<ClassLoader, String> classLoaderModuleMap =
             new HashMap<ClassLoader, String>();
-
-    /**
-     *
-     */
-    private Map<String, TOC> helpSetMap = new HashMap<String, TOC>();
-
-    private Map<String, Index> helpSetIndexMap = new HashMap<String, Index>();
-
 }

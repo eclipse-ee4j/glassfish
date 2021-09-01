@@ -1,5 +1,6 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,26 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.kernel.deployment.container;
+package org.glassfish.main.core.kernel.test.example;
 
-import org.glassfish.api.container.Container;
-import org.glassfish.api.deployment.Deployer;
-import org.glassfish.internal.deployment.GenericDeployer;
 import org.jvnet.hk2.annotations.Service;
+import org.glassfish.api.admin.AdminCommand;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.ActionReport;
 
 /**
- * Fake container for testing purposes
+ * public command with no visibility annotation
  *
  * @author Jerome Dochez
  */
-@Service(name="FakeContainer")
-public class FakeContainer implements Container {
+@Service(name="notannoated-public-command")
+public class AnotherPublicMethod implements AdminCommand {
 
-    public Class<? extends Deployer> getDeployer() {
-        return GenericDeployer.class;
-    }
-
-    public String getName() {
-        return "Fake";
+    @Override
+    public void execute(AdminCommandContext context) {
+        context.getActionReport().setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }
 }

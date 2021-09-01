@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,114 +17,142 @@
 
 package org.glassfish.tests.kernel.deployment;
 
-import org.junit.*;
-import org.glassfish.api.event.Events;
-import org.glassfish.api.event.EventListener;
-import org.glassfish.api.event.EventTypes;
-import org.glassfish.api.deployment.DeployCommandParameters;
-import org.glassfish.api.deployment.UndeployCommandParameters;
+import com.sun.enterprise.config.serverbeans.Server;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.glassfish.hk2.api.ActiveDescriptor;
+import org.glassfish.api.deployment.DeployCommandParameters;
+import org.glassfish.api.deployment.UndeployCommandParameters;
+import org.glassfish.api.event.EventListener;
+import org.glassfish.api.event.EventListener.Event;
+import org.glassfish.api.event.EventTypes;
+import org.glassfish.api.event.Events;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.utilities.BuilderHelper;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.config.support.GlassFishDocument;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.tests.utils.CustomConfiguration;
+import org.glassfish.tests.utils.HK2Extension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
+import org.junit.jupiter.api.extension.ExtendWith;
+import jakarta.inject.Inject;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.logging.Logger;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.module.bootstrap.StartupContext;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * Created by IntelliJ IDEA.
  * User: dochez
  * Date: Mar 12, 2009
  * Time: 9:26:57 AM
- * To change this template use File | Settings | File Templates.
  */
-public class EventsTest extends ConfigApiTest {
+@TestMethodOrder(OrderAnnotation.class)
+@ExtendWith(HK2Extension.class)
+@CustomConfiguration("DomainTest.xml")
+public class EventsTest {
 
-    static ServiceLocator habitat;
-    static File application;
-    static List<EventListener.Event> allEvents = new ArrayList<EventListener.Event>();
-    static private EventListener listener = new EventListener() {
-        public void event(Event event) {
-            //System.out.println("Received event " + event.name());
-            allEvents.add(event);
-        }
-    };
+    private static List<Event> allEvents = new ArrayList<>();
 
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
+    private File application;
+    private final EventListener listener = event -> allEvents.add(event);
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
-       DomDocument doc = habitat.getService(GlassFishDocument.class);
-        if (doc==null) {
-            return new GlassFishDocument(habitat, Executors.newCachedThreadPool(new ThreadFactory() {
 
-                        public Thread newThread(Runnable r) {
-                            Thread t = Executors.defaultThreadFactory().newThread(r);
-                            t.setDaemon(true);
-                            return t;
-                        }
+    @BeforeEach
+    public void setup() throws Exception {
+        Server server = locator.getService(Server.class, "server");
+        assertNotNull(server, "server");
+        ServiceLocatorUtilities.addOneConstant(locator, server, ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
 
-                    }));
-        }
-        return doc;
-    }
-
-    @Before
-    public void setup() throws IOException {
-
-        // cludge to run only once yet not depend on a static method.
-        if (habitat!=null) {
-            return;
-        }
-        habitat  = super.getHabitat();
-
-        Server server = habitat.getService(Server.class, "server");
-        ActiveDescriptor<Server> descriptor = BuilderHelper.createConstantDescriptor(server,
-                ServerEnvironment.DEFAULT_INSTANCE_NAME, Server.class);
-        ServiceLocatorUtilities.addOneDescriptor(habitat, descriptor);
-
-        try {
-            application = File.createTempFile("kerneltest", "tmp");
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw e;
-
-        }
-
+        application = File.createTempFile("kerneltest", "tmp");
         application.delete();
         application.mkdirs();
 
-        Events events = habitat.getService(Events.class);
+        Events events = locator.getService(Events.class);
         events.register(listener);
     }
 
-    @AfterClass
-    public static void tearDown() {
+    @AfterEach
+    public void deleteApplications() {
        if (application != null) {
            application.delete();
        }
     }
 
-    public static List<EventTypes> getSingletonModuleSuccessfullDeploymentEvents() {
-        ArrayList<EventTypes> events = new ArrayList<EventTypes>();
+
+    @Test
+    @Order(1)
+    public void deployUndeployTest() throws Exception {
+        final List<EventTypes> myTestEvents = getSingletonModuleSuccessfullDeploymentEvents();
+        Events events = locator.getService(Events.class);
+        EventListener listenerRemovingEvents = event -> {
+            if (myTestEvents.contains(event.type())) {
+                myTestEvents.remove(event.type());
+            }
+        };
+        events.register(listenerRemovingEvents);
+        Deployment deployment = locator.getService(Deployment.class);
+        DeployCommandParameters params = new DeployCommandParameters(application);
+        params.name = "fakeApplication";
+        params.target = "server";
+        ActionReport report = locator.getService(ActionReport.class, "hk2-agent");
+        ExtendedDeploymentContext dc = deployment.getBuilder(Logger.getAnonymousLogger(), params, report).source(application).build();
+        deployment.deploy(dc);
+        events.unregister(listenerRemovingEvents);
+        assertThat(myTestEvents.toString(), myTestEvents, hasSize(6));
+
+        final List<EventTypes> myTestEvents2 = getSingletonModuleSuccessfullUndeploymentEvents();
+        EventListener listener2 = event -> {
+            if (myTestEvents2.contains(event.type())) {
+                myTestEvents2.remove(event.type());
+            }
+        };
+        events.register(listener2);
+        UndeployCommandParameters params2 = new UndeployCommandParameters("fakeApplication");
+        params2.target = "server";
+        ActionReport report2 = locator.getService(ActionReport.class, "hk2-agent");
+        ExtendedDeploymentContext dc2 = deployment.getBuilder(Logger.getAnonymousLogger(), params2, report2).source(application).build();
+        deployment.undeploy("fakeApplication", dc2);
+        events.unregister(listener2);
+        assertThat(myTestEvents.toString(), myTestEvents2, hasSize(6));
+    }
+
+    @Test
+    @Order(2)
+    public void badUndeployTest() throws Exception {
+        Deployment deployment = locator.getService(Deployment.class);
+        UndeployCommandParameters params = new UndeployCommandParameters("notavalidname");
+        params.target = "server";
+        ActionReport report = locator.getService(ActionReport.class, "hk2-agent");
+        ExtendedDeploymentContext dc = deployment.getBuilder(Logger.getAnonymousLogger(), params, report).source(application).build();
+        deployment.undeploy("notavalidname", dc);
+        assertEquals(ActionReport.ExitCode.FAILURE, report.getActionExitCode());
+    }
+
+    @Test
+    @Order(3)
+    public void asynchronousEvents() {
+        List<EventTypes> remaining = asynchonousEvents().stream()
+            .filter(et -> allEvents.stream().anyMatch(event -> event.is(et))).collect(Collectors.toList());
+        assertThat(remaining.toString(), remaining, hasSize(2));
+    }
+
+
+    private static List<EventTypes> getSingletonModuleSuccessfullDeploymentEvents() {
+        ArrayList<EventTypes> events = new ArrayList<>();
         events.add(Deployment.MODULE_PREPARED);
         events.add(Deployment.MODULE_LOADED);
         events.add(Deployment.MODULE_STARTED);
@@ -133,8 +162,8 @@ public class EventsTest extends ConfigApiTest {
         return events;
     }
 
-    public static List<EventTypes> getSingletonModuleSuccessfullUndeploymentEvents() {
-        ArrayList<EventTypes> events = new ArrayList<EventTypes>();
+    private static List<EventTypes> getSingletonModuleSuccessfullUndeploymentEvents() {
+        ArrayList<EventTypes> events = new ArrayList<>();
         events.add(Deployment.MODULE_STOPPED);
         events.add(Deployment.MODULE_UNLOADED);
         events.add(Deployment.MODULE_CLEANED);
@@ -144,93 +173,13 @@ public class EventsTest extends ConfigApiTest {
         return events;
     }
 
-    public static List<EventTypes> asynchonousEvents() {
-        ArrayList<EventTypes> events = new ArrayList<EventTypes>();
+    private static List<EventTypes> asynchonousEvents() {
+        ArrayList<EventTypes> events = new ArrayList<>();
         events.add(Deployment.DEPLOYMENT_START);
         events.add(Deployment.DEPLOYMENT_SUCCESS);
         events.add(Deployment.UNDEPLOYMENT_START);
         events.add(Deployment.UNDEPLOYMENT_SUCCESS);
         events.add(Deployment.UNDEPLOYMENT_FAILURE);
         return events;
-    }
-
-    @Test
-    public void deployUndeployTest() throws Exception {
-
-        final List<EventTypes> myTestEvents = getSingletonModuleSuccessfullDeploymentEvents();
-        Events events = habitat.getService(Events.class);
-        EventListener listener = new EventListener() {
-            public void event(Event event) {
-                if (myTestEvents.contains(event.type())) {
-                    myTestEvents.remove(event.type());
-                }
-            }
-        };
-        events.register(listener);
-        Deployment deployment = habitat.getService(Deployment.class);
-        DeployCommandParameters params = new DeployCommandParameters(application);
-        params.name = "fakeApplication";
-        params.target = "server";
-        ActionReport report = habitat.getService(ActionReport.class, "hk2-agent");
-        ExtendedDeploymentContext dc = deployment.getBuilder(Logger.getAnonymousLogger(), params, report).source(application).build();
-        deployment.deploy(dc);
-        events.unregister(listener);
-        for (EventTypes et : myTestEvents) {
-            System.out.println("An expected event of type " + et.type() + " was not received");
-        }
-
-        try {
-        final List<EventTypes> myTestEvents2 = getSingletonModuleSuccessfullUndeploymentEvents();
-        EventListener listener2 = new EventListener() {
-            public void event(Event event) {
-                if (myTestEvents2.contains(event.type())) {
-                    myTestEvents2.remove(event.type());
-                }
-            }
-        };
-        events.register(listener2);
-        UndeployCommandParameters params2 = new UndeployCommandParameters("fakeApplication");
-        params2.target = "server";
-        ActionReport report2 = habitat.getService(ActionReport.class, "hk2-agent");
-        ExtendedDeploymentContext dc2 = deployment.getBuilder(Logger.getAnonymousLogger(), params2, report2).source(application).build();
-        deployment.undeploy("fakeApplication", dc2);
-        events.unregister(listener2);
-        for (EventTypes et : myTestEvents2) {
-            System.out.println("An expected event of type " + et.type() + " was not received");
-        }
-        } catch(Throwable t) {
-            t.printStackTrace();
-        }
-
-    }
-
-    @Test
-    public void badUndeployTest() throws Exception {
-        Deployment deployment = habitat.getService(Deployment.class);
-        UndeployCommandParameters params = new UndeployCommandParameters("notavalidname");
-        params.target = "server";
-        ActionReport report = habitat.getService(ActionReport.class, "hk2-agent");
-        ExtendedDeploymentContext dc = deployment.getBuilder(Logger.getAnonymousLogger(), params, report).source(application).build();
-        deployment.undeploy("notavalidname", dc);
-        Assert.assertEquals(report.getActionExitCode(), ActionReport.ExitCode.FAILURE);
-    }
-
-    @Test
-    @Ignore
-    public void asynchronousEvents() {
-        List<EventTypes> asyncEvents =  asynchonousEvents();
-        Iterator<EventTypes> itr = asyncEvents.iterator();
-        while (itr.hasNext()) {
-            EventTypes et = itr.next();
-            for (EventListener.Event evt : allEvents) {
-                if (evt.is(et)) {
-                    itr.remove();
-                }
-            }
-        }
-        for (EventTypes et : asyncEvents) {
-            System.out.println("Asynchronous event " + et.type() + " was not received");
-        }
-        Assert.assertTrue(asyncEvents.size()==0);
     }
 }

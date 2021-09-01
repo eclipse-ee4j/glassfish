@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,22 +17,25 @@
 
 package com.sun.enterprise.v3.server;
 
-import static org.junit.Assert.assertEquals;
+import com.sun.enterprise.module.ModuleLifecycleListener;
+import com.sun.enterprise.module.single.SingleModulesRegistry;
 
 import java.net.URL;
 import java.util.List;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import com.sun.enterprise.module.ModuleLifecycleListener;
-import com.sun.enterprise.module.single.SingleModulesRegistry;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public class APIClassLoaderServiceImplTest {
-    int loadClassCalls;
-    int getResourceCalls;
+    private int loadClassCalls;
+    private int getResourceCalls;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         loadClassCalls = 0;
         getResourceCalls = 0;
@@ -43,103 +47,64 @@ public class APIClassLoaderServiceImplTest {
      */
     @Test
     public void testBlackList() {
-        try {
-            APIClassLoaderServiceImpl apiClassLoaderService = new APIClassLoaderServiceImpl();
+        APIClassLoaderServiceImpl apiClassLoaderService = new APIClassLoaderServiceImpl();
 
-            // Set up a fake ModulesRegistry to exercise ModulesRegistry lifecycle events
-            FakeClassLoader classLoader = new FakeClassLoader(getClass().getClassLoader());
-            FakeModulesRegistry fakeModulesRegistry = new FakeModulesRegistry(classLoader);
+        // Set up a fake ModulesRegistry to exercise ModulesRegistry lifecycle events
+        FakeClassLoader classLoader = new FakeClassLoader(getClass().getClassLoader());
+        FakeModulesRegistry fakeModulesRegistry = new FakeModulesRegistry(classLoader);
+        assertThat(fakeModulesRegistry.getLifecycleListeners(), hasSize(0));
 
-            apiClassLoaderService.modulesRegistry = fakeModulesRegistry;
+        apiClassLoaderService.modulesRegistry = fakeModulesRegistry;
+        apiClassLoaderService.postConstruct();
 
-            assertEquals(0, fakeModulesRegistry.getLifecycleListeners().size());
+        List<ModuleLifecycleListener> lifecycleListeners = fakeModulesRegistry.getLifecycleListeners();
+        assertThat("apiClassLoaderService should have registered a lifecycle listener",
+            fakeModulesRegistry.getLifecycleListeners(), hasSize(1));
 
-            apiClassLoaderService.postConstruct();
+        ModuleLifecycleListener lifecycleListener = lifecycleListeners.iterator().next();
 
-            List<ModuleLifecycleListener> lifecycleListeners = fakeModulesRegistry.getLifecycleListeners();
+        // assert that the classloader isn't called on to load the same bad class twice
+        assertEquals(0, loadClassCalls);
 
-            assertEquals("apiClassLoaderService should have registered a lifecycle listener", 1, fakeModulesRegistry.getLifecycleListeners().size());
+        final String BAD_CLASSNAME = "BADCLASS";
+        assertThrows(ClassNotFoundException.class,
+            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
+        assertEquals(1, loadClassCalls, "Classloader.loadClass not called at all");
+        assertThrows(ClassNotFoundException.class,
+            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
 
-            ModuleLifecycleListener lifecycleListener = lifecycleListeners.iterator().next();
+        assertEquals(1, loadClassCalls, "blacklist not honored, excessive call to classloader.load");
 
+        // try same thing with resources
+        assertEquals(0, getResourceCalls); // sanity
+        final String BAD_RESOURCE = "BADRESOURCE";
+        apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
+        assertEquals(1, getResourceCalls, "Classloader.findResource not called at all");
 
-            // assert that the classloader isn't called on to load the same bad
-            // class twice
-            assertEquals(0, loadClassCalls);
+        apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
+        assertEquals(1, getResourceCalls, "blacklist not honored, excessive call to classloader.getResource");
 
-            final String BAD_CLASSNAME = "BADCLASS";
+        // Now signal that a new module has been loaded, clearing the blacklist
+        lifecycleListener.moduleInstalled(null);
 
-            try {
-                apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME);
-            } catch (ClassNotFoundException e) {
-                // ignore
-            }
+        apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
+        assertEquals(2, getResourceCalls, "blacklist did not clear after a module was installed");
 
-            assertEquals("Classloader.loadClass not called at all", 1, loadClassCalls);
+        assertThrows(ClassNotFoundException.class,
+            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
 
-            try {
-                apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME);
-            } catch (ClassNotFoundException e) {
-                // ignore
-            }
+        assertEquals(2, loadClassCalls, "blacklist did not clear after a module was installed");
 
-            assertEquals("blacklist not honored, excessive call to classloader.load", 1, loadClassCalls);
+        // Now signal that a new module has been updated, clearing the blacklist
+        lifecycleListener.moduleUpdated(null);
 
+        apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
+        assertEquals(3, getResourceCalls, "blacklist did not clear after a module was updated");
 
-            // try same thing with resources
+        assertThrows(ClassNotFoundException.class,
+            () -> apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME));
 
-            assertEquals(0, getResourceCalls); // sanity
-
-            final String BAD_RESOURCE = "BADRESOURCE";
-
-            apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
-
-            assertEquals("Classloader.findResource not called at all", 1, getResourceCalls);
-
-            apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
-
-            assertEquals("blacklist not honored, excessive call to classloader.getResource", 1, getResourceCalls);
-
-
-            //
-            // Now signal that a new module has been loaded, clearing the blacklist
-            //
-
-            lifecycleListener.moduleInstalled(null);
-
-            apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
-            assertEquals("blacklist did not clear after a module was installed", 2, getResourceCalls);
-
-            try {
-                apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME);
-            } catch (ClassNotFoundException e) {
-                // ignore
-            }
-
-            assertEquals("blacklist did not clear after a module was installed", 2, loadClassCalls);
-
-
-            //
-            // Now signal that a new module has been updated, clearing the blacklist
-            //
-
-            lifecycleListener.moduleUpdated(null);
-
-            apiClassLoaderService.getAPIClassLoader().getResource(BAD_RESOURCE);
-            assertEquals("blacklist did not clear after a module was updated", 3, getResourceCalls);
-
-            try {
-                apiClassLoaderService.getAPIClassLoader().loadClass(BAD_CLASSNAME);
-            } catch (ClassNotFoundException e) {
-                // ignore
-            }
-
-            assertEquals("blacklist did not clear after a module was updated", 3, loadClassCalls);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
+        assertEquals(3, loadClassCalls, "blacklist did not clear after a module was updated");
     }
 
     class FakeModulesRegistry extends SingleModulesRegistry {

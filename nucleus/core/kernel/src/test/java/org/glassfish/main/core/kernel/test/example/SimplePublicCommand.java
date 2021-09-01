@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,22 +15,23 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.v3.admin;
+package org.glassfish.main.core.kernel.test.example;
 
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.ActionReport;
+import org.glassfish.internal.api.Public;
 import org.glassfish.internal.api.Visibility;
-import org.glassfish.internal.api.Private;
 import org.jvnet.hk2.annotations.Service;
 
 /**
- * simple private command
+ * simple public command
  */
-@Service(name="simple-private-command")
-@Visibility(Private.class)
-public class SimplePrivateCommand implements AdminCommand {
+@Service(name = "simple-public-command")
+@Visibility(Public.class)
+public class SimplePublicCommand implements AdminCommand {
 
+    @Override
     public void execute(AdminCommandContext context) {
         context.getActionReport().setActionExitCode(ActionReport.ExitCode.SUCCESS);
     }

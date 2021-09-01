@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,32 +17,33 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static org.junit.Assert.*;
-
-import org.glassfish.common.util.admin.CommandModelImpl;
-import org.glassfish.hk2.api.MultiException;
-import org.junit.Test;
-import org.junit.Before;
 import org.glassfish.api.Param;
-import org.glassfish.api.admin.ParameterMap;
-
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandModel;
+import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.common.util.admin.CommandModelImpl;
+import org.glassfish.hk2.api.MultiException;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.annotations.Service;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
- * junit test to test CommandRunner class
+ * junit test to test {@link CommandRunnerImpl} class
  */
-public class CommandRunnerTest {
-    private CommandRunnerImpl cr = null;
+public class CommandRunnerImplTest {
 
     @Test
     public void getUsageTextTest() {
         String expectedUsageText = "Usage: dummy-admin --foo=foo [--bar=false] --hello=there world ";
-        DummyAdminCommand dac = new DummyAdminCommand();
         CommandModel model = new CommandModelImpl(DummyAdminCommand.class);
-        String actualUsageText = cr.getUsageText(model);
+        String actualUsageText = CommandRunnerImpl.getUsageText(model);
         assertEquals(expectedUsageText, actualUsageText);
     }
 
@@ -51,31 +53,38 @@ public class CommandRunnerTest {
         params.set("foo", "bar");
         params.set("hello", "world");
         params.set("one", "two");
-        try {
-            cr.validateParameters(new CommandModelImpl(DummyAdminCommand.class), params);
-        }
-        catch (MultiException ce) {
-            String expectedMessage = " Invalid option: one";
-            assertTrue(ce.getMessage().contains(expectedMessage));
-        }
+        MultiException ce = assertThrows(MultiException.class,
+            () -> CommandRunnerImpl.validateParameters(new CommandModelImpl(DummyAdminCommand.class), params));
+        assertThat(ce.getMessage(), stringContainsInOrder(" Invalid option: one"));
     }
 
     @Test
     public void skipValidationTest() {
         DummyAdminCommand dac = new DummyAdminCommand();
-        assertFalse(cr.skipValidation(dac));
+        assertFalse(CommandRunnerImpl.skipValidation(dac));
         SkipValidationCommand svc = new SkipValidationCommand();
-        assertTrue(cr.skipValidation(svc));
+        assertTrue(CommandRunnerImpl.skipValidation(svc));
     }
 
-    @Before
-    public void setup() {
-        cr = new CommandRunnerImpl();
+    /** Mock - does nothing */
+    private static class SkipValidationCommand implements AdminCommand {
+
+        /**
+         *  This field is used via reflection!
+         *  See {@link CommandRunnerImpl#skipValidation(AdminCommand)}
+         */
+        @SuppressWarnings("unused")
+        boolean skipParamValidation = true;
+
+        @Override
+        public void execute(AdminCommandContext context) {
+            // ignore everything
+        }
     }
 
-        //mock-up DummyAdminCommand object
+
     @Service(name="dummy-admin")
-    public class DummyAdminCommand implements AdminCommand {
+    public static class DummyAdminCommand implements AdminCommand {
         @Param(optional=false)
         String foo;
 
@@ -89,15 +98,8 @@ public class CommandRunnerTest {
         String world;
 
         @Override
-        public void execute(AdminCommandContext context) {}
+        public void execute(AdminCommandContext context) {
+            // ignore everything
+        }
     }
-
-        //mock-up SkipValidationCommand
-    public class SkipValidationCommand implements AdminCommand {
-        boolean skipParamValidation=true;
-        @Override
-        public void execute(AdminCommandContext context) {}
-    }
-
-
 }

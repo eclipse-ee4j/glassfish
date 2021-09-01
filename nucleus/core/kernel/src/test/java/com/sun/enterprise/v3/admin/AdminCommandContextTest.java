@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +17,7 @@
 
 package com.sun.enterprise.v3.admin;
 
-import static org.junit.Assert.assertEquals;
+import com.sun.enterprise.v3.common.PlainTextActionReporter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -27,10 +28,9 @@ import java.io.ObjectOutputStream;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import com.sun.enterprise.v3.common.DoNothingActionReporter;
-import com.sun.enterprise.v3.common.PlainTextActionReporter;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AdminCommandContextTest {
 
@@ -45,8 +45,7 @@ public class AdminCommandContextTest {
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
         ObjectInputStream ois = new ObjectInputStream(is);
         AdminCommandContext restored = (AdminCommandContextImpl) ois.readObject();
-        assertEquals("failureCause", "Test", restored.getActionReport().getFailureCause().getMessage());
-        // context.setPayload
+        assertEquals("Test", restored.getActionReport().getFailureCause().getMessage());
     }
 
 }

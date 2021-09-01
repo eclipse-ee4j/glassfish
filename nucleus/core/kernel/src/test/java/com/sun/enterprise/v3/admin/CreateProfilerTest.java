@@ -36,10 +36,8 @@ import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
-import org.glassfish.tests.utils.CustomConfiguration;
-import org.glassfish.tests.utils.ExcludeClasses;
-import org.glassfish.tests.utils.HK2Extension;
 import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,9 +64,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author Prashanth
  * @author David Matejcek
  */
-@ExtendWith(HK2Extension.class)
-@ExcludeClasses({ObjectInputStreamWithServiceLocator.class})
-@CustomConfiguration("DomainTest.xml")
+@ExtendWith(KernelJUnitExtension.class)
 public class CreateProfilerTest {
 
     @Inject

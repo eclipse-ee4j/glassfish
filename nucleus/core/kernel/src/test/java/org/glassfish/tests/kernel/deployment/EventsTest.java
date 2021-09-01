@@ -37,8 +37,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.internal.deployment.Deployment;
 import org.glassfish.internal.deployment.ExtendedDeploymentContext;
-import org.glassfish.tests.utils.CustomConfiguration;
-import org.glassfish.tests.utils.HK2Extension;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
@@ -59,8 +58,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Time: 9:26:57 AM
  */
 @TestMethodOrder(OrderAnnotation.class)
-@ExtendWith(HK2Extension.class)
-@CustomConfiguration("DomainTest.xml")
+@ExtendWith(KernelJUnitExtension.class)
 public class EventsTest {
 
     private static List<Event> allEvents = new ArrayList<>();

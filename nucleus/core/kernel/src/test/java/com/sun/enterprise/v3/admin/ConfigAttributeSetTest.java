@@ -30,10 +30,8 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.security.services.api.authentication.AuthenticationService;
-import org.glassfish.tests.utils.CustomConfiguration;
-import org.glassfish.tests.utils.ExcludeClasses;
-import org.glassfish.tests.utils.HK2Extension;
 import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,9 +55,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * test the set command
  * @author Jerome Dochez
  */
-@ExtendWith(HK2Extension.class)
-@ExcludeClasses({ObjectInputStreamWithServiceLocator.class})
-@CustomConfiguration("DomainTest.xml")
+@ExtendWith(KernelJUnitExtension.class)
 public class ConfigAttributeSetTest implements ConfigListener {
 
     @Inject

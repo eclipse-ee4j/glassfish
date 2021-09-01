@@ -25,17 +25,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * A set of resource paths with HK2 "inhabitant files" processed by HK2.
+ * <p>
+ * Note: This annotation is ignored when processing file provided by the {@link DomainXml}
+ * annotation.
+ *
  * @author David Matejcek
  */
 @Documented
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface CustomConfiguration {
+public @interface LocatorFiles {
 
     /**
-     * @return Resource path with domain.xml-like content used for the test.
-     * The path is relative to the test classloader.
+     * @return set of resource paths with HK2 "inhabitant files".
      */
-    public String value();
+    String[] value();
 }

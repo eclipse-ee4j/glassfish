@@ -45,10 +45,7 @@ import java.util.jar.JarFile;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
@@ -60,36 +57,40 @@ import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
+import org.junit.jupiter.api.extension.Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ExtensionContext.Namespace;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
-import org.jvnet.hk2.testing.junit.annotations.Classes;
-import org.jvnet.hk2.testing.junit.annotations.InhabitantFiles;
-import org.jvnet.hk2.testing.junit.annotations.Packages;
-import org.jvnet.hk2.testing.junit.internal.ClassVisitorImpl;
-import org.jvnet.hk2.testing.junit.internal.TestServiceLocator;
 import org.objectweb.asm.ClassReader;
 
-import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 
 /**
- * This JUnit5 extension is based on {@link TestServiceLocator} implementaion, which served for JUnit4.
- * In the future it will probably move to HK2, but first it needs to gain some maturity in practice.
- * The hk2-junitrunner will be refactored, so both usages will be possible.
+ * This JUnit5 extension allows to use HK2 services in tests.
+ * You can also override methods in your own {@link Extension} and add features.
+ * <p>
+ * Injectable services:
+ * <ul>
+ * <li><code>@Inject {@link Logger}</code> - named after the test.
+ * <li><code>@Inject {@link StartupContext}</code> - install root and instance root are set
+ * to the root of test classpath; see {@link #getStartupContextProperties(ExtensionContext)}.
+ * <li><code>@Inject {@link StaticModulesRegistry}</code>
+ * <li><code>@Inject {@link TestDocument}</code>
+ * <li>services configured by the {@link DomainXml} annotation.
+ * </ul>
  *
  * @author David Matejcek
  */
-public class HK2Extension
+public class HK2JUnit5Extension
     implements BeforeAllCallback, TestInstancePostProcessor, BeforeEachCallback, AfterEachCallback, AfterAllCallback {
 
-    private static final Logger LOG = Logger.getLogger(HK2Extension.class.getName());
+    private static final Logger LOG = Logger.getLogger(HK2JUnit5Extension.class.getName());
     private static final String CLASS_PATH_PROP = "java.class.path";
     private static final String DOT_CLASS = ".class";
     private static final String START_TIME_METHOD = "start time method";
@@ -100,76 +101,48 @@ public class HK2Extension
 
     @Override
     public void beforeAll(final ExtensionContext context) throws Exception {
-        // TODO: make the extension extensible, so projects can change defaults
         final Class<?> testClass = context.getRequiredTestClass();
-        final ClassLoader loader = testClass.getClassLoader();
+        final ClassLoader loader = getClassLoader(context);
 
-        locator = createAndPopulateServiceLocator(testClass.getSimpleName() + "ServiceLocator");
-        assertNotNull(locator.getService(Transactions.class),
-            "Transactions service from Configuration subsystem is null");
+        locator = createLocator(context);
+        addConstantServices(context);
 
-        addOneConstant(locator, Logger.getLogger(testClass.getName()));
-
-        final Properties startupContextProperties = new Properties();
-        final String rootPath = testClass.getResource("/").getPath();
-        startupContextProperties.put(Constants.INSTALL_ROOT_PROP_NAME, rootPath);
-        startupContextProperties.put(Constants.INSTANCE_ROOT_PROP_NAME, rootPath);
-        final StartupContext startupContext = new StartupContext(startupContextProperties);
-        addOneConstant(locator, startupContext);
-        addOneConstant(locator, new StaticModulesRegistry(loader, startupContext));
-
-        addOneConstant(locator, new TestDocument(locator));
-        final CustomConfiguration configAnnotation = testClass.getAnnotation(CustomConfiguration.class);
-        if (configAnnotation != null) {
-            addConfigFromResource(loader, configAnnotation.value());
+        final String domainXml = getDomainXml(testClass);
+        if (domainXml != null) {
+            addConfigFromResource(loader, domainXml);
         }
 
-        final Packages packagesAnnotation = testClass.getAnnotation(Packages.class);
-        final List<String> packages = packagesAnnotation == null ? List.of(testClass.getPackageName())
-            : Arrays.asList(packagesAnnotation.value());
-        final Classes classesAnnotation = testClass.getAnnotation(Classes.class);
-        final List<Class<?>> classes = classesAnnotation == null ? List.of() : Arrays.asList(classesAnnotation.value());
-        final ExcludeClasses excludeClassesAnnotation = testClass.getAnnotation(ExcludeClasses.class);
-        final Set<String> excludedClasses = excludeClassesAnnotation == null ? Set.of()
-            : Stream.of(excludeClassesAnnotation.value()).map(Class::getName).collect(Collectors.toSet());
+        // lists keep ordering
+        final List<String> packages = getPackages(testClass);
+        final List<Class<?>> classes = getClasses(testClass);
+        final Set<Class<?>> excludedClasses = getExcludedClasses(testClass);
 
         config = locator.getService(DynamicConfigurationService.class).createDynamicConfiguration();
-        addServicesFromDefault(loader, excludedClasses, getDefaultLocatorPaths(context));
+        config.addActiveDescriptor(ServerEnvironmentImpl.class);
+        addServicesFromLocatorFiles(loader, excludedClasses, getLocatorFilePaths(context));
         addServicesFromPackage(packages, excludedClasses);
         addServices(classes, excludedClasses);
-
-        config.addActiveDescriptor(ServerEnvironmentImpl.class);
 
         try {
             config.commit();
         } catch (Exception e) {
             // if it failed, dump everything
-            ServiceLocatorUtilities.dumpAllDescriptors(locator);
+            ServiceLocatorUtilities.dumpAllDescriptors(locator, System.err);
             throw e;
         }
     }
 
 
-
-    private void addConfigFromResource(final ClassLoader loader, final String resourcePath) {
-        URL url = Objects.requireNonNull(loader.getResource(resourcePath),
-            "The resourcePath doesn't exist: " + resourcePath);
-        ConfigParser configParser = new ConfigParser(locator);
-        DomDocument document = configParser.parse(url, locator.getService(TestDocument.class));
-        ServiceLocatorUtilities.addOneConstant(locator, document);
-    }
-
-
     @Override
     public void postProcessTestInstance(final Object testInstance, final ExtensionContext context) throws Exception {
-        LOG.log(Level.INFO, "Injecting attributes to the test instance: {0}", testInstance);
+        LOG.log(Level.FINE, "Injecting attributes to the test instance: {0}", testInstance);
         locator.inject(testInstance);
     }
 
 
     @Override
     public void beforeEach(ExtensionContext context) throws Exception {
-        LOG.log(Level.INFO, "beforeEach. Test name: {0}", context.getRequiredTestMethod());
+        LOG.log(Level.FINE, "beforeEach. Test name: {0}", context.getRequiredTestMethod());
         this.namespaceMethod = Namespace.create(context.getRequiredTestClass(), context.getRequiredTestMethod());
         context.getStore(this.namespaceMethod).put(START_TIME_METHOD, LocalDateTime.now());
     }
@@ -179,11 +152,11 @@ public class HK2Extension
     public void afterEach(ExtensionContext context) throws Exception {
         final LocalDateTime startTime = context.getStore(this.namespaceMethod).remove(START_TIME_METHOD,
             LocalDateTime.class);
-        LOG.log(Level.INFO, "afterEach(). Test name: {0}, started at {1}, test time: {2} ms", //
+        LOG.log(Level.INFO, "Test: {0}.{1}, started at {2}, test time: {3} ms",
             new Object[] {
-            context.getRequiredTestMethod().getName(), //
-            DateTimeFormatter.ISO_LOCAL_TIME.format(startTime), //
-            startTime.until(LocalDateTime.now(), ChronoUnit.MILLIS)});
+                context.getRequiredTestClass().getName(), context.getRequiredTestMethod().getName(),
+                DateTimeFormatter.ISO_LOCAL_TIME.format(startTime),
+                startTime.until(LocalDateTime.now(), ChronoUnit.MILLIS)});
     }
 
 
@@ -195,35 +168,150 @@ public class HK2Extension
     }
 
 
-    private Set<String> getDefaultLocatorPaths(final ExtensionContext context) {
+    /**
+     * @return simple name of the test class + ServiceLocator
+     */
+    protected String getLocatorName(final ExtensionContext context) {
+        return context.getRequiredTestClass().getSimpleName() + "ServiceLocator";
+    }
+
+
+    /**
+     * @return {@link ServiceLocator} named by {@link #getLocatorName(ExtensionContext)}
+     */
+    protected ServiceLocator createLocator(final ExtensionContext context) {
+        final ServiceLocator newLocator = createAndPopulateServiceLocator(getLocatorName(context));
+        assertNotNull(newLocator.getService(Transactions.class),
+            "Transactions service from Configuration subsystem is not available!");
+        return newLocator;
+    }
+
+
+    /**
+     * @return {@link ClassLoader} of the test class
+     */
+    protected ClassLoader getClassLoader(final ExtensionContext context) {
+        return context.getRequiredTestClass().getClassLoader();
+    }
+
+
+    /**
+     * @return properties for the {@link StartupContext} instance.
+     */
+    protected Properties getStartupContextProperties(final ExtensionContext context) {
+        final Properties startupContextProperties = new Properties();
+        final String rootPath = context.getRequiredTestClass().getResource("/").getPath();
+        startupContextProperties.put(Constants.INSTALL_ROOT_PROP_NAME, rootPath);
+        startupContextProperties.put(Constants.INSTANCE_ROOT_PROP_NAME, rootPath);
+        return startupContextProperties;
+    }
+
+
+    /**
+     * Uses {@link ServiceLocatorUtilities#addOneConstant(ServiceLocator, Object)} calls to set
+     * some useful implicit services:
+     * <li><code>@Inject {@link Logger}</code> - named after the test.
+     * <li><code>@Inject {@link StartupContext}</code> - install root and instance root are set
+     * to the root of test classpath; see {@link #getStartupContextProperties(ExtensionContext)}.
+     * <li><code>@Inject {@link StaticModulesRegistry}</code>
+     * <li><code>@Inject {@link TestDocument}</code>
+     */
+    protected void addConstantServices(final ExtensionContext context) {
+        addOneConstant(locator, Logger.getLogger(context.getRequiredTestClass().getName()));
+
+        final Properties startupContextProperties = getStartupContextProperties(context);
+        LOG.log(Level.FINE, "startupContextProperties set to {0}", startupContextProperties);
+        final StartupContext startupContext = new StartupContext(startupContextProperties);
+        addOneConstant(locator, startupContext);
+        addOneConstant(locator, new StaticModulesRegistry(getClassLoader(context), startupContext));
+        addOneConstant(locator, new TestDocument(locator));
+    }
+
+
+    /**
+     * @param testClass
+     * @return path obtained from test's {@link DomainXml} annotation
+     */
+    protected String getDomainXml(final Class<?> testClass) {
+        final DomainXml domainXmlAnnotation = testClass.getAnnotation(DomainXml.class);
+        return domainXmlAnnotation == null ? null : domainXmlAnnotation.value();
+    }
+
+
+    /**
+     * @param testClass
+     * @return packages obtained from test's {@link Packages} annotation
+     */
+    protected List<String> getPackages(final Class<?> testClass) {
+        final Packages packagesAnnotation = testClass.getAnnotation(Packages.class);
+        final List<String> packages = packagesAnnotation == null ? List.of(testClass.getPackageName())
+            : Arrays.asList(packagesAnnotation.value());
+        return packages;
+    }
+
+
+    /**
+     * @param testClass
+     * @return classes obtained from test's {@link Classes} annotation
+     */
+    protected List<Class<?>> getClasses(final Class<?> testClass) {
+        final Classes classesAnnotation = testClass.getAnnotation(Classes.class);
+        final List<Class<?>> classes = classesAnnotation == null ? List.of() : List.of(classesAnnotation.value());
+        return classes;
+    }
+
+
+    /**
+     * @param testClass
+     * @return classes obtained from test's {@link ExcludeClasses} annotation
+     */
+    protected Set<Class<?>> getExcludedClasses(final Class<?> testClass) {
+        final ExcludeClasses excludeClassesAnnotation = testClass.getAnnotation(ExcludeClasses.class);
+        final Set<Class<?>> excludedClasses = excludeClassesAnnotation == null ? Set.of()
+            : Set.of(excludeClassesAnnotation.value());
+        return excludedClasses;
+    }
+
+
+    private void addConfigFromResource(final ClassLoader loader, final String resourcePath) {
+        URL url = Objects.requireNonNull(loader.getResource(resourcePath),
+            "The resourcePath doesn't exist: " + resourcePath);
+        ConfigParser configParser = new ConfigParser(locator);
+        TestDocument testDocumentService = locator.getService(TestDocument.class);
+        DomDocument<?> document = configParser.parse(url, testDocumentService);
+        addOneConstant(locator, document);
+    }
+
+
+    private Set<String> getLocatorFilePaths(final ExtensionContext context) {
         final HashSet<String> paths = new HashSet<>();
-        final InhabitantFiles iFiles = context.getRequiredTestClass().getAnnotation(InhabitantFiles.class);
-        if (iFiles == null) {
+        final LocatorFiles locatorFilePaths = context.getRequiredTestClass().getAnnotation(LocatorFiles.class);
+        if (locatorFilePaths == null) {
             paths.add("META-INF/hk2-locator/default");
             return paths;
         }
-        for (final String iFile : iFiles.value()) {
-            paths.add(iFile);
+        for (final String path : locatorFilePaths.value()) {
+            paths.add(path);
         }
         return paths;
     }
 
 
-    private void addServicesFromDefault(final ClassLoader loader, final Set<String> excludedClasses,
+    private void addServicesFromLocatorFiles(final ClassLoader loader, final Set<Class<?>> excludedClasses,
         final Set<String> locatorFiles) {
         for (final String locatorFile : locatorFiles) {
             Enumeration<URL> resources;
             try {
                 resources = loader.getResources(locatorFile);
             } catch (IOException e) {
-                throw new IllegalStateException("addServicesFromDefault failed.", e);
+                throw new IllegalStateException("Resource could not be loaded: " + locatorFile, e);
             }
             readResources(resources, excludedClasses);
         }
     }
 
 
-    private void addServicesFromPackage(final List<String> packages, final Set<String> excludedClasses) {
+    private void addServicesFromPackage(final List<String> packages, final Set<Class<?>> excludedClasses) {
         if (packages.isEmpty()) {
             return;
         }
@@ -235,9 +323,9 @@ public class HK2Extension
     }
 
 
-    private void addServices(final List<Class<?>> classes, final Set<String> exclusions) {
+    private void addServices(final List<Class<?>> classes, final Set<Class<?>> excludedClasses) {
         for (Class<?> clazz : classes) {
-            if (exclusions.contains(clazz.getName()) || exclusions.contains(clazz.getPackageName())) {
+            if (excludedClasses.contains(clazz)) {
                 continue;
             }
             config.addActiveDescriptor(clazz);
@@ -246,7 +334,7 @@ public class HK2Extension
 
 
     private void addServicesFromPathElement(final List<String> packages, final String path,
-        final Set<String> excludedClasses) {
+        final Set<Class<?>> excludedClasses) {
         final File fileElement = new File(path);
         if (!fileElement.exists()) {
             return;
@@ -261,7 +349,7 @@ public class HK2Extension
 
 
     private void addServicesFromPathDirectory(final List<String> packages, final File directory,
-        final Set<String> excludedClasses) {
+        final Set<Class<?>> excludedClasses) {
         for (final String pack : packages) {
             final File searchDir = new File(directory, convertToFileFormat(pack));
             if (!searchDir.exists()) {
@@ -296,7 +384,8 @@ public class HK2Extension
     }
 
 
-    private void addServicesFromPathJar(final List<String> packages, final File jar, final Set<String> excludes) {
+    private void addServicesFromPathJar(final List<String> packages, final File jar,
+        final Set<Class<?>> excludedClasses) {
         try (JarFile jarFile = new JarFile(jar)) {
             for (final String pack : packages) {
                 final String packAsFile = convertToFileFormat(pack);
@@ -321,7 +410,7 @@ public class HK2Extension
                     }
 
                     try {
-                        addClassIfService(jarFile.getInputStream(entry), excludes);
+                        addClassIfService(jarFile.getInputStream(entry), excludedClasses);
                     } catch (final IOException ioe) {
                         // Simply don't add it if we can't read it
                     }
@@ -333,7 +422,8 @@ public class HK2Extension
     }
 
 
-    private void readResources(final Enumeration<URL> resources, final Set<String> excludedClasses) {
+    private void readResources(final Enumeration<URL> resources, final Set<Class<?>> excludedClasses) {
+        final Set<String> exclude = excludedClasses.stream().map(Class::getName).collect(Collectors.toSet());
         while (resources.hasMoreElements()) {
             final URL url = resources.nextElement();
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()))) {
@@ -343,7 +433,7 @@ public class HK2Extension
                     if (!goOn) {
                         break;
                     }
-                    if (excludedClasses.contains(descriptor.getImplementation())) {
+                    if (exclude.contains(descriptor.getImplementation())) {
                         continue;
                     }
                     config.bind(descriptor);
@@ -360,9 +450,9 @@ public class HK2Extension
     }
 
 
-    private void addClassIfService(final InputStream is, final Set<String> excludedClasses) throws IOException {
+    private void addClassIfService(final InputStream is, final Set<Class<?>> excludedClasses) throws IOException {
         final ClassReader reader = new ClassReader(is);
-        final ClassVisitorImpl cvi = new ClassVisitorImpl(locator, true, excludedClasses);
+        final HK2ClasssVisitor cvi = new HK2ClasssVisitor(locator, excludedClasses);
         reader.accept(cvi, ClassReader.SKIP_CODE | ClassReader.SKIP_DEBUG | ClassReader.SKIP_FRAMES);
     }
 }

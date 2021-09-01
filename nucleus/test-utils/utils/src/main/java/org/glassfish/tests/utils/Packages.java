@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2021 Eclipse Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,7 +25,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * You can use this annotation to exclude classes from HK2 processing.
+ * Set of fully qualified packages processed by HK2.
+ * If not used, the {@link HK2JUnit5Extension} will use just the test's package.
  * <p>
  * Note: This annotation is ignored when processing file provided by the {@link DomainXml}
  * annotation.
@@ -35,13 +37,10 @@ import java.lang.annotation.Target;
 @Inherited
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ExcludeClasses {
+public @interface Packages {
 
     /**
-     * Classes of any service implementations that should NOT automatically be added via package
-     * scanning or from inhabitant files read
-     *
-     * @return array iof ignored classes
+     * @return set of fully qualified packages processed by HK2
      */
-    public Class<?>[] value();
+    String[] value();
 }

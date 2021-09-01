@@ -28,7 +28,7 @@ import org.glassfish.security.services.api.context.SecurityContextService;
 import org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl;
 import org.glassfish.security.services.impl.authorization.AzEnvironmentImpl;
 import org.glassfish.security.services.spi.authorization.AuthorizationProvider;
-import org.glassfish.tests.utils.HK2Extension;
+import org.glassfish.tests.utils.HK2JUnit5Extension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,7 +38,7 @@ import jakarta.inject.Inject;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@ExtendWith(HK2Extension.class)
+@ExtendWith(HK2JUnit5Extension.class)
 public class SimpleAtzProviderTest {
 
     @Inject

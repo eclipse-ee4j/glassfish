@@ -25,9 +25,8 @@ import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.InternalSystemAdministrator;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
 import org.glassfish.security.services.api.authorization.AuthorizationService;
-import org.glassfish.tests.utils.ExcludeClasses;
-import org.glassfish.tests.utils.HK2Extension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -49,8 +48,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  * @author Jerome Dochez
  * @author David Matejcek
  */
-@ExtendWith(HK2Extension.class)
-@ExcludeClasses({ObjectInputStreamWithServiceLocator.class})
+@ExtendWith(KernelJUnitExtension.class)
 public class CommandRunnerImplServiceTest {
 
     @Inject

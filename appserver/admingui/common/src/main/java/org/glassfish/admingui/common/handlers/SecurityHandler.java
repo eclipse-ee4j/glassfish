@@ -770,7 +770,8 @@ public class SecurityHandler {
             Map<String, Object> payload = new HashMap<String, Object>();
             payload.put("target", configName);
             for (String option : newOptions) {
-                ArrayList kv = InstanceHandler.getKeyValuePair(option);
+                String option1 = UtilHandlers.escapePropertyValue(option);
+                ArrayList kv = InstanceHandler.getKeyValuePair(option1);
                 payload.put((String)kv.get(0), kv.get(1));
             }
             RestUtil.restRequest(endpoint, payload, "POST", handlerCtx, false);

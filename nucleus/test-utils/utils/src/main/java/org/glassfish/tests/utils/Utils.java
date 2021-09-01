@@ -17,21 +17,30 @@
 
 package org.glassfish.tests.utils;
 
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.module.single.StaticModulesRegistry;
+
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.sun.enterprise.module.ModulesRegistry;
-import com.sun.enterprise.module.bootstrap.StartupContext;
+import javax.security.auth.Subject;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
+import org.glassfish.hk2.utilities.AbstractActiveDescriptor;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
+import org.glassfish.security.common.PrincipalImpl;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.DomDocument;
 
-import com.sun.enterprise.module.single.StaticModulesRegistry;
+import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 
 /**
  * Utilities to create a configured Habitat and cache them
@@ -39,6 +48,11 @@ import com.sun.enterprise.module.single.StaticModulesRegistry;
  * @author Jerome Dochez
  */
 public class Utils {
+    private static final Logger LOG = Logger.getLogger(Utils.class.getName());
+
+    private static final InvocationHandler MOCK_HANDLER = (proxy, method, args) -> {
+        throw new UnsupportedOperationException("Feature-free dummy implementation for injection only");
+    };
 
     final static String habitatName = "default";
     final static String inhabitantPath = "META-INF/inhabitants";
@@ -62,7 +76,6 @@ public class Utils {
 
     private static synchronized ServiceLocator getNewHabitat(final ConfigApiTest test) {
         final ServiceLocator sl = getNewHabitat();
-
         final String fileName = test.getFileName();
         ConfigParser configParser = new ConfigParser(sl);
 
@@ -75,11 +88,9 @@ public class Utils {
                 ServiceLocatorUtilities.addOneConstant(sl, document);
                 test.decorate(sl);
             } catch (Exception e) {
-                e.printStackTrace();
+                LOG.log(Level.SEVERE, "Failed to use the document: " + fileName, e);
             }
-            Logger.getAnonymousLogger().fine(
-                "time to parse domain.xml : "
-                    + String.valueOf(System.currentTimeMillis() - now));
+            LOG.fine("time to parse domain.xml: " + String.valueOf(System.currentTimeMillis() - now));
         }
 
         return sl;
@@ -102,12 +113,39 @@ public class Utils {
     }
 
 
+    /**
+     * Don't forget to call this, otherwise it can affect other tests.
+     *
+     * @param test
+     */
     public void shutdownServiceLocator(final ConfigApiTest test) {
         String fileName = test.getFileName();
-
         if (habitats.containsKey(fileName))  {
             ServiceLocator locator = habitats.remove(fileName);
             ServiceLocatorFactory.getInstance().destroy(locator);
         }
+    }
+
+
+    public static Subject createInternalAsadminSubject() {
+        final Subject subject = new Subject();
+        subject.getPrincipals().add(new PrincipalImpl("asadmin"));
+        subject.getPrincipals().add(new PrincipalImpl("_InternalSystemAdministrator_"));
+        return subject;
+    }
+
+
+    public static <T> AbstractActiveDescriptor<T> createMockDescriptor(Class<T> clazz) {
+        final AbstractActiveDescriptor<T> descriptor = createConstantDescriptor(createMockProxy(clazz), null, clazz);
+        // high ranking to override detected HK2 service
+        descriptor.setRanking(Integer.MAX_VALUE);
+        descriptor.setReified(true);
+        return descriptor;
+    }
+
+
+    @SuppressWarnings("unchecked")
+    public static <T> T createMockProxy(Class<T> clazz) {
+        return (T) Proxy.newProxyInstance(clazz.getClassLoader(), new Class[] {clazz}, MOCK_HANDLER);
     }
 }

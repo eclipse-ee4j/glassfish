@@ -17,19 +17,11 @@
 
 package org.glassfish.tests.utils;
 
-import java.lang.reflect.Method;
-import java.security.AccessController;
 import java.security.Principal;
-import java.security.PrivilegedAction;
-import java.util.List;
-import java.util.Set;
 import java.util.logging.Logger;
 
-import javax.security.auth.Subject;
 import javax.xml.stream.XMLStreamReader;
 
-import org.glassfish.hk2.api.Filter;
-import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigModel;
@@ -45,40 +37,6 @@ public abstract class ConfigApiTest {
 
     public static final Logger logger = Logger.getAnonymousLogger();
 
-    private final Subject adminSubject = prepareAdminSubject();
-
-    private Subject prepareAdminSubject() {
-        final ServiceLocator locator = getBaseServiceLocator();
-        if (locator != null) {
-            final Filter filter = d -> {
-                if (d == null) {
-                    return false;
-                }
-                final Set<String> contracts = d.getAdvertisedContracts();
-                return (contracts == null ? false
-                    : contracts.contains("org.glassfish.internal.api.InternalSystemAdmin"));
-            };
-            final PrivilegedAction<List<ServiceHandle<? extends Object>>> privilegedAction = () -> {
-                return (List<ServiceHandle<? extends Object>>) getBaseServiceLocator().getAllServices(filter);
-            };
-            final List<ServiceHandle<? extends Object>> adminIdentities = AccessController.doPrivileged(privilegedAction);
-            if (!adminIdentities.isEmpty()) {
-                final Object adminIdentity = adminIdentities.get(0);
-                try {
-                    final Method getSubjectMethod = adminIdentity.getClass().getDeclaredMethod("getSubject", Subject.class);
-                    return (Subject) getSubjectMethod.invoke(adminIdentity);
-                } catch (Exception ex) {
-                    // ignore - fallback to creating a subject explicitly that
-                    // should match the GlassFish admin identity
-                }
-            }
-        }
-        final Subject s = new Subject();
-        s.getPrincipals().add(new PrincipalImpl("asadmin"));
-        s.getPrincipals().add(new PrincipalImpl("_InternalSystemAdministrator_"));
-        return s;
-    }
-
     private static class PrincipalImpl implements Principal {
         private final String name;
 
@@ -91,9 +49,6 @@ public abstract class ConfigApiTest {
         }
     }
 
-    protected Subject adminSubject() {
-        return adminSubject;
-    }
 
     /**
      * Returns the file name without the .xml extension to load the test configuration
@@ -132,7 +87,15 @@ public abstract class ConfigApiTest {
         return doc;
     }
 
-    class TestDocument extends DomDocument<ConfigBean> {
+    /**
+     * Decorate the habitat after parsing.  This is called on the habitat
+     * just after parsing of the XML file is complete.
+     */
+    public void decorate(ServiceLocator locator) {
+        // override it
+    }
+
+    public static class TestDocument extends DomDocument<ConfigBean> {
 
         public TestDocument(ServiceLocator habitat) {
             super(habitat);
@@ -143,13 +106,5 @@ public abstract class ConfigApiTest {
                 ConfigBean dom, ConfigModel configModel) {
             return new ConfigBean(habitat,this, dom, configModel, xmlStreamReader);
         }
-    }
-
-    /**
-     * Decorate the habitat after parsing.  This is called on the habitat
-     * just after parsing of the XML file is complete.
-     */
-    public void decorate(ServiceLocator locator) {
-        // override it
     }
 }

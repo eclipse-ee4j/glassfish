@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,48 +17,10 @@
 
 package org.glassfish.contextpropagation.wireadapters.wls;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.util.EnumSet;
-
 //import mockit.Deencapsulation;
 
-import org.glassfish.contextpropagation.ContextMap;
-import org.glassfish.contextpropagation.InsufficientCredentialException;
-import org.glassfish.contextpropagation.PropagationMode;
-import org.glassfish.contextpropagation.SerializableContextFactory;
-import org.glassfish.contextpropagation.SerializableContextFactory.WLSContext;
-//import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
-//import org.glassfish.contextpropagation.adaptors.MockLoggerAdapter;
-import org.glassfish.contextpropagation.internal.AccessControlledMap;
-import org.glassfish.contextpropagation.internal.Entry;
-import org.glassfish.contextpropagation.internal.Utils;
-import org.glassfish.contextpropagation.internal.Utils.PrivilegedWireAdapterAccessor;
-import org.glassfish.contextpropagation.spi.ContextMapHelper;
-import org.glassfish.contextpropagation.spi.ContextMapPropagator;
-import org.glassfish.contextpropagation.weblogic.workarea.PropagationTest;
-import org.glassfish.contextpropagation.weblogic.workarea.PropertyReadOnlyException;
-import org.glassfish.contextpropagation.wireadapters.AbstractWireAdapter;
-import org.glassfish.contextpropagation.wireadapters.Catalog;
-import org.glassfish.contextpropagation.wireadapters.WireAdapter;
-import org.glassfish.contextpropagation.wireadapters.wls.WLSWireAdapter.ClassNames;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
 
-@Ignore
+
 public class WLSWireAdapterTest {
 //  WLSWireAdapter adapter = new WLSWireAdapter();
 //

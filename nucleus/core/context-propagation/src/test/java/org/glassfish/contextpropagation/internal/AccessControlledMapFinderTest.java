@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,18 +17,6 @@
 
 package org.glassfish.contextpropagation.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-//import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
-import org.glassfish.contextpropagation.internal.Utils.AccessControlledMapFinder;
-import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore
 public class AccessControlledMapFinderTest {
 //  static AccessControlledMapFinder mapFinder = new AccessControlledMapFinder();
 //

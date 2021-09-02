@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +17,9 @@
 
 package org.glassfish.contextpropagation.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNotSame;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.EnumSet;
+import mockit.integration.junit5.JMockitExtension;
 
 //import mockit.Deencapsulation;
 /*import mockit.Expectations;
@@ -34,27 +27,12 @@ import mockit.Mocked;
 import mockit.NonStrictExpectations;
 import mockit.integration.junit4.JMockit;*/
 
-import org.glassfish.contextpropagation.ContextMap;
-import org.glassfish.contextpropagation.InsufficientCredentialException;
-import org.glassfish.contextpropagation.Location;
-import org.glassfish.contextpropagation.PropagationMode;
-//import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
-//import org.glassfish.contextpropagation.adaptors.TestableThread;
-import org.glassfish.contextpropagation.internal.Entry.ContextType;
-import org.glassfish.contextpropagation.spi.ContextMapPropagator;
-import org.glassfish.contextpropagation.wireadapters.WireAdapter;
-import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import org.junit.runner.RunWith;
 
-/*
+
+/**
  * Behavioral tests to check the ContextMapPropagator is properly driving the WireAdapter
- *
  */
-//@RunWith(JMockit.class)
-@Ignore
+@ExtendWith(JMockitExtension.class)
 public class ContextMapPropagatorTest {
 //  ContextMapPropagator propagator;
 //  ContextMap cm;

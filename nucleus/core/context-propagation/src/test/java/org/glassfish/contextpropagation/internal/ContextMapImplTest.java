@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,36 +17,6 @@
 
 package org.glassfish.contextpropagation.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.EnumSet;
-import java.util.Iterator;
-
-//import mockit.Deencapsulation;
-
-import org.glassfish.contextpropagation.ContextMap;
-import org.glassfish.contextpropagation.ContextViewFactory;
-import org.glassfish.contextpropagation.InsufficientCredentialException;
-import org.glassfish.contextpropagation.Location;
-import org.glassfish.contextpropagation.PropagationMode;
-import org.glassfish.contextpropagation.View;
-import org.glassfish.contextpropagation.ViewCapable;
-//import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
-//import org.glassfish.contextpropagation.adaptors.MockLoggerAdapter;
-import org.glassfish.contextpropagation.internal.Entry.ContextType;
-import org.glassfish.contextpropagation.internal.Utils.AccessControlledMapFinder;
-import org.glassfish.contextpropagation.spi.ContextMapHelper;
-import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore
 public class ContextMapImplTest {
 //  private static Entry DUMMY_ENTRY;
 //  private static EnumSet<PropagationMode> PROP_MODES = PropagationMode.defaultSet();

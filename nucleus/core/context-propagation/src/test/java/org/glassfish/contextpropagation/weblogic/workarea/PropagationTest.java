@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,34 +17,6 @@
 
 package org.glassfish.contextpropagation.weblogic.workarea;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectInput;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
-import java.io.ObjectOutputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import org.glassfish.contextpropagation.InsufficientCredentialException;
-//import org.glassfish.contextpropagation.adaptors.MockLoggerAdapter;
-//import org.glassfish.contextpropagation.adaptors.TestableThread;
-import org.glassfish.contextpropagation.internal.Utils;
-//import org.glassfish.contextpropagation.weblogic.workarea.spi.WorkContextMapInterceptor;
-//import org.glassfish.contextpropagation.weblogic.workarea.utils.WorkContextInputAdapter;
-//import org.glassfish.contextpropagation.weblogic.workarea.utils.WorkContextOutputAdapter;
-//import org.glassfish.contextpropagation.wireadapters.wls.MySerializable;
-import org.glassfish.contextpropagation.wireadapters.wls.WLSWireAdapterTest;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore
 public class PropagationTest {
 //  public static WorkContextMap wcMap;
 //

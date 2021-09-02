@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,36 +17,6 @@
 
 package org.glassfish.contextpropagation.internal;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
-
-import org.glassfish.contextpropagation.ContextLifecycle;
-import org.glassfish.contextpropagation.PropagationMode;
-import org.glassfish.contextpropagation.ViewCapable;
-//import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
-//import org.glassfish.contextpropagation.adaptors.MockContextAccessController;
-//import org.glassfish.contextpropagation.adaptors.MockThreadLocalAccessor;
-//import org.glassfish.contextpropagation.adaptors.RecordingLoggerAdapter;
-import org.glassfish.contextpropagation.bootstrap.ContextBootstrap;
-import org.glassfish.contextpropagation.bootstrap.LoggerAdapter.Level;
-import org.glassfish.contextpropagation.bootstrap.LoggerAdapter.MessageID;
-import org.glassfish.contextpropagation.internal.Entry.ContextType;
-import org.glassfish.contextpropagation.internal.SimpleMap.Filter;
-import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-
-@Ignore
 public class SimpleMapTest {
 //  SimpleMap sm;
 //  static RecordingLoggerAdapter logger;

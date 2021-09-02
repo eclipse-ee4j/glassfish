@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,27 +17,27 @@
 
 package org.glassfish.contextpropagation;
 
-import static org.junit.Assert.assertEquals;
-
 import java.util.EnumSet;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class PropagationModeTest {
 
-  @Test
-  public void testFromOrdinal() {
-    PropagationMode[] modes = PropagationMode.values();
-    for (int i = 0; i < modes.length; i++) {
-      assertEquals(modes[i], PropagationMode.fromOrdinal(modes[i].ordinal()));
+    @Test
+    public void testFromOrdinal() {
+        PropagationMode[] modes = PropagationMode.values();
+        for (PropagationMode mode : modes) {
+            assertEquals(mode, PropagationMode.fromOrdinal(mode.ordinal()));
+        }
     }
-  }
 
-  @Test
-  public void testDefaultSet() {
-    assertEquals(EnumSet.of(PropagationMode.THREAD, PropagationMode.RMI,
-        PropagationMode.SOAP, PropagationMode.JMS_QUEUE,
-        PropagationMode.MIME_HEADER), PropagationMode.defaultSet());
-  }
+
+    @Test
+    public void testDefaultSet() {
+        assertEquals(EnumSet.of(PropagationMode.THREAD, PropagationMode.RMI, PropagationMode.SOAP,
+            PropagationMode.JMS_QUEUE, PropagationMode.MIME_HEADER), PropagationMode.defaultSet());
+    }
 
 }

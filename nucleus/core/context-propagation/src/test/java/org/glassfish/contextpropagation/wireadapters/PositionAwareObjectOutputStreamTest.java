@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,23 +17,10 @@
 
 package org.glassfish.contextpropagation.wireadapters;
 
-import static org.junit.Assert.assertArrayEquals;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.util.LinkedList;
-import java.util.List;
-
 //import mockit.Deencapsulation;
 
-//import org.glassfish.contextpropagation.adaptors.MockLoggerAdapter;
-import org.glassfish.contextpropagation.internal.Utils;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
 
-@Ignore
+
 public class PositionAwareObjectOutputStreamTest {
 //
 //  @Test

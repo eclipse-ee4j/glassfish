@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,43 +17,48 @@
 
 package org.glassfish.contextpropagation.adaptors;
 
-import org.junit.ComparisonFailure;
-import org.junit.runner.notification.StoppedByUserException;
-
 public abstract class TestableThread extends Thread {
-  final Throwable[] throwableHolder = new Throwable[1];
 
-  public TestableThread() { super(); }
+    final Throwable[] throwableHolder = new Throwable[1];
 
-  @SuppressWarnings("serial")
-  public synchronized void startJoinAndCheckForFailures() {
-    start();
-    try {
-      join();
-    } catch (InterruptedException e) {
-      throwableHolder[0] = e;
+    public TestableThread() {
+        super();
     }
-    if (throwableHolder[0] != null) {
-      if (throwableHolder[0] instanceof ComparisonFailure) {
-        throw (ComparisonFailure) throwableHolder[0];
-      } else {
-        throw (StoppedByUserException) new StoppedByUserException() {
-          @Override public String getMessage() {
-            return throwableHolder[0].getMessage();
-          }
-        }.initCause(throwableHolder[0]);
-      }
-    }
-  }
 
-  @Override
-  public void run() {
-    try {
-      runTest();
-    } catch (Throwable t) {
-      throwableHolder[0] = t;
-    }
-  }
 
-  protected abstract void runTest() throws Exception;
+    @SuppressWarnings("serial")
+    public synchronized void startJoinAndCheckForFailures() {
+        start();
+        try {
+            join();
+        } catch (InterruptedException e) {
+            throwableHolder[0] = e;
+        }
+        if (throwableHolder[0] != null) {
+            if (throwableHolder[0] instanceof AssertionError) {
+                throw (AssertionError) throwableHolder[0];
+            } else {
+                throw (RuntimeException) new RuntimeException() {
+
+                    @Override
+                    public String getMessage() {
+                        return throwableHolder[0].getMessage();
+                    }
+                }.initCause(throwableHolder[0]);
+            }
+        }
+    }
+
+
+    @Override
+    public void run() {
+        try {
+            runTest();
+        } catch (Throwable t) {
+            throwableHolder[0] = t;
+        }
+    }
+
+
+    protected abstract void runTest() throws Exception;
 }

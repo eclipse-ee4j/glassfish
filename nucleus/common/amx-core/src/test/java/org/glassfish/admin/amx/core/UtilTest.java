@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,36 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.admin.amx.test;
-
-import org.junit.Test;
-import org.junit.Before;
-import org.junit.After;
+package org.glassfish.admin.amx.core;
 
 import org.glassfish.admin.amx.base.DomainRoot;
-import org.glassfish.admin.amx.core.Util;
+import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.glassfish.admin.amx.test.AmxTestExtension;
+
+@ExtendWith(AmxTestExtension.class)
 public final class UtilTest {
-    public UtilTest()
-    {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     @Test
-    public void testTypes() {
-        assert Util.deduceType(DomainRoot.class).equals( "domain-root" );
+    public void testDeduceType() {
+        assertEquals("domain-root", Util.deduceType(DomainRoot.class));
     }
 }
-
-
-
-
-
-

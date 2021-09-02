@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,49 +15,21 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.admin.amx.test;
-
-import org.glassfish.admin.amx.impl.util.ObjectNameBuilder;
-
-import org.junit.Test;
-import org.junit.Before;
+package org.glassfish.admin.amx.impl.util;
 
 import java.lang.management.ManagementFactory;
 
+import org.glassfish.admin.amx.test.AmxTestExtension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-public final class ObjectNamesTest extends TestBase
-{
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-    public ObjectNamesTest() {
-    }
-
-    private ObjectNameBuilder get() {
-        return new ObjectNameBuilder( ManagementFactory.getPlatformMBeanServer(), amxDomain());
-    }
-
-    @Before
-    public void setUp() {
-        initBootUtil();
-    }
+@ExtendWith(AmxTestExtension.class)
+public final class ObjectNameBuilderTest {
 
     @Test
-    public void testCreate() {
-        final ObjectNameBuilder objectNames = get();
-    }
-
-    private String amxDomain()
-    {
-        return "test";
-    }
-
-    @Test
-    public void testMisc() {
-        get().getJMXDomain();
+    public void testGetJMXDomain() {
+        assertEquals("test", new ObjectNameBuilder(ManagementFactory.getPlatformMBeanServer(), "test").getJMXDomain());
     }
 }
-
-
-
-
-
-

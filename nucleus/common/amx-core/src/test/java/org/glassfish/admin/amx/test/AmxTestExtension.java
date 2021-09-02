@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,36 +17,32 @@
 
 package org.glassfish.admin.amx.test;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.extension.AfterAllCallback;
+import org.junit.jupiter.api.extension.BeforeAllCallback;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
-@Ignore
-class TestBase extends junit.framework.TestCase {
+public final class AmxTestExtension implements BeforeAllCallback, AfterAllCallback {
 
-    /** some tests might need this */
-    protected static void initBootUtil() {
-        System.setProperty( "com.sun.aas.instanceRoot", "/tmp/amx-test" );
+
+    @Override
+    public void beforeAll(ExtensionContext context) {
+        checkAssertsOn();
+        System.setProperty("com.sun.aas.instanceRoot", "/tmp/amx-test");
     }
 
 
-    protected void
-    checkAssertsOn() {
+    @Override
+    public void afterAll(ExtensionContext context) {
+        System.clearProperty("com.sun.aas.instanceRoot");
+    }
+
+
+    private void checkAssertsOn() {
         try {
             assert false;
-            throw new Error("Assertions must be enabled for unit tests");
-        }
-        catch (AssertionError a) {
+            throw new Error("Assertions must be enabled for unit tests, because they are used in library sources.");
+        } catch (AssertionError a) {
             // OK, this is the desired outcome
         }
     }
-
-
-    public TestBase() {
-        checkAssertsOn();
-    }
 }
-
-
-
-
-
-

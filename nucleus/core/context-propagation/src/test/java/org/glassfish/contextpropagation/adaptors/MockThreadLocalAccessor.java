@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,17 +21,18 @@ import org.glassfish.contextpropagation.bootstrap.ThreadLocalAccessor;
 import org.glassfish.contextpropagation.internal.AccessControlledMap;
 
 public class MockThreadLocalAccessor implements ThreadLocalAccessor {
-  private ThreadLocal<AccessControlledMap> mapThreadLocal = new ThreadLocal<AccessControlledMap>();
 
-  @Override
-  public void set(AccessControlledMap contextMap) {
-    mapThreadLocal.set(contextMap);
-  }
+    private final ThreadLocal<AccessControlledMap> mapThreadLocal = new ThreadLocal<>();
 
-  @Override
-  public AccessControlledMap get() {
-    //MockLoggerAdapter.debug("Thread: " + Thread.currentThread().getId() + " map: " + mapThreadLocal.get());
-    return mapThreadLocal.get();
-  }
+    @Override
+    public void set(AccessControlledMap contextMap) {
+        mapThreadLocal.set(contextMap);
+    }
 
+
+    @Override
+    public AccessControlledMap get() {
+        MockLoggerAdapter.debug("Thread: " + Thread.currentThread().getId() + " map: " + mapThreadLocal.get());
+        return mapThreadLocal.get();
+    }
 }

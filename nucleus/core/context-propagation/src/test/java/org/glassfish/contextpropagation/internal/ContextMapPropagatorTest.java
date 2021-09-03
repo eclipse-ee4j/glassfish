@@ -17,16 +17,34 @@
 
 package org.glassfish.contextpropagation.internal;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.EnumSet;
+
+import org.glassfish.contextpropagation.ContextMap;
+import org.glassfish.contextpropagation.Location;
+import org.glassfish.contextpropagation.PropagationMode;
+import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
+import org.glassfish.contextpropagation.adaptors.TestableThread;
+import org.glassfish.contextpropagation.internal.Entry.ContextType;
+import org.glassfish.contextpropagation.internal.Utils.AccessControlledMapFinder;
+import org.glassfish.contextpropagation.spi.ContextMapPropagator;
+import org.glassfish.contextpropagation.wireadapters.WireAdapter;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import mockit.Expectations;
+import mockit.Mocked;
 import mockit.integration.junit5.JMockitExtension;
 
-//import mockit.Deencapsulation;
-/*import mockit.Expectations;
-import mockit.Mocked;
-import mockit.NonStrictExpectations;
-import mockit.integration.junit4.JMockit;*/
-
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotSame;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 
 /**
@@ -34,165 +52,215 @@ import mockit.integration.junit4.JMockit;*/
  */
 @ExtendWith(JMockitExtension.class)
 public class ContextMapPropagatorTest {
-//  ContextMapPropagator propagator;
-//  ContextMap cm;
-//  SimpleMap sm;
-//  //@Mocked(realClassName="org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter")
-//  final WireAdapter adapter = new DefaultWireAdapter();
-//  Entry defaultEntry, rmiEntry, soapEntry;
-//  final OutputStream out = new ByteArrayOutputStream();
-//
-//  @Before
-//  public void setup() throws InsufficientCredentialException {
-//    BootstrapUtils.bootstrap(adapter);
-//    propagator = Utils.getScopeAwarePropagator();
-//    cm = Utils.getScopeAwareContextMap();
-//    EnumSet<PropagationMode> oneWayDefault = PropagationMode.defaultSet();
-//    oneWayDefault.add(PropagationMode.ONEWAY);
-//    cm.put("default", "default value", oneWayDefault); // Only sent in the request
-//    cm.put("rmi", "rmi value", EnumSet.of(PropagationMode.RMI));
-//    cm.put("soap", "soap value", EnumSet.of(PropagationMode.SOAP));
-//    Utils.AccessControlledMapFinder acmFinder = Deencapsulation.getField(Utils.class, "mapFinder");
-//    sm = acmFinder.getMapIfItExists().simpleMap;
-//    defaultEntry = sm.getEntry("default");
-//    rmiEntry = sm.getEntry("rmi");
-//    soapEntry = sm.getEntry("soap");
-//  }
-//
-//  @Test
-//  public void testSendRequest() throws IOException, InsufficientCredentialException {
-////    new Expectations() {
-////      {
-////        adapter.prepareToWriteTo(out);
-////        adapter.write("default", defaultEntry);
-////        adapter.write("rmi", rmiEntry);
-////        adapter.flush();
-////      }
-////    };
-//    propagator.sendRequest(out, PropagationMode.RMI);
-//  }
-//
-//  @Ignore("jmockit fails without providing a reason")@Test // TODO re-evaluate this test
-//  public void testSendRequestWithLocation() throws IOException, InsufficientCredentialException {
-//    final Entry locationEntry = setupLocation();
-////    new Expectations() {
-////      {
-////        adapter.prepareToWriteTo(out);
-////        adapter.write(Location.KEY, locationEntry); // the order to location calls may have changed since we no longer write it first.
-////        adapter.write("default", defaultEntry);
-////        //adapter.write(Location.KEY + ".locationId", (Entry) any);
-////        //adapter.write(Location.KEY + ".origin", (Entry) any);
-////        adapter.write("rmi", rmiEntry);
-////        adapter.flush();
-////      }
-////    };
-//    propagator.sendRequest(out, PropagationMode.RMI);
-//  }
-//
-//  protected Entry setupLocation() {
-//    final Entry locationEntry = new Entry(new Location(new ViewImpl(Location.KEY)) {},
-//        Location.PROP_MODES, ContextType.VIEW_CAPABLE).init(true, false);
-//    sm.put(Location.KEY, locationEntry);
-//    return locationEntry;
-//  }
-//
-//  @Test
-//  public void testSendResponse() throws IOException {
-////    new Expectations() {
-////      {
-////        adapter.prepareToWriteTo(out);
-////        // default is not expected because it has propagation mode ONEWAY
-////        adapter.write("rmi", rmiEntry);
-////        adapter.flush();
-////      }
-////    };
-//    propagator.sendResponse(out, PropagationMode.RMI);
-//  }
-//
-//  @Test
-//  public void testSendResponseWithLocation() throws IOException {
-//    setupLocation();
-////    new Expectations() {
-////      {
-////        adapter.prepareToWriteTo(out);
-////        // Location is not expected for responses
-////        // default is not expected because it has propagation mode ONEWAY
-////        adapter.write("rmi", rmiEntry);
-////        adapter.flush();
-////      }
-////    };
-//    propagator.sendResponse(out, PropagationMode.RMI);
-//  }
-//
-//  final static InputStream NOOPInputStream = new InputStream() {
-//    @Override public int read() throws IOException {
-//      return 0;
-//    }
-//  };
-//
-//  @Test
-//  public void testReceiveRequestBehavior() throws IOException, ClassNotFoundException {
-//    checkReceiveBehavior("receiveRequest", NOOPInputStream);
-//  }
-//
-//  protected void checkReceiveBehavior(String methodName, Object... args) throws IOException,
-//  ClassNotFoundException {
-//
-////    new Expectations() {
-////      {
-////        adapter.prepareToReadFrom(NOOPInputStream);
-////        adapter.readKey(); result = "default";
-////        adapter.readEntry(); result = defaultEntry;
-////        adapter.readKey(); result = "rmi";
-////        adapter.readEntry(); result = rmiEntry;
-////        adapter.readKey(); result = "soap";
-////        adapter.readEntry(); result = soapEntry;
-////        adapter.readKey(); result = null;
-////      }
-////    };
-//    Deencapsulation.invoke(propagator, methodName, args);
-//  }
-//
-//  @Test
-//  public void testReceiveResponse() throws IOException, ClassNotFoundException {
-//    checkReceiveBehavior("receiveResponse", NOOPInputStream, PropagationMode.SOAP);
-//  }
-//
-//  @Test
-//  public void testRestoreThreadContexts() throws InsufficientCredentialException, InterruptedException {
-//    cm.put("local", "local context", EnumSet.of(PropagationMode.LOCAL)); // This one should not propagate since it is LOCAL
-//    final AccessControlledMap acm = cm.getAccessControlledMap();
-//    new TestableThread() {
-//      @Override
-//      public void runTest() throws Exception {
-//        propagator.restoreThreadContexts(acm);
-//        ContextMap newCM = Utils.getScopeAwareContextMap();
-//        assertNotSame(cm, newCM);
-//        assertNull(newCM.get("local"));
-//        assertNotNull(newCM.get("default"));
-//        assertNull(newCM.get("soap")); // Does not have the PropagationMode.THREAD
-//        assertNull(newCM.get("rmi")); // Does not have the PropagationMode.THREAD
-//      }
-//    }.startJoinAndCheckForFailures();
-//  }
-//
-//  public void testUseWireAdapter(final WireAdapter wa) throws IOException {
-//    assertTrue(wa != adapter);
-//    propagator.useWireAdapter(wa);
-////    new NonStrictExpectations() {{
-////      wa.prepareToWriteTo((OutputStream) withNotNull()); times = 1;
-////    }};
-//    propagator.sendRequest(out, PropagationMode.RMI);
-//  }
-//
-//  @Test public void clearPropagatedEntries() throws InsufficientCredentialException {
-//    assertEquals(defaultEntry.value, cm.get("default"));
-//    assertEquals(rmiEntry.value, cm.get("rmi"));
-//    assertEquals(soapEntry.value, cm.get("soap"));
-//    Deencapsulation.invoke(propagator, "clearPropagatedEntries", PropagationMode.ONEWAY, sm);
-//    assertNull(cm.get("default")); // The only ONEWAY item
-//    assertNotNull(cm.get("rmi"));
-//    assertNotNull(cm.get("soap"));
-//  }
 
+    @Mocked
+    private WireAdapter adapter;
+    private ContextMapPropagator propagator;
+    private ContextMap contextMap;
+    private SimpleMap simpleMap;
+    private Entry defaultEntry;
+    private Entry rmiEntry;
+    private Entry soapEntry;
+    private final OutputStream out = new ByteArrayOutputStream();
+
+    private static final InputStream NOOP_INPUT_STREAM = new InputStream() {
+
+        @Override
+        public int read() throws IOException {
+            return 0;
+        }
+    };
+
+    @BeforeEach
+    public void setup() throws Exception {
+        BootstrapUtils.bootstrap(adapter);
+        propagator = Utils.getScopeAwarePropagator();
+        propagator.useWireAdapter(adapter);
+        contextMap = Utils.getScopeAwareContextMap();
+        EnumSet<PropagationMode> oneWayDefault = PropagationMode.defaultSet();
+        oneWayDefault.add(PropagationMode.ONEWAY);
+        // Only sent in the request
+        contextMap.put("default", "default value", oneWayDefault);
+        contextMap.put("rmi", "rmi value", EnumSet.of(PropagationMode.RMI));
+        contextMap.put("soap", "soap value", EnumSet.of(PropagationMode.SOAP));
+        AccessControlledMapFinder acmFinder = new AccessControlledMapFinder();
+        simpleMap = acmFinder.getMapAndCreateIfNeeded().simpleMap;
+        defaultEntry = simpleMap.getEntry("default");
+        rmiEntry = simpleMap.getEntry("rmi");
+        soapEntry = simpleMap.getEntry("soap");
+    }
+
+
+    @Test
+    public void testSendRequest() throws Exception {
+        new Expectations() {
+
+            {
+                adapter.prepareToWriteTo(out);
+                adapter.write("default", defaultEntry);
+                adapter.write("rmi", rmiEntry);
+                adapter.flush();
+            }
+        };
+        propagator.sendRequest(out, PropagationMode.RMI);
+    }
+
+
+    @Test
+    @Disabled("Causes ConcurrentModificationException at SimpleMap.findNext:162")
+    public void testSendRequestWithLocation() throws Exception {
+        final Entry locationEntry = createLocationEntry();
+        new Expectations() {
+
+            {
+                adapter.prepareToWriteTo(out);
+                adapter.write(Location.KEY, locationEntry);
+                // the order to location calls may have changed since we no longer write it first.
+                adapter.write("default", defaultEntry);
+                adapter.write(Location.KEY + ".locationId", (Entry) any);
+                adapter.write(Location.KEY + ".origin", (Entry) any);
+                adapter.write("rmi", rmiEntry);
+                adapter.flush();
+            }
+        };
+        propagator.sendRequest(out, PropagationMode.RMI);
+    }
+
+
+    @Test
+    public void testSendResponse() throws IOException {
+        new Expectations() {
+
+            {
+                adapter.prepareToWriteTo(out);
+                // default is not expected because it has propagation mode ONEWAY
+                adapter.write("rmi", rmiEntry);
+                adapter.flush();
+            }
+        };
+        propagator.sendResponse(out, PropagationMode.RMI);
+    }
+
+
+    @Test
+    public void testSendResponseWithLocation() throws IOException {
+        createLocationEntry();
+        new Expectations() {
+
+            {
+                adapter.prepareToWriteTo(out);
+                // Location is not expected for responses
+                // default is not expected because it has propagation mode ONEWAY
+                adapter.write("rmi", rmiEntry);
+                adapter.flush();
+            }
+        };
+        propagator.sendResponse(out, PropagationMode.RMI);
+    }
+
+
+    @Test
+    @Disabled("Incompatible Jmockit 1.49 and JaCoCo 0.8.7, also readEntry after 'soap' still fails even without jacoco")
+    public void testReceiveRequestBehavior() throws Exception {
+        new Expectations() {
+
+            {
+                adapter.prepareToReadFrom(NOOP_INPUT_STREAM);
+                adapter.readKey();
+                result = "default";
+                adapter.readEntry();
+                result = defaultEntry;
+                adapter.readKey();
+                result = "rmi";
+                adapter.readEntry();
+                result = rmiEntry;
+                adapter.readKey();
+                result = "soap";
+                adapter.readEntry();
+                result = soapEntry;
+                adapter.readKey();
+                result = null;
+            }
+        };
+        propagator.receiveRequest(NOOP_INPUT_STREAM);
+    }
+
+
+    @Test
+    @Disabled("Incompatible Jmockit 1.49 and JaCoCo 0.8.7, also readEntry after 'soap' still fails even without jacoco")
+    public void testReceiveResponse() throws Exception {
+        new Expectations() {
+
+            {
+                adapter.prepareToReadFrom(NOOP_INPUT_STREAM);
+                adapter.readKey();
+                result = "default";
+
+                adapter.readEntry();
+                result = defaultEntry;
+
+                adapter.readKey();
+                result = "rmi";
+
+                adapter.readEntry();
+                result = rmiEntry;
+
+                adapter.readKey();
+                result = "soap";
+
+                adapter.readEntry();
+                result = soapEntry;
+
+                adapter.readKey();
+                result = null;
+            }
+        };
+        propagator.receiveResponse(NOOP_INPUT_STREAM, PropagationMode.SOAP);
+    }
+
+
+    @Test
+    public void testRestoreThreadContexts() throws Exception {
+        contextMap.put("local", "local context", EnumSet.of(PropagationMode.LOCAL));
+        final AccessControlledMap acm = contextMap.getAccessControlledMap();
+        new TestableThread() {
+
+            @Override
+            public void runTest() throws Exception {
+                propagator.restoreThreadContexts(acm);
+                ContextMap newCM = Utils.getScopeAwareContextMap();
+                assertAll(
+                    () -> assertNotSame(contextMap, newCM),
+                    () -> assertNull(newCM.get("local"), "This one should not propagate since it is LOCAL"),
+                    () -> assertNotNull(newCM.get("default")),
+                    () -> assertNull(newCM.get("soap")),
+                    () -> assertNull(newCM.get("rmi"))
+                );
+            }
+        }.startJoinAndCheckForFailures();
+    }
+
+
+    @Test
+    public void testUseWireAdapter() throws IOException {
+        new Expectations() {
+
+            {
+                adapter.prepareToWriteTo(withInstanceOf(OutputStream.class));
+                times = 1;
+            }
+        };
+        propagator.sendRequest(out, PropagationMode.RMI);
+    }
+
+
+    /**
+     * Create the entry and put it into the simpleMap ({@link SimpleMap})
+     */
+    private Entry createLocationEntry() {
+        final Entry locationEntry = new Entry(new Location(new ViewImpl(Location.KEY)) {
+        }, Location.PROP_MODES, ContextType.VIEW_CAPABLE).init(true, false);
+        simpleMap.put(Location.KEY, locationEntry);
+        return locationEntry;
+    }
 }

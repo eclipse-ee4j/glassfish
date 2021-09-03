@@ -17,36 +17,29 @@
 
 package org.glassfish.contextpropagation.adaptors;
 
+import java.util.concurrent.atomic.AtomicReference;
+
 public abstract class TestableThread extends Thread {
 
-    final Throwable[] throwableHolder = new Throwable[1];
+    private final AtomicReference<Throwable> throwableHolder = new AtomicReference<>();
 
-    public TestableThread() {
-        super();
-    }
+    protected abstract void runTest() throws Exception;
 
-
-    @SuppressWarnings("serial")
-    public synchronized void startJoinAndCheckForFailures() {
+    public void startJoinAndCheckForFailures() {
         start();
         try {
             join();
         } catch (InterruptedException e) {
-            throwableHolder[0] = e;
+            throwableHolder.set(e);
         }
-        if (throwableHolder[0] != null) {
-            if (throwableHolder[0] instanceof AssertionError) {
-                throw (AssertionError) throwableHolder[0];
-            } else {
-                throw (RuntimeException) new RuntimeException() {
-
-                    @Override
-                    public String getMessage() {
-                        return throwableHolder[0].getMessage();
-                    }
-                }.initCause(throwableHolder[0]);
-            }
+        Throwable throwable = throwableHolder.get();
+        if (throwable == null) {
+            return;
         }
+        if (throwable instanceof AssertionError) {
+            throw (AssertionError) throwable;
+        }
+        throw new RuntimeException(throwable.getMessage(), throwable);
     }
 
 
@@ -55,10 +48,7 @@ public abstract class TestableThread extends Thread {
         try {
             runTest();
         } catch (Throwable t) {
-            throwableHolder[0] = t;
+            throwableHolder.set(t);
         }
     }
-
-
-    protected abstract void runTest() throws Exception;
 }

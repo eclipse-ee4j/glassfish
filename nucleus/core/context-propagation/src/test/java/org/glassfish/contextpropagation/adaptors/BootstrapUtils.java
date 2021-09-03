@@ -17,6 +17,7 @@
 
 package org.glassfish.contextpropagation.adaptors;
 
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -27,10 +28,15 @@ import org.glassfish.contextpropagation.InsufficientCredentialException;
 import org.glassfish.contextpropagation.PropagationMode;
 import org.glassfish.contextpropagation.View;
 import org.glassfish.contextpropagation.ViewCapable;
+import org.glassfish.contextpropagation.bootstrap.ContextBootstrap;
 import org.glassfish.contextpropagation.internal.Utils.ContextMapAdditionalAccessors;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
+import org.glassfish.contextpropagation.wireadapters.WireAdapter;
+
+import mockit.internal.reflection.FieldReflection;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class BootstrapUtils {
 
@@ -84,26 +90,70 @@ public class BootstrapUtils {
         wcMap.get("ascii");
     }
 
-//  public static void bootstrap(WireAdapter wireAdapter) {
-//    reset();
-//    /*ThreadLocalAccessor tla = Deencapsulation.getField(ContextBootstrap.class, "threadLocalAccessor");
-//    tla.set(null);*/
-//    ContextBootstrap.configure(new MockLoggerAdapter(),
-//        wireAdapter, new MockThreadLocalAccessor(),
-//        new MockContextAccessController(), "guid");
-//  }
 
-//  public static void reset() {
-//    Deencapsulation.setField(ContextBootstrap.class, "isConfigured", false);
-//    try {
-//      ContextMapHelper.getScopeAwareContextMap().get("true");
-//      fail("Should get IllegalStateException");
-//    } catch (InsufficientCredentialException e) {
-//      fail(e.toString());
-//    } catch (IllegalStateException ignoreThisIsExpected) {}
-//  }
+    public static void bootstrap(WireAdapter wireAdapter) {
+        reset();
+        /*
+         * ThreadLocalAccessor tla = Deencapsulation.getField(ContextBootstrap.class,
+         * "threadLocalAccessor");
+         * tla.set(null);
+         */
+        ContextBootstrap.configure(new MockLoggerAdapter(), wireAdapter, new MockThreadLocalAccessor(),
+            new MockContextAccessController(), "guid");
+    }
 
 
+    public static void reset() {
+        try {
+            setStaticField(ContextBootstrap.class, "isConfigured", false);
+            ContextMapHelper.getScopeAwareContextMap().get("true");
+            fail("Should get IllegalStateException");
+        } catch (IllegalStateException e) {
+            // ignored
+        } catch (Exception e) {
+            fail(e.toString());
+        }
+    }
 
 
+    // Reason for following methods: API of JMockit changes with minor versions
+    public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(null, value);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to set static field " + fieldName + " of " + clazz + " to " + value, e);
+        }
+    }
+
+    public static void getStaticField(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.get(null);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to get static field " + fieldName + " of " + clazz, e);
+        }
+    }
+
+    public static void setField(Object instance, String fieldName, Object value) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            FieldReflection.setFieldValue(field, instance, value);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to set field " + fieldName + " of " + instance + " to " + value, e);
+        }
+    }
+
+
+
+    public static <T> T getField(Object instance, String fieldName) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            return FieldReflection.getFieldValue(field, instance);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to get a value of field " + fieldName + " of " + instance , e);
+        }
+    }
 }

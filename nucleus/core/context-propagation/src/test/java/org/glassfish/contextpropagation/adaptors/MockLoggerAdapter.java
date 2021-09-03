@@ -22,8 +22,8 @@ import org.junit.jupiter.api.Test;
 
 public class MockLoggerAdapter implements LoggerAdapter {
 
-    // TODO TIP: Change the Level constant to control what is logged, use null to reduce output to a minimum
-    static final Level LOGGING_LEVEL = null; // Level.WARN;
+    // TIP: Change the Level constant to control what is logged, use null to reduce output to a minimum
+    static final Level LOGGING_LEVEL = Level.WARN;
 
     @Override
     public boolean isLoggable(Level level) {

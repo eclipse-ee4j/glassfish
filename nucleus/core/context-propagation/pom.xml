@@ -45,6 +45,8 @@
 
     <properties>
         <findbugs.exclude>${project.basedir}/exclude.xml</findbugs.exclude>
+        <!-- jmockit is used in test and depends on it's agent -->
+        <maven.test.jvmoptions.custom>-javaagent:"${settings.localRepository}"/org/jmockit/jmockit/${jmockit.version}/jmockit-${jmockit.version}.jar</maven.test.jvmoptions.custom>
     </properties>
 
     <dependencies>

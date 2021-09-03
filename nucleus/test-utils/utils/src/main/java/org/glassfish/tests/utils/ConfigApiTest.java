@@ -102,8 +102,8 @@ public abstract class ConfigApiTest {
         }
 
         @Override
-        public ConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader,
-                ConfigBean dom, ConfigModel configModel) {
+        public ConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, ConfigBean dom,
+            ConfigModel configModel) {
             return new ConfigBean(habitat,this, dom, configModel, xmlStreamReader);
         }
     }

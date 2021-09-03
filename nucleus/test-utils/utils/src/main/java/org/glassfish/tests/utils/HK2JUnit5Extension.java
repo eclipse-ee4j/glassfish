@@ -94,6 +94,7 @@ public class HK2JUnit5Extension
     private static final String CLASS_PATH_PROP = "java.class.path";
     private static final String DOT_CLASS = ".class";
     private static final String START_TIME_METHOD = "start time method";
+
     private ServiceLocator locator;
     private DynamicConfiguration config;
     private Namespace namespaceMethod;
@@ -108,8 +109,10 @@ public class HK2JUnit5Extension
         addConstantServices(context);
 
         final String domainXml = getDomainXml(testClass);
+        Class<? extends DomDocument<?>> domainXmlDomClass = getDomainXmlDomClass(testClass);
+        addOneConstant(locator, domainXmlDomClass.getConstructor(ServiceLocator.class).newInstance(locator));
         if (domainXml != null) {
-            addConfigFromResource(loader, domainXml);
+            addConfigFromResource(loader, domainXml, domainXmlDomClass);
         }
 
         // lists keep ordering
@@ -165,6 +168,11 @@ public class HK2JUnit5Extension
         if (locator != null) {
             locator.shutdown();
         }
+    }
+
+
+    protected ServiceLocator getLocator() {
+        return locator;
     }
 
 
@@ -224,7 +232,6 @@ public class HK2JUnit5Extension
         final StartupContext startupContext = new StartupContext(startupContextProperties);
         addOneConstant(locator, startupContext);
         addOneConstant(locator, new StaticModulesRegistry(getClassLoader(context), startupContext));
-        addOneConstant(locator, new TestDocument(locator));
     }
 
 
@@ -235,6 +242,16 @@ public class HK2JUnit5Extension
     protected String getDomainXml(final Class<?> testClass) {
         final DomainXml domainXmlAnnotation = testClass.getAnnotation(DomainXml.class);
         return domainXmlAnnotation == null ? null : domainXmlAnnotation.value();
+    }
+
+
+    /**
+     * @param testClass
+     * @return a {@link DomDocument} class obtained from test's {@link DomainXml} annotation
+     */
+    protected Class<? extends DomDocument<?>> getDomainXmlDomClass(final Class<?> testClass) {
+        final DomainXml domainXmlAnnotation = testClass.getAnnotation(DomainXml.class);
+        return domainXmlAnnotation == null ? TestDocument.class : domainXmlAnnotation.domDocumentClass();
     }
 
 
@@ -273,11 +290,12 @@ public class HK2JUnit5Extension
     }
 
 
-    private void addConfigFromResource(final ClassLoader loader, final String resourcePath) {
+    private void addConfigFromResource(final ClassLoader loader, final String resourcePath,
+        final Class<? extends DomDocument<?>> domClass) {
         URL url = Objects.requireNonNull(loader.getResource(resourcePath),
             "The resourcePath doesn't exist: " + resourcePath);
         ConfigParser configParser = new ConfigParser(locator);
-        TestDocument testDocumentService = locator.getService(TestDocument.class);
+        DomDocument<?> testDocumentService = locator.getService(domClass);
         DomDocument<?> document = configParser.parse(url, testDocumentService);
         addOneConstant(locator, document);
     }

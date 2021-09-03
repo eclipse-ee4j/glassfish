@@ -24,6 +24,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.glassfish.tests.utils.ConfigApiTest.TestDocument;
+import org.jvnet.hk2.config.DomDocument;
+
 /**
  * Path to custom domain.xml used to load configuration by the {@link HK2JUnit5Extension}
  *
@@ -40,4 +43,10 @@ public @interface DomainXml {
      * The path is relative to the test classloader.
      */
     String value();
+
+
+    /**
+     * @return DOM tree representation
+     */
+    Class<? extends DomDocument<?>> domDocumentClass() default TestDocument.class;
 }

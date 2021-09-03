@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,84 +15,88 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.connectors.admin.cli;
+package org.glassfish.resources.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.BindableResource;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
-import org.glassfish.api.ActionReport;
+
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.config.serverbeans.BindableResource;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourceRef;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.resources.admin.cli.test.ResourcesJunit5Extension;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
-import org.glassfish.tests.utils.ConfigApiTest;
+import jakarta.inject.Inject;
+
+import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class DeleteJndiResourceTest extends ConfigApiTest {
+@ExtendWith(ResourcesJunit5Extension.class)
+public class DeleteJndiResourceTest {
+    @Inject
     private ServiceLocator habitat;
+    @Inject
+    private Logger logger;
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
     private CommandRunner cr;
+    private final Subject adminSubject = Utils.createInternalAsadminSubject();
 
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
-
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        habitat = getHabitat();
         resources = habitat.<Domain>getService(Domain.class).getResources();
         parameters = new ParameterMap();
         cr = habitat.getService(CommandRunner.class);
         context = new AdminCommandContextImpl(
-                LogDomains.getLogger(DeleteJndiResourceTest.class, LogDomains.ADMIN_LOGGER),
-                new PropsFileActionReporter());
+            LogDomains.getLogger(DeleteJndiResourceTest.class, LogDomains.ADMIN_LOGGER), new PropsFileActionReporter());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws TransactionFailure {
         parameters = new ParameterMap();
-        ConfigSupport.apply(new SingleConfigCode<Resources>() {
-            public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                Resource target = null;
-                for (Resource resource : param.getResources()) {
-                    if (resource instanceof BindableResource) {
-                        BindableResource r = (BindableResource) resource;
-                        if (r.getJndiName().equals("sample_jndi_resource") ||
-                                r.getJndiName().equals("dupRes")) {
-                            target = resource;
-                            break;
-                        }
+        SingleConfigCode<Resources> configCode = resourcesProxy -> {
+            Resource target = null;
+            for (Resource resource : resourcesProxy.getResources()) {
+                if (resource instanceof BindableResource) {
+                    BindableResource r = (BindableResource) resource;
+                    if (r.getJndiName().equals("sample_jndi_resource") ||
+                            r.getJndiName().equals("dupRes")) {
+                        target = resource;
+                        break;
                     }
                 }
-                if (target != null) {
-                    param.getResources().remove(target);
-                }
-                return null;
             }
-        }, resources);
+            if (target != null) {
+                resourcesProxy.getResources().remove(target);
+            }
+            return null;
+        };
+        ConfigSupport.apply(configCode, resources);
     }
 
     /**
@@ -106,14 +111,16 @@ public class DeleteJndiResourceTest extends ConfigApiTest {
         parameters.set("jndilookupname", "sample_jndi");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "sample_jndi_resource");
-        org.glassfish.resources.admin.cli.CreateJndiResource createCommand = habitat.getService(org.glassfish.resources.admin.cli.CreateJndiResource.class);
-        cr.getCommandInvocation("create-jndi-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        CreateJndiResource createCommand = habitat.getService(CreateJndiResource.class);
+        cr.getCommandInvocation("create-jndi-resource", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(createCommand);
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
         parameters = new ParameterMap();
         parameters.set("jndi_name", "sample_jndi_resource");
-        org.glassfish.resources.admin.cli.DeleteJndiResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteJndiResource.class);
-        cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        DeleteJndiResource deleteCommand = habitat.getService(DeleteJndiResource.class);
+        cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(deleteCommand);
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
         boolean isDeleted = true;
         for (Resource resource : resources.getResources()) {
             if (resource instanceof BindableResource) {
@@ -126,7 +133,6 @@ public class DeleteJndiResourceTest extends ConfigApiTest {
             }
         }
         assertTrue(isDeleted);
-        logger.fine("msg: " + context.getActionReport().getMessage());
         Servers servers = habitat.getService(Servers.class);
         boolean isRefDeleted = true;
         for (Server server : servers.getServer()) {
@@ -149,9 +155,9 @@ public class DeleteJndiResourceTest extends ConfigApiTest {
     @Test
     public void testExecuteFailDoesNotExist() {
         parameters.set("jndi_name", "doesnotexist");
-        org.glassfish.resources.admin.cli.DeleteJndiResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteJndiResource.class);
-        cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-        logger.fine("msg: " + context.getActionReport().getMessage());
+        DeleteJndiResource deleteCommand = habitat.getService(DeleteJndiResource.class);
+        cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(deleteCommand);
+        assertEquals(FAILURE, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
     }
 }

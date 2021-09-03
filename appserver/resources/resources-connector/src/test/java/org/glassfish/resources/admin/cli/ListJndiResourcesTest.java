@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,65 +15,65 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.connectors.admin.cli;
+package org.glassfish.resources.admin.cli;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.After;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.resources.admin.cli.test.ResourcesJunit5Extension;
+import org.glassfish.resources.config.ExternalJndiResource;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.glassfish.tests.utils.ConfigApiTest;
+import jakarta.inject.Inject;
 
-public class ListJndiResourcesTest extends ConfigApiTest {
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(ResourcesJunit5Extension.class)
+public class ListJndiResourcesTest {
+
+    @Inject
     private ServiceLocator habitat;
-    private int origNum = 0;
+    private int origNum;
     private ParameterMap parameters;
-    AdminCommandContext context;
-    CommandRunner cr;
+    private AdminCommandContext context;
+    private CommandRunner cr;
+    private final Subject adminSubject = Utils.createInternalAsadminSubject();
 
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
 
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        habitat = getHabitat();
         cr = habitat.getService(CommandRunner.class);
         context = new AdminCommandContextImpl(
-                LogDomains.getLogger(ListJndiResourcesTest.class, LogDomains.ADMIN_LOGGER),
-                new PropsFileActionReporter());
+            LogDomains.getLogger(ListJndiResourcesTest.class, LogDomains.ADMIN_LOGGER), new PropsFileActionReporter());
         parameters = new ParameterMap();
         Resources resources = habitat.<Domain>getService(Domain.class).getResources();
         for (Resource resource : resources.getResources()) {
-            if (resource instanceof org.glassfish.resources.config.ExternalJndiResource) {
+            if (resource instanceof ExternalJndiResource) {
                 origNum = origNum + 1;
             }
         }
     }
 
-    @After
-    public void tearDown() {
-
-    }
 
     /**
      * Test of execute method, of class ListJndiResources.
@@ -81,15 +82,12 @@ public class ListJndiResourcesTest extends ConfigApiTest {
 
     @Test
     public void testExecuteSuccessListOriginal() {
-        org.glassfish.resources.admin.cli.ListJndiResources listCommand = habitat.getService(org.glassfish.resources.admin.cli.ListJndiResources.class);
-        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        ListJndiResources listCommand = habitat.getService(ListJndiResources.class);
+        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(listCommand);
         List<ActionReport.MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        if (origNum == 0) {
-            //Nothing to list.
-        } else {
-            assertEquals(origNum, list.size());
-        }
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        assertEquals(origNum, list.size());
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
     }
 
 /**
@@ -103,16 +101,17 @@ public class ListJndiResourcesTest extends ConfigApiTest {
     public void testExecuteSuccessListResource() {
         createJndiResource();
         parameters = new ParameterMap();
-        org.glassfish.resources.admin.cli.ListJndiResources listCommand = habitat.getService(org.glassfish.resources.admin.cli.ListJndiResources.class);
-        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        ListJndiResources listCommand = habitat.getService(ListJndiResources.class);
+        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(listCommand);
         List<ActionReport.MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum + 1, list.size());
-        List<String> listStr = new ArrayList<String>();
+        List<String> listStr = new ArrayList<>();
         for (ActionReport.MessagePart mp : list) {
             listStr.add(mp.getMessage());
         }
         assertTrue(listStr.contains("resource"));
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
 
         deleteJndiResource();
     }
@@ -124,18 +123,21 @@ public class ListJndiResourcesTest extends ConfigApiTest {
         parameters.set("jndilookupname", "sample_jndi");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "resource");
-        org.glassfish.resources.admin.cli.CreateJndiResource createCommand = habitat.getService(org.glassfish.resources.admin.cli.CreateJndiResource.class);
-        cr.getCommandInvocation("create-jndi-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        CreateJndiResource createCommand = habitat.getService(CreateJndiResource.class);
+        cr.getCommandInvocation("create-jndi-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(createCommand);
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
     }
 
     private void deleteJndiResource() {
         parameters = new ParameterMap();
         parameters.set("jndi_name", "resource");
-        org.glassfish.resources.admin.cli.DeleteJndiResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteJndiResource.class);
-        cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        DeleteJndiResource deleteCommand = habitat.getService(DeleteJndiResource.class);
+        cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(deleteCommand);
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
     }
+
     /**
      * Test of execute method, of class ListJndiResource.
      * delete-jndi-resource resource
@@ -147,35 +149,32 @@ public class ListJndiResourcesTest extends ConfigApiTest {
         createJndiResource();
 
         parameters = new ParameterMap();
-        org.glassfish.resources.admin.cli.ListJndiResources listCommand = habitat.getService(org.glassfish.resources.admin.cli.ListJndiResources.class);
-        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        ListJndiResources listCommand = habitat.getService(ListJndiResources.class);
+        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(listCommand);
 
         List<ActionReport.MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum + 1, list.size());
         origNum = origNum + 1; //as we newly created a resource after test "setup".
 
-
         deleteJndiResource();
 
-        ParameterMap parameters = new ParameterMap();
-        listCommand = habitat.getService(org.glassfish.resources.admin.cli.ListJndiResources.class);
+        ParameterMap params = new ParameterMap();
+        listCommand = habitat.getService(ListJndiResources.class);
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJndiResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(params)
+            .execute(listCommand);
 
         list = context.getActionReport().getTopMessagePart().getChildren();
 
-        if ((origNum - 1) == 0) {
-            //Nothing to list.
-        } else {
-            assertEquals(origNum - 1, list.size());
-        }
-        List<String> listStr = new ArrayList<String>();
+        assertEquals(origNum - 1, list.size());
+        List<String> listStr = new ArrayList<>();
         for (ActionReport.MessagePart mp : list) {
             listStr.add(mp.getMessage());
         }
         assertFalse(listStr.contains("resource"));
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
     }
 }

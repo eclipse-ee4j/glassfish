@@ -14,7 +14,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.apf.test;
+package org.glassfish.apf.test.example;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -24,10 +24,9 @@ import java.lang.annotation.Target;
 
 /**
  * @author jwells
- *
  */
 @Retention(RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ClassC {
+public @interface ClassB {
 
 }

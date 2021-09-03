@@ -153,6 +153,7 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
         <javaee.version.old>8</javaee.version.old>
         <javaee.version.new>9</javaee.version.new>
+        <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -449,6 +450,12 @@
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
                 <version>2.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>${easymock.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

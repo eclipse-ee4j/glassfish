@@ -22,6 +22,12 @@ import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.MessagePart;
 import org.glassfish.api.admin.AdminCommandContext;
@@ -30,39 +36,35 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.mail.config.MailResource;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.junit.After;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Test;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.resources.mail.test.MailJunit5Extension;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import java.util.ArrayList;
-import java.util.List;
+import jakarta.inject.Inject;
 
-public class ListMailResourcesTest extends ConfigApiTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@ExtendWith(MailJunit5Extension.class)
+public class ListMailResourcesTest {
+
+    @Inject
     private ServiceLocator habitat;
     private int origNum = 0;
     private ParameterMap parameters;
     private AdminCommandContext context;
     private CommandRunner cr;
+    private final Subject adminSubject = Utils.createInternalAsadminSubject();
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
-
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        habitat = getHabitat();
         parameters = new ParameterMap();
         cr = habitat.getService(CommandRunner.class);
-        assertTrue(cr != null);
+        assertNotNull(cr);
         Resources resources = habitat.<Domain>getService(Domain.class).getResources();
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListMailResourcesTest.class, LogDomains.ADMIN_LOGGER),
@@ -74,10 +76,6 @@ public class ListMailResourcesTest extends ConfigApiTest {
         }
     }
 
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of execute method, of class ListMailResources.
      * list-mail-resources
@@ -85,7 +83,7 @@ public class ListMailResourcesTest extends ConfigApiTest {
     @Test
     public void testExecuteSuccessListOriginal() {
         org.glassfish.resources.mail.admin.cli.ListMailResources listCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.ListMailResources.class);
-        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         if (origNum == 0) {
             //Nothing to list
@@ -107,12 +105,12 @@ public class ListMailResourcesTest extends ConfigApiTest {
         createMailResource();
 
         parameters = new ParameterMap();
-        org.glassfish.resources.mail.admin.cli.ListMailResources listCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.ListMailResources.class);
-        assertTrue(listCommand != null);
-        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        ListMailResources listCommand = habitat.getService(ListMailResources.class);
+        assertNotNull(listCommand);
+        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum + 1, list.size());
-        List<String> listStr = new ArrayList<String>();
+        List<String> listStr = new ArrayList<>();
         for (MessagePart mp : list) {
             listStr.add(mp.getMessage());
         }
@@ -129,7 +127,7 @@ public class ListMailResourcesTest extends ConfigApiTest {
         parameters.set("jndi_name", "mailresource");
         CreateMailResource createCommand = habitat.getService(CreateMailResource.class);
         assertTrue(createCommand != null);
-        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
+        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
 
@@ -145,7 +143,7 @@ public class ListMailResourcesTest extends ConfigApiTest {
 
         parameters = new ParameterMap();
         org.glassfish.resources.mail.admin.cli.ListMailResources listCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.ListMailResources.class);
-        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<ActionReport.MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum + 1, list.size());
@@ -157,14 +155,14 @@ public class ListMailResourcesTest extends ConfigApiTest {
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListMailResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-mail-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
         list = context.getActionReport().getTopMessagePart().getChildren();
         if ((origNum - 1) == 0) {
             //Nothing to list.
         } else {
             assertEquals(origNum - 1, list.size());
         }
-        List<String> listStr = new ArrayList<String>();
+        List<String> listStr = new ArrayList<>();
         for (MessagePart mp : list) {
             listStr.add(mp.getMessage());
         }
@@ -177,7 +175,7 @@ public class ListMailResourcesTest extends ConfigApiTest {
         parameters.set("jndi_name", "mailresource");
         DeleteMailResource deleteCommand = habitat.getService(DeleteMailResource.class);
         assertTrue(deleteCommand != null);
-        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
     }
 }

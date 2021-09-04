@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,45 +17,57 @@
 
 package org.glassfish.resources.mail.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
+
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourceRef;
-import com.sun.enterprise.config.serverbeans.Resources;
 import org.glassfish.resources.mail.config.MailResource;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.resources.mail.test.MailJunit5Extension;
+import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class DeleteMailResourceTest extends ConfigApiTest {
+@ExtendWith(MailJunit5Extension.class)
+public class DeleteMailResourceTest {
+    @Inject
     private ServiceLocator habitat;
+    @Inject
+    private Logger logger;
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
     private CommandRunner cr;
+    private final Subject adminSubject = Utils.createInternalAsadminSubject();
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        habitat = getHabitat();
         parameters = new ParameterMap();
         cr = habitat.getService(CommandRunner.class);
         resources = habitat.<Domain>getService(Domain.class).getResources();
@@ -63,36 +76,27 @@ public class DeleteMailResourceTest extends ConfigApiTest {
                 new PropsFileActionReporter());
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws TransactionFailure {
-        ConfigSupport.apply(new SingleConfigCode<Resources>() {
-            public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                Resource target = null;
-                for (Resource resource : param.getResources()) {
-                    if (resource instanceof MailResource) {
-                        MailResource r = (MailResource) resource;
-                        if (r.getJndiName().equals("mail/MyMailSession")) {
-                            target = resource;
-                            break;
-                        }
+        SingleConfigCode<Resources> configCode = resourcesProxy -> {
+            Resource target = null;
+            for (Resource resource : resourcesProxy.getResources()) {
+                if (resource instanceof MailResource) {
+                    MailResource r = (MailResource) resource;
+                    if (r.getJndiName().equals("mail/MyMailSession")) {
+                        target = resource;
+                        break;
                     }
                 }
-                if (target != null) {
-                    param.getResources().remove(target);
-                }
-                return null;
             }
-        }, resources);
-        parameters = new ParameterMap();
+            if (target != null) {
+                resourcesProxy.getResources().remove(target);
+            }
+            return null;
+        };
+        ConfigSupport.apply(configCode, resources);
     }
 
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
-
-    public String getFileName() {
-        return "DomainTest";
-    }
 
     /**
      * Test of execute method, of class DeleteMailResource.
@@ -108,14 +112,14 @@ public class DeleteMailResourceTest extends ConfigApiTest {
         parameters.set("jndi_name", "mail/MyMailSession");
         org.glassfish.resources.mail.admin.cli.CreateMailResource createCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
         assertTrue(createCommand != null);
-        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
+        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
         parameters = new ParameterMap();
         parameters.set("jndi_name", "mail/MyMailSession");
         org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
         assertTrue(deleteCommand != null);
-        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isDeleted = true;
         for (Resource resource : resources.getResources()) {
@@ -154,7 +158,7 @@ public class DeleteMailResourceTest extends ConfigApiTest {
     public void testExecuteFailDoesNotExist() {
         parameters.set("jndi_name", "doesnotexist");
         org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
-        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         logger.fine("msg: " + context.getActionReport().getMessage());
     }

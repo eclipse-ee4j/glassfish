@@ -704,17 +704,20 @@ public class Request
             if (p != null) {
                 hostValve = p.getBasic();
             }
-            try {
-                String reqEncoding = this.servletContext.getRequestCharacterEncoding();
-                if (reqEncoding != null) {
-                    setCharacterEncoding(reqEncoding);
+            String charsetEncoding = getCharacterEncoding();
+            if (charsetEncoding == null) {
+                try {
+                    String reqEncoding = this.servletContext.getRequestCharacterEncoding();
+                    if (reqEncoding != null) {
+                        setCharacterEncoding(reqEncoding);
+                    }
+                    String resEncoding = this.servletContext.getResponseCharacterEncoding();
+                    if (resEncoding != null) {
+                        getResponse().getResponse().setCharacterEncoding(resEncoding);
+                    }
+                } catch(UnsupportedEncodingException e) {
+                    throw new RuntimeException(e);
                 }
-                String resEncoding = this.servletContext.getResponseCharacterEncoding();
-                if (resEncoding != null) {
-                    getResponse().getResponse().setCharacterEncoding(resEncoding);
-                }
-            } catch(UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
             }
         }
         // START GlassFish 896

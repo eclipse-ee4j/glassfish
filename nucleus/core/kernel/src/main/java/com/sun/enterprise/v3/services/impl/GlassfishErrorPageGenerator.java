@@ -36,7 +36,7 @@ public class GlassfishErrorPageGenerator implements ErrorPageGenerator {
                     "The requested resource is not available.", "404");
         } else {
             return HttpUtils.getErrorPage(Version.getVersion(),
-                    "The server encountered an internal error that prevented it from fulfilling this request.", "500");
+                    "The server encountered an internal error that prevented it from fulfilling this request.", String.valueOf(status));
         }
    }
 }

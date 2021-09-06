@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,18 +15,20 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
+
 package org.apache.catalina.fileupload;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 
 /**
- * Unit tests {@link org.apache.commons.fileupload.MultipartStream}.
+ * Unit tests {@link MultipartStream}
  *
  * @version $Id$
  */
@@ -67,19 +70,18 @@ public class MultipartStreamTest {
         assertNotNull(ms);
     }
 
-    @Test(expected=IllegalArgumentException.class)
+    @Test
     public void testSmallBuffer() throws Exception {
         final String strData = "foobar";
         final byte[] contents = strData.getBytes();
         InputStream input = new ByteArrayInputStream(contents);
         byte[] boundary = BOUNDARY_TEXT.getBytes();
         int iBufSize = 1;
-        @SuppressWarnings("unused")
-        MultipartStream ms = new MultipartStream(
+        assertThrows(IllegalArgumentException.class, () -> new MultipartStream(
                 input,
                 boundary,
                 iBufSize,
-                new MultipartStream.ProgressNotifier(null, contents.length));
+                new MultipartStream.ProgressNotifier(null, contents.length)));
     }
 
     @Test

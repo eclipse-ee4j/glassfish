@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,14 +18,15 @@
 package org.glassfish.cdi.transaction;
 
 import java.util.concurrent.ConcurrentHashMap;
-import org.junit.Test;
+
+import org.easymock.EasyMockSupport;
+import org.junit.jupiter.api.Test;
 
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 
-import static junit.framework.Assert.assertSame;
-import static org.easymock.EasyMock.*;
-import org.easymock.EasyMockSupport;
+import static org.easymock.EasyMock.expect;
+import static org.junit.jupiter.api.Assertions.assertSame;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
@@ -63,7 +65,7 @@ public class TransactionScopedBeanTest {
         expect(contextual.create(creationalContext)).andReturn(localBean);
         mockSupport.replayAll();
 
-        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<T>(contextual, creationalContext,
+        TransactionScopedBean<T> transactionScopedBean = new TransactionScopedBean<>(contextual, creationalContext,
                 transactionScopedContext);
         assertSame(localBean, transactionScopedBean.getContextualInstance());
 

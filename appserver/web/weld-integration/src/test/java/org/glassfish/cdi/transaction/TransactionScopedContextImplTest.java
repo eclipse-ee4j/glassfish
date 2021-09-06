@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,24 +17,31 @@
 
 package org.glassfish.cdi.transaction;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+
 import org.easymock.EasyMockSupport;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import jakarta.enterprise.context.ContextNotActiveException;
 import jakarta.enterprise.context.spi.Contextual;
 import jakarta.enterprise.context.spi.CreationalContext;
 import jakarta.enterprise.inject.spi.PassivationCapable;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import jakarta.transaction.Status;
 import jakarta.transaction.TransactionScoped;
 import jakarta.transaction.TransactionSynchronizationRegistry;
 
-import static junit.framework.Assert.*;
-import static org.easymock.EasyMock.*;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.same;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>
@@ -46,7 +54,7 @@ public class TransactionScopedContextImplTest {
     private EasyMockSupport mockSupport = null;
     private InitialContext initialContext = null;
 
-    @Before
+    @BeforeEach
     public void beforeTest() throws Exception {
         mockSupport = new EasyMockSupport();
         initialContext = mockSupport.createMock(InitialContext.class);
@@ -58,7 +66,7 @@ public class TransactionScopedContextImplTest {
         System.setProperty(Context.URL_PKG_PREFIXES, MyInitialContext.class.getPackage().getName());
     }
 
-    @After
+    @AfterEach
     public void afterTest() throws Exception {
         System.setProperty(Context.INITIAL_CONTEXT_FACTORY, initialContextFactoryProperty == null ? "" : initialContextFactoryProperty);
         System.setProperty(Context.URL_PKG_PREFIXES, urlPkgPrefixes == null ? "" : urlPkgPrefixes);
@@ -173,14 +181,8 @@ public class TransactionScopedContextImplTest {
         setupMocksForInactiveTransaction(transactionSynchronizationRegistry);
         mockSupport.replayAll();
 
-        TransactionScopedContextImpl transactionScopedContext = new TransactionScopedContextImpl();
-
-        try {
-            transactionScopedContext.get(contextual, creationalContext);
-            fail("Should have gotten a ContextNotActiveException.");
-        } catch (ContextNotActiveException ignore) {
-        }
-
+        final TransactionScopedContextImpl transactionScopedContext = new TransactionScopedContextImpl();
+        assertThrows(ContextNotActiveException.class, () -> transactionScopedContext.get(contextual, creationalContext));
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
@@ -233,14 +235,8 @@ public class TransactionScopedContextImplTest {
         setupMocksForInactiveTransaction(transactionSynchronizationRegistry);
         mockSupport.replayAll();
 
-        transactionScopedContext = new TransactionScopedContextImpl();
-
-        try {
-            transactionScopedContext.get(contextual);
-            fail("Should have gotten a ContextNotActiveException.");
-        } catch (ContextNotActiveException ignore) {
-        }
-
+        final TransactionScopedContextImpl transactionScopedContext2 = new TransactionScopedContextImpl();
+        assertThrows(ContextNotActiveException.class, () -> transactionScopedContext2.get(contextual));
         mockSupport.verifyAll();
         mockSupport.resetAll();
 
@@ -249,7 +245,7 @@ public class TransactionScopedContextImplTest {
         setupMocksForGetContextualInstance(transactionSynchronizationRegistry, contextual, transactionScopedBean, localBean);
         mockSupport.replayAll();
 
-        retrievedLocalBean = transactionScopedContext.get(contextual);
+        retrievedLocalBean = transactionScopedContext2.get(contextual);
         assertSame(localBean, retrievedLocalBean);
 
         mockSupport.verifyAll();

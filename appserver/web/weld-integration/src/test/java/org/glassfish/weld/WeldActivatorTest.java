@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +17,13 @@
 
 package org.glassfish.weld;
 
-import org.jboss.weld.bootstrap.api.SingletonProvider;
-import org.junit.Test;
-import static junit.framework.Assert.*;
-
 import java.lang.reflect.Field;
+
+import org.jboss.weld.bootstrap.api.SingletonProvider;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author <a href="mailto:j.j.snyder@oracle.com">JJ Snyder</a>

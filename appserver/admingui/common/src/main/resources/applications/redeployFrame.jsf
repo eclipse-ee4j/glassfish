@@ -94,6 +94,10 @@
                 }
                 gf.redeploy(filePath="$attribute{filePath}", deployMap="#{pageSession.deployMap}" convertToFalse="#{pageSession.convertToFalse}"
                         valueMap="#{pageSession.valueMap}" );
+                if(${needUpload}) {
+                    gf.logger(logString="Deleting the file uploaded to Temp Directory", level="INFO");
+                    deleteFileFromTempDir(deleteTempFile="$attribute{filePath}");
+                }
 		gf.redirect(page="#{request.contextPath}/common/removeFrame.jsf?#{request.contextPath}/common/applications/applications.jsf&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}&bare=true");
                 />
         </sun:button>

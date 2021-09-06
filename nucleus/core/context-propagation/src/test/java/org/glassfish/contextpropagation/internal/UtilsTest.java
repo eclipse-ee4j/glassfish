@@ -35,6 +35,7 @@ import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapte
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.tests.utils.Utils.setStaticField;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -156,7 +157,7 @@ public class UtilsTest {
     @Test
     public void testValidateFactoryRegistrationAlreadyRegistered() {
         RecordingLoggerAdapter logger = new RecordingLoggerAdapter();
-        BootstrapUtils.setStaticField(ContextBootstrap.class, "loggerAdapter", logger);
+        setStaticField(ContextBootstrap.class, "loggerAdapter", logger);
         Map<String, Object> map = new HashMap<>();
         Utils.validateFactoryRegistrationArgs("key", msgID, "context class name", CONTEXT_VIEW_FACTORY, map);
         logger.verify(null, null, null, (Object[]) null);

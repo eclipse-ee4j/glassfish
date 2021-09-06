@@ -21,6 +21,7 @@ import com.sun.enterprise.module.ModulesRegistry;
 import com.sun.enterprise.module.bootstrap.StartupContext;
 import com.sun.enterprise.module.single.StaticModulesRegistry;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.net.URL;
@@ -126,6 +127,46 @@ public class Utils {
         }
     }
 
+
+    public static void setStaticField(Class<?> clazz, String fieldName, Object value) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(null, value);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to set static field " + fieldName + " of " + clazz + " to " + value, e);
+        }
+    }
+
+    public static void getStaticField(Class<?> clazz, String fieldName) {
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.get(null);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to get static field " + fieldName + " of " + clazz, e);
+        }
+    }
+
+    public static void setField(Object instance, String fieldName, Object value) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            field.set(instance, value);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to set field " + fieldName + " of " + instance + " to " + value, e);
+        }
+    }
+
+    public static <T> T getField(Object instance, String fieldName) {
+        try {
+            Field field = instance.getClass().getDeclaredField(fieldName);
+            field.setAccessible(true);
+            return (T) field.get(instance);
+        } catch (Exception e) {
+            throw new IllegalStateException("Failed to get a value of field " + fieldName + " of " + instance , e);
+        }
+    }
 
     public static Subject createInternalAsadminSubject() {
         final Subject subject = new Subject();

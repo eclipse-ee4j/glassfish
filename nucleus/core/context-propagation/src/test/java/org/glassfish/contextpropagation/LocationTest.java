@@ -26,12 +26,11 @@ import org.glassfish.contextpropagation.adaptors.TestableThread;
 import org.glassfish.contextpropagation.internal.ViewImpl;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
+import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.contextpropagation.adaptors.BootstrapUtils.getField;
-import static org.glassfish.contextpropagation.adaptors.BootstrapUtils.setField;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LocationTest {
@@ -47,7 +46,7 @@ public class LocationTest {
         Location location = new Location(new ViewImpl("prefix") {
         });
         assertEquals("guid", location.getOrigin());
-        setField(location, "origin", "non-null origin");
+        Utils.setField(location, "origin", "non-null origin");
         assertEquals("non-null origin", location.getOrigin());
     }
 
@@ -68,8 +67,8 @@ public class LocationTest {
         assertEquals(location, locationToPropagate);
         Location propagatedLocation = new Location(new ViewImpl("prefix") {
         });
-        View view = getField(location, "view");
-        setField(propagatedLocation, "view", view);
+        View view = Utils.getField(location, "view");
+        Utils.setField(propagatedLocation, "view", view);
         propagatedLocation.contextAdded();
         assertEquals("[0, 1]", propagatedLocation.getLocationId());
     }

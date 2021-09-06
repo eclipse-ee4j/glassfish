@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,75 +21,69 @@ import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Resource;
 import com.sun.enterprise.config.serverbeans.Resources;
 
+import java.util.List;
+
 import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.jvnet.hk2.config.TransactionFailure;
+import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
+import org.glassfish.tests.utils.DomainXml;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
+import jakarta.inject.Inject;
 
-public class ConcurrentModificationsTest extends ConfigApiTest{
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(JdbcAdminJunit5Extension.class)
+@DomainXml("DomainTest.xml")
+public class ConcurrentModificationsTest {
 
-    @Test(expected= TransactionFailure.class)
+    @Inject
+    private ServiceLocator locator;
+
+    @Test
     public void collectionTest() throws TransactionFailure {
 
-        ServiceLocator habitat = super.getHabitat();
-        final Resources resources = habitat.<Domain>getService(Domain.class).getResources();
-        assertTrue(resources!=null);
+        final Resources resources = locator.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
 
-        ConfigSupport.apply(new SingleConfigCode<Resources>() {
+        SingleConfigCode<Resources> configCode = writeableResources -> {
 
-            public Object run(Resources writeableResources) throws PropertyVetoException, TransactionFailure {
+            assertNotNull(writeableResources);
+            JdbcResource newResource = writeableResources.createChild(JdbcResource.class);
+            newResource.setJndiName("foo");
+            newResource.setDescription("Random ");
+            newResource.setPoolName("bar");
+            newResource.setEnabled("true");
+            writeableResources.getResources().add(newResource);
 
-                assertTrue(writeableResources!=null);
-                JdbcResource newResource = writeableResources.createChild(JdbcResource.class);
-                newResource.setJndiName("foo");
-                newResource.setDescription("Random ");
-                newResource.setPoolName("bar");
-                newResource.setEnabled("true");
-                writeableResources.getResources().add(newResource);
+            // now let's check I have my copy...
+            assertTrue(containsFoo(writeableResources.getResources()), "writeableResources should NOT contain foo");
 
-                // now let's check I have my copy...
-                boolean found=false;
-                for (Resource resource : writeableResources.getResources()) {
-                    if (resource instanceof JdbcResource) {
-                        JdbcResource jdbc = (JdbcResource) resource;
-                        if (jdbc.getJndiName().equals("foo")) {
-                            found = true;
-                            break;
-                        }
-                    }
+            // now let's check that my readonly copy does not see it...
+            assertFalse(containsFoo(resources.getResources()), "resources should contain foo");
+
+            // now I am throwing a transaction failure since I don't care about saving it
+            throw new TransactionFailure("Test passed", null);
+        };
+        assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, resources));
+    }
+
+
+    private boolean containsFoo(List<Resource> resources) {
+        for (Resource resource : resources) {
+            if (resource instanceof JdbcResource) {
+                JdbcResource jdbc2 = (JdbcResource) resource;
+                if (jdbc2.getJndiName().equals("foo")) {
+                    return true;
                 }
-                assertTrue(found);
-
-                // now let's check that my readonly copy does not see it...
-                boolean shouldNot = false;
-                for (Resource resource : resources.getResources()) {
-                    if (resource instanceof JdbcResource) {
-                        JdbcResource jdbc = (JdbcResource) resource;
-                        if (jdbc.getJndiName().equals("foo")) {
-                            shouldNot = true;
-                            break;
-                        }
-                    }
-                }
-                assertFalse(shouldNot);
-
-                // now I am throwing a transaction failure since I don't care about saving it
-                throw new TransactionFailure("Test passed", null);
             }
-        },resources);
+        }
+        return false;
     }
 }

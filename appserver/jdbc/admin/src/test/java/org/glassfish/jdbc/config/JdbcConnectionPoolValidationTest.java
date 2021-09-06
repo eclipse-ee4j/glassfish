@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,73 +18,60 @@
 package org.glassfish.jdbc.config;
 
 import java.beans.PropertyVetoException;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
+
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
+import org.glassfish.tests.utils.DomainXml;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-
+import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
- *
  * @author &#2325;&#2375;&#2342;&#2366;&#2352 (km@dev.java.net)
  */
-public class JdbcConnectionPoolValidationTest extends ConfigApiTest {
+@ExtendWith(JdbcAdminJunit5Extension.class)
+@DomainXml("JdbcConnectionPoolValidation.xml")
+public class JdbcConnectionPoolValidationTest {
 
-    private JdbcConnectionPool pool = null;
-    private static final String NAME = "test"; //same as the one in JdbcConnectionPoolValidation.xml
+    // same as the one in JdbcConnectionPoolValidation.xml
+    private static final String NAME = "test";
+    @Inject
+    private ServiceLocator locator;
+    private JdbcConnectionPool pool;
 
-    public JdbcConnectionPoolValidationTest() {
-    }
-
-    @Override
-    public String getFileName() {
-        return ("JdbcConnectionPoolValidation");
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        pool = super.getHabitat().getService(JdbcConnectionPool.class, NAME);
+        pool = locator.getService(JdbcConnectionPool.class, NAME);
     }
 
-    @After
-    public void tearDown() {
-        pool = null;
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
-    @Test (expected= ConstraintViolationException.class)
-    public void testBooleanDoesNotTakeInteger1() throws Throwable {
-        try {
-            ConfigSupport.apply(new SingleConfigCode<JdbcConnectionPool>() {
-                public Object run(JdbcConnectionPool jdbcConnectionPool) throws PropertyVetoException, TransactionFailure {
-                    jdbcConnectionPool.setConnectionLeakReclaim("123"); //this method should only take boolean;
-                    return null;
-                }
-            }, pool);
-
-        } catch(TransactionFailure e) {
-            throw e.getCause().getCause();
-        }
+    @Test
+    public void testBooleanDoesNotTakeInteger1() throws Exception {
+        SingleConfigCode<JdbcConnectionPool> configCode = jdbcConnectionPool -> {
+            jdbcConnectionPool.setConnectionLeakReclaim("123");
+            return null;
+        };
+        TransactionFailure e = assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, pool));
+        assertThat(e.getCause(), instanceOf(RuntimeException.class));
+        assertThat(e.getCause().getCause(), instanceOf(ConstraintViolationException.class));
     }
 
 
     @Test
     public void testBooleanTakesTrueFalse() {
-        try {
-            pool.setSteadyPoolSize("true"); //this only takes a boolean
-            pool.setSteadyPoolSize("false"); //this only takes a boolean
-            pool.setSteadyPoolSize("TRUE"); //this only takes a boolean
-            pool.setSteadyPoolSize("FALSE"); //this only takes a boolean
-            pool.setSteadyPoolSize("FALSE"); //this only takes a boolean
-        } catch(PropertyVetoException pv) {
-            //ignore?
-        }
+        assertThrows(PropertyVetoException.class, () -> pool.setSteadyPoolSize("true"));
+        assertThrows(PropertyVetoException.class, () -> pool.setSteadyPoolSize("false"));
+        assertThrows(PropertyVetoException.class, () ->  pool.setSteadyPoolSize("TRUE"));
+        assertThrows(PropertyVetoException.class, () ->  pool.setSteadyPoolSize("FALSE"));
+        assertThrows(PropertyVetoException.class, () ->  pool.setSteadyPoolSize("FALSE"));
     }
 }

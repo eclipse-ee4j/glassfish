@@ -23,69 +23,61 @@ import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import javax.security.auth.Subject;
+
+import org.glassfish.api.ActionReport;
+import org.glassfish.api.ActionReport.MessagePart;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.glassfish.api.ActionReport;
-import org.glassfish.api.ActionReport.MessagePart;
 import org.glassfish.tests.utils.Utils;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.jvnet.hk2.config.DomDocument;
-import org.jvnet.hk2.config.TransactionFailure;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author Jennifer
  */
-//@Ignore // temporarily disabled
-public class ListJdbcResourcesTest extends ConfigApiTest {
-    private ServiceLocator habitat = Utils.instance.getHabitat(this);
-    private Resources resources = habitat.<Domain>getService(Domain.class).getResources();
+@ExtendWith(JdbcAdminJunit5Extension.class)
+public class ListJdbcResourcesTest {
+    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    @Inject
+    private ServiceLocator habitat;
+    @Inject
+    private Logger logger;
+
+    private Resources resources;
     private int origNum = 0;
-    private ParameterMap parameters = new ParameterMap();
-    CreateJdbcResource createCommand = null;
-    DeleteJdbcResource deleteCommand = null;
-    ListJdbcResources listCommand = null;
-    AdminCommandContext context = null;
-    CommandRunner cr = habitat.getService(CommandRunner.class);
+    private ParameterMap parameters;
+    private CreateJdbcResource createCommand;
+    private DeleteJdbcResource deleteCommand;
+    private ListJdbcResources listCommand;
+    private AdminCommandContext context;
+    private CommandRunner cr;
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
 
-        return new TestDocument(habitat);
-    }
-
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
+        parameters = new ParameterMap();
+        resources = habitat.<Domain>getService(Domain.class).getResources();
+        cr = habitat.getService(CommandRunner.class);
         for (Resource resource : resources.getResources()) {
             if (resource instanceof JdbcResource) {
                 origNum = origNum + 1;
             }
         }
-    }
-
-    @After
-    public void tearDown() throws TransactionFailure {
-        parameters = new ParameterMap();
     }
 
     /**
@@ -94,16 +86,13 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
      */
     @Test
     public void testExecuteSuccessListOriginal() {
-        // List the original set of JDBC Resources
-        //Get an instance of the ListJdbcResources command
-        ListJdbcResources listCommand = habitat.getService(ListJdbcResources.class);
-
-        AdminCommandContext context = new AdminCommandContextImpl(
+        listCommand = habitat.getService(ListJdbcResources.class);
+        context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum, list.size());
@@ -129,7 +118,7 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 new PropsFileActionReporter());
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(origNum, list.size());
@@ -159,7 +148,7 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
 
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
@@ -172,7 +161,7 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 new PropsFileActionReporter());
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
 
@@ -209,7 +198,7 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
 
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
@@ -223,7 +212,7 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
         parameters = new ParameterMap();
         parameters.add("DEFAULT", "bob2");
 
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
@@ -236,7 +225,7 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 new PropsFileActionReporter());
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
 
@@ -263,7 +252,6 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
      * Test of execute method, of class ListJdbcResource.
      * list-jdbc-resources invalid
      */
-    @Ignore
     @Test
     public void testExecuteFailInvalidTargetOperand() {
         // List the original set of JDBC Resources
@@ -277,23 +265,19 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 new PropsFileActionReporter());
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-       cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+       cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
-        // Need bug fix before uncommenting assertion
-        //List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        //assertEquals(0, list.size());
+        List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
+        assertEquals(0, list.size());
 
         // Check the exit code is FAILURE
-        // Need bug fix before uncommenting assertion
-        //assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-        // Check error msg 'Invalid target: invalid'
+        assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
     }
 
     /**
      * Test of execute method, of class ListJdbcResource.
      * list-jdbc-resources --invalid invalid
      */
-    @Ignore
     @Test
     public void testExecuteFailInvalidOption() {
         listCommand = habitat.getService(ListJdbcResources.class);
@@ -302,13 +286,13 @@ public class ListJdbcResourcesTest extends ConfigApiTest {
                 LogDomains.getLogger(ListJdbcResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
-        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject()).parameters(parameters).execute(listCommand);
+        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
         assertEquals(1, list.size());
 
         for (MessagePart mp : list) {
-            assertEquals("Usage: list-jdbc-resources ", mp.getMessage());
+            assertEquals("Usage: list-jdbc-resources [target] ", mp.getMessage());
         }
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());

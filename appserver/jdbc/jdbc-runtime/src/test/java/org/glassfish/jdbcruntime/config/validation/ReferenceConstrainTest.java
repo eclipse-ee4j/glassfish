@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,42 +18,38 @@
 package org.glassfish.jdbcruntime.config.validation;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import jakarta.validation.ConstraintViolationException;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.junit.Test;
-import org.junit.Ignore;
-import org.junit.Before;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.DomainXml;
+import org.glassfish.tests.utils.HK2JUnit5Extension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.TransactionFailure;
-import org.glassfish.jdbcruntime.config.ConfigApiTest;
 
-import static org.junit.Assert.*;
+import jakarta.inject.Inject;
+import jakarta.validation.ConstraintViolationException;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
- *
  * @author mmares
  */
-public class ReferenceConstrainTest extends ConfigApiTest {
+@ExtendWith(HK2JUnit5Extension.class)
+@DomainXml(value = "DomainTest.xml")
+// FIXME: This test probably belongs to another module: code coverage here: 0.0%
+public class ReferenceConstrainTest {
 
-//    private Logger logger = Logger.getLogger(ReferenceConstrainTest.class.getName());
+    @Inject
     private ServiceLocator habitat;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Override
-    public ServiceLocator getHabitat() {
-        return habitat;
-    }
 
     private ConstraintViolationException findConstrViolation(Throwable thr) {
         if (thr == null) {
@@ -64,12 +61,8 @@ public class ReferenceConstrainTest extends ConfigApiTest {
         return findConstrViolation(thr.getCause());
     }
 
-    @Before
-    public void createNewHabitat() {
-        this.habitat = Utils.instance.getHabitat(this);
-    }
 
-    @Test // @Ignore
+    @Test
     public void doChangeToValidPool() throws TransactionFailure {
         Domain domain = habitat.getService(Domain.class);
         //Find JdbcResource to chenge its values
@@ -83,23 +76,19 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             }
         }
         assertNotNull(jdbc);
-        ConfigBean poolConfig = (ConfigBean) ConfigBean.unwrap(jdbc);
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-        Map<String, String> configChanges = new HashMap<String, String>();
+        ConfigBean poolConfig = (ConfigBean) Dom.unwrap(jdbc);
+        Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+        Map<String, String> configChanges = new HashMap<>();
         configChanges.put("pool-name", "DerbyPool");
         changes.put(poolConfig, configChanges);
-        try {
-            ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
-            cs.apply(changes);
-        } catch (TransactionFailure tf) {
-            fail();
-        }
+        ConfigSupport cs = this.habitat.getService(ConfigSupport.class);
+        cs.apply(changes);
     }
 
     @Test
     public void doChangeToInValidPool() throws TransactionFailure {
         Domain domain = habitat.getService(Domain.class);
-        //Find JdbcResource to chenge its values
+        // Find JdbcResource to chenge its values
         Iterator<JdbcResource> iterator = domain.getResources().getResources(JdbcResource.class).iterator();
         JdbcResource jdbc = null;
         while (iterator.hasNext()) {
@@ -110,20 +99,14 @@ public class ReferenceConstrainTest extends ConfigApiTest {
             }
         }
         assertNotNull(jdbc);
-        ConfigBean poolConfig = (ConfigBean) ConfigBean.unwrap(jdbc);
-        Map<ConfigBean, Map<String, String>> changes = new HashMap<ConfigBean, Map<String, String>>();
-        Map<String, String> configChanges = new HashMap<String, String>();
+        ConfigBean poolConfig = (ConfigBean) Dom.unwrap(jdbc);
+        Map<ConfigBean, Map<String, String>> changes = new HashMap<>();
+        Map<String, String> configChanges = new HashMap<>();
         configChanges.put("pool-name", "WrongPointer");
         changes.put(poolConfig, configChanges);
-        try {
-            ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
-            cs.apply(changes);
-            fail("Can not reach this point");
-        } catch (TransactionFailure tf) {
-            ConstraintViolationException cv = findConstrViolation(tf);
-//            cv.printStackTrace(System.out);
-            assertNotNull(cv);
-        }
+        ConfigSupport cs = this.habitat.getService(ConfigSupport.class);
+        TransactionFailure tf = assertThrows(TransactionFailure.class, () -> cs.apply(changes));
+        ConstraintViolationException cv = findConstrViolation(tf);
+        assertNotNull(cv);
     }
-
 }

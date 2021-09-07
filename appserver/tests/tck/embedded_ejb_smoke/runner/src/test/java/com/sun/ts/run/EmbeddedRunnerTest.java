@@ -15,8 +15,8 @@
  */
 package com.sun.ts.run;
 
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static org.junit.Assert.fail;
+import com.sun.javatest.Status;
+import com.sun.ts.lib.harness.ExecTSTestCmd;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -28,10 +28,10 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import com.sun.javatest.Status;
-import com.sun.ts.lib.harness.ExecTSTestCmd;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class EmbeddedRunnerTest {
 
@@ -51,10 +51,8 @@ public class EmbeddedRunnerTest {
 
         try {
             Status status = cmd.run(arguments.toArray(String[]::new), log, ref);
-
-            System.out.println(status.getReason());
             if (!status.isPassed()) {
-                fail();
+                fail(status.getReason());
             }
 
         } finally {

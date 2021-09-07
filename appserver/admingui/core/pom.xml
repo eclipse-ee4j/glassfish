@@ -2,6 +2,7 @@
 <!--
 
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -54,6 +55,10 @@
             <artifactId>console-plugin-service</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
     </dependencies>
 </project>

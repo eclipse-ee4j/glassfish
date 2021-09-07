@@ -24,6 +24,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.tests.utils.ConfigApiTest.TestDocument;
 import org.jvnet.hk2.config.DomDocument;
 
@@ -46,7 +47,8 @@ public @interface DomainXml {
 
 
     /**
-     * @return DOM tree representation
+     * @return DOM tree representation. Must have public constructor with a single parameter
+     *         {@link ServiceLocator}
      */
     Class<? extends DomDocument<?>> domDocumentClass() default TestDocument.class;
 }

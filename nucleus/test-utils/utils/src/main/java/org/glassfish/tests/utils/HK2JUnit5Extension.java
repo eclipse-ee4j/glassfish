@@ -121,7 +121,6 @@ public class HK2JUnit5Extension
         final Set<Class<?>> excludedClasses = getExcludedClasses(testClass);
 
         config = locator.getService(DynamicConfigurationService.class).createDynamicConfiguration();
-        config.addActiveDescriptor(ServerEnvironmentImpl.class);
         addServicesFromLocatorFiles(loader, excludedClasses, getLocatorFilePaths(context));
         addServicesFromPackage(packages, excludedClasses);
         addServices(classes, excludedClasses);
@@ -232,6 +231,12 @@ public class HK2JUnit5Extension
         final StartupContext startupContext = new StartupContext(startupContextProperties);
         addOneConstant(locator, startupContext);
         addOneConstant(locator, new StaticModulesRegistry(getClassLoader(context), startupContext));
+        String installRoot = startupContext.getArguments().getProperty(Constants.INSTALL_ROOT_PROP_NAME);
+        if (installRoot == null) {
+            addOneConstant(locator, new ServerEnvironmentImpl());
+        } else {
+            addOneConstant(locator, new ServerEnvironmentImpl(new File(installRoot)));
+        }
     }
 
 

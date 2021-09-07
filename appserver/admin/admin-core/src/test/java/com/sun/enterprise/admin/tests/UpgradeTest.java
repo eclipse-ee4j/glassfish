@@ -22,14 +22,23 @@ import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
 import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.tests.utils.DomainXml;
+import org.glassfish.tests.utils.HK2JUnit5Extension;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayContaining;
@@ -37,6 +46,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -44,22 +54,52 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Jerome Dochez
  */
-public class UpgradeTest extends ConfigApiTest {
+@ExtendWith(HK2JUnit5Extension.class)
+@DomainXml(value = "UpgradeTest.xml")
+public class UpgradeTest {
 
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private StartupContext startupContext;
+
+    // FIXME: Workaround, because ServerEnvironmentImpl changes global System.properties, but other services
+    //        are depending on it. The for cycle in setup() in the test will start initializations
+    //        of objects, but the order is not well defined.
+    //        But if the test instance injects the environment instance, it is initialized before the cycle.
+    @Inject
+    private ServerEnvironment environment;
+
+    /**
+     * Does the upgrade. Results will be verified in tests methods.
+     */
     @BeforeEach
     public void setup() {
-        Domain domain = getHabitat().getService(Domain.class);
+        System.clearProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        locator.getService(StartupContext.class).getArguments().clear();
+
+        Domain domain = locator.getService(Domain.class);
         assertNotNull(domain);
 
-        // perform upgrade
-        for (ConfigurationUpgrade upgrade : getHabitat().<ConfigurationUpgrade>getAllServices(ConfigurationUpgrade.class)) {
+        final List<ConfigurationUpgrade> allServices = locator
+            .<ConfigurationUpgrade> getAllServices(ConfigurationUpgrade.class);
+        for (ConfigurationUpgrade upgrade : allServices) {
             Logger.getAnonymousLogger().info("Running upgrade " + upgrade.getClass());
         }
     }
 
+    @AfterEach
+    public void checkStateOfEnvironment() {
+        // DefaultConfigUpgrade uses this property.
+        assertNull(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY), "Install root in system props");
+        assertNotNull(environment.getInstanceRoot(), "Instance root in ServerEnvironment");
+        assertNull(startupContext.getArguments().get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY),
+            "Install root in startup context");
+    }
+
     @Test
     public void threadPools() {
-        List<ThreadPool> threadPools = getHabitat().<Config>getService(Config.class).getThreadPools().getThreadPool();
+        List<ThreadPool> threadPools = locator.<Config>getService(Config.class).getThreadPools().getThreadPool();
         assertThat(threadPools, hasSize(3));
         String[] threadPoolNames = threadPools.stream().map(ThreadPool::getName).toArray(String[]::new);
         assertThat(threadPoolNames, arrayContaining("thread-pool-1", "http-thread-pool", "admin-thread-pool"));
@@ -68,7 +108,7 @@ public class UpgradeTest extends ConfigApiTest {
 
     @Test
     public void applicationUpgrade() {
-        Applications apps = getHabitat().getService(Applications.class);
+        Applications apps = locator.getService(Applications.class);
         assertNotNull(apps);
         for (Application app : apps.getApplications()) {
             assertTrue(app.getEngine().isEmpty());
@@ -79,4 +119,4 @@ public class UpgradeTest extends ConfigApiTest {
             }
         }
     }
- }
+}

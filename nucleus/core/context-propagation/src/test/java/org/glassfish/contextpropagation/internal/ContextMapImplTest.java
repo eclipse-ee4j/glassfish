@@ -33,10 +33,12 @@ import org.glassfish.contextpropagation.internal.Entry.ContextType;
 import org.glassfish.contextpropagation.internal.Utils.AccessControlledMapFinder;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.tests.utils.Utils.getStaticField;
 import static org.glassfish.tests.utils.Utils.setStaticField;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -49,47 +51,57 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ContextMapImplTest {
 
-    private static Entry DUMMY_ENTRY;
-    private static EnumSet<PropagationMode> PROP_MODES = PropagationMode.defaultSet();
-    private static ContextMap cm;
-    private static AccessControlledMap acMap;
-    private static AccessControlledMap savedMap;
-    static AccessControlledMapFinder mapFinder = new AccessControlledMapFinder() {
+    private static final Entry DUMMY_ENTRY
+        = new Entry("dummy", PropagationMode.defaultSet(), ContextType.STRING).init(true, true);
+    private static final EnumSet<PropagationMode> PROP_MODES = PropagationMode.defaultSet();
+    private static ContextMap contextMap;
+    private static AccessControlledMap acMapForFinder;
+    private static AccessControlledMap acMapCustom;
+    private static AccessControlledMapFinder originalFinder;
+    private static AccessControlledMapFinder mapFinder = new AccessControlledMapFinder() {
 
         @Override
         protected AccessControlledMap getMapIfItExists() {
             AccessControlledMap map = super.getMapIfItExists();
-            return map == null ? acMap : map;
+            return map == null ? acMapForFinder : map;
         }
     };
 
     @BeforeAll
     public static void setupClass() {
         BootstrapUtils.bootstrap(new DefaultWireAdapter());
-        DUMMY_ENTRY = new Entry("dummy", PropagationMode.defaultSet(), ContextType.STRING).init(true, true);
-        savedMap = new AccessControlledMap();
+        originalFinder = getStaticField(Utils.class, "mapFinder");
         setStaticField(Utils.class, "mapFinder", mapFinder);
-        cm = Utils.getScopeAwareContextMap();
-        savedMap.simpleMap.put("key", DUMMY_ENTRY);
-        savedMap.simpleMap.put("removeMe", DUMMY_ENTRY);
+
+        contextMap = Utils.getScopeAwareContextMap();
+
+        acMapCustom = new AccessControlledMap();
+        acMapCustom.simpleMap.put("key", DUMMY_ENTRY);
+        acMapCustom.simpleMap.put("removeMe", DUMMY_ENTRY);
+
         Entry entry = new Entry(new Location(new ViewImpl(Location.KEY)) {
         }, PropagationMode.defaultSet(), ContextType.VIEW_CAPABLE).init(true, true);
-        savedMap.simpleMap.put(Location.KEY, entry);
+        acMapCustom.simpleMap.put(Location.KEY, entry);
     }
 
 
     @BeforeEach
     public void setup() {
         BootstrapUtils.bootstrap(new DefaultWireAdapter());
-        acMap = null;
+        acMapForFinder = null;
     }
 
+    @AfterAll
+    public static void reset() {
+        BootstrapUtils.reset();
+        setStaticField(Utils.class, "mapFinder", originalFinder);
+    }
 
     @Test
     public void testGet() throws InsufficientCredentialException {
-        assertNull(cm.get("key"));
-        acMap = savedMap;
-        assertEquals("dummy", cm.get("key"));
+        assertNull(contextMap.get("key"));
+        acMapForFinder = acMapCustom;
+        assertEquals("dummy", contextMap.get("key"));
     }
 
 
@@ -97,9 +109,9 @@ public class ContextMapImplTest {
     public void testPutString() throws InsufficientCredentialException {
         String key = "a String";
         String origContext = "string";
-        cm.put(key, origContext, PROP_MODES);
+        contextMap.put(key, origContext, PROP_MODES);
         checkPut(key, origContext);
-        assertEquals(origContext, cm.put(key, "new string", PROP_MODES));
+        assertEquals(origContext, contextMap.put(key, "new string", PROP_MODES));
     }
 
 
@@ -114,9 +126,9 @@ public class ContextMapImplTest {
     public void testPutNumber() throws InsufficientCredentialException {
         String key = "a long";
         long origContext = 1L;
-        cm.put(key, origContext, PROP_MODES);
+        contextMap.put(key, origContext, PROP_MODES);
         checkPut(key, origContext);
-        assertThat(cm.put(key, 2L, PROP_MODES), equalTo(origContext));
+        assertThat(contextMap.put(key, 2L, PROP_MODES), equalTo(origContext));
     }
 
 
@@ -124,15 +136,15 @@ public class ContextMapImplTest {
     public void testPutBoolean() throws InsufficientCredentialException {
         String key = "a boolean";
         boolean origContext = true;
-        cm.put(key, origContext, PROP_MODES);
+        contextMap.put(key, origContext, PROP_MODES);
         checkPut(key, origContext);
-        assertThat(cm.put(key, false, PROP_MODES), equalTo(origContext));
+        assertThat(contextMap.put(key, false, PROP_MODES), equalTo(origContext));
     }
 
 
     @Test
     public void testCreateViewCapable() throws InsufficientCredentialException {
-        acMap = savedMap;
+        acMapForFinder = acMapCustom;
         String prefix = "a view capable";
         ContextMapHelper.registerContextFactoryForPrefixNamed(prefix, new ContextViewFactory() {
 
@@ -148,23 +160,23 @@ public class ContextMapImplTest {
                     /* dummy instance */};
             }
         });
-        assertNotNull(cm.createViewCapable(prefix));
+        assertNotNull(contextMap.createViewCapable(prefix));
     }
 
 
     @Test
     public void testGetPropagationModes() throws InsufficientCredentialException {
-        assertNull(cm.getPropagationModes("key"));
-        acMap = savedMap;
-        assertEquals(PropagationMode.defaultSet(), cm.getPropagationModes("key"));
+        assertNull(contextMap.getPropagationModes("key"));
+        acMapForFinder = acMapCustom;
+        assertEquals(PropagationMode.defaultSet(), contextMap.getPropagationModes("key"));
     }
 
 
     @Test
     public void testRemove() throws InsufficientCredentialException {
-        acMap = savedMap;
-        assertNull(cm.remove("nonexistent"));
-        assertNotNull(cm.remove("removeMe"));
+        acMapForFinder = acMapCustom;
+        assertNull(contextMap.remove("nonexistent"));
+        assertNotNull(contextMap.remove("removeMe"));
     }
 
 
@@ -172,36 +184,36 @@ public class ContextMapImplTest {
     public void testPutCharacter() throws InsufficientCredentialException {
         String key = "a Character";
         char origContext = 'c';
-        cm.put(key, origContext, PROP_MODES);
+        contextMap.put(key, origContext, PROP_MODES);
         checkPut(key, origContext);
-        assertThat(cm.put(key, 'd', PROP_MODES), equalTo(origContext));
+        assertThat(contextMap.put(key, 'd', PROP_MODES), equalTo(origContext));
     }
 
 
     @Test
     public void testGetLocationNormalCase() {
-        acMap = savedMap;
-        Location location = cm.getLocation();
+        acMapForFinder = acMapCustom;
+        Location location = contextMap.getLocation();
         assertNotNull(location);
     }
 
 
     @Test
     public void testIsEmpty() {
-        assertTrue(cm.isEmpty());
-        acMap = new AccessControlledMap();
-        assertTrue(cm.isEmpty());
-        acMap = savedMap;
-        assertFalse(cm.isEmpty());
+        assertTrue(contextMap.isEmpty());
+        acMapForFinder = new AccessControlledMap();
+        assertTrue(contextMap.isEmpty());
+        acMapForFinder = acMapCustom;
+        assertFalse(contextMap.isEmpty());
     }
 
 
     @Test
     public void testNames() {
-        Iterator<?> iter = cm.names();
+        Iterator<?> iter = contextMap.names();
         assertNull(iter);
-        acMap = savedMap;
-        iter = cm.names();
+        acMapForFinder = acMapCustom;
+        iter = contextMap.names();
         while (iter.hasNext()) {
             MockLoggerAdapter.debug((String) iter.next());
         }

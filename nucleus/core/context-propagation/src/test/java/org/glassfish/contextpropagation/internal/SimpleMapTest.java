@@ -36,6 +36,7 @@ import org.glassfish.contextpropagation.bootstrap.LoggerAdapter.MessageID;
 import org.glassfish.contextpropagation.internal.Entry.ContextType;
 import org.glassfish.contextpropagation.internal.SimpleMap.Filter;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -110,11 +111,17 @@ public class SimpleMapTest {
 
 
     @BeforeAll
-    public static void setupClass() {
-        logger = new RecordingLoggerAdapter();
+    public static void bootstrap() {
+        // must be called here too, because isConfigured is initialized in static block
         BootstrapUtils.reset();
+        logger = new RecordingLoggerAdapter();
         ContextBootstrap.configure(logger, new DefaultWireAdapter(), new MockThreadLocalAccessor(),
             new MockContextAccessController(), "guid");
+    }
+
+    @AfterAll
+    public static void reset() {
+        BootstrapUtils.reset();
     }
 
 

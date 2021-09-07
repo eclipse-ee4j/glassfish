@@ -20,9 +20,9 @@ package org.glassfish.contextpropagation.internal;
 import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
 import org.glassfish.contextpropagation.internal.Utils.AccessControlledMapFinder;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -34,26 +34,28 @@ public class AccessControlledMapFinderTest {
     @BeforeEach
     public void setup() {
         BootstrapUtils.bootstrap(new DefaultWireAdapter());
-        mapFinder.getMapAndCreateIfNeeded();
     }
 
+    @AfterEach
+    public void reset() {
+        BootstrapUtils.reset();
+    }
 
     @Test
     public void testGetMapIfItExistsButDoesnt() {
-        BootstrapUtils.bootstrap(new DefaultWireAdapter());
         assertNull(mapFinder.getMapIfItExists());
     }
 
 
     @Test
     public void testGetMapIfItExistsWhenItDoes() {
+        mapFinder.getMapAndCreateIfNeeded();
         assertNotNull(mapFinder.getMapIfItExists());
     }
 
 
     @Test
     public void testCreateMapIfItExistsButDoesnt() {
-        BootstrapUtils.bootstrap(new DefaultWireAdapter());
         assertNull(mapFinder.getMapIfItExists());
         assertNotNull(mapFinder.getMapAndCreateIfNeeded());
     }
@@ -61,6 +63,7 @@ public class AccessControlledMapFinderTest {
 
     @Test
     public void testCreateMapIfItExistsWhenItDoes() {
+        assertNotNull(mapFinder.getMapAndCreateIfNeeded());
         assertEquals(mapFinder.getMapIfItExists(), mapFinder.getMapAndCreateIfNeeded());
     }
 

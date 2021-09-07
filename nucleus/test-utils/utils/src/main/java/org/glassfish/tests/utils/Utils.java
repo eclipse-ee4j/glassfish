@@ -138,11 +138,11 @@ public class Utils {
         }
     }
 
-    public static void getStaticField(Class<?> clazz, String fieldName) {
+    public static <T> T getStaticField(Class<?> clazz, String fieldName) {
         try {
             Field field = clazz.getDeclaredField(fieldName);
             field.setAccessible(true);
-            field.get(null);
+            return (T) field.get(null);
         } catch (Exception e) {
             throw new IllegalStateException("Failed to get static field " + fieldName + " of " + clazz, e);
         }
@@ -159,8 +159,12 @@ public class Utils {
     }
 
     public static <T> T getField(Object instance, String fieldName) {
+        return getField(instance, fieldName, instance.getClass());
+    }
+
+    public static <T> T getField(Object instance, String fieldName, Class<?> parentOfInstance) {
         try {
-            Field field = instance.getClass().getDeclaredField(fieldName);
+            Field field = parentOfInstance.getDeclaredField(fieldName);
             field.setAccessible(true);
             return (T) field.get(instance);
         } catch (Exception e) {

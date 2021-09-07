@@ -91,11 +91,6 @@ public class BootstrapUtils {
 
     public static void bootstrap(WireAdapter wireAdapter) {
         reset();
-        /*
-         * ThreadLocalAccessor tla = Deencapsulation.getField(ContextBootstrap.class,
-         * "threadLocalAccessor");
-         * tla.set(null);
-         */
         ContextBootstrap.configure(new MockLoggerAdapter(), wireAdapter, new MockThreadLocalAccessor(),
             new MockContextAccessController(), "guid");
     }

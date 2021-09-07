@@ -29,8 +29,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ViewImplTest {
 
-    static ViewImpl view;
-    static SimpleMap sm;
+    private static ViewImpl view;
+    private static SimpleMap sm;
 
     @BeforeAll
     public static void setupClass() {

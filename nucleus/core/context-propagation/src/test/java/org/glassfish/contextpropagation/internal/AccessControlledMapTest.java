@@ -30,6 +30,7 @@ import org.glassfish.contextpropagation.bootstrap.ContextBootstrap;
 import org.glassfish.contextpropagation.internal.AccessControlledMap.ContextAccessLevel;
 import org.glassfish.contextpropagation.internal.Entry.ContextType;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -53,38 +54,16 @@ public class AccessControlledMapTest {
 
     @BeforeAll
     public static void setupClass() {
+        // must be called here too, because isConfigured is initialized in static block
         BootstrapUtils.reset();
         ContextBootstrap.configure(new MockLoggerAdapter(), new DefaultWireAdapter(), new MockThreadLocalAccessor(),
-            new ContextAccessController() {
-
-                @Override
-                public boolean isAccessAllowed(String key, ContextAccessLevel type) {
-                    switch (type) {
-                        case READ:
-                            return key.contains("read") || key.contains("create") || key.contains("delete")
-                                || key.contains("update");
-                        case CREATE:
-                            return key.contains("create");
-                        case DELETE:
-                            return key.contains("delete");
-                        case UPDATE:
-                            return key.contains("update");
-                    }
-                    return false;
-                }
-
-
-                @Override
-                public boolean isEveryoneAllowedToRead(String key) {
-                    if ("put".equals(Thread.currentThread().getStackTrace()[2].getMethodName())) {
-                        return true;
-                    } else {
-                        throw new UnsupportedOperationException();
-                    }
-                }
-            }, "guid");
+            new ContextAccessController4ACMTest(), "guid");
     }
 
+    @AfterAll
+    public static void reset() {
+        BootstrapUtils.reset();
+    }
 
     @BeforeEach
     public void setup() {
@@ -230,4 +209,32 @@ public class AccessControlledMapTest {
         assertEquals(4, count);
     }
 
+
+    private static final class ContextAccessController4ACMTest extends ContextAccessController {
+
+        @Override
+        public boolean isAccessAllowed(String key, ContextAccessLevel type) {
+            switch (type) {
+                case READ:
+                    return key.contains("read") || key.contains("create") || key.contains("delete")
+                        || key.contains("update");
+                case CREATE:
+                    return key.contains("create");
+                case DELETE:
+                    return key.contains("delete");
+                case UPDATE:
+                    return key.contains("update");
+            }
+            return false;
+        }
+
+        @Override
+        public boolean isEveryoneAllowedToRead(String key) {
+            if ("put".equals(Thread.currentThread().getStackTrace()[2].getMethodName())) {
+                return true;
+            } else {
+                throw new UnsupportedOperationException();
+            }
+        }
+    }
 }

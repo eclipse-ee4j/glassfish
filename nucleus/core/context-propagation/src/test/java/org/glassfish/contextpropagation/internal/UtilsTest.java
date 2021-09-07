@@ -32,6 +32,7 @@ import org.glassfish.contextpropagation.bootstrap.ContextBootstrap;
 import org.glassfish.contextpropagation.bootstrap.LoggerAdapter.Level;
 import org.glassfish.contextpropagation.bootstrap.LoggerAdapter.MessageID;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -42,8 +43,13 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public class UtilsTest {
 
     @BeforeAll
-    public static void setupClass() {
+    public static void bootstrap() {
         BootstrapUtils.bootstrap(new DefaultWireAdapter());
+    }
+
+    @AfterAll
+    public static void reset() {
+        BootstrapUtils.reset();
     }
 
 

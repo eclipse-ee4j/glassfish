@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.common</groupId>
         <artifactId>nucleus-common</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.2-SNAPSHOT</version>
         <relativePath>../../common/pom.xml</relativePath>
     </parent>
 

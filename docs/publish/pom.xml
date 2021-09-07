@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.glassfish.docs</groupId>
         <artifactId>docs</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.2-SNAPSHOT</version>
     </parent>
     <groupId>org.glassfish.docs</groupId>
     <artifactId>publish</artifactId>

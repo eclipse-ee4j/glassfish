@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>6.2.1-SNAPSHOT</version>
+        <version>6.2.2-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -85,7 +85,7 @@
         <version_suffix />
         <major_version>6</major_version>
         <minor_version>2</minor_version>
-        <update_version>1</update_version>
+        <update_version>2</update_version>
         <install.dir.name>glassfish6</install.dir.name>
 
         <!-- Jakarta Faces -->
@@ -118,7 +118,7 @@
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
         <eclipselink.version>3.0.2</eclipselink.version>
         <eclipselink.asm.version>9.1.1</eclipselink.asm.version>
-        
+
 
         <!-- Jakarta Transactions -->
         <jakarta.transaction-api.version>2.0.0</jakarta.transaction-api.version>

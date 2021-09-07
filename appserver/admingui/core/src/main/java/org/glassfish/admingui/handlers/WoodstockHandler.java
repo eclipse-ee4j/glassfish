@@ -94,7 +94,7 @@ public class WoodstockHandler {
                 Files.delete(pathToFile);
 
             } catch (IOException x) {
-                logger.log(Level.WARNING, GuiUtil.getCommonMessage("log.fileCouldntFound", new Object[]{"" + deleteTempFile}));
+                logger.log(Level.WARNING, GuiUtil.getCommonMessage("log.fileCouldntbeFound", new Object[]{"" + deleteTempFile}));
 
             } catch (SecurityException e) {
 

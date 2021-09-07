@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -94,12 +95,16 @@ public class WoodstockHandler {
                 Files.delete(pathToFile);
 
             } catch (IOException x) {
-                logger.log(Level.WARNING, GuiUtil.getCommonMessage("log.fileCouldntbeFound", new Object[]{"" + deleteTempFile}));
+                logger.log(Level.WARNING, prepareFileNotDeletedMessage(deleteTempFile));
 
             } catch (SecurityException e) {
 
             }
         }
+    }
+
+    static String prepareFileNotDeletedMessage(String file) {
+      return GuiUtil.getCommonMessage("log.fileCouldntbeFound", new Object[] { file });
     }
 
 

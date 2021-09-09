@@ -19,56 +19,34 @@ package com.sun.enterprise.configapi.tests.validation;
 
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.ServerRef;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
-
 import java.util.HashMap;
 import java.util.Map;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.tests.utils.DomainXml;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author mmares
  */
-public class ReferenceConstrainClusterTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("ClusterDomain.xml")
+public class ReferenceConstrainClusterTest {
 
+    @Inject
     private ServiceLocator locator;
-
-    @Override
-    public String getFileName() {
-        return "ClusterDomain";
-    }
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return locator;
-    }
-
-    private ConstraintViolationException findConstrViolation(Throwable thr) {
-        if (thr == null) {
-            return null;
-        }
-        if (thr instanceof ConstraintViolationException) {
-            return (ConstraintViolationException) thr;
-        }
-        return findConstrViolation(thr.getCause());
-    }
-
-    @BeforeEach
-    public void createNewHabitat() {
-        this.locator = Utils.instance.getHabitat(this);
-    }
 
     @Test
     public void clusterServerRefValid() throws TransactionFailure {
@@ -80,7 +58,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
         Map<String, String> configChanges = new HashMap<>();
         configChanges.put("ref", "server");
         changes.put(serverConfig, configChanges);
-        ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
+        ConfigSupport cs = locator.getService(ConfigSupport.class);
         cs.apply(changes);
     }
 
@@ -94,14 +72,10 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
         Map<String, String> configChanges = new HashMap<>();
         configChanges.put("ref", "server-nonexist");
         changes.put(serverConfig, configChanges);
-        try {
-            ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
-            cs.apply(changes);
-            fail("Can not reach this point");
-        } catch (TransactionFailure tf) {
-            ConstraintViolationException cv = findConstrViolation(tf);
-            assertNotNull(cv);
-        }
+        ConfigSupport cs = locator.getService(ConfigSupport.class);
+        TransactionFailure tf = assertThrows(TransactionFailure.class, () -> cs.apply(changes));
+        ConstraintViolationException cv = findConstrViolation(tf);
+        assertNotNull(cv);
     }
 
     @Test
@@ -113,7 +87,7 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
         Map<String, String> configChanges = new HashMap<>();
         configChanges.put("config-ref", "server-config");
         changes.put(serverConfig, configChanges);
-        ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
+        ConfigSupport cs = locator.getService(ConfigSupport.class);
         cs.apply(changes);
     }
 
@@ -126,13 +100,19 @@ public class ReferenceConstrainClusterTest extends ConfigApiTest {
         Map<String, String> configChanges = new HashMap<>();
         configChanges.put("config-ref", "server-config-nonexist");
         changes.put(serverConfig, configChanges);
-        try {
-            ConfigSupport cs = getHabitat().getService(ConfigSupport.class);
-            cs.apply(changes);
-            fail("Can not reach this point");
-        } catch (TransactionFailure tf) {
-            ConstraintViolationException cv = findConstrViolation(tf);
-            assertNotNull(cv);
+        ConfigSupport cs = locator.getService(ConfigSupport.class);
+        TransactionFailure tf = assertThrows(TransactionFailure.class, () -> cs.apply(changes));
+        ConstraintViolationException cv = findConstrViolation(tf);
+        assertNotNull(cv);
+    }
+
+    private ConstraintViolationException findConstrViolation(Throwable thr) {
+        if (thr == null) {
+            return null;
         }
+        if (thr instanceof ConstraintViolationException) {
+            return (ConstraintViolationException) thr;
+        }
+        return findConstrViolation(thr.getCause());
     }
 }

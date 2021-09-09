@@ -22,8 +22,6 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import java.util.List;
 import java.util.logging.Logger;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -42,36 +40,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class JavaConfigSubTypesTest extends ConfigPersistence {
 
-    private final ServiceLocator habitat = Utils.instance.getHabitat(this);
-
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return habitat;
-    }
-
-
-    @Override
-    public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
-    }
-
-
     @Override
     @Test
     public void doTest() throws TransactionFailure {
-        JavaConfig javaConfig = habitat.getService(JavaConfig.class);
+        JavaConfig javaConfig = locator.getService(JavaConfig.class);
         SingleConfigCode<JavaConfig> configCode = (SingleConfigCode<JavaConfig>) jvm -> {
             List<String> jvmOptions = jvm.getJvmOptions();
             jvmOptions.add("-XFooBar=true");
@@ -89,7 +61,7 @@ public class JavaConfigSubTypesTest extends ConfigPersistence {
 
     @Test
     public void testSubTypesOfDomain() throws Exception {
-        JavaConfig config = super.getHabitat().getService(JavaConfig.class);
+        JavaConfig config = locator.getService(JavaConfig.class);
         Class<?>[] subTypes = ConfigSupport.getSubElementsTypes((ConfigBean) Dom.unwrap(config));
         boolean found = false;
         for (Class<?> subType : subTypes) {

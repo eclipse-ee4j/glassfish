@@ -36,7 +36,6 @@ import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 import java.util.Set;
 import java.util.StringTokenizer;
@@ -52,7 +51,6 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.server.ServerEnvironmentImpl;
-import org.glassfish.tests.utils.ConfigApiTest.TestDocument;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -66,6 +64,7 @@ import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Transactions;
 import org.objectweb.asm.ClassReader;
 
+import static java.util.Objects.requireNonNull;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -295,18 +294,11 @@ public class HK2JUnit5Extension
     }
 
 
-    private void addConfigFromResource(final ClassLoader loader, final String resourcePath,
-        final Class<? extends DomDocument<?>> domClass) {
-        URL url = Objects.requireNonNull(loader.getResource(resourcePath),
-            "The resourcePath doesn't exist: " + resourcePath);
-        ConfigParser configParser = new ConfigParser(locator);
-        DomDocument<?> testDocumentService = locator.getService(domClass);
-        DomDocument<?> document = configParser.parse(url, testDocumentService);
-        addOneConstant(locator, document);
-    }
-
-
-    private Set<String> getLocatorFilePaths(final ExtensionContext context) {
+    /**
+     * @param context
+     * @return paths obtained from test's {@link LocatorFiles} annotation
+     */
+    protected Set<String> getLocatorFilePaths(final ExtensionContext context) {
         final HashSet<String> paths = new HashSet<>();
         final LocatorFiles locatorFilePaths = context.getRequiredTestClass().getAnnotation(LocatorFiles.class);
         if (locatorFilePaths == null) {
@@ -317,6 +309,16 @@ public class HK2JUnit5Extension
             paths.add(path);
         }
         return paths;
+    }
+
+
+    private void addConfigFromResource(final ClassLoader loader, final String resourcePath,
+        final Class<? extends DomDocument<?>> domClass) {
+        URL url = requireNonNull(loader.getResource(resourcePath), "The resourcePath doesn't exist: " + resourcePath);
+        DomDocument<?> testDocumentService = requireNonNull(locator.getService(domClass), "service " + domClass);
+        ConfigParser configParser = new ConfigParser(locator);
+        DomDocument<?> document = configParser.parse(url, testDocumentService);
+        addOneConstant(locator, document, null, DomDocument.class, domClass);
     }
 
 

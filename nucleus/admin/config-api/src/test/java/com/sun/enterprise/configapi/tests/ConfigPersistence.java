@@ -21,42 +21,47 @@ import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.ConfigurationPersistence;
-import org.glassfish.tests.utils.Utils;
-import org.junit.jupiter.api.AfterEach;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import jakarta.inject.Inject;
+
 /**
  * User: Jerome Dochez
  * Date: Mar 25, 2008
  * Time: 11:36:46 AM
  */
-public abstract class ConfigPersistence extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public abstract class ConfigPersistence {
+
+    @Inject
+    protected ServiceLocator locator;
+    @Inject
+    private DomDocument<?> document;
+    @Inject
+    private Logger logger;
 
     public abstract void doTest() throws Exception;
 
     public abstract void assertResult(String resultingXml);
 
-    @AfterEach
-    public void tearDown() {
-        Utils.instance.shutdownServiceLocator(this);
-    }
-
 
     @Test
     public void test() throws Exception {
-        final DomDocument document = getDocument(getHabitat());
-
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.reset();
 
@@ -77,7 +82,7 @@ public abstract class ConfigPersistence extends ConfigApiTest {
                 try {
                     testPersistence.save(document);
                 } catch (IOException | XMLStreamException e) {
-                    e.printStackTrace();
+                    throw new IllegalStateException(e);
                 }
             }
 
@@ -86,7 +91,7 @@ public abstract class ConfigPersistence extends ConfigApiTest {
             public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
             }
         };
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
 
         try {
             transactions.addTransactionsListener(testListener);

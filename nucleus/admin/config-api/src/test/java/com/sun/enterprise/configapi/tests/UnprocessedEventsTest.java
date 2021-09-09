@@ -20,11 +20,12 @@ package com.sun.enterprise.configapi.tests;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
@@ -35,6 +36,8 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
+import jakarta.inject.Inject;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -43,34 +46,27 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * @author Jerome Dochez
  */
-public class UnprocessedEventsTest extends ConfigApiTest implements ConfigListener, TransactionListener {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class UnprocessedEventsTest implements ConfigListener, TransactionListener {
 
-    private final ServiceLocator habitat = Utils.instance.getHabitat(this);
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private NetworkConfig service
+    ;
     private UnprocessedChangeEvents unprocessed;
-
-    /**
-     * Returns the DomainTest file name without the .xml extension to load the test configuration
-     * from.
-     *
-     * @return the configuration file name
-     */
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
     @Test
      public void unprocessedEventsTest() throws TransactionFailure {
 
         // let's find our target
-        NetworkConfig service = habitat.getService(NetworkConfig.class);
         NetworkListener networkListener = service.getNetworkListener("http-listener-1");
         assertNotNull(networkListener);
 
         // Let's register a listener
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(networkListener);
         bean.addListener(this);
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
 
         try {
             transactions.addTransactionsListener(this);

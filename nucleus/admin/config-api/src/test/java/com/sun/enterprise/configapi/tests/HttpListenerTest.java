@@ -17,14 +17,21 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import java.util.logging.Logger;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Transport;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -34,19 +41,20 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Jerome Dochez
  */
-public class HttpListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class HttpListenerTest {
+
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
     private NetworkListener listener;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
 
     @BeforeEach
     public void setup() {
-        NetworkListeners service = getHabitat().getService(NetworkListeners.class);
+        NetworkListeners service = locator.getService(NetworkListeners.class);
         assertNotNull(service);
         for (NetworkListener item : service.getNetworkListener()) {
             if ("http-listener-1".equals(item.getName())) {

@@ -22,10 +22,10 @@ import com.sun.enterprise.config.serverbeans.VirtualServer;
 
 import java.beans.PropertyChangeEvent;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
@@ -35,6 +35,8 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
 
+import jakarta.inject.Inject;
+
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -43,20 +45,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Jerome Dochez
  */
-public class PropertyChangeListenerTest  extends ConfigApiTest implements ConfigListener {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class PropertyChangeListenerTest implements ConfigListener {
 
+    @Inject
     private ServiceLocator locator;
     private boolean result;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @BeforeEach
-    public void setup() {
-        locator = Utils.instance.getHabitat(this);
-    }
 
     @Test
     public void propertyChangeEventReceptionTest() throws TransactionFailure {
@@ -85,7 +79,7 @@ public class PropertyChangeListenerTest  extends ConfigApiTest implements Config
        };
        ConfigSupport.apply(configCode, prop);
 
-       getHabitat().<Transactions> getService(Transactions.class).waitForDrain();
+       locator.<Transactions> getService(Transactions.class).waitForDrain();
        assertTrue(result);
        ((ObservableBean) ConfigSupport.getImpl(target)).removeListener(this);
    }

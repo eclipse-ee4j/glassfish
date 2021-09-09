@@ -19,18 +19,20 @@ package com.sun.enterprise.configapi.tests;
 
 import java.util.List;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -42,19 +44,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * User: Jerome Dochez
  */
-public class ParentConfigListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ParentConfigListenerTest {
 
+    @Inject
     private ServiceLocator locator;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @BeforeEach
-    public void setup() {
-        locator = Utils.instance.getHabitat(this);
-    }
 
     @Test
     public void addHttpListenerTest() throws TransactionFailure {
@@ -68,7 +62,7 @@ public class ParentConfigListenerTest extends ConfigApiTest {
         };
         ConfigSupport.apply(configCode, container.httpService);
 
-        getHabitat().<Transactions>getService(Transactions.class).waitForDrain();
+        locator.<Transactions>getService(Transactions.class).waitForDrain();
         assertTrue(container.received);
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(container.httpService);
 

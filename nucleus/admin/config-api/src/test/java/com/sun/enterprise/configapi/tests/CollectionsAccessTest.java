@@ -23,10 +23,15 @@ import com.sun.enterprise.config.serverbeans.Applications;
 import java.util.List;
 
 import org.glassfish.api.admin.config.ApplicationName;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -36,24 +41,21 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Date: Apr 8, 2008
  * Time: 9:45:21 PM
  */
-public class CollectionsAccessTest extends ConfigApiTest  {
-
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class CollectionsAccessTest {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Applications apps;
 
     @Test
     public void unprotectedAccess() {
-        Applications apps = getHabitat().getService(Applications.class);
         assertNotNull(apps);
         assertThrows(IllegalStateException.class, () -> apps.getModules().add(null));
     }
 
     @Test
     public void semiProtectedTest() throws TransactionFailure {
-        final Applications apps = getHabitat().getService(Applications.class);
         assertNotNull(apps);
         SingleConfigCode<Applications> configCode = proxy -> {
             List<ApplicationName> modules = proxy.getModules();
@@ -66,7 +68,6 @@ public class CollectionsAccessTest extends ConfigApiTest  {
 
     @Test
     public void protectedTest() throws TransactionFailure {
-        final Applications apps = getHabitat().getService(Applications.class);
         assertNotNull(apps);
         SingleConfigCode<Applications> configCode = proxy -> {
             List<ApplicationName> modules = proxy.getModules();

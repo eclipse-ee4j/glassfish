@@ -32,14 +32,8 @@ import static org.hamcrest.Matchers.stringContainsInOrder;
 public class PersistenceTest extends ConfigPersistence {
 
     @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-
-    @Override
     public void doTest() throws TransactionFailure {
-        NetworkListeners service = getHabitat().getService(NetworkListeners.class);
+        NetworkListeners service = locator.getService(NetworkListeners.class);
         SingleConfigCode<Transport> configCode = (SingleConfigCode<Transport>) transport -> {
             transport.setAcceptorThreads("8989");
             return null;

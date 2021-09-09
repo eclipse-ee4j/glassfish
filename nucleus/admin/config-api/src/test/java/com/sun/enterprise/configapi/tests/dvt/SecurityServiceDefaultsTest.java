@@ -18,11 +18,12 @@
 package com.sun.enterprise.configapi.tests.dvt;
 
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.tests.utils.DomainXml;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -30,24 +31,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
  * Tests the JdbcConnectionPool config bean's defaults.
  * @author Kedar Mhaswade (km@dev.java.net)
  */
-public class SecurityServiceDefaultsTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("SecurityServiceDefaults.xml")
+public class SecurityServiceDefaultsTest {
 
+    @Inject
     private SecurityService securityService;
-
-    @Override
-    public String getFileName() {
-        return "SecurityServiceDefaults"; //this is the xml to load
-    }
-
-    @BeforeEach
-    public void setUp() {
-        securityService = super.getHabitat().getService(SecurityService.class);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        securityService = null;
-    }
 
     @Test
     public void testFewDefaults() {

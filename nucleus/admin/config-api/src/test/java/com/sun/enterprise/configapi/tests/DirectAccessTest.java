@@ -21,8 +21,6 @@ import com.sun.enterprise.config.serverbeans.JavaConfig;
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
@@ -40,32 +38,6 @@ import java.util.Map;
  * Time: 8:50:42 PM
  */
 public class DirectAccessTest extends ConfigPersistence {
-
-    private final ServiceLocator locator = Utils.instance.getHabitat(this);
-
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return locator;
-    }
-
-
-    @Override
-    public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
-    }
-
 
     @Override
     public void doTest() throws TransactionFailure {
@@ -89,7 +61,7 @@ public class DirectAccessTest extends ConfigPersistence {
         javaConfigChanges.put("jvm-options", "-XFooBar=false");
         changes.put(javaConfigBean, javaConfigChanges);
 
-        getHabitat().<ConfigSupport>getService(ConfigSupport.class).apply(changes);
+        locator.<ConfigSupport>getService(ConfigSupport.class).apply(changes);
     }
 
     @Override

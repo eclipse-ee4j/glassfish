@@ -18,10 +18,17 @@
 package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.GlassFishConfigBean;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -33,21 +40,26 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
  * Date: Jan 30, 2008
  * Time: 11:18:52 AM
  */
-public class RawValueTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class RawValueTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
 
     @BeforeEach
-    public void setup() {
-        System.setProperty("com.sun.aas.instanceRoot", "cafebabe");
+    public void initSysProps() {
+        System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, "cafebabe");
+    }
+
+
+    @AfterEach
+    public void reset() {
+        System.clearProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
     }
 
     @Test
     public void testAppRoot() {
-        Domain domain = getHabitat().getService(Domain.class);
+        Domain domain = locator.getService(Domain.class);
         Domain rawDomain = GlassFishConfigBean.getRawView(domain);
         String appRoot = domain.getApplicationRoot();
         String appRawRoot = rawDomain.getApplicationRoot();

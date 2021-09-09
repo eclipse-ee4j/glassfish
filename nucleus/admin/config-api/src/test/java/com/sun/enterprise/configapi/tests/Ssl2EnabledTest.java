@@ -17,47 +17,68 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import java.util.List;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
+import jakarta.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * User: Jerome Dochez Date: Mar 4, 2008 Time: 2:44:59 PM
  */
-public class Ssl2EnabledTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class Ssl2EnabledTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
+    @Inject
     private NetworkConfig config;
-
-    @BeforeEach
-    public void setup() {
-        config = getHabitat().getService(NetworkConfig.class);
-        assertNotNull(config);
-    }
 
     @Test
     public void sslEnabledTest() {
-        for (NetworkListener listener : config.getNetworkListeners().getNetworkListener()) {
-            Protocol httpProtocol = listener.findHttpProtocol();
-            if (httpProtocol != null) {
+        final List<NetworkListener> listeners = config.getNetworkListeners().getNetworkListener();
+        assertThat(listeners, hasSize(3));
+        assertAll(
+            () -> {
+                NetworkListener listener = listeners.get(0);
+                Protocol httpProtocol = listener.findHttpProtocol();
+                assertNotNull(httpProtocol);
+                assertEquals("http-listener-1", httpProtocol.getName());
                 Ssl ssl = httpProtocol.getSsl();
-                if (ssl != null) {
-                    assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
-                    assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
-                    assertTrue(Boolean.parseBoolean(ssl.getTlsEnabled()));
-                }
+                assertNull(ssl);
+            },
+            () -> {
+                NetworkListener listener = listeners.get(1);
+                Protocol httpProtocol = listener.findHttpProtocol();
+                assertNotNull(httpProtocol);
+                assertEquals("http-listener-2", httpProtocol.getName());
+                Ssl ssl = httpProtocol.getSsl();
+                assertNotNull(ssl);
+                assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
+                assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
+                assertTrue(Boolean.parseBoolean(ssl.getTlsEnabled()));
+            },
+            () -> {
+                NetworkListener listener = listeners.get(2);
+                Protocol httpProtocol = listener.findHttpProtocol();
+                assertNotNull(httpProtocol);
+                assertEquals("admin-listener", httpProtocol.getName());
+                Ssl ssl = httpProtocol.getSsl();
+                assertNull(ssl);
             }
-        }
+        );
     }
 }

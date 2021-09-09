@@ -19,8 +19,6 @@ package com.sun.enterprise.configapi.tests;
 
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
@@ -37,27 +35,9 @@ import static org.hamcrest.Matchers.stringContainsInOrder;
  */
 public class DirectRemovalTest extends ConfigPersistence {
 
-    private final ServiceLocator habitat = Utils.instance.getHabitat(this);
-
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return habitat;
-    }
-
     @Override
     public void doTest() throws TransactionFailure {
-        NetworkListeners listeners = habitat.getService(NetworkListeners.class);
+        NetworkListeners listeners = locator.getService(NetworkListeners.class);
         ConfigBean serviceBean = (ConfigBean) Dom.unwrap(listeners);
         for (NetworkListener listener : listeners.getNetworkListener()) {
             if (listener.getName().endsWith("http-listener-1")) {

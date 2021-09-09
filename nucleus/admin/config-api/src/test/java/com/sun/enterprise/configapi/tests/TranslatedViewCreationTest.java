@@ -23,18 +23,21 @@ import com.sun.enterprise.config.serverbeans.VirtualServer;
 import java.beans.PropertyChangeEvent;
 import java.util.List;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -48,38 +51,29 @@ import static org.junit.jupiter.api.Assertions.fail;
  * Date: Jun 24, 2008
  * Time: 8:27:29 PM
  */
-public class TranslatedViewCreationTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class TranslatedViewCreationTest {
 
     private static final String propName = "com.sun.my.chosen.docroot";
 
+    @Inject
+    private ServiceLocator locator;
+    @Inject
     private HttpService httpService;
     private List<PropertyChangeEvent> events;
-    private ServiceLocator locator;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
     @BeforeEach
     public void setup() {
         System.setProperty(propName, "/foo/bar/docroot");
-        locator = Utils.instance.getHabitat(this);
     }
 
     @AfterEach
     public void tearDown() {
-        System.setProperty(propName, "");
-    }
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return locator;
+        System.clearProperty(propName);
     }
 
     @Test
     public void createVirtualServerTest() throws TransactionFailure {
-        httpService = getHabitat().getService(HttpService.class);
         final TransactionListener listener = new TransactionListener() {
 
             @Override
@@ -93,7 +87,7 @@ public class TranslatedViewCreationTest extends ConfigApiTest {
             }
         };
 
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
         try {
             transactions.addTransactionsListener(listener);
             assertNotNull(httpService);

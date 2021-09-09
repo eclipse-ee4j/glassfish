@@ -20,29 +20,35 @@ package com.sun.enterprise.configapi.tests;
 import com.sun.enterprise.config.serverbeans.Applications;
 
 import java.util.Collection;
+import java.util.logging.Logger;
 
 import org.glassfish.api.admin.config.ApplicationName;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Modules related tests
  */
-public class ModulesTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ModulesTest {
+
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
     private Collection<? extends ApplicationName> modules;
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-
     @BeforeEach
     public void setup() {
-        Applications apps = getHabitat().getService(Applications.class);
+        Applications apps = locator.getService(Applications.class);
         assertNotNull(apps);
         modules = apps.getModules();
         assertNotNull(modules);

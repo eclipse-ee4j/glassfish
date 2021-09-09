@@ -19,9 +19,14 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Config;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigSupport;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -32,17 +37,15 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @Author Jerome Dochez
  */
-public class GetElementTypeByNameTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class GetElementTypeByNameTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void testAppRoot() throws Exception {
-        Config cfg = getHabitat().getService(Config.class);
+        Config cfg = locator.getService(Config.class);
         Class<? extends ConfigBeanProxy> elementType = ConfigSupport.getElementTypeByName(cfg, "admin-service");
         assertNotNull(elementType);
         assertThat(elementType.getName(), endsWith("AdminService"));

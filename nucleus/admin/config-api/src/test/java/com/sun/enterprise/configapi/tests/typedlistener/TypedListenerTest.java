@@ -19,21 +19,28 @@ package com.sun.enterprise.configapi.tests.typedlistener;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.SystemProperty;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Logger;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
 
+import jakarta.inject.Inject;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -41,25 +48,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Test the listeners per type registration/events/un-registration.
  * @author Jerome Dochez
  */
-public class TypedListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class TypedListenerTest {
+
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
     private List<PropertyChangeEvent> events;
     private final AtomicInteger listenersInvoked = new AtomicInteger();
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
     @Test
     public void addElementTest() throws TransactionFailure {
-        final Domain domain = getHabitat().getService(Domain.class);
+        final Domain domain = locator.getService(Domain.class);
         final ConfigListener configListener = propertyChangeEvents -> {
             events = Arrays.asList(propertyChangeEvents);
             return null;
         };
 
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
         try {
             transactions.addListenerForType(SystemProperty.class, configListener);
 
@@ -124,7 +132,7 @@ public class TypedListenerTest extends ConfigApiTest {
 
     @Test
     public void multipleListeners() throws TransactionFailure {
-        final Domain domain = getHabitat().getService(Domain.class);
+        final Domain domain = locator.getService(Domain.class);
         assertNotNull(domain);
 
         final ConfigListener configListener1 = propertyChangeEvents -> {
@@ -136,7 +144,7 @@ public class TypedListenerTest extends ConfigApiTest {
             return null;
         };
 
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
         try {
             transactions.addListenerForType(SystemProperty.class, configListener1);
             transactions.addListenerForType(SystemProperty.class, configListener2);
@@ -152,7 +160,7 @@ public class TypedListenerTest extends ConfigApiTest {
             ConfigSupport.apply(configCode, domain);
             transactions.waitForDrain();
 
-            assertTrue(listenersInvoked.intValue()==2);
+            assertEquals(2, listenersInvoked.intValue());
         } finally {
             assertTrue(transactions.removeListenerForType(SystemProperty.class, configListener1));
             assertTrue(transactions.removeListenerForType(SystemProperty.class, configListener2));

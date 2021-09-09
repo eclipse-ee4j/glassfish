@@ -18,14 +18,19 @@
 package com.sun.enterprise.configapi.tests.concurrent;
 
 import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
 
 import java.util.concurrent.Semaphore;
+import java.util.logging.Logger;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -33,12 +38,12 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Concurrent access to the configuarion APIs related tests
  * @author Jerome Dochez
  */
-public class ConcurrentAccessTest extends ConfigApiTest {
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ConcurrentAccessTest {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
     @Test
     public void waitAndSuccessTest() throws Exception {
@@ -53,7 +58,7 @@ public class ConcurrentAccessTest extends ConfigApiTest {
     }
 
     private void runTest(final int waitTime) throws Exception {
-        final Domain domain = getHabitat().getService(Domain.class);
+        final Domain domain = locator.getService(Domain.class);
 
         // my lock.
         final Semaphore lock = new Semaphore(1);

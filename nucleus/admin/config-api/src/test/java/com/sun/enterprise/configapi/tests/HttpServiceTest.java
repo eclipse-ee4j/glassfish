@@ -17,16 +17,21 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.FileCache;
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -37,19 +42,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Jerome Dochez
  */
-public class HttpServiceTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class HttpServiceTest {
+
+    @Inject
+    private ServiceLocator locator;
 
     private NetworkListener listener;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
 
     @BeforeEach
     public void setup() {
-        listener = getHabitat().<NetworkConfig>getService(NetworkConfig.class).getNetworkListener("admin-listener");
+        listener = locator.<NetworkConfig>getService(NetworkConfig.class).getNetworkListener("admin-listener");
         assertNotNull(listener);
     }
 

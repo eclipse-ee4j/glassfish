@@ -24,7 +24,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
@@ -35,6 +38,8 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
 
+import jakarta.inject.Inject;
+
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -44,19 +49,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Date: Mar 25, 2008
  * Time: 1:32:35 PM
  */
-public class AddPropertyTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class AddPropertyTest {
 
+    @Inject
+    private ServiceLocator locator;
     private List<PropertyChangeEvent> events;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
 
     @Test
     public void transactionEvents() throws TransactionFailure {
-        final Domain domain = getHabitat().getService(Domain.class);
+        final Domain domain = locator.getService(Domain.class);
         assertNotNull(domain);
         final TransactionListener listener = new TransactionListener() {
 
@@ -71,7 +74,7 @@ public class AddPropertyTest extends ConfigApiTest {
             }
         };
 
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
 
         try {
 

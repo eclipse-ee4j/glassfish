@@ -18,11 +18,17 @@
 package com.sun.enterprise.configapi.tests;
 
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -32,18 +38,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * User: Jerome Dochez Date: Feb 21, 2008 Time: 2:06:44 PM
  */
-public class EnabledTest extends ConfigApiTest {
-    private List<NetworkListener> listeners;
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class EnabledTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+
+    private List<NetworkListener> listeners;
 
 
     @BeforeEach
     public void setup() {
-        NetworkConfig service = getHabitat().getService(NetworkConfig.class);
+        NetworkConfig service = locator.getService(NetworkConfig.class);
         assertTrue(service != null);
         listeners = service.getNetworkListeners().getNetworkListener();
     }

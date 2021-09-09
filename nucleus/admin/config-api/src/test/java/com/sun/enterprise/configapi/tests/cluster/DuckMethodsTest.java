@@ -20,12 +20,14 @@ package com.sun.enterprise.configapi.tests.cluster;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.tests.utils.DomainXml;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -36,24 +38,17 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Jerome Dochez
  */
-public class DuckMethodsTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("ClusterDomain.xml")
+public class DuckMethodsTest {
+
+    @Inject
     private ServiceLocator locator;
-
-    @Override
-    public String getFileName() {
-        return "ClusterDomain";
-    }
-
-    @BeforeEach
-    public void setup() {
-        locator = Utils.instance.getHabitat(this);
-    }
-
 
     @Test
     public void getClusterFromServerTest() {
-        Domain d = locator.getService(Domain.class);
-        Server server = d.getServerNamed("server");
+        Domain domain = locator.getService(Domain.class);
+        Server server = domain.getServerNamed("server");
         assertNotNull(server);
         Cluster cluster = server.getCluster();
         assertEquals("clusterA", cluster.getName());

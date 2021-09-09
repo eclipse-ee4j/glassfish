@@ -21,13 +21,18 @@ import com.sun.enterprise.config.serverbeans.Domain;
 
 import java.util.Set;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
 
+import jakarta.inject.Inject;
+
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.hasItems;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -37,7 +42,11 @@ import static org.junit.jupiter.api.Assertions.assertAll;
  * Date: Mar 20, 2008
  * Time: 2:44:48 PM
  */
-public class SubTypesTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class SubTypesTest {
+
+    @Inject
+    private ServiceLocator locator;
 
     // not testing all the sub types, just a few to be sure it works ok.
     private static final Class<?>[] expectedClassNames = {
@@ -47,17 +56,12 @@ public class SubTypesTest extends ConfigApiTest {
     };
 
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
     @Test
     public void testSubTypesOfDomain() throws Exception {
-        Domain domain = super.getHabitat().getService(Domain.class);
+        Domain domain = locator.getService(Domain.class);
         Class<?>[] subTypes = ConfigSupport.getSubElementsTypes((ConfigBean) Dom.unwrap(domain));
         assertAll(
-            () -> assertThat(subTypes.length, equalTo(12)),
+            () -> assertThat(subTypes, arrayWithSize(12)),
             () -> assertThat(Set.of(subTypes), hasItems(expectedClassNames))
         );
     }

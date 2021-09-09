@@ -24,15 +24,17 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
 import java.beans.VetoableChangeListener;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ConstrainedBeanListener;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -43,19 +45,11 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Jerome Dochez
  */
-public class VetoableChangeListenerTest extends ConfigApiTest implements VetoableChangeListener {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class VetoableChangeListenerTest implements VetoableChangeListener {
 
+    @Inject
     private ServiceLocator locator;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @BeforeEach
-    public void setup() {
-        locator = Utils.instance.getHabitat(this);
-    }
 
     @Test
     public void propertyChangeEventReceptionTest() throws TransactionFailure {
@@ -67,11 +61,13 @@ public class VetoableChangeListenerTest extends ConfigApiTest implements Vetoabl
             vs.setAccessLog("Foo");
             return null;
         };
-        ((ConfigBean) ConfigSupport.getImpl(target)).getOptionalFeature(ConstrainedBeanListener.class).addVetoableChangeListener(this);
+        ConfigBean configBean1 = (ConfigBean) ConfigSupport.getImpl(target);
+        configBean1.getOptionalFeature(ConstrainedBeanListener.class).addVetoableChangeListener(this);
         assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, target));
         // let's do it again.
         assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, target));
-        ((ConfigBean) ConfigSupport.getImpl(target)).getOptionalFeature(ConstrainedBeanListener.class).removeVetoableChangeListener(this);
+        ConfigBean configBean2 = (ConfigBean) ConfigSupport.getImpl(target);
+        configBean2.getOptionalFeature(ConstrainedBeanListener.class).removeVetoableChangeListener(this);
 
         // this time it should work!
         SingleConfigCode<VirtualServer> configCode2 = vs -> {

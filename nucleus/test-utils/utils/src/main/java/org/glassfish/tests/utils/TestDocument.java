@@ -15,33 +15,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package com.sun.enterprise.configapi.tests;
+package org.glassfish.tests.utils;
 
-import com.sun.enterprise.config.serverbeans.Domain;
+import javax.xml.stream.XMLStreamReader;
 
-import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-
-import jakarta.inject.Inject;
-
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.DomDocument;
 
 /**
- * Domain related tests
- *
- * @author Jerome Dochez
+ * Trivial {@link DomDocument} usually representing domain.xml
  */
-@ExtendWith(ConfigApiJunit5Extension.class)
-public class DomainTest {
+public class TestDocument extends DomDocument<ConfigBean> {
 
-    @Inject
-    private ServiceLocator locator;
+    /**
+     * @param locator is used access services and descriptors
+     */
+    public TestDocument(ServiceLocator locator) {
+        super(locator);
+    }
 
-    @Test
-    public void domainExist() {
-        Domain domain = locator.getService(Domain.class);
-        assertNotNull(domain);
+
+    @Override
+    public ConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, ConfigBean dom,
+        ConfigModel configModel) {
+        return new ConfigBean(habitat, this, dom, configModel, xmlStreamReader);
     }
 }

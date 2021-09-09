@@ -19,21 +19,24 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.configapi.tests.example.HttpListenerContainer;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.ConfigConfigBeanListener;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -43,33 +46,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Simple ConfigListener tests
  */
-public class ConfigListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ConfigListenerTest {
 
     private static final SingleConfigCode<NetworkListener> configCodeRestore = param -> {
         param.setPort("8080");
         return null;
     };
 
-    private ServiceLocator habitat;
+    @Inject
+    private ServiceLocator locator;
     private Transactions transactions;
     private HttpListenerContainer container;
 
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
     @BeforeEach
     public void setup() {
-        habitat = Utils.instance.getHabitat(this);
-
         // make sure the ConfigConfigListener exists
-        ServiceHandle<ConfigConfigBeanListener> i = habitat.getServiceHandle(ConfigConfigBeanListener.class);
-        ConfigConfigBeanListener ccbl = i.getService();
-        assertNotNull(ccbl);
-        transactions = getHabitat().getService(Transactions.class);
-        container = registerAndCreateHttpListenerContainer(habitat);
+        ServiceHandle<ConfigConfigBeanListener> i = locator.getServiceHandle(ConfigConfigBeanListener.class);
+        ConfigConfigBeanListener listener = i.getService();
+        assertNotNull(listener);
+        transactions = locator.getService(Transactions.class);
+        container = registerAndCreateHttpListenerContainer(locator);
     }
 
 

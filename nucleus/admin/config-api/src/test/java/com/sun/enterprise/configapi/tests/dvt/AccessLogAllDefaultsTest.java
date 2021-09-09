@@ -18,35 +18,24 @@
 package com.sun.enterprise.configapi.tests.dvt;
 
 import com.sun.enterprise.config.serverbeans.AccessLog;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
-
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.tests.utils.DomainXml;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @author kedar
  */
-public class AccessLogAllDefaultsTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("AccessLogAllDefaultsTest.xml")
+public class AccessLogAllDefaultsTest {
 
+    @Inject
     private AccessLog al;
-
-    @Override
-    public String getFileName() {
-        return ("AccessLogAllDefaultsTest"); //this is the xml to load
-    }
-
-    @BeforeEach
-    public void setUp() {
-        al = super.getHabitat().getService(AccessLog.class);
-    }
-
-    @AfterEach
-    public void tearDown() {
-        al = null;
-    }
 
     @Test
     public void testAllDefaults() {

@@ -21,17 +21,23 @@ import com.sun.enterprise.config.serverbeans.HttpService;
 
 import java.beans.PropertyChangeEvent;
 import java.util.List;
+import java.util.logging.Logger;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -45,21 +51,21 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Date: Jan 23, 2008
  * Time: 10:48:55 PM
  */
-public class TransactionListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class TransactionListenerTest {
 
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
     private HttpService httpService;
     private List<PropertyChangeEvent> events;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
 
     @Test
     public void transactionEvents() throws Exception, TransactionFailure {
-        httpService = getHabitat().getService(HttpService.class);
-        final NetworkConfig networkConfig = getHabitat().getService(NetworkConfig.class);
+        final NetworkConfig networkConfig = locator.getService(NetworkConfig.class);
         final NetworkListener netListener = networkConfig.getNetworkListeners().getNetworkListener().get(0);
         final Http http = netListener.findHttpProtocol().getHttp();
         final TransactionListener listener = new TransactionListener() {
@@ -75,7 +81,7 @@ public class TransactionListenerTest extends ConfigApiTest {
             }
         };
 
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
 
         try {
             transactions.addTransactionsListener(listener);

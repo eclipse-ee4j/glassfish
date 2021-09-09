@@ -19,26 +19,31 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.HttpService;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
-import org.jvnet.hk2.config.types.Property;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.types.Property;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test for invalid duplicate keyed entries
  *
  * @author Jerome Dochez
  */
-public class DuplicateKeyedElementTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class DuplicateKeyedElementTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void duplicateKeyTest() throws TransactionFailure {
@@ -76,7 +81,7 @@ public class DuplicateKeyedElementTest extends ConfigApiTest {
     }
 
     private VirtualServer findVirtualServerWithProperties() {
-        HttpService httpService = getHabitat().getService(HttpService.class);
+        HttpService httpService = locator.getService(HttpService.class);
         assertNotNull(httpService);
         for (VirtualServer vs : httpService.getVirtualServer()) {
             if (!vs.getProperty().isEmpty()) {

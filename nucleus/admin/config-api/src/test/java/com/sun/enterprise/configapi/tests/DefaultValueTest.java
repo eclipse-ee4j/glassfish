@@ -17,33 +17,36 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Protocols;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.Attribute;
 import org.jvnet.hk2.config.Dom;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test attribute and raw attribute access *
  */
-public class DefaultValueTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class DefaultValueTest {
 
+    @Inject
+    private ServiceLocator locator;
     private NetworkListener listener;
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
 
     @BeforeEach
     public void setup() {
-        NetworkListeners httpService = getHabitat().getService(NetworkListeners.class);
+        NetworkListeners httpService = locator.getService(NetworkListeners.class);
         listener = httpService.getNetworkListener().get(0);
     }
 
@@ -59,7 +62,7 @@ public class DefaultValueTest extends ConfigApiTest {
 
     @Test
     public void defaultValueTest() {
-        Protocols protocols = getHabitat().getService(Protocols.class);
+        Protocols protocols = locator.getService(Protocols.class);
         for (Protocol protocol : protocols.getProtocol()) {
             Http http = protocol.getHttp();
             assertEquals(Http.COMPRESSABLE_MIME_TYPE, http.getCompressableMimeType());

@@ -22,11 +22,17 @@ import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 
 import java.beans.PropertyVetoException;
-import org.glassfish.tests.utils.Utils;
+import java.util.logging.Logger;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,16 +44,16 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * Date: Jun 25, 2008
  * Time: 8:03:41 AM
  */
-public class AttributeRemovalTest extends ConfigApiTest {
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class AttributeRemovalTest {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
     @Test
     public void removeAttributeTest() throws TransactionFailure {
-        HttpService httpService = Utils.instance.getHabitat(this).getService(HttpService.class);
+        HttpService httpService = locator.getService(HttpService.class);
         VirtualServer vs = httpService.getVirtualServerByName("server");
         SingleConfigCode<VirtualServer> configCodeWebModule = virtualServer -> {
             virtualServer.setDefaultWebModule("/context/bar");
@@ -66,7 +72,7 @@ public class AttributeRemovalTest extends ConfigApiTest {
 
     @Test
     public void readOnlyRemovalTest(){
-        Server server = getHabitat().getService(Server.class);
+        Server server = locator.getService(Server.class);
         logger.fine("config-ref is " + server.getConfigRef());
         assertThrows(PropertyVetoException.class, () -> server.setConfigRef(null));
     }
@@ -74,7 +80,7 @@ public class AttributeRemovalTest extends ConfigApiTest {
     @Test
     @SuppressWarnings("deprecation")
     public void deprecatedWrite() throws TransactionFailure {
-        final Server server = getHabitat().getService(Server.class);
+        final Server server = locator.getService(Server.class);
         final String value = server.getNodeRef();
         final SingleConfigCode<Server> configCode = virtualServer -> {
             virtualServer.setNodeAgentRef(null);

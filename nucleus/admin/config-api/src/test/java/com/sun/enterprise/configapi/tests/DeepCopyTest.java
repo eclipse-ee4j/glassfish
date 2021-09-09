@@ -22,11 +22,15 @@ import com.sun.enterprise.config.serverbeans.Configs;
 
 import java.io.ByteArrayOutputStream;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigModel;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -34,6 +38,8 @@ import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
 import org.jvnet.hk2.config.SingleConfigCode;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -46,19 +52,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  *
  * @author Jerome Dochez
  */
-public class DeepCopyTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class DeepCopyTest {
 
-    private final DomDocument document = getDocument(getHabitat());
-
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
+    private DomDocument document;
 
     @Test
     public void configCopy() throws Exception {
-        final Config config = getHabitat().getService(Config.class);
+        final Config config = locator.getService(Config.class);
         assertNotNull(config);
         String configName = config.getName();
         final Config newConfig = (Config) ConfigSupport.apply(parent -> config.deepCopy(parent), config.getParent());
@@ -77,7 +83,7 @@ public class DeepCopyTest extends ConfigApiTest {
             configs.getConfig().add(newConfig);
             return null;
         };
-        ConfigSupport.apply(configCodeParent, getHabitat().<Configs>getService(Configs.class));
+        ConfigSupport.apply(configCodeParent, locator.<Configs>getService(Configs.class));
         String resultingXML = save(document);
         assertThat("Expecting some-config, got " + resultingXML, resultingXML, stringContainsInOrder("some-config"));
     }
@@ -85,7 +91,7 @@ public class DeepCopyTest extends ConfigApiTest {
     @Test
     public void parentingTest() throws Exception {
 
-        final Config config = getHabitat().getService(Config.class);
+        final Config config = locator.getService(Config.class);
         assertNotNull(config);
         assertEquals("server-config", config.getName());
         SingleConfigCode<ConfigBeanProxy> configCode = configProxy -> {

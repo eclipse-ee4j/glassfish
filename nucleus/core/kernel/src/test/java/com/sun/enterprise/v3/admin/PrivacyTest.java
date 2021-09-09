@@ -17,9 +17,13 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.single.StaticModulesRegistry;
+
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -30,18 +34,36 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 public class PrivacyTest {
 
+    private ServiceLocator locator;
+    private ModulesRegistry registry;
+
+    @BeforeEach
+    public void initLocator() {
+        registry = new StaticModulesRegistry(PrivacyTest.class.getClassLoader());
+        locator = registry.createServiceLocator("default");
+    }
+
+    @AfterEach
+    public void shutdownLocator() {
+        if (locator != null) {
+            locator.shutdown();
+        }
+        if (registry != null) {
+            registry.shutdown();
+        }
+    }
+
     @Test
     public void privacyTests() {
         AdminAdapter publicAdaper = new PublicAdminAdapter();
         AdminAdapter privateAdapter = new PrivateAdminAdapter();
-        ServiceLocator habitat = Utils.getNewHabitat();
-        AdminCommand adminCommand = habitat.getService(AdminCommand.class, "simple-public-command");
+        AdminCommand adminCommand = locator.getService(AdminCommand.class, "simple-public-command");
         assertTrue(publicAdaper.validatePrivacy(adminCommand));
         assertFalse(privateAdapter.validatePrivacy(adminCommand));
-        adminCommand = habitat.getService(AdminCommand.class, "notannoated-public-command");
+        adminCommand = locator.getService(AdminCommand.class, "notannoated-public-command");
         assertTrue(publicAdaper.validatePrivacy(adminCommand));
         assertFalse(privateAdapter.validatePrivacy(adminCommand));
-        adminCommand = habitat.getService(AdminCommand.class, "simple-private-command");
+        adminCommand = locator.getService(AdminCommand.class, "simple-private-command");
         assertFalse(publicAdaper.validatePrivacy(adminCommand));
         assertTrue(privateAdapter.validatePrivacy(adminCommand));
     }

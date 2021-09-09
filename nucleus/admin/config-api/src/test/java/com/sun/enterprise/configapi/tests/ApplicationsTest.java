@@ -23,10 +23,15 @@ import com.sun.enterprise.config.serverbeans.Applications;
 import java.util.List;
 
 import org.glassfish.api.admin.config.ApplicationName;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
@@ -39,30 +44,28 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * Applications related tests
  * @author Jerome Dochez
  */
-public class ApplicationsTest extends ConfigApiTest {
-
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ApplicationsTest {
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void appsExistTest() {
-        Applications apps = getHabitat().getService(Applications.class);
+        Applications apps = locator.getService(Applications.class);
         assertNotNull(apps);
         assertThat(apps.getApplications(), hasSize(1));
     }
 
     @Test
     public void getModulesTest() {
-        Applications apps = getHabitat().getService(Applications.class);
+        Applications apps = locator.getService(Applications.class);
         List<ApplicationName> modules = apps.getModules();
         assertThat(modules, hasSize(1));
     }
 
     @Test
     public void getApplicationTest() {
-        Applications apps = getHabitat().getService(Applications.class);
+        Applications apps = locator.getService(Applications.class);
         Application app = apps.getApplication("simple");
         assertNotNull(app);
     }
@@ -73,7 +76,7 @@ public class ApplicationsTest extends ConfigApiTest {
      */
     @Test
     public void removalTest() {
-        final Applications apps = getHabitat().getService(Applications.class);
+        final Applications apps = locator.getService(Applications.class);
         final SingleConfigCode<Applications> configCode = param -> {
             List<Application> appList = param.getApplications();
             for (Application application : param.getApplicationsWithSnifferType("web")) {

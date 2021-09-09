@@ -17,6 +17,9 @@
 
 package com.sun.enterprise.deploy.shared;
 
+import com.sun.enterprise.module.ModulesRegistry;
+import com.sun.enterprise.module.single.StaticModulesRegistry;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,15 +34,17 @@ import java.util.Vector;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
 import org.glassfish.api.deployment.archive.WritableArchive;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyIterable;
 import static org.hamcrest.Matchers.not;
@@ -52,8 +57,6 @@ import static org.junit.jupiter.api.Assertions.fail;
  * @author Tim Quinn
  */
 public class FileArchiveTest {
-
-    public static final Logger deplLogger = org.glassfish.deployment.common.DeploymentContextImpl.deplLogger;
 
     private static final String EXPECTED_LOG_KEY = "NCLS-DEPLOYMENT-00022";
     private static final String LINE_SEP = System.getProperty("line.separator");
@@ -73,6 +76,44 @@ public class FileArchiveTest {
 
     private final Set<String> usualExpectedSubarchiveEntryNames = initUsualExpectedSubarchiveEntryNames();
 
+    private static ServiceLocator locator;
+    private static ModulesRegistry registry;
+    private static ArchiveFactory archiveFactory;
+    private static RecordingHandler handler;
+
+    @BeforeAll
+    public static void setUpClass() throws Exception {
+        registry = new StaticModulesRegistry(FileArchiveTest.class.getClassLoader());
+        locator = registry.createServiceLocator("default");
+        archiveFactory = locator.getService(ArchiveFactory.class);
+        handler = new RecordingHandler();
+        deplLogger.addHandler(handler);
+    }
+
+    @BeforeEach
+    public void setUp() throws IOException {
+        archiveDir = tempDir();
+    }
+
+    @AfterEach
+    public void tearDown() {
+        if (archiveDir != null) {
+            clean(archiveDir);
+        }
+        archiveDir = null;
+    }
+
+    @AfterAll
+    public static void shutdownLocator() {
+        if (locator != null) {
+            locator.shutdown();
+        }
+        if (registry != null) {
+            registry.shutdown();
+        }
+    }
+
+
     private Set<String> initUsualExpectedEntryNames() {
         final Set<String> expectedEntryNames = new HashSet<>(usualEntryNames);
         expectedEntryNames.add("lower");
@@ -90,32 +131,6 @@ public class FileArchiveTest {
         final Set<String> result = new HashSet<>(usualSubarchiveEntryNames);
         result.add("under");
         return result;
-    }
-
-    private static ServiceLocator locator;
-    private static ArchiveFactory archiveFactory;
-    private static RecordingHandler handler;
-
-    @BeforeAll
-    public static void setUpClass() throws Exception {
-        locator = Utils.getNewHabitat();
-        archiveFactory = locator.getService(ArchiveFactory.class);
-
-        handler = new RecordingHandler();
-        deplLogger.addHandler(handler);
-    }
-
-    @BeforeEach
-    public void setUp() throws IOException {
-        archiveDir = tempDir();
-    }
-
-    @AfterEach
-    public void tearDown() {
-        if (archiveDir != null) {
-            clean(archiveDir);
-        }
-        archiveDir = null;
     }
 
     private File tempDir() throws IOException {
@@ -141,7 +156,7 @@ public class FileArchiveTest {
 
 
     private ReadableArchive createAndPopulateArchive(final Set<String> entryNames) throws Exception {
-        WritableArchive instance = archiveFactory.createArchive(archiveDir.toURI()); //new FileArchive();
+        WritableArchive instance = archiveFactory.createArchive(archiveDir.toURI());
         instance.create(archiveDir.toURI());
 
         // Add some entries.
@@ -250,7 +265,6 @@ public class FileArchiveTest {
 
     @Test
     public void testSubArchiveCreateWithStaleEntry() throws Exception {
-        System.out.println("testSubArchiveCreateWithStaleEntry");
         // Subarchives are a little tricky.  The marker file lives only at
         // the top level (because that's where undeployment puts it).  So
         // when a subarchive tests to see if an entry is valid it needs to

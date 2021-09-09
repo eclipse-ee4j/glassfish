@@ -17,10 +17,15 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBeanProxy;
+
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -29,17 +34,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  *
  * @author Jerome Dochez
  */
-public class ParentTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ParentTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void parents() {
 
-        NetworkListeners service = getHabitat().getService(NetworkListeners.class);
+        NetworkListeners service = locator.getService(NetworkListeners.class);
         assertNotNull(service);
         NetworkListener listener = service.getNetworkListener().get(0);
         assertNotNull(listener);

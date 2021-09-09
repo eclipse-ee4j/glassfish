@@ -36,7 +36,7 @@ import org.objectweb.asm.Opcodes;
  * @author David Matejcek
  */
 // This class was taken from org.jvnet.hk2.testing.junit.internal.ClassVisitorImpl and updated.
-public class HK2ClasssVisitor extends ClassVisitor {
+class HK2ClasssVisitor extends ClassVisitor {
     private static final Logger LOG = Logger.getLogger(HK2ClasssVisitor.class.getName());
     private final static String SERVICE_CLASS_FORM = "Lorg/jvnet/hk2/annotations/Service;";
 

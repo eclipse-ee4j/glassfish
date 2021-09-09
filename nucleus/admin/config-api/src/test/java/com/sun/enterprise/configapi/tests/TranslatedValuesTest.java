@@ -19,11 +19,18 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
+import com.sun.enterprise.util.SystemPropertyConstants;
 
 import java.io.File;
 
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.stringContainsInOrder;
@@ -34,34 +41,37 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  *
  * @author Jerome Dochez
  */
-public class TranslatedValuesTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class TranslatedValuesTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
+    @Inject
+    private ServiceLocator locator;
+
+    @BeforeAll
+    public static void initSysProps() {
+        System.setProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY, "cafebabe");
+        System.setProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY, System.getProperty("user.home"));
     }
 
-    @BeforeEach
-    public void setup() {
-        System.setProperty("com.sun.aas.instanceRoot", "cafebabe");
-        System.setProperty("com.sun.aas.javaRoot", System.getProperty("user.home"));
+    @AfterAll
+    public static void reset() {
+        System.clearProperty(SystemPropertyConstants.INSTANCE_ROOT_PROPERTY);
+        System.clearProperty(SystemPropertyConstants.JAVA_ROOT_PROPERTY);
     }
 
 
     @Test
     public void testAppRoot() {
-        Domain domain = getHabitat().getService(Domain.class);
+        Domain domain = locator.getService(Domain.class);
         String appRoot = domain.getApplicationRoot();
         assertTrue(appRoot.startsWith("cafebabe"));
     }
 
     @Test
     public void testJavaRoot() {
-        if (System.getProperty("user.home").contains(File.separator)) {
-            JavaConfig config = getHabitat().getService(JavaConfig.class);
-            String javaRoot = config.getJavaHome();
-            assertThat(javaRoot, stringContainsInOrder(File.separator));
-        }
+        JavaConfig config = locator.getService(JavaConfig.class);
+        String javaRoot = config.getJavaHome();
+        assertThat(javaRoot, stringContainsInOrder(File.separator));
     }
 
 }

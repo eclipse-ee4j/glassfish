@@ -28,8 +28,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.AttributeChanges;
 import org.jvnet.hk2.config.ConfigBean;
@@ -49,38 +47,12 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class DirectCreationTest extends ConfigPersistence {
 
-    private final ServiceLocator locator = Utils.instance.getHabitat(this);
-
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return locator;
-    }
-
-
-    @Override
-    public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
-    }
-
-
     @Override
     public void doTest() throws Exception {
         AdminService service = locator.getService(AdminService.class);
         ConfigBean serviceBean = (ConfigBean) Dom.unwrap(service);
         Class<?>[] subTypes = ConfigSupport.getSubElementsTypes(serviceBean);
-        ConfigSupport support = getBaseServiceLocator().getService(ConfigSupport.class);
+        ConfigSupport support = locator.getService(ConfigSupport.class);
         assertNotNull(support, "ConfigSupport not found");
 
         for (Class<?> subType : subTypes) {

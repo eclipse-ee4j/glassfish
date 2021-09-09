@@ -24,8 +24,6 @@ import java.util.Map;
 
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
 import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.Dom;
@@ -42,32 +40,6 @@ import static org.hamcrest.Matchers.stringContainsInOrder;
  * Time: 4:23:31 PM
  */
 public class TransactionCallBackTest extends ConfigPersistence {
-
-    private final ServiceLocator locator = Utils.instance.getHabitat(this);
-
-    /**
-     * Returns the file name without the .xml extension to load the test configuration
-     * from. By default, it's the name of the TestClass.
-     *
-     * @return the configuration file name
-     */
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-
-    @Override
-    public ServiceLocator getBaseServiceLocator() {
-        return locator;
-    }
-
-
-    @Override
-    public ServiceLocator getHabitat() {
-        return getBaseServiceLocator();
-    }
-
 
     @Override
     public void doTest() throws TransactionFailure {

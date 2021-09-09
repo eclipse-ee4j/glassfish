@@ -1014,7 +1014,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo>Generating manifest for ${project.build.outputDirectory}/META-INF for
+                                <echo level="info">Generating manifest for ${project.build.outputDirectory}/META-INF for
                                     ${project.artifactId}</echo>
                                 <echo file="${basedir}/target/MANIFEST.MF">Manifest-Version: 1.0</echo>
                                 <copy toDir="${project.build.outputDirectory}/META-INF" overwrite="false">

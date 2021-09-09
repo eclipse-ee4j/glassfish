@@ -102,7 +102,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
             ZipEntry domEnt = templatezip.getEntry("config/domain.xml");
             if (domEnt == null) {
                 throw new RuntimeException(localStrings.getLocalString("DefaultConfigUpgrade.cannotGetDomainXmlTemplate",
-                        "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0)", templatefile.getAbsolutePath()));
+                        "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0}", templatefile.getAbsolutePath()));
             }
             template = templatezip.getInputStream(domEnt);
 
@@ -139,7 +139,7 @@ public class DefaultConfigUpgrade implements ConfigurationUpgrade, PostConstruct
             logger.log(Level.SEVERE, defaultConfigUpgradeFailure, ex);
         } catch (IOException ex) {
             throw new RuntimeException(localStrings.getLocalString("DefaultConfigUpgrade.cannotGetDomainXmlTemplate",
-                    "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0)", templatefile.getAbsolutePath()), ex);
+                    "DefaultConfigUpgrade failed. Cannot get default domain.xml from {0}", templatefile.getAbsolutePath()), ex);
         } finally {
             try {
                 if (parser != null) {

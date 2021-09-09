@@ -120,8 +120,8 @@
 
         <!-- TEST dependencies -->
         <dependency>
-            <groupId>org.glassfish.main.tests</groupId>
-            <artifactId>utils</artifactId>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>test-utils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>

@@ -30,9 +30,9 @@ import org.glassfish.config.support.GlassFishDocument;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.glassfish.tests.utils.DomainXml;
-import org.glassfish.tests.utils.HK2JUnit5Extension;
-import org.glassfish.tests.utils.TestDocument;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.glassfish.tests.utils.mock.TestDocument;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.jvnet.hk2.config.DomDocument;
 

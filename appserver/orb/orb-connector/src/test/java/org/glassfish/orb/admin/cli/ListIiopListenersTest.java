@@ -35,7 +35,7 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.IiopService;
 import org.glassfish.orb.admin.test.OrbJunitExtension;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -54,11 +54,15 @@ public class ListIiopListenersTest {
     @Inject
     private Logger logger;
     @Inject
+    private MockGenerator mockGenerator;
+
+    @Inject
     private IiopService iiopService;
-    private int origNum;
-    private ParameterMap parameters;
     @Inject
     private CommandRunner cr;
+
+    private int origNum;
+    private ParameterMap parameters;
     private AdminCommandContext context;
     private Subject adminSubject;
 
@@ -70,7 +74,7 @@ public class ListIiopListenersTest {
                 new PropsFileActionReporter());
         List<IiopListener> listenerList = iiopService.getIiopListener();
         origNum = listenerList.size();
-        adminSubject = Utils.createInternalAsadminSubject();
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     /**

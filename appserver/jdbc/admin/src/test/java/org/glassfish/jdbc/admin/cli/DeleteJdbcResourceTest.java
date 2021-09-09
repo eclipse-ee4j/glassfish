@@ -39,7 +39,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -59,22 +59,26 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(JdbcAdminJunit5Extension.class)
 public class DeleteJdbcResourceTest {
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
     @Inject
     private ServiceLocator habitat;
     @Inject
     private Logger logger;
-    private Resources resources;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+    @Inject
     private DeleteJdbcResource deleteCommand;
+
+    private Resources resources;
     private ParameterMap parameters = new ParameterMap();
     private AdminCommandContext context;
-    private CommandRunner cr;
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
         resources = habitat.<Domain>getService(Domain.class).getResources();
         assertNotNull(resources);
-        cr = habitat.getService(CommandRunner.class);
 
         // Create a JDBC Resource jdbc/foo for each test
         CreateJdbcResource createCommand = habitat.getService(CreateJdbcResource.class);
@@ -82,18 +86,17 @@ public class DeleteJdbcResourceTest {
 
         parameters.add("connectionpoolid", "DerbyPool");
         parameters.add("DEFAULT", "jdbc/foo");
-
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(DeleteJdbcResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
+        adminSubject = mockGenerator.createAsadminSubject();
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
         // Setup for delete-jdbc-resource
         parameters = new ParameterMap();
-        deleteCommand = habitat.getService(DeleteJdbcResource.class);
-        assertTrue(deleteCommand!=null);
+        assertNotNull(deleteCommand);
     }
 
     @AfterEach
@@ -101,7 +104,8 @@ public class DeleteJdbcResourceTest {
         // Cleanup any leftover jdbc/foo resource - could be success or failure depending on the test
         parameters = new ParameterMap();
         parameters.add("DEFAULT", "jdbc/foo");
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(deleteCommand);
     }
 
     /**
@@ -114,7 +118,8 @@ public class DeleteJdbcResourceTest {
         parameters.add("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(deleteCommand);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());

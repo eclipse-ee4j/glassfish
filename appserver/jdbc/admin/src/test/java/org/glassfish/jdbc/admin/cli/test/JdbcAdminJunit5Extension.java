@@ -18,12 +18,9 @@ package org.glassfish.jdbc.admin.cli.test;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
 
-import org.glassfish.tests.utils.DomainXml;
-import org.glassfish.tests.utils.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-
-import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
-import static org.glassfish.tests.utils.Utils.createMockDescriptor;
 
 
 /**
@@ -39,10 +36,9 @@ public class JdbcAdminJunit5Extension extends HK2JUnit5Extension {
         return super.getDomainXml(testClass);
     }
 
-
     @Override
-    public void beforeEach(ExtensionContext context) throws Exception {
-        super.beforeEach(context);
-        addOneDescriptor(getLocator(), createMockDescriptor(InstanceStateService.class));
+    public void postProcessTestInstance(final Object testInstance, final ExtensionContext context) throws Exception {
+        addMockDescriptor(InstanceStateService.class);
+        super.postProcessTestInstance(testInstance, context);
     }
 }

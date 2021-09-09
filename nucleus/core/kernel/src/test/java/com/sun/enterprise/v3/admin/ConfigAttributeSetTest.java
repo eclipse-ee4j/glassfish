@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.util.InstanceStateService;
 import com.sun.enterprise.v3.common.PlainTextActionReporter;
 
 import java.beans.PropertyChangeEvent;
@@ -31,8 +30,7 @@ import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
-import org.glassfish.security.services.api.authentication.AuthenticationService;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -43,8 +41,6 @@ import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import jakarta.inject.Inject;
 
-import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
-import static org.glassfish.tests.utils.Utils.createMockDescriptor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.arrayWithSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -60,12 +56,14 @@ public class ConfigAttributeSetTest implements ConfigListener {
 
     @Inject
     private ServiceLocator locator;
+    @Inject
+    private MockGenerator mockGenerator;
     private PropertyChangeEvent event;
+    private Subject adminSubject;
 
     @BeforeEach
     public void addMissingServices() {
-        addOneDescriptor(locator, createMockDescriptor(AuthenticationService.class));
-        addOneDescriptor(locator, createMockDescriptor(InstanceStateService.class));
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @Test
@@ -92,7 +90,6 @@ public class ConfigAttributeSetTest implements ConfigListener {
         ParameterMap parameters = new ParameterMap();
         parameters.set("DEFAULT",
             "configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.port=8090");
-        Subject adminSubject = Utils.createInternalAsadminSubject();
         // execute the set command.
         PlainTextActionReporter reporter = new PlainTextActionReporter();
         CommandInvocation invocation = runner.getCommandInvocation("set", reporter, adminSubject).parameters(parameters);

@@ -39,7 +39,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,25 +61,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(JdbcAdminJunit5Extension.class)
 public class CreateJdbcResourceTest {
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private Logger logger;
-    private Resources resources;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+    @Inject
     private CreateJdbcResource command;
+
+    private Resources resources;
     private ParameterMap parameters = new ParameterMap();
     private AdminCommandContext context;
-    private CommandRunner cr;
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
-        resources = habitat.<Domain>getService(Domain.class).getResources();
-        assertNotNull(resources);
-
-        // Get an instance of the CreateJdbcResource command
-        command = habitat.getService(CreateJdbcResource.class);
         assertNotNull(command);
+        resources = locator.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
 
         // Set the options and operand to pass to the command
         parameters.set("connectionpoolid", "DerbyPool");
@@ -91,7 +93,7 @@ public class CreateJdbcResourceTest {
                 LogDomains.getLogger(CreateJdbcResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
-        cr = habitat.getService(CommandRunner.class);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach
@@ -119,8 +121,6 @@ public class CreateJdbcResourceTest {
             return null;
         };
         ConfigSupport.apply(configCode, resources);
-
-        parameters = new ParameterMap();
     }
 
     /**
@@ -159,7 +159,7 @@ public class CreateJdbcResourceTest {
         logger.fine("msg: " + context.getActionReport().getMessage());
 
         // Check resource-ref created
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -246,7 +246,7 @@ public class CreateJdbcResourceTest {
         assertTrue(isCreated);
 
         //Try to create a duplicate resource dupRes. Get a new instance of the command.
-        CreateJdbcResource command2 = habitat.getService(CreateJdbcResource.class);
+        CreateJdbcResource command2 = locator.getService(CreateJdbcResource.class);
         cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command2);
 
         // Check the exit code is FAILURE

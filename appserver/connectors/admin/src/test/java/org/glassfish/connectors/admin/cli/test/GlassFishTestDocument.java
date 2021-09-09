@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
@@ -15,15 +15,14 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.resources.admin.cli.test;
+package org.glassfish.connectors.admin.cli.test;
 
-import javax.xml.stream.XMLStreamReader;
-
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.ConfigModel;
 import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.DomDocument;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  *
@@ -32,9 +31,9 @@ import org.jvnet.hk2.config.DomDocument;
  *
  * User: Jerome Dochez
  */
-public class TestDocument extends DomDocument<GlassFishConfigBean> {
+public class GlassFishTestDocument extends DomDocument<GlassFishConfigBean> {
 
-    public TestDocument(ServiceLocator habitat) {
+    public GlassFishTestDocument(ServiceLocator habitat) {
         super(habitat);
     }
 

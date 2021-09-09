@@ -17,11 +17,13 @@
 
 package org.glassfish.main.core.kernel.test;
 
+import com.sun.enterprise.admin.util.InstanceStateService;
 import com.sun.enterprise.v3.admin.ObjectInputStreamWithServiceLocator;
 
 import java.util.Set;
 
-import org.glassfish.tests.utils.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.junit.jupiter.api.extension.ExtensionContext;
 
 
 /**
@@ -34,6 +36,13 @@ public class KernelJUnitExtension extends HK2JUnit5Extension {
     @Override
     protected String getDomainXml(final Class<?> testClass) {
         return "DomainTest.xml";
+    }
+
+
+    @Override
+    public void postProcessTestInstance(final Object testInstance, final ExtensionContext context) throws Exception {
+        addMockDescriptor(InstanceStateService.class);
+        super.postProcessTestInstance(testInstance, context);
     }
 
 

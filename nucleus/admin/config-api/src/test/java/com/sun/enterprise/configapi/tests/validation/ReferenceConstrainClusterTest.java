@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.DomainXml;
+import org.glassfish.tests.utils.junit.DomainXml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBean;

@@ -18,7 +18,7 @@
 package org.glassfish.jdbc.config;
 
 import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
-import org.glassfish.tests.utils.DomainXml;
+import org.glassfish.tests.utils.junit.DomainXml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

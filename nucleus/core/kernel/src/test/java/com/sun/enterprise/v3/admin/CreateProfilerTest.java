@@ -17,7 +17,6 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.util.InstanceStateService;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Profiler;
@@ -37,8 +36,7 @@ import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
-import org.glassfish.security.services.api.authentication.AuthenticationService;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,7 +49,6 @@ import jakarta.inject.Inject;
 import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
 import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
-import static org.glassfish.tests.utils.Utils.createMockDescriptor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
 import static org.hamcrest.Matchers.hasSize;
@@ -71,9 +68,13 @@ public class CreateProfilerTest {
     private ServiceLocator locator;
     @Inject
     private Logger logger;
-
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
     private JavaConfig javaConfig;
+    @Inject
     private CommandRunnerImpl commandRunner;
+
     private CreateProfiler command;
     private AdminCommandContext context;
     private Subject adminSubject;
@@ -81,27 +82,20 @@ public class CreateProfilerTest {
 
     @BeforeEach
     public void init() {
-        assertEquals("CreateProfilerTestServiceLocator", locator.getName());
+        assertNotNull(javaConfig);
+        assertNotNull(commandRunner);
 
         final Config config = locator.getService(Config.class);
         assertNotNull(config, "config");
         addOneDescriptor(locator, createConstantDescriptor(config, DEFAULT_INSTANCE_NAME, Config.class));
-        addOneDescriptor(locator, createMockDescriptor(AuthenticationService.class));
-        addOneDescriptor(locator, createMockDescriptor(InstanceStateService.class));
-
-        javaConfig = locator.getService(JavaConfig.class);
-        assertNotNull(javaConfig);
-
-        adminSubject = Utils.createInternalAsadminSubject();
-        context = new AdminCommandContextImpl(
-            LogDomains.getLogger(CreateProfilerTest.class, LogDomains.ADMIN_LOGGER),
-            locator.<ActionReport>getService(PlainTextActionReporter.class));
-        commandRunner = locator.getService(CommandRunnerImpl.class);
-        assertNotNull(commandRunner);
 
         command = locator.getService(CreateProfiler.class);
         assertNotNull(command);
 
+        adminSubject = mockGenerator.createAsadminSubject();
+        context = new AdminCommandContextImpl(
+            LogDomains.getLogger(CreateProfilerTest.class, LogDomains.ADMIN_LOGGER),
+            locator.<ActionReport>getService(PlainTextActionReporter.class));
     }
 
 

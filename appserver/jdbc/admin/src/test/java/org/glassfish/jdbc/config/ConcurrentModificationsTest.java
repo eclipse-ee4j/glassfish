@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
-import org.glassfish.tests.utils.DomainXml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -40,7 +39,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(JdbcAdminJunit5Extension.class)
-@DomainXml("DomainTest.xml")
 public class ConcurrentModificationsTest {
 
     @Inject

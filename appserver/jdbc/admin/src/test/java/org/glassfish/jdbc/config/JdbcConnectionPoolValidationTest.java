@@ -21,8 +21,7 @@ import java.beans.PropertyVetoException;
 
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
-import org.glassfish.tests.utils.DomainXml;
-import org.junit.jupiter.api.BeforeEach;
+import org.glassfish.tests.utils.junit.DomainXml;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
@@ -30,6 +29,7 @@ import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.validation.ConstraintViolationException;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -47,12 +47,9 @@ public class JdbcConnectionPoolValidationTest {
     private static final String NAME = "test";
     @Inject
     private ServiceLocator locator;
+    @Inject
+    @Named(NAME)
     private JdbcConnectionPool pool;
-
-    @BeforeEach
-    public void setUp() {
-        pool = locator.getService(JdbcConnectionPool.class, NAME);
-    }
 
     @Test
     public void testBooleanDoesNotTakeInteger1() throws Exception {

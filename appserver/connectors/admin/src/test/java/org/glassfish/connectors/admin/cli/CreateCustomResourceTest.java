@@ -37,8 +37,10 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.connectors.admin.cli.test.ConnectorsAdminJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.resources.admin.cli.CreateCustomResource;
+import org.glassfish.resources.admin.cli.DeleteCustomResource;
 import org.glassfish.resources.config.CustomResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -55,34 +57,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CreateCustomResourceTest {
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private Logger logger;
-    private ParameterMap parameters;
-    private Resources resources;
-    private org.glassfish.resources.admin.cli.CreateCustomResource command;
-    private AdminCommandContext context;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CreateCustomResource command;
+    @Inject
     private CommandRunner cr;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Resources resources;
+    private AdminCommandContext context;
+    private Subject adminSubject;
 
 
     @BeforeEach
     public void setUp() {
-        parameters = new ParameterMap();
-        resources = habitat.<Domain>getService(Domain.class).getResources();
-        assertNotNull(resources);
-        command = habitat.getService(org.glassfish.resources.admin.cli.CreateCustomResource.class);
         assertNotNull(command);
+        resources = locator.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(CreateCustomResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        cr = habitat.getService(CommandRunner.class);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach
     public void tearDown() throws TransactionFailure {
-        org.glassfish.resources.admin.cli.DeleteCustomResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteCustomResource.class);
-        parameters = new ParameterMap();
+        DeleteCustomResource deleteCommand = locator.getService(DeleteCustomResource.class);
+        ParameterMap parameters = new ParameterMap();
         parameters.set("jndi_name", "sample_custom_resource");
         cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         parameters = new ParameterMap();
@@ -97,6 +100,7 @@ public class CreateCustomResourceTest {
      */
     @Test
     public void testExecuteSuccess() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "sample_custom_resource");
@@ -127,7 +131,7 @@ public class CreateCustomResourceTest {
         logger.fine("msg: " + context.getActionReport().getMessage());
 
         // Check resource-ref created
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -152,6 +156,7 @@ public class CreateCustomResourceTest {
      */
     @Test
     public void testExecuteFailDuplicateResource() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "dupRes");
@@ -177,7 +182,7 @@ public class CreateCustomResourceTest {
         assertTrue(isCreated);
 
         //Try to create a duplicate resource dupRes. Get a new instance of the command.
-        org.glassfish.resources.admin.cli.CreateCustomResource command2 = habitat.getService(org.glassfish.resources.admin.cli.CreateCustomResource.class);
+        CreateCustomResource command2 = locator.getService(CreateCustomResource.class);
         cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command2);
 
         // Check the exit code is FAILURE
@@ -205,6 +210,7 @@ public class CreateCustomResourceTest {
      */
     @Test
     public void testExecuteWithOptionalValuesSet() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("enabled", "false");
@@ -246,6 +252,7 @@ public class CreateCustomResourceTest {
      */
     @Test
     public void testExecuteFailInvalidResType() throws TransactionFailure {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "sample_custom_resource");
 

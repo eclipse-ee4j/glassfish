@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
@@ -15,31 +15,31 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.resources.mail.test;
+package org.glassfish.tests.utils.mock;
 
-import org.glassfish.config.support.GlassFishConfigBean;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigModel;
-import org.jvnet.hk2.config.Dom;
-import org.jvnet.hk2.config.DomDocument;
 import javax.xml.stream.XMLStreamReader;
 
-/**
- *
- * This document will create the appropriate ConfigBean implementation but will
- * not save the modified config tree.
- *
- * User: Jerome Dochez
- */
-public class TestDocument extends DomDocument<GlassFishConfigBean> {
+import org.glassfish.hk2.api.ServiceLocator;
+import org.jvnet.hk2.config.ConfigBean;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.DomDocument;
 
-    public TestDocument(ServiceLocator habitat) {
-        super(habitat);
+/**
+ * Trivial {@link DomDocument} usually representing domain.xml
+ */
+public class TestDocument extends DomDocument<ConfigBean> {
+
+    /**
+     * @param locator is used to access services and descriptors
+     */
+    public TestDocument(ServiceLocator locator) {
+        super(locator);
     }
 
+
     @Override
-    public Dom make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom, ConfigModel configModel) {
-        // by default, people get the translated view.
-        return new GlassFishConfigBean(habitat, this, dom, configModel, xmlStreamReader);
+    public ConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, ConfigBean dom,
+        ConfigModel configModel) {
+        return new ConfigBean(habitat, this, dom, configModel, xmlStreamReader);
     }
 }

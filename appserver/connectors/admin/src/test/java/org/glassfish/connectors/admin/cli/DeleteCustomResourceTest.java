@@ -38,8 +38,10 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.connectors.admin.cli.test.ConnectorsAdminJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.resources.admin.cli.CreateCustomResource;
+import org.glassfish.resources.admin.cli.DeleteCustomResource;
 import org.glassfish.resources.config.CustomResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -60,20 +62,24 @@ public class DeleteCustomResourceTest {
     private ServiceLocator habitat;
     @Inject
     private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    private CommandRunner cr;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
         resources = habitat.<Domain>getService(Domain.class).getResources();
         parameters = new ParameterMap();
-        cr = habitat.getService(CommandRunner.class);
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(DeleteCustomResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach
@@ -95,7 +101,6 @@ public class DeleteCustomResourceTest {
             return null;
         };
         ConfigSupport.apply(configCode, resources);
-        parameters = new ParameterMap();
     }
 
     /**
@@ -104,7 +109,7 @@ public class DeleteCustomResourceTest {
      */
     @Test
     public void testExecuteSuccessDefaultTarget() {
-        org.glassfish.resources.admin.cli.CreateCustomResource createCommand = habitat.getService(org.glassfish.resources.admin.cli.CreateCustomResource.class);
+        CreateCustomResource createCommand = habitat.getService(CreateCustomResource.class);
         assertNotNull(createCommand);
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
@@ -113,7 +118,7 @@ public class DeleteCustomResourceTest {
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
         parameters = new ParameterMap();
-        org.glassfish.resources.admin.cli.DeleteCustomResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteCustomResource.class);
+        DeleteCustomResource deleteCommand = habitat.getService(DeleteCustomResource.class);
         assertTrue(deleteCommand != null);
         parameters.set("jndi_name", "sample_custom_resource");
         cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
@@ -153,7 +158,7 @@ public class DeleteCustomResourceTest {
      */
     @Test
     public void testExecuteFailDoesNotExist() {
-        org.glassfish.resources.admin.cli.DeleteCustomResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteCustomResource.class);
+        DeleteCustomResource deleteCommand = habitat.getService(DeleteCustomResource.class);
         assertNotNull(deleteCommand);
         parameters.set("jndi_name", "doesnotexist");
         cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);

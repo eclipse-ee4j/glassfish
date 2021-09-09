@@ -36,7 +36,7 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.tests.utils.Utils.setStaticField;
+import static org.glassfish.tests.utils.ReflectionUtils.setStaticField;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 

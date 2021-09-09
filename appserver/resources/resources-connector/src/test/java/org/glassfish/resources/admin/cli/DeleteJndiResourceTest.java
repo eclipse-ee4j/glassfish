@@ -38,7 +38,7 @@ import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.admin.cli.test.ResourcesJunit5Extension;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -58,22 +58,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(ResourcesJunit5Extension.class)
 public class DeleteJndiResourceTest {
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    private CommandRunner cr;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
-        resources = habitat.<Domain>getService(Domain.class).getResources();
+        resources = locator.<Domain>getService(Domain.class).getResources();
         parameters = new ParameterMap();
-        cr = habitat.getService(CommandRunner.class);
+        cr = locator.getService(CommandRunner.class);
         context = new AdminCommandContextImpl(
             LogDomains.getLogger(DeleteJndiResourceTest.class, LogDomains.ADMIN_LOGGER), new PropsFileActionReporter());
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach
@@ -111,13 +116,13 @@ public class DeleteJndiResourceTest {
         parameters.set("jndilookupname", "sample_jndi");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "sample_jndi_resource");
-        CreateJndiResource createCommand = habitat.getService(CreateJndiResource.class);
+        CreateJndiResource createCommand = locator.getService(CreateJndiResource.class);
         cr.getCommandInvocation("create-jndi-resource", context.getActionReport(), adminSubject)
             .parameters(parameters).execute(createCommand);
         assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
         parameters = new ParameterMap();
         parameters.set("jndi_name", "sample_jndi_resource");
-        DeleteJndiResource deleteCommand = habitat.getService(DeleteJndiResource.class);
+        DeleteJndiResource deleteCommand = locator.getService(DeleteJndiResource.class);
         cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject)
             .parameters(parameters).execute(deleteCommand);
         assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
@@ -133,7 +138,7 @@ public class DeleteJndiResourceTest {
             }
         }
         assertTrue(isDeleted);
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefDeleted = true;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -155,7 +160,7 @@ public class DeleteJndiResourceTest {
     @Test
     public void testExecuteFailDoesNotExist() {
         parameters.set("jndi_name", "doesnotexist");
-        DeleteJndiResource deleteCommand = habitat.getService(DeleteJndiResource.class);
+        DeleteJndiResource deleteCommand = locator.getService(DeleteJndiResource.class);
         cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject)
             .parameters(parameters).execute(deleteCommand);
         assertEquals(FAILURE, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());

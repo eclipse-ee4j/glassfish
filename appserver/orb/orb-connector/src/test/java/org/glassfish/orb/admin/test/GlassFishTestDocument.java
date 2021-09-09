@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.connectors.admin.cli.test;
+package org.glassfish.orb.admin.test;
 
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.Dom;
@@ -31,9 +31,9 @@ import javax.xml.stream.XMLStreamReader;
  *
  * User: Jerome Dochez
  */
-public class TestDocument extends DomDocument<GlassFishConfigBean> {
+public class GlassFishTestDocument extends DomDocument<GlassFishConfigBean> {
 
-    public TestDocument(ServiceLocator habitat) {
+    public GlassFishTestDocument(ServiceLocator habitat) {
         super(habitat);
     }
 

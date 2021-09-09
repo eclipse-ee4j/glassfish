@@ -39,7 +39,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.mail.config.MailResource;
 import org.glassfish.resources.mail.test.MailJunit5Extension;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -57,23 +57,27 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(MailJunit5Extension.class)
 public class DeleteMailResourceTest {
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    private CommandRunner cr;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
         parameters = new ParameterMap();
-        cr = habitat.getService(CommandRunner.class);
-        resources = habitat.<Domain>getService(Domain.class).getResources();
+        resources = locator.<Domain>getService(Domain.class).getResources();
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(DeleteMailResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach
@@ -110,14 +114,14 @@ public class DeleteMailResourceTest {
         parameters.set("mailuser", "test");
         parameters.set("fromaddress", "test@sun.com");
         parameters.set("jndi_name", "mail/MyMailSession");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource createCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
+        org.glassfish.resources.mail.admin.cli.CreateMailResource createCommand = locator.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
         assertTrue(createCommand != null);
         cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
         parameters = new ParameterMap();
         parameters.set("jndi_name", "mail/MyMailSession");
-        org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
+        org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = locator.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
         assertTrue(deleteCommand != null);
         cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -135,7 +139,7 @@ public class DeleteMailResourceTest {
         assertTrue(isDeleted);
         logger.fine("msg: " + context.getActionReport().getMessage());
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefDeleted = true;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -157,7 +161,7 @@ public class DeleteMailResourceTest {
     @Test
     public void testExecuteFailDoesNotExist() {
         parameters.set("jndi_name", "doesnotexist");
-        org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
+        org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = locator.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
         cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         logger.fine("msg: " + context.getActionReport().getMessage());

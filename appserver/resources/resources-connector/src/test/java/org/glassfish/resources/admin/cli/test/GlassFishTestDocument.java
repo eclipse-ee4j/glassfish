@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
@@ -15,31 +15,32 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.utils;
+package org.glassfish.resources.admin.cli.test;
 
 import javax.xml.stream.XMLStreamReader;
 
+import org.glassfish.config.support.GlassFishConfigBean;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigBean;
 import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
 
 /**
- * Trivial {@link DomDocument} usually representing domain.xml
+ *
+ * This document will create the appropriate ConfigBean implementation but will
+ * not save the modified config tree.
+ *
+ * User: Jerome Dochez
  */
-public class TestDocument extends DomDocument<ConfigBean> {
+public class GlassFishTestDocument extends DomDocument<GlassFishConfigBean> {
 
-    /**
-     * @param locator is used access services and descriptors
-     */
-    public TestDocument(ServiceLocator locator) {
-        super(locator);
+    public GlassFishTestDocument(ServiceLocator habitat) {
+        super(habitat);
     }
 
-
     @Override
-    public ConfigBean make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, ConfigBean dom,
-        ConfigModel configModel) {
-        return new ConfigBean(habitat, this, dom, configModel, xmlStreamReader);
+    public Dom make(final ServiceLocator habitat, XMLStreamReader xmlStreamReader, GlassFishConfigBean dom, ConfigModel configModel) {
+        // by default, people get the translated view.
+        return new GlassFishConfigBean(habitat, this, dom, configModel, xmlStreamReader);
     }
 }

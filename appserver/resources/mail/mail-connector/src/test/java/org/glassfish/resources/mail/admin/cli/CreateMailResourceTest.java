@@ -39,7 +39,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.mail.config.MailResource;
 import org.glassfish.resources.mail.test.MailJunit5Extension;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -56,30 +56,34 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class CreateMailResourceTest {
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
     @Inject
     private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    @Inject
-    private CommandRunner cr;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
-        resources = habitat.<Domain>getService(Domain.class).getResources();
+        resources = locator.<Domain>getService(Domain.class).getResources();
         assertNotNull(resources);
         parameters = new ParameterMap();
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(CreateMailResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
         assertNotNull(cr);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach
     public void tearDown() throws TransactionFailure {
-        org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
+        DeleteMailResource deleteCommand = locator.getService(DeleteMailResource.class);
         parameters = new ParameterMap();
         parameters.set("jndi_name", "mail/MyMailSession");
 
@@ -100,8 +104,8 @@ public class CreateMailResourceTest {
         parameters.set("mailuser", "test");
         parameters.set("fromaddress", "test@sun.com");
         parameters.set("jndi_name", "mail/MyMailSession");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        assertTrue(command != null);
+        CreateMailResource command = locator.getService(CreateMailResource.class);
+        assertNotNull(command);
         cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isCreated = false;
@@ -126,7 +130,7 @@ public class CreateMailResourceTest {
         }
         assertTrue(isCreated);
         logger.fine("msg: " + context.getActionReport().getMessage());
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -155,8 +159,8 @@ public class CreateMailResourceTest {
         parameters.set("mailuser", "test");
         parameters.set("fromaddress", "test@sun.com");
         parameters.set("jndi_name", "dupRes");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command1 = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        assertTrue(command1 != null);
+        CreateMailResource command1 = locator.getService(CreateMailResource.class);
+        assertNotNull(command1);
         cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command1);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isCreated = false;
@@ -172,7 +176,7 @@ public class CreateMailResourceTest {
         }
         assertTrue(isCreated);
 
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command2 = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
+        CreateMailResource command2 = locator.getService(CreateMailResource.class);
         cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command2);
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         int numDupRes = 0;
@@ -210,8 +214,8 @@ public class CreateMailResourceTest {
         parameters.set("transprotocol", "lmtp");
         parameters.set("transprotocolclass", "com.sun.mail.lmtp.LMTPTransport");
         parameters.set("jndi_name", "mail/MyMailSession");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        assertTrue(command != null);
+        CreateMailResource command = locator.getService(CreateMailResource.class);
+        assertNotNull(command);
         cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isCreated = false;

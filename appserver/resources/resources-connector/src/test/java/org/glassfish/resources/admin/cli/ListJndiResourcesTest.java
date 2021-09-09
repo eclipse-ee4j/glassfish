@@ -36,7 +36,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.admin.cli.test.ResourcesJunit5Extension;
 import org.glassfish.resources.config.ExternalJndiResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -52,26 +52,31 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ListJndiResourcesTest {
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
+    @Inject
+    private CommandRunner cr;
+    @Inject
+    private MockGenerator mockGenerator;
+
     private int origNum;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    private CommandRunner cr;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Subject adminSubject;
 
 
     @BeforeEach
     public void setUp() {
-        cr = habitat.getService(CommandRunner.class);
+        cr = locator.getService(CommandRunner.class);
         context = new AdminCommandContextImpl(
             LogDomains.getLogger(ListJndiResourcesTest.class, LogDomains.ADMIN_LOGGER), new PropsFileActionReporter());
         parameters = new ParameterMap();
-        Resources resources = habitat.<Domain>getService(Domain.class).getResources();
+        Resources resources = locator.<Domain>getService(Domain.class).getResources();
         for (Resource resource : resources.getResources()) {
             if (resource instanceof ExternalJndiResource) {
                 origNum = origNum + 1;
             }
         }
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
 
@@ -82,7 +87,7 @@ public class ListJndiResourcesTest {
 
     @Test
     public void testExecuteSuccessListOriginal() {
-        ListJndiResources listCommand = habitat.getService(ListJndiResources.class);
+        ListJndiResources listCommand = locator.getService(ListJndiResources.class);
         cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(parameters)
             .execute(listCommand);
         List<ActionReport.MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
@@ -101,7 +106,7 @@ public class ListJndiResourcesTest {
     public void testExecuteSuccessListResource() {
         createJndiResource();
         parameters = new ParameterMap();
-        ListJndiResources listCommand = habitat.getService(ListJndiResources.class);
+        ListJndiResources listCommand = locator.getService(ListJndiResources.class);
         cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(parameters)
             .execute(listCommand);
         List<ActionReport.MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
@@ -123,7 +128,7 @@ public class ListJndiResourcesTest {
         parameters.set("jndilookupname", "sample_jndi");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "resource");
-        CreateJndiResource createCommand = habitat.getService(CreateJndiResource.class);
+        CreateJndiResource createCommand = locator.getService(CreateJndiResource.class);
         cr.getCommandInvocation("create-jndi-resource", context.getActionReport(), adminSubject).parameters(parameters)
             .execute(createCommand);
         assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
@@ -132,7 +137,7 @@ public class ListJndiResourcesTest {
     private void deleteJndiResource() {
         parameters = new ParameterMap();
         parameters.set("jndi_name", "resource");
-        DeleteJndiResource deleteCommand = habitat.getService(DeleteJndiResource.class);
+        DeleteJndiResource deleteCommand = locator.getService(DeleteJndiResource.class);
         cr.getCommandInvocation("delete-jndi-resource", context.getActionReport(), adminSubject).parameters(parameters)
             .execute(deleteCommand);
         assertEquals(SUCCESS, context.getActionReport().getActionExitCode(), context.getActionReport().getMessage());
@@ -149,7 +154,7 @@ public class ListJndiResourcesTest {
         createJndiResource();
 
         parameters = new ParameterMap();
-        ListJndiResources listCommand = habitat.getService(ListJndiResources.class);
+        ListJndiResources listCommand = locator.getService(ListJndiResources.class);
         cr.getCommandInvocation("list-jndi-resources", context.getActionReport(), adminSubject).parameters(parameters)
             .execute(listCommand);
 
@@ -160,7 +165,7 @@ public class ListJndiResourcesTest {
         deleteJndiResource();
 
         ParameterMap params = new ParameterMap();
-        listCommand = habitat.getService(ListJndiResources.class);
+        listCommand = locator.getService(ListJndiResources.class);
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(ListJndiResourcesTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());

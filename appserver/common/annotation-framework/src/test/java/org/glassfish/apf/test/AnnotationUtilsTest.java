@@ -25,7 +25,7 @@ import org.glassfish.apf.test.example.HandlerForClassA;
 import org.glassfish.apf.test.example.HandlerForClassB;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.HK2JUnit5Extension;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 

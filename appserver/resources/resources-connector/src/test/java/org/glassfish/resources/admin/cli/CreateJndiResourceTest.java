@@ -39,7 +39,7 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.resources.admin.cli.test.ResourcesJunit5Extension;
 import org.glassfish.resources.config.ExternalJndiResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -62,21 +62,25 @@ public class CreateJndiResourceTest {
     private ServiceLocator habitat;
     @Inject
     private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+    @Inject
+    private Server server;
+
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    private CommandRunner cr;
-    private Server server;
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
+    private Subject adminSubject;
 
     @BeforeEach
     public void setUp() {
         resources = habitat.<Domain>getService(Domain.class).getResources();
-        server = habitat.getService(Server.class);
         parameters = new ParameterMap();
         context = new AdminCommandContextImpl(
             LogDomains.getLogger(CreateJndiResourceTest.class, LogDomains.ADMIN_LOGGER), new PropsFileActionReporter());
-        cr = habitat.getService(CommandRunner.class);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @AfterEach

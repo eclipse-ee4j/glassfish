@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.utils;
+package org.glassfish.tests.utils.junit;
 
 import com.sun.enterprise.glassfish.bootstrap.Constants;
 import com.sun.enterprise.module.bootstrap.StartupContext;
@@ -51,6 +51,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.utilities.DescriptorImpl;
 import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
 import org.glassfish.server.ServerEnvironmentImpl;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.glassfish.tests.utils.mock.TestDocument;
 import org.junit.jupiter.api.extension.AfterAllCallback;
 import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.BeforeAllCallback;
@@ -66,6 +68,7 @@ import org.objectweb.asm.ClassReader;
 
 import static java.util.Objects.requireNonNull;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneConstant;
+import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
 import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.createAndPopulateServiceLocator;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -94,8 +97,12 @@ public class HK2JUnit5Extension
     private static final String DOT_CLASS = ".class";
     private static final String START_TIME_METHOD = "start time method";
 
+    private MockGenerator mockGenerator;
     private ServiceLocator locator;
     private DynamicConfiguration config;
+    private StartupContext startupContext;
+    private StaticModulesRegistry modulesRegistry;
+
     private Namespace namespaceMethod;
 
 
@@ -104,7 +111,14 @@ public class HK2JUnit5Extension
         final Class<?> testClass = context.getRequiredTestClass();
         final ClassLoader loader = getClassLoader(context);
 
+        mockGenerator = new MockGenerator();
+        final Properties startupContextProperties = getStartupContextProperties(context);
+        LOG.log(Level.CONFIG, "startupContextProperties set to {0}", startupContextProperties);
+        startupContext = new StartupContext(startupContextProperties);
+        modulesRegistry = new StaticModulesRegistry(getClassLoader(context), startupContext);
+        // note: locator created from the registry would not support transactions.
         locator = createLocator(context);
+
         addConstantServices(context);
 
         final String domainXml = getDomainXml(testClass);
@@ -163,12 +177,18 @@ public class HK2JUnit5Extension
 
     @Override
     public void afterAll(final ExtensionContext context) throws Exception {
+        if (modulesRegistry != null) {
+            modulesRegistry.shutdown();
+        }
         if (locator != null) {
             locator.shutdown();
         }
     }
 
 
+    /**
+     * @return locator with a name set by {@link #getLocatorName(ExtensionContext)}
+     */
     protected ServiceLocator getLocator() {
         return locator;
     }
@@ -217,6 +237,7 @@ public class HK2JUnit5Extension
      * Uses {@link ServiceLocatorUtilities#addOneConstant(ServiceLocator, Object)} calls to set
      * some useful implicit services:
      * <li><code>@Inject {@link Logger}</code> - named after the test.
+     * <li><code>@Inject {@link MockGenerator}</code>
      * <li><code>@Inject {@link StartupContext}</code> - install root and instance root are set
      * to the root of test classpath; see {@link #getStartupContextProperties(ExtensionContext)}.
      * <li><code>@Inject {@link StaticModulesRegistry}</code>
@@ -224,12 +245,9 @@ public class HK2JUnit5Extension
      */
     protected void addConstantServices(final ExtensionContext context) {
         addOneConstant(locator, Logger.getLogger(context.getRequiredTestClass().getName()));
-
-        final Properties startupContextProperties = getStartupContextProperties(context);
-        LOG.log(Level.FINE, "startupContextProperties set to {0}", startupContextProperties);
-        final StartupContext startupContext = new StartupContext(startupContextProperties);
+        addOneConstant(locator, mockGenerator);
         addOneConstant(locator, startupContext);
-        addOneConstant(locator, new StaticModulesRegistry(getClassLoader(context), startupContext));
+        addOneConstant(locator, modulesRegistry);
         String installRoot = startupContext.getArguments().getProperty(Constants.INSTALL_ROOT_PROP_NAME);
         if (installRoot == null) {
             addOneConstant(locator, new ServerEnvironmentImpl());
@@ -309,6 +327,18 @@ public class HK2JUnit5Extension
             paths.add(path);
         }
         return paths;
+    }
+
+
+    /**
+     * Creates a mock for the interface.
+     * All it's methods will throw {@link UnsupportedOperationException}.
+     * The service then can be injected in cases when it is required as a dependency, but then unused.
+     *
+     * @param iface
+     */
+    protected void addMockDescriptor(final Class<?> iface) {
+        addOneDescriptor(locator, mockGenerator.createMockDescriptor(iface));
     }
 
 

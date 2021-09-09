@@ -17,24 +17,19 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.admin.util.InstanceStateService;
-import com.sun.enterprise.config.serverbeans.Domain;
-
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.ActionReport.ExitCode;
 import org.glassfish.api.admin.CommandRunner.CommandInvocation;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.internal.api.InternalSystemAdministrator;
 import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
-import org.glassfish.security.services.api.authorization.AuthorizationService;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import jakarta.inject.Inject;
 
-import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
-import static org.glassfish.tests.utils.Utils.createMockDescriptor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -53,6 +48,8 @@ public class CommandRunnerImplServiceTest {
 
     @Inject
     private ServiceLocator locator;
+    @Inject
+    private MockGenerator mockGenerator;
 
     private CommandRunnerImpl commandRunner;
     private InternalSystemAdministrator sysAdmin;
@@ -60,10 +57,6 @@ public class CommandRunnerImplServiceTest {
 
     @BeforeEach
     public void init() {
-        addOneDescriptor(locator, createMockDescriptor(Domain.class));
-        addOneDescriptor(locator, createMockDescriptor(AuthorizationService.class));
-        addOneDescriptor(locator, createMockDescriptor(InstanceStateService.class));
-
         commandRunner = locator.getService(CommandRunnerImpl.class);
         sysAdmin = locator.getService(InternalSystemAdministrator.class);
     }

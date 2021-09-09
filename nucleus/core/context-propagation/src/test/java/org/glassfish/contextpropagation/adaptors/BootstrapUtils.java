@@ -31,7 +31,7 @@ import org.glassfish.contextpropagation.bootstrap.ContextBootstrap;
 import org.glassfish.contextpropagation.internal.Utils.ContextMapAdditionalAccessors;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
 import org.glassfish.contextpropagation.wireadapters.WireAdapter;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.ReflectionUtils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
@@ -98,7 +98,7 @@ public class BootstrapUtils {
 
     public static void reset() {
         try {
-            Utils.setStaticField(ContextBootstrap.class, "isConfigured", false);
+            ReflectionUtils.setStaticField(ContextBootstrap.class, "isConfigured", false);
             ContextMapHelper.getScopeAwareContextMap().get("true");
             fail("Should get IllegalStateException");
         } catch (IllegalStateException e) {

@@ -15,7 +15,7 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-package org.glassfish.tests.utils;
+package org.glassfish.tests.utils.junit;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;

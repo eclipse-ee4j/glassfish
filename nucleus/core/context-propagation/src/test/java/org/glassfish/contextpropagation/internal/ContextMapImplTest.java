@@ -38,8 +38,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.glassfish.tests.utils.Utils.getStaticField;
-import static org.glassfish.tests.utils.Utils.setStaticField;
+import static org.glassfish.tests.utils.ReflectionUtils.getStaticField;
+import static org.glassfish.tests.utils.ReflectionUtils.setStaticField;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;

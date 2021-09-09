@@ -36,12 +36,13 @@ import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.mock.MockGenerator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import jakarta.inject.Inject;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -52,32 +53,35 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @ExtendWith(JdbcAdminJunit5Extension.class)
 public class ListJdbcResourcesTest {
-    private final Subject adminSubject = Utils.createInternalAsadminSubject();
     @Inject
     private ServiceLocator habitat;
     @Inject
     private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
 
     private Resources resources;
-    private int origNum = 0;
+    private int origNum;
     private ParameterMap parameters;
     private CreateJdbcResource createCommand;
     private DeleteJdbcResource deleteCommand;
     private ListJdbcResources listCommand;
     private AdminCommandContext context;
-    private CommandRunner cr;
+    private Subject adminSubject;
 
 
     @BeforeEach
     public void setUp() {
         parameters = new ParameterMap();
         resources = habitat.<Domain>getService(Domain.class).getResources();
-        cr = habitat.getService(CommandRunner.class);
         for (Resource resource : resources.getResources()) {
             if (resource instanceof JdbcResource) {
                 origNum = origNum + 1;
             }
         }
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     /**

@@ -18,11 +18,8 @@ package org.glassfish.resources.mail.test;
 
 import com.sun.enterprise.admin.util.InstanceStateService;
 
-import org.glassfish.tests.utils.HK2JUnit5Extension;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
 import org.junit.jupiter.api.extension.ExtensionContext;
-
-import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
 
 
 /**
@@ -37,14 +34,14 @@ public class MailJunit5Extension extends HK2JUnit5Extension {
 
 
     @Override
-    protected Class<TestDocument> getDomainXmlDomClass(Class<?> testClass) {
-        return TestDocument.class;
+    protected Class<GlassFishTestDocument> getDomainXmlDomClass(Class<?> testClass) {
+        return GlassFishTestDocument.class;
     }
 
 
     @Override
     public void postProcessTestInstance(final Object testInstance, ExtensionContext context) throws Exception {
-        addOneDescriptor(getLocator(), Utils.createMockDescriptor(InstanceStateService.class));
+        addMockDescriptor(InstanceStateService.class);
         super.postProcessTestInstance(testInstance, context);
     }
 }

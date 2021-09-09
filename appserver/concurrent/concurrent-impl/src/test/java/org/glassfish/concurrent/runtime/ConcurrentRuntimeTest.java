@@ -27,13 +27,13 @@ import org.glassfish.enterprise.concurrent.ManagedExecutorServiceImpl;
 import org.glassfish.enterprise.concurrent.ManagedThreadFactoryImpl;
 import org.glassfish.enterprise.concurrent.internal.ManagedThreadPoolExecutor;
 import org.glassfish.resourcebase.resources.api.ResourceInfo;
-import org.glassfish.tests.utils.Utils;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.glassfish.tests.utils.ReflectionUtils.getField;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -63,10 +63,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertTrue((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertTrue((Boolean) getField(contextSetupProvider, "security"));
+        assertTrue((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -81,10 +81,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertTrue((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertTrue((Boolean) getField(contextSetupProvider, "security"));
+        assertTrue((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -99,10 +99,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertTrue((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertTrue((Boolean) getField(contextSetupProvider, "security"));
+        assertTrue((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -117,10 +117,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertFalse((Boolean) getField(contextSetupProvider, "classloading"));
+        assertFalse((Boolean) getField(contextSetupProvider, "naming"));
+        assertFalse((Boolean) getField(contextSetupProvider, "security"));
+        assertFalse((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -135,10 +135,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertFalse((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertFalse((Boolean) getField(contextSetupProvider, "security"));
+        assertTrue((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -153,10 +153,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertTrue((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertTrue((Boolean) getField(contextSetupProvider, "security"));
+        assertTrue((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -171,10 +171,10 @@ public class ConcurrentRuntimeTest {
         ResourceInfo resource = new ResourceInfo("test");
         ContextServiceImpl contextService = concurrentRuntime.getContextService(resource, contextServiceConfig);
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertFalse((Boolean) getField(contextSetupProvider, "classloading"));
+        assertFalse((Boolean) getField(contextSetupProvider, "naming"));
+        assertFalse((Boolean) getField(contextSetupProvider, "security"));
+        assertFalse((Boolean) getField(contextSetupProvider, "workArea"));
     }
 
     @Test
@@ -191,14 +191,14 @@ public class ConcurrentRuntimeTest {
 
         ResourceInfo resource = new ResourceInfo("test");
         ManagedThreadFactoryImpl managedThreadFactory = concurrentRuntime.getManagedThreadFactory(resource, managedThreadFactoryConfig);
-        ContextServiceImpl contextService = (ContextServiceImpl) Utils.getField(managedThreadFactory, "contextService");
+        ContextServiceImpl contextService = (ContextServiceImpl) getField(managedThreadFactory, "contextService");
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) contextService.getContextSetupProvider();
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertTrue((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertTrue((Boolean) getField(contextSetupProvider, "security"));
+        assertFalse((Boolean) getField(contextSetupProvider, "workArea"));
 
-        int threadPriority = (Integer)Utils.getField(managedThreadFactory, "priority");
+        int threadPriority = (Integer)getField(managedThreadFactory, "priority");
         assertEquals(THREAD_PRIORITY, threadPriority);
     }
 
@@ -236,21 +236,21 @@ public class ConcurrentRuntimeTest {
 
         assertEquals(HUNG_AFTER_SECONDS * 1000, managedThreadFactory.getHungTaskThreshold());
 
-        ManagedThreadPoolExecutor executor = (ManagedThreadPoolExecutor) Utils.getField(mes, "threadPoolExecutor");
+        ManagedThreadPoolExecutor executor = (ManagedThreadPoolExecutor) getField(mes, "threadPoolExecutor");
         assertEquals(CORE_POOL_SIZE, executor.getCorePoolSize());
         assertEquals(KEEP_ALIVE_SECONDS, executor.getKeepAliveTime(TimeUnit.SECONDS));
         assertEquals(MAXIMUM_POOL_SIZE, executor.getMaximumPoolSize());
 
-        long threadLifeTime = (Long)Utils.getField(executor, "threadLifeTime");
+        long threadLifeTime = (Long)getField(executor, "threadLifeTime");
         assertEquals(THREAD_LIFE_TIME_SECONDS, threadLifeTime);
 
         ContextSetupProviderImpl contextSetupProvider = (ContextSetupProviderImpl) mes.getContextSetupProvider();
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "classloading"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "naming"));
-        assertTrue((Boolean) Utils.getField(contextSetupProvider, "security"));
-        assertFalse((Boolean) Utils.getField(contextSetupProvider, "workArea"));
+        assertTrue((Boolean) getField(contextSetupProvider, "classloading"));
+        assertTrue((Boolean) getField(contextSetupProvider, "naming"));
+        assertTrue((Boolean) getField(contextSetupProvider, "security"));
+        assertFalse((Boolean) getField(contextSetupProvider, "workArea"));
 
-        int threadPriority = (Integer)Utils.getField(managedThreadFactory, "priority");
+        int threadPriority = (Integer)getField(managedThreadFactory, "priority");
         assertEquals(THREAD_PRIORITY, threadPriority);
     }
 }

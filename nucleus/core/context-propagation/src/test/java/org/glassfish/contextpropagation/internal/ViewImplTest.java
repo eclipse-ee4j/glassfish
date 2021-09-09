@@ -21,7 +21,7 @@ import org.glassfish.contextpropagation.PropagationMode;
 import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
 import org.glassfish.contextpropagation.internal.Entry.ContextType;
 import org.glassfish.contextpropagation.wireadapters.glassfish.DefaultWireAdapter;
-import org.glassfish.tests.utils.Utils;
+import org.glassfish.tests.utils.ReflectionUtils;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -37,7 +37,7 @@ public class ViewImplTest {
         BootstrapUtils.bootstrap(new DefaultWireAdapter());
         view = new ViewImpl("prefix");
         sm = new SimpleMap();
-        Utils.setField(view, "sMap", sm);
+        ReflectionUtils.setField(view, "sMap", sm);
         sm.put("prefix.removeMe",
             new Entry("removeMe", PropagationMode.defaultSet(), ContextType.STRING).init(true, true));
         sm.put("prefix.getMe", new Entry("getMe", PropagationMode.defaultSet(), ContextType.STRING).init(true, true));

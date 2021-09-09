@@ -18,19 +18,20 @@ package org.glassfish.admingui.handlers;
 
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class WoodstockHandlerTest {
-  @Test
-  public void testMessageForNullName() {
-    var actual = WoodstockHandler.prepareFileNotDeletedMessage(null);
 
-    assert "file Couldn't be found at null, proceeding execution without deletion.".equals(actual) : actual;
-  }
+    @Test
+    public void testMessageForNullName() {
+        assertNotNull(WoodstockHandler.prepareFileNotDeletedMessage(null));
+    }
 
-  @Test
-  public void testMessageForNonNullName() {
-    var actual = WoodstockHandler.prepareFileNotDeletedMessage("abcd");
 
-    assert "file Couldn't be found at abcd, proceeding execution without deletion.".equals(actual) : actual;
-  }
+    @Test
+    public void testMessageForNonNullName() {
+        var actual = WoodstockHandler.prepareFileNotDeletedMessage("abcd");
+        assertEquals("file Couldn't be found at abcd, proceeding execution without deletion.", actual);
+    }
 }
-

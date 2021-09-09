@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -14,45 +15,28 @@
  * SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
  */
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
 package com.sun.enterprise.configapi.tests.dvt;
 
 import com.sun.enterprise.config.serverbeans.AccessLog;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author kedar
  */
-public class AccessLogAllDefaultsTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("AccessLogAllDefaultsTest.xml")
+public class AccessLogAllDefaultsTest {
 
-    private AccessLog al = null;
+    @Inject
+    private AccessLog al;
 
-    public AccessLogAllDefaultsTest() {
-    }
-
-    @Override
-    public String getFileName() {
-        return ("AccessLogAllDefaultsTest"); //this is the xml to load
-    }
-
-    @Before
-    public void setUp() {
-        al = super.getHabitat().getService(AccessLog.class);
-    }
-
-    @After
-    public void tearDown() {
-        al = null;
-    }
     @Test
     public void testAllDefaults() {
         assertEquals("true", al.getRotationEnabled());

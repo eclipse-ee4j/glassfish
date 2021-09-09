@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,7 +18,6 @@
 package com.sun.enterprise.admin.util.cache;
 
 /**
- *
  * @author mmares
  */
 public class AdminCacheMemStoreTest extends AdminCacheTstBase {
@@ -25,5 +25,4 @@ public class AdminCacheMemStoreTest extends AdminCacheTstBase {
     public AdminCacheMemStoreTest() {
         super(AdminCacheMemStore.getInstance());
     }
-
 }

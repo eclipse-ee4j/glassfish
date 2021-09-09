@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,8 +18,16 @@
 package org.glassfish.api.admin.progress;
 
 import org.glassfish.api.admin.ProgressStatus;
-import org.junit.*;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.lessThan;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
@@ -28,10 +37,7 @@ public class ProgressStatusImplTest {
 
     private DummyParent parent;
 
-    public ProgressStatusImplTest() {
-    }
-
-    @Before
+    @BeforeEach
     public void prepareParent() {
         parent = new DummyParent();
     }
@@ -39,7 +45,7 @@ public class ProgressStatusImplTest {
     @Test
     public void testGetSetTotalStepCount() {
         ProgressStatusImpl psi = new ProgressStatusImpl("first", parent, null);
-        assertTrue(psi.getTotalStepCount() < 0);
+        assertThat(psi.getTotalStepCount(), lessThan(0));
         psi.setTotalStepCount(10);
         assertNotNull(parent.lastEvent);
         parent.lastEvent = null;
@@ -91,9 +97,9 @@ public class ProgressStatusImplTest {
         assertNull(parent.lastEvent);
         assertEquals(0, psi.getRemainingStepCount());
         psi = new ProgressStatusImpl("second", parent, null);
-        assertTrue(psi.getRemainingStepCount() < 0);
+        assertThat(psi.getRemainingStepCount(), lessThan(0));
         psi.progress(1);
-        assertTrue(psi.getRemainingStepCount() < 0);
+        assertThat(psi.getRemainingStepCount(), lessThan(0));
         psi.setTotalStepCount(10);
         assertEquals(9, psi.getRemainingStepCount());
         psi.complete();

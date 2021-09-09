@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,63 +17,106 @@
 
 package com.sun.enterprise.admin.tests;
 
-import java.util.logging.Logger;
-import java.util.List;
-import java.util.ArrayList;
-
 import com.sun.enterprise.config.serverbeans.Application;
 import com.sun.enterprise.config.serverbeans.Applications;
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Module;
-import com.sun.enterprise.config.serverbeans.Config;
-import org.glassfish.grizzly.config.dom.ThreadPool;
+import com.sun.enterprise.module.bootstrap.StartupContext;
+import com.sun.enterprise.util.SystemPropertyConstants;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.admin.config.ConfigurationUpgrade;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.grizzly.config.dom.ThreadPool;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import jakarta.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayContaining;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Simple test for the domain.xml upgrade scenario
  *
  * @author Jerome Dochez
  */
-public class UpgradeTest extends ConfigApiTest {
+@ExtendWith(HK2JUnit5Extension.class)
+@DomainXml(value = "UpgradeTest.xml")
+public class UpgradeTest {
 
-    @Before
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private StartupContext startupContext;
+
+    // FIXME: Workaround, because ServerEnvironmentImpl changes global System.properties, but other services
+    //        are depending on it. The for cycle in setup() in the test will start initializations
+    //        of objects, but the order is not well defined.
+    //        But if the test instance injects the environment instance, it is initialized before the cycle.
+    @Inject
+    private ServerEnvironment environment;
+
+    /**
+     * Does the upgrade. Results will be verified in tests methods.
+     */
+    @BeforeEach
     public void setup() {
-        Domain domain = getHabitat().getService(Domain.class);
-        assertTrue(domain!=null);
+        System.clearProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
+        startupContext.getArguments().clear();
 
-        // perform upgrade
-        for (ConfigurationUpgrade upgrade : getHabitat().<ConfigurationUpgrade>getAllServices(ConfigurationUpgrade.class)) {
-            Logger.getAnonymousLogger().info("running upgrade " + upgrade.getClass());
+        Domain domain = locator.getService(Domain.class);
+        assertNotNull(domain);
+
+        final List<ConfigurationUpgrade> allServices = locator
+            .<ConfigurationUpgrade> getAllServices(ConfigurationUpgrade.class);
+        for (ConfigurationUpgrade upgrade : allServices) {
+            Logger.getAnonymousLogger().info("Running upgrade " + upgrade.getClass());
         }
+    }
+
+    @AfterEach
+    public void checkStateOfEnvironment() {
+        // DefaultConfigUpgrade uses this property.
+        assertNull(System.getProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY), "Install root in system props");
+        assertNotNull(environment.getInstanceRoot(), "Instance root in ServerEnvironment");
+        assertNull(startupContext.getArguments().get(SystemPropertyConstants.INSTALL_ROOT_PROPERTY),
+            "Install root in startup context");
     }
 
     @Test
     public void threadPools() {
-        List<String> names = new ArrayList<String>();
-        for (ThreadPool pool : getHabitat().<Config>getService(Config.class).getThreadPools().getThreadPool()) {
-            names.add(pool.getName());
-        }
-        assertTrue(names.contains("http-thread-pool") && names.contains("thread-pool-1"));
+        List<ThreadPool> threadPools = locator.<Config>getService(Config.class).getThreadPools().getThreadPool();
+        assertThat(threadPools, hasSize(3));
+        String[] threadPoolNames = threadPools.stream().map(ThreadPool::getName).toArray(String[]::new);
+        assertThat(threadPoolNames, arrayContaining("thread-pool-1", "http-thread-pool", "admin-thread-pool"));
     }
 
-    private void verify(String name) {
-        assertTrue("Should find thread pool named " + name, getHabitat().getService(ThreadPool.class, name) != null);
-    }
+
     @Test
     public void applicationUpgrade() {
-        Applications apps = getHabitat().getService(Applications.class);
-        assertTrue(apps!=null);
+        Applications apps = locator.getService(Applications.class);
+        assertNotNull(apps);
         for (Application app : apps.getApplications()) {
             assertTrue(app.getEngine().isEmpty());
-            assertTrue(app.getModule().size()==1);
+            assertThat(app.getModule(), hasSize(1));
             for (Module module : app.getModule()) {
-                assertTrue(module.getName().equals(app.getName()));
-                assertTrue(!module.getEngines().isEmpty());
+                assertEquals(app.getName(), module.getName());
+                assertFalse(module.getEngines().isEmpty());
             }
         }
     }
-
- }
+}

@@ -38,8 +38,8 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.tests</groupId>
-            <artifactId>utils</artifactId>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>test-utils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
@@ -57,6 +57,10 @@
             <groupId>org.glassfish.main.jdbc</groupId>
             <artifactId>jdbc-config</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,20 +21,20 @@ import org.glassfish.contextpropagation.bootstrap.ContextAccessController;
 import org.glassfish.contextpropagation.internal.AccessControlledMap;
 import org.glassfish.contextpropagation.internal.AccessControlledMap.ContextAccessLevel;
 
-public class MockContextAccessController extends
-    ContextAccessController {
+public class MockContextAccessController extends ContextAccessController {
 
-  @Override
-  public boolean isAccessAllowed(String key, AccessControlledMap.ContextAccessLevel type) {
-    if (type == ContextAccessLevel.READ && isEveryoneAllowedToRead(key)) {
-      return true; // First do a quick check for read access
+    @Override
+    public boolean isAccessAllowed(String key, AccessControlledMap.ContextAccessLevel type) {
+        if (type == ContextAccessLevel.READ && isEveryoneAllowedToRead(key)) {
+            return true; // First do a quick check for read access
+        }
+        return true;
     }
-    return true;
-  }
 
-  @Override
-  public boolean isEveryoneAllowedToRead(String key) {
-    return false;
-  }
+
+    @Override
+    public boolean isEveryoneAllowedToRead(String key) {
+        return false;
+    }
 
 }

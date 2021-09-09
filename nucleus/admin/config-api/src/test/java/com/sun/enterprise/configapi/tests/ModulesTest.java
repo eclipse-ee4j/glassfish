@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,39 +18,47 @@
 package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Applications;
-import org.glassfish.api.admin.config.ApplicationName;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.Collection;
+import java.util.logging.Logger;
+
+import org.glassfish.api.admin.config.ApplicationName;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Modules related tests
  */
-public class ModulesTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ModulesTest {
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
-    Collection<? extends ApplicationName> modules = null;
+    private Collection<? extends ApplicationName> modules;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        Applications apps = getHabitat().getService(Applications.class);
-        assertTrue(apps!=null);
+        Applications apps = locator.getService(Applications.class);
+        assertNotNull(apps);
         modules = apps.getModules();
-        assertTrue(modules!=null);
-
+        assertNotNull(modules);
     }
 
     @Test
     public void modulesTest() {
         for (ApplicationName module : modules) {
             logger.fine("Found module " + module.getName());
-            assertTrue(module.getName()!=null);
+            assertNotNull(module.getName());
         }
     }
 }

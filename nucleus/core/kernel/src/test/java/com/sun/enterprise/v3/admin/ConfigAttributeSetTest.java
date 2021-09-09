@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,60 +17,63 @@
 
 package com.sun.enterprise.v3.admin;
 
-import com.sun.enterprise.v3.common.HTMLActionReporter;
+import com.sun.enterprise.v3.common.PlainTextActionReporter;
+
+import java.beans.PropertyChangeEvent;
+
+import javax.security.auth.Subject;
+
+import org.glassfish.api.ActionReport.ExitCode;
+import org.glassfish.api.admin.CommandRunner.CommandInvocation;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.api.admin.*;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.glassfish.tests.utils.Utils;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+import jakarta.inject.Inject;
 
-import java.beans.PropertyChangeEvent;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.arrayWithSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * test the set command
  * @author Jerome Dochez
  */
-// Ignored temporarily because it fails to inject CommandRunnerImpl as ModulesRegistry is not available
-@Ignore
-public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigListener {
+@ExtendWith(KernelJUnitExtension.class)
+public class ConfigAttributeSetTest implements ConfigListener {
 
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
-    PropertyChangeEvent event = null;
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private MockGenerator mockGenerator;
+    private PropertyChangeEvent event;
+    private Subject adminSubject;
 
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
-
-    /**
-     * Returns the DomainTest file name without the .xml extension to load the test configuration
-     * from.
-     *
-     * @return the configuration file name
-     */
-    public String getFileName() {
-        return "DomainTest";
+    @BeforeEach
+    public void addMissingServices() {
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
     @Test
-     public void simpleAttributeSetTest() {
-
-        CommandRunnerImpl runner = habitat.getService(CommandRunnerImpl.class);
+    public void simpleAttributeSetTest() {
+        CommandRunnerImpl runner = locator.getService(CommandRunnerImpl.class);
         assertNotNull(runner);
 
         // let's find our target
         NetworkListener listener = null;
-        NetworkListeners service = habitat.getService(NetworkListeners.class);
+        NetworkListeners service = locator.getService(NetworkListeners.class);
         for (NetworkListener l : service.getNetworkListener()) {
             if ("http-listener-1".equals(l.getName())) {
                 listener = l;
@@ -84,32 +88,36 @@ public class ConfigAttributeSetTest  extends ConfigApiTest implements ConfigList
 
         // parameters to the command
         ParameterMap parameters = new ParameterMap();
-        parameters.set("value", "8090");
-        parameters.set("DEFAULT", "configs.config.server-config.http-service.http-listener.http-listener-1.port");
-
+        parameters.set("DEFAULT",
+            "configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.port=8090");
         // execute the set command.
-        runner.getCommandInvocation("set", new HTMLActionReporter(), adminSubject()).parameters(parameters).execute();
+        PlainTextActionReporter reporter = new PlainTextActionReporter();
+        CommandInvocation invocation = runner.getCommandInvocation("set", reporter, adminSubject).parameters(parameters);
+        invocation.execute();
+
+        assertEquals(ExitCode.SUCCESS, reporter.getActionExitCode());
+        assertEquals("", reporter.getMessage());
+
+        // ensure events are delivered.
+        locator.<Transactions>getService(Transactions.class).waitForDrain();
 
         // check the result.
         String port = listener.getPort();
-        assertEquals(port, "8090");
-
-        // ensure events are delivered.
-        habitat.<Transactions>getService(Transactions.class).waitForDrain();
-
-        // finally
-        bean.removeListener(this);
+        assertEquals("8090", port);
 
         // check we recevied the event
         assertNotNull(event);
-        assertEquals("8080", event.getOldValue());
-        assertEquals("8090", event.getNewValue());
-        assertEquals("port", event.getPropertyName());
+        assertAll(
+            () -> assertEquals("8080", event.getOldValue()),
+            () -> assertEquals("8090", event.getNewValue()),
+            () -> assertEquals("port", event.getPropertyName())
+        );
 
     }
 
+    @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] propertyChangeEvents) {
-        assertEquals("Array size", propertyChangeEvents.length, 1 );
+        assertThat(propertyChangeEvents, arrayWithSize(1));
         event = propertyChangeEvents[0];
         return null;
     }

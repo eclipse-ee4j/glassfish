@@ -72,6 +72,11 @@
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
@@ -109,8 +114,8 @@
                 <configuration>
                     <systemPropertyVariables>
                         <tck.home>${tck.home}</tck.home>
-                        <glassfish.home>${glassfish.home}</glassfish.home> 
-                        <glassfish.version>${project.version}</glassfish.version> 
+                        <glassfish.home>${glassfish.home}</glassfish.home>
+                        <glassfish.version>${project.version}</glassfish.version>
                         <maven.tck.debug>${tck.debug}</maven.tck.debug>
                     </systemPropertyVariables>
                 </configuration>

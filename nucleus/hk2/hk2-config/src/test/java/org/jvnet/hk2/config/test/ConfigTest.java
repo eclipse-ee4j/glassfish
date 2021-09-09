@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +17,13 @@
 
 package org.jvnet.hk2.config.test;
 
-//import com.sun.enterprise.module.bootstrap.Populator;
+import java.beans.PropertyChangeEvent;
+import java.lang.reflect.Proxy;
+import java.net.URL;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.Descriptor;
@@ -26,16 +33,17 @@ import org.glassfish.hk2.api.Filter;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
-import org.glassfish.hk2.utilities.ServiceLocatorUtilities;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import org.jvnet.hk2.config.ConfigBean;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer.OrderAnnotation;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigInjector;
 import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.ConfigView;
 import org.jvnet.hk2.config.ConfigurationPopulator;
 import org.jvnet.hk2.config.Dom;
 import org.jvnet.hk2.config.DomDocument;
@@ -44,17 +52,35 @@ import org.jvnet.hk2.config.InjectionTarget;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.Populator;
 import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.provider.internal.ConfigInstanceListener;
+import org.jvnet.hk2.config.test.example.ConfigModule;
+import org.jvnet.hk2.config.test.example.DummyPopulator;
+import org.jvnet.hk2.config.test.example.EjbContainerAvailability;
+import org.jvnet.hk2.config.test.example.EjbContainerAvailabilityInjector;
+import org.jvnet.hk2.config.test.example.GenericConfigInjector;
+import org.jvnet.hk2.config.test.example.GenericContainer;
+import org.jvnet.hk2.config.test.example.GenericContainerInjector;
+import org.jvnet.hk2.config.test.example.SimpleConfigBeanWrapper;
+import org.jvnet.hk2.config.test.example.SimpleConnector;
+import org.jvnet.hk2.config.test.example.SimpleConnectorInjector;
+import org.jvnet.hk2.config.test.example.WebContainerAvailabilityInjector;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyVetoException;
-import java.lang.reflect.Proxy;
-import java.net.URL;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addClasses;
+import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.getOneMetadataField;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.core.StringContains.containsString;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This runs a set of tests to test various habitat and Dom APIs
@@ -62,341 +88,251 @@ import java.util.concurrent.atomic.AtomicInteger;
  *
  *  @author Mahesh Kannan
  */
+@TestMethodOrder(OrderAnnotation.class)
 public class ConfigTest {
-    private final static String TEST_NAME = "";
-    private final static ServiceLocator habitat = ServiceLocatorFactory.getInstance().create(TEST_NAME);
+    private static final String TEST_NAME = "";
+    private static final ServiceLocator locator = ServiceLocatorFactory.getInstance().create(TEST_NAME);
 
-    @BeforeClass
+    @BeforeAll
     public static void before() {
-        DynamicConfigurationService dcs = habitat.getService(DynamicConfigurationService.class);
-        DynamicConfiguration config = dcs.createDynamicConfiguration();
-        new ConfigModule(habitat).configure(config);
-
+        final DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
+        final DynamicConfiguration config = dcs.createDynamicConfiguration();
+        new ConfigModule(locator).configure(config);
         config.commit();
     }
 
-    // @Test
+    @Test
+    @Order(1)
     public void lookupAllInjectors() {
-        String[] expected = {
+        final String[] expected = {
                 SimpleConnectorInjector.class.getName(), EjbContainerAvailabilityInjector.class.getName(),
                 WebContainerAvailabilityInjector.class.getName(), GenericContainerInjector.class.getName(),
                 GenericConfigInjector.class.getName()
         };
-        List<String> expectedInjectors = Arrays.asList(expected);
-
-        List<ServiceHandle<ConfigInjector>> inhabitants = habitat.getAllServiceHandles(ConfigInjector.class);
-        Set<String> inhabitantNames = new HashSet<String>();
-        for (ServiceHandle<?> inh : inhabitants) {
+        final List<ServiceHandle<ConfigInjector>> inhabitants = locator.getAllServiceHandles(ConfigInjector.class);
+        final Set<String> inhabitantNames = new HashSet<>();
+        for (final ServiceHandle<?> inh : inhabitants) {
             inhabitantNames.add(inh.getActiveDescriptor().getImplementation());
         }
 
-        assert(inhabitants.size() == expected.length);
-        assert(inhabitantNames.containsAll(expectedInjectors));
-    }
-
-    // @Test
-    public void lookupInjectorByName() {
-        ServiceHandle inhabitant1 = habitat.getServiceHandle(ConfigInjector.class, "simple-connector");
-        ServiceHandle inhabitant2 = habitat.getServiceHandle(ConfigInjector.class, "ejb-container-availability");
-
-        assert(inhabitant1 != null && inhabitant2 != null
-                && inhabitant1.getActiveDescriptor().getImplementation().equals(SimpleConnectorInjector.class.getName())
-                && inhabitant2.getActiveDescriptor().getImplementation().equals(EjbContainerAvailabilityInjector.class.getName()));
-    }
-
-    // @Test
-    public void testLookupOfInjectorAndCheckIfActive() {
-        ServiceHandle inhabitant1 = habitat.getServiceHandle(ConfigInjector.class, "simple-connector");
-        ServiceHandle inhabitant2 = habitat.getServiceHandle(ConfigInjector.class, "ejb-container-availability");
-        assert(inhabitant1 != null && inhabitant2 != null
-                && inhabitant1.isActive() == false
-                && inhabitant2.isActive() == false);
-    }
-
-    // @Test
-    public void lookupInjectorByFilter() {
-        ActiveDescriptor desc = habitat.getBestDescriptor(
-                new InjectionTargetFilter(EjbContainerAvailability.class.getName()));
-        assert(desc != null
-                && desc.getImplementation().equals(EjbContainerAvailabilityInjector.class.getName()));
-    }
-
-    // @Test
-    public void parseDomainXml() {
-        ConfigParser parser = new ConfigParser(habitat);
-        URL url = this.getClass().getResource("/domain.xml");
-        System.out.println("URL : " + url);
-
-        try {
-            DomDocument doc = parser.parse(url);
-            System.out.println("[parseDomainXml] ==> Successfully parsed");
-            assert(doc != null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            assert(false);
-        }
-    }
-
-    // @Test
-    public void lookupConnectorServiceAndEnsureNotActive() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        System.out.println("[lookupConnectorService] Got sc : " + sc.getClass().getName());
-        ServiceHandle inhabitant1 = habitat.getServiceHandle(ConfigInjector.class, "simple-connector");
-        assert(sc != null && !inhabitant1.isActive());
-    }
-
-
-    // @Test
-    public void getConnectorServiceAndCheckIfActive() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        String port = sc.getPort();
-        ServiceHandle inhabitant1 = habitat.getServiceHandle(ConfigInjector.class, "simple-connector");
-        assert(port.equals("8080")); // && inhabitant1.isActive());
-    }
-
-    // @Test
-    public void testConfig() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        System.out.println("[testConfig] : " + sc.getClass().getName());
-        assert(Proxy.isProxyClass(sc.getClass()));
-    }
-
-    // @Test
-    public void testDefaultValuesFromConfig() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        assert(
-                sc.getWebContainerAvailability().getPersistenceFrequency().equals("web-method")
-                        && Boolean.valueOf(sc.getEjbContainerAvailability().getAvailabilityEnabled())
-                        && sc.getEjbContainerAvailability().getSfsbPersistenceType().equals("file")
-                        && sc.getEjbContainerAvailability().getSfsbHaPersistenceType().equals("replicated")
+        assertAll(
+            () -> assertThat(inhabitants, hasSize(expected.length)),
+            () -> assertThat(inhabitantNames, containsInAnyOrder(expected))
         );
     }
 
-    // @Test
-    public void testDom() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        EjbContainerAvailability ejb = sc.getEjbContainerAvailability();
-
-        assert(Dom.class.isAssignableFrom(Dom.unwrap(ejb).getClass())
-                && ConfigBeanProxy.class.isAssignableFrom(ejb.getClass()));
-    }
-
-    // @Test
-    public void testHabitatFromDom() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        EjbContainerAvailability ejb = sc.getEjbContainerAvailability();
-
-        Dom ejbDom = Dom.unwrap(ejb);
-        assert(ejbDom.getHabitat() != null);
-    }
-
-    // @Test
-    public void testDomTx() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        EjbContainerAvailability ejb = sc.getEjbContainerAvailability();
-
-        Dom ejbDom = Dom.unwrap(ejb);
-        assert(ejbDom.getHabitat() != null);
-
-        String avEnabled = ejb.getAvailabilityEnabled();
-        try {
-            ConfigSupport.apply(new SingleConfigCode<EjbContainerAvailability>() {
-                @Override
-                public Object run(EjbContainerAvailability param)
-                        throws PropertyVetoException, TransactionFailure {
-                    param.setSfsbHaPersistenceType("coherence");
-                    param.setSfsbCheckpointEnabled("**MUST BE**");
-                    return null;
-                }
-            }, ejb);
-
-            //printEjb("AFTER CHANGES", ejb);
-            assert(ejb.getSfsbHaPersistenceType().equals("coherence")
-                    && ejb.getSfsbCheckpointEnabled().equals("**MUST BE**")
-                    && ejb.getAvailabilityEnabled().equals(avEnabled));
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
-        }
-    }
-
-    // @Test
-    public void testDomTxReadOnlyAttributes() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        final EjbContainerAvailability ejb = sc.getEjbContainerAvailability();
-
-        Dom ejbDom = Dom.unwrap(ejb);
-        assert(ejbDom.getHabitat() != null);
-
-        String origAVEnabled = ejb.getAvailabilityEnabled();
-        final String origSFSBHaPersistenceType = ejb.getSfsbHaPersistenceType();
-        try {
-            ConfigSupport.apply(new SingleConfigCode<EjbContainerAvailability>() {
-                @Override
-                public Object run(EjbContainerAvailability param)
-                        throws PropertyVetoException, TransactionFailure {
-                    param.setSfsbHaPersistenceType("99999.999");
-                    param.setSfsbCheckpointEnabled("**MUST BE**");
-
-                    assert(origSFSBHaPersistenceType.equals(ejb.getSfsbHaPersistenceType()));
-                    assert(! ejb.getSfsbHaPersistenceType().equals(param.getSfsbHaPersistenceType()));
-                    return null;
-                }
-            }, ejb);
-
-            //printEjb("AFTER CHANGES", ejb);
-            assert(ejb.getSfsbHaPersistenceType().equals("99999.999")
-                    && ejb.getSfsbCheckpointEnabled().equals("**MUST BE**")
-                    && ejb.getAvailabilityEnabled().equals(origAVEnabled));
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
-        }
-    }
-
-    // @Test
-    public void testGetImplAndAddListener() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        final EjbContainerAvailability ejb = sc.getEjbContainerAvailability();
-        ObservableBean obean = (ObservableBean) ConfigSupport.getImpl(ejb);
-        EjbObservableBean ejbBean = new EjbObservableBean();
-
-        assert(ejbBean.getCount() == 0);
-        obean.addListener(ejbBean);
-        try {
-            ConfigSupport.apply(new SingleConfigCode<EjbContainerAvailability>() {
-                @Override
-                public Object run(EjbContainerAvailability param)
-                        throws PropertyVetoException, TransactionFailure {
-                    param.setSfsbHaPersistenceType("DynamicData");
-                    param.setSfsbCheckpointEnabled("**MUST BE**");
-                    assert(! ejb.getSfsbHaPersistenceType().equals(param.getSfsbHaPersistenceType()));
-                    return null;
-                }
-            }, ejb);
-
-            //printEjb("AFTER CHANGES", ejb);
-            assert(ejb.getSfsbHaPersistenceType().equals("DynamicData")
-                    && ejb.getSfsbCheckpointEnabled().equals("**MUST BE**"));
-
-            assert(ejbBean.getCount() == 1);
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
-        }
-        try {
-            ConfigSupport.apply(new SingleConfigCode<EjbContainerAvailability>() {
-                @Override
-                public Object run(EjbContainerAvailability param)
-                        throws PropertyVetoException, TransactionFailure {
-                    param.setSfsbHaPersistenceType("DynamicData1");
-                    param.setSfsbCheckpointEnabled("**MUST BE**");
-                    assert(! ejb.getSfsbHaPersistenceType().equals(param.getSfsbHaPersistenceType()));
-                    return null;
-                }
-            }, ejb);
-
-            //printEjb("AFTER CHANGES", ejb);
-            assert(ejb.getSfsbHaPersistenceType().equals("DynamicData1")
-                    && ejb.getSfsbCheckpointEnabled().equals("**MUST BE**"));
-
-            assert(ejbBean.getCount() == 2);
-
-            System.out.println("getImpl(ejb) == > "
-                    + ConfigSupport.getImpl(ejb).getClass().getName());
-            System.out.println("getImpl(ejb).getMasterView() == > "
-                    + ConfigSupport.getImpl(ejb).getMasterView().getClass().getName());
-            System.out.println("getImpl(ejb).getProxyType() == > "
-                    + ConfigSupport.getImpl(ejb).getProxyType().getClass().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-            assert(false);
-        }
-    }
-
-    // @Test
-    public void testGetConfigBean() {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        final EjbContainerAvailability ejb = sc.getEjbContainerAvailability();
-        ConfigBean ejbConfigBean = (ConfigBean) ConfigBean.unwrap(ejb);
-
-        assert(ejbConfigBean != null);
-    }
-
-    // @Test
-    public void testGenericContainerInjector() {
-        ServiceHandle sh = habitat.getServiceHandle(ConfigInjector.class, "generic-container");
-
-        assert(sh != null);
-
-    }
-
-    // @Test
-    public void testLongDataType() {
-        GenericContainer gc = habitat.getService(GenericContainer.class);
-        Object obj = gc.getStartupTime();
-        assert(obj.getClass() == Long.class);
-
-    }
-
-    // @Test
-    public void testIntDataType() {
-        GenericContainer gc = habitat.getService(GenericContainer.class);
-        Object obj = gc.getIntValue();
-        assert(obj.getClass() == Integer.class);
-
-    }
-
-    // @Test
-    public void testConfigurationPopulator() {
-        DummyPopulator pop = (DummyPopulator) habitat.getService(Populator.class);
-
-        ConfigurationPopulator confPopulator = habitat.getService(ConfigurationPopulator.class);
-        confPopulator.populateConfig((ServiceLocator) habitat);
-
-        assert(pop.isPopulateCalled());
-    }
-
-    // @Test
-    public void testSingletonProxy() {
-        SimpleConnector simpleConnector1 = habitat.getService(SimpleConnector.class);
-        SimpleConnector simpleConnector2 = habitat.getService(SimpleConnector.class);
-
-        System.out.println("[testSingleProxy] Got simpleConnector1 : " + simpleConnector1.getClass().getName());
-        System.out.println("[testSingleProxy] Got simpleConnector2 : " + simpleConnector2.getClass().getName());
-
-        assert(simpleConnector1 != null && simpleConnector1 == simpleConnector2);
-    }
-
-    /**
-     * This test is an unfortunate reaction to the fact that JDK 7 does not run the
-     * tests above in order, and that the fact that the ordering seems to be important
-     * to the passing of the above tests
-     */
     @Test
-    public void runTestsInOrder() {
-        lookupAllInjectors();
-        lookupInjectorByName();
-        testLookupOfInjectorAndCheckIfActive();
-        lookupInjectorByFilter();
-        parseDomainXml();
-        lookupConnectorServiceAndEnsureNotActive();
-        getConnectorServiceAndCheckIfActive();
-        testConfig();
-        testDefaultValuesFromConfig();
-        testDom();
-        testHabitatFromDom();
-        testDomTx();
-        testDomTxReadOnlyAttributes();
-        testGetImplAndAddListener();
-        testGetConfigBean();
-        testGenericContainerInjector();
-        testLongDataType();
-        testIntDataType();
-        testConfigurationPopulator();
-        testSingletonProxy();
+    @Order(2)
+    public void lookupInjectorByName() {
+        final ServiceHandle<?> inhabitant1 = locator.getServiceHandle(ConfigInjector.class, "simple-connector");
+        final ServiceHandle<?> inhabitant2 = locator.getServiceHandle(ConfigInjector.class, "ejb-container-availability");
+
+        assertAll(
+            () -> assertNotNull(inhabitant1),
+            () -> assertNotNull(inhabitant2)
+        );
+        assertAll(
+            () -> assertEquals(SimpleConnectorInjector.class.getName(),
+                inhabitant1.getActiveDescriptor().getImplementation()),
+            () -> assertEquals(EjbContainerAvailabilityInjector.class.getName(),
+                inhabitant2.getActiveDescriptor().getImplementation()),
+            () -> assertFalse(inhabitant1.isActive()),
+            () -> assertFalse(inhabitant2.isActive())
+
+        );
+    }
+
+    @Test
+    @Order(4)
+    public void lookupInjectorByFilter() {
+        final ActiveDescriptor<?> desc = locator
+            .getBestDescriptor(new InjectionTargetFilter(EjbContainerAvailability.class.getName()));
+        assertNotNull(desc);
+        assertEquals(EjbContainerAvailabilityInjector.class.getName(), desc.getImplementation());
+    }
+
+    @Test
+    @Order(5)
+    public void parseDomainXml() {
+        final ConfigParser parser = new ConfigParser(locator);
+        final URL url = this.getClass().getResource("/domain.xml");
+        assertNotNull(url, "url");
+        final DomDocument<?> doc = parser.parse(url);
+        assertNotNull(doc, "parsed document");
+    }
+
+    @Test
+    @Order(6)
+    public void lookupConnectorServiceAndEnsureNotActive() {
+        final SimpleConnector connector = locator.getService(SimpleConnector.class);
+        assertNotNull(connector, "simple connector");
+        System.out.println("[lookupConnectorService] Got connector : " + connector.getClass().getName());
+        assertNotNull(connector);
+        assertAll(
+            () -> assertEquals("8080", connector.getPort()),
+            () -> assertTrue(Proxy.isProxyClass(connector.getClass()))
+        );
+        final ServiceHandle<?> inhabitant1 = locator.getServiceHandle(ConfigInjector.class, "simple-connector");
+        assertFalse(inhabitant1.isActive());
+    }
+
+
+    @Test
+    @Order(9)
+    public void testDefaultValuesFromConfig() {
+        final SimpleConnector connector = locator.getService(SimpleConnector.class);
+        assertNotNull(connector);
+        assertAll(
+            () -> assertEquals("web-method", connector.getWebContainerAvailability().getPersistenceFrequency()),
+            () -> assertEquals("true", connector.getEjbContainerAvailability().getAvailabilityEnabled()),
+            () -> assertEquals("file", connector.getEjbContainerAvailability().getSfsbPersistenceType()),
+            () -> assertEquals("replicated", connector.getEjbContainerAvailability().getSfsbHaPersistenceType())
+        );
+    }
+
+    @Test
+    @Order(10)
+    public void testDomTx() throws Exception {
+        final SimpleConnector connector = locator.getService(SimpleConnector.class);
+        final EjbContainerAvailability ejb = connector.getEjbContainerAvailability();
+        assertAll(
+            () -> assertTrue(Dom.class.isAssignableFrom(Dom.unwrap(ejb).getClass()), "Dom.class"),
+            () -> assertTrue(ConfigBeanProxy.class.isAssignableFrom(ejb.getClass()), "ConfigBeanProxy.class")
+        );
+        final Dom ejbDom = Dom.unwrap(ejb);
+        assertNotNull(ejbDom.getHabitat(), "ejbDom.habitat");
+
+        final String avEnabled = ejb.getAvailabilityEnabled();
+        final SingleConfigCode<EjbContainerAvailability> configCode = p -> {
+            p.setSfsbHaPersistenceType("coherence");
+            p.setSfsbCheckpointEnabled("**MUST BE**");
+            return null;
+        };
+        ConfigSupport.apply(configCode, ejb);
+
+        assertAll(
+            () -> assertEquals("coherence", ejb.getSfsbHaPersistenceType()),
+            () -> assertEquals("**MUST BE**", ejb.getSfsbCheckpointEnabled()),
+            () -> assertEquals(avEnabled, ejb.getAvailabilityEnabled())
+        );
+    }
+
+    @Test
+    @Order(13)
+    public void testDomTxReadOnlyAttributes() throws Exception {
+        final SimpleConnector connector = locator.getService(SimpleConnector.class);
+        final EjbContainerAvailability ejb = connector.getEjbContainerAvailability();
+        final Dom ejbDom = Dom.unwrap(ejb);
+        assertNotNull(ejbDom.getHabitat(), "ejbDom.habitat");
+
+        final String origAVEnabled = ejb.getAvailabilityEnabled();
+        final String origSFSBHaPersistenceType = ejb.getSfsbHaPersistenceType();
+        final SingleConfigCode<EjbContainerAvailability> configCode = p -> {
+           p.setSfsbHaPersistenceType("99999.999");
+           p.setSfsbCheckpointEnabled("**MUST BE**");
+           assertAll(
+               () -> assertEquals(origSFSBHaPersistenceType, ejb.getSfsbHaPersistenceType()),
+               () -> assertNotEquals(p.getSfsbHaPersistenceType(), ejb.getSfsbHaPersistenceType())
+           );
+           return null;
+        };
+        ConfigSupport.apply(configCode, ejb);
+
+        assertAll(
+            () -> assertEquals("99999.999", ejb.getSfsbHaPersistenceType()),
+            () -> assertEquals("**MUST BE**", ejb.getSfsbCheckpointEnabled()),
+            () -> assertEquals(origAVEnabled, ejb.getAvailabilityEnabled())
+        );
+    }
+
+    @Test
+    @Order(14)
+    public void testGetImplAndAddListener() throws Exception {
+        final SimpleConnector connector = locator.getService(SimpleConnector.class);
+        final EjbContainerAvailability ejb = connector.getEjbContainerAvailability();
+        final ObservableBean obean = (ObservableBean) ConfigSupport.getImpl(ejb);
+        final EjbObservableBean ejbBean = new EjbObservableBean();
+
+        assertEquals(0, ejbBean.getCount());
+        obean.addListener(ejbBean);
+        final SingleConfigCode<EjbContainerAvailability> configCode = p -> {
+            p.setSfsbHaPersistenceType("DynamicData");
+            p.setSfsbCheckpointEnabled("**MUST BE**");
+            assertNotEquals(ejb.getSfsbHaPersistenceType(), p.getSfsbHaPersistenceType());
+            return null;
+        };
+        ConfigSupport.apply(configCode, ejb);
+
+        assertAll(
+            () -> assertEquals("DynamicData", ejb.getSfsbHaPersistenceType()),
+            () -> assertEquals("**MUST BE**", ejb.getSfsbCheckpointEnabled()),
+            () -> assertEquals(1, ejbBean.getCount())
+        );
+
+        final SingleConfigCode<EjbContainerAvailability> configCode2 = p -> {
+           p.setSfsbHaPersistenceType("DynamicData2");
+           p.setSfsbCheckpointEnabled("**MUST BE**");
+           assertNotEquals(ejb.getSfsbHaPersistenceType(), p.getSfsbHaPersistenceType());
+           return null;
+        };
+        ConfigSupport.apply(configCode2, ejb);
+
+        final ConfigView impl = ConfigSupport.getImpl(ejb);
+        assertAll(
+            () -> assertEquals("DynamicData2", ejb.getSfsbHaPersistenceType()),
+            () -> assertEquals("**MUST BE**", ejb.getSfsbCheckpointEnabled()),
+            () -> assertEquals(2, ejbBean.getCount()),
+            () -> assertEquals(SimpleConfigBeanWrapper.class, impl.getClass()),
+            () -> assertEquals(SimpleConfigBeanWrapper.class, impl.getMasterView().getClass()),
+            () -> assertEquals(Class.class, impl.getProxyType().getClass())
+        );
+    }
+
+
+    @Test
+    @Order(16)
+    public void testGenericContainerInjector() {
+        assertNotNull(locator.getServiceHandle(ConfigInjector.class, "generic-container"));
 
     }
+
+    @Test
+    @Order(17)
+    public void testLongDataType() {
+        final GenericContainer gc = locator.getService(GenericContainer.class);
+        assertEquals(1234L, gc.getStartupTime());
+    }
+
+    @Test
+    @Order(18)
+    public void testIntDataType() {
+        final GenericContainer gc = locator.getService(GenericContainer.class);
+        assertEquals(1234, gc.getIntValue());
+    }
+
+    @Test
+    @Order(19)
+    public void testConfigurationPopulator() {
+        final DummyPopulator dummyPopulator = (DummyPopulator) locator.getService(Populator.class);
+        assertNotNull(dummyPopulator, "dummy populator");
+        final ConfigurationPopulator confPopulator = locator.getService(ConfigurationPopulator.class);
+        confPopulator.populateConfig(locator);
+        assertTrue(dummyPopulator.isPopulateCalled());
+    }
+
+    @Test
+    @Order(20)
+    public void testSingletonProxy() {
+        final SimpleConnector simpleConnector1 = locator.getService(SimpleConnector.class);
+        final SimpleConnector simpleConnector2 = locator.getService(SimpleConnector.class);
+
+        assertAll(
+            () -> assertNotNull(simpleConnector1),
+            () -> assertThat(simpleConnector1.getClass().getName(), containsString("$Proxy")),
+            () -> assertSame(simpleConnector1, simpleConnector2)
+        );
+    }
+
 
     /**
      * Ensures that even the non-standard format of metadata from the hk2-config subsystem can
@@ -404,72 +340,53 @@ public class ConfigTest {
      * documented form fails, it'll try the hk2-config form
      */
     @Test
+    @Order(21)
     public void testAddClassOfInjector() {
-        ServiceLocator locator = ServiceLocatorFactory.getInstance().create(null);
+        final ServiceLocator myLocator = ServiceLocatorFactory.getInstance().create(null);
 
-        List<ActiveDescriptor<?>> added = ServiceLocatorUtilities.addClasses(locator, EjbContainerAvailabilityInjector.class);
-        ActiveDescriptor<?> descriptor = added.get(0);
+        final List<ActiveDescriptor<?>> added = addClasses(myLocator, EjbContainerAvailabilityInjector.class);
+        final ActiveDescriptor<?> descriptor = added.get(0);
 
-        Assert.assertEquals("org.jvnet.hk2.config.test.EjbContainerAvailability", ServiceLocatorUtilities.getOneMetadataField(descriptor, "target"));
-
+        assertEquals(EjbContainerAvailability.class.getName(), getOneMetadataField(descriptor, "target"));
     }
 
     @Test
+    @Order(22)
     public void testEnableConfigUtilities() {
-        ServiceLocator locator = ServiceLocatorFactory.getInstance().create(null);
+        final ServiceLocator myLocator = ServiceLocatorFactory.getInstance().create(null);
 
-        Assert.assertNull(locator.getService(ConfigSupport.class));
-        Assert.assertNull(locator.getService(ConfigurationPopulator.class));
-        Assert.assertNull(locator.getService(Transactions.class));
-        Assert.assertNull(locator.getService(ConfigInstanceListener.class));
-
-        HK2DomConfigUtilities.enableHK2DomConfiguration(locator);
+        assertAll(
+            () -> assertNull(myLocator.getService(ConfigSupport.class)),
+            () -> assertNull(myLocator.getService(ConfigurationPopulator.class)),
+            () -> assertNull(myLocator.getService(Transactions.class)),
+            () -> assertNull(myLocator.getService(ConfigInstanceListener.class))
+        );
 
         // Twice to check idempotence
-        HK2DomConfigUtilities.enableHK2DomConfiguration(locator);
+        HK2DomConfigUtilities.enableHK2DomConfiguration(myLocator);
+        HK2DomConfigUtilities.enableHK2DomConfiguration(myLocator);
 
-        Assert.assertEquals(1, locator.getAllServices(ConfigSupport.class).size());
-        Assert.assertEquals(1, locator.getAllServices(ConfigurationPopulator.class).size());
-        Assert.assertEquals(1, locator.getAllServices(Transactions.class).size());
-        Assert.assertEquals(1, locator.getAllServices(ConfigInstanceListener.class).size());
+        assertAll(
+            () -> assertThat(myLocator.getAllServices(ConfigSupport.class), hasSize(1)),
+            () -> assertThat(myLocator.getAllServices(ConfigurationPopulator.class), hasSize(1)),
+            () -> assertThat(myLocator.getAllServices(Transactions.class), hasSize(1)),
+            () -> assertThat(myLocator.getAllServices(ConfigInstanceListener.class), hasSize(1))
+        );
     }
 
-    private static void printEjb(String message, EjbContainerAvailability ejb) {
-        StringBuilder sb = new StringBuilder(ejb.getClass().getName());
-        sb.append(" : " ).append(ejb.getAvailabilityEnabled())
-                .append("; ").append(ejb.getSfsbCheckpointEnabled())
-                .append("; ").append(ejb.getSfsbHaPersistenceType())
-                .append("; ").append(ejb.getSfsbQuickCheckpointEnabled())
-                .append(";").append(ejb.getSfsbStorePoolName());
 
-        System.out.println(message + " ==> " + sb.toString());
-    }
+    private static class InjectionTargetFilter implements Filter {
 
-    private static void printWeb(String message, WebContainerAvailability web) {
-        StringBuilder sb = new StringBuilder(web.getClass().getName());
-        sb.append(" : " ).append(web.getAvailabilityEnabled())
-                .append("; ").append(web.getDisableJreplica())
-                .append("; ").append(web.getPersistenceFrequency())
-                .append("; ").append(web.getPersistenceScope())
-                .append(";").append(web.getPersistenceType())
-                .append(";").append(web.getSsoFailoverEnabled());
+        private final String targetName;
 
-        System.out.println(message + " ==> " + sb.toString());
-    }
-
-    private static class InjectionTargetFilter
-            implements Filter {
-
-        String targetName;
-
-        InjectionTargetFilter(String targetName) {
+        InjectionTargetFilter(final String targetName) {
             this.targetName = targetName;
         }
 
         @Override
-        public boolean matches(Descriptor d) {
+        public boolean matches(final Descriptor d) {
             if (d.getQualifiers().contains(InjectionTarget.class.getName())) {
-                List<String> list = d.getMetadata().get("target");
+                final List<String> list = d.getMetadata().get("target");
                 if (list != null && list.get(0).equals(targetName)) {
                     return true;
                 }
@@ -479,13 +396,12 @@ public class ConfigTest {
         }
     }
 
-    private static class EjbObservableBean
-        implements ConfigListener {
+    private static class EjbObservableBean implements ConfigListener {
 
-        private AtomicInteger count = new AtomicInteger();
+        private final AtomicInteger count = new AtomicInteger();
 
         @Override
-        public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
+        public UnprocessedChangeEvents changed(final PropertyChangeEvent[] events) {
             System.out.println("** EjbContainerAvailability changed ==> " + count.incrementAndGet());
             return null;
         }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,18 +18,23 @@
 package com.sun.enterprise.util.io;
 
 import com.sun.enterprise.universal.io.SmartFile;
+
 import java.io.File;
-import java.util.Arrays;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author wnevins
  */
 public class FileUtilsTest {
+
     /**
      * Test of mkdirsMaybe method, of class FileUtils.
      */
@@ -48,13 +54,17 @@ public class FileUtilsTest {
         assertTrue(FileUtils.mkdirsMaybe(d2));
         assertFalse(d2.mkdirs());
 
-        if (!d1.delete())
+        if (!d1.delete()) {
             d1.deleteOnExit();
+        }
 
-        if (!d2.delete())
+        if (!d2.delete()) {
             d2.deleteOnExit();
+        }
 
     }
+
+
     @Test
     public void testParent() {
         File f = null;
@@ -71,6 +81,7 @@ public class FileUtilsTest {
         assertEquals(shouldBeSameAsChild, sanitizedChild);
     }
 
+
     @Test
     public void testResourceToString() {
         String resname = "simplestring.txt";
@@ -78,6 +89,8 @@ public class FileUtilsTest {
         String fetched = FileUtils.resourceToString(resname);
         assertEquals(contents, fetched);
     }
+
+
     @Test
     public void testEmptyButExistingResourceToString() {
         String resname = "empty.txt";
@@ -86,12 +99,15 @@ public class FileUtilsTest {
         assertTrue(fetched.length() == 0);
     }
 
+
     @Test
     public void testNonExistingResourceToString() {
         String resname = "doesnotexist.txt";
         String fetched = FileUtils.resourceToString(resname);
         assertNull(fetched);
     }
+
+
     @Test
     public void testNonExistingResourceToBytes() {
         String resname = "doesnotexist.txt";
@@ -99,6 +115,8 @@ public class FileUtilsTest {
         // null -- not an empty array!
         assertNull(fetched);
     }
+
+
     @Test
     public void testResourceToBytes() {
         String resname = "verysimplestring.txt";

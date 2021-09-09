@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,48 +18,34 @@
 package com.sun.enterprise.universal.glassfish;
 
 import java.io.File;
+import java.net.URL;
 import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- *
  * @author bnevins
  */
-
 public class ASenvPropertyReaderTest {
 
-    public ASenvPropertyReaderTest() {
-    }
+    private static File installDir;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
-        installDir = new File(
-            ASenvPropertyReaderTest.class.getClassLoader().getResource
-            ("config/asenv.bat").getPath()).getParentFile().getParentFile();
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-        pr = new ASenvPropertyReader(installDir);
-    }
-
-    @After
-    public void tearDown() {
+        URL resource = ASenvPropertyReaderTest.class.getClassLoader().getResource("config/asenv.bat");
+        installDir = new File(resource.getPath()).getParentFile().getParentFile();
+        assertNotNull(installDir);
     }
 
     @Test
     public void test() {
-        //System.out.println(pr);
+        ASenvPropertyReader reader = new ASenvPropertyReader(installDir);
+        Map<String, String> props = reader.getProps();
+        assertThat(props.toString(), props.entrySet(), hasSize(10));
     }
-    ASenvPropertyReader pr;
-    private static File installDir;
 }

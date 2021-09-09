@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,23 +17,25 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import java.util.List;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Assert;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
 
-import java.util.Collection;
-import java.util.List;
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * This test will ensure that when a class is injected with a parent bean and a child
@@ -41,56 +44,42 @@ import java.util.List;
  *
  * User: Jerome Dochez
  */
-public class ParentConfigListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ParentConfigListenerTest {
 
-    ServiceLocator habitat;
-
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
-    public void setup() {
-        habitat = Utils.instance.getHabitat(this);
-    }
-
-
-
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void addHttpListenerTest() throws TransactionFailure {
-        NetworkListenersContainer container = habitat.getService(NetworkListenersContainer.class);
+        NetworkListenersContainer container = locator.getService(NetworkListenersContainer.class);
+        SingleConfigCode<NetworkListeners> configCode = listeners -> {
+            NetworkListener newListener = listeners.createChild(NetworkListener.class);
+            newListener.setName("Funky-Listener");
+            newListener.setPort("8078");
+            listeners.getNetworkListener().add(newListener);
+            return null;
+        };
+        ConfigSupport.apply(configCode, container.httpService);
 
-        ConfigSupport.apply(new SingleConfigCode<NetworkListeners>() {
-
-            public Object run(NetworkListeners param) throws TransactionFailure {
-                NetworkListener newListener = param.createChild(NetworkListener.class);
-                newListener.setName("Funky-Listener");
-                newListener.setPort("8078");
-                param.getNetworkListener().add(newListener);
-                return null;
-            }
-        }, container.httpService);
-
-        getHabitat().<Transactions>getService(Transactions.class).waitForDrain();
+        locator.<Transactions>getService(Transactions.class).waitForDrain();
         assertTrue(container.received);
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(container.httpService);
 
         // let's check that my newly added listener is available in the habitat.
-        List<ServiceHandle<NetworkListener>> networkListeners = habitat.getAllServiceHandles(NetworkListener.class);
+        List<ServiceHandle<NetworkListener>> networkListeners = locator.getAllServiceHandles(NetworkListener.class);
         boolean found = false;
-
         for (ServiceHandle<NetworkListener> nlSH : networkListeners) {
-            NetworkListener nl = (NetworkListener) nlSH.getService();
+            NetworkListener nl = nlSH.getService();
             if (nl.getName().equals("Funky-Listener")) {
-                found=true;
+                found = true;
             }
         }
-        Assert.assertTrue("Newly added listener not found", found);
+        assertTrue(found, "Newly added listener not found");
 
         // direct access.
-        NetworkListener nl = habitat.getService(NetworkListener.class, "Funky-Listener");
-        Assert.assertTrue("Direct access to newly added listener failed", nl!=null);
+        NetworkListener networkListener = locator.getService(NetworkListener.class, "Funky-Listener");
+        assertNotNull(networkListener, "Direct access to newly added listener failed");
         bean.removeListener(container);
     }
 }

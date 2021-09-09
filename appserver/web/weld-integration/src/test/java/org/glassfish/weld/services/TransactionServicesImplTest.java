@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2017, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,15 +18,24 @@
 package org.glassfish.weld.services;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.Test;
-
-import static junit.framework.Assert.*;
-import static org.easymock.EasyMock.*;
-
-import static jakarta.transaction.Status.*;
 
 import org.easymock.EasyMockSupport;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+
+import static jakarta.transaction.Status.STATUS_ACTIVE;
+import static jakarta.transaction.Status.STATUS_COMMITTED;
+import static jakarta.transaction.Status.STATUS_COMMITTING;
+import static jakarta.transaction.Status.STATUS_MARKED_ROLLBACK;
+import static jakarta.transaction.Status.STATUS_NO_TRANSACTION;
+import static jakarta.transaction.Status.STATUS_PREPARED;
+import static jakarta.transaction.Status.STATUS_PREPARING;
+import static jakarta.transaction.Status.STATUS_ROLLEDBACK;
+import static jakarta.transaction.Status.STATUS_ROLLING_BACK;
+import static jakarta.transaction.Status.STATUS_UNKNOWN;
+import static org.easymock.EasyMock.expect;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionServicesImplTest {
     @Test

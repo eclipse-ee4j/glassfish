@@ -63,15 +63,22 @@
             <artifactId>logging-annotation-processor</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency><!-- Needed to have a bundle activator to set up a different serialization policy -->
+        <!-- Needed to have a bundle activator to set up a different serialization policy -->
+        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.core</artifactId>
             <scope>provided</scope>
         </dependency>
-        <dependency><!-- Needed to have a bundle activator to set up a different serialization policy -->
+        <!-- Needed to have a bundle activator to set up a different serialization policy -->
+        <dependency>
             <groupId>org.osgi</groupId>
             <artifactId>osgi.enterprise</artifactId>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.hamcrest</groupId>
@@ -89,18 +96,5 @@
                 </includes>
             </resource>
         </resources>
-        <plugins>
-            <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
-                <configuration>
-                    <source>11</source>
-                    <target>11</target>
-                    <excludes>
-                        <exclude>**/.ade_path/**</exclude>
-                        <exclude>**/ha/spi/*.java</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
-        </plugins>
     </build>
 </project>

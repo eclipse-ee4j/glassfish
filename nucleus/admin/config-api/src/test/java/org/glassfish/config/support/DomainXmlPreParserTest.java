@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,28 +17,35 @@
 
 package org.glassfish.config.support;
 
-import java.io.*;
-import java.net.*;
-import java.util.*;
+import java.net.URL;
+import java.util.List;
+
 import javax.xml.stream.XMLInputFactory;
+
 import org.glassfish.config.support.DomainXmlPreParser.DomainXmlPreParserException;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
- *
  * @author bnevins
  */
 public class DomainXmlPreParserTest {
 
-    public DomainXmlPreParserTest() {
-    }
+    private static URL stock, i1, i1i2, c1i1, c1i1c1i2, noconfigfori1;
+    private static ClassLoader classLoader = DomainXmlPreParserTest.class.getClassLoader();
+    private static XMLInputFactory xif = XMLInputFactory.newInstance();
 
-    @BeforeClass
+    @BeforeAll
     public static void setUpClass() throws Exception {
         stock = loadURL("parser/stock.xml");
         i1 = loadURL("parser/i1.xml");
@@ -54,22 +62,10 @@ public class DomainXmlPreParserTest {
         return url;
     }
 
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
-    @Test(expected=DomainXmlPreParser.DomainXmlPreParserException.class)
+    @Test
     public void stockDomainHasNoInstance() throws DomainXmlPreParserException {
         System.out.println("stockDomainHasNoInstance");
-        DomainXmlPreParser pp = new DomainXmlPreParser(stock, xif, "i1");
+        assertThrows(DomainXmlPreParserException.class, () -> new DomainXmlPreParser(stock, xif, "i1"));
     }
 
     @Test
@@ -80,10 +76,10 @@ public class DomainXmlPreParserTest {
         String clusterName = pp.getClusterName();
         String configName = pp.getConfigName();
 
-        assertTrue(servers.size() == 1);
-        assertTrue(servers.get(0).equals("i1"));
+        assertThat(servers, hasSize(1));
+        assertEquals("i1", servers.get(0));
         assertNull(clusterName);
-        assertEquals(configName, "i1-config");
+        assertEquals("i1-config", configName);
     }
 
     @Test
@@ -94,11 +90,10 @@ public class DomainXmlPreParserTest {
         String clusterName = pp.getClusterName();
         String configName = pp.getConfigName();
 
-        assertTrue(servers.size() == 1);
-        assertTrue(servers.contains("i1"));
-        assertFalse(servers.contains("i2"));
+        assertThat(servers, hasSize(1));
+        assertThat(servers, contains("i1"));
         assertNull(clusterName);
-        assertEquals(configName, "i1-config");
+        assertEquals("i1-config", configName);
     }
 
     @Test
@@ -109,11 +104,10 @@ public class DomainXmlPreParserTest {
         String clusterName = pp.getClusterName();
         String configName = pp.getConfigName();
 
-        assertTrue(servers.size() == 1);
-        assertTrue(servers.contains("i2"));
-        assertFalse(servers.contains("i1"));
+        assertThat(servers, hasSize(1));
+        assertThat(servers, contains("i2"));
         assertNull(clusterName);
-        assertEquals(configName, "i2-config");
+        assertEquals("i2-config", configName);
     }
 
     @Test
@@ -124,10 +118,10 @@ public class DomainXmlPreParserTest {
         String clusterName = pp.getClusterName();
         String configName = pp.getConfigName();
 
-        assertTrue(servers.size() == 1);
-        assertTrue(servers.contains("c1i1"));
-        assertEquals(clusterName, "c1");
-        assertEquals(configName, "c1-config");
+        assertThat(servers, hasSize(1));
+        assertThat(servers, contains("c1i1"));
+        assertEquals("c1", clusterName);
+        assertEquals("c1-config", configName);
     }
 
     @Test
@@ -138,27 +132,20 @@ public class DomainXmlPreParserTest {
         String clusterName = pp.getClusterName();
         String configName = pp.getConfigName();
 
-        assertTrue(servers.size() == 2);
-        assertTrue(servers.contains("c1i1"));
-        assertTrue(servers.contains("c1i2"));
-        assertEquals(clusterName, "c1");
-        assertEquals(configName, "c1-config");
+        assertThat(servers, hasSize(2));
+        assertThat(servers, contains("c1i1", "c1i2"));
+        assertEquals("c1", clusterName);
+        assertEquals("c1-config", configName);
     }
 
     @Test
     public void noConfigTest() {
         System.out.println("noConfigTest");
         try {
-            DomainXmlPreParser pp = new DomainXmlPreParser(noconfigfori1, xif, "i1");
+            new DomainXmlPreParser(noconfigfori1, xif, "i1");
             fail("Expected an exception!!!");
-        }
-        catch(DomainXmlPreParserException e) {
-            assertTrue(e.getMessage().startsWith("The config element, "));
-            System.out.println(e);
+        } catch (DomainXmlPreParserException e) {
+            assertThat(e.getMessage(), startsWith("The config element, "));
         }
     }
-
-    private static URL stock, i1, i1i2, c1i1, c1i1c1i2, noconfigfori1;
-    private static ClassLoader classLoader = DomainXmlPreParserTest.class.getClassLoader();
-    private static XMLInputFactory xif = XMLInputFactory.newInstance();
 }

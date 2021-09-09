@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,13 +21,16 @@ import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
 import org.glassfish.api.ExecutionContext;
 import org.glassfish.api.Param;
 import org.glassfish.api.ParamDefaultCalculator;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.ParameterMap;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 
 /**
@@ -45,23 +49,22 @@ public class MapInjectionResolverTest {
         params.set("FivE", "six");
         params.set("sIx", "seVen");
         params.set("eiGHT", "niNe");
-        String value =
-            MapInjectionResolver.getParameterValue(params, "foo", false);
-        assertEquals("value is bar", "bar", value);
+        String value = MapInjectionResolver.getParameterValue(params, "foo", false);
+        assertEquals("bar", value, "value is bar");
         value = MapInjectionResolver.getParameterValue(params, "hello", true);
-        assertEquals("value is world", "world", value);
+        assertEquals("world", value, "value is world");
         value = MapInjectionResolver.getParameterValue(params, "onE", true);
-        assertEquals("value is two", "two", value);
+        assertEquals("two", value, "value is two");
         value = MapInjectionResolver.getParameterValue(params, "three", true);
-        assertEquals("value is four", "Four", value);
+        assertEquals("Four", value, "value is four");
         value = MapInjectionResolver.getParameterValue(params, "five", false);
-        assertEquals("value is null", null, value);
+        assertEquals(null, value, "value is null");
         value = MapInjectionResolver.getParameterValue(params, "six", true);
-        assertEquals("value is SeVen", "seVen", value);
+        assertEquals("seVen", value, "value is SeVen");
         value = MapInjectionResolver.getParameterValue(params, "eight", true);
-        assertEquals("value is niNe", "niNe", value);
+        assertEquals("niNe", value, "value is niNe");
         value = MapInjectionResolver.getParameterValue(params, "none", true);
-        assertEquals("value is null", null, value);
+        assertEquals(null, value, "value is null");
     }
 
     @Test
@@ -71,8 +74,7 @@ public class MapInjectionResolverTest {
         propsExpected.put("prop1", "valA");
         propsExpected.put("prop2", "valB");
         propsExpected.put("prop3", "valC");
-        Properties propsActual =
-            MapInjectionResolver.convertStringToProperties(propsStr, ':');
+        Properties propsActual = MapInjectionResolver.convertStringToProperties(propsStr, ':');
         assertEquals(propsExpected, propsActual);
     }
 
@@ -82,8 +84,7 @@ public class MapInjectionResolverTest {
         Properties propsExpected = new Properties();
         propsExpected.put("connectionAttributes", ";create\\=true");
         Properties propsActual = null;
-        propsActual =
-            MapInjectionResolver.convertStringToProperties(propsStr, ':');
+        propsActual = MapInjectionResolver.convertStringToProperties(propsStr, ':');
         assertEquals(propsExpected, propsActual);
     }
 
@@ -93,8 +94,7 @@ public class MapInjectionResolverTest {
         Properties propsExpected = new Properties();
         propsExpected.put("connectionAttributes", ";create=true");
         Properties propsActual = null;
-        propsActual =
-            MapInjectionResolver.convertStringToProperties(propsStr, ':');
+        propsActual = MapInjectionResolver.convertStringToProperties(propsStr, ':');
         assertEquals(propsExpected, propsActual);
     }
 
@@ -107,14 +107,11 @@ public class MapInjectionResolverTest {
             "java.naming.security.principal=\"uid=admin,ou=People," +
                 "o=foo,o=something\"";
         Properties propsExpected = new Properties();
-        propsExpected.put("java.naming.provider.url",
-                                "ldap://ldapserver.sun.com:389");
+        propsExpected.put("java.naming.provider.url", "ldap://ldapserver.sun.com:389");
         propsExpected.put("java.naming.security.authentication", "simple");
         propsExpected.put("java.naming.security.credentials", "changeit");
-        propsExpected.put("java.naming.security.principal",
-                                "uid=admin,ou=People,o=foo,o=something");
-        Properties propsActual =
-            MapInjectionResolver.convertStringToProperties(propsStr, ':');
+        propsExpected.put("java.naming.security.principal", "uid=admin,ou=People,o=foo,o=something");
+        Properties propsActual = MapInjectionResolver.convertStringToProperties(propsStr, ':');
         assertEquals(propsExpected, propsActual);
     }
 
@@ -122,165 +119,137 @@ public class MapInjectionResolverTest {
     public void convertStringToObjectTest() throws Exception {
         DummyCommand dc = new DummyCommand();
         Class<?> cl = dc.getClass();
-        AnnotatedElement target = (AnnotatedElement)cl.getDeclaredField("foo");
+        AnnotatedElement target = cl.getDeclaredField("foo");
         String paramValueStr = "prop1=valA:prop2=valB:prop3=valC";
-        Object paramValActual = MapInjectionResolver.convertStringToObject(
-                                    target, String.class, paramValueStr);
+        Object paramValActual = MapInjectionResolver.convertStringToObject(target, String.class, paramValueStr);
         Object paramValExpected =  "prop1=valA:prop2=valB:prop3=valC";
-        assertEquals("String type", paramValExpected, paramValActual);
+        assertEquals(paramValExpected, paramValActual, "String type");
 
-        target = (AnnotatedElement)cl.getDeclaredField("prop");
-        paramValActual = MapInjectionResolver.convertStringToObject(
-                                    target, Properties.class, paramValueStr);
+        target = cl.getDeclaredField("prop");
+        paramValActual = MapInjectionResolver.convertStringToObject(target, Properties.class, paramValueStr);
         paramValExpected = new Properties();
-        ((Properties)paramValExpected).put("prop1", "valA");
-        ((Properties)paramValExpected).put("prop2", "valB");
-        ((Properties)paramValExpected).put("prop3", "valC");
-        assertEquals("Properties type", paramValExpected, paramValActual);
+        ((Properties) paramValExpected).put("prop1", "valA");
+        ((Properties) paramValExpected).put("prop2", "valB");
+        ((Properties) paramValExpected).put("prop3", "valC");
+        assertEquals(paramValExpected, paramValActual, "Properties type");
 
-        target = (AnnotatedElement)cl.getDeclaredField("portnum");
+        target = cl.getDeclaredField("portnum");
         paramValueStr = "8080";
-        paramValActual = MapInjectionResolver.convertStringToObject(
-                                    target, Integer.class, paramValueStr);
-        paramValExpected = new Integer(8080);
-        assertEquals("Integer type", paramValExpected, paramValActual);
+        paramValActual = MapInjectionResolver.convertStringToObject(target, Integer.class, paramValueStr);
+        paramValExpected = Integer.valueOf(8080);
+        assertEquals(paramValExpected, paramValActual, "Integer type");
 
         paramValueStr = "server1:server2:server3";
-        target = (AnnotatedElement)cl.getDeclaredField("lstr");
+        target = cl.getDeclaredField("lstr");
         paramValActual = MapInjectionResolver.convertStringToObject(
                                     target, List.class, paramValueStr);
         List<String> paramValueList = new java.util.ArrayList();
         paramValueList.add("server1");
         paramValueList.add("server2");
         paramValueList.add("server3");
-        assertEquals("List type", paramValueList, paramValActual);
+        assertEquals(paramValueList, paramValActual, "List type");
 
         paramValueStr = "server1,server2,server3";
-        target = (AnnotatedElement)cl.getDeclaredField("astr");
-        paramValActual = MapInjectionResolver.convertStringToObject(
-                                    target, (new String[]{}).getClass(),
-                                                  paramValueStr);
+        target = cl.getDeclaredField("astr");
+        paramValActual = MapInjectionResolver.convertStringToObject(target, (new String[] {}).getClass(), paramValueStr);
         String[] strArray = new String[3];
         strArray[0] = "server1";
         strArray[1] = "server2";
         strArray[2] = "server3";
-        assertEquals("String Array type", strArray, (String[])paramValActual);
+        assertArrayEquals(strArray, (String[]) paramValActual, "String Array type");
     }
 
     @Test
     public void convertListToObjectTest() throws Exception {
         DummyCommand dc = new DummyCommand();
         Class<?> cl = dc.getClass();
-        AnnotatedElement target =
-            (AnnotatedElement)cl.getDeclaredField("propm");
-        List<String> paramValueList = new ArrayList<String>();
+        AnnotatedElement target = cl.getDeclaredField("propm");
+        List<String> paramValueList = new ArrayList<>();
         paramValueList.add("prop1=valA");
         paramValueList.add("prop2=valB");
         paramValueList.add("prop3=valC");
-        Object paramValActual = MapInjectionResolver.convertListToObject(
-                                    target, Properties.class, paramValueList);
+        Object paramValActual = MapInjectionResolver.convertListToObject(target, Properties.class, paramValueList);
         Object paramValExpected = new Properties();
-        ((Properties)paramValExpected).put("prop1", "valA");
-        ((Properties)paramValExpected).put("prop2", "valB");
-        ((Properties)paramValExpected).put("prop3", "valC");
-        assertEquals("Properties type", paramValExpected, paramValActual);
+        ((Properties) paramValExpected).put("prop1", "valA");
+        ((Properties) paramValExpected).put("prop2", "valB");
+        ((Properties) paramValExpected).put("prop3", "valC");
+        assertEquals(paramValExpected, paramValActual, "Properties type");
 
         paramValueList.clear();
         paramValueList.add("server1");
         paramValueList.add("server2");
         paramValueList.add("server3");
-        target = (AnnotatedElement)cl.getDeclaredField("lstrm");
-        paramValActual = MapInjectionResolver.convertListToObject(
-                                    target, List.class, paramValueList);
-        assertEquals("List type", paramValueList, paramValActual);
+        target = cl.getDeclaredField("lstrm");
+        paramValActual = MapInjectionResolver.convertListToObject(target, List.class, paramValueList);
+        assertEquals(paramValueList, paramValActual, "List type");
 
-        target = (AnnotatedElement)cl.getDeclaredField("astrm");
-        paramValActual = MapInjectionResolver.convertListToObject(
-                                    target, (new String[]{}).getClass(),
-                                                  paramValueList);
+        target = cl.getDeclaredField("astrm");
+        paramValActual = MapInjectionResolver.convertListToObject(target, (new String[] {}).getClass(), paramValueList);
         String[] strArray = new String[3];
         strArray[0] = "server1";
         strArray[1] = "server2";
         strArray[2] = "server3";
-        assertEquals("String Array type", strArray, (String[])paramValActual);
+        assertArrayEquals(strArray, (String[]) paramValActual, "String Array type");
+    }
+
+
+    @Test
+    public void getParamValueStringTest() throws Exception {
+        DummyCommand dc = new DummyCommand();
+        Class<?> cl = dc.getClass();
+        AnnotatedElement ae = cl.getDeclaredField("foo");
+        Param param = ae.getAnnotation(Param.class);
+        ParameterMap params = new ParameterMap();
+        params.set("foo", "true");
+        String val = MapInjectionResolver.getParamValueString(params, param, ae, null);
+        assertEquals("true", val, "val should be true");
+
+        ae = cl.getDeclaredField("bar");
+        param = ae.getAnnotation(Param.class);
+        val = MapInjectionResolver.getParamValueString(params, param, ae, null);
+        assertEquals("false", val, "val should be false");
+
+        ae = cl.getDeclaredField("hello");
+        param = ae.getAnnotation(Param.class);
+        val = MapInjectionResolver.getParamValueString(params, param, ae, null);
+        assertEquals(null, val, "val should be null");
+
+        ae = cl.getDeclaredField("dyn");
+        param = ae.getAnnotation(Param.class);
+        val = MapInjectionResolver.getParamValueString(params, param, ae, null);
+        assertEquals("dynamic-default-value", val, "val should be dynamic-default-value");
     }
 
     @Test
-    public void getParamValueStringTest() {
-        try {
-            DummyCommand dc = new DummyCommand();
-            Class<?> cl = dc.getClass();
-            AnnotatedElement ae = (AnnotatedElement)cl.getDeclaredField("foo");
-            Param param = ae.getAnnotation(Param.class);
-            ParameterMap params = new ParameterMap();
-            params.set("foo", "true");
-            String val =
-                MapInjectionResolver.getParamValueString(params, param, ae, null);
-            assertEquals("val should be true", "true", val);
+    public void getParamFieldTest() throws Exception {
+        DummyCommand dc = new DummyCommand();
+        Class<?> cl = dc.getClass();
+        AnnotatedElement ae = cl.getDeclaredField("hello");
+        Object obj = MapInjectionResolver.getParamField(dc, ae);
+        assertEquals("world", obj, "obj should be world");
+        ae = cl.getDeclaredField("prop");
+        obj = MapInjectionResolver.getParamField(dc, ae);
+        assertEquals(null, obj, "obj should be null");
 
-            ae = (AnnotatedElement)cl.getDeclaredField("bar");
-            param = ae.getAnnotation(Param.class);
-            val = MapInjectionResolver.getParamValueString(params, param, ae, null);
-            assertEquals("val should be false", "false", val);
-
-            ae = (AnnotatedElement)cl.getDeclaredField("hello");
-            param = ae.getAnnotation(Param.class);
-            val = MapInjectionResolver.getParamValueString(params, param, ae, null);
-            assertEquals("val should be null", null, val);
-
-            ae = (AnnotatedElement)cl.getDeclaredField("dyn");
-            param = ae.getAnnotation(Param.class);
-            val = MapInjectionResolver.getParamValueString(params, param, ae, null);
-            assertEquals("val should be dynamic-default-value", "dynamic-default-value", val);
-
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
+        ae = cl.getDeclaredField("dyn3");
+        obj = MapInjectionResolver.getParamField(dc, ae);
+        assertEquals("dynamic-default-value", obj, "obj should be dynamic-default-value");
     }
 
-    @Test
-    public void getParamFieldTest() {
-        try {
-            DummyCommand dc = new DummyCommand();
-            Class<?> cl = dc.getClass();
-            AnnotatedElement ae =
-                (AnnotatedElement)cl.getDeclaredField("hello");
-            Object obj = MapInjectionResolver.getParamField(dc, ae);
-            assertEquals("obj should be world", "world", (String)obj);
-            ae = (AnnotatedElement)cl.getDeclaredField("prop");
-            obj = MapInjectionResolver.getParamField(dc, ae);
-            assertEquals("obj should be null", null, obj);
-
-            ae = (AnnotatedElement)cl.getDeclaredField("dyn3");
-            obj = MapInjectionResolver.getParamField(dc, ae);
-            assertEquals("obj should be dynamic-default-value", "dynamic-default-value", (String)obj);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-        }
-    }
 
     @Test
-    public void getParamValueTest() {
-        try {
-            DummyCommand dc = new DummyCommand();
-            Class<?> cl = dc.getClass();
-            ParameterMap params = new ParameterMap();
-            params.add("hello", "world");
+    public void getParamValueTest() throws Exception {
+        DummyCommand dc = new DummyCommand();
+        Class<?> cl = dc.getClass();
+        ParameterMap params = new ParameterMap();
+        params.add("hello", "world");
 
-            CommandModel dccm = new CommandModelImpl(dc.getClass());
-            MapInjectionResolver mir = new MapInjectionResolver(dccm, params);
+        CommandModel dccm = new CommandModelImpl(dc.getClass());
+        MapInjectionResolver mir = new MapInjectionResolver(dccm, params);
 
-            AnnotatedElement ae =
-                (AnnotatedElement)cl.getDeclaredField("hello");
-            String hello = mir.getValue(dc, ae, null, String.class);
-            assertEquals("hello should be world", "world", hello);
-        }
-        catch (Exception ex) {
-            ex.printStackTrace();
-            fail("unexpected exception");
-        }
+        AnnotatedElement ae = cl.getDeclaredField("hello");
+        String hello = mir.getValue(dc, ae, null, String.class);
+        assertEquals("world", hello, "hello should be world");
     }
 
     @Test
@@ -290,8 +259,7 @@ public class MapInjectionResolverTest {
         listExpected.add("server1:server2");
         listExpected.add("\\server3");
         listExpected.add("server4");
-        List<String> listActual =
-            MapInjectionResolver.convertStringToList(listStr, ':');
+        List<String> listActual = MapInjectionResolver.convertStringToList(listStr, ':');
         assertEquals(listExpected, listActual);
     }
 
@@ -299,16 +267,19 @@ public class MapInjectionResolverTest {
     public void convertStringToStringArrayTest() {
         String strArray = "server1\\,server2,\\\\server3,server4";
         String[] strArrayExpected = new String[3];
-        strArrayExpected[0]="server1,server2";
-        strArrayExpected[1]="\\server3";
-        strArrayExpected[2]="server4";
-        String[] strArrayActual =
-            MapInjectionResolver.convertStringToStringArray(strArray, ',');
-        assertEquals(strArrayExpected, strArrayActual);
+        strArrayExpected[0] = "server1,server2";
+        strArrayExpected[1] = "\\server3";
+        strArrayExpected[2] = "server4";
+        String[] strArrayActual = MapInjectionResolver.convertStringToStringArray(strArray, ',');
+        assertArrayEquals(strArrayExpected, strArrayActual);
     }
 
     public static class DynTest extends ParamDefaultCalculator {
-        public DynTest() {}
+
+        public DynTest() {
+        }
+
+
         @Override
         public String defaultValue(ExecutionContext ec) {
             return "dynamic-default-value";
@@ -322,7 +293,7 @@ public class MapInjectionResolverTest {
     }
 
 
-        //mock-up DummyCommand object
+    // mock-up DummyCommand object
     public class DummyCommand {
         @Param(name="foo")
         String foo;

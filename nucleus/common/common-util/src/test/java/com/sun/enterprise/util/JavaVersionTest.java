@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +17,11 @@
 
 package com.sun.enterprise.util;
 
-import org.junit.Test;
-import static org.junit.Assert.assertTrue;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Tests for JavaVersion class's methods.
@@ -29,7 +33,8 @@ public class JavaVersionTest {
         "1.6.0",
         "1.7.0_10-ea",
         "1.7.0_17",
-        "1.7.0_17-rc1"
+        "1.7.0_17-rc1",
+        "11.0.11+9",
     };
 
     private static final String[] INVALID_JAVA_VERSIONS = new String[] {
@@ -44,14 +49,14 @@ public class JavaVersionTest {
         for (String st: JAVA_VERSIONS) {
             System.out.println("Test Java Version String " + st);
             JavaVersion jv = JavaVersion.getVersion(st);
-            assertTrue(jv != null);
+            assertNotNull(jv);
             System.out.println("Java Version = " + jv.toJdkStyle());
         }
 
         for (String st: INVALID_JAVA_VERSIONS) {
             System.out.println("Test Invalid Java Version String " + st);
             JavaVersion jv = JavaVersion.getVersion(st);
-            assertTrue(jv == null);
+            assertNull(jv);
         }
     }
 

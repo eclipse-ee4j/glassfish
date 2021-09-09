@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,12 +18,12 @@
 package com.sun.enterprise.deployment.deploy.shared;
 
 import com.sun.enterprise.deployment.deploy.shared.InputJarArchive.CollectionWrappedEnumeration;
+
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -36,135 +37,66 @@ import java.util.jar.Attributes.Name;
 import java.util.jar.JarEntry;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+
 import org.glassfish.api.deployment.archive.ReadableArchive;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author Tim
  */
 public class InputJarArchiveTest {
 
     private static final String NESTED_JAR_ENTRY_NAME = "nested/archive.jar";
 
-    public InputJarArchiveTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
     /**
      * Test of getArchiveSize method, of class InputJarArchive.
      */
     @Test
     public void testCollectionWrappedEnumerationSimple() {
-        System.out.println("collection wrapped enumeration - simple iterator test");
         final Enumeration<String> e = testEnum();
-
-        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<String>(
-                new CollectionWrappedEnumeration.EnumerationFactory() {
-
-            @Override
-            public Enumeration enumeration() {
-                return e;
-            }
-
-        });
-
-        ArrayList<String> answer = new ArrayList<String>(cwe);
-        assertEquals("resulting array list != original", testStringsAsArrayList(), answer);
+        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(() -> e);
+        ArrayList<String> answer = new ArrayList<>(cwe);
+        assertEquals(testStringsAsArrayList(), answer, "resulting array list != original");
     }
 
     @Test
     public void testCollectionWrappedEnumerationInitialSize() {
-        System.out.println("collection wrapped enumeration - initial size() call");
         final Enumeration<String> e = testEnum();
-
-        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<String>(
-                new CollectionWrappedEnumeration.EnumerationFactory() {
-
-            @Override
-            public Enumeration enumeration() {
-                return e;
-            }
-
-        });
-
+        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(() -> e);
         int size = cwe.size();
-        ArrayList<String> answer = new ArrayList<String>(cwe);
-        assertEquals("array list of size " + size + " after initial size != original", testStringsAsArrayList(), answer);
+        ArrayList<String> answer = new ArrayList<>(cwe);
+        assertEquals(testStringsAsArrayList(), answer, "array list of size " + size + " after initial size != original");
     }
 
     @Test
     public void testCollectionWrappedEnumerationMiddleSize() {
-        System.out.println("collection wrapped enumeration - middle size() call");
-
-        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<String>(
-                new CollectionWrappedEnumeration.EnumerationFactory() {
-
-            @Override
-            public Enumeration enumeration() {
-                return testEnum();
-            }
-
-        });
-
-        ArrayList<String> answer = new ArrayList<String>();
+        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(() -> testEnum());
+        ArrayList<String> answer = new ArrayList<>();
         Iterator<String> it = cwe.iterator();
-
         answer.add(it.next());
         answer.add(it.next());
         answer.add(it.next());
         int size = cwe.size();
         answer.add(it.next());
         answer.add(it.next());
-
-        assertEquals("array list of size " + size + " after middle size call != original", testStringsAsArrayList(), answer);
+        assertEquals(testStringsAsArrayList(), answer, "array list of size " + size + " after middle size call != original");
     }
 
     @Test
     public void testCollectionWrappedEnumerationEndSize() {
-        System.out.println("collection wrapped enumeration - end size() call");
-
-        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<String>(
-                new CollectionWrappedEnumeration.EnumerationFactory() {
-
-            @Override
-            public Enumeration enumeration() {
-                return testEnum();
-            }
-
-        });
-
-        List<String> answer = new ArrayList<String>();
+        CollectionWrappedEnumeration<String> cwe = new CollectionWrappedEnumeration<>(() -> testEnum());
+        List<String> answer = new ArrayList<>();
         Iterator<String> it = cwe.iterator();
-
         answer.add(it.next());
         answer.add(it.next());
         answer.add(it.next());
         answer.add(it.next());
         answer.add(it.next());
         int size = cwe.size();
-
-        assertEquals("array list of size " + size + " after middle size call != original", testStringsAsArrayList(), answer);
+        assertEquals(testStringsAsArrayList(), answer,
+            "array list of size " + size + " after middle size call != original");
     }
 
     private ReadableArchive getArchiveForTest() throws IOException {
@@ -181,66 +113,43 @@ public class InputJarArchiveTest {
     }
 
     @Test
-    public void testTopLevelDirEntryNamesForInputJarArchive() {
-        try {
-            System.out.println("top-level directory entry names in InputJarArchive");
-            final ReadableArchive arch = getArchiveForTest();
-            final Set<String> returnedNames = new HashSet<String>(arch.getDirectories());
-            assertEquals("Returned top-level directories do not match expected", testJarTopLevelDirEntryNames(), returnedNames);
-            retireArchive(arch);
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
-            fail("Error during test");
-        }
+    public void testTopLevelDirEntryNamesForInputJarArchive() throws Exception {
+        final ReadableArchive arch = getArchiveForTest();
+        final Set<String> returnedNames = new HashSet<>(arch.getDirectories());
+        assertEquals(testJarTopLevelDirEntryNames(), returnedNames,
+            "Returned top-level directories do not match expected");
+        retireArchive(arch);
     }
 
     @Test
-    public void testNonDirEnryNames() {
-        try {
-            System.out.println("non-directory entry names in InputJarArchive");
-            final ReadableArchive arch = getArchiveForTest();
-            final Set<String> returnedNames = new HashSet<String>(setFromEnumeration(arch.entries()));
-            assertEquals("Returned non-directory entry names do not match expected", testStandAloneArchiveJarNonDirEntryNames(), returnedNames);
-            retireArchive(arch);
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
-            fail("Error during test");
-        }
+    public void testNonDirEnryNames() throws Exception {
+        final ReadableArchive arch = getArchiveForTest();
+        final Set<String> returnedNames = new HashSet<>(setFromEnumeration(arch.entries()));
+        assertEquals(testStandAloneArchiveJarNonDirEntryNames(), returnedNames,
+            "Returned non-directory entry names do not match expected");
+        retireArchive(arch);
     }
 
     @Test
-    public void testNestedTopLevelDirEntryNames() {
-        try {
-            System.out.println("nested top-level directory entry names in InputJarArchive");
-            final ReadableArchive arch = getArchiveForTest();
-            ReadableArchive subArchive = arch.getSubArchive(NESTED_JAR_ENTRY_NAME);
+    public void testNestedTopLevelDirEntryNames() throws Exception {
+        final ReadableArchive arch = getArchiveForTest();
+        ReadableArchive subArchive = arch.getSubArchive(NESTED_JAR_ENTRY_NAME);
 
-            final Set<String> returnedNames = new HashSet<String>(subArchive.getDirectories());
-            assertEquals("Returned nested top-level directories do not match expected",
-                    testJarTopLevelDirEntryNames(), returnedNames);
-            retireArchive(arch);
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
-            fail("Error during test");
-        }
+        final Set<String> returnedNames = new HashSet<>(subArchive.getDirectories());
+        assertEquals(testJarTopLevelDirEntryNames(), returnedNames,
+            "Returned nested top-level directories do not match expected");
+        retireArchive(arch);
     }
 
     @Test
-    public void testNestedNonDirEntryNames() {
-        try {
-            System.out.println("nested non-directory entry names in InputJarArchive");
-            final ReadableArchive arch = getArchiveForTest();
-            ReadableArchive subArchive = arch.getSubArchive(NESTED_JAR_ENTRY_NAME);
+    public void testNestedNonDirEntryNames() throws Exception {
+        final ReadableArchive arch = getArchiveForTest();
+        ReadableArchive subArchive = arch.getSubArchive(NESTED_JAR_ENTRY_NAME);
 
-            final Set<String> returnedNames = new HashSet<String>(
-                    setFromEnumeration(subArchive.entries()));
-            assertEquals("Returned nested non-directories do not match expected",
-                    testSubArchiveNonDirEntryNames(), returnedNames);
-            retireArchive(arch);
-        } catch (IOException ex) {
-            ex.printStackTrace(System.out);
-            fail("Error during test");
-        }
+        final Set<String> returnedNames = new HashSet<>(setFromEnumeration(subArchive.entries()));
+        assertEquals(testSubArchiveNonDirEntryNames(), returnedNames,
+            "Returned nested non-directories do not match expected");
+        retireArchive(arch);
     }
 
     private File createTestJAR() throws IOException {
@@ -261,10 +170,8 @@ public class InputJarArchiveTest {
             // Note that these entries in the test JAR are empty - we just need to test the names
         }
 
-        /*
-         * Now create a nested JAR within the main test JAR.  For simplicity
-         * use the same entry names as the outer JAR.
-         */
+        //  Now create a nested JAR within the main test JAR.  For simplicity
+        //  use the same entry names as the outer JAR.
         final JarEntry nestedJarEntry = new JarEntry(NESTED_JAR_ENTRY_NAME);
         jos.putNextEntry(nestedJarEntry);
 
@@ -281,16 +188,13 @@ public class InputJarArchiveTest {
         jos.write(baos.toByteArray());
         jos.closeEntry();
 
-
         jos.close();
         return tempJAR;
     }
 
 
     private static Enumeration<String> testEnum() {
-        Enumeration<String> e = Collections.enumeration(testStringsAsArrayList());
-
-        return e;
+        return Collections.enumeration(testStringsAsArrayList());
     }
 
     private static List<String> testStringsAsArrayList() {
@@ -306,25 +210,26 @@ public class InputJarArchiveTest {
                 "topLevelDir/secondLevelDir/thirdLevelNonDir");
     }
 
+
     private static Set<String> testJarTopLevelDirEntryNames() {
-        return new HashSet(Arrays.asList(
-                "topLevelDir/"));
+        return Set.of("topLevelDir/");
     }
+
 
     private static Set<String> testSubArchiveNonDirEntryNames() {
-        return new HashSet(Arrays.asList(
-                "topLevelNonDir", "topLevelDir/secondLevelNonDir",
-                "topLevelDir/secondLevelDir/thirdLevelNonDir"));
+        return Set.of("topLevelNonDir", "topLevelDir/secondLevelNonDir", "topLevelDir/secondLevelDir/thirdLevelNonDir");
     }
 
+
     private static Set<String> testStandAloneArchiveJarNonDirEntryNames() {
-        final Set<String> result = testSubArchiveNonDirEntryNames();
+        final Set<String> result = new HashSet<>(testSubArchiveNonDirEntryNames());
         result.add(NESTED_JAR_ENTRY_NAME);
         return result;
     }
 
+
     private static <T> Set<T> setFromEnumeration(final Enumeration<T> e) {
-        final Set<T> result = new HashSet<T>();
+        final Set<T> result = new HashSet<>();
         while (e.hasMoreElements()) {
             result.add(e.nextElement());
         }

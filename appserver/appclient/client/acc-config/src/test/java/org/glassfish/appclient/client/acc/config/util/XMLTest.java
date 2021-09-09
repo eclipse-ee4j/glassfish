@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,8 +17,6 @@
 
 package org.glassfish.appclient.client.acc.config.util;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.HashMap;
@@ -25,28 +24,23 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.sax.SAXSource;
 
 import org.glassfish.appclient.client.acc.config.ClientContainer;
 import org.glassfish.appclient.client.acc.config.TargetServer;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 
 import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -67,68 +61,47 @@ public class XMLTest {
     private static final String SECOND_PROP_NAME = "secondProp";
     private static final String SECOND_PROP_VALUE = "secondValue";
 
-    public XMLTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
     @Test
     public void testProps() throws Exception {
-        System.out.println("testProps");
         for (String sampleXMLPath : SAMPLE_XML_PATH) {
-            System.out.println("  Testing with " + sampleXMLPath);
+            System.out.println("Testing with " + sampleXMLPath);
             ClientContainer cc = readConfig(sampleXMLPath);
             Properties props = XML.toProperties(cc.getProperty());
-            assertEquals("property value mismatch for first property from " + sampleXMLPath,
-                    FIRST_PROP_VALUE, props.getProperty(FIRST_PROP_NAME));
-            assertEquals("property value mismatch for second property from " + sampleXMLPath,
-                    SECOND_PROP_VALUE, props.getProperty(SECOND_PROP_NAME));
+            assertEquals(FIRST_PROP_VALUE, props.getProperty(FIRST_PROP_NAME),
+                "property value mismatch for first property from " + sampleXMLPath);
+            assertEquals(SECOND_PROP_VALUE, props.getProperty(SECOND_PROP_NAME),
+                "property value mismatch for second property from " + sampleXMLPath);
         }
     }
 
     @Test
     public void testReadSampleXML() throws Exception {
-        System.out.println("testReadSampleXML");
         for (String sampleXMLPath : SAMPLE_XML_PATH) {
             System.out.println("  Testing with " + sampleXMLPath);
             ClientContainer cc = readConfig(sampleXMLPath);
             List<TargetServer> servers = cc.getTargetServer();
-
-
-            assertTrue("target servers did not read correctly from " + sampleXMLPath,
-                    servers.get(0).getAddress().equals(FIRST_HOST) &&
-                    servers.get(0).getPort().equals(FIRST_PORT) &&
-                    servers.get(1).getAddress().equals(SECOND_HOST) &&
-                    servers.get(1).getPort() == SECOND_PORT
-                );
+            assertAll("target servers did not read correctly from " + sampleXMLPath,
+                () -> assertEquals(FIRST_HOST, servers.get(0).getAddress()),
+                () -> assertEquals(FIRST_PORT, servers.get(0).getPort()),
+                () -> assertEquals(SECOND_HOST, servers.get(1).getAddress()),
+                () -> assertEquals(SECOND_PORT, servers.get(1).getPort())
+            );
         }
-
     }
 
-    private static ClientContainer readConfig(final String configPath)
-            throws JAXBException, FileNotFoundException, ParserConfigurationException, SAXException, IOException {
-        ClientContainer result = null;
-        InputStream is = XMLTest.class.getResourceAsStream(configPath);
-        assertNotNull("cannot locate test file " + configPath, configPath);
-        try {
+
+    private static ClientContainer readConfig(final String configPath) throws Exception {
+        assertNotNull(configPath, "cannot locate test file " + configPath);
+        try (InputStream is = XMLTest.class.getResourceAsStream(configPath)) {
             JAXBContext jc = JAXBContext.newInstance(ClientContainer.class );
             Unmarshaller u = jc.createUnmarshaller();
             final SAXSource src = setUpToUseLocalDTDs(is);
-            result = (ClientContainer) u.unmarshal(src);
-            return result;
-        } finally {
-            is.close();
+            return (ClientContainer) u.unmarshal(src);
         }
     }
 
-    private static SAXSource setUpToUseLocalDTDs(final InputStream is)
-            throws ParserConfigurationException, SAXException {
+
+    private static SAXSource setUpToUseLocalDTDs(final InputStream is) throws Exception {
         SAXParserFactory parserFactory = SAXParserFactory.newInstance();
         parserFactory.setNamespaceAware(true);
         SAXParser saxParser = parserFactory.newSAXParser();
@@ -155,34 +128,19 @@ public class XMLTest {
                 "-//GlassFish.org//DTD GlassFish Application Server 3.1 Application Client Container//EN",
                 "dtds/glassfish-application-client-container_1_3.dtd");
 
-            private static final String SYSTEM_ID_PREFIX = "http://glassfish.org/";
-
             private final String publicID;
-            private final String systemIDSuffix;
             private final URI uri;
 
             ACC_INFO(final String publicID, final String systemIDSuffix) {
                 this.publicID = publicID;
-                this.systemIDSuffix = systemIDSuffix;
                 uri = URI.create(LOCAL_PATH_PREFIX + systemIDSuffix);
             }
         }
 
-        private static final String SUN_ACC_PUBLIC_ID =
-                "-//Sun Microsystems Inc.//DTD Application Server 8.0 Application Client Container//EN";
-        private static final String GLASSFISH_ACC_PUBLIC_ID =
-                "-//GlassFish.org//DTD GlassFish Application Server 3.1 Application Client Container//EN";
-        private static final String SYSTEM_ID_PREFIX =
-                "http://glassfish.org/";
-        private static final URI SUN_ACC_SYSTEM_ID_URI =
-                URI.create(SYSTEM_ID_PREFIX + "dtds/sun-application-client-container_1_2.dtd");
-        private static final URI GLASSFISH_ACC_SYSTEM_ID_URI =
-                URI.create(SYSTEM_ID_PREFIX + "dtds/glassfish-application-client-container_1_3.dtd");
-
+        private static final String SYSTEM_ID_PREFIX = "http://glassfish.org/";
         private static final String LOCAL_PATH_PREFIX = "/glassfish/lib/";
 
-        private static final Map<String,String> publicIdToLocalPathMap =
-                initPublicIdToLocalPathMap();
+        private static final Map<String, String> publicIdToLocalPathMap = initPublicIdToLocalPathMap();
 
         private static Map<String,String> initPublicIdToLocalPathMap() {
             final Map<String,String> result = new HashMap<>();
@@ -198,15 +156,10 @@ public class XMLTest {
          */
         @Override
         public InputSource resolveEntity(String publicId, String systemId){
-            InputSource result = null;
             final String localPath = publicIdToLocalPathMap.get(publicId);
             if (localPath == null) {
                 return null;
             }
-
-//            showClassPath(Thread.currentThread().getContextClassLoader(), "context");
-//            showClassPath(getClass().getClassLoader(), "class");
-//            showClassPath(ClassLoader.getSystemClassLoader(), "system");
 
             /*
              * The next line works because the pom for this project extracted
@@ -221,25 +174,7 @@ public class XMLTest {
                 System.err.println("Found map entry for public Id but could not find the local path " + localPath);
                 return null;
             }
-            result = new InputSource(is);
-            return result;
+            return new InputSource(is);
         }
-
-//        private void showClassPath(ClassLoader cl, final String title) {
-//            System.err.println("URLs of loaders for the " + title + " class loader");
-//            while (cl != null) {
-//                if (cl instanceof URLClassLoader) {
-//                    System.err.println("  " + cl.toString());
-//                    URLClassLoader urlCL = URLClassLoader.class.cast(cl);
-//                    System.err.println();
-//                    for (URL url : urlCL.getURLs()) {
-//                        System.err.println("    " + url.toExternalForm());
-//                    }
-//                }
-//                cl = cl.getParent();
-//            }
-//            System.err.println();
-//        }
-
     }
 }

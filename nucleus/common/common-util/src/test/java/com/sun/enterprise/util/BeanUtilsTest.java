@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2014, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +21,13 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  *
@@ -82,7 +88,7 @@ public class BeanUtilsTest {
 
     @Test
     public void testMapToBean1() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("one", "hello");
         map.put("two", true);
         Bean1 b = new Bean1();
@@ -93,7 +99,7 @@ public class BeanUtilsTest {
 
     @Test
     public void testMapToBean2() throws Exception {
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("one", "hello");
         map.put("two", true);
         map.put("some", "some");
@@ -101,7 +107,7 @@ public class BeanUtilsTest {
         BeanUtils.mapToBean(b, map, true);
         try {
             BeanUtils.mapToBean(b, map, false);
-            assertTrue(false);
+            fail("should result with IAE");
         } catch (IllegalArgumentException ex) {
         }
     }

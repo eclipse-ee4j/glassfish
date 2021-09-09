@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,81 +17,81 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.FileCache;
 import org.glassfish.grizzly.config.dom.Http;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
-import static junit.framework.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * HttpService related tests
  *
  * @author Jerome Dochez
  */
-public class HttpServiceTest extends ConfigApiTest {
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class HttpServiceTest {
 
-    NetworkListener listener = null;
+    @Inject
+    private ServiceLocator locator;
 
-    @Before
+    private NetworkListener listener;
+
+
+    @BeforeEach
     public void setup() {
-        listener = getHabitat().<NetworkConfig>getService(NetworkConfig.class).getNetworkListener("admin-listener");
-        assertTrue(listener != null);
+        listener = locator.<NetworkConfig>getService(NetworkConfig.class).getNetworkListener("admin-listener");
+        assertNotNull(listener);
     }
 
     @Test
     public void connectionTest() {
         final String max = listener.findHttpProtocol().getHttp().getMaxConnections();
-        logger.fine("Max connections = " + max);
-        assertEquals("Should only allow 250 connections.  The default is 256, however.", "250", max);
+        assertEquals("250", max, "Should only allow 250 connections. The default is 256, however.");
     }
 
     @Test
     public void validTransaction() throws TransactionFailure {
         final String max = listener.findHttpProtocol().getHttp().getMaxConnections();
 
-        ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
-            public Object run(NetworkListener okToChange) throws TransactionFailure {
-                final Http http = okToChange.createChild(Http.class);
-                http.setMaxConnections("100");
-                http.setTimeoutSeconds("65");
-                http.setFileCache(http.createChild(FileCache.class));
-                ConfigSupport.apply(new SingleConfigCode<Protocol>() {
-                    @Override
-                    public Object run(Protocol param) {
-                        param.setHttp(http);
-                        return null;
-                    }
-                }, okToChange.findHttpProtocol());
-                return http;
-            }
-        }, listener);
-
-        ConfigSupport.apply(new SingleConfigCode<Http>() {
-            @Override
-            public Object run(Http param) {
-                param.setMaxConnections(max);
+        SingleConfigCode<NetworkListener> listenerConfigCode = networkListener -> {
+            final Http http = networkListener.createChild(Http.class);
+            http.setMaxConnections("100");
+            http.setTimeoutSeconds("65");
+            http.setFileCache(http.createChild(FileCache.class));
+            SingleConfigCode<Protocol> protocolConfigCode = protocol -> {
+                protocol.setHttp(http);
                 return null;
-            }
-        }, listener.findHttpProtocol().getHttp());
-        try {
-            ConfigSupport.apply(new SingleConfigCode<Http>() {
-                public Object run(Http param) throws TransactionFailure {
-                    param.setMaxConnections("7");
-                    throw new TransactionFailure("Sorry, changed my mind", null);
-                }
-            }, listener.findHttpProtocol().getHttp());
-        } catch (TransactionFailure e) {
-            logger.fine("good, got my exception about changing my mind");
-        }
+            };
+            ConfigSupport.apply(protocolConfigCode, networkListener.findHttpProtocol());
+            return http;
+        };
+        ConfigSupport.apply(listenerConfigCode, listener);
+
+        SingleConfigCode<Http> httpConfigCode = (SingleConfigCode<Http>) http -> {
+            http.setMaxConnections(max);
+            return null;
+        };
+        ConfigSupport.apply(httpConfigCode, listener.findHttpProtocol().getHttp());
+        SingleConfigCode<Http> configCode = http -> {
+            http.setMaxConnections("7");
+            throw new TransactionFailure("Sorry, changed my mind", null);
+        };
+        assertThrows(TransactionFailure.class,
+            () -> ConfigSupport.apply(configCode, listener.findHttpProtocol().getHttp()));
+        assertEquals(max, listener.findHttpProtocol().getHttp().getMaxConnections());
     }
 }

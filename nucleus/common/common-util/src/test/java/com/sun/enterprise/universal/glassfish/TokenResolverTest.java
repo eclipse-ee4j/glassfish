@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,14 +18,13 @@
 package com.sun.enterprise.universal.glassfish;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
@@ -32,36 +32,24 @@ import static org.junit.Assert.*;
  */
 public class TokenResolverTest {
 
-    public TokenResolverTest() {
-    }
+    private Map<String,String> testMap;
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        testMap = new HashMap<String,String>();
+        testMap = new HashMap<>();
         testMap.put("name1", "value1");
         testMap.put("name2", "value2");
         testMap.put("name3", "value3");
         testMap.put("name4", "value4");
     }
 
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of resolve method, of class TokenResolver.
      */
     @Test
     public void testResolve_Map() {
-        Map<String,String> map2 = new HashMap<String,String>();
+        Map<String,String> map2 = new HashMap<>();
 
         map2.put("foo", "${name1}");
         map2.put("foo2", "${name111}");
@@ -82,17 +70,7 @@ public class TokenResolverTest {
 
         instance.resolve(map2);
     }
-    /**
-     * Test of resolve method, of class TokenResolver.
-     */
-    @Test
-    public void testResolve_List() {
-        List<String> list = null;
-        TokenResolver instance = new TokenResolver(testMap);
-        //instance.resolve(list);
-        // TODO review the generated test code and remove the default call to fail.
-        //fail("The test case is a prototype.");
-    }
+
 
     /**
      * Test of resolve method, of class TokenResolver.
@@ -121,5 +99,4 @@ public class TokenResolverTest {
         assertEquals(expResult, result);
     }
 
-    private Map<String,String> testMap;
 }

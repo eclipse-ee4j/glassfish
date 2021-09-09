@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,67 +19,56 @@ package com.sun.enterprise.admin.util.cache;
 
 import com.sun.enterprise.admin.util.CachedCommandModel;
 import com.sun.enterprise.admin.util.CachedCommandModelTest;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+
 import org.glassfish.api.admin.CommandModel;
-import static org.junit.Assert.*;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author mmares
  */
 public class AdminCacheUtilsTest {
 
-    private AdminCacheUtils acu = AdminCacheUtils.getInstance();
-
-    public AdminCacheUtilsTest() {
-    }
-
-//    @BeforeClass
-//    public static void setUpClass() throws Exception {
-//    }
-
-//    @AfterClass
-//    public static void tearDownClass() throws Exception {
-//    }
+    private final AdminCacheUtils acu = AdminCacheUtils.getInstance();
 
     @Test
-    public void testSimpleGetProvider() throws IOException {
-        DataProvider provider;
-        byte[] data;
-        //String
-        Object o = "The Man Who Sold The World";
-        assertNotNull(provider = acu.getProvider(o.getClass()));
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        provider.writeToStream(o, baos);
-        assertNotNull(data = baos.toByteArray());
-        assertTrue(o.equals(provider.toInstance(new ByteArrayInputStream(data),
-                o.getClass())));
-        //byte array
-        o = "The Man Who Sold The World".getBytes();
-        assertNotNull(provider = acu.getProvider(o.getClass()));
-        baos = new ByteArrayOutputStream();
-        provider.writeToStream(o, baos);
-        assertNotNull(data = baos.toByteArray());
-        assertArrayEquals((byte[]) o, data);
-        assertArrayEquals((byte[]) o, (byte[]) provider.toInstance(
-                new ByteArrayInputStream(data), byte[].class));
+    public void testSimpleGetProvider_String() throws IOException {
+        final String string = "The Man Who Sold The World";
+        final DataProvider provider = acu.getProvider(string.getClass());
+        assertNotNull(provider);
+        final byte[] data = toByteArray(string, provider);
+        assertNotNull(data);
+        assertEquals(string, toInstance(data, String.class, provider));
+    }
+
+    @Test
+    public void testSimpleGetProvider_byteArray() throws IOException {
+        final byte[] byteArray = "The Man Who Sold The World".getBytes();
+        final DataProvider provider = acu.getProvider(byteArray.getClass());
+        assertNotNull(provider);
+        final byte[] data = toByteArray(byteArray, provider);
+        assertNotNull(data);
+        assertArrayEquals(byteArray, data);
+        assertArrayEquals(byteArray, toInstance(data, byte[].class, provider));
     }
 
     @Test
     public void testGetProvider4CommandModel() throws Exception {
-        DataProvider provider;
-        byte[] data;
-        assertNotNull(provider = acu.getProvider(CommandModel.class));
-        CachedCommandModel beatles1 = CachedCommandModelTest.createBeateles();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        provider.writeToStream(beatles1, baos);
-        assertNotNull(data = baos.toByteArray());
-        System.out.println("BTW: " + new String(data, "UTF-8"));
-        CachedCommandModel beatles2 = (CachedCommandModel) provider.toInstance(
-                new ByteArrayInputStream(data), CachedCommandModel.class);
+        final DataProvider provider = acu.getProvider(CommandModel.class);
+        assertNotNull(provider);
+        final CachedCommandModel beatles1 = CachedCommandModelTest.createBeateles();
+        final byte[] data = toByteArray(beatles1, provider);
+        assertNotNull(data);
+        final CachedCommandModel beatles2 = toInstance(data, CachedCommandModel.class, provider);
         beatles2.setETag(null);
         assertEquals(beatles1.getETag(), CachedCommandModel.computeETag(beatles2));
     }
@@ -96,4 +86,17 @@ public class AdminCacheUtilsTest {
         assertTrue(acu.validateKey("kurt.cobain/smells.like.teen.spirit/"));
     }
 
+
+    private byte[] toByteArray(final Object object, final DataProvider provider) throws IOException {
+        final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        provider.writeToStream(object, baos);
+        return baos.toByteArray();
+    }
+
+
+    @SuppressWarnings("unchecked") // yeah, we know that
+    private <T> T toInstance(final byte[] data, final Class<T> targetClass, final DataProvider provider)
+        throws IOException {
+        return (T) provider.toInstance(new ByteArrayInputStream(data), targetClass);
+    }
 }

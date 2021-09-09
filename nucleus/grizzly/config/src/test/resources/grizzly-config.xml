@@ -27,7 +27,7 @@
     </protocols>
     <network-listeners>
         <thread-pool name="defaultThreadPool"/>
-        <thread-pool name="customThreadPool" classname="org.glassfish.grizzly.config.CustomExecutorService"/>
+        <thread-pool name="customThreadPool" classname="org.glassfish.grizzly.config.test.example.CustomExecutorService"/>
         <network-listener name="http-listener-1" port="38082" transport="tcp" protocol="http" thread-pool="defaultThreadPool"/>
         <network-listener name="http-listener-2" port="38083" transport="tcp" protocol="http" thread-pool="defaultThreadPool"/>
         <network-listener name="http-listener-3" port="38084" transport="tcp" protocol="http" thread-pool="customThreadPool"/>

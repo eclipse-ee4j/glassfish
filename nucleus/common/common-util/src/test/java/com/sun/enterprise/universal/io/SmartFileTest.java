@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,40 +17,19 @@
 
 package com.sun.enterprise.universal.io;
 
-import com.sun.enterprise.util.OS;
+
 import java.io.File;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.assertEquals;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author bnevins
  */
 public class SmartFileTest {
-
-    public SmartFileTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
-
 
     /**
      * Test of sanitizePaths method, of class SmartFile.
@@ -77,14 +57,12 @@ public class SmartFileTest {
      */
     @Test
     public void sanitizePaths2() {
-        String sep = File.pathSeparator;
-        if (OS.isWindows()) {
+        if (com.sun.enterprise.util.OS.isWindows()) {
             String badPaths = "c:/xyz;\"c:\\a b\";c:\\foo";
             String convert = SmartFile.sanitizePaths(badPaths);
             String expect = "C:/xyz;C:/a b;C:/foo";
             assertEquals(convert, expect);
-        }
-        else {
+        } else {
             String badPaths = "/xyz:\"/a b\":/foo";
             String convert = SmartFile.sanitizePaths(badPaths);
             String expect = "/xyz:/a b:/foo";
@@ -93,9 +71,8 @@ public class SmartFileTest {
     }
 
     @Test
+    @DisabledOnOs(OS.WINDOWS)
     public void edgeCase() {
-        if(OS.isWindows())
-            return;
 
         String fn = "/../../../../../../../../foo";
         assertEquals(SmartFile.sanitize(fn), "/foo");
@@ -108,20 +85,4 @@ public class SmartFileTest {
         fn = "/foo/../../foo";
         assertEquals(SmartFile.sanitize(fn), "/foo");
     }
-
-
-    private static final String[] FILENAMES = new String[]{
-        "c:/",
-        "c:",
-        "",
-        "\\foo",
-        "/",
-        "/xxx/yyy/././././../yyy",
-        "/x/y/z/../../../temp",
-        //"\\\\",
-        //"\\\\foo\\goo\\hoo",
-        "x/y/../../../..",
-        "/x/y/../../../..",
-        "/./../.././../",
-        "/::::/x/yy",};
 }

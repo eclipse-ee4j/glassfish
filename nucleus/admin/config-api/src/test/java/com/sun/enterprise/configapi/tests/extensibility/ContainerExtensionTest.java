@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,36 +18,44 @@
 package com.sun.enterprise.configapi.tests.extensibility;
 
 import com.sun.enterprise.config.serverbeans.Application;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Domain;
-import org.glassfish.tests.utils.Utils;
-import org.glassfish.api.admin.config.Container;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import com.sun.enterprise.configapi.tests.example.AnApplicationExtension;
+import com.sun.enterprise.configapi.tests.example.RandomContainer;
+import com.sun.enterprise.configapi.tests.example.RandomElement;
+import com.sun.enterprise.configapi.tests.example.RandomExtension;
 
 import java.util.List;
+
+import org.glassfish.api.admin.config.Container;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author Jerome Dochez
  */
-public class ContainerExtensionTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("Extensibility.xml")
+public class ContainerExtensionTest {
 
-
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
-
-    @Override
-    public String getFileName() {
-        return "Extensibility";
-    }
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void existenceTest() {
-
-        Config config = habitat.<Domain>getService(Domain.class).getConfigs().getConfig().get(0);
+        Config config = locator.<Domain>getService(Domain.class).getConfigs().getConfig().get(0);
         List<Container> containers = config.getContainers();
-        assertTrue(containers.size()==2);
+        assertThat(containers, hasSize(2));
         RandomContainer container = (RandomContainer) containers.get(0);
         assertEquals("random", container.getName());
         assertEquals("1243", container.getNumberOfRuntime());
@@ -57,7 +66,7 @@ public class ContainerExtensionTest extends ConfigApiTest {
 
     @Test
     public void extensionTest() {
-        Config config = habitat.<Domain>getService(Domain.class).getConfigs().getConfig().get(0);
+        Config config = locator.<Domain>getService(Domain.class).getConfigs().getConfig().get(0);
         RandomExtension extension = config.getExtensionByType(RandomExtension.class);
         assertNotNull(extension);
         assertEquals("foo", extension.getSomeAttribute());
@@ -65,8 +74,8 @@ public class ContainerExtensionTest extends ConfigApiTest {
 
     @Test
     public void applicationExtensionTest() {
-        Application a = habitat.getService(Application.class);
+        Application a = locator.getService(Application.class);
         List<AnApplicationExtension> taes = a.getExtensionsByType(AnApplicationExtension.class);
-        assertEquals(taes.size(), 2);
+        assertThat(taes, hasSize(2));
     }
 }

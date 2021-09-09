@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,12 +18,14 @@
 package com.sun.enterprise.admin.util.cache;
 
 import com.sun.enterprise.security.store.AsadminSecurityUtil;
+
 import java.io.File;
-import static org.junit.Assert.assertEquals;
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author mmares
  */
 public class AdminCacheWeakReferenceTest extends AdminCacheTstBase {
@@ -33,19 +36,12 @@ public class AdminCacheWeakReferenceTest extends AdminCacheTstBase {
 
     @Test
     public void testWithFileDelete() {
-        if (isSkipThisTest()) {
-            System.out.println(this.getClass().getName() + ".testWithFileDelete(): Must skip this unit test, because something is wrong with file cache writing during build");
-        } else {
-            System.out.println(this.getClass().getName() + ".testWithFileDelete()");
-        }
-        String floyd1 = "Wish You Were Here";
-        String floyd1Key = TEST_CACHE_COTEXT + "Pink.Floyd.1";
+        final String floyd1 = "Wish You Were Here";
+        final String floyd1Key = TEST_CACHE_COTEXT + "Pink.Floyd.1";
         getCache().put(floyd1Key, floyd1);
-        String holder = getCache().get(floyd1Key, String.class); //To be shure that it stay in memory
+        final String holder = getCache().get(floyd1Key, String.class); // to be sure that it stay in memory
         assertEquals(floyd1, holder);
         recursiveDelete(new File(AsadminSecurityUtil.getDefaultClientDir(), TEST_CACHE_COTEXT));
         assertEquals(floyd1, getCache().get(floyd1Key, String.class));
-        System.out.println(this.getClass().getName() + ".testWithFileDelete(): Done");
     }
-
 }

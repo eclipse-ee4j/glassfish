@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,49 +17,68 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import java.util.List;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkConfig;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.Protocol;
 import org.glassfish.grizzly.config.dom.Ssl;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * User: Jerome Dochez Date: Mar 4, 2008 Time: 2:44:59 PM
  */
-public class Ssl2EnabledTest extends ConfigApiTest {
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class Ssl2EnabledTest {
 
-    NetworkConfig config = null;
-
-    @Before
-    public void setup() {
-        config = getHabitat().getService(NetworkConfig.class);
-        assertTrue(config != null);
-
-    }
+    @Inject
+    private NetworkConfig config;
 
     @Test
     public void sslEnabledTest() {
-        for (NetworkListener listener : config.getNetworkListeners().getNetworkListener()) {
-            Protocol httpProtocol = listener.findHttpProtocol();
-            if (httpProtocol != null) {
+        final List<NetworkListener> listeners = config.getNetworkListeners().getNetworkListener();
+        assertThat(listeners, hasSize(3));
+        assertAll(
+            () -> {
+                NetworkListener listener = listeners.get(0);
+                Protocol httpProtocol = listener.findHttpProtocol();
+                assertNotNull(httpProtocol);
+                assertEquals("http-listener-1", httpProtocol.getName());
                 Ssl ssl = httpProtocol.getSsl();
-                if (ssl != null) {
-                    try {
-                        logger.fine("SSL2 ENABLED = " + ssl.getSsl2Enabled());
-                        assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
-                        assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
+                assertNull(ssl);
+            },
+            () -> {
+                NetworkListener listener = listeners.get(1);
+                Protocol httpProtocol = listener.findHttpProtocol();
+                assertNotNull(httpProtocol);
+                assertEquals("http-listener-2", httpProtocol.getName());
+                Ssl ssl = httpProtocol.getSsl();
+                assertNotNull(ssl);
+                assertFalse(Boolean.parseBoolean(ssl.getSsl2Enabled()));
+                assertFalse(Boolean.parseBoolean(ssl.getSsl3Enabled()));
+                assertTrue(Boolean.parseBoolean(ssl.getTlsEnabled()));
+            },
+            () -> {
+                NetworkListener listener = listeners.get(2);
+                Protocol httpProtocol = listener.findHttpProtocol();
+                assertNotNull(httpProtocol);
+                assertEquals("admin-listener", httpProtocol.getName());
+                Ssl ssl = httpProtocol.getSsl();
+                assertNull(ssl);
             }
-        }
+        );
     }
 }

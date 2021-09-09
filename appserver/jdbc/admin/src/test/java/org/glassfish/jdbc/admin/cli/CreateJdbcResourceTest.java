@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,69 +17,71 @@
 
 package org.glassfish.jdbc.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
-import java.beans.PropertyVetoException;
+import java.util.logging.Logger;
 
+import javax.security.auth.Subject;
+
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.glassfish.api.ActionReport;
-import org.glassfish.tests.utils.Utils;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 /**
- *
  * @author Jennifer
  */
-//@Ignore // temporarily disabled
-public class CreateJdbcResourceTest extends ConfigApiTest {
-    // Get Resources config bean
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
-    private Resources resources = habitat.<Domain>getService(Domain.class).getResources();
-    private CreateJdbcResource command = null;
+@ExtendWith(JdbcAdminJunit5Extension.class)
+public class CreateJdbcResourceTest {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+    @Inject
+    private CreateJdbcResource command;
+
+    private Resources resources;
     private ParameterMap parameters = new ParameterMap();
-    private AdminCommandContext context = null;
-    private CommandRunner cr = null;
+    private AdminCommandContext context;
+    private Subject adminSubject;
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
-
-        return new TestDocument(habitat);
-    }
-
-    /**
-     * Returns the DomainTest file name without the .xml extension to load the test configuration
-     * from.
-     *
-     * @return the configuration file name
-     */
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        assertTrue(resources!=null);
-
-        // Get an instance of the CreateJdbcResource command
-        command = habitat.getService(CreateJdbcResource.class);
-        assertTrue(command!=null);
+        assertNotNull(command);
+        resources = locator.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
 
         // Set the options and operand to pass to the command
         parameters.set("connectionpoolid", "DerbyPool");
@@ -90,39 +93,34 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
                 LogDomains.getLogger(CreateJdbcResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
 
-        cr = habitat.getService(CommandRunner.class);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws TransactionFailure {
-       // Delete the created resource
-       ConfigSupport.apply(new SingleConfigCode<Resources>() {
-            public Object run(Resources param) throws PropertyVetoException, TransactionFailure {
-                Resource target = null;
-                // TODO: this causes NoSuchElementException but really
-                // it should have caused ConcurrentModificationException, because the iteration
-                // and removal runs at the same time.
-                for (Resource resource : param.getResources()) {
-                    if (resource instanceof JdbcResource) {
-                        JdbcResource jr = (JdbcResource)resource;
-                        if (jr.getJndiName().equals("jdbc/foo")||
-                            jr.getJndiName().equals("dupRes")||
-                            jr.getJndiName().equals("jdbc/sun")||
-                            jr.getJndiName().equals("jdbc/alldefaults")||
-                            jr.getJndiName().equals("jdbc/junk")) {
-                            target = resource;
-                            break;
-                        }
+        // Delete the created resource
+        SingleConfigCode<Resources> configCode = resourcesBean -> {
+            Resource target = null;
+            // TODO: this causes NoSuchElementException but really
+            // it should have caused ConcurrentModificationException, because the iteration
+            // and removal runs at the same time.
+            for (Resource resource : resourcesBean.getResources()) {
+                if (resource instanceof JdbcResource) {
+                    JdbcResource jr = (JdbcResource) resource;
+                    if (jr.getJndiName().equals("jdbc/foo") || jr.getJndiName().equals("dupRes")
+                        || jr.getJndiName().equals("jdbc/sun") || jr.getJndiName().equals("jdbc/alldefaults")
+                        || jr.getJndiName().equals("jdbc/junk")) {
+                        target = resource;
+                        break;
                     }
                 }
-                if (target!=null) {
-                    param.getResources().remove(target);
-                }
-                return null;
             }
-        }, resources);
-
-        parameters = new ParameterMap();
+            if (target != null) {
+                resourcesBean.getResources().remove(target);
+            }
+            return null;
+        };
+        ConfigSupport.apply(configCode, resources);
     }
 
     /**
@@ -136,7 +134,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         parameters.set("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -161,7 +159,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         logger.fine("msg: " + context.getActionReport().getMessage());
 
         // Check resource-ref created
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -190,7 +188,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
 
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -228,7 +226,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         parameters.set("DEFAULT", "dupRes");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -248,8 +246,8 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         assertTrue(isCreated);
 
         //Try to create a duplicate resource dupRes. Get a new instance of the command.
-        CreateJdbcResource command2 = habitat.getService(CreateJdbcResource.class);
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command2);
+        CreateJdbcResource command2 = locator.getService(CreateJdbcResource.class);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command2);
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -285,7 +283,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         parameters.set("DEFAULT", "jdbc/nopool");
 
         // Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is Failure
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -313,7 +311,6 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
      * asadmin create-jdbc-resource --connectionpoolid DerbyPool --enabled=junk
      *         --description "my resource" jdbc/junk
      */
-    @Ignore
     @Test
     public void testExecuteFailInvalidOptionEnabled() {
         // Set invalid enabled option value: --enabled junk
@@ -321,11 +318,10 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         parameters.set("DEFAULT", "jdbc/junk");
 
         // Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is Failure
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-
         // Don't check error message.  Error message being set by CommandRunnerImpl.
     }
 
@@ -341,7 +337,7 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
         parameters.set("DEFAULT", "jdbc/sun");
 
         // Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -361,7 +357,6 @@ public class CreateJdbcResourceTest extends ConfigApiTest {
             }
         }
         assertTrue(isCreated);
-
         logger.fine("msg: " + context.getActionReport().getMessage());
     }
 }

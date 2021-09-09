@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,186 +17,190 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import org.glassfish.security.services.api.common.Attribute;
-import org.glassfish.security.services.api.common.Attributes;
-import org.glassfish.security.services.impl.common.AttributesImpl;
-import org.junit.Test;
-
 import java.net.URI;
 import java.util.BitSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.glassfish.security.services.api.common.Attribute;
+import org.glassfish.security.services.api.common.Attributes;
+import org.glassfish.security.services.impl.common.AttributesImpl;
+import org.junit.jupiter.api.Test;
+
 import static org.glassfish.security.services.impl.authorization.AzResourceImpl.addAttributesFromUriQuery;
 import static org.glassfish.security.services.impl.authorization.AzResourceImpl.decodeURI;
-import static junit.framework.Assert.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * @see AzResourceImpl
  */
 public class AzResourceImplTest {
+
     @Test
     public void testGetters() throws Exception {
+        assertThrows(IllegalArgumentException.class, () -> new AzResourceImpl(null));
+
         URI uri;
         AzResourceImpl impl;
 
-        // Null
-        try {
-            new AzResourceImpl(null);
-            fail( "Expected exception" );
-        } catch (IllegalArgumentException e) {
-        }
 
         // Doesn't care about scheme
-        uri = new URI( "http://foo" );
+        uri = new URI("http://foo");
         impl = new AzResourceImpl(uri);
-        assertSame( "non-admin OK", uri, impl.getUri() );
+        assertSame(uri, impl.getUri(), "non-admin OK");
 
         // Empty domain (i.e. default)
-        uri = new URI( "admin:///tenants/tenant/zirka?locked=true%3D" );
+        uri = new URI("admin:///tenants/tenant/zirka?locked=true%3D");
         impl = new AzResourceImpl(uri);
 
         // Test getters
-        assertEquals("URI", uri, impl.getUri());
-        assertEquals("toString", "admin:///tenants/tenant/zirka?locked=true%3D", impl.toString());
+        assertEquals(uri, impl.getUri(), "URI");
+        assertEquals("admin:///tenants/tenant/zirka?locked=true%3D", impl.toString(), "toString");
 
         // Non-empty domain, empty path
-        uri = new URI( "admin://myDomain?locked=true%3D" );
+        uri = new URI("admin://myDomain?locked=true%3D");
         impl = new AzResourceImpl(uri);
 
         // Test getters
-        assertEquals("URI", uri, impl.getUri());
-        assertEquals("toString", "admin://myDomain?locked=true%3D", impl.toString());
+        assertEquals(uri, impl.getUri(), "URI");
+        assertEquals("admin://myDomain?locked=true%3D", impl.toString(), "toString");
     }
+
 
     @Test
     public void testAddAttributesFromUriQuery() throws Exception {
-        URI uri = new URI( "admin:///tenants/tenant/zirka?locked=true" );
+        final boolean REPLACE = true;
+
+        assertThrows(IllegalArgumentException.class,
+            () -> addAttributesFromUriQuery(null, new AttributesImpl(), REPLACE));
+        assertThrows(IllegalArgumentException.class,
+            () -> addAttributesFromUriQuery(new URI("admin:///tenants/tenant/zirka?locked=true"), null, REPLACE));
+
         Attributes attributes = new AttributesImpl();
         Attribute attribute;
         Set<String> values;
         Iterator<String> iter;
         BitSet bitset;
-
-        final boolean REPLACE = true;
-
-        // Null
-        try {
-            addAttributesFromUriQuery( null, attributes, REPLACE );
-            fail( "Expected IllegalArgumentException from null URI." );
-        } catch (IllegalArgumentException e) {
-        }
-        try {
-            addAttributesFromUriQuery( uri, null, REPLACE );
-            fail( "Expected IllegalArgumentException from null Attributes." );
-        } catch (IllegalArgumentException e) {
-        }
-
-        assertEquals( "Empty attributes", 0, attributes.getAttributeCount() );
+        assertEquals(0, attributes.getAttributeCount(), "Empty attributes");
 
         // No params
-        uri = new URI( "admin:///tenants/tenant/zirka" );
-        addAttributesFromUriQuery( uri, attributes, !REPLACE );
-        assertEquals( "Empty attributes", 0, attributes.getAttributeCount() );
+        URI uri = new URI("admin:///tenants/tenant/zirka");
+        addAttributesFromUriQuery(uri, attributes, !REPLACE);
+        assertEquals(0, attributes.getAttributeCount(), "Empty attributes");
 
         // 1 param
-        uri = new URI( "admin:///tenants/tenant/zirka?name1=value1" );
-        addAttributesFromUriQuery( uri, attributes, !REPLACE );
-        assertEquals("Attributes count", 1, attributes.getAttributeCount());
-        assertNotNull("attribute", attribute = attributes.getAttribute("name1"));
+        uri = new URI("admin:///tenants/tenant/zirka?name1=value1");
+        addAttributesFromUriQuery(uri, attributes, !REPLACE);
+        assertEquals(1, attributes.getAttributeCount(), "Attributes count");
+
+        attribute = attributes.getAttribute("name1");
+        assertNotNull(attributes.getAttribute("name1"), "attribute");
+
         values = attribute.getValues();
-        assertEquals("Values count", 1, values.size());
+        assertThat("Values count", values, hasSize(1));
         iter = values.iterator();
-        assertTrue( iter.hasNext() );
-        assertEquals("Values value", "value1", iter.next());
-        assertFalse( iter.hasNext() );
+        assertTrue(iter.hasNext());
+        assertEquals("value1", iter.next(), "Values value");
+        assertFalse(iter.hasNext());
 
         // Repeat, no dup value
-        addAttributesFromUriQuery( uri, attributes, !REPLACE );
-        assertEquals("Attributes count", 1, attributes.getAttributeCount());
-        assertNotNull("attribute", attribute = attributes.getAttribute("name1"));
+        addAttributesFromUriQuery(uri, attributes, !REPLACE);
+        assertEquals(1, attributes.getAttributeCount(), "Attributes count");
+        attribute = attributes.getAttribute("name1");
+        assertNotNull(attribute, "attribute");
         values = attribute.getValues();
-        assertEquals("Values count", 1, values.size());
+        assertEquals(1, values.size(), "Values count");
         iter = values.iterator();
-        assertTrue( "iterator", iter.hasNext() );
-        assertEquals("Values value", "value1", iter.next());
-        assertFalse("iterator", iter.hasNext());
+        assertTrue(iter.hasNext(), "iterator");
+        assertEquals("value1", iter.next(), "Values value");
+        assertFalse(iter.hasNext(), "iterator");
 
         // New value
-        uri = new URI( "admin:///tenants/tenant/boris?name1=value2" );
-        addAttributesFromUriQuery( uri, attributes, !REPLACE );
-        assertEquals("Attributes count", 1, attributes.getAttributeCount());
-        assertNotNull("attribute", attribute = attributes.getAttribute("name1"));
+        uri = new URI("admin:///tenants/tenant/boris?name1=value2");
+        addAttributesFromUriQuery(uri, attributes, !REPLACE);
+        assertEquals(1, attributes.getAttributeCount(), "Attributes count");
+        attribute = attributes.getAttribute("name1");
+        assertNotNull(attribute, "attribute");
         values = attribute.getValues();
-        assertEquals("Values count", 2, values.size());
+        assertThat("Values count", values, hasSize(2));
         bitset = new BitSet(2);
-        for ( String v : values ) {
-            if ( "value1".equals(v) && !bitset.get(0) ) {
+        for (String v : values) {
+            if ("value1".equals(v) && !bitset.get(0)) {
                 bitset.set(0);
-            } else if ( "value2".equals(v) && !bitset.get(1) ) {
+            } else if ("value2".equals(v) && !bitset.get(1)) {
                 bitset.set(1);
             } else {
-                fail( "Unexpected attribute value " + v );
+                fail("Unexpected attribute value " + v);
             }
         }
 
         // Replace attribute
-        uri = new URI( "admin:///tenants/tenant/lucky?name1=value3" );
-        addAttributesFromUriQuery( uri, attributes, REPLACE );
-        assertEquals("Attributes count", 1, attributes.getAttributeCount());
-        assertNotNull("attribute", attribute = attributes.getAttribute("name1"));
+        uri = new URI("admin:///tenants/tenant/lucky?name1=value3");
+        addAttributesFromUriQuery(uri, attributes, REPLACE);
+        assertEquals(1, attributes.getAttributeCount(), "Attributes count");
+        assertNotNull(attribute = attributes.getAttribute("name1"), "attribute");
         values = attribute.getValues();
-        assertEquals("Values count", 1, values.size());
+        assertEquals(1, values.size(), "Values count");
         iter = values.iterator();
-        assertTrue( "iterator", iter.hasNext() );
-        assertEquals("Values value", "value3", iter.next());
-        assertFalse("iterator", iter.hasNext());
+        assertTrue(iter.hasNext(), "iterator");
+        assertEquals("value3", iter.next(), "Values value");
+        assertFalse(iter.hasNext(), "iterator");
 
         // New attribute
-        uri = new URI( "admin:///tenants/tenant/lucky?name2=value21&name2=value22" );
-        addAttributesFromUriQuery( uri, attributes, !REPLACE );
-        assertEquals("Attributes count", 2, attributes.getAttributeCount());
-        assertNotNull("attribute", attributes.getAttribute("name1"));
-        assertNotNull("attribute", attribute = attributes.getAttribute("name2"));
+        uri = new URI("admin:///tenants/tenant/lucky?name2=value21&name2=value22");
+        addAttributesFromUriQuery(uri, attributes, !REPLACE);
+        assertEquals(2, attributes.getAttributeCount(), "Attributes count");
+        assertNotNull(attributes.getAttribute("name1"), "attribute");
+        assertNotNull(attribute = attributes.getAttribute("name2"), "attribute");
         values = attribute.getValues();
-        assertEquals("Values count", 2, values.size());
+        assertEquals(2, values.size(), "Values count");
         bitset = new BitSet(2);
-        for ( String v : values ) {
-            if ( "value21".equals(v) && !bitset.get(0) ) {
+        for (String v : values) {
+            if ("value21".equals(v) && !bitset.get(0)) {
                 bitset.set(0);
-            } else if ( "value22".equals(v) && !bitset.get(1) ) {
+            } else if ("value22".equals(v) && !bitset.get(1)) {
                 bitset.set(1);
             } else {
-                fail( "Unexpected attribute value " + v );
+                fail("Unexpected attribute value " + v);
             }
         }
 
         // Encoded attribute
         attributes = new AttributesImpl();
-        uri = new URI( "admin:///tenants/tenant/lucky?na%3Dme2=val%26ue1&na%3Dme2=val%3Due2" );
-        addAttributesFromUriQuery( uri, attributes, !REPLACE );
-        assertEquals("Attributes count", 1, attributes.getAttributeCount());
-        assertNotNull("attribute", attribute = attributes.getAttribute("na=me2"));
+        uri = new URI("admin:///tenants/tenant/lucky?na%3Dme2=val%26ue1&na%3Dme2=val%3Due2");
+        addAttributesFromUriQuery(uri, attributes, !REPLACE);
+        assertEquals(1, attributes.getAttributeCount(), "Attributes count");
+        assertNotNull(attribute = attributes.getAttribute("na=me2"), "attribute");
         values = attribute.getValues();
-        assertEquals("Values count", 2, values.size());
+        assertEquals(2, values.size(), "Values count");
         bitset = new BitSet(2);
-        for ( String v : values ) {
-            if ( "val&ue1".equals(v) && !bitset.get(0) ) {
+        for (String v : values) {
+            if ("val&ue1".equals(v) && !bitset.get(0)) {
                 bitset.set(0);
-            } else if ( "val=ue2".equals(v) && !bitset.get(1) ) {
+            } else if ("val=ue2".equals(v) && !bitset.get(1)) {
                 bitset.set(1);
             } else {
-                fail( "Unexpected attribute value " + v );
+                fail("Unexpected attribute value " + v);
             }
         }
     }
 
+
     @Test
     public void testdecodeURI() throws Exception {
-        assertNull( "Expected null", decodeURI(null) );
-
-        assertEquals( "decoded",
+        assertNull(decodeURI(null), "Expected null");
+        assertEquals(
             "#($^&#&(*$C@#$*&^@#*&(|}|}{|}dfaj;",
-            decodeURI( "%23(%24%5E%26%23%26(*%24C%40%23%24*%26%5E%40%23*%26(%7C%7D%7C%7D%7B%7C%7Ddfaj%3B" ) );
+            decodeURI("%23(%24%5E%26%23%26(*%24C%40%23%24*%26%5E%40%23*%26(%7C%7D%7C%7D%7B%7C%7Ddfaj%3B"),
+            "decoded");
     }
 }

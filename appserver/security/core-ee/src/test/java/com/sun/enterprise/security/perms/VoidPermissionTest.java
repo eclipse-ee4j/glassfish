@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,50 +17,34 @@
 
 package com.sun.enterprise.security.perms;
 
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
+import java.io.FilePermission;
 import java.security.AllPermission;
 import java.security.Permission;
-import java.io.FilePermission;
 
-import junit.framework.Assert;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class VoidPermissionTest {
 
-    @BeforeClass
-    public static void setUpBeforeClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownAfterClass() throws Exception {
-    }
-
-
     @Test
     public void testImpliedByAllPermission() {
-
         Permission allPerm = new AllPermission();
-
         VoidPermission vPerm = new VoidPermission();
 
-
-        Assert.assertTrue(allPerm.implies(vPerm));
-
-        Assert.assertTrue(!vPerm.implies(allPerm));
+        assertTrue(allPerm.implies(vPerm));
+        assertFalse(vPerm.implies(allPerm));
     }
 
 
     @Test
     public void testNotImplied() {
-
         VoidPermission vPerm = new VoidPermission();
         FilePermission fPerm = new FilePermission("/scratch/test/*", "read");
 
-        Assert.assertTrue(!vPerm.implies(fPerm));
-        Assert.assertTrue(!fPerm.implies(vPerm));
+        assertFalse(vPerm.implies(fPerm));
+        assertFalse(fPerm.implies(vPerm));
     }
 
 
@@ -68,9 +53,8 @@ public class VoidPermissionTest {
         VoidPermission vPerm1 = new VoidPermission();
         VoidPermission vPerm2 = new VoidPermission();
 
-        Assert.assertTrue(!vPerm1.implies(vPerm2));
-        Assert.assertTrue(!vPerm2.implies(vPerm1));
-
-        Assert.assertTrue(!vPerm1.implies(vPerm1));
+        assertFalse(vPerm1.implies(vPerm2));
+        assertFalse(vPerm2.implies(vPerm1));
+        assertFalse(vPerm1.implies(vPerm1));
     }
 }

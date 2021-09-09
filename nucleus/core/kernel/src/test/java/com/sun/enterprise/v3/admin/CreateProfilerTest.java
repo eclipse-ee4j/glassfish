@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,90 +17,98 @@
 
 package com.sun.enterprise.v3.admin;
 
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.JavaConfig;
 import com.sun.enterprise.config.serverbeans.Profiler;
+import com.sun.enterprise.v3.common.PlainTextActionReporter;
 import com.sun.logging.LogDomains;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
-import org.glassfish.api.admin.AdminCommandContextImpl;
-import org.jvnet.hk2.config.types.Property;
+import javax.security.auth.Subject;
 
-import org.glassfish.api.admin.AdminCommandContext;
-import org.glassfish.api.admin.ParameterMap;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.Ignore;
-import static org.junit.Assert.*;
 import org.glassfish.api.ActionReport;
+import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandContextImpl;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.tests.utils.Utils;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.main.core.kernel.test.KernelJUnitExtension;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import jakarta.inject.Inject;
+
+import static org.glassfish.api.admin.ServerEnvironment.DEFAULT_INSTANCE_NAME;
+import static org.glassfish.hk2.utilities.BuilderHelper.createConstantDescriptor;
+import static org.glassfish.hk2.utilities.ServiceLocatorUtilities.addOneDescriptor;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 /**
- *
  * @author Prashanth
+ * @author David Matejcek
  */
-@Ignore
-public class CreateProfilerTest extends ConfigApiTest {
-    // Get Resources config bean
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
-    private JavaConfig javaConfig = habitat.getService(JavaConfig.class);
-    private CreateProfiler command = null;
-    private ParameterMap parameters = new ParameterMap();
-    private AdminCommandContext context = null;
-    private CommandRunnerImpl cr = habitat.getService(CommandRunnerImpl.class);
+@ExtendWith(KernelJUnitExtension.class)
+public class CreateProfilerTest {
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private JavaConfig javaConfig;
+    @Inject
+    private CommandRunnerImpl commandRunner;
 
-        return new TestDocument(habitat);
-    }
+    private CreateProfiler command;
+    private AdminCommandContext context;
+    private Subject adminSubject;
 
-    /**
-     * Returns the DomainTest file name without the .xml extension to load the test configuration
-     * from.
-     *
-     * @return the configuration file name
-     */
-    public String getFileName() {
-        return "DomainTest";
-    }
 
-    @Before
-    public void setUp() {
-        assertTrue(javaConfig!=null);
+    @BeforeEach
+    public void init() {
+        assertNotNull(javaConfig);
+        assertNotNull(commandRunner);
 
-        // Get an instance of the CreateProfiler command
-        command = habitat.getService(CreateProfiler.class);
-        assertTrue(command!=null);
+        final Config config = locator.getService(Config.class);
+        assertNotNull(config, "config");
+        addOneDescriptor(locator, createConstantDescriptor(config, DEFAULT_INSTANCE_NAME, Config.class));
 
+        command = locator.getService(CreateProfiler.class);
+        assertNotNull(command);
+
+        adminSubject = mockGenerator.createAsadminSubject();
         context = new AdminCommandContextImpl(
-                LogDomains.getLogger(CreateProfilerTest.class, LogDomains.ADMIN_LOGGER),
-                habitat.<ActionReport>getService(ActionReport.class, "hk2-agent"));
-
+            LogDomains.getLogger(CreateProfilerTest.class, LogDomains.ADMIN_LOGGER),
+            locator.<ActionReport>getService(PlainTextActionReporter.class));
     }
 
-    @After
-    public void tearDown() throws TransactionFailure {
-       // Delete the created profiler
-       ConfigSupport.apply(new SingleConfigCode<JavaConfig>() {
-            public Object run(JavaConfig param) throws PropertyVetoException, TransactionFailure {
-                if (param.getProfiler() != null){
-                    param.setProfiler(null);
-                }
-                return null;
+
+    @AfterEach
+    public void deleteProfiler() throws TransactionFailure {
+        ConfigSupport.apply(param -> {
+            if (param.getProfiler() != null) {
+                param.setProfiler(null);
             }
+            return null;
         }, javaConfig);
-
-        parameters = new ParameterMap();
     }
+
 
     /**
      * Test of execute method, of class CreateProfiler.
@@ -107,48 +116,38 @@ public class CreateProfilerTest extends ConfigApiTest {
      *          --enabled=true --classpath "myProfilerClasspath" testProfiler
      */
     @Test
-    public void testExecuteSuccess() {
-        // Set the options and operand to pass to the command
+    public void properties() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("classpath", "myProfilerClasspath");
         parameters.set("enabled", "true");
         parameters.set("nativelibrarypath", "myNativeLibraryPath");
         parameters.set("property","a=x:b=y:c=z");
         parameters.set("DEFAULT", "testProfiler");
 
+        commandRunner.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(command);
 
-        //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-
-        // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
-        //Check that the profiler is created
-        boolean isCreated = false;
-        int propertyCount = 0;
         Profiler profiler = javaConfig.getProfiler();
-        if (profiler.getName().equals("testProfiler")) {
-            assertEquals("myProfilerClasspath", profiler.getClasspath());
-            assertEquals("true", profiler.getEnabled());
-            assertEquals("myNativeLibraryPath", profiler.getNativeLibraryPath());
-            List<Property> properties = profiler.getProperty();
-            for (Property property:properties){
-                if (property.getName().equals("a")) assertEquals("x",property.getValue());
-                if (property.getName().equals("b")) assertEquals("y",property.getValue());
-                if (property.getName().equals("c")) assertEquals("z",property.getValue());
-                propertyCount++;
-            }
-            isCreated = true;
-            logger.fine("Profiler element myProfiler is created.");
-        }
-        assertTrue(isCreated);
-        assertEquals(propertyCount, 3);
+        assertAll(
+            () -> assertEquals("testProfiler", profiler.getName()),
+            () -> assertEquals("myProfilerClasspath", profiler.getClasspath()),
+            () -> assertEquals("true", profiler.getEnabled()),
+            () -> assertEquals("myNativeLibraryPath", profiler.getNativeLibraryPath()),
+            () -> assertThat(profiler.getProperty(), hasSize(3)),
+            () -> assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode()),
+            () -> assertEquals("", context.getActionReport().getMessage(), "message")
+        );
 
-        // Check the exit code is SUCCESS
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
+        Map<String, String> properties = profiler.getProperty().stream().map(p -> Map.entry(p.getName(), p.getValue()))
+            .collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        assertAll(
+            () -> assertThat(properties, hasEntry("a", "x")),
+            () -> assertThat(properties, hasEntry("b", "y")),
+            () -> assertThat(properties, hasEntry("c", "z"))
+        );
 
-        // Check the success message
-        //assertEquals("Command create-profiler executed successfully.", context.getActionReport().getMessage());
-        logger.fine("msg: " + context.getActionReport().getMessage());
     }
 
     /**
@@ -157,33 +156,22 @@ public class CreateProfilerTest extends ConfigApiTest {
      *          --enabled=true --classpath "myProfilerClasspath" testProfiler
      */
     @Test
-    public void testExecuteSuccessDefaultValues() {
-        // Only pass the required option and operand
-        assertTrue(parameters.size() == 0);
+    public void defaults() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("DEFAULT", "myProfilerAllDefaults");
 
-
-        //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-
-        // Check the exit code is SUCCESS
+        commandRunner.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
-        //Check that the resource was created
-        boolean isCreated = false;
         Profiler profiler = javaConfig.getProfiler();
-        if (profiler.getName().equals("myProfilerAllDefaults")) {
-            //assertEquals("myProfilerClasspath", profiler.getClasspath());
-            assertEquals("true", profiler.getEnabled());
-            //assertEquals("nativelibrarypath", profiler.getNativeLibraryPath());
-            isCreated = true;
-            logger.fine("Profiler element myProfilerAllDefaults is created.");
-        }
-        assertTrue(isCreated);
-
-        // Check the success message
-        //assertEquals("Command create-profiler executed successfully.", context.getActionReport().getMessage());
-        logger.fine("msg: " + context.getActionReport().getMessage());
+        assertAll(
+            () -> assertEquals("myProfilerAllDefaults", profiler.getName()),
+            () -> assertNull(profiler.getClasspath()),
+            () -> assertEquals("true", profiler.getEnabled()),
+            () -> assertNull(profiler.getNativeLibraryPath()),
+            () -> assertEquals("", context.getActionReport().getMessage(), "message")
+        );
     }
 
     /**
@@ -192,44 +180,32 @@ public class CreateProfilerTest extends ConfigApiTest {
      *          --enabled=true --classpath "myProfilerClasspath" testProfiler
      */
     @Test
-    public void testExecuteSuccessUpdateExisting() {
-        assertTrue(parameters.size() == 0);
+    public void twoProfilersForbidden() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("DEFAULT", "testProfiler");
 
-
-        //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-
-        // Check the exit code is SUCCESS
+        commandRunner.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
+        // try to create another profile
         parameters = new ParameterMap();
-
-        //Create another profiler, see if it overrides the existing one
         parameters.set("DEFAULT", "testProfilerNew");
 
+        commandRunner.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(command);
+        assertAll(
+            () -> assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode()),
+            () -> assertEquals("profiler exists. Please delete it first", context.getActionReport().getMessage())
+        );
 
-        //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
-
-        // Check the exit code is SUCCESS
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-
-        //Check that the resource was created
-        boolean isCreated = false;
         Profiler profiler = javaConfig.getProfiler();
-        if (profiler.getName().equals("testProfilerNew")) {
-            //assertEquals("myProfilerClasspath", profiler.getClasspath());
-            assertEquals("true", profiler.getEnabled());
-            //assertEquals("nativelibrarypath", profiler.getNativeLibraryPath());
-            isCreated = true;
-            logger.fine("Profiler element testProfilerNew is created.");
-        }
-        assertTrue(isCreated);
-
-        // Check the success message
-        //assertEquals("Command create-profiler executed successfully.", context.getActionReport().getMessage());
-        logger.fine("msg: " + context.getActionReport().getMessage());
+        assertAll(
+            () -> assertEquals("testProfiler", profiler.getName()),
+            () -> assertNull(profiler.getClasspath(), "classpath"),
+            () -> assertEquals("true", profiler.getEnabled()),
+            () -> assertNull(profiler.getNativeLibraryPath(), "nativelibrarypath")
+        );
     }
 
     /**
@@ -238,22 +214,21 @@ public class CreateProfilerTest extends ConfigApiTest {
      *          --enabled=true --classpath "myProfilerClasspath" testProfiler
      */
     @Test
-    public void testExecuteFailInvalidOptionEnabled() {
-        // Set invalid enabled option value: --enabled junk
-        //parameters = new ParameterMap();
-        assertTrue(parameters.size() == 0);
+    public void invalidOption() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("enabled", "junk");
         parameters.set("DEFAULT", "myProfiler");
 
-        // Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        commandRunner.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(command);
 
-        // Check the exit code is Failure - test fails, need bug fix before uncommenting
-        assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
-
-        // Check the error message - test fails
-        assertEquals("Invalid parameter: enabled.  This boolean option must be set (case insensitive) to true or false.  Its value was set to junk",
-                        context.getActionReport().getMessage());
+        assertAll(
+            () -> assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode()),
+            () -> assertEquals(
+                "Invalid parameter: enabled."
+                    + "  This boolean option must be set (case insensitive) to true or false."
+                    + "  Its value was set to junk",
+                context.getActionReport().getMessage()));
     }
 
     /**
@@ -262,30 +237,20 @@ public class CreateProfilerTest extends ConfigApiTest {
      *          --enabled=true --classpath "myProfilerClasspath" testProfiler
      */
     @Test
-    public void testExecuteSuccessNoValueOptionEnabled() {
-        // Set enabled without a value:  --enabled
-        assertTrue(parameters.size() == 0);
+    public void noValueOptionEnabled() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("enabled", "");
         parameters.set("DEFAULT", "testProfiler");
 
-        // Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        commandRunner.getCommandInvocation("create-profiler", context.getActionReport(), adminSubject)
+            .parameters(parameters).execute(command);
 
-        //Check that the profiler is created
-        boolean isCreated = false;
         Profiler profiler = javaConfig.getProfiler();
-        if (profiler.getName().equals("testProfiler")) {
-            assertEquals("true", profiler.getEnabled());
-            isCreated = true;
-            logger.fine("msg: " + context.getActionReport().getMessage());
-        }
-        assertTrue(isCreated);
-
-        // Check the exit code is SUCCESS
-        assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
-
-        // Check the success message
-        //assertEquals("Command create-profiler executed successfully.", context.getActionReport().getMessage());
-        logger.fine("msg: " + context.getActionReport().getMessage());
+        assertAll(
+            () -> assertEquals("testProfiler", profiler.getName()),
+            () -> assertEquals("true", profiler.getEnabled()),
+            () -> assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode()),
+            () -> assertEquals("", context.getActionReport().getMessage())
+        );
     }
 }

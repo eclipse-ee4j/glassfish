@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,37 +17,16 @@
 
 package com.sun.enterprise.util;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  *
  * @author bnevins
  */
 public class StringUtilsTest {
-
-    public StringUtilsTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
 
     /**
      * Test of removeEnclosingQuotes method, of class StringUtils.
@@ -58,16 +38,15 @@ public class StringUtilsTest {
         String c = "\"hello'";
         String d = "\"\"hello";
 
-        assertEquals(StringUtils.removeEnclosingQuotes(a), "hello");
-        assertEquals(StringUtils.removeEnclosingQuotes(b), "hello");
+        assertEquals("hello", StringUtils.removeEnclosingQuotes(a));
+        assertEquals("hello", StringUtils.removeEnclosingQuotes(b));
         assertEquals(StringUtils.removeEnclosingQuotes(c), "\"hello\'");
-        assertEquals(StringUtils.removeEnclosingQuotes(d), "\"\"hello");
-        assertEquals(StringUtils.removeEnclosingQuotes("\""), "\"");
-        assertEquals(StringUtils.removeEnclosingQuotes("'"), "'");
-        assertEquals(StringUtils.removeEnclosingQuotes("''"), "");
-        assertEquals(StringUtils.removeEnclosingQuotes("\"\""), "");
-        assertEquals(StringUtils.removeEnclosingQuotes(""), "");
+        assertEquals("\"\"hello", StringUtils.removeEnclosingQuotes(d));
+        assertEquals("\"", StringUtils.removeEnclosingQuotes("\""));
+        assertEquals("'", StringUtils.removeEnclosingQuotes("'"));
+        assertEquals("", StringUtils.removeEnclosingQuotes("''"));
+        assertEquals("", StringUtils.removeEnclosingQuotes("\"\""));
+        assertEquals("", StringUtils.removeEnclosingQuotes(""));
         assertNull(StringUtils.removeEnclosingQuotes(null));
-
     }
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,74 +17,79 @@
 
 package org.glassfish.orb.admin.cli;
 
-import org.glassfish.api.admin.AdminCommandContextImpl;
-import org.glassfish.orb.admin.config.IiopListener;
-import org.glassfish.orb.admin.config.IiopService;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
+
+import java.util.List;
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.After;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.orb.admin.config.IiopListener;
+import org.glassfish.orb.admin.config.IiopService;
+import org.glassfish.orb.admin.test.OrbJunitExtension;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
-import java.util.List;
+import jakarta.inject.Inject;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class DeleteIiopListenerTest extends org.glassfish.tests.utils.ConfigApiTest {
+@ExtendWith(OrbJunitExtension.class)
+public class DeleteIiopListenerTest {
 
+    @Inject
     private ServiceLocator services;
+    @Inject
+    private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+
+    @Inject
     private IiopService iiopService;
-    private ParameterMap parameters;
+    @Inject
     private CommandRunner cr;
+
+    private ParameterMap parameters;
     private AdminCommandContext context;
+    private Subject adminSubject;
 
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    public DomDocument getDocument(ServiceLocator services) {
-        return new TestDocument(services);
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        services = getHabitat();
-        iiopService = services.getService(IiopService.class);
         parameters = new ParameterMap();
-        cr = services.getService(CommandRunner.class);
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(DeleteIiopListenerTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws TransactionFailure {
-        ConfigSupport.apply(new SingleConfigCode<IiopService>() {
-            public Object run(IiopService param) throws PropertyVetoException,
-                    TransactionFailure {
-                List<IiopListener> listenerList = param.getIiopListener();
-                for (IiopListener listener : listenerList) {
-                    String currListenerId = listener.getId();
-                    if (currListenerId != null && currListenerId.equals
-                            ("iiop_1")) {
-                        listenerList.remove(listener);
-                        break;
-                    }
+        SingleConfigCode<IiopService> configCode = iiopServiceProxy -> {
+            List<IiopListener> listenerList = iiopServiceProxy.getIiopListener();
+            for (IiopListener listener : listenerList) {
+                String currListenerId = listener.getId();
+                if (currListenerId != null && currListenerId.equals("iiop_1")) {
+                    listenerList.remove(listener);
+                    break;
                 }
-                return listenerList;
             }
-        }, iiopService);
+            return listenerList;
+        };
+        ConfigSupport.apply(configCode, iiopService);
     }
 
 
@@ -97,12 +103,12 @@ public class DeleteIiopListenerTest extends org.glassfish.tests.utils.ConfigApiT
         parameters.set("iiopport", "4440");
         parameters.set("listener_id", "iiop_1");
         CreateIiopListener createCommand = services.getService(CreateIiopListener.class);
-        cr.getCommandInvocation("create-iiop-listener", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
+        cr.getCommandInvocation("create-iiop-listener", context.getActionReport(), adminSubject).parameters(parameters).execute(createCommand);
         CreateIiopListenerTest.checkActionReport(context.getActionReport());
         parameters = new ParameterMap();
         parameters.set("listener_id", "iiop_1");
         DeleteIiopListener deleteCommand = services.getService(DeleteIiopListener.class);
-        cr.getCommandInvocation("delete-iiop-listener", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-iiop-listener", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         CreateIiopListenerTest.checkActionReport(context.getActionReport());
         boolean isDeleted = true;
@@ -126,7 +132,7 @@ public class DeleteIiopListenerTest extends org.glassfish.tests.utils.ConfigApiT
     public void testExecuteFailDoesNotExist() {
         parameters.set("DEFAULT", "doesnotexist");
         DeleteIiopListener deleteCommand = services.getService(DeleteIiopListener.class);
-        cr.getCommandInvocation("delete-iiop-listener", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-iiop-listener", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         logger.fine("msg: " + context.getActionReport().getMessage());
     }

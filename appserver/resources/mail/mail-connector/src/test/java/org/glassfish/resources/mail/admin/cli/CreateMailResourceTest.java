@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,72 +17,80 @@
 
 package org.glassfish.resources.mail.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
+
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourceRef;
-import com.sun.enterprise.config.serverbeans.Resources;
 import org.glassfish.resources.mail.config.MailResource;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.junit.After;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.resources.mail.test.MailJunit5Extension;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import jakarta.inject.Inject;
 
-public class CreateMailResourceTest extends ConfigApiTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    private ServiceLocator habitat;
+@ExtendWith(MailJunit5Extension.class)
+public class CreateMailResourceTest {
+
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+
     private Resources resources;
     private ParameterMap parameters;
     private AdminCommandContext context;
-    private CommandRunner cr;
+    private Subject adminSubject;
 
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
-
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        habitat = getHabitat();
-        resources = habitat.<Domain>getService(Domain.class).getResources();
-        assertTrue(resources != null);
+        resources = locator.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
         parameters = new ParameterMap();
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(CreateMailResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        cr = habitat.getService(CommandRunner.class);
-        assertTrue(cr != null);
+        assertNotNull(cr);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws TransactionFailure {
-        org.glassfish.resources.mail.admin.cli.DeleteMailResource deleteCommand = habitat.getService(org.glassfish.resources.mail.admin.cli.DeleteMailResource.class);
+        DeleteMailResource deleteCommand = locator.getService(DeleteMailResource.class);
         parameters = new ParameterMap();
         parameters.set("jndi_name", "mail/MyMailSession");
 
-        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         parameters = new ParameterMap();
         parameters.set("jndi_name", "dupRes");
-        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
     }
 
     /**
@@ -95,9 +104,9 @@ public class CreateMailResourceTest extends ConfigApiTest {
         parameters.set("mailuser", "test");
         parameters.set("fromaddress", "test@sun.com");
         parameters.set("jndi_name", "mail/MyMailSession");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        assertTrue(command != null);
-        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        CreateMailResource command = locator.getService(CreateMailResource.class);
+        assertNotNull(command);
+        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -121,7 +130,7 @@ public class CreateMailResourceTest extends ConfigApiTest {
         }
         assertTrue(isCreated);
         logger.fine("msg: " + context.getActionReport().getMessage());
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -150,9 +159,9 @@ public class CreateMailResourceTest extends ConfigApiTest {
         parameters.set("mailuser", "test");
         parameters.set("fromaddress", "test@sun.com");
         parameters.set("jndi_name", "dupRes");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command1 = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        assertTrue(command1 != null);
-        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command1);
+        CreateMailResource command1 = locator.getService(CreateMailResource.class);
+        assertNotNull(command1);
+        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command1);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {
@@ -167,8 +176,8 @@ public class CreateMailResourceTest extends ConfigApiTest {
         }
         assertTrue(isCreated);
 
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command2 = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command2);
+        CreateMailResource command2 = locator.getService(CreateMailResource.class);
+        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command2);
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
         int numDupRes = 0;
         for (Resource resource : resources.getResources()) {
@@ -205,9 +214,9 @@ public class CreateMailResourceTest extends ConfigApiTest {
         parameters.set("transprotocol", "lmtp");
         parameters.set("transprotocolclass", "com.sun.mail.lmtp.LMTPTransport");
         parameters.set("jndi_name", "mail/MyMailSession");
-        org.glassfish.resources.mail.admin.cli.CreateMailResource command = habitat.getService(org.glassfish.resources.mail.admin.cli.CreateMailResource.class);
-        assertTrue(command != null);
-        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        CreateMailResource command = locator.getService(CreateMailResource.class);
+        assertNotNull(command);
+        cr.getCommandInvocation("create-mail-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
         boolean isCreated = false;
         for (Resource resource : resources.getResources()) {

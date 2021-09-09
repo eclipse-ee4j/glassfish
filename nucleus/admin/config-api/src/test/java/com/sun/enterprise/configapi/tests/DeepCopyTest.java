@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,85 +19,88 @@ package com.sun.enterprise.configapi.tests;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
-import org.glassfish.config.support.ConfigurationPersistence;
-import org.junit.Assert;
-import org.junit.Test;
-import org.jvnet.hk2.config.*;
+
+import java.io.ByteArrayOutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
-import java.beans.PropertyVetoException;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.logging.Level;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.jvnet.hk2.config.ConfigBeanProxy;
+import org.jvnet.hk2.config.ConfigModel;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.Dom;
+import org.jvnet.hk2.config.DomDocument;
+import org.jvnet.hk2.config.IndentingXMLStreamWriter;
+import org.jvnet.hk2.config.SingleConfigCode;
+
+import jakarta.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.stringContainsInOrder;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Test the deepCopy feature of ConfigBeans.
  *
  * @author Jerome Dochez
  */
-public class DeepCopyTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class DeepCopyTest {
 
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
+    private DomDocument document;
 
     @Test
     public void configCopy() throws Exception {
-        final Config config = getHabitat().getService(Config.class);
-        Assert.assertNotNull(config);
+        final Config config = locator.getService(Config.class);
+        assertNotNull(config);
         String configName = config.getName();
-        final Config newConfig = (Config) ConfigSupport.apply(new SingleConfigCode<ConfigBeanProxy>() {
-            @Override
-            public Object run(ConfigBeanProxy parent) throws PropertyVetoException, TransactionFailure {
-                return config.deepCopy(parent);
-            }
-        }, config.getParent());
-        Assert.assertNotNull(newConfig);
-        try {
-            newConfig.setName("some-config");
-        } catch(Exception e) {
-            // I was expecting this...
-        }
-        ConfigSupport.apply(new SingleConfigCode<Config>() {
-            @Override
-            public Object run(Config wConfig) throws PropertyVetoException, TransactionFailure {
-                wConfig.setName("some-config");
-                return null;
-            }
-        }, newConfig);
-        Assert.assertEquals(newConfig.getName(), "some-config");
-        Assert.assertEquals(config.getName(), configName);
+        final Config newConfig = (Config) ConfigSupport.apply(parent -> config.deepCopy(parent), config.getParent());
+        assertNotNull(newConfig);
+        assertThrows(IllegalStateException.class, () -> newConfig.setName("some-config"));
+        SingleConfigCode<Config> configCode = cfg -> {
+            cfg.setName("some-config");
+            return null;
+        };
+        ConfigSupport.apply(configCode, newConfig);
+        assertEquals("some-config", newConfig.getName());
+        assertEquals(configName, config.getName());
 
         // add it the parent
-        ConfigSupport.apply(new SingleConfigCode<Configs>() {
-            @Override
-            public Object run(Configs wConfigs) throws PropertyVetoException, TransactionFailure {
-                wConfigs.getConfig().add(newConfig);
-                return null;
-            }
-        }, getHabitat().<Configs>getService(Configs.class));
-        String resultingXML = save(document).toString();
-        Assert.assertTrue("Expecting some-config, got " + resultingXML, resultingXML.contains("some-config"));
+        SingleConfigCode<Configs> configCodeParent = configs -> {
+            configs.getConfig().add(newConfig);
+            return null;
+        };
+        ConfigSupport.apply(configCodeParent, locator.<Configs>getService(Configs.class));
+        String resultingXML = save(document);
+        assertThat("Expecting some-config, got " + resultingXML, resultingXML, stringContainsInOrder("some-config"));
     }
 
     @Test
     public void parentingTest() throws Exception {
 
-        final Config config = getHabitat().getService(Config.class);
-        Assert.assertNotNull(config);
-        String configName = config.getName();
-        final Config newConfig = (Config) ConfigSupport.apply(new SingleConfigCode<ConfigBeanProxy>() {
-            @Override
-            public Object run(ConfigBeanProxy parent) throws PropertyVetoException, TransactionFailure {
-                Config newConfig = (Config) config.deepCopy(parent);
-                newConfig.setName("cloned-config");
-                return newConfig;
-            }
-        }, config.getParent());
-        Assert.assertNotNull(newConfig);
+        final Config config = locator.getService(Config.class);
+        assertNotNull(config);
+        assertEquals("server-config", config.getName());
+        SingleConfigCode<ConfigBeanProxy> configCode = configProxy -> {
+            Config newConfig1 = (Config) config.deepCopy(configProxy);
+            newConfig1.setName("cloned-config");
+            return newConfig1;
+        };
+        final Config newConfig = (Config) ConfigSupport.apply(configCode, config.getParent());
+        assertNotNull(newConfig);
 
         // now let's check the parents are correct.
         Dom original = Dom.unwrap(config);
@@ -112,48 +116,56 @@ public class DeepCopyTest extends ConfigApiTest {
     private void assertTypes(Dom original, Dom cloned) {
         logger.info(original.model.getTagName()+":" + original.getKey() + ":" + original.getClass().getSimpleName() +
                 " and " + cloned.model.getTagName()+":" + cloned.getKey() + ":" + cloned.getClass().getSimpleName());
-        Assert.assertEquals(original.getClass(), cloned.getClass());
+        assertEquals(original.getClass(), cloned.getClass());
         for (String elementName : original.getElementNames()) {
             ConfigModel.Property property = original.model.getElement(elementName);
-            if (property != null && property.isLeaf()) continue;
+            if (property != null && property.isLeaf()) {
+                continue;
+            }
             Dom originalChild = original.element(elementName);
             Dom clonedChild = cloned.element(elementName);
-            if (originalChild==null && clonedChild==null) continue;
-            Assert.assertNotNull(originalChild);
-            Assert.assertNotNull(clonedChild);
+            if (originalChild==null && clonedChild==null) {
+                continue;
+            }
+            assertNotNull(originalChild);
+            assertNotNull(clonedChild);
             assertTypes(originalChild, clonedChild);
         }
     }
 
     private void assertParenting(Dom dom) {
-
         for (String elementName : dom.model.getElementNames()) {
             ConfigModel.Property property = dom.model.getElement(elementName);
-            if (property.isLeaf()) continue;
+            if (property.isLeaf()) {
+                continue;
+            }
             Dom child = dom.element(elementName);
-            if (child==null) continue;
+            if (child==null) {
+                continue;
+            }
             if (logger.isLoggable(Level.FINE)) {
-                logger.fine("Parent of " + child.model.targetTypeName + ":" + child.getKey() + " is " + child.parent().getKey() + " while I am " + dom.getKey());
+                logger.fine("Parent of " + child.model.targetTypeName + ":" + child.getKey() + " is "
+                    + child.parent().getKey() + " while I am " + dom.getKey());
             }
             logger.info("Parent of " + child.model.targetTypeName + ":" + child.getKey() + " is " +
                     child.parent().model.targetTypeName + ":" + child.parent().getKey() + " while I am " +
                     dom.model.targetTypeName + ":" + dom.getKey());
 
-            Assert.assertEquals(dom, child.parent());
+            assertEquals(dom, child.parent());
             assertParenting(child);
         }
     }
 
-    final DomDocument document = getDocument(getHabitat());
-
-    public OutputStream save(DomDocument doc) throws IOException, XMLStreamException {
-        final ByteArrayOutputStream outStream = new ByteArrayOutputStream();
-        outStream.reset();
-
-        XMLOutputFactory factory = XMLOutputFactory.newInstance();
-        XMLStreamWriter writer = factory.createXMLStreamWriter(outStream);
-        doc.writeTo(new IndentingXMLStreamWriter(writer));
-        writer.close();
-        return outStream;
+    private String save(DomDocument doc) throws Exception {
+        try (ByteArrayOutputStream outStream = new ByteArrayOutputStream()) {
+            XMLOutputFactory factory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(outStream);
+            try {
+                doc.writeTo(new IndentingXMLStreamWriter(writer));
+            } finally {
+                writer.close();
+            }
+            return outStream.toString();
+        }
     }
 }

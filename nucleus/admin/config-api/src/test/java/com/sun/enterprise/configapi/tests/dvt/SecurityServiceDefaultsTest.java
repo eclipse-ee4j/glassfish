@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,49 +18,33 @@
 package com.sun.enterprise.configapi.tests.dvt;
 
 import com.sun.enterprise.config.serverbeans.SecurityService;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests the JdbcConnectionPool config bean's defaults.
  * @author Kedar Mhaswade (km@dev.java.net)
  */
+@ExtendWith(ConfigApiJunit5Extension.class)
+@DomainXml("SecurityServiceDefaults.xml")
+public class SecurityServiceDefaultsTest {
 
-public class SecurityServiceDefaultsTest extends ConfigApiTest {
+    @Inject
+    private SecurityService securityService;
 
-    SecurityService ss = null;
-
-    public SecurityServiceDefaultsTest() {
-    }
-
-    @Override
-    public String getFileName() {
-        return ("SecurityServiceDefaults"); //this is the xml to load
-    }
-
-    @Before
-    public void setUp() {
-        ss = super.getHabitat().getService(SecurityService.class);
-    }
-
-    @After
-    public void tearDown() {
-        ss = null;
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
     public void testFewDefaults() {
-        assertEquals("file", ss.getDefaultRealm());
-        assertEquals("true", ss.getActivateDefaultPrincipalToRoleMapping());
-        assertEquals("AttributeDeprecated", ss.getAnonymousRole());
-        assertEquals("false", ss.getAuditEnabled());
-        assertEquals("default", ss.getAuditModules());
-        assertEquals("default", ss.getJacc());
+        assertEquals("file", securityService.getDefaultRealm());
+        assertEquals("true", securityService.getActivateDefaultPrincipalToRoleMapping());
+        assertEquals("AttributeDeprecated", securityService.getAnonymousRole());
+        assertEquals("false", securityService.getAuditEnabled());
+        assertEquals("default", securityService.getAuditModules());
+        assertEquals("default", securityService.getJacc());
     }
 }

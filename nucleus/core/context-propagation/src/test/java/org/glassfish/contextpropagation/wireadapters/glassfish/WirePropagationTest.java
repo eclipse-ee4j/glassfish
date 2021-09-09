@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,31 +20,34 @@ package org.glassfish.contextpropagation.wireadapters.glassfish;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-import org.glassfish.contextpropagation.InsufficientCredentialException;
 import org.glassfish.contextpropagation.PropagationMode;
-//import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
-//import org.glassfish.contextpropagation.adaptors.MockLoggerAdapter;
+import org.glassfish.contextpropagation.adaptors.BootstrapUtils;
+import org.glassfish.contextpropagation.adaptors.MockLoggerAdapter;
 import org.glassfish.contextpropagation.internal.Utils;
 import org.glassfish.contextpropagation.spi.ContextMapHelper;
 import org.glassfish.contextpropagation.spi.ContextMapPropagator;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-@Ignore
 public class WirePropagationTest {
 
-//  @BeforeClass
-//  public static void setup() throws InsufficientCredentialException {
-//    BootstrapUtils.bootstrap(new DefaultWireAdapter());
-//    BootstrapUtils.populateMap();
-//  }
-//
-//  @Test
-//  public void testPropagateOverWire() throws IOException {
-//    ContextMapPropagator wcPropagator = ContextMapHelper.getScopeAwarePropagator();
-//    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-//    wcPropagator.sendRequest(baos, PropagationMode.SOAP);
-//    MockLoggerAdapter.debug(Utils.toString(baos.toByteArray()));
-//  }
+    @BeforeEach
+    public void setup() throws Exception {
+        BootstrapUtils.bootstrap(new DefaultWireAdapter());
+        BootstrapUtils.populateMap();
+    }
+
+    @AfterEach
+    public void reset() {
+        BootstrapUtils.reset();
+    }
+
+    @Test
+    public void testPropagateOverWire() throws IOException {
+        ContextMapPropagator wcPropagator = ContextMapHelper.getScopeAwarePropagator();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        wcPropagator.sendRequest(baos, PropagationMode.SOAP);
+        MockLoggerAdapter.debug(Utils.toString(baos.toByteArray()));
+    }
 }

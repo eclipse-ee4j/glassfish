@@ -33,30 +33,30 @@ import com.sun.xml.ws.api.server.ServiceDefinition;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.policy.PolicyMap;
 import com.sun.xml.ws.wsdl.OperationDispatcher;
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Executor;
+
 import javax.xml.namespace.QName;
-import jakarta.xml.ws.EndpointReference;
+
 import org.glassfish.gmbal.ManagedObjectManager;
-import org.junit.Assert;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.w3c.dom.Element;
 
+import jakarta.xml.ws.EndpointReference;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 /**
- *
  * @author ljungman
  */
 public class JAXWSAdapterRegistryTest {
 
-    public JAXWSAdapterRegistryTest() {
-    }
-
     /**
      * Test of addAdapter method, of class JAXWSAdapterRegistry.
-     *
      * http://java.net/jira/browse/GLASSFISH-17836
      * Putting load on freshly-started Glassfish web-app messes up its initialization process
      */
@@ -70,6 +70,7 @@ public class JAXWSAdapterRegistryTest {
         for (int i = 0; i < size; i++) {
             final int j = i;
             ts[i] = new Thread(new Runnable() {
+
                 @Override
                 public void run() {
                     registry.addAdapter(contextRoot, urlPattern + j, new A(j));
@@ -77,7 +78,9 @@ public class JAXWSAdapterRegistryTest {
             });
         }
 
-        for (int i = 0; i < size; i++) ts[i].start();
+        for (int i = 0; i < size; i++) {
+            ts[i].start();
+        }
 
         for (int i = 0; i < size; i++) {
             try {
@@ -87,24 +90,26 @@ public class JAXWSAdapterRegistryTest {
         }
 
         for (int i = 0; i < size; i++) {
-            Adapter a = registry.getAdapter(contextRoot, urlPattern + i, urlPattern + i);
-            Assert.assertNotNull("No adapter for '" + contextRoot + urlPattern + i + "'", a);
-            Assert.assertEquals(i, ((A)a).getX());
+            Adapter adapter = registry.getAdapter(contextRoot, urlPattern + i, urlPattern + i);
+            assertNotNull(adapter, "No adapter for '" + contextRoot + urlPattern + i + "'");
+            assertEquals(i, ((A) adapter).getX());
         }
     }
 
     private class A extends Adapter {
 
-        private int x;
+        private final int x;
 
         public A(int x) {
             super(new WSE());
             this.x = x;
         }
 
+
         public int getX() {
             return x;
         }
+
 
         @Override
         protected Toolkit createToolkit() {
@@ -117,117 +122,142 @@ public class JAXWSAdapterRegistryTest {
         @NotNull
         @Override
         public Set<Component> getComponents() {
-            return new HashSet<Component>();
+            return new HashSet<>();
         }
+
 
         @Override
         public Codec createCodec() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public QName getServiceName() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public QName getPortName() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public Class getImplementationClass() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public WSBinding getBinding() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public Container getContainer() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public WSDLPort getPort() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public void setExecutor(Executor exctr) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public void schedule(Packet packet, CompletionCallback cc, FiberContextSwitchInterceptor fcsi) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public PipeHead createPipeHead() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public void dispose() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public ServiceDefinition getServiceDefinition() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public Set getComponentRegistry() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public SEIModel getSEIModel() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public PolicyMap getPolicyMap() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public ManagedObjectManager getManagedObjectManager() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public void closeManagedObjectManager() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
         public ServerTubeAssemblerContext getAssemblerContext() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
-        public EndpointReference getEndpointReference(Class clazz, String address, String wsdlAddress, Element... referenceParameters) {
+        public EndpointReference getEndpointReference(Class clazz, String address, String wsdlAddress,
+            Element... referenceParameters) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
-        public EndpointReference getEndpointReference(Class clazz, String address, String wsdlAddress, List metadata, List referenceParameters) {
+        public EndpointReference getEndpointReference(Class clazz, String address, String wsdlAddress, List metadata,
+            List referenceParameters) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
+
 
         @Override
         public OperationDispatcher getOperationDispatcher() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
+
         @Override
-        public Packet createServiceResponseForException(ThrowableContainerPropertySet tcps, Packet packet, SOAPVersion soapv, WSDLPort wsdlp, SEIModel seim, WSBinding wsb) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public Packet createServiceResponseForException(ThrowableContainerPropertySet tcps, Packet packet,
+            SOAPVersion soapv, WSDLPort wsdlp, SEIModel seim, WSBinding wsb) {
+            throw new UnsupportedOperationException("Not supported yet.");
         }
     }
 }

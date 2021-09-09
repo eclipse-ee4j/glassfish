@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,11 +17,7 @@
 
 package org.jvnet.hk2.config.test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
-import java.beans.PropertyVetoException;
 import java.net.URL;
 import java.util.List;
 import java.util.Random;
@@ -30,207 +27,197 @@ import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.api.ServiceLocatorFactory;
 import org.glassfish.hk2.utilities.BuilderHelper;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+import org.jvnet.hk2.config.test.example.ConfigModule;
+import org.jvnet.hk2.config.test.example.GenericConfig;
+import org.jvnet.hk2.config.test.example.GenericContainer;
+import org.jvnet.hk2.config.test.example.SimpleConnector;
+import org.jvnet.hk2.config.test.example.SimpleDocument;
+import org.jvnet.hk2.config.test.example.WebContainerAvailability;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ConfigDisposalTest {
     private final static String TEST_NAME = "ConfigDisposal";
     private final static Random RANDOM = new Random();
 
-    private ServiceLocator habitat;
+    private ServiceLocator locator;
 
-    @Before
+    @BeforeEach
     public void before() {
         String testName = TEST_NAME + RANDOM.nextInt();
 
-        habitat = ServiceLocatorFactory.getInstance().create(testName);
-        DynamicConfigurationService dcs = habitat.getService(DynamicConfigurationService.class);
+        locator = ServiceLocatorFactory.getInstance().create(testName);
+        DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
         DynamicConfiguration config = dcs.createDynamicConfiguration();
-        new ConfigModule(habitat).configure(config);
+        new ConfigModule(locator).configure(config);
 
         config.commit();
         parseDomainXml();
     }
 
-    @After
+    @AfterEach
     public void after() {
-        ServiceLocatorFactory.getInstance().destroy(habitat);
-        habitat = null;
+        ServiceLocatorFactory.getInstance().destroy(locator);
+        locator = null;
     }
 
     public void parseDomainXml() {
-        ConfigParser parser = new ConfigParser(habitat);
-        URL url = ConfigDisposalTest.class.getResource("/domain.xml");
-        System.out.println("URL : " + url);
-
-        try {
-            DomDocument doc = parser.parse(url, new SimpleDocument(habitat));
-            System.out.println("[parseDomainXml] ==> Successfully parsed");
-            assert(doc != null);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            assert(false);
-        }
+        final ConfigParser parser = new ConfigParser(locator);
+        final URL url = ConfigDisposalTest.class.getResource("/domain.xml");
+        assertNotNull(url);
+        final DomDocument<?> doc = parser.parse(url, new SimpleDocument(locator));
+        assertNotNull(doc);
     }
 
-    // to regenerate config injectors do the following in command line:
-    // mvn config-generator:generate-test-injectors
-    // cp target/generated-sources/hk2-config-generator/src/test/java/org/jvnet/hk2/config/test/* src/test/java/org/jvnet/hk2/config/test/
-    @Test // Removed container causes nested elements be removed
+    @Test
     public void testDisposedNestedAndNamed() throws TransactionFailure {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        assertEquals("Extensions", 1, sc.getExtensions().size());
-        assertEquals("Nested children", 2, sc.getExtensions().get(0).getExtensions().size());
+        SimpleConnector sc = locator.getService(SimpleConnector.class);
+        assertEquals(1, sc.getExtensions().size(), "Extensions");
+        assertEquals(2, sc.getExtensions().get(0).getExtensions().size(), "Nested children");
 
-        ConfigSupport.apply(new SingleConfigCode<SimpleConnector>() {
-            @Override
-            public Object run(SimpleConnector sc)
-                    throws PropertyVetoException, TransactionFailure {
-                List<GenericContainer> extensions = sc.getExtensions();
-                GenericContainer child = extensions.get(extensions.size() - 1);
-                extensions.remove(child);
-                return child;
-            }
-        }, sc);
+        SingleConfigCode<SimpleConnector> configCode = sc1 -> {
+            List<GenericContainer> extensions = sc1.getExtensions();
+            GenericContainer child = extensions.get(extensions.size() - 1);
+            extensions.remove(child);
+            return child;
+        };
+        ConfigSupport.apply(configCode, sc);
 
-        assertEquals("Removed extensions", 0, sc.getExtensions().size());
-        // NOTE, habitat.getService(GenericConfig.class) creates new instance
-        //       if not all instances of GenericConfig descriptors are removed
-        assertNull("GenericContainer descriptor still has " +
-                habitat.getDescriptors(BuilderHelper.createContractFilter(GenericContainer.class.getName())),
-                habitat.getService(GenericContainer.class));
-        assertNull("GenericConfig descriptor test still has " +
-                habitat.getDescriptors(BuilderHelper.createContractFilter(GenericConfig.class.getName())),
-                habitat.getService(GenericConfig.class, "test"));
-        assertNull("GenericConfig descriptor still has " +
-                habitat.getDescriptors(BuilderHelper.createContractFilter(GenericConfig.class.getName())),
-                habitat.getService(GenericConfig.class));
+        assertAll(
+            () -> assertThat("Removed extensions", sc.getExtensions(), hasSize(0)),
+            // NOTE, habitat.getService(GenericConfig.class) creates new instance
+            //       if not all instances of GenericConfig descriptors are removed
+            () -> assertNull(locator.getService(GenericContainer.class), "GenericContainer descriptor still has " +
+                locator.getDescriptors(BuilderHelper.createContractFilter(GenericContainer.class.getName()))),
+            () -> assertNull(locator.getService(GenericConfig.class, "test"), "GenericConfig descriptor test still has " +
+                locator.getDescriptors(BuilderHelper.createContractFilter(GenericConfig.class.getName()))),
+            () -> assertNull(locator.getService(GenericConfig.class), "GenericConfig descriptor still has " +
+                locator.getDescriptors(BuilderHelper.createContractFilter(GenericConfig.class.getName())))
+        );
         // assert with VisualVm there is no GenericContainer and GenericConfig instances with OQL query:
         // select x.implementation.toString() from org.jvnet.hk2.config.test.SimpleConfigBeanWrapper x
     }
 
     @Test
     public void testRemoveNamed() throws TransactionFailure {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        assertEquals("Eextensions", 1, sc.getExtensions().size());
-        assertEquals("Nested children", 2, sc.getExtensions().get(0).getExtensions().size());
+        SimpleConnector sc = locator.getService(SimpleConnector.class);
+        assertAll(
+            () -> assertThat("Extensions", sc.getExtensions(), hasSize(1)),
+            () -> assertThat("Nested children", sc.getExtensions().get(0).getExtensions(), hasSize(2))
+        );
 
         GenericContainer extension = sc.getExtensions().get(0);
 
-        ConfigSupport.apply(new SingleConfigCode<GenericContainer>() {
-            @Override
-            public Object run(GenericContainer container)
-                    throws PropertyVetoException, TransactionFailure {
-                List<GenericConfig> childExtensions = container.getExtensions();
-                GenericConfig nestedChild = childExtensions.get(childExtensions.size() - 1);
-                childExtensions.remove(nestedChild);
-                return nestedChild;
-            }
-        }, extension);
+        SingleConfigCode<GenericContainer> configCode = container -> {
+            List<GenericConfig> childExtensions = container.getExtensions();
+            GenericConfig nestedChild = childExtensions.get(childExtensions.size() - 1);
+            childExtensions.remove(nestedChild);
+            return nestedChild;
+        };
+        ConfigSupport.apply(configCode, extension);
 
-        assertEquals("Removed extensions", 1, sc.getExtensions().size());
-        assertNull("Removed nested named child", habitat.getService(GenericConfig.class, "test2"));
-        // make sure other elements are not removed
-        assertNotNull("Nested named child", habitat.getService(GenericConfig.class, "test1"));
-        assertNotNull("Nested named grand child", habitat.getService(GenericConfig.class, "test"));
+        assertAll(
+            () -> assertThat("Removed Extensions", sc.getExtensions(), hasSize(1)),
+            () -> assertNull(locator.getService(GenericConfig.class, "test2"), "Removed nested named child"),
+            // make sure other elements are not removed
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test1"), "Nested named child"),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test"), "Nested named grand child")
+        );
     }
 
     @Test
     public void testRemovedOne() throws TransactionFailure {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        assertEquals("Extensions", 1, sc.getExtensions().size());
+        SimpleConnector connector = locator.getService(SimpleConnector.class);
+        assertEquals(1, connector.getExtensions().size(), "Extensions");
 
-        ConfigSupport.apply(new SingleConfigCode<SimpleConnector>() {
-            @Override
-            public Object run(SimpleConnector sc)
-                    throws PropertyVetoException, TransactionFailure {
-                List<GenericContainer> extensions = sc.getExtensions();
-                GenericContainer child = sc.createChild(GenericContainer.class);
-                WebContainerAvailability grandchild = child.createChild(WebContainerAvailability.class);
-                child.setWebContainerAvailability(grandchild);
-                extensions.add(child);
-                return child;
-            }
-        }, sc);
+        SingleConfigCode<SimpleConnector> configCode = sc -> {
+            List<GenericContainer> extensions = sc.getExtensions();
+            GenericContainer child = sc.createChild(GenericContainer.class);
+            WebContainerAvailability grandchild = child.createChild(WebContainerAvailability.class);
+            child.setWebContainerAvailability(grandchild);
+            extensions.add(child);
+            return child;
+        };
+        ConfigSupport.apply(configCode, connector);
+        assertEquals(2, connector.getExtensions().size(), "Added extensions");
 
-        assertEquals("Added extensions", 2, sc.getExtensions().size());
-
-        ConfigSupport.apply(new SingleConfigCode<SimpleConnector>() {
-            @Override
-            public Object run(SimpleConnector sc)
-                    throws PropertyVetoException, TransactionFailure {
-                List<GenericContainer> extensions = sc.getExtensions();
-                GenericContainer child = extensions.get(extensions.size() - 1);
-                extensions.remove(child);
-                return child;
-            }
-        }, sc);
-
-        assertEquals("Removed extensions", 1, sc.getExtensions().size());
-
-        assertNotNull("Nested named child 1", habitat.getService(GenericConfig.class, "test1"));
-        assertNotNull("Nested named grand child", habitat.getService(GenericConfig.class, "test"));
-        assertNotNull("Nested named child 2", habitat.getService(GenericConfig.class, "test2"));
-        assertNotNull("GenericContainer Service", habitat.getService(GenericContainer.class));
+        SingleConfigCode<SimpleConnector> configCode2 = (SingleConfigCode<SimpleConnector>) sc -> {
+            List<GenericContainer> extensions = sc.getExtensions();
+            GenericContainer child = extensions.get(extensions.size() - 1);
+            extensions.remove(child);
+            return child;
+        };
+        ConfigSupport.apply(configCode2, connector);
+        assertAll(
+            () -> assertThat("Removed extensions", connector.getExtensions(), hasSize(1)),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test1"), "Nested named child 1"),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test"), "Nested named grand child"),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test2"), "Nested named child 2"),
+            () -> assertNotNull(locator.getService(GenericContainer.class), "GenericContainer Service")
+        );
     }
 
     @Test
     public void testReplaceNode() throws TransactionFailure {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        assertEquals("Eextensions", 1, sc.getExtensions().size());
+        SimpleConnector sc = locator.getService(SimpleConnector.class);
+        assertEquals(1, sc.getExtensions().size(), "Eextensions");
 
         GenericContainer extension = sc.getExtensions().get(0);
-        assertEquals("Child extensions", 2, extension.getExtensions().size());
+        assertEquals(2, extension.getExtensions().size(), "Child extensions");
         GenericConfig nestedChild = extension.getExtensions().get(0);
 
-        ConfigSupport.apply(new SingleConfigCode<GenericConfig>() {
-            @Override
-            public Object run(GenericConfig nestedChild)
-                    throws PropertyVetoException, TransactionFailure {
-                nestedChild.setGenericConfig(null);
-                GenericConfig newChild = nestedChild.createChild(GenericConfig.class);
-                newChild.setName("test3");
-                nestedChild.setGenericConfig(newChild);
-                return nestedChild;
-            }
-        }, nestedChild);
+        SingleConfigCode<GenericConfig> configCode = nestedChild1 -> {
+            nestedChild1.setGenericConfig(null);
+            GenericConfig newChild = nestedChild1.createChild(GenericConfig.class);
+            newChild.setName("test3");
+            nestedChild1.setGenericConfig(newChild);
+            return nestedChild1;
+        };
+        ConfigSupport.apply(configCode, nestedChild);
 
-        assertNotNull("Nested named child 1", habitat.getService(GenericConfig.class, "test1"));
-        assertNotNull("Nested named child 2", habitat.getService(GenericConfig.class, "test2"));
-        assertNull("Nested named grand child replaced", habitat.getService(GenericConfig.class, "test"));
+        assertAll(
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test1"), "Nested named child 1"),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test2"), "Nested named child 2"),
+            () -> assertNull(locator.getService(GenericConfig.class, "test"), "Nested named grand child replaced")
+        );
     }
 
     @Test
     public void testReplaceChild() throws TransactionFailure {
-        SimpleConnector sc = habitat.getService(SimpleConnector.class);
-        assertEquals("Eextensions", 1, sc.getExtensions().size());
+        SimpleConnector sc = locator.getService(SimpleConnector.class);
+        assertEquals(1, sc.getExtensions().size(), "Eextensions");
 
         GenericContainer extension = sc.getExtensions().get(0);
-        assertEquals("Child extensions", 2, extension.getExtensions().size());
+        assertEquals(2, extension.getExtensions().size(), "Child extensions");
 
-        ConfigSupport.apply(new SingleConfigCode<GenericContainer>() {
-            @Override
-            public Object run(GenericContainer extension)
-                    throws PropertyVetoException, TransactionFailure {
-                GenericConfig newChild = extension.createChild(GenericConfig.class);
-                newChild.setName("test3");
-                GenericConfig nestedChild = extension.getExtensions().set(0, newChild);
-                return nestedChild;
-            }
-        }, extension);
+        SingleConfigCode<GenericContainer> configCode = extension1 -> {
+            GenericConfig newChild = extension1.createChild(GenericConfig.class);
+            newChild.setName("test3");
+            GenericConfig nestedChild = extension1.getExtensions().set(0, newChild);
+            return nestedChild;
+        };
+        ConfigSupport.apply(configCode, extension);
 
-        assertEquals("Extensions", 2, extension.getExtensions().size());
-        assertNull("Nested named child 1", habitat.getService(GenericConfig.class, "test1"));
-        assertNull("Nested named grand child replaced", habitat.getService(GenericConfig.class, "test"));
-        assertEquals("New Nested child", "test3", extension.getExtensions().get(0).getName());
-        // can't verify it with getService becaue named alias is not created with createChild
-        //assertNotNull("New Nested child", habitat.getService(GenericConfig.class, "test3"));
-        assertNotNull("Nested named child 2", habitat.getService(GenericConfig.class, "test2"));
+        assertAll(
+            () -> assertThat("Extensions", extension.getExtensions(), hasSize(2)),
+            () -> assertNull(locator.getService(GenericConfig.class, "test1"), "Nested named child 1"),
+            () -> assertNull(locator.getService(GenericConfig.class, "test"), "Nested named grand child replaced"),
+            () -> assertEquals("test3", extension.getExtensions().get(0).getName(), "New Nested child"),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test3"), "New Nested child"),
+            () -> assertNotNull(locator.getService(GenericConfig.class, "test2"), "Nested named child 2")
+        );
     }
 }

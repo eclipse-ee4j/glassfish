@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -23,15 +24,19 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+
 import javax.net.SocketFactory;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.glassfish.grizzly.config.test.GrizzlyConfigTestHelper;
+import org.junit.jupiter.api.Test;
 
-public class HttpRedirectTest extends BaseTestGrizzlyConfig {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 
-    // ------------------------------------------------------------ Test Methods
+public class HttpRedirectTest {
+    private static final GrizzlyConfigTestHelper helper = new GrizzlyConfigTestHelper(HttpRedirectTest.class);
+
 
     @Test
     public void legacyHttpToHttpsRedirect() throws IOException {
@@ -45,7 +50,7 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
 
     @Test
     public void legacyHttpsToHttpRedirect() throws IOException {
-        doTest(getSSLSocketFactory(),
+        doTest(helper.getSSLSocketFactory(),
                "legacy-https-http-redirect.xml",
                 "/",
                 "localhost",
@@ -65,7 +70,7 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
 
     @Test
     public void httpsToHttpSamePortRedirect() throws IOException {
-        doTest(getSSLSocketFactory(),
+        doTest(helper.getSSLSocketFactory(),
                "https-http-redirect-same-port.xml",
                 "/",
                 "localhost",
@@ -75,7 +80,7 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
 
     @Test
     public void httpToHttpsDifferentPortRedirect() throws IOException {
-        doTest(getSSLSocketFactory(),
+        doTest(helper.getSSLSocketFactory(),
                "http-https-redirect-different-port.xml",
                 "/",
                 "localhost",
@@ -85,7 +90,7 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
 
     @Test
     public void httpToHttpsWithAttributesRedirect() throws IOException {
-        doTest(getSSLSocketFactory(),
+        doTest(helper.getSSLSocketFactory(),
                 "http-https-redirect-different-port.xml",
                 "/index.html?DEFAULT=D:%5Cprojects%5Ceclipse%5CSimpleWAR.war&name=SimpleWAR&contextroot=SimpleWAR&force=true&keepstate=true",
                 "localhost",
@@ -116,7 +121,7 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
         grizzlyConfig.setupNetwork();
             int count = 0;
             for (GrizzlyListener listener : grizzlyConfig.getListeners()) {
-                addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
+                helper.addStaticHttpHandler((GenericGrizzlyListener) listener, count++);
             }
 
         try {
@@ -145,31 +150,18 @@ public class HttpRedirectTest extends BaseTestGrizzlyConfig {
                     }
 
                     // will fail here
-                    Assert.assertEquals(expectedLocation, line.toLowerCase());
+                    assertEquals(expectedLocation, line.toLowerCase());
                 }
             }
             if (!found) {
-                Assert.fail("Unable to find Location header in response - no redirect occurred.");
+                fail("Unable to find Location header in response - no redirect occurred.");
             }
         } catch (Exception e) {
-            Assert.fail(e.toString());
+            fail(e.toString());
         } finally {
             grizzlyConfig.shutdownNetwork();
         }
     }
-
-//    @Override
-//    protected void setRootFolder(final GrizzlyServiceListener listener, final int count) {
-//
-//        final StaticResourcesAdapter adapter = (StaticResourcesAdapter) listener.getEmbeddedHttp().getAdapter();
-//        final String name = System.getProperty("java.io.tmpdir", "/tmp") + "/"
-//            + Dom.convertName(getClass().getSimpleName()) + count;
-//        File dir = new File(name);
-//        dir.mkdirs();
-//
-//        adapter.addRootFolder(name);
-//
-//    }
 
     /**
      * Check the localhost aliases, cause server might return not localhost, but 127.0.0.1

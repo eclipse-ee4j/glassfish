@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +17,14 @@
 
 package org.glassfish.appclient.client;
 
-import org.glassfish.appclient.client.acc.UserError;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  *
@@ -31,90 +32,53 @@ import static org.junit.Assert.*;
  */
 public class CLIBootstrapTest {
 
-    public CLIBootstrapTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "AS_JAVA", "");
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "JAVA_HOME", "");
-        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "PATH",
-                System.getenv("PATH"));
+        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "PATH", System.getenv("PATH"));
         System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + "_AS_INSTALL",
-                "/Users/Tim/asgroup/v3/H/publish/glassfish6/glassfish");
+            "/Users/Tim/asgroup/v3/H/publish/glassfish6/glassfish");
     }
 
-    @After
-    public void tearDown() {
-    }
-
-    @Ignore
     @Test
     public void testChooseJavaASJAVAAsCurrent() {
         runTest("AS_JAVA");
     }
 
-    @Ignore
     @Test
     public void testChooseJavaJAVAHOMEAsCurrent() {
         runTest("JAVA_HOME");
     }
 
 
-    @Ignore
     @Test
     public void testChooseJavaASJAVAAsBad() {
         runTestUsingBadLocation("AS_JAVA");
     }
 
-    @Ignore
     @Test
     public void testChooseJAVAHOMEAsBad() {
         runTestUsingBadLocation("JAVA_HOME");
     }
 
     private void runTestUsingBadLocation(final String envVarName) {
-        try {
-            final CLIBootstrap boot = new CLIBootstrap();
-            System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName,
-                        "shouldnotexistanywhere");
-            CLIBootstrap.JavaInfo javaInfo = boot.initJava();
-
-        } catch (UserError ex) {
-            /*
-             * We expect this exception because we tried to use a non-sensical
-             * setting for the java location.
-             */
-        }
+        final CLIBootstrap boot = assertDoesNotThrow(() -> new CLIBootstrap());
+        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName, "shouldnotexistanywhere");
+        CLIBootstrap.JavaInfo javaInfo = boot.initJava();
+        assertNotNull(javaInfo);
     }
 
     private void runTest(final String envVarName) {
-        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName,
-                       System.getProperty("java.home"));
-        try {
-            final CLIBootstrap boot = new CLIBootstrap();
-            CLIBootstrap.JavaInfo javaInfo = boot.initJava();
-            if (javaInfo == null) {
-                fail("chooseJava found no match; expected to match on " + envVarName);
-            }
-            if ( ! javaInfo.toString().equals(envVarName)) {
-                fail("Expected to choose " + envVarName + " but chose " + javaInfo.toString() + " instead");
-            }
-            if ( ! javaInfo.isValid()) {
-                fail("Correctly chose " + envVarName + " but it should have been valid, derived as it was from PATH, but was not");
-            }
-        } catch (UserError ex) {
-            fail(ex.getMessage());
-        }
+        String javaHome = System.getProperty("java.home");
+        System.setProperty(CLIBootstrap.ENV_VAR_PROP_PREFIX + envVarName, javaHome);
+        final CLIBootstrap boot = assertDoesNotThrow(() -> new CLIBootstrap());
+        CLIBootstrap.JavaInfo javaInfo = boot.initJava();
+        assertAll(
+            () -> assertNotNull(javaInfo, "found no match; expected to match on " + envVarName),
+            () -> assertEquals(javaHome, javaInfo.javaBinDir().getAbsoluteFile().getParent()),
+            () -> assertFalse(javaInfo.isValid(), "it should have been valid, derived as it was from PATH, but was not")
+        );
     }
 
 }

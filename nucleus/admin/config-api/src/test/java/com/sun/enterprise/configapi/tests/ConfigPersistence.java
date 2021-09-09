@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,96 +17,93 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.beans.PropertyChangeEvent;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.config.support.ConfigurationPersistence;
-import org.glassfish.tests.utils.Utils;
-import org.junit.After;
-import org.junit.Test;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.DomDocument;
 import org.jvnet.hk2.config.IndentingXMLStreamWriter;
-import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.TransactionListener;
 import org.jvnet.hk2.config.Transactions;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
+
+import jakarta.inject.Inject;
 
 /**
  * User: Jerome Dochez
  * Date: Mar 25, 2008
  * Time: 11:36:46 AM
  */
-public abstract class ConfigPersistence extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public abstract class ConfigPersistence {
 
-    @After
-    public void tearDown() {
-            Utils.instance.shutdownServiceLocator(this);
-    }
+    @Inject
+    protected ServiceLocator locator;
+    @Inject
+    private DomDocument<?> document;
+    @Inject
+    private Logger logger;
+
+    public abstract void doTest() throws Exception;
+
+    public abstract void assertResult(String resultingXml);
+
 
     @Test
-    public void test() throws TransactionFailure {
-
-        final DomDocument document = getDocument(getHabitat());
-
+    public void test() throws Exception {
         final ByteArrayOutputStream baos = new ByteArrayOutputStream();
         baos.reset();
 
-        final ConfigurationPersistence testPersistence =  new ConfigurationPersistence() {
-            public void save(DomDocument doc) throws IOException, XMLStreamException {
-                XMLOutputFactory factory = XMLOutputFactory.newInstance();
-                XMLStreamWriter writer = factory.createXMLStreamWriter(baos);
+        final ConfigurationPersistence testPersistence = doc -> {
+            XMLOutputFactory factory = XMLOutputFactory.newInstance();
+            XMLStreamWriter writer = factory.createXMLStreamWriter(baos);
+            try {
                 doc.writeTo(new IndentingXMLStreamWriter(writer));
+            } finally {
                 writer.close();
             }
         };
 
         TransactionListener testListener = new TransactionListener() {
+
+            @Override
             public void transactionCommited(List<PropertyChangeEvent> changes) {
                 try {
                     testPersistence.save(document);
-                } catch (IOException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-                } catch (XMLStreamException e) {
-                    e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+                } catch (IOException | XMLStreamException e) {
+                    throw new IllegalStateException(e);
                 }
             }
 
-            public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
 
+            @Override
+            public void unprocessedTransactedEvents(List<UnprocessedChangeEvents> changes) {
             }
         };
-        Transactions transactions = getHabitat().getService(Transactions.class);
+        Transactions transactions = locator.getService(Transactions.class);
 
         try {
             transactions.addTransactionsListener(testListener);
-
             doTest();
-        } catch(TransactionFailure f) {
-            f.printStackTrace();
-            throw f;
-
         } finally {
             transactions.waitForDrain();
             transactions.removeTransactionsListener(testListener);
         }
 
         // now check if we persisted correctly...
-
         final String resultingXml = baos.toString();
-
         logger.fine(resultingXml);
-        assertTrue("assertResult from " + getClass().getName() + " was false from " + resultingXml, assertResult(resultingXml));
+        assertResult(resultingXml);
     }
-
-    public abstract void doTest() throws TransactionFailure;
-
-    public abstract boolean assertResult(String resultingXml);
 }

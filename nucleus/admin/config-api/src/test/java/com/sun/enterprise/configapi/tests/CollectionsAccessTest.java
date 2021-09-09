@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,68 +17,69 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.jvnet.hk2.config.TransactionFailure;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.glassfish.api.admin.config.ApplicationName;
-import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
 
 import java.util.List;
-import java.beans.PropertyVetoException;
+
+import org.glassfish.api.admin.config.ApplicationName;
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * User: Jerome Dochez
  * Date: Apr 8, 2008
  * Time: 9:45:21 PM
  */
-public class CollectionsAccessTest extends ConfigApiTest  {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class CollectionsAccessTest {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Applications apps;
 
-
-    public String getFileName() {
-        return "DomainTest";
+    @Test
+    public void unprotectedAccess() {
+        assertNotNull(apps);
+        assertThrows(IllegalStateException.class, () -> apps.getModules().add(null));
     }
 
-    @Test(expected=IllegalStateException.class)
-    public void unprotectedAccess() throws IllegalStateException {
-        Applications apps = getHabitat().getService(Applications.class);
-        assertTrue(apps!=null);
-        apps.getModules().add(null);
-    }
-
-    @Test(expected= TransactionFailure.class)
+    @Test
     public void semiProtectedTest() throws TransactionFailure {
-        final Applications apps = getHabitat().getService(Applications.class);
-        assertTrue(apps!=null);
-        ConfigSupport.apply(new SingleConfigCode<Applications>() {
-            public Object run(Applications param) throws PropertyVetoException, TransactionFailure {
-                // this is the bug, we should not get the list from apps but from param.
-                List<ApplicationName> modules = apps.getModules();
-                Application m = param.createChild(Application.class);
-                modules.add(m); // should throw an exception
-                return m;
-            }
-        }, apps);
+        assertNotNull(apps);
+        SingleConfigCode<Applications> configCode = proxy -> {
+            List<ApplicationName> modules = proxy.getModules();
+            Application m = proxy.createChild(Application.class);
+            modules.add(m);
+            return m;
+        };
+        assertThrows(TransactionFailure.class, () -> ConfigSupport.apply(configCode, apps));
     }
 
     @Test
     public void protectedTest() throws TransactionFailure {
-        final Applications apps = getHabitat().getService(Applications.class);
-        assertTrue(apps!=null);
-        ConfigSupport.apply(new SingleConfigCode<Applications>() {
-            public Object run(Applications param) throws PropertyVetoException, TransactionFailure {
-                List<ApplicationName> modules = param.getModules();
-                Application m = param.createChild(Application.class);
-                m.setName( "ejb-test" );
-                m.setLocation("test-location");
-                m.setObjectType("ejb");
-                modules.add(m);
-                modules.remove(m);
-                return m;
-            }
-        }, apps);
+        assertNotNull(apps);
+        SingleConfigCode<Applications> configCode = proxy -> {
+            List<ApplicationName> modules = proxy.getModules();
+            Application m = proxy.createChild(Application.class);
+            m.setName( "ejb-test" );
+            m.setLocation("test-location");
+            m.setObjectType("ejb");
+            modules.add(m);
+            modules.remove(m);
+            return m;
+        };
+        ConfigSupport.apply(configCode, apps);
     }
 }
 

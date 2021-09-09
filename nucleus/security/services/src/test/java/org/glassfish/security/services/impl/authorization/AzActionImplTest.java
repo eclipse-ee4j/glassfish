@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,21 +17,21 @@
 
 package org.glassfish.security.services.impl.authorization;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * @see AzActionImpl
  */
 public class AzActionImplTest {
+
     @Test
     public void testToString() throws Exception {
-
         AzActionImpl nullAction = new AzActionImpl(null);
-        assertEquals( "null Action", "*", nullAction.toString() );
+        assertEquals("*", nullAction.toString(), "null Action");
 
         AzActionImpl createAction = new AzActionImpl("create");
-        assertEquals( "non-null Action", "create", createAction.toString() );
+        assertEquals("create", createAction.toString(), "non-null Action");
     }
 }

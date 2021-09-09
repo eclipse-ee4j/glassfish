@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -19,37 +20,25 @@ package com.sun.enterprise.admin.progress;
 import org.glassfish.api.admin.ProgressStatus;
 import org.glassfish.api.admin.progress.ProgressStatusImpl;
 import org.glassfish.api.admin.progress.ProgressStatusMirroringImpl;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- *
  * @author mmares
  */
 public class CommandProgressImplTest {
-
-    public CommandProgressImplTest() {
-    }
-
-//    @BeforeClass
-//    public static void setUpClass() throws Exception {
-//    }
-//
-//    @AfterClass
-//    public static void tearDownClass() throws Exception {
-//    }
-
 
     @Test
     public void testCreateMirroringChild() {
         CommandProgressImpl cp = new CommandProgressImpl("first", "a");
         cp.setTotalStepCount(2);
-        ProgressStatusMirroringImpl ch1 = cp.createMirroringChild(1);
+        final ProgressStatusMirroringImpl ch1 = cp.createMirroringChild(1);
         assertNotNull(ch1);
-        ProgressStatus ch2 = cp.createChild(1);
+        final ProgressStatus ch2 = cp.createChild(1);
         assertNotNull(ch1);
-        assertTrue(ch2 instanceof ProgressStatusImpl);
+        assertThat(ch2, instanceOf(ProgressStatusImpl.class));
     }
-
 }

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,35 +17,37 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import org.junit.Test;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import com.sun.enterprise.config.serverbeans.Config;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigBeanProxy;
 import org.jvnet.hk2.config.ConfigSupport;
-import com.sun.enterprise.config.serverbeans.Config;
+
+import jakarta.inject.Inject;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.StringEndsWith.endsWith;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Test the getElementTypeByName ConfigSupport API
  *
  * @Author Jerome Dochez
  */
-public class GetElementTypeByNameTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class GetElementTypeByNameTest {
 
-    public String getFileName() {
-        return "DomainTest";
-    }
-
+    @Inject
+    private ServiceLocator locator;
 
     @Test
-    public void testAppRoot() {
-        Config c = getHabitat().getService(Config.class);
-        Class<? extends ConfigBeanProxy> elementType = null;
-        try {
-            elementType = ConfigSupport.getElementTypeByName(c, "admin-service");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void testAppRoot() throws Exception {
+        Config cfg = locator.getService(Config.class);
+        Class<? extends ConfigBeanProxy> elementType = ConfigSupport.getElementTypeByName(cfg, "admin-service");
         assertNotNull(elementType);
-        assertTrue(elementType.getName().endsWith("AdminService"));
+        assertThat(elementType.getName(), endsWith("AdminService"));
     }
 }

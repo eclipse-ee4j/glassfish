@@ -16,14 +16,14 @@
 
 package org.glassfish.common.util.timer;
 
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
 import java.util.Date;
 import java.util.Locale;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  *
@@ -31,30 +31,22 @@ import java.util.Locale;
  */
 public class TimerScheduleTest {
 
-    public TimerScheduleTest() {
+    private Locale localeDefault;
+
+    @BeforeEach
+    public void backupLocale() {
+        localeDefault = Locale.getDefault();
     }
 
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
+    @AfterEach
+    public void resetLocale() {
+        Locale.setDefault(localeDefault);
     }
 
     @Test
     public void testSundays() {
         Date fromDate = new Date(112, 9, 16, 10, 35);
         Date timeoutDate = new Date(112, 9, 21, 12, 0);
-        Locale localeDefault = Locale.getDefault();
         Locale[] availableLocales = Locale.getAvailableLocales();
         for (Locale l : availableLocales) {
             Locale.setDefault(l);
@@ -69,9 +61,6 @@ public class TimerScheduleTest {
         l1 = new Locale("it", "IT");
         Locale.setDefault(l1);
         testSundays(fromDate, timeoutDate, true);
-
-        Locale.setDefault(localeDefault);
-
     }
 
     @Test
@@ -80,10 +69,9 @@ public class TimerScheduleTest {
         Date fromDate = new Date(113, 6, 7, 10, 35);
         // 2013 Jul 8 - Mon
         Date timeoutDate = new Date(113, 6, 8, 20, 15);
-        Locale localeDefault = Locale.getDefault();
         Locale[] availableLocales = Locale.getAvailableLocales();
-        for (Locale l : availableLocales) {
-            Locale.setDefault(l);
+        for (Locale locale : availableLocales) {
+            Locale.setDefault(locale);
             testDays1To5(fromDate, timeoutDate, false);
         }
 
@@ -91,44 +79,20 @@ public class TimerScheduleTest {
         Locale l1 = new Locale("de", "DE");
         Locale.setDefault(l1);
         testDays1To5(fromDate, timeoutDate, true);
-
-        Locale.setDefault(localeDefault);
     }
 
     private void testSundays(Date fromDate, Date timeoutDate, boolean log) {
-        TimerSchedule ts = new TimerSchedule().dayOfWeek("7").
-                hour("12").
-                minute("0");
-
-
+        TimerSchedule ts = new TimerSchedule().dayOfWeek("7").hour("12").minute("0");
         Date newDate = ts.getNextTimeout(fromDate).getTime();
-        if (log)
-            System.out.println("Expected date: " + timeoutDate + " Got date: " + newDate + " in Locale: "+Locale.getDefault());
-
-        if (!newDate.equals(timeoutDate)) {
-            System.out.println("ERROR - Expected date: " + timeoutDate + " Got date: " + newDate + " in Locale: "+Locale.getDefault());
-            assert(false);
-        } else {
-            assert(true);
-        }
+        assertEquals(timeoutDate, newDate,
+            "Expected date: " + timeoutDate + " Got date: " + newDate + " in Locale: " + Locale.getDefault());
     }
 
     private void testDays1To5(Date fromDate, Date timeoutDate, boolean log) {
-        TimerSchedule ts = new TimerSchedule().dayOfWeek("1-5").
-                hour("20").
-                minute("15");
-
-
+        TimerSchedule ts = new TimerSchedule().dayOfWeek("1-5").hour("20").minute("15");
         Date newDate = ts.getNextTimeout(fromDate).getTime();
-        if (log)
-            System.out.println("Expected date: " + timeoutDate + " Got date: " + newDate + " in Locale: "+Locale.getDefault());
-
-        if (!newDate.equals(timeoutDate)) {
-            System.out.println("ERROR - Expected date: " + timeoutDate + " Got date: " + newDate + " in Locale: "+Locale.getDefault());
-            assert(false);
-        } else {
-            assert(true);
-        }
+        assertEquals(timeoutDate, newDate,
+            "Expected date: " + timeoutDate + " Got date: " + newDate + " in Locale: " + Locale.getDefault());
     }
 
 }

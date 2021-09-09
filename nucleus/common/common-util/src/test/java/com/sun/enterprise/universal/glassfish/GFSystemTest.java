@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +17,12 @@
 
 package com.sun.enterprise.universal.glassfish;
 
-import com.sun.enterprise.universal.collections.*;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
+
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 /**
  *
@@ -34,24 +30,7 @@ import static org.junit.Assert.*;
  */
 public class GFSystemTest {
 
-    public GFSystemTest() {
-    }
-
-    @BeforeClass
-    public static void setUpClass() throws Exception {
-    }
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
-    public void setUp() {
-    }
-
-    @After
-    public void tearDown() {
-    }
+    public static volatile boolean failed = false;
 
     /**
      * Test of GFSystem for the case where there are multiple instances in a JVM
@@ -76,7 +55,6 @@ public class GFSystemTest {
     public static synchronized void setFailure() {
         failed = true;
     }
-    public static volatile boolean failed = false;
 }
 
 class ParentThread extends Thread {
@@ -103,6 +81,7 @@ class ParentThread extends Thread {
 
 
 class ChildThread extends Thread {
+    String parentName;
     ChildThread(String parentName, String name) {
         super(name);
         this.parentName = parentName;
@@ -123,10 +102,10 @@ class ChildThread extends Thread {
             Logger.getLogger(ChildThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    String parentName;
 }
 
 class GrandChildThread extends Thread {
+    String grandParentName;
     GrandChildThread(String grandParentName, String name) {
         super(name);
         this.grandParentName = grandParentName;
@@ -139,21 +118,4 @@ class GrandChildThread extends Thread {
             GFSystemTest.setFailure();
         }
     }
-    String grandParentName;
 }
-
-
-/*
-/*
-    public static void main(String[] args) {
-        Thread t = new TestThread("thread1");
-        Thread t2 = new TestThread("thread2");
-        t.start();
-        t2.start();
-    }
-
-}
-
-
-
- */

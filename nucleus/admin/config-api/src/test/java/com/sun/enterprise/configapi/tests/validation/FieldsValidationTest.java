@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,30 +18,38 @@
 package com.sun.enterprise.configapi.tests.validation;
 
 import com.sun.enterprise.config.serverbeans.AdminService;
-import com.sun.enterprise.configapi.tests.ConfigApiTest;
-import junit.framework.Assert;
-import org.junit.Test;
+
+import java.beans.PropertyVetoException;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import jakarta.inject.Inject;
 import jakarta.validation.ConstraintViolationException;
-import java.beans.PropertyVetoException;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Test Field validation
  */
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class FieldsValidationTest {
 
-public class FieldsValidationTest extends ConfigApiTest {
-
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
 
     @Test
     public void testNotNullField() {
-        AdminService admin = super.getHabitat().getService(AdminService.class);
-        Assert.assertNotNull(admin);
+        AdminService admin = locator.getService(AdminService.class);
+        assertNotNull(admin);
         try {
             ConfigSupport.apply(new SingleConfigCode<AdminService>() {
                 @Override
@@ -49,11 +58,9 @@ public class FieldsValidationTest extends ConfigApiTest {
                     return null;
                 }
             }, admin);
-            Assert.fail("Exception not raised when setting a @NotNull annotated field with null");
+            fail("Exception not raised when setting a @NotNull annotated field with null");
         } catch(TransactionFailure e) {
-            if (e.getCause()!=null) {
-                Assert.assertTrue(e.getCause() instanceof ConstraintViolationException);
-            }
+            assertThat(e.getCause(), instanceOf(ConstraintViolationException.class));
         }
     }
 }

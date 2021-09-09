@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,63 +17,68 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import java.util.logging.Logger;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.grizzly.config.dom.NetworkListeners;
 import org.glassfish.grizzly.config.dom.Transport;
-import static org.junit.Assert.assertTrue;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * HttpListener related tests
  *
  * @author Jerome Dochez
  */
-public class HttpListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class HttpListenerTest {
+
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+
+    private NetworkListener listener;
 
 
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    NetworkListener listener = null;
-
-    @Before
+    @BeforeEach
     public void setup() {
-        NetworkListeners service = getHabitat().getService(NetworkListeners.class);
-        assertTrue(service!=null);
+        NetworkListeners service = locator.getService(NetworkListeners.class);
+        assertNotNull(service);
         for (NetworkListener item : service.getNetworkListener()) {
             if ("http-listener-1".equals(item.getName())) {
                 listener= item;
                 break;
             }
         }
-
-        logger.fine("listener = " + listener);
-        assertTrue(listener!=null);
-
+        assertNotNull(listener);
     }
 
     @Test
     public void portTest() {
-        logger.fine("port = " + listener.getPort());
-        assertTrue("8080".equals(listener.getPort()));
+        assertEquals("8080", listener.getPort());
     }
 
     @Test
     public void validTransaction() throws TransactionFailure {
-
-        ConfigSupport.apply(new SingleConfigCode<Transport>() {
-            public Object run(Transport okToChange) {
-                okToChange.setAcceptorThreads("2");
-                logger.fine("ID inside the transaction is " + okToChange.getName());
-                return null;
-            }
-        }, listener.findTransport());
+        SingleConfigCode<Transport> configCode = transport -> {
+            transport.setAcceptorThreads("2");
+            logger.fine("ID inside the transaction is " + transport.getName());
+            return null;
+        };
+        ConfigSupport.apply(configCode, listener.findTransport());
         logger.fine("ID outside the transaction is " + listener.getName());
-        assertTrue("2".equals(listener.findTransport().getAcceptorThreads()));
+        assertEquals("2", listener.findTransport().getAcceptorThreads());
     }
 }

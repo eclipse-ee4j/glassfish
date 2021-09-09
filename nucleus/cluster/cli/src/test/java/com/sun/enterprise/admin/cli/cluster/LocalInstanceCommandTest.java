@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,39 +18,31 @@
 package com.sun.enterprise.admin.cli.cluster;
 
 import com.sun.enterprise.universal.io.SmartFile;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import java.io.*;
+
+import java.io.File;
+
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandValidationException;
-import com.sun.enterprise.admin.servermgmt.cli.LocalServerCommand;
-import org.junit.After;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 /**
  *
  * @author bnevins
  */
-public class LocalInstanceCommandTest extends LocalInstanceCommand{
+public class LocalInstanceCommandTest extends LocalInstanceCommand {
 
-    public LocalInstanceCommandTest() {
-    }
+    private static File installDir;
+    private static File nodeAgentsDir;
 
-
-    @AfterClass
-    public static void tearDownClass() throws Exception {
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        me = new LocalInstanceCommandTest();
-    }
-
-    @After
-    public void tearDown() {
+        String installDirPath = LocalInstanceCommandTest.class.getClassLoader().getResource("fake_gf_install_dir").getPath();
+        installDir = SmartFile.sanitize(new File(installDirPath));
+        System.out.println("install dir: " + installDir);
+        nodeAgentsDir = new File(installDir, "nodes");
     }
 
     /**
@@ -57,32 +50,15 @@ public class LocalInstanceCommandTest extends LocalInstanceCommand{
      */
     @Test
     public void testValidate() throws Exception {
-        System.out.println("test LocalInstanceCommand.validate");
-        try {
-            nodeDir = nodeAgentsDir.getAbsolutePath();
-            instanceName = "i1";
-            isCreateInstanceFilesystem = true;
-            validate();
-        }
-        catch(CommandException e) {
-            fail("validate failed!!!");
-            throw e;
-        }
+        nodeDir = nodeAgentsDir.getAbsolutePath();
+        instanceName = "i1";
+        isCreateInstanceFilesystem = true;
+        assertDoesNotThrow(() -> validate());
     }
 
     @Override
     protected int executeCommand() throws CommandException, CommandValidationException {
         System.out.println("Do nothing!");
         return 0;
-    }
-
-    private LocalInstanceCommandTest me;
-    private static File installDir;
-    private static File nodeAgentsDir;
-
-    static {
-        String installDirPath = LocalInstanceCommandTest.class.getClassLoader().getResource("fake_gf_install_dir").getPath();
-        installDir = SmartFile.sanitize(new File(installDirPath));
-        nodeAgentsDir = new File(installDir, "nodes");
     }
 }

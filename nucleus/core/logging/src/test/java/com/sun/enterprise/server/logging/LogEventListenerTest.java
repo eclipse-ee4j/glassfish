@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +17,17 @@
 
 package com.sun.enterprise.server.logging;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Test class to exercise the LogEvent notification mechanism.
@@ -48,7 +49,7 @@ public class LogEventListenerTest {
 
     private static final Logger LOGGER = Logger.getLogger(LOGGER_NAME);
 
-    @BeforeClass
+    @BeforeAll
     public static void initializeLoggingAnnotationsTest() throws Exception {
         File basePath = new File(BASE_PATH);
         basePath.mkdirs();
@@ -81,7 +82,7 @@ public class LogEventListenerTest {
         System.out.println("Test testLogEventListenerNotifications passed.");
     }
 
-    @AfterClass
+    @AfterAll
     public static void cleanupLoggingAnnotationsTest() throws Exception {
         logEventListener.logEvents.clear();
         LOGGER.removeHandler(gfFileHandler);
@@ -93,7 +94,7 @@ public class LogEventListenerTest {
 
     private static class TestLogEventListener implements LogEventListener {
 
-        private BlockingQueue<LogEvent> logEvents = new ArrayBlockingQueue<LogEvent>(100);
+        private final BlockingQueue<LogEvent> logEvents = new ArrayBlockingQueue<>(100);
 
         @Override
         public void messageLogged(LogEvent event) {

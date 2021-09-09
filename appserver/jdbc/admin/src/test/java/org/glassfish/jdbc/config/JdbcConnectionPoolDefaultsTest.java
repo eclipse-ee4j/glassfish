@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,45 +17,28 @@
 
 package org.glassfish.jdbc.config;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.*;
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Tests the JdbcConnectionPool config bean's defaults.
  * @author Kedar Mhaswade (km@dev.java.net)
  */
+@ExtendWith(JdbcAdminJunit5Extension.class)
+@DomainXml("JdbcConnectionPoolDefaults.xml")
+public class JdbcConnectionPoolDefaultsTest {
 
-public class JdbcConnectionPoolDefaultsTest extends ConfigApiTest{
+    @Inject
+    private JdbcConnectionPool onlyOnePool;
 
-    JdbcConnectionPool onlyOnePool = null;
-
-    public JdbcConnectionPoolDefaultsTest() {
-    }
-
-    @Override
-    public String getFileName() {
-        return ("JdbcConnectionPoolDefaults"); //this is the xml to load
-    }
-
-    @Before
-    public void setUp() {
-        onlyOnePool = super.getHabitat().getService(JdbcConnectionPool.class);
-    }
-
-    @After
-    public void tearDown() {
-        onlyOnePool = null;
-    }
-
-    // TODO add test methods here.
-    // The methods must be annotated with annotation @Test. For example:
-    //
     @Test
     public void testFewDefaults() {
-
         assertEquals("8", onlyOnePool.getSteadyPoolSize());
         assertEquals("32", onlyOnePool.getMaxPoolSize());
         assertEquals("false", onlyOnePool.getMatchConnections());

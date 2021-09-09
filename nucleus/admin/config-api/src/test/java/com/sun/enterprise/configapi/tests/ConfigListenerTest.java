@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,129 +17,109 @@
 
 package com.sun.enterprise.configapi.tests;
 
+import com.sun.enterprise.configapi.tests.example.HttpListenerContainer;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.config.support.ConfigConfigBeanListener;
 import org.glassfish.grizzly.config.dom.NetworkListener;
 import org.glassfish.hk2.api.DynamicConfiguration;
 import org.glassfish.hk2.api.DynamicConfigurationService;
 import org.glassfish.hk2.api.ServiceHandle;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import org.glassfish.config.support.ConfigConfigBeanListener;
-import org.glassfish.tests.utils.Utils;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.ConfigSupport;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.TransactionFailure;
 import org.jvnet.hk2.config.Transactions;
 
-import com.sun.enterprise.config.serverbeans.Config;
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Simple ConfigListener tests
  */
-public class ConfigListenerTest extends ConfigApiTest {
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class ConfigListenerTest {
 
-    ServiceLocator habitat;
+    private static final SingleConfigCode<NetworkListener> configCodeRestore = param -> {
+        param.setPort("8080");
+        return null;
+    };
 
-    @Override
-    public String getFileName() {
-        return "DomainTest";
-    }
+    @Inject
+    private ServiceLocator locator;
+    private Transactions transactions;
+    private HttpListenerContainer container;
 
-    @Before
+    @BeforeEach
     public void setup() {
-        habitat = Utils.instance.getHabitat(this);
-
         // make sure the ConfigConfigListener exists
-        ServiceHandle<ConfigConfigBeanListener> i = habitat.getServiceHandle(ConfigConfigBeanListener.class);
-        ConfigConfigBeanListener ccbl = i.getService();
-        assertTrue(ccbl != null);
+        ServiceHandle<ConfigConfigBeanListener> i = locator.getServiceHandle(ConfigConfigBeanListener.class);
+        ConfigConfigBeanListener listener = i.getService();
+        assertNotNull(listener);
+        transactions = locator.getService(Transactions.class);
+        container = registerAndCreateHttpListenerContainer(locator);
     }
 
-    private HttpListenerContainer registerAndCreateHttpListenerContainer(ServiceLocator locator) {
-        HttpListenerContainer retVal = locator.getService(HttpListenerContainer.class);
-        if (retVal != null) return retVal;
 
-        DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
-        Assert.assertNotNull(dcs);
-
-        DynamicConfiguration config = dcs.createDynamicConfiguration();
-
-        config.addActiveDescriptor(HttpListenerContainer.class);
-
-        config.commit();
-
-        return locator.getService(HttpListenerContainer.class);
+    @AfterEach
+    public void reset() throws TransactionFailure {
+        ConfigSupport.apply(configCodeRestore, container.httpListener);
+        assertEquals("8080", container.httpListener.getPort());
     }
-
 
     @Test
     public void changedTest() throws TransactionFailure {
-
-        Transactions transactions = getHabitat().getService(Transactions.class);
-
-        HttpListenerContainer container = registerAndCreateHttpListenerContainer(habitat);
-
-        ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
-
-            @Override
-            public Object run(NetworkListener param) {
-                param.setPort("8989");
-                return null;
-            }
-        }, container.httpListener);
+        SingleConfigCode<NetworkListener> configCode = listener -> {
+            listener.setPort("8989");
+            return null;
+        };
+        ConfigSupport.apply(configCode, container.httpListener);
+        assertEquals("8989", container.httpListener.getPort());
 
         transactions.waitForDrain();
         assertTrue(container.received);
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(container.httpListener);
         bean.removeListener(container);
-
-        // put back the right values in the domain to avoid test collisions
-        ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
-
-            @Override
-            public Object run(NetworkListener param) {
-                param.setPort("8080");
-                return null;
-            }
-        }, container.httpListener);
     }
 
     @Test
     public void removeListenerTest() throws TransactionFailure {
-
-        Transactions transactions = getHabitat().getService(Transactions.class);
-
-        HttpListenerContainer container = registerAndCreateHttpListenerContainer(habitat);
-
         ObservableBean bean = (ObservableBean) ConfigSupport.getImpl(container.httpListener);
         bean.removeListener(container);
 
-        ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
-
-            @Override
-            public Object run(NetworkListener param) {
-                param.setPort("8989");
-                return null;
-            }
-        }, container.httpListener);
+        SingleConfigCode<NetworkListener> configCode = listener -> {
+            listener.setPort("8989");
+            return null;
+        };
+        ConfigSupport.apply(configCode, container.httpListener);
 
         transactions.waitForDrain();
         assertFalse(container.received);
+    }
 
-        // put back the right values in the domain to avoid test collisions
-        ConfigSupport.apply(new SingleConfigCode<NetworkListener>() {
 
-            @Override
-            public Object run(NetworkListener param) {
-                param.setPort("8080");
-                return null;
-            }
-        }, container.httpListener);
+    private HttpListenerContainer registerAndCreateHttpListenerContainer(ServiceLocator locator) {
+        HttpListenerContainer retVal = locator.getService(HttpListenerContainer.class);
+        if (retVal != null) {
+            return retVal;
+        }
+
+        DynamicConfigurationService dcs = locator.getService(DynamicConfigurationService.class);
+        assertNotNull(dcs);
+
+        DynamicConfiguration config = dcs.createDynamicConfiguration();
+        config.addActiveDescriptor(HttpListenerContainer.class);
+        config.commit();
+
+        return locator.getService(HttpListenerContainer.class);
     }
 }

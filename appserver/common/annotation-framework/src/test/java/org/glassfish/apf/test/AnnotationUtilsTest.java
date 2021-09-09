@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,48 +17,58 @@
 
 package org.glassfish.apf.test;
 
-import jakarta.inject.Inject;
-
 import org.glassfish.apf.AnnotationHandler;
-import org.glassfish.apf.impl.AnnotationUtils;
+import org.glassfish.apf.test.example.ClassA;
+import org.glassfish.apf.test.example.ClassB;
+import org.glassfish.apf.test.example.ClassC;
+import org.glassfish.apf.test.example.HandlerForClassA;
+import org.glassfish.apf.test.example.HandlerForClassB;
 import org.glassfish.hk2.api.ActiveDescriptor;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.junit.Assert;
-import org.junit.Test;
-import org.jvnet.hk2.testing.junit.HK2Runner;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.glassfish.apf.impl.AnnotationUtils.getAnnotationHandlerForDescriptor;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Tests for the AnnotationUtils
  *
  * @author jwells
- *
  */
-public class AnnotationUtilsTest extends HK2Runner {
+@ExtendWith(HK2JUnit5Extension.class)
+public class AnnotationUtilsTest {
+
     @Inject
     private ServiceLocator locator;
 
     @Test
     public void testGetAnnotationHandlerForDescriptor() {
         {
-            ActiveDescriptor<AnnotationHandler> forA =
-                AnnotationUtils.getAnnotationHandlerForDescriptor(locator, ClassA.class);
-            Assert.assertNotNull(forA);
-            Assert.assertFalse(forA.isReified());  // not classloaded by HK2
-            Assert.assertEquals(HandlerForClassA.class.getName(), forA.getImplementation());
+            ActiveDescriptor<AnnotationHandler> forA = getAnnotationHandlerForDescriptor(locator, ClassA.class);
+            assertNotNull(forA);
+            // not classloaded by HK2
+            assertFalse(forA.isReified());
+            assertEquals(HandlerForClassA.class.getName(), forA.getImplementation());
         }
 
         {
-            ActiveDescriptor<AnnotationHandler> forB =
-                AnnotationUtils.getAnnotationHandlerForDescriptor(locator, ClassB.class);
-            Assert.assertNotNull(forB);
-            Assert.assertFalse(forB.isReified());  // not classloaded by HK2
-            Assert.assertEquals(HandlerForClassB.class.getName(), forB.getImplementation());
+            ActiveDescriptor<AnnotationHandler> forB = getAnnotationHandlerForDescriptor(locator, ClassB.class);
+            assertNotNull(forB);
+            // not classloaded by HK2
+            assertFalse(forB.isReified());
+            assertEquals(HandlerForClassB.class.getName(), forB.getImplementation());
         }
 
         {
-            ActiveDescriptor<AnnotationHandler> forC =
-                AnnotationUtils.getAnnotationHandlerForDescriptor(locator, ClassC.class);
-            Assert.assertNull(forC);
+            ActiveDescriptor<AnnotationHandler> forC = getAnnotationHandlerForDescriptor(locator, ClassC.class);
+            assertNull(forC);
         }
 
     }

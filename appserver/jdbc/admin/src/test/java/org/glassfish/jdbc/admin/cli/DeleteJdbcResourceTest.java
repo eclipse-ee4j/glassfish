@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,87 +17,95 @@
 
 package org.glassfish.jdbc.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.*;
-import com.sun.enterprise.v3.common.PropsFileActionReporter;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.SystemPropertyConstants;
+import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import java.util.logging.Logger;
 
+import javax.security.auth.Subject;
+
+import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.jdbc.admin.cli.test.JdbcAdminJunit5Extension;
 import org.glassfish.jdbc.config.JdbcResource;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Test;
-import static org.junit.Assert.*;
-import org.glassfish.api.ActionReport;
-import org.glassfish.tests.utils.Utils;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  *
  * @author Jennifer
  */
-//@Ignore // temporarily disabled
-public class DeleteJdbcResourceTest extends ConfigApiTest {
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
-    private Resources resources = habitat.<Domain>getService(Domain.class).getResources();
-    private DeleteJdbcResource deleteCommand = null;
+@ExtendWith(JdbcAdminJunit5Extension.class)
+public class DeleteJdbcResourceTest {
+    @Inject
+    private ServiceLocator habitat;
+    @Inject
+    private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CommandRunner cr;
+    @Inject
+    private DeleteJdbcResource deleteCommand;
+
+    private Resources resources;
     private ParameterMap parameters = new ParameterMap();
-    private AdminCommandContext context = null;
-    private CommandRunner cr = habitat.getService(CommandRunner.class);
+    private AdminCommandContext context;
+    private Subject adminSubject;
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
-
-        return new TestDocument(habitat);
-    }
-
-    /**
-     * Returns the DomainTest file name without the .xml extension to load the test configuration
-     * from.
-     *
-     * @return the configuration file name
-     */
-    public String getFileName() {
-        return "DomainTest";
-    }
-
-    @Before
+    @BeforeEach
     public void setUp() {
-        assertTrue(resources!=null);
+        resources = habitat.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
 
         // Create a JDBC Resource jdbc/foo for each test
         CreateJdbcResource createCommand = habitat.getService(CreateJdbcResource.class);
-        assertTrue(createCommand!=null);
+        assertNotNull(createCommand);
 
         parameters.add("connectionpoolid", "DerbyPool");
         parameters.add("DEFAULT", "jdbc/foo");
-
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(DeleteJdbcResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-
-        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(createCommand);
+        adminSubject = mockGenerator.createAsadminSubject();
+        cr.getCommandInvocation("create-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(createCommand);
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
 
         // Setup for delete-jdbc-resource
         parameters = new ParameterMap();
-        deleteCommand = habitat.getService(DeleteJdbcResource.class);
-        assertTrue(deleteCommand!=null);
+        assertNotNull(deleteCommand);
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         // Cleanup any leftover jdbc/foo resource - could be success or failure depending on the test
         parameters = new ParameterMap();
         parameters.add("DEFAULT", "jdbc/foo");
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(deleteCommand);
     }
 
     /**
@@ -109,7 +118,8 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         parameters.add("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters)
+            .execute(deleteCommand);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -159,7 +169,7 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         parameters.add("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -208,7 +218,7 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
         parameters.add("DEFAULT", "doesnotexist");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -222,11 +232,11 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
      * Test of execute method, of class DeleteJdbcResource.
      * delete-jdbc-resource
      */
-    @Ignore
     @Test
+    @Disabled("Results in 'Cannot find jndiName in delete-jdbc-resource command model, file a bug'")
     public void testExecuteFailNoOperand() {
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -239,15 +249,15 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
      * Test of execute method, of class DeleteJdbcResource.
      * delete-jdbc-resource --invalid jdbc/foo
      */
-    @Ignore
     @Test
+    @Disabled("The action report error message contains weird characters (EOL, percents)")
     public void testExecuteFailInvalidOption() {
         // Set operand
         parameters.add("invalid", "");
         parameters.add("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -261,19 +271,13 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
      * delete-jdbc-resource --target invalid jdbc/foo
      */
     @Test
-    @Ignore
-    //disabling the test.
-    //in v3, this test was expecting the Command to return failure code.
-    //in 3.1 --target validation is done by CLI framework (as part of command replication)
-    //as of now command replication is not enabled by default and as a result,
-    //the modified command does not fail when an invalid target is specified
     public void testExecuteFailInvalidTarget() {
         // Set operand
         parameters.add("target", "invalid");
         parameters.add("DEFAULT", "jdbc/foo");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-jdbc-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
 
         //Check that the resource was NOT deleted
         boolean isDeleted = true;
@@ -288,7 +292,7 @@ public class DeleteJdbcResourceTest extends ConfigApiTest {
             }
         }
         // Need bug fix in DeleteJdbcResource before uncommenting assertion
-        //assertFalse(isDeleted);
+        assertFalse(isDeleted);
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());

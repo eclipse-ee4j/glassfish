@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,39 +17,41 @@
 
 package org.glassfish.connectors.config;
 
-import org.junit.Ignore;
-import org.junit.Before;
-import org.junit.Test;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.security.common.MasterPassword;
+import org.glassfish.tests.utils.junit.DomainXml;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import jakarta.inject.Inject;
+
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * @author: Bhakti Mehta
  */
-public  class PasswordAliasTest extends ConfigApiTest{
+@ExtendWith(HK2JUnit5Extension.class)
+@DomainXml("PasswordAliasTest.xml")
+public  class PasswordAliasTest {
 
-    BackendPrincipal bp1  ;
-    final String ALIAS_TOKEN = "ALIAS";
+    private static final String ALIAS_TOKEN = "ALIAS";
 
-    @Before
-    public void setup() {
-        bp1 = super.getHabitat().getService(BackendPrincipal.class);
-    }
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private BackendPrincipal backendPrincipal;
+
 
     @Test
     public void passwordAttributeTest() throws NoSuchMethodException {
-
-        String starter = "${" + ALIAS_TOKEN + "="; //no space is allowed in starter
-
-        String password = bp1.getPassword();
-        //Currently the habitat.getByContract(MasterPassword is null)
-
-        assertTrue(password!=null);
-        //assertTrue(!password.startsWith(starter));
-
-
+        assertNotNull(backendPrincipal, "BackendPrincipal");
+        assertNotNull(locator.getService(MasterPassword.class), "MasterPassword service");
+        final String password = backendPrincipal.getPassword();
+        assertNotNull(password);
+        // no space is allowed in starter
+        assertThat(password, startsWith("${" + ALIAS_TOKEN + "="));
     }
-
-
 }

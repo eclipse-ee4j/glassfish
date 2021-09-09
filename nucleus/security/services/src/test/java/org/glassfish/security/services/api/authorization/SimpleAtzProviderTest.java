@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,58 +17,50 @@
 
 package org.glassfish.security.services.api.authorization;
 
-
-import org.glassfish.security.services.impl.authorization.*;
 import java.net.URI;
 
 import javax.security.auth.Subject;
+
+import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.security.common.PrincipalImpl;
 import org.glassfish.security.services.api.common.Attributes;
 import org.glassfish.security.services.api.context.SecurityContextService;
 import org.glassfish.security.services.impl.authorization.AuthorizationServiceImpl;
-import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
-
-import org.jvnet.hk2.testing.junit.HK2Runner;
-
+import org.glassfish.security.services.impl.authorization.AzEnvironmentImpl;
 import org.glassfish.security.services.spi.authorization.AuthorizationProvider;
+import org.glassfish.tests.utils.junit.HK2JUnit5Extension;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-public class SimpleAtzProviderTest extends HK2Runner {
+import jakarta.inject.Inject;
 
-    private AuthorizationProvider simpleAtzPrv = null;
-    private SecurityContextService contextService = null;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@ExtendWith(HK2JUnit5Extension.class)
+public class SimpleAtzProviderTest {
 
-    @Before
+    @Inject
+    private ServiceLocator testLocator;
+    private AuthorizationProvider simpleAtzPrv;
+    private SecurityContextService contextService;
+
+    @BeforeEach
     public void before() {
-        super.before();
-
-        String pf = System.getProperty("java.security.policy");
-        System.out.println("policy file = " + pf);
-        String bd = System.getProperty("build.dir");
-        System.out.println("build dir = " + bd);
-
-        String apsd = System.getProperty("appserver_dir");
-        System.out.println("appserver dir = " + apsd);
-
-        String local = System.getProperty("localRepository");
-        System.out.println("local repository dir = " + local);
-
         simpleAtzPrv = testLocator.getService(AuthorizationProvider.class, "simpleAuthorization");
         contextService = testLocator.getService(SecurityContextService.class);
 
-        Assert.assertNotNull(simpleAtzPrv);
-        Assert.assertNotNull(contextService);
-
-        contextService.getEnvironmentAttributes().addAttribute(
-                AuthorizationAdminConstants.ISDAS_ATTRIBUTE, "true", true);
+        assertNotNull(simpleAtzPrv);
+        assertNotNull(contextService);
+        contextService.getEnvironmentAttributes()
+            .addAttribute(AuthorizationAdminConstants.ISDAS_ATTRIBUTE, "true", true);
     }
 
     @Test
     public void testService() throws Exception {
         final AuthorizationService authorizationService = new AuthorizationServiceImpl();
-        Assert.assertNotNull(simpleAtzPrv);
+        assertNotNull(simpleAtzPrv);
         final AzEnvironment env = new AzEnvironmentImpl();
         final Attributes attrs = contextService.getEnvironmentAttributes();
         for (String attrName : attrs.getAttributeNames()) {
@@ -83,8 +76,7 @@ public class SimpleAtzProviderTest extends HK2Runner {
               );
 
         AzResult.Decision ds = rt.getDecision();
-
-        Assert.assertEquals(AzResult.Decision.PERMIT, ds);
+        assertEquals(AzResult.Decision.PERMIT, ds);
 
     }
 

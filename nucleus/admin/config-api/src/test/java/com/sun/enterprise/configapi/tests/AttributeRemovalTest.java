@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,94 +17,83 @@
 
 package com.sun.enterprise.configapi.tests;
 
-import com.sun.enterprise.config.serverbeans.Server;
-import org.junit.Test;
-import org.junit.Before;
-import org.jvnet.hk2.config.*;
-import org.glassfish.tests.utils.Utils;
 import com.sun.enterprise.config.serverbeans.HttpService;
+import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.VirtualServer;
 
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyVetoException;
-import java.util.List;
-import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import org.glassfish.config.api.test.ConfigApiJunit5Extension;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import jakarta.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * User: Jerome Dochez
  * Date: Jun 25, 2008
  * Time: 8:03:41 AM
  */
-public class AttributeRemovalTest extends ConfigApiTest {
-
-    public String getFileName() {
-        return "DomainTest";
-    }
+@ExtendWith(ConfigApiJunit5Extension.class)
+public class AttributeRemovalTest {
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
 
     @Test
     public void removeAttributeTest() throws TransactionFailure {
-        HttpService httpService = Utils.instance.getHabitat(this).getService(HttpService.class);
+        HttpService httpService = locator.getService(HttpService.class);
         VirtualServer vs = httpService.getVirtualServerByName("server");
-        ConfigSupport.apply(new SingleConfigCode<VirtualServer>() {
+        SingleConfigCode<VirtualServer> configCodeWebModule = virtualServer -> {
+            virtualServer.setDefaultWebModule("/context/bar");
+            return null;
+        };
+        ConfigSupport.apply(configCodeWebModule, vs);
+        assertNotNull(vs.getDefaultWebModule());
 
-            public Object run(VirtualServer param) throws PropertyVetoException, TransactionFailure {
-                param.setDefaultWebModule("/context/bar");
-                return null;
-            }
-        }, vs);
-
-        // ensure it's here
-        org.junit.Assert.assertNotNull(vs.getDefaultWebModule());
-
-        ConfigSupport.apply(new SingleConfigCode<VirtualServer>() {
-
-            public Object run(VirtualServer param) throws PropertyVetoException, TransactionFailure {
-                param.setDefaultWebModule(null);
-                return null;
-            }
-        }, vs);
-
-        // ensure it's removed
-        org.junit.Assert.assertNull(vs.getDefaultWebModule());
-    }
-
-    @Test(expected=PropertyVetoException.class)
-    public void readOnlyRemovalTest() throws TransactionFailure , PropertyVetoException{
-        Server server = getHabitat().getService(Server.class);
-        logger.fine("config-ref is " + server.getConfigRef());
-        try {
-            server.setConfigRef(null);
-        } catch (PropertyVetoException e) {
-            if (logger.isLoggable(Level.FINE))
-                e.printStackTrace();
-            throw e;
-        }
+        SingleConfigCode<VirtualServer> configCodeNullWebModule = virtualServer -> {
+            virtualServer.setDefaultWebModule(null);
+            return null;
+        };
+        ConfigSupport.apply(configCodeNullWebModule, vs);
+        assertNull(vs.getDefaultWebModule());
     }
 
     @Test
-    public void deprecatedWrite() throws TransactionFailure {
-        final Server server = getHabitat().getService(Server.class);
-        final String value = server.getNodeRef();
-        logger.fine("node-ref is " + server.getNodeRef());
-        ConfigSupport.apply(new SingleConfigCode<Server>() {
-            @Override
-            public Object run(Server s) throws PropertyVetoException, TransactionFailure {
-                s.setNodeAgentRef(value);
-                return null;
-            }
-        }, server);
-        logger.fine("node-agent-ref is " + server.getNodeAgentRef());
-        // restore
-        ConfigSupport.apply(new SingleConfigCode<Server>() {
-            @Override
-            public Object run(Server s) throws PropertyVetoException, TransactionFailure {
-                s.setNodeAgentRef(null);
-                return null;
-            }
-        }, server);
-        logger.fine("after, node-agent-ref is " + server.getNodeAgentRef());
-
+    public void readOnlyRemovalTest(){
+        Server server = locator.getService(Server.class);
+        logger.fine("config-ref is " + server.getConfigRef());
+        assertThrows(PropertyVetoException.class, () -> server.setConfigRef(null));
     }
 
+    @Test
+    @SuppressWarnings("deprecation")
+    public void deprecatedWrite() throws TransactionFailure {
+        final Server server = locator.getService(Server.class);
+        final String value = server.getNodeRef();
+        final SingleConfigCode<Server> configCode = virtualServer -> {
+            virtualServer.setNodeAgentRef(null);
+            return null;
+        };
+        ConfigSupport.apply(configCode, server);
+        assertNull(server.getNodeRef());
 
+        SingleConfigCode<Server> restoreConfig = virtualServer -> {
+            virtualServer.setNodeAgentRef(value);
+            return null;
+        };
+        ConfigSupport.apply(restoreConfig, server);
+        assertEquals(value, server.getNodeAgentRef());
+    }
 }

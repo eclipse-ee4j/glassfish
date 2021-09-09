@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +17,18 @@
 
 package org.glassfish.api.admin;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.glassfish.api.Param;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
- *
  * @author Andriy Zhdanov
- *
  */
 public class WrappedAdminCommandTest {
 
-    /*
+    /**
      * Test getParamValue from wrapped command.
      */
     @Test
@@ -42,10 +41,10 @@ public class WrappedAdminCommandTest {
                 // nothing todo
             }
         };
-        assertEquals("set param value", "test", CommandSupport.getParamValue(wrappedCommand, "foo"));
+        assertEquals("test", CommandSupport.getParamValue(wrappedCommand, "foo"), "set param value");
         // note, after resolver it must be not null
-        assertNull("unset param value must be null", CommandSupport.getParamValue(wrappedCommand, "foobar"));
-        assertNull("non existent param value must be null", CommandSupport.getParamValue(wrappedCommand, "dummy"));
+        assertNull(CommandSupport.getParamValue(wrappedCommand, "foobar"), "unset param value must be null");
+        assertNull(CommandSupport.getParamValue(wrappedCommand, "dummy"), "non existent param value must be null");
     }
 
     private class DummyAdminCommand implements AdminCommand {

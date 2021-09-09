@@ -153,6 +153,7 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
         <javaee.version.old>8</javaee.version.old>
         <javaee.version.new>9</javaee.version.new>
+        <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -434,18 +435,6 @@
                 <version>${pfl.version}</version>
             </dependency>
             <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
-                <scope>test</scope>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.hamcrest</groupId>
-                        <artifactId>*</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>5.7.2</version>
@@ -461,6 +450,12 @@
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
                 <version>2.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymock</artifactId>
+                <version>${easymock.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -549,7 +544,7 @@
                 <artifactId>org.apache.felix.configadmin</artifactId>
                 <version>1.9.22</version>
             </dependency>
-            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that. Since Felix Core doesn't export 
+            <!-- Felix SCR used to include/embed promise, but after 2.0.12 stopped doing that. Since Felix Core doesn't export
                 these packages, we have to deploy them together with Felix SCR. -->
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -615,13 +610,6 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 
     <build>
         <defaultGoal>install</defaultGoal>
@@ -720,6 +708,7 @@
                     <version>3.0.0-M5</version>
                     <configuration>
                         <argLine>${surefire.argLine}</argLine>
+                        <trimStackTrace>false</trimStackTrace>
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkCount>1</forkCount>
                         <forkNode
@@ -736,7 +725,7 @@
                         <skip>${checkstyle.skip}</skip>
                         <logViolationsToConsole>true</logViolationsToConsole>
                         <excludes>**/generated-sources/**/*</excludes>
-                        <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and 
+                        <!-- build-helper-plugin adds the root as a resource path, but checkstyle overrides the filter and
                             adds all property files in the tree -->
                         <resourceExcludes>
                             **/appserver/**/src/main/resources/**/*,
@@ -902,11 +891,11 @@
                 </executions>
             </plugin>
 
-            <!-- force cleaning of the local repository <plugin> <artifactId>maven-dependency-plugin</artifactId> <executions> 
-                <execution> <id>purge-local-dependencies</id> <phase>initialize</phase> <goals> <goal>purge-local-repository</goal> </goals> 
-                <configuration> <resolutionFuzziness>groupId</resolutionFuzziness> <includes> <include>jakarta.ejb</include> <include>jakarta.transaction</include> 
-                <include>jakarta.resource</include> <include>jakarta.enterprise.concurrent</include> <include>jakarta.ws.rs</include> <include>javax.xml.registry</include> 
-                <include>jakarta.websocket</include> <include>org.glassfish.jersey</include> </includes> </configuration> </execution> </executions> 
+            <!-- force cleaning of the local repository <plugin> <artifactId>maven-dependency-plugin</artifactId> <executions>
+                <execution> <id>purge-local-dependencies</id> <phase>initialize</phase> <goals> <goal>purge-local-repository</goal> </goals>
+                <configuration> <resolutionFuzziness>groupId</resolutionFuzziness> <includes> <include>jakarta.ejb</include> <include>jakarta.transaction</include>
+                <include>jakarta.resource</include> <include>jakarta.enterprise.concurrent</include> <include>jakarta.ws.rs</include> <include>javax.xml.registry</include>
+                <include>jakarta.websocket</include> <include>org.glassfish.jersey</include> </includes> </configuration> </execution> </executions>
                 </plugin> -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -1038,7 +1027,6 @@
                             <classpathLayoutType>custom</classpathLayoutType>
                             <customClasspathLayout>${artifact.artifactId}.${artifact.extension}</customClasspathLayout>
                         </manifest>
-
                         <manifestFile>${project.build.outputDirectory}/META-INF/MANIFEST.MF</manifestFile>
                     </archive>
                     <excludes>
@@ -1069,8 +1057,8 @@
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>osgiversion-maven-plugin</artifactId>
-                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the 
-                    following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier 
+                <!-- Since we don't want qualifier like b05 or SNAPSHOT to appear in package version attribute, we use the
+                    following goal to populate a project property with an OSGi version which is equivalent to maven version without qualifier
                     and then use that property in osgi.bundle while exporting. -->
                 <configuration>
                     <dropVersionComponent>qualifier</dropVersionComponent>

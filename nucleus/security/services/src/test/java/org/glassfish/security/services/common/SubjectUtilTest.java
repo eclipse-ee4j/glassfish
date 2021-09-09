@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2012, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,17 +17,18 @@
 
 package org.glassfish.security.services.common;
 
-import org.junit.Test;
-import javax.security.auth.Subject;
-
 import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.glassfish.security.common.PrincipalImpl;
+import javax.security.auth.Subject;
 
-import junit.framework.Assert;
+import org.glassfish.security.common.PrincipalImpl;
+import org.junit.jupiter.api.Test;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 
 public class SubjectUtilTest {
 
@@ -34,77 +36,47 @@ public class SubjectUtilTest {
     private static final String USERNAME2 = "John";
     private static final String[] GROUPS = {"g1", "g2"};
 
-    private boolean debug = false;
-
     @Test
     public void testUserNameUtil() {
-
         Subject sub = createSub(USERNAME, GROUPS);
-
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
-
-        if (debug)
-            System.out.println("user list =" + usernames);
-
-        Assert.assertEquals(1, usernames.size());
+        assertThat(usernames, hasSize(1));
     }
 
 
     @Test
     public void testGroupNameUtil() {
-
         Subject sub = createSub(USERNAME, GROUPS);
-
         List<String> groupnames = SubjectUtil.getGroupnamesFromSubject(sub);
-
-        if (debug)
-            System.out.println("group list =" + groupnames);
-
-        Assert.assertEquals(2, groupnames.size());
+        assertThat(groupnames, hasSize(2));
     }
 
     @Test
     public void testUserNameUtil_empty() {
-
         Subject sub = createSub(null, GROUPS);
-
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
-
-        Assert.assertEquals(0, usernames.size());
+        assertThat(usernames, hasSize(0));
     }
 
 
     @Test
     public void testGroupNameUtil_empty() {
-
         Subject sub = createSub(USERNAME, null);
-
         List<String> groupnames = SubjectUtil.getGroupnamesFromSubject(sub);
-
-        Assert.assertEquals(0, groupnames.size());
+        assertThat(groupnames, hasSize(0));
 
     }
 
     @Test
     public void testUserNameUtil_multi() {
-
         Subject sub = createSub(USERNAME, GROUPS);
         sub.getPrincipals().add(new PrincipalImpl(USERNAME2));
-
         List<String> usernames = SubjectUtil.getUsernamesFromSubject(sub);
-
-        if (debug)
-            System.out.println("user list =" + usernames);
-
-        Assert.assertEquals(2, usernames.size());
+        assertThat(usernames, hasSize(2));
     }
 
-
-
-    public static Subject createSub(String username, String[] groups) {
-
-        Set<Principal> pset = new HashSet<Principal>();
-
+    private static Subject createSub(String username, String[] groups) {
+        Set<Principal> pset = new HashSet<>();
         if (username != null) {
             Principal u = new PrincipalImpl(username);
             pset.add(u);
@@ -119,15 +91,9 @@ public class SubjectUtilTest {
             }
         }
 
-
-        Set prvSet = new HashSet();
-
-        Set<Object> pubSet = new HashSet<Object>();
-
+        Set<?> prvSet = new HashSet<>();
+        Set<?> pubSet = new HashSet<>();
         Subject sub = new Subject(false, pset, pubSet, prvSet);
-
         return sub;
-
     }
-
 }

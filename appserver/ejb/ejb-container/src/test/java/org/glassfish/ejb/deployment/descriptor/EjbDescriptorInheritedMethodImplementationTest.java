@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2015, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,6 +17,8 @@
 
 package org.glassfish.ejb.deployment.descriptor;
 
+import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -24,47 +27,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
-import junit.framework.Test;
+import org.junit.jupiter.api.Test;
 
-import com.sun.enterprise.deployment.WritableJndiNameEnvironment;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.object.IsCompatibleType.typeCompatibleWith;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class EjbDescriptorInheritedMethodImplementationTest extends TestCase {
-
-
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-
-    public EjbDescriptorInheritedMethodImplementationTest(String testName) {
-        super(testName);
-    }
-
-    /**
-     * @return the suite of tests being tested.
-     */
-    public static Test suite() throws Exception {
-        return new TestSuite(EjbDescriptorInheritedMethodImplementationTest.class);
-    }
-
+public class EjbDescriptorInheritedMethodImplementationTest {
 
     /**
      * This method tests if methods inherited from WritableJndiNameEnvironment are
      * directly implemented in EjbDescriptor or not and if implemented, methods
      * are marked final or not.
      */
+    @Test
     public void testEjbDescriptorInheritedMethodImplementation() {
-
-        Map<Error, List<Method>> unimplementedMethods = new HashMap<Error, List<Method>>();
-
-        validateWritableJndiNameEnvInterfaceImplementation();
+        assertThat(EjbDescriptor.class, typeCompatibleWith(com.sun.enterprise.deployment.EjbDescriptor.class));
+        assertThat(com.sun.enterprise.deployment.EjbDescriptor.class,
+            typeCompatibleWith(WritableJndiNameEnvironment.class));
 
         List<Method> methodsDefinedByWritableJndiNameEnvInterface = Arrays
-                .asList(WritableJndiNameEnvironment.class.getMethods());
-
+            .asList(WritableJndiNameEnvironment.class.getMethods());
+        Map<Error, List<Method>> unimplementedMethods = new HashMap<>();
         for (Method writableJndiNameEnvMethod : methodsDefinedByWritableJndiNameEnvInterface) {
             try {
                 Method ejbDescriptorMethod = EjbDescriptor.class.getDeclaredMethod(
@@ -78,49 +62,9 @@ public class EjbDescriptorInheritedMethodImplementationTest extends TestCase {
             }
         }
 
-        assertTrue(getErrorMessage(unimplementedMethods),
-                unimplementedMethods.size() == 0);
-
+        assertEquals("", getErrorMessage(unimplementedMethods));
     }
 
-    /**
-     * This method validates if EjbDescriptor abstract class implements
-     * WritableJndiNameEnviroment interface or not. EjbDescriptor abstract
-     * class implements WritableJndiNameEnvironment by way of implementing
-     * EjbDescriptor interface, which in-turn is implementing
-     * WritableJndiNameEnvironment interface. This test ensures that right
-     * interfaces have been implemented by EjbDescriptor abstract class.
-     */
-    private void validateWritableJndiNameEnvInterfaceImplementation() {
-
-        boolean doesEjbDescriptorClassImplementsEjbDescriptorInterface = validateInterfaceImplementation(
-                EjbDescriptor.class,
-                com.sun.enterprise.deployment.EjbDescriptor.class);
-
-        assertTrue(
-                "Abstract class org.glassfish.ejb.deployment.descriptor.EjbDescriptor "
-                        + "doesn't implement com.sun.enterprise.deployment.EjbDescriptor interface.",
-                doesEjbDescriptorClassImplementsEjbDescriptorInterface);
-
-        boolean doesEjbDescriptorInterfaceImplementsJndiNameEnvInterface = validateInterfaceImplementation(
-                com.sun.enterprise.deployment.EjbDescriptor.class,
-                WritableJndiNameEnvironment.class);
-
-        assertTrue(
-                "Abstract class org.glassfish.ejb.deployment.descriptor.EjbDescriptor "
-                        + "doesn't implement com.sun.enterprise.deployment.EjbDescriptor interface.",
-                doesEjbDescriptorInterfaceImplementsJndiNameEnvInterface);
-    }
-
-    private boolean validateInterfaceImplementation(Class<?> interface1,
-                                                    Class<?> interface2) {
-        Class<?>[] interfaces = interface1.getInterfaces();
-        for (Class<?> interface1interface : interfaces) {
-            if (interface1interface == interface2)
-                return true;
-        }
-        return false;
-    }
 
     private String getErrorMessage(Map<Error, List<Method>> unimplementedMethods) {
         StringBuilder sb = new StringBuilder();
@@ -135,13 +79,14 @@ public class EjbDescriptorInheritedMethodImplementationTest extends TestCase {
         return sb.toString();
     }
 
-    private void updateUnimplementedMethodsMap(Error error, Method method, Map<Error,
-            List<Method>> unimplementedMethods) {
+
+    private void updateUnimplementedMethodsMap(Error error, Method method,
+        Map<Error, List<Method>> unimplementedMethods) {
         if (unimplementedMethods.containsKey(error)) {
             List<Method> methods = unimplementedMethods.get(error);
             methods.add(method);
         } else {
-            List<Method> methods = new ArrayList<Method>();
+            List<Method> methods = new ArrayList<>();
             methods.add(method);
             unimplementedMethods.put(error, methods);
         }

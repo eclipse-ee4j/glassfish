@@ -16,72 +16,81 @@
 
 package org.glassfish.connectors.admin.cli;
 
-import com.sun.enterprise.config.serverbeans.*;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Resource;
+import com.sun.enterprise.config.serverbeans.ResourceRef;
+import com.sun.enterprise.config.serverbeans.Resources;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
+
+import java.util.logging.Logger;
+
+import javax.security.auth.Subject;
+
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.AdminCommandContextImpl;
 import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.connectors.admin.cli.test.ConnectorsAdminJunit5Extension;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.resources.admin.cli.CreateCustomResource;
+import org.glassfish.resources.admin.cli.DeleteCustomResource;
 import org.glassfish.resources.config.CustomResource;
-import com.sun.enterprise.config.serverbeans.Resource;
-import com.sun.enterprise.config.serverbeans.ResourceRef;
-import org.glassfish.tests.utils.ConfigApiTest;
-import org.glassfish.tests.utils.Utils;
-import org.junit.After;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.jvnet.hk2.config.DomDocument;
+import org.glassfish.tests.utils.mock.MockGenerator;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.jvnet.hk2.config.TransactionFailure;
 
+import jakarta.inject.Inject;
 
-public class CreateCustomResourceTest extends ConfigApiTest {
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
-    ServiceLocator habitat = Utils.instance.getHabitat(this);
-    private ParameterMap parameters;
-    private Resources resources = null;
-    private org.glassfish.resources.admin.cli.CreateCustomResource command = null;
-    private AdminCommandContext context = null;
-    private CommandRunner cr = null;
+@ExtendWith(ConnectorsAdminJunit5Extension.class)
+public class CreateCustomResourceTest {
 
-    @Override
-    public DomDocument getDocument(ServiceLocator habitat) {
-        return new TestDocument(habitat);
-    }
+    @Inject
+    private ServiceLocator locator;
+    @Inject
+    private Logger logger;
+    @Inject
+    private MockGenerator mockGenerator;
+    @Inject
+    private CreateCustomResource command;
+    @Inject
+    private CommandRunner cr;
+    private Resources resources;
+    private AdminCommandContext context;
+    private Subject adminSubject;
 
-    public String getFileName() {
-        return "DomainTest";
-    }
 
-    @Before
+    @BeforeEach
     public void setUp() {
-        parameters = new ParameterMap();
-        resources = habitat.<Domain>getService(Domain.class).getResources();
-        assertTrue(resources != null);
-        command = habitat.getService(org.glassfish.resources.admin.cli.CreateCustomResource.class);
-        assertTrue(command != null);
+        assertNotNull(command);
+        resources = locator.<Domain>getService(Domain.class).getResources();
+        assertNotNull(resources);
         context = new AdminCommandContextImpl(
                 LogDomains.getLogger(CreateCustomResourceTest.class, LogDomains.ADMIN_LOGGER),
                 new PropsFileActionReporter());
-        cr = habitat.getService(CommandRunner.class);
+        adminSubject = mockGenerator.createAsadminSubject();
     }
 
-    @After
+    @AfterEach
     public void tearDown() throws TransactionFailure {
-        org.glassfish.resources.admin.cli.DeleteCustomResource deleteCommand = habitat.getService(org.glassfish.resources.admin.cli.DeleteCustomResource.class);
-        parameters = new ParameterMap();
+        DeleteCustomResource deleteCommand = locator.getService(DeleteCustomResource.class);
+        ParameterMap parameters = new ParameterMap();
         parameters.set("jndi_name", "sample_custom_resource");
-        cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
         parameters = new ParameterMap();
         parameters.set("jndi_name", "dupRes");
-        cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(deleteCommand);
+        cr.getCommandInvocation("delete-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(deleteCommand);
     }
 
     /**
@@ -91,12 +100,13 @@ public class CreateCustomResourceTest extends ConfigApiTest {
      */
     @Test
     public void testExecuteSuccess() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "sample_custom_resource");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -121,7 +131,7 @@ public class CreateCustomResourceTest extends ConfigApiTest {
         logger.fine("msg: " + context.getActionReport().getMessage());
 
         // Check resource-ref created
-        Servers servers = habitat.getService(Servers.class);
+        Servers servers = locator.getService(Servers.class);
         boolean isRefCreated = false;
         for (Server server : servers.getServer()) {
             if (server.getName().equals(SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)) {
@@ -146,12 +156,13 @@ public class CreateCustomResourceTest extends ConfigApiTest {
      */
     @Test
     public void testExecuteFailDuplicateResource() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "dupRes");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -171,8 +182,8 @@ public class CreateCustomResourceTest extends ConfigApiTest {
         assertTrue(isCreated);
 
         //Try to create a duplicate resource dupRes. Get a new instance of the command.
-        org.glassfish.resources.admin.cli.CreateCustomResource command2 = habitat.getService(org.glassfish.resources.admin.cli.CreateCustomResource.class);
-        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command2);
+        CreateCustomResource command2 = locator.getService(CreateCustomResource.class);
+        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command2);
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -199,6 +210,7 @@ public class CreateCustomResourceTest extends ConfigApiTest {
      */
     @Test
     public void testExecuteWithOptionalValuesSet() {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("restype", "topic");
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("enabled", "false");
@@ -206,7 +218,7 @@ public class CreateCustomResourceTest extends ConfigApiTest {
         parameters.set("jndi_name", "sample_custom_resource");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -240,11 +252,12 @@ public class CreateCustomResourceTest extends ConfigApiTest {
      */
     @Test
     public void testExecuteFailInvalidResType() throws TransactionFailure {
+        ParameterMap parameters = new ParameterMap();
         parameters.set("factoryclass", "javax.naming.spi.ObjectFactory");
         parameters.set("jndi_name", "sample_custom_resource");
 
         //Call CommandRunnerImpl.doCommand(..) to execute the command
-        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject()).parameters(parameters).execute(command);
+        cr.getCommandInvocation("create-custom-resource", context.getActionReport(), adminSubject).parameters(parameters).execute(command);
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());

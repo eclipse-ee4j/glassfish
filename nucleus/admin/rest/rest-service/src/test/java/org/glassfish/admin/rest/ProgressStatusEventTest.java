@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -17,29 +18,35 @@
 package org.glassfish.admin.rest;
 
 import com.sun.enterprise.admin.remote.reader.ProgressStatusEventJsonProprietaryReader;
+
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import jakarta.ws.rs.core.MediaType;
+
 import org.glassfish.admin.rest.provider.ProgressStatusEventJsonProvider;
 import org.glassfish.api.admin.progress.ProgressStatusEvent;
 import org.glassfish.api.admin.progress.ProgressStatusEventComplete;
 import org.glassfish.api.admin.progress.ProgressStatusEventCreateChild;
 import org.glassfish.api.admin.progress.ProgressStatusEventProgress;
 import org.glassfish.api.admin.progress.ProgressStatusEventSet;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import jakarta.ws.rs.core.MediaType;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- *
  * @author martinmares
  */
 public class ProgressStatusEventTest {
 
-    private static ProgressStatusEventSet EVENT_SET = new ProgressStatusEventSet("a", 1, null);
-    private static ProgressStatusEventProgress EVENT_PROGRESS = new ProgressStatusEventProgress("a", 3, "some message", true);
-    private static ProgressStatusEventComplete EVENT_COMPLETE = new ProgressStatusEventComplete("a", "some message");
-    private static ProgressStatusEventCreateChild EVENT_CREATE_CHILD = new ProgressStatusEventCreateChild("a", "child", "a.b", 10, 5);
+    private static final ProgressStatusEventSet EVENT_SET = new ProgressStatusEventSet("a", 1, null);
+    private static final ProgressStatusEventProgress EVENT_PROGRESS
+        = new ProgressStatusEventProgress("a", 3, "some message", true);
+    private static final ProgressStatusEventComplete EVENT_COMPLETE
+        = new ProgressStatusEventComplete("a", "some message");
+    private static final ProgressStatusEventCreateChild EVENT_CREATE_CHILD
+        = new ProgressStatusEventCreateChild("a", "child", "a.b", 10, 5);
 
     private static ProgressStatusEventJsonProvider writer = new ProgressStatusEventJsonProvider();
     private static ProgressStatusEventJsonProprietaryReader reader = new ProgressStatusEventJsonProprietaryReader();
@@ -51,8 +58,9 @@ public class ProgressStatusEventTest {
         baos.close();
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
-        assertEquals(event, EVENT_SET);
+        assertEquals(EVENT_SET, event);
     }
+
 
     @Test
     public void testEventProgress() throws IOException {
@@ -61,8 +69,9 @@ public class ProgressStatusEventTest {
         baos.close();
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
-        assertEquals(event, EVENT_PROGRESS);
+        assertEquals(EVENT_PROGRESS, event);
     }
+
 
     @Test
     public void testEventComplete() throws IOException {
@@ -71,8 +80,9 @@ public class ProgressStatusEventTest {
         baos.close();
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
-        assertEquals(event, EVENT_COMPLETE);
+        assertEquals(EVENT_COMPLETE, event);
     }
+
 
     @Test
     public void testEventCreateChild() throws IOException {
@@ -81,7 +91,7 @@ public class ProgressStatusEventTest {
         baos.close();
         ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
         ProgressStatusEvent event = reader.readFrom(bais, MediaType.APPLICATION_JSON);
-        assertEquals(event, EVENT_CREATE_CHILD);
+        assertEquals(EVENT_CREATE_CHILD, event);
     }
 
 }

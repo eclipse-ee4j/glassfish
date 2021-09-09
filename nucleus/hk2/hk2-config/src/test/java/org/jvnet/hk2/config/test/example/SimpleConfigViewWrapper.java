@@ -58,7 +58,7 @@ public class SimpleConfigViewWrapper implements ConfigView {
 
     @Override
     public ConfigView getMasterView() {
-        return masterView;  //To change body of implemented methods use File | Settings | File Templates.
+        return masterView;
     }
 
     @Override
@@ -73,14 +73,13 @@ public class SimpleConfigViewWrapper implements ConfigView {
 
     @Override
     public <T extends ConfigBeanProxy> T getProxy(Class<T> proxyType) {
-        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[]{proxyType},
-                 this));
+        return proxyType.cast(Proxy.newProxyInstance(proxyType.getClassLoader(), new Class[] {proxyType}, this));
     }
 
     static ServiceLocator habitat;
 
     public static void setHabitat(ServiceLocator h) {
-         habitat = h;
+        habitat = h;
     }
 
    /**
@@ -89,24 +88,23 @@ public class SimpleConfigViewWrapper implements ConfigView {
      * @param propName The property name to resolve. ex. ${ALIAS=aliasname}.
      * @return The aliasname or null.
      */
-    static public String getAlias(String propName)
-    {
-       String aliasName=null;
-       String starter = "${" + ALIAS_TOKEN + "="; //no space is allowed in starter
-       String ender   = "}";
+   static public String getAlias(String propName) {
+       String aliasName = null;
+       String starter = "${" + ALIAS_TOKEN + "="; // no space is allowed in starter
+       String ender = "}";
 
        propName = propName.trim();
-       if (propName.startsWith(starter) && propName.endsWith(ender) ) {
-           propName = propName.substring(starter.length() );
+       if (propName.startsWith(starter) && propName.endsWith(ender)) {
+           propName = propName.substring(starter.length());
            int lastIdx = propName.length() - 1;
            if (lastIdx > 1) {
-              propName = propName.substring(0,lastIdx);
-              if (propName!=null) {
-                aliasName = propName.trim();
-            }
+               propName = propName.substring(0, lastIdx);
+               if (propName != null) {
+                   aliasName = propName.trim();
+               }
            }
        }
        return aliasName;
-    }
+   }
 
 }

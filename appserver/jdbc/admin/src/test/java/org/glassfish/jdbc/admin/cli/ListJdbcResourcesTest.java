@@ -22,6 +22,7 @@ import com.sun.enterprise.config.serverbeans.Resources;
 import com.sun.enterprise.v3.common.PropsFileActionReporter;
 import com.sun.logging.LogDomains;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -43,12 +44,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 
 import jakarta.inject.Inject;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author Jennifer
  */
 @ExtendWith(JdbcAdminJunit5Extension.class)
@@ -99,7 +101,7 @@ public class ListJdbcResourcesTest {
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        assertEquals(origNum, list.size());
+        assertThat(list, hasSize(origNum));
 
         // Check the exit code is SUCCESS
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -125,7 +127,7 @@ public class ListJdbcResourcesTest {
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        assertEquals(origNum, list.size());
+        assertThat(list, hasSize(origNum));
 
         // Check the exit code is Success
         assertEquals(ActionReport.ExitCode.SUCCESS, context.getActionReport().getActionExitCode());
@@ -169,7 +171,7 @@ public class ListJdbcResourcesTest {
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
 
-        assertEquals(origNum + 1, list.size());
+        assertThat(list, hasSize(origNum + 1));
 
         List<String> listStr = new java.util.ArrayList();
         for (MessagePart mp : list) {
@@ -240,9 +242,9 @@ public class ListJdbcResourcesTest {
             }
         }
 
-        assertEquals(numResources, list.size());
+        assertThat(list, hasSize(origNum));
 
-        List<String> listStr = new java.util.ArrayList();
+        List<String> listStr = new ArrayList<>();
         for (MessagePart mp : list) {
             listStr.add(mp.getMessage());
         }
@@ -272,7 +274,7 @@ public class ListJdbcResourcesTest {
        cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        assertEquals(0, list.size());
+        assertThat(list, hasSize(0));
 
         // Check the exit code is FAILURE
         assertEquals(ActionReport.ExitCode.FAILURE, context.getActionReport().getActionExitCode());
@@ -293,7 +295,7 @@ public class ListJdbcResourcesTest {
         cr.getCommandInvocation("list-jdbc-resources", context.getActionReport(), adminSubject).parameters(parameters).execute(listCommand);
 
         List<MessagePart> list = context.getActionReport().getTopMessagePart().getChildren();
-        assertEquals(1, list.size());
+        assertThat(list, hasSize(1));
 
         for (MessagePart mp : list) {
             assertEquals("Usage: list-jdbc-resources [target] ", mp.getMessage());

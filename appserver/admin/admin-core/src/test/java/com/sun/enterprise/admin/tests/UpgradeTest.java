@@ -76,7 +76,7 @@ public class UpgradeTest {
     @BeforeEach
     public void setup() {
         System.clearProperty(SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
-        locator.getService(StartupContext.class).getArguments().clear();
+        startupContext.getArguments().clear();
 
         Domain domain = locator.getService(Domain.class);
         assertNotNull(domain);

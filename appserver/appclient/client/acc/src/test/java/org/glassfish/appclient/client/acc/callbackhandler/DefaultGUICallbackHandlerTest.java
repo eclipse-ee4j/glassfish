@@ -78,6 +78,9 @@ public class DefaultGUICallbackHandlerTest {
 
     @AfterEach
     public void shutdown() {
+        if (Globals.getStaticBaseServiceLocator() != null) {
+            Globals.getStaticBaseServiceLocator().shutdown();
+        }
         if (registry != null) {
             registry.shutdown();
         }

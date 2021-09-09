@@ -77,11 +77,13 @@ public interface SimpleConnector extends ConfigBeanProxy {
      */
     void setPort(String value) throws PropertyVetoException;
 
-    @Element EjbContainerAvailability getEjbContainerAvailability();
+    @Element
+    EjbContainerAvailability getEjbContainerAvailability();
 
     void setEjbContainerAvailability(EjbContainerAvailability v);
 
-    @Element WebContainerAvailability getWebContainerAvailability();
+    @Element
+    WebContainerAvailability getWebContainerAvailability();
 
     void setWebContainerAvailability(WebContainerAvailability v);
 

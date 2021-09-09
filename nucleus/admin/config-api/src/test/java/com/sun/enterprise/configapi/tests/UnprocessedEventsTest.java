@@ -52,8 +52,7 @@ public class UnprocessedEventsTest implements ConfigListener, TransactionListene
     @Inject
     private ServiceLocator locator;
     @Inject
-    private NetworkConfig service
-    ;
+    private NetworkConfig service;
     private UnprocessedChangeEvents unprocessed;
 
     @Test

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -46,7 +47,7 @@ public class WeldFacesConfigProvider implements FacesConfigResourceProvider {
     private static final String HABITAT_ATTRIBUTE = "org.glassfish.servlet.habitat";
     private InvocationManager invokeMgr;
 
-    private Logger logger = Logger.getLogger(WeldFacesConfigProvider.class.getName());
+    private Logger logger = CDILoggerInfo.getLogger();
 
     private static final String SERVICES_FACES_CONFIG = "META-INF/services/faces-config.xml";
 

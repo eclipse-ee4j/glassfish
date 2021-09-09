@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -36,7 +37,7 @@ import jakarta.servlet.jsp.JspFactory;
  */
 public class WeldContextListener implements ServletContextListener {
 
-    private Logger logger = Logger.getLogger(WeldContextListener.class.getName());
+    private Logger logger = CDILoggerInfo.getLogger();
 
     @Inject
     private BeanManager beanManager;

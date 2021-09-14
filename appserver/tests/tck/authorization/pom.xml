@@ -196,7 +196,7 @@
                                     <arg value="start-domain"/>
                                 </exec>
 
-                                <echo message="Start running all tests" />
+                                <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant"
                                       dir="${tck.tests.home}" resultproperty="testResult">
                                     <arg value="deploy"/>

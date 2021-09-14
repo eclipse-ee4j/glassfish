@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -369,16 +370,16 @@ public class UpdateConnectorSecurityMap extends ConnectorSecurityMap implements 
      * @return boolean true - if it is a homogeneous security map, false otherwise.
      */
     private boolean hasOnlyPrincipalsOrOnlyUserGroups(ActionReport report,
-        List<String> existingPrincipals, List<String> existingUserGroups) {
-        if (existingPrincipals.isEmpty() && addPrincipals != null) {
-           report.setMessage(localStrings.getLocalString("update.connector.security.map." +
-                   "addPrincipalToExistingUserGroupsWorkSecurityMap",
-                   "Failed to add principals to a security map with user groups."));
-           report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            List<String> existingPrincipals, List<String> existingUserGroups) {
+        if (!existingUserGroups.isEmpty() && addPrincipals != null) {
+            report.setMessage(localStrings.getLocalString("update.connector.security.map." +
+                    "addPrincipalToExistingUserGroupsWorkSecurityMap",
+                    "Failed to add principals to a security map with user groups."));
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
             return false;
-       }
+        }
 
-        if (existingUserGroups.isEmpty() && addUserGroups != null) {
+        if (!existingPrincipals.isEmpty() && addUserGroups != null) {
             report.setMessage(localStrings.getLocalString("update.connector.security.map." +
                     "addUserGroupsToExistingPrincipalsWorkSecurityMap",
                     "Failed to add user groups to a security map with principals."));

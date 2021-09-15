@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -536,63 +537,81 @@ public class EJBUtils {
 
 
     private static Class generateAndLoad(ClassGeneratorFactory cgf,
-                                         final String actualClassName,
-                                         final ClassLoader loader,
-                                         final Class protectionDomainBase) {
-
-        cgf.evaluate();
-
-        final Properties props = new Properties();
-        if( _logger.isLoggable(Level.FINE) ) {
-
-            props.put(DUMP_AFTER_SETUP_VISITOR, "true");
-            props.put(TRACE_BYTE_CODE_GENERATION, "true");
-            props.put(USE_ASM_VERIFIER, "true");
-
-            try {
-
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                PrintStream ps = new PrintStream(baos);
-
-                _sourceCode(ps, props);
-                _logger.fine(baos.toString());
-
-            } catch(Exception e) {
-                _logger.log(Level.FINE, "exception generating src", e);
-            }
-
+            final String actualClassName,
+            final ClassLoader loader,
+            final Class protectionDomainBase) {
+        Class clazz = loadClassIgnoringExceptions(loader, actualClassName);
+        if (clazz != null) {
+            return clazz;
         }
 
-        Class result = null;
-        try {
-            if(System.getSecurityManager() == null) {
-                result = _generate(loader, protectionDomainBase.getProtectionDomain(),
-                                   props);
-            } else {
-                result = (Class)  java.security.AccessController.doPrivileged
-                        (new java.security.PrivilegedAction() {
-                    public java.lang.Object run() {
-                        return  _generate(loader, protectionDomainBase.getProtectionDomain(),
-                                          props);
-                    }});
+        synchronized (EJBUtils.class) {
+            clazz = loadClassIgnoringExceptions(loader, actualClassName);
+            if (clazz != null) {
+                return clazz;
             }
-        } catch (RuntimeException runEx) {
-            //We would have got this exception if there were two (or more)
-            //  concurrent threads that attempted to define the same class
-            //  Lets try to load the class and if we are able to load it
-            //  then we can ignore the exception. Else throw the original exception
-            try {
-                result = loader.loadClass(actualClassName);
-                _logger.log(Level.FINE, "[EJBUtils] Got exception ex: " + runEx
-                        + " but loaded class: " + result.getName());
-            } catch (ClassNotFoundException cnfEx) {
-                throw runEx;
-            }
-        }
 
-        return result;
+            cgf.evaluate();
+
+            final Properties props = new Properties();
+            if (_logger.isLoggable(Level.FINE)) {
+
+                props.put(DUMP_AFTER_SETUP_VISITOR, "true");
+                props.put(TRACE_BYTE_CODE_GENERATION, "true");
+                props.put(USE_ASM_VERIFIER, "true");
+
+                try {
+
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    PrintStream ps = new PrintStream(baos);
+
+                    _sourceCode(ps, props);
+                    _logger.fine(baos.toString());
+
+                } catch (Exception e) {
+                    _logger.log(Level.FINE, "exception generating src", e);
+                }
+
+            }
+
+            Class result = null;
+            try {
+                if (System.getSecurityManager() == null) {
+                    result = _generate(loader, protectionDomainBase.getProtectionDomain(),
+                            props);
+                } else {
+                    result = (Class) java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
+                        public java.lang.Object run() {
+                            return _generate(loader, protectionDomainBase.getProtectionDomain(),
+                                    props);
+                        }
+                    });
+                }
+            } catch (RuntimeException runEx) {
+                // We would have got this exception if there were two (or more)
+                // concurrent threads that attempted to define the same class
+                // Lets try to load the class and if we are able to load it
+                // then we can ignore the exception. Else throw the original exception
+                try {
+                    result = loader.loadClass(actualClassName);
+                    _logger.log(Level.FINE, "[EJBUtils] Got exception ex: " + runEx
+                            + " but loaded class: " + result.getName());
+                } catch (ClassNotFoundException cnfEx) {
+                    throw runEx;
+                }
+            }
+
+            return result;
+        }
     }
 
+    private static Class loadClassIgnoringExceptions(ClassLoader classLoader, String className) {
+        try {
+            return classLoader.loadClass(className);
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     public static RemoteBusinessWrapperBase createRemoteBusinessObject
         (String businessInterface, java.rmi.Remote delegate)

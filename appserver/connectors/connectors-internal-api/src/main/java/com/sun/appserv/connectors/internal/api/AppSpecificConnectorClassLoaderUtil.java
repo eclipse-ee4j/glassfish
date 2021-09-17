@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -274,6 +275,11 @@ public class AppSpecificConnectorClassLoaderUtil {
                         (com.sun.enterprise.config.serverbeans.Application) itr.next();
                         String appName = application.getName();
                         ApplicationInfo appInfo = appRegistry.get(appName);
+                        // appInfo is null if application is not enabled or
+                        // not referred in this instance.
+                        if (appInfo == null) {
+                            continue;
+                        }
                         Application dolApp = appInfo.getMetaData(Application.class);
                         Collection<ConnectorDescriptor> rarDescriptors = dolApp.getBundleDescriptors(ConnectorDescriptor.class);
                         for (ConnectorDescriptor desc : rarDescriptors) {

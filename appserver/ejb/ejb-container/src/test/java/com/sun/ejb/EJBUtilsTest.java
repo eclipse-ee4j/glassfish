@@ -41,6 +41,7 @@ import static org.hamcrest.Matchers.lessThan;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -105,12 +106,11 @@ public class EJBUtilsTest {
 
     @Test
     public void loadGeneratedGenericEJBHomeClass() throws Exception {
-        // FIXME: Uses EjbUtils as an anchor, but it is in different package - breaks JDK rules
-        // com.sun.ejb.codegen vs. com.sun.ejb.EjbUtils
         Class<?> newClass = EJBUtils.loadGeneratedGenericEJBHomeClass(loader);
         assertNotNull(newClass);
         assertTrue(newClass.isInterface());
         assertEquals("com.sun.ejb.codegen.GenericEJBHome_Generated", newClass.getName());
+        assertSame(newClass, EJBUtils.loadGeneratedGenericEJBHomeClass(loader));
     }
 
     private static class CustomGenerator extends Generator implements ClassGeneratorFactory {

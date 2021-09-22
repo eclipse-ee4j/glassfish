@@ -518,28 +518,15 @@ public class EJBUtils {
         }
     }
 
-    public static Class loadGeneratedGenericEJBHomeClass
-        (ClassLoader appClassLoader) throws Exception {
 
+    public static Class<?> loadGeneratedGenericEJBHomeClass(ClassLoader appClassLoader) throws Exception {
         String className = getGenericEJBHomeClassName();
-
-        Class generatedGenericEJBHomeClass = null;
-
-        try {
-            generatedGenericEJBHomeClass = appClassLoader.loadClass(className);
-        } catch(Exception e) {
+        Class<?> generatedGenericEJBHomeClass = loadClassIgnoringExceptions(appClassLoader, className);
+        if (generatedGenericEJBHomeClass != null) {
+            return generatedGenericEJBHomeClass;
         }
-
-        if( generatedGenericEJBHomeClass == null ) {
-
-            GenericHomeGenerator gen =new GenericHomeGenerator(appClassLoader);
-
-
-            generatedGenericEJBHomeClass =generateAndLoad(gen, className,
-                    appClassLoader, EJBUtils.class);
-        }
-
-        return generatedGenericEJBHomeClass;
+        GenericHomeGenerator gen = new GenericHomeGenerator(appClassLoader);
+        return generateAndLoad(gen, className, appClassLoader, GenericHomeGenerator.class);
     }
 
 
@@ -620,10 +607,11 @@ public class EJBUtils {
         }
     }
 
-    private static Class loadClassIgnoringExceptions(ClassLoader classLoader, String className) {
+    private static Class<?> loadClassIgnoringExceptions(ClassLoader classLoader, String className) {
         try {
             return classLoader.loadClass(className);
-        } catch (Exception e) {
+        } catch (ClassNotFoundException e) {
+            _logger.log(FINE, "Could not load class: " + className + " by classloader " + classLoader, e);
             return null;
         }
     }

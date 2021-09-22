@@ -544,10 +544,9 @@ public class EJBUtils {
 
 
     public static Class generateSEI(ClassGeneratorFactory cgf,
-                                    final String seiClassName,
                                     final ClassLoader loader,
                                     final Class beanClass) {
-        return generateAndLoad(cgf, seiClassName, loader, beanClass);
+        return generateAndLoad(cgf, cgf.className(), loader, beanClass);
 
     }
 

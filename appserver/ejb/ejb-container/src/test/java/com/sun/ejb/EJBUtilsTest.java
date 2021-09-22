@@ -76,18 +76,9 @@ public class EJBUtilsTest {
     @Benchmark
     public void generateSei_Benchmark() throws Exception {
         ClassGeneratorFactory generator = new CustomGenerator();
-        Class<?> newClass = EJBUtils.generateSEI(generator, generator.className(), loader, EJbUtilsEjbTestClass.class);
+        Class<?> newClass = EJBUtils.generateSEI(generator, loader, EJbUtilsEjbTestClass.class);
         assertNotNull(newClass);
         assertEquals(generator.className(), newClass.getName());
-    }
-
-
-    @Test
-    public void generateSEI_callTwiceWithWrongParameters() throws Exception {
-        // FIXME: Class will be generated, but with different name -> consecutive call cannot find
-        // it and cannot generate it again.
-        EJBUtils.generateSEI(new CustomGenerator(), "com.acme.Fake", loader, EJbUtilsEjbTestClass.class);
-        EJBUtils.generateSEI(new CustomGenerator(), "com.acme.Fake", loader, EJbUtilsEjbTestClass.class);
     }
 
 
@@ -95,7 +86,7 @@ public class EJBUtilsTest {
     public void generateSei_ServiceInterfaceGenerator() throws Exception {
         ServiceInterfaceGenerator generator = new ServiceInterfaceGenerator(loader, EJbUtilsEjbTestClass.class);
         // FIXME: com.sun.ejb.EJBUtilsTest$EJbUtilsEjbTestClass doesn't have expected package com.sun.ejb.internal.jaxws
-        Class<?> newClass = EJBUtils.generateSEI(generator, generator.getGeneratedClass(), loader, EJbUtilsEjbTestClass.class);
+        Class<?> newClass = EJBUtils.generateSEI(generator, loader, EJbUtilsEjbTestClass.class);
         assertNotNull(newClass);
         assertEquals(generator.className(), newClass.getName());
     }

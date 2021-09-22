@@ -103,7 +103,7 @@
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.0.0</jax-rs-api.impl.version>
-        <jersey.version>3.0.2</jersey.version>
+        <jersey.version>3.0.3</jersey.version>
 
         <!-- Jakarta Mail -->
         <mail.version>2.0.1</mail.version>

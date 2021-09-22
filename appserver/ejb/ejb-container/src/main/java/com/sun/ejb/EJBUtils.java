@@ -436,84 +436,49 @@ public class EJBUtils {
 
     }
 
-    public static Class loadGeneratedSerializableClass(ClassLoader loader, String className)
-        throws Exception {
+
+    public static Class loadGeneratedSerializableClass(ClassLoader loader, String className) throws Exception {
         String generatedSerializableClassName = getGeneratedSerializableClassName(className);
-
         Class developerClass = loader.loadClass(className);
-        AsmSerializableBeanGenerator gen = new AsmSerializableBeanGenerator
-                (loader, developerClass, generatedSerializableClassName);
-
-        Class serializableClass = gen.generateSerializableSubclass();
-
-        return serializableClass;
+        AsmSerializableBeanGenerator gen = new AsmSerializableBeanGenerator(loader, developerClass,
+            generatedSerializableClassName);
+        return gen.generateSerializableSubclass();
     }
 
-    public static void loadGeneratedRemoteBusinessClasses
-        (String businessInterfaceName) throws Exception {
 
-        ClassLoader appClassLoader =
-            getBusinessIntfClassLoader(businessInterfaceName);
-
-        loadGeneratedRemoteBusinessClasses(appClassLoader,
-                                           businessInterfaceName);
+    public static void loadGeneratedRemoteBusinessClasses(String businessInterfaceName) throws Exception {
+        ClassLoader appClassLoader = getBusinessIntfClassLoader(businessInterfaceName);
+        loadGeneratedRemoteBusinessClasses(appClassLoader, businessInterfaceName);
     }
 
-    public static void loadGeneratedRemoteBusinessClasses
-        (ClassLoader appClassLoader, String businessInterfaceName)
+
+    public static void loadGeneratedRemoteBusinessClasses(ClassLoader appClassLoader, String businessInterfaceName)
         throws Exception {
-
-        String generatedRemoteIntfName = EJBUtils.
-            getGeneratedRemoteIntfName(businessInterfaceName);
-
-        String wrapperClassName = EJBUtils.
-            getGeneratedRemoteWrapperName(businessInterfaceName);
-
-        Class generatedRemoteIntf = null;
-        try {
-            generatedRemoteIntf =
-                appClassLoader.loadClass(generatedRemoteIntfName);
-        } catch(Exception e) {
-        }
-
-        Class generatedRemoteWrapper = null;
-        try {
-            generatedRemoteWrapper =
-                appClassLoader.loadClass(wrapperClassName);
-        } catch(Exception e) {
-        }
-
-        if( (generatedRemoteIntf != null) &&
-            (generatedRemoteWrapper != null) ) {
+        String generatedRemoteIntfName = EJBUtils.getGeneratedRemoteIntfName(businessInterfaceName);
+        String wrapperClassName = EJBUtils.getGeneratedRemoteWrapperName(businessInterfaceName);
+        Class<?> generatedRemoteIntf = loadClassIgnoringExceptions(appClassLoader, generatedRemoteIntfName);
+        Class<?> generatedRemoteWrapper = loadClassIgnoringExceptions(appClassLoader, wrapperClassName);
+        if (generatedRemoteIntf != null && generatedRemoteWrapper != null) {
             return;
         }
 
         Wrapper._setClassLoader(appClassLoader);
-
         try {
-            if( generatedRemoteIntf == null ) {
-
-                RemoteGenerator gen = new RemoteGenerator(appClassLoader,
-                                                          businessInterfaceName);
-
-                Class developerClass = appClassLoader.loadClass(businessInterfaceName);
+            if (generatedRemoteIntf == null) {
+                RemoteGenerator gen = new RemoteGenerator(appClassLoader, businessInterfaceName);
+                Class<?> developerClass = appClassLoader.loadClass(businessInterfaceName);
                 generateAndLoad(gen, generatedRemoteIntfName, appClassLoader, developerClass);
 
             }
+            if (generatedRemoteWrapper == null) {
+                Remote30WrapperGenerator gen = new Remote30WrapperGenerator(appClassLoader, businessInterfaceName,
+                    generatedRemoteIntfName);
 
-            if( generatedRemoteWrapper == null ) {
-
-                Remote30WrapperGenerator gen = new Remote30WrapperGenerator
-                    (appClassLoader, businessInterfaceName,
-                     generatedRemoteIntfName);
-
-                Class developerClass = appClassLoader.loadClass(businessInterfaceName);
+                Class<?> developerClass = appClassLoader.loadClass(businessInterfaceName);
                 generateAndLoad(gen, wrapperClassName, appClassLoader, developerClass);
             }
-
         } finally {
-            // Fix for 7075: Make sure no classloader is bound to threadlocal:
-            // avoid possible classloader leak.
+            // Make sure no classloader is bound to threadlocal: avoid possible classloader leak.
             Wrapper._setClassLoader(null) ;
         }
     }
@@ -530,81 +495,46 @@ public class EJBUtils {
     }
 
 
-    public static Class generateSEI(ClassGeneratorFactory cgf,
-                                    final ClassLoader loader,
-                                    final Class beanClass) {
+    public static Class generateSEI(ClassGeneratorFactory cgf, ClassLoader loader, Class beanClass) {
+        Class<?> clazz = loadClassIgnoringExceptions(loader, cgf.className());
+        if (clazz != null) {
+            return clazz;
+        }
         return generateAndLoad(cgf, cgf.className(), loader, beanClass);
-
     }
 
 
-    private static Class generateAndLoad(ClassGeneratorFactory cgf,
-            final String actualClassName,
-            final ClassLoader loader,
-            final Class protectionDomainBase) {
-        Class clazz = loadClassIgnoringExceptions(loader, actualClassName);
+    private synchronized static Class<?> generateAndLoad(
+        final ClassGeneratorFactory factory, final String requestedClassName,
+        final ClassLoader loader, final Class<?> anchorClass) {
+
+        Class<?> clazz = loadClassIgnoringExceptions(loader, requestedClassName);
         if (clazz != null) {
             return clazz;
         }
 
-        synchronized (EJBUtils.class) {
-            clazz = loadClassIgnoringExceptions(loader, actualClassName);
-            if (clazz != null) {
-                return clazz;
-            }
+        factory.evaluate();
 
-            cgf.evaluate();
-
-            final Properties props = new Properties();
-            if (_logger.isLoggable(Level.FINE)) {
-
-                props.put(DUMP_AFTER_SETUP_VISITOR, "true");
-                props.put(TRACE_BYTE_CODE_GENERATION, "true");
-                props.put(USE_ASM_VERIFIER, "true");
-
-                try {
-
-                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                    PrintStream ps = new PrintStream(baos);
-
-                    _sourceCode(ps, props);
-                    _logger.fine(baos.toString());
-
-                } catch (Exception e) {
-                    _logger.log(Level.FINE, "exception generating src", e);
-                }
-
-            }
-
-            Class result = null;
+        final Properties props = new Properties();
+        if (_logger.isLoggable(Level.FINEST)) {
+            props.put(DUMP_AFTER_SETUP_VISITOR, "true");
+            props.put(TRACE_BYTE_CODE_GENERATION, "true");
+            props.put(USE_ASM_VERIFIER, "true");
             try {
-                if (System.getSecurityManager() == null) {
-                    result = _generate(loader, protectionDomainBase.getProtectionDomain(),
-                            props);
-                } else {
-                    result = (Class) java.security.AccessController.doPrivileged(new java.security.PrivilegedAction() {
-                        public java.lang.Object run() {
-                            return _generate(loader, protectionDomainBase.getProtectionDomain(),
-                                    props);
-                        }
-                    });
-                }
-            } catch (RuntimeException runEx) {
-                // We would have got this exception if there were two (or more)
-                // concurrent threads that attempted to define the same class
-                // Lets try to load the class and if we are able to load it
-                // then we can ignore the exception. Else throw the original exception
-                try {
-                    result = loader.loadClass(actualClassName);
-                    _logger.log(Level.FINE, "[EJBUtils] Got exception ex: " + runEx
-                            + " but loaded class: " + result.getName());
-                } catch (ClassNotFoundException cnfEx) {
-                    throw runEx;
-                }
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                PrintStream ps = new PrintStream(baos);
+                Wrapper._sourceCode(ps, props);
+                _logger.fine(baos.toString());
+            } catch (Exception e) {
+                _logger.log(Level.SEVERE, "Exception generating src for logs", e);
             }
-
-            return result;
         }
+
+        if (System.getSecurityManager() == null) {
+            return Wrapper._generate(anchorClass, props);
+        }
+        PrivilegedAction<Class<?>> action = () -> Wrapper._generate(anchorClass, props);
+        return AccessController.doPrivileged(action);
     }
 
     private static Class<?> loadClassIgnoringExceptions(ClassLoader classLoader, String className) {

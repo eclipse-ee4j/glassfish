@@ -17,22 +17,31 @@
 
 package com.sun.ejb;
 
-import com.sun.ejb.codegen.ClassGeneratorFactory;
 import com.sun.ejb.codegen.AsmSerializableBeanGenerator;
+import com.sun.ejb.codegen.ClassGeneratorFactory;
 import com.sun.ejb.codegen.GenericHomeGenerator;
 import com.sun.ejb.codegen.Remote30WrapperGenerator;
 import com.sun.ejb.codegen.RemoteGenerator;
 import com.sun.ejb.containers.BaseContainer;
-import com.sun.ejb.containers.RemoteBusinessWrapperBase;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.ejb.containers.GenericEJBLocalHome;
+import com.sun.ejb.containers.RemoteBusinessWrapperBase;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbReferenceDescriptor;
+import com.sun.logging.LogDomains;
 
-import javax.naming.NamingException;
-import javax.rmi.PortableRemoteObject;
-import java.io.*;
-import java.lang.reflect.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.SortedMap;
@@ -40,9 +49,15 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.naming.NamingException;
+import javax.rmi.PortableRemoteObject;
 
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.*;
-import com.sun.logging.LogDomains;
+import org.glassfish.pfl.dynamic.codegen.spi.Wrapper;
+
+import static java.util.logging.Level.FINE;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.DUMP_AFTER_SETUP_VISITOR;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.TRACE_BYTE_CODE_GENERATION;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.USE_ASM_VERIFIER;
 
 /**
  * A handy class with static utility methods.
@@ -136,6 +151,7 @@ public class EJBUtils {
                     ejbStaticCodegenProp = (String)
                     java.security.AccessController.doPrivileged
                             (new java.security.PrivilegedAction() {
+                        @Override
                         public java.lang.Object run() {
                             return
                                 System.getProperty(EJB_USE_STATIC_CODEGEN_PROP);
@@ -148,7 +164,7 @@ public class EJBUtils {
 
                 ejbUseStaticCodegen_ = useStaticCodegen;
 
-                _logger.log(Level.FINE, "EJB Static codegen is " +
+                _logger.log(FINE, "EJB Static codegen is " +
                             (useStaticCodegen ? "ENABLED" : "DISABLED") +
                             " ejbUseStaticCodegenProp = " +
                             ejbStaticCodegenProp);
@@ -472,7 +488,7 @@ public class EJBUtils {
             return;
         }
 
-        _setClassLoader(appClassLoader);
+        Wrapper._setClassLoader(appClassLoader);
 
         try {
             if( generatedRemoteIntf == null ) {
@@ -498,7 +514,7 @@ public class EJBUtils {
         } finally {
             // Fix for 7075: Make sure no classloader is bound to threadlocal:
             // avoid possible classloader leak.
-            _setClassLoader(null) ;
+            Wrapper._setClassLoader(null) ;
         }
     }
 
@@ -666,6 +682,7 @@ public class EJBUtils {
             contextLoader = (ClassLoader)
             java.security.AccessController.doPrivileged
                     (new java.security.PrivilegedAction() {
+                @Override
                 public java.lang.Object run() {
                     // Return context class loader.  If there is none,
                     // which could happen within Appclient container,
@@ -688,6 +705,7 @@ public class EJBUtils {
             appClassLoader = (ClassLoader)
             java.security.AccessController.doPrivileged
                     (new java.security.PrivilegedAction() {
+                @Override
                 public java.lang.Object run() {
                     return businessInterfaceClass.getClassLoader();
 
@@ -729,6 +747,7 @@ public class EJBUtils {
                 } else {
                     value = java.security.AccessController.doPrivileged(
                             new java.security.PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run() throws Exception {
                             if( !nextField.isAccessible() ) {
                                 nextField.setAccessible(true);
@@ -737,18 +756,18 @@ public class EJBUtils {
                         }
                     });
                 }
-                if( _logger.isLoggable(Level.FINE) ) {
-                    _logger.log(Level.FINE, "=====> Serializing field: " + nextField);
+                if( _logger.isLoggable(FINE) ) {
+                    _logger.log(FINE, "=====> Serializing field: " + nextField);
                 }
 
                 objOutStream.writeObject(value);
             } catch(Throwable t) {
-                if( _logger.isLoggable(Level.FINE) ) {
-                    _logger.log(Level.FINE, "=====> failed serializing field: " + nextField +
+                if( _logger.isLoggable(FINE) ) {
+                    _logger.log(FINE, "=====> failed serializing field: " + nextField +
                              " =====> of class: " + clazz + " =====> using: " + oos.getClass() +
                              " =====> serializing value of type: " + ((value == null)? null : value.getClass().getName()) +
                              " ===> Error: " + t);
-                    _logger.log(Level.FINE, "", t);
+                    _logger.log(FINE, "", t);
                 }
                 IOException ioe = new IOException();
                 Throwable cause = (t instanceof InvocationTargetException) ?
@@ -776,10 +795,11 @@ public class EJBUtils {
         throws IOException {
 
         Class clazz = (usesSuperClass)? instance.getClass().getSuperclass() : instance.getClass();
-        if( _logger.isLoggable(Level.FINE) ) {
-            _logger.log(Level.FINE, "=====> Deserializing class: " + clazz);
-            if (replaceValue != null)
-                _logger.log(Level.FINE, "=====> Replace requested for value: " + replaceValue.getClass());
+        if( _logger.isLoggable(FINE) ) {
+            _logger.log(FINE, "=====> Deserializing class: " + clazz);
+            if (replaceValue != null) {
+                _logger.log(FINE, "=====> Replace requested for value: " + replaceValue.getClass());
+            }
         }
 
         // Use helper method to get sorted list of fields eligible
@@ -790,15 +810,15 @@ public class EJBUtils {
             try {
 
                 final Field nextField = next;
-                if( _logger.isLoggable(Level.FINE) ) {
-                    _logger.log(Level.FINE, "=====> Deserializing field: " + nextField);
+                if( _logger.isLoggable(FINE) ) {
+                    _logger.log(FINE, "=====> Deserializing field: " + nextField);
                 }
 
                 // Read value from the stream even if it is to be replaced to adjust the pointers
                 Object value = ois.readObject();
                 if (replaceValue != null && nextField.getType().isAssignableFrom(replaceValue.getClass())) {
-                    if( _logger.isLoggable(Level.FINE) ) {
-                        _logger.log(Level.FINE, "=====> Replacing field: " + nextField);
+                    if( _logger.isLoggable(FINE) ) {
+                        _logger.log(FINE, "=====> Replacing field: " + nextField);
                     }
 
                     value = replaceValue;
@@ -814,6 +834,7 @@ public class EJBUtils {
                 } else {
                     java.security.AccessController.doPrivileged(
                             new java.security.PrivilegedExceptionAction() {
+                        @Override
                         public java.lang.Object run() throws Exception {
                             if( !nextField.isAccessible() ) {
                                 nextField.setAccessible(true);
@@ -837,7 +858,7 @@ public class EJBUtils {
 
         Field[] fields = clazz.getDeclaredFields();
 
-        SortedMap<String, Field> sortedMap = new TreeMap<String, Field>();
+        SortedMap<String, Field> sortedMap = new TreeMap<>();
 
         for(Field next : fields) {
 
@@ -854,7 +875,7 @@ public class EJBUtils {
 
         }
 
-        return (Collection<Field>) sortedMap.values();
+        return sortedMap.values();
     }
 
 }

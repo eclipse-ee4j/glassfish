@@ -6,5 +6,6 @@
 <suppressions>
     <!-- Generated sources break some rules and are usually out of our control -->
     <suppress checks=".*" files=".*[\\/]generated-sources[\\/].*" />
+    <suppress checks=".*" files=".*[\\/]generated-test-sources[\\/].*" />
     <suppress checks=".*" files="target[\\/]jackson-jaxb-src[\\/].*" />
 </suppressions>

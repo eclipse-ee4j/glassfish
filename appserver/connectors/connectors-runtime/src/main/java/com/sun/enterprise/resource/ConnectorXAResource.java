@@ -197,9 +197,6 @@ public class ConnectorXAResource implements XAResource {
         return false;
     }
 
-    public static void freeListener(ManagedConnection mc) {
-    }
-
     private ResourceHandle getResourceHandle() throws PoolingException {
         try {
             ResourceHandle h = null;

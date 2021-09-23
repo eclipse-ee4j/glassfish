@@ -1103,8 +1103,8 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
             Class serviceEndpointIntfClass = loader.loadClass(webServiceEndpoint.getServiceEndpointInterface());
 
             if (!serviceEndpointIntfClass.isInterface()) {
-                ServiceInterfaceGenerator generator = new ServiceInterfaceGenerator(loader, ejbClass);
-                serviceEndpointIntfClass = EJBUtils.generateSEI(generator, loader, this.ejbClass);
+                ServiceInterfaceGenerator generator = new ServiceInterfaceGenerator(ejbClass);
+                serviceEndpointIntfClass = EJBUtils.generateSEI(generator, loader);
                 if (serviceEndpointIntfClass == null) {
                     throw new RuntimeException(localStrings.getLocalString("ejb.error_generating_sei",
                         "Error in generating service endpoint interface class for EJB class {0}", this.ejbClass));

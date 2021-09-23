@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,74 +17,70 @@
 
 package com.sun.ejb.codegen;
 
+import com.sun.ejb.containers.GenericEJBHome;
 
-import com.sun.ejb.EJBUtils;
+import java.rmi.Remote;
+import java.rmi.RemoteException;
 
-import com.sun.enterprise.util.LocalStringManagerImpl;
-
-import static java.lang.reflect.Modifier.*;
-
-import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper.*;
+import static java.lang.reflect.Modifier.ABSTRACT;
+import static java.lang.reflect.Modifier.PUBLIC;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._String;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._arg;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._classGenerator;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._clear;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._end;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._interface;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._method;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._package;
+import static org.glassfish.pfl.dynamic.codegen.spi.Wrapper._t;
 
 /**
  * This class is used to generate a sub-interface of the
  * GenericEJBHome interface that will be loaded within each
  * application.
  */
+public class GenericHomeGenerator extends Generator {
 
-public class GenericHomeGenerator extends Generator
-    implements ClassGeneratorFactory {
-
-    private static LocalStringManagerImpl localStrings = new LocalStringManagerImpl(GenericHomeGenerator.class);
-
-    private String genericEJBHomeClassName;
-    private ClassLoader loader;
+    /**
+     * This class name is relative to the classloader used, but has always the same name.
+     */
+    public static final String GENERIC_HOME_CLASSNAME = GenericHomeGenerator.class.getPackageName()
+        + ".GenericEJBHome_Generated";
 
     /**
      * Get the fully qualified name of the generated class.
      * @return the name of the generated class.
      */
-    public String getGeneratedClass() {
-        return genericEJBHomeClassName;
-    }
-
-    // For corba codegen infrastructure
-    public String className() {
-        return getGeneratedClass();
+    @Override
+    public final String getGeneratedClassName() {
+        return GENERIC_HOME_CLASSNAME;
     }
 
 
-    public GenericHomeGenerator(ClassLoader cl) throws GeneratorException {
-        super();
-
-        genericEJBHomeClassName = EJBUtils.getGenericEJBHomeClassName();
-        loader = cl;
+    @Override
+    public Class<?> getAnchorClass() {
+        return GenericHomeGenerator.class;
     }
 
 
+    @Override
     public void evaluate() {
-
         _clear();
 
-        String packageName = getPackageName(genericEJBHomeClassName);
-        String simpleName = getBaseName (genericEJBHomeClassName);
+        String packageName = getPackageName(getGeneratedClassName());
+        String simpleName = getBaseName(getGeneratedClassName());
 
         _package(packageName);
 
-        _interface(PUBLIC, simpleName,
-                   _t("com.sun.ejb.containers.GenericEJBHome"));
+        _interface(PUBLIC, simpleName, _t(GenericEJBHome.class.getName()));
 
-        // Create method
-        _method(PUBLIC | ABSTRACT, _t("java.rmi.Remote"),
-                "create", _t("java.rmi.RemoteException"));
+        _method(PUBLIC | ABSTRACT, _t(Remote.class.getName()), "create", _t(RemoteException.class.getName()));
 
         _arg(_String(), "generatedBusinessIntf");
 
         _end();
 
         _classGenerator() ;
-
-        return;
     }
 
 }

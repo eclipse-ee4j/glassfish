@@ -17,7 +17,6 @@
 
 package com.sun.ejb.codegen;
 
-import com.sun.ejb.EJBUtils;
 import com.sun.ejb.containers.InternalEJBContainerException;
 import com.sun.ejb.containers.RemoteBusinessObject;
 import com.sun.enterprise.util.LocalStringManagerImpl;
@@ -55,6 +54,19 @@ public final class RemoteGenerator extends Generator {
 
 
     /**
+     * Adds _Remote to the original name.
+     *
+     * @param businessIntf full class name
+     */
+    public static String getGeneratedRemoteIntfName(String businessIntf) {
+        String packageName = getPackageName(businessIntf);
+        String simpleName = getBaseName(businessIntf);
+        String generatedSimpleName = "_" + simpleName + "_Remote";
+        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+    }
+
+
+    /**
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
      *
@@ -70,7 +82,7 @@ public final class RemoteGenerator extends Generator {
                 localStrings.getLocalString("generator.remote_interface_not_found", "Remote interface not found "));
         }
 
-        remoteInterfaceName = EJBUtils.getGeneratedRemoteIntfName(businessInterface.getName());
+        remoteInterfaceName = getGeneratedRemoteIntfName(businessInterface.getName());
         remoteInterfacePackageName = getPackageName(remoteInterfaceName);
         remoteInterfaceSimpleName = getBaseName(remoteInterfaceName);
 

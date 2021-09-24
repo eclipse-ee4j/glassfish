@@ -17,6 +17,7 @@
 package com.sun.ejb.containers;
 
 import com.sun.ejb.EjbInvocation;
+import com.sun.ejb.codegen.RemoteGenerator;
 import com.sun.enterprise.deployment.EjbDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -117,7 +118,7 @@ public abstract class AbstractSessionContextImpl
 
                 // Create a new client object from the stub for this
                 // business interface.
-                String generatedIntf = EJBUtils.getGeneratedRemoteIntfName(intfName);
+                String generatedIntf = RemoteGenerator.getGeneratedRemoteIntfName(intfName);
 
                 java.rmi.Remote stub =
                     ejbRemoteBusinessObjectImpl.getStub(generatedIntf);

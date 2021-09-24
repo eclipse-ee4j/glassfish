@@ -19,6 +19,7 @@ package com.sun.ejb;
 
 import com.sun.ejb.codegen.AsmSerializableBeanGenerator;
 import com.sun.ejb.codegen.ClassGeneratorFactory;
+import com.sun.ejb.codegen.Generator;
 import com.sun.ejb.codegen.GenericHomeGenerator;
 import com.sun.ejb.codegen.Remote30WrapperGenerator;
 import com.sun.ejb.codegen.RemoteGenerator;
@@ -176,16 +177,6 @@ public class EJBUtils {
 
     }
 
-    private static String getClassPackageName(String intf) {
-        int dot = intf.lastIndexOf('.');
-        return dot == -1 ? null : intf.substring(0, dot);
-    }
-
-    /** @return the simple name of the class. For included classes returns includes dollar and wrapper class */
-    private static String getClassSimpleName(String intf) {
-        int dot = intf.lastIndexOf('.');
-        return dot == -1 ? intf : intf.substring(dot + 1);
-    }
 
     /**
      * Prepends __EJB31_Generated__ and adds _Intf__ to the simple class name.
@@ -193,47 +184,12 @@ public class EJBUtils {
      * @param ejbClassName full class name
      */
     public static String getGeneratedOptionalInterfaceName(String ejbClassName) {
-        String packageName = getClassPackageName(ejbClassName);
-        String simpleName = getClassSimpleName(ejbClassName);
+        String packageName = Generator.getPackageName(ejbClassName);
+        String simpleName = Generator.getBaseName(ejbClassName);
         String optionalIntfName = "__EJB31_Generated__" + simpleName + "__Intf__";
         return packageName == null ? optionalIntfName : packageName + "." + optionalIntfName;
     }
 
-    /**
-     * Adds _Serializable to the original name.
-     *
-     * @param beanClass full class name
-     */
-    public static String getGeneratedSerializableClassName(String beanClass) {
-        String packageName = getClassPackageName(beanClass);
-        String simpleName = getClassSimpleName(beanClass);
-        String generatedSimpleName = "_" + simpleName + "_Serializable";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
-    }
-
-    /**
-     * Adds _Remote to the original name.
-     *
-     * @param businessIntf full class name
-     */
-    public static String getGeneratedRemoteIntfName(String businessIntf) {
-        String packageName = getClassPackageName(businessIntf);
-        String simpleName = getClassSimpleName(businessIntf);
-        String generatedSimpleName = "_" + simpleName + "_Remote";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
-    }
-
-    /**
-     * Adds _Wrapper to the original name.
-     *
-     * @param businessIntf full class name
-     */
-    public static String getGeneratedRemoteWrapperName(String businessIntf) {
-        String packageName = getClassPackageName(businessIntf);
-        String simpleName = getClassSimpleName(businessIntf);
-        String generatedSimpleName = "_" + simpleName + "_Wrapper";
-        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
-    }
 
     /**
      * Actual jndi-name under which Remote ejb factory lives depends on
@@ -385,7 +341,7 @@ public class EJBUtils {
             // is needed in a given JVM.
             loadGeneratedRemoteBusinessClasses(businessInterface);
 
-            String generatedRemoteIntfName = EJBUtils.getGeneratedRemoteIntfName(businessInterface);
+            String generatedRemoteIntfName = RemoteGenerator.getGeneratedRemoteIntfName(businessInterface);
             Method createMethod = genericEJBHome.getMethod("create", String.class);
             java.rmi.Remote delegate = (java.rmi.Remote) createMethod.invoke(genericHomeObj, generatedRemoteIntfName);
 
@@ -401,10 +357,10 @@ public class EJBUtils {
 
 
     public static Class loadGeneratedSerializableClass(ClassLoader loader, String className) throws Exception {
-        String generatedSerializableClassName = getGeneratedSerializableClassName(className);
+        String generatedSerializableClassName = AsmSerializableBeanGenerator.getGeneratedSerializableClassName(className);
         Class developerClass = loader.loadClass(className);
-        AsmSerializableBeanGenerator gen = new AsmSerializableBeanGenerator(loader, developerClass,
-            generatedSerializableClassName);
+        AsmSerializableBeanGenerator gen =
+            new AsmSerializableBeanGenerator(loader, developerClass, generatedSerializableClassName);
         return gen.generateSerializableSubclass();
     }
 
@@ -418,15 +374,17 @@ public class EJBUtils {
     /**
      * @param appClassLoader - used to verify existence of classes and for generating too.
      * @param businessInterfaceName - this class must exist
+     * @return full class name of the generated remote interface
+     * @throws Exception
      */
-    public static void loadGeneratedRemoteBusinessClasses(ClassLoader appClassLoader, String businessInterfaceName)
+    public static String loadGeneratedRemoteBusinessClasses(ClassLoader appClassLoader, String businessInterfaceName)
         throws Exception {
-        String generatedRemoteIntfName = EJBUtils.getGeneratedRemoteIntfName(businessInterfaceName);
-        String wrapperClassName = EJBUtils.getGeneratedRemoteWrapperName(businessInterfaceName);
+        String generatedRemoteIntfName = RemoteGenerator.getGeneratedRemoteIntfName(businessInterfaceName);
+        String wrapperClassName = Remote30WrapperGenerator.getGeneratedRemoteWrapperName(businessInterfaceName);
         Class<?> generatedRemoteIntf = loadClassIgnoringExceptions(appClassLoader, generatedRemoteIntfName);
         Class<?> generatedRemoteWrapper = loadClassIgnoringExceptions(appClassLoader, wrapperClassName);
         if (generatedRemoteIntf != null && generatedRemoteWrapper != null) {
-            return;
+            return generatedRemoteIntfName;
         }
 
         Wrapper._setClassLoader(appClassLoader);
@@ -444,6 +402,7 @@ public class EJBUtils {
             // Make sure no classloader is bound to threadlocal: avoid possible classloader leak.
             Wrapper._setClassLoader(null) ;
         }
+        return generatedRemoteIntfName;
     }
 
 
@@ -523,30 +482,21 @@ public class EJBUtils {
     }
 
 
-    public static RemoteBusinessWrapperBase createRemoteBusinessObject
-        (ClassLoader loader, String businessInterface,
-         java.rmi.Remote delegate)
-
-        throws Exception {
-
-        String wrapperClassName = EJBUtils.getGeneratedRemoteWrapperName
-            (businessInterface);
-
+    public static RemoteBusinessWrapperBase createRemoteBusinessObject(ClassLoader loader, String businessInterface,
+        java.rmi.Remote delegate) throws Exception {
+        String wrapperClassName = Remote30WrapperGenerator.getGeneratedRemoteWrapperName(businessInterface);
         Class clientWrapperClass = loader.loadClass(wrapperClassName);
-
         Constructor ctors[] = clientWrapperClass.getConstructors();
-
         Constructor ctor = null;
-        for(Constructor next : ctors) {
-            if (next.getParameterTypes().length > 0 ) {
+        for (Constructor next : ctors) {
+            if (next.getParameterTypes().length > 0) {
                 ctor = next;
                 break;
             }
         }
         Object obj = null;
         if (ctor != null) {
-            obj = ctor.newInstance(new Object[]
-                    {delegate, businessInterface});
+            obj = ctor.newInstance(delegate, businessInterface);
         }
         return (RemoteBusinessWrapperBase) obj;
     }

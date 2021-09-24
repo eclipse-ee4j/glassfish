@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -18,6 +19,7 @@ package com.sun.ejb.base.io;
 
 import com.sun.ejb.containers.BaseContainer;
 import com.sun.ejb.EJBUtils;
+import com.sun.ejb.codegen.RemoteGenerator;
 import com.sun.ejb.containers.EjbContainerUtilImpl;
 import com.sun.ejb.containers.RemoteBusinessWrapperBase;
 import com.sun.enterprise.container.common.spi.util.JavaEEIOUtils;
@@ -69,6 +71,7 @@ public class EJBObjectOutputStreamHandler
      * This code is needed to serialize non-Serializable objects that
      * can be part of a bean's state. See EJB2.0 section 7.4.1.
      */
+    @Override
     public Object replaceObject(Object obj)
             throws IOException {
         Object result = obj;
@@ -186,6 +189,7 @@ final class SerializableJNDIContext
         }
     }
 
+    @Override
     public Object createObject()
         throws IOException
     {
@@ -273,6 +277,7 @@ final class SerializableS1ASEJBHomeReference
     super(containerId);
     }
 
+    @Override
     public Object createObject()
         throws IOException
     {
@@ -299,14 +304,14 @@ final class SerializableS1ASEJBHomeReference
 final class SerializableS1ASEJBObjectReference
     extends AbstractSerializableS1ASEJBReference
 {
-    private byte[] instanceKey;
+    private final byte[] instanceKey;
     private Object sfsbKey;
     private long sfsbClientVersion;
     private boolean haEnabled;
 
     // If 3.0 Remote business view, the name of the remote business
     // interface to which this stub corresponds.
-    private String remoteBusinessInterface;
+    private final String remoteBusinessInterface;
 
     SerializableS1ASEJBObjectReference(long containerId, byte[] objKey,
             int keySize, String remoteBusinessInterfaceName) {
@@ -330,6 +335,7 @@ final class SerializableS1ASEJBObjectReference
         return haEnabled;
     }
 
+    @Override
     public Object createObject()
         throws IOException
     {
@@ -352,7 +358,7 @@ final class SerializableS1ASEJBObjectReference
 
                     } else {
 
-                        String generatedRemoteIntfName = EJBUtils.
+                        String generatedRemoteIntfName = RemoteGenerator.
                             getGeneratedRemoteIntfName(remoteBusinessInterface);
 
                         java.rmi.Remote remoteRef = container.

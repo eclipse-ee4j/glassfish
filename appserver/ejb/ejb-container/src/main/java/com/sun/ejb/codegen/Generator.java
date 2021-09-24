@@ -28,30 +28,19 @@ import java.util.List;
 public abstract class Generator implements ClassGeneratorFactory {
 
     /**
-     * Get the package name from the class name.
-     *
-     * @param className class name.
-     * @return the package name.
+     * @return the package name or null.
      */
-    protected String getPackageName(String className) {
-        int dot = className.lastIndexOf('.');
-        if (dot == -1) {
-            return null;
-        }
-        return className.substring(0, dot);
+    public static String getPackageName(String fullClassName) {
+        int dot = fullClassName.lastIndexOf('.');
+        return dot == -1 ? null : fullClassName.substring(0, dot);
     }
 
-
     /**
-     * @param className
      * @return simple class name (including wrapper class and dollar sign if it is internal class)
      */
-    protected String getBaseName(String className) {
-        int dot = className.lastIndexOf('.');
-        if (dot == -1) {
-            return className;
-        }
-        return className.substring(dot + 1);
+    public static String getBaseName(String fullClassName) {
+        int dot = fullClassName.lastIndexOf('.');
+        return dot == -1 ? fullClassName : fullClassName.substring(dot + 1);
     }
 
 

@@ -17,7 +17,6 @@
 
 package com.sun.ejb.codegen;
 
-import com.sun.ejb.EJBUtils;
 import com.sun.ejb.containers.InternalEJBContainerException;
 import com.sun.ejb.containers.InternalRemoteException;
 import com.sun.ejb.containers.RemoteBusinessWrapperBase;
@@ -66,6 +65,18 @@ public final class Remote30WrapperGenerator extends Generator {
 
 
     /**
+     * Adds _Wrapper to the original name.
+     *
+     * @param businessIntf full class name
+     */
+    public static String getGeneratedRemoteWrapperName(String businessIntf) {
+        String packageName = getPackageName(businessIntf);
+        String simpleName = getBaseName(businessIntf);
+        String generatedSimpleName = "_" + simpleName + "_Wrapper";
+        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+    }
+
+    /**
      * Construct the Wrapper generator with the specified deployment
      * descriptor and class loader.
      *
@@ -94,7 +105,7 @@ public final class Remote30WrapperGenerator extends Generator {
                 + ". A Remote Business interface MUST not extend jakarta.ejb.EJBObject.");
         }
 
-        remoteClientClassName = EJBUtils.getGeneratedRemoteWrapperName(businessIntfName);
+        remoteClientClassName = getGeneratedRemoteWrapperName(businessIntfName);
         remoteClientPackageName = getPackageName(remoteClientClassName);
         remoteClientSimpleName = getBaseName(remoteClientClassName);
 

@@ -609,11 +609,9 @@ public abstract class BaseContainer implements Container, EjbContainerFacade, Ja
                     // made before any EJB 3.0 Remote business interface
                     // runtime behavior is needed for a particular
                     // classloader.
-                    EJBUtils.loadGeneratedRemoteBusinessClasses(loader, next);
+                    String nextGen = EJBUtils.loadGeneratedRemoteBusinessClasses(loader, next);
 
-                    String nextGen = EJBUtils.getGeneratedRemoteIntfName(next);
-
-                    Class genRemoteIntf = loader.loadClass(nextGen);
+                    Class<?> genRemoteIntf = loader.loadClass(nextGen);
 
                     RemoteBusinessIntfInfo info = new RemoteBusinessIntfInfo();
                     info.generatedRemoteIntf = genRemoteIntf;

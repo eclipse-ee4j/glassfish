@@ -1,4 +1,4 @@
-Thank you for downloading Eclipse GlassFish 6.0.0!
+Thank you for downloading Eclipse GlassFish ${project.version}!
 
 Here are a few short steps to get you started...
 
@@ -6,7 +6,7 @@ Here are a few short steps to get you started...
 0. Prerequisite
 ===============
 
-Eclipse GlassFish 6.0.0 requires JDK 8.
+Eclipse GlassFish ${project.version} requires JDK 11 or newer.
 
 
 1. Installing Eclipse GlassFish
@@ -32,7 +32,7 @@ After a few seconds, GlassFish will be up and ready to accept requests. The defa
 To manage GlassFish, just go to web administration console: http://localhost:4848
 
 
-3. Stopping GlassFish 
+3. Stopping GlassFish
 =====================
 
 To stop GlassFish, just issue the following command :
@@ -45,14 +45,14 @@ To stop GlassFish, just issue the following command :
 
 Open the following local file in your browser: glassfish6/glassfish/docs/quickstart.html. It contains useful information such as the details about the pre-configured 'domain1', links to the GlassFish Documentation, etc.
 
-Make sure to also check the GlassFish 6.0.0 Documentation contains important information : https://glassfish.org/docs/#current
+Make sure to also check the GlassFish ${project.version} Documentation contains important information : https://glassfish.org/docs/#current
 
 If you are new to Jakarta EE, the Jakarta EE Tutorial (https://eclipse-ee4j.github.io/jakartaee-tutorial/) is a good way to learn more. The examples are tailored to run with GlassFish and this will help you get oriented.
 
 The Jakarta EE Examples Project also has useful code samples https://projects.eclipse.org/projects/ee4j.jakartaee-examples
 
 
-5. Documentation 
+5. Documentation
 ================
 
 Eclipse GlassFish Documentation : https://glassfish.org/docs/#current

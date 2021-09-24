@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -122,17 +123,6 @@ public class WeldUtils {
         cdiEnablingAnnotations.add(Stateless.class.getName());
         cdiEnablingAnnotations.add(jakarta.ejb.Singleton.class.getName());
     }
-
-    private static final List<String> excludedAnnotationTypes = new ArrayList<String>();
-    static {
-        // These are excluded because they are not scope annotations, and they cause the recursive
-        // analysis of parent annotations to continue infinitely because they reference each other,
-        // and in some cases, they reference themselves.
-        excludedAnnotationTypes.add(Documented.class.getName());
-        excludedAnnotationTypes.add(Retention.class.getName());
-        excludedAnnotationTypes.add(Target.class.getName());
-    }
-
 
     /**
      * Determine whether the specified archive is an implicit bean deployment archive.

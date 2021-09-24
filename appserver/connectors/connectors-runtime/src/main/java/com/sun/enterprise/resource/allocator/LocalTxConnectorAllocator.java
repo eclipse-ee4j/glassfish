@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -106,7 +107,6 @@ public class LocalTxConnectorAllocator extends AbstractConnectorAllocator {
             throws PoolingException {
         try {
             ManagedConnection mc = (ManagedConnection) resource.getResource();
-            ConnectorXAResource.freeListener(mc);
             XAResource xares = resource.getXAResource();
             forceTransactionCompletion(xares);
             mc.destroy();

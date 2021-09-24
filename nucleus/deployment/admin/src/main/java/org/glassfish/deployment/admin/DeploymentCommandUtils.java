@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -63,8 +64,6 @@ public class DeploymentCommandUtils {
     final static String SERVERS_RESOURCE_NAME = "domain/servers/server";
 
     final private static String COPY_IN_PLACE_ARCHIVE_PROP_NAME = "copy.inplace.archive";
-
-    private static final List<String> LIST_CONTAINING_DOMAIN = new ArrayList<String>(Arrays.asList(DeploymentUtils.DOMAIN_TARGET_NAME));
 
     /**
      * Replicates an enable or disable command to all instances in the cluster

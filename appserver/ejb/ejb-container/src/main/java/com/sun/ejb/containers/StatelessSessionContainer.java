@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -92,8 +93,6 @@ public class StatelessSessionContainer
     // Data members for Remote business view. Any objects representing the
     // Remote business interface are not subtypes of EJBObject.
     private EJBObjectImpl theRemoteBusinessObjectImpl = null;
-    private Map<String, java.rmi.Remote> theRemoteBusinessStubs =
-        new HashMap<String, java.rmi.Remote>();
 
     protected AbstractPool pool;
 
@@ -191,8 +190,6 @@ public class StatelessSessionContainer
                         remoteBusinessIntfInfo.values()) {
                     java.rmi.Remote stub = next.referenceFactory.
                         createRemoteReference(statelessInstanceKey);
-                    theRemoteBusinessStubs.put
-                        (next.generatedRemoteIntf.getName(), stub);
                     theRemoteBusinessObjectImpl.setStub
                         (next.generatedRemoteIntf.getName(), stub);
                 }

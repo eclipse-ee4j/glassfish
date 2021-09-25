@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -65,7 +66,6 @@ public class FlashlightProbeProviderFactory implements ProbeProviderFactory, Pos
 
     private List<ProbeProviderEventListener> listeners = new ArrayList<ProbeProviderEventListener>();
 
-    private final static Set<FlashlightProbeProvider> allProbeProviders = new HashSet<FlashlightProbeProvider>();
     private static final Logger logger = FlashlightLoggerInfo.getLogger();
     private static final ResourceBundle rb = logger.getResourceBundle();
 
@@ -565,7 +565,6 @@ public class FlashlightProbeProviderFactory implements ProbeProviderFactory, Pos
             return;
 
         handleDTrace(flProvider);
-        allProbeProviders.add(flProvider);
         ProbeProviderRegistry.getInstance().registerProbeProvider(
             flProvider, providerClazz);
         if (logger.isLoggable(Level.FINE))

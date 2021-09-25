@@ -53,6 +53,7 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>**/glassfish-version.properties</include>
+                    <include>**/README.txt</include>
                 </includes>
             </resource>
             <resource>
@@ -60,6 +61,7 @@
                 <filtering>false</filtering>
                 <excludes>
                     <exclude>**/glassfish-version.properties</exclude>
+                    <exclude>**/README.txt</exclude>
                 </excludes>
             </resource>
         </resources>

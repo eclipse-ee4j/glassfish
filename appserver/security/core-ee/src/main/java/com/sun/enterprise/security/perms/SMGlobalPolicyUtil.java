@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -117,17 +118,6 @@ public class SMGlobalPolicyUtil {
     public static final String EAR_TYPE_CODESOURCE = "file:/module/Ear";
 
     public static final String EAR_CLASS_LOADER = "org.glassfish.javaee.full.deployment.EarClassLoader";
-
-    // map recording the 'Java EE component type' to its code source URL
-    private static final Map<CommponentType, String> CompTypeToCodeBaseMap = new HashMap<>();
-
-    static {
-        CompTypeToCodeBaseMap.put(CommponentType.ejb, EJB_TYPE_CODESOURCE);
-        CompTypeToCodeBaseMap.put(CommponentType.war, WEB_TYPE_CODESOURCE);
-        CompTypeToCodeBaseMap.put(CommponentType.rar, RAR_TYPE_CODESOURCE);
-        CompTypeToCodeBaseMap.put(CommponentType.car, CLIENT_TYPE_CODESOURCE);
-        CompTypeToCodeBaseMap.put(CommponentType.ear, EAR_TYPE_CODESOURCE);
-    }
 
     // map recording the 'Java EE component type' to its EE granted permissions
     private static final Map<CommponentType, PermissionCollection> compTypeToEEGarntsMap = new HashMap<>();

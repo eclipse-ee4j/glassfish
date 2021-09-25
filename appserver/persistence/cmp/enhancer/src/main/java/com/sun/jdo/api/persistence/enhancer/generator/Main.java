@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -346,15 +347,6 @@ public final class Main extends Assertion {
         final int n = (fieldNames != null ? fieldNames.length : 0);
 
         // write method clone() for enhancer testing purpose
-        final ArrayList list = new ArrayList();
-        for (int i = 0; i < n; i++) {
-            final String fieldName = (String)fieldNames[i];
-            final int access = meta.getFieldModifiers(className, fieldName);
-            if ((access & Modifier.STATIC) == 0) {
-                list.add(fieldName);
-            }
-        }
-
         writer.addMethod(
             "clone",
             Modifier.PUBLIC,

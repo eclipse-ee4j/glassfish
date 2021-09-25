@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -455,8 +456,6 @@ public class ApplicationHandlers {
         List standalone = TargetUtil.getStandaloneInstances();
         standalone.add("server");
 
-        Map attrs = new HashMap();
-        attrs.put("id", appName);
         List<String> associatedTargets = DeployUtil.getApplicationTarget(appName, "application-ref");
         for(String newTarget :  selectedTargets){
             if (associatedTargets.contains(newTarget)){

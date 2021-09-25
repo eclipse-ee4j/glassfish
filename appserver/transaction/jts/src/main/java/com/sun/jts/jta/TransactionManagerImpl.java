@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -69,10 +70,6 @@ public class TransactionManagerImpl implements TransactionManager {
      */
     // private Hashtable transactionStates;
 
-    /**
-     * mapping between CosTransaction status -> JTA status
-     */
-    static private HashMap statusMap;
     static private int[] directLookup;
     static final int maxStatus;
 
@@ -117,12 +114,9 @@ public class TransactionManagerImpl implements TransactionManager {
         jakarta.transaction.Status.STATUS_ROLLING_BACK
     };
 
-    // static block to initialize statusMap
     static {
-        statusMap = new HashMap();
         int calcMaxStatus = 0;
         for (int i=0; i<CosTransactionStatus.length; i++) {
-            statusMap.put(CosTransactionStatus[i], JTAStatus[i]);
             calcMaxStatus = Math.max(calcMaxStatus, CosTransactionStatus[i].value());
         }
         maxStatus = calcMaxStatus;

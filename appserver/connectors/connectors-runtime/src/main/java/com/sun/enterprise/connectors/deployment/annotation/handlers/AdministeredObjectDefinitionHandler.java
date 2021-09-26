@@ -121,7 +121,7 @@ public class AdministeredObjectDefinitionHandler extends AbstractResourceHandler
             if (!(context instanceof WebBundleContext || context instanceof WebComponentsContext
                     || context instanceof WebComponentContext )) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Ignoring @AdministeredObjectDefinition annotation processing as the class is" +
+                    logger.log(Level.FINEST, "Ignoring @AdministeredObjectDefinition annotation processing as the class is " +
                             "an Web class and context is not one of WebContext");
                 }
                 return false;

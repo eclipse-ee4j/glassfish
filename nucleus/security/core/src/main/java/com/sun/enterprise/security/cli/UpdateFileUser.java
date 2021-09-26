@@ -185,7 +185,7 @@ public class UpdateFileUser implements AdminCommand, AdminCommandSecurity.Preaut
         String password = userpassword; // fetchPassword(report);
         if (password == null && groups == null) {
             report.setMessage(localStrings.getLocalString("update.file.user.keyfilenotreadable",
-                "None of password or groups have been specified for update," + "Password for user {0} has to be specified"
+                "None of password or groups have been specified for update, " + "Password for user {0} has to be specified "
                     + "through AS_ADMIN_USERPASSWORD property in the file specified " + "in --passwordfile option",
                 userName));
             report.setActionExitCode(ActionReport.ExitCode.FAILURE);

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -731,9 +732,6 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
         // all containers that have recognized parts of the application being deployed
         // have now been successfully started. Start the deployment process.
-
-        List<ApplicationMetaDataProvider> providers = new LinkedList<ApplicationMetaDataProvider>();
-        providers.addAll(habitat.<ApplicationMetaDataProvider>getAllServices(ApplicationMetaDataProvider.class));
 
         List<EngineInfo> sortedEngineInfos = new ArrayList<EngineInfo>();
 

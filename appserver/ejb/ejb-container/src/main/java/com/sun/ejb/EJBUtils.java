@@ -455,9 +455,10 @@ public class EJBUtils {
         }
 
         if (System.getSecurityManager() == null) {
-            return Wrapper._generate(generator.getAnchorClass(), props);
+            return Wrapper._generate(loader, generator.getAnchorClass().getProtectionDomain(), props);
         }
-        PrivilegedAction<Class<?>> action = () -> Wrapper._generate(generator.getAnchorClass(), props);
+        PrivilegedAction<Class<?>> action = () ->
+            Wrapper._generate(loader, generator.getAnchorClass().getProtectionDomain(), props);
         return AccessController.doPrivileged(action);
     }
 

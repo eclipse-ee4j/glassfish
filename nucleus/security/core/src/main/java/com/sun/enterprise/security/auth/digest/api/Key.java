@@ -23,9 +23,7 @@ package com.sun.enterprise.security.auth.digest.api;
  * @author K.Venugopal@sun.com
  */
 public interface Key {
-
-    public java.lang.String getRealmName();
-
-    public java.lang.String getUsername();
+    String getRealmName();
+    String getUsername();
 
 }

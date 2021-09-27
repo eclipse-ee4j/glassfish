@@ -1,5 +1,16 @@
 # Eclipse GlassFish Downloads
 
+## Eclipse GlassFish 6.2.1
+
+GlassFish 6.2.1 now has much improved support for JDK 17, and includes new component Eclipse Exousia, the standalone Jakarta Authorization implementation. GlassFish 6.2.1 compiles with JDK 11 to JDK 17.
+
+For more details on Jakarta EE 9.1, please see the [Jakarte EE Platform Specification Project](https://eclipse-ee4j.github.io/jakartaee-platform/).
+
+Other than bug-fixes, the major change is support for JDK 17.
+
+
+* [Eclipse GlassFish 6.2.1, Jakarta EE Platform, 9.1](https://github.com/eclipse-ee4j/glassfish/releases/download/6.2.1/glassfish-6.2.1.zip)
+
 ## Eclipse GlassFish 6.1
 
 Release Candidate build of Eclipse GlassFish is available for trial usage. This release will be certified compatible with

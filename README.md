@@ -106,3 +106,13 @@ Stopping Eclipse GlassFish
 ------------------
 
 `glassfish6/bin/asadmin stop-domain`
+
+Professional Services and Enterprise Support
+---------------------
+
+This section is dedicated to companies offering products and services around Eclipse GlassFish.
+
+The Eclipse GlassFish project does not endorse or recommend any of the companies on this page. We love all our supporters equally.
+
+Professional Services and Enterprise support are available through following companies:
+- [ManageCat](https://www.managecat.com/services-and-support/eclipse-glassfish-enterprise-support).

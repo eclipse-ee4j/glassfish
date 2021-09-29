@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -66,7 +67,7 @@ import jakarta.inject.Named;
 @Service(name = "delete-file-user")
 @PerLookup
 @I18n("delete.file.user")
-@ExecuteOn({ RuntimeType.ALL })
+@ExecuteOn({ RuntimeType.DAS, RuntimeType.INSTANCE })
 @TargetType({ CommandTarget.DAS, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CONFIG })
 @RestEndpoints({
     @RestEndpoint(configBean = AuthRealm.class, opType = RestEndpoint.OpType.DELETE, path = "delete-user", description = "Delete", params = {

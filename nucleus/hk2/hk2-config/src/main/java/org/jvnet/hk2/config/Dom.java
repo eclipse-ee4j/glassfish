@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -615,19 +616,32 @@ public class Dom extends AbstractActiveDescriptor implements InvocationHandler, 
      */
     public synchronized void removeChild(final Dom reference) {
         ListIterator<Child> itr = children.listIterator();
-        while(itr.hasNext()) {
+        while (itr.hasNext()) {
             Child child = itr.next();
             if (child instanceof NodeChild) {
                 NodeChild nc = (NodeChild) child;
-                if(nc.dom==reference) {
+                if (nc.dom == reference) {
+                    nc.dom.removeNestedChildren();
                     itr.remove();
                     reference.release();
                     return;
                 }
             }
         }
-        throw new IllegalArgumentException(reference+" is not a valid child of "+this+". Children="+children);
+        throw new IllegalArgumentException(reference + " is not a valid child of " + this + ". Children=" + children);
 
+    }
+
+    private synchronized void removeNestedChildren() {
+        ListIterator<Child> itr = children.listIterator();
+        while (itr.hasNext()) {
+            Child child = itr.next();
+            if (child instanceof NodeChild) {
+                NodeChild nc = (NodeChild) child;
+                nc.dom.removeNestedChildren();
+                nc.dom.release();
+            }
+        }
     }
 
     public synchronized boolean addLeafElement(String xmlName, String value) {

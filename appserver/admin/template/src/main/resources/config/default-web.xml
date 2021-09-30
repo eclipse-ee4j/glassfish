@@ -312,7 +312,7 @@
         jspcaching-connector.jar
         web-glue.jar
         hibernate-validator.jar
-        validation.jar
+        jakarta.validation-api.jar
         jakarta.ejb.jar
         jakarta.jms-api.jar
         jakarta.activation.jar

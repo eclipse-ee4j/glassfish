@@ -22,7 +22,7 @@
   <parent>
     <groupId>org.glassfish.soteria.test</groupId>
     <artifactId>soteria</artifactId>
-    <version>6.2.2</version>
+    <version>6.2.3-SNAPSHOT</version>
   </parent>
 
         <artifactId>app-no-application-caller-principal</artifactId>
@@ -39,7 +39,7 @@
     <dependency>
       <groupId>org.glassfish.soteria.test</groupId>
       <artifactId>common</artifactId>
-      <version>6.2.2</version>
+      <version>6.2.3-SNAPSHOT</version>
       <scope>test</scope>
       </dependency>
   </dependencies>

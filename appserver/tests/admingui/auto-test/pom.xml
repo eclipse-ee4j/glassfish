@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.tests.admingui</groupId>
         <artifactId>admingui</artifactId>
-        <version>6.2.2-SNAPSHOT</version>
+        <version>6.2.2</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>console-auto-tests</artifactId>

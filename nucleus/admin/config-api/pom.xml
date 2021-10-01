@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.admin</groupId>
         <artifactId>nucleus-admin</artifactId>
-        <version>6.2.2-SNAPSHOT</version>
+        <version>6.2.2</version>
     </parent>
 
     <artifactId>config-api</artifactId>

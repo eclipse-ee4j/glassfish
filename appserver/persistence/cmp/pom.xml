@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.persistence</groupId>
         <artifactId>persistence</artifactId>
-        <version>6.2.2-SNAPSHOT</version>
+        <version>6.2.2</version>
     </parent>
 
     <groupId>org.glassfish.main.persistence.cmp</groupId>

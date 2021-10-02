@@ -9,6 +9,15 @@ sponsored by the Eclipse Foundation.
 
 ## Latest News
 
+## October 1, 2021 -- Eclipse GlassFish 6.2.2 Available
+
+We are pleased to announce the release of Eclipse GlassFish 6.2.2. This release provides implementations
+of the Jakarta EE 9.1 Platform and Web Profile specifications. Download links are available from the [GlassFish Download page](https://eclipse-ee4j.github.io/glassfish/download). Eclipse GlassFish 6.1 implements the Jakarta EE 9.1 specification ([Jakarta EE 9.1 Platform](https://jakarta.ee/specifications/platform/9.1/), [Jakarta EE 9 Web Profile](https://jakarta.ee/specifications/webprofile/9.1/)). GlassFish 6.2.2 brings GlassFish embedded back to live, and contains an import fix for a memory leak. A major behind the scenes accomplishment is that all active tests now use JUnit 5.
+
+GlassFish 6.2.2 compiles with JDK 11 to JDK 17 and runs on JDK 11 to JDK 17. GlassFish 6.2.2 has been briefly tested with JDK 18-EA releases.
+
+Note this release requires at least JDK 11. 
+
 ## August 28, 2021 -- Eclipse GlassFish 6.2.1 Available
 
 We are happy to announce the release of Eclipse GlassFish 6.2.1. This release provides implementations

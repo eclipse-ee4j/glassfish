@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -30,19 +31,31 @@ import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
-public class AsmSerializableBeanGenerator
-implements Opcodes {
+public class AsmSerializableBeanGenerator implements Opcodes {
 
     private static final int INTF_FLAGS = ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES;
 
-    private byte[] classData = null;
+    private byte[] classData;
+    private Class loadedClass;
+    private final ClassLoader loader;
 
-    private Class loadedClass = null;
-    private ClassLoader loader;
+    private final Class baseClass;
 
-    private Class baseClass;
+    private final String subclassName;
 
-    private String subclassName;
+
+    /**
+     * Adds _Serializable to the original name.
+     *
+     * @param beanClass full class name
+     */
+    public static String getGeneratedSerializableClassName(String beanClass) {
+        String packageName = Generator.getPackageName(beanClass);
+        String simpleName = Generator.getBaseName(beanClass);
+        String generatedSimpleName = "_" + simpleName + "_Serializable";
+        return packageName == null ? generatedSimpleName : packageName + "." + generatedSimpleName;
+    }
+
 
     public AsmSerializableBeanGenerator(ClassLoader loader, Class baseClass, String serializableSubclassName) {
         this.loader = loader;
@@ -51,9 +64,7 @@ implements Opcodes {
     }
 
     public String getSerializableSubclassName() {
-
         return subclassName;
-
     }
 
     public Class generateSerializableSubclass()
@@ -132,57 +143,13 @@ implements Opcodes {
         cv.visitInsn(RETURN);
         cv.visitMaxs(2, 2);
 
-
-        /**
-        Type[] eTypes = new Type[] { Type.getType(java.io.IOException.class)};
-
-        Method writeObjMethod = Method.getMethod("void writeObject (java.io.ObjectOutputStream)");
-        GeneratorAdapter writeObjMethodAdapter =
-                new GeneratorAdapter(ACC_PRIVATE, writeObjMethod, null, eTypes, tv);
-
-        Type ejbUtilsType = Type.getType(com.sun.ejb.EJBUtils.class);
-        Method ejbUtilsWrite = Method.getMethod
-                ("void serializeObjectFields (java.lang.Class, java.lang.Object, java.lang.Object)");
-
-
-        writeObjMethodAdapter.push(Type.getType(ejbClass));
-        writeObjMethodAdapter.loadThis();
-        writeObjMethodAdapter.loadArg(0);
-
-        writeObjMethodAdapter.invokeStatic( ejbUtilsType, ejbUtilsWrite);
-
-        writeObjMethodAdapter.endMethod();
-
-
-        //
-        eTypes = new Type[] { Type.getType(java.io.IOException.class),
-                              Type.getType(java.lang.ClassNotFoundException.class)};
-
-        Method readObjMethod = Method.getMethod("void readObject (java.io.ObjectInputStream)");
-        GeneratorAdapter readObjMethodAdapter =
-                new GeneratorAdapter(ACC_PRIVATE, readObjMethod, null, eTypes, tv);
-
-
-        Method ejbUtilsRead = Method.getMethod
-                ("void deserializeObjectFields (java.lang.Class, java.lang.Object, java.lang.Object)");
-
-
-        readObjMethodAdapter.push(Type.getType(ejbClass));
-        readObjMethodAdapter.loadThis();
-        readObjMethodAdapter.loadArg(0);
-
-        readObjMethodAdapter.invokeStatic( ejbUtilsType, ejbUtilsRead);
-
-        readObjMethodAdapter.endMethod();
-
-        **/
-
         tv.visitEnd();
 
         classData = cw.toByteArray();
 
         loadedClass = (Class) java.security.AccessController.doPrivileged(
                         new java.security.PrivilegedAction() {
+                            @Override
                             public java.lang.Object run() {
                                 return makeClass(subclassName, classData, baseClass.getProtectionDomain(), loader);
                             }
@@ -196,6 +163,7 @@ implements Opcodes {
     // using reflection.  This requires the supressAccessChecks permission.
     private static final java.lang.reflect.Method defineClassMethod = AccessController.doPrivileged(
         new PrivilegedAction<java.lang.reflect.Method>() {
+            @Override
             public java.lang.reflect.Method run() {
                 try {
                     java.lang.reflect.Method meth = ClassLoader.class.getDeclaredMethod(

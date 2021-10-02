@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,38 +17,6 @@
 
 package com.sun.ejb.containers;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.NotSerializableException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-import java.util.TimerTask;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import jakarta.ejb.CreateException;
-import jakarta.ejb.EJBException;
-import jakarta.ejb.EJBObject;
-import jakarta.ejb.NoSuchObjectLocalException;
-import jakarta.ejb.RemoveException;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.PersistenceContextType;
-import jakarta.persistence.SynchronizationType;
-import jakarta.transaction.Status;
-import jakarta.transaction.SystemException;
-import jakarta.transaction.Transaction;
-
 import com.sun.appserv.util.cache.CacheListener;
 import com.sun.ejb.ComponentContext;
 import com.sun.ejb.Container;
@@ -57,6 +26,7 @@ import com.sun.ejb.InvocationInfo;
 import com.sun.ejb.MethodLockInfo;
 import com.sun.ejb.base.stats.HAStatefulSessionStoreMonitor;
 import com.sun.ejb.base.stats.StatefulSessionStoreMonitor;
+import com.sun.ejb.containers.EJBContextImpl.BeanState;
 import com.sun.ejb.containers.util.cache.LruSessionCache;
 import com.sun.ejb.monitoring.probes.EjbCacheProbeProvider;
 import com.sun.ejb.monitoring.stats.EjbCacheStatsProvider;
@@ -75,10 +45,51 @@ import com.sun.enterprise.container.common.spi.util.IndirectlySerializable;
 import com.sun.enterprise.container.common.spi.util.SerializableObjectFactory;
 import com.sun.enterprise.deployment.EntityManagerReferenceDescriptor;
 import com.sun.enterprise.deployment.LifecycleCallbackDescriptor;
+import com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
 import com.sun.enterprise.deployment.MethodDescriptor;
 import com.sun.enterprise.security.SecurityManager;
 import com.sun.enterprise.transaction.api.JavaEETransaction;
 import com.sun.enterprise.util.Utility;
+
+import jakarta.ejb.ConcurrentAccessException;
+import jakarta.ejb.ConcurrentAccessTimeoutException;
+import jakarta.ejb.CreateException;
+import jakarta.ejb.EJBException;
+import jakarta.ejb.EJBObject;
+import jakarta.ejb.IllegalLoopbackException;
+import jakarta.ejb.NoSuchObjectLocalException;
+import jakarta.ejb.RemoveException;
+import jakarta.ejb.SessionBean;
+import jakarta.ejb.SessionSynchronization;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContextType;
+import jakarta.persistence.SynchronizationType;
+import jakarta.transaction.Status;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.Transaction;
+
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.NotSerializableException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
@@ -92,16 +103,8 @@ import org.glassfish.ha.store.api.BackingStoreException;
 import org.glassfish.ha.store.util.SimpleMetadata;
 import org.glassfish.logging.annotation.LogMessageInfo;
 
-import static com.sun.ejb.containers.EJBContextImpl.BeanState;
-import static com.sun.enterprise.deployment.LifecycleCallbackDescriptor.CallbackType;
-import jakarta.ejb.ConcurrentAccessException;
-import jakarta.ejb.ConcurrentAccessTimeoutException;
-import jakarta.ejb.IllegalLoopbackException;
-import jakarta.ejb.SessionBean;
-import jakarta.ejb.SessionSynchronization;
-import java.util.HashMap;
+import static com.sun.ejb.codegen.AsmSerializableBeanGenerator.getGeneratedSerializableClassName;
 import static jakarta.persistence.SynchronizationType.SYNCHRONIZED;
-
 /**
  * This class provides container functionality specific to stateful
  * SessionBeans.
@@ -2675,7 +2678,7 @@ public final class StatefulSessionContainer
     private byte[] serializeContext(SessionContextImpl ctx) throws IOException {
         Object ejb = ctx.getEJB();
         if (!(ejb instanceof Serializable ||
-                ejb.getClass().getName().equals(EJBUtils.getGeneratedSerializableClassName(ejbName)))) {
+                ejb.getClass().getName().equals(getGeneratedSerializableClassName(ejbName)))) {
 
             ctx.setEJB(null);
             ctx.setEJB(new SerializableEJB(ejb));

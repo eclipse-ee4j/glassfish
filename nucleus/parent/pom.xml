@@ -153,8 +153,11 @@
         <replacer.plugin.version>1.5.3</replacer.plugin.version>
         <javaee.version.old>8</javaee.version.old>
         <javaee.version.new>9</javaee.version.new>
+
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
+        <junit.version>5.8.1</junit.version>
+        <jmh.version>1.33</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
         <maven.test.jvmoptions.add-opens>--add-opens java.base/java.lang=ALL-UNNAMED</maven.test.jvmoptions.add-opens>
@@ -434,16 +437,17 @@
                 <artifactId>pfl-tf-tools</artifactId>
                 <version>${pfl.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
-                <version>5.7.2</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-params</artifactId>
-                <version>5.7.2</version>
+                <version>${junit.version}</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -464,6 +468,19 @@
                 <version>${jmockit.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-core</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.openjdk.jmh</groupId>
+                <artifactId>jmh-generator-annprocess</artifactId>
+                <version>${jmh.version}</version>
+                <scope>test</scope>
+            </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,14 +17,18 @@
 
 package com.sun.ejb.containers;
 
+import com.sun.ejb.Container;
+import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
+import com.sun.enterprise.deployment.EjbInterceptor;
+
+import jakarta.ejb.EJBException;
+import jakarta.ejb.NoSuchEJBException;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.Proxy;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.logging.Level;
-
-import jakarta.ejb.EJBException;
-import jakarta.ejb.NoSuchEJBException;
 
 import org.glassfish.ejb.LogFacade;
 import org.glassfish.ejb.api.EjbContainerServices;
@@ -31,10 +36,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbDescriptor;
 import org.glassfish.ejb.deployment.descriptor.EjbSessionDescriptor;
 import org.jvnet.hk2.annotations.Service;
 
-import com.sun.ejb.Container;
-import com.sun.ejb.EJBUtils;
-import com.sun.ejb.spi.container.OptionalLocalInterfaceProvider;
-import com.sun.enterprise.deployment.EjbInterceptor;
+import static com.sun.ejb.codegen.AsmSerializableBeanGenerator.getGeneratedSerializableClassName;
 
 /**
  *
@@ -244,7 +246,7 @@ public class EjbContainerServicesImpl implements EjbContainerServices {
 
         for(String next : ejbManagedObjectClassNames) {
             // Add the serializable sub-class version of each name as well
-            serializableClassNames.add(EJBUtils.getGeneratedSerializableClassName(next));
+            serializableClassNames.add(getGeneratedSerializableClassName(next));
         }
 
         boolean isEjbManagedObject = ejbManagedObjectClassNames.contains(className) ||

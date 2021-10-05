@@ -86,7 +86,7 @@
             <!command
                 setAttribute(key="click" value="$this{component}");
                 setAttribute(key="filterValue" value="#{click.selected}");
-                gf.redirect(page="#{request.contextPath}/#{pageSession.listPageLink}?filterValue=${filterValue}" );
+                gf.redirect(page="#{pageSession.listPageLink}?filterValue=${filterValue}" );
             />
         </sun:dropDown>
 

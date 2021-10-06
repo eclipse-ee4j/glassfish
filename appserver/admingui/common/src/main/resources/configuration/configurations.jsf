@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -120,16 +121,18 @@
                         setAttribute(key="status" value="RUNNING");
                     }
 
+                    gf.getClusterNameForInstance(instanceName="#{instance}"  clusterName="#{requestScope.clusterName}");
+                    urlencode(value="#{requestScope.clusterName}" encoding="UTF-8" result="#{requestScope.encodedClusterName}");
                     if (!#{requestScope.isAdminServer}){
                         setAttribute(key="status" value="#{requestScope.statusMap['${instance}']}");
 
                         gf.containedIn(list="#{pageSession.standaloneList}" testStr="#{instance}" contain="#{requestScope.isStandalone}" );
                         if (#{requestScope.isStandalone}){
-                            setAttribute(key="iurl" value="#{request.contextPath}/cluster/standalone/standaloneInstanceGeneral.jsf?instanceName=#{instance}");
+                            setAttribute(key="iurl" value="#{request.contextPath}/cluster/standalone/standaloneInstanceGeneral.jsf?clusterName=#{requestScope.encodedClusterName}&instanceName=#{instance}");
                         }
 
                         if ( !#{requestScope.isStandalone}){
-                            setAttribute(key="iurl" value="#{request.contextPath}/cluster/cluster/clusterInstanceEdit.jsf?instanceName=#{instance}" );
+                            setAttribute(key="iurl" value="#{request.contextPath}/cluster/cluster/clusterInstanceEdit.jsf?clusterName=#{requestScope.encodedClusterName}&instanceName=#{instance}" );
                         }
                     }
 

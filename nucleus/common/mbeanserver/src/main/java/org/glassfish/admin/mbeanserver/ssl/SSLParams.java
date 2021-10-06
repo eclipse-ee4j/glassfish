@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -61,6 +62,9 @@ public class SSLParams {
     private Boolean ssl3Enabled = true;
     private String ssl3TlsCiphers;
     private Boolean tlsEnabled=true;
+    private Boolean tls11Enabled=true;
+    private Boolean tls12Enabled=true;
+    private Boolean tls13Enabled=true;
     private Boolean tlsRollBackEnabled=false;
 
 
@@ -295,10 +299,33 @@ public class SSLParams {
         return tlsEnabled;
     }
 
+    public Boolean getTls11Enabled() {
+        return tls11Enabled;
+    }
+
+    public Boolean getTls12Enabled() {
+        return tls12Enabled;
+    }
+
+    public Boolean getTls13Enabled() {
+        return tls13Enabled;
+    }
+
     public void setTlsEnabled(String tlsEnabled) {
         this.tlsEnabled = Boolean.parseBoolean(tlsEnabled);
     }
 
+    public void setTls11Enabled(String tls11Enabled) {
+        this.tls11Enabled = Boolean.parseBoolean(tls11Enabled);
+    }
+
+    public void setTls12Enabled(String tls12Enabled) {
+        this.tls12Enabled = Boolean.parseBoolean(tls12Enabled);
+    }
+
+    public void setTls13Enabled(String tls13Enabled) {
+        this.tls13Enabled = Boolean.parseBoolean(tls13Enabled);
+    }
 
     /**
      * Determines whether TLS rollback is enabled. TLS rollback should be enabled for Microsoft Internet Explorer 5.0

@@ -64,32 +64,24 @@
         </dependency>
     </dependencies>
 
-    <build><!--
-         In this module, all the files are statically stored as-is in the Subversion repository,
-         so the simple copying from src/main/resources to target/classes that Maven does by default
-         is suffice.
-
-         But in more complex scenario, one can use maven-antrun-extended-plugin and use a series of Ant tasks
-         to perform processing on resources, such as token replacement, file generation, pre-processing, etc.
-
-         The following section shows how you can do this.
-       -->
+    <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-                <artifactId>maven-antrun-extended-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <tasks>
-                                <!-- place the ejb timer app jar into the location -->
-                                <resolveArtifact artifactId="ejb-timer-service-app" tofile="target/classes/glassfish/lib/install/applications/ejb-timer-service-app.war" />
-                            </tasks>
-                        </configuration>
+                        <id>war</id>
                         <goals>
-                            <goal>run</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <outputDirectory>${projecty.build.outputDirectory}/glassfish/lib/install/applications</outputDirectory>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeScope>compile</includeScope>
+                            <includeTypes>war</includeTypes>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

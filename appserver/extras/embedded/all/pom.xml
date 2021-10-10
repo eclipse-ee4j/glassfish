@@ -1624,13 +1624,6 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>sun-as-jsr88-dm-frag</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 
     <properties>
@@ -1669,8 +1662,6 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${projecty.build.outputDirectory}</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>true</excludeTransitive>
                             <includeScope>compile</includeScope>
                             <includeScope>runtime</includeScope>
@@ -1715,8 +1706,6 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${artifact-collection.directory}</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>true</excludeTransitive>
                             <includeTypes>zip</includeTypes>
                             <includeArtifactIds>mq-distribution</includeArtifactIds>

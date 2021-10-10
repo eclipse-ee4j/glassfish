@@ -54,18 +54,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>sun-as-jsr88-dm</artifactId>
-            <version>${project.version}</version>
-            <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>*</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>org.glassfish.main.batch</groupId>
             <artifactId>glassfish-batch-connector</artifactId>
             <version>${project.version}</version>

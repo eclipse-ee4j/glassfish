@@ -52,30 +52,44 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-                <artifactId>maven-antrun-extended-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>process-classes</phase>
+                        <id>unzip-mq</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
-                            <tasks>
-                                <resolveArtifact artifactId="mq-distribution" property="mq-distribution.zip" />
-                                <mkdir dir="target/tmp" />
-                                <mkdir dir="target/classes/glassfish/lib/install/applications/jmsra" />
-                                <unzip src="${mq-distribution.zip}" dest="target/tmp">
-                                    <patternset>
-                                        <include name="mq/lib/imqjmsra.rar" />
-                                    </patternset>
-                                </unzip>
-                                <unzip
-                                    src="target/tmp/mq/lib/imqjmsra.rar"
-                                    dest="target/classes/glassfish/lib/install/applications/jmsra">
-                                </unzip>
-                            </tasks>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeTypes>zip</includeTypes>
+                            <includeArtifactIds>mq-distribution</includeArtifactIds>
+                            <includes>mq/lib/imqjmsra.rar</includes>
+                            <fileMappers>
+                                <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
+                            </fileMappers>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>unzip-rar</id>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <target>
+                                <unzip
+                                    src="${project.build.directory}/imqjmsra.rar"
+                                    dest="${project.build.outputDirectory}/glassfish/lib/install/applications/jmsra"
+                                />
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

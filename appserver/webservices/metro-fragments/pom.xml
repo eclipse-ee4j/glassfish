@@ -79,20 +79,21 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-                <artifactId>maven-antrun-extended-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <tasks>
-                                <!-- place the ejb timer app jar into the location -->
-                                <resolveArtifact artifactId="wstx-services" tofile="target/classes/glassfish/lib/install/applications/metro/wstx-services.war" />
-                            </tasks>
-                        </configuration>
+                        <id>war</id>
                         <goals>
-                            <goal>run</goal>
+                            <goal>copy-dependencies</goal>
                         </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <outputDirectory>${projecty.build.outputDirectory}/glassfish/lib/install/applications/metro</outputDirectory>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeScope>compile</includeScope>
+                            <includeTypes>war</includeTypes>
+                            <stripVersion>true</stripVersion>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

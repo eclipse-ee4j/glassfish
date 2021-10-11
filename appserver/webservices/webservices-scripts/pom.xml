@@ -28,10 +28,6 @@
 
     <artifactId>webservices-scripts</artifactId>
     <!--
-        The comments below were copied from the appclient-scripts module.
-        They are very helpful so it seemed like a good idea to leave them here also.
-    -->
-    <!--
       This packaging specifies that it's a package that contains files to be added to
       the distribution.
 
@@ -53,20 +49,5 @@
       the transitive dependency handling in Maven.
     -->
     <packaging>distribution-fragment</packaging>
-
     <name>GlassFish webservices scripts</name>
-    <!--
-
-    <packaging>pom</packaging>
--->
-        <!--
-         In this module, all the files are statically stored as-is in the Subversion repository,
-         so the simple copying from src/main/resources to target/classes that Maven does by default
-         is suffice.
-
-         But in more complex scenario, one can use maven-antrun-extended-plugin and use a series of Ant tasks
-         to perform processing on resources, such as token replacement, file generation, pre-processing, etc.
-
-         The following section shows how you can do this.
-       -->
 </project>

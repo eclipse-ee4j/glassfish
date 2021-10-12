@@ -51,9 +51,7 @@
     <packaging>distribution-fragment</packaging>
 
     <name>GlassFish Metro Related Fragments</name>
-    <description>
-        GlassFish Metro Related Fragments such as scripts, applications etc.
-    </description>
+    <description>GlassFish Metro Related Fragments such as scripts, applications etc.</description>
 
     <developers>
         <developer>

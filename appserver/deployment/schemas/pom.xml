@@ -63,6 +63,7 @@
                         <goals>
                             <goal>unpack</goal>
                         </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
                             <artifactItems>
                                 <artifactItem>

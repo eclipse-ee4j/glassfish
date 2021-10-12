@@ -1719,7 +1719,7 @@
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>jdbcra-cp.rar</id>
+                        <id>rars</id>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -1727,61 +1727,9 @@
                         <configuration>
                             <descriptors>
                                 <descriptor>src/assembly/jdbcra-cp.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jdbcra-ds.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/assembly/jdbcra-ds.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jdbcra-dm.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
                                 <descriptor>src/assembly/jdbcra-dm.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jdbcra-xa.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-ds.xml</descriptor>
                                 <descriptor>src/assembly/jdbcra-xa.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jmsra.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
                                 <descriptor>src/assembly/jmsra.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>

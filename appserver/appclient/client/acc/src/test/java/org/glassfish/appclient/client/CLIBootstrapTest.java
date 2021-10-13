@@ -26,6 +26,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+import com.sun.enterprise.util.OS;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
+
 /**
  *
  * @author Tim Quinn
@@ -81,4 +86,28 @@ public class CLIBootstrapTest {
         );
     }
 
+    @Test
+    public void testEscapingOfEscapedCommandLineArguments() throws Throwable {
+        Class CommandLineArgumentClass = Class.forName("org.glassfish.appclient.client.CLIBootstrap$CommandLineArgument");
+        Constructor constructor = CommandLineArgumentClass.getDeclaredConstructor(CLIBootstrap.class, String.class, int.class);
+        constructor.setAccessible(true);
+        Object commandLineArgument = constructor.newInstance(new CLIBootstrap(), ".*", Pattern.DOTALL);
+        Method formatMethod = CommandLineArgumentClass.getDeclaredMethod("format", StringBuilder.class, boolean.class, String.class);
+
+        assertAll(() -> {
+            String expect = "\"test\" \"append\"";
+            StringBuilder preCommandLineArgs = new StringBuilder("\"test\"");
+            String appendArg = "append";
+            StringBuilder actual = (StringBuilder) formatMethod.invoke(commandLineArgument, preCommandLineArgs, true, appendArg);
+            assertEquals(actual.toString(), expect);
+        }, () -> {
+            if (!OS.isWindows()) {
+                String expect = "\"a\\\\\\\"b\\\\\\$\\`c\\\"\\\\\"";
+                StringBuilder preCommandLineArgs = new StringBuilder("");
+                String appendArg = "a\\\"b\\$`c\"\\";
+                StringBuilder actual = (StringBuilder) formatMethod.invoke(commandLineArgument, preCommandLineArgs, true, appendArg);
+                assertEquals(actual.toString(), expect);
+            }
+        });
+    }
 }

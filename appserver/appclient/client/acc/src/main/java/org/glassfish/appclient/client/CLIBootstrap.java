@@ -100,7 +100,7 @@ public class CLIBootstrap {
         jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions),
         jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings),
         otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions),
-        arguments = new CommandLineElement(".*", Pattern.DOTALL);
+        arguments = new CommandLineArgument(".*", Pattern.DOTALL);
 
     /** Records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
@@ -532,6 +532,27 @@ public class CLIBootstrap {
             commandLine.append((useQuotes ? quoteSuppressTokenSubst(v) : v));
 
             return commandLine;
+        }
+    }
+
+    private class CommandLineArgument extends CommandLineElement {
+        CommandLineArgument(String patternString, int flags) {
+            super(patternString, flags);
+        }
+        @Override
+        StringBuilder format(final StringBuilder commandLine,
+                final boolean useQuotes, final String v) {
+            if (commandLine.length() > 0) {
+                commandLine.append(' ');
+            }
+            commandLine.append((useQuotes ? quoteCommandLineArgument(v) : v));
+            return commandLine;
+        }
+        private String quoteCommandLineArgument(String s) {
+            if(! OS.isWindows()) {
+                s = s.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
+            }
+            return "\"" + s + "\"";
         }
     }
 

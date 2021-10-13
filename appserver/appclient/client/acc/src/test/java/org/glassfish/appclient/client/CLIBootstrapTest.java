@@ -25,6 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import com.sun.enterprise.util.OS;
 import java.lang.reflect.Constructor;
@@ -109,5 +110,27 @@ public class CLIBootstrapTest {
                 assertEquals(actual.toString(), expect);
             }
         });
+    }
+
+    @Test
+    public void testAcceptabilityForEscapedDoubleQuotes() throws Throwable {
+        runTestUsingConvertInputArgsVariable("a\\\"b c\\\"d", new String[] { "a\\\"b", "c\\\"d" });
+    }
+
+    @Test
+    public void testAcceptabilityForQuotedEscapedDoubleQuotes() throws Throwable {
+        runTestUsingConvertInputArgsVariable("\"a \\\" b \\\" c\"", new String[] { "a \\\" b \\\" c" });
+    }
+
+    @Test
+    public void testAcceptabilityForQuotedEmptyStr() throws Throwable {
+        runTestUsingConvertInputArgsVariable("\"\"", new String[] { "" });
+    }
+
+    private void runTestUsingConvertInputArgsVariable( String inputArgs, String[] expect) throws Throwable {
+        Method convertInputArgsVariableMethod = CLIBootstrap.class.getDeclaredMethod("convertInputArgsVariable", String.class);
+        convertInputArgsVariableMethod.setAccessible(true);
+        String[] actual = (String[]) convertInputArgsVariableMethod.invoke(new CLIBootstrap(), inputArgs);
+        assertArrayEquals(actual, expect);
     }
 }

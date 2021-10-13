@@ -190,8 +190,14 @@ public class CLIBootstrap {
         /*
          * The pattern matches a quoted string (double quotes around a string containing no double quote) or a non-quoted string
          * (a string containing no white space or quotes).
+         * Note:
+         * escapedDoubleQuoteRegex matches a double quote following odd number of
+         * backslash as an escaped string.
          */
-        Pattern argPattern = Pattern.compile("\"([^\"]+)\"|([^\"\\s]+)");
+        final String escapedDoubleQuoteRegex = "?:(?<!\\\\)(?:(?:\\\\\\\\)*\\\\)\"";
+        Pattern argPattern = Pattern.compile(
+                "\"((" + escapedDoubleQuoteRegex + "|[^\"])*)\""
+                        + "|((" + escapedDoubleQuoteRegex + "|[^\"\\s])+)");
 
         Matcher matcher = argPattern.matcher(inputArgs);
         List<String> argList = new ArrayList<>();

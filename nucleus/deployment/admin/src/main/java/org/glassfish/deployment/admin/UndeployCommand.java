@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -312,6 +313,8 @@ public class UndeployCommand extends UndeployCommandParameters implements AdminC
             ExtendedDeploymentContext deploymentContext = null;
             try {
                 deploymentContext = deployment.getBuilder(logger, this, report).source(source).build();
+                // Remove old metadata to avoid object leak
+                deploymentContext.getSource().removeArchiveMetaData(DeploymentProperties.COMMAND_PARAMS);
             } catch (IOException e) {
                 logger.log(Level.SEVERE, "Cannot create context for undeployment ", e);
                 report.setMessage(localStrings.getLocalString("undeploy.contextcreation.failed","Cannot create context for undeployment : {0} ", e.getMessage()));

@@ -22,19 +22,29 @@
 
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
-        <artifactId>extras</artifactId>
+        <artifactId>embedded</artifactId>
         <version>6.2.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>embedded</artifactId>
-    <packaging>pom</packaging>
+    <artifactId>tests-embedded</artifactId>
+    <name>GlassFish Embedded Modules - Tests</name>
 
-    <name>GlassFish Embedded modules</name>
-
-    <modules>
-        <module>all</module>
-        <module>nucleus</module>
-        <module>web</module>
-        <module>tests</module>
-    </modules>
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.main.extras</groupId>
+            <artifactId>glassfish-embedded-all</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main</groupId>
+            <artifactId>test-utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+        </dependency>
+    </dependencies>
 </project>

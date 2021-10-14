@@ -38,13 +38,11 @@
             <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc-core</groupId>
             <artifactId>jdbc-core</artifactId>
             <version>${project.parent.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.jdbc.jdbc-ra.jdbc40</groupId>
             <artifactId>jdbc40</artifactId>
             <version>${project.parent.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.jdbc</groupId>
@@ -53,44 +51,146 @@
         </dependency>
     </dependencies>
 
+    <properties>
+        <target.application.directory>${project.build.outputDirectory}/glassfish/lib/install/applications</target.application.directory>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-                <artifactId>maven-antrun-extended-plugin</artifactId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>generate-sources</phase>
+                        <id>unpack-classes</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
                         <configuration>
-                            <tasks>
-                                <!-- Resolving jdbc-core and jdbc40 artifacts -->
-                                <resolveArtifact
-                                    artifactId="jdbc-core"
-                                    groupId="org.glassfish.main.jdbc.jdbc-ra.jdbc-core"
-                                    property="core.jar" />
-                                <resolveArtifact
-                                    artifactId="jdbc40"
-                                    groupId="org.glassfish.main.jdbc.jdbc-ra.jdbc40"
-                                    property="40.jar" />
-                                <resolveArtifact
-                                    artifactId="templates"
-                                    groupId="org.glassfish.main.jdbc"
-                                    property="templates.jar" />
-                                <unjar src="${core.jar}" dest="target/classes" />
-                                <unjar src="${40.jar}" dest="target/classes" />
-                                <unjar src="${templates.jar}" dest="target/classes/templates" />
-                                <!-- Creating jars/rars done using ant build.xml -->
-                                <property name="compile_classpath" refid="maven.compile.classpath" />
-                                <property name="build.compiler" value="extJavac" />
-                                <ant dir="." antfile="build.xml" target="all" />
-                                <!-- TODO: Kohsuke to come back here and make sure mvn install puts a
-                                    zip file, not .distribution-fragment -->
-                                <attachArtifact file="target/jdbc-ra.zip" />
-                            </tasks>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeArtifactIds>jdbc-core,jdbc40</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}/unpackedDependencies</outputDirectory>
                         </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-templates</id>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <phase>generate-resources</phase>
+                        <configuration>
+                            <excludeTransitive>true</excludeTransitive>
+                            <includeArtifactIds>templates</includeArtifactIds>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <attach>false</attach>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>jdbc-ra-cp</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-cp.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>${target.application.directory}/__cp_jdbc_ra</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jdbc-ra-dm</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-dm.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>${target.application.directory}/__dm_jdbc_ra</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jdbc-ra-ds</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-ds.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>${target.application.directory}/__ds_jdbc_ra</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jdbc-ra-xa</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-xa.xml</descriptor>
+                            </descriptors>
+                            <outputDirectory>${target.application.directory}/__xa_jdbc_ra</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>jdbc-ra-manifest-4-all-apps</id>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                        <phase>process-classes</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-manifest.xml</descriptor>
+                            </descriptors>
+                            <archive>
+                                <manifest>
+                                    <addClasspath>false</addClasspath>
+                                    <addDefaultEntries>true</addDefaultEntries>
+                                    <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+                                </manifest>
+                                <manifestEntries>
+                                    <probe-provider-class-names>
+com.sun.gjc.monitoring.StatementCacheProbeProvider,com.sun.gjc.monitoring.SQLTraceProbeProvider,com.sun.gjc.monitoring.StatementLeakProbeProvider
+                                    </probe-provider-class-names>
+                                </manifestEntries>
+                            </archive>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>jdbc-ra-manifest-4-all-apps</id>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <phase>prepare-package</phase>
+                        <configuration>
+                            <target>
+                                <unjar src="${project.build.directory}/jdbc-ra-manifest.jar"
+                                    dest="${target.application.directory}/__cp_jdbc_ra" />
+                                <unjar src="${project.build.directory}/jdbc-ra-manifest.jar"
+                                    dest="${target.application.directory}/__dm_jdbc_ra" />
+                                <unjar src="${project.build.directory}/jdbc-ra-manifest.jar"
+                                    dest="${target.application.directory}/__ds_jdbc_ra" />
+                                <unjar src="${project.build.directory}/jdbc-ra-manifest.jar"
+                                    dest="${target.application.directory}/__xa_jdbc_ra" />
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

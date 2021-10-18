@@ -19,6 +19,8 @@ package org.glassfish.appclient.client;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
@@ -27,8 +29,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
-import com.sun.enterprise.util.OS;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.regex.Pattern;
 
@@ -88,28 +88,22 @@ public class CLIBootstrapTest {
     }
 
     @Test
-    public void testEscapingOfEscapedCommandLineArguments() throws Throwable {
-        Class CommandLineArgumentClass = Class.forName("org.glassfish.appclient.client.CLIBootstrap$CommandLineArgument");
-        Constructor constructor = CommandLineArgumentClass.getDeclaredConstructor(CLIBootstrap.class, String.class, int.class);
-        constructor.setAccessible(true);
-        Object commandLineArgument = constructor.newInstance(new CLIBootstrap(), ".*", Pattern.DOTALL);
-        Method formatMethod = CommandLineArgumentClass.getDeclaredMethod("format", StringBuilder.class, boolean.class, String.class);
+    public void testCommandLineArgument() throws Throwable {
+        CLIBootstrap.CommandLineArgument instance = (new CLIBootstrap()).new CommandLineArgument(".*", Pattern.DOTALL);
+        String expect = "\"test\" \"append\"";
+        StringBuilder preCommandLineArgs = new StringBuilder("\"test\"");
+        String appendArg = "append";
+        StringBuilder actual = instance.format(preCommandLineArgs, true, appendArg);
+        assertEquals(actual.toString(), expect);
+    }
 
-        assertAll(() -> {
-            String expect = "\"test\" \"append\"";
-            StringBuilder preCommandLineArgs = new StringBuilder("\"test\"");
-            String appendArg = "append";
-            StringBuilder actual = (StringBuilder) formatMethod.invoke(commandLineArgument, preCommandLineArgs, true, appendArg);
-            assertEquals(actual.toString(), expect);
-        }, () -> {
-            if (!OS.isWindows()) {
-                String expect = "\"a\\\\\\\"b\\\\\\$\\`c\\\"\\\\\"";
-                StringBuilder preCommandLineArgs = new StringBuilder("");
-                String appendArg = "a\\\"b\\$`c\"\\";
-                StringBuilder actual = (StringBuilder) formatMethod.invoke(commandLineArgument, preCommandLineArgs, true, appendArg);
-                assertEquals(actual.toString(), expect);
-            }
-        });
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    public void testQuoteEscapedArgument() throws Throwable {
+        String expect = "\"a\\\\\\\"b\\\\\\$\\`c\\\"\\\\\"";
+        String inputArgs = "a\\\"b\\$`c\"\\";
+        String actual = CLIBootstrap.quoteEscapedArgument(inputArgs);
+        assertEquals(actual.toString(), expect);
     }
 
     @Test
@@ -130,7 +124,7 @@ public class CLIBootstrapTest {
     private void runTestUsingConvertInputArgsVariable( String inputArgs, String[] expect) throws Throwable {
         Method convertInputArgsVariableMethod = CLIBootstrap.class.getDeclaredMethod("convertInputArgsVariable", String.class);
         convertInputArgsVariableMethod.setAccessible(true);
-        String[] actual = (String[]) convertInputArgsVariableMethod.invoke(new CLIBootstrap(), inputArgs);
+        String[] actual = (String[]) convertInputArgsVariableMethod.invoke(null, inputArgs);
         assertArrayEquals(actual, expect);
     }
 }

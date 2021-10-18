@@ -342,6 +342,19 @@ public class CLIBootstrap {
     }
 
     /**
+     * Quotes the string, on non-Windows systems escaping metacharacters ('\', '"', '$', '`').
+     *
+     * @param string
+     * @return
+     */
+    static String quoteEscapedArgument(String string) {
+        if(! OS.isWindows()) {
+            string = string.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
+        }
+        return "\"" + string + "\"";
+    }
+
+    /**
      * Replaces commas in an argument value (which can confuse the ACC agent argument parsing because shells strip out
      * double-quotes) with a special sequence.
      *
@@ -541,7 +554,7 @@ public class CLIBootstrap {
         }
     }
 
-    private class CommandLineArgument extends CommandLineElement {
+    class CommandLineArgument extends CommandLineElement {
         CommandLineArgument(String patternString, int flags) {
             super(patternString, flags);
         }
@@ -551,14 +564,8 @@ public class CLIBootstrap {
             if (commandLine.length() > 0) {
                 commandLine.append(' ');
             }
-            commandLine.append((useQuotes ? quoteCommandLineArgument(v) : v));
+            commandLine.append((useQuotes ? quoteEscapedArgument(v) : v));
             return commandLine;
-        }
-        private String quoteCommandLineArgument(String s) {
-            if(! OS.isWindows()) {
-                s = s.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
-            }
-            return "\"" + s + "\"";
         }
     }
 

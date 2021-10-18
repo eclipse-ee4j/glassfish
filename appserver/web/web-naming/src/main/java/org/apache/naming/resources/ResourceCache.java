@@ -1,6 +1,7 @@
 /*
  * Copyright (c) 1997-2018 Oracle and/or its affiliates. All rights reserved.
  * Copyright 2004 The Apache Software Foundation
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -290,10 +291,11 @@ public class ResourceCache {
     public CacheEntry lookup(String name) {
 
         CacheEntry cacheEntry = null;
+        CacheEntry[] currentCache = cache;
         accessCount++;
-        int pos = find(cache, name);
-        if ((pos != -1) && (name.equals(cache[pos].name))) {
-            cacheEntry = cache[pos];
+        int pos = find(currentCache, name);
+        if ((pos != -1) && (name.equals(currentCache[pos].name))) {
+            cacheEntry = currentCache[pos];
         }
         if (cacheEntry == null) {
             try {

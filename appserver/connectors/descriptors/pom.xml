@@ -29,31 +29,26 @@
     <artifactId>descriptors</artifactId>
     <packaging>distribution-fragment</packaging>
 
-    <name>JavaEE Connector Architecture Descriptors</name>
-    <description>Descriptors of Java EE Connector Architecture module</description>
+    <name>Jakarta EE Connector Architecture Descriptors</name>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.maven-antrun-extended-plugin</groupId>
-                <artifactId>maven-antrun-extended-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>compile</phase>
-                        <configuration>
-                            <tasks>
-                                <jar file="target/descriptors.jar">
-                                    <fileset dir="src/main/resources">
-                                        <exclude name="**/*connector_1_5.dtd" />
-                                        <exclude name="**/*connector_1_6.dtd" />
-                                    </fileset>
-                                </jar>
-                                <attachArtifact file="target/descriptors.jar" type="jar" classifier="resources" />
-                            </tasks>
-                        </configuration>
+                        <id>jar</id>
                         <goals>
-                            <goal>run</goal>
+                            <goal>single</goal>
                         </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/jar.xml</descriptor>
+                            </descriptors>
+                            <attach>true</attach>
+                            <appendAssemblyId>true</appendAssemblyId>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

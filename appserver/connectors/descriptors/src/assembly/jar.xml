@@ -1,0 +1,20 @@
+<assembly xmlns="http://maven.apache.org/ASSEMBLY/2.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/ASSEMBLY/2.1.0 http://maven.apache.org/xsd/assembly-2.1.0.xsd"
+>
+    <id>resources</id>
+    <formats>
+        <format>jar</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+        <fileSet>
+            <directory>target/classes</directory>
+            <outputDirectory></outputDirectory>
+            <excludes>
+                <exclude>**/*connector_1_5.dtd</exclude>
+                <exclude>**/*connector_1_6.dtd</exclude>
+            </excludes>
+        </fileSet>
+    </fileSets>
+</assembly>

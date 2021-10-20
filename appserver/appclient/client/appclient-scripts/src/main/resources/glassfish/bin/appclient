@@ -75,4 +75,4 @@ esac
 
 chooseJava
 
-eval `"${ACCJava}" -Dorg.glassfish.appclient.shell $cygwinProp -classpath "${_AS_INSTALL}/lib/gf-client.jar" org.glassfish.appclient.client.CLIBootstrap "$@"`
+eval "`"${ACCJava}" -Dorg.glassfish.appclient.shell $cygwinProp -classpath "${_AS_INSTALL}/lib/gf-client.jar" org.glassfish.appclient.client.CLIBootstrap "$@"`"

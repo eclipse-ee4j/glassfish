@@ -100,7 +100,7 @@ public class CLIBootstrap {
         jvmValuedOptions = new JVMValuedOption("-classpath|-cp", userVMArgs.evJVMValuedOptions),
         jvmPropertySettings = new JVMOption("-D.*", userVMArgs.evJVMPropertySettings),
         otherJVMOptions = new JVMOption("-.*", userVMArgs.evOtherJVMOptions),
-        arguments = new CommandLineElement(".*", Pattern.DOTALL);
+        arguments = new CommandLineArgument(".*", Pattern.DOTALL);
 
     /** Records how the user specifies the main class: -jar xxx.jar, -client xxx.jar, or a.b.MainClass */
     private final JVMMainOption jvmMainSetting = new JVMMainOption();
@@ -190,8 +190,14 @@ public class CLIBootstrap {
         /*
          * The pattern matches a quoted string (double quotes around a string containing no double quote) or a non-quoted string
          * (a string containing no white space or quotes).
+         * Note:
+         * escapedDoubleQuoteRegex matches a double quote following odd number of
+         * backslash as an escaped string.
          */
-        Pattern argPattern = Pattern.compile("\"([^\"]+)\"|([^\"\\s]+)");
+        final String escapedDoubleQuoteRegex = "?:(?<!\\\\)(?:(?:\\\\\\\\)*\\\\)\"";
+        Pattern argPattern = Pattern.compile(
+                "\"((" + escapedDoubleQuoteRegex + "|[^\"])*)\""
+                        + "|((" + escapedDoubleQuoteRegex + "|[^\"\\s])+)");
 
         Matcher matcher = argPattern.matcher(inputArgs);
         List<String> argList = new ArrayList<>();
@@ -333,6 +339,19 @@ public class CLIBootstrap {
      */
     private static String quoteSuppressTokenSubst(String string) {
         return (OS.isWindows() ? quote(string) : quote(string.replace("$", "\\$")));
+    }
+
+    /**
+     * Quotes the string, on non-Windows systems escaping metacharacters ('\', '"', '$', '`').
+     *
+     * @param string
+     * @return
+     */
+    static String quoteEscapedArgument(String string) {
+        if (!OS.isWindows()) {
+            string = string.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
+        }
+        return "\"" + string + "\"";
     }
 
     /**
@@ -531,6 +550,21 @@ public class CLIBootstrap {
             }
             commandLine.append((useQuotes ? quoteSuppressTokenSubst(v) : v));
 
+            return commandLine;
+        }
+    }
+
+    class CommandLineArgument extends CommandLineElement {
+        CommandLineArgument(String patternString, int flags) {
+            super(patternString, flags);
+        }
+        @Override
+        StringBuilder format(final StringBuilder commandLine,
+                final boolean useQuotes, final String nextArg) {
+            if (commandLine.length() > 0) {
+                commandLine.append(' ');
+            }
+            commandLine.append((useQuotes ? quoteEscapedArgument(nextArg) : nextArg));
             return commandLine;
         }
     }

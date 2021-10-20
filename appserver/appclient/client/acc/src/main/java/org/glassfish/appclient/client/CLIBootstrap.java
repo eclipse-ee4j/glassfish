@@ -348,7 +348,7 @@ public class CLIBootstrap {
      * @return
      */
     static String quoteEscapedArgument(String string) {
-        if(!OS.isWindows()) {
+        if (!OS.isWindows()) {
             string = string.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
         }
         return "\"" + string + "\"";

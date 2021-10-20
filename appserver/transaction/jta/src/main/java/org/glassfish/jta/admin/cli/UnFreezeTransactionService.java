@@ -66,7 +66,10 @@ import jakarta.inject.Inject;
             params = {
                 @RestParam(
                     name = "id",
-                    value = "$parent") }),
+                    value = "$parent"
+                )
+            }
+        ),
 
         @RestEndpoint(
             configBean = Server.class,
@@ -76,13 +79,18 @@ import jakarta.inject.Inject;
             params = {
                 @RestParam(
                     name = "id",
-                    value = "$parent") }),
+                    value = "$parent"
+                )
+            }
+        ),
 
         @RestEndpoint(
             configBean = Domain.class,
             opType = POST,
             path = "unfreeze-transaction-service",
-            description = "Unfreeze Transaction Service") })
+            description = "Unfreeze Transaction Service"
+        )
+})
 public class UnFreezeTransactionService implements AdminCommand {
 
     private static StringManager localStrings = StringManager.getManager(UnFreezeTransactionService.class);

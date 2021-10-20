@@ -67,7 +67,10 @@ import jakarta.inject.Inject;
             params = {
                 @RestParam(
                     name = "target",
-                    value = "$parent") }),
+                    value = "$parent"
+                )
+            }
+        ),
 
         @RestEndpoint(
             configBean = Server.class,
@@ -77,13 +80,18 @@ import jakarta.inject.Inject;
             params = {
                 @RestParam(
                     name = "target",
-                    value = "$parent") }),
+                    value = "$parent"
+                )
+            }
+        ),
 
         @RestEndpoint(
             configBean = Domain.class,
             opType = POST,
             path = "freeze-transaction-service",
-            description = "Freeze Transaction Service") })
+            description = "Freeze Transaction Service"
+        )
+})
 public class FreezeTransactionService implements AdminCommand {
 
     private static StringManager localStrings = StringManager.getManager(FreezeTransactionService.class);

@@ -348,7 +348,7 @@ public class CLIBootstrap {
      * @return
      */
     static String quoteEscapedArgument(String string) {
-        if(! OS.isWindows()) {
+        if(!OS.isWindows()) {
             string = string.replace("\\", "\\\\").replace("\"", "\\\"").replace("$", "\\$").replace("`", "\\`");
         }
         return "\"" + string + "\"";
@@ -560,11 +560,11 @@ public class CLIBootstrap {
         }
         @Override
         StringBuilder format(final StringBuilder commandLine,
-                final boolean useQuotes, final String v) {
+                final boolean useQuotes, final String nextArg) {
             if (commandLine.length() > 0) {
                 commandLine.append(' ');
             }
-            commandLine.append((useQuotes ? quoteEscapedArgument(v) : v));
+            commandLine.append((useQuotes ? quoteEscapedArgument(nextArg) : nextArg));
             return commandLine;
         }
     }

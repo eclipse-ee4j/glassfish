@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -55,7 +56,7 @@ monitoring     web  800
       setAttribute(key="configName" value="#{pageSession.configsList[0]}");
       gf.encodeId(id="${configName}" result="#{requestScope.configNameId}");
     />
-    <!--<h:commandButton id="update" style="display: none;">
+    <h:commandButton id="update" style="display: none;">
         <!command
             setResourceBundle(key="i18n" bundle="org.glassfish.admingui.core.Strings");
 
@@ -76,7 +77,7 @@ monitoring     web  800
             buildUIComponentTree(layoutElement="$attribute{desc}" parent="#{parent}" result=>$attribute{newComp});
             replaceUIComponent(old="${temp}" new="$attribute{newComp}");
         />
-    </h:commandButton>-->
+    </h:commandButton>
     <sun:tree id="tree" 
               text="$resource{i18n.tree.commonTasks}"
               url="/common/commonTask.jsf"

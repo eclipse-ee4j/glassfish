@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,48 +17,50 @@
 
 package com.sun.enterprise.transaction;
 
-import java.rmi.RemoteException;
-import java.io.Serializable;
+import static java.util.logging.Level.SEVERE;
+
 import java.io.ObjectStreamException;
-import java.util.logging.*;
+import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.logging.Logger;
 
-import jakarta.transaction.*;
-
-import com.sun.enterprise.util.i18n.StringManager;
-import com.sun.logging.LogDomains;
+import org.glassfish.api.invocation.ComponentInvocation;
+import org.glassfish.api.invocation.InvocationManager;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.hk2.api.ServiceLocator;
+import org.glassfish.internal.api.Globals;
+import org.jvnet.hk2.annotations.ContractsProvided;
+import org.jvnet.hk2.annotations.Service;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 import com.sun.enterprise.transaction.spi.TransactionOperationsManager;
-
-import org.glassfish.api.invocation.InvocationManager;
-import org.glassfish.api.invocation.ComponentInvocation;
-import org.glassfish.internal.api.Globals;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
 
 import jakarta.inject.Inject;
-
-import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.annotations.ContractsProvided;
-import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.hk2.api.ServiceLocator;
+import jakarta.transaction.HeuristicMixedException;
+import jakarta.transaction.HeuristicRollbackException;
+import jakarta.transaction.NotSupportedException;
+import jakarta.transaction.RollbackException;
+import jakarta.transaction.SystemException;
+import jakarta.transaction.UserTransaction;
 
 /**
- * This class implements jakarta.transaction.UserTransaction .
- * Its methods are called from TX_BEAN_MANAGED EJB code.
- * Most of its methods just delegate to the TransactionManager
- * after doing some EJB Container-related steps.
+ * This class implements jakarta.transaction.UserTransaction . Its methods are called from TX_BEAN_MANAGED EJB code.
+ * Most of its methods just delegate to the TransactionManager after doing some EJB Container-related steps.
  *
- * Note: EJB1.1 Section 6.4.1 requires that the Container must be able to
- * preserve an object reference of the UserTransaction interface across
- * passivation, so we make this Serializable.
+ * Note: EJB1.1 Section 6.4.1 requires that the Container must be able to preserve an object reference of the
+ * UserTransaction interface across passivation, so we make this Serializable.
  *
  * @author Tony Ng
  * @author Marina Vatkina
  */
 @Service
-@ContractsProvided({UserTransactionImpl.class, UserTransaction.class}) // Needed because we can't change spec provided class
+@ContractsProvided({ UserTransactionImpl.class, UserTransaction.class }) // Needed because we can't change spec provided class
 @PerLookup
-public class UserTransactionImpl implements UserTransaction, Serializable
-{
+public class UserTransactionImpl implements UserTransaction, Serializable {
+
+    private static final long serialVersionUID = -9058595590726479777L;
 
     static Logger _logger = LogDomains.getLogger(UserTransactionImpl.class, LogDomains.JTA_LOGGER);
 
@@ -70,196 +73,195 @@ public class UserTransactionImpl implements UserTransaction, Serializable
     @Inject
     private transient InvocationManager invocationManager;
 
-    private static final boolean debug = false;
     private transient boolean initialized;
 
     // for non-J2EE clients usage
     // currently is never set
-    private transient UserTransaction userTx;
+    private transient UserTransaction userTransaction;
 
     // private int transactionTimeout;
 
-    // true if ejb access checks should be performed.  Default is
-    // true.  All instances of UserTransaction exposed to applications
+    // true if ejb access checks should be performed. Default is
+    // true. All instances of UserTransaction exposed to applications
     // will have checking turned on.
     private boolean checkEjbAccess;
-
 
     /**
      * Default constructor.
      */
-    public UserTransactionImpl()
-    {
+    public UserTransactionImpl() {
         this(true);
     }
 
     /**
-     * Alternate version of constructor that allows control over whether
-     * ejb access checks are performed.
+     * Alternate version of constructor that allows control over whether ejb access checks are performed.
      */
     public UserTransactionImpl(boolean doEjbAccessChecks) {
         init();
         checkEjbAccess = doEjbAccessChecks;
     }
 
-
     /**
      * Could be called after passivation and reactivation
      */
     private void init() {
         initialized = true;
-
-        // non J2EE client, set up UserTransaction from JTS
-        //  userTx = new com.sun.jts.jta.UserTransactionImpl();
     }
 
-    private void checkUserTransactionMethodAccess(ComponentInvocation inv)
-        throws IllegalStateException, SystemException {
-        TransactionOperationsManager toMgr =
-                (TransactionOperationsManager)inv.getTransactionOperationsManager();
+    private void checkUserTransactionMethodAccess(ComponentInvocation inv) throws IllegalStateException, SystemException {
+        TransactionOperationsManager transactionOperationsManager = (TransactionOperationsManager) inv.getTransactionOperationsManager();
 
-        if ( toMgr != null && checkEjbAccess ) {
-            if( !toMgr.userTransactionMethodsAllowed() ) {
+        if (transactionOperationsManager != null && checkEjbAccess) {
+            if (!transactionOperationsManager.userTransactionMethodsAllowed()) {
                 throw new IllegalStateException(sm.getString("enterprise_distributedtx.operation_not_allowed"));
             }
         }
     }
 
-    public void begin() throws NotSupportedException, SystemException
-    {
-        if (!initialized) init();
+    @Override
+    public void begin() throws NotSupportedException, SystemException {
+        if (!initialized) {
+            init();
+        }
 
-        if (userTx != null) {
-            userTx.begin();
+        if (userTransaction != null) {
+            userTransaction.begin();
             return;
         }
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-            checkUserTransactionMethodAccess(inv);
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
+        if (componentInvocation != null) {
+            checkUserTransactionMethodAccess(componentInvocation);
         }
 
         transactionManager.begin();
-            /** V2 **
-        if ( transactionTimeout > 0 )
-            transactionManager.begin(transactionTimeout);
-        else
-            transactionManager.begin();
-            **/
 
         try {
-            if (inv != null) {
-                TransactionOperationsManager toMgr =
-                        (TransactionOperationsManager)inv.getTransactionOperationsManager();
-                if ( toMgr != null)
+            if (componentInvocation != null) {
+                TransactionOperationsManager toMgr = (TransactionOperationsManager) componentInvocation.getTransactionOperationsManager();
+                if (toMgr != null)
                     toMgr.doAfterUtxBegin();
 
-                inv.setTransaction(transactionManager.getTransaction());
+                componentInvocation.setTransaction(transactionManager.getTransaction());
                 transactionManager.enlistComponentResources();
             }
-        } catch ( RemoteException ex ) {
-            _logger.log(Level.SEVERE,"enterprise_distributedtx.excep_in_utx_begin", ex);
+        } catch (RemoteException ex) {
+            _logger.log(SEVERE, "enterprise_distributedtx.excep_in_utx_begin", ex);
             SystemException sysEx = new SystemException(ex.getMessage());
             sysEx.initCause(ex);
             throw sysEx;
         }
     }
 
-    public void commit() throws RollbackException,
-            HeuristicMixedException, HeuristicRollbackException, SecurityException,
-            IllegalStateException, SystemException {
-        if (!initialized) init();
+    @Override
+    public void commit() throws RollbackException, HeuristicMixedException, HeuristicRollbackException, SecurityException, IllegalStateException, SystemException {
+        if (!initialized) {
+            init();
+        }
 
-        if (userTx != null) {
-            userTx.commit();
+        if (userTransaction != null) {
+            userTransaction.commit();
             return;
         }
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-            checkUserTransactionMethodAccess(inv);
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
+        if (componentInvocation != null) {
+            checkUserTransactionMethodAccess(componentInvocation);
         }
 
         try {
-            transactionManager.delistComponentResources(false);  // TMSUCCESS
+            transactionManager.delistComponentResources(false); // TMSUCCESS
             transactionManager.commit();
-        } catch ( RemoteException ex ) {
-            _logger.log(Level.SEVERE,"enterprise_distributedtx.excep_in_utx_commit", ex);
+        } catch (RemoteException ex) {
+            _logger.log(SEVERE, "enterprise_distributedtx.excep_in_utx_commit", ex);
             throw new SystemException();
         } finally {
-            if (inv != null)
-                inv.setTransaction(null);
+            if (componentInvocation != null) {
+                componentInvocation.setTransaction(null);
+            }
         }
     }
 
-    public void rollback() throws IllegalStateException, SecurityException,
-            SystemException {
-        if (!initialized) init();
+    @Override
+    public void rollback() throws IllegalStateException, SecurityException, SystemException {
+        if (!initialized) {
+            init();
+        }
 
-        if (userTx != null) {
-            userTx.rollback();
+        if (userTransaction != null) {
+            userTransaction.rollback();
             return;
         }
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-            checkUserTransactionMethodAccess(inv);
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
+        if (componentInvocation != null) {
+            checkUserTransactionMethodAccess(componentInvocation);
         }
 
         try {
             transactionManager.delistComponentResources(false); // TMSUCCESS
             transactionManager.rollback();
-        } catch ( RemoteException ex ) {
-            _logger.log(Level.SEVERE,"enterprise_distributedtx.excep_in_utx_rollback", ex);
+        } catch (RemoteException ex) {
+            _logger.log(SEVERE, "enterprise_distributedtx.excep_in_utx_rollback", ex);
             throw new SystemException();
         } finally {
-            if (inv !=  null)
-                inv.setTransaction(null);
+            if (componentInvocation != null) {
+                componentInvocation.setTransaction(null);
+            }
         }
     }
 
+    @Override
     public void setRollbackOnly() throws IllegalStateException, SystemException {
-        if (!initialized) init();
+        if (!initialized) {
+            init();
+        }
 
-        if (userTx != null) {
-            userTx.setRollbackOnly();
+        if (userTransaction != null) {
+            userTransaction.setRollbackOnly();
             return;
         }
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-            checkUserTransactionMethodAccess(inv);
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
+        if (componentInvocation != null) {
+            checkUserTransactionMethodAccess(componentInvocation);
         }
 
         transactionManager.setRollbackOnly();
     }
 
+    @Override
     public int getStatus() throws SystemException {
-        if (!initialized) init();
-
-        if (userTx != null) {
-            return userTx.getStatus();
+        if (!initialized) {
+            init();
         }
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-                checkUserTransactionMethodAccess(inv);
+        if (userTransaction != null) {
+            return userTransaction.getStatus();
+        }
+
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
+        if (componentInvocation != null) {
+            checkUserTransactionMethodAccess(componentInvocation);
         }
 
         return transactionManager.getStatus();
     }
 
+    @Override
     public void setTransactionTimeout(int seconds) throws SystemException {
-        if (!initialized) init();
+        if (!initialized) {
+            init();
+        }
 
-        if (userTx != null) {
-            userTx.setTransactionTimeout(seconds);
+        if (userTransaction != null) {
+            userTransaction.setTransactionTimeout(seconds);
             return;
         }
 
-        ComponentInvocation inv = invocationManager.getCurrentInvocation();
-        if (inv != null) {
-            checkUserTransactionMethodAccess(inv);
+        ComponentInvocation componentInvocation = invocationManager.getCurrentInvocation();
+        if (componentInvocation != null) {
+            checkUserTransactionMethodAccess(componentInvocation);
         }
 
         transactionManager.setTransactionTimeout(seconds);
@@ -268,16 +270,16 @@ public class UserTransactionImpl implements UserTransaction, Serializable
     public void setForTesting(JavaEETransactionManager tm, InvocationManager im) {
         transactionManager = tm;
         invocationManager = im;
-        ((JavaEETransactionManagerSimplified)transactionManager).invMgr = im;
+        ((JavaEETransactionManagerSimplified) transactionManager).invMgr = im;
     }
 
     /**
      * Return instance with all injected values from deserialization if possible
      */
     Object readResolve() throws ObjectStreamException {
-        ServiceLocator h = Globals.getDefaultHabitat();
-        if (h != null) {
-            return h.getService(UserTransactionImpl.class);
+        ServiceLocator serviceLocator = Globals.getDefaultHabitat();
+        if (serviceLocator != null) {
+            return serviceLocator.getService(UserTransactionImpl.class);
         }
 
         return this;

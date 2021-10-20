@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,61 +17,61 @@
 
 package com.sun.enterprise.transaction;
 
-import com.sun.enterprise.config.serverbeans.Config;
-import java.util.*;
-import java.util.logging.*;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+
 import java.beans.PropertyChangeEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-import com.sun.logging.LogDomains;
-import com.sun.enterprise.util.i18n.StringManager;
-
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.jvnet.hk2.annotations.Service;
-import jakarta.inject.Inject;
-
 import org.jvnet.hk2.config.ConfigListener;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 import org.jvnet.hk2.config.types.Property;
 
+import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.ModuleMonitoringLevels;
-import com.sun.enterprise.transaction.config.TransactionService;
 import com.sun.enterprise.config.serverbeans.ServerTags;
-
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
-import org.glassfish.api.admin.ServerEnvironment;
-import org.glassfish.hk2.api.PostConstruct;
-import org.glassfish.hk2.api.ServiceLocator;
-import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.ObservableBean;
+import com.sun.enterprise.transaction.config.TransactionService;
+import com.sun.enterprise.util.i18n.StringManager;
+import com.sun.logging.LogDomains;
+
+import jakarta.inject.Inject;
 
 /**
- * ConfigListener class for TransactionService and TransactionService
- * monitoring level changes
+ * ConfigListener class for TransactionService and TransactionService monitoring level changes
  *
  * @author Marina Vatkina
  */
 @Service
 public class TransactionServiceConfigListener implements ConfigListener, PostConstruct {
 
-    private static final Logger _logger = LogDomains.getLogger(
-            TransactionServiceConfigListener.class, LogDomains.JTA_LOGGER);
+    private static final Logger _logger = LogDomains.getLogger(TransactionServiceConfigListener.class, LogDomains.JTA_LOGGER);
 
     private TransactionService ts;
 
     @Inject
     private ServiceLocator habitat;
 
-    private JavaEETransactionManager tm;
+    private JavaEETransactionManager javaEETransactionManager;
 
     // Sting Manager for Localization
-    private static StringManager sm
-           = StringManager.getManager(TransactionServiceConfigListener.class);
+    private static StringManager sm = StringManager.getManager(TransactionServiceConfigListener.class);
 
     /**
      * Clears the transaction associated with the caller thread
      */
-    public void setTM(JavaEETransactionManager tm) {
-        this.tm = tm;
+    public void setTM(JavaEETransactionManager javaEETransactionManager) {
+        this.javaEETransactionManager = javaEETransactionManager;
     }
 
     @Override
@@ -79,12 +80,12 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
         Config c = habitat.getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
         ts = c.getExtensionByType(TransactionService.class);
         ModuleMonitoringLevels mml = c.getMonitoringService().getModuleMonitoringLevels();
-        ((ObservableBean)ConfigSupport.getImpl(mml)).addListener(this);
+        ((ObservableBean) ConfigSupport.getImpl(mml)).addListener(this);
     }
 
     /****************************************************************************/
-/** Implementation of org.jvnet.hk2.config.ConfigListener *********************/
-/****************************************************************************/
+    /** Implementation of org.jvnet.hk2.config.ConfigListener *********************/
+    /****************************************************************************/
     @Override
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] events) {
 
@@ -97,58 +98,54 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
             Object newValue = event.getNewValue();
             boolean accepted = true;
 
-            _logger.log(Level.FINE, "Got TransactionService change event ==== {0} {1} {2} {3}",
-                    new Object[]{event.getSource(), eventName, oldValue, newValue});
+            _logger.log(FINE, "Got TransactionService change event ==== {0} {1} {2} {3}",
+                    new Object[] { event.getSource(), eventName, oldValue, newValue });
 
             if (oldValue != null && oldValue.equals(newValue)) {
-                _logger.log(Level.FINE, "Event {0} did not change existing value of {1}",
-                        new Object[]{eventName, oldValue});
+                _logger.log(FINE, "Event {0} did not change existing value of {1}", new Object[] { eventName, oldValue });
                 continue;
             }
 
-           if (event.getSource() instanceof ModuleMonitoringLevels) {
+            if (event.getSource() instanceof ModuleMonitoringLevels) {
                 if (eventName.equals(ServerTags.TRANSACTION_SERVICE)) {
                     String newlevel = newValue.toString();
-                    _logger.log(Level.FINE, "Changing transaction monitoring level");
+                    _logger.log(FINE, "Changing transaction monitoring level");
                     if ("OFF".equals(newlevel)) {
-                        tm.setMonitoringEnabled(false);
+                        javaEETransactionManager.setMonitoringEnabled(false);
                     } else if ("LOW".equals(newlevel) || "HIGH".equals(newlevel)) {
-                        tm.setMonitoringEnabled(true);
+                        javaEETransactionManager.setMonitoringEnabled(true);
                     }
                 } // else skip
-           } else if (eventName.equals(ServerTags.TIMEOUT_IN_SECONDS)) {
+            } else if (eventName.equals(ServerTags.TIMEOUT_IN_SECONDS)) {
                 try {
-                    tm.setDefaultTransactionTimeout(Integer.parseInt((String)newValue,10));
-                    _logger.log(Level.FINE, " Transaction Timeout interval event processed for: {0}", newValue);
+                    javaEETransactionManager.setDefaultTransactionTimeout(Integer.parseInt((String) newValue, 10));
+                    _logger.log(FINE, " Transaction Timeout interval event processed for: {0}", newValue);
                 } catch (Exception ex) {
-                    _logger.log(Level.WARNING,"transaction.reconfig_txn_timeout_failed",ex);
+                    _logger.log(Level.WARNING, "transaction.reconfig_txn_timeout_failed", ex);
                 } // timeout-in-seconds
 
-            } else if (eventName.equals(ServerTags.KEYPOINT_INTERVAL)
-                    || eventName.equals(ServerTags.RETRY_TIMEOUT_IN_SECONDS)) {
-                tm.handlePropertyUpdate(eventName, newValue);
-                _logger.log(Level.FINE, "{0} reconfig event processed for new value: {1}",
-                        new Object[]{eventName, newValue});
+            } else if (eventName.equals(ServerTags.KEYPOINT_INTERVAL) || eventName.equals(ServerTags.RETRY_TIMEOUT_IN_SECONDS)) {
+                javaEETransactionManager.handlePropertyUpdate(eventName, newValue);
+                _logger.log(FINE, "{0} reconfig event processed for new value: {1}", new Object[] { eventName, newValue });
 
             } else if (event.getPropertyName().equals("value")) {
-                eventName = ((Property)event.getSource()).getName();
-                _logger.log(Level.FINE, "Got Property change event for {0}", eventName);
+                eventName = ((Property) event.getSource()).getName();
+                _logger.log(FINE, "Got Property change event for {0}", eventName);
                 if (eventName.equals("purge-cancelled-transactions-after")) {
-                    String v = (String)newValue;
+                    String v = (String) newValue;
                     if (v == null || v.length() == 0) {
-                        tm.setPurgeCancelledTtransactionsAfter(0);
+                        javaEETransactionManager.setPurgeCancelledTtransactionsAfter(0);
                     } else {
-                        tm.setPurgeCancelledTtransactionsAfter(Integer.parseInt(v,10));
+                        javaEETransactionManager.setPurgeCancelledTtransactionsAfter(Integer.parseInt(v, 10));
                     }
                 } else {
                     // Not handled dynamically. Restart is required.
                     accepted = false;
                 }
 
-            } else if (event.getPropertyName().equals("name")
-                    || event.getPropertyName().equals("property")) {
+            } else if (event.getPropertyName().equals("name") || event.getPropertyName().equals("property")) {
                 // skip - means a new property added, was processed above as "value".
-                _logger.log(Level.FINE, "...skipped");
+                _logger.log(FINE, "...skipped");
 
             } else {
                 // Not handled dynamically. Restart is required.
@@ -156,14 +153,13 @@ public class TransactionServiceConfigListener implements ConfigListener, PostCon
             }
 
             if (!accepted) {
-                String msg = sm.getString("enterprise_distributedtx.restart_required",
-                        eventName);
-                _logger.log(Level.INFO, msg);
+                String msg = sm.getString("enterprise_distributedtx.restart_required", eventName);
+                _logger.log(INFO, msg);
                 unprocessedEvents.add(new UnprocessedChangeEvent(event, msg));
             }
         }
-        return (unprocessedEvents.size() > 0)
-                ? new UnprocessedChangeEvents(unprocessedEvents) : null;
+
+        return (unprocessedEvents.size() > 0) ? new UnprocessedChangeEvents(unprocessedEvents) : null;
     }
 
 }

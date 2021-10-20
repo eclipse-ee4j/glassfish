@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,13 +18,14 @@
 package com.sun.enterprise.transaction.monitoring;
 
 import java.util.List;
-import java.util.logging.*;
+import java.util.logging.Logger;
 
+import org.glassfish.external.probe.provider.annotations.ProbeListener;
+import org.glassfish.external.probe.provider.annotations.ProbeParam;
 import org.glassfish.external.statistics.CountStatistic;
 import org.glassfish.external.statistics.StringStatistic;
 import org.glassfish.external.statistics.impl.CountStatisticImpl;
 import org.glassfish.external.statistics.impl.StringStatisticImpl;
-import org.glassfish.external.probe.provider.annotations.*;
 import org.glassfish.gmbal.AMXMetadata;
 import org.glassfish.gmbal.Description;
 import org.glassfish.gmbal.ManagedAttribute;
@@ -37,7 +39,7 @@ import com.sun.enterprise.transaction.api.TransactionAdminBean;
  *
  * @author Marina Vatkina
  */
-@AMXMetadata(type="transaction-service-mon", group="monitoring")
+@AMXMetadata(type = "transaction-service-mon", group = "monitoring")
 @ManagedObject
 @Description("Transaction Service Statistics")
 public class TransactionServiceStatsProvider {
@@ -55,12 +57,10 @@ public class TransactionServiceStatsProvider {
             "Provides the number of transactions that have been rolled back.");
 
     private StringStatisticImpl inflightTransactions = new StringStatisticImpl("ActiveIds", "List",
-                "Provides the IDs of the transactions that are currently active a.k.a. in-flight "
-                + "transactions. Every such transaction can be rolled back after freezing the transaction "
-                + "service." );
+            "Provides the IDs of the transactions that are currently active a.k.a. in-flight "
+                    + "transactions. Every such transaction can be rolled back after freezing the transaction " + "service.");
 
-    private StringStatisticImpl state = new StringStatisticImpl("State", "String",
-                "Indicates if the transaction service has been frozen.");
+    private StringStatisticImpl state = new StringStatisticImpl("State", "String", "Indicates if the transaction service has been frozen.");
 
     private boolean isFrozen = false;
 
@@ -73,33 +73,33 @@ public class TransactionServiceStatsProvider {
         _logger = l;
     }
 
-    @ManagedAttribute(id="activecount")
-    @Description( "Provides the number of transactions that are currently active." )
+    @ManagedAttribute(id = "activecount")
+    @Description("Provides the number of transactions that are currently active.")
     public CountStatistic getActiveCount() {
         return activeCount;
     }
 
-    @ManagedAttribute(id="committedcount")
-    @Description( "Provides the number of transactions that have been committed." )
+    @ManagedAttribute(id = "committedcount")
+    @Description("Provides the number of transactions that have been committed.")
     public CountStatistic getCommittedCount() {
         return committedCount;
     }
 
-    @ManagedAttribute(id="rolledbackcount")
-    @Description( "Provides the number of transactions that have been rolled back." )
+    @ManagedAttribute(id = "rolledbackcount")
+    @Description("Provides the number of transactions that have been rolled back.")
     public CountStatistic getRolledbackCount() {
         return rolledbackCount;
     }
 
-    @ManagedAttribute(id="state")
-    @Description( "Indicates if the transaction service has been frozen." )
+    @ManagedAttribute(id = "state")
+    @Description("Indicates if the transaction service has been frozen.")
     public StringStatistic getState() {
-        state.setCurrent((isFrozen)? "True": "False");
+        state.setCurrent((isFrozen) ? "True" : "False");
         return state;
     }
 
-    @ManagedAttribute(id="activeids")
-    @Description( "List of inflight transactions." )
+    @ManagedAttribute(id = "activeids")
+    @Description("List of inflight transactions.")
     public StringStatistic getActiveIds() {
 
         if (txMgr == null) {
@@ -111,11 +111,11 @@ public class TransactionServiceStatsProvider {
         List aList = txMgr.getActiveTransactions();
         StringBuffer strBuf = new StringBuffer(1024);
         if (!aList.isEmpty()) {
-            //Set the headings for the tabular output
+            // Set the headings for the tabular output
             int componentNameLength = COLUMN_LENGTH;
             int txIdLength = COLUMN_LENGTH + 15;
-            for (int i=0; i < aList.size(); i++) {
-                TransactionAdminBean txnBean = (TransactionAdminBean)aList.get(i);
+            for (int i = 0; i < aList.size(); i++) {
+                TransactionAdminBean txnBean = (TransactionAdminBean) aList.get(i);
                 String componentName = txnBean.getComponentName();
                 if (componentName.length() > componentNameLength) {
                     componentNameLength = componentName.length() + 1;
@@ -135,8 +135,8 @@ public class TransactionServiceStatsProvider {
                 strBuf.append("ResourceNames ").append(LINE_BREAK);
             }
 
-            for (int i=0; i < aList.size(); i++) {
-                TransactionAdminBean txnBean = (TransactionAdminBean)aList.get(i);
+            for (int i = 0; i < aList.size(); i++) {
+                TransactionAdminBean txnBean = (TransactionAdminBean) aList.get(i);
                 String txnId = txnBean.getId();
 
                 _logger.fine("=== Processing txnId: " + txnId);
@@ -148,7 +148,8 @@ public class TransactionServiceStatsProvider {
                 List<String> resourceList = txnBean.getResourceNames();
                 if (resourceList != null) {
                     for (int k = 0; k < resourceList.size(); k++) {
-                        if (k != 0) strBuf.append(",");
+                        if (k != 0)
+                            strBuf.append(",");
                         strBuf.append(resourceList.get(k));
                     }
                 }
@@ -195,7 +196,7 @@ public class TransactionServiceStatsProvider {
 
     private void appendColumn(StringBuffer buf, String text, int length) {
         buf.append(text);
-        for (int i=text.length(); i<length; i++){
+        for (int i = text.length(); i < length; i++) {
             buf.append(" ");
         }
     }

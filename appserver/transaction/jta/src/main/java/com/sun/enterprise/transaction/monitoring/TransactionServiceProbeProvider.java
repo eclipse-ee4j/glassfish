@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,28 +17,35 @@
 
 package com.sun.enterprise.transaction.monitoring;
 
-import org.glassfish.external.probe.provider.annotations.*;
+import org.glassfish.external.probe.provider.annotations.Probe;
+import org.glassfish.external.probe.provider.annotations.ProbeParam;
+import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 
 /**
  * Probe emitter for the Transaction Service. Used by the probe framework as an event notifier.
  *
  * @author Marina Vatkina
  */
-@ProbeProvider(moduleProviderName="glassfish", moduleName="transaction", probeProviderName="transaction-service")
+@ProbeProvider(moduleProviderName = "glassfish", moduleName = "transaction", probeProviderName = "transaction-service")
 public class TransactionServiceProbeProvider {
 
-    @Probe(name="activated")
-    public void transactionActivatedEvent() {}
+    @Probe(name = "activated")
+    public void transactionActivatedEvent() {
+    }
 
-    @Probe(name="deactivated")
-    public void transactionDeactivatedEvent() {}
+    @Probe(name = "deactivated")
+    public void transactionDeactivatedEvent() {
+    }
 
-    @Probe(name="committed")
-    public void transactionCommittedEvent() {}
+    @Probe(name = "committed")
+    public void transactionCommittedEvent() {
+    }
 
-    @Probe(name="rolledback")
-    public void transactionRolledbackEvent() {}
+    @Probe(name = "rolledback")
+    public void transactionRolledbackEvent() {
+    }
 
-    @Probe(name="freeze")
-    public void freezeEvent(@ProbeParam("isFrozen") boolean b) {}
+    @Probe(name = "freeze")
+    public void freezeEvent(@ProbeParam("isFrozen") boolean b) {
+    }
 }

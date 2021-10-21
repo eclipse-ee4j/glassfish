@@ -48,6 +48,7 @@
         setPageSessionAttribute(key="parentUrl" value="#{sessionScope.REST_URL}/configs");
         setPageSessionAttribute(key="childType" value="config");
         setPageSessionAttribute(key="rest-api" value="true");
+        setSessionAttribute(key="backPage" value="../../common/configuration/configurations");
         gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", result="#{requestScope.listOfRows}");
         setPageSessionAttribute(key="confirmDeleteMsg" value="$resource{i18nc.msg.JS.confirmDeleteConfigs}");
         setPageSessionAttribute(key="createLink" value="#{request.contextPath}/common/configuration/configurationNew.jsf");

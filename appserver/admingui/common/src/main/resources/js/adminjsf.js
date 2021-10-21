@@ -94,7 +94,7 @@ function disableAllButtons() {
     var inputs = document.getElementsByTagName("input");
     for ( i=0; i < inputs.length; i++) {
         component = inputs[i];
-        if (component.type == "submit"){
+        if (component.type == "submit" && !component.id.startsWith("Masthead:")){
             component.disabled=true;
         }
     }

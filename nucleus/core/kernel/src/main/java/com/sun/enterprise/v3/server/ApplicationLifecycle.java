@@ -30,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.Level;
@@ -62,6 +63,8 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.glassfish.hk2.classmodel.reflect.Parser;
 import org.glassfish.hk2.classmodel.reflect.ParsingContext;
 import org.glassfish.hk2.classmodel.reflect.Types;
+import org.glassfish.hk2.classmodel.reflect.util.CommonModelRegistry;
+import org.glassfish.hk2.classmodel.reflect.util.ResourceLocator;
 import org.glassfish.internal.api.*;
 import org.glassfish.internal.data.*;
 import org.glassfish.internal.deployment.ApplicationLifecycleInterceptor;
@@ -520,7 +523,11 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
 
                 try {
                     // scan the jar and store the result in the deployment context.
-                    ParsingContext parsingContext = new ParsingContext.Builder().logger(context.getLogger()).executorService(executorService).build();
+                    ParsingContext parsingContext = new ParsingContext.Builder()
+                            .logger(context.getLogger())
+                            .executorService(executorService)
+                            .locator(getResourceLocator())
+                            .build();
                     Parser parser = new Parser(parsingContext);
                     ReadableArchiveScannerAdapter scannerAdapter = new ReadableArchiveScannerAdapter(parser, context.getSource());
                     parser.parse(scannerAdapter, null);
@@ -546,6 +553,29 @@ public class ApplicationLifecycle implements Deployment, PostConstruct {
                 }
             }
         }
+    }
+
+    private ResourceLocator getResourceLocator() {
+        if (CommonModelRegistry.getInstance().canLoadResources()) {
+            return null;
+        }
+        ClassLoaderHierarchy clh = habitat.getService(ClassLoaderHierarchy.class);
+        ClassLoader cl = clh.getCommonClassLoader();
+        return new ResourceLocator() {
+            private boolean excluded(String name) {
+                return name.startsWith("java/") || name.startsWith("sun/") || name.startsWith("com/sun/");
+            }
+
+            @Override
+            public InputStream openResourceStream(String name) throws IOException {
+                return excluded(name) ? null : cl.getResourceAsStream(name);
+            }
+
+            @Override
+            public URL getResource(String name) {
+                return excluded(name) ? null : cl.getResource(name);
+            }
+        };
     }
 
     private void notifyLifecycleInterceptorsBefore(final ExtendedDeploymentContext.Phase phase,

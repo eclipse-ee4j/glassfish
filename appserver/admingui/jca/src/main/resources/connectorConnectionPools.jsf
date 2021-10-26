@@ -25,8 +25,7 @@
 <!composition template="/templates/default.layout"
     guiTitle="$resource{i18njca.connectorConnectionPools.pageTitle}"
     guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:Connectors');
-        admingui.nav.refreshTree('treeForm:tree:resources:jmsResources:jmsConnectionFactories');
-        setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0);"
+        admingui.nav.refreshTree('treeForm:tree:resources:jmsResources:jmsConnectionFactories');"
 >
 <!define name="content">
     <event>
@@ -48,7 +47,7 @@
         setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
         setPageSessionAttribute(key="rest-api" value="true");
         gf.getChildList(parentEndpoint="#{pageSession.parentUrl}", childType="#{pageSession.childType}", result="#{requestScope.listOfRows}");
-        
+
     />
     </event>
 "    <script type="text/javascript">admingui.nav.selectTreeNodeById(admingui.nav.TREE_ID+":resources:Connectors:connectorConnectionPools");</script>
@@ -56,11 +55,11 @@
 #include "/common/shared/alertMsg_1.inc"
                  <sun:title id="propertyContentPage" title="$resource{i18njca.connectorConnectionPools.pageTitle}"
                  helpText="$resource{i18njca.connectorConnectionPools.pageTitleHelp}" />
-		 "<br /> <br />
+     "<br /> <br />
 
 #include "/jca/poolTable.inc"
 
-	<sun:hidden id="helpKey" value="$resource{help_jca.connectorConnectionPools}" />
+  <sun:hidden id="helpKey" value="$resource{help_jca.connectorConnectionPools}" />
             </sun:form>
 </define>
 </composition>

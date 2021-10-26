@@ -24,8 +24,7 @@
 />
 <!composition template="/templates/default.layout"
     guiTitle="$resource{i18njca.resourceAdapterConfig.pageTitle}"
-    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:resourceAdapterConfigs');
-        setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\');', 0);"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:resourceAdapterConfigs');"
 >
 <!define name="content">
     <event>
@@ -51,7 +50,7 @@
 #include "/common/shared/alertMsg_1.inc"
                  <sun:title id="propertyContentPage" title="$resource{i18njca.resourceAdapterConfig.pageTitle}"
                  helpText="$resource{i18njca.resourceAdapterConfig.pageTitleHelp}" />
-		 "<br /> <br />
+     "<br /> <br />
 
 <sun:table id="poolTable" title="#{tableTitle}"
         deselectMultipleButton="$boolean{true}"
@@ -85,7 +84,7 @@
 
 </sun:table>
 
-	<sun:hidden id="helpKey" value="$resource{help_jca.resourceAdapterConfigs}" />
+  <sun:hidden id="helpKey" value="$resource{help_jca.resourceAdapterConfigs}" />
             </sun:form>
 </define>
 </composition>

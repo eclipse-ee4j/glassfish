@@ -24,8 +24,7 @@
 />
 <!composition template="/templates/default.layout"
     guiTitle="$resource{i18njca.workSecurityMaps.pageTitle}"
-    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:Connectors:workSecurityMaps');
-        setTimeout('admingui.table.changeOneTableButton(\\\\\'#{pageSession.topActionGroup}\\\\\', \\\\\'#{pageSession.tableId}\\\\\'); admingui.table.initAllRows(\\\\\'#{pageSession.tableId}\\\\\');', 0);"
+    guiTemplateOnLoad="admingui.nav.refreshTree('treeForm:tree:resources:Connectors:workSecurityMaps');"
 >
 <!define name="content">
     <event>
@@ -49,10 +48,10 @@
 #include "/common/shared/alertMsg_1.inc"
                  <sun:title id="propertyContentPage" title="$resource{i18njca.workSecurityMaps.pageTitle}"
                  helpText="$resource{i18njca.workSecurityMaps.pageTitleHelp}" />
-		 "<br /> <br />
+     "<br /> <br />
 
 #include "/jca/securityMapsTable.inc"
-	<sun:hidden id="helpKey" value="$resource{help_jca.workSecurityMaps}" />
+  <sun:hidden id="helpKey" value="$resource{help_jca.workSecurityMaps}" />
             </sun:form>
 </define>
 </composition>

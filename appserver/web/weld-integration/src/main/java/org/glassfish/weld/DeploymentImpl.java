@@ -134,7 +134,7 @@ public class DeploymentImpl implements CDI11Deployment {
             logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE, new Object[] { beanClass });
         }
 
-        List<BeanDeploymentArchive> beanDeploymentArchives = getBeanDeploymentArchives();
+        // Check if we have already created a bean archive for this bean class, and if so return it.
 
         for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
             if (logger.isLoggable(FINE)) {
@@ -197,29 +197,34 @@ public class DeploymentImpl implements CDI11Deployment {
                 new HashSet<>(),
                 context);
 
+        // If bean.xml explicitly says to ignore this archive, return
+        // without adding the bean archive
+
         BeansXml beansXml = newBeanDeploymentArchive.getBeansXml();
-        if (beansXml == null || !beansXml.getBeanDiscoveryMode().equals(NONE)) {
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
-            }
-
-            for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
-                beanDeploymentArchive.getBeanDeploymentArchives().add(newBeanDeploymentArchive);
-            }
-
-            if (logger.isLoggable(FINE)) {
-                logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,
-                        new Object[] { beanClass, newBeanDeploymentArchive });
-            }
-
-            beanDeploymentArchives.add(newBeanDeploymentArchive);
-            idToBeanDeploymentArchive.put(newBeanDeploymentArchive.getId(), newBeanDeploymentArchive);
-            extensionBDAMap.put(beanClass.getClassLoader(), newBeanDeploymentArchive);
-
-            return newBeanDeploymentArchive;
+        if (beansXml != null && beansXml.getBeanDiscoveryMode().equals(NONE)) {
+            return null;
         }
 
-        return null;
+        // Add the new BeanDeploymentArchive to all root BeanDeploymentArchives of this deployment.
+
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_ADD_NEW_BDA_TO_ROOTS, new Object[] {});
+        }
+
+        for (BeanDeploymentArchive beanDeploymentArchive : beanDeploymentArchives) {
+            beanDeploymentArchive.getBeanDeploymentArchives().add(newBeanDeploymentArchive);
+        }
+
+        if (logger.isLoggable(FINE)) {
+            logger.log(FINE, LOAD_BEAN_DEPLOYMENT_ARCHIVE_RETURNING_NEWLY_CREATED_BDA,
+                    new Object[] { beanClass, newBeanDeploymentArchive });
+        }
+
+        beanDeploymentArchives.add(newBeanDeploymentArchive);
+        idToBeanDeploymentArchive.put(newBeanDeploymentArchive.getId(), newBeanDeploymentArchive);
+        extensionBDAMap.put(beanClass.getClassLoader(), newBeanDeploymentArchive);
+
+        return newBeanDeploymentArchive;
     }
 
     @Override
@@ -329,7 +334,7 @@ public class DeploymentImpl implements CDI11Deployment {
     public void scanArchive(ReadableArchive archive, Collection<EjbDescriptor> ejbs, DeploymentContext context) {
         if (libJarRootBdas == null) {
             libJarRootBdas = scanForLibJars(archive, ejbs, context);
-            if (libJarRootBdas != null && libJarRootBdas.size() > 0) {
+            if (!isEmpty(libJarRootBdas)) {
                 return;
             }
         }

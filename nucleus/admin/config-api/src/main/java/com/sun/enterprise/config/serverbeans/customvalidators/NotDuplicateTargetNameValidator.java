@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,7 +17,6 @@
 
 package com.sun.enterprise.config.serverbeans.customvalidators;
 
-import com.sun.enterprise.config.serverbeans.ConfigBeansUtilities;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Cluster;
 import com.sun.enterprise.config.serverbeans.Config;
@@ -26,7 +26,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import org.glassfish.api.admin.config.Named;
 import org.glassfish.hk2.api.ServiceLocator;
-import org.glassfish.hk2.api.ServiceLocatorFactory;
+import org.jvnet.hk2.config.Dom;
 
 /**
  * Validation logic for NotDuplicateTargetName constraint
@@ -35,23 +35,30 @@ import org.glassfish.hk2.api.ServiceLocatorFactory;
  */
 public class NotDuplicateTargetNameValidator implements ConstraintValidator<NotDuplicateTargetName, Named> {
 
-    Domain domain = null;
-
     @Override
     public void initialize(NotDuplicateTargetName constraintAnnotation) {
-        ServiceLocator locator = ServiceLocatorFactory.getInstance().find("default");
-        if (locator == null)
-            return;
-
-        ConfigBeansUtilities cbu = locator.getService(ConfigBeansUtilities.class);
-        if (cbu == null)
-            return;
-
-        domain = cbu.getDomain();
     }
 
     @Override
     public boolean isValid(Named bean, ConstraintValidatorContext context) {
+        if (bean == null) {
+            return true;
+        }
+
+        Dom beanDom = Dom.unwrap(bean);
+        if (beanDom == null) {
+            return true;
+        }
+
+        ServiceLocator locator = beanDom.getHabitat();
+        if (locator == null) {
+            return true;
+        }
+
+        Domain domain = locator.getService(Domain.class);
+        if (domain == null) {
+            return true;
+        }
 
         // When we search for name clashes we typically do not check the
         // type of object being created since that check has already been
@@ -76,10 +83,6 @@ public class NotDuplicateTargetNameValidator implements ConstraintValidator<NotD
         }
 
         String name = bean.getName();
-
-        if (domain == null) {
-            return true;
-        }
 
         if ((checkCluster && domain.getClusterNamed(name) != null) || (checkConfig && domain.getConfigNamed(name) != null)
                 || (checkNode && domain.getNodeNamed(name) != null) || (checkServer && domain.getServerNamed(name) != null)) {

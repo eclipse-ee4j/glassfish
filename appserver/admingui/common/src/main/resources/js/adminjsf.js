@@ -94,7 +94,7 @@ function disableAllButtons() {
     var inputs = document.getElementsByTagName("input");
     for ( i=0; i < inputs.length; i++) {
         component = inputs[i];
-        if (component.type == "submit"){
+        if (component.type == "submit" && !component.id.startsWith("Masthead:")){
             component.disabled=true;
         }
     }
@@ -2093,19 +2093,15 @@ admingui.table = {
     },
 
     changeButtons : function (buttons,tableId){
-        try {
-            var table = document.getElementById(tableId);// + ":_table");
-            var selections = table.getAllSelectedRowsCount();
-            var disabled = (selections > 0) ? false : true;
-            for (count=0; count < buttons.length; count++) {
-                var element = document.getElementById(buttons[count]);
-                if (element) {
-                    element.disabled = disabled;
-                    element.className = disabled ? "Btn2Dis_sun4" : "Btn1_sun4";
-                }
+        var table = document.getElementById(tableId);// + ":_table");
+        var selections = table.getAllSelectedRowsCount();
+        var disabled = (selections > 0) ? false : true;
+        for (count=0; count < buttons.length; count++) {
+            var element = document.getElementById(buttons[count]);
+            if (element) {
+                element.disabled = disabled;
+                element.className = disabled ? "Btn2Dis_sun4" : "Btn1_sun4";
             }
-        } catch (err) {
-            alert(err);
         }
     },
 

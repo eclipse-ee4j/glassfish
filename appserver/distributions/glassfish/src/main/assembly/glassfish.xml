@@ -2,6 +2,7 @@
 <!--
 
     Copyright (c) 2013, 2021 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -266,7 +267,7 @@
                 <include>javaee.jar</include>
                 <include>appserv-rt.jar</include>
                 <include>gf-client.jar</include>
-                <include>grizzly-npn-bootstrap.jar</include>
+                <include>grizzly-npn-api.jar</include>
             </includes>
             <outputDirectory>${install.dir.name}/glassfish/lib</outputDirectory>
         </fileSet>

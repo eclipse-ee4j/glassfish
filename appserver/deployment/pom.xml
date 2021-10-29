@@ -39,6 +39,5 @@
         <module>dol</module>
         <module>javaee-core</module>
         <module>javaee-full</module>
-        <module>jsr88-jar</module>
     </modules>
 </project>

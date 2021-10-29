@@ -19,12 +19,18 @@ package org.glassfish.appclient.client;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+
+import java.lang.reflect.Method;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -81,4 +87,44 @@ public class CLIBootstrapTest {
         );
     }
 
+    @Test
+    public void testCommandLineArgument() throws Throwable {
+        CLIBootstrap.CommandLineArgument instance = (new CLIBootstrap()).new CommandLineArgument(".*", Pattern.DOTALL);
+        String expect = "\"test\" \"append\"";
+        StringBuilder preCommandLineArgs = new StringBuilder("\"test\"");
+        String appendArg = "append";
+        StringBuilder actual = instance.format(preCommandLineArgs, true, appendArg);
+        assertEquals(actual.toString(), expect);
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    public void testQuoteEscapedArgument() throws Throwable {
+        String expect = "\"a\\\\\\\"b\\\\\\$\\`c\\\"\\\\\"";
+        String inputArgs = "a\\\"b\\$`c\"\\";
+        String actual = CLIBootstrap.quoteEscapedArgument(inputArgs);
+        assertEquals(actual.toString(), expect);
+    }
+
+    @Test
+    public void testAcceptabilityForEscapedDoubleQuotes() throws Throwable {
+        runTestUsingConvertInputArgsVariable("a\\\"b c\\\"d", new String[] { "a\\\"b", "c\\\"d" });
+    }
+
+    @Test
+    public void testAcceptabilityForQuotedEscapedDoubleQuotes() throws Throwable {
+        runTestUsingConvertInputArgsVariable("\"a \\\" b \\\" c\"", new String[] { "a \\\" b \\\" c" });
+    }
+
+    @Test
+    public void testAcceptabilityForQuotedEmptyStr() throws Throwable {
+        runTestUsingConvertInputArgsVariable("\"\"", new String[] { "" });
+    }
+
+    private void runTestUsingConvertInputArgsVariable( String inputArgs, String[] expect) throws Throwable {
+        Method convertInputArgsVariableMethod = CLIBootstrap.class.getDeclaredMethod("convertInputArgsVariable", String.class);
+        convertInputArgsVariableMethod.setAccessible(true);
+        String[] actual = (String[]) convertInputArgsVariableMethod.invoke(null, inputArgs);
+        assertArrayEquals(actual, expect);
+    }
 }

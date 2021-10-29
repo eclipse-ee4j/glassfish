@@ -1624,13 +1624,6 @@
             <type>zip</type>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.deployment</groupId>
-            <artifactId>sun-as-jsr88-dm-frag</artifactId>
-            <version>${project.version}</version>
-            <type>zip</type>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 
     <properties>
@@ -1669,8 +1662,6 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${projecty.build.outputDirectory}</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>true</excludeTransitive>
                             <includeScope>compile</includeScope>
                             <includeScope>runtime</includeScope>
@@ -1715,8 +1706,6 @@
                         <phase>generate-resources</phase>
                         <configuration>
                             <outputDirectory>${artifact-collection.directory}</outputDirectory>
-                            <overWriteReleases>false</overWriteReleases>
-                            <overWriteSnapshots>true</overWriteSnapshots>
                             <excludeTransitive>true</excludeTransitive>
                             <includeTypes>zip</includeTypes>
                             <includeArtifactIds>mq-distribution</includeArtifactIds>
@@ -1725,11 +1714,12 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <artifactId>maven-assembly-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>jdbcra-cp.rar</id>
+                        <id>rars</id>
                         <goals>
                             <goal>single</goal>
                         </goals>
@@ -1737,61 +1727,9 @@
                         <configuration>
                             <descriptors>
                                 <descriptor>src/assembly/jdbcra-cp.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jdbcra-ds.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
-                                <descriptor>src/assembly/jdbcra-ds.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jdbcra-dm.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
                                 <descriptor>src/assembly/jdbcra-dm.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jdbcra-xa.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
+                                <descriptor>src/assembly/jdbcra-ds.xml</descriptor>
                                 <descriptor>src/assembly/jdbcra-xa.xml</descriptor>
-                            </descriptors>
-                            <attach>false</attach>
-                            <outputDirectory>${rar.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>jmsra.rar</id>
-                        <goals>
-                            <goal>single</goal>
-                        </goals>
-                        <phase>process-resources</phase>
-                        <configuration>
-                            <descriptors>
                                 <descriptor>src/assembly/jmsra.xml</descriptor>
                             </descriptors>
                             <attach>false</attach>
@@ -1821,6 +1759,7 @@
                     </execution>
                 </executions>
             </plugin>
+
             <plugin>
                 <groupId>org.glassfish.hk2</groupId>
                 <artifactId>hk2-inhabitant-generator</artifactId>

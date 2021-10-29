@@ -161,7 +161,9 @@
             <sun:property id="instanceName"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.instanceName}" >
                 <sun:staticText id="instanceName" text="#{pageSession.instanceName}" />
             </sun:property>
-
+            <sun:property id="statusProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.common.status}">
+                <sun:staticText id="status" text="#{pageSession.statusString}" />
+            </sun:property>
         <sun:property id="jvmProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18n.inst.JVMLabel}">
             <sun:hyperlink id="jvmlink" text="$resource{i18nc.inst.jvmReport}"
                 onClick="javascript:

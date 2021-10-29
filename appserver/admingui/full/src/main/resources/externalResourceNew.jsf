@@ -30,6 +30,7 @@
         setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/full/externalResourceNew.jsf");
         setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/full/externalResources.jsf");
         setPageSessionAttribute(key="childType" value="external-jndi-resource");
+        setPageSessionAttribute(key="factoryClassHelpText" value="$resource{i18njmail.jndiResource.factoryClassHelp}");
         setPageSessionAttribute(key="showJndiLookup" value="#{true}");
         setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");
         gf.getDefaultValues(endpoint="#{pageSession.parentUrl}/#{pageSession.childType}", valueMap="#{pageSession.valueMap}");

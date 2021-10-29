@@ -63,7 +63,7 @@
             </sun:property> 
 
 
-         <sun:property id="factoryClassProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18njmail.jndiResource.factoryClass}" helpText="$resource{i18njmail.jndiResource.factoryClassHelp}">
+         <sun:property id="factoryClassProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18njmail.jndiResource.factoryClass}" helpText="#{factoryClassHelpText}">
             <sun:textField id="factoryClass" styleClass="required"  columns="$int{70}" maxLength="#{sessionScope.fieldLengths['maxLength.jndiResource.factoryClass']}" text="#{pageSession.valueMap['factoryClass']}" required="#{true}" >
                 <!afterCreate
                         getClientId(component="$this{component}" clientId=>$page{factoryClassTextId});

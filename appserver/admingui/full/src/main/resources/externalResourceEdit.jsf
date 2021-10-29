@@ -58,6 +58,7 @@
     gf.getEntityAttrs(endpoint="#{pageSession.selfUrl}", valueMap="#{pageSession.valueMap}");
     setPageSessionAttribute(key="convertToFalseList" value={"enabled"});
     setPageSessionAttribute(key="skipAttrsList", value={"jndiName"});
+    setPageSessionAttribute(key="factoryClassHelpText" value="$resource{i18njmail.jndiResource.factoryClassHelp}");
     setPageSessionAttribute(key="showJndiLookup" value="#{true}");
     
     gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json" method="GET" result="#{requestScope.propTable}");

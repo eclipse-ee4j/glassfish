@@ -59,6 +59,7 @@
 
     setPageSessionAttribute(key="convertToFalseList" value={"enabled"});
     setPageSessionAttribute(key="skipAttrsList", value={"jndiName"});
+    setPageSessionAttribute(key="factoryClassHelpText" value="$resource{i18njmail.customResource.factoryClassHelp}");
     setPageSessionAttribute(key="showJndiLookup" value="#{false}");
     gf.restRequest(endpoint="#{sessionScope.REST_URL}/resources/get-built-in-custom-resources"
                    method="GET"

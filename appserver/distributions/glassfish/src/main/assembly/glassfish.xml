@@ -53,7 +53,7 @@
             <outputDirectory>${install.dir.name}/glassfish/bin</outputDirectory>
         </fileSet>
         <fileSet>
-            <directory>${temp.dir}/appclient-scripts/config</directory>
+            <directory>${temp.dir}/appclient-scripts/glassfish/config</directory>
             <outputDirectory>${install.dir.name}/glassfish/config</outputDirectory>
         </fileSet>
 

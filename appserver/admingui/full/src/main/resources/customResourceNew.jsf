@@ -30,6 +30,7 @@
         setPageSessionAttribute(key="selfPage" value="#{request.contextPath}/full/customResourceNew.jsf");
         setPageSessionAttribute(key="parentPage" value="#{request.contextPath}/full/customResources.jsf");
         setPageSessionAttribute(key="childType" value="custom-resource");
+        setPageSessionAttribute(key="factoryClassHelpText" value="$resource{i18njmail.customResource.factoryClassHelp}");
         setPageSessionAttribute(key="showJndiLookup" value="#{false}");
         
         setPageSessionAttribute(key="parentUrl", value="#{sessionScope.REST_URL}/resources");

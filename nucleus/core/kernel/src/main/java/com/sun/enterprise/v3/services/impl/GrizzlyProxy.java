@@ -89,10 +89,11 @@ public class GrizzlyProxy implements NetworkProxy {
         } catch (NumberFormatException e) {
             logger.log(Level.SEVERE, KernelLoggerInfo.badPort, port);
         }
+        String addressAsString = networkListener.getAddress();
         try {
-            address = InetAddress.getByName(networkListener.getAddress());
+            address = InetAddress.getByName(addressAsString);
         } catch (UnknownHostException ex) {
-            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.badAddress, ex, address);
+            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.badAddress, ex, addressAsString);
         }
 
         grizzlyListener = createGrizzlyListener(networkListener);

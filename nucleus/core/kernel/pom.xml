@@ -171,6 +171,10 @@
             <artifactId>junit-jupiter-engine</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.easymock</groupId>
+            <artifactId>easymock</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.hamcrest</groupId>
             <artifactId>hamcrest</artifactId>
         </dependency>

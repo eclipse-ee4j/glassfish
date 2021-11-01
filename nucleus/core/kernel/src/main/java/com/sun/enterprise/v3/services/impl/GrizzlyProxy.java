@@ -78,27 +78,35 @@ public class GrizzlyProxy implements NetworkProxy {
      * configuration object.
      */
     public void initialize() throws IOException {
+        portNumber = initPort(networkListener);
+        address = initAddress(networkListener);
+        grizzlyListener = createGrizzlyListener(networkListener);
+
+        grizzlyListener.configure(grizzlyService.getHabitat(), networkListener);
+    }
+
+    int initPort(final NetworkListener networkListener) {
         String port = networkListener.getPort();
-        portNumber = 8080;
         if (port == null) {
             logger.severe(KernelLoggerInfo.noPort);
             throw new RuntimeException("Cannot find port information from domain configuration");
         }
         try {
-            portNumber = Integer.parseInt(port);
-        } catch (NumberFormatException e) {
+            return Integer.parseInt(port);
+        } catch (final NumberFormatException e) {
             logger.log(Level.SEVERE, KernelLoggerInfo.badPort, port);
+            return 8080;
         }
+    }
+
+    InetAddress initAddress(final NetworkListener networkListener) {
         String addressAsString = networkListener.getAddress();
         try {
-            address = InetAddress.getByName(addressAsString);
-        } catch (UnknownHostException ex) {
-            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.badAddress, ex, addressAsString);
+            return InetAddress.getByName(addressAsString);
+        } catch (final UnknownHostException e) {
+            LogHelper.log(logger, Level.SEVERE, KernelLoggerInfo.badAddress, e, addressAsString);
+            return null;
         }
-
-        grizzlyListener = createGrizzlyListener(networkListener);
-
-        grizzlyListener.configure(grizzlyService.getHabitat(), networkListener);
     }
 
     protected GrizzlyListener createGrizzlyListener(

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -149,7 +150,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="8")
+    @Attribute(defaultValue = "8", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getSteadyPoolSize();
@@ -170,7 +171,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="32")
+    @Attribute(defaultValue = "32", dataType = Integer.class)
     @Min(value=1)
     @Max(value=Integer.MAX_VALUE)
     String getMaxPoolSize();
@@ -192,7 +193,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="60000")
+    @Attribute(defaultValue = "60000", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getMaxWaitTimeInMillis();
@@ -216,7 +217,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="2")
+    @Attribute(defaultValue = "2", dataType = Integer.class)
     @Min(value=1)
     @Max(value=Integer.MAX_VALUE)
     String getPoolResizeQuantity();
@@ -243,7 +244,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="300")
+    @Attribute(defaultValue = "300", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getIdleTimeoutInSeconds();
@@ -481,7 +482,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="0")
+    @Attribute(defaultValue = "0", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getValidateAtmostOncePeriodInSeconds();
@@ -509,7 +510,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="0")
+    @Attribute(defaultValue = "0", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getConnectionLeakTimeoutInSeconds();
@@ -551,7 +552,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="0")
+    @Attribute(defaultValue = "0", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getConnectionCreationRetryAttempts();
@@ -574,7 +575,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="10")
+    @Attribute(defaultValue = "10", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getConnectionCreationRetryIntervalInSeconds();
@@ -706,7 +707,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="0")
+    @Attribute(defaultValue = "0", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getStatementCacheSize();
@@ -745,7 +746,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="0")
+    @Attribute(defaultValue = "0", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getStatementLeakTimeoutInSeconds();
@@ -824,7 +825,7 @@ public interface JdbcConnectionPool extends ConfigBeanProxy, Resource, ResourceP
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="0")
+    @Attribute(defaultValue = "0", dataType = Integer.class)
     @Min(value=0)
     @Max(value=Integer.MAX_VALUE)
     String getMaxConnectionUsageCount();

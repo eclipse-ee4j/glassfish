@@ -172,6 +172,7 @@
                         <attach>false</attach>
                         <appendAssemblyId>false</appendAssemblyId>
                         <useProjectArtifact>false</useProjectArtifact>
+                        <ignoreMissingDescriptor>true</ignoreMissingDescriptor>
                     </configuration>
                 </plugin>
                 <plugin>

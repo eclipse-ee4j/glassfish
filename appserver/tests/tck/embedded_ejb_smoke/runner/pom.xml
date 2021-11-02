@@ -21,14 +21,14 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>embedded_ejb_smoke</artifactId>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>embedded-ejb-smoke</artifactId>
         <version>6.2.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>runner</artifactId>
+    <artifactId>embedded-ejb-smoke-runner</artifactId>
 
-    <name>GlassFish Tests - TCK - Run embedded EJB smoke</name>
+    <name>TCK: Run embedded EJB smoke</name>
     <description>
         This test starts up the embedded EJB container as close as possible to how the actual TCK does this.
         It's intended to catch errors with starting and deploying this embedded container.
@@ -43,15 +43,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.sun</groupId>
+            <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>javatest</artifactId>
-            <version>5.0</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun</groupId>
+            <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>tsharness</artifactId>
-            <version>1.4</version>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -89,28 +89,21 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Grab-Glassfish</id>
+                        <id>unpack-glassfish</id>
                         <phase>process-test-resources</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.main.distributions</groupId>
-                                    <artifactId>glassfish</artifactId>
-                                    <version>${glassfish.version}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${tck.home}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
+                            <includeArtifactIds>glassfish</includeArtifactIds>
+                            <outputDirectory>${tck.home}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
+                <artifactId>maven-failsafe-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>
                         <tck.home>${tck.home}</tck.home>

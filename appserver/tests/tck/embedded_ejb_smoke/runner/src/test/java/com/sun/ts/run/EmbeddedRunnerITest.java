@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class EmbeddedRunnerTest {
+public class EmbeddedRunnerITest {
 
     @Test
     public void test() {

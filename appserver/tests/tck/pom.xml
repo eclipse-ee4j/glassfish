@@ -26,12 +26,13 @@
         <version>6.2.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>tests.tck</artifactId>
+    <groupId>org.glassfish.main.tests.tck</groupId>
+    <artifactId>tck</artifactId>
     <packaging>pom</packaging>
-
-    <name>GlassFish Tests - TCK</name>
+    <name>TCK: Parent</name>
 
     <modules>
+        <module>tck-download</module>
         <module>authorization</module>
         <module>embedded_ejb_smoke</module>
     </modules>

@@ -21,26 +21,20 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>embedded_ejb_smoke</artifactId>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>embedded-ejb-smoke</artifactId>
         <version>6.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>ejb-lite-basic</artifactId>
 
-    <name>EJB Lite Basic</name>
+    <name>TCK: EJB Lite Basic</name>
     <description>
         This module builds an EJB test jar that is to be deployed. As per the Jakarta TCK
         it contains several test harness classes.
     </description>
 
     <dependencies>
-        <dependency>
-            <groupId>org.glassfish.main.tests</groupId>
-            <artifactId>glassfish-javatest-install</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <dependency>
             <groupId>jakarta.ejb</groupId>
             <artifactId>jakarta.ejb-api</artifactId>
@@ -55,14 +49,16 @@
         </dependency>
 
         <dependency>
-            <groupId>com.sun</groupId>
+            <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>javatest</artifactId>
-            <version>5.0</version>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.sun</groupId>
+            <groupId>org.glassfish.main.tests.tck</groupId>
             <artifactId>tsharness</artifactId>
-            <version>1.4</version>
+            <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -39,17 +39,6 @@
 
     <build>
         <plugins>
-            <!-- all artifacts under this module are duplicating other which are unavailable for
-                Maven at this moment, so we make them available locally at least -->
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-install</id>
-                        <phase>disabled</phase>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-deploy-plugin</artifactId>
                 <executions>

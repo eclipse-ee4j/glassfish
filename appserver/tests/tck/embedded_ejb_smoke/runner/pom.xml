@@ -55,16 +55,16 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>ejb-lite-basic</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.glassfish.main.distributions</groupId>
             <artifactId>glassfish</artifactId>
             <version>${glassfish.version}</version>
             <type>zip</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.main.tests</groupId>
-            <artifactId>ejb-lite-basic</artifactId>
-            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>

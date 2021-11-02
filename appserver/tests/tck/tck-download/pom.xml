@@ -24,7 +24,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.glassfish.main.tests.tck</groupId>
-        <artifactId>tck</artifactId>  <version>6.2.3-SNAPSHOT</version>
+        <artifactId>tck</artifactId>
+        <version>6.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>tck-download</artifactId>
@@ -36,38 +37,4 @@
         <module>tsharness</module>
         <module>javatest</module>
     </modules>
-
-    <build>
-        <plugins>
-            <!-- all artifacts under this module are duplicating other which are unavailable for
-                Maven at this moment, so we make them available locally at least -->
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-jar</id>
-                        <phase>disabled</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-install-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-install</id>
-                        <phase>disabled</phase>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>default-deploy</id>
-                        <phase>disabled</phase>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
 </project>

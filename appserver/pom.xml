@@ -679,15 +679,25 @@
                     <specs>
                         <spec>
                             <artifact>
-                                <groupId>com.sun.mail</groupId>
-                                <artifactId>jakarta.mail</artifactId>
+                                <groupId>jakarta.activation</groupId>
+                                <artifactId>jakarta.activation-api</artifactId>
+                                <version>${activation.version}</version>
+                            </artifact>
+                            <jarType>api</jarType>
+                            <specVersion>2.1</specVersion>
+                            <specImplVersion>${activation.version}</specImplVersion>
+                            <apiPackage>jakarta.activation</apiPackage>
+                        </spec>
+                        <spec>
+                            <artifact>
+                                <groupId>jakarta.mail</groupId>
+                                <artifactId>jakarta.mail-api</artifactId>
                                 <version>${mail.version}</version>
                             </artifact>
-                            <jarType>impl</jarType>
-                            <specVersion>2.0</specVersion>
-                            <implVersion>2.0.0</implVersion>
+                            <jarType>api</jarType>
+                            <specVersion>2.1</specVersion>
+                            <specImplVersion>${mail.version}</specImplVersion>
                             <apiPackage>jakarta.mail</apiPackage>
-                            <implNamespace>com.sun.mail</implNamespace>
                         </spec>
                         <spec>
                             <artifact>

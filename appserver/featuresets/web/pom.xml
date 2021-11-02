@@ -681,8 +681,18 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>jakarta.mail</artifactId>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.angus</groupId>
+            <artifactId>angus-mail</artifactId>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

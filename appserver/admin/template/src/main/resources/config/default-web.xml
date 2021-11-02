@@ -317,7 +317,8 @@
         jakarta.jms-api.jar
         jakarta.activation-api.jar
         angus-activation.jar
-        jakarta.mail.jar
+        jakarta.mail-api.jar
+        angus-mail.jar
         jakarta.management.j2ee-api.jar
         jakarta.persistence.jar
         jakarta.resource-api.jar

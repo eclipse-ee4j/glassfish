@@ -106,7 +106,8 @@
         <jersey.version>3.0.3</jersey.version>
 
         <!-- Jakarta Mail -->
-        <mail.version>2.0.1</mail.version>
+        <mail.version>2.1.0-RC2</mail.version>
+        <angus.mail.version>1.0.0-M1</angus.mail.version>
 
         <!-- Jakarta Activation -->
         <activation.version>2.1.0-RC2</activation.version>
@@ -404,9 +405,9 @@
                 <version>${mail.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.mail</groupId>
-                <artifactId>jakarta.mail</artifactId>
-                <version>${mail.version}</version>
+                <groupId>org.eclipse.angus</groupId>
+                <artifactId>angus-mail</artifactId>
+                <version>${angus.mail.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.activation</groupId>

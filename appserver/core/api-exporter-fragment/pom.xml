@@ -66,6 +66,7 @@
                             <regex>\s+</regex>
                             <replacement> </replacement>
                             <value>
+                                jakarta.activation;
                                 jakarta.annotation;
                                 jakarta.annotation.security;
                                 jakarta.annotation.sql;

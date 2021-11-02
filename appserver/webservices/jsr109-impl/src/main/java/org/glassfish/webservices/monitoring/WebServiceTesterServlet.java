@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
@@ -78,7 +78,8 @@ public class WebServiceTesterServlet extends HttpServlet {
 
     //modules required by wsimport tool
     private static final List<String> WSIMPORT_MODULES = Arrays.asList(new String[] {
-        "com.sun.activation.jakarta.activation",
+        "jakarta.activation-api",
+        "angus-activation",
         "jakarta.annotation-api",
         "jakarta.xml.bind-api",
         "com.sun.xml.bind.jaxb-osgi",

@@ -383,7 +383,8 @@
 <!-- the following targets are for running the wsit tests -->
     <path id="wsit.classpath">
         <pathelement location="${glassfish.home}/modules/jakarta.xml.bind-api.jar"/>
-        <pathelement location="${glassfish.home}/modules/jakarta.activation.jar"/>
+        <pathelement location="${glassfish.home}/modules/jakarta.activation-api.jar"/>
+        <pathelement location="${glassfish.home}/modules/angus-activation.jar"/>
         <pathelement location="${glassfish.home}/modules/jakarta.mail.jar"/>
         <pathelement location="${glassfish.home}/modules/jaxb-osgi.jar"/>
         <pathelement location="${glassfish.home}/modules/webservices-api-osgi.jar"/>

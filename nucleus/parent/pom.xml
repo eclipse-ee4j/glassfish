@@ -109,7 +109,8 @@
         <mail.version>2.0.1</mail.version>
 
         <!-- Jakarta Activation -->
-        <activation.version>2.0.1</activation.version>
+        <activation.version>2.1.0-RC2</activation.version>
+        <angus.activation.version>1.0.0-M1</angus.activation.version>
 
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
@@ -408,9 +409,14 @@
                 <version>${mail.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.sun.activation</groupId>
-                <artifactId>jakarta.activation</artifactId>
+                <groupId>jakarta.activation</groupId>
+                <artifactId>jakarta.activation-api</artifactId>
                 <version>${activation.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.angus</groupId>
+                <artifactId>angus-activation</artifactId>
+                <version>${angus.activation.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.glassfish.pfl</groupId>

@@ -40,6 +40,14 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>javatest-src</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 
     <build>
@@ -48,7 +56,7 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>unpack-tsharness-tck</id>
+                        <id>unpack-authorization-tck</id>
                         <phase>prepare-package</phase>
                         <goals>
                             <goal>unpack-dependencies</goal>
@@ -56,14 +64,50 @@
                         <configuration>
                             <outputDirectory>${project.build.directory}</outputDirectory>
                             <includes>authorization-tck/lib/javatest.jar</includes>
+                            <includeArtifactIds>jakarta-authorization-tck</includeArtifactIds>
                             <includeGroupIds>org.glassfish.main.tests.tck</includeGroupIds>
                             <fileMappers>
                                 <org.codehaus.plexus.components.io.filemappers.FlattenFileMapper/>
                             </fileMappers>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>unpack-javatest-src</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                            <includes>jtharness-jt5.0/src/*</includes>
+                            <includeArtifactIds>javatest-src</includeArtifactIds>
+                            <includeGroupIds>org.glassfish.main.tests.tck</includeGroupIds>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-javatests-sources-jar</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <jar
+                                    basedir="${project.build.directory}/jtharness-jt5.0/src"
+                                    destfile="${project.build.directory}/javatest-sources.jar" />
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            
             <plugin>
                 <artifactId>maven-install-plugin</artifactId>
                 <executions>
@@ -75,6 +119,7 @@
                         </goals>
                         <configuration>
                             <file>${project.build.directory}/javatest.jar</file>
+                            <sources>${project.build.directory}/javatest-sources.jar</sources>
                             <groupId>${project.groupId}</groupId>
                             <artifactId>${project.artifactId}</artifactId>
                             <version>${project.version}</version>

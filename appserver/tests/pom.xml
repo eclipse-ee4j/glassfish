@@ -38,13 +38,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.codehaus.mojo</groupId>
-                    <artifactId>findbugs-maven-plugin</artifactId>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
-                <plugin>
                     <groupId>org.glassfish.copyright</groupId>
                     <artifactId>glassfish-copyright-maven-plugin</artifactId>
                     <version>${copyright-plugin.version}</version>
@@ -130,6 +123,10 @@
         </profile>
         <profile>
             <id>fastest</id>
+            <modules />
+        </profile>
+        <profile>
+            <id>fast</id>
             <modules />
         </profile>
     </profiles>

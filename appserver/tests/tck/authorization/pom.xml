@@ -21,24 +21,34 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>tests.tck</artifactId>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
         <version>6.2.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>glassfish-external-tck-authorization</artifactId>
     <packaging>pom</packaging>
 
-    <name>GlassFish Tests - TCK - Authorization</name>
+    <name>TCK: Authorization</name>
 
     <properties>
-        <ant.home>${project.build.directory}/ant</ant.home>
+        <ant.home>${project.build.directory}/apache-ant-${ant.version}</ant.home>
         <ant.zip.url>https://archive.apache.org/dist/ant/binaries/apache-ant-${ant.version}-bin.zip</ant.zip.url>
-        <tck.home>${project.build.directory}/tck</tck.home>
-        <glassfish.home>${tck.home}/glassfish6</glassfish.home>
+        <tck.home>${project.build.directory}/authorization-tck</tck.home>
+        <glassfish.home>${project.build.directory}/glassfish6</glassfish.home>
         <glassfish.version>${project.version}</glassfish.version>
+        <glassfish.asadmin>${glassfish.home}/glassfish/bin/asadmin</glassfish.asadmin>
         <tck.tests.home>${tck.home}/src/com/sun/ts/tests</tck.tests.home>
-        <tck.tests.url>https://download.eclipse.org/ee4j/jakartaee-tck/jakartaee9-eftl/promoted/jakarta-authorization-tck-2.0.1.zip</tck.tests.url>
+        <jacoco.includes>org/glassfish/**\:com/sun/enterprise/**</jacoco.includes>
+        <port.admin>14848</port.admin>
+        <port.derby>11527</port.derby>
+        <port.http>18080</port.http>
+        <port.https>18181</port.https>
+        <port.jmx>18686</port.jmx>
+        <port.orb>13700</port.orb>
+        <port.orb.mutual>13920</port.orb.mutual>
+        <port.orb.ssl>13820</port.orb.ssl>
+        <port.harness.log>12000</port.harness.log>
     </properties>
 
     <dependencies>
@@ -49,29 +59,62 @@
             <type>zip</type>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.tests.tck</groupId>
+            <artifactId>jakarta-authorization-tck</artifactId>
+            <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
+                <groupId>com.googlecode.maven-download-plugin</groupId>
+                <artifactId>download-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>Grab-Glassfish</id>
+                        <id>download-authorization-tck</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wget</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                    <url>${ant.zip.url}</url>
+                    <unpack>true</unpack>
+                    <outputDirectory>${project.build.directory}</outputDirectory>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>unpack-glassfish</id>
                         <phase>pre-integration-test</phase>
                         <goals>
-                            <goal>unpack</goal>
+                            <goal>unpack-dependencies</goal>
                         </goals>
                         <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.glassfish.main.distributions</groupId>
-                                    <artifactId>glassfish</artifactId>
-                                    <version>${glassfish.version}</version>
-                                    <type>zip</type>
-                                    <outputDirectory>${tck.home}</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
+                            <includeArtifactIds>glassfish</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>unpack-tck</id>
+                        <phase>pre-integration-test</phase>
+                        <goals>
+                            <goal>unpack-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <includeArtifactIds>jakarta-authorization-tck</includeArtifactIds>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -97,36 +140,45 @@
                         </exclusions>
                     </dependency>
                 </dependencies>
+                <configuration>
+                    <skip>${skipITs}</skip>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>Grab-TCK-ANT-Configure-ts</id>
+                        <id>prepare-tck-and-glassfish</id>
                         <phase>pre-integration-test</phase>
                         <configuration>
                             <target>
-                                <!-- Grab TCK - download, unzip and rename TCK -->
-                                <get src="${tck.tests.url}" dest="${project.build.directory}/tck.zip" skipexisting="true" />
-                                <unzip src="${project.build.directory}/tck.zip" dest="${project.build.directory}" />
-                                <move file="${project.build.directory}/authorization-tck"
-                                    tofile="${project.build.directory}/tck" />
-
-                                <!-- Grab ANT - download, unzip, rename and chmod Ant -->
-                                <get src="${ant.zip.url}" dest="${project.build.directory}/ant.zip" skipexisting="true" />
-                                <unzip src="${project.build.directory}/ant.zip" dest="${project.build.directory}" />
-                                <move file="${project.build.directory}/apache-ant-${ant.version}"
-                                    tofile="${project.build.directory}/ant" />
-                                <chmod dir="${ant.home}/bin" perm="ugo+rx" includes="*" />
+                                <taskdef resource="net/sf/antcontrib/antcontrib.properties"
+                                         classpathref="maven.plugin.classpath" />
 
                                 <!-- Change configuration -->
                                 <copy file="${tck.home}/bin/ts.jte.jdk11" tofile="${tck.home}/bin/ts.jte" overwrite="true"  />
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="s1as\.admin\.port=.*"
+                                    replace="s1as\.admin\.port=${port.admin}" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="orb\.port=.*"
-                                    replace="orb\.port=3699" />
+                                    replace="orb\.port=${port.orb}" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="database\.port=.*"
+                                    replace="database\.port=${port.derby}" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="webServerPort=.*"
+                                    replace="webServerPort=${port.http}" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="securedWebServicePort=.*"
+                                    replace="securedWebServicePort=${port.https}" />
+                                <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
+                                    match="harness\.log\.port=.*"
+                                    replace="harness\.log\.port=${port.harness.log}" />
+
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="javaee\.level=.*"
                                     replace="javaee\.level=full" />
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="jacc\.home=.*"
-                                    replace="jacc\.home=${tck.home}/glassfish6/glassfish" />
+                                    replace="jacc\.home=${glassfish.home}/glassfish" />
                                 <replaceregexp file="${tck.home}/bin/ts.jte" byline="true"
                                     match="report\.dir=.*"
                                     replace="report\.dir=${tck.home}/jacctckreport/jacctck" />
@@ -139,6 +191,55 @@
                                     match="&lt;/project&gt;"
                                     replace="&lt;property name=&quot;all.test.dir&quot; value=&quot;com/sun/ts/tests/jacc/,com/sun/ts/tests/signaturetest/jacc,com/sun/ts/tests/common/vehicle/&quot; /&gt; &lt;/project&gt;" />
 
+                                <limit maxwait="60">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="start-domain"/>
+                                    </exec>
+
+                                    <if>
+                                        <isset property="jacoco.version" />
+                                        <then>
+                                            <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                                <arg value="create-jvm-options" />
+                                                <arg value="&quot;-javaagent\:${settings.localRepository}/org/jacoco/org.jacoco.agent/${jacoco.version}/org.jacoco.agent-${jacoco.version}-runtime.jar=destfile=${project.build.directory}/jacoco-it.exec,includes=${jacoco.includes}&quot;" />
+                                            </exec>
+                                        </then>
+                                    </if>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.admin-service.jmx-connector.system.port=${port.jmx}"/>
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1.port=${port.http}"/>
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.network-config.network-listeners.network-listener.http-listener-2.port=${port.https}"/>
+                                    </exec>
+
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.port=${port.orb}"/>
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.iiop-service.iiop-listener.SSL.port=${port.orb.ssl}"/>
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.iiop-service.iiop-listener.SSL_MUTUALAUTH.port=${port.orb.mutual}"/>
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="set"/>
+                                        <arg value="configs.config.server-config.network-config.network-listeners.network-listener.admin-listener.port=${port.admin}"/>
+                                    </exec>
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
+                                        <arg value="stop-domain"/>
+                                        <!--  -->
+                                        <arg value="--kill=true"/>
+                                    </exec>
+                                </limit>
                                 <mkdir dir="${tck.home}/jacctckreport"/>
                                 <mkdir dir="${tck.home}/jacctckreport/jacctck"/>
                             </target>
@@ -149,7 +250,7 @@
                     </execution>
 
                     <execution>
-                        <id>Configure-TCK</id>
+                        <id>configure-tck-tests</id>
                         <phase>pre-integration-test</phase>
                         <goals>
                             <goal>run</goal>
@@ -158,10 +259,8 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                <!-- If domain fails to start, we don't want to wait 10 minutes -->
-                                <limit maxwait="30" failonerror="true">
-                                    <exec executable="${glassfish.home}/glassfish/bin/asadmin"
-                                        dir="${glassfish.home}/glassfish/bin">
+                                <limit maxwait="20">
+                                    <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                         <arg value="start-domain"/>
                                     </exec>
                                 </limit>
@@ -178,7 +277,7 @@
                     </execution>
 
                      <execution>
-                        <id>Run-TCK-tests</id>
+                        <id>run-tck-tests</id>
                         <phase>integration-test</phase>
                         <goals>
                             <goal>run</goal>
@@ -187,14 +286,6 @@
                             <target>
                                 <taskdef resource="net/sf/antcontrib/antcontrib.properties"
                                          classpathref="maven.plugin.classpath" />
-                                <exec executable="${glassfish.home}/glassfish/bin/asadmin"
-                                    dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="stop-domain"/>
-                                </exec>
-                                <exec executable="${glassfish.home}/glassfish/bin/asadmin"
-                                    dir="${glassfish.home}/glassfish/bin">
-                                    <arg value="start-domain"/>
-                                </exec>
 
                                 <echo level="info" message="Start running all tests" />
                                 <exec executable="${ant.home}/bin/ant"
@@ -215,7 +306,7 @@
                                     </then>
                                 </if>
 
-                                <exec executable="${glassfish.home}/glassfish/bin/asadmin" dir="${glassfish.home}/glassfish/bin">
+                                <exec executable="${glassfish.asadmin}" dir="${glassfish.home}/glassfish/bin">
                                     <arg value="stop-domain" />
                                 </exec>
                             </target>

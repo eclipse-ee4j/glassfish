@@ -175,6 +175,7 @@
             ${maven.test.jvmoptions.custom}
         </maven.test.jvmoptions>
         <surefire.argLine>${maven.test.jvmoptions}</surefire.argLine>
+        <failsafe.argLine>${maven.test.jvmoptions}</failsafe.argLine>
     </properties>
 
     <dependencyManagement>
@@ -715,9 +716,41 @@
                         <trimStackTrace>false</trimStackTrace>
                         <useSystemClassLoader>true</useSystemClassLoader>
                         <forkCount>1</forkCount>
-                        <forkNode
-                            implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory" />
+                        <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                        <excludes>
+                           <exclude>**/*ITest.java</exclude>
+                           <exclude>**/*IT.java</exclude>
+                        </excludes>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-failsafe-plugin</artifactId>
+                    <version>3.0.0-M5</version>
+                    <configuration>
+                        <argLine>${failsafe.argLine}</argLine>
+                        <trimStackTrace>false</trimStackTrace>
+                        <useSystemClassLoader>true</useSystemClassLoader>
+                        <verbose>true</verbose>
+                        <forkNode implementation="org.apache.maven.plugin.surefire.extensions.SurefireForkNodeFactory"/>
+                        <includes>
+                           <include>**/*ITest.java</include>
+                           <include>**/*IT.java</include>
+                        </includes>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>integration-test</id>
+                            <goals>
+                                <goal>integration-test</goal>
+                            </goals>
+                        </execution>
+                        <execution>
+                            <id>verify</id>
+                            <goals>
+                                <goal>verify</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
                 <plugin>
                     <artifactId>maven-checkstyle-plugin</artifactId>
@@ -760,6 +793,11 @@
                             <phase>verify</phase>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>com.googlecode.maven-download-plugin</groupId>
+                    <artifactId>download-maven-plugin</artifactId>
+                    <version>1.6.7</version>
                 </plugin>
                 <plugin>
                     <artifactId>maven-release-plugin</artifactId>
@@ -976,6 +1014,9 @@
                     <useSystemClassLoader>true</useSystemClassLoader>
                     <forkCount>1</forkCount>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
 
             <plugin>
@@ -1222,6 +1263,7 @@
             <properties>
                 <checkstyle.skip>true</checkstyle.skip>
                 <maven.javadoc.skip>true</maven.javadoc.skip>
+                <skipITs>true</skipITs>
             </properties>
         </profile>
         <profile>
@@ -1280,6 +1322,7 @@
                                     <include>com/sun/enterprise/**</include>
                                 </includes>
                                 <formats>
+                                    <!-- Eclipse uses exec files, SonarQube uses xml reports -->
                                     <format>XML</format>
                                 </formats>
                             </configuration>
@@ -1288,6 +1331,7 @@
                 </pluginManagement>
                 <plugins>
                     <plugin>
+                        <!-- Generates @argLine for surefire and failsafe plugins -->
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
                         <executions>

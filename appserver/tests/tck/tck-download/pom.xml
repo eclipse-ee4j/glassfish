@@ -17,33 +17,36 @@
 
 -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd"
+>
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
-        <groupId>org.glassfish.main.tests</groupId>
-        <artifactId>tests</artifactId>
+        <groupId>org.glassfish.main.tests.tck</groupId>
+        <artifactId>tck</artifactId>
         <version>6.2.3-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.glassfish.main.tests.tck</groupId>
-    <artifactId>tck</artifactId>
+    <artifactId>tck-download</artifactId>
     <packaging>pom</packaging>
-    <name>TCK: Parent</name>
+    <name>TCK: Download and Install Dependencies not in Maven Repos</name>
 
     <modules>
-        <module>tck-download</module>
-        <module>authorization</module>
-        <module>embedded_ejb_smoke</module>
+        <module>jakarta-authorization-tck</module>
+        <module>tsharness</module>
+        <module>javatest</module>
     </modules>
 
     <build>
         <plugins>
+            <!-- all artifacts under this module are duplicating other which are unavailable for
+                Maven at this moment, so we make them available locally at least -->
             <plugin>
-                <artifactId>maven-deploy-plugin</artifactId>
+                <artifactId>maven-install-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-deploy</id>
+                        <id>default-install</id>
                         <phase>disabled</phase>
                     </execution>
                 </executions>

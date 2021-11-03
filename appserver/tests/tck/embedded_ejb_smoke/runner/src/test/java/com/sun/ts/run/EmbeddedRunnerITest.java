@@ -33,7 +33,7 @@ import org.junit.jupiter.api.Test;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class EmbeddedRunnerTest {
+public class EmbeddedRunnerITest {
 
     @Test
     public void test() {
@@ -115,7 +115,7 @@ public class EmbeddedRunnerTest {
         String glassfishVersion = System.getProperty("glassfish.version");
         String localRepository = System.getProperty("localRepository");
 
-        Path originalEjbJar = Paths.get(localRepository + "/org/glassfish/main/tests/ejb-lite-basic/" + glassfishVersion + "/ejb-lite-basic-" + glassfishVersion + ".jar");
+        Path originalEjbJar = Paths.get(localRepository + "/org/glassfish/main/tests/tck/ejb-lite-basic/" + glassfishVersion + "/ejb-lite-basic-" + glassfishVersion + ".jar");
         Path copiedEjbJar = Paths.get(System.getProperty("tck.home") + "/ejbembed_vehicle_ejb.jar");
         try {
             Files.copy(originalEjbJar, copiedEjbJar, REPLACE_EXISTING);

@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2007, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -56,6 +57,7 @@ import org.glassfish.grizzly.filterchain.FilterChainBuilder;
 import org.glassfish.grizzly.filterchain.TransportFilter;
 import org.glassfish.grizzly.http.ContentEncoding;
 import org.glassfish.grizzly.http.GZipContentEncoding;
+import org.glassfish.grizzly.http.HttpCodecFilter;
 import org.glassfish.grizzly.http.KeepAlive;
 import org.glassfish.grizzly.http.LZMAContentEncoding;
 import org.glassfish.grizzly.http.server.AddOn;
@@ -104,8 +106,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
     /**
      * The logger to use for logging messages.
      */
-    private static final Logger LOGGER =
-            Grizzly.logger(GenericGrizzlyListener.class);
+    private static final Logger LOGGER = Grizzly.logger(GenericGrizzlyListener.class);
 
     protected volatile String name;
     protected volatile InetAddress address;
@@ -159,8 +160,16 @@ public class GenericGrizzlyListener implements GrizzlyListener {
     @Override
     public void start() throws IOException {
         startDelayedExecutor();
-        ((SocketBinder) transport).bind(new InetSocketAddress(address, port));
-        transport.start();
+        try {
+            ((SocketBinder) transport).bind(new InetSocketAddress(address, port));
+            transport.start();
+        } catch (Exception e) {
+            throw new IOException("Failed to start listener " + this, e);
+        } finally {
+            if (transport.isStopped()) {
+                stopDelayedExecutor();
+            }
+        }
     }
 
     @Override
@@ -241,6 +250,16 @@ public class GenericGrizzlyListener implements GrizzlyListener {
     public boolean isCometEnabled() {
         return isCometEnabled;
     }
+
+
+    /**
+     * Returns super.toString()[name=xyz, address=a.b.c.d, port=nnnn]
+     */
+    @Override
+    public String toString() {
+        return super.toString() + "[name=" + getName() + ", address=" + getAddress() + ", port=" + getPort() + "]";
+    }
+
 
     @SuppressWarnings({"unchecked"})
     public static <E> List<E> getFilters(Class<E> clazz,
@@ -860,7 +879,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
         int maxRequestHeaders = MimeHeaders.MAX_NUM_HEADERS_DEFAULT;
         int maxResponseHeaders = MimeHeaders.MAX_NUM_HEADERS_DEFAULT;
         boolean isChunkedEnabled = true;
-        int headerBufferLengthBytes = org.glassfish.grizzly.http.HttpServerFilter.DEFAULT_MAX_HTTP_PACKET_HEADER_SIZE;
+        int headerBufferLengthBytes = HttpCodecFilter.DEFAULT_MAX_HTTP_PACKET_HEADER_SIZE;
 
         String defaultResponseType = null;
 
@@ -1029,7 +1048,7 @@ public class GenericGrizzlyListener implements GrizzlyListener {
                 compressableMimeTypes,
                 noCompressionUserAgents,
                 LZMAContentEncoding.getLzmaAliases()));
-        final Set<ContentEncoding> set = new HashSet<ContentEncoding>(2);
+        final Set<ContentEncoding> set = new HashSet<>(2);
         set.add(gzipContentEncoding);
         set.add(lzmaEncoding);
         return set;

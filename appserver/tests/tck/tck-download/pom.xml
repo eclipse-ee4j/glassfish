@@ -35,7 +35,6 @@
     <modules>
         <module>jakarta-authorization-tck</module>
         <module>tsharness</module>
-        <module>javatest-src</module>
         <module>javatest</module>
     </modules>
 

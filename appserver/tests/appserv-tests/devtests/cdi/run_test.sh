@@ -29,7 +29,7 @@ test_run(){
 
     printf "\n%s \n\n" "===== TEST RUN - STARTING GLASSFISH AND DB ====="
     ${S1AS_HOME}/bin/asadmin start-domain
-    if [ "${JACOCO_ENABLED}" != "" ]; then
+    if [ "${JACOCO_ENABLED}" = "true" ]; then
         ${S1AS_HOME}/bin/asadmin create-jvm-options -javaagent\\:${WORKSPACE}/bundles/org.jacoco.agent.jar=destfile=${WORKSPACE}/cdi.exec,append=true,includes=org/glassfish/**\\:com/sun/enterprise/**
         ${S1AS_HOME}/bin/asadmin restart-domain
     fi

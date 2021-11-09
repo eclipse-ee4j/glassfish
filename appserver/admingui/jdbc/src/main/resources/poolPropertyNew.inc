@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -44,7 +45,7 @@
                 />
         </sun:dropDown>
         "<br/>
-        <sun:textField id="datasourceField"  columns="$int{60}" maxLength="#{sessionScope.fieldLengths['jdbcPool.datasource']}" text="#{wizardPoolExtra.DatasourceClassnameField}"  disabled="#{!wizardPoolExtra.dsClassname}" >
+        <sun:textField id="datasourceField"  columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.jdbcPool.datasource']}" text="#{wizardPoolExtra.DatasourceClassnameField}"  disabled="#{!wizardPoolExtra.dsClassname}" >
             <!afterCreate
                 getClientId(component="$this{component}" clientId=>$page{datasourceClassNameFieldId});
             />

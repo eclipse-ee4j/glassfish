@@ -33,7 +33,7 @@ def jobs_all = [
   "ql_gf_full_profile_all",
   "ql_gf_web_profile_all",
   "web_jsp",
-  
+
   "deployment_all",
   "ejb_group_1",
   "ejb_group_2",
@@ -65,10 +65,10 @@ def generateStage(job) {
                         sleep 60
                         checkout scm
                       }
-                      
+
                       // run the test
                       unstash 'build-bundles'
-                      
+
                       try {
                           retry(3) {
                               timeout(time: 2, unit: 'HOURS') {
@@ -91,27 +91,27 @@ def generateStage(job) {
 }
 
 pipeline {
-  
+
   options {
     // keep at most 50 builds
     buildDiscarder(logRotator(numToKeepStr: '10'))
-    
+
     // preserve the stashes to allow re-running a test stage
     preserveStashes()
-    
+
     // issue related to default 'implicit' checkout, disable it
     skipDefaultCheckout()
-    
+
     // abort pipeline if previous stage is unstable
     skipStagesAfterUnstable()
-    
+
     // show timestamps in logs
     timestamps()
-    
+
     // global timeout, abort after 6 hours
     timeout(time: 6, unit: 'HOURS')
   }
-  
+
   agent {
     kubernetes {
       label "${env.label}"
@@ -163,7 +163,7 @@ spec:
       - name: "jenkins-home"
         mountPath: "/home/jenkins"
         readOnly: false
-      - name: maven-repo-shared-storage 
+      - name: maven-repo-shared-storage
         mountPath: /home/jenkins/.m2/repository
       - name: settings-xml
         mountPath: /home/jenkins/.m2/settings.xml
@@ -187,14 +187,17 @@ spec:
 """
     }
   }
-  
+
   environment {
     S1AS_HOME = "${WORKSPACE}/glassfish6/glassfish"
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
     GF_INTERNAL_ENV = credentials('gf-internal-env')
+    PORT_ADMIN=4848
+    PORT_HTTP=8080
+    PORT_HTTPS=8181
   }
-  
+
   stages {
     stage('build') {
       agent {
@@ -205,21 +208,21 @@ spec:
       steps {
         container('glassfish-ci') {
           timeout(time: 1, unit: 'HOURS') {
-            
+
             // do the scm checkout
             checkout scm
-            
+
             // do the build
             sh '''
               echo Maven version
               mvn -v
-              
+
               echo User
               id
-              
+
               echo Uname
               uname -a
-              
+
               bash -xe ./gfbuild.sh build_re_dev
             '''
             archiveArtifacts artifacts: 'bundles/*.zip'
@@ -229,7 +232,7 @@ spec:
         }
       }
     }
-    
+
     stage('tests') {
       steps {
         script {

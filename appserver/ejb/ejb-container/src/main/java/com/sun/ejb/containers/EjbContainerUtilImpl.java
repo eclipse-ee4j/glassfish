@@ -438,68 +438,13 @@ public class EjbContainerUtilImpl
     private ThreadPoolExecutor createThreadPoolExecutor(String poolName) {
         ThreadPoolExecutor result = null;
         String val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_CORE_POOL_SIZE);
-        int corePoolSize = EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE;
-        if (val != null) {
-            try {
-                int configCorePoolSize = Integer.parseInt(val.trim());
-                if (configCorePoolSize >= 0) {
-                    corePoolSize = configCorePoolSize;
-                } else {
-                    _logger.warning(RuntimeTagNames.THREAD_CORE_POOL_SIZE
-                            + " < 0 using default value "
-                            + EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE);
-                }
-            } catch (NumberFormatException e) {
-                _logger.warning(RuntimeTagNames.THREAD_CORE_POOL_SIZE
-                        + " is not a number, using default value "
-                        + EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE);
-            }
-        }
+        int corePoolSize = initCorePoolSize(val);
 
         val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_MAX_POOL_SIZE);
-        int maxPoolSize = EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE;
-        if (val != null) {
-            try {
-                int configMaxPoolSize = Integer.parseInt(val.trim());
-                if (configMaxPoolSize > 0) {
-                    maxPoolSize = configMaxPoolSize;
-                } else {
-                    _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
-                            + " <= 0 using default value "
-                            + EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE);
-                }
-            } catch (NumberFormatException e) {
-                _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
-                        + " is not a number, using default value "
-                        + EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE);
-            }
-            if (corePoolSize > maxPoolSize) {
-                maxPoolSize = corePoolSize;
-                _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
-                        + " < " + RuntimeTagNames.THREAD_CORE_POOL_SIZE
-                        + " using " + RuntimeTagNames.THREAD_MAX_POOL_SIZE
-                        + "=" + corePoolSize);
-            }
-        }
+        int maxPoolSize = initMaxPoolSize(val, corePoolSize);
 
         val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS);
-        long keepAliveSeconds = EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS;
-        if (val != null) {
-            try {
-                long configKeepAliveSeconds = Long.parseLong(val.trim());
-                if (configKeepAliveSeconds >= 0) {
-                    keepAliveSeconds = configKeepAliveSeconds;
-                } else {
-                    _logger.warning(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS
-                            + " < 0 using default value "
-                            + EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS);
-                }
-            } catch (NumberFormatException e) {
-                _logger.warning(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS
-                        + " is not a number, using default value "
-                        + EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS);
-            }
-        }
+        long keepAliveSeconds = initKeepAliveSeconds(val);
 
         val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_QUEUE_CAPACITY);
         int queueCapacity = val != null ? Integer.parseInt(val.trim())
@@ -531,6 +476,79 @@ public class EjbContainerUtilImpl
 
         }
         return result;
+    }
+
+    static int initCorePoolSize(String propertyValue) {
+        int corePoolSize = EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE;
+        if (propertyValue == null) {
+            return corePoolSize;
+        }
+        try {
+            int configCorePoolSize = Integer.parseInt(propertyValue.trim());
+            if (configCorePoolSize >= 0) {
+                corePoolSize = configCorePoolSize;
+            } else {
+                _logger.warning(RuntimeTagNames.THREAD_CORE_POOL_SIZE
+                        + " < 0 using default value "
+                        + EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE);
+            }
+        } catch (NumberFormatException e) {
+            _logger.warning(RuntimeTagNames.THREAD_CORE_POOL_SIZE
+                    + " is not a number, using default value "
+                    + EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE);
+        }
+        return corePoolSize;
+    }
+
+    static int initMaxPoolSize(String propertyValue, final int corePoolSize) {
+        int maxPoolSize = EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE;
+        if (propertyValue == null) {
+            return maxPoolSize;
+        }
+        try {
+            int configMaxPoolSize = Integer.parseInt(propertyValue.trim());
+            if (configMaxPoolSize > 0) {
+                maxPoolSize = configMaxPoolSize;
+            } else {
+                _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                        + " <= 0 using default value "
+                        + EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE);
+            }
+        } catch (NumberFormatException e) {
+            _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                    + " is not a number, using default value "
+                    + EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE);
+        }
+        if (corePoolSize > maxPoolSize) {
+            maxPoolSize = corePoolSize;
+            _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                    + " < " + RuntimeTagNames.THREAD_CORE_POOL_SIZE
+                    + " using " + RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                    + "=" + corePoolSize);
+        }
+        return maxPoolSize;
+    }
+
+    static long initKeepAliveSeconds(String propertyValue) {
+        long keepAliveSeconds = EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS;
+        if (propertyValue == null) {
+            return keepAliveSeconds;
+        }
+        try {
+            long configKeepAliveSeconds = Long.parseLong(propertyValue.trim());
+            if (configKeepAliveSeconds >= 0) {
+                keepAliveSeconds = configKeepAliveSeconds;
+            } else {
+                _logger.warning(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS
+                        + " < 0 using default value "
+                        + EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS);
+            }
+        } catch (NumberFormatException e) {
+            _logger.warning(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS
+                    + " is not a number, using default value "
+                    + EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS);
+        }
+        return keepAliveSeconds;
     }
 
     public ThreadPoolExecutor getThreadPoolExecutor(String poolName) {

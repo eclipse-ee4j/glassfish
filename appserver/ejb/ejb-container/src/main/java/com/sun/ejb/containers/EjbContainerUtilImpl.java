@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2008, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -437,16 +438,13 @@ public class EjbContainerUtilImpl
     private ThreadPoolExecutor createThreadPoolExecutor(String poolName) {
         ThreadPoolExecutor result = null;
         String val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_CORE_POOL_SIZE);
-        int corePoolSize = val != null ? Integer.parseInt(val.trim())
-                : EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE;
+        int corePoolSize = initCorePoolSize(val);
 
         val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_MAX_POOL_SIZE);
-        int maxPoolSize = val != null ? Integer.parseInt(val.trim())
-                : EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE;
+        int maxPoolSize = initMaxPoolSize(val, corePoolSize);
 
         val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS);
-        long keepAliveSeconds = val != null ? Long.parseLong(val.trim())
-                : EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS;
+        long keepAliveSeconds = initKeepAliveSeconds(val);
 
         val = ejbContainer.getPropertyValue(RuntimeTagNames.THREAD_QUEUE_CAPACITY);
         int queueCapacity = val != null ? Integer.parseInt(val.trim())
@@ -478,6 +476,79 @@ public class EjbContainerUtilImpl
 
         }
         return result;
+    }
+
+    static int initCorePoolSize(String propertyValue) {
+        int corePoolSize = EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE;
+        if (propertyValue == null) {
+            return corePoolSize;
+        }
+        try {
+            int configCorePoolSize = Integer.parseInt(propertyValue.trim());
+            if (configCorePoolSize >= 0) {
+                corePoolSize = configCorePoolSize;
+            } else {
+                _logger.warning(RuntimeTagNames.THREAD_CORE_POOL_SIZE
+                        + " < 0 using default value "
+                        + EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE);
+            }
+        } catch (NumberFormatException e) {
+            _logger.warning(RuntimeTagNames.THREAD_CORE_POOL_SIZE
+                    + " is not a number, using default value "
+                    + EjbContainer.DEFAULT_THREAD_CORE_POOL_SIZE);
+        }
+        return corePoolSize;
+    }
+
+    static int initMaxPoolSize(String propertyValue, final int corePoolSize) {
+        int maxPoolSize = EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE;
+        if (propertyValue == null) {
+            return maxPoolSize;
+        }
+        try {
+            int configMaxPoolSize = Integer.parseInt(propertyValue.trim());
+            if (configMaxPoolSize > 0) {
+                maxPoolSize = configMaxPoolSize;
+            } else {
+                _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                        + " <= 0 using default value "
+                        + EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE);
+            }
+        } catch (NumberFormatException e) {
+            _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                    + " is not a number, using default value "
+                    + EjbContainer.DEFAULT_THREAD_MAX_POOL_SIZE);
+        }
+        if (corePoolSize > maxPoolSize) {
+            maxPoolSize = corePoolSize;
+            _logger.warning(RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                    + " < " + RuntimeTagNames.THREAD_CORE_POOL_SIZE
+                    + " using " + RuntimeTagNames.THREAD_MAX_POOL_SIZE
+                    + "=" + corePoolSize);
+        }
+        return maxPoolSize;
+    }
+
+    static long initKeepAliveSeconds(String propertyValue) {
+        long keepAliveSeconds = EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS;
+        if (propertyValue == null) {
+            return keepAliveSeconds;
+        }
+        try {
+            long configKeepAliveSeconds = Long.parseLong(propertyValue.trim());
+            if (configKeepAliveSeconds >= 0) {
+                keepAliveSeconds = configKeepAliveSeconds;
+            } else {
+                _logger.warning(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS
+                        + " < 0 using default value "
+                        + EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS);
+            }
+        } catch (NumberFormatException e) {
+            _logger.warning(RuntimeTagNames.THREAD_KEEP_ALIVE_SECONDS
+                    + " is not a number, using default value "
+                    + EjbContainer.DEFAULT_THREAD_KEEP_ALIVE_SECONDS);
+        }
+        return keepAliveSeconds;
     }
 
     public ThreadPoolExecutor getThreadPoolExecutor(String poolName) {

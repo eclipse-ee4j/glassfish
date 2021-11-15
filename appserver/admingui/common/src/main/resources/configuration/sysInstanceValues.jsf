@@ -1,6 +1,7 @@
 <!--
 
     Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
 
     This program and the accompanying materials are made available under the
     terms of the Eclipse Public License v. 2.0, which is available at
@@ -21,7 +22,7 @@
     setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
     setResourceBundle(key="help_common" bundle="org.glassfish.common.admingui.Helplinks");
 />
-<!composition template="/templates/default.layout"  guiTitle="$resource{i18n.instanceValues.PageTitle}" >
+<!composition template="/templates/default.layout"  guiTitle="$resource{i18n.instanceValues.PageTitle, $pageSession{propName}}" >
 <!define name="content">
     <event>
         <!beforeCreate
@@ -57,11 +58,13 @@
                     createMap(result="#{requestScope.instanceMap}");
                     gf.restRequest(endpoint="#{sessionScope.REST_URL}/servers/server/#{instance}/system-properties", method="get", result="#{requestScope.result}");
                     mapPut(map="#{requestScope.instanceMap}", key="instance", value="#{instance}");
+                    mapPut(map="#{requestScope.instanceMap}", key="currentOverrideValue", value="");
                     mapPut(map="#{requestScope.instanceMap}", key="overrideValue", value="");
                     mapPut(map="#{requestScope.instanceMap}", key="cluster", value="");
                     foreach(var="sysprop", list="#{requestScope.result.data.extraProperties.systemProperties}") {
                         if ("#{sysprop.name}=#{propName}") {
                             if ("#{sysprop.value}") {
+                                mapPut(map="#{requestScope.instanceMap}", key="currentOverrideValue", value="#{sysprop.value}");
                                 mapPut(map="#{requestScope.instanceMap}", key="overrideValue", value="#{sysprop.value}");
                             }
                         }
@@ -84,11 +87,19 @@
                             foreach (var="row" list="#{pageSession.tableList}") {
                                 createMap(result="#{requestScope.attrs}");
                                 mapPut(map="#{requestScope.attrs}", key="value", value="#{row.overrideValue}");
-                                gf.restRequest(endpoint="#{sessionScope.REST_URL}/servers/server/#{row.instance}/system-properties/#{pageSession.propName}", method="POST",
-                                    data="#{requestScope.attrs}", contentType="application/x-www-form-urlencoded", result="#{requestScope.restResponse}");
+                                if ("!(#{row.overrideValue}=#{row.currentOverrideValue})") {
+                                    if ("#{row.overrideValue}") {
+                                        gf.restRequest(endpoint="#{sessionScope.REST_URL}/servers/server/#{row.instance}/system-properties/#{pageSession.propName}", method="POST",
+                                            data="#{requestScope.attrs}", contentType="application/x-www-form-urlencoded", result="#{requestScope.restResponse}");
+                                    }
+                                    if ("!#{row.overrideValue}") {
+                                        gf.restRequest(endpoint="#{sessionScope.REST_URL}/servers/server/#{row.instance}/system-properties/#{pageSession.propName}", method="DELETE",
+                                            result="#{requestScope.restResponse}");
+                                    }
+                                }
                             }
                             prepareSuccessfulMsg();
-                            //gf.redirect(page="#{pageSession.parentPage}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                            gf.redirect(page="#{request.contextPath}#{pageSession.selfPage}&propName=#{pageSession.propName}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
                         />
                     </sun:button>
 

@@ -124,7 +124,7 @@ public class EmbeddedRunnerITest {
         }
 
         return String.join(":", List.of(
-            localRepository + "/com/sun/tsharness/1.4/tsharness-1.4.jar",
+            localRepository + "/org/glassfish/main/tests/tck/tsharness/" + glassfishVersion + "/tsharness-" + glassfishVersion + ".jar",
             localRepository + "/org/apache/commons/commons-lang3/3.3.2/commons-lang3-3.3.2.jar",
             System.getProperty("glassfish.home") + "/glassfish/lib/embedded/glassfish-embedded-static-shell.jar",
             copiedEjbJar.toString()

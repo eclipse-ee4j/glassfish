@@ -111,14 +111,14 @@ public class ApplicationClientRunnerTest {
         List<String> javaOptions = new ArrayList<>();
         javaOptions.add(System.getProperty("java.home") + "/bin/java");
 
+        if (System.getProperty("maven.tck.debug") != null && !System.getProperty("maven.tck.debug").isEmpty()) {
+            javaOptions.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9009");
+        }
+
         javaOptions.addAll(getJavaConstantOptions());
         javaOptions.addAll(getJavaDynamicOptions());
         javaOptions.add(getJavaAgentOption());
         javaOptions.addAll(getJavaClassPath());
-
-        if (System.getProperty("maven.tck.debug") != null && !System.getProperty("maven.tck.debug").isEmpty()) {
-            javaOptions.add("-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=9009");
-        }
 
         return javaOptions;
     }

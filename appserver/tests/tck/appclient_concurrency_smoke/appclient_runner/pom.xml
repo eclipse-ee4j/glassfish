@@ -163,7 +163,7 @@
                 <configuration>
                     <systemPropertyVariables>
                         <glassfish.home>${glassfish.home}</glassfish.home>
-                        <glassfish.version>${project.version}</glassfish.version>
+                        <glassfish.version>${glassfish.version}</glassfish.version>
                         <glassfish.enableDerby>true</glassfish.enableDerby>
                         <glassfish.postBootCommands>
                              create-jdbc-connection-pool --restype javax.sql.DataSource --datasourceclassname org.apache.derby.jdbc.ClientDataSource cts-derby-pool

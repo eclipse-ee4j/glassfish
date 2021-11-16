@@ -61,7 +61,7 @@
 
         <classpath.derby>${path.derby}/derby.jar ${path.derby}/derbyclient.jar ${path.derby}/derbynet.jar ${path.derby}/derbytools.jar ${path.derby}/derbyrun.jar</classpath.derby>
         <classpath.jaxrra>${path.apps}/jaxr-ra/jaxr-ra.jar</classpath.jaxrra>
-        <classpath.jdbcra>${path.apps}/__ds_jdbc_ra/__ds_jdbc_ra.jar ${path.apps}/__cp_jdbc_ra/__cp_jdbc_ra.jar ${path.apps}/__xa_jdbc_ra/__xa_jdbc_ra.jar ${path.apps}/__dm_jdbc_ra/__dm_jdbc_ra.jar</classpath.jdbcra>
+        <classpath.jdbcra>${path.apps}/__ds_jdbc_ra/jdbc-ra-ds.jar ${path.apps}/__cp_jdbc_ra/jdbc-ra-cp.jar ${path.apps}/__xa_jdbc_ra/jdbc-ra-xa.jar ${path.apps}/__dm_jdbc_ra/jdbc-ra-dm.jar</classpath.jdbcra>
         <classpath.mq>${path.mq}/imq.jar ${path.mq}/imqadmin.jar ${path.mq}/imqutil.jar ${path.mq}/fscontext.jar ${path.apps}/jmsra/imqjmsra.jar</classpath.mq>
         <classpath.weld>${path.appclient}/weld-se-shaded.jar</classpath.weld>
 

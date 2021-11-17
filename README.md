@@ -2,113 +2,95 @@
 
 ## About
 
-Eclipse GlassFish is a [Jakarta EE compatible implementation](compatibility)
-sponsored by the Eclipse Foundation. Eclipse GlassFish 5.1 is also Java EE 8 Compatible.
+[Eclipse GlassFish](https://projects.eclipse.org/projects/ee4j.glassfish) is a Jakarta EE compatible implementation
+sponsored by the Eclipse Foundation.
 
-Building
---------
+### Compatibility
 
-Prerequisites:
+* Eclipse GlassFish 6.2.0 is Jakarta EE 9.1 compatible, requires Java 11, supports Java 17
+* Eclipse GlassFish 6.1.0 is Jakarta EE 9.1 compatible, requires Java 11
+* Eclipse GlassFish 6.0.0 is Jakarta EE 9 compatible, requires Java 8
+* Eclipse GlassFish 5.1.0 is Java EE 8 and Jakarta EE 8 compatible, requires Java 8
+
+### Distribution
+
+The Zip distributions can be found on following paths:
+* appserver/distributions/glassfish/target/glassfish.zip (Full Profile)
+* appserver/distributions/web/target/web.zip (Web Profile)
+
+## Building
+
+### Prerequisites
 
 * JDK11+
 * Maven 3.5.4+
 
-Currently in the master branch artifacts are being pulled from OSSRH staging.
+### Execution
 
-Run the full build:
+* `mvn clean install` - Full build including automatic QA and maven managed tests. Typical time: 5 minutes.
+* `mvn clean install -Pfast` - Building all distribution artifacts, running just unit tests, QA and integration tests excluded. Typical time: 3 minutes.
+* `mvn clean install -Pfastest` - Building all distribution artifacts, excluded all QA and testing. Typical time: 1.5 minutes.
 
-`mvn -Pstaging install`
+You can use also some maven optimizations, ie. using `-T4C` to allow parallel build.
 
-Locate the Zip distributions:
-- appserver/distributions/glassfish/target/glassfish.zip
-- appserver/distributions/web/target/web.zip
+### Special Profiles
 
-Locate staged distributions:
-- appserver/distributions/glassfish/target/stage
-- appserver/distributions/web/target/stage
+* `staging` - In some development stages may happen that some dependencies are available just in OSSRH staging repository.
+  Then you have to use this profile, which is not enabled by default.
+* `jacoco` - enables the [JaCoCo](https://www.eclemma.org/jacoco/) agent in tests, so you can import it's output to you editor, ie. Eclipse, and see the code coverage.
+* `jacoco-merge` - merges all JaCoCo output files found in subdirectories and merges them into one. It is useful to see code which wasn't even touched by tests.
 
-Testing
---------
+### Special Scripts
 
+* `./updateVersion.sh 6.99.99.experimental` - useful for custom distributions, so you can avoid conflicts with version in master branch.
+* `./runTests.sh 6.2.0 cdi_all` - useful to run [additional](Additional Testing) tests locally; before that edit the script and update variables so they will reflect your environment.
+* `./validateJars.sh` - uses the bnd command to check OSGI dependencies in all target directories
 
-Testing QuickLook directly
---------------------------
+## Additional Testing
 
-Running Eclipse GlassFish QuickLook tests:
+After building the GlassFish distribution artifacts you can execute also additional tests managed by bash scripts.
+They are quite old and have high technical debt, but at this moment they still provide useful service.
 
-`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=appserver/distributions/glassfish/target/stage/glassfish6/glassfish`
+### QuickLook
 
-For more details, see [QuickLook_Test_Instructions](https://github.com/eclipse-ee4j/glassfish/blob/master/appserver/tests/quicklook/QuickLook_Test_Instructions.html)
+`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish6/glassfish`
 
+* Usual time: 3 minutes
+* see [QuickLook_Test_Instructions](https://github.com/eclipse-ee4j/glassfish/blob/master/appserver/tests/quicklook/QuickLook_Test_Instructions.html)
 
-Testing Full
-------------
+### Old Additional Tests
 
-Build Eclipse GlassFish using the `gfbuild.sh` script, OR build as stated above and copy the distributions to the `bundles` folder using:
+* `./runTests.sh 6.2.3 cdi_all` - Usual time: 6 minutes
+* `./runTests.sh 6.2.3 ejb_group_1` - Usual time: 8 minutes
+* `./runTests.sh 6.2.3 web_jsp` - Usual time: 6 minutes
+* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_web_profile_all` - Usual time: 2 minutes
+* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_full_profile_all` - Usual time: 4 minutes
 
-`./gfbuild.sh archive_bundles`
+### Half-Dead Additional Tests Waiting for a Rescue
 
-This will result in:
+First warning: if the script fails, it doesn't stop the domain and you have to do that manually.
+* `./runTests.sh 6.2.3 batch_all` - Crashes, Derby uses different port than expected
+* `./runTests.sh 6.2.3 connector_group_1` - Crashes, ports
+* `./runTests.sh 6.2.3 connector_group_2` - Crashes, ports
+* `./runTests.sh 6.2.3 connector_group_3` - Crashes, ports
+* `./runTests.sh 6.2.3 connector_group_4` - Crashes, ports
+* `./runTests.sh 6.2.3 deployment_all` - Usual time: 1 minute, failure: still uses javax packages.
+* `./runTests.sh 6.2.3 ejb_group_2` - Usual time: 2 minutes, failure: incompatible API at TimerSessionEJB.
+* `./runTests.sh 6.2.3 ejb_group_3` - Usual time: 4 minutes, failure: still uses javax packages
+* `./runTests.sh 6.2.3 jdbc_all` - Crashes, Derby uses different port than expected
+* `./runTests.sh 6.2.3 persistence_all` - Crashes, Derby uses different port than expected
+* `./gfbuild.sh archive_bundles && ./gftest.sh ejb_web_all` - Usual time: 4 minutes, failure: could not create the derby database
+* `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_nucleus_all` - Crashes
+* `./gfbuild.sh archive_bundles && ./gftest.sh nucleus_admin_all` - Crashes, missing TestNG dependency
+* many tests under appserver/tests subdirectories; they are still waiting for someone's attention.
 
-```
-bundles
-   glassfish.zip	
-   nucleus-new.zip
-   web.zip
-```
+## Basic Usage
 
-Run tests using:
+* Starting Eclipse GlassFish: `glassfish6/bin/asadmin start-domain`
+* Visit [http://localhost:4848](http://localhost:4848)
+* Stopping Eclipse GlassFish: `glassfish6/bin/asadmin stop-domain`
 
-```
-./gftest [name of test]
-```
-
-
-Where [name of test] is one or more off:
-
-```
-       "deployment_all" 
-       "ejb_group_1" 
-       "ejb_group_2" 
-       "ejb_group_3" 
-       "ejb_web_all" 
-       "cdi_all" 
-       "ql_gf_full_profile_all" 
-       "ql_gf_nucleus_all" 
-       "ql_gf_web_profile_all"
-       "nucleus_admin_all"
-       "jdbc_all"
-       "batch_all"
-       "persistence_all"
-       "connector_group_1"
-       "connector_group_2"
-       "connector_group_3"
-       "connector_group_4"
-```
-
-(note the project contains more than these tests, but they may not be up to date)
-
-E.g.
-
-```
-./gftest deployment_all
-```
-
-
-
-
-Starting Eclipse GlassFish
-------------------
-
-`glassfish6/bin/asadmin start-domain`
-
-Stopping Eclipse GlassFish
-------------------
-
-`glassfish6/bin/asadmin stop-domain`
-
-Professional Services and Enterprise Support
----------------------
+## Professional Services and Enterprise Support
 
 This section is dedicated to companies offering products and services around Eclipse GlassFish.
 

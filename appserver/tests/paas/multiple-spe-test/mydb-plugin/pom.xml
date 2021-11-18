@@ -22,13 +22,13 @@
     <parent>
         <groupId>org.glassfish</groupId>
         <artifactId>paas.plugins</artifactId>
-        <version>6.2.3</version>
+        <version>6.2.4</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.glassfish</groupId>
     <artifactId>paas.mydbplugin</artifactId>
 
-    <version>6.2.3</version>
+    <version>6.2.4</version>
     <name>MyDB Plugin</name>
     <build>
         <resources>

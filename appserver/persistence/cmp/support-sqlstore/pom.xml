@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+	Copyright (c) 2021 Contributors to the Eclipse Foundation
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -24,7 +25,6 @@
         <groupId>org.glassfish.main.persistence.cmp</groupId>
         <artifactId>cmp</artifactId>
         <version>6.2.3-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>cmp-support-sqlstore</artifactId>
@@ -117,7 +117,7 @@
         </resources>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
+                <groupId>org.omnifaces</groupId>
                 <artifactId>antlr-maven-plugin</artifactId>
                 <configuration>
                     <grammars>JQL.g, Semantic.g, Optimizer.g, CodeGeneration.g</grammars>

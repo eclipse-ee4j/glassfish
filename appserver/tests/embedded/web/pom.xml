@@ -23,7 +23,7 @@
     <groupId>org.glassfish.tests.embedded</groupId>
     <artifactId>web</artifactId>
     <packaging>pom</packaging>
-    <version>6.2.4</version>
+    <version>6.2.4-SNAPSHOT</version>
     <name>GlassFish Web Embedded Tests</name>
     <modules>
         <module>web-api</module>

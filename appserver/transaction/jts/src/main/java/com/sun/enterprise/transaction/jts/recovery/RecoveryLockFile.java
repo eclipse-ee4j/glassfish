@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -24,36 +25,36 @@
 
 package com.sun.enterprise.transaction.jts.recovery;
 
-import java.util.*;
-import java.io.*;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.RandomAccessFile;
 import java.nio.channels.FileLock;
-
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
-import java.util.logging.Level;
-import com.sun.logging.LogDomains;
 
-import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
 import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
-
+import com.sun.enterprise.transaction.jts.api.TransactionRecoveryFence;
 import com.sun.jts.CosTransactions.Configuration;
 import com.sun.jts.CosTransactions.LogControl;
 import com.sun.jts.CosTransactions.RecoveryManager;
+import com.sun.logging.LogDomains;
 
 /**
  * This class manages lock file required for delegated recovery.
+ *
  * @author mvatkina
  *
- * @see
- * Records in the recovery lock file have the following format:
- * PREFIX INSTANCE_NAME TIMESTAMP
- * Where PREFIX can be one of:
- * - "O" means OWNED by this instance, i.e. non-delegated recovery
- * - "B" means recovered BY the specified instance
- * - "F" means recovered FOR the specified instance
- * TIMESTAMP is the time of the recovery operation
+ * @see Records in the recovery lock file have the following format: PREFIX INSTANCE_NAME TIMESTAMP Where PREFIX can be
+ * one of: - "O" means OWNED by this instance, i.e. non-delegated recovery - "B" means recovered BY the specified
+ * instance - "F" means recovered FOR the specified instance TIMESTAMP is the time of the recovery operation
  *
-*/
-
+ */
 public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTransactionRecoveryFence {
 
     // Logger to log transaction messages = use class from com.sun.jts sub-package to find the bundle
@@ -82,6 +83,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
         return instance;
     }
 
+    @Override
     public void start() {
         if (!started) {
             gmsCallBack.finishDelegatedRecovery(log_path);
@@ -98,8 +100,8 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
         try {
             recoveryLockFile.createNewFile();
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, "jts.exception_creating_recovery_file", recoveryLockFile);
-            _logger.log(Level.WARNING, "", ex);
+            _logger.log(WARNING, "jts.exception_creating_recovery_file", recoveryLockFile);
+            _logger.log(WARNING, "", ex);
         }
         RecoveryManager.registerTransactionRecoveryFence(this);
     }
@@ -107,9 +109,10 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     /**
      * {@inheritDoc}
      */
+    @Override
     public void raiseFence() {
         while (isRecovering()) {
-            //wait
+            // wait
             try {
                 Thread.sleep(60000);
             } catch (Exception e) {
@@ -121,15 +124,17 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     /**
      * {@inheritDoc}
      */
+    @Override
     public void lowerFence() {
-        _logger.log(Level.INFO, "Lower Fence request for instance " + instance_name);
+        _logger.log(INFO, "Lower Fence request for instance " + instance_name);
         doneRecovering();
-        _logger.log(Level.INFO, "Fence lowered for instance " + instance_name);
+        _logger.log(INFO, "Fence lowered for instance " + instance_name);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public boolean isFenceRaised(String logDir, String instance, long timestamp) {
         return isRecovering(logDir, instance, timestamp, BY);
     }
@@ -137,6 +142,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     /**
      * {@inheritDoc}
      */
+    @Override
     public void raiseFence(String logPath, String instance) {
         raiseFence(logPath, instance, 0L);
     }
@@ -145,30 +151,32 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
      * {@inheritDoc}
      */
     public void raiseFence(String logPath, String instance, long timestamp) {
-        _logger.log(Level.INFO, "Raise Fence request for instance " + instance);
+        _logger.log(INFO, "Raise Fence request for instance " + instance);
         while (isRecovering(logPath, instance, timestamp, BY)) {
-            //wait
+            // wait
             try {
                 Thread.sleep(60000);
             } catch (Exception e) {
             }
         }
         registerRecovery(logPath, instance);
-        _logger.log(Level.INFO, "Fence raised for instance " + instance);
+        _logger.log(INFO, "Fence raised for instance " + instance);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public void lowerFence(String logPath, String instance) {
-        _logger.log(Level.INFO, "Lower Fence request for instance " + instance);
+        _logger.log(INFO, "Lower Fence request for instance " + instance);
         doneRecovering(logPath, instance);
-        _logger.log(Level.INFO, "Fence lowered for instance " + instance);
+        _logger.log(INFO, "Fence lowered for instance " + instance);
     }
 
     /**
      * {@inheritDoc}
      */
+    @Override
     public String getInstanceRecoveredFor(String path, long timestamp) {
         if (!isRecovering(path, null, timestamp, FOR)) {
             return doneRecovering(path, null, FOR);
@@ -180,6 +188,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     /**
      * {@inheritDoc}
      */
+    @Override
     public void transferRecoveryTo(String logDir, String instance) {
         doneRecovering(logDir, null, BY);
         registerRecovery(logDir, instance);
@@ -193,33 +202,31 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     }
 
     /**
-     * Returns true if recovery file on the specified path contains information
-     * that the specified instance started recovery after specified timestamp
-     * either for itself or by another instance.
+     * Returns true if recovery file on the specified path contains information that the specified instance started recovery
+     * after specified timestamp either for itself or by another instance.
      */
     private boolean isRecovering(String logDir, String instance, long timestamp, String prefix) {
         BufferedReader reader = null;
         File recoveryLockFile = LogControl.recoveryLockFile(".", logDir);
         if (!recoveryLockFile.exists()) {
-            _logger.log(Level.INFO, "Lock File not found " + recoveryLockFile);
+            _logger.log(INFO, "Lock File not found " + recoveryLockFile);
             return false;
         }
 
         boolean result = false;
         try {
-            _logger.log(Level.INFO, "Checking Lock File " + recoveryLockFile);
+            _logger.log(INFO, "Checking Lock File " + recoveryLockFile);
             RandomAccessFile raf = new RandomAccessFile(recoveryLockFile, "rw");
             FileLock lock = raf.getChannel().lock();
             try {
                 reader = new BufferedReader(new FileReader(recoveryLockFile));
                 String line = null;
-                while( (line = reader.readLine()) != null) {
-                    _logger.log(Level.INFO, "Testing line: " + line);
+                while ((line = reader.readLine()) != null) {
+                    _logger.log(INFO, "Testing line: " + line);
                     String[] parts = line.split(SEPARATOR);
                     if (parts.length != 3) {
                         throw new IllegalStateException();
-                    } else if ((parts[0].equals(OWN) && parts[1].equals(instance)) ||
-                             (instance == null && parts[0].equals(prefix))) {
+                    } else if ((parts[0].equals(OWN) && parts[1].equals(instance)) || (instance == null && parts[0].equals(prefix))) {
                         result = (Long.parseLong(parts[2]) > timestamp);
                         break;
                     } else {
@@ -231,18 +238,18 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
                 lock.release();
             }
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+            _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (Exception ex) {
-                    _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+                    _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
                 }
             }
         }
 
-        _logger.log(Level.INFO, "Recovering? " + result);
+        _logger.log(INFO, "Recovering? " + result);
         return result;
     }
 
@@ -254,9 +261,8 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     }
 
     /**
-     * Removes recovery data from the recovery lock files for both, the instance that the
-     * recovery is done for (i.e. for specified instance), and the current instance which the
-     * recovery is done by (in the lock file on the specified path)
+     * Removes recovery data from the recovery lock files for both, the instance that the recovery is done for (i.e. for
+     * specified instance), and the current instance which the recovery is done by (in the lock file on the specified path)
      */
     private void doneRecovering(String logPath, String instance) {
         doneRecovering(log_path, instance, FOR);
@@ -265,6 +271,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
 
     /**
      * Removes recovery data from the recovery lock file.
+     *
      * @return instance name if instance was unknown (null).
      */
     private String doneRecovering(String logPath, String instance, String prefix) {
@@ -273,7 +280,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
         String result = null;
         File recoveryLockFile = LogControl.recoveryLockFile(".", logPath);
         if (!recoveryLockFile.exists()) {
-            _logger.log(Level.INFO, "Lock Fine not found: " + recoveryLockFile);
+            _logger.log(INFO, "Lock Fine not found: " + recoveryLockFile);
             return null;
         }
 
@@ -282,19 +289,19 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
             FileLock lock = raf.getChannel().lock();
             try {
                 reader = new BufferedReader(new FileReader(recoveryLockFile));
-                _logger.log(Level.INFO, "Updating File " + recoveryLockFile);
+                _logger.log(INFO, "Updating File " + recoveryLockFile);
                 String line = null;
-                List<String> list_out = new ArrayList<String>();
-                while( (line = reader.readLine()) != null) {
-                    _logger.log(Level.INFO, "Processing line: " + line);
+                List<String> list_out = new ArrayList<>();
+                while ((line = reader.readLine()) != null) {
+                    _logger.log(INFO, "Processing line: " + line);
                     String[] parts = line.split(SEPARATOR);
                     if (parts.length != 3) {
                         // Remove such line
-                        _logger.log(Level.INFO, "...skipping bad line ...");
+                        _logger.log(INFO, "...skipping bad line ...");
                         continue;
                     } else if (parts[0].equals(prefix) && (instance == null || parts[1].equals(instance))) {
                         // Remove such line
-                        _logger.log(Level.INFO, "...skipping found line ...");
+                        _logger.log(INFO, "...skipping found line ...");
                         result = parts[1];
                         continue;
                     }
@@ -307,7 +314,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
 
                 writer = new FileWriter(recoveryLockFile);
                 for (String out : list_out) {
-                    _logger.log(Level.INFO, "Re-adding line: " + out);
+                    _logger.log(INFO, "Re-adding line: " + out);
                     writer.write(out);
                     writer.write(END_LINE);
                 }
@@ -315,20 +322,20 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
                 lock.release();
             }
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+            _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
         } finally {
             if (reader != null) {
                 try {
                     reader.close();
                 } catch (Exception ex) {
-                    _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+                    _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
                 }
             }
             if (writer != null) {
                 try {
                     writer.close();
                 } catch (Exception ex) {
-                    _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+                    _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
                 }
             }
         }
@@ -348,8 +355,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
     }
 
     /**
-     * Writes into recovery lock file data about recovery for the specified instance by
-     * the current instance.
+     * Writes into recovery lock file data about recovery for the specified instance by the current instance.
      */
     private void registerRecovery(String logPath, String instance) {
         // Remove stale data if there is any
@@ -366,7 +372,7 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
         FileWriter writer = null;
         File recoveryLockFile = LogControl.recoveryLockFile(".", logPath);
         if (!recoveryLockFile.exists()) {
-            _logger.log(Level.INFO, "Lock File not found " + recoveryLockFile);
+            _logger.log(INFO, "Lock File not found " + recoveryLockFile);
             return;
         }
 
@@ -375,22 +381,24 @@ public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTran
             FileLock lock = raf.getChannel().lock();
             try {
                 writer = new FileWriter(recoveryLockFile, true);
-                    _logger.log(Level.INFO, "Writing into file " + recoveryLockFile);
-                StringBuffer b = (new StringBuffer()).append(prefix).append(SEPARATOR).append(instance).
-                        append(SEPARATOR).append(System.currentTimeMillis()).append(END_LINE);
-                _logger.log(Level.INFO, "Storing " + b);
+                _logger.log(INFO, "Writing into file " + recoveryLockFile);
+                StringBuffer b = (new StringBuffer())
+                        .append(prefix).append(SEPARATOR)
+                        .append(instance).append(SEPARATOR)
+                        .append(System.currentTimeMillis()).append(END_LINE);
+                _logger.log(INFO, "Storing " + b);
                 writer.write(b.toString());
             } finally {
                 lock.release();
             }
         } catch (Exception ex) {
-            _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+            _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
         } finally {
             if (writer != null) {
                 try {
                     writer.close();
                 } catch (Exception ex) {
-                    _logger.log(Level.WARNING, "jts.exception_in_recovery_file_handling", ex);
+                    _logger.log(WARNING, "jts.exception_in_recovery_file_handling", ex);
                 }
             }
         }

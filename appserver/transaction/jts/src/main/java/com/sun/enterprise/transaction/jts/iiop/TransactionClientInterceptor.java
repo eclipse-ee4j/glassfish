@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,70 +21,85 @@ import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
-import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 
+import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
 public class TransactionClientInterceptor extends LocalObject
         implements ClientRequestInterceptor, Comparable<TransactionClientInterceptor> {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private String name;
     private int order;
 
-    private JavaEETransactionManager tm;
+    private JavaEETransactionManager eeTransactionManager;
 
     /**
      * Create the interceptor.
+     *
      * @param the name of the interceptor.
      * @param the order in which the interceptor should be invoked.
      */
-    public TransactionClientInterceptor(String name, int order, ServiceLocator habitat) {
+    public TransactionClientInterceptor(String name, int order, ServiceLocator serviceLocator) {
         this.name = name;
         this.order = order;
-        tm = habitat.getService(JavaEETransactionManager.class);
+        eeTransactionManager = serviceLocator.getService(JavaEETransactionManager.class);
     }
 
+    @Override
     public int compareTo(TransactionClientInterceptor o) {
         int otherOrder = o.order;
 
         if (order < otherOrder) {
             return -1;
-        } else if (order == otherOrder) {
+        }
+
+        if (order == otherOrder) {
             return 0;
         }
+
         return 1;
     }
 
     /**
      * Return the name of the interceptor.
+     *
      * @return the name of the interceptor.
      */
+    @Override
     public String name() {
         return name;
     }
 
-
-    public void send_request(ClientRequestInfo cri) {
+    @Override
+    public void send_request(ClientRequestInfo clientRequestInfo) {
         // Check if there is an exportable transaction on current thread
-        Object target = cri.effective_target();
-        if (tm != null) {
-            tm.checkTransactionExport(StubAdapter.isLocal(target));
+        Object target = clientRequestInfo.effective_target();
+        if (eeTransactionManager != null) {
+            eeTransactionManager.checkTransactionExport(StubAdapter.isLocal(target));
         }
     }
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void send_poll(ClientRequestInfo cri) {
     }
 
+    @Override
     public void receive_reply(ClientRequestInfo cri) {
     }
 
+    @Override
     public void receive_exception(ClientRequestInfo cri) {
     }
 
+    @Override
     public void receive_other(ClientRequestInfo cri) {
     }
 }
-

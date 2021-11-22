@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -27,32 +28,30 @@ package com.sun.enterprise.transaction.jts.api;
 
 public interface DelegatedTransactionRecoveryFence {
     /**
-     * Returns true if the specified instance on the specified path is being recovered
-     * after the specified timestamp
+     * Returns true if the specified instance on the specified path is being recovered after the specified timestamp
      */
-    public boolean isFenceRaised(String path, String instanceName, long timestamp);
+    boolean isFenceRaised(String path, String instanceName, long timestamp);
 
     /**
-     * Raise the fence for the specified instance on the specified path so that no other instance can
-     * start delegated recovery at the same time.
+     * Raise the fence for the specified instance on the specified path so that no other instance can start delegated
+     * recovery at the same time.
      */
-    public void raiseFence(String path, String instanceName);
+    void raiseFence(String path, String instanceName);
 
     /**
      * Lower the fence for the specified instance on the specified path
      */
-    public void lowerFence(String path, String instanceName);
+    void lowerFence(String path, String instanceName);
 
     /**
-     * Returns instance for which delegated recovery was done before the timestamp specified
-     * on the specified path or null if such instance does not exist
+     * Returns instance for which delegated recovery was done before the timestamp specified on the specified path or null
+     * if such instance does not exist
      */
-    public String getInstanceRecoveredFor(String path, long timestamp);
+    String getInstanceRecoveredFor(String path, long timestamp);
 
     /**
-     * If an instance was doing delegated recovery on the specified path, assign
-     * specified instance instead.
+     * If an instance was doing delegated recovery on the specified path, assign specified instance instead.
      */
-    public void transferRecoveryTo(String path, String instanceName);
+    void transferRecoveryTo(String path, String instanceName);
 
 }

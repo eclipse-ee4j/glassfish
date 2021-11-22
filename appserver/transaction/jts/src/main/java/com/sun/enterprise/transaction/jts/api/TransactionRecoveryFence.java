@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,18 +29,18 @@ package com.sun.enterprise.transaction.jts.api;
 
 public interface TransactionRecoveryFence {
     /**
-     * DataStructures are initialized first. Recovery
-     * of transaction starts immediatley after the initialization.
+     * DataStructures are initialized first. Recovery of transaction starts immediately after the initialization.
      */
-    public void start();
+    void start();
+
     /**
-     * Raise the fence so that no other instance can
-     * start the recovery at the same time.
+     * Raise the fence so that no other instance can start the recovery at the same time.
      */
-    public void raiseFence();
+    void raiseFence();
+
     /**
      * Lower the fence
      */
-    public void lowerFence();
+    void lowerFence();
 
 }

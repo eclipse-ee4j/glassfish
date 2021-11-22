@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,33 +17,36 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
+import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
+import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.Any;
-import org.omg.CORBA.ORB;
-import org.omg.CORBA.INV_POLICY;
 import org.omg.CORBA.INTERNAL;
+import org.omg.CORBA.INV_POLICY;
 import org.omg.CORBA.LocalObject;
-import org.omg.CosTransactions.ADAPTS;
-import org.omg.CosTransactions.SHARED;
-import org.omg.CosTransactions.OTSPolicy;
-import org.omg.CosTSInteroperation.TAG_OTS_POLICY;
+import org.omg.CORBA.ORB;
 import org.omg.CosTSInteroperation.TAG_INV_POLICY;
+import org.omg.CosTSInteroperation.TAG_OTS_POLICY;
+import org.omg.CosTransactions.ADAPTS;
+import org.omg.CosTransactions.OTSPolicy;
+import org.omg.CosTransactions.SHARED;
 import org.omg.IOP.Codec;
 import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.IORInterceptor;
 
 import com.sun.logging.LogDomains;
-import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
-import org.glassfish.hk2.api.ServiceLocator;
 
 public class TxIORInterceptor extends LocalObject implements IORInterceptor {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
-    private static Logger _logger =
-           LogDomains.getLogger(com.sun.jts.pi.InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(com.sun.jts.pi.InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     private Codec codec;
 
@@ -53,15 +57,18 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
         habitat = h;
     }
 
+    @Override
     public void destroy() {
     }
 
+    @Override
     public String name() {
         return "TxIORInterceptor";
     }
 
     // Note: this is called for all remote refs created from this ORB,
     // including EJBs and COSNaming objects.
+    @Override
     public void establish_components(IORInfo iorInfo) {
         try {
             _logger.log(Level.FINE, "TxIORInterceptor.establish_components->:");
@@ -69,16 +76,14 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
             // Add OTS tagged components. These are always the same for all EJBs
             OTSPolicy otsPolicy = null;
             try {
-                otsPolicy = (OTSPolicy)iorInfo.get_effective_policy(
-             habitat.getService(GlassFishORBHelper.class).getOTSPolicyType());
-            } catch ( INV_POLICY ex ) {
-                _logger.log(Level.FINE,
-                        "TxIORInterceptor.establish_components: OTSPolicy not present");
+                otsPolicy = (OTSPolicy) iorInfo.get_effective_policy(habitat.getService(GlassFishORBHelper.class).getOTSPolicyType());
+            } catch (INV_POLICY ex) {
+                _logger.log(Level.FINE, "TxIORInterceptor.establish_components: OTSPolicy not present");
             }
-        addOTSComponents(iorInfo, otsPolicy);
+            addOTSComponents(iorInfo, otsPolicy);
 
         } catch (Exception e) {
-            _logger.log(Level.WARNING,"Exception in establish_components", e);
+            _logger.log(Level.WARNING, "Exception in establish_components", e);
         } finally {
             _logger.log(Level.FINE, "TxIORInterceptor.establish_components<-:");
         }
@@ -89,8 +94,8 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
         short otsPolicyValue = ADAPTS.value;
 
         if (otsPolicy != null) {
-        otsPolicyValue = otsPolicy.value();
-    }
+            otsPolicyValue = otsPolicy.value();
+        }
 
         Any otsAny = ORB.init().create_any();
         Any invAny = ORB.init().create_any();
@@ -104,15 +109,13 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
             otsCompValue = codec.encode_value(otsAny);
             invCompValue = codec.encode_value(invAny);
         } catch (org.omg.IOP.CodecPackage.InvalidTypeForEncoding e) {
-            throw new INTERNAL("InvalidTypeForEncoding "+e.getMessage());
+            throw new INTERNAL("InvalidTypeForEncoding " + e.getMessage());
         }
 
-        TaggedComponent otsComp = new TaggedComponent(TAG_OTS_POLICY.value,
-                                                      otsCompValue);
+        TaggedComponent otsComp = new TaggedComponent(TAG_OTS_POLICY.value, otsCompValue);
         iorInfo.add_ior_component(otsComp);
 
-        TaggedComponent invComp = new TaggedComponent(TAG_INV_POLICY.value,
-                                                      invCompValue);
+        TaggedComponent invComp = new TaggedComponent(TAG_INV_POLICY.value, invCompValue);
         iorInfo.add_ior_component(invComp);
     }
 

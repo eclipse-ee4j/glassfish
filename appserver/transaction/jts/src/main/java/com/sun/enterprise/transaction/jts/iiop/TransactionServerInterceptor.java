@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,18 +17,20 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-import org.omg.CORBA.LocalObject;
-import org.omg.PortableInterceptor.ServerRequestInterceptor;
-import org.omg.PortableInterceptor.ServerRequestInfo;
-
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.hk2.api.ServiceLocator;
+import org.omg.CORBA.LocalObject;
+import org.omg.PortableInterceptor.ServerRequestInfo;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
-public class TransactionServerInterceptor extends LocalObject
-        implements ServerRequestInterceptor, Comparable {
+public class TransactionServerInterceptor extends LocalObject implements ServerRequestInterceptor, Comparable {
 
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
     private static final String name = "TransactionServerInterceptor";
     private int order;
 
@@ -36,6 +39,7 @@ public class TransactionServerInterceptor extends LocalObject
 
     /**
      * Construct the interceptor.
+     *
      * @param the order in which the interceptor should run.
      */
     public TransactionServerInterceptor(int order, ServiceLocator habitat) {
@@ -44,13 +48,16 @@ public class TransactionServerInterceptor extends LocalObject
         tm = habitat.getService(JavaEETransactionManager.class);
     }
 
+    @Override
     public String name() {
         return name;
     }
 
-    public void receive_request_service_contexts(ServerRequestInfo sri) { }
+    @Override
+    public void receive_request_service_contexts(ServerRequestInfo sri) {
+    }
 
-
+    @Override
     public int compareTo(Object o) {
         int otherOrder = -1;
         if (o instanceof TransactionServerInterceptor) {
@@ -64,29 +71,34 @@ public class TransactionServerInterceptor extends LocalObject
         return 1;
     }
 
-
+    @Override
     public void destroy() {
     }
 
+    @Override
     public void receive_request(ServerRequestInfo sri) {
     }
 
+    @Override
     public void send_reply(ServerRequestInfo sri) {
         checkTransaction(sri);
     }
 
+    @Override
     public void send_exception(ServerRequestInfo sri) {
         checkTransaction(sri);
     }
 
+    @Override
     public void send_other(ServerRequestInfo sri) {
         checkTransaction(sri);
     }
 
     private void checkTransaction(ServerRequestInfo sri) {
         try {
-            if (tm != null)
+            if (tm != null) {
                 tm.checkTransactionImport();
+            }
         } finally {
             if (gfORBHelper.isEjbCall(sri)) {
                 tm.cleanTxnTimeout();

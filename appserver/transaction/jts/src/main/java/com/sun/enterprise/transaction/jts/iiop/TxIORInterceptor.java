@@ -17,7 +17,9 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-import java.util.logging.Level;
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.logging.Logger;
 
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
@@ -37,28 +39,21 @@ import org.omg.IOP.TaggedComponent;
 import org.omg.PortableInterceptor.IORInfo;
 import org.omg.PortableInterceptor.IORInterceptor;
 
+import com.sun.jts.pi.InterceptorImpl;
 import com.sun.logging.LogDomains;
 
 public class TxIORInterceptor extends LocalObject implements IORInterceptor {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
 
-    private static Logger _logger = LogDomains.getLogger(com.sun.jts.pi.InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
+    private static Logger _logger = LogDomains.getLogger(InterceptorImpl.class, LogDomains.TRANSACTION_LOGGER);
 
     private Codec codec;
+    private ServiceLocator serviceLocator;
 
-    private ServiceLocator habitat;
-
-    public TxIORInterceptor(Codec c, ServiceLocator h) {
-        codec = c;
-        habitat = h;
-    }
-
-    @Override
-    public void destroy() {
+    public TxIORInterceptor(Codec codec, ServiceLocator serviceLocator) {
+        this.codec = codec;
+        this.serviceLocator = serviceLocator;
     }
 
     @Override
@@ -71,22 +66,26 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
     @Override
     public void establish_components(IORInfo iorInfo) {
         try {
-            _logger.log(Level.FINE, "TxIORInterceptor.establish_components->:");
+            _logger.log(FINE, "TxIORInterceptor.establish_components->:");
 
             // Add OTS tagged components. These are always the same for all EJBs
             OTSPolicy otsPolicy = null;
             try {
-                otsPolicy = (OTSPolicy) iorInfo.get_effective_policy(habitat.getService(GlassFishORBHelper.class).getOTSPolicyType());
+                otsPolicy = (OTSPolicy) iorInfo.get_effective_policy(serviceLocator.getService(GlassFishORBHelper.class).getOTSPolicyType());
             } catch (INV_POLICY ex) {
-                _logger.log(Level.FINE, "TxIORInterceptor.establish_components: OTSPolicy not present");
+                _logger.log(FINE, "TxIORInterceptor.establish_components: OTSPolicy not present");
             }
             addOTSComponents(iorInfo, otsPolicy);
 
         } catch (Exception e) {
-            _logger.log(Level.WARNING, "Exception in establish_components", e);
+            _logger.log(WARNING, "Exception in establish_components", e);
         } finally {
-            _logger.log(Level.FINE, "TxIORInterceptor.establish_components<-:");
+            _logger.log(FINE, "TxIORInterceptor.establish_components<-:");
         }
+    }
+
+    @Override
+    public void destroy() {
     }
 
     private void addOTSComponents(IORInfo iorInfo, OTSPolicy otsPolicy) {
@@ -120,5 +119,3 @@ public class TxIORInterceptor extends LocalObject implements IORInterceptor {
     }
 
 }
-
-// End of file.

@@ -17,24 +17,21 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
+import static com.sun.corba.ee.spi.presentation.rmi.StubAdapter.isLocal;
+
 import org.glassfish.hk2.api.ServiceLocator;
 import org.omg.CORBA.LocalObject;
 import org.omg.PortableInterceptor.ClientRequestInfo;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
 
-import com.sun.corba.ee.spi.presentation.rmi.StubAdapter;
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
-public class TransactionClientInterceptor extends LocalObject
-        implements ClientRequestInterceptor, Comparable<TransactionClientInterceptor> {
+public class TransactionClientInterceptor extends LocalObject implements ClientRequestInterceptor, Comparable<TransactionClientInterceptor> {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
+
     private String name;
     private int order;
-
     private JavaEETransactionManager eeTransactionManager;
 
     /**
@@ -79,7 +76,7 @@ public class TransactionClientInterceptor extends LocalObject
         // Check if there is an exportable transaction on current thread
         Object target = clientRequestInfo.effective_target();
         if (eeTransactionManager != null) {
-            eeTransactionManager.checkTransactionExport(StubAdapter.isLocal(target));
+            eeTransactionManager.checkTransactionExport(isLocal(target));
         }
     }
 

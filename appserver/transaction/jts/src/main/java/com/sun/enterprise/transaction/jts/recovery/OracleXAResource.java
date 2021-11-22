@@ -72,7 +72,7 @@ public class OracleXAResource extends XAResourceWrapper {
         if (flag == XAResource.TMNOFLAGS) {
             return null;
         }
-        
+
         return recoverList(flag);
     }
 
@@ -160,7 +160,7 @@ public class OracleXAResource extends XAResourceWrapper {
             if (connection == null) {
                 throw new XAException(sm.getString("transaction.oracle_xa_wrapper_connection_failed"));
             }
-            
+
             statement = connection.createStatement();
             resultset = statement.executeQuery(
                     "select pending.local_tran_id from SYS.PENDING_TRANS$ pending, SYS.DBA_2PC_NEIGHBORS dba where pending.global_foreign_id = '"
@@ -214,7 +214,7 @@ public class OracleXAResource extends XAResourceWrapper {
             }
             return stringbuffer.toString();
         }
-        
+
         return "";
     }
 }

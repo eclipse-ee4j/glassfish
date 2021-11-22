@@ -25,27 +25,24 @@ import org.omg.PortableInterceptor.ServerRequestInterceptor;
 
 import com.sun.enterprise.transaction.api.JavaEETransactionManager;
 
-public class TransactionServerInterceptor extends LocalObject implements ServerRequestInterceptor, Comparable {
+public class TransactionServerInterceptor extends LocalObject implements ServerRequestInterceptor, Comparable<Object> {
 
-    /**
-     *
-     */
     private static final long serialVersionUID = 1L;
     private static final String name = "TransactionServerInterceptor";
     private int order;
 
-    private JavaEETransactionManager tm;
-    private GlassFishORBHelper gfORBHelper = null;
+    private JavaEETransactionManager javaEETransactionManager;
+    private GlassFishORBHelper gfORBHelper;
 
     /**
      * Construct the interceptor.
      *
      * @param the order in which the interceptor should run.
      */
-    public TransactionServerInterceptor(int order, ServiceLocator habitat) {
+    public TransactionServerInterceptor(int order, ServiceLocator serviceLocator) {
         this.order = order;
-        gfORBHelper = habitat.getService(GlassFishORBHelper.class);
-        tm = habitat.getService(JavaEETransactionManager.class);
+        gfORBHelper = serviceLocator.getService(GlassFishORBHelper.class);
+        javaEETransactionManager = serviceLocator.getService(JavaEETransactionManager.class);
     }
 
     @Override
@@ -96,12 +93,12 @@ public class TransactionServerInterceptor extends LocalObject implements ServerR
 
     private void checkTransaction(ServerRequestInfo sri) {
         try {
-            if (tm != null) {
-                tm.checkTransactionImport();
+            if (javaEETransactionManager != null) {
+                javaEETransactionManager.checkTransactionImport();
             }
         } finally {
             if (gfORBHelper.isEjbCall(sri)) {
-                tm.cleanTxnTimeout();
+                javaEETransactionManager.cleanTxnTimeout();
             }
         }
     }

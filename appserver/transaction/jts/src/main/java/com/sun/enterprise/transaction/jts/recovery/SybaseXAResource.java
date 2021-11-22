@@ -62,7 +62,7 @@ public class SybaseXAResource extends XAResourceWrapper {
         } catch (ResourceException e) {
             throw new XAException(sm.getString("transaction.sybase_xa_wrapper_connection_failed", e));
         }
-        
+
         return null;
     }
 

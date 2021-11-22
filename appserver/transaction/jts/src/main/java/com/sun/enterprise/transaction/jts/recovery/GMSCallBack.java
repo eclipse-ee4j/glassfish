@@ -26,25 +26,21 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
 
-import com.sun.jts.jta.TransactionServiceProperties;
-import com.sun.jts.CosTransactions.Configuration;
-
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Servers;
-
-import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
-import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
-
 import org.glassfish.gms.bootstrap.GMSAdapter;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.ee.cms.core.CallBack;
 import com.sun.enterprise.ee.cms.core.DistributedStateCache;
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.FailureRecoverySignal;
+import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.Signal;
-
+import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
+import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.jta.TransactionServiceProperties;
 import com.sun.logging.LogDomains;
 
 public class GMSCallBack implements CallBack {
@@ -87,7 +83,7 @@ public class GMSCallBack implements CallBack {
                     }
 
                     gms = gmsAdapter.getModule();
-                    
+
                     // Set the member details when GMS service is ready to store it
                     String instanceName = props.getProperty(Configuration.INSTANCE_NAME);
                     String logdir = props.getProperty(Configuration.LOG_DIRECTORY);
@@ -169,7 +165,7 @@ public class GMSCallBack implements CallBack {
         if (_logger.isLoggable(INFO)) {
             _logger.log(INFO, "[GMSCallBack] Instance " + instance + " need to finish delegated recovering");
         }
-        
+
         if (instance != null) {
             DistributedStateCache dsc = gms.getGroupHandle().getDistributedStateCache();
             Map<Serializable, Serializable> memberDetails = dsc.getFromCacheForPattern(MEMBER_DETAILS, instance);

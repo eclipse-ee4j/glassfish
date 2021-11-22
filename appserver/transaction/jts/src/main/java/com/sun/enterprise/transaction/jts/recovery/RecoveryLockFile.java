@@ -48,11 +48,24 @@ import com.sun.logging.LogDomains;
 /**
  * This class manages lock file required for delegated recovery.
  *
- * @author mvatkina
+ * <p>
+ * Records in the recovery lock file have the following format:
  *
- * @see Records in the recovery lock file have the following format: PREFIX INSTANCE_NAME TIMESTAMP Where PREFIX can be
- * one of: - "O" means OWNED by this instance, i.e. non-delegated recovery - "B" means recovered BY the specified
- * instance - "F" means recovered FOR the specified instance TIMESTAMP is the time of the recovery operation
+ * <p>
+ * <code>PREFIX INSTANCE_NAME TIMESTAMP</code>
+ *
+ * <p>
+ * Where <code>PREFIX</code> can be one of:
+ * <ul>
+ *  <li> "O" means OWNED by this instance, i.e. non-delegated recovery
+ *  <li> "B" means recovered BY the specified instance
+ *  <li> "F" means recovered FOR the specified instance
+ * </ul>
+ *
+ * <p>
+ * <code>TIMESTAMP</code> is the time of the recovery operation
+ *
+ * @author mvatkina
  *
  */
 public class RecoveryLockFile implements TransactionRecoveryFence, DelegatedTransactionRecoveryFence {

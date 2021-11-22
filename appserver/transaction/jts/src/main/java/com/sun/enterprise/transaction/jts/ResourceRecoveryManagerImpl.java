@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,8 +17,11 @@
 
 package com.sun.enterprise.transaction.jts;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.SEVERE;
+import static java.util.logging.Level.WARNING;
+
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import jakarta.inject.Inject;
 import javax.transaction.xa.XAResource;
@@ -52,52 +56,51 @@ import org.glassfish.hk2.api.ServiceLocator;
 @Service
 public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecoveryManager {
 
-    private TransactionService txnService;
+    private static Logger _logger = LogDomains.getLogger(JavaEETransactionManagerSimplified.class, LogDomains.JTA_LOGGER);
+    private static StringManager localStrings = StringManager.getManager(JavaEETransactionManagerSimplified.class);
+
+    // Externally registered (ie not via habitat.getAllByContract) ResourceHandlers
+    private static List<RecoveryResourceHandler> externallyRegisteredRecoveryResourceHandlers = new ArrayList<>();
 
     @Inject
-    private ServiceLocator habitat;
+    private ServiceLocator serviceLocator;
 
-    private JavaEETransactionManager txMgr;
+    private TransactionService transactionService;
+    private JavaEETransactionManager eeTransactionManager;
 
     private Collection<RecoveryResourceHandler> recoveryResourceHandlers;
 
     private RecoveryResourceRegistry recoveryListenersRegistry;
 
-    private static Logger _logger =
-            LogDomains.getLogger(JavaEETransactionManagerSimplified.class,
-            LogDomains.JTA_LOGGER);
-    private static StringManager localStrings =
-            StringManager.getManager(JavaEETransactionManagerSimplified.class);
-
-    private volatile boolean lazyRecovery = false;
-    private volatile boolean configured = false;
-    // Externally registered (ie not via habitat.getAllByContract) ResourceHandlers
-    private static List externallyRegisteredRecoveryResourceHandlers = new ArrayList();
-
+    private volatile boolean lazyRecovery;
+    private volatile boolean configured;
 
     public void postConstruct() {
         if (configured) {
-            _logger.log(Level.WARNING, "", new IllegalStateException());
+            _logger.log(WARNING, "", new IllegalStateException());
             return;
         }
+
         // Recover XA resources if the auto-recovery flag in tx service is set to true
         recoverXAResources();
     }
 
     /**
      * recover incomplete transactions
+     *
      * @param delegated indicates whether delegated recovery is needed
      * @param logPath transaction log directory path
      * @return boolean indicating the status of transaction recovery
      * @throws Exception when unable to recover
      */
     public boolean recoverIncompleteTx(boolean delegated, String logPath) throws Exception {
-        return recoverIncompleteTx(delegated, logPath,
-                ((delegated)? null : Configuration.getPropertyValue(Configuration.INSTANCE_NAME)), false);
+        return recoverIncompleteTx(delegated, logPath, ((delegated) ? null : Configuration.getPropertyValue(Configuration.INSTANCE_NAME)),
+                false);
     }
 
     /**
      * recover incomplete transactions
+     *
      * @param delegated indicates whether delegated recovery is needed
      * @param logPath transaction log directory path
      * @param instance the name of the instance for which delegated recovery is performed, null if unknown.
@@ -105,14 +108,12 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * @return boolean indicating the status of transaction recovery
      * @throws Exception when unable to recover
      */
-    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance,
-            boolean notifyRecoveryListeners) throws Exception {
+    public boolean recoverIncompleteTx(boolean delegated, String logPath, String instance, boolean notifyRecoveryListeners)
+            throws Exception {
         boolean result = false;
         Map<RecoveryResourceHandler, Vector> handlerToXAResourcesMap = null;
         try {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Performing recovery of incomplete Tx...");
-            }
+            _logger.log(FINE, "Performing recovery of incomplete Tx...");
 
             configure();
             if (notifyRecoveryListeners) {
@@ -121,7 +122,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
             Vector xaresList = new Vector();
 
-            //TODO V3 will handle ThirdPartyXAResources also (v2 is not so). Is this fine ?
+            // TODO V3 will handle ThirdPartyXAResources also (v2 is not so). Is this fine ?
             handlerToXAResourcesMap = getAllRecoverableResources(xaresList);
 
             int size = xaresList.size();
@@ -129,11 +130,12 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
             for (int i = 0; i < size; i++) {
                 xaresArray[i] = (XAResource) xaresList.elementAt(i);
             }
-            if (_logger.isLoggable(Level.FINE)) {
-                String msg = localStrings.getStringWithDefault("xaresource.recovering",
-                        "Recovering {0} XA resources...", new Object[] {String.valueOf(size)});
 
-                _logger.log(Level.FINE, msg);
+            if (_logger.isLoggable(FINE)) {
+                String msg = localStrings.getStringWithDefault("xaresource.recovering", "Recovering {0} XA resources...",
+                        new Object[] { String.valueOf(size) });
+
+                _logger.log(FINE, msg);
             }
             if (!delegated) {
                 RecoveryManager.recoverIncompleteTx(xaresArray);
@@ -144,13 +146,13 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
             return result;
         } catch (Exception ex1) {
-            _logger.log(Level.WARNING, "xaresource.recover_error", ex1);
+            _logger.log(WARNING, "xaresource.recover_error", ex1);
             throw ex1;
         } finally {
             try {
                 closeAllResources(handlerToXAResourcesMap);
             } catch (Exception ex1) {
-                _logger.log(Level.WARNING, "xaresource.recover_error", ex1);
+                _logger.log(WARNING, "xaresource.recover_error", ex1);
             }
             if (notifyRecoveryListeners) {
                 afterRecovery(result, delegated, instance);
@@ -160,6 +162,7 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
     /**
      * close all resources provided using their handlers
+     *
      * @param resourcesToHandlers map that holds handlers and their resources
      */
     private void closeAllResources(Map<RecoveryResourceHandler, Vector> resourcesToHandlers) {
@@ -175,15 +178,15 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
     /**
      * get all recoverable resources
+     *
      * @param xaresList xa resources
      * @return recovery-handlers and their resources
      */
     private Map<RecoveryResourceHandler, Vector> getAllRecoverableResources(Vector xaresList) {
-        Map<RecoveryResourceHandler, Vector> resourcesToHandlers =
-                new HashMap<RecoveryResourceHandler, Vector>();
+        Map<RecoveryResourceHandler, Vector> resourcesToHandlers = new HashMap<RecoveryResourceHandler, Vector>();
 
         for (RecoveryResourceHandler handler : recoveryResourceHandlers) {
-            //TODO V3 FINE LOG
+            // TODO V3 FINE LOG
             Vector resources = new Vector();
             handler.loadXAResourcesAndItsConnections(xaresList, resources);
             resourcesToHandlers.put(handler, resources);
@@ -193,28 +196,26 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
 
     /**
      * recover the xa-resources
+     *
      * @param force boolean to indicate if it has to be forced.
      */
     public void recoverXAResources(boolean force) {
         if (force) {
             try {
-                if (txnService == null) {
-                    Config c = habitat.getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME);
-                    txnService = c.getExtensionByType(TransactionService.class);
+                if (transactionService == null) {
+                    transactionService = serviceLocator.getService(Config.class, ServerEnvironment.DEFAULT_INSTANCE_NAME)
+                                                       .getExtensionByType(TransactionService.class);
                 }
-                if (!Boolean.valueOf(txnService.getAutomaticRecovery())) {
+                if (!Boolean.valueOf(transactionService.getAutomaticRecovery())) {
                     return;
                 }
-                if (_logger.isLoggable(Level.FINE)) {
-                    _logger.log(Level.FINE, "ejbserver.recovery",
-                            "Perform recovery of XAResources...");
-                }
+
+                _logger.log(FINE, "ejbserver.recovery", "Perform recovery of XAResources...");
 
                 configure();
 
                 Vector xaresList = new Vector();
-                Map<RecoveryResourceHandler, Vector> resourcesToHandler =
-                        getAllRecoverableResources(xaresList);
+                Map<RecoveryResourceHandler, Vector> resourcesToHandler = getAllRecoverableResources(xaresList);
 
                 int size = xaresList.size();
                 XAResource[] xaresArray = new XAResource[size];
@@ -223,18 +224,18 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
                 }
 
                 resourceRecoveryStarted();
-                if (_logger.isLoggable(Level.FINE)) {
-                    String msg = localStrings.getStringWithDefault("xaresource.recovering",
-                        "Recovering {0} XA resources...", new Object[]{String.valueOf(size)});
+                if (_logger.isLoggable(FINE)) {
+                    String msg = localStrings.getStringWithDefault("xaresource.recovering", "Recovering {0} XA resources...",
+                            new Object[] { String.valueOf(size) });
 
-                    _logger.log(Level.FINE, msg);
+                    _logger.log(FINE, msg);
                 }
-                txMgr.recover(xaresArray);
+                eeTransactionManager.recover(xaresArray);
                 resourceRecoveryCompleted();
 
                 closeAllResources(resourcesToHandler);
             } catch (Exception ex) {
-                _logger.log(Level.SEVERE, "xaresource.recover_error", ex);
+                _logger.log(SEVERE, "xaresource.recover_error", ex);
             }
         }
     }
@@ -243,11 +244,8 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * notifies the resource listeners that recovery has started
      */
     private void resourceRecoveryStarted() {
-        Set<RecoveryResourceListener> listeners =
-                recoveryListenersRegistry.getListeners();
-
-        for (RecoveryResourceListener rrl : listeners) {
-            rrl.recoveryStarted();
+        for (RecoveryResourceListener listener : recoveryListenersRegistry.getListeners()) {
+            listener.recoveryStarted();
         }
     }
 
@@ -255,11 +253,8 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * notifies the resource listeners that recovery has completed
      */
     private void resourceRecoveryCompleted() {
-        Set<RecoveryResourceListener> listeners =
-                recoveryListenersRegistry.getListeners();
-
-        for (RecoveryResourceListener rrl : listeners) {
-            rrl.recoveryCompleted();
+        for (RecoveryResourceListener listeners : recoveryListenersRegistry.getListeners()) {
+            listeners.recoveryCompleted();
         }
     }
 
@@ -267,15 +262,12 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * notifies the event listeners that recovery is about to start
      */
     private void beforeRecovery(boolean delegated, String instance) {
-        Set<RecoveryEventListener> listeners =
-                recoveryListenersRegistry.getEventListeners();
-
-        for (RecoveryEventListener erl : listeners) {
+        for (RecoveryEventListener listener : recoveryListenersRegistry.getEventListeners()) {
             try {
-                erl.beforeRecovery(delegated, instance);
+                listener.beforeRecovery(delegated, instance);
             } catch (Throwable e) {
-                _logger.log(Level.WARNING, "", e);
-                _logger.log(Level.WARNING, "jts.before_recovery_excep", e);
+                _logger.log(WARNING, "", e);
+                _logger.log(WARNING, "jts.before_recovery_excep", e);
             }
         }
     }
@@ -284,15 +276,12 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
      * notifies the event listeners that all recovery operations are completed
      */
     private void afterRecovery(boolean success, boolean delegated, String instance) {
-        Set<RecoveryEventListener> listeners =
-                recoveryListenersRegistry.getEventListeners();
-
-        for (RecoveryEventListener erl : listeners) {
+        for (RecoveryEventListener listener : recoveryListenersRegistry.getEventListeners()) {
             try {
-                erl.afterRecovery(success, delegated, instance);
+                listener.afterRecovery(success, delegated, instance);
             } catch (Throwable e) {
-                _logger.log(Level.WARNING, "", e);
-                _logger.log(Level.WARNING, "jts.after_recovery_excep", e);
+                _logger.log(WARNING, "", e);
+                _logger.log(WARNING, "jts.after_recovery_excep", e);
             }
         }
     }
@@ -318,28 +307,30 @@ public class ResourceRecoveryManagerImpl implements PostConstruct, ResourceRecov
             return;
         }
 
-        recoveryResourceHandlers = new ArrayList(habitat.getAllServices(RecoveryResourceHandler.class));
+        recoveryResourceHandlers = new ArrayList<>(serviceLocator.getAllServices(RecoveryResourceHandler.class));
         recoveryResourceHandlers.addAll(externallyRegisteredRecoveryResourceHandlers);
-        txMgr = habitat.getService(JavaEETransactionManager.class);
-        recoveryListenersRegistry = habitat.getService(RecoveryResourceRegistry.class);
-        if (recoveryListenersRegistry == null) throw new IllegalStateException();
+        eeTransactionManager = serviceLocator.getService(JavaEETransactionManager.class);
+        recoveryListenersRegistry = serviceLocator.getService(RecoveryResourceRegistry.class);
+
+        if (recoveryListenersRegistry == null) {
+            throw new IllegalStateException();
+        }
+
         RecoveryManager.startTransactionRecoveryFence();
 
         configured = true;
     }
 
-
     public static void registerRecoveryResourceHandler(final XAResource xaResource) {
-        RecoveryResourceHandler recoveryResourceHandler =
-                new RecoveryResourceHandler() {
-                    public void loadXAResourcesAndItsConnections(List xaresList, List connList) {
-                        xaresList.add(xaResource);
-                    }
+        RecoveryResourceHandler recoveryResourceHandler = new RecoveryResourceHandler() {
+            public void loadXAResourcesAndItsConnections(List xaresList, List connList) {
+                xaresList.add(xaResource);
+            }
 
-                    public void closeConnections(List connList) {
-                        ;
-                    }
-                };
+            public void closeConnections(List connList) {
+                ;
+            }
+        };
         externallyRegisteredRecoveryResourceHandlers.add(recoveryResourceHandler);
     }
 }

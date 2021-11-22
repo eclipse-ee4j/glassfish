@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,31 +17,30 @@
 
 package com.sun.enterprise.transaction.jts.recovery;
 
+import static java.util.logging.Level.FINE;
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 import java.io.Serializable;
 import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Logger;
-import java.util.logging.Level;
-
-import com.sun.jts.jta.TransactionServiceProperties;
-import com.sun.jts.CosTransactions.Configuration;
-
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.config.serverbeans.Servers;
-
-import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
-import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
 
 import org.glassfish.gms.bootstrap.GMSAdapter;
 import org.glassfish.gms.bootstrap.GMSAdapterService;
 import org.glassfish.hk2.api.ServiceLocator;
 
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.ee.cms.core.CallBack;
 import com.sun.enterprise.ee.cms.core.DistributedStateCache;
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.FailureRecoverySignal;
+import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.Signal;
-
+import com.sun.enterprise.transaction.api.ResourceRecoveryManager;
+import com.sun.enterprise.transaction.jts.api.DelegatedTransactionRecoveryFence;
+import com.sun.jts.CosTransactions.Configuration;
+import com.sun.jts.jta.TransactionServiceProperties;
 import com.sun.logging.LogDomains;
 
 public class GMSCallBack implements CallBack {
@@ -83,15 +83,15 @@ public class GMSCallBack implements CallBack {
                     }
 
                     gms = gmsAdapter.getModule();
+
                     // Set the member details when GMS service is ready to store it
                     String instanceName = props.getProperty(Configuration.INSTANCE_NAME);
                     String logdir = props.getProperty(Configuration.LOG_DIRECTORY);
                     try {
-                         _logger.log(Level.INFO, "Storing GMS instance " + instanceName +
-                                 " data " + TXLOGLOCATION + " : " + logdir);
-                         gms.updateMemberDetails(instanceName, TXLOGLOCATION, logdir);
+                        _logger.log(INFO, "Storing GMS instance " + instanceName + " data " + TXLOGLOCATION + " : " + logdir);
+                        gms.updateMemberDetails(instanceName, TXLOGLOCATION, logdir);
                     } catch (Exception e) {
-                        _logger.log(Level.WARNING, "jts.error_updating_gms", e);
+                        _logger.log(WARNING, "jts.error_updating_gms", e);
                     }
                 }
             }
@@ -104,16 +104,16 @@ public class GMSCallBack implements CallBack {
         if (signal instanceof FailureRecoverySignal) {
             long timestamp = System.currentTimeMillis();
 
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, "[GMSCallBack] failure recovery signal: " + signal);
+            if (_logger.isLoggable(INFO)) {
+                _logger.log(INFO, "[GMSCallBack] failure recovery signal: " + signal);
             }
 
             // Waiting for 1 minute (or the user set value) to ensure that indoubt xids are updated into
             // the database, otherwise while doing the recovery an instance may not
             // get all the correct indoubt xids.
             try {
-                Thread.sleep(waitTime*1000L);
-            } catch(InterruptedException e) {
+                Thread.sleep(waitTime * 1000L);
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
 
@@ -124,13 +124,12 @@ public class GMSCallBack implements CallBack {
             } else {
                 Map<Serializable, Serializable> failedMemberDetails = signal.getMemberDetails();
                 if (failedMemberDetails != null) {
-                    logdir = (String)failedMemberDetails.get(TXLOGLOCATION);
+                    logdir = (String) failedMemberDetails.get(TXLOGLOCATION);
                 }
             }
 
-            synchronized(lock) {
-                _logger.log(Level.INFO, "[GMSCallBack] Recovering for instance: " + instance +
-                        " logdir: " + logdir);
+            synchronized (lock) {
+                _logger.log(INFO, "[GMSCallBack] Recovering for instance: " + instance + " logdir: " + logdir);
                 doRecovery(logdir, instance, timestamp);
 
                 if (!Configuration.isDBLoggingEnabled()) {
@@ -139,39 +138,40 @@ public class GMSCallBack implements CallBack {
                         logdir = finishDelegatedRecovery(logdir, timestamp);
                     }
                 }
-                _logger.log(Level.INFO, "[GMSCallBack] Finished recovery for instance: " + instance);
+                _logger.log(INFO, "[GMSCallBack] Finished recovery for instance: " + instance);
             }
         } else {
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "[GMSCallBack] ignoring signal: " + signal);
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "[GMSCallBack] ignoring signal: " + signal);
             }
         }
     }
 
     /**
-     * Find records of not finished delegated recovery in the recovery lock file on
-     * this path, and do delegated recovery if such record exists
+     * Find records of not finished delegated recovery in the recovery lock file on this path, and do delegated recovery if
+     * such record exists
      */
     String finishDelegatedRecovery(String logdir) {
         return finishDelegatedRecovery(logdir, startTime);
     }
 
     /**
-     * Find records of not finished delegated recovery in the recovery lock file on
-     * this path and recorded before specified timestamp, and do delegated recovery if such record exists
+     * Find records of not finished delegated recovery in the recovery lock file on this path and recorded before specified
+     * timestamp, and do delegated recovery if such record exists
      */
     String finishDelegatedRecovery(String logdir, long timestamp) {
         String delegatedLogDir = null;
         String instance = fence.getInstanceRecoveredFor(logdir, timestamp);
-        if (_logger.isLoggable(Level.INFO)) {
-            _logger.log(Level.INFO, "[GMSCallBack] Instance " + instance + " need to finish delegated recovering");
+        if (_logger.isLoggable(INFO)) {
+            _logger.log(INFO, "[GMSCallBack] Instance " + instance + " need to finish delegated recovering");
         }
+
         if (instance != null) {
-            DistributedStateCache dsc=gms.getGroupHandle().getDistributedStateCache();
-            Map<Serializable, Serializable> memberDetails = dsc.getFromCacheForPattern(MEMBER_DETAILS, instance );
-            delegatedLogDir = (String)memberDetails.get(TXLOGLOCATION);
-            if (_logger.isLoggable(Level.INFO)) {
-                _logger.log(Level.INFO, "[GMSCallBack] Tx log dir for instance " + instance + " is " + delegatedLogDir);
+            DistributedStateCache dsc = gms.getGroupHandle().getDistributedStateCache();
+            Map<Serializable, Serializable> memberDetails = dsc.getFromCacheForPattern(MEMBER_DETAILS, instance);
+            delegatedLogDir = (String) memberDetails.get(TXLOGLOCATION);
+            if (_logger.isLoggable(INFO)) {
+                _logger.log(INFO, "[GMSCallBack] Tx log dir for instance " + instance + " is " + delegatedLogDir);
             }
 
             doRecovery(delegatedLogDir, instance, timestamp);
@@ -189,13 +189,13 @@ public class GMSCallBack implements CallBack {
             if (logdir == null) {
                 // Could happen if instance fails BEFORE actually getting this info into distributed state cache.
                 // Could also be a gms distributed state cache bug.
-                _logger.log(Level.WARNING, "jts.error_getting_member_details", instance);
+                _logger.log(WARNING, "jts.error_getting_member_details", instance);
                 return;
             }
 
             if (fence.isFenceRaised(logdir, instance, timestamp)) {
-                if (_logger.isLoggable(Level.INFO)) {
-                    _logger.log(Level.INFO, "Instance " + instance + " is already recovering");
+                if (_logger.isLoggable(INFO)) {
+                    _logger.log(INFO, "Instance " + instance + " is already recovering");
                 }
                 return;
             }
@@ -206,18 +206,18 @@ public class GMSCallBack implements CallBack {
                 fence.raiseFence(logdir, instance);
             }
 
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Transaction log directory for " + instance + " is " + logdir);
-                _logger.log(Level.FINE, "Starting transaction recovery of " + instance);
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Transaction log directory for " + instance + " is " + logdir);
+                _logger.log(FINE, "Starting transaction recovery of " + instance);
             }
 
             ResourceRecoveryManager recoveryManager = serviceLocator.getService(ResourceRecoveryManager.class);
             recoveryManager.recoverIncompleteTx(true, logdir, instance, true);
-            if (_logger.isLoggable(Level.FINE)) {
-                _logger.log(Level.FINE, "Transaction recovery of " + instance + " is completed");
+            if (_logger.isLoggable(FINE)) {
+                _logger.log(FINE, "Transaction recovery of " + instance + " is completed");
             }
         } catch (Throwable e) {
-            _logger.log(Level.WARNING, "jts.recovery_error", e);
+            _logger.log(WARNING, "jts.recovery_error", e);
         } finally {
             if (!Configuration.isDBLoggingEnabled()) {
                 fence.lowerFence(logdir, instance);
@@ -226,14 +226,12 @@ public class GMSCallBack implements CallBack {
     }
 
     private boolean isInstanceRunning(String instance) {
-        boolean rs = false;
-        for(Server server : servers.getServer()) {
-            if(instance.equals(server.getName())) {
-                rs = server.isRunning();
-                break;
+        for (Server server : servers.getServer()) {
+            if (instance.equals(server.getName())) {
+                return server.isRunning();
             }
         }
 
-        return rs;
+        return false;
     }
 }

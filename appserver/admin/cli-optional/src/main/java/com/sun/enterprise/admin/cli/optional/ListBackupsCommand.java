@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -36,41 +37,39 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 @PerLookup
 public final class ListBackupsCommand extends BackupCommands {
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(ListBackupsCommand.class);
+    private static final LocalStringsImpl strings = new LocalStringsImpl(ListBackupsCommand.class);
 
     @Override
-    protected void validate()
-            throws CommandException {
-        // only if domain name is not specified, it should try to find one
-        if (domainName == null)
+    protected void validate() throws CommandException {
+        // Only if domain name is not specified, it should try to find one
+        if (domainName == null) {
             super.validate();
+        }
 
         checkOptions();
 
         File domainFile = new File(new File(domainDirParam), domainName);
 
         if (!isWritableDirectory(domainFile)) {
-            throw new CommandException(
-                strings.get("InvalidDirectory", domainFile.getPath()));
+            throw new CommandException(strings.get("InvalidDirectory", domainFile.getPath()));
         }
+
         setBackupDir(backupdir);
         prepareRequest();
-        initializeLogger();     // in case program options changed
+        initializeLogger(); // in case program options changed
     }
 
-
     @Override
-    protected int executeCommand()
-            throws CommandException {
+    protected int executeCommand() throws CommandException {
         try {
-            ListManager mgr = new ListManager(request);
-            logger.info(mgr.list());
+            ListManager listManager = new ListManager(request);
+            logger.info(listManager.list());
         } catch (BackupWarningException bwe) {
             logger.info(bwe.getMessage());
         } catch (BackupException be) {
             throw new CommandException(be);
         }
+
         return 0;
     }
 

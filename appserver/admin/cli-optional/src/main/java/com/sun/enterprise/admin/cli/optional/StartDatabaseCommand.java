@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,10 +17,15 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
+import static com.sun.enterprise.admin.cli.optional.DerbyControl.DB_LOG_FILENAME;
+import static java.io.File.pathSeparator;
+import static java.io.File.separator;
+import static java.util.Arrays.asList;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.List;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -32,47 +38,42 @@ import com.sun.enterprise.universal.glassfish.GFLauncherUtils;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.OS;
 
-
 /**
- *  start-database command
- *  This command class will invoke DerbyControl to first ping
- *  if the database is running.  If not then it will start
- *  the database.  If the database is already started, then
- *  a message will be displayed to the user.
+ * start-database command This command class will invoke DerbyControl to first ping if the database is running. If not
+ * then it will start the database. If the database is already started, then a message will be displayed to the user.
  *
- *  @author <a href="mailto:jane.young@sun.com">Jane Young</a>
- *  @author Bill Shannon
+ * @author <a href="mailto:jane.young@sun.com">Jane Young</a>
+ * @author Bill Shannon
  */
 @Service(name = "start-database")
 @PerLookup
 public final class StartDatabaseCommand extends DatabaseCommand {
+
+    private static final LocalStringsImpl strings = new LocalStringsImpl(StartDatabaseCommand.class);
     private final static String DATABASE_DIR_NAME = "databases";
 
     @Param(name = "dbhome", optional = true)
     private String dbHome;
 
-    @Param(name = "jvmoptions", optional = true, separator=' ')
+    @Param(name = "jvmoptions", optional = true, separator = ' ')
     private String[] jvmoptions;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(StartDatabaseCommand.class);
-
     /**
-     *  defines the command to start the derby database
-     *  Note that when using Darwin (Mac), the property,
-     *  "-Dderby.storage.fileSyncTransactionLog=True" is defined.
+     * defines the command to start the derby database Note that when using Darwin (Mac), the property,
+     * "-Dderby.storage.fileSyncTransactionLog=True" is defined.
      */
     public String[] startDatabaseCmd() {
-        ArrayList<String> cmd = new ArrayList<String>();
-        cmd.add(sJavaHome + File.separator + "bin" + File.separator + "java");
-        cmd.add("-Djava.library.path=" + sInstallRoot + File.separator + "lib");
+        List<String> cmd = new ArrayList<>();
+
+        cmd.add(javaHome + separator + "bin" + separator + "java");
+        cmd.add("-Djava.library.path=" + installRoot + separator + "lib");
         if (OS.isDarwin()) {
             cmd.add("-Dderby.storage.fileSyncTransactionLog=True");
         }
         cmd.add("-cp");
-        cmd.add(sClasspath + File.pathSeparator + sDatabaseClasspath);
+        cmd.add(sClasspath + pathSeparator + sDatabaseClasspath);
         if (jvmoptions != null) {
-            cmd.addAll(Arrays.asList(jvmoptions));
+            cmd.addAll(asList(jvmoptions));
         }
         cmd.add("com.sun.enterprise.admin.cli.optional.DerbyControl");
         cmd.add("start");
@@ -80,114 +81,118 @@ public final class StartDatabaseCommand extends DatabaseCommand {
         cmd.add(dbPort);
         cmd.add("true");
         cmd.add(dbHome);
+
         return cmd.toArray(new String[cmd.size()]);
     }
 
-
     /**
-     *  defines the command to print out the database sysinfo
-     *  Note that when using Darwin (Mac), the property,
-     *  "-Dderby.storage.fileSyncTransactionLog=True" is defined.
+     * defines the command to print out the database sysinfo Note that when using Darwin (Mac), the property,
+     * "-Dderby.storage.fileSyncTransactionLog=True" is defined.
      */
     public String[] sysinfoCmd() throws Exception {
         if (OS.isDarwin()) {
-            return new String [] {
-                sJavaHome+File.separator+"bin"+File.separator+"java",
-                "-Djava.library.path="+sInstallRoot+File.separator+"lib",
+            return new String[] {
+                javaHome + separator + "bin" + separator + "java",
+                "-Djava.library.path=" + installRoot + separator + "lib",
                 "-Dderby.storage.fileSyncTransactionLog=True",
-                "-cp",
-                sClasspath + File.pathSeparator + sDatabaseClasspath,
+                "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
+
                 "com.sun.enterprise.admin.cli.optional.DerbyControl",
                 "sysinfo",
-               dbHost, dbPort, "false"
-            };
-        } else {
-            return new String [] {
-                sJavaHome+File.separator+"bin"+File.separator+"java",
-                "-Djava.library.path="+sInstallRoot+File.separator+"lib",
-                "-cp",
-                sClasspath + File.pathSeparator + sDatabaseClasspath,
-                "com.sun.enterprise.admin.cli.optional.DerbyControl",
-                "sysinfo",
-                dbHost, dbPort, "false"
-            };
+                dbHost, dbPort, "false" };
         }
+
+        return new String[] {
+            javaHome + separator + "bin" + separator + "java",
+            "-Djava.library.path=" + installRoot + separator + "lib",
+            "-cp", sClasspath + pathSeparator + sDatabaseClasspath,
+
+            "com.sun.enterprise.admin.cli.optional.DerbyControl",
+            "sysinfo",
+            dbHost, dbPort, "false" };
+
     }
 
     /**
-     *  This method returns dbhome.
-     *  If dbhome option is specified, then the option value is returned.
-     *  If not, then go through series of conditions to determine the
-     *  default dbhome directory.
-     *  The conditions are as follow:
-     *    1.  if derby.log exists in the current directory, then that is
-     *        the default dbhome directory.
-     *    2.  if derby.log does not exist in the current directory, then
-     *        create a "databases" in <parent directory of domains>.  This
-     *        is usually <install-dir> in filebased installation.  In
-     *        package based installation this directory is /var/SUNWappserver.
+     * This method returns dbhome.
+     *
+     * <p>
+     * If dbhome option is specified, then the option value is returned. If not, then go through
+     * series of conditions to determine the default dbhome directory.
+     *
+     * The conditions are as follow:
+     * 1. if derby.log exists in the current directory, then that is the default dbhome directory.
+     * 2. if derby.log does not exist in the current directory, then create a "databases" in <parent directory of domains>. This is usually <install-dir> in filebased
+     * installation. In package based installation this directory is /var/SUNWappserver.
      */
     private String getDatabaseHomeDir() {
         // dbhome is specified then return the dbhome option value
-        if (dbHome != null)
+        if (dbHome != null) {
             return dbHome;
+        }
 
-        // check if current directory contains derby.log
+        // Check if current directory contains derby.log
         // for now we are going to rely on derby.log file to ascertain
         // whether the current directory is where databases were created.
         // However, this may not always be right.
-        // The reason for this behavior is so that it is
-        // compatible with 8.2PE and 9.0 release.
-        // In 8.2PE and 9.0, the current directory is the
-        // default dbhome.
+        //
+        // The reason for this behavior is so that it is compatible with 8.2PE and 9.0 release.
+        // In 8.2PE and 9.0, the current directory is the default dbhome.
         final String currentDir = System.getProperty("user.dir");
-        if ((new File(currentDir, DerbyControl.DB_LOG_FILENAME)).exists())
+        if ((new File(currentDir, DB_LOG_FILENAME)).exists()) {
             return currentDir;
+        }
+
         // the default dbhome is <AS_INSTALL>/databases
         final File installPath = GFLauncherUtils.getInstallDir();
 
         if (installPath != null) {
             final File dbDir = new File(installPath, DATABASE_DIR_NAME);
-            if (!dbDir.isDirectory() && !dbDir.mkdir())
+            if (!dbDir.isDirectory() && !dbDir.mkdir()) {
                 logger.warning(strings.get("CantCreateDatabaseDir", dbDir));
+            }
             try {
                 return dbDir.getCanonicalPath();
             } catch (IOException ioe) {
-                // if unable to get canonical path, then return absolute path
+                // If unable to get canonical path, then return absolute path
                 return dbDir.getAbsolutePath();
             }
         }
-        // hopefully it'll never get here.  if installPath is null then
+
+        // Hopefully it'll never get here. if installPath is null then
         // asenv.conf is incorrect.
         return null;
     }
 
     /**
-     *  method that execute the command
-     *  @throws CommandException
+     * method that execute the command
+     *
+     * @throws CommandException
      */
     @Override
-    protected int executeCommand()
-            throws CommandException, CommandValidationException {
-        final CLIProcessExecutor cpe = new CLIProcessExecutor();
+    protected int executeCommand() throws CommandException, CommandValidationException {
+        final CLIProcessExecutor cliProcessExecutor = new CLIProcessExecutor();
         String dbLog = "";
         int exitCode = 0;
+
         try {
             prepareProcessExecutor();
             dbHome = getDatabaseHomeDir();
-            if (dbHome != null)
-                dbLog = dbHome + File.separator + DerbyControl.DB_LOG_FILENAME;
+            if (dbHome != null) {
+                dbLog = dbHome + separator + DB_LOG_FILENAME;
+            }
 
             logger.finer("Ping Database");
-            cpe.execute("pingDatabaseCmd", pingDatabaseCmd(true), true);
-            // if ping is unsuccesfull then database is not up and running
-            if (cpe.exitValue() > 0) {
+            cliProcessExecutor.execute("pingDatabaseCmd", pingDatabaseCmd(true), true);
+
+            // If ping is unsuccessful then database is not up and running
+            if (cliProcessExecutor.exitValue() > 0) {
                 logger.finer("Start Database");
-                cpe.execute("startDatabaseCmd", startDatabaseCmd(), false);
-                if (cpe.exitValue() != 0) {
+                cliProcessExecutor.execute("startDatabaseCmd", startDatabaseCmd(), false);
+                if (cliProcessExecutor.exitValue() != 0) {
                     throw new CommandException(strings.get("UnableToStartDatabase", dbLog));
                 }
-            } else if (cpe.exitValue() < 0) {
+            } else if (cliProcessExecutor.exitValue() < 0) {
                 // Something terribly wrong!
                 throw new CommandException(strings.get("CommandUnSuccessful", name));
             } else {
@@ -195,32 +200,36 @@ public final class StartDatabaseCommand extends DatabaseCommand {
                 logger.info(strings.get("StartDatabaseStatus", dbHost, dbPort));
             }
         } catch (IllegalThreadStateException ite) {
+
             // IllegalThreadStateException is thrown if the
-            // process has not yet teminated and is still running.
+            // process has not yet terminated and is still running.
+            //
             // see http://java.sun.com/j2se/1.5.0/docs/api/java/lang/Process.html#exitValue()
             // This is good since that means the database is up and running.
             CLIProcessExecutor cpePing = new CLIProcessExecutor();
             CLIProcessExecutor cpeSysInfo = new CLIProcessExecutor();
             try {
                 if (!programOpts.isTerse()) {
-                    // try getting sysinfo
+                    // Try getting sysinfo
                     logger.fine(strings.get("database.info.msg", dbHost, dbPort));
                 }
                 cpePing.execute("pingDatabaseCmd", pingDatabaseCmd(true), true);
                 int counter = 0;
-                //give time for the database to be started
+
+                // Give time for the database to be started
                 while (cpePing.exitValue() != 0 && counter < 10) {
                     cpePing.execute("pingDatabaseCmd", pingDatabaseCmd(true), true);
                     Thread.sleep(500);
                     counter++;
-                    //break out if start-database failed
+                    // Break out if start-database failed
                     try {
-                        cpe.exitValue();
+                        cliProcessExecutor.exitValue();
                         break;
                     } catch (IllegalThreadStateException itse) {
                         continue;
                     }
                 }
+
                 if (!programOpts.isTerse()) {
                     logger.finer("Database SysInfo");
                     if (cpePing.exitValue() == 0) {
@@ -233,6 +242,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
             } catch (Exception e) {
                 throw new CommandException(strings.get("CommandUnSuccessful", name), e);
             }
+
             if (cpePing.exitValue() == 0) {
                 logger.info(strings.get("DatabaseStartMsg"));
                 if ((new File(dbLog)).canWrite()) {
@@ -244,6 +254,7 @@ public final class StartDatabaseCommand extends DatabaseCommand {
         } catch (Exception e) {
             throw new CommandException(strings.get("CommandUnSuccessful", name), e);
         }
+
         return exitCode;
     }
 }

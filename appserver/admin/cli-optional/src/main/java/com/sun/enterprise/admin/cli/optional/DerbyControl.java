@@ -52,9 +52,28 @@ public final class DerbyControl {
     final private String derbyUser;
     final private String derbyPassword;
 
-    // constructor
-    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String dhe, final String duser,
-            final String dpwd) {
+    public static void main(String[] args) {
+        if (args.length < 3) {
+            System.out.println("paramters not specified.");
+            System.out.println("DerbyControl <derby command> <derby host> <derby port> <derby home> <redirect output>");
+            System.exit(1);
+        }
+
+        DerbyControl derbyControl = null;
+        if (args.length == 3) {
+            derbyControl = new DerbyControl(args[0], args[1], args[2]);
+        } else if (args.length == 4) {
+            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3]);
+        } else if (args.length == 5) {
+            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3], args[4]);
+        } else {
+            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3], args[4], args[5]);
+        }
+
+        derbyControl.invokeNetworkServerControl();
+    }
+
+    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String dhe, final String duser, final String dpwd) {
         this.derbyCommand = dc;
         this.derbyHost = dht;
         this.derbyPort = dp;
@@ -91,7 +110,7 @@ public final class DerbyControl {
         if (!isEmpty(derbyHome)) {
             System.setProperty("derby.system.home", derbyHome);
         }
-        // set the property to not overwrite log file
+        // Set the property to not overwrite log file
         System.setProperty("derby.infolog.append", "true");
     }
 
@@ -110,28 +129,27 @@ public final class DerbyControl {
         this(dc, dht, dp, redirect, dhe, null, null);
     }
 
-    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String duser,
-            final String dpassword) {
+    public DerbyControl(final String dc, final String dht, final String dp, final String redirect, final String duser, final String dpassword) {
         this(dc, dht, dp, redirect, null, duser, dpassword);
     }
 
     /**
-     * This methos invokes the Derby's NetworkServerControl to start/stop/ping the database.
+     * This method invokes the Derby's NetworkServerControl to start/stop/ping the database.
      */
     private void invokeNetworkServerControl() {
         try {
             Class<?> networkServer = Class.forName("org.apache.derby.drda.NetworkServerControl");
             Method networkServerMethod = networkServer.getDeclaredMethod("main", String[].class);
-            Object[] paramObj = null;
+            Object[] parameters = null;
             if (isAllNull(derbyUser, derbyPassword)) {
-                paramObj = new Object[] {
-                    new String[] { derbyCommand, "-h", derbyHost, "-p", derbyPort } };
+                parameters = new Object[] {
+                    new String[] { derbyCommand, "-h", derbyHost, "-p", derbyPort, "-noSecurityManager" } };
             } else {
-                paramObj = new Object[] {
-                    new String[] { derbyCommand, "-h", derbyHost, "-p", derbyPort, "-user", derbyUser, "-password", derbyPassword } };
+                parameters = new Object[] {
+                    new String[] { derbyCommand, "-h", derbyHost, "-p", derbyPort, "-noSecurityManager", "-user", derbyUser, "-password", derbyPassword} };
             }
 
-            networkServerMethod.invoke(networkServer, paramObj);
+            networkServerMethod.invoke(networkServer, parameters);
         } catch (Throwable t) {
             t.printStackTrace();
             Runtime.getRuntime().exit(2);
@@ -195,24 +213,4 @@ public final class DerbyControl {
         return tempFileName;
     }
 
-    public static void main(String[] args) {
-        if (args.length < 3) {
-            System.out.println("paramters not specified.");
-            System.out.println("DerbyControl <derby command> <derby host> <derby port> <derby home> <redirect output>");
-            System.exit(1);
-        }
-
-        DerbyControl derbyControl = null;
-        if (args.length == 3) {
-            derbyControl = new DerbyControl(args[0], args[1], args[2]);
-        } else if (args.length == 4) {
-            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3]);
-        } else if (args.length == 5) {
-            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3], args[4]);
-        } else {
-            derbyControl = new DerbyControl(args[0], args[1], args[2], args[3], args[4], args[5]);
-        }
-
-        derbyControl.invokeNetworkServerControl();
-    }
 }

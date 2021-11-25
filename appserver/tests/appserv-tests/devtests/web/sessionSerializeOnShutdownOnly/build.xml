@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -72,7 +73,7 @@
     </target>
 
     <target name="runfirst" depends="init-common, deploy">
-        <java classname="WebTest">
+        <java classname="WebTest" fork="true">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
             <arg value="${contextroot}"/>
@@ -85,7 +86,7 @@
     </target>
 
     <target name="checkForSession" depends="init-common">
-        <java classname="WebTest">
+        <java classname="WebTest" fork="true">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
             <arg value="${contextroot}"/>
@@ -99,7 +100,7 @@
     </target>
 
     <target name="checkForNoSession" depends="init-common">
-        <java classname="WebTest">
+        <java classname="WebTest" fork="true">
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>
             <arg value="${contextroot}"/>

@@ -80,7 +80,7 @@
     </target>
 
     <target name="run" depends="init-common">
-        <java classname="WebTest">
+        <java classname="WebTest" fork="true">
             <sysproperty key="debug" value="true"/>
             <arg value="${http.host}"/>
             <arg value="${http.port}"/>

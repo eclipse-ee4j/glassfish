@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-nucleus-parent</artifactId>
-        <version>6.2.3-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
 
@@ -83,10 +83,10 @@
         <default_domain_template>appserver-domain.jar</default_domain_template>
         <version_prefix />
         <version_suffix />
-        <major_version>6</major_version>
-        <minor_version>2</minor_version>
-        <update_version>3</update_version>
-        <install.dir.name>glassfish6</install.dir.name>
+        <major_version>7</major_version>
+        <minor_version>0</minor_version>
+        <update_version>0</update_version>
+        <install.dir.name>glassfish7</install.dir.name>
 
         <!-- Jakarta Faces -->
         <jakarta.faces-api.version>3.0.0</jakarta.faces-api.version>

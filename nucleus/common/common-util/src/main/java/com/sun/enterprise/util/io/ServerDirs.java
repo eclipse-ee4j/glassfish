@@ -32,14 +32,14 @@ import com.sun.enterprise.util.ObjectAnalyzer;
  *
  * examples:
  * DAS
- * domainDir = getServerDir() == C:/glassfish6/glassfish/domains/domain1
- * domainsDir = getServerParentDir() == C:/glassfish6/glassfish/domains
+ * domainDir = getServerDir() == C:/glassfish7/glassfish/domains/domain1
+ * domainsDir = getServerParentDir() == C:/glassfish7/glassfish/domains
  * grandparent-dir is meaningless
  *
  * Instance
- * instanceDir = getServerDir() == C:/glassfish6/glassfish/nodes/mymachine/instance1
- * agentDir = getServerParentDir() == C:/glassfish6/glassfish/nodes/mymachine
- * agentsDir = getServerGrandParentDir() == C:/glassfish6/glassfish/nodes
+ * instanceDir = getServerDir() == C:/glassfish7/glassfish/nodes/mymachine/instance1
+ * agentDir = getServerParentDir() == C:/glassfish7/glassfish/nodes/mymachine
+ * agentsDir = getServerGrandParentDir() == C:/glassfish7/glassfish/nodes
  *
  * Currently in all cases the name of the serverDir is the name of the server --
  * by our definition.
@@ -79,11 +79,13 @@ public class ServerDirs {
     }
 
     public ServerDirs(File leaf) throws IOException {
-        if (leaf == null)
+        if (leaf == null) {
             throw new IllegalArgumentException(strings.get("ServerDirs.nullArg", "ServerDirs.ServerDirs()"));
+        }
 
-        if (!leaf.isDirectory())
+        if (!leaf.isDirectory()) {
             throw new IOException(strings.get("ServerDirs.badDir", leaf));
+        }
 
         serverDir = SmartFile.sanitize(leaf);
         serverName = serverDir.getName();
@@ -92,8 +94,9 @@ public class ServerDirs {
         // about getParentFile() which has issues with relative paths...
         parentDir = serverDir.getParentFile();
 
-        if (parentDir == null || !parentDir.isDirectory())
+        if (parentDir == null || !parentDir.isDirectory()) {
             throw new IOException(strings.get("ServerDirs.badParentDir", serverDir));
+        }
 
         // grandparent dir is optional.  It can be null for DAS for instance...
         grandParentDir = parentDir.getParentFile();
@@ -130,8 +133,9 @@ public class ServerDirs {
     }
 
     public final String getServerName() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
 
         return serverName;
     }
@@ -141,11 +145,13 @@ public class ServerDirs {
      * @return
      */
     public final String deletePidFile() {
-        if (!valid)
+        if (!valid) {
             return "Internal Error: ServerDirs is in an invalid state";
+        }
 
-        if (!pidFile.isFile())
+        if (!pidFile.isFile()) {
             return null;
+        }
 
         String message = "pid file " + pidFile + " exists, removing it.";
 
@@ -163,46 +169,53 @@ public class ServerDirs {
 
     // getters & setters section below
     public final File getServerDir() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
         return serverDir;
     }
 
     public final File getAgentDir(){
-         if (!valid)
+         if (!valid) {
             return null;
+        }
         return agentDir;
     }
 
     public final File getServerParentDir() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
         return parentDir;
     }
 
     public final File getServerGrandParentDir() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
         return grandParentDir;
     }
 
     public final File getDomainXml() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
 
         return domainXml;
     }
 
     public final File getConfigDir() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
 
         return configDir;
     }
 
     public final File getPidFile() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
 
         return pidFile;
     }
@@ -216,8 +229,9 @@ public class ServerDirs {
     }
 
     public final File getLocalPasswordFile() {
-        if (!valid)
+        if (!valid) {
             return null;
+        }
 
         return localPasswordFile;
     }

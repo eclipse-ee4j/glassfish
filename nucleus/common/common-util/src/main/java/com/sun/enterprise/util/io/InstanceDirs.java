@@ -28,11 +28,11 @@ import java.io.IOException;
  * when working with invalid directories...
  *
  * Example:
- * new InstanceDirs(new File("/glassfish6/glassfish/nodes/mymachine/instance1"));
+ * new InstanceDirs(new File("/glassfish7/glassfish/nodes/mymachine/instance1"));
  *
- * getInstanceDir()   == /glassfish6/glassfish/nodes/mymachine/instance1
- * getNodeAgentDir()  == /glassfish6/glassfish/nodes/mymachine
- * getNodeAgentsDir() == /glassfish6/glassfish/nodes
+ * getInstanceDir()   == /glassfish7/glassfish/nodes/mymachine/instance1
+ * getNodeAgentDir()  == /glassfish7/glassfish/nodes/mymachine
+ * getNodeAgentsDir() == /glassfish7/glassfish/nodes
  * getInstanceName()  == instance1
  *
  *

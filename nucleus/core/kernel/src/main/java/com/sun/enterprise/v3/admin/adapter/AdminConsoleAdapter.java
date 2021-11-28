@@ -145,7 +145,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
     }
 
     @Override
-    public final HttpHandler getHttpService() {
+    public HttpHandler getHttpService() {
         return this;
     }
 
@@ -460,7 +460,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
             warFile = new File(iRoot.replace('/', File.separatorChar));
             writeAdminServiceProp(ServerTags.ADMIN_CONSOLE_DOWNLOAD_LOCATION, "${" + INSTALL_ROOT + "}/lib/install/applications/admingui.war");
         } else {
-            //For any non-absolute path, we start from the installation, ie glassfish6
+            //For any non-absolute path, we start from the installation, ie glassfish7
             //eg, v3 prelude upgrade, where the location property was "glassfish/lib..."
             String locValue = locProp.getValue();
             warFile = new File(locValue);
@@ -831,7 +831,7 @@ public final class AdminConsoleAdapter extends HttpHandler implements Adapter, P
 //            return method;
 //        }
 //    }
-    private Method[] allowedHttpMethods = {Method.GET, Method.POST, Method.HEAD,
+    private final Method[] allowedHttpMethods = {Method.GET, Method.POST, Method.HEAD,
         Method.DELETE, Method.PUT};
 
     private boolean checkHttpMethodAllowed(Method method) {

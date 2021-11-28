@@ -710,7 +710,7 @@ public class DeploymentImpl implements CDI11Deployment {
 
         try {
             // Each appLib in context.getAppLibs is a URI of the form
-            // "file:/glassfish/runtime/trunk/glassfish6/glassfish/domains/domain1/lib/applibs/mylib.jar"
+            // "file:/glassfish/runtime/trunk/glassfish7/glassfish/domains/domain1/lib/applibs/mylib.jar"
             List<URI> appLibs = context.getAppLibs();
             Set<String> installedLibraries = getInstalledLibraries(archive);
 

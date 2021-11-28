@@ -7,6 +7,7 @@ sponsored by the Eclipse Foundation.
 
 ### Compatibility
 
+* Eclipse GlassFish 7.0.0 is Jakarta EE 10 compatible, requires Java 11, supports Java 18
 * Eclipse GlassFish 6.2.0 is Jakarta EE 9.1 compatible, requires Java 11, supports Java 17
 * Eclipse GlassFish 6.1.0 is Jakarta EE 9.1 compatible, requires Java 11
 * Eclipse GlassFish 6.0.0 is Jakarta EE 9 compatible, requires Java 8
@@ -53,32 +54,32 @@ They are quite old and have high technical debt, but at this moment they still p
 
 ### QuickLook
 
-`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish6/glassfish`
+`mvn -f appserver/tests/quicklook/pom.xml test -Dglassfish.home=$(pwd)/appserver/distributions/glassfish/target/stage/glassfish7/glassfish`
 
 * Usual time: 3 minutes
 * see [QuickLook_Test_Instructions](https://github.com/eclipse-ee4j/glassfish/blob/master/appserver/tests/quicklook/QuickLook_Test_Instructions.html)
 
 ### Old Additional Tests
 
-* `./runTests.sh 6.2.3 cdi_all` - Usual time: 6 minutes
-* `./runTests.sh 6.2.3 ejb_group_1` - Usual time: 8 minutes
-* `./runTests.sh 6.2.3 web_jsp` - Usual time: 6 minutes
+* `./runTests.sh 7.0.0 cdi_all` - Usual time: 6 minutes
+* `./runTests.sh 7.0.0 ejb_group_1` - Usual time: 8 minutes
+* `./runTests.sh 7.0.0 web_jsp` - Usual time: 6 minutes
 * `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_web_profile_all` - Usual time: 2 minutes
 * `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_full_profile_all` - Usual time: 4 minutes
 
 ### Half-Dead Additional Tests Waiting for a Rescue
 
 First warning: if the script fails, it doesn't stop the domain and you have to do that manually.
-* `./runTests.sh 6.2.3 batch_all` - Crashes, Derby uses different port than expected
-* `./runTests.sh 6.2.3 connector_group_1` - Crashes, ports
-* `./runTests.sh 6.2.3 connector_group_2` - Crashes, ports
-* `./runTests.sh 6.2.3 connector_group_3` - Crashes, ports
-* `./runTests.sh 6.2.3 connector_group_4` - Crashes, ports
-* `./runTests.sh 6.2.3 deployment_all` - Usual time: 1 minute, failure: still uses javax packages.
-* `./runTests.sh 6.2.3 ejb_group_2` - Usual time: 2 minutes, failure: incompatible API at TimerSessionEJB.
-* `./runTests.sh 6.2.3 ejb_group_3` - Usual time: 4 minutes, failure: still uses javax packages
-* `./runTests.sh 6.2.3 jdbc_all` - Crashes, Derby uses different port than expected
-* `./runTests.sh 6.2.3 persistence_all` - Crashes, Derby uses different port than expected
+* `./runTests.sh 7.0.0 batch_all` - Crashes, Derby uses different port than expected
+* `./runTests.sh 7.0.0 connector_group_1` - Crashes, ports
+* `./runTests.sh 7.0.0 connector_group_2` - Crashes, ports
+* `./runTests.sh 7.0.0 connector_group_3` - Crashes, ports
+* `./runTests.sh 7.0.0 connector_group_4` - Crashes, ports
+* `./runTests.sh 7.0.0 deployment_all` - Usual time: 1 minute, failure: still uses javax packages.
+* `./runTests.sh 7.0.0 ejb_group_2` - Usual time: 2 minutes, failure: incompatible API at TimerSessionEJB.
+* `./runTests.sh 7.0.0 ejb_group_3` - Usual time: 4 minutes, failure: still uses javax packages
+* `./runTests.sh 7.0.0 jdbc_all` - Crashes, Derby uses different port than expected
+* `./runTests.sh 7.0.0 persistence_all` - Crashes, Derby uses different port than expected
 * `./gfbuild.sh archive_bundles && ./gftest.sh ejb_web_all` - Usual time: 4 minutes, failure: could not create the derby database
 * `./gfbuild.sh archive_bundles && ./gftest.sh ql_gf_nucleus_all` - Crashes
 * `./gfbuild.sh archive_bundles && ./gftest.sh nucleus_admin_all` - Crashes, missing TestNG dependency
@@ -86,9 +87,9 @@ First warning: if the script fails, it doesn't stop the domain and you have to d
 
 ## Basic Usage
 
-* Starting Eclipse GlassFish: `glassfish6/bin/asadmin start-domain`
+* Starting Eclipse GlassFish: `glassfish7/bin/asadmin start-domain`
 * Visit [http://localhost:4848](http://localhost:4848)
-* Stopping Eclipse GlassFish: `glassfish6/bin/asadmin stop-domain`
+* Stopping Eclipse GlassFish: `glassfish7/bin/asadmin stop-domain`
 
 ## Professional Services and Enterprise Support
 

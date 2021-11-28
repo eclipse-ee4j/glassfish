@@ -65,9 +65,9 @@ fi
 
 export WORKSPACE="$(pwd)/target"
 export TEST_RUN_LOG="${WORKSPACE}/tests-run.log"
-export CLASSPATH="${WORKSPACE}/glassfish6/javadb"
+export CLASSPATH="${WORKSPACE}/glassfish7/javadb"
 export APS_HOME="$(pwd)/appserver/tests/appserv-tests"
-export S1AS_HOME="${WORKSPACE}/glassfish6/glassfish"
+export S1AS_HOME="${WORKSPACE}/glassfish7/glassfish"
 export PORT_ADMIN="4848"
 export PORT_HTTP="8080"
 export PORT_HTTPS="8181"

@@ -1,17 +1,17 @@
 type=page
 status=published
-title=Installing Eclipse GlassFish Server 5.1
+title=Installing Eclipse GlassFish Server 7
 next=uninstalling.html
 prev=preface.html
 ~~~~~~
-Installing Eclipse GlassFish Server 5.1
+Installing Eclipse GlassFish Server 7
 =======================================
 
 [[GSING00002]][[ggssq]]
 
 
 [[installing-glassfish-server-5.0]]
-1 Installing Eclipse GlassFish Server 5.1
+1 Installing Eclipse GlassFish Server 7
 -----------------------------------------
 
 This chapter provides instructions for installing Eclipse GlassFish Server
@@ -29,7 +29,7 @@ The following topics are addressed here:
 Installation Requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Before installing Eclipse GlassFish Server 5.1, ensure that
+Before installing Eclipse GlassFish Server 7, ensure that
 your system meets the requirements listed in "link:../release-notes/release-notes.html#GSRLN00131[Hardware
 and Software Requirements]" in Eclipse GlassFish Server
 Release Notes. If necessary, download and install the required JDK
@@ -58,7 +58,7 @@ You are receiving a copy of the Javassist (Java Programming Assistant)
 Library in source form at
 `https://github.com/jboss-javassist/javassist/archive/rel_3_22_0_cr2.zip`
 and in object code form in the jar file
-`glassfish6/glassfish/modules/javassist.jar` included with the
+`glassfish7/glassfish/modules/javassist.jar` included with the
 distribution. The terms of the Oracle license do NOT apply to the
 Javassist (Java Programming Assistant) program; it is licensed under the
 following license, separately from the Oracle programs you receive. If
@@ -572,7 +572,7 @@ either the MPL or the LGPL.
 
 [[ggrlg]][[GSING00023]][[installation-files-for-glassfish-server-5.0]]
 
-Installation Files for GlassFish Server 5.1
+Installation Files for GlassFish Server 7
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The following topics are addressed here:
@@ -587,12 +587,12 @@ The following topics are addressed here:
 GlassFish Server Download Locations
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Installation files for Eclipse GlassFish Server 5.1 are
+Installation files for Eclipse GlassFish Server 7 are
 available by download from the
 https://javaee.github.io/glassfish/download[GlassFish Server Downloads]
 page.
 
-Eclipse GlassFish Server 5.1 is also part of the Java EE SDK
+Eclipse GlassFish Server 7 is also part of the Java EE SDK
 distributions. The SDK distributions are available from the
 http://www.oracle.com/technetwork/java/javaee/downloads/index.html[Java
 EE downloads page] and are not described in this document.
@@ -622,7 +622,7 @@ Source Edition Release Notes.
 [[GSING103]][[sthref3]][[ghtqe]]
 
 
-Table 1-1 GlassFish Server 5.1 Installation Methods
+Table 1-1 GlassFish Server 7 Installation Methods
 
 [width="100%",cols="39%,61%",options="header",]
 |=======================================================================
@@ -642,7 +642,7 @@ Choosing an Installation Method
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 There are two general sets of questions you should consider when
-deciding which GlassFish Server 5.1 installation method to use.
+deciding which GlassFish Server 7 installation method to use.
 
 * link:#gkuau[ZIP Package]
 * link:#gkudp[Full Platform or Web Profile Distribution]
@@ -780,7 +780,7 @@ CORBA v3.0 APIs are available in the Java EE Web Profile.
 GlassFish Server ZIP Files
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The Eclipse GlassFish Server 5.1 multi-platform ZIP files
+The Eclipse GlassFish Server 7 multi-platform ZIP files
 are compatible with Solaris, Linux, Mac OS, UNIX, and Windows operating
 systems. See link:#gkbaj[GlassFish Server Download Locations] for a list
 of download locations.
@@ -820,7 +820,7 @@ Installing GlassFish Server From a ZIP File
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section describes how to install GlassFish Server Open Source
-Edition 5.1 using the multi-platform ZIP file. GlassFish Server is
+Edition 7 using the multi-platform ZIP file. GlassFish Server is
 installed by unzipping the file in the installation directory of your
 choice.
 
@@ -850,7 +850,7 @@ Server Open Source Edition Release Notes.
 Also see "link:../release-notes/release-notes.html#GSRLN00253[Known Issues]" in GlassFish Server Open
 Source Edition Release Notes for known issues related to installation.
 
-1.  Download the desired GlassFish Server 5.1 ZIP file. +
+1.  Download the desired GlassFish Server 7 ZIP file. +
 See link:#gkbaj[GlassFish Server Download Locations] for a list of
 download locations. See link:#gkbac[Table 1-3] for a list of available
 ZIP files.
@@ -869,8 +869,8 @@ glassfish-5.0.zip
 ----
 * Windows systems: +
 Unzip using your favorite file compression utility. +
-Eclipse GlassFish Server 5.1 is extracted into a new `glassfish6` directory
-under your current directory. This `glassfish6` directory is referred to
+Eclipse GlassFish Server 7 is extracted into a new `glassfish7` directory
+under your current directory. This `glassfish7` directory is referred to
 throughout the GlassFish Server documentation set as as-install-parent.
 4.  Start GlassFish Server using the instructions in the
 link:../quick-start-guide/toc.html#GSQSG[GlassFish Server Open Source Edition Quick Start Guide]. +

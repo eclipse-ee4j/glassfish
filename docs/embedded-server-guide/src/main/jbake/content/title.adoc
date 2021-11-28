@@ -1,10 +1,10 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Embedded Server Guide, Release 5.1
+title=Eclipse GlassFish Server Embedded Server Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
-Eclipse GlassFish Server Embedded Server Guide, Release 5.1
+Eclipse GlassFish Server Embedded Server Guide, Release 7
 ===========================================================
 
 [[eclipse-glassfish-server]]
@@ -13,7 +13,7 @@ Eclipse GlassFish Server
 
 Embedded Server Guide
 
-Release 5.1
+Release 7
 
 Contributed 2018, 2019
 
@@ -23,7 +23,7 @@ GlassFish Server is embedded. This document is for software developers
 who are developing applications to run in embedded GlassFish Server. The
 ability to program in the Java language is assumed.
 
-Note: The main thrust of the Eclipse GlassFish Server 5.1
+Note: The main thrust of the Eclipse GlassFish Server 7
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Java EE 7
 platform. Thus, the embedded server feature of GlassFish Server was not
@@ -35,7 +35,7 @@ of the Java EE 7 platform.
 
 '''''
 
-Eclipse GlassFish Server Embedded Server Guide, Release 5.1
+Eclipse GlassFish Server Embedded Server Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

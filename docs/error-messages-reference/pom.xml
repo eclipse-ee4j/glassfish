@@ -28,5 +28,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>error-messages-reference</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Error Message Reference, Release 5.1</name>
+    <name>Eclipse GlassFish Server Error Message Reference, Release 7</name>
 </project>

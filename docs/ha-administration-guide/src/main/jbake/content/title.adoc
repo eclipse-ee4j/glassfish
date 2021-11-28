@@ -1,10 +1,10 @@
 type=page
 status=published
-title=Eclipse GlassFish Server High Availability Administration Guide, Release 5.1
+title=Eclipse GlassFish Server High Availability Administration Guide, Release 7
 next=preface.html
 prev=loe.html
 ~~~~~~
-Eclipse GlassFish Server High Availability Administration Guide, Release 5.1
+Eclipse GlassFish Server High Availability Administration Guide, Release 7
 ============================================================================
 
 [[eclipse-glassfish-server]]
@@ -13,7 +13,7 @@ Eclipse GlassFish Server
 
 High Availability Administration Guide
 
-Release 5.1
+Release 7
 
 Contributed 2018, 2019
 
@@ -21,7 +21,7 @@ This book describes thehigh-availability features in GlassFish Server,
 including converged load balancing, HTTP load balancing, clusters,
 session persistence and failover.
 
-Note: The main thrust of the Eclipse GlassFish Server 5.1
+Note: The main thrust of the Eclipse GlassFish Server 7
 release is to provide an application server for developers to explore
 and begin exploiting the new and updated technologies in the Java EE 7
 platform. Thus, the clustering, standalone instance and high
@@ -35,7 +35,7 @@ Java EE 7 platform.
 '''''
 
 Eclipse GlassFish Server High Availability Administration
-Guide, Release 5.1
+Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

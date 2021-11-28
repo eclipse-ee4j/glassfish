@@ -31,13 +31,13 @@ features in the 5.1 release, and descriptions and workarounds for known
 issues and limitations.
 
 Refer to this document prior to installing, configuring, or using
-GlassFish Server 5.1 software. Consult this document periodically to
+GlassFish Server 7 software. Consult this document periodically to
 view the most up-to-date product information.
 
 * link:#ghmvk["Revision History"]
-* link:#glcmf["What's New in the GlassFish Server 5.1 Release?"]
+* link:#glcmf["What's New in the GlassFish Server 7 Release?"]
 * link:#abpaj["Hardware and Software Requirements"]
-* link:#glcmm["Known Issues in GlassFish Server 5.1"]
+* link:#glcmm["Known Issues in GlassFish Server 7"]
 * link:#ggqok["Restrictions and Deprecated Functionality"]
 * link:#BABDACBE["Documentation Errata"]
 * link:#giraq["Features Available Only in the Full Platform"]
@@ -60,13 +60,13 @@ Table 1-1 Revision History
 [width="100%",cols="16%,84%",options="header",]
 |=========================================================
 |Date |Description of Changes
-|September 2017 |Eclipse GlassFish Server 5.1.
+|September 2017 |Eclipse GlassFish Server 7.
 |=========================================================
 
 
 [[glcmf]][[GSRLN00129]][[whats-new-in-the-glassfish-server-5.1-release]]
 
-What's New in the GlassFish Server 5.1 Release?
+What's New in the GlassFish Server 7 Release?
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 GlassFish is the Reference Implementation for Java EE. Java EE 8
@@ -81,7 +81,7 @@ identity stores. The Bean Validation facility is updated to reflect
 enhancements made in Java SE 8 and to extend the range of validated
 objects.
 
-GlassFish Server 5.1 includes the following new and updated Java EE
+GlassFish Server 7 includes the following new and updated Java EE
 standards.
 
 New Features
@@ -110,7 +110,7 @@ Server 5.1, see link:#gipkz[Java EE Standards Support].
 [NOTE]
 =======================================================================
 
-The main thrust of the Eclipse GlassFish Server 5.1 release
+The main thrust of the Eclipse GlassFish Server 7 release
 is to provide an application server for developers to explore and begin
 exploiting the new and updated technologies in the Java EE 8 platform.
 Thus, the following features of GlassFish Server were not a focus of
@@ -134,7 +134,7 @@ Hardware and Software Requirements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section lists the requirements that must be met before installing
-Eclipse GlassFish Server Release 5.1 software.
+Eclipse GlassFish Server Release 7 software.
 
 The following topics are addressed here:
 
@@ -149,7 +149,7 @@ The following topics are addressed here:
 Required JDK Versions
 ^^^^^^^^^^^^^^^^^^^^^
 
-Eclipse GlassFish Server Release 5.1 requires Oracle JDK 8
+Eclipse GlassFish Server Release 7 requires Oracle JDK 8
 Update 144 or later.
 
 Also be sure to see link:#gfgps[Paths and Environment Settings for the
@@ -170,7 +170,7 @@ DAS or server instance have a minimum of 1 GB RAM.
 Required Disk Space
 ^^^^^^^^^^^^^^^^^^^
 
-The download sizes for GlassFish Server 5.1 vary depending on the
+The download sizes for GlassFish Server 7 vary depending on the
 package you choose. The following are the approximate sizes of the ZIP
 packages for the Full and Web profiles:
 
@@ -178,7 +178,7 @@ packages for the Full and Web profiles:
 * Web `*.zip`: 64.9 MB (82.9 MB unzipped)
 
 The installation sizes will vary depending on your configuration, but
-the approximate amount of disk space used by GlassFish Server 5.1 is as
+the approximate amount of disk space used by GlassFish Server 7 is as
 follows:
 
 * Full: 138 MB
@@ -199,7 +199,7 @@ selected port number might not be the next available port number.
 
 [[sthref3]][[ggpmu]]
 
-Table 1-2 Default Port Assignments for GlassFish Server 5.1
+Table 1-2 Default Port Assignments for GlassFish Server 7
 
 [width="100%",cols="52%,48%",options="header",]
 |=======================================================================
@@ -323,7 +323,7 @@ configuration, as this has not been tested.
 Message Queue Broker Requirements
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server 5.1 is now bundled with Message Queue (MQ) Broker
+GlassFish Server 7 is now bundled with Message Queue (MQ) Broker
 5.1.1. Refer to the
 https://javaee.github.io/glassfish/doc/5.1/mq-release-notes.pdf[`Open Message Queue Release Notes`]
 for complete information about MQ Broker requirements.
@@ -405,11 +405,11 @@ property in the in the as-install`/config/asenv.conf` file.
 
 [[glcmm]][[GSRLN00253]][[known-issues-in-glassfish-server-5.1]]
 
-Known Issues in GlassFish Server 5.1
+Known Issues in GlassFish Server 7
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section describes known issues and any available workarounds for
-Eclipse GlassFish Server 5.1 software.
+Eclipse GlassFish Server 7 software.
 
 The following topics are addressed here:
 
@@ -461,7 +461,7 @@ Description
 +++++++++++
 
 A new JVM option for deployment - deployment.resource.validation is
-introduced in GlassFish Server 5.1. This property is set to True by
+introduced in GlassFish Server 7. This property is set to True by
 default so that each resource is validated during deployment time. This
 ensures that all resources are created beforehand. This property is
 applicable for administration server as well as instances when clusters
@@ -522,7 +522,7 @@ Description
 +++++++++++
 
 In the previous releases, Java DB was used as the database for GlassFish
-servers. With the release of GlassFish Server 5.1, Apache Derby
+servers. With the release of GlassFish Server 7, Apache Derby
 10.13.1.1 has replaced Java DB as the database for GlassFish servers.
 
 [[sthref13]][[workaround-3]]
@@ -538,7 +538,7 @@ Restrictions and Deprecated Functionality
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 This section describes restrictions and deprecated functionality in
-Oracle GlassFish Server 5.1.
+Oracle GlassFish Server 7.
 
 The following topics are addressed here:
 
@@ -553,7 +553,7 @@ The following topics are addressed here:
 `asadmin` Subcommands
 ^^^^^^^^^^^^^^^^^^^^^
 
-In GlassFish Server 5.1, it is recommended that utility options of the
+In GlassFish Server 7, it is recommended that utility options of the
 `asadmin` command precede the subcommand. Utility options are options
 that control the behavior of the `asadmin` utility, as distinguished
 from subcommand options. Use of the following options after the
@@ -666,11 +666,11 @@ Replaced by an operand in the `list-custom-resources` subcommand and the
 Applications That Use Apache Derby
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The directory location of Apache Derby in GlassFish Server 5.1 has
+The directory location of Apache Derby in GlassFish Server 7 has
 changed from its location in previous installations. Suppose that you
 have deployed applications that use Apache Derby databases in your
 previous server installation, and you upgrade your existing installation
-to GlassFish Server 5.1. If you run the `asadmin start-database` command
+to GlassFish Server 7. If you run the `asadmin start-database` command
 and successfully start Apache Derby, you could run into problems while
 trying to run applications that were deployed on your previous server
 installation.
@@ -688,7 +688,7 @@ Derby. For example: +
 ----
 asadmin start-database --dbhome c:\glassfish\databases
 ----
-2.  After upgrade, start GlassFish Server 5.1.
+2.  After upgrade, start GlassFish Server 7.
 
 [[ghpen]][[GSRLN00261]][[no-support-for-client-vm-on-windows-amd64]]
 
@@ -712,7 +712,7 @@ Metro Reliable Messaging in `InOrder` Delivery Mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The Metro Reliable Messaging in `InOrder` Delivery mode has not been
-tested for high availability in GlassFish Server 5.1. The feature may
+tested for high availability in GlassFish Server 7. The feature may
 work, but it has not been formally tested and is therefore not a
 supported feature.
 
@@ -721,7 +721,7 @@ supported feature.
 No Support for Kerberos on AIX
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-GlassFish Server 5.1 does not support Kerberos on the AIX platform.
+GlassFish Server 7 does not support Kerberos on the AIX platform.
 
 For the complete report about this issue, see
 https://github.com/javaee/glassfish/issues/16728[`Issue-16728`]
@@ -749,7 +749,7 @@ upgrade is not necessary.
 [NOTE]
 ==============================================
 
-Upgrading may not work for GlassFish Server 5.1
+Upgrading may not work for GlassFish Server 7
 
 ==============================================
 
@@ -759,7 +759,7 @@ Upgrading may not work for GlassFish Server 5.1
 Features Available Only in the Full Platform
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The following features of GlassFish Server 5.1 are available only in the
+The following features of GlassFish Server 7 are available only in the
 Full Platform:
 
 * EJB features that make up the full EJB 3.2 API, such as remote EJB
@@ -781,7 +781,7 @@ related to web services are ignored.
 Connector modules that use only outbound communication features and
 work-management that does not involve inbound communication features are
 supported in the Web Profile. Other connector features are supported
-only in the Eclipse GlassFish Server 5.1 full platform.
+only in the Eclipse GlassFish Server 7 full platform.
 
 [[gipkz]][[GSRLN00136]][[java-ee-standards-support]]
 
@@ -789,7 +789,7 @@ Java EE Standards Support
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
 link:#gjxcp[Table 1-4] lists the Java EE standards implemented in
-GlassFish Server 5.1. The table also indicates the distributions in
+GlassFish Server 7. The table also indicates the distributions in
 which the implementation of a standard is available.
 
 * X indicates that the implementation is available in the distribution.
@@ -798,12 +798,12 @@ distribution.
 
 [[sthref15]][[gjxcp]]
 
-Table 1-4 Java EE Standards Implementations in GlassFish Server 5.1
+Table 1-4 Java EE Standards Implementations in GlassFish Server 7
 
 [width="100%",cols="48%,24%,16%,12%",options="header",]
 |=======================================================================
 |Java EE Standard |Java Specification Request (JSR) |GlassFish Server
-5.1 Full Platform |GlassFish Server 5.1 Web Profile
+5.1 Full Platform |GlassFish Server 7 Web Profile
 |https://javaee.github.io/javaee-spec/javadocs/[Java Platform,
 Enterprise Edition 8] `(https://javaee.github.io/javaee-spec/javadocs/)`
 |http://jcp.org/en/jsr/detail?id=366[JSR 366] |X |X
@@ -929,7 +929,7 @@ Procedure Calls (JAX-RPC) 1.1]`(https://github.com/javaee/jax-rpc-ri/)`
 
 ^*^ Standalone Connector 1.7 Container only.
 
-Building on these standards, GlassFish Server 5.1 provides a number of
+Building on these standards, GlassFish Server 7 provides a number of
 extensions, including the following:
 
 * Ajax (asynchronous JavaScript and XML): Retrieves and displays new
@@ -946,13 +946,13 @@ Servlet API, and Comet is provided.
 Java EE SDK
 ~~~~~~~~~~~
 
-GlassFish Server 5.1 is available as part of the Java EE 8 SDK. The
+GlassFish Server 7 is available as part of the Java EE 8 SDK. The
 following versions of the Java EE 8 SDK are available:
 
-* Java EE 8 SDK: This version includes GlassFish Server 5.1. This
+* Java EE 8 SDK: This version includes GlassFish Server 7. This
 version is designed for developers who require the full set of Java EE
 APIs for enterprise application development.
-* Java EE 8 Web Profile SDK: This version includes GlassFish Server 5.1
+* Java EE 8 Web Profile SDK: This version includes GlassFish Server 7
 Web Profile. This version contains web technologies that are subset of
 the Full Platform and is designed for developers who do not require the
 full set of Java EE APIs.
@@ -971,7 +971,7 @@ EE SDK Downloads page]
 How to Report Problems and Provide Feedback
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you have problems with GlassFish Server 5.1, provide feedback through
+If you have problems with GlassFish Server 7, provide feedback through
 one of the following mechanisms:
 
 * https://javaee.groups.io/g/glassfish[GlassFish Server forum]

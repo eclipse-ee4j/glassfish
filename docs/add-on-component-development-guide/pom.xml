@@ -28,5 +28,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>add-on-component-development-guide</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1</name>
+    <name>Eclipse GlassFish Server Add-On Component Development Guide, Release 7</name>
 </project>

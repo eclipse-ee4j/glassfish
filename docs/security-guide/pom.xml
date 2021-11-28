@@ -28,5 +28,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>security-guide</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Security Guide, Release 5.1</name>
+    <name>Eclipse GlassFish Server Security Guide, Release 7</name>
 </project>

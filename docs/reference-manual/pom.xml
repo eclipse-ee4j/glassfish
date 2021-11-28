@@ -28,5 +28,5 @@
     <groupId>org.glassfish.docs</groupId>
     <artifactId>reference-manual</artifactId>
     <packaging>jar</packaging>
-    <name>Eclipse GlassFish Server Reference Manual, Release 5.1</name>
+    <name>Eclipse GlassFish Server Reference Manual, Release 7</name>
 </project>

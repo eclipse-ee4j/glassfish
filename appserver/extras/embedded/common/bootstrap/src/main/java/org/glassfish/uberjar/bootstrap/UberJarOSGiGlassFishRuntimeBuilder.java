@@ -48,6 +48,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private Framework framework;
 
+    @Override
     public boolean handles(BootstrapProperties bsOptions) {
         // default is Felix
         /* Constants.Platform platform =
@@ -93,6 +94,7 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private static final String UBER_JAR_URI = "org.glassfish.embedded.osgimain.jarURI";
 
+    @Override
     public GlassFishRuntime build(BootstrapProperties bsOptions) throws GlassFishException {
         // Get all the properties in the Bootstrap options and then manipulate the Properties object.
         Properties props = bsOptions.getProperties();
@@ -201,13 +203,13 @@ public class UberJarOSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
 
     private String getDefaultInstallRoot() {
         String userDir = System.getProperty("user.home");
-        return new File(userDir, ".glassfish6-embedded").getAbsolutePath();
+        return new File(userDir, ".glassfish7-embedded").getAbsolutePath();
     }
 
     private String getDefaultInstanceRoot() {
         String userDir = System.getProperty("user.home");
         String fs = File.separator;
-        return new File(userDir, ".glassfish6-embedded" + fs + "domains" + fs + "domain1").getAbsolutePath();
+        return new File(userDir, ".glassfish7-embedded" + fs + "domains" + fs + "domain1").getAbsolutePath();
     }
 
     private boolean isOSGiEnv() {

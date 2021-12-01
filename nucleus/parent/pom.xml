@@ -90,7 +90,7 @@
         <jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
-        <jakarta.validation.version>3.0.0</jakarta.validation.version>
+        <jakarta.validation-api.version>3.0.1</jakarta.validation-api.version>
         <hibernate-validator.version>7.0.1.Final</hibernate-validator.version>
 
         <!-- Jakarta Web Services -->
@@ -100,21 +100,21 @@
         <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
 
         <!-- Jakarta XML Binding -->
-        <jakarta.jaxb-api.version>3.0.1</jakarta.jaxb-api.version>
-        <jakarta.jaxb-impl.version>3.0.2</jakarta.jaxb-impl.version>
+        <jakarta.jaxb-api.version>4.0.0-RC2</jakarta.jaxb-api.version>
+        <jakarta.jaxb-impl.version>4.0.0-M1</jakarta.jaxb-impl.version>
 
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
-        <jax-rs-api.impl.version>3.0.0</jax-rs-api.impl.version>
+        <jax-rs-api.impl.version>3.1.0</jax-rs-api.impl.version>
         <jersey.version>3.0.3</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
-        <angus.mail.version>1.0.0-M1</angus.mail.version>
+        <angus.mail.version>1.0.0-M2</angus.mail.version>
 
         <!-- Jakarta Activation -->
         <activation.version>2.1.0</activation.version>
-        <angus.activation.version>1.0.0-M1</angus.activation.version>
+        <angus.activation.version>1.0.0</angus.activation.version>
 
         <!-- Jakarta Annotations -->
         <jakarta.annotation-api.version>2.1.0</jakarta.annotation-api.version>
@@ -147,7 +147,7 @@
         <ant.version>1.10.2</ant.version>
         <jackson.version>2.13.0</jackson.version>
         <jettison.version>1.4.1</jettison.version>
-        <mimepull.version>1.9.14</mimepull.version>
+        <mimepull.version>1.9.15</mimepull.version>
         <asm.version>9.2</asm.version>
 
         <commons-io.version>2.11.0</commons-io.version>
@@ -161,7 +161,7 @@
 
         <easymock.version>4.3</easymock.version>
         <jmockit.version>1.49</jmockit.version>
-        <junit.version>5.8.1</junit.version>
+        <junit.version>5.8.2</junit.version>
         <jmh.version>1.33</jmh.version>
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
 
@@ -298,7 +298,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.webconsole</artifactId>
-                <version>4.6.2</version>
+                <version>4.7.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -565,7 +565,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.fileinstall</artifactId>
-                <version>3.7.0</version>
+                <version>3.7.2</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -582,12 +582,12 @@
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.util.promise</artifactId>
-                <version>1.1.1</version>
+                <version>1.2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.util.function</artifactId>
-                <version>1.1.0</version>
+                <version>1.2.0</version>
             </dependency>
 
             <dependency>
@@ -634,7 +634,7 @@
             <dependency>
                 <groupId>jakarta.validation</groupId>
                 <artifactId>jakarta.validation-api</artifactId>
-                <version>${jakarta.validation.version}</version>
+                <version>${jakarta.validation-api.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

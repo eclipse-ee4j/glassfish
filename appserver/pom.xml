@@ -101,7 +101,7 @@
         <concurrent.version>2.0.0</concurrent.version>
 
         <!-- Jakarta Interceptors -->
-        <jakarta.interceptor-api.version>2.0.0</jakarta.interceptor-api.version>
+        <jakarta.interceptor-api.version>2.0.1-RC1</jakarta.interceptor-api.version>
 
         <!-- Jakarta EE Security + Authentication/Authorization -->
         <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
@@ -115,8 +115,8 @@
         <mq.version>6.2.0</mq.version>
 
         <!-- Jakarta Persistence -->
-        <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
-        <eclipselink.version>3.0.2</eclipselink.version>
+        <jakarta-persistence-api.version>3.1.0-RC1</jakarta-persistence-api.version>
+        <eclipselink.version>3.1.0-M1</eclipselink.version>
         <eclipselink.asm.version>9.2.0</eclipselink.asm.version>
 
 
@@ -135,18 +135,18 @@
         <jakarta.ejb-api.version>4.0.0</jakarta.ejb-api.version>
 
         <!-- Jakarta JSON -->
-        <jsonp-api.version>2.0.1</jsonp-api.version>
+        <jsonp-api.version>2.1.0</jsonp-api.version>
         <jsonp-ri.version>2.0.1</jsonp-ri.version>
         <jsonp-jaxrs.version>2.0.1</jsonp-jaxrs.version>
         <json.bind-api.version>2.0.0</json.bind-api.version>
-        <yasson.version>2.0.2</yasson.version>
+        <yasson.version>2.0.3</yasson.version>
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.0.0</jsp-api.version>
-        <wasp.version>3.0.1</wasp.version>
+        <wasp.version>3.0.2</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
-        <woodstox.version>6.2.6</woodstox.version>
+        <woodstox.version>6.2.7</woodstox.version>
         <stax2-api.version>4.2.1</stax2-api.version>
 
         <!-- Jakarta Standard Tag Library -->
@@ -175,7 +175,7 @@
         <dbschema.version>6.7</dbschema.version>
         <schema2beans.version>6.7</schema2beans.version>
         <derby.version>10.15.2.0</derby.version>
-        <wsdl4j.version>1.5.0</wsdl4j.version>
+        <wsdl4j.version>1.6.3</wsdl4j.version>
         <maven-rar-plugin.version>2.4</maven-rar-plugin.version>
     </properties>
 

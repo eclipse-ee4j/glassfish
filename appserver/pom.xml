@@ -117,7 +117,7 @@
         <!-- Jakarta Persistence -->
         <jakarta-persistence-api.version>3.0.0</jakarta-persistence-api.version>
         <eclipselink.version>3.0.2</eclipselink.version>
-        <eclipselink.asm.version>9.1.1</eclipselink.asm.version>
+        <eclipselink.asm.version>9.2.0</eclipselink.asm.version>
 
 
         <!-- Jakarta Transactions -->

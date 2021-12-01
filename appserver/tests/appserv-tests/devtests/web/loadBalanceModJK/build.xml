@@ -84,7 +84,7 @@
     <target name="all" depends="init-common,build,create-cluster-common,create-local-instances,setup,create-network-listener,start,deploy,run,stop-instance-1,run-again,start-instance-1,delete-network-listener,undeploy,restore,stop,delete-local-instances,delete-cluster-common"/>
 
     <target name="run" depends="init-common">
-      <java classname="WebTest">
+      <java classname="WebTest" fork="true">
         <arg value="${http.host}"/>
         <arg value="${contextroot}"/>
           <arg value="${apache.port}"/>
@@ -96,7 +96,7 @@
     </target>
 
     <target name="run-again" depends="init-common">
-        <java classname="WebTest2">
+        <java classname="WebTest2" fork="true">
             <arg value="${http.host}"/>
             <arg value="${contextroot}"/>
             <arg value="${apache.port}"/>

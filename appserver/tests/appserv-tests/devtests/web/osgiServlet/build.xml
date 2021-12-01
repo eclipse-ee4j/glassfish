@@ -74,7 +74,7 @@
     <target name="build-publish-war" depends="build, publish-war-common" />
 
     <target name="run" depends="init-common">
-      <java classname="WebTest">
+      <java classname="WebTest" fork="true">
         <arg value="${http.host}"/>
         <arg value="${http.port}"/>
         <arg value="${contextroot}"/>

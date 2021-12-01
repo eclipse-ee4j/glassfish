@@ -44,7 +44,7 @@ You can use also some maven optimizations, ie. using `-T4C` to allow parallel bu
 ### Special Scripts
 
 * `./updateVersion.sh 6.99.99.experimental` - useful for custom distributions, so you can avoid conflicts with version in master branch.
-* `./runTests.sh 6.2.0 cdi_all` - useful to run [additional](Additional Testing) tests locally; before that edit the script and update variables so they will reflect your environment.
+* `./runTests.sh 6.2.0 cdi_all` - useful to run [additional](#additional-testing) tests locally; before that edit the script and update variables so they will reflect your environment.
 * `./validateJars.sh` - uses the bnd command to check OSGI dependencies in all target directories
 
 ## Additional Testing

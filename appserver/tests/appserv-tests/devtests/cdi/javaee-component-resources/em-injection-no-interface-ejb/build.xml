@@ -65,7 +65,7 @@
         </target>
 
         <target name="run" depends="init-common">
-                <java classname="test.client.WebTest">
+                <java classname="test.client.WebTest" fork="true">
                         <arg value="${http.host}" />
                         <arg value="${http.port}" />
                         <arg value="${contextroot}" />

@@ -1,10 +1,10 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Performance Tuning Guide, Release 5.1
+title=Eclipse GlassFish Server Performance Tuning Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
-Eclipse GlassFish Server Performance Tuning Guide, Release 5.1
+Eclipse GlassFish Server Performance Tuning Guide, Release 7
 ==============================================================
 
 [[eclipse-glassfish-server]]
@@ -13,7 +13,7 @@ Eclipse GlassFish Server
 
 Performance Tuning Guide
 
-Release 5.1
+Release 7
 
 Contributed 2018, 2019
 
@@ -24,7 +24,7 @@ Server 5.1.
 
 '''''
 
-Eclipse GlassFish Server Performance Tuning Guide, Release 5.1
+Eclipse GlassFish Server Performance Tuning Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

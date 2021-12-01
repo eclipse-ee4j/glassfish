@@ -1,10 +1,10 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1
+title=Eclipse GlassFish Server Add-On Component Development Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
-Eclipse GlassFish Server Add-On Component Development Guide, Release 5.1
+Eclipse GlassFish Server Add-On Component Development Guide, Release 7
 ========================================================================
 
 
@@ -14,7 +14,7 @@ Eclipse GlassFish Server
 
 Add-On Component Development Guide
 
-Release 5.1
+Release 7
 
 Contributed 2018, 2019
 
@@ -35,7 +35,7 @@ program in the Java language.
 '''''
 
 Eclipse GlassFish Server Add-On Component Development Guide,
-Release 5.1
+Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

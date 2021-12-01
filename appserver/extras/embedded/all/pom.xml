@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main.extras</groupId>
         <artifactId>extras</artifactId>
-        <version>6.2.3-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -1051,6 +1051,12 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.web</groupId>
+            <artifactId>jersey-ejb-component-provider</artifactId>
+            <version>${project.version}</version>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.web</groupId>
             <artifactId>jersey-mvc-connector</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
@@ -1186,11 +1192,6 @@
         <dependency>
             <groupId>org.glassfish.jersey.ext.cdi</groupId>
             <artifactId>jersey-cdi1x-transaction</artifactId>
-            <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish.jersey.containers.glassfish</groupId>
-            <artifactId>jersey-gf-ejb</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

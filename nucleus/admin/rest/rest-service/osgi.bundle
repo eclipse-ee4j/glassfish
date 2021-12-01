@@ -15,21 +15,26 @@
 #
 
 -exportcontents: \
-                        org.glassfish.admin.rest, \
-                        org.glassfish.admin.rest.adapter, \
-                        org.glassfish.admin.rest.model, \
-						org.glassfish.admin.rest.utils, \
-						org.glassfish.admin.rest.composite, \
-						org.glassfish.admin.rest.composite.metadata, \
-						org.glassfish.admin.rest.resources.composite, \
-						org.glassfish.admin.rest.wadl, \
-						org.glassfish.admin.rest.utils.xml
-DynamicImport-Package: \
-                        org.glassfish.flashlight, \
-                        org.glassfish.flashlight.datatree
+    org.glassfish.admin.rest, \
+    org.glassfish.admin.rest.adapter, \
+    org.glassfish.admin.rest.model, \
+    org.glassfish.admin.rest.utils, \
+    org.glassfish.admin.rest.composite, \
+    org.glassfish.admin.rest.composite.metadata, \
+    org.glassfish.admin.rest.resources.composite, \
+    org.glassfish.admin.rest.wadl, \
+    org.glassfish.admin.rest.utils.xml
 
-# logging packages are not always available in every distribution, 
+DynamicImport-Package: \
+    org.glassfish.flashlight, \
+    org.glassfish.flashlight.datatree
+
+# logging packages are not always available in every distribution,
 # e.g., in some embedded setup, we may disable logging altogether.
 # So, we need to mark it as an optional dependency. We can remove this
 # when admin team moves logging rest resources out of this module to logging module.
-Import-Package: !org.glassfish.admin.rest.resources.generatedASM, com.sun.enterprise.server.logging.*; resolution:=optional, *
+Import-Package: \
+    !org.glassfish.admin.rest.resources.generatedASM, \
+    org.glassfish.jersey.gf.ejb.internal, \
+    com.sun.enterprise.server.logging.*; resolution:=optional, \
+    *

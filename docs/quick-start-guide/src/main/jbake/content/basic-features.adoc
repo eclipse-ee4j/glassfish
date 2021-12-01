@@ -16,7 +16,7 @@ Quick Start for Basic Features
 Eclipse GlassFish Server provides a server for the
 development and deployment of Java Platform, Enterprise Edition (Java EE
 platform) applications and web technologies based on Java technology.
-GlassFish Server 5.1 provides the following:
+GlassFish Server 7 provides the following:
 
 * A lightweight and extensible core based on OSGi Alliance standards
 * A web container
@@ -41,14 +41,14 @@ The following topics are addressed here:
 About This Quick Start Guide
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Eclipse GlassFish Server 5.1 Quick Start Guide demonstrates
+Eclipse GlassFish Server 7 Quick Start Guide demonstrates
 key features of the GlassFish Server product and enables you to quickly
 learn the basics. Step-by-step procedures introduce you to product
 features and enable you to use them immediately.
 
 This guide assumes that you have already obtained and installed the
-GlassFish Server 5.1 software. For more information about installing
-GlassFish Server 5.1, see the
+GlassFish Server 7 software. For more information about installing
+GlassFish Server 7, see the
 https://javaee.github.io/glassfish/documentation[GlassFish Server Open
 Source Edition Installation Guide].
 
@@ -68,9 +68,9 @@ guide, see link:#ggkzh[For More Information].
 To review additional details about this release before you begin using
 the software, see the link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition
 Release Notes]. The Release Notes provide important information about
-the GlassFish Server 5.1 release, including details about new features,
+the GlassFish Server 7 release, including details about new features,
 information about known issues and possible workarounds, and tips for
-installing and working with GlassFish Server 5.1 software.
+installing and working with GlassFish Server 7 software.
 
 [[ghpfg]][[GSQSG00031]][[default-paths-and-file-names]]
 
@@ -95,11 +95,11 @@ as-install
 Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac OS operating system:
 
-user's-home-directory`/glassfish6/glassfish`
+user's-home-directory`/glassfish7/glassfish`
 
 Installations on the Windows operating system:
 
-SystemDrive`:\glassfish6\glassfish`
+SystemDrive`:\glassfish7\glassfish`
 
 a|
 as-install-parent
@@ -110,11 +110,11 @@ Server. a|
 Installations on the Oracle Solaris operating system, Linux operating
 system, and Mac operating system:
 
-user's-home-directory`/glassfish6`
+user's-home-directory`/glassfish7`
 
 Installations on the Windows operating system:
 
-SystemDrive`:\glassfish6`
+SystemDrive`:\glassfish7`
 
 a|
 domain-root-dir
@@ -756,7 +756,7 @@ For More Information
 ~~~~~~~~~~~~~~~~~~~~
 
 Additional resources are available to help you learn more about
-GlassFish Server 5.1 and related technologies.
+GlassFish Server 7 and related technologies.
 
 The following resources are described here:
 

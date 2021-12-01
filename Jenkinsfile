@@ -73,7 +73,7 @@ def generateStage(job) {
                           retry(3) {
                               timeout(time: 2, unit: 'HOURS') {
                                 sh """
-                                  export CLASSPATH=$WORKSPACE/glassfish6/javadb
+                                  export CLASSPATH=$WORKSPACE/glassfish7/javadb
                                   ./appserver/tests/gftest.sh run_test ${job}
                                 """
                               }
@@ -189,7 +189,7 @@ spec:
   }
 
   environment {
-    S1AS_HOME = "${WORKSPACE}/glassfish6/glassfish"
+    S1AS_HOME = "${WORKSPACE}/glassfish7/glassfish"
     APS_HOME = "${WORKSPACE}/appserver/tests/appserv-tests"
     TEST_RUN_LOG = "${WORKSPACE}/tests-run.log"
     GF_INTERNAL_ENV = credentials('gf-internal-env')

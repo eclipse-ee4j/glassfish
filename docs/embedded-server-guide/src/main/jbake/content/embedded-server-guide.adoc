@@ -1,16 +1,16 @@
 type=page
 status=published
-title=Eclipse GlassFish Server 5.1 Embedded Server Guide
+title=Eclipse GlassFish Server 7 Embedded Server Guide
 prev=preface.html
 ~~~~~~
-Eclipse GlassFish Server 5.1 Embedded Server Guide
+Eclipse GlassFish Server 7 Embedded Server Guide
 ==================================================
 
 [[GSESG00001]][[gjldt]]
 
 
 [[glassfish-server-open-source-edition-4.0-embedded-server-guide]]
-1 Eclipse GlassFish Server 5.1 Embedded Server Guide
+1 Eclipse GlassFish Server 7 Embedded Server Guide
 ----------------------------------------------------
 
 This document explains how to run applications in embedded GlassFish

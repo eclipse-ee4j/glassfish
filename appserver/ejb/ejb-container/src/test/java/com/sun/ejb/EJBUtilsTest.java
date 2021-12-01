@@ -56,7 +56,7 @@ public class EJBUtilsTest {
      * The value shall be high enough to pass on all standard environments,
      * but lower than when we are generating classes. See warmup results in logs.
      */
-    private static final double MAX_TIME_PER_OPERATION = 1_000_000d;
+    private static final double MAX_TIME_PER_OPERATION = 2_000_000d;
     private static final ClassLoader loader = EJBUtilsTest.class.getClassLoader();
     private static double firstRunScore;
 

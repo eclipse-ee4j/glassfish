@@ -1,17 +1,17 @@
 type=page
 status=published
-title=Eclipse GlassFish Server 5.1 GlassFish Server Concepts
+title=Eclipse GlassFish Server 7 GlassFish Server Concepts
 next=application.html
 prev=package-appclient.html
 ~~~~~~
-Eclipse GlassFish Server 5.1 GlassFish Server Concepts
+Eclipse GlassFish Server 7 GlassFish Server Concepts
 ======================================================
 
 [[GSRFM814]][[sthref2391]]
 
 
 [[glassfish-server-open-source-edition-5.0-glassfish-server-concepts]]
-3 Eclipse GlassFish Server 5.1 GlassFish Server Concepts
+3 Eclipse GlassFish Server 7 GlassFish Server Concepts
 --------------------------------------------------------
 
 This section describes concepts that are related to GlassFish Server

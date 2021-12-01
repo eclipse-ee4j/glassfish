@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.main</groupId>
         <artifactId>glassfish-parent</artifactId>
-        <version>6.2.3-SNAPSHOT</version>
+        <version>7.0.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -39,6 +39,7 @@
         <module>war-util</module>
         <module>jstl-connector</module>
         <module>jersey-mvc-connector</module>
+        <module>jersey-ejb-component-provider</module>
         <module>jsf-connector</module>
         <module>jspcaching-connector</module>
         <module>gui-plugin-common</module>

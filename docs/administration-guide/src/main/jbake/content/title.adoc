@@ -1,10 +1,10 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Administration Guide, Release 5.1
+title=Eclipse GlassFish Server Administration Guide, Release 7
 next=preface.html
 prev=lot.html
 ~~~~~~
-= Eclipse GlassFish Server Administration Guide, Release 5.1
+= Eclipse GlassFish Server Administration Guide, Release 7
 
 
 [[eclipse-glassfish-server]]
@@ -13,11 +13,11 @@ Eclipse GlassFish Server
 
 Administration Guide
 
-Release 5.1
+Release 7
 
 Contributed 2018, 2019
 
-Eclipse GlassFish Server 5.1 Administration Guide provides
+Eclipse GlassFish Server 7 Administration Guide provides
 instructions for configuring and administering GlassFish Server Open
 Source Edition.
 
@@ -25,7 +25,7 @@ Source Edition.
 
 '''''
 
-Eclipse GlassFish Server Administration Guide, Release 5.1
+Eclipse GlassFish Server Administration Guide, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

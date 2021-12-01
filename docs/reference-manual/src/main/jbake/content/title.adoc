@@ -1,10 +1,10 @@
 type=page
 status=published
-title=Eclipse GlassFish Server Reference Manual, Release 5.1
+title=Eclipse GlassFish Server Reference Manual, Release 7
 next=preface.html
 prev=toc.html
 ~~~~~~
-Eclipse GlassFish Server Reference Manual, Release 5.1
+Eclipse GlassFish Server Reference Manual, Release 7
 ======================================================
 
 [[eclipse-glassfish-server]]
@@ -13,7 +13,7 @@ Eclipse GlassFish Server
 
 Reference Manual
 
-Release 5.1
+Release 7
 
 Contributed 2018, 2019
 
@@ -34,7 +34,7 @@ Edition.
 
 '''''
 
-Eclipse GlassFish Server Reference Manual, Release 5.1
+Eclipse GlassFish Server Reference Manual, Release 7
 
 Copyright © 2013, 2019 Oracle and/or its affiliates. All rights reserved.
 

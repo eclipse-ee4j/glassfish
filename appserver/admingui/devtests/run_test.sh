@@ -64,7 +64,7 @@ run_test_id(){
 
 post_test_run(){
   cp $TEST_RUN_LOG ${WORKSPACE}/results/ || true
-  cp ${WORKSPACE}/glassfish6/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
+  cp ${WORKSPACE}/glassfish7/glassfish/domains/domain1/logs/server.log* ${WORKSPACE}/results/ || true
   cp ${WORKSPACE}/appserver/admingui/devtests/target/surefire-reports/*.png ${WORKSPACE}/results/ || true
 }
 

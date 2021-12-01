@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+	Copyright (c) 2021 Contributors to the Eclipse Foundation
     Copyright (c) 2017, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -132,7 +133,7 @@
         <shoal.version>2.0.0</shoal.version>
         <ha-api.version>3.1.13</ha-api.version>
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
-        <command-security-plugin.version>1.0.13</command-security-plugin.version>
+        <command-security-plugin.version>1.0.14</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
 
         <!-- 3rd party dependencies -->

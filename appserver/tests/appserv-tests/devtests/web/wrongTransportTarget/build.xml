@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <!--
 
+    Copyright (c) 2021 Contributors to the Eclipse Foundation
     Copyright (c) 1997, 2018 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -33,55 +34,55 @@
     &testproperties;
     &run;
 
-    <import file="../reportbuilder.xml"/>
+    <import file="../reportbuilder.xml" />
 
-    <target name="all" depends="build,init-common,prepare-truststore-common,create-cluster,create-local-instance,restart,run,stop-local-instance,delete-local-instance,delete-cluster"/>
+    <target name="all" depends="build,init-common,prepare-truststore-common,create-cluster,create-local-instance,restart,run,stop-local-instance,delete-local-instance,delete-cluster" />
 
     <target name="run" depends="init-common">
-        <java classname="wrongtransporttarget.WrongTransport" classpathref="reportbuilder.class.path">
-          <arg value="${cluster.name}"/>
-          <arg value="${http.host}"/>
-          <arg value="${instance.http.port}"/>
+        <java classname="wrongtransporttarget.WrongTransport" classpathref="reportbuilder.class.path" fork="true">
+            <arg value="${cluster.name}" />
+            <arg value="${http.host}" />
+            <arg value="${instance.http.port}" />
         </java>
-        <java classname="wrongtransporttarget.WrongTransportSSL" classpathref="reportbuilder.class.path">
-          <arg value="${cluster.name}"/>
-          <arg value="${http.host}"/>
-          <arg value="${instance.https.port}"/>
-          <arg value="${truststore.db.file}"/>
+        <java classname="wrongtransporttarget.WrongTransportSSL" classpathref="reportbuilder.class.path" fork="true">
+            <arg value="${cluster.name}" />
+            <arg value="${http.host}" />
+            <arg value="${instance.https.port}" />
+            <arg value="${truststore.db.file}" />
         </java>
     </target>
 
     <target name="restart" depends="init-common">
-      <antcall target="restart-server-instance-common"/>
-      <antcall target="start-local-instance"/>
-      <sleep seconds="5"/>
+        <antcall target="restart-server-instance-common" />
+        <antcall target="start-local-instance" />
+        <sleep seconds="5" />
     </target>
 
     <target name="create-cluster" depends="init-common">
-        <antcall target="create-cluster-common"/>
+        <antcall target="create-cluster-common" />
     </target>
 
     <target name="create-local-instance" depends="init-common">
-        <antcall target="create-local-instance-common"/>
+        <antcall target="create-local-instance-common" />
     </target>
 
     <target name="delete-local-instance" depends="init-common">
-        <antcall target="delete-local-instance-common"/>
+        <antcall target="delete-local-instance-common" />
     </target>
 
     <target name="start-local-instance" depends="init-common">
-        <antcall target="start-local-instance-common"/>
+        <antcall target="start-local-instance-common" />
     </target>
 
     <target name="stop-local-instance" depends="init-common">
-        <antcall target="stop-local-instance-common"/>
+        <antcall target="stop-local-instance-common" />
     </target>
 
     <target name="delete-cluster" depends="init-common">
-        <antcall target="delete-cluster-common"/>
+        <antcall target="delete-cluster-common" />
     </target>
 
     <target name="usage">
-        <antcall target="usage-common"/>
+        <antcall target="usage-common" />
     </target>
 </project>

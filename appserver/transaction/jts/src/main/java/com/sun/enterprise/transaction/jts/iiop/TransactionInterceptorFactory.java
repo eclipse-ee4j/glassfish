@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 1997, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,30 +17,30 @@
 
 package com.sun.enterprise.transaction.jts.iiop;
 
-
 import org.glassfish.enterprise.iiop.api.IIOPInterceptorFactory;
 import org.glassfish.hk2.api.ServiceLocator;
-
-import jakarta.inject.Inject;
 import org.jvnet.hk2.annotations.Service;
-
 import org.omg.IOP.Codec;
 import org.omg.PortableInterceptor.ClientRequestInterceptor;
-import org.omg.PortableInterceptor.ServerRequestInterceptor;
 import org.omg.PortableInterceptor.ORBInitInfo;
+import org.omg.PortableInterceptor.ServerRequestInterceptor;
+
+import jakarta.inject.Inject;
 
 /**
  *
  * @author mvatkina
  */
-@Service(name="TransactionInterceptorFactory")
-public class TransactionInterceptorFactory implements IIOPInterceptorFactory{
+@Service(name = "TransactionInterceptorFactory")
+public class TransactionInterceptorFactory implements IIOPInterceptorFactory {
 
     private TransactionServerInterceptor tsi = null;
     private TransactionClientInterceptor tci = null;
 
-    @Inject private ServiceLocator habitat;
+    @Inject
+    private ServiceLocator habitat;
 
+    @Override
     public ClientRequestInterceptor createClientRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (tci == null) {
             tci = new TransactionClientInterceptor("TransactionClientInterceptor", 1, habitat);
@@ -48,6 +49,7 @@ public class TransactionInterceptorFactory implements IIOPInterceptorFactory{
         return tci;
     }
 
+    @Override
     public ServerRequestInterceptor createServerRequestInterceptor(ORBInitInfo info, Codec codec) {
         if (tsi == null) {
             tsi = new TransactionServerInterceptor(2, habitat);

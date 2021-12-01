@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -16,7 +17,10 @@
 
 package com.sun.enterprise.admin.cli.optional;
 
+import static com.sun.enterprise.util.Utility.isAllNull;
+
 import java.io.File;
+import java.io.IOException;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
@@ -33,44 +37,42 @@ import com.sun.enterprise.util.ObjectAnalyzer;
 
 /**
  * This is a local command for restoring domains.
+ *
+ * <p>
  * The Options:
- *  <ul>
- *  <li>domaindir
- *  </ul>
+ * <ul>
+ *   <li>domaindir
+ * </ul>
  * The Operand:
- *  <ul>
- *  <li>domain_name
- *  </ul>
+ * <ul>
+ *   <li>domain_name
+ * </ul>
  */
 @Service(name = "restore-domain")
 @PerLookup
 public final class RestoreDomainCommand extends BackupCommands {
 
+    private static final LocalStringsImpl strings = new LocalStringsImpl(BackupDomainCommand.class);
+
     @Param(name = "filename", optional = true)
     private String backupFilename;
 
-    @Param(name= "force", optional = true, defaultValue = "false")
+    @Param(name = "force", optional = true, defaultValue = "false")
     private boolean force;
 
-    @Param(name= "description", optional = true, obsolete = true)
+    @Param(name = "description", optional = true, obsolete = true)
     private String description;
 
-    private static final LocalStringsImpl strings =
-            new LocalStringsImpl(BackupDomainCommand.class);
-
-    /**
-     */
     @Override
-    protected void validate()
-            throws CommandException, CommandValidationException {
-
+    protected void validate() throws CommandException, CommandValidationException {
         boolean domainExists = true;
 
-        if (backupFilename == null && domainName == null) {
+        if (isAllNull(backupFilename, domainName)) {
             if (!force) {
                 throw new CommandException(strings.get("UseForceOption"));
             }
-            // this will properly initialize the domain dir
+
+            // This will properly initialize the domain dir
             // see LocalDomainCommand.initDomain())
             super.validate();
         }
@@ -81,10 +83,8 @@ public final class RestoreDomainCommand extends BackupCommands {
             setDomainName(domainName);
             initDomain();
         } catch (CommandException e) {
-            if (e.getCause() != null &&
-                (e.getCause() instanceof java.io.IOException)) {
-                // The domain does not exist which is allowed if the
-                // force option is used (checked later).
+            if (e.getCause() != null && (e.getCause() instanceof IOException)) {
+                // The domain does not exist which is allowed if the force option is used (checked later).
                 domainExists = false;
             } else {
                 throw e;
@@ -92,67 +92,59 @@ public final class RestoreDomainCommand extends BackupCommands {
         }
 
         if (domainExists && isRunning()) {
-            throw new CommandException(strings.get("DomainIsNotStopped",
-                                       domainName));
+            throw new CommandException(strings.get("DomainIsNotStopped", domainName));
         }
 
         if (backupFilename != null) {
-            File f = new File(backupFilename);
+            File backupFile = new File(backupFilename);
 
-            if (!f.exists()) {
-                throw new CommandValidationException(
-                    strings.get("FileDoesNotExist", backupFilename));
+            if (!backupFile.exists()) {
+                throw new CommandValidationException(strings.get("FileDoesNotExist", backupFilename));
             }
 
-            if (!f.canRead()) {
-                throw new CommandValidationException(
-                    strings.get("FileCanNotRead", backupFilename));
+            if (!backupFile.canRead()) {
+                throw new CommandValidationException(strings.get("FileCanNotRead", backupFilename));
             }
 
-            if (f.isDirectory()) {
-                throw new CommandValidationException(
-                    strings.get("FileIsDirectory", backupFilename));
+            if (backupFile.isDirectory()) {
+                throw new CommandValidationException(strings.get("FileIsDirectory", backupFilename));
             }
         }
 
         setBackupDir(backupdir);
         initRequest();
 
-        initializeLogger();     // in case program options changed
+        initializeLogger(); // in case program options changed
     }
 
-    /**
-     */
     @Override
-    protected int executeCommand()
-            throws CommandException {
+    protected int executeCommand() throws CommandException {
         try {
-            RestoreManager mgr = new RestoreManager(request);
-            logger.info(mgr.restore());
+            RestoreManager restoreManager = new RestoreManager(request);
+            logger.info(restoreManager.restore());
         } catch (BackupWarningException bwe) {
             logger.info(bwe.getMessage());
         } catch (BackupException be) {
             throw new CommandException(be);
         }
+
         return 0;
     }
 
     private void initRequest() throws CommandValidationException {
-
-        File backupdir_f = null;
+        File backupdirFile = null;
         if (backupdir != null) {
-            backupdir_f = new File(backupdir);
-            if (!backupdir_f.isAbsolute()) {
-                throw new CommandValidationException(
-                    strings.get("InvalidBackupDirPath", backupdir));
+            backupdirFile = new File(backupdir);
+            if (!backupdirFile.isAbsolute()) {
+                throw new CommandValidationException(strings.get("InvalidBackupDirPath", backupdir));
             }
         }
         boolean configonlybackup = false;
-        if ((configonly != null) && ( Boolean.valueOf(configonly))) {
+        if ((configonly != null) && (Boolean.valueOf(configonly))) {
             configonlybackup = true;
         }
-        request = new BackupRequest(domainDirParam, domainName, backupdir_f,
-                                    backupConfig, backupFilename,configonlybackup);
+
+        request = new BackupRequest(domainDirParam, domainName, backupdirFile, backupConfig, backupFilename, configonlybackup);
         request.setTerse(programOpts.isTerse());
         request.setVerbose(verbose);
         request.setForce(force);

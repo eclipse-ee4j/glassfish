@@ -83,11 +83,11 @@
         <!-- Jakarta API Versions -->
 
         <!-- Jakarta EL -->
-        <jakarta.el-api.version>4.0.0</jakarta.el-api.version>
+        <jakarta.el-api.version>5.0.0</jakarta.el-api.version>
         <jakarta.el.version>4.0.2</jakarta.el.version>
 
         <!-- Jakarta Servlet -->
-        <servlet-api.version>5.0.0</servlet-api.version>
+        <jakarta.servlet-api.version>5.0.0</jakarta.servlet-api.version>
 
         <!-- Jakarta Validation -->
         <jakarta.validation.version>3.0.0</jakarta.validation.version>
@@ -97,7 +97,7 @@
         <webservices.version>3.0.3</webservices.version>
 
         <!-- Jakarta Inject -->
-        <jakarta.inject-api.version>2.0.0</jakarta.inject-api.version>
+        <jakarta.inject-api.version>2.0.1.MR</jakarta.inject-api.version>
 
         <!-- Jakarta XML Binding -->
         <jakarta.jaxb-api.version>3.0.1</jakarta.jaxb-api.version>
@@ -109,15 +109,15 @@
         <jersey.version>3.0.3</jersey.version>
 
         <!-- Jakarta Mail -->
-        <mail.version>2.1.0-RC2</mail.version>
+        <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
         <angus.mail.version>1.0.0-M1</angus.mail.version>
 
         <!-- Jakarta Activation -->
-        <activation.version>2.1.0-RC2</activation.version>
+        <activation.version>2.1.0</activation.version>
         <angus.activation.version>1.0.0-M1</angus.activation.version>
 
         <!-- Jakarta Annotations -->
-        <jakarta.annotation-api.version>2.0.0</jakarta.annotation-api.version>
+        <jakarta.annotation-api.version>2.1.0</jakarta.annotation-api.version>
 
         <!-- GlassFish Components -->
         <glassfish-corba.version>4.2.4</glassfish-corba.version>
@@ -309,7 +309,7 @@
             <dependency>
                 <groupId>jakarta.servlet</groupId>
                 <artifactId>jakarta.servlet-api</artifactId>
-                <version>${servlet-api.version}</version>
+                <version>${jakarta.servlet-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>jakarta.el</groupId>
@@ -406,7 +406,7 @@
             <dependency>
                 <groupId>jakarta.mail</groupId>
                 <artifactId>jakarta.mail-api</artifactId>
-                <version>${mail.version}</version>
+                <version>${jakarta.mail-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.angus</groupId>

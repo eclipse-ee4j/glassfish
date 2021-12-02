@@ -20,7 +20,6 @@ package org.apache.catalina.session;
 
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.http.HttpSession;
-import jakarta.servlet.http.HttpSessionContext;
 import java.util.Enumeration;
 
 
@@ -68,102 +67,68 @@ public class StandardSessionFacade
     // ---------------------------------------------------- HttpSession Methods
 
 
+    @Override
     public long getCreationTime() {
         return session.getCreationTime();
     }
 
 
+    @Override
     public String getId() {
         return session.getId();
     }
 
 
+    @Override
     public long getLastAccessedTime() {
         return session.getLastAccessedTime();
     }
 
 
+    @Override
     public ServletContext getServletContext() {
         // FIXME : Facade this object ?
         return session.getServletContext();
     }
 
 
+    @Override
     public void setMaxInactiveInterval(int interval) {
         session.setMaxInactiveInterval(interval);
     }
 
 
+    @Override
     public int getMaxInactiveInterval() {
         return session.getMaxInactiveInterval();
     }
 
-
-    /**
-     * @deprecated
-     */
-    public HttpSessionContext getSessionContext() {
-        return session.getSessionContext();
-    }
-
-
+    @Override
     public Object getAttribute(String name) {
         return session.getAttribute(name);
     }
 
-
-    /**
-     * @deprecated
-     */
-    public Object getValue(String name) {
-        return session.getAttribute(name);
-    }
-
-
-    /**
-     * @deprecated
-     */
+    @Override
     public Enumeration<String> getAttributeNames() {
         return session.getAttributeNames();
     }
 
-
-    public String[] getValueNames() {
-        return session.getValueNames();
-    }
-
-
+    @Override
     public void setAttribute(String name, Object value) {
         session.setAttribute(name, value);
     }
 
-
-    /**
-     * @deprecated
-     */
-    public void putValue(String name, Object value) {
-        session.setAttribute(name, value);
-    }
-
-
+    @Override
     public void removeAttribute(String name) {
         session.removeAttribute(name);
     }
 
-
-    /**
-     * @deprecated
-     */
-    public void removeValue(String name) {
-        session.removeAttribute(name);
-    }
-
-
+    @Override
     public void invalidate() {
         session.invalidate();
     }
 
-
+    @Override
     public boolean isNew() {
         return session.isNew();
     }

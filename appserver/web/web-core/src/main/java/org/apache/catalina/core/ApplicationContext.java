@@ -17,22 +17,44 @@
 
 package org.apache.catalina.core;
 
-import org.apache.catalina.*;
-import org.apache.catalina.deploy.ApplicationParameter;
-import org.apache.catalina.util.Enumerator;
-import org.apache.catalina.util.ServerInfo;
-
-import javax.naming.directory.DirContext;
-import jakarta.servlet.*;
-import jakarta.servlet.descriptor.JspConfigDescriptor;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.*;
-import java.util.concurrent.ConcurrentMap;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
+import java.util.EventListener;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.naming.directory.DirContext;
+
+import org.apache.catalina.ContainerEvent;
+import org.apache.catalina.Globals;
+import org.apache.catalina.LogFacade;
+import org.apache.catalina.util.Enumerator;
+import org.apache.catalina.util.ServerInfo;
+
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterRegistration;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextAttributeEvent;
+import jakarta.servlet.ServletContextAttributeListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRegistration;
+import jakarta.servlet.SessionCookieConfig;
+import jakarta.servlet.SessionTrackingMode;
+import jakarta.servlet.descriptor.JspConfigDescriptor;
 
 
 /**
@@ -379,35 +401,11 @@ public class ApplicationContext implements ServletContext {
     }
 
     /**
-     * @deprecated As of Java Servlet API 2.1, with no direct replacement.
-     */
-    @Override
-    public Servlet getServlet(String name) {
-        return (null);
-    }
-
-    /**
      * Return the display name of this web application.
      */
     @Override
     public String getServletContextName() {
         return (context.getDisplayName());
-    }
-
-    /**
-     * @deprecated As of Java Servlet API 2.1, with no direct replacement.
-     */
-    @Override
-    public Enumeration<String> getServletNames() {
-        return (new Enumerator<String>(emptyString));
-    }
-
-    /**
-     * @deprecated As of Java Servlet API 2.1, with no direct replacement.
-     */
-    @Override
-    public Enumeration<Servlet> getServlets() {
-        return (new Enumerator<Servlet>(emptyServlet));
     }
 
     /**
@@ -418,20 +416,6 @@ public class ApplicationContext implements ServletContext {
     @Override
     public void log(String message) {
         context.log(message);
-    }
-
-    /**
-     * Writes the specified exception and message to a servlet log file.
-     *
-     * @param exception Exception to be reported
-     * @param message Message to be written
-     *
-     * @deprecated As of Java Servlet API 2.1, use
-     *  <code>log(String, Throwable)</code> instead
-     */
-    @Override
-    public void log(Exception exception, String message) {
-        context.log(exception, message);
     }
 
     /**

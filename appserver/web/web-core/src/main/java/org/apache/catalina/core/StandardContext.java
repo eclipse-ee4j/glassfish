@@ -727,6 +727,7 @@ public class StandardContext
 
     // ----------------------------------------------------- Context Properties
 
+    @Override
     public String getEncodedPath() {
         return encodedPath;
     }
@@ -1646,6 +1647,7 @@ public class StandardContext
     /**
      * Returns the value of the securePagesWithPragma property.
      */
+    @Override
     public boolean isSecurePagesWithPragma() {
         return securePagesWithPragma;
     }
@@ -2069,6 +2071,7 @@ public class StandardContext
      *
      * @param listener the fully qualified class name of the Listener
      */
+    @Override
     public void addApplicationListener(String listener) {
         addListener(listener, false);
     }
@@ -2078,6 +2081,7 @@ public class StandardContext
      *
      * @param parameter The new application parameter
      */
+    @Override
     public void addApplicationParameter(ApplicationParameter parameter) {
         String newName = parameter.getName();
         Iterator<ApplicationParameter> i =
@@ -2266,6 +2270,7 @@ public class StandardContext
      *
      * @param ejb New EJB resource reference
      */
+    @Override
     public void addEjb(ContextEjb ejb) {
         namingResources.addEjb(ejb);
         if (notifyContainerListeners) {
@@ -2278,6 +2283,7 @@ public class StandardContext
      *
      * @param environment New environment entry
      */
+    @Override
     public void addEnvironment(ContextEnvironment environment) {
 
         ContextEnvironment env = findEnvironment(environment.getName());
@@ -2357,6 +2363,7 @@ public class StandardContext
      *
      * @param filterDef The filter definition to be added
      */
+    @Override
     public void addFilterDef(FilterDef filterDef) {
         addFilterDef(filterDef, false, true);
     }
@@ -2523,6 +2530,7 @@ public class StandardContext
      * Adds the filter with the given name and class name to this servlet
      * context.
      */
+    @Override
     public FilterRegistration.Dynamic addFilter(
             String filterName, String className) {
 
@@ -3166,6 +3174,7 @@ public class StandardContext
      * @param extension Filename extension being mapped
      * @param mimeType Corresponding MIME type
      */
+    @Override
     public void addMimeMapping(String extension, String mimeType) {
         mimeMappings.put(extension.toLowerCase(Locale.ENGLISH), mimeType);
         if (notifyContainerListeners) {
@@ -3183,6 +3192,7 @@ public class StandardContext
      *  or if this context initialization parameter has already been
      *  registered
      */
+    @Override
     public void addParameter(String name, String value) {
         // Validate the proposed context initialization parameter
         if ((name == null) || (value == null)) {
@@ -3210,6 +3220,7 @@ public class StandardContext
      *
      * @param resource New resource reference
      */
+    @Override
     public void addResource(ContextResource resource) {
         namingResources.addResource(resource);
         if (notifyContainerListeners) {
@@ -3224,6 +3235,7 @@ public class StandardContext
      * @param name The resource environment reference name
      * @param type The resource environment reference type
      */
+    @Override
     public void addResourceEnvRef(String name, String type) {
         namingResources.addResourceEnvRef(name, type);
         if (notifyContainerListeners) {
@@ -3236,6 +3248,7 @@ public class StandardContext
      *
      * @param resourceLink New resource link
      */
+    @Override
     public void addResourceLink(ContextResourceLink resourceLink) {
         namingResources.addResourceLink(resourceLink);
         if (notifyContainerListeners) {
@@ -3250,6 +3263,7 @@ public class StandardContext
      * @param role Security role used in the application
      * @param link Actual security role to check for
      */
+    @Override
     public void addRoleMapping(String role, String link) {
         synchronized (roleMappings) {
             roleMappings.put(role, link);
@@ -3264,6 +3278,7 @@ public class StandardContext
      *
      * @param role New security role
      */
+    @Override
     public void addSecurityRole(String role) {
         securityRoles.add(role);
         if (notifyContainerListeners) {
@@ -3585,11 +3600,6 @@ public class StandardContext
 
         if (servlet == null) {
             throw new NullPointerException(rb.getString(LogFacade.NULL_SERVLET_INSTANCE_EXCEPTION));
-        }
-
-        if (servlet instanceof SingleThreadModel) {
-            throw new IllegalArgumentException("Servlet implements " +
-                SingleThreadModel.class.getName());
         }
 
         /*
@@ -4498,6 +4508,7 @@ public class StandardContext
      *
      * @param name Name of the EJB resource reference to remove
      */
+    @Override
     public void removeEjb(String name) {
 
         namingResources.removeEjb(name);
@@ -6842,6 +6853,7 @@ public class StandardContext
     /**
      * Returns the context path of the web application.
      */
+    @Override
     public String getContextPath() {
         return getPath();
     }
@@ -6850,6 +6862,7 @@ public class StandardContext
      * Return a <code>ServletContext</code> object that corresponds to a
      * specified URI on the server.
      */
+    @Override
     public ServletContext getContext(String uri) {
 
         // Validate the format of the specified argument
@@ -6894,6 +6907,7 @@ public class StandardContext
      * Return the value of the specified initialization parameter, or
      * <code>null</code> if this parameter does not exist.
      */
+    @Override
     public String getInitParameter(final String name) {
         return context.getInitParameter(name);
     }
@@ -6902,6 +6916,7 @@ public class StandardContext
      * Return the names of the context's initialization parameters, or an
      * empty enumeration if the context has no initialization parameters.
      */
+    @Override
     public Enumeration<String> getInitParameterNames() {
         return context.getInitParameterNames();
     }
@@ -6912,6 +6927,7 @@ public class StandardContext
      * if it was not set because this ServletContext already contains a
      * context initialization parameter with a matching name
      */
+    @Override
     public boolean setInitParameter(String name, String value) {
         if (isContextInitializedCalled) {
             String msg = MessageFormat.format(rb.getString(LogFacade.SERVLET_CONTEXT_ALREADY_INIT_EXCEPTION),
@@ -6924,6 +6940,7 @@ public class StandardContext
     /**
      * Return the major version of the Java Servlet API that we implement.
      */
+    @Override
     public int getMajorVersion() {
         return context.getMajorVersion();
     }
@@ -6931,6 +6948,7 @@ public class StandardContext
     /**
      * Return the minor version of the Java Servlet API that we implement.
      */
+    @Override
     public int getMinorVersion() {
         return context.getMinorVersion();
     }
@@ -6939,6 +6957,7 @@ public class StandardContext
      * Return the MIME type of the specified file, or <code>null</code> if
      * the MIME type cannot be determined.
      */
+    @Override
     public String getMimeType(String file) {
 
         if (file == null)
@@ -6957,6 +6976,7 @@ public class StandardContext
      * Return a <code>RequestDispatcher</code> object that acts as a
      * wrapper for the named servlet.
      */
+    @Override
     public RequestDispatcher getNamedDispatcher(String name) {
 
         // Validate the name argument
@@ -6975,6 +6995,7 @@ public class StandardContext
     /**
      * Return the display name of this web application.
      */
+    @Override
     public String getServletContextName() {
         return getDisplayName();
     }
@@ -6982,6 +7003,7 @@ public class StandardContext
     /**
      * Remove the context attribute with the specified name, if any.
      */
+    @Override
     public void removeAttribute(String name) {
         context.removeAttribute(name);
     }
@@ -6990,6 +7012,7 @@ public class StandardContext
      * Bind the specified value with the specified context attribute name,
      * replacing any existing value for that name.
      */
+    @Override
     public void setAttribute(String name, Object value) {
         context.setAttribute(name, value);
     }
@@ -6997,6 +7020,7 @@ public class StandardContext
     /**
      * Return the name and version of the servlet container.
      */
+    @Override
     public String getServerInfo() {
         return context.getServerInfo();
     }
@@ -7006,6 +7030,7 @@ public class StandardContext
      * <code>null</code> if the container was unable to perform the
      * translation
      */
+    @Override
     public String getRealPath(String path) {
         if (!(showArchivedRealPathEnabled || directoryDeployed)) {
             return null;
@@ -7056,6 +7081,7 @@ public class StandardContext
     /**
      * Writes the specified message to a servlet log file.
      */
+    @Override
     public void log(String message) {
         message= neutralizeForLog(message);
         org.apache.catalina.Logger logger = getLogger();
@@ -7082,23 +7108,12 @@ public class StandardContext
     /**
      * Writes the specified message and exception to a servlet log file.
      */
+    @Override
     public void log(String message, Throwable throwable) {
         message= neutralizeForLog(message);
         org.apache.catalina.Logger logger = getLogger();
         if (logger != null)
             logger.log(logName() + message, throwable);
-    }
-
-    public Servlet getServlet(String name) {
-        return context.getServlet(name);
-    }
-
-    public Enumeration<String> getServletNames() {
-        return context.getServletNames();
-    }
-
-    public Enumeration<Servlet> getServlets() {
-        return context.getServlets();
     }
 
     /**
@@ -7107,6 +7122,7 @@ public class StandardContext
      * <code>getResource</code>.  If no such resource can be identified,
      * return <code>null</code>.
      */
+    @Override
     public InputStream getResourceAsStream(String path) {
 
         if (path == null || !path.startsWith("/"))
@@ -7149,6 +7165,7 @@ public class StandardContext
      * The path must begin with a "/" and is interpreted as relative to the
      * current context root.
      */
+    @Override
     public java.net.URL getResource(String path)
         throws MalformedURLException {
 
@@ -7219,6 +7236,7 @@ public class StandardContext
      * specified collection. Each path will be a String starting with
      * a "/" character. The returned set is immutable.
      */
+    @Override
     public Set<String> getResourcePaths(String path) {
         // Validate the path argument
         if (path == null) {
@@ -7300,6 +7318,7 @@ public class StandardContext
      * wrapper for the resource at the given path.  The path must begin
      * with a "/" and is interpreted as relative to the current context root.
      */
+    @Override
     public RequestDispatcher getRequestDispatcher(String path) {
 
         // Validate the path argument
@@ -7414,6 +7433,7 @@ public class StandardContext
      * parsing xml instances.
      * @param webXmlValidation true to enable xml instance validation
      */
+    @Override
     public void setXmlValidation(boolean webXmlValidation){
         this.webXmlValidation = webXmlValidation;
     }
@@ -7423,6 +7443,7 @@ public class StandardContext
      * @return true if validation is enabled.
      *
      */
+    @Override
     public boolean getXmlValidation(){
         return webXmlValidation;
     }
@@ -7431,6 +7452,7 @@ public class StandardContext
      * Get the server.xml <context> attribute's xmlNamespaceAware.
      * @return true if namespace awarenes is enabled.
      */
+    @Override
     public boolean getXmlNamespaceAware(){
         return webXmlNamespaceAware;
     }
@@ -7440,6 +7462,7 @@ public class StandardContext
      * parsing xml instances.
      * @param webXmlNamespaceAware true to enable namespace awareness
      */
+    @Override
     public void setXmlNamespaceAware(boolean webXmlNamespaceAware){
         this.webXmlNamespaceAware= webXmlNamespaceAware;
     }
@@ -7449,6 +7472,7 @@ public class StandardContext
      * parsing tlds files.
      * @param tldValidation true to enable xml instance validation
      */
+    @Override
     public void setTldValidation(boolean tldValidation){
         this.tldValidation = tldValidation;
     }
@@ -7458,6 +7482,7 @@ public class StandardContext
      * @return true if validation is enabled.
      *
      */
+    @Override
     public boolean getTldValidation(){
         return tldValidation;
     }
@@ -7466,6 +7491,7 @@ public class StandardContext
      * Get the server.xml <host> attribute's xmlNamespaceAware.
      * @return true if namespace awarenes is enabled.
      */
+    @Override
     public boolean getTldNamespaceAware(){
         return tldNamespaceAware;
     }
@@ -7475,6 +7501,7 @@ public class StandardContext
      * parsing xml instances.
      * @param tldNamespaceAware true to enable namespace awareness
      */
+    @Override
     public void setTldNamespaceAware(boolean tldNamespaceAware){
         this.tldNamespaceAware= tldNamespaceAware;
     }
@@ -7627,10 +7654,12 @@ public class StandardContext
             this.delegate = delegate;
         }
 
+        @Override
         public void contextInitialized(ServletContextEvent sce) {
             delegate.contextInitialized(sce);
         }
 
+        @Override
         public void contextDestroyed(ServletContextEvent sce) {
             delegate.contextDestroyed(sce);
         }
@@ -7757,6 +7786,7 @@ public class StandardContext
     private static class PrivilegedCreateSecurityManager
             implements PrivilegedAction<MySecurityManager> {
 
+        @Override
         public MySecurityManager run() {
             return new MySecurityManager();
         }

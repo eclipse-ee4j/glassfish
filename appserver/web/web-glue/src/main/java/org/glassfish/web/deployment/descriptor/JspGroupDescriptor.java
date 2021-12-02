@@ -43,6 +43,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * Return the set of URL pattern aliases for this group.
      */
+    @Override
     public Set<String> getUrlPatterns() {
         if (this.urlPatterns == null) {
             this.urlPatterns = new OrderedSet<String>();
@@ -69,6 +70,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * Return an Iterable over the include prelude elements for this group.
      */
+    @Override
     public Set<String> getIncludePreludes() {
         if (this.includePreludes == null) {
             this.includePreludes = new OrderedSet<String>();
@@ -95,6 +97,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * Return an Iterable over include coda elements for this group.
      */
+    @Override
     public Set<String> getIncludeCodas() {
         if (this.includeCodas == null) {
             this.includeCodas = new OrderedSet<String>();
@@ -125,6 +128,7 @@ public class JspGroupDescriptor extends Descriptor
         elIgnored = value;
     }
 
+    @Override
     public String getElIgnored() {
         return elIgnored;
     }
@@ -136,6 +140,7 @@ public class JspGroupDescriptor extends Descriptor
         scriptingInvalid = value;
     }
 
+    @Override
     public String getScriptingInvalid() {
         return scriptingInvalid;
     }
@@ -147,6 +152,7 @@ public class JspGroupDescriptor extends Descriptor
         isXml = value;
     }
 
+    @Override
     public String getIsXml() {
         return isXml;
     }
@@ -158,6 +164,7 @@ public class JspGroupDescriptor extends Descriptor
         deferredSyntaxAllowedAsLiteral = value;
     }
 
+    @Override
     public String getDeferredSyntaxAllowedAsLiteral() {
         return deferredSyntaxAllowedAsLiteral;
     }
@@ -169,6 +176,7 @@ public class JspGroupDescriptor extends Descriptor
         trimDirectiveWhitespaces = value;
     }
 
+    @Override
     public String getTrimDirectiveWhitespaces() {
         return trimDirectiveWhitespaces;
     }
@@ -176,6 +184,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * get display name.
      */
+    @Override
     public String getDisplayName() {
         // bug#4745178  other code requires the
         // display name to be localized.
@@ -185,12 +194,14 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * set display name.
      */
+    @Override
     public void setDisplayName(String name) {
         // bug#4745178  other code requires the
         // display name to be localized.
         super.setName(name);
     }
 
+    @Override
     public String getPageEncoding() {
         return pageEncoding;
     }
@@ -202,6 +213,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * get defaultContentType
      */
+    @Override
     public String getDefaultContentType() {
         return defaultContentType;
     }
@@ -216,6 +228,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * get buffer
      */
+    @Override
     public String getBuffer() {
         return buffer;
     }
@@ -234,6 +247,7 @@ public class JspGroupDescriptor extends Descriptor
         errorOnUndeclaredNamespace = value;
     }
 
+    @Override
     public String getErrorOnUndeclaredNamespace() {
         return errorOnUndeclaredNamespace;
     }
@@ -241,6 +255,7 @@ public class JspGroupDescriptor extends Descriptor
     /**
      * @return a string describing the values I hold
      */
+    @Override
     public void print(StringBuffer toStringBuffer) {
         toStringBuffer.append("\n JspGroupDescriptor");
         toStringBuffer.append( "\n");
@@ -258,5 +273,11 @@ public class JspGroupDescriptor extends Descriptor
         toStringBuffer.append( "\n defaultContentType: ").append(defaultContentType);
         toStringBuffer.append( "\n buffer: ").append(buffer);
         toStringBuffer.append( "\n errorOnUndeclaredNamespace: ").append(errorOnUndeclaredNamespace);
+    }
+
+    @Override
+    public String getErrorOnELNotFound() {
+        // TODO IMPLEMENT!
+        return null;
     }
 }

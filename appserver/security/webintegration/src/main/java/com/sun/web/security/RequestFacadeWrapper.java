@@ -191,11 +191,6 @@ class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
     }
 
     @Override
-    public boolean isRequestedSessionIdFromUrl() {
-        return servletRequest.isRequestedSessionIdFromUrl();
-    }
-
-    @Override
     public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
         return servletRequest.authenticate(response);
     }
@@ -342,11 +337,6 @@ class RequestFacadeWrapper extends RequestFacade implements HttpServletRequest {
     @Override
     public RequestDispatcher getRequestDispatcher(String path) {
         return servletRequest.getRequestDispatcher(path);
-    }
-
-    @Override
-    public String getRealPath(String path) {
-        return servletRequest.getRealPath(path);
     }
 
     @Override

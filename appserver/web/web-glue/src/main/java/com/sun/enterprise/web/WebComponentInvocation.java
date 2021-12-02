@@ -16,12 +16,12 @@
 
 package com.sun.enterprise.web;
 
+import java.lang.reflect.Method;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.Servlet;
-import jakarta.servlet.SingleThreadModel;
-import java.lang.reflect.Method;
 
 public class WebComponentInvocation extends ComponentInvocation {
 
@@ -58,12 +58,7 @@ public class WebComponentInvocation extends ComponentInvocation {
         Object resourceTableKey = null;
         if (instance instanceof Servlet || instance instanceof Filter) {
             // Servlet or Filter
-            if (instance instanceof SingleThreadModel) {
-                resourceTableKey = instance;
-            } else {
-                resourceTableKey =
-                        new PairKey(instance, Thread.currentThread());
-            }
+            resourceTableKey = new PairKey(instance, Thread.currentThread());
         } else {
             resourceTableKey = instance;
         }

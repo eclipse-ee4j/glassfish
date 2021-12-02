@@ -273,6 +273,7 @@ public class ResponseFacade
                 AccessController.doPrivileged(
                         new PrivilegedExceptionAction<Void>(){
 
+                    @Override
                     public Void run() throws IOException{
                         response.setAppCommitted(true);
 
@@ -397,28 +398,6 @@ public class ResponseFacade
 
     @Override
     public String encodeRedirectURL(String url) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        return response.encodeRedirectURL(url);
-    }
-
-    @Override
-    public String encodeUrl(String url) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        return response.encodeURL(url);
-    }
-
-    @Override
-    public String encodeRedirectUrl(String url) {
 
         // Disallow operation if the object has gone out of scope
         if (response == null) {
@@ -575,20 +554,6 @@ public class ResponseFacade
             return;
 
         response.setStatus(sc);
-    }
-
-    @Override
-    public void setStatus(int sc, String msg) {
-
-        // Disallow operation if the object has gone out of scope
-        if (response == null) {
-            throw new IllegalStateException(rb.getString(LogFacade.NULL_RESPONSE_OBJECT));
-        }
-
-        if (isCommitted())
-            return;
-
-        response.setStatus(sc, msg);
     }
 
     @Override

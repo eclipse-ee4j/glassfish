@@ -78,6 +78,7 @@ final class StandardHostValve
     /**
      * Return descriptive information about this Valve implementation.
      */
+    @Override
     public String getInfo() {
 
         return (info);
@@ -426,7 +427,7 @@ final class StandardHostValve
             int statusCode = statusCodeObj.intValue();
             String message = (String) hreq.getAttribute(
                 RequestDispatcher.ERROR_MESSAGE);
-            hres.setStatus(statusCode, message);
+            hres.sendError(statusCode, message);
 
             // Forward control to the specified location
             ServletContext servletContext =

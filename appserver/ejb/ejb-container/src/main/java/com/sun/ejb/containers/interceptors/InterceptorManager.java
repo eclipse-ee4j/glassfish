@@ -177,15 +177,14 @@ public class InterceptorManager {
 
 
     /**
-     * Called sometime after original interceptor initialization.
-     * Install the given interceptor class instance before any application
-     * level interceptors.
-     * param o  instance of an interceptor class
+     * Can be called after original interceptor initialization.
+     * Install the given interceptor class instance before any application level interceptors.
+     *
+     * @param interceptor optionally specified delegate to be set on SystemInterceptorProxy
      */
-    public void registerRuntimeInterceptor(Object o) {
-
-        runtimeInterceptor = o;
-
+    public void registerRuntimeInterceptor(Object interceptor) {
+        _logger.log(Level.CONFIG, "registerRuntimeInterceptor({0})", interceptor);
+        runtimeInterceptor = interceptor;
     }
 
     public InterceptorManager.InterceptorChain getAroundInvokeChain(

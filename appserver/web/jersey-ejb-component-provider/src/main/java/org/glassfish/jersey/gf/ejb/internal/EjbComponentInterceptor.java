@@ -41,13 +41,11 @@ public final class EjbComponentInterceptor {
         this.injectionManager = injectionManager;
     }
 
+
     @PostConstruct
     private void inject(final InvocationContext context) throws Exception {
-
         final Object beanInstance = context.getTarget();
         injectionManager.inject(beanInstance, CdiComponentProvider.CDI_CLASS_ANALYZER);
-
-        // Invoke next interceptor in chain
         context.proceed();
     }
 }

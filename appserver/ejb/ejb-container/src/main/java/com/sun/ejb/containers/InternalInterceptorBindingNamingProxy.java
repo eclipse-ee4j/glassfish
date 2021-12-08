@@ -39,9 +39,9 @@ public class InternalInterceptorBindingNamingProxy
     @Inject
     private ServiceLocator services;
 
-    static final String INTERCEPTOR_BINDING
-            = "java:org.glassfish.ejb.container.interceptor_binding_spi";
+    public static final String INTERCEPTOR_BINDING = "java:org.glassfish.ejb.container.interceptor_binding_spi";
 
+    @Override
     public Object handle(String name) throws NamingException {
 
         Object returnValue = null;

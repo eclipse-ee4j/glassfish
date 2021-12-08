@@ -38,45 +38,42 @@ import org.glassfish.jersey.spi.ExtendedExceptionMapper;
  */
 public class EjbExceptionMapper implements ExtendedExceptionMapper<EJBException> {
 
-    private final Provider<ExceptionMappers> mappers;
+    private final Provider<ExceptionMappers> mapperProvider;
 
     /**
      * Create new EJB exception mapper.
      *
-     * @param mappers utility to find mapper delegate.
+     * @param mapperProvider utility to find mapper delegate.
      */
     @Inject
-    public EjbExceptionMapper(Provider<ExceptionMappers> mappers) {
-        this.mappers = mappers;
+    public EjbExceptionMapper(final Provider<ExceptionMappers> mapperProvider) {
+        this.mapperProvider = mapperProvider;
     }
 
+
     @Override
-    public Response toResponse(EJBException exception) {
+    public Response toResponse(final EJBException exception) {
         return causeToResponse(exception);
     }
 
+
     @Override
-    public boolean isMappable(EJBException exception) {
+    public boolean isMappable(final EJBException exception) {
         try {
-            return (causeToResponse(exception) != null);
-        } catch (Throwable ignored) {
+            return causeToResponse(exception) != null;
+        } catch (final Throwable ignored) {
             return false;
         }
     }
 
-    private Response causeToResponse(EJBException exception) {
 
+    private Response causeToResponse(final EJBException exception) {
         final Exception cause = exception.getCausedByException();
-
         if (cause != null) {
-
-            final ExceptionMapper mapper = mappers.get().findMapping(cause);
+            final ExceptionMapper mapper = mapperProvider.get().findMapping(cause);
             if (mapper != null && mapper != this) {
-
                 return mapper.toResponse(cause);
-
             } else if (cause instanceof WebApplicationException) {
-
                 return ((WebApplicationException) cause).getResponse();
             }
         }

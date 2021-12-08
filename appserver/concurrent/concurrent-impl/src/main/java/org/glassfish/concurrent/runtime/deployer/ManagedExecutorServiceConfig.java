@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -24,6 +25,8 @@ import org.glassfish.concurrent.config.ManagedExecutorService;
 public class ManagedExecutorServiceConfig extends BaseConfig  {
 
     private int hungAfterSeconds;
+    private long hungLoggerInitialDelaySeconds;
+    private long hungLoggerIntervalSeconds;
     private boolean longRunningTasks;
     private int threadPriority;
     private int corePoolSize;
@@ -35,6 +38,8 @@ public class ManagedExecutorServiceConfig extends BaseConfig  {
     public ManagedExecutorServiceConfig(ManagedExecutorService config) {
         super(config.getJndiName(), config.getContextInfo(), config.getContextInfoEnabled());
         hungAfterSeconds = parseInt(config.getHungAfterSeconds(), 0);
+        hungLoggerInitialDelaySeconds = parseLong(config.getHungLoggerInitialDelaySeconds(), 60);
+        hungLoggerIntervalSeconds = parseLong(config.getHungLoggerIntervalSeconds(), 60);
         longRunningTasks = Boolean.valueOf(config.getLongRunningTasks());
         threadPriority = parseInt(config.getThreadPriority(), Thread.NORM_PRIORITY);
         corePoolSize = parseInt(config.getCorePoolSize(), 0);
@@ -46,6 +51,14 @@ public class ManagedExecutorServiceConfig extends BaseConfig  {
 
     public int getHungAfterSeconds() {
         return hungAfterSeconds;
+    }
+
+    public long getHungLoggerInitialDelaySeconds() {
+        return hungLoggerInitialDelaySeconds;
+    }
+
+    public long getHungLoggerIntervalSeconds() {
+        return hungLoggerIntervalSeconds;
     }
 
     public boolean isLongRunningTasks() {

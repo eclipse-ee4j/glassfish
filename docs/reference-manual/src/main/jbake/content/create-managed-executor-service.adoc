@@ -27,6 +27,8 @@ asadmin [asadmin-options] create-managed-executor-service [--help]
 [--threadpriority threadpriority]
 [--longrunningtasks={false|true}]
 [--hungafterseconds hungafterseconds]
+[--hungloggerinitialdelayseconds hungloggerinitialdelayseconds]
+[--hungloggerintervalseconds hungloggerintervalseconds]
 [--corepoolsize corepoolsize]
 [--maximumpoolsize maximumpoolsize]
 [--keepaliveseconds keepaliveseconds]
@@ -81,6 +83,12 @@ asadmin-options::
   Specifies the number of seconds that a task can execute before it is
   considered unresponsive. The default value is 0, which means that
   tasks are never considered unresponsive.
+`--hungloggerinitialdelayseconds`::
+  Specifies the number of seconds to delay logging the detection of hung
+  tasks. The default value is 60.
+`--hungloggerintervalseconds`::
+  Specifies the number of seconds between logging the detection of hung
+  tasks. The default value is 60.
 `--corepoolsize`::
   Specifies the number of threads to keep in a thread pool, even if they
   are idle. The default value is 0. +

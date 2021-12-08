@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2013, 2020 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -60,6 +61,8 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
     protected String contextInfo = CONTEXT_INFO_DEFAULT_VALUE;
     protected String longRunningTasks = Boolean.FALSE.toString();
     protected String hungAfterSeconds = "0";
+    protected String hungLoggerInitialDelaySeconds = "60";
+    protected String hungLoggerIntervalSeconds = "60";
     protected String corePoolSize = "0";
     protected String keepAliveSeconds = "60";
     protected String threadLifetimeSeconds = "0";
@@ -141,6 +144,8 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         threadPriority = (String) attributes.get(THREAD_PRIORITY);
         longRunningTasks = (String) attributes.get(LONG_RUNNING_TASKS);
         hungAfterSeconds = (String) attributes.get(HUNG_AFTER_SECONDS);
+        hungLoggerInitialDelaySeconds = (String) attributes.get(HUNG_LOGGER_INITIAL_DELAY_SECONDS);
+        hungLoggerIntervalSeconds = (String) attributes.get(HUNG_LOGGER_INTERVAL_SECONDS);
         corePoolSize = (String) attributes.get(CORE_POOL_SIZE);
         keepAliveSeconds = (String) attributes.get(KEEP_ALIVE_SECONDS);
         threadLifetimeSeconds = (String) attributes.get(THREAD_LIFETIME_SECONDS);
@@ -169,6 +174,8 @@ public abstract class ManagedExecutorServiceBaseManager implements ResourceManag
         managedExecutorService.setContextInfo(contextInfo);
         managedExecutorService.setThreadPriority(threadPriority);
         managedExecutorService.setHungAfterSeconds(hungAfterSeconds);
+        managedExecutorService.setHungLoggerInitialDelaySeconds(hungLoggerInitialDelaySeconds);
+        managedExecutorService.setHungLoggerIntervalSeconds(hungLoggerIntervalSeconds);
         managedExecutorService.setCorePoolSize(corePoolSize);
         managedExecutorService.setKeepAliveSeconds(keepAliveSeconds);
         managedExecutorService.setThreadLifetimeSeconds(threadLifetimeSeconds);

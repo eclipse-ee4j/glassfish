@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -171,7 +172,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         }
         managedExecutorServiceMap.put(jndiName, mes);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
-            scheduleInternalTimer();
+            scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds());
         }
         return mes;
     }
@@ -213,7 +214,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         }
         managedScheduledExecutorServiceMap.put(jndiName, mes);
         if (config.getHungAfterSeconds() > 0L && !config.isLongRunningTasks()) {
-            scheduleInternalTimer();
+            scheduleInternalTimer(config.getHungLoggerInitialDelaySeconds(), config.getHungLoggerIntervalSeconds());
         }
         return mes;
     }
@@ -299,7 +300,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
         return contextTypeArray.toArray(contextTypes);
     }
 
-    private void scheduleInternalTimer() {
+    private void scheduleInternalTimer(long initialDelay, long interval) {
         if (internalScheduler == null) {
             String name = "glassfish-internal";
             ManagedThreadFactoryImpl managedThreadFactory = new ManagedThreadFactoryImpl(
@@ -316,7 +317,7 @@ public class ConcurrentRuntime implements PostConstruct, PreDestroy {
                     createContextService(name + "-contextservice",
                             CONTEXT_INFO_CLASSLOADER, "true", false),
                     AbstractManagedExecutorService.RejectPolicy.ABORT);
-            internalScheduler.scheduleAtFixedRate(new HungTasksLogger(), 1L, 1L, TimeUnit.MINUTES);
+            internalScheduler.scheduleAtFixedRate(new HungTasksLogger(), initialDelay, interval, TimeUnit.SECONDS);
         }
     }
 

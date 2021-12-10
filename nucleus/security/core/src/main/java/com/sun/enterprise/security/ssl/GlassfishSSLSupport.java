@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2010, 2021 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -16,20 +17,21 @@
 
 package com.sun.enterprise.security.ssl;
 
+import com.sun.enterprise.security.SecurityLoggerInfo;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.security.cert.Certificate;
 import java.security.cert.CertificateFactory;
+import java.security.cert.X509Certificate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.net.ssl.SSLEngine;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocket;
-import javax.security.cert.X509Certificate;
 
 import org.glassfish.grizzly.ssl.SSLSupport;
-
-import com.sun.enterprise.security.SecurityLoggerInfo;
 
 /**
  *
@@ -84,8 +86,8 @@ public class GlassfishSSLSupport implements SSLSupport {
         if (session == null) {
             return null;
         }
-        X509Certificate[] certs = null;
-        certs = session.getPeerCertificateChain();
+        Certificate[] certs = null;
+        certs = session.getPeerCertificates();
         if (certs == null) {
             certs = new X509Certificate[0];
         }
@@ -151,9 +153,9 @@ public class GlassfishSSLSupport implements SSLSupport {
     }
 
     private Object[] getX509Certs() {
-        X509Certificate certs[] = null;
+        Certificate[] certs = null;
         try {
-            certs = session.getPeerCertificateChain();
+            certs = session.getPeerCertificates();
         } catch (Throwable ex) {
             // Get rid of the warning in the logs when no Client-Cert is
             // available
@@ -162,13 +164,13 @@ public class GlassfishSSLSupport implements SSLSupport {
         if (certs == null) {
             certs = new X509Certificate[0];
         }
-        java.security.cert.X509Certificate[] x509Certs = new java.security.cert.X509Certificate[certs.length];
+        X509Certificate[] x509Certs = new X509Certificate[certs.length];
         for (int i = 0; i < x509Certs.length; i++) {
             try {
                 byte buffer[] = certs[i].getEncoded();
                 CertificateFactory cf = CertificateFactory.getInstance("X.509");
                 ByteArrayInputStream stream = new ByteArrayInputStream(buffer);
-                x509Certs[i] = (java.security.cert.X509Certificate) cf.generateCertificate(stream);
+                x509Certs[i] = (X509Certificate) cf.generateCertificate(stream);
                 if (logger.isLoggable(Level.FINEST)) {
                     logger.log(Level.FINE, "Cert #{0} = {1}", new Object[] { i, x509Certs[i] });
                 }

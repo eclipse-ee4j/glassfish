@@ -1,6 +1,6 @@
 /*
- * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  * Copyright (c) 2021 Contributors to the Eclipse Foundation
+ * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -20,8 +20,8 @@ package org.glassfish.weld;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.jasper.runtime.JspApplicationContextImpl;
 import org.glassfish.cdi.CDILoggerInfo;
+import org.glassfish.wasp.runtime.JspApplicationContextImpl;
 import org.jboss.weld.module.web.el.WeldELContextListener;
 
 import jakarta.enterprise.inject.spi.BeanManager;

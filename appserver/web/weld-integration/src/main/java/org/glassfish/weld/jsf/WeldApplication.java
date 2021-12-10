@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -19,7 +20,7 @@ package org.glassfish.weld.jsf;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.apache.jasper.runtime.JspApplicationContextImpl;
+import org.glassfish.wasp.runtime.JspApplicationContextImpl;
 import org.glassfish.weld.util.Util;
 
 import jakarta.el.ELContextListener;

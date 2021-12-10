@@ -106,7 +106,7 @@
         <!-- Jakarta REST -->
         <jax-rs-api.spec.version>3.0</jax-rs-api.spec.version>
         <jax-rs-api.impl.version>3.1.0</jax-rs-api.impl.version>
-        <jersey.version>3.0.3</jersey.version>
+        <jersey.version>3.1.0-SNAPSHOT</jersey.version>
 
         <!-- Jakarta Mail -->
         <jakarta.mail-api.version>2.1.0</jakarta.mail-api.version>
@@ -293,7 +293,7 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.main</artifactId>
-                <version>7.0.1</version>
+                <version>7.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.felix</groupId>
@@ -1024,6 +1024,8 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <!-- Add the license and the notice file to every module -->
             <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>

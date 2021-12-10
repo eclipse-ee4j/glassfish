@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
+	Copyright (c) 2021 Contributors to Eclipse Foundation.
     Copyright (c) 1997, 2021 Oracle and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -105,10 +106,10 @@
 
         <!-- Jakarta EE Security + Authentication/Authorization -->
         <jakarta.security.enterprise-api.version>2.0.0</jakarta.security.enterprise-api.version>
-        <jakarta.authorization-api.version>2.0.0</jakarta.authorization-api.version>
+        <jakarta.authorization-api.version>2.1.0-RC1</jakarta.authorization-api.version>
         <jakarta.authentication-api.version>2.0.0</jakarta.authentication-api.version>
         <soteria.version>2.0.1</soteria.version>
-        <exousia.version>1.0.0</exousia.version>
+        <exousia.version>2.1.0-M1</exousia.version>
 
         <!-- Jakarta Messaging -->
         <jms-api.version>3.0.0</jms-api.version>
@@ -143,7 +144,7 @@
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.1.0</jsp-api.version>
-        <wasp.version>3.0.2</wasp.version>
+        <wasp.version>3.1.0-SNAPSHOT</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
         <woodstox.version>6.2.7</woodstox.version>

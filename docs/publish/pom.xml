@@ -192,6 +192,9 @@
                                     <scmBranch>gh-pages</scmBranch>
                                     <skipDeletedFiles>false</skipDeletedFiles>
                                     <checkinComment>Update docs</checkinComment>
+                                    <ignorePathsToDelete>
+                                        <ignorePathToDelete>docs/latest</ignorePathToDelete>
+                                    </ignorePathsToDelete>
                                 </configuration>
                             </execution>
                         </executions>

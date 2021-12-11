@@ -4,6 +4,7 @@ title=Extending the Administration Console
 next=extending-asadmin.html
 prev=writing-hk2-components.html
 ~~~~~~
+
 Extending the Administration Console
 ====================================
 
@@ -11,8 +12,8 @@ Extending the Administration Console
 
 
 [[extending-the-administration-console]]
-3 Extending the Administration Console
---------------------------------------
+Extending the Administration Console
+------------------------------------
 
 The Administration Console is a browser-based tool for administering
 Eclipse GlassFish Server. It features an easy-to-navigate interface and online
@@ -27,7 +28,7 @@ Administration Console.
 
 This chapter refers to a simple example called `console-sample-ip` that
 illustrates how to provide Administration Console features for a
-hypothetical add-on component. 
+hypothetical add-on component.
 
 The following topics are addressed here:
 
@@ -100,14 +101,12 @@ To implement the console provider for your add-on component, write a
 Java class that is similar to the following example.
 
 [[GSACG00019]][[ghosz]]
-
-
 Example 3-1 Example `ConsoleProvider` Implementation
 
 This example shows a simple implementation of the `ConsoleProvider`
 interface:
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.admingui.plugin;
 
@@ -191,7 +190,7 @@ unique name or ID value for the add-on component.
 
 In the example, the element is declared as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <console-config id="sample">
     ...
@@ -204,7 +203,7 @@ Node to the Navigation Tree] for an example.
 
 For example, a URL to an image named `my.gif` might look like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sun:image url="/resource/sample/images/my.gif" />
 ----
@@ -249,16 +248,12 @@ For each `integration-point` element, specify the following attributes.
   directory `project/src/main/resources/`.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The order in which these attributes are specified does not matter, and
 in the example `console-config.xml` file the order varies. To improve
 readability, this chapter uses the same order throughout.
-
-|=======================================================================
+====
 
 
 The following topics are addressed here:
@@ -298,30 +293,24 @@ include the following:
   Under the HTTP Service node
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The `webContainer` and `httpService` nodes are available only if you
 installed the web container module for the Administration Console (the
 `console-web-gui.jar` OSGi bundle).
-
-|=======================================================================
+====
 
 
 If you do not specify a `parentId`, the new content is added to the root
 of the integration point, in this case the top level node, `tree`.
 
 [[GSACG00020]][[ghpmb]]
-
-
 Example 3-2 Example Tree Node Integration Point
 
 For example, the following `integration-point` element uses a `parentId`
 of `tree` to place the new node at the top level.
 
-[source,oac_no_warn]
+[source,xml]
 ----
         <integration-point
                 id="samplenode"
@@ -349,20 +338,18 @@ nodes under the Resources and Configuration nodes.
 [[ghoej]][[GSACG00158]][[creating-a-javaserver-faces-page-for-your-node]]
 
 Creating a Jakarta Server Faces Page for Your Node
-++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
 A Jakarta Server Faces page for a tree node uses the tag `sun:treeNode`.
 This tag provides all the capabilities of the Project Woodstock tag
 `webuijsf:treeNode`.
 
 [[GSACG00021]][[ghpmn]]
-
-
 Example 3-3 Example Jakarta Server Faces Page for a Tree Node
 
 In the example, the `sampleNode.jsf` file has the following content:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sun:treeNode
         id="treenode1"
@@ -394,7 +381,7 @@ pages, specify the attributes of this tag as follows:
   `id` value as the root of the URL; in this case, it is `sample` (see
   link:#ghmpg[Specifying the ID of an Add-On Component]). The rest of
   the URL is relative to the `src/main/resources/` directory, where
-  `sampleNode.jsf` resides. +
+  `sampleNode.jsf` resides.
   The `url` tag in this example passes a `name` parameter to the
   Jakarta Server Faces page.
 `imageURL`::
@@ -418,14 +405,12 @@ Administration Console. You can also create sub-tabs. Once again, the
 `parentId` element specifies where to place the tab or tab set.
 
 [[GSACG00022]][[ghplc]]
-
-
 Example 3-4 Example Tab Integration Point
 
 In the example, the following `integration-point` element adds a new tab
 on the main GlassFish Server page of the Administration Console:
 
-[source,oac_no_warn]
+[source,xml]
 ----
         <integration-point
             id="sampletab"
@@ -450,15 +435,13 @@ tab set. This value is optional.
 page that displays the tab.
 
 [[GSACG00023]][[ghplu]]
-
-
 Example 3-5 Example Tab Set Integration Points
 
 The following `integration-point` elements add a new tab with two
 sub-tabs, also on the main GlassFish Server page of the Administration
 Console:
 
-[source,oac_no_warn]
+[source,xml]
 ----
         <integration-point
             id="sampletabwithsubtab"
@@ -467,7 +450,6 @@ Console:
             priority="300"
             content="sampleTabWithSubTab.jsf"
         />
-
         <integration-point
             id="samplesubtab1"
             parentid="sampletabwithsubtab"
@@ -509,20 +491,18 @@ the tabs.
 [[ghovg]][[GSACG00159]][[creating-javaserver-faces-pages-for-your-tabs]]
 
 Creating Jakarta Server Faces Pages for Your Tabs
-+++++++++++++++++++++++++++++++++++++++++++++
++++++++++++++++++++++++++++++++++++++++++++++++++
 
 A Jakarta Server Faces page for a tab uses the tag `sun:tab`. This tag
 provides all the capabilities of the Project Woodstock tag
 `webuijsf:tab`.
 
 [[GSACG00024]][[ghpnt]]
-
-
 Example 3-6 Example Jakarta Server Faces Page for a Tab
 
 In the example, the `sampleTab.jsf` file has the following content:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sun:tab id="sampletab" immediate="true" text="Sample First Tab">
     <!command
@@ -533,14 +513,10 @@ In the example, the `sampleTab.jsf` file has the following content:
 ----
 
 
-[width="100%",cols="<100%",]
-|======================================================================
-a|
-Note:
-
+[NOTE]
+====
 In the actual file there are no line breaks in the `gf.redirect` value.
-
-|======================================================================
+====
 
 
 In your own Jakarta Server Faces pages, specify the attributes of this tag
@@ -568,12 +544,10 @@ identical to `sampleTab.jsf`. The most important difference is that each
 sets the session attribute `serverInstTabs` to the base name of the
 Jakarta Server Faces file that corresponds to that tab:
 
-[source,oac_no_warn]
+[source]
 ----
 setSessionAttribute(key="serverInstTabs" value="sampleTab");
-
 setSessionAttribute(key="serverInstTabs" value="sampleSubTab1");
-
 setSessionAttribute(key="serverInstTabs" value="sampleSubTab2");
 ----
 
@@ -590,14 +564,12 @@ See link:#ghozn[Adding a Task Group to the Common Tasks Page] for
 information on adding a task group.
 
 [[GSACG00025]][[ghpox]]
-
-
 Example 3-7 Example Task Integration Point
 
 In the example `console-config.xml` file, the following
 `integration-point` element adds a task to the Deployment task group:
 
-[source,oac_no_warn]
+[source,xml]
 ----
         <integration-point
                 id="samplecommontask"
@@ -610,8 +582,7 @@ In the example `console-config.xml` file, the following
 
 This example specifies the following values:
 
-* The `id` value, `sampleCommonTask`, specifies the integration point
-ID.
+* The `id` value, `sampleCommonTask`, specifies the integration point ID.
 * The `parentId` value, `deployment`, specifies that the task is to be
 placed in the Deployment task group.
 * The `type` value, `org.glassfish.admingui:commonTask`, specifies the
@@ -624,21 +595,18 @@ Faces page that displays the task.
 [[ghoeu]][[GSACG00160]][[creating-a-javaserver-faces-page-for-your-task]]
 
 Creating a Jakarta Server Faces Page for Your Task
-++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++
 
-A Jakarta Server Faces page for a task uses the tag `sun:commonTask`. This
-tag provides all the capabilities of the Project Woodstock tag
-`webuijsf:commonTask`.
+A Jakarta Server Faces page for a task uses the tag `sun:commonTask`.
+This tag provides all the capabilities of the Project Woodstock tag `webuijsf:commonTask`.
 
 [[GSACG00026]][[gjkgd]]
-
-
 Example 3-8 Example Jakarta Server Faces Page for a Task
 
 In the example, the `sampleCommonTask.jsf` file has the following
 content:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sun:commonTask
         text="Sample Application Page"
@@ -649,15 +617,10 @@ content:
 ----
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-In the actual file, there is no line break in the `onClick` attribute
-value.
-
-|=======================================================================
+[NOTE]
+====
+In the actual file, there is no line break in the `onClick` attribute value.
+====
 
 
 This file uses the `sun:commonTask` tag to specify the task. In your own
@@ -682,15 +645,13 @@ most important tasks for your add-on component. To add a task group, use
 an integration point of type `org.glassfish.admingui:commonTask`.
 
 [[GSACG00027]][[ghplk]]
-
-
 Example 3-9 Example Task Group Integration Point
 
 In the example `console-config.xml` file, the following
 `integration-point` element adds a new task group to the Common Tasks
 page:
 
-[source,oac_no_warn]
+[source,xml]
 ----
        <integration-point
             id="samplegroup"
@@ -716,21 +677,19 @@ Faces page that displays the task.
 [[ghoya]][[GSACG00161]][[creating-a-javaserver-faces-page-for-your-task-group]]
 
 Creating a Jakarta Server Faces Page for Your Task Group
-++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 A Jakarta Server Faces page for a task group uses the tag
 `sun:commonTasksGroup`. This tag provides all the capabilities of the
 Project Woodstock tag `webuijsf:commonTasksGroup`.
 
 [[GSACG00028]][[ghpqe]]
-
-
 Example 3-10 Example Jakarta Server Faces Page for a Task Group
 
 In the example, the `sampleTaskGroup.jsf` file has the following
 content:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sun:commonTasksGroup title="My Own Sample Group">
     <sun:commonTask
@@ -749,15 +708,10 @@ content:
 ----
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-In the actual file, there are no line breaks in the `onClick` attribute
-values.
-
-|=======================================================================
+[NOTE]
+====
+In the actual file, there are no line breaks in the `onClick` attribute values.
+====
 
 
 This file uses the `sun:commonTasksGroup` tag to specify the task group,
@@ -771,21 +725,17 @@ Adding Content to a Page
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
 You can add content for your add-on component to an existing top-level
-page, such as the Configuration page or the Resources page. To add
-content to one of these pages, use an integration point of type
-`org.glassfish.admingui:configuration` or
-`org.glassfish.admingui:resources`.
+page, such as the Configuration page or the Resources page.
+To add content to one of these pages, use an integration point of type
+`org.glassfish.admingui:configuration` or `org.glassfish.admingui:resources`.
 
 [[GSACG00029]][[ghpnu]]
-
-
 Example 3-11 Example Resources Page Implementation Point
 
 In the example `console-config.xml` file, the following
-`integration-point` element adds new content to the top-level Resources
-page:
+`integration-point` element adds new content to the top-level Resources page:
 
-[source,oac_no_warn]
+[source,xml]
 ----
         <integration-point
                 id="sampleresourcelink"
@@ -798,19 +748,18 @@ page:
 
 This example specifies the following values:
 
-* The `id` value, `sampleResourceLink`, specifies the integration point
-ID.
+* The `id` value, `sampleResourceLink`, specifies the integration point ID.
 * The `parentId` value, `propSheetSection`, specifies that the content
 is to be a section of a property sheet on the page.
 * The `type` value, `org.glassfish.admingui:resources`, specifies the
-integration point type as the Resources page. +
+integration point type as the Resources page.
++
 To add content to the Configuration page, specify the `type` value as
 `org.glassfish.admingui:configuration`.
 * The `priority` value, `100`, specifies the order of the content on the
 Resources page. The high value places it at the top of the page.
 * The `content` value, `sampleResourceLink.jsf`, specifies the
-JavaServer Faces page that displays the new content on the Resources
-page.
+JavaServer Faces page that displays the new content on the Resources page.
 
 Another `integration-point` element in the `console-config.xml` file
 places similar content on the Configuration page.
@@ -818,7 +767,7 @@ places similar content on the Configuration page.
 [[ghpao]][[GSACG00162]][[creating-a-javaserver-faces-page-for-your-page-content]]
 
 Creating a Jakarta Server Faces Page for Your Page Content
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 A Jakarta Server Faces page for page content often uses the tag
 `sun:property` to specify a property on a property sheet. This tag
@@ -826,14 +775,12 @@ provides all the capabilities of the Project Woodstock tag
 `webuijsf:property`.
 
 [[GSACG00030]][[ghpoz]]
-
-
 Example 3-12 Example Jakarta Server Faces Page for a Resource Page Item
 
 In the example, the `sampleResourceLink.jsf` file has the following
 content:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sun:property>
     <sun:hyperlink
@@ -881,8 +828,6 @@ configure your component or to perform tasks such as creating and
 editing resources for it.
 
 [[GSACG00031]][[ghple]]
-
-
 Example 3-13 Example Jakarta Server Faces Page for a Property Sheet
 
 Most of the user interface features used in the example reference the
@@ -890,7 +835,7 @@ file `testPage.jsf` or (for tabs) the file `tabPage.jsf`. Both files are
 in the `src/main/resources/page/` directory. The `testPage.jsf` file
 looks like this:
 
-[source,oac_no_warn]
+[source]
 ----
 <!composition template="/templates/default.layout" guiTitle="TEST Sample Page Title">
 <!define name="content">
@@ -928,7 +873,7 @@ To add internationalization support for your add-on component to the
 Administration Console, you can place an event and handler like the
 following at the top of your page:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <!initPage
     setResourceBundle(key="yourI18NKey" bundle="bundle.package.BundleName")
@@ -950,13 +895,11 @@ Cascading Style Sheet (CSS) files and images that are used in the
 Administration Console.
 
 [[GSACG00032]][[ghpls]]
-
-
 Example 3-14 Example Custom Theme Integration Point
 
 For example, the following integration point specifies a custom theme:
 
-[source,oac_no_warn]
+[source,xml]
 ----
         <integration-point
                 id="myownbrand"
@@ -997,14 +940,12 @@ Administration Console:
   popup window.
 
 [[GSACG00033]][[ghpla]]
-
-
 Example 3-15 Example of Branding Integration Points
 
 For example, you might specify the following integration points. The
 content for each integration point is defined in an include file.
 
-[source,oac_no_warn]
+[source,xml]
 ----
        <integration-point
                id="myownbrandmast"
@@ -1064,20 +1005,25 @@ extend.
 To Create an Integration Point Type
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Decide on the name of your integration point type. +
+1. Decide on the name of your integration point type.
++
 The integration point type must be a unique identifier. You might use
 the package name of your integration point, with a meaningful name
-appended to the end, as in the following example: +
-[source,oac_no_warn]
+appended to the end, as in the following example:
++
+[source]
 ----
 org.company.project:myMonitoringTabs
 ----
-2.  After you have an integration point ID, use handlers to insert the
-integration point implementation(s). +
+
+2. After you have an integration point ID, use handlers to insert the
+integration point implementation(s).
++
 Include code like the following below the place in your Jakarta Server Faces
 page where you would like to enable others to add their integration
-point implementations: +
-[source,oac_no_warn]
+point implementations:
++
+[source]
 ----
 <event>
     <!afterCreate
@@ -1096,5 +1042,3 @@ If you omit the `root` argument to `includeIntegrations`, all components
 on the entire page can be used for the `parentId` of the integration
 points.
 
-
-----

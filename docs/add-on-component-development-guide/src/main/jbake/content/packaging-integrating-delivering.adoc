@@ -4,6 +4,7 @@ title=Packaging, Integrating, and Delivering an Add-On Component
 next=integration-point-reference.html
 prev=session-persistence-modules.html
 ~~~~~~
+
 Packaging, Integrating, and Delivering an Add-On Component
 ==========================================================
 
@@ -11,8 +12,8 @@ Packaging, Integrating, and Delivering an Add-On Component
 
 
 [[packaging-integrating-and-delivering-an-add-on-component]]
-9 Packaging, Integrating, and Delivering an Add-On Component
-------------------------------------------------------------
+Packaging, Integrating, and Delivering an Add-On Component
+----------------------------------------------------------
 
 Packaging an add-on component enables the component to interact with the
 GlassFish Server kernel in the same way as other components. Integrating
@@ -74,4 +75,3 @@ For information about how to create IPS packages, see the
 http://wikis.oracle.com/display/IpsBestPractices/[IPS best practices
 document] (`http://wikis.oracle.com/display/IpsBestPractices/`).
 
-----

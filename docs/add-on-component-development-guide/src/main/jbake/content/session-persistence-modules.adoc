@@ -4,6 +4,7 @@ title=Creating a Session Persistence Module
 next=packaging-integrating-delivering.html
 prev=adding-container-capabilities.html
 ~~~~~~
+
 Creating a Session Persistence Module
 =====================================
 
@@ -11,8 +12,8 @@ Creating a Session Persistence Module
 
 
 [[creating-a-session-persistence-module]]
-8 Creating a Session Persistence Module
----------------------------------------
+Creating a Session Persistence Module
+-------------------------------------
 
 GlassFish Server enables you to create a session persistence module in
 the web container for high availability-related functionality by
@@ -34,7 +35,7 @@ Implementing the `PersistenceStrategyBuilder` Interface
 You can implement the `PersistenceStrategyBuilder` interface by creating
 a new web session manager type.
 
-[source,oac_no_warn]
+[source,java]
 ----
 
 package com.sun.enterprise.web;
@@ -63,7 +64,7 @@ Here is an example of how to implement the `PersistenceStrategyBuilder`
 interface by creating a new web session manager and setting a store for
 it:
 
-[source,oac_no_warn]
+[source,java]
 ----
 
 @Service(name="xyz")
@@ -96,17 +97,12 @@ public class XYZStrategyBuilder implements PersistenceStrategyBuilder {
 If a `Manager` is provided, then it will be used in GlassFish Server.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If a backing store is required, it is the responsibility of the
 `Manager` to make sure that the `findSession` method correctly uses the
 `Store` that the `Manager` provides.
-
-|=======================================================================
-
+====
 
 [[sthref10]]
 
@@ -116,7 +112,7 @@ Session Manager
 This example defines a session manager type that is named
 `MyHASolution`.
 
-[source,oac_no_warn]
+[source,java]
 ----
 
 @Service(name="MyHASolution")
@@ -166,9 +162,8 @@ Based on the `domain.xml` and `glassfish-web.xml` settings, the web
 container looks up the appropriate `PersistenceStrategyBuilder`
 interface in the Habitat and uses it.
 
-[source,oac_no_warn]
+[source,xml]
 ----
-
        <glassfish-web-app>
          <session-config>
            <session-manager persistence-type="myHASolution"/>

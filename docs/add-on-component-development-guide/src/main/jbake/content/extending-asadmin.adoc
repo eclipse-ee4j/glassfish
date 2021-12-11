@@ -4,6 +4,7 @@ title=Extending the asadmin Utility
 next=adding-monitoring-capabilities.html
 prev=extending-the-admin-console.html
 ~~~~~~
+
 Extending the asadmin Utility
 =============================
 
@@ -11,8 +12,8 @@ Extending the asadmin Utility
 
 
 [[extending-the-asadmin-utility]]
-4 Extending the `asadmin` Utility
----------------------------------
+Extending the `asadmin` Utility
+-------------------------------
 
 The `asadmin` utility is a command-line tool for configuring and
 administering Eclipse GlassFish Server. Extending the `asadmin` utility enables
@@ -24,8 +25,7 @@ link:../reference-manual/asadmin.html#GSRFM00263[`asadmin`(1M)] man page.
 
 The following topics are addressed here:
 
-* link:#ghpuj[About the Administrative Command Infrastructure of
-GlassFish Server]
+* link:#ghpuj[About the Administrative Command Infrastructure of GlassFish Server]
 * link:#ghpwe[Adding an `asadmin` Subcommand]
 * link:#ghpwa[Adding Parameters to an `asadmin` Subcommand]
 * link:#gkygt[Making `asadmin` Subcommands Cluster-Aware]
@@ -89,15 +89,13 @@ interface with the `org.jvnet.hk2.annotations.Service` annotation. The
 `@Service` annotation ensures that the following requirements for your
 implementations are met:
 
-* The implementations are eligible for resource injection and resource
-extraction.
+* The implementations are eligible for resource injection and resource extraction.
 * The implementations are location independent, provided that the
-component that contains them is made known to the GlassFish Server
-runtime. +
+component that contains them is made known to the GlassFish Server runtime.
++
 For information about how to make a component known to the GlassFish
 Server runtime, see
-link:packaging-integrating-delivering.html#ghmne[Integrating an Add-On
-Component With GlassFish Server].
+link:packaging-integrating-delivering.html#ghmne[Integrating an Add-On Component With GlassFish Server].
 
 [[ghrpm]][[GSACG00195]][[specifying-the-name-of-an-asadmin-subcommand]]
 
@@ -108,14 +106,10 @@ To specify the name of the subcommand, set the `name` element of the
 `@Service` annotation to the name.
 
 
-[width="100%",cols="<100%",]
-|===================================
-a|
-Note:
-
+[NOTE]
+====
 Subcommand names are case-sensitive.
-
-|===================================
+====
 
 
 Subcommands that are supplied in GlassFish Server distributions
@@ -124,12 +118,9 @@ consistency with the names of subcommands that are supplied in GlassFish
 Server distributions, follow these conventions when specifying the name
 of a subcommand:
 
-* For subcommands that create an object of a particular type, use the
-name `create-`object`.`
-* For subcommands that delete an object of a particular type, use the
-name `delete-`object`.`
-* For subcommands that list all objects of a particular type, use the
-name `list-`objects`.`
+* For subcommands that create an object of a particular type, use the name `create-`object`.`
+* For subcommands that delete an object of a particular type, use the name `delete-`object`.`
+* For subcommands that list all objects of a particular type, use the name `list-`objects`.`
 
 For example, GlassFish Server provides the following subcommands for
 creating, deleting, and listing HTTP listeners:
@@ -138,11 +129,13 @@ creating, deleting, and listing HTTP listeners:
 * `delete-http-listener`
 * `list-http-listeners`
 
-You must also ensure that the name of your subcommand is unique. To
-obtain a complete list of the names of all `asadmin` subcommands that
-are installed, use the link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand. For
-a complete list of `asadmin` subcommands that are supplied in GlassFish
-Server distributions, see the link:../reference-manual/toc.html#GSRFM[Eclipse GlassFish Reference Manual].
+You must also ensure that the name of your subcommand is unique.
+To obtain a complete list of the names of all `asadmin` subcommands that
+are installed, use the
+link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`] subcommand.
+For a complete list of `asadmin` subcommands that are supplied in
+GlassFish Server distributions, see the
+link:../reference-manual/toc.html#GSRFM[Eclipse GlassFish Reference Manual].
 
 [[ghrng]][[GSACG00196]][[ensuring-that-an-admincommand-implementation-is-stateless]]
 
@@ -156,10 +149,8 @@ subcommand is stateless. To ensure that the implementation of the
 implementation with the `org.jvnet.hk2.annotations.Scoped` annotation.
 In the `@Scoped` annotation, set the scope as follows:
 
-* To instantiate the subcommand for each lookup, set the scope to
-`PerLookup.class`.
-* To instantiate the subcommand only once for each session, set the
-scope to `Singleton`.
+* To instantiate the subcommand for each lookup, set the scope to `PerLookup.class`.
+* To instantiate the subcommand only once for each session, set the scope to `Singleton`.
 
 [[ghrqx]][[GSACG00197]][[example-of-adding-an-asadmin-subcommand]]
 
@@ -167,15 +158,13 @@ Example of Adding an `asadmin` Subcommand
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 [[GSACG00034]][[ghrqq]]
-
-
 Example 4-1 Adding an `asadmin` Subcommand
 
 This example shows the declaration of the class `CreateMycontainer` that
 represents an `asadmin` subcommand that is named `create-mycontainer`.
 The subcommand is instantiated for each lookup.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.mycontainer;
 
@@ -308,14 +297,10 @@ for specifying terse output are as follows:
 * Long form: `--monitor`
 
 
-[width="100%",cols="<100%",]
-|===============================
-a|
-Note:
-
+[NOTE]
+====
 Option names are case-sensitive.
-
-|===============================
+====
 
 
 [[ghpvy]][[GSACG00163]][[specifying-the-long-form-of-an-option-name]]
@@ -413,15 +398,12 @@ Example of Adding Parameters to an `asadmin` Subcommand
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 [[GSACG00035]][[ghpuh]]
-
-
 Example 4-2 Adding Parameters to an `asadmin` Subcommand
 
 This example shows the code for adding parameters to an `asadmin`
 subcommand with the properties as shown in the table.
 
-[width="172%",cols="<17%,<12%,<8%,<5%,<6%,<46%,<6%",options="header",]
-|=======================================================================
+|===
 |Name |Represented As |Acceptable Values |Default Value |Optional or
 Required |Short Name |Option or Operand
 |`--originator` |A field that is named `originator` |Any character
@@ -435,21 +417,21 @@ character string |None defined |Optional |None |Option
 
 |`--containername` |A field that is named `containername` |Any character
 string |None defined |Required |None |Operand
-|=======================================================================
+|===
 
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.api.Param;
 ...
 {
-…
+//…
     @Param
     String originator;
 
     @Param(name="description", optional=true)
-    …
+    //…
     String mycontainerDescription
 
     @Param (acceptableValues="true,false", defaultValue="false", optional=true)
@@ -457,7 +439,7 @@ import org.glassfish.api.Param;
 
     @Param(primary=true)
     String containername;
-…
+//…
 }
 ----
 
@@ -526,7 +508,7 @@ server instances, clusters, and configurations. Not specifying a
 `@TargetType` annotation is equivalent to specifying the following
 `@TargetType` annotation:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @TargetType(CommandTarget.DAS,CommandTarget.STANDALONE_SERVER,CommandTarget.CLUSTER,CommandTarget.CONFIG)
 ----
@@ -536,7 +518,7 @@ Subcommands that support other combinations of targets must specify
 supports only standalone server instance and cluster targets. Its
 `@TargetType` annotation is as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @TargetType(CommandTarget.STANDALONE_SERVER,CommandTarget.CLUSTER)
 ----
@@ -552,7 +534,7 @@ enable the new application (which automatically disables the old) on one
 clustered instance at a time. The `@TargetType` annotation for the
 `enable` subcommand is as follows, all on one line:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @TargetType(CommandTarget.DAS,CommandTarget.STANDALONE_INSTANCE,CommandTarget.CLUSTER,
 CommandTarget.CLUSTERED_INSTANCE)
@@ -563,10 +545,10 @@ Note that the `CommandTarget.CLUSTERED_INSTANCE` element is specified.
 The target name specified in the command line is injected into the
 subcommand implementation if the following annotation is present:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Param(optional=true,defaultValue=SystemPropertyConstants.DEFAULT_SERVER_INSTANCE_NAME)
-    String target;
+String target;
 ----
 
 [[gkykm]][[GSACG00207]][[the-target-utility]]
@@ -578,7 +560,7 @@ The `Target` utility is a service, present in the `internal-api` module,
 `org.glassfish.internal.api` package, which a command implementation can
 obtain by using the following annotation:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Inject Target targetUtil;
 ----
@@ -589,7 +571,7 @@ if a server instance is part of a cluster. For example, here is an
 example of using the utility to obtain the configuration for a target
 cluster or server instance:
 
-[source,oac_no_warn]
+[source,java]
 ----
 Config c = targetUtil.getConfig(target);
 ----
@@ -606,10 +588,9 @@ Specifying `asadmin` Subcommand Execution
 By default, all `asadmin` subcommands are automatically replicated and
 run on the DAS and all GlassFish Server instances specified in the
 `--target` option. To run a subcommand only on the DAS, use the
-following `@ExecuteOn` annotation in the `org.glassfish.api.admin`
-package:
+following `@ExecuteOn` annotation in the `org.glassfish.api.admin` package:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @ExecuteOn(RuntimeType.DAS)
 ----
@@ -620,7 +601,7 @@ examples of subcommands that execute only on the DAS.
 To run a subcommand only on applicable server instances, use the
 following `@ExecuteOn` annotation:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @ExecuteOn(RuntimeType.INSTANCE)
 ----
@@ -628,7 +609,7 @@ following `@ExecuteOn` annotation:
 Not specifying an `@ExecuteOn` annotation is equivalent to specifying
 the following `@ExecuteOn` annotation:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @ExecuteOn(RuntimeType.DAS,RuntimeType.INSTANCE)
 ----
@@ -641,8 +622,9 @@ subcommand on a server instance, command execution is considered to have
 failed and further execution is stopped. However, you can choose to
 ignore the failure or warn the user rather than stopping further command
 execution. Specify the `ifFailure` element and set it to
-`FailurePolicy.Ignore` or `FailurePolicy.Warn`. For example: +
-[source,oac_no_warn]
+`FailurePolicy.Ignore` or `FailurePolicy.Warn`. For example:
++
+[source,java]
 ----
 @ExecuteOn(value={RuntimeType.DAS}, ifFailure=FailurePolicy.Warn)
 ----
@@ -651,8 +633,9 @@ during the command replication process, command execution is considered
 to have failed and further execution is stopped. However, you can choose
 to ignore the failure or warn the user rather than stopping further
 command execution. Specify the `ifOffline` element and set it to
-`FailurePolicy.Ignore` or `FailurePolicy.Warn`. For example: +
-[source,oac_no_warn]
+`FailurePolicy.Ignore` or `FailurePolicy.Warn`. For example:
++
+[source,java]
 ----
 @ExecuteOn(value={RuntimeType.DAS}, ifOffline=FailurePolicy.Ignore)
 ----
@@ -679,49 +662,49 @@ annotation (in the `org.jvnet.hk2.annotations` package).
 For example, the `deploy` subcommand requires postprocessing. The
 deployment command implementation looks like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service(name="deploy")
 @ExecuteOn(RuntimeType.DAS)
 public DeployCommand implements AdminCommand {
-//Do Actual Deployment
+// Do Actual Deployment
 }
 ----
 
 A supplemental command that is run after every successful deployment
 looks like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service(name="DeploymentSupplementalCommand")
 @Supplemental("deploy")
 @ExecuteOn(RuntimeType.INSTANCE)
 public DeploymentSupplementalCommand implements AdminCommand {
-//Do logic that happens after deployment has been done
+// Do logic that happens after deployment has been done
 }
 ----
 
 As another example, a subcommand to create a local server instance might
 look like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service(name = "create-local-instance")
 @Scoped(PerLookup.class)
 public final class CreateLocalInstanceCommand implements AdminCommand {
-//Do local instance creation
+// Do local instance creation
 }
 ----
 
 A supplemental command to change Message Queue or load balancer settings
 after local instance creation might look like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service(name="CreateLocalInstanceSupplementalCommand")
 @Supplemental("create-local-instance")
 public CreateLocalInstanceSupplementalCommand implements AdminCommand {
-//Change MQ/LB properties here
+// Change MQ/LB properties here
 }
 ----
 
@@ -742,7 +725,7 @@ To specify that a supplemental command is run before the main command,
 set the `on` element of the `@Supplemental` annotation to
 `Supplemental.Timing.Before`. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Supplemental(value="mycommand", on=Supplemental.Timing.Before)
 ----
@@ -770,7 +753,7 @@ of another `AdminCommand` that has already been injected.
 To list parameter names you want excluded from the `ParameterMap`, pass
 the following:
 
-[source,oac_no_warn]
+[source,java]
 ----
 Set<String>
 ----
@@ -795,7 +778,7 @@ To add message text strings to an `asadmin` subcommand, create a plain
 text file that is named `LocalStrings.properties` to contain the
 strings. Define each string on a separate line of the file as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 key=string
 ----
@@ -804,31 +787,23 @@ key::
   A key that maps the string to a subcommand or a parameter. The format
   to use for key depends on the target to which the key applies and
   whether the target is annotated with the `@I18n` annotation. See the
-  following table. +
+  following table.
++
 [width="100%",cols="<36%,<64%",options="header",]
-|======================================================
+|===
 |Target |Format
-|Subcommand or parameter with the `@I18n` annotation a|
-[source,oac_no_warn]
-----
-subcommand-name.command.resource-name
-----
+|Subcommand or parameter with the `@I18n` annotation
+|`subcommand-name.command.resource-name`
 
-|Subcommand without the `@I18n` annotation a|
-[source,oac_no_warn]
-----
-subcommand-name.command
-----
+|Subcommand without the `@I18n` annotation
+|`subcommand-name.command`
 
-|Parameter without the `@I18n` annotation a|
-[source,oac_no_warn]
-----
-subcommand-name.command.param-name
-----
-
-|======================================================
-
-  The replaceable parts of these formats are as follows: +
+|Parameter without the `@I18n` annotation
+|`subcommand-name.command.param-name`
+|===
++
+The replaceable parts of these formats are as follows:
++
   subcommand-name;;
     The name of the subcommand.
   resource-name;;
@@ -839,22 +814,15 @@ string::
   A string without quotes that contains the text of the message.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 To display the message strings to users, you must provide code in your
 implementation of the `execute` method to display the text. For more
 information about implementing the `execute` method, see
 link:#ghpvn[Enabling an `asadmin` Subcommand to Run].
-
-|=======================================================================
-
+====
 
 [[GSACG00036]][[ghpvm]]
-
-
 Example 4-3 Adding Message Strings to an `asadmin` Subcommand
 
 This example shows the code for adding message strings to the
@@ -871,28 +839,25 @@ contained in the resource `mydesc`, for which internationalization is
 provided. This resource contains the message text
 `A description of the container`.
 * The `--enabled` parameter is associated with the message
-`Whether the container is enabled or disabled`. No internationalization
-support is provided for this message.
+`Whether the container is enabled or disabled`.
+No internationalization support is provided for this message.
 * The `--containername` parameter is associated with the message
-`The container name`. No internationalization support is provided for
-this message.
+`The container name`. No internationalization support is provided for this message.
 
 The addition of the parameters `originator`, `description`, `enabled`
-and `containername` to the subcommand is shown in link:#ghpuh[Example
-4-2].
+and `containername` to the subcommand is shown in link:#ghpuh[Example 4-2].
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.mycontainer;
 
 import org.glassfish.api.admin.AdminCommand;
-...
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
 import org.jvnet.hk2.annotations.Service;
-...
 import org.jvnet.hk2.annotations.Scoped;
 import org.jvnet.hk2.component.PerLookup;
+//...
 
 /**
  * Sample subcommand
@@ -900,8 +865,6 @@ import org.jvnet.hk2.component.PerLookup;
 @Service(name="create-mycontainer")
 @Scoped(PerLookup.class)
 public Class CreateMycontainer implements AdminCommand {
-
-    …
 
     @Param
     String originator;
@@ -915,15 +878,14 @@ public Class CreateMycontainer implements AdminCommand {
 
     @Param(primary=true)
     String containername;
- …
-
+//...
 }
 ----
 
 The following message text strings are defined in the file
 `LocalStrings.properties` for use by the subcommand:
 
-[source,oac_no_warn]
+[source]
 ----
 create-mycontainer.command=Creates a custom container
 create-mycontainer.command.originator=The originator of the container
@@ -941,7 +903,7 @@ To enable an `asadmin` subcommand to run, implement the `execute` method
 in your implementation of the `AdminCommand` interface. The declaration
 of the `execute` method in your implementation must be as follows.
 
-[source,oac_no_warn]
+[source,java]
 ----
     public void execute(AdminCommandContext context);
 ----
@@ -994,7 +956,7 @@ bundle that contains a plain text file that is named
 In the `BrandingVersion.properties` file, define the following
 keyword-value pairs:
 
-[source,oac_no_warn]
+[source]
 ----
 product_name=product-name
 abbrev_product_name=abbrev-product-name
@@ -1030,8 +992,6 @@ The meaning of each keyword-value pair is as follows:
   Specifies a suffix for the product version, for example, `Beta`.
 
 [[GSACG00037]][[ghrfh]]
-
-
 Example 4-4 `BrandingVersion.properties` File for Changing the Brand in
 the GlassFish Server CLI
 
@@ -1040,7 +1000,7 @@ defining the product name and release information of Eclipse GlassFish
 Server 6.0.0, build 17. The abbreviated product name is
 `glassfish-server`.
 
-[source,oac_no_warn]
+[source]
 ----
 product_name=Eclise GlassFish Server
 abbrev_product_name=glassfish-server
@@ -1052,7 +1012,7 @@ build_id=build 17
 To enable the display of OEM-specific information, the following
 properties might also be required:
 
-[source,oac_no_warn]
+[source]
 ----
 LEGAL_COPYRIGHT                "Copyright 2020"
 LEGAL_COMPANY_NAME             "Eclipse Foundation"
@@ -1068,8 +1028,6 @@ Examples of Extending the `asadmin` Utility
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 [[GSACG00038]][[ghrnt]]
-
-
 Example 4-5 `asadmin` Subcommand With Empty `execute` Method
 
 This example shows a class that represents the `asadmin` subcommand
@@ -1077,7 +1035,7 @@ This example shows a class that represents the `asadmin` subcommand
 
 The usage statement for this subcommand is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-mycontainer --originator any-character-string
 [--description any-character-string]
@@ -1087,7 +1045,7 @@ asadmin create-mycontainer --originator any-character-string
 This subcommand uses injection to specify that a running domain is
 required.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.mycontainer;
 
@@ -1138,7 +1096,7 @@ public Class CreateMycontainer implements AdminCommand {
 The following message text strings are defined in the file
 `LocalStrings.properties` for use by the subcommand:
 
-[source,oac_no_warn]
+[source]
 ----
 create-mycontainer.command=Creates a custom container
 create-mycontainer.command.originator=The originator of the container
@@ -1148,10 +1106,7 @@ create-mycontainer.command.containername=The container name
 ----
 
 [[GSACG00039]][[ghrsi]]
-
-
-Example 4-6 `asadmin` Subcommand for Retrieving and Displaying
-Information
+Example 4-6 `asadmin` Subcommand for Retrieving and Displaying Information
 
 This example shows a class that represents the `asadmin` subcommand
 `list-runtime-environment`. The subcommand determines the operating
@@ -1159,10 +1114,12 @@ system or runtime information for GlassFish Server.
 
 The usage statement for this subcommand is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin list-runtime-environment{runtime|os}
-
+----
+[source,java]
+----
 package com.example.env.cli;
 
 import org.glassfish.api.admin.AdminCommand;
@@ -1182,8 +1139,7 @@ import java.lang.management.RuntimeMXBean;
 
 /**
  * Demos asadmin CLI extension
- *
-  */
+ */
 @Service(name="list-runtime-environment")
 @Scoped(PerLookup.class)
 public class ListRuntimeEnvironmentCommand implements AdminCommand {
@@ -1211,14 +1167,11 @@ public class ListRuntimeEnvironmentCommand implements AdminCommand {
             report.setActionExitCode(ExitCode.FAILURE);
             report.setMessage("operand should be either 'os' or 'runtime'");
         }
-
     }
 }
 ----
 
 [[GSACG00040]][[gkbdf]]
-
-
 Example 4-7 `asadmin` Subcommand for Updating Configuration Data
 
 This example shows a class that represents the `asadmin` subcommand
@@ -1230,7 +1183,7 @@ Update Configuration Data].
 
 The usage statement for this subcommand is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin configure-greeter-container --instances instances [--language language] [--style style]
 ----
@@ -1240,12 +1193,12 @@ are shown in the following table. The table also indicates whether each
 option is optional or required.
 
 [width="100%",cols="<25%,<25%,<25%,<25%",options="header",]
-|==================================================================
+|===
 |Option |Acceptable Values |Default value |Optional or Required
 |`--instances` |An integer in the range 1-10 |5 |Required
 |`--language` |`english`, `norsk`, or `francais` |`norsk` |Optional
 |`--style` |`formal`, `casual`, or `expansive` |`formal` |Optional
-|==================================================================
+|===
 
 
 Code for the container component is shown in
@@ -1256,7 +1209,7 @@ Code that defines the configuration data for the container component is
 shown in link:adding-configuration-data.html#gkaal[Examples of Adding
 Configuration Data for a Component].
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter.config;
 
@@ -1338,30 +1291,36 @@ Command Patterns
 Create command pattern. The most basic create commands are implemented
 in the following pattern:
 
-1.  Retrieve the parent configuration object instance to which the child
+1. Retrieve the parent configuration object instance to which the child
 will be added. For example, the parent could be a `Clusters` object and
 the child a `Cluster` object.
-2.  Start a transaction on the parent instance.
-3.  Create the child configuration object instance.
-4.  Set the attributes and properties of the newly created child
-instance.
-5.  Add the child to the parent using one of the following accessor
-methods: +
-[source,oac_no_warn]
+
+2. Start a transaction on the parent instance.
+
+3. Create the child configuration object instance.
+
+4. Set the attributes and properties of the newly created child instance.
+
+5. Add the child to the parent using one of the following accessor
+methods:
++
+[source,java]
 ----
 void setChild(ChildType child)
 ----
 Used when there can be zero or one children of a single type associated
-with one parent instance. +
-[source,oac_no_warn]
+with one parent instance.
++
+[source,java]
 ----
 List<ChildType> getChildren()
 ----
 Used when there can be zero or more children of a single type associated
-with one parent instance. +
+with one parent instance.
 You cannot retrieve a set of children of the same type from the same
 parent using two different accessor methods.
-6.  Commit the transaction.
+
+6. Commit the transaction.
 
 A generic create command implementation can do most of these tasks if
 the following information is provided:
@@ -1374,11 +1333,10 @@ the following information is provided:
 Delete command pattern. The most basic delete commands are implemented
 in the following pattern:
 
-1.  Retrieve the configuration object instance to be deleted.
-2.  Start a transaction on the parent instance.
-3.  Delete the child by removing it from the list or calling
-`setXXX(null)`.
-4.  Commit the transaction.
+1. Retrieve the configuration object instance to be deleted.
+2. Start a transaction on the parent instance.
+3. Delete the child by removing it from the list or calling `setXXX(null)`.
+4. Commit the transaction.
 
 A generic delete command implementation can do most of these tasks if
 the following information is provided:
@@ -1399,7 +1357,7 @@ type. For a create command, it retrieves the parent of the object to be
 created. For a delete command, it retrieves the object to be deleted. A
 resolver implements the CrudResolver interface:
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.config.support;
 
@@ -1463,7 +1421,7 @@ The only additional information needed is the resolver to use.
 
 The following example specifies a `create-cluster` subcommand:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Clusters extends ConfigBeanProxy, Injectable {
@@ -1502,7 +1460,7 @@ The only additional information needed is the resolver to use.
 
 The following example specifies a `delete-cluster` subcommand:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Clusters extends ConfigBeanProxy, Injectable {
@@ -1534,8 +1492,9 @@ method, you provide the following information:
 `asadmin` subcommand that lists the configuration objects.
 * The method's class is the type of the parent.
 * The method's return type is the type of the children to be listed.
-* The method is always the following accessor method: +
-[source,oac_no_warn]
+* The method is always the following accessor method:
++
+[source,java]
 ----
 List<ChildType> getChildren()
 ----
@@ -1545,7 +1504,7 @@ type. Therefore, no resolver needs to be specified for a list command.
 
 The following example specifies a `list-clusters` subcommand:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Clusters extends ConfigBeanProxy, Injectable {
@@ -1576,7 +1535,7 @@ perform such additional operations.
 
 The interface that a creation decorator must implement is as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Scoped(PerLookup.class)
 public interface CreationDecorator<T extends ConfigBeanProxy> {
@@ -1616,7 +1575,7 @@ package.
 A `@Create` annotation specifies a creation decorator using a
 `decorator` element. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Clusters extends ConfigBeanProxy, Injectable {
@@ -1636,7 +1595,7 @@ The `@Create` annotation is on a method of the parent class. However,
 the referenced creation decorator class is associated with the child
 class. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Cluster extends ConfigBeanProxy, ... {
@@ -1681,7 +1640,7 @@ to perform such additional operations.
 
 The interface that a deletion decorator must implement is as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 /**
  * A decorator for acting upon a configuration element deletion.
@@ -1715,7 +1674,7 @@ package.
 A `@Delete` annotation specifies a deletion decorator using a
 `decorator` element. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Clusters extends ConfigBeanProxy, Injectable {
@@ -1736,7 +1695,7 @@ The `@Delete` annotation is on a method of the parent class. However,
 the referenced deletion decorator class is associated with the child
 class. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Cluster extends ConfigBeanProxy, ... {
@@ -1768,7 +1727,7 @@ link:#gkyfv[Specifying `asadmin` Subcommand Execution].
 To add an `@ExecuteOn` annotation to a `@Create` or `@Delete`
 annotation, use the `cluster` element. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Create(value="create-instance", resolver=TypeResolver.class,
         decorator=Server.CreateDecorator.class,
@@ -1784,7 +1743,7 @@ You can specify multiple command annotations on the same method. The
 following example combines create, delete, and list commands for
 clusters:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Configured
 public interface Clusters extends ConfigBeanProxy, Injectable {
@@ -1808,7 +1767,7 @@ the same configuration object type using the `@Creates` or `@Deletes`
 annotation (both in the `org.glassfish.config.support` package). For
 example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Element
 @Creates(
@@ -1823,4 +1782,3 @@ Differences in the decorators and resolvers can produce differences in
 the options each command takes. The `@Param` annotated attributes of the
 created type define a superset of options for both commands.
 
-----

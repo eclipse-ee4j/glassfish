@@ -4,6 +4,7 @@ title=Writing HK2 Components
 next=extending-the-admin-console.html
 prev=introduction.html
 ~~~~~~
+
 Writing HK2 Components
 ======================
 
@@ -11,8 +12,8 @@ Writing HK2 Components
 
 
 [[writing-hk2-components]]
-2 Writing HK2 Components
-------------------------
+Writing HK2 Components
+----------------------
 
 The Hundred-Kilobyte Kernel (HK2) is the lightweight and extensible
 kernel of GlassFish Server. To interact with GlassFish Server, add-on
@@ -29,8 +30,7 @@ The following topics are addressed here:
 * link:#ghokt[HK2 Runtime]
 * link:#ghojb[Inversion of Control]
 * link:#ghmoe[Identifying a Class as an Add-On Component]
-* link:#ghpvp[Using the Apache Maven Build System to Develop HK2
-Components]
+* link:#ghpvp[Using the Apache Maven Build System to Develop HK2 Components]
 
 [[ghokq]][[GSACG00091]][[hk2-component-model]]
 
@@ -72,7 +72,7 @@ HK2 runtime requires the following information:
 Interfaces that define a contract are identified by the
 `org.jvnet.hk2.annotations.Contract` annotation.
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Retention(RUNTIME)
 @Target(TYPE)
@@ -84,7 +84,7 @@ Implementations of such contracts should be identified with an
 `org.jvnet.hk2.annotations.Service` annotation so that the HK2 runtime
 can recognize them as `@Contract` implementations.
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Retention(RUNTIME)
 @Target(TYPE)
@@ -119,7 +119,7 @@ other services. Each scope is responsible for storing the service
 instances to which it is tied; therefore, the HK2 runtime does not rely
 on predefined scopes (although it comes with a few predefined ones).
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Contract
 public abstract class Scope {
@@ -130,7 +130,7 @@ public abstract class Scope {
 The following code fragment shows how to set the scope for a service to
 the predefined `Singleton` scope:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service
 public Singleton implements Scope {
@@ -159,7 +159,7 @@ retrieve components by using the `Habitat` instance. The simplest way to
 use the `Habitat` instance is through a `getComponent(Class`T
 `contract)` call:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public <T> T getComponent(Class<T> clazz) throws ComponentException;
 ----
@@ -191,11 +191,9 @@ The `PreDestroy` interface defines a single method, `preDestroy`, which
 is called just before a component is removed from the system.
 
 [[GSACG00014]][[ghoqv]]
-
-
 Example 2-1 Example Implementation of `PostContruct` and `PreDestroy`
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service(name="com.example.container.MyContainer")
 public class MyContainer implements Container, PostConstruct, PreDestroy {
@@ -245,7 +243,7 @@ manager.
 
 The following example shows how to use `@Inject` at the field level:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Inject
 ConfigService config;
@@ -253,7 +251,7 @@ ConfigService config;
 
 The following example shows how to use `@Inject` at the setter level:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Inject
 public void set(ConfigService svc) {...}
@@ -263,7 +261,7 @@ Injection can further qualify the intended injected service
 implementation by using a name and scope from which the service should
 be available:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Inject(Scope=Singleton.class, name="deploy")
 AdminCommand deployCommand;
@@ -283,15 +281,13 @@ private as possible while relying on interfaces and the separation of
 contracts and providers.
 
 [[GSACG00015]][[ghquz]]
-
-
 Example 2-2 Example of Instantiation Cascading
 
 The following example shows how the instantiation of `DeploymentService`
 as a `Startup` contract implementation will trigger the instantiation of
 the `ConfigService`.
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Contract
 public interface Startup {...}
@@ -322,7 +318,7 @@ To identify a class as an implementation of an GlassFish Server service,
 add the `org.jvnet.hk2.annotations.Service` annotation at the
 class-definition level of your Java programming language class.
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service
 public class SamplePlugin implements ConsoleProvider {
@@ -347,15 +343,12 @@ optional.
   `org.jvnet.hk2.component.Factory.class`.
 
 [[GSACG00016]][[ghoip]]
-
-
-Example 2-3 Example of the Optional Elements of the `@Service`
-Annotation
+Example 2-3 Example of the Optional Elements of the `@Service` Annotation
 
 The following example shows how to use the optional elements of the
 `@Service` annotation:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service (name="MyService",
     scope=com.example.PerRequest.class,
@@ -375,11 +368,9 @@ If you are using Maven 2 to build HK2 components, invoke the
 are generated automatically during build time.
 
 [[GSACG00017]][[ghqsa]]
-
-
 Example 2-4 Example of the Maven Plug-In Configuration
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <plugin>
     <groupId>org.glassfish.hk2</groupId>
@@ -393,8 +384,6 @@ Example 2-4 Example of the Maven Plug-In Configuration
 ----
 
 [[GSACG00018]][[ghoik]]
-
-
 Example 2-5 Example of `META-INF/services` File Generation
 
 This example shows how to use
@@ -407,7 +396,7 @@ and the resulting `META-INF/services` files.
 
 The interfaces and classes in this example are as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.wallaby.annotations;
 @Contract
@@ -427,7 +416,7 @@ public class MyService implements Startup, RandomContract, PropertyChangeListene
 These interfaces and classes generate this `META-INF/services` file with
 the `MyService` content:
 
-[source,oac_no_warn]
+[source]
 ----
 com.example.wallaby.annotations.Startup
 com.example.wombat.RandomContract

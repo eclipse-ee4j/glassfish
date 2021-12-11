@@ -4,15 +4,15 @@ title=Adding Monitoring Capabilities
 next=adding-configuration-data.html
 prev=extending-asadmin.html
 ~~~~~~
+
 Adding Monitoring Capabilities
 ==============================
 
 [[GSACG00005]][[ghmos]]
 
-
 [[adding-monitoring-capabilities]]
-5 Adding Monitoring Capabilities
---------------------------------
+Adding Monitoring Capabilities
+------------------------------
 
 Monitoring is the process of reviewing the statistics of a system to
 improve performance or solve problems. By monitoring the state of
@@ -34,8 +34,7 @@ The following topics are addressed here:
 
 * link:#ghopc[Defining Statistics That Are to Be Monitored]
 * link:#ghplw[Updating the Monitorable Object Tree]
-* link:#ghrma[Dotted Names and REST URLs for an Add-On Component's
-Statistics]
+* link:#ghrma[Dotted Names and REST URLs for an Add-On Component's Statistics]
 * link:#ghptj[Example of Adding Monitoring Capabilities]
 
 [[ghopc]][[GSACG00116]][[defining-statistics-that-are-to-be-monitored]]
@@ -113,21 +112,21 @@ the elements of the `@ProbeProvider` annotation as follows:
 `moduleProviderName`::
   Your choice of text to identify the application to which the event
   provider belongs. The value of the `moduleProviderName` element is not
-  required to be unique. +
+  required to be unique.
   For example, for event providers from GlassFish Server Open Source
   Edition, `moduleProviderName` is `glassfish`.
 `moduleName`::
   Your choice of name for the module for which the event provider is
   defined. A module provides significant functionality of an
   application. The value of the `moduleName` element is not required to
-  be unique. +
+  be unique.
   In GlassFish Server, examples of module names are `web-container`,
   `ejb-container`, `transaction`, and `webservices`.
 `probeProviderName`::
   Your choice of name to identify the event provider. To uniquely
   identify the event provider, ensure that `probeProviderName` is unique
-  for all event providers in the same module. +
-  In GlassFish Server, examples of event—provider names are `jsp`,
+  for all event providers in the same module.
+  In GlassFish Server, examples of event-provider names are `jsp`,
   `servlet`, and `web-module`.
 
 [[ghosi]][[GSACG00011]][[defining-event-types-in-an-event-provider-class]]
@@ -140,8 +139,8 @@ for each method are as follows:
 
 * The return value of the callback methods must be void.
 * The method body must be empty. You instantiate the event provider
-class in the class that invokes the method to send the event. For more
-information, see link:#ghprg[Sending an Event].
+class in the class that invokes the method to send the event.
+For more information, see link:#ghprg[Sending an Event].
 * To enable the event to be used as an Oracle Solaris DTrace probe, each
 parameter in the method signature must be a Java language primitive,
 such as `Integer`, `boolean`, or `String`.
@@ -154,16 +153,10 @@ method in your class, you must uniquely identify the event type for each
 form of the method. To uniquely identify the event type, set the `name`
 element of the `@Probe` annotation to the name of the event type.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-You are not required to uniquely identify the event type for methods
-that are not overloaded.
-
-|=======================================================================
+[NOTE]
+====
+You are not required to uniquely identify the event type for methods that are not overloaded.
+====
 
 
 [[ghoul]][[GSACG00012]][[specifying-event-parameters]]
@@ -181,8 +174,6 @@ the name of the parameter.
 Example of Defining an Event Provider by Writing a Java Class
 
 [[GSACG00041]][[ghprw]]
-
-
 Example 5-1 Defining an Event Provider by Writing a Java Class
 
 This example shows the definition of the `TxManager` class. This class
@@ -200,7 +191,7 @@ The methods in this class are as follows:
   name of the event type that is associated with this method is `end`. A
   parameter that is named `outcome` is passed to the method.
 
-[source,oac_no_warn]
+[source,java]
 ----
 import org.glassfish.external.probe.provider.annotations.Probe;
 import org.glassfish.external.probe.provider.annotations.ProbeParam;
@@ -236,20 +227,20 @@ the attributes of the `probe-provider` element as follows:
 `moduleProviderName`::
   Your choice of text to identify the application to which the event
   provider belongs. The value of the `moduleProviderName` attribute is
-  not required to be unique. +
+  not required to be unique.
   For example, for event providers from GlassFish Server Open Source
   Edition, `moduleProviderName` is `glassfish`.
 `moduleName`::
   Your choice of name for the module for which the event provider is
   defined. A module provides significant functionality of an
   application. The value of the `moduleName` attribute is not required
-  to be unique. +
+  to be unique.
   In GlassFish Server, examples of module names are `web-container`,
   `ejb-container`, `transaction`, and `webservices`.
 `probeProviderName`::
   Your choice of name to identify the event provider. To uniquely
   identify the event provider, ensure that `probeProviderName` is unique
-  for all event providers in the same module. +
+  for all event providers in the same module.
   In GlassFish Server, examples of event—provider names are `jsp`,
   `servlet`, and `web-module`.
 
@@ -269,23 +260,23 @@ elements within the `probe` element:
   generate the statistic.
 `signature`::
   This element contains the following information about the signature if
-  the method: +
-[source,oac_no_warn]
+  the method:
++
+[source]
 ----
 return-type (paramater-type-list)
 ----
-::
-  return-type;;
+  `return-type`;;
     The return type of the method.
-  paramater-type-list;;
+  `paramater-type-list`;;
     A comma-separated list of the types of the parameters in the method
     signature.
 `probe-param`::
   The attributes of this element identify the type and the name of a
   parameter in the method signature. One `probe-param` element is
   required for each parameter in the method signature. The `probe-param`
-  element does not contain any data. +
-  The attributes of the `probe-param` element are as follows: +
+  element does not contain any data.
+  The attributes of the `probe-param` element are as follows:
   `type`;;
     Specifies the type of the parameter.
   `name`;;
@@ -295,8 +286,6 @@ return-type (paramater-type-list)
   method. The `return-param` element does not contain any data.
 
 [[GSACG00042]][[gkajj]]
-
-
 Example 5-2 Defining an Event Provider by Writing an XML Fragment
 
 This example defines an event provider for the `glassfish:web:jsp`
@@ -305,10 +294,12 @@ component. The Java class of this component is
 defines one event of type `jspLoadedEvent`. The signature of the method
 that is associated with this event is as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
-void jspLoaded (String jsp, String hostName)
-
+void jspLoaded(String jsp, String hostName)
+----
+[source,xml]
+----
 <probe-provider moduleProviderName="glassfish" moduleName="web" probeProviderName="jsp">
     <probe name="jspLoadedEvent">
        <class>com.sun.enterprise.web.jsp.JspProbeEmitterImpl</class>
@@ -327,8 +318,7 @@ Packaging a Component's Event Providers
 +++++++++++++++++++++++++++++++++++++++
 
 Packaging a component's event providers enables the monitoring
-infrastructure of GlassFish Server to discover the event providers
-automatically.
+infrastructure of GlassFish Server to discover the event providers automatically.
 
 To package a component's event providers, add an entry to the
 component's `META-INF/MANIFEST.MF` file that identifies all of the
@@ -336,34 +326,34 @@ component's event providers. The format of the entry depends on how the
 event providers are defined:
 
 * If the event providers are defined as Java classes, the entry is a
-list of the event providers' class names as follows: +
-[source,oac_no_warn]
+list of the event providers' class names as follows:
++
+[source]
 ----
 probe-provider-class-names : class-list
 ----
++
 The `class-list` is a comma-separated list of the fully qualified Java
 class names of the component's event providers.
 * If the event providers are defined as XML fragments, the entry is a
-list of the paths to the files that contain the XML fragments as
-follows: +
-[source,oac_no_warn]
+list of the paths to the files that contain the XML fragments as follows:
++
+[source]
 ----
 probe-provider-xml-file-names : path-list
 ----
++
 The `path-list` is a comma-separated list of the paths to the XML files
 relative to the root of the archive in the JAR file.
 
 [[GSACG00043]][[gkaii]]
-
-
-Example 5-3 Manifest Entry for Event Providers That Are Defined as Java
-Classes
+Example 5-3 Manifest Entry for Event Providers That Are Defined as Java Classes
 
 This example shows the entry in the `META-INF/MANIFEST.MF` file of a
 component whose event provider is the
 `org.glassfish.pluggability.monitoring.ModuleProbeProvider` class.
 
-[source,oac_no_warn]
+[source]
 ----
 probe-provider-class-names : org.glassfish.pluggability.monitoring.ModuleProbeProvider
 ----
@@ -387,8 +377,6 @@ way to meet this requirement is to invoke the method for sending the
 event in the body of the method for performing the operation.
 
 [[GSACG00044]][[ghpus]]
-
-
 Example 5-4 Sending an Event
 
 This example shows the code for instantiating the `TxManager` class and
@@ -403,7 +391,7 @@ correct time, the `onTxBegin` method is invoked in the body of the
 The declaration of the `onTxBegin` method in the event provider
 interface is shown in link:#ghprw[Example 5-1].
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 public class TransactionManagerImpl {
@@ -464,8 +452,7 @@ Monitored].
 Updating the monitorable object tree involves the following tasks:
 
 * link:#ghpni[Creating Event Listeners]
-* link:#ghptp[Representing a Component's Statistics in an Event Listener
-Class]
+* link:#ghptp[Representing a Component's Statistics in an Event Listener Class]
 * link:#ghpml[Subscribing to Events From Event Provider Classes]
 * link:#ghppo[Registering an Event Listener]
 
@@ -504,17 +491,12 @@ allows access to thread locals, the listener can access thread locals of
 the monitored system.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 A listener that is not registered to listen for events is never called
 by the framework. Therefore, unregistered listeners do not consume any
 computing resources, such as memory or processor cycles.
-
-|=======================================================================
-
+====
 
 [[ghptp]][[GSACG00223]][[representing-a-components-statistics-in-an-event-listener-class]]
 
@@ -562,15 +544,13 @@ following classes to gather and compute statistics data:
   Provides standard timing measurements.
 
 [[GSACG00045]][[ghpsc]]
-
-
 Example 5-5 Representing a Component's Statistics in an Event Listener
 Class
 
 This example shows the code for representing the `txcount` statistic in
 the `TxListener` class.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.external.statistics.CountStatistic;
@@ -609,7 +589,7 @@ provider and the type of event, annotate the method with the
 annotation. In the `@ProbeListener` annotation, specify the provider and
 the type as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 "module-providername:module-name:probe-provider-name:event-type"
 ----
@@ -645,8 +625,6 @@ In the method body, provide the code to update monitoring statistics in
 response to the event.
 
 [[GSACG00046]][[ghpwu]]
-
-
 Example 5-6 Subscribing to Events From Event Provider Classes
 
 This example shows the code for subscribing to events of type `begin`
@@ -654,16 +632,14 @@ from the `tx` component. The provider of the component is `TxManager`.
 The body of the `begin` method contains code to increase the transaction
 count txcount by 1 each time that an event is received.
 
-The definition of the `begin` event type is shown in link:#ghprw[Example
-5-1].
+The definition of the `begin` event type is shown in link:#ghprw[Example 5-1].
 
-The code for sending `begin` events is shown in link:#ghpus[Example
-5-4].
+The code for sending `begin` events is shown in link:#ghpus[Example 5-4].
 
 The instantiation of the `txCount` object is shown in
 link:#ghpsc[Example 5-5].
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.external.probe.provider.annotations.ProbeListener;
@@ -700,7 +676,7 @@ Getting Information About a Event Provider
 `ProbeProviderInfo` contains details about individual event types in an
 event provider class.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public interface ProbeProviderInfo {
 
@@ -734,7 +710,7 @@ For example, while it is easy to monitor (through gfProbes) when
 TransactionManagerImpl.begin() entered / exited, the client cannot
 determine the transaction ID in this case.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public class TxMonitor {
      @MethodEntry("tx:com.sun.tx.TxMgrImpl::onTxBegin")
@@ -821,8 +797,6 @@ character.
 * The listener object that you are registering.
 
 [[GSACG00047]][[ghpuu]]
-
-
 Example 5-7 Registering an Event Listener
 
 This example shows the code for registering the event listener
@@ -836,7 +810,7 @@ path from this node to the statistics in the event listener is
 Code for the constructor of the `TxListener` class is beyond the scope
 of this example.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.external.probe.provider.StatsProviderManager;
@@ -861,7 +835,7 @@ through the dotted name of the statistic. The dotted name of a statistic
 for an add-on component is determined from the registration of the event
 listener that defines the statistic as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 listener-parent-node.path-to-statistic.statistic-name
 ----
@@ -888,15 +862,14 @@ For example, the dotted name of the `txcount` statistic that is defined
 in link:#ghpsc[Example 5-5] and registered in link:#ghpuu[Example 5-7]
 is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.tx.txapp.txcount
 ----
 
-The formats of the URL to a REST resource that represents a statistic is
-as follows:
+The formats of the URL to a REST resource that represents a statistic is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/monitoring/domain/path
 ----
@@ -913,7 +886,7 @@ For example, the URL the REST resource for the `txcount` statistic that
 is defined in link:#ghpsc[Example 5-5] and registered in
 link:#ghpuu[Example 5-7] is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:4848/monitoring/domain/server/applications/tx/txapp/txcount
 ----
@@ -926,8 +899,7 @@ for administration is 4848.
 Adding a Type to the `monitor` Command
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To add a type to the `monitor` command, implement the `MonitorContract`
-interface.
+To add a type to the `monitor` command, implement the `MonitorContract` interface.
 
 An implementation of the `MonitorContract` interface is an HK2 service
 that provides monitoring data to the `monitor` command.
@@ -942,26 +914,24 @@ a container receives. The following table provides a cross-reference to
 the listing of each class or interface in the example.
 
 [width="100%",cols="<50%,<50%",options="header",]
-|===================================================
+|===
 |Class or Interface |Listing
-|`ModuleProbeProvider` |link:#ghpna[Example 5-8] +
-|`ModuleBootStrap` |link:#ghpmu[Example 5-9] +
-|`ModuleStatsTelemetry` |link:#ghpvw[Example 5-10] +
-|`Module` |link:#ghpuc[Example 5-11] +
-|`ModuleMBean` |link:#ghpwx[Example 5-12] +
-|===================================================
+|`ModuleProbeProvider` |link:#ghpna[Example 5-8]
+|`ModuleBootStrap` |link:#ghpmu[Example 5-9]
+|`ModuleStatsTelemetry` |link:#ghpvw[Example 5-10]
+|`Module` |link:#ghpuc[Example 5-11]
+|`ModuleMBean` |link:#ghpwx[Example 5-12]
+|===
 
 
 [[GSACG00048]][[ghpna]]
-
-
 Example 5-8 Event Provider Class
 
 This example illustrates how to define an event provider as explained in
 link:#ghovq[Defining an Event Provider by Writing a Java Class].
 
-The example shows the definition of the `ModuleProbeProvider` class. The
-event provider sends events when the request count is increased by 1 or
+The example shows the definition of the `ModuleProbeProvider` class.
+The event provider sends events when the request count is increased by 1 or
 decreased by 1.
 
 This class defines the following methods:
@@ -974,7 +944,7 @@ associated with the method.
 
 A parameter that is named `count` is passed to each method.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.pluggability.monitoring;
 
@@ -985,7 +955,6 @@ import org.glassfish.external.probe.provider.annotations.ProbeProvider;
 /**
  * Monitoring count events
  * Provider interface for module specific probe events.
- *
  */
 @ProbeProvider(moduleProviderName = "glassfish", moduleName = "mybeanmodule",
 probeProviderName = "mybean")
@@ -1009,8 +978,8 @@ public class ModuleProbeProvider {
 }
 ----
 
-[[GSACG00049]][[ghpmu]]
 
+[[GSACG00049]][[ghpmu]]
 
 Example 5-9 Bootstrap Class
 
@@ -1020,7 +989,7 @@ code for registering an instance of the listener class
 `ModuleStatsTelemetry`. This instance is added as a child of the
 `server/applications` node of the tree.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.pluggability.monitoring;
 
@@ -1034,7 +1003,6 @@ import org.glassfish.external.probe.provider.PluginPoint;
 /**
  * Monitoring Count Example
  * Bootstrap object for registering probe provider and listener
- *
  */
 @Service
 @Scoped(Singleton.class)
@@ -1054,8 +1022,6 @@ public class ModuleBootStrap implements PostConstruct {
 ----
 
 [[GSACG00050]][[ghpvw]]
-
-
 Example 5-10 Listener Class
 
 This example shows how to perform the following tasks:
@@ -1068,12 +1034,10 @@ Class]. The example shows the code for representing the
 * link:#ghpml[Subscribing to Events From Event Provider Classes]. The
 example shows the code for subscribing to the following types of events
 from the `count` component:
-
 ** `moduleCountIncrementEvent`
-
 ** `moduleCountDecrementEvent`
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.pluggability.monitoring;
 
@@ -1088,7 +1052,6 @@ import org.glassfish.gmbal.ManagedObject;
  * Monitoring counter example
  * Telemtry object which listens to probe events and updates
  * the monitoring stats
- *
  */
 @ManagedObject
 public class ModuleStatsTelemetry {
@@ -1116,21 +1079,18 @@ public class ModuleStatsTelemetry {
 ----
 
 [[GSACG00051]][[ghpuc]]
-
-
 Example 5-11 MBean Interface
 
 This example defines the interface for a simple standard MBean that has
 methods to increase and decrease a counter by 1.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.count.monitoring;
 
 /**
  * Monitoring counter example
  * ModuleMBean interface
- *
  */
 public interface ModuleMBean {
     public Integer getCount() ;
@@ -1140,30 +1100,24 @@ public interface ModuleMBean {
 ----
 
 [[GSACG00052]][[ghpwx]]
-
-
 Example 5-12 MBean Implementation
 
-This example illustrates how to send an event as explained in
-link:#ghprg[Sending an Event]. The example shows code for sending events
-as follows:
+This example illustrates how to send an event as explained in link:#ghprg[Sending an Event].
+The example shows code for sending events as follows:
 
-* The `moduleCountIncrementEvent` method is invoked in the body of the
-`incrementCount` method.
-* The `moduleCountDecrementEvent` method is invoked in the body of the
-`decrementCount` method.
+* The `moduleCountIncrementEvent` method is invoked in the body of the `incrementCount` method.
+* The `moduleCountDecrementEvent` method is invoked in the body of the `decrementCount` method.
 
 The methods `incrementCount` and `decrementCount` are invoked by an
 entity that is beyond the scope of this example, for example, JConsole.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.pluggability.monitoring;
 
 /**
  * Monitoring counter example
  * ModuleMBean implementation
- *
  */
 public class Module implements ModuleMBean {
 

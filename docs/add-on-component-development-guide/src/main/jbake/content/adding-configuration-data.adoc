@@ -4,15 +4,15 @@ title=Adding Configuration Data for a Component
 next=adding-container-capabilities.html
 prev=adding-monitoring-capabilities.html
 ~~~~~~
+
 Adding Configuration Data for a Component
 =========================================
 
 [[GSACG00006]][[gjlpe]]
 
-
 [[adding-configuration-data-for-a-component]]
-6 Adding Configuration Data for a Component
--------------------------------------------
+Adding Configuration Data for a Component
+-----------------------------------------
 
 The configuration data of a component determines the characteristics and
 runtime behavior of a component. Eclipse GlassFish provides interfaces to
@@ -69,44 +69,46 @@ adding.
 To Define an Element
 ^^^^^^^^^^^^^^^^^^^^
 
-1.  Define a Java language interface to represent the element. +
+1. Define a Java language interface to represent the element.
 Define one interface for each element. Do not represent multiple
-elements in a single interface. +
+elements in a single interface.
 The name that you give to the interface determines name of the element
 as follows:
 * A change from lowercase to uppercase in the interface name is
-transformed to the hyphen (`-`) separator character.
-* The element name is all lowercase. +
+  transformed to the hyphen (`-`) separator character.
+* The element name is all lowercase.
 For example, to define an interface to represent the
 `wombat-container-config` element, give the name `WombatContainerConfig`
 to the interface.
-2.  Specify the parent of the element. +
-To specify the parent, extend the interface that identifies the parent
-as shown in the following table. +
-[width="100%",cols="<27%,<73%",options="header",]
-|=======================================================================
-|Parent Element |Interface to Extend
-|`config` |`org.glassfish.api.admin.config.Container`
 
-|`applications` |`org.glassfish.api.admin.config.ApplicationName`
+2. Specify the parent of the element.
+To specify the parent, extend the interface that identifies the parent
+as shown in the following table.
++
+[width="100%",cols="<27%,<73%",options="header",]
+|===
+|Parent Element |Interface to Extend
+|`config`
+|`org.glassfish.api.admin.config.Container`
+
+|`applications`
+|`org.glassfish.api.admin.config.ApplicationName`
 
 |Another element that you are defining
 |`org.jvnet.hk2.config.ConfigBeanProxy`
-|=======================================================================
+|===
 
-3.  Annotate the declaration of the interface with the
+3. Annotate the declaration of the interface with the
 `org.jvnet.hk2.config.Configured` annotation.
 
 [[GSACG00053]][[gjcne]]
-
-
 Example 6-1 Declaration of an Interface That Defines an Element
 
 This example shows the declaration of the `WombatContainerConfig`
-interface that represents the `wombat-container-config` element. The
-parent of this element is the `config` element.
+interface that represents the `wombat-container-config` element.
+The parent of this element is the `config` element.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.jvnet.hk2.config.Configured;
@@ -135,7 +137,8 @@ Defining an Attribute of an Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The attributes of an element describe the characteristics of the
-element. For example, the `port` attribute of the `network-listener`
+element.
+For example, the `port` attribute of the `network-listener`
 element identifies the port number on which the listener listens.
 
 [[gjorj]][[GSACG00227]][[representing-an-attribute-of-an-element]]
@@ -236,7 +239,7 @@ This example defines the attribute `number-of-instances`. To enable the
 attribute take properties in the form `${`property-name`}` as values,
 the data type of this attribute is `String`.
 
-[source,oac_no_warn]
+[source,java]
 ----
 import org.jvnet.hk2.config.Attribute;
 ...
@@ -263,27 +266,28 @@ the `network-listener` element, which is a subelement of
 To Define a Subelement
 ^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Define an interface to represent the subelement. +
-For more information, see link:#gjlop[Defining an Element]. +
+1. Define an interface to represent the subelement.
+For more information, see link:#gjlop[Defining an Element].
 The interface that represents the subelement must extend the
 `org.jvnet.hk2.config.ConfigBeanProxy` interface.
-2.  In the interface that defines the parent element, identify the
+
+2. In the interface that defines the parent element, identify the
 subelement to its parent element.
-1.  Represent the subelement as the property of a JavaBeans
+
+3. Represent the subelement as the property of a JavaBeans
 specification getter or setter method.
-2.  Annotate the declaration of the getter or setter method that is
+
+4. Annotate the declaration of the getter or setter method that is
 associated with the subelement with the `org.jvnet.hk2.config.Element`
 annotation.
 
 [[GSACG00054]][[gjzjt]]
-
-
 Example 6-3 Declaring an Interface to Represent a Subelement
 
 This example shows the declaration of the `WombatElement` interface to
 represent the `wombat-element` element.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.jvnet.hk2.config.ConfigBeanProxy;
@@ -297,13 +301,11 @@ public interface WombatElement extends ConfigBeanProxy {
 ----
 
 [[GSACG00055]][[gjzkh]]
-
-
 Example 6-4 Identifying a Subelement to its Parent Element
 
 This example identifies the `wombat-element` element as a subelement.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.jvnet.hk2.config.Element;
@@ -333,14 +335,16 @@ attribute is initialized and every time the attribute is changed.
 To standardize the validation of configuration data, GlassFish Server
 uses https://jakarta.ee/specifications/bean-validation/[Jakarta Bean Validation]
 (`https://jakarta.ee/specifications/bean-validation/`) for validating configuration
-data. Jakarta Bean Validation defines a metadata model and API for the validation of
+data.
+Jakarta Bean Validation defines a metadata model and API for the validation of
 JavaBeans components.
 
 To validate an attribute of an element, annotate the attribute's getter
 method with the annotation in the `jakarta.validation.constraints` package
 that performs the validation that you require. The following table lists
 commonly used annotations for validating GlassFish Server configuration
-data. For the complete list of annotations, see the
+data.
+For the complete list of annotations, see the
 https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html[`jakarta.validation.constraints`
 package summary]
 (`https://jakarta.ee/specifications/bean-validation/3.0/apidocs/jakarta/validation/constraints/package-summary.html`).
@@ -351,7 +355,7 @@ Table 6-1 Commonly Used Annotations for Validating GlassFish Server
 Configuration Data
 
 [width="100%",cols="<37%,<63%",options="header",]
-|=======================================================================
+|===
 |Validation |Annotation
 |Not null |`jakarta.validation.constraints.NotNull`
 
@@ -373,18 +377,16 @@ Set the `value` element of this annotation to the maximum allowed value.
 Set the `regexp` element of this annotation to the regular expression
 that is to be matched.
 
-|=======================================================================
+|===
 
 
 [[GSACG00056]][[gjrmp]]
-
-
 Example 6-5 Specifying a Range of Valid Values for an Integer
 
 This example specifies that the attribute `rotation-interval-in-minutes`
 must be a positive integer.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import jakarta.validation.constraints.Max;
@@ -397,14 +399,12 @@ String getRotationIntervalInMinutes();
 ----
 
 [[GSACG00057]][[gjzkq]]
-
-
 Example 6-6 Specifying Regular Expression Matching
 
 This example specifies that the attribute `classname` must contain only
 non-whitespace characters.
 
-[source,oac_no_warn]
+[source,java]
 ----
 import jakarta.validation.constraints.Pattern;
 ...
@@ -434,19 +434,16 @@ tasks:
 To Define a Component's Initial Configuration Data
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Create a plain-text file that contains an XML fragment to represent
+1. Create a plain-text file that contains an XML fragment to represent
 the configuration data.
 * Ensure that each XML element accurately represents the interface that
-is defined for the element.
-* Ensure that any subelements that you are initializing are correctly
-nested.
+  is defined for the element.
+* Ensure that any subelements that you are initializing are correctly nested.
 * Set attributes of the elements to their required initial values.
-2.  When you package the component, include the file that contains the
+2. When you package the component, include the file that contains the
 XML fragment in the component's JAR file.
 
 [[GSACG00058]][[gkaba]]
-
-
 Example 6-7 XML Data Fragment
 
 This example shows the XML data fragment for adding the
@@ -458,7 +455,7 @@ follows:
 * The `foo` attribute is set to `something`.
 * The `bar` attribute is set to `anything`.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <wombat-container-config>
     <wombat-element foo="something" bar="anything"/>
@@ -467,8 +464,7 @@ follows:
 
 [[gjses]][[GSACG00077]][[to-write-a-components-initial-configuration-data-to-the-domain.xml-file]]
 
-To Write a Component's Initial Configuration Data to the `domain.xml`
-File
+To Write a Component's Initial Configuration Data to the `domain.xml` File
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Add code to write the component's initial configuration data in the
@@ -478,37 +474,40 @@ about adding a container, see
 link:adding-container-capabilities.html#ghmon[Adding Container
 Capabilities].
 
-1.  Set an optional dependency on an instance of the class that
+1. Set an optional dependency on an instance of the class that
 represents the XML element that you are adding.
-1.  Initialize the instance variable to `null`. +
+
+2. Initialize the instance variable to `null`.
++
 If the element is not present in the `domain.xml` file when the add-on
 component is initialized, the instance variable remains `null`.
-2.  Annotate the declaration of the instance variable with the
+
+3. Annotate the declaration of the instance variable with the
 `org.jvnet.hk2.annotations.Inject` annotation.
-3.  Set the `optional` element of the `@Inject` annotation to `true`.
-2.  Set a dependency on an instance of the following classes:
-* `org.glassfish.api.admin.config.ConfigParser` +
+
+4. Set the `optional` element of the `@Inject` annotation to `true`.
+
+5. Set a dependency on an instance of the following classes:
+* `org.glassfish.api.admin.config.ConfigParser`
++
 The `ConfigParser` class provides methods to parse an XML fragment and
 to write the fragment to the correct location in the `domain.xml` file.
 * `org.jvnet.hk2.component.Habitat`
-3.  Invoke the `parseContainerConfig` method of the `ConfigParser`
-object only if the instance is `null`. +
+
+6. Invoke the `parseContainerConfig` method of the `ConfigParser`
+object only if the instance is `null`.
 If your add-on component is a container, invoke this method within the
-implementation of the `setup` method the sniffer class. When the
-container is first instantiated, GlassFish Server invokes the `setup`
-method. +
+implementation of the `setup` method the sniffer class.
+When the container is first instantiated, GlassFish Server invokes the `setup` method.
 The test that the instance is `null` is required to ensure that the
 configuration data is added only if the data is not already present in
-the `domain.xml` file. +
+the `domain.xml` file.
 In the invocation of the `parseContainerConfig` method, pass the
 following items as parameters:
 * The `Habitat` object on which you set a dependency
-* The URL to the file that contains the XML fragment that represents the
-configuration data
+* The URL to the file that contains the XML fragment that represents the configuration data
 
 [[GSACG00059]][[gkabo]]
-
-
 Example 6-8 Writing a Component's Initial Configuration Data to the
 `domain.xml` File
 
@@ -520,7 +519,7 @@ The `wombat-container-config` element is represented by the
 `WombatContainerConfig` interface. An optional dependency is set on an
 instance of a class that implements `WombatContainerConfig`.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.api.admin.config.ConfigParser;
@@ -540,7 +539,7 @@ import java.net.URL;
     @Inject(optional=true)
     WombatContainerConfig config=null;
 ...
-@Inject
+    @Inject
     ConfigParser configParser;
 
     @Inject
@@ -560,19 +559,17 @@ import java.net.URL;
 ----
 
 [[GSACG00060]][[gjski]]
-
-
 Example 6-9 `domain.xml` File After Initialization
 
 This example shows the `domain.xml` file after the `setup` method was
 invoked to add the `wombat-container-config` element under the `config`
 element.
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<domain...>
+<domain>
 ...
-   <configs>
+  <configs>
     <config name="server-config">
       <wombat-container-config number-of-instances="5">
         <wombat-element foo="something" bar="anything" />
@@ -609,27 +606,30 @@ Any transaction that you create to modify configuration data must use a
 configuration change transaction to ensure that the change is atomic,
 consistent, isolated, and durable (ACID).
 
-1.  [[gkakq]]
+.  [[gkakq]]
 Set a dependency on the configuration object to update.
-2.  [[gkalq]]
+
+.  [[gkalq]]
 Define a method to invoke to perform the transaction.
 
-1.  Use the generic `SimpleConfigCode` interface to define the method
+.  Use the generic `SimpleConfigCode` interface to define the method
 that is to be invoked on a single configuration object, namely:
 `SingleConfigCode<T extends ConfigBeanProxy>()`.
-2.  In the body of this method, implement the `run` method of the
+
+.  In the body of this method, implement the `run` method of the
 `SingleConfigCode<T extends ConfigBeanProxy>` interface.
-3.  In the body of the `run` method, invoke the setter methods that are
-defined for the attributes that you are setting. +
+
+.  In the body of the `run` method, invoke the setter methods that are
+defined for the attributes that you are setting.
++
 These setter methods are defined in the interface that represents the
 element whose elements you are setting.
-3.  Invoke the static method
-`org.jvnet.hk2.config.ConfigSupport.ConfigSupport.apply`. +
-In the invocation, pass the following information as parameters to the
-method:
+
+.  Invoke the static method
+`org.jvnet.hk2.config.ConfigSupport.ConfigSupport.apply`.
+In the invocation, pass the following information as parameters to the method:
 * The code of the method that you defined in Step  link:#gkalq[2].
-* The configuration object to update, on which you set the dependency in
-Step link:#gkakq[1].
+* The configuration object to update, on which you set the dependency in Step link:#gkakq[1].
 
 [[sthref9]]
 
@@ -639,7 +639,7 @@ This example shows code in the `execute` method of an `asadmin`
 subcommand for updating the `number-of-instances` element of
 `wombat-container-config` element.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.api.Param;
@@ -681,7 +681,7 @@ link:../reference-manual/list.html#GSRFM00145[`list`], and olink:GSRFM00226[`set
 configuration attribute through the dotted name of the attribute. The
 dotted name of an attribute of a configuration element is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 configs.config.server-config.element-name[.subelement-name...].attribute-name
 ----
@@ -692,23 +692,22 @@ subelement-name::
   The name of a subelement, if any.
 attribute-name::
   The name of the attribute.
-
++
 For example, the dotted name of the `foo` attribute of the
 `wombat-element` element is as follows:
-
-[source,oac_no_warn]
++
+[source]
 ----
 configs.config.server-config.wombat-container-config.wombat-element.foo
 ----
-
++
 The formats of the URL to a REST resource that represent an attribute of
 a configuration element is as follows:
-
-[source,oac_no_warn]
++
+[source]
 ----
 http://host:port/management/domain/path
 ----
-
 host::
   The host where the DAS is running.
 port::
@@ -720,10 +719,9 @@ path::
 For example, the URL to the REST resource for the `foo` attribute of the
 `wombat-element` element is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
-http://localhost:4848/management/domain/configs/config/server-config/
-wombat-container-config/wombat-element/foo
+http://localhost:4848/management/domain/configs/config/server-config/wombat-container-config/wombat-element/foo
 ----
 
 In this example, the DAS is running on the local host and the HTTP port
@@ -753,13 +751,10 @@ Code for an `asadmin` subcommand that updates the configuration data in
 this example is shown in link:extending-asadmin.html#gkbdf[Example 4-7].
 
 [[GSACG00061]][[gkamy]]
-
-
 Example 6-11 Parent Element Definition
 
-This example shows the definition of the `greeter-container-config`
-element. The attributes of the `greeter-container-config` element are as
-follows:
+This example shows the definition of the `greeter-container-config` element.
+The attributes of the `greeter-container-config` element are as follows:
 
 * `number-of-instances`, which must be in the range 1-10.
 * `language`, which must contain only non-whitespace characters.
@@ -769,7 +764,7 @@ The `greeter-element` element is identified as a subelement of the
 `greeter-container-config` element. The definition of the
 `greeter-element` element is shown in link:#gkamb[Example 6-12].
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter.config;
 
@@ -812,17 +807,14 @@ public interface GreeterContainerConfig extends Container {
 ----
 
 [[GSACG00062]][[gkamb]]
-
-
 Example 6-12 Subelement Definition
 
 This example shows the definition of the `greeter-element` element,
 which is identified as a subelement of the `greeter-container-config`
 element in link:#gkamy[Example 6-11]. The only attribute of the
-`greeter-element` element is `greeter-port`, which must be in the range
-1030-1050.
+`greeter-element` element is `greeter-port`, which must be in the range 1030-1050.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter.config;
 
@@ -848,15 +840,11 @@ public interface GreeterElement extends ConfigBeanProxy {
 ----
 
 [[GSACG00063]][[gkamk]]
-
-
-Example 6-13 XML Data Fragment for Initializing the
-`greeter-container-config` Element
+Example 6-13 XML Data Fragment for Initializing the `greeter-container-config` Element
 
 This example shows the XML data fragment for adding the
-`greeter-container-config` element to the `domain.xml` file. The
-`greeter-container-config` element contains the subelement
-`greeter-element`.
+`greeter-container-config` element to the `domain.xml` file.
+The `greeter-container-config` element contains the subelement `greeter-element`.
 
 The attributes of `greeter-container-config` are initialized as follows:
 
@@ -864,10 +852,9 @@ The attributes of `greeter-container-config` are initialized as follows:
 * The `language` attribute is set to `norsk`.
 * The `style` element is set to `formal`.
 
-The `greeter-port` attribute of the `greeter-element` element is set to
-`1040`.
+The `greeter-port` attribute of the `greeter-element` element is set to `1040`.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <greeter-container-config number-of-instances="5" language="norsk" style="formal">
     <greeter-element greeter-port="1040"/>
@@ -877,5 +864,3 @@ The `greeter-port` attribute of the `greeter-element` element is set to
 The definition of the `greeter-container-config` element is shown in
 link:#gkamy[Example 6-11]. The definition of the `greeter-element`
 element is shown in link:#gkamb[Example 6-12].
-
-----

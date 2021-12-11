@@ -4,6 +4,7 @@ title=Adding Container Capabilities
 next=session-persistence-modules.html
 prev=adding-configuration-data.html
 ~~~~~~
+
 Adding Container Capabilities
 =============================
 
@@ -11,8 +12,8 @@ Adding Container Capabilities
 
 
 [[adding-container-capabilities]]
-7 Adding Container Capabilities
--------------------------------
+Adding Container Capabilities
+-----------------------------
 
 Applications run on Eclipse GlassFish Server in containers. GlassFish Server
 enables you to create containers that extend or replace the existing
@@ -55,7 +56,7 @@ Marking the Class With the `@Service` Annotation
 Add a `com.jvnet.hk2.annotations.Service` annotation at the class
 definition level to identify your class as a service implementation.
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Service
 public class MyContainer implements Container {
@@ -67,7 +68,7 @@ To avoid potential name collisions with other containers, use the fully
 qualified class name of your container class in the `@Service`
 annotation's `name` element:
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.containers;
 ...
@@ -119,18 +120,16 @@ The `DeploymentContext` is the usual context object passed around
 deployer instances during deployment.
 
 [[GSACG00064]][[ghojg]]
-
-
 Example 7-1 Example Implementation of `Container`
 
 This example shows a Java programming language class that implements the
 `Container` interface and is capable of extending the functionality of
 GlassFish Server.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.containers;
-contains
+
 @Service(name="com.example.containers.MyContainer")
 public class MyContainer implements Container {
     public String getName() {
@@ -144,11 +143,9 @@ public class MyContainer implements Container {
 ----
 
 [[GSACG00065]][[ghoiv]]
-
-
 Example 7-2 Example Implementation of `Deployer`
 
-[source,oac_no_warn]
+[source,java]
 ----
 package com.example.containers;
 
@@ -287,7 +284,7 @@ containers in which the application will be deployed.
   returned by `DeploymentContext.getScratchDir()`, as stubs and other
   artifacts are generated in the scratch directory.
 `expand(ReadableArchive source, WritableArchive target)`::
-  Prepares the `ReadableArchive`source archive for loading into the
+  Prepares the `ReadableArchive`++'s++ source archive for loading into the
   container in a format the container accepts. Such preparation could be
   to expand a compressed archive, or possibly nothing at all if the
   source archive format is already in a state that the container can
@@ -308,15 +305,12 @@ configure containers on demand.
 
 When a deployment request is received by the GlassFish Server runtime:
 
-1.  The current `Sniffer` implementations are used to determine the
-application type.
-2.  Once an application type is found, the runtime looks for a running
+1. The current `Sniffer` implementations are used to determine the application type.
+2. Once an application type is found, the runtime looks for a running
 container associated with that application type. If no running container
 is found, the runtime attempts to install and configure the container
-associated with the application type as defined by the `Sniffer`
-implementation.
-3.  The `Deployer` interface is used to prepare and load the
-implementation.
+associated with the application type as defined by the `Sniffer` implementation.
+3. The `Deployer` interface is used to prepare and load the implementation.
 
 [[ghozd]][[GSACG00237]][[associating-file-types-with-containers-by-using-the-sniffer-interface]]
 
@@ -339,20 +333,17 @@ container's runtime classes.
 
 A simple version of a `Sniffer` implementation uses the `handles` method
 to check the existence of a file in the archive that denotes the
-application type (as `WEB-INF/web.xml` denotes a web application). Once
-a `Sniffer` implementation has detected that it can handle the
+application type (as `WEB-INF/web.xml` denotes a web application).
+Once a `Sniffer` implementation has detected that it can handle the
 deployment request artifact, GlassFish Server calls the `setUp` method.
 The `setUp` method is responsible for setting up the container, which
 can involve one or more of the following actions:
 
-* Downloading the container's runtime (the first time that a container
-is used)
-* Installing the container's runtime (the first time that a container is
-used)
+* Downloading the container's runtime (the first time that a container is used)
+* Installing the container's runtime (the first time that a container is used)
 * Setting up one or more repositories to access the runtime's classes
-(these are implementations of the HK2
-`com.sun.enterprise.module.Repository` interface, such as the
-`com.sun.enterprise.module.impl.DirectoryBasedRepository` class)
+(these are implementations of the HK2 `com.sun.enterprise.module.Repository` interface,
+such as the `com.sun.enterprise.module.impl.DirectoryBasedRepository` class)
 
 The `setUp` method returns an array of the
 `com.sun.enterprise.module.Module` objects required by the container.
@@ -445,25 +436,22 @@ that are listed in the following table. The table also provides a
 cross-reference to the listing of each class or interface.
 
 [width="100%",cols="<50%,<50%",options="header",]
-|==============================================
+|===
 |Class or Interface |Listing
-|`Greeter` |link:#gkamr[Example 7-3] +
-|`GreeterContainer` |link:#gkand[Example 7-4] +
-|`GreeterContainer` |link:#gkamm[Example 7-5] +
-|`GreeterDeployer` |link:#gkalo[Example 7-6] +
-|`GreeterSniffer` |link:#gkaks[Example 7-7] +
-|==============================================
-
+|`Greeter` |link:#gkamr[Example 7-3]
+|`GreeterContainer` |link:#gkand[Example 7-4]
+|`GreeterContainer` |link:#gkamm[Example 7-5]
+|`GreeterDeployer` |link:#gkalo[Example 7-6]
+|`GreeterSniffer` |link:#gkaks[Example 7-7]
+|===
 
 [[GSACG00066]][[gkamr]]
-
-
 Example 7-3 Annotation to Denote a Container's Component
 
 This example shows the code for defining a component of the `Greeter`
 container.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter;
 
@@ -486,14 +474,12 @@ public @interface Greeter {
 ----
 
 [[GSACG00067]][[gkand]]
-
-
 Example 7-4 Application Container Class
 
 This example shows the Java language class `GreeterAppContainer`, which
 implements the `ApplicationContainer` interface.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter;
 
@@ -557,14 +543,12 @@ public class GreeterAppContainer implements ApplicationContainer {
 ----
 
 [[GSACG00068]][[gkamm]]
-
-
 Example 7-5 Container Class
 
 This example shows the Java language class `GreeterContainer`, which
 implements the `Container` interface.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter;
 
@@ -591,14 +575,12 @@ public class GreeterContainer implements Container {
 ----
 
 [[GSACG00069]][[gkalo]]
-
-
 Example 7-6 Deployer Class
 
 This example shows the Java language class `GreeterDeployer`, which
 implements the `Deployer` interface.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter;
 
@@ -671,14 +653,12 @@ public class GreeterDeployer
 ----
 
 [[GSACG00070]][[gkaks]]
-
-
 Example 7-7 Sniffer Class
 
 This example shows the Java language class `GreeterSniffer`, which
 implements the `Sniffer` interface.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package org.glassfish.examples.extension.greeter;
 
@@ -776,20 +756,21 @@ listed in the following table. The table also provides a cross-reference
 to the listing of each class or resource.
 
 [width="100%",cols="<50%,<50%",options="header",]
-|==================================================
+|===
 |Class or Resource |Listing
-|`HelloWorld` |link:#gkaki[Example 7-8] +
-|`SimpleGreeter` |link:#gkalf[Example 7-9] +
-|Deployment descriptor |link:#gkaly[Example 7-10] +
-|==================================================
+|`HelloWorld` |link:#gkaki[Example 7-8]
++
+|`SimpleGreeter` |link:#gkalf[Example 7-9]
++
+|Deployment descriptor |link:#gkaly[Example 7-10]
++
+|===
 
 
 [[GSACG00071]][[gkaki]]
-
-
 Example 7-8 Container Client Class
 
-[source,oac_no_warn]
+[source,java]
 ----
 import components.SimpleGreeter;
 
@@ -826,11 +807,9 @@ public class HelloWorld extends HttpServlet {
 ----
 
 [[GSACG00072]][[gkalf]]
-
-
 Example 7-9 Component for Container Client
 
-[source,oac_no_warn]
+[source,java]
 ----
 package components;
 
@@ -846,11 +825,9 @@ public class SimpleGreeter {
 ----
 
 [[GSACG00073]][[gkaly]]
-
-
 Example 7-10 Deployment Descriptor for Container Client
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="3.1"

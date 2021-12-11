@@ -4,15 +4,16 @@ title=Introduction to the Development Environment for Eclipse GlassFish Add-On C
 next=writing-hk2-components.html
 prev=preface.html
 ~~~~~~
+
 Introduction to the Development Environment for Eclipse GlassFish Add-On Components
-==================================================================================
+===================================================================================
 
 [[GSACG00001]][[ghmlv]]
 
 
 [[introduction-to-the-development-environment-for-eclipse-glassfish-add-on-components]]
-1 Introduction to the Development Environment for Eclipse GlassFish Add-On Components
-------------------------------------------------------------------------------------
+Introduction to the Development Environment for Eclipse GlassFish Add-On Components
+-----------------------------------------------------------------------------------
 
 Eclipse GlassFish enables an external vendor such as
 an independent software vendor (ISV), original equipment manufacturer
@@ -295,4 +296,3 @@ For more information, see
 link:packaging-integrating-delivering.html#ghmxp[Packaging, Integrating,
 and Delivering an Add-On Component].
 
-----

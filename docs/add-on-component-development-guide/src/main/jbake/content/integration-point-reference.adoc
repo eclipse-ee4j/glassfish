@@ -3,6 +3,7 @@ status=published
 title=Integration Point Reference
 prev=packaging-integrating-delivering.html
 ~~~~~~
+
 Integration Point Reference
 ===========================
 
@@ -10,13 +11,12 @@ Integration Point Reference
 
 
 [[a-integration-point-reference]]
-A Integration Point Reference
------------------------------
+Integration Point Reference
+---------------------------
 
 This appendix provides reference information about integration points,
 which are described in
-link:extending-the-admin-console.html#ghmrb[Extending the Administration
-Console]. 
+link:extending-the-admin-console.html#ghmrb[Extending the Administration Console].
 Define an integration point for each user interface feature in the
 `console-config.xml` file for your add-on component.
 
@@ -25,8 +25,7 @@ The following topics are addressed here:
 * link:#ghprc[Integration Point Attributes]
 * link:#ghmwa[`org.glassfish.admingui:navNode` Integration Point]
 * link:#gjkff[`org.glassfish.admingui:rightPanel` Integration Point]
-* link:#gjkfq[`org.glassfish.admingui:rightPanelTitle` Integration
-Point]
+* link:#gjkfq[`org.glassfish.admingui:rightPanelTitle` Integration Point]
 * link:#ghpkh[`org.glassfish.admingui:serverInstTab` Integration Point]
 * link:#ghpit[`org.glassfish.admingui:commonTask` Integration Point]
 * link:#ghphz[`org.glassfish.admingui:configuration` Integration Point]
@@ -77,8 +76,9 @@ attributes and their content as follows.
 `type`::
   `org.glassfish.admingui:navNode`, the left-hand navigation tree
 `parentId`::
-  The `id` value of the `navNode` that is the parent for this node. The
-  `parentId` can be any of the following: +
+  The `id` value of the `navNode` that is the parent for this node.
+  The `parentId` can be any of the following:
++
   `tree`;;
     The root node of the entire navigation tree. Use this value to place
     your node at the top level of the tree. You can then use the `id` of
@@ -96,18 +96,14 @@ attributes and their content as follows.
   `webContainer`;;
     The Web Container node under the Configuration node
   `httpService`;;
-    The HTTP Service node under the Configuration node +
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+    The HTTP Service node under the Configuration node
++
+[NOTE]
+====
 The `webContainer` and `httpService` nodes are available only if you
 installed the web container module for the Administration Console (the
 `console-web-gui.jar` OSGi bundle).
-
-|=======================================================================
+====
 
 `priority`::
   A numeric value that specifies the relative ordering of the node on
@@ -117,8 +113,7 @@ installed the web container module for the Administration Console (the
   to be integrated, or a URL to an external resource that returns the
   appropriate data structure for inclusion.
 
-For an example, see link:extending-the-admin-console.html#ghpmb[Example
-3-2].
+For an example, see link:extending-the-admin-console.html#ghpmb[Example 3-2].
 
 [[gjkff]][[GSACG00147]][[org.glassfish.adminguirightpanel-integration-point]]
 
@@ -177,19 +172,20 @@ Console. Specify the attributes and their content as follows.
   The `id` value of the tab set that is the parent for this tab. For a
   top-level tab on this page, this value is `serverInstTabs`, the tab
   set that contains the general information property pages for GlassFish
-  Server. +
+  Server.
   For a sub-tab, the value is the `id` value for the parent tab.
 `priority`::
   A numeric value that specifies the relative ordering of the tab on the
   page, whether at the top level or under another tab.
 `content`::
   A relative path to the Jakarta Server Faces page that contains the content
-  to be integrated. +
+  to be integrated.
   When you use this integration point, your Jakarta Server Faces page must
   call the `setSessionAttribute` handler for the `command` event to set
   the session variable of the `serverInstTabs` tab set to the `id` value
-  of your tab. For example, the file may have the following content: +
-[source,oac_no_warn]
+  of your tab. For example, the file may have the following content:
++
+[source,xml]
 ----
 <sun:tab id="sampletab" immediate="true" text="Sample First Tab">
     <!command
@@ -198,7 +194,6 @@ Console. Specify the attributes and their content as follows.
     />
 </sun:tab>
 ----
-::
   The `id` of the `sun:tab` custom tag must be the same as the `value`
   argument of the `setSessionAttribute` handler.
 
@@ -218,7 +213,7 @@ Console. Specify the attributes and their content as follows.
   `org.glassfish.admingui:commonTask`
 `parentId`::
   If you are adding a task group, the `id` value of the Common Tasks
-  page, which is `commonTasksSection`. +
+  page, which is `commonTasksSection`.
   If you are adding a single task, the `id` value of the task group that
   is the parent for this tab, such as `deployment` (for the Deployment
   group).
@@ -300,15 +295,16 @@ this integration point.
 `content`::
   The name of the properties file that contains the key/value pairs that
   will be used to access your theme JAR file. You must specify the
-  following keys: +
+  following keys:
   `com.sun.webui.theme.DEFAULT_THEME`;;
     Specifies the theme name for the theme that this application may
     depend on.
   `com.sun.webui.theme.DEFAULT_THEME_VERSION`;;
-    Specifies the theme version this application may depend on. +
-  For example, the properties file for the default Administration
-  Console brand contains the following: +
-[source,oac_no_warn]
+    Specifies the theme version this application may depend on.
++
+For example, the properties file for the default Administration Console brand contains the following:
++
+[source]
 ----
 com.sun.webui.theme.DEFAULT_THEME=suntheme
 com.sun.webui.theme.DEFAULT_THEME_VERSION=4.3
@@ -418,4 +414,3 @@ Specify the attributes and their content as follows. Do not specify a
 For an example, see link:extending-the-admin-console.html#ghpla[Example
 3-15].
 
-----

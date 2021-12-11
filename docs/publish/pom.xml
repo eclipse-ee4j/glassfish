@@ -193,7 +193,7 @@
                                     <skipDeletedFiles>false</skipDeletedFiles>
                                     <checkinComment>Update docs</checkinComment>
                                     <ignorePathsToDelete>
-                                        <ignorePathToDelete>docs/latest</ignorePathToDelete>
+                                        <ignorePathsToDelete>latest</ignorePathsToDelete>
                                     </ignorePathsToDelete>
                                 </configuration>
                             </execution>

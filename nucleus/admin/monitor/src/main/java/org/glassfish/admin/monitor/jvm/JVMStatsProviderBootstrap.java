@@ -1,5 +1,6 @@
 /*
  * Copyright (c) 2009, 2018 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021 Contributors to the Eclipse Foundation
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -45,7 +46,6 @@ public class JVMStatsProviderBootstrap implements PostConstruct {
     private JVMOSStatsProvider osStatsProvider = new JVMOSStatsProvider();
     private JVMRuntimeStatsProvider runtimeStatsProvider = new JVMRuntimeStatsProvider();
     private JVMThreadSystemStatsProvider threadSysStatsProvider = new JVMThreadSystemStatsProvider();
-    private List<JVMGCStatsProvider> jvmStatsProviderList = new ArrayList();
     private ThreadMXBean threadBean = ManagementFactory.getThreadMXBean();
     public static final String JVM = "jvm";
 
@@ -59,7 +59,6 @@ public class JVMStatsProviderBootstrap implements PostConstruct {
                 ContainerMonitoring.LEVEL_LOW);
         for (GarbageCollectorMXBean gc : ManagementFactory.getGarbageCollectorMXBeans()) {
             JVMGCStatsProvider jvmStatsProvider = new JVMGCStatsProvider(gc.getName());
-            jvmStatsProviderList.add(jvmStatsProvider);
             StatsProviderManager.register("jvm", PluginPoint.SERVER, "jvm/garbage-collectors/" + gc.getName(), jvmStatsProvider,
                     ContainerMonitoring.LEVEL_LOW);
         }

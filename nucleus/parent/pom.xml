@@ -84,7 +84,7 @@
 
         <!-- Jakarta EL -->
         <jakarta.el-api.version>5.0.0</jakarta.el-api.version>
-        <jakarta.el.version>4.0.2</jakarta.el.version>
+        <jakarta.el.version>5.0.0-M1</jakarta.el.version>
 
         <!-- Jakarta Servlet -->
         <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
@@ -577,17 +577,17 @@
             <dependency>
                 <groupId>org.apache.felix</groupId>
                 <artifactId>org.apache.felix.scr</artifactId>
-                <version>2.1.28</version>
+                <version>2.2.0-RC1</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.util.promise</artifactId>
-                <version>1.2.0</version>
+                <version>1.1.1</version>
             </dependency>
             <dependency>
                 <groupId>org.osgi</groupId>
                 <artifactId>org.osgi.util.function</artifactId>
-                <version>1.2.0</version>
+                <version>1.1.0</version>
             </dependency>
 
             <dependency>

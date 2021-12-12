@@ -144,7 +144,7 @@
 
         <!-- Jakarta Server Pages -->
         <jsp-api.version>3.1.0</jsp-api.version>
-        <wasp.version>3.1.0-SNAPSHOT</wasp.version>
+        <wasp.version>3.1.0-M1</wasp.version>
 
         <!-- Used for Jakarta XML Web Services -->
         <woodstox.version>6.2.7</woodstox.version>

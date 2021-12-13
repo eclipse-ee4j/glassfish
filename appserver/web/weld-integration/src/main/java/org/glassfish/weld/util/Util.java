@@ -41,9 +41,7 @@ public class Util {
                 return clazz;
             }
             Class<?> c = Class.forName(name);
-            @SuppressWarnings("unchecked")
-            Class<T> clazz = (Class<T>) c;
-            return clazz;
+            return (Class<T>) c;
         } catch (ClassNotFoundException | NoClassDefFoundError e) {
             throw new IllegalArgumentException("Cannot load class for " + name, e);
         }

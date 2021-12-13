@@ -40,13 +40,15 @@ public class WeldApplication extends ApplicationWrapper {
 
     public WeldApplication(Application application) {
         this.application = application;
+
         BeanManager beanManager = getBeanManager();
         if (beanManager != null) {
             application.addELContextListener(Util.<ELContextListener>newInstance("org.jboss.weld.module.web.el.WeldELContextListener"));
             application.addELResolver(beanManager.getELResolver());
+
             JspApplicationContext jspAppContext = JspFactory.getDefaultFactory()
                     .getJspApplicationContext((ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext());
-            this.expressionFactory = beanManager.wrapExpressionFactory(jspAppContext.getExpressionFactory());
+            expressionFactory = beanManager.wrapExpressionFactory(jspAppContext.getExpressionFactory());
             ((JspApplicationContextImpl) jspAppContext).setExpressionFactory(this.expressionFactory);
         }
     }
@@ -58,21 +60,21 @@ public class WeldApplication extends ApplicationWrapper {
 
     @Override
     public ExpressionFactory getExpressionFactory() {
-        if (this.expressionFactory == null) {
+        if (expressionFactory == null) {
             BeanManager beanManager = getBeanManager();
             if (beanManager != null) {
-                this.expressionFactory = beanManager.wrapExpressionFactory(getWrapped().getExpressionFactory());
+                expressionFactory = beanManager.wrapExpressionFactory(getWrapped().getExpressionFactory());
             } else {
-                this.expressionFactory = getWrapped().getExpressionFactory();
+                expressionFactory = getWrapped().getExpressionFactory();
             }
         }
+
         return expressionFactory;
     }
 
     private BeanManager getBeanManager() {
         try {
-            InitialContext context = new InitialContext();
-            return (BeanManager) context.lookup("java:comp/BeanManager");
+            return (BeanManager) new InitialContext().lookup("java:comp/BeanManager");
         } catch (NamingException e) {
             return null;
         }

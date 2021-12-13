@@ -18,7 +18,6 @@ package org.glassfish.weld;
 
 import static java.util.Collections.emptyList;
 
-import java.net.URL;
 import java.util.Collection;
 
 import org.glassfish.api.deployment.DeploymentContext;

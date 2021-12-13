@@ -633,8 +633,7 @@ public class BeanDeploymentArchiveImpl implements BeanDeploymentArchive {
         } else {
             className = filename.replace(SEPARATOR_CHAR, '.');
         }
-        className = className.substring(0, className.length() - 6);
-        return className;
+        return className.substring(0, className.length() - 6);
     }
 
     private ClassLoader getClassLoader() {

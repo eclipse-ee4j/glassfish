@@ -155,8 +155,8 @@
         <jstl-impl.version>2.0.0</jstl-impl.version>
 
         <!-- CDI -->
-        <cdi-api.version>3.0.0</cdi-api.version>
-        <weld.version>4.0.2.Final</weld.version>
+        <cdi-api.version>4.0.0.Beta3</cdi-api.version>
+        <weld.version>5.0.0.Alpha2</weld.version>
         <jboss.classfilewriter.version>1.2.5.Final</jboss.classfilewriter.version>
 
         <!-- Jakarta MVC -->
@@ -482,6 +482,11 @@
                         <artifactId>jakarta.inject</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.enterprise</groupId>
+                <artifactId>jakarta.enterprise.lang-model</artifactId>
+                <version>${cdi-api.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld</groupId>

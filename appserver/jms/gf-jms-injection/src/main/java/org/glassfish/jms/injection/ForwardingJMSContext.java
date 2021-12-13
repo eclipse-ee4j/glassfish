@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,8 +18,27 @@
 package org.glassfish.jms.injection;
 
 import java.io.Serializable;
-import jakarta.jms.*;
+
 import com.sun.enterprise.util.LocalStringManagerImpl;
+
+import jakarta.jms.BytesMessage;
+import jakarta.jms.ConnectionMetaData;
+import jakarta.jms.Destination;
+import jakarta.jms.ExceptionListener;
+import jakarta.jms.IllegalStateRuntimeException;
+import jakarta.jms.JMSConsumer;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSProducer;
+import jakarta.jms.MapMessage;
+import jakarta.jms.Message;
+import jakarta.jms.ObjectMessage;
+import jakarta.jms.Queue;
+import jakarta.jms.QueueBrowser;
+import jakarta.jms.StreamMessage;
+import jakarta.jms.TemporaryQueue;
+import jakarta.jms.TemporaryTopic;
+import jakarta.jms.TextMessage;
+import jakarta.jms.Topic;
 
 // Delegate all business methods to JMSContext API
 public abstract class ForwardingJMSContext implements JMSContext {
@@ -238,6 +258,6 @@ public abstract class ForwardingJMSContext implements JMSContext {
 
     private IllegalStateRuntimeException getUnsupportedException() {
         return new IllegalStateRuntimeException(localStrings.getLocalString("JMSContext.injection.not.supported",
-                                      "This method is not permitted on a container-managed (injected) JMSContext."));
+                "This method is not permitted on a container-managed (injected) JMSContext."));
     }
 }

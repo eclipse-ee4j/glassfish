@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2014, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -166,11 +167,6 @@ public class TransactionScopedCDIUtil {
 
         @Override
         public boolean isAlternative() {
-            return false;
-        }
-
-        @Override
-        public boolean isNullable() {
             return false;
         }
 

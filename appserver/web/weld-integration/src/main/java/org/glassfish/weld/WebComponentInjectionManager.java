@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2009, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,10 +29,12 @@ import com.sun.enterprise.web.WebComponentDecorator;
 import com.sun.enterprise.web.WebModule;
 
 import jakarta.enterprise.context.spi.CreationalContext;
+import jakarta.enterprise.inject.spi.AnnotatedType;
 import jakarta.enterprise.inject.spi.BeanManager;
+import jakarta.enterprise.inject.spi.InjectionTargetFactory;
 
 /**
- * This is a decorator which calls Weld implemetation to do necessary injection of a web component. It is called by
+ * This is a decorator which calls Weld implementation to do necessary injection of a web component. It is called by
  * {@link com.sun.web.server.J2EEInstanceListener} before a web component is put into service.
  *
  * @author Sanjeeb.Sahoo@Sun.COM
@@ -52,12 +55,14 @@ public class WebComponentInjectionManager<T> implements WebComponentDecorator<T>
                                                               .getBeanDeploymentArchives()
                                                               .iterator().next());
 
+            Class<T> beanClass = (Class<T>) webComponent.getClass();
+            
             // PENDING : Not available in this Web Beans Release
-            CreationalContext<T> ccontext = beanManager.createCreationalContext(null);
-
-            beanManager.createInjectionTarget(
-                beanManager.createAnnotatedType(
-                    (Class<T>) webComponent.getClass())).inject(webComponent, ccontext);
+            CreationalContext<T> creationalContext = beanManager.createCreationalContext(null);
+            AnnotatedType<T> annotatedType = (AnnotatedType<T>) beanManager.createAnnotatedType(beanClass);
+            InjectionTargetFactory<T> injectionTargetFactory = beanManager.getInjectionTargetFactory(annotatedType);
+            
+            injectionTargetFactory.createInjectionTarget(null).inject(webComponent, creationalContext);
         }
     }
 }

@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -20,10 +21,9 @@ import jakarta.transaction.TransactionScoped;
 
 @TransactionScoped
 public class TransactedJMSContextManager extends AbstractJMSContextManager {
-    public TransactedJMSContextManager() {
-        super();
-    }
+    private static final long serialVersionUID = 1L;
 
+    @Override
     public String getType() {
         return "TransactionScoped";
     }

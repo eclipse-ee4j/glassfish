@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2012, 2020 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,18 +18,23 @@
 package org.glassfish.jms.injection;
 
 import java.io.Serializable;
-import jakarta.jms.JMSContext;
+
 import org.glassfish.api.invocation.ComponentInvocation;
 
+import jakarta.jms.JMSContext;
+
 public class JMSContextEntry implements Serializable {
+    
+    private static final long serialVersionUID = 5250371279470306316L;
+    
     private final String injectionPointId;
-    private final JMSContext ctx;
-    private final transient ComponentInvocation inv;
+    private final JMSContext jmsContext;
+    private final transient ComponentInvocation componentInvocation;
 
     public JMSContextEntry(String ipId, JMSContext context, ComponentInvocation inv) {
         injectionPointId = ipId;
-        ctx = context;
-        this.inv = inv;
+        jmsContext = context;
+        this.componentInvocation = inv;
     }
 
     public String getInjectionPointId() {
@@ -36,10 +42,10 @@ public class JMSContextEntry implements Serializable {
     }
 
     public JMSContext getCtx() {
-        return ctx;
+        return jmsContext;
     }
 
     public ComponentInvocation getComponentInvocation() {
-        return inv;
+        return componentInvocation;
     }
 }

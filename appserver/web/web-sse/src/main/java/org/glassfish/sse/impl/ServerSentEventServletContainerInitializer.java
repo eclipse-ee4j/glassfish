@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -28,8 +29,7 @@ import org.glassfish.sse.api.*;
 /**
  * Registers a context listener to get ServletContext
  *
- * Registers a servlet dynamically if there are ServerSentEventHandlers in
- * an application.
+ * Registers a servlet dynamically if there are ServerSentEventHandlers in an application.
  *
  * @author Jitendra Kotamraju
  */
@@ -43,7 +43,7 @@ public class ServerSentEventServletContainerInitializer implements ServletContai
 
         // Check if there is already a servlet for server sent events
         Map<String, ? extends ServletRegistration> registrations = ctx.getServletRegistrations();
-        for(ServletRegistration reg : registrations.values()) {
+        for (ServletRegistration reg : registrations.values()) {
             if (reg.getClass().equals(ServerSentEventServlet.class)) {
                 return;
             }
@@ -52,11 +52,11 @@ public class ServerSentEventServletContainerInitializer implements ServletContai
         // Collect all the url patterns for server sent event handlers
         List<String> urlPatternList = new ArrayList<String>();
 
-        for(Class<?> clazz : set) {
+        for (Class<?> clazz : set) {
             if (ServerSentEventHandler.class.isAssignableFrom(clazz)) {
                 ServerSentEvent handler = clazz.getAnnotation(ServerSentEvent.class);
                 if (handler == null) {
-                    throw new RuntimeException("ServerSentEventHandler Class "+clazz+" doesn't have WebHandler annotation");
+                    throw new RuntimeException("ServerSentEventHandler Class " + clazz + " doesn't have WebHandler annotation");
                 }
                 urlPatternList.add(handler.value());
             }

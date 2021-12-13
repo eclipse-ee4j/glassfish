@@ -1,4 +1,5 @@
 /*
+ * Copyright (c) 2021 Contributors to Eclipse Foundation.
  * Copyright (c) 2011, 2018 Oracle and/or its affiliates. All rights reserved.
  *
  * This program and the accompanying materials are made available under the
@@ -17,7 +18,6 @@
 package org.glassfish.sse.api;
 
 import jakarta.servlet.http.HttpServletRequest;
-import java.io.IOException;
 
 /**
  * A handler that handles Server-Sent Events.
@@ -28,18 +28,18 @@ import java.io.IOException;
 public abstract class ServerSentEventHandler {
     protected ServerSentEventConnection connection;
 
-    public enum Status { DONT_RECONNECT, OK }
+    public enum Status {
+        DONT_RECONNECT, OK
+    }
 
     /**
-     * A callback to indicate that a client connects to receive Server-Sent Events.
-     * The application has full access to HTTP request and can decide whether
-     * to accept the connection or reject it. In SSE, clients will reconnect
-     * if the connection is closed, but can be told to stop reconnecting by
-     * returning the appropriate status.
+     * A callback to indicate that a client connects to receive Server-Sent Events. The application has full access to HTTP
+     * request and can decide whether to accept the connection or reject it. In SSE, clients will reconnect if the
+     * connection is closed, but can be told to stop reconnecting by returning the appropriate status.
      *
      * <p>
-     * Last-Event-ID may be used in determining the status and it can be
-     * got using {@code HttpServletRequest.getHeader("Last-Event-ID")}
+     * Last-Event-ID may be used in determining the status and it can be got using
+     * {@code HttpServletRequest.getHeader("Last-Event-ID")}
      *
      * @param request connection request
      * @return Status to accept, or don't reconnect etc
@@ -49,11 +49,9 @@ public abstract class ServerSentEventHandler {
     }
 
     /**
-     * A callback to indicate that a client connects to receive Server-Sent Events.
-     * The application has full access to HTTP request and can decide whether
-     * to accept the connection or reject it. In SSE, clients will reconnect
-     * if the connection is closed, but can be told to stop reconnecting by
-     * returning the appropriate status.
+     * A callback to indicate that a client connects to receive Server-Sent Events. The application has full access to HTTP
+     * request and can decide whether to accept the connection or reject it. In SSE, clients will reconnect if the
+     * connection is closed, but can be told to stop reconnecting by returning the appropriate status.
      *
      * @param connection Server-Sert event connection
      * @return Status to accept, or don't reconnect etc

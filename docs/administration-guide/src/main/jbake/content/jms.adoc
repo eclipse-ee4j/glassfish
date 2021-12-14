@@ -273,14 +273,12 @@ Embedded Type::
   When the JMS service configuration's `type` attribute is `EMBEDDED`,
   the MQ broker is co-located in the same JVM as the GlassFish server
   instance it services. The JMS service starts it in-process and manages
-  its configuration and lifecycle.
-+
+  its configuration and lifecycle. +
   For this type, the JMS service uses lazy initialization to start the
   broker when the first JMS operation is requested instead of
   immediately when the GlassFish instance is started. If necessary, you
   can force startup of the broker by using the
-  link:../reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] command.
-+
+  link:../reference-manual/jms-ping.html#GSRFM00144[`jms-ping`] command. +
   Additionally, if the GlassFish instance is a standalone instance (not
   a clustered instance), JMS operations use a Message Queue feature
   called direct mode to bypass the networking stack, leading to
@@ -290,11 +288,9 @@ Local Type::
   JMS service starts the MQ broker specified in the configuration as the
   default JMS host in a separate process on the same host as the
   GlassFish server instance. The JMS service manages its configuration
-  and lifecycle.
-+
+  and lifecycle. +
   For this type, the JMS service starts the broker immediately when the
-  GlassFish instance is started.
-+
+  GlassFish instance is started. +
   The JMS service provides the Message Queue broker an additional port
   to start the RMI registry. This port number is equal to the broker's
   JMS port plus 100. For example, if the JMS port number is 37676, then
@@ -399,7 +395,6 @@ asadmin> create-jms-host --mqhost hostName --mqport portNumber
 ----
 prop1Name=prop1Value:prop2Name=prop2Value:...
 ----
-::
   If a broker property name includes dots, preface the dots with two
   backslashes (`\\`); for example, to include the `imq.system.max_count`
   property, specify `imq\\.system\\.max_count` in the `--property`
@@ -1021,26 +1016,24 @@ Restarting an Embedded or Local Broker That Has Failed::
 Changing the Admin User Password for an Embedded or Local Broker::
   Follow these steps to change the `admin` user password for an Embedded
   or Local broker:
-+
-  1.  [[CHDDHDIE]]
-+
+  1. [[CHDDHDIE]]
   Make sure the broker is running.
-  2.  [[CHDHDFAH]]
-+
+
+  2. [[CHDHDFAH]]
   Use the `imqusermgr` Message Queue utility to change the password of
   the `admin` user.
-  3.  [[CHDCJEFG]]
-+
+
+  3. [[CHDCJEFG]]
   Edit the configuration of the JMS host, changing the password of the
   `admin` user to the new password.
-  4.  [[CHDFJECE]]
-+
-  Restart the GlassFish instance that the broker is servicing.
-+
+
+  4. [[CHDFJECE]]
+  Restart the GlassFish instance that the broker is servicing. +
   When changing the password for the brokers in a broker cluster, first
   perform steps link:#CHDDHDIE[1] and link:#CHDHDFAH[2] on each broker.
   Then, perform step link:#CHDCJEFG[3]. Finally, perform
   step link:#CHDFJECE[4] on each broker.
+
 Using SSL to Connect to an Oracle Internet Directory (OID) or Oracle
 Virtual Directory (OVD) User Respository::
   When using SSL to connect to an OID or OVD user repository, you must

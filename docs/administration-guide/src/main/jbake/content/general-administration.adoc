@@ -2073,6 +2073,7 @@ children::
   url;;
     The URL to the child resource.
 
+
 [[gkvyr]][[GSADG00024]][[json-representation-of-a-command-in-a-command-list]]
 
 JSON Representation of a Command in a Command List
@@ -2159,8 +2160,7 @@ attribute-list::
 ----
 "name":"value"
 ----
-::
-  Possible attributes are as follows:
+Possible attributes are as follows:
 +
   `defaultValue`;;
     The default value of the parameter.
@@ -2299,7 +2299,6 @@ children::
 ----
 <entry key="resource-name" value="url"></entry>
 ----
-::
   resource-name;;
     The name of the resource as displayed in client applications that
     access the parent of the resource.
@@ -2402,7 +2401,6 @@ attributes::
 ----
 <entry key="name" value="value"></entry>
 ----
-::
   Possible attributes are as follows:
 +
   `defaultValue`;;
@@ -2802,7 +2800,6 @@ children::
 ----
 <entry key="resource-name" value="url"></entry>
 ----
-::
   resource-name;;
     The name of the resource as displayed in client applications that
     access the parent of the resource.

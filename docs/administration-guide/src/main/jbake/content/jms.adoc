@@ -1163,7 +1163,7 @@ The following table describes the properties that can be set to when
 configuring the resource adapter.
 
 [width="100%",cols="28%,19%,14%,39%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Values |Default Value |Description
 |`SupportsXA` |`true/false` |false |Specifies whether the JMS client
 supports XA transactions.
@@ -1252,7 +1252,7 @@ XAResource wrapper implementation's `isSameRM` in GenericJMSRA would
 check if both the `XAResources` use the same physical connection, before
 delegating to the wrapped objects.
 
-|=======================================================================
+|===
 
 
 [[gbtwu]][[GSADG00675]][[connection-factory-properties]]
@@ -1267,7 +1267,7 @@ while creating the resource adapter can be overridden in a
 `ManagedConnectionFactory` are given below.
 
 [width="181%",cols="20%,8%,49%,23%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Value |Default Value |Description
 |`ClientId` |A valid client ID |None |`ClientID` as specified by JMS 1.1
 specification.
@@ -1282,7 +1282,7 @@ only if `ProviderIntegratinMode` is `jndi`.
 resource adapter will use an exception listener to catch any connection
 exception and will send a `CONNECTION_ERROR_OCCURED` event to
 application server.
-|=======================================================================
+|===
 
 
 [[gbtxa]][[GSADG00676]][[destination-properties]]
@@ -1296,7 +1296,7 @@ in a destination. Additional properties available only in the
 destination are given below.
 
 [width="100%",cols="31%,14%,11%,44%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Value |Default Value |Description
 |`DestinationJndiName` |JNDI Name |None |JNDI name of the destination
 bound in the JNDI tree of the JMS provider. The Administrator should
@@ -1307,7 +1307,7 @@ will be used only if `ProviderIntegrationMode` is `jndi`.
 |Specifies the `javabean` property names and values of the destination
 of the JMS client. Required only if `ProviderIntegrationMode` is
 `javabean`.
-|=======================================================================
+|===
 
 
 [[gbtvf]][[GSADG00677]][[activation-spec-properties]]
@@ -1322,7 +1322,7 @@ be overridden in an Activation Spec. Additional properties available
 only in ActivationSpec are given below.
 
 [width="100%",cols="43%,14%,13%,30%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Value |Default Value |Description
 |`MaxPoolSize` |An integer |8 |Maximum size of server session pool
 internally created by the resource adapter for achieving concurrent
@@ -1399,7 +1399,7 @@ destination type for dead messages.
 attempted in case exception listener catches an error on connection.
 
 |`ReconnectInterval` |time in seconds |0 |Interval between reconnects.
-|=======================================================================
+|===
 
 
 [[gkkuy]][[GSADG00778]][[using-genericjmsra-with-weblogic-jms]]
@@ -1519,7 +1519,7 @@ Server is running on to suit your installation.
 In this example, the following properties are configured:
 
 [width="100%",cols="28%,72%",options="header",]
-|===============================================================
+|===
 |Property |Value
 |`SupportsXA` |`false`
 |`DeliveryType` |`Synchronous`
@@ -1535,7 +1535,7 @@ java.naming.factory.initial
 (replace "localhost:7001" with the host:port of WebLogic Server)
 ----
 
-|===============================================================
+|===
 
 
 You must use the same values for `SupportsXA`, `DeliveryType` and
@@ -1977,7 +1977,7 @@ it is deployed, and can be specified using the
 `create-resource-adapter-config` command.
 
 [width="100%",cols="28%,42%,30%",options="header",]
-|=======================================================================
+|===
 |Property Name |Required Value |Description
 |`SupportsXA` |`false` a|
 Specifies whether the JMS client supports XA transactions.
@@ -2021,7 +2021,7 @@ to WebLogic JMS. The password can be overridden in `ActivationSpec` and
 
 |`LogLevel` |`Desired log level of JDK logger` |Used to specify the
 level of logging.
-|=======================================================================
+|===
 
 
 Connection Factory Properties
@@ -2034,7 +2034,7 @@ them on a destination object. The properties specific to
 `ManagedConnectionFactory` objects are listed in the following table.
 
 [width="100%",cols="39%,14%,10%,37%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Value |Default Value |Description
 |`ClientId` |A valid client ID |None |`ClientID` as specified by JMS 1.1
 specification.
@@ -2048,7 +2048,7 @@ in the WebLogic JNDI store.
 `true`, the resource adapter will use an exception listener to catch any
 connection exception and will send a `CONNECTION_ERROR_OCCURED` event to
 GlassFish Server.
-|=======================================================================
+|===
 
 
 Destination Properties
@@ -2061,13 +2061,13 @@ them on a destination object. The properties specific to destination
 objects are listed in the following table.
 
 [width="100%",cols="28%,14%,10%,48%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Value |Default Value |Description
 |`DestinationJndiName` |A valid JNDI name |None |JNDI name of the
 destination object in the GlassFish Server JNDI store. This destination
 object should be configured to refer to the corresponding physical
 destination in the WebLogic JNDI store.
-|=======================================================================
+|===
 
 
 ActivationSpec Properties
@@ -2081,7 +2081,7 @@ Additional properties available only to a ActivationSpec are given
 below.
 
 [width="100%",cols="30%,19%,14%,37%",options="header",]
-|=======================================================================
+|===
 |Property Name |Valid Value |Default Value |Description
 |`MaxPoolSize` |An integer |8 a|
 Maximum size of server session pool internally created by the resource
@@ -2123,7 +2123,7 @@ attempted in case exception listener catches an error on connection.
 
 |`ReconnectInterval` |time in seconds |0 |Interval between reconnection
 attempts.
-|=======================================================================
+|===
 
 
 [[gkslb]][[GSADG00779]][[using-genericjmsra-with-ibm-websphere-mq]]

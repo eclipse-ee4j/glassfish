@@ -341,10 +341,10 @@ one of the following names:::
   This token is replaced with the string `server`.
 +
 [TIP]
-=======================================================================
+====
 For information about how these tokens are used in the default template,
 examine the as-install`/lib/templates/domain.xml` file.
-=======================================================================
+====
 
 5. Create the domain that you want to be based on a custom template.
 In the command to create the domain, pass the name of file that you
@@ -574,7 +574,7 @@ separately.
 
 
 [NOTE]
-=======================================================================
+====
 For Microsoft Windows, you can use an alternate method to start a
 domain. From the Windows Start menu, select the command for your
 distribution of GlassFish Server:
@@ -583,7 +583,7 @@ distribution of GlassFish Server:
 Server > Start Admin Server.
 * If you are using the Web Profile, select Programs > Oracle GlassFish
 Server Web Profile > Start Admin Server.
-=======================================================================
+====
 
 
 This subcommand is supported in local mode only.
@@ -1347,11 +1347,11 @@ GlassFish Server 5.0 requires Java SE 8 as the underlying virtual
 machine for the Java platform (Java Virtual Machine or JVM machine).
 
 [NOTE]
-=======================================================================
+====
 Do not downgrade to an earlier Java version after a domain has been
 created with a newer JVM machine. If you must downgrade your JVM
 machine, downgrade it only for individual domains.
-=======================================================================
+====
 
 1. If you have not already done so, download the desired Java SDK (not the JRE) and install it on your system.
 The Java SDK can be downloaded from the
@@ -1408,13 +1408,13 @@ The new-port-number is the new value that you are setting for the port
 number.
 +
 [NOTE]
-=======================================================================
+====
 After you set the port number to its new value, running the
 `list-domains` subcommand incorrectly reports that the DAS is not
 running. The `list-domains` subcommand reports the correct state again
 only after you stop and restart the domain as explained in the steps
 that follow.
-=======================================================================
+====
 
 3. Stop the domain, specifying the host on which the DAS is running and
 the old administration port number of the domain.
@@ -1424,12 +1424,12 @@ the command fails because the `stop-domain` subcommand attempts to
 contact the DAS through the new port number.
 +
 [NOTE]
-=======================================================================
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the domain, see the olink:GSRFM00240[`stop-domain`(1)] help
 page.
-=======================================================================
+====
 +
 [source]
 ----
@@ -1447,12 +1447,12 @@ old-port-number::
 4. Start the domain.
 +
 [NOTE]
-=======================================================================
+====
 Only the options that are required to complete this task are provided in
 this step. For information about all the options for controlling the
 behavior of the domain, see the olink:GSRFM00235[`start-domain`(1)] help
 page.
-=======================================================================
+====
 +
 [source]
 ----

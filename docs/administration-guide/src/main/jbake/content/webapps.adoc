@@ -53,7 +53,7 @@ The following table describes each URL section.
 Table 6-1 URL Fields for Servlets Within an Application
 
 [width="100%",cols="21%,79%",options="header",]
-|=======================================================================
+|===
 |URL element |Description
 |server`:`port a|
 The IP address (or host name) and optional port number.
@@ -75,7 +75,7 @@ context root is the name of the WAR file minus the `.war` suffix.
 file.
 
 |`?`name`=`value`...` |Optional request parameters.
-|=======================================================================
+|===
 
 
 [[GSADG00166]][[giyhf]]

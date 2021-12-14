@@ -153,7 +153,7 @@ listeners that use ports.
 Table 13-1 Default Ports for Listeners
 
 [width="100%",cols="18%,13%,69%",options="header",]
-|=======================================================================
+|===
 |Listener |Default Port |Description
 |Administrative server |4848 |A domain's administrative server is
 accessed by the Administration Console and the `asadmin` utility. For
@@ -167,7 +167,7 @@ To access deployed web applications and services, clients connect to this port.
 |HTTPS |8181 |Web applications configured for secure communications
 listen on a separate port.
 
-|=======================================================================
+|===
 
 
 The following topics are addressed here:

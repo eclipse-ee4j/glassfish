@@ -1328,7 +1328,7 @@ Table 2-1 REST Resource Methods for Administering Monitoring and
 Configuration Data
 
 [width="100%",cols="74%,26%",options="header",]
-|=======================================================================
+|===
 |Task |REST Method
 |Determine the methods and method parameters that an object in the tree
 supports |`GET`
@@ -1340,7 +1340,7 @@ supports |`GET`
 |Update an object in the tree |`POST`
 
 |Delete an object from the tree |`DELETE`
-|=======================================================================
+|===
 
 
 

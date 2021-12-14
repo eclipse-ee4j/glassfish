@@ -1055,7 +1055,6 @@ online help.
 
 [NOTE]
 ====
-
 Instructions written for the GlassFish Server tools use standard UNIX
 forward slashes (/) for directory path separators in commands and file
 names. If you are running GlassFish Server on a Microsoft Windows

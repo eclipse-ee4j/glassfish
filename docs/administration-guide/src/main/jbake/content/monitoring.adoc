@@ -748,7 +748,7 @@ following table.
 Table 8-1 HTTP Listener Common Monitoring Statistics
 
 [width="100%",cols="17%,83%",options="header",]
-|=======================================================================
+|===
 |Statistic |Description
 |`ec` |Error count. Cumulative value of the error count
 
@@ -761,7 +761,7 @@ each request, with processing time being the average of request
 processing times over request
 
 |`rc` |Request count. Cumulative number of requests processed so far
-|=======================================================================
+|===
 
 
 [[ghlvm]][[GSADG00649]][[jvm-common-statistics]]
@@ -778,7 +778,7 @@ table.
 Table 8-2 JVM Common Monitoring Statistics
 
 [width="100%",cols="19%,81%",options="header",]
-|=======================================================================
+|===
 |Statistic |Description
 |`count` |Amount of memory (in bytes) that is guaranteed to be available
 for use by the JVM machine
@@ -795,7 +795,7 @@ requests from the operating system for memory management during startup
 
 |`UpTime` |Number of milliseconds that the JVM machine has been running
 since it was last started
-|=======================================================================
+|===
 
 
 [[ghljx]][[GSADG00650]][[web-module-common-statistics]]
@@ -812,7 +812,7 @@ following table.
 Table 8-3 Web Module Common Monitoring Statistics
 
 [width="100%",cols="18%,82%",options="header",]
-|=======================================================================
+|===
 |Statistic |Description
 |`ajlc` |Number of active JavaServer Pages (JSP) technology pages that
 are loaded
@@ -834,7 +834,7 @@ are loaded
 |`tjlc` |Total number of JSP pages that are loaded
 
 |`tslc` |Total number of servlets that are loaded
-|=======================================================================
+|===
 
 
 [[ghmct]][[GSADG00560]][[viewing-comprehensive-monitoring-data]]
@@ -897,7 +897,7 @@ For example, the following table explains the output of the `list` and
 Table 8-4 Example Resources Level Dotted Names
 
 [width="100%",cols="23%,41%,36%",options="header",]
-|=======================================================================
+|===
 |Subcommand |Dotted Name |Output
 |`list --monitor` |`server.resources` |List of pool names.
 
@@ -907,7 +907,7 @@ to view this node's attributes and values."
 
 |`get --monitor` |`server.resources.``connection-pool1.*` |List of
 attributes and values corresponding to connection pool attributes.
-|=======================================================================
+|===
 
 
 For detailed information on dotted names, see the
@@ -1133,7 +1133,7 @@ table.
 Table 8-5 EJB Cache Monitoring Statistics
 
 [width="100%",cols="37%,16%,47%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`cachemisses` |RangeStatistic |The number of times a user request does
 not find a bean in the cache.
@@ -1155,7 +1155,7 @@ removed by the cleanup thread. Applies only to stateful session beans.
 
 |`numpassivationsuccess` |CountStatistic |Number of times passivation
 completed successfully. Applies only to stateful session beans.
-|=======================================================================
+|===
 
 
 [[giszu]][[GSADG00053]][[ejb-container-statistics]]
@@ -1178,7 +1178,7 @@ table.
 Table 8-6 EJB Container Monitoring Statistics
 
 [width="100%",cols="24%,16%,60%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`createcount` |CountStatistic |Number of times an EJB's `create` method
 is called.
@@ -1198,7 +1198,7 @@ are in `Passive` state.
 
 |`removecount` |CountStatistic |Number of times an EJB's `remove` method
 is called.
-|=======================================================================
+|===
 
 
 [[gisyx]][[GSADG00054]][[ejb-method-statistics]]
@@ -1221,7 +1221,7 @@ following table.
 Table 8-7 EJB Method Monitoring Statistics
 
 [width="100%",cols="23%,16%,61%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`executiontime` |CountStatistic |Time, in milliseconds, spent executing
 the method for the last successful/unsuccessful attempt to run the
@@ -1240,7 +1240,7 @@ container.
 successfully executed. This is collected for stateless and stateful
 session beans and entity beans if monitoring enabled is true for EJB
 container.
-|=======================================================================
+|===
 
 
 [[gisza]][[GSADG00055]][[ejb-pool-statistics]]
@@ -1263,7 +1263,7 @@ table.
 Table 8-8 EJB Pool Monitoring Statistics
 
 [width="100%",cols="28%,16%,56%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`jmsmaxmessagesload` |CountStatistic |The maximum number of messages to
 load into a JMS session at one time for a message-driven bean to serve.
@@ -1280,7 +1280,7 @@ associated pool since the gathering of data started.
 
 |`totalbeansdestroyed` |CountStatistic |Number of beans destroyed from
 associated pool since the gathering of data started.
-|=======================================================================
+|===
 
 
 [[gisyr]][[GSADG00057]][[timer-statistics]]
@@ -1302,7 +1302,7 @@ The statistics available for timers are listed in the following table.
 Table 8-9 Timer Monitoring Statistics
 
 [width="100%",cols="28%,16%,56%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`numtimerscreated` |CountStatistic |Number of timers created in the
 system.
@@ -1312,7 +1312,7 @@ system.
 
 |`numtimersremoved` |CountStatistic |Number of timers removed from the
 system.
-|=======================================================================
+|===
 
 
 [[ablvg]][[GSADG00652]][[http-service-statistics]]
@@ -1344,7 +1344,7 @@ following table.
 Table 8-10 HTTP Service Virtual Server Monitoring Statistics
 
 [width="100%",cols="21%,16%,63%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`count200` |CountStatistic |Number of responses with a status code
 equal to 200
@@ -1403,7 +1403,7 @@ request processing times over the request count
 so far
 
 |`state` |StringStatistic |The state of the virtual server
-|=======================================================================
+|===
 
 
 [[gjjyb]][[GSADG00653]][[jersey-statistics]]
@@ -1429,14 +1429,14 @@ The statistics available for Jersey are shown in the following table.
 Table 8-11 Jersey Statistics
 
 [width="100%",cols="33%,21%,46%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`resourcehitcount` |CountStatistic |Number of hits on this resource
 class
 
 |`rootresourcehitcount` |CountStatistic |Number of hits on this root
 resource class
-|=======================================================================
+|===
 
 
 [[ablvi]][[GSADG00654]][[jmsconnector-service-statistics]]
@@ -1483,7 +1483,7 @@ for a connection pool are not available until the pool is initialized.
 Table 8-12 Connector Connection Pool Monitoring Statistics (JMS)
 
 [width="100%",cols="37%,16%,47%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`averageconnwaittime` |CountStatistic |Average wait time of connections
 before they are serviced by the connection pool.
@@ -1520,7 +1520,7 @@ released to the pool.
 
 |`waitqueuelenght` |CountStatistic |Number of connection requests in the
 queue waiting to be serviced.
-|=======================================================================
+|===
 
 
 [[giszh]][[GSADG00061]][[connector-work-management-statistics-jms]]
@@ -1544,7 +1544,7 @@ are listed in the following table.
 Table 8-13 Connector Work Management Monitoring Statistics (JMS)
 
 [width="100%",cols="28%,16%,56%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`activeworkcount` |RangeStatistic |Number of work objects executed by
 the connector.
@@ -1563,7 +1563,7 @@ the queue before executing.
 
 |`workrequestwaittime` |RangeStatistic |Longest and shortest wait of a
 work object before it gets executed.
-|=======================================================================
+|===
 
 
 [[ablvm]][[GSADG00655]][[jvm-statistics]]
@@ -1618,7 +1618,7 @@ SE are shown in the following table.
 Table 8-14 JVM Monitoring Statistics for Java SE Class Loading
 
 [width="100%",cols="31%,16%,53%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`loadedclasscount` |CountStatistic |Number of classes that are
 currently loaded in the JVM
@@ -1628,7 +1628,7 @@ have been loaded since the JVM began execution
 
 |`unloadedclasscount` |CountStatistic |Number of classes that have been
 unloaded from the JVM since the JVM began execution
-|=======================================================================
+|===
 
 
 The statistics available for threads in the JVM in Java SE are shown in
@@ -1640,7 +1640,7 @@ the following table.
 Table 8-15 JVM Monitoring Statistics for Java SE - Threads
 
 [width="100%",cols="35%,16%,49%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`allthreadids` |StringStatistic |List of all live thread ids.
 
@@ -1662,7 +1662,7 @@ non-daemon threads.
 
 |`totalstartedthreadcount` |CountStatistic |Total number of threads
 created and/or started since the JVM started.
-|=======================================================================
+|===
 
 
 [[ghqfh]][[GSADG00063]][[jvm-compilation-system-statistics]]
@@ -1686,13 +1686,13 @@ are shown in the following table.
 Table 8-16 JVM Monitoring Statistics for Java SE Compilation
 
 [width="100%",cols="34%,20%,46%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`name-current` |StringStatistic |Name of the current compiler
 
 |`totalcompilationtime` |CountStatistic |Accumulated time (in
 milliseconds) spent in compilation
-|=======================================================================
+|===
 
 
 [[ghqea]][[GSADG00064]][[jvm-garbage-collectors-statistics]]
@@ -1716,14 +1716,14 @@ Java SE are shown in the following table.
 Table 8-17 JVM Monitoring Statistics for Java SE Garbage Collectors
 
 [width="100%",cols="23%,16%,61%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`collectioncount` |CountStatistic |Total number of collections that
 have occurred
 
 |`collectiontime` |CountStatistic |Accumulated time (in milliseconds)
 spent in collection
-|=======================================================================
+|===
 
 
 [[ghqdn]][[GSADG00065]][[jvm-memory-statistics]]
@@ -1746,7 +1746,7 @@ shown in the following table.
 Table 8-18 JVM Monitoring Statistics for Java SE Memory
 
 [width="100%",cols="44%,16%,40%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`committedheapsize` |CountStatistic |Amount of heap memory (in bytes)
 that is committed for the JVM to use
@@ -1773,7 +1773,7 @@ objects that are pending finalization
 
 |`usednonheapsize` |CountStatistic |Size of the non-heap area currently
 in use
-|=======================================================================
+|===
 
 
 [[ghqec]][[GSADG00066]][[jvm-operating-system-statistics]]
@@ -1797,7 +1797,7 @@ machine in Java SE are shown in the following table.
 Table 8-19 JVM Statistics for the Java SE Operating System
 
 [width="100%",cols="28%,16%,56%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`arch-current` |StringStatistic |Operating system architecture
 
@@ -1807,7 +1807,7 @@ to the JVM
 |`name-current` |StringStatistic |Operating system name
 
 |`version-current` |StringStatistic |Operating system version
-|=======================================================================
+|===
 
 
 [[ghqby]][[GSADG00067]][[jvm-runtime-statistics]]
@@ -1830,7 +1830,7 @@ Java SE are shown in the following table.
 Table 8-20 JVM Monitoring Statistics for Java SE Runtime
 
 [width="100%",cols="42%,16%,42%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`classpath-current` |StringStatistic |Classpath that is used by the
 system class loader to search for class files
@@ -1860,7 +1860,7 @@ specification version implemented by the JVM
 | | |
 
 | | |
-|=======================================================================
+|===
 
 
 [[gjipy]][[GSADG00656]][[network-statistics]]
@@ -1898,7 +1898,7 @@ table.
 Table 8-21 Network Keep Alive Statistics
 
 [width="100%",cols="25%,16%,59%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`countconnections` |CountStatistic |Number of connections in keep-alive
 mode.
@@ -1919,7 +1919,7 @@ in keep-alive mode.
 
 |`countrefusals` |CountStatistic |Number of keep-alive connections that
 were rejected.
-|=======================================================================
+|===
 
 
 [[gjjom]][[GSADG00069]][[network-connection-queue-statistics]]
@@ -1943,7 +1943,7 @@ following table.
 Table 8-22 Network Connection Queue Statistics
 
 [width="100%",cols="40%,16%,44%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`countopenconnections` |CountStatistic |The number of open/active
 connections
@@ -1976,7 +1976,7 @@ in the queue simultaneously
 
 |`tickstotalqueued` |CountStatistic |(Unsupported) Total number of ticks
 that connections have spent in the queue
-|=======================================================================
+|===
 
 
 [[gjjpi]][[GSADG00070]][[network-file-cache-statistics]]
@@ -1999,7 +1999,7 @@ table.
 Table 8-23 Network File Cache Statistics
 
 [width="100%",cols="28%,16%,56%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`contenthits` |CountStatistic |Number of hits on cached file content
 
@@ -2027,7 +2027,7 @@ caching in bytes
 
 |`opencacheentries` |CountStatistic |Number of current open cache
 entries
-|=======================================================================
+|===
 
 
 [[gjjpp]][[GSADG00071]][[network-thread-pool-statistics]]
@@ -2051,7 +2051,7 @@ table.
 Table 8-24 Network Thread Pool Statistics
 
 [width="100%",cols="28%,16%,56%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`corethreads` |CountStatistic |Core number of threads in the thread
 pool
@@ -2068,7 +2068,7 @@ thread pool
 
 |`totalexecutedtasks` |CountStatistic |Provides the total number of
 tasks, which were executed by the thread pool
-|=======================================================================
+|===
 
 
 [[ablvj]][[GSADG00657]][[orb-statistics-connection-manager]]
@@ -2096,7 +2096,7 @@ in the following table.
 Table 8-25 ORB Monitoring Statistics (Connection Manager)
 
 [width="100%",cols="24%,26%,50%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`connectionsidle` |CountStatistic |Total number of connections that are
 idle to the ORB
@@ -2106,7 +2106,7 @@ to the ORB
 
 |`totalconnections` |BoundedRangeStatistic |Total number of connections
 to the ORB
-|=======================================================================
+|===
 
 
 [[gipzv]][[GSADG00658]][[resource-statistics-connection-pool]]
@@ -2166,7 +2166,7 @@ for a connection pool are not available until the pool is initialized.
 Table 8-26 General Resource Monitoring Statistics (Connection Pool)
 
 [width="100%",cols="43%,16%,41%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`averageconnwaittime` |CountStatistic |Average wait-time-duration per
 successful connection request
@@ -2228,7 +2228,7 @@ Cache is enabled)
 
 |`waitqueuelength` |CountStatistic |Number of connection requests in the
 queue waiting to be serviced
-|=======================================================================
+|===
 
 
 [[GSADG908]][[sthref54]][[gktcp]]
@@ -2238,7 +2238,7 @@ Table 8-27 Application Specific Resource Monitoring Statistics
 (Connection Pool)
 
 [width="100%",cols="23%,16%,61%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`numconnacquired` |CountStatistic |Number of logical connections
 acquired from the pool since the last sampling
@@ -2249,7 +2249,7 @@ to the pool since the last sampling
 |`numconnused` |RangeStatistic |Number of connections that are currently
 being used, as well as information about the maximum number of
 connections that were used (high water mark)
-|=======================================================================
+|===
 
 
 [[gjiov]][[GSADG00659]][[security-statistics]]
@@ -2286,13 +2286,13 @@ table.
 Table 8-28 EJB Security Monitoring Statistics
 
 [width="100%",cols="40%,18%,42%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`policyconfigurationcount` |CountStatistic |Number of policy
 configuration
 
 |`securitymanagercount` |CountStatistic |Number of EJB security managers
-|=======================================================================
+|===
 
 
 [[gjirn]][[GSADG00073]][[web-security-statistics]]
@@ -2315,13 +2315,13 @@ table.
 Table 8-29 Web Security Monitoring Statistics
 
 [width="100%",cols="40%,16%,44%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`websecuritymanagercount` |CountStatistic |Number of security managers
 
 |`webpolicyconfigurationcount` |CountStatistic |Number of policy
 configuration objects
-|=======================================================================
+|===
 
 
 [[gjirj]][[GSADG00074]][[realm-security-statistics]]
@@ -2344,10 +2344,10 @@ table.
 Table 8-30 Realm Security Monitoring Statistics
 
 [width="100%",cols="32%,22%,46%",options="header",]
-|==============================================
+|===
 |Statistic |Data Type |Description
 |`realmcount` |CountStatistic |Number of realms
-|==============================================
+|===
 
 
 [[ablvk]][[GSADG00660]][[thread-pool-statistics]]
@@ -2384,7 +2384,7 @@ table.
 Table 8-31 Thread Pool Monitoring Statistics
 
 [width="100%",cols="37%,26%,37%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`averagetimeinqueue` |BoundedRangeStatistic |Average amount of time (in
 milliseconds) a request waited in the queue before being processed
@@ -2404,7 +2404,7 @@ work items waiting in queue
 
 |`totalworkitemsadded` |CountStatistic |Total number of work items added
 to the work queue as of last sampling
-|=======================================================================
+|===
 
 
 [[gitce]][[GSADG00076]][[jvm-statistics-for-java-se-thread-information]]
@@ -2420,7 +2420,7 @@ shown in the following table.
 Table 8-32 JVM Monitoring Statistics for Java SE - Thread Info
 
 [width="100%",cols="20%,16%,64%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`blockedcount` |CountStatistic |Total number of times that the thread
 entered the `BLOCKED` state.
@@ -2453,7 +2453,7 @@ monitoring is disabled.
 
 |`waitedcount` |CountStatistic |Total number of times the thread was in
 `WAITING` or `TIMED_WAITING` states.
-|=======================================================================
+|===
 
 
 [[ablvl]][[GSADG00661]][[transaction-service-statistics]]
@@ -2484,7 +2484,7 @@ following table.
 Table 8-33 Transaction Service Monitoring Statistics
 
 [width="100%",cols="23%,16%,61%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`activecount` |CountStatistic |Number of transactions currently active.
 
@@ -2500,7 +2500,7 @@ been rolled back.
 
 |`state` |StringStatistic |Indicates whether or not the transaction has
 been frozen.
-|=======================================================================
+|===
 
 
 [[ablvf]][[GSADG00662]][[web-statistics]]
@@ -2540,7 +2540,7 @@ table.
 Table 8-34 Web Module Servlet Statistics
 
 [width="100%",cols="21%,16%,63%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`errorcount` |CountStatistic |Cumulative number of cases where the
 response code is greater than or equal to 400.
@@ -2556,7 +2556,7 @@ average of request processing times divided by the request count.
 so far.
 
 |`servicetime` |CountStatistic |Aggregate response time in milliseconds.
-|=======================================================================
+|===
 
 
 [[ghqge]][[GSADG00079]][[web-jsp-statistics]]
@@ -2579,7 +2579,7 @@ The available web JSP statistics are shown in the following table.
 Table 8-35 Web JSP Monitoring Statistics
 
 [width="100%",cols="24%,16%,60%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`jspcount-current` |RangeStatistic |Number of active JSP pages
 
@@ -2590,7 +2590,7 @@ JSP page invocations
 reloaded
 
 |`totaljspcount` |CountStatistic |Total number of JSP pages ever loaded
-|=======================================================================
+|===
 
 
 [[ghqga]][[GSADG00080]][[web-request-statistics]]
@@ -2613,7 +2613,7 @@ The available web request statistics are shown in the following table.
 Table 8-36 Web Request Monitoring Statistics
 
 [width="100%",cols="21%,16%,63%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`errorcount` |CountStatistic |Cumulative value of the error count, with
 error count representing the number of cases where the response code was
@@ -2628,7 +2628,7 @@ milliseconds
 
 |`requestcount` |CountStatistic |Cumulative number of the requests
 processed so far
-|=======================================================================
+|===
 
 
 [[ghqfu]][[GSADG00081]][[web-servlet-statistics]]
@@ -2651,7 +2651,7 @@ The available web servlet statistics are shown in the following table.
 Table 8-37 Web Servlet Monitoring Statistics
 
 [width="100%",cols="37%,16%,47%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`activeservletsloadedcount` |RangeStatistic |Number of currently loaded
 servlets
@@ -2661,7 +2661,7 @@ times , in milliseconds
 
 |`totalservletsloadedcount` |CountStatistic |Cumulative number of
 servlets that have been loaded into the web module
-|=======================================================================
+|===
 
 
 [[ghqfr]][[GSADG00082]][[web-session-statistics]]
@@ -2684,7 +2684,7 @@ The available web session statistics are shown in the following table.
 Table 8-38 Web Session Monitoring Statistics
 
 [width="100%",cols="34%,16%,50%",options="header",]
-|=======================================================================
+|===
 |Statistic |Data Type |Description
 |`activatedsessionstotal` |CountStatistic |Total number of activated
 sessions
@@ -2708,7 +2708,7 @@ sessions
 sessions
 
 |`sessionstotal` |CountStatistic |Total number of sessions created
-|=======================================================================
+|===
 
 
 [[giwqm]][[GSADG00561]][[configuring-jconsole-to-view-glassfish-server-monitoring-data]]

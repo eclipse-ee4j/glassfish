@@ -667,14 +667,14 @@ link:#DAFFGDCD[Default Concurrent Resources].
 
 
 [NOTE]
-=======================================================================
+====
 Creating a managed scheduled executor service resource is a dynamic
 event and typically does not require server restart. Applications can
 use a resource as soon as it is created. However, if an application
 tried to use a resource before it was created, and that resource is
 created later, the application or the server must be restarted.
 Otherwise, the application will not be able to locate the resource.
-=======================================================================
+====
 
 
 1. Ensure that the server is running. Remote subcommands require a running server.
@@ -749,11 +749,11 @@ subcommands to view and change the values of the managed scheduled
 executor service attributes.
 
 [NOTE]
-=======================================================================
+====
 When a resource is updated, the existing resource is shut down and
 recreated. If applications used the resource prior to the update, the
 application or the server must be restarted.
-=======================================================================
+====
 
 
 1. Ensure that the server is running. Remote subcommands require a running server.

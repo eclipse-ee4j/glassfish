@@ -80,12 +80,12 @@ In an GlassFish Server Open Source Edition domain, log files have the
 following name and location by default:
 
 [width="100%",cols="27%,73%",options="header",]
-|====================================================
+|===
 |Instance |Default Log File Name and Location
 |DAS |domain-dir``/logs/server.log``
 |Each server instance |instance-dir``/logs/server.log``
 |Cluster instance |instance-dir``/logs/server.log``
-|====================================================
+|===
 
 
 For example, in a domain hosted on a given machine that includes a
@@ -311,7 +311,7 @@ passed using the `--target` option. If no target is specified when using
 any of these subcommands, the default target is the DAS.
 
 [width="100%",cols="27%,47%,26%",options="header",]
-|=======================================================================
+|===
 |Subcommand |Description |Target Specification
 |link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] |Collects all available log files
 into a ZIP archive. |`--target``=`target-name
@@ -333,7 +333,7 @@ attributes in the logging properties file. |`--target``=`target-name
 
 |link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] |Sets the log level for one or more
 loggers listed in the logging properties file. |`--target``=`target-name
-|=======================================================================
+|===
 
 
 [[gkkit]][[GSADG00722]][[logging-properties]]
@@ -355,7 +355,7 @@ By default in an GlassFish Server Open Source Edition domain, logging
 properties files are created in the following locations:
 
 [width="100%",cols="18%,82%",options="header",]
-|=======================================================================
+|===
 |Target |Default Location of Logging Properties File
 |DAS |domain-dir`/config``/logging.properties`
 
@@ -370,7 +370,7 @@ instance-name represents the name of the instance.
 |A cluster
 |domain-dir`/config/`cluster-name`-config/logging.properties`, where
 cluster-name represents the name of the cluster.
-|=======================================================================
+|===
 
 
 For information about configuring logging properties, see
@@ -490,11 +490,11 @@ this system property, you can have a single logging properties file that
 is used by all instances running on the same host.
 
 [NOTE]
-=======================================================================
+====
 Setting the `java.util.logging.config.file` system property causes all
 other GlassFish Server Open Source Edition logging properties files on
 the host to be overridden.
-=======================================================================
+====
 
 
 1. Set the `java.util.logging.config.file` system property.
@@ -791,10 +791,10 @@ Records].
 
 
 [NOTE]
-=======================================================================
+====
 Changing the log format forces log rotation to avoid mixed format in the
 same file.
-=======================================================================
+====
 
 
 1. Ensure that the target server or cluster is running. Remote commands require a running server.

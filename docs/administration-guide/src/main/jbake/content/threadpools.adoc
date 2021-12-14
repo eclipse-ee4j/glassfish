@@ -93,11 +93,9 @@ See link:domains.html#ginqj[To Restart a Domain].
 +
 
 [NOTE]
-===================================================================
-
+====
 Restart is not necessary for thread pools used by the web container.
-
-===================================================================
+====
 
 
 [[GSADG00162]][[giuez]]
@@ -170,11 +168,9 @@ See link:domains.html#ginqj[To Restart a Domain].
 +
 
 [NOTE]
-===================================================================
-
+====
 Restart is not necessary for thread pools used by the web container.
-
-===================================================================
+====
 
 
 [[GSADG00164]][[giuhc]]
@@ -214,11 +210,9 @@ See link:domains.html#ginqj[To Restart a Domain].
 +
 
 [NOTE]
-===================================================================
-
+====
 Restart is not necessary for thread pools used by the web container.
-
-===================================================================
+====
 
 
 [[GSADG00165]][[giugt]]

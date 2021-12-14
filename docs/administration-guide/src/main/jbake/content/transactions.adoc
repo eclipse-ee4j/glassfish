@@ -577,11 +577,9 @@ transaction recovery implementations.
 
 
 [NOTE]
-=====================================================================
-
+====
 These workarounds do not imply support for any particular JDBC driver.
-
-=====================================================================
+====
 
 
 [[gknau]][[GSADG00689]][[general-recovery-limitations]]
@@ -741,13 +739,13 @@ However, if you would prefer to create the table manually, name
 it `txn_log_table` with the following schema:
 +
 [width="100%",cols="50%,50%",options="header",]
-|==========================
+|===
 |Column Name |JDBC Type
 |`LOCALTID` |`VARCHAR`
 |`INSTANCENAME` |`VARCHAR`
 |`SERVERNAME` |`VARCHAR(n)`
 |`GTRID` |`VARBINARY`
-|==========================
+|===
 The size of the `SERVERNAME` column should be at least the length of the
 GlassFish Server host name plus 10 characters. +
 The size of the `GTRID` column should be at least 64 bytes.

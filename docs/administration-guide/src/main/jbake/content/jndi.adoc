@@ -132,7 +132,7 @@ references for the Java EE resources used by the GlassFish Server.
 Table 18-1 JNDI Lookup Names and Their Associated References
 
 [width="100%",cols="38%,62%",options="header",]
-|=======================================================================
+|===
 |JNDI Lookup Name |Associated Resource Reference
 |`java:comp/env` |Application environment entries
 
@@ -150,7 +150,7 @@ factories
 |`java:comp/env/jms` |JMS Connection Factories and Destinations
 
 |`java:comp/ORB` |ORB instance shared across application components
-|=======================================================================
+|===
 
 
 [[gglpq]][[GSADG00604]][[administering-jndi-resources]]

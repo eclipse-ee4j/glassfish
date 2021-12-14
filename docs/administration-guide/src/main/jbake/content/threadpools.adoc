@@ -4,6 +4,7 @@ title=Administering Thread Pools
 next=webapps.html
 prev=jvm.html
 ~~~~~~
+
 Administering Thread Pools
 ==========================
 
@@ -80,14 +81,16 @@ If one resource adapter or application occupies all the GlassFish Server
 threads, thread starvation might occur. You can avoid this by dividing
 the GlassFish Server threads into different thread pools.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a new thread pool by using the
-link:../reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a new thread pool by using the
+link:../reference-manual/create-threadpool.html#GSRFM00060[`create-threadpool`] subcommand.
++
 Information about options for the subcommand is included in this help
 page.
-3.  To apply your changes, restart GlassFish Server. +
-See link:domains.html#ginqj[To Restart a Domain]. +
+3. To apply your changes, restart GlassFish Server.
++
+See link:domains.html#ginqj[To Restart a Domain].
++
 
 [NOTE]
 ===================================================================
@@ -98,13 +101,11 @@ Restart is not necessary for thread pools used by the web container.
 
 
 [[GSADG00162]][[giuez]]
-
-
 Example 5-1 Creating a Thread Pool
 
 This example creates `threadpool-l`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-threadpool --maxthreadpoolsize 100 
 --minthreadpoolsize 20 --idletimeout 2 --workqueues 100 threadpool-1
@@ -126,19 +127,16 @@ To List Thread Pools
 Use the `list-threadpools` subcommand in remote mode to list the
 existing thread pools.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the existing thread pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the existing thread pools by using the
 link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`] subcommand.
 
 [[GSADG00163]][[giugs]]
-
-
 Example 5-2 Listing Thread Pools
 
 This example lists the existing thread pools.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-threadpools
 threadpool-1
@@ -160,13 +158,16 @@ To Update a Thread Pool
 Use the `set` subcommand to update the values for a specified thread
 pool.
 
-1.  List the existing thread pools by using the
+1. List the existing thread pools by using the
 link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`] subcommand.
-2.  Modify the values for a thread pool by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
+2. Modify the values for a thread pool by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
 The thread pool is identified by its dotted name.
-3.  To apply your changes, restart GlassFish Server. +
-See link:domains.html#ginqj[To Restart a Domain]. +
+3. To apply your changes, restart GlassFish Server.
++
+See link:domains.html#ginqj[To Restart a Domain].
++
 
 [NOTE]
 ===================================================================
@@ -177,14 +178,10 @@ Restart is not necessary for thread pools used by the web container.
 
 
 [[GSADG00164]][[giuhc]]
-
-
 Example 5-3 Updating a Thread Pool
 
 This example sets the `max-thread-pool-size` from its previous value to
-8.
-
-[source,oac_no_warn]
+8. [source]
 ----
 asadmin> set server.thread-pools.thread-pool.http-thread-pool.max-thread-pool-size=8
 Command set executed successfully
@@ -206,14 +203,15 @@ Use the `delete-threadpool` subcommand in remote mode to delete an
 existing thread pool. Deleting a thread pool will fail if that pool is
 referenced by a network listener.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the existing thread pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the existing thread pools by using the
 link:../reference-manual/list-threadpools.html#GSRFM00204[`list-threadpools`] subcommand.
-3.  Delete the specified thread pool by using the
+3. Delete the specified thread pool by using the
 link:../reference-manual/delete-threadpool.html#GSRFM00111[`delete-threadpool`] subcommand.
-4.  To apply your changes, restart GlassFish Server. +
-See link:domains.html#ginqj[To Restart a Domain]. +
+4. To apply your changes, restart GlassFish Server.
++
+See link:domains.html#ginqj[To Restart a Domain].
++
 
 [NOTE]
 ===================================================================
@@ -224,13 +222,11 @@ Restart is not necessary for thread pools used by the web container.
 
 
 [[GSADG00165]][[giugt]]
-
-
 Example 5-4 Deleting a Thread Pool
 
 This example deletes `threadpool-1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-threadpool threadpool-1
 Command delete-threadpool executed successfully

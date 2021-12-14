@@ -4,6 +4,7 @@ title=Administering the Monitoring Service
 next=lifecycle-modules.html
 prev=logging.html
 ~~~~~~
+
 Administering the Monitoring Service
 ====================================
 
@@ -81,7 +82,7 @@ link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help
 The following command lists the monitorable child objects of the
 instance `server`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list --monitor "server.*"
 
@@ -92,7 +93,7 @@ server.jms-service
 server.jvm
 server.network
 server.orb
-server.resources 
+server.resources
 server.security
 server.thread-pool
 server.transaction-service
@@ -104,7 +105,7 @@ address specific attributes in monitorable objects. For example, the
 `jvm` object has a `memory` attribute with a statistic called
 `maxheapsize`. The following dotted name addresses the attribute:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.memory.maxheapsize
 ----
@@ -143,7 +144,7 @@ Applications Tree Hierarchy
 
 The `applications` tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications
    |--- application1
@@ -179,27 +180,27 @@ server.applications
    |    |        |--- resources
                            resource-0
                                hitcount
-                                    *statistic   
+                                    *statistic
    |--- application2
 ----
 
 An example dotted name might be:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.hello.server.request.maxtime
 ----
 
 An example dotted name under the EJB `method` node might be:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.ejbsfapp1.ejbsfapp1ejbmod1\.jar.SFApp1EJB1
 ----
 
 An example Jersey dotted name might be:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.helloworld-webapp.jersey.resources.resource-0.hitcount.resourcehitcount-count
 ----
@@ -215,7 +216,7 @@ The `connector-service` tree holds monitorable attributes for pools such
 as the connector connection pool. The `connector-service` tree contains
 the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.connector-service
         resource-adapter-1
@@ -235,7 +236,7 @@ HTTP Service Tree Hierarchy
 
 The `http-service` tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.http-service
        virtual-server
@@ -259,7 +260,7 @@ factories (connection pools for resource adapters) and work management
 (for Message Queue resource adapters). The `jms-service` tree contains
 the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jms-service
         connection-factories
@@ -278,7 +279,7 @@ JVM Tree Hierarchy
 
 The `jvm` tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm
            class-loading-system
@@ -286,7 +287,7 @@ server.jvm
            garbage-collectors
            memory
            operating-system
-           runtime 
+           runtime
 ----
 
 An example dotted name under the `memory` node might be
@@ -301,7 +302,7 @@ The network statistics apply to the network listener, such as
 `admin-listener`, `http-listener-1`, `ttp-listener-2`. The `network`
 tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.network
           type-of-listener
@@ -326,7 +327,7 @@ ORB Tree Hierarchy
 The `orb` tree holds monitorable attributes for connection managers. The
 `orb` tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.orb
     transport
@@ -350,7 +351,7 @@ The `resources` tree holds monitorable attributes for pools such as the
 JDBC connection pool and connector connection pool. The `resources` tree
 contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.resources
        connection-pool
@@ -369,7 +370,7 @@ Security Tree Hierarchy
 
 The security tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.security
        ejb
@@ -391,7 +392,7 @@ Thread Pool Tree Hierarchy
 The `thread-pool` tree holds monitorable attributes for connection
 managers, and contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.thread-pool
                 orb
@@ -412,7 +413,7 @@ The `transaction-service` tree holds monitorable attributes for the
 transaction subsystem for the purpose of rolling back transactions. The
 `transaction-service` tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.transaction-service
          statistic
@@ -428,7 +429,7 @@ Web Tree Hierarchy
 
 The `web` tree contains the following nodes:
 
-[source,oac_no_warn]
+[source]
 ----
 server.web
            jsp
@@ -518,54 +519,51 @@ monitoring for a module. Using the `set` command is not a dynamic
 procedure, so you need to restart GlassFish Server for your changes to
 take effect.
 
-1.  Determine which services and components are currently enabled for
-monitoring. +
-[source,oac_no_warn]
+1. Determine which services and components are currently enabled for
+monitoring.
++
+[source]
 ----
 asadmin> get server.monitoring-service.module-monitoring-levels.*
 ----
 This example output shows that the HTTP service is not enabled (OFF for
-monitoring), but other objects are enabled: +
-[source,oac_no_warn]
+monitoring), but other objects are enabled:
++
+[source]
 ----
 configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
        configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=OFF
-           configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH 
+           configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
 ----
-2.  Enable monitoring by using the olink:GSRFM00128[`enable-monitoring`]
-subcommand. +
+2. Enable monitoring by using the olink:GSRFM00128[`enable-monitoring`]
+subcommand.
++
 Server restart is not required.
 
 [[GSADG00188]][[gixri]]
-
-
 Example 8-1 Enabling the Monitoring Service Dynamically
 
 This example enables the monitoring service without affecting monitoring
 for individual modules.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-monitoring
 Command enable-monitoring executed successfully
 ----
 
 [[GSADG00189]][[gixre]]
-
-
 Example 8-2 Enabling Monitoring for Modules Dynamically
 
 This example enables monitoring for the `ejb-container` module.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> enable-monitoring --level ejb-container=HIGH
 Command enable-monitoring executed successfully
 ----
 
 [[GSADG00190]][[gjcmm]]
-
-
 Example 8-3 Enabling Monitoring for Modules by Using the `set`
 Subcommand
 
@@ -573,7 +571,7 @@ This example enables monitoring for the HTTP service by setting the
 monitoring level to HIGH (you must restart the server for changes to
 take effect).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.monitoring-service.module-monitoring-levels.http-service=HIGH
 Command set executed successfully
@@ -600,61 +598,58 @@ monitoring for a module. Using the `set` command is not a dynamic
 procedure, so you need to restart GlassFish Server for your changes to
 take effect.
 
-1.  Determine which services and components currently are enabled for
-monitoring. +
-[source,oac_no_warn]
+1. Determine which services and components currently are enabled for
+monitoring.
++
+[source]
 ----
 asadmin get server.monitoring-service.module-monitoring-levels.*
 ----
 This example output shows that monitoring is enabled for
-`web-container`, `http-service`, and `jvm`: +
-[source,oac_no_warn]
+`web-container`, `http-service`, and `jvm`:
++
+[source]
 ----
 configs.config.server-config.monitoring-service.module-monitoring-levels.web-container=HIGH
        configs.config.server-config.monitoring-service.module-monitoring-levels.http-service=HIGH
-              configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH 
+              configs.config.server-config.monitoring-service.module-monitoring-levels.jvm=HIGH
 ----
-2.  Disable monitoring for a service or module by using the
-link:../reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`] subcommand. +
+2. Disable monitoring for a service or module by using the
+link:../reference-manual/disable-monitoring.html#GSRFM00120[`disable-monitoring`] subcommand.
++
 Server restart is not required.
 
 [[GSADG00191]][[gixsc]]
-
-
 Example 8-4 Disabling the Monitoring Service Dynamically
 
 This example disables the monitoring service without changing the
 monitoring levels for individual modules.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable-monitoring
 Command disable-monitoring executed successfully
 ----
 
 [[GSADG00192]][[gjcnw]]
-
-
 Example 8-5 Disabling Monitoring for Modules Dynamically
 
 This example disables monitoring for specific modules. Their monitoring
 levels are set to OFF.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> disable-monitoring --modules web-container,ejb-container
 Command disable-monitoring executed successfully
 ----
 
 [[GSADG00193]][[gixpg]]
-
-
 Example 8-6 Disabling Monitoring by Using the `set` Subcommand
 
 This example disables monitoring for the HTTP service (you must restart
 the server for changes to take effect).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.monitoring-service.module-monitoring-levels.http-service=OFF
 Command set executed successfully
@@ -699,19 +694,18 @@ Before You Begin
 A monitorable object must be configured for monitoring before you can
 display data on the object. See link:#ablvr[To Enable Monitoring].
 
-1.  Determine which type of monitorable object you want to monitor. +
+1. Determine which type of monitorable object you want to monitor.
++
 Your choices for 5.0 are `jvm`, `httplistener`, and `webmodule`.
-2.  Request the monitoring data by using the link:../reference-manual/monitor.html#GSRFM00212[`monitor`]
+2. Request the monitoring data by using the link:../reference-manual/monitor.html#GSRFM00212[`monitor`]
 subcommand.
 
 [[GSADG00194]][[ghljw]]
-
-
 Example 8-7 Viewing Common Monitoring Data
 
 This example requests common data for type `jvm` on instance `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> monitor --type jvm server
 
@@ -871,8 +865,9 @@ with dotted names are:
 * A `list` subcommand that specifies a dotted name that is not followed
 by a wildcard (`*`) lists the current node's immediate children. For
 example, the following subcommand lists all immediate children belonging
-to the `server` node: +
-[source,oac_no_warn]
+to the `server` node:
++
+[source]
 ----
 list --monitor server
 ----
@@ -880,8 +875,9 @@ list --monitor server
 wildcard of the form `.*` lists a hierarchical tree of child nodes from
 the specified node. For example, the following subcommand lists all
 children of the `applications` node, their subsequent child nodes, and
-so on: +
-[source,oac_no_warn]
+so on:
++
+[source]
 ----
 list --monitor server.applications.*
 ----
@@ -936,33 +932,33 @@ A monitorable object must be configured for monitoring before you can
 display information about the object. See link:#ablvr[To Enable
 Monitoring] if needed.
 
-1.  List the objects that are enabled for monitoring by using the
-link:../reference-manual/list.html#GSRFM00145[`list`] subcommand. +
+1. List the objects that are enabled for monitoring by using the
+link:../reference-manual/list.html#GSRFM00145[`list`] subcommand.
++
 For example, the following subcommand lists all components and services
-that have monitoring enabled for instance `server`. +
-[source,oac_no_warn]
+that have monitoring enabled for instance `server`.
++
+[source]
 ----
 asadmin> list --monitor "*"
 server.web
-server.connector-service 
-server.orb 
+server.connector-service
+server.orb
 server.jms-serviceserver.jvm
 server.applications
 server.http-service
 server.thread-pools
 ----
-2.  Get data for a monitored component or service by using the
+2. Get data for a monitored component or service by using the
 link:../reference-manual/get.html#GSRFM00139[`get`] subcommand.
 
 [[GSADG00195]][[ghlre]]
-
-
 Example 8-8 Viewing Attributes for a Specific Type
 
 This example gets information about all the attributes for object type
 `jvm` on instance `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get --monitor server.jvm.*
 server.jvm.class-loading-system.loadedclasscount = 3715
@@ -1001,31 +997,27 @@ server.jvm.runtime.vmversion-current = 1.5.0_11-b03
 ----
 
 [[GSADG00196]][[ghbgv]]
-
-
 Example 8-9 Viewing Monitorable Applications
 
 This example lists all the monitorable applications for instance
 `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list --monitor server.applications.*
 server.applications.app1
 server.applications.app2
 server.applications.app1.virtual-server1
-server.applications.app2.virtual-server1 
+server.applications.app2.virtual-server1
 ----
 
 [[GSADG00197]][[ghbfj]]
-
-
 Example 8-10 Viewing Attributes for an Application
 
 This example gets information about all the attributes for application
 `hello`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get --monitor server.applications.hello.*
 server.applications.hello.server.activatedsessionstotal = 0
@@ -1043,20 +1035,18 @@ server.applications.hello.server.persistedsessionstotal = 0
 server.applications.hello.server.processingtime = 0.0
 server.applications.hello.server.rejectedsessionstotal = 0
 server.applications.hello.server.requestcount = 0
-server.applications.hello.server.sessionstotal = 
+server.applications.hello.server.sessionstotal =
 server.applications.hello.server.totaljspsloadedcount = 0
 server.applications.hello.server.totalservletsloadedcount = 0
 ----
 
 [[GSADG00198]][[ghbge]]
-
-
 Example 8-11 Viewing a Specific Attribute
 
 This example gets information about the `jvm` attribute
 `runtime.vmversion-current` on instance `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get --monitor server.jvm.runtime.vmversion-current
 server.jvm.runtime.vmversion-current = 10.0-b23
@@ -1099,21 +1089,19 @@ EJBs fit into the tree of objects as shown in link:#abluw[Applications
 Tree Hierarchy]. Use the following dotted name pattern to get EJB
 statistics for an application:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.appname.ejbmodulename.ejbname.bean-cache.statistic
 ----
 
 
 [NOTE]
-=======================================================================
-
+====
 EJB statistics for an application are available after the application is
 executed. If the application is deployed but has not yet been executed,
 all counts will show default values. When the application is undeployed,
 all its monitoring data is lost.
-
-=======================================================================
+====
 
 
 Statistics available for applications are shown in the following
@@ -1131,7 +1119,7 @@ EJB Cache Statistics
 
 Use the following dotted name pattern for EJB cache statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.appname.ejbmodulename.bean-cache.ejbname.statistic
 ----
@@ -1176,7 +1164,7 @@ EJB Container Statistics
 
 Use the following dotted name pattern for EJB container statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.appname.ejbmodulename.container.ejbname
 ----
@@ -1219,7 +1207,7 @@ EJB Method Statistics
 
 Use the following dotted name pattern for EJB method statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.appname.ejbmodulename.bean-methods.ejbname.statistic
 ----
@@ -1261,7 +1249,7 @@ EJB Pool Statistics
 
 Use the following dotted name pattern for EJB pool statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.appname.ejbmodulename.bean-pool.ejbname.statistic
 ----
@@ -1301,7 +1289,7 @@ Timer Statistics
 
 Use the following dotted name pattern for timer statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.appname.ejbmodulename.timers.ejbname.statistic
 ----
@@ -1342,7 +1330,7 @@ HTTP Service Virtual Server Statistics
 Use the following dotted name pattern for HTTP service virtual server
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.http-service.virtual-server.request.statistic
 ----
@@ -1428,7 +1416,7 @@ link:#abluw[Applications Tree Hierarchy].
 
 Use the following dotted name pattern for Jersey statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.jersey-application.jersey.resources.resource-0.hitcount.statistic
 ----
@@ -1471,7 +1459,7 @@ Connector Connection Pool Statistics (JMS)
 Use the following dotted name pattern for JMS/Connector Service
 connection pool statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.connector-service.resource-adapter-1.connection-pool.statistic
 ----
@@ -1481,14 +1469,12 @@ pools are shown in the following table.
 
 
 [NOTE]
-=======================================================================
-
+====
 In order to improve system performance, connection pools are initialized
 lazily; that is, a pool is not initialized until an application first
 uses the pool or the pool is explicitly pinged. Monitoring statistics
 for a connection pool are not available until the pool is initialized.
-
-=======================================================================
+====
 
 
 [[GSADG893]][[sthref39]][[gelot]]
@@ -1544,7 +1530,7 @@ Connector Work Management Statistics (JMS)
 Use the following dotted name pattern for JMS/Connector Service work
 management statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.connector-service.resource-adapter-1.work-management.statistic
 ----
@@ -1606,7 +1592,7 @@ JVM Class Loading System Statistics
 Use the following dotted name pattern for JVM class loading system
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.class-loading-system.statistic
 ----
@@ -1686,7 +1672,7 @@ JVM Compilation System Statistics
 Use the following dotted name pattern for JVM compilation system
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.compilation-system.statistic
 ----
@@ -1716,7 +1702,7 @@ JVM Garbage Collectors Statistics
 Use the following dotted name pattern for JVM garbage collectors
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.garbage-collectors.statistic
 ----
@@ -1746,7 +1732,7 @@ JVM Memory Statistics
 
 Use the following dotted name pattern for JVM memory statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.memory.statistic
 ----
@@ -1797,7 +1783,7 @@ JVM Operating System Statistics
 Use the following dotted name pattern for JVM operating system
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.operating-system.statistic
 ----
@@ -1830,7 +1816,7 @@ JVM Runtime Statistics
 
 Use the following dotted name pattern for JVM runtime statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.jvm.runtime.statistic
 ----
@@ -1898,7 +1884,7 @@ Network Keep Alive Statistics
 
 Use the following dotted name pattern for network keep alive statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.network.type-of-listener.keep-alive.statistic
 ----
@@ -1943,7 +1929,7 @@ Network Connection Queue Statistics
 Use the following dotted name pattern for network connection queue
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.network.type-of-listener.connection-queue.statistic
 ----
@@ -1999,7 +1985,7 @@ Network File Cache Statistics
 
 Use the following dotted name pattern for network file cache statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.network.type-of-listener.file-cache.statistic
 ----
@@ -2051,7 +2037,7 @@ Network Thread Pool Statistics
 Use the following dotted name pattern for network thread pool
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.network.type-of-listener.thread-pool.statistic
 ----
@@ -2095,7 +2081,7 @@ Hierarchy].
 
 Use the following dotted name patterns for ORB statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.orb.transport.connectioncache.inbound.statistic
 server.orb.transport.connectioncache.outbound.statistic
@@ -2141,7 +2127,7 @@ link:#giqdo[Resources Tree Hierarchy].
 Use the following dotted name pattern for general connection pool
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.resources.pool-name.statistic
 ----
@@ -2149,7 +2135,7 @@ server.resources.pool-name.statistic
 Use the following dotted name pattern for application-scoped connection
 pool statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.application-name.resources.pool-name.statistic
 ----
@@ -2157,7 +2143,7 @@ server.applications.application-name.resources.pool-name.statistic
 Use the following dotted name pattern for module-scoped connection pool
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.application-name.module-name.resources.pool-name.statistic
 ----
@@ -2166,14 +2152,12 @@ The connection pool statistics are shown in the following tables.
 
 
 [NOTE]
-=======================================================================
-
+====
 In order to improve system performance, connection pools are initialized
 lazily; that is, a pool is not initialized until an application first
 uses the pool or the pool is explicitly pinged. Monitoring statistics
 for a connection pool are not available until the pool is initialized.
-
-=======================================================================
+====
 
 
 [[GSADG907]][[sthref53]][[gelqa]]
@@ -2288,7 +2272,7 @@ EJB Security Statistics
 
 Use the following dotted name pattern for EJB security statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.security.ejb.statistic
 ----
@@ -2317,7 +2301,7 @@ Web Security Statistics
 
 Use the following dotted name pattern for web security statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.security.web.statistic
 ----
@@ -2346,7 +2330,7 @@ Realm Security Statistics
 
 Use the following dotted name pattern for realm security statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.security.realm.statistic
 ----
@@ -2386,7 +2370,7 @@ Thread Pool Monitoring Statistics
 
 Use the following dotted name pattern for thread pool statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.thread-pool.thread-pool.statistic
 ----
@@ -2486,7 +2470,7 @@ link:#gitci[Transactions Service Tree Hierarchy].
 Use the following dotted name pattern for transaction service
 statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.transaction-service.statistic
 ----
@@ -2541,7 +2525,7 @@ Web Module Servlet Statistics
 
 Use the following dotted name pattern for web module servlet statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.web-module.virtual-server.servlet.statistic
 server.applications.application.web-module.virtual-server.servlet.statistic
@@ -2581,7 +2565,7 @@ Web JSP Statistics
 
 Use the following dotted name pattern for web JSP statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.web-module.virtual-server.statistic
 server.applications.application.web-module.virtual-server.statistic
@@ -2615,7 +2599,7 @@ Web Request Statistics
 
 Use the following dotted name pattern for web request statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.web-module.virtual-server.statistic
 server.applications.application.web-module.virtual-server.statistic
@@ -2653,7 +2637,7 @@ Web Servlet Statistics
 
 Use the following dotted name pattern for web servlet statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.web-module.virtual-server.statistic
 server.applications.application.web-module.virtual-server.statistic
@@ -2686,7 +2670,7 @@ Web Session Statistics
 
 Use the following dotted name pattern for web session statistics:
 
-[source,oac_no_warn]
+[source]
 ----
 server.applications.web-module.virtual-server.statistic
 server.applications.application.web-module.virtual-server.statistic
@@ -2759,47 +2743,54 @@ Connector Server. If this is an issue, the JMX connector can be removed.
 However, access can be restricted to a specific IP address (for example,
 the loopback address) by setting `address` to `locahost`.
 
-1.  Start the domain. +
+1. Start the domain.
++
 For instructions, see link:domains.html#ggoda[To Start a Domain].
-2.  Start JConsole using this format: JDK_HOME`/bin/jconsole` +
-For example: +
-[source,oac_no_warn]
+2. Start JConsole using this format: JDK_HOME`/bin/jconsole`
++
+For example:
++
+[source]
 ----
 /usr/java/bin/jconsole
 ----
 The JConsole Connect to Agent window is displayed.
-3.  Click the Remote tab and type the host name and port. +
+3. Click the Remote tab and type the host name and port.
++
 Always connect remotely with JConsole, otherwise MBeans will not load
 automatically.
-4.  Click Connect.
-5.  In the Remote Process text box, specify the JMX Service URL. +
-For example: +
-[source,oac_no_warn]
+4. Click Connect.
+5. In the Remote Process text box, specify the JMX Service URL.
++
+For example:
++
+[source]
 ----
-service:jmx:rmi:///jndi/rmi://localhost:8686/jmxrmi 
+service:jmx:rmi:///jndi/rmi://localhost:8686/jmxrmi
 ----
 The JMX Service URL is emitted by the server at startup, looking
-something like this: +
-[source,oac_no_warn]
+something like this:
++
+[source]
 ----
 [#|2009-12-03T10:25:17.737-0800|INFO|glassfishv3.0|
 x..system.tools.admin.org.glassfish.server|_ThreadID=20;
-_ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService 
+_ThreadName=Thread-26;|JMXStartupService: Started JMXConnector, JMXService
 URL = service:jmx:rmi://localhost:8686/jndi/rmi://localhost:8686/jmxrmi|#]
 ----
 However, in most cases, simply entering `host:port` is fine, such as,
-192.168.1.150:8686. The long Service URL is not needed. +
+192.168.1.150:8686. The long Service URL is not needed.
++
 
 [NOTE]
-=======================================================================
-
+====
 Another host name can be substituted for `localhost`. The default port
 number (8686) could change if the `jmx-connector` configuration has been
 modified.
+====
 
-=======================================================================
-
-6.  Click Connect. +
+6. Click Connect.
++
 In the JConsole window you will see all your MBeans, JVM information,
 and so on, in various tabs. Most of the useful MBeans are to be found in
 the `amx` and `java.lang` domains.

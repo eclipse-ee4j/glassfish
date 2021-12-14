@@ -4,6 +4,7 @@ title=Administering Life Cycle Modules
 next=batch.html
 prev=monitoring.html
 ~~~~~~
+
 Administering Life Cycle Modules
 ================================
 
@@ -44,13 +45,13 @@ as-install`/modules/glassfish-api.jar` file.
 A life cycle module listens for and performs its tasks in response to
 the following GlassFish Server sequence of events:
 
-1.  Initialization. The server reads the configuration, initializes
+1. Initialization. The server reads the configuration, initializes
 built-in subsystems (such as security and logging services), and creates
 the containers.
-2.  Startup. The server loads and initializes deployed applications.
-3.  Ready. The server begins servicing requests.
-4.  Shutdown. The server shuts down the applications and stops.
-5.  Termination. The server closes the containers, the built-in
+2. Startup. The server loads and initializes deployed applications.
+3. Ready. The server begins servicing requests.
+4. Shutdown. The server shuts down the applications and stops.
+5. Termination. The server closes the containers, the built-in
 subsystems, and the server runtime environment.
 
 These events are defined in the `LifecycleEvent` class. For information
@@ -60,13 +61,11 @@ Application Development Guide.
 
 
 [NOTE]
-=======================================================================
-
+====
 If the `is-failure-fatal` setting is set to true (the default is false),
 life cycle module failure prevents server initialization or startup, but
 not shutdown or termination.
-
-=======================================================================
+====
 
 
 [[giuue]][[GSADG00567]][[configuring-life-cycle-modules]]
@@ -89,27 +88,26 @@ To Create a Life Cycle Module
 Use the `create-lifecycle-module` subcommand in remote mode to create a
 life cycle module.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a new life cycle modules by using the
-link:../reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a new life cycle modules by using the
+link:../reference-manual/create-lifecycle-module.html#GSRFM00043[`create-lifecycle-module`] subcommand.
++
 Information about options and properties for the subcommand are included
 in this help page.
-3.  Restart the server for your changes to take effect. +
+3. Restart the server for your changes to take effect.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00206]][[giuyo]]
-
-
 Example 9-1 Creating a Life Cycle Module
 
 This example creates the `customSetup` life cycle module :
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-lifecycle-module --classname "com.acme.CustomSetup" 
---classpath "/export/customSetup" --loadorder 1 --failurefatal=true 
---description "this is a sample customSetup" 
+asadmin> create-lifecycle-module --classname "com.acme.CustomSetup"
+--classpath "/export/customSetup" --loadorder 1 --failurefatal=true
+--description "this is a sample customSetup"
 --property rmi="Server\=acme1\:7070":timeout=30 customSetup
 Command create-lifecycle-module executed successfully
 ----
@@ -129,19 +127,16 @@ To List Life Cycle Modules
 Use the `list-lifecycle-modules` subcommand in remote mode to list the
 existing life cycle modules.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List life cycle modules by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List life cycle modules by using the
 link:../reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`] subcommand.
 
 [[GSADG00207]][[giuyr]]
-
-
 Example 9-2 Listing Life Cycle Modules
 
 This example lists the existing life cycle modules.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-lifecycle-modules
 WSTCPConnectorLCModule
@@ -162,10 +157,12 @@ To Update a Life Cycle Module
 
 Use the `set` subcommand to update an existing life cycle module.
 
-1.  List the properties that can be updated for a life cycle module by
-using the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand. +
-For example (single mode): +
-[source,oac_no_warn]
+1. List the properties that can be updated for a life cycle module by
+using the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand.
++
+For example (single mode):
++
+[source]
 ----
 asadmin get "*" | grep sampleLCM
 applications.application.sampleLCMmodule.availability-enabled=false
@@ -178,19 +175,18 @@ applications.application.sampleLCMmodule.property.classpath=/build/lcm.jar
 applications.application.sampleLCMmodule.property.is-failure-fatal=false
 applications.application.sampleLCMmodule.property.isLifecycle=true
 ----
-2.  Update a life cycle module by using the olink:GSRFM00226[`set`]
+2. Update a life cycle module by using the olink:GSRFM00226[`set`]
 subcommand.
-3.  Restart the server for your changes to take effect. +
+3. Restart the server for your changes to take effect.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00208]][[giuyq]]
-
-
 Example 9-3 Updating a Life Cycle Module
 
 This example updates the `classpath` property.
 
-[source,oac_no_warn]
+[source]
 ----
 sadmin> set applications.application.sampleLCMmodule.
 property.classpath=/build/lcm_new.jarapplications.application.
@@ -213,21 +209,18 @@ To Delete a Life Cycle Module
 Use the `delete-lifecycle-module` subcommand in remote mode to delete a
 life cycle module.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the current life cycle modules by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the current life cycle modules by using the
 link:../reference-manual/list-lifecycle-modules.html#GSRFM00181[`list-lifecycle-modules`] subcommand.
-3.  Delete a life cycle module by using the
+3. Delete a life cycle module by using the
 link:../reference-manual/delete-lifecycle-module.html#GSRFM00095[`delete-lifecycle-module`] subcommand.
 
 [[GSADG00209]][[giuyi]]
-
-
 Example 9-4 Deleting a Life Cycle Module
 
 This example deletes the `customSetup` life cycle module.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-lifecycle-module customSetup
 Command delete-lifecycle-module executed successfully

@@ -4,16 +4,16 @@ title=Runtime Administration
 next=general-administration.html
 prev=overview.html
 ~~~~~~
+
 Runtime Administration
 ======================
 
 [[gitzg]][[GSADG00297]][[part-i]]
 
-Part I +
---------
+Part I
+------
 
 [[runtime-administration]]
 Runtime Administration
 ----------------------
-
 

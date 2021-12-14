@@ -4,6 +4,7 @@ title=Administering Transactions
 next=part-appendixes.html
 prev=jndi.html
 ~~~~~~
+
 Administering Transactions
 ==========================
 
@@ -54,12 +55,12 @@ back.
 For example, to transfer funds from a checking account to a savings
 account, the following steps typically occur:
 
-1.  Check to see if the checking account has enough money to cover the
+1. Check to see if the checking account has enough money to cover the
 transfer.
-2.  Debit the amount from the checking account.
-3.  Credit the amount to the savings account.
-4.  Record the transfer to the checking account log.
-5.  Record the transfer to the savings account log.
+2. Debit the amount from the checking account.
+3. Credit the amount to the savings account.
+4. Record the transfer to the checking account log.
+5. Record the transfer to the savings account log.
 
 These steps together are considered a single transaction.
 
@@ -119,7 +120,8 @@ There are three types of transaction resource managers:
 inconsistent states due to incomplete updates. For information about
 JDBC transaction isolation levels, see "link:../application-development-guide/transaction-service.html#GSDVG00511[Using JDBC
 Transaction Isolation Levels]" in GlassFish Server Open Source Edition
-Application Development Guide. +
+Application Development Guide.
++
 The GlassFish Server supports a variety of JDBC XA drivers. For a list
 of the JDBC drivers currently supported by the GlassFish Server, see the
 link:../release-notes/toc.html#GSRLN[GlassFish Server Open Source Edition Release Notes]. For
@@ -194,13 +196,15 @@ following ways:
 open the Transaction Service component under the relevant configuration.
 For details, click the Help button in the Administration Console.
 * To configure the transaction service, use the link:../reference-manual/set.html#GSRFM00226[`set`]
-subcommand to set the following attributes. +
+subcommand to set the following attributes.
++
 The following examples show the `server-config` configuration, but
 values for any configuration can be set. For example, if you create a
 cluster named `cluster1` and a configuration named `cluster1-config` is
 automatically created for it, you can use `cluster1-config` in the `set`
-subcommand to get the transaction service settings for that cluster. +
-[source,oac_no_warn]
+subcommand to get the transaction service settings for that cluster.
++
+[source]
 ----
 server-config.transaction-service.automatic-recovery = false
 server-config.transaction-service.heuristic-decision = rollback
@@ -209,8 +213,9 @@ server-config.transaction-service.retry-timeout-in-seconds = 600
 server-config.transaction-service.timeout-in-seconds = 0
 server-config.transaction-service.tx-log-dir = domain-dir/logs
 ----
-You can also set these properties: +
-[source,oac_no_warn]
+You can also set these properties:
++
+[source]
 ----
 server-config.transaction-service.property.oracle-xa-recovery-workaround = true
 server-config.transaction-service.property.sybase-xa-recovery-workaround = false
@@ -218,7 +223,7 @@ server-config.transaction-service.property.disable-distributed-transaction-loggi
 server-config.transaction-service.property.xaresource-txn-timeout = 0
 server-config.transaction-service.property.pending-txn-cleanup-interval = -1
 server-config.transaction-service.property.use-last-agent-optimization = true
-server-config.transaction-service.property.delegated-recovery = false 
+server-config.transaction-service.property.delegated-recovery = false
 server-config.transaction-service.property.wait-time-before-recovery-insec = 60
 server-config.transaction-service.property.purge-cancelled-transactions-after = 0
 server-config.transaction-service.property.commit-one-phase-during-recovery = false
@@ -249,16 +254,19 @@ is unset by default. However, if you set `db-logging-resource` to an
 empty value, the value used is `jdbc/TxnDS`.
 
 ** The `xa-servername` property does not have a default value. Use this
-property to override server names that can cause errors. +
+property to override server names that can cause errors.
++
 You can use the link:../reference-manual/get.html#GSRFM00139[`get`] subcommand to list all the
 transaction service attributes and the properties that have been set.
 For details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
-Reference Manual]. +
+Reference Manual].
++
 Changing `keypoint-interval`, `retry-timeout-in-seconds`, or
 `timeout-in-seconds` does not require a server restart. Changing other
 attributes or properties requires a server restart.
-* You can also set the following system properties: +
-[source,oac_no_warn]
+* You can also set the following system properties:
++
+[source]
 ----
 ALLOW_MULTIPLE_ENLISTS_DELISTS=false
 JTA_RESOURCE_TABLE_MAX_ENTRIES=8192
@@ -299,19 +307,16 @@ Running this subcommand on a stopped transaction subsystem has no
 effect. The transaction service remains suspended until you restart it
 by using the `unfreeze-transaction-service` subcommand.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Stop the transaction service by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Stop the transaction service by using the
 link:../reference-manual/freeze-transaction-service.html#GSRFM00137[`freeze-transaction-service`] subcommand.
 
 [[GSADG00293]][[giufq]]
-
-
 Example 19-1 Stopping the Transaction Service
 
 This example stops the transaction service.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> freeze-transaction-service --target instance1
 Command freeze-transaction-service executed successfully
@@ -335,39 +340,40 @@ the transaction service so that transaction operations are suspended.
 Use the `rollback-transaction` subcommand in remote mode to roll back a
 specific transaction.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Enable monitoring using the `set` subcommand. For example: +
-[source,oac_no_warn]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Enable monitoring using the `set` subcommand. For example:
++
+[source]
 ----
 asadmin> set cluster1-config.monitoring-service.module-monitoring-levels.transaction-service=HIGH
 ----
-3.  Use the `freeze-transaction-service` subcommand to halt in-process
+3. Use the `freeze-transaction-service` subcommand to halt in-process
 transactions. See link:#giufn[To Stop the Transaction Service].
-4.  Identify the ID of the transaction you want to roll back. +
+4. Identify the ID of the transaction you want to roll back.
++
 To see a list of IDs of active transactions, use the `get` subcommand
 with the `--monitor` option to get the monitoring data for the
 `activeids` statistic. See link:monitoring.html#ablvl[Transaction Service
-Statistics]. For example: +
-[source,oac_no_warn]
+Statistics]. For example:
++
+[source]
 ----
 asadmin> get --monitor instance1.server.transaction-service.activeids-current
 ----
-5.  Roll back the transaction by using the
-link:../reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`] subcommand. +
+5. Roll back the transaction by using the
+link:../reference-manual/rollback-transaction.html#GSRFM00223[`rollback-transaction`] subcommand.
++
 The transaction is not rolled back at the time of this command's
 execution, but only marked for rollback. The transaction is rolled back
 when it is completed.
 
 [[GSADG00294]][[giufy]]
-
-
 Example 19-2 Rolling Back a Transaction
 
 This example rolls back the transaction with transaction ID
 `0000000000000001_00`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> rollback-transaction --target instance1 0000000000000001_00
 Command rollback-transaction executed successfully
@@ -389,19 +395,16 @@ Use the `unfreeze-transaction-service` subcommand in remote mote to
 resume all the suspended in-flight transactions. Run this subcommand to
 restart the transaction service after it has been frozen.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Restart the suspended transaction service by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Restart the suspended transaction service by using the
 link:../reference-manual/unfreeze-transaction-service.html#GSRFM00245[`unfreeze-transaction-service`] subcommand.
 
 [[GSADG00295]][[giuef]]
-
-
 Example 19-3 Restarting the Transaction Service
 
 This example restarts the transaction service after it has been frozen.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> unfreeze-transaction-service --target instance1
 Command unfreeze-transaction-service executed successfully
@@ -433,7 +436,7 @@ non-XA transactions at server shutdown, set the
 option to either `commit` or `rollback` using the
 link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options -Dcom.sun.enterprise.in-progress-local-transaction.completion-mode=rollback
 ----
@@ -517,32 +520,27 @@ If commit fails during recovery, a message is written to the server log.
 
 
 [NOTE]
-=======================================================================
-
+====
 A JMS resource crash is handled the same way as any other resource.
 
 You can list in-doubt Open Message Queue transactions using the
 `imqcmd list txn` subcommand. For more information, see
 "olink:GMADG00241[Managing Transactions]" in Open Message Queue
 Administration Guide.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Manually recover transactions by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Manually recover transactions by using the
 link:../reference-manual/recover-transactions.html#GSRFM00216[`recover-transactions`] subcommand.
 
 [[GSADG00296]][[giugn]]
-
-
 Example 19-4 Manually Recovering Transactions
 
 This example performs manual recovery of transactions on `instance1`,
 saving them to `instance2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin recover-transactions --target instance2 instance1
 Transaction recovered.
@@ -620,12 +618,12 @@ Oracle Setup for Transaction Recovery
 You must configure the following `grant` statements in your Oracle
 database to set up transaction recovery:
 
-[source,oac_no_warn]
+[source]
 ----
-grant select on SYS.DBA_PENDING_TRANSACTIONS to user; 
-grant execute on SYS.DBMS_SYSTEM to user; 
-grant select on SYS.PENDING_TRANS$ to user; 
-grant select on SYS.DBA_2PC_NEIGHBORS to user; 
+grant select on SYS.DBA_PENDING_TRANSACTIONS to user;
+grant execute on SYS.DBMS_SYSTEM to user;
+grant select on SYS.PENDING_TRANS$ to user;
+grant select on SYS.DBA_2PC_NEIGHBORS to user;
 grant execute on SYS.DBMS_XA to user;
 grant select on SYS.DBA_2PC_PENDING to user;
 ----
@@ -693,8 +691,9 @@ to a relative path.
 directory, in which case `log-root` is ignored for transaction logs.
 
 ** Set a system property called `TX-LOG-DIR` to a shared file system
-directory. For example: +
-[source,oac_no_warn]
+directory. For example:
++
+[source]
 ----
 asadmin> create-system-properties --target server TX-LOG-DIR=/inst1/logs
 ----
@@ -707,16 +706,14 @@ is more important than transaction recovery.
 
 
 [NOTE]
-=======================================================================
-
+====
 All instances in a cluster must be owned by the same user (`uid`), and
 read/write permissions for that user must be set on the transaction log
 directories.
 
 Transaction logs should be stored in a high-availability network file
 system (NFS) to avoid a single point of failure.
-
-=======================================================================
+====
 
 
 [[gcmam]][[GSADG00517]][[to-store-transaction-logs-in-a-database]]
@@ -730,16 +727,19 @@ JDBC-compliant database. For databases with which transaction logging
 has been tested, see the GlassFish Server Open Source Edition Release
 Notes.
 
-1.  [[CIHDBIJI]] +
+1. [[CIHDBIJI]]
 Create a JDBC connection Pool. To use non-transactional connections to
 insert log records, you can either set the
 `non-transactional-connections` attribute to `true` in this step, or you
 can perform step link:#CIHGIHJC[5] later.
-2.  Create a JDBC resource that uses the connection pool and note the
+
+2. Create a JDBC resource that uses the connection pool and note the
 JNDI name of the JDBC resource.
-3.  Automatic table creation for the transaction logs is done by
-default. However, if you would prefer to create the table manually, name
-it `txn_log_table` with the following schema: +
+
+3. Automatic table creation for the transaction logs is done by default.
+However, if you would prefer to create the table manually, name
+it `txn_log_table` with the following schema:
++
 [width="100%",cols="50%,50%",options="header",]
 |==========================
 |Column Name |JDBC Type
@@ -748,36 +748,42 @@ it `txn_log_table` with the following schema: +
 |`SERVERNAME` |`VARCHAR(n)`
 |`GTRID` |`VARBINARY`
 |==========================
-
 The size of the `SERVERNAME` column should be at least the length of the
 GlassFish Server host name plus 10 characters. +
 The size of the `GTRID` column should be at least 64 bytes.
-4.  Add the `db-logging-resource` property to the transaction service.
-For example: +
-[source,oac_no_warn]
+
+4. Add the `db-logging-resource` property to the transaction service.
+For example:
++
+[source]
 ----
 asadmin set server-config.transaction-service.property.db-logging-resource="jdbc/TxnDS"
 ----
 The property's value should be the JNDI name of the JDBC resource
 configured previously.
-5.  [[CIHGIHJC]] +
+
+5. [[CIHGIHJC]]
 If you didn't set the `non-transactional-connections` attribute to
 `true` in step link:#CIHDBIJI[1] and you want to use non-transactional
 connections to insert log records, use the following
 `asadmin create-jvm-options` command to reference an existing
 transactional resource but use non-transactional connections for the
-`INSERT` statements: +
-[source,oac_no_warn]
+`INSERT` statements:
++
+[source]
 ----
 asadmin create-jvm-options -Dcom.sun.jts.dblogging.use.nontx.connection.for.add=true
 ----
-6.  To disable file synchronization, use the following
-`asadmin create-jvm-options` command: +
-[source,oac_no_warn]
+
+6. To disable file synchronization, use the following
+`asadmin create-jvm-options` command:
++
+[source]
 ----
 asadmin create-jvm-options -Dcom.sun.appserv.transaction.nofdsync
 ----
-7.  Restart the server.
+
+7. Restart the server.
 
 [[GSADG1042]]
 

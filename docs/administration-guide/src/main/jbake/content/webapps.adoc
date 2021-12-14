@@ -4,6 +4,7 @@ title=Administering Web Applications
 next=logging.html
 prev=threadpools.html
 ~~~~~~
+
 Administering Web Applications
 ==============================
 
@@ -39,7 +40,7 @@ You can call a servlet deployed to GlassFish Server by using a URL in a
 browser or embedded as a link in an HTML or JSP file. The format of a
 servlet invocation URL is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://server:port/context-root/servlet-mapping?name=value
 ----
@@ -78,27 +79,23 @@ file.
 
 
 [[GSADG00166]][[giyhf]]
-
-
 Example 6-1 Invoking a Servlet With a URL
 
 In this example, `localhost` is the host name, `MortPages` is the
 context root, and `calcMortgage` is the servlet mapping.
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/MortPages/calcMortgage?rate=8.0&per=360&bal=180000
 ----
 
 [[GSADG00167]][[giyib]]
-
-
 Example 6-2 Invoking a Servlet From Within a JSP File
 
 To invoke a servlet from within a JSP file, you can use a relative path.
 For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <jsp:forward page="TestServlet"/><jsp:include page="TestServlet"/>
 ----
@@ -133,7 +130,7 @@ security. To enable directory listings in your domain's
 `servlet-name` is equal to `default`, and set the value of the
 `init-param` named `listings` to `true`. Then restart the server.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <init-param>
    <param-name>listings</param-name>
@@ -145,7 +142,7 @@ If `listings` is set to `true`, you can also determine how directory
 listings are sorted. Set the value of the `init-param` named `sortedBy`
 to `NAME`, `SIZE`, or `LAST_MODIFIED`. Then restart the server.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <init-param>
    <param-name>sortedBy</param-name>
@@ -167,11 +164,12 @@ file, or edit the file directly using the following steps.
 To Use the `default-web.xml` File
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Place the JAR file for the filter, security constraint, or other
+1. Place the JAR file for the filter, security constraint, or other
 feature in the domain-dir`/lib` directory.
-2.  Edit the domain-dir`/config/default-web.xml` file to refer to the
+2. Edit the domain-dir`/config/default-web.xml` file to refer to the
 JAR file.
-3.  To apply your changes, restart GlassFish Server. +
+3. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[gixrb]][[GSADG00551]][[redirecting-a-url]]
@@ -196,13 +194,11 @@ to match.
 return to the client. The from prefix is replaced by this URL prefix.
 
 [[GSADG00168]][[giyis]]
-
-
 Example 6-3 Redirecting a URL
 
 This example redirects `from` `dummy` to `etude`:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <property name="redirect_1" value="from=/dummy url-prefix=http://etude"/>
 ----
@@ -250,57 +246,61 @@ not need to copy any additional JAR files into the `/lib` directory. You
 can also create JK connectors under different virtual servers by using
 the network listener attribute `jk-enabled`.
 
-1.  Install Apache HTTP Server and `mod_jk`.
+1. Install Apache HTTP Server and `mod_jk`.
 * For information on installing Apache HTTP Server, see
 `http://httpd.apache.org/docs/2.2/install.html`.
 * For information on installing `mod_jk`, see
 `http://tomcat.apache.org/connectors-doc/webserver_howto/apache.html`.
-2.  Configure the following files:
+2. Configure the following files:
 * `apache2/conf/httpd.conf`, the main Apache configuration file
-* `apache2/conf/workers.properties` +
+* `apache2/conf/workers.properties`
++
 link:#gixrq[Example 6-4] and link:#gixqt[Example 6-5] provide examples
 of configuring these two files.
-3.  Start Apache HTTP Server (`httpd`).
-4.  Start GlassFish Server with at least one web application deployed. +
+3. Start Apache HTTP Server (`httpd`).
+4. Start GlassFish Server with at least one web application deployed.
++
 In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
 achieved by deploying a web application.
-5.  Create a jk-enabled network listener by using the
-link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand. +
-[source,oac_no_warn]
+5. Create a jk-enabled network listener by using the
+link:../reference-manual/create-network-listener.html#GSRFM00046[`create-network-listener`] subcommand.
++
+[source]
 ----
 asadmin> create-network-listener --protocol http-listener-1 \
 --listenerport 8009 --jkenabled true jk-connector
 ----
-6.  If you are using the `glassfish-jk.properties` file to use
+6. If you are using the `glassfish-jk.properties` file to use
 non-default values of attributes described at
 `http://tomcat.apache.org/tomcat-5.5-doc/config/ajp.html`), set the
 `jk-configuration-file` property of the network listener to the
-fully-qualified file name of the `glassfish-jk.properties` file. +
-[source,oac_no_warn]
+fully-qualified file name of the `glassfish-jk.properties` file.
++
+[source]
 ----
 asadmin> set server-config.network-config.network-listeners.network-listener.\
 jk-connector.jk-configuration-file=domain-dir/config/glassfish-jk.properties
 ----
-7.  If you expect to need more than five threads for the listener,
-increase the maximum threads in the `http-thread-pool` pool: +
-[source,oac_no_warn]
+7. If you expect to need more than five threads for the listener,
+increase the maximum threads in the `http-thread-pool` pool:
++
+[source]
 ----
 asadmin> set configs.config.server-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-8.  To apply your changes, restart GlassFish Server. +
+8. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00169]][[gixrq]]
-
-
 Example 6-4 `httpd.conf` File for `mod_jk`
 
 This example shows an `httpd.conf` file that is set for `mod_jk`. In
 this example, `mod_jk` used as a simple pass-through.
 
-[source,oac_no_warn]
+[source]
 ----
 LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
 JkWorkersFile /etc/httpd/conf/worker.properties
@@ -321,15 +321,13 @@ JkMount /glassfish-test/* worker1
 ----
 
 [[GSADG00170]][[gixqt]]
-
-
 Example 6-5 `workers.properties` File for `mod_jk`
 
 This example shows a `workers.properties` that is set for `mod_jk`. This
 `workers.properties` file is referenced in the second line of
 link:#gixrq[Example 6-4].
 
-[source,oac_no_warn]
+[source]
 ----
 # Define 1 real worker using ajp13
 worker.list=worker1
@@ -364,62 +362,61 @@ received by the load balancer. This means that every GlassFish Server
 instance that is front-ended by the Apache load balancer must be
 configured with a unique `jvmRoute` system property.
 
-1.  On each of the instances, perform the steps in link:#gixqw[To Enable
-`mod_jk`]. +
+1. On each of the instances, perform the steps in link:#gixqw[To Enable
+`mod_jk`].
++
 If your instances run on the same machine, you must choose different JK
 ports. The ports must match `worker.worker*.port` in your
 `workers.properties` file. See the properties file in
 link:#gixqt[Example 6-5].
-2.  On each of the instances, create the `jvmRoute` system property of
+2. On each of the instances, create the `jvmRoute` system property of
 GlassFish Server by using the link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`]
-subcommand. +
-Use the following format: +
-[source,oac_no_warn]
+subcommand.
++
+Use the following format:
++
+[source]
 ----
 asadmin> create-jvm-options "-DjvmRoute=/instance-worker-name"/
 ----
 where instance-worker-name is the name of the worker that you defined to
 represent the instance in the `workers.properties` file.
-3.  To apply your changes, restart Apache HTTP Server and GlassFish
+3. To apply your changes, restart Apache HTTP Server and GlassFish
 Server.
 
 [[GSADG00171]][[gjjzu]]
-
-
 Example 6-6 `httpd.conf` File for Load Balancing
 
 This example shows an `httpd.conf` file that is set for load balancing.
 
-[source,oac_no_warn]
+[source]
 ----
-LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so 
-JkWorkersFile /etc/httpd/conf/worker.properties 
-# Where to put jk logs 
-JkLogFile /var/log/httpd/mod_jk.log 
-# Set the jk log level [debug/error/info] 
-JkLogLevel debug 
-# Select the log format 
-JkLogStampFormat "[%a %b %d %H:%M:%S %Y] " 
-# JkOptions indicate to send SSL KEY SIZE, 
-JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories 
-# JkRequestLogFormat set the request format 
-JkRequestLogFormat "%w %V %T" 
-# Send all jsp requests to GlassFish 
-JkMount /*.jsp worker1 
-# Send all glassfish-test requests to GlassFish 
+LoadModule jk_module /usr/lib/httpd/modules/mod_jk.so
+JkWorkersFile /etc/httpd/conf/worker.properties
+# Where to put jk logs
+JkLogFile /var/log/httpd/mod_jk.log
+# Set the jk log level [debug/error/info]
+JkLogLevel debug
+# Select the log format
+JkLogStampFormat "[%a %b %d %H:%M:%S %Y] "
+# JkOptions indicate to send SSL KEY SIZE,
+JkOptions +ForwardKeySize +ForwardURICompat -ForwardDirectories
+# JkRequestLogFormat set the request format
+JkRequestLogFormat "%w %V %T"
+# Send all jsp requests to GlassFish
+JkMount /*.jsp worker1
+# Send all glassfish-test requests to GlassFish
 JkMount /glassfish-test/* loadbalancer
 ----
 
 [[GSADG00172]][[gjjzf]]
-
-
 Example 6-7 `workers.properties` File for Load Balancing
 
 This example shows a `workers.properties` or `glassfish-jk.properties`
 file that is set for load balancing. The `worker.worker*.port` should
 match with JK ports you created.
 
-[source,oac_no_warn]
+[source]
 ----
 worker.list=worker1,worker2,loadbalancer
 worker.worker1.type=ajp13
@@ -455,51 +452,54 @@ Before You Begin
 
 The `mod_jk` connector must be enabled.
 
-1.  Generate the private key as follows: +
-[source,oac_no_warn]
+1. Generate the private key as follows:
++
+[source]
 ----
 openssl genrsa -des3 -rand file1:file2:file3:file4:file5 -out server.key 1024
 ----
 where `file1:file2:` and so on represents the random compressed files.
-2.  Remove the pass-phrase from the key as follows: +
-[source,oac_no_warn]
+2. Remove the pass-phrase from the key as follows:
++
+[source]
 ----
-openssl rsa -in server.key -out server.pem 
+openssl rsa -in server.key -out server.pem
 ----
-3.  Generate the CSR is as follows: +
-[source,oac_no_warn]
+3. Generate the CSR is as follows:
++
+[source]
 ----
 openssl req -new -key server.pem -out server.csr
 ----
 Enter the information you are prompted for.
-4.  Generate a temporary certificate as follows: +
-[source,oac_no_warn]
+4. Generate a temporary certificate as follows:
++
+[source]
 ----
 openssl x509 -req -days 60 -in server.csr -signkey server.pem -out server.crt
 ----
 This temporary certificate is good for 60 days.
-5.  Create the `http-ssl.conf` file under the `/etc/apache2/conf.d`
+5. Create the `http-ssl.conf` file under the `/etc/apache2/conf.d`
 directory.
-6.  In the `http-ssl.conf` file, add one of the following redirects:
+6. In the `http-ssl.conf` file, add one of the following redirects:
 * Redirect a web application, for example, `JkMount /hello/* worker1`.
-* Redirect all requests, for example, `JkMount /* worker1`. +
-[source,oac_no_warn]
+* Redirect all requests, for example, `JkMount /* worker1`.
++
+[source]
 ----
 # Send all jsp requests to GlassFish
 JkMount /*.jsp worker1
 # Send all glassfish-test requests to GlassFish
-JkMount /glassfish-test/* loadbalancer 
+JkMount /glassfish-test/* loadbalancer
 ----
 
 [[GSADG00173]][[gjpnc]]
-
-
 Example 6-8 `http-ssl.conf` File for `mod_jk` Security
 
 A basic SSL-enabled virtual host will appear in the `http-ssl.conf`
 file. In this example, all requests are redirected.
 
-[source,oac_no_warn]
+[source]
 ----
 Listen 443
 <VirtualHost _default_:443>
@@ -526,22 +526,26 @@ Before You Begin
 
 The self-signed certificate must be configured.
 
-1.  Perform the steps in link:#gixqw[To Enable `mod_jk`].
-2.  Start another GlassFish Server with at least one web application
-deployed. +
+1. Perform the steps in link:#gixqw[To Enable `mod_jk`].
+2. Start another GlassFish Server with at least one web application
+deployed.
++
 In order for the `mod_jk`-enabled network listener to start listening
 for requests, the web container must be started. Normally, this is
 achieved by deploying a web application.
-3.  Follow instructions from link:http_https.html#ggnbj[To Configure an
-HTTP Listener for SSL] on the `mod_jk` connector. +
-Use the following format: +
-[source,oac_no_warn]
+3. Follow instructions from link:http_https.html#ggnbj[To Configure an
+HTTP Listener for SSL] on the `mod_jk` connector.
++
+Use the following format:
++
+[source]
 ----
 asadmin> create-ssl --type http-listener --certname sampleCert new-listener
 ----
-4.  Add the following directives in the `httpd.conf` file under the
-`/etc/apache2/conf.d` directory: +
-[source,oac_no_warn]
+4. Add the following directives in the `httpd.conf` file under the
+`/etc/apache2/conf.d` directory:
++
+[source]
 ----
 # Should mod_jk send SSL information (default is On)
 JkExtractSSL On
@@ -554,7 +558,7 @@ JkCIPHERIndicator SSL_CIPHER
 # What is the indicator for the client SSL certificated? (default is SSL_CLIENT_CERT )
 JkCERTSIndicator SSL_CLIENT_CERT
 ----
-5.  To apply your changes, restart Apache HTTP Server and GlassFish
+5. To apply your changes, restart Apache HTTP Server and GlassFish
 Server.
 
 [[CIHJDAJD]][[GSADG861]][[administering-mod_proxy_ajp]]
@@ -581,50 +585,56 @@ handle requests for static resources, while having requests for dynamic
 resources, such as servlets and JavaServer Pages (JSPs), forwarded to,
 and handled by the GlassFish Server back-end instance.
 
-1.  Install Apache HTTP Server. +
+1. Install Apache HTTP Server.
++
 For information on installing Apache HTTP Server, see
 `http://httpd.apache.org/docs/2.2/install.html`.
-2.  Configure `apache2/conf/httpd.conf`, the main Apache configuration
-file. +
-For example: +
-[source,oac_no_warn]
+2. Configure `apache2/conf/httpd.conf`, the main Apache configuration
+file.
++
+For example:
++
+[source]
 ----
 LoadModule proxy_module /usr/lib/httpd/modules/mod_proxy.so
 LoadModule proxy_ajp_module /usr/lib/httpd/modules/mod_proxy_ajp.so
- 
+
 Listen 1979
 NameVirtualHost *:1979
 <VirtualHost *:1979>
    ServerName localhost
    ErrorLog /var/log/apache2/ajp.error.log
    CustomLog /var/log/apache2/ajp.log combined
- 
+
    <Proxy *>
      AddDefaultCharset Off
      Order deny,allow
      Allow from all
    </Proxy>
- 
+
    ProxyPass / ajp://localhost:8009/
    ProxyPassReverse / ajp://localhost:8009/
 </VirtualHost>
 ----
-3.  Start Apache HTTP Server (`httpd`).
-4.  Create a jk-enabled network listener by using the
-`create-network-listener` subcommand. +
-[source,oac_no_warn]
+3. Start Apache HTTP Server (`httpd`).
+4. Create a jk-enabled network listener by using the
+`create-network-listener` subcommand.
++
+[source]
 ----
 asadmin> create-network-listener --protocol http-listener-1 \
 --listenerport 8009 --jkenabled true jk-connector
 ----
-5.  If you expect to need more than five threads for the listener,
-increase the maximum threads in the `http-thread-pool` pool: +
-[source,oac_no_warn]
+5. If you expect to need more than five threads for the listener,
+increase the maximum threads in the `http-thread-pool` pool:
++
+[source]
 ----
 asadmin> set configs.config.server-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-6.  To apply your changes, restart GlassFish Server. +
+6. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG863]]
@@ -662,29 +672,33 @@ relies on a `jvmRoute` system property that is included in any
 GlassFish Server instance that is front-ended by the Apache load
 balancer must be configured with a unique `jvmRoute` system property.
 
-1.  Install Apache HTTP Server. +
+1. Install Apache HTTP Server.
++
 For information on installing Apache HTTP Server, see
 `http://httpd.apache.org/docs/2.2/install.html`.
-2.  [[BABIFEEC]] +
-Configure `apache2/conf/httpd.conf`, the main Apache configuration file. +
-For example: +
-[source,oac_no_warn]
+2. [[BABIFEEC]]
++
+Configure `apache2/conf/httpd.conf`, the main Apache configuration file.
++
+For example:
++
+[source]
 ----
 LoadModule proxy_module /usr/lib/httpd/modules/mod_proxy.so
 LoadModule proxy_ajp_module /usr/lib/httpd/modules/mod_proxy_ajp.so
 LoadModule proxy_balancer_module /usr/lib/httpd/modules/mod_proxy_balancer.so
- 
+
 # Forward proxy needs to be turned off
 ProxyRequests Off
 # Keep the original Host Header
 ProxyPreserveHost On
- 
+
    <Proxy *>
       Order deny,allow
       Deny from all
       Allow from localhost
    </Proxy>
- 
+
 # Each BalancerMember corresponds to an instance in the GlassFish Server
 # cluster. The port specified for each instance must match the ajp port
 # specified for that instance.
@@ -694,38 +708,45 @@ ProxyPreserveHost On
     BalancerMember ajp://localhost:8011
 </Proxy>
 ----
-3.  Start Apache HTTP Server (`httpd`).
-4.  In GlassFish Server, use the `create-network-listener` subcommand to
-create a jk-enabled network listener targeted to the cluster. +
-For example: +
-[source,oac_no_warn]
+3. Start Apache HTTP Server (`httpd`).
+4. In GlassFish Server, use the `create-network-listener` subcommand to
+create a jk-enabled network listener targeted to the cluster.
++
+For example:
++
+[source]
 ----
 asadmin> create-network-listener --jkenabled true --target cluster1 \
 --protocol http-listener-1 --listenerport ${AJP_PORT} jk-listener
 ----
 In this example, `cluster1` is the name of the cluster and `jk-listener`
 is the name of the new listener.
-5.  If you expect to need more than five threads for the listener,
-increase the maximum threads in the `http-thread-pool` pool: +
-[source,oac_no_warn]
+5. If you expect to need more than five threads for the listener,
+increase the maximum threads in the `http-thread-pool` pool:
++
+[source]
 ----
 asadmin> set configs.config.cluster1-config.thread-pools.thread-pool.\
 http-thread-pool.max-thread-pool-size=value
 ----
-6.  Use the `create-jvm-options` subcommand to create the `jvmRoute`
-property targeted to the cluster. +
-For example: +
-[source,oac_no_warn]
+6. Use the `create-jvm-options` subcommand to create the `jvmRoute`
+property targeted to the cluster.
++
+For example:
++
+[source]
 ----
 asadmin> create-jvm-options --target cluster1 \
 "-DjvmRoute=\${AJP_INSTANCE_NAME}"
 ----
-7.  Use the `create-system-properties` subcommand to define the
+7. Use the `create-system-properties` subcommand to define the
 `AJP_PORT` and `AJP_INSTANCE_NAME` properties for each of the instances
 in the cluster, making sure to match the port values you used in
-Step link:#BABIFEEC[2] when specifying the load balancer members. +
-For example: +
-[source,oac_no_warn]
+Step link:#BABIFEEC[2] when specifying the load balancer members.
++
+For example:
++
+[source]
 ----
 asadmin> create-system-properties --target instance1 AJP_PORT=8009
 asadmin> create-system-properties --target instance1 \
@@ -739,7 +760,8 @@ AJP_INSTANCE_NAME=instance3
 ----
 In this example, `instance1`, `instance2` and `instance3` are the names
 of the GlassFish Server instances in the cluster.
-8.  To apply your changes, restart GlassFish Server. +
+8. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 

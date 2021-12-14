@@ -3,6 +3,7 @@ status=published
 title=Subcommands for the asadmin Utility
 prev=part-appendixes.html
 ~~~~~~
+
 Subcommands for the asadmin Utility
 ===================================
 
@@ -43,12 +44,10 @@ provides a collection of these help pages.
 
 
 [NOTE]
-=======================================================================
-
+====
 The common options used with remote subcommands are described in the
 olink:GSRFM00263[`asadmin`(1M)] help page.
-
-=======================================================================
+====
 
 
 [[ggltk]][[GSADG00610]][[general-administration-subcommands]]

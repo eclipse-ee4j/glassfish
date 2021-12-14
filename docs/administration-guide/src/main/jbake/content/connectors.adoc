@@ -4,6 +4,7 @@ title=Administering EIS Connectivity
 next=http_https.html
 prev=jdbc.html
 ~~~~~~
+
 Administering EIS Connectivity
 ==============================
 
@@ -21,14 +22,12 @@ utility.
 
 
 [NOTE]
-=======================================================================
-
+====
 If you installed the Web Profile, connector modules that use only
 outbound communication features and work-management that does not
 involve inbound communication features are supported. Other connector
 features are supported only in the Full Platform Profile.
-
-=======================================================================
+====
 
 
 The following topics are addressed here:
@@ -103,21 +102,24 @@ Objects].
 At runtime, the following sequence occurs when an application connects
 to an EIS:
 
-1.  The application gets the connector resource (data source) associated
-with the EIS by making a call through the JNDI API. +
+1. The application gets the connector resource (data source) associated
+with the EIS by making a call through the JNDI API.
++
 Using the JNDI name of the connector resource, the naming and directory
 service locates the resource. Each EIS resource specifies a connector
 connection pool.
-2.  Using the connector resource, the application gets an EIS
-connection. +
+2. Using the connector resource, the application gets an EIS
+connection.
++
 GlassFish Server retrieves a physical connection from the connection
 pool that corresponds to the EIS resource. The pool defines connection
 attributes such as the EIS name, user name, and password.
-3.  After the EIS connection is established, the application can read,
-modify, and add data to the EIS. +
+3. After the EIS connection is established, the application can read,
+modify, and add data to the EIS.
++
 The application accesses the EIS information by making calls to the JMS
 API.
-4.  When the application is finished accessing the EIS, the application
+4. When the application is finished accessing the EIS, the application
 closes the connection and returns the connection to the connection pool.
 
 [[ablls]][[GSADG00581]][[administering-connector-connection-pools]]
@@ -162,34 +164,34 @@ Before You Begin
 Before creating the connector connection pool, the connector must be
 installed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create the connector connection pool by using the
-link:../reference-manual/create-connector-connection-pool.html#GSRFM00018[`create-connector-connection-pool`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create the connector connection pool by using the
+link:../reference-manual/create-connector-connection-pool.html#GSRFM00018[`create-connector-connection-pool`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
-3.  If needed, restart the server. +
+3. If needed, restart the server.
++
 Some properties require server restart. See
 link:overview.html#ghciy[Configuration Changes That Require Restart]. If
 your server needs to be restarted, see link:domains.html#ginqj[To Restart
 a Domain].
-4.  You can verify that a connection pool is usable by using the
-`ping-connection-pool` subcommand. +
+4. You can verify that a connection pool is usable by using the
+`ping-connection-pool` subcommand.
++
 For instructions, see link:jdbc.html#ggnwn[To Contact (Ping) a Connection
 Pool].
 
 [[GSADG00223]][[giocc]]
-
-
 Example 12-1 Creating a Connector Connection Pool
 
 This example creates the new `jms/qConnPool` pool for the
 `jakarta.jms.QueueConnectionFactory` connector module.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-connection-pool --steadypoolsize 20 --maxpoolsize 100 
---poolresize 2 --maxwait 60000 --raname jmsra --connectiondefinition 
+asadmin> create-connector-connection-pool --steadypoolsize 20 --maxpoolsize 100
+--poolresize 2 --maxwait 60000 --raname jmsra --connectiondefinition
 jakarta.jms.QueueConnectionFactory jms/qConnPool
 
 Command create-connector-connection-pool executed successfully
@@ -211,19 +213,16 @@ To List Connector Connection Pools
 Use the `list-connector-connection-pools` subcommand in remote mode to
 list the pools that have been created.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector connection pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector connection pools by using the
 link:../reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
 
 [[GSADG00224]][[giody]]
-
-
 Example 12-2 Listing Connector Connection Pools
 
 This example lists the existing connector connection pools.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-connection-pools
 jms/qConnPool
@@ -249,9 +248,8 @@ link:jdbc.html#ggnwn[To Contact (Ping) a Connection Pool] or
 link:jdbc.html#gjiqp[To Reset (Flush) a Connection Pool] for
 instructions.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Connect to or reset a connector connection pool by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Connect to or reset a connector connection pool by using the
 link:../reference-manual/flush-connection-pool.html#GSRFM00135[`flush-connection-pool`] subcommand or the
 link:../reference-manual/ping-connection-pool.html#GSRFM00214[`ping-connection-pool`] subcommand.
 
@@ -263,28 +261,27 @@ To Update a Connector Connection Pool
 Use the `get` and `set` subcommands to view and change the values of the
 connector connection pool properties.
 
-1.  List the connector connection pools by using the
+1. List the connector connection pools by using the
 link:../reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
-2.  View the properties of the connector connection pool by using the
-link:../reference-manual/get.html#GSRFM00139[`get`] subcommand. +
-For example: +
-[source,oac_no_warn]
+2. View the properties of the connector connection pool by using the
+link:../reference-manual/get.html#GSRFM00139[`get`] subcommand. For example:
++
+[source]
 ----
 asadmin> get domain.resources.connector-connection-pool.conectionpoolname.*
 ----
-3.  Set the property of the connector connection pool by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-For example: +
-[source,oac_no_warn]
+3. Set the property of the connector connection pool by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+For example:
++
+[source]
 ----
 asadmin> set domain.resources.connector-connection-pool
 .conectionpoolname.validate-atmost-once-period-in-seconds=3
 ----
-4.  If needed, restart the server. +
-Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
-a Domain].
+4. If needed, restart the server. Some properties require server restart.
+See link:overview.html#ghciy[Configuration Changes That Require Restart].
+If your server needs to be restarted, see link:domains.html#ginqj[To Restart a Domain].
 
 [[giocp]][[GSADG00435]][[to-delete-a-connector-connection-pool]]
 
@@ -294,23 +291,19 @@ To Delete a Connector Connection Pool
 Use the `delete-connector-connection-pool` subcommand in remote mode to
 remove a connector connection pool.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector connection pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector connection pools by using the
 link:../reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
-3.  If necessary, notify users that the connector connection pool is
-being deleted.
-4.  Delete the connector connection pool by using the
+3. If necessary, notify users that the connector connection pool is being deleted.
+4. Delete the connector connection pool by using the
 link:../reference-manual/delete-connector-connection-pool.html#GSRFM00070[`delete-connector-connection-pool`] subcommand.
 
 [[GSADG00225]][[giohd]]
-
-
 Example 12-3 Deleting a Connector Connection Pool
 
 This example deletes the connection pool named `jms/qConnPool`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-connector-connection-pool --cascade=false jms/qConnPool
 Command delete-connector-connection-pool executed successfully
@@ -361,29 +354,28 @@ Before creating a connector resource, you must first create a connector
 connection pool. For instructions, see link:#gioce[To Create a Connector
 Connection Pool].
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create the connector resource by using the
-link:../reference-manual/create-connector-resource.html#GSRFM00019[`create-connector-resource`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create the connector resource by using the
+link:../reference-manual/create-connector-resource.html#GSRFM00019[`create-connector-resource`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
-3.  If needed, restart the server. +
+3. If needed, restart the server.
++
 Some properties require server restart. See
 link:overview.html#ghciy[Configuration Changes That Require Restart]. If
 your server needs to be restarted, see link:domains.html#ginqj[To Restart
 a Domain].
 
 [[GSADG00226]][[giogn]]
-
-
 Example 12-4 Creating a Connector Resource
 
 This example creates a new resource named `jms/qConnFactory` for the
 `jms/qConnPool` connection pool.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-resource --poolname jms/qConnPool 
+asadmin> create-connector-resource --poolname jms/qConnPool
 --description "creating sample connector resource" jms/qConnFactory
 Command create-connector-resource executed successfully
 ----
@@ -403,19 +395,16 @@ To List Connector Resources
 Use the `list-connector-resources` subcommand in remote mode to list the
 connector resources that have been created.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector connection pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector connection pools by using the
 link:../reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`] subcommand.
 
 [[GSADG00227]][[gioia]]
-
-
 Example 12-5 Listing Connector Resources
 
 This example lists the existing connector resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-resources
 jms/qConnFactory
@@ -437,27 +426,27 @@ To Update a Connector Resource
 Use the `get` and `set` subcommands to view and change the values of the
 connector resource properties.
 
-1.  List the connector connection pools by using the
+1. List the connector connection pools by using the
 link:../reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`] subcommand.
-2.  View the properties of the connector resource by using the
-link:../reference-manual/get.html#GSRFM00139[`get`] subcommand. +
-For example +
-[source,oac_no_warn]
+2. View the properties of the connector resource by using the
+link:../reference-manual/get.html#GSRFM00139[`get`] subcommand.
+For example
++
+[source]
 ----
 asadmin> get domain.resources.connector-resource.jms/qConnFactory
 ----
-3.  Set the property of the connector resource by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-For example: +
-[source,oac_no_warn]
+3. Set the property of the connector resource by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+For example:
++
+[source]
 ----
 asadmin> set domain.resources.connector-resource.jms/qConnFactory.enabled=true
 ----
-4.  If needed, restart the server. +
-Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
-a Domain].
+4. If needed, restart the server. Some properties require server restart.
+See link:overview.html#ghciy[Configuration Changes That Require Restart].
+If your server needs to be restarted, see link:domains.html#ginqj[To Restart a Domain].
 
 [[giofs]][[GSADG00439]][[to-delete-a-connector-resource]]
 
@@ -471,28 +460,23 @@ a connector resource by specifying the JNDI name.
 
 Before You Begin
 
-Before deleting a resource, all associations with the resource must be
-removed.
+Before deleting a resource, all associations with the resource must be removed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector connection pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector connection pools by using the
 link:../reference-manual/list-connector-resources.html#GSRFM00158[`list-connector-resources`] subcommand.
-3.  If necessary, notify users that the connector resource is being
-deleted.
-4.  Delete the connector resource by using the
+3. If necessary, notify users that the connector resource is being deleted.
+4. Delete the connector resource by using the
 link:../reference-manual/delete-connector-resource.html#GSRFM00071[`delete-connector-resource`] subcommand.
 
 [[GSADG00228]][[giokh]]
-
-
 Example 12-6 Deleting a Connector Resource
 
 This example deletes the `jms/qConnFactory` connector resource.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> delete-connector-resource jms/qConnFactory 
+asadmin> delete-connector-resource jms/qConnFactory
 Command delete-connector-resources executed successfully
 ----
 
@@ -529,23 +513,21 @@ of deployment. The resource adapter configuration can also be created
 after the resource adapter is deployed. In this situation, the resource
 adapter is restarted with the new configuration.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create configuration information by using the
-link:../reference-manual/create-resource-adapter-config.html#GSRFM00054[`create-resource-adapter-config`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create configuration information by using the
+link:../reference-manual/create-resource-adapter-config.html#GSRFM00054[`create-resource-adapter-config`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
 
 [[GSADG00229]][[gionp]]
-
-
 Example 12-7 Creating a Resource Adapter Configuration
 
 This example creates the configuration for resource adapter `ra1`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-resource-adapter-config --property foo=bar 
+asadmin> create-resource-adapter-config --property foo=bar
 --threadpoolid mycustomerthreadpool ra1
 Command create-resource-adapter-config executed successfully
 ----
@@ -568,19 +550,16 @@ list the configuration information contained in the domain configuration
 file (`domain.xml`) for the specified resource adapter (connector
 module).
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the configurations for a resource adapter by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the configurations for a resource adapter by using the
 link:../reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`] subcommand.
 
 [[GSADG00230]][[gioof]]
-
-
 Example 12-8 Listing Configurations for a Resource Adapter
 
 This example lists all the resource adapter configurations.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-resource-adapter-configs
 ra1
@@ -603,19 +582,21 @@ To Update a Resource Adapter Configuration
 Use the `get` and `set` subcommands to view and change the values of the
 resource adapter configuration properties.
 
-1.  List the configurations for a resource adapter by using the
+1. List the configurations for a resource adapter by using the
 link:../reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`] subcommand.
-2.  View the properties of the connector resource by using the
-link:../reference-manual/get.html#GSRFM00139[`get`] subcommand. +
-For example: +
-[source,oac_no_warn]
+2. View the properties of the connector resource by using the
+link:../reference-manual/get.html#GSRFM00139[`get`] subcommand.
+For example:
++
+[source]
 ----
 asadmin>get domain.resources.resource-adapter-config.ra1.*
 ----
-3.  Set the property of the connector resource by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-For example: +
-[source,oac_no_warn]
+3. Set the property of the connector resource by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+For example:
++
+[source]
 ----
 asadmin> set domain.resources.resource-adapter-config.ra1.raSpecificProperty=value
 ----
@@ -630,21 +611,18 @@ delete the configuration information contained in the domain
 configuration file (`domain.xml`) for a specified resource adapter
 (connector module).
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the configurations for a resource adapter by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the configurations for a resource adapter by using the
 link:../reference-manual/list-resource-adapter-configs.html#GSRFM00196[`list-resource-adapter-configs`] subcommand.
-3.  Delete the configuration for a resource adapter by using the
+3. Delete the configuration for a resource adapter by using the
 link:../reference-manual/delete-resource-adapter-config.html#GSRFM00106[`delete-resource-adapter-config`] subcommand.
 
 [[GSADG00231]][[giorj]]
-
-
 Example 12-9 Deleting a Resource Adapter Configuration
 
 This example deletes the configuration for resource adapter `ra1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-resource-adapter-config ra1
 Command delete-resource-adapter-config executed successfully
@@ -703,29 +681,28 @@ For this subcommand to succeed, you must have first created a connector
 connection pool. For instructions, see link:#gioce[To Create a Connector
 Connection Pool].
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a connector security map by using the
-link:../reference-manual/create-connector-security-map.html#GSRFM00020[`create-connector-security-map`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a connector security map by using the
+link:../reference-manual/create-connector-security-map.html#GSRFM00020[`create-connector-security-map`] subcommand.
++
 Information about the options for the subcommand is included in this
 help page.
-3.  If needed, restart the server. +
+3. If needed, restart the server.
++
 Some properties require server restart. See
 link:overview.html#ghciy[Configuration Changes That Require Restart]. If
 your server needs to be restarted, see link:domains.html#ginqj[To Restart
 a Domain].
 
 [[GSADG00232]][[giuxc]]
-
-
 Example 12-10 Creating a Connector Security Map
 
 This example creates a connector security map `securityMap1` for
 `connection-pool1`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-security-map --poolname connector-pool1 
+asadmin> create-connector-security-map --poolname connector-pool1
 --principals principal1, principal2 --mappedusername backend-username securityMap1
 Command create-connector-security-map executed successfully
 ----
@@ -741,38 +718,33 @@ connection pool. You can get a simple listing of the connector security
 maps for a connector connection pool, or you can get a more
 comprehensive listing that shows the principals of the map.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List existing connector connection pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List existing connector connection pools by using the
 link:../reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
-3.  List the security maps for a specific connector connection pool by
+3. List the security maps for a specific connector connection pool by
 using the link:../reference-manual/list-connector-security-maps.html#GSRFM00159[`list-connector-security-maps`] subcommand.
 
 [[GSADG00233]][[giuwj]]
-
-
 Example 12-11 Listing All Connector Security Maps for a Connector
 Connection Pool
 
 This example lists the connector security maps associated with
 `connector-Pool1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-security-maps connector-Pool1
-securityMap1 
+securityMap1
 Command list-connector-security-maps executed successfully.
 ----
 
 [[GSADG00234]][[giuyc]]
-
-
 Example 12-12 Listing Principals for a Specific Security Map for a
 Connector Connection Pool
 
 This example lists the principals associated with `securityMap1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-security-maps --securitymap securityMap1 connector-Pool1
 principal1
@@ -781,15 +753,13 @@ Command list-connector-security-maps executed successfully.
 ----
 
 [[GSADG00235]][[giuuf]]
-
-
 Example 12-13 Listing Principals of All Connector Security Maps for a
 Connector Connection Pool
 
 This example lists the connector security maps associated with
 `connector-Pool1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-security-maps --verbose connector-Pool1
 securityMap1
@@ -807,28 +777,26 @@ Use the `update-connector-security-map` subcommand in remote mode to
 create or modify a security map for the specified connector connection
 pool.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List existing connector security maps by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List existing connector security maps by using the
 link:../reference-manual/list-connector-security-maps.html#GSRFM00159[`list-connector-security-maps`] subcommand.
-3.  Modify a security map for a specific connector connection pool by
+3. Modify a security map for a specific connector connection pool by
 using the link:../reference-manual/update-connector-security-map.html#GSRFM00252[`update-connector-security-map`] subcommand.
-4.  If needed, restart the server. +
+4. If needed, restart the server.
++
 Some properties require server restart. See
 link:overview.html#ghciy[Configuration Changes That Require Restart]. If
 your server needs to be restarted, see link:domains.html#ginqj[To Restart
 a Domain].
 
 [[GSADG00236]][[giuwi]]
-
-
 Example 12-14 Updating a Connector Security Map
 
 This example adds principals to `securityMap1`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> update-connector-security-map --poolname connector-pool1 
+asadmin> update-connector-security-map --poolname connector-pool1
 --addprincipals principal1, principal2 securityMap1
 Command update-connector-security-map executed successfully.
 ----
@@ -841,23 +809,21 @@ To Delete a Connector Security Map
 Use the `delete-connector-security-map` subcommand in remote mode to
 delete a security map for the specified connector connection pool.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List existing connector connection pools by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List existing connector connection pools by using the
 link:../reference-manual/list-connector-connection-pools.html#GSRFM00157[`list-connector-connection-pools`] subcommand.
-3.  Delete a security map for a specific connector connection pool by
-using the link:../reference-manual/delete-connector-security-map.html#GSRFM00072[`delete-connector-security-map`] subcommand. +
+3. Delete a security map for a specific connector connection pool by
+using the link:../reference-manual/delete-connector-security-map.html#GSRFM00072[`delete-connector-security-map`] subcommand.
++
 Information about options for this subcommand is included in this help
 page.
 
 [[GSADG00237]][[giuvr]]
-
-
 Example 12-15 Deleting a Connector Security Map
 
 This example deletes `securityMap1` from `connector-pool1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-connector-security-map --poolname connector-pool1 securityMap1
 
@@ -907,30 +873,29 @@ Before creating a connector work security map, you must first create a
 connector connection pool. For instructions, see link:#gioce[To Create a
 Connector Connection Pool].
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create the connector work security map by using the
-link:../reference-manual/create-connector-work-security-m.html#GSRFM00021[`create-connector-work-security-map`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create the connector work security map by using the
+link:../reference-manual/create-connector-work-security-m.html#GSRFM00021[`create-connector-work-security-map`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
-3.  If needed, restart the server. +
+3. If needed, restart the server.
++
 Some properties require server restart. See
 link:overview.html#ghciy[Configuration Changes That Require Restart]. If
 your server needs to be restarted, see link:domains.html#ginqj[To Restart
 a Domain].
 
 [[GSADG00238]][[giokw]]
-
-
 Example 12-16 Creating Connector Work Security Maps
 
 The following examples create `workSecurityMap1` and `workSecurityMap2`
 for `my-resource-adapter-name`.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> create-connector-work-security-map --raname my-resource-adapter-name 
---principalsmap eis-principal-1=server-principal-1,eis-principal-2=server-principal-2, 
+asadmin> create-connector-work-security-map --raname my-resource-adapter-name
+--principalsmap eis-principal-1=server-principal-1,eis-principal-2=server-principal-2,
 eis-principal-3=server-principal-1 workSecurityMap1
 
 asadmin> create-connector-work-security-map --raname my-resource-adapter-name
@@ -955,19 +920,16 @@ To List Connector Work Security Maps
 Use the `list-connector-work-security-maps` subcommand in remote mode to
 list the work security maps that belong to a specific connector module.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector work security maps by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector work security maps by using the
 link:../reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`] subcommand.
 
 [[GSADG00239]][[gionj]]
-
-
 Example 12-17 Listing the Connector Work Security Maps
 
 This example lists the generic work security maps.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-connector-work-security-maps generic-ra
 generic-ra-groups-map: EIS group=eis-group, mapped group=glassfish-group
@@ -993,23 +955,20 @@ Use the `update-connector-work-security-map` subcommand in remote to
 modify a work security map that belongs to a specific resource adapter
 (connector module).
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector work security maps by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector work security maps by using the
 link:../reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`] subcommand.
-3.  If necessary, notify users that the connector work security map is
+3. If necessary, notify users that the connector work security map is
 being modified.
-4.  Update a connector work security map by using the
+4. Update a connector work security map by using the
 link:../reference-manual/update-connector-work-security-m.html#GSRFM00253[`update-connector-work-security-map`] subcommand.
 
 [[GSADG00240]][[gioll]]
-
-
 Example 12-18 Updating a Connector Work Security Map
 
 This example removes a principal from a work security map.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> update-connector-work-security-map --raname generic-ra
 --removeprincipals eis-foo generic-ra-principals-map
@@ -1033,22 +992,19 @@ Use the `delete-connector-work-security-map` subcommand in remote mode
 to delete a work security map that belongs to a specific connector
 module (resource adapter).
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the connector work security maps by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the connector work security maps by using the
 link:../reference-manual/list-connector-work-security-map.html#GSRFM00160[`list-connector-work-security-maps`] subcommand.
-3.  Delete a connector work security map by using the
+3. Delete a connector work security map by using the
 link:../reference-manual/delete-connector-work-security-m.html#GSRFM00073[`delete-connector-work-security-map`] subcommand.
 
 [[GSADG00241]][[giolk]]
-
-
 Example 12-19 Deleting a Connector Work Security Map
 
 This example deletes the `worksecuritymap1` map from the `my_ra`
 connector module.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-connector-work-security-map --raname my_ra worksecuritymap1
 Command delete-connector-work-security-map executed successfully.
@@ -1096,26 +1052,26 @@ Before You Begin
 The resource adapter must be deployed before running this subcommand
 (`jmsrar.rar`).
 
-1.  Create an administered object by using the
-link:../reference-manual/create-admin-object.html#GSRFM00012[`create-admin-object`] subcommand. +
+1. Create an administered object by using the
+link:../reference-manual/create-admin-object.html#GSRFM00012[`create-admin-object`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
-2.  If needed, restart the server. +
+2. If needed, restart the server.
++
 Some properties require server restart. See
 link:overview.html#ghciy[Configuration Changes That Require Restart]. If
 your server needs to be restarted, see link:domains.html#ginqj[To Restart
 a Domain].
 
 [[GSADG00242]][[giokx]]
-
-
 Example 12-20 Creating an Administered Object
 
 For this example, the `jakarta.jms.Queue` resource type is obtained from
 the `ra.xml` file. The JNDI name of the new administered object is
 `jms/samplequeue`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-admin-object --restype jakarta.jms.Queue --raname jmsra
 --description "sample administered object" --property Name=sample_jmsqueue jms/samplequeue
@@ -1137,19 +1093,16 @@ To List Administered Objects
 Use the `list-admin-object` subcommand in remote mode to list the
 existing administered objects.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the administered objects by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the administered objects by using the
 link:../reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`] subcommand.
 
 [[GSADG00243]][[giokg]]
-
-
 Example 12-21 Listing Administered Objects
 
 This example lists the existing administered objects.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-admin-objects
 jms/samplequeue
@@ -1171,52 +1124,48 @@ To Update an Administered Object
 Use the `get` and `set` subcommands to view and change the values of the
 administered objects properties.
 
-1.  List the administered objects by using the
+1. List the administered objects by using the
 link:../reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`] subcommand.
-2.  View the properties of the administered object by using the
-link:../reference-manual/get.html#GSRFM00139[`get`] subcommand. +
-For example: +
-[source,oac_no_warn]
+2. View the properties of the administered object by using the
+link:../reference-manual/get.html#GSRFM00139[`get`] subcommand.
+For example:
++
+[source]
 ----
-asadmin> get domain.resources.admin-object-resource.jms/samplequeue.* 
+asadmin> get domain.resources.admin-object-resource.jms/samplequeue.*
 ----
-3.  Set the property of the administered object by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
-For example: +
-[source,oac_no_warn]
+3. Set the property of the administered object by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
+For example:
++
+[source]
 ----
 asadmin> set domain.resources.admin-object-resource.jms/samplequeue.enabled=false
 ----
-4.  If needed, restart the server. +
-Some properties require server restart. See
-link:overview.html#ghciy[Configuration Changes That Require Restart]. If
-your server needs to be restarted, see link:domains.html#ginqj[To Restart
-a Domain].
+4. If needed, restart the server. Some properties require server restart.
+See link:overview.html#ghciy[Configuration Changes That Require Restart].
+If your server needs to be restarted, see link:domains.html#ginqj[To Restart a Domain].
 
 [[gioma]][[GSADG00455]][[to-delete-an-administered-object]]
 
 To Delete an Administered Object
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Use the `delete-admin-object` subcommand to delete an administered
-objects.
+Use the `delete-admin-object` subcommand to delete an administered objects.
 
-1.  List the administered objects by using the
+1. List the administered objects by using the
 link:../reference-manual/list-admin-objects.html#GSRFM00146[`list-admin-objects`] subcommand.
-2.  If necessary, notify users that the administered object is being
-deleted.
-3.  Delete an administered object by using the
+2. If necessary, notify users that the administered object is being deleted.
+3. Delete an administered object by using the
 link:../reference-manual/delete-admin-object.html#GSRFM00063[`delete-admin-object`] subcommand.
 
 [[GSADG00244]][[giolc]]
-
-
 Example 12-22 Deleting an Administered Object
 
 This example deletes the administered object with the JNDI name
 `jms/samplequeue`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-admin-object jms/samplequeue
 Command delete-admin-object executed successfully

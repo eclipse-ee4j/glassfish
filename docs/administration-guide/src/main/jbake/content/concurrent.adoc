@@ -4,6 +4,7 @@ title=Administering Concurrent Resources
 next=orb.html
 prev=http_https.html
 ~~~~~~
+
 Administering Concurrent Resources
 ==================================
 
@@ -120,33 +121,28 @@ with GlassFish Server, see link:#DAFFGDCD[Default Concurrent Resources].
 
 
 [NOTE]
-=======================================================================
-
+====
 Creating a context service resource is a dynamic event and typically
 does not require server restart. Applications can use a resource as soon
 as it is created. However, if an application tried to use a resource
 before it was created, and that resource is created later, the
 application or the server must be restarted. Otherwise, the application
 will not be able to locate the resource.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a context service by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a context service by using the
 link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-context-service`] subcommand.
-3.  If necessary, notify users that the new resource has been created.
+3. If necessary, notify users that the new resource has been created.
 
 [[GSADG1113]][[sthref74]]
-
-
 Example 14-1 Creating a Context Service
 
 This example creates a context service resource named
 `concurrent/Context1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-context-service concurrent/Context1
 Context service concurrent/Context1 created successfully.
@@ -168,20 +164,17 @@ To List Context Services
 Use the `list-context-services` subcommand in remote mode to list the
 existing context service resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List context service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List context service resources by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-context-services`] subcommand.
 
 [[GSADG1116]][[sthref75]]
-
-
 Example 14-2 Listing Context Services
 
 This example lists context service resources on the default server
 instance, `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-context-services
 concurrent/__defaultContextService
@@ -208,32 +201,29 @@ view and change the values of the context service attributes.
 
 
 [NOTE]
-=======================================================================
-
+====
 When a resource is updated, the existing resource is shut down and
 recreated. If an application used the resource prior to the update, the
 application or the server must be restarted.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the context service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the context service resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-context-services`] subcommand.
-3.  View the attributes of a specific context service by using the `get`
-subcommand. +
-For example: +
-[source,oac_no_warn]
+3. View the attributes of a specific context service by using the `get` subcommand.
+For example:
++
+[source]
 ----
-asdmin> get resources.context-service.concurrent/Context1.*
+asadmin> get resources.context-service.concurrent/Context1.*
 ----
-4.  Set an attribute of the context service by using the `set`
-subcommand. +
-For example: +
-[source,oac_no_warn]
+4. Set an attribute of the context service by using the `set` subcommand.
+For example:
++
+[source]
 ----
-asdmin> set resources.context-service.concurrent/Context1.deployment-order=120
+asadmin> set resources.context-service.concurrent/Context1.deployment-order=120
 ----
 
 [[DAFGGGEC]][[GSADG1119]][[to-delete-a-context-service]]
@@ -248,24 +238,20 @@ and does not require server restart.
 Before deleting a context service resource, all associations to the
 resource must be removed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the context service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the context service resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-context-services`] subcommand.
-3.  If necessary, notify users that the context service is being
-deleted.
-4.  Delete the context service by using the
+3. If necessary, notify users that the context service is being deleted.
+4. Delete the context service by using the
 link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-context-service`] subcommand.
 
 [[GSADG1120]][[sthref76]]
-
-
 Example 14-3 Deleting a Context Service
 
 This example deletes the context service resource named
 `concurrent/Context1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-context-service concurrent/Context1
 Context service concurrent/Context1 deleted successfully.
@@ -315,33 +301,28 @@ Resources].
 
 
 [NOTE]
-=======================================================================
-
+====
 Creating a managed thread factory resource is a dynamic event and
 typically does not require server restart. Applications can use a
 resource as soon as it is created. However, if an application tried to
 use a resource before it was created, and that resource is created
 later, the application or the server must be restarted. Otherwise, the
 application will not be able to locate the resource.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a managed thread factory by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a managed thread factory by using the
 link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-thread-factory`] subcommand.
-3.  If necessary, notify users that the new resource has been created.
+3. If necessary, notify users that the new resource has been created.
 
 [[GSADG1124]][[sthref77]]
-
-
 Example 14-4 Creating a Managed Thread Factory
 
 This example creates a managed thread factory resource named
 `concurrent/Factory1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-managed-thread-factory concurrent/Factory1
 Managed thread factory concurrent/Factory1 created successfully.
@@ -363,20 +344,17 @@ To List Managed Thread Factories
 Use the `list-managed-thread-factories` subcommand in remote mode to
 list the existing managed thread factory resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List managed thread factory resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List managed thread factory resources by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-thread-factories`] subcommand.
 
 [[GSADG1127]][[sthref78]]
-
-
 Example 14-5 Listing Managed Thread Factories
 
 This example lists managed thread factory resources on the default
 server instance, `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-managed-thread-factories
 concurrent/__defaultManagedThreadFactory
@@ -404,32 +382,29 @@ attributes.
 
 
 [NOTE]
-=======================================================================
-
+====
 When a resource is updated, the existing resource is shut down and
 recreated. If applications used the resource prior to the update, the
 application or the server must be restarted.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the managed thread factory resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the managed thread factory resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-thread-factories`] subcommand.
-3.  View the attributes of a managed thread factory by using the `get`
-subcommand. +
-For example: +
-[source,oac_no_warn]
+3. View the attributes of a managed thread factory by using the `get` subcommand.
+For example:
++
+[source]
 ----
-asdmin> get resources.managed-thread-factory.concurrent/Factory1.*
+asadmin> get resources.managed-thread-factory.concurrent/Factory1.*
 ----
-4.  Set an attribute of the managed thread factory by using the `set`
-subcommand. +
-For example: +
-[source,oac_no_warn]
+4. Set an attribute of the managed thread factory by using the `set` subcommand.
+For example:
++
+[source]
 ----
-asdmin> set resources.managed-thread-factory.concurrent/Factory1.deployment-order=120
+asadmin> set resources.managed-thread-factory.concurrent/Factory1.deployment-order=120
 ----
 
 [[DAFCEDEI]][[GSADG1130]][[to-delete-a-managed-thread-factory]]
@@ -444,24 +419,20 @@ factory is a dynamic event and does not require server restart.
 Before deleting a managed thread factory resource, all associations to
 the resource must be removed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the managed thread factory resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the managed thread factory resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-thread-factories`] subcommand.
-3.  If necessary, notify users that the managed thread factory is being
-deleted.
-4.  Delete the managed thread factory by using the
+3. If necessary, notify users that the managed thread factory is being deleted.
+4. Delete the managed thread factory by using the
 link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-thread-factory`] subcommand.
 
 [[GSADG1131]][[sthref79]]
-
-
 Example 14-6 Deleting a Managed Thread Factory
 
 This example deletes the managed thread factory resource named
 `concurrent/Factory1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-managed-thread-factory concurrent/Factory1
 Managed thread factory concurrent/Factory1 deleted successfully.
@@ -511,33 +482,28 @@ Resources].
 
 
 [NOTE]
-=======================================================================
-
+====
 Creating a managed executor service resource is a dynamic event and
 typically does not require server restart. Applications can use a
 resource as soon as it is created. However, if an application tried to
 use a resource before it was created, and that resource is created
 later, the application or the server must be restarted. Otherwise, the
 application will not be able to locate the resource.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a managed executor service by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a managed executor service by using the
 link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-executor-service`] subcommand.
-3.  If necessary, notify users that the new resource has been created.
+3. If necessary, notify users that the new resource has been created.
 
 [[GSADG1135]][[sthref80]]
-
-
 Example 14-7 Creating a Managed Executor Service
 
 This example creates a managed executor service resource named
 `concurrent/Executor1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-managed-executor-service concurrent/Executor1
 Managed executor service concurrent/Executor1 created successfully.
@@ -560,20 +526,17 @@ To List Managed Executor Services
 Use the `list-managed-executor-services` subcommand in remote mode to
 list the existing managed executor service resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List managed executor service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List managed executor service resources by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-executor-services`] subcommand.
 
 [[GSADG1138]][[sthref81]]
-
-
 Example 14-8 Listing Managed Executor Services
 
 This example lists managed executor service resources on the default
 server instance, `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-managed-executor-services
 concurrent/__defaultManagedExecutorService
@@ -602,32 +565,29 @@ service attributes.
 
 
 [NOTE]
-=======================================================================
-
+====
 When a resource is updated, the existing resource is shut down and
 recreated. If applications used the resource prior to the update, the
 application or the server must be restarted.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the managed executor service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the managed executor service resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-executor-services`] subcommand.
-3.  View the attributes of a managed executor service by using the `get`
-subcommand. +
-For example: +
-[source,oac_no_warn]
+3. View the attributes of a managed executor service by using the `get` subcommand.
+For example:
++
+[source]
 ----
-asdmin> get resources.managed-executor-service.concurrent/Executor1.*
+asadmin> get resources.managed-executor-service.concurrent/Executor1.*
 ----
-4.  Set an attribute of the managed executor service by using the `set`
-subcommand. +
-For example: +
-[source,oac_no_warn]
+4. Set an attribute of the managed executor service by using the `set`
+subcommand. For example:
++
+[source]
 ----
-asdmin> set resources.managed-executor-service.concurrent/Executor1.deployment-order=120
+asadmin> set resources.managed-executor-service.concurrent/Executor1.deployment-order=120
 ----
 
 [[DAFDAGAD]][[GSADG1141]][[to-delete-a-managed-executor-service]]
@@ -642,24 +602,20 @@ service is a dynamic event and does not require server restart.
 Before deleting a managed executor service resource, all associations to
 the resource must be removed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the managed executor service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the managed executor service resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-executor-services`] subcommand.
-3.  If necessary, notify users that the managed executor service is
-being deleted.
-4.  Delete the managed executor service by using the
+3. If necessary, notify users that the managed executor service is being deleted.
+4. Delete the managed executor service by using the
 link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-executor-service`] subcommand.
 
 [[GSADG1142]][[sthref82]]
-
-
 Example 14-9 Deleting a Managed Executor Service
 
 This example deletes the managed executor service resource named
 `concurrent/Executor1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-managed-executor-service concurrent/Executor1
 Managed executor service concurrent/Executor1 deleted successfully.
@@ -712,33 +668,27 @@ link:#DAFFGDCD[Default Concurrent Resources].
 
 [NOTE]
 =======================================================================
-
 Creating a managed scheduled executor service resource is a dynamic
 event and typically does not require server restart. Applications can
 use a resource as soon as it is created. However, if an application
 tried to use a resource before it was created, and that resource is
 created later, the application or the server must be restarted.
 Otherwise, the application will not be able to locate the resource.
-
 =======================================================================
 
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a managed scheduled executor service by using the
-link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-scheduled-executor-service`]
-subcommand.
-3.  If necessary, notify users that the new resource has been created.
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a managed scheduled executor service by using the
+link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-managed-scheduled-executor-service`] subcommand.
+3. If necessary, notify users that the new resource has been created.
 
 [[GSADG1146]][[sthref83]]
-
-
 Example 14-10 Creating a Managed Scheduled Executor Service
 
 This example creates a managed scheduled executor service resource named
 `concurrent/ScheduledExecutor1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-managed-scheduled-executor-service concurrent/ScheduledExecutor1
 Managed scheduled executor service concurrent/ScheduledExecutor1 created successfully.
@@ -761,20 +711,17 @@ To List Managed Scheduled Executor Services
 Use the `list-managed-scheduled-executor-services` subcommand in remote
 mode to list the existing managed scheduled executor service resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List managed scheduled executor service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List managed scheduled executor service resources by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-managed-scheduled-executor-services`] subcommand.
 
 [[GSADG1149]][[sthref84]]
-
-
 Example 14-11 Listing Managed Scheduled Executor Services
 
 This example lists managed scheduled executor service resources on the
 default server instance, `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-managed-scheduled-executor-services
 concurrent/__defaultManagedScheduledExecutorService
@@ -801,34 +748,30 @@ executor service resource except its JNDI name. Use the `get` and `set`
 subcommands to view and change the values of the managed scheduled
 executor service attributes.
 
-
 [NOTE]
 =======================================================================
-
 When a resource is updated, the existing resource is shut down and
 recreated. If applications used the resource prior to the update, the
 application or the server must be restarted.
-
 =======================================================================
 
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the managed scheduled executor service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the managed scheduled executor service resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-scheduled-executor-services`] subcommand.
-3.  View the attributes of a managed scheduled executor service by using
-the `get` subcommand. +
-For example: +
-[source,oac_no_warn]
+3. View the attributes of a managed scheduled executor service by using the `get` subcommand.
+For example:
++
+[source]
 ----
-asdmin> get resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.*
+asadmin> get resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.*
 ----
-4.  Set an attribute of the managed scheduled executor service by using
-the `set` subcommand. +
-For example: +
-[source,oac_no_warn]
+4. Set an attribute of the managed scheduled executor service by using
+the `set` subcommand. For example:
++
+[source]
 ----
-asdmin> set resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.deployment-order=120
+asadmin> set resources.managed-scheduled-executor-service.concurrent/ScheduledExecutor1.deployment-order=120
 ----
 
 [[DAFEBEGC]][[GSADG1152]][[to-delete-a-managed-scheduled-executor-service]]
@@ -844,25 +787,20 @@ require server restart.
 Before deleting a managed scheduled executor service resource, all
 associations to the resource must be removed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the managed scheduled executor service resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the managed scheduled executor service resources by using the
 link:../reference-manual/list-jdbc-connection-pools.html#GSRFM00173[`list-managed-scheduled-executor-service`] subcommand.
-3.  If necessary, notify users that the managed scheduled executor
-service is being deleted.
-4.  Delete the managed scheduled executor service by using the
-link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-scheduled-executor-service`]
-subcommand.
+3. If necessary, notify users that the managed scheduled executor service is being deleted.
+4. Delete the managed scheduled executor service by using the
+link:../reference-manual/delete-jdbc-connection-pool.html#GSRFM00088[`delete-managed-scheduled-executor-service`] subcommand.
 
 [[GSADG1153]][[sthref85]]
-
-
 Example 14-12 Deleting a Managed Scheduled Executor Service
 
 This example deletes the managed scheduled executor service resource
 named `concurrent/ScheduledExecutor1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-managed-scheduled-executor-service concurrent/ScheduledExecutor1
 Managed scheduled executor service concurrent/ScheduledExecutor1 deleted successfully.

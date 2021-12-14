@@ -4,6 +4,7 @@ title=Administering the JavaMail Service
 next=jms.html
 prev=orb.html
 ~~~~~~
+
 Administering the JavaMail Service
 ==================================
 
@@ -100,25 +101,24 @@ JavaMail session resource. The JNDI name for a JavaMail session resource
 customarily includes the mail/ naming subcontext, For example:
 `mail/MyMailSession.`
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a JavaMail resource by using the
-link:../reference-manual/create-javamail-resource.html#GSRFM00035[`create-javamail-resource`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a JavaMail resource by using the
+link:../reference-manual/create-javamail-resource.html#GSRFM00035[`create-javamail-resource`] subcommand.
++
 Information about the properties for the subcommand is included in this
 help page.
-3.  To apply your changes, restart GlassFish Server. +
+3. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00267]][[gipfs]]
-
-
 Example 16-1 Creating a JavaMail Resource
 
 This example creates a JavaMail resource named `mail/MyMailSession`. The
 escape character (\) is used in the `--fromaddress` option to
 distinguish the dot (.) and at sign (@).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-javamail-resource --mailhost localhost 
 --mailuser sample --fromaddress sample\@sun\.com mail/MyMailSession 
@@ -140,19 +140,16 @@ To List JavaMail Resources
 Use the `list-javamail-resources` subcommand in remote mode to list the
 existing JavaMail session resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the JavaMail resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the JavaMail resources by using the
 link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommand.
 
 [[GSADG00268]][[gipfe]]
-
-
 Example 16-2 Listing JavaMail Resources
 
 This example lists the JavaMail resources on `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-javamail-resources 
 mail/MyMailSession
@@ -171,20 +168,19 @@ typing `asadmin help list-javamail-resources` at the command line.
 To Update a JavaMail Resource
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  List the JavaMail resources by using the
+1. List the JavaMail resources by using the
 link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommand.
-2.  Modify the values for the specified JavaMail source by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
+2. Modify the values for the specified JavaMail source by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
 The resource is identified by its dotted name.
 
 [[GSADG00269]][[giwjb]]
-
-
 Example 16-3 Updating a JavaMail Resource
 
 This example changes `joeserver` to `joe`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.resources.mail-resource.mail/
 MyMailSession.user=joeserver.resources.mail-resource.mail/
@@ -207,24 +203,22 @@ Before You Begin
 References to the specified resource must be removed before running the
 `delete-javamail-resource` subcommands.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the JavaMail resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the JavaMail resources by using the
 link:../reference-manual/list-javamail-resources.html#GSRFM00172[`list-javamail-resources`] subcommands.
-3.  Delete a JavaMail resource by using the
+3. Delete a JavaMail resource by using the
 link:../reference-manual/delete-javamail-resource.html#GSRFM00087[`delete-javamail-resource`] subcommands.
-4.  To apply your changes, restart GlassFish Server. +
+4. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00270]][[gipcd]]
-
-
 Example 16-4 Deleting a JavaMail Resource
 
 This example deletes the JavaMail session resource named
 `mail/MyMailSession`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-javamail-resource mail/MyMailSession 
 Command delete-javamail-resource executed successfully.

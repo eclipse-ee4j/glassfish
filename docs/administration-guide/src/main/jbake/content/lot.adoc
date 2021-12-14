@@ -4,6 +4,7 @@ title=List of Tables
 next=title.html
 prev=lof.html
 ~~~~~~
+
 List of Tables
 ==============
 

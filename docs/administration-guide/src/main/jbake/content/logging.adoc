@@ -4,6 +4,7 @@ title=Administering the Logging Service
 next=monitoring.html
 prev=webapps.html
 ~~~~~~
+
 Administering the Logging Service
 =================================
 
@@ -15,8 +16,7 @@ Administering the Logging Service
 -----------------------------------
 
 This chapter provides instructions on how to configure logging and how
-to view log information in the GlassFish Server Open Source Edition 5.0
-environment.
+to view log information in the GlassFish Server Open Source Edition 5.0 environment.
 
 The following topics are addressed here:
 
@@ -44,8 +44,8 @@ server.
 
 Although application components can use the Apache Commons Logging
 Library to record messages, the platform standard JSR 47 Logging API is
-recommended for better log configuration. For more information about JSR
-47, see `http://jcp.org/en/jsr/detail?id=47`.
+recommended for better log configuration. For more information about JSR 47,
+see `http://jcp.org/en/jsr/detail?id=47`.
 
 The following topics are addressed here:
 
@@ -60,8 +60,8 @@ Log Files
 ^^^^^^^^^
 
 GlassFish Server Open Source Edition log records are captured in the
-server log file, which captures information about the operation of a
-server instance running in the domain. Each instance, managed server
+server log file, which captures information about the operation of a server instance
+running in the domain. Each instance, managed server
 instance (that is, each cluster member), and the domain administration
 server (DAS) has an individual server log file.
 
@@ -82,9 +82,9 @@ following name and location by default:
 [width="100%",cols="27%,73%",options="header",]
 |====================================================
 |Instance |Default Log File Name and Location
-|DAS |domain-dir`/logs/server.log`
-|Each server instance |instance-dir`/logs/server.log`
-|Cluster instance |instance-dir`/logs/server.log`
+|DAS |domain-dir``/logs/server.log``
+|Each server instance |instance-dir``/logs/server.log``
+|Cluster instance |instance-dir``/logs/server.log``
 |====================================================
 
 
@@ -95,25 +95,25 @@ arranged in the following directory structure. In this directory
 structure, the `server.log` file for the DAS is located in
 domain-dir`/logs`.
 
-[source,oac_no_warn]
+[source]
 ----
 as-install-parent directory
-     glassfish/
-         domains/
-             domain-dir/
-                         logs/
-                            server.log
-         nodes/
-             hostname/
-                         ClusterServer1/
-                                      logs/
-                                         server.log
-                         ClusterServer2/
-                                      logs/
-                                         server.log
-                         StandaloneServer/
-                                      logs/
-                                         server.log
+  glassfish/
+    domains/
+      domain-dir/
+        logs/
+          server.log
+    nodes/
+      hostname/
+        ClusterServer1/
+          logs/
+            server.log
+        ClusterServer2/
+          logs/
+            server.log
+        StandaloneServer/
+          logs/
+            server.log
 ----
 
 You can change the default name or location of a log file by modifying
@@ -139,11 +139,10 @@ placed in the as-install`/modules` directory.
 
 Log records formatted in the ODL format are displayed as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 [yyyy-mm-ddThh:mm:ss.SSS-Z][ProductName-Version][Log Level]
-[Message ID][LoggerName][Key Value Pairs][[
-  Message]]
+[Message ID][LoggerName][Key Value Pairs][[Message]]
 ----
 
 * `[` and `]` mark the beginning and end of fields in the record. Some
@@ -168,7 +167,7 @@ header and are indented.
 
 The following is an example of a log record formatted in the ODL format:
 
-[source,oac_no_warn]
+[source]
 ----
 [2013-04-12T08:08:30.154-0700] [glassfish 4.0] [INFO] [AS-WEB-GLUE-00172] [jakarta.enterprise.web] [tid: _ThreadID=217 _ThreadName=admin-listener(21)]
 [timeMillis: 1365779310154] [levelValue: 800] [[
@@ -177,7 +176,7 @@ The following is an example of a log record formatted in the ODL format:
 
 Log records formatted in the ULF format are displayed as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 [#|yyyy-mm-ddThh:mm:ss.SSS-Z|Log Level|ProductName-Version|LoggerName|Key Value Pairs|Message|#]
 ----
@@ -194,7 +193,8 @@ Open Source Edition. For example: `glassfish`
 * LoggerName represents a hierarchical logger namespace that identifies
 the source of the log module. For example: `jakarta.enterprise.web.core`
 * Key Value Pairs represents pairs of key names and values and can
-include a message ID. For example: `_MessageID=AS-WEB-CORE-00306`. +
+include a message ID. For example: `_MessageID=AS-WEB-CORE-00306`.
++
 Message IDs are included for all GlassFish Server Open Source Edition
 `EMERGENCY`, `ALERT`, `SEVERE`, and `WARNING` messages, and for many
 `INFO` messages.
@@ -203,7 +203,7 @@ start on a new line after the message header and are indented.
 
 The following is an example of a log record formatted in the ULF format:
 
-[source,oac_no_warn]
+[source]
 ----
 [#|2013-04-18T09:27:44.315-0700|INFO|glassfish 6.0|jakarta.enterprise.web.core|
 _ThreadID=15;_ThreadName=RunLevelControllerThread-1366302462682;_TimeMillis=1366302464315;_LevelValue=800;_MessageID=AS-WEB-CORE-00306;|
@@ -238,7 +238,7 @@ modules. The following list is an example of the logger namespaces in a
 server instance as they appear when using the `list-log-levels`
 subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 java.util.logging.ConsoleHandler     <FINEST>
 jakarta.enterprise.resource.corba     <INFO>
@@ -412,41 +412,39 @@ setting for the log file name and location. Then use the
 default target for these two subcommands is the DAS. However, you can
 optionally specify one of the following targets:
 
-* Configuration name — to target all instances or clusters that share a
-specific configuration name.
+* Configuration name — to target all instances or clusters that share a specific configuration name.
 * Server name — to target only a specific server.
 * Instance name — to target only a specific instance.
 * Cluster name — to target only a specific cluster.
 
-1.  Ensure that the target server or cluster is running. +
+1. Ensure that the target server or cluster is running.
 Remote subcommands require a running server.
-2.  Use the link:../reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`] subcommand in remote
-mode to obtain the current log attribute settings. +
+
+2. Use the link:../reference-manual/list-log-attributes.html#GSRFM00182[`list-log-attributes`]
+subcommand in remote mode to obtain the current log attribute settings.
 The name and location of the log file is set with the
 `com.sun.enterprise.server.logging.GFFileHandler.file` attribute of the
-logging properties file. Optionally you can target a configuration,
-server, instance, or cluster. If you do not specify a target, the log
-attribute settings for the DAS are displayed.
-3.  Use the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand in remote
-mode to define a custom name or location of the log file. +
-If you do not specify a target, the log file for the DAS is targeted by
-default. If you target a cluster, the name of the cluster log file for
+logging properties file.
+Optionally you can target a configuration, server, instance, or cluster.
+If you do not specify a target, the log attribute settings for the DAS are displayed.
+
+3. Use the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
+subcommand in remote mode to define a custom name or location of the log file.
+If you do not specify a target, the log file for the DAS is targeted by default.
+If you target a cluster, the name of the cluster log file for
 each member instance can be changed (the server log file name cannot).
 
 [[GSADG00174]][[gkmal]]
-
-
 Example 7-1 Changing the Name and Location of a Cluster's Log File
 
 This example changes the name of the cluster log file for `Cluster1` to
-`cluster1.log`. `Cluster1` has two server instances: `ClusterServer1`
-and `ClusterServer2`.
+`cluster1.log`. `Cluster1` has two server instances: `ClusterServer1` and `ClusterServer2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-log-attributes Cluster1
 com.sun.enterprise.server.logging.GFFileHandler.alarms <false>
-com.sun.enterprise.server.logging.GFFileHandler.file 
+com.sun.enterprise.server.logging.GFFileHandler.file
 <${com.sun.aas.instanceRoot}/logs/server.log>
 com.sun.enterprise.server.logging.GFFileHandler.flushFrequency  <1>
 .
@@ -491,36 +489,31 @@ setting the `java.util.logging.config.file` system property. By setting
 this system property, you can have a single logging properties file that
 is used by all instances running on the same host.
 
-
 [NOTE]
 =======================================================================
-
 Setting the `java.util.logging.config.file` system property causes all
 other GlassFish Server Open Source Edition logging properties files on
 the host to be overridden.
-
 =======================================================================
 
 
-1.  Set the `java.util.logging.config.file` system property. +
-For example, you can use the following `java` command: +
-[source,oac_no_warn]
+1. Set the `java.util.logging.config.file` system property.
+For example, you can use the following `java` command:
++
+[source]
 ----
 java -Djava.util.logging.config.file=properties_file
 ----
-Alternatively, you can use the Administration Console to set this system
-property.
-2.  To apply your change, restart GlassFish Server Open Source Edition.
+Alternatively, you can use the Administration Console to set this system property.
+
+2. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG00175]][[gkmgz]]
-
-
 Example 7-2 Setting the `java.util.logging.config.file` System Property
 
 The following example changes the location of the logging properties
 file to `/space/mylogging/logging.properties`:
-
-[source,oac_no_warn]
+[source]
 ----
 java -Djava.util.logging.config.file=/space/mylogging/logging.properties
 ----
@@ -579,28 +572,24 @@ and their current log levels. The default target for this subcommand is
 the DAS. However, you can optionally specify one of the following
 targets:
 
-* Configuration name — to target all instances or clusters that share a
-specific configuration name.
+* Configuration name — to target all instances or clusters that share a specific configuration name.
 * Server name — to target a specific server.
 * Instance name — to target a specific instance.
 * Cluster name — to target a specific cluster.
 
-1.  Ensure that the DAS is running. +
-Remote subcommands require a running server.
-2.  List the existing module loggers and log levels by using the
+1. Ensure that the DAS is running. Remote subcommands require a running server.
+2. List the existing module loggers and log levels by using the
 link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
 
 [[GSADG00176]][[gjiti]]
-
-
 Example 7-3 Listing Logger Levels for Modules
 
 This example shows a partial list of the existing loggers and their log
 levels in the DAS.
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin> list-log-levels 
+asadmin> list-log-levels
 jakarta.enterprise.system.container.cmp <INFO>
 jakarta.enterprise.system.tools.admin <INFO>
 java.util.logging.ConsoleHandler <FINEST>
@@ -614,14 +603,12 @@ Command list-log-levels executed successfully.
 ----
 
 [[GSADG00177]][[gkkot]]
-
-
 Example 7-4 Listing Log Levels for an Instance
 
 This example shows a partial list of the loggers and log levels for the
 instance `MyServer2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-log-levels MyServer2
 java.util.logging.ConsoleHandler <FINEST>
@@ -658,33 +645,31 @@ level. The default target for this subcommand is the DAS. However, you
 can optionally specify one of the following targets using the `--target`
 option:
 
-* Configuration name — to target all instances or clusters that share a
-specific configuration name.
+* Configuration name — to target all instances or clusters that share a specific configuration name.
 * Server name — to target a specific server.
 * Instance name — to target a specific instance.
 * Cluster name — to target a specific cluster.
 
-1.  Ensure that the target server or cluster is running.
-2.  Set the global log level by using the
+1. Ensure that the target server or cluster is running.
+2. Set the global log level by using the
 link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand, specifying the log level
-of the `java.util.logging.ConsoleHandler` logger. +
+of the `java.util.logging.ConsoleHandler` logger.
 The `ConsoleHandler` has a separate log level setting that limits the
-messages that are displayed. For example: +
-[source,oac_no_warn]
+messages that are displayed. For example:
++
+[source]
 ----
 java.util.logging.ConsoleHandler <FINEST>
 ----
 
 [[GSADG00178]][[ghmfi]]
-
-
 Example 7-5 Changing the Global Log Level for All Module Loggers
 
 By setting the log level of the `ConsoleHandler`, you set the global log
 level for all loggers. This example sets the global log level in the DAS
 to `INFO`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-levels java.util.logging.ConsoleHandler=INFO
 java.util.logging.ConsoleHandler package set with log level INFO.
@@ -708,14 +693,13 @@ To Set Module Log Levels
 A module log level specifies the events that are logged for a particular
 logger. The default level for messages output to the console is `INFO`
 (which also includes `EMERGENCY`, `ALERT`, `SEVERE`, and `WARNING`
-messages). The global log level is overridden by a module-specific log
-level.
+messages). The global log level is overridden by a module-specific log level.
 
 By default, the module log level is set to `FINE`. The lines for the
 loggers in the logging properties file might look like this (the modules
 are indicated in bold):
 
-[source,oac_no_warn]
+[source]
 ----
 jakarta.enterprise.system.tools.level=FINE
 jakarta.enterprise.system.container.ejb.level=FINE
@@ -728,24 +712,23 @@ jakarta.enterprise.system.container.web.level=FINE
 Because setting log levels is a dynamic operation, you do not need to
 restart GlassFish Server Open Source Edition for changes to take effect.
 
-1.  Ensure that the target server or cluster is running. +
-Remote subcommands require a running server.
-2.  List the existing module loggers and their log levels by using the
+1. Ensure that the target server or cluster is running. Remote subcommands require a running server.
+
+2. List the existing module loggers and their log levels by using the
 link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
-3.  Set the log level for a module by using the
-link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand. +
+
+3. Set the log level for a module by using the
+link:../reference-manual/set-log-levels.html#GSRFM00228[`set-log-levels`] subcommand.
 Your choices are `EMERGENCY`, `ALERT`, `SEVERE`, `WARNING`, `INFO`,
 `CONFIG`, `FINE`, `FINER`, and `FINEST`.
 
 [[GSADG00179]][[ghmev]]
-
-
 Example 7-6 Setting the Log Level for a Module Logger
 
 This example sets the log level for the web container logger to WARNING
 on the target instance `ManagedServer1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-levels --target ManagedServer1
 jakarta.enterprise.system.container.web=WARNING
@@ -759,14 +742,12 @@ Command set-log-levels executed successfully.
 ----
 
 [[GSADG00180]][[gjkat]]
-
-
 Example 7-7 Setting Log Levels for Multiple Loggers
 
 The following example sets the log level for security and web container
 loggers in the DAS.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-levels jakarta.enterprise.system.core.security=FINE:
 jakarta.enterprise.system.container.web=WARNING
@@ -811,28 +792,23 @@ Records].
 
 [NOTE]
 =======================================================================
-
 Changing the log format forces log rotation to avoid mixed format in the
 same file.
-
 =======================================================================
 
 
-1.  Ensure that the target server or cluster is running. +
-Remote commands require a running server.
-2.  Set the formatter by using the
+1. Ensure that the target server or cluster is running. Remote commands require a running server.
+2. Set the formatter by using the
 link:../reference-manual/redeploy.html#GSRFM00217[`set-log-file-format`] subcommand.
-3.  To apply your change, restart GlassFish Server Open Source Edition.
+3. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG1064]][[sthref23]]
-
-
 Example 7-8 Setting the Log File Format using `set-log-file-format`
 
 This example sets the log file format to `ULF` for standalone instance
 `ManagedServer1` using the `set-log-file-format` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-file-format --target ManagedServer1 ulf
 The log file formatter is set to com.sun.enterprise.server.logging.UniformLogFormatter for instance ManagedServer1.
@@ -840,14 +816,12 @@ Command set-log-file-format executed successfully.
 ----
 
 [[GSADG1065]][[sthref24]]
-
-
 Example 7-9 Setting the Log File Format using `set-log-attributes`
 
 This example sets the log file format to `ULF` for standalone instance
 `ManagedServer1` using the `set-log-attributes` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes --target ManagedServer1 com.sun.enterprise.server.logging.GFFileHandler.formatter=ulf
 com.sun.enterprise.server.logging.GFFileHandler.formatter logging attribute value set to ulf.
@@ -877,33 +851,31 @@ following fields can be excluded:
 
 * `tid`
 * `userId`
-
 * `ecid`
 * `timeMillis`
 * `levelVal`
 
-1.  Ensure that the target server or cluster is running. +
-Remote commands require a running server.
-2.  Exclude fields by using the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
-subcommand, specifying the following attribute and the fields to
-exclude: +
-[source,oac_no_warn]
+1. Ensure that the target server or cluster is running. Remote commands require a running server.
+
+2. Exclude fields by using the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`]
+subcommand, specifying the following attribute and the fields to exclude:
++
+[source]
 ----
 com.sun.enterprise.server.logging.GFFileHandler.excludeFields=fields
 ----
 where `fields` is a comma-separated list of the name-value fields to
 exclude from the log file.
-3.  To apply your change, restart GlassFish Server Open Source Edition.
+
+3. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG1068]][[sthref25]]
-
-
 Example 7-10 Excluding Fields in Log Records
 
 This example excludes the `userId` and `levelVal` name-value fields in
 log records for standalone instance `ManagedServer1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes --target ManagedServer1
 com.sun.enterprise.server.logging.GFFileHandler.excludeFields=userId,levelVal
@@ -929,26 +901,26 @@ Use the `set-log-attributes` command in remote mode to set multiline
 mode. When multiline mode is enabled (the default), the body of a log
 message starts on a new line after the message header and is indented.
 
-1.  Ensure that the target server or cluster is running. +
-Remote commands require a running server.
-2.  Set multiline mode by using the
+1. Ensure that the target server or cluster is running. Remote commands require a running server.
+
+2. Set multiline mode by using the
 link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand, specifying the
-following attribute and its value (`true` or `false`): +
-[source,oac_no_warn]
+following attribute and its value (`true` or `false`):
++
+[source]
 ----
 com.sun.enterprise.server.logging.GFFileHandler.multiLineMode=value
 ----
-3.  To apply your change, restart GlassFish Server Open Source Edition.
+
+3. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG1071]][[sthref26]]
-
-
 Example 7-11 Setting Multiline Mode
 
 Multiline mode is enabled by default. The following example disables
 multiline mode in log files for standalone instance `ManagedServer1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes --target ManagedServer1
 com.sun.enterprise.server.logging.GFFileHandler.multiLineMode=false
@@ -977,12 +949,13 @@ can change the file size at which the server rotates the log file or you
 can configure a server to rotate log files based on a time interval. In
 addition to changing when rotation occurs, you can also:
 
-* Specify the maximum number of rotated files that can accumulate. +
+* Specify the maximum number of rotated files that can accumulate.
 By default, GlassFish Server Open Source Edition does not limit the
 number of rotated log files that are retained. However, you can set a
 limit. After the number of log files reaches this limit, subsequent file
 rotations delete the oldest rotated log file.
-* Rotate the log file manually. +
+
+* Rotate the log file manually.
 A manual rotation forces the immediate rotation of the target log file.
 
 Changing the default log rotation settings is done using the
@@ -1005,25 +978,26 @@ rotation file size. The default target of this subcommand is the DAS.
 Optionally, you can target a configuration, server, instance, or
 cluster. The minimum size that can be set is 500 KB.
 
-1.  Ensure that the target server or cluster is running.
-2.  Change the rotation file size limit by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand, specifying the
-following attribute and the desired limit in bytes: +
-[source,oac_no_warn]
+1. Ensure that the target server or cluster is running.
+
+2. Change the rotation file size limit by using the
+link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+specifying the following attribute and the desired limit in bytes:
++
+[source]
 ----
 com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes=bytes
 ----
-3.  To apply your change, restart GlassFish Server Open Source Edition.
+
+3. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG00181]][[gkmay]]
-
-
 Example 7-12 Changing the Rotation Size
 
 The following example sets the log file rotation size to 1 MB for the
 standalone instance `ManagedServer1`:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes --target ManagedServer1
 com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes=1000000
@@ -1031,7 +1005,7 @@ com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes
 logging attribute set with value 1000000.
 These logging attributes are set for ManagedServer1.
 ManagedServer1 :
-com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes 
+com.sun.enterprise.server.logging.GFFileHandler.rotationLimitInBytes
 logging attribute set with value 1000000.
 These logging attributes are set for ManagedServer1.
 
@@ -1055,26 +1029,27 @@ file rotation time limit interval. The default target of this subcommand
 is the DAS. Optionally, you can target a configuration, server,
 instance, or cluster. The default value is `0`.
 
-1.  Ensure that the target server or cluster is running.
-2.  Change the rotation time limit by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand, specifying the
-following attribute and the desired limit in minutes: +
-[source,oac_no_warn]
+1. Ensure that the target server or cluster is running.
+
+2. Change the rotation time limit by using the
+link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+specifying the following attribute and the desired limit in minutes:
++
+[source]
 ----
 com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes=minutes
 ----
-3.  To apply your change, restart GlassFish Server Open Source Edition.
+
+3. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG00182]][[gkmbc]]
-
-
 Example 7-13 Changing the Rotation Interval
 
 The following example sets the log file rotation time limit for the
 cluster `Cluster1`, which has the instances `ClusterServer1` and
 `ClusterServer2`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes --target Cluster1
 com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes=10
@@ -1082,12 +1057,12 @@ com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes
 logging attribute set with value 10.
 These logging attributes are set for Cluster1.
 ClusterServer1 :
-com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes 
+com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes
 logging attribute set with value 10.
 These logging attributes are set for Cluster1.
 
 ClusterServer2 :
-com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes 
+com.sun.enterprise.server.logging.GFFileHandler.rotationTimelimitInMinutes
 logging attribute set with value 10.
 These logging attributes are set for Cluster1.
 
@@ -1113,38 +1088,39 @@ Optionally, you can target a configuration, server, instance, or
 cluster. The default limit value is `0`, which results in no limit
 placed on the number of rotated log files that are retained.
 
-1.  Ensure that the target server or cluster is running.
-2.  Change the limit number of retained log files by using the
-link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand, specifying the
-following attribute and the desired file limit number: +
-[source,oac_no_warn]
+1. Ensure that the target server or cluster is running.
+2. Change the limit number of retained log files by using the
+link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand,
+specifying the following attribute and the desired file limit number:
++
+[source]
 ----
 com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=minutes
 ----
-The behavior of the
-`com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles`
++
+The behavior of the `com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles`
 attribute is as follows:
++
 * If the property is not set, GlassFish Server Open Source Edition keeps
-a maximum of 10 rotated log files.
+  a maximum of 10 rotated log files.
 * If the property is set to an invalid number or null, GlassFish Server
-Open Source Edition keeps a maximum of 10 rotated log files.
+  Open Source Edition keeps a maximum of 10 rotated log files.
 * If the property is set to 0, GlassFish Server Open Source Edition
-retains all rotated log files (that is, sets no maximum).
-3.  To apply your change, restart GlassFish Server Open Source Edition.
+  retains all rotated log files (that is, sets no maximum).
+
+3. To apply your change, restart GlassFish Server Open Source Edition.
 
 [[GSADG00183]][[gkmaq]]
-
-
 Example 7-14 Changing the Limit Number of Retained Files
 
 The following example sets the log limit number of retained log files
 for the DAS to `10`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes
 com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles=10
-com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles 
+com.sun.enterprise.server.logging.GFFileHandler.maxHistoryFiles
 logging attribute set with value 10.
 These logging attributes are set for server.
 Command set-log-attributes executed successfully.
@@ -1172,13 +1148,11 @@ created.
 Because log rotation is a dynamic operation, you do not need to restart
 GlassFish Server Open Source Edition for changes to take effect.
 
-1.  Ensure that the target server or cluster is running.
-2.  Rotate log files by using the link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]
+1. Ensure that the target server or cluster is running.
+2. Rotate log files by using the link:../reference-manual/rotate-log.html#GSRFM00224[`rotate-log`]
 subcommand.
 
 [[GSADG00184]][[gkmav]]
-
-
 Example 7-15 Rotating Log Files Manually
 
 The following example rotates the `server.log` file for `ManagedServer2`
@@ -1186,7 +1160,7 @@ to `server.log_`yyyy-mm-dd`T`hh-mm-ss, where yyyy-mm-dd`T`hh-mm-ss
 represents the time when the file is rotated, and creates a new
 `server.log` file in the default location.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> rotate-log --target ManagedServer2
 Command rotate-log executed successfully.
@@ -1223,7 +1197,7 @@ the Java Virtual Machine (JVM) host. The default log handler that is
 provided in the `logging.properties` file, `ConsoleHandler`, is
 configured as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 handlers=java.util.logging.ConsoleHandler
 ----
@@ -1236,12 +1210,10 @@ component. There is no task required of the administrator.
 
 
 [NOTE]
-=======================================================================
-
+====
 The custom handler class should be packaged in an OSGi module and the
 JAR file placed in the as-install`/modules` directory.
-
-=======================================================================
+====
 
 
 To configure a custom handler that is not developed as an HK2 component,
@@ -1257,24 +1229,25 @@ If you set a handler by setting the handlers attribute in the logging
 properties file, the class that extends `java.util.logging.Handler` must
 be in the server classpath.
 
-1.  Ensure that the target server or cluster is running. +
+1. Ensure that the target server or cluster is running.
++
 Remote subcommands require a running server.
-2.  Use the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand to add the
-handler to the `handlers` attribute. +
+2. Use the link:../reference-manual/set-log-attributes.html#GSRFM00227[`set-log-attributes`] subcommand to add the
+handler to the `handlers` attribute.
++
 The default target of this subcommand is the DAS. Optionally you can
 target a configuration, server, instance, or cluster.
-3.  To apply your changes, restart GlassFish Server Open Source Edition. +
+3. To apply your changes, restart GlassFish Server Open Source Edition.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00185]][[ghphb]]
-
-
 Example 7-16 Adding a New Log Handler
 
 This example adds the custom logger `com.example.logging.MyHandler` to
 the logging properties file of the DAS.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-log-attributes
 handlers=java.util.logging.ConsoleHandler,com.example.logging.MyHandler
@@ -1318,27 +1291,29 @@ files into a ZIP archive. The default target of this subcommand is the
 DAS. Optionally you can target a configuration, server, instance, or
 cluster.
 
-1.  Ensure that the target server or cluster is running. +
+1. Ensure that the target server or cluster is running.
++
 Remote subcommands require a running server.
-2.  Use the link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] subcommand to create
-the ZIP archive. +
+2. Use the link:../reference-manual/collect-log-files.html#GSRFM00007[`collect-log-files`] subcommand to create
+the ZIP archive.
++
 The default location in which the ZIP archive is created is the
 domain-dir`/collected-logs` directory. The `collect-log-files`
 subcommand allows you to specify a nondefault directory in which the ZIP
 archive is to be created by using the `--retrieve` option set to `true`,
-followed by the directory name. +
-The name of the ZIP file contains the timestamp, as follows: +
+followed by the directory name.
++
+The name of the ZIP file contains the timestamp, as follows:
++
 `log_`yyyy-mm-dd_hh-min-sec`.zip`
 
 [[GSADG00186]][[gklap]]
-
-
 Example 7-17 Creating a ZIP Archive
 
 This example shows collecting the log files for the cluster `MyCluster`
 and compiling them into a ZIP archive in the `/space/output` directory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> collect-log-files --target MyCluster
 --retrieve true /space/output
@@ -1351,18 +1326,18 @@ Command collect-log-files executed successfully.
 When the ZIP file created by the preceding command is uncompressed, the
 following directory structure is created:
 
-[source,oac_no_warn]
+[source]
 ----
 as-install-parent/
-       glassfish/
-            domains/
-                domain-dir/
-                       collected_logs/
-                                    logs/
-                                       ClusterServer1/
-                                                    server.log
-                                       ClusterServer2/
-                                                    server.log
+  glassfish/
+    domains/
+      domain-dir/
+        collected_logs/
+          logs/
+            ClusterServer1/
+              server.log
+            ClusterServer2/
+              server.log
 ----
 
 [[GSADG874]]
@@ -1389,21 +1364,18 @@ Use the `list-loggers` subcommand in remote mode to list the logger
 name, subsystem, and description of loggers in your distribution of
 GlassFish Server Open Source Edition. Internal loggers are not listed.
 
-1.  Ensure that the target server or cluster is running. +
-Remote commands require a running server.
-2.  List loggers by using the link:../reference-manual/redeploy.html#GSRFM00217[`list-loggers`]
+1. Ensure that the target server or cluster is running. Remote commands require a running server.
+2. List loggers by using the link:../reference-manual/redeploy.html#GSRFM00217[`list-loggers`]
 subcommand.
 
 [[GSADG1075]][[sthref27]]
-
-
 Example 7-18 Listing Loggers
 
 This example lists the logger name, subsystem, and description for each
 logger. Some lines of output are omitted from this example for
 readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-loggers
 Logger Name                            Subsystem         Logger Description

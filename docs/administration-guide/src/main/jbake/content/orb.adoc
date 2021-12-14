@@ -4,6 +4,7 @@ title=Administering the Object Request Broker (ORB)
 next=javamail.html
 prev=concurrent.html
 ~~~~~~
+
 Administering the Object Request Broker (ORB)
 =============================================
 
@@ -91,23 +92,22 @@ To Create an IIOP Listener
 Use the `create-iiop-listener` subcommand in remote mode to create an
 IIOP listener.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create an IIOP listener by using the
-link:../reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create an IIOP listener by using the
+link:../reference-manual/create-iiop-listener.html#GSRFM00032[`create-iiop-listener`] subcommand.
++
 Information about the properties for the subcommand is included in this
 help page.
-3.  To apply your changes, restart GlassFish Server. +
+3. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00263]][[gipfl]]
-
-
 Example 15-1 Creating an IIOP Listener
 
 This example creates an IIOP listener named `sample_iiop_listener`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-iiop-listener --listeneraddress 192.168.1.100
 --iiopport 1400 sample_iiop_listener
@@ -129,19 +129,16 @@ To List IIOP Listeners
 Use the `list-iiop-listeners` subcommand in remote mode to list the
 existing IIOP listeners.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the IIOP listeners by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the IIOP listeners by using the
 link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
 
 [[GSADG00264]][[gipcm]]
-
-
 Example 15-2 Listing IIOP Listeners
 
 This example lists all the IIOP listeners for the server instance.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-iiop-listeners
 orb-listener-1
@@ -163,20 +160,19 @@ typing `asadmin help list-iiop-listeners` at the command line.
 To Update an IIOP Listener
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  List the IIOP listeners by using the
+1. List the IIOP listeners by using the
 link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
-2.  Modify the values for the specified IIOP listener by using the
-link:../reference-manual/set.html#GSRFM00226[`set`] subcommand. +
+2. Modify the values for the specified IIOP listener by using the
+link:../reference-manual/set.html#GSRFM00226[`set`] subcommand.
++
 The listener is identified by its dotted name.
 
 [[GSADG00265]][[giwlj]]
-
-
 Example 15-3 Updating an IIOP Listener
 
 This example changes SSL from enabled to disabled.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set "server.iiop-service.iiop-listener.SSL.enabled"
 server.iiop-service.iiop-listener.SSL.enabled=false
@@ -191,23 +187,21 @@ To Delete an IIOP Listener
 Use the `delete-iiop-listener` subcommand in remote mode to delete an
 IIOP listener.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the IIOP listeners by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the IIOP listeners by using the
 link:../reference-manual/list-iiop-listeners.html#GSRFM00169[`list-iiop-listeners`] subcommand.
-3.  Delete an IIOP listener by using the
+3. Delete an IIOP listener by using the
 link:../reference-manual/delete-iiop-listener.html#GSRFM00084[`delete-iiop-listener`] subcommand.
-4.  To apply your changes, restart GlassFish Server. +
+4. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00266]][[giped]]
-
-
 Example 15-4 Deleting an IIOP Listener
 
 This example deletes the IIOP listener named `sample_iiop_listener`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-iiop-listener sample_iiop_listener
  Command delete-iiop-listener executed successfully.

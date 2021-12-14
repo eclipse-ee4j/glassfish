@@ -4,6 +4,7 @@ title=Overview of GlassFish Server Administration
 next=part-runtime-admin.html
 prev=preface.html
 ~~~~~~
+
 Overview of GlassFish Server Administration
 ===========================================
 
@@ -51,13 +52,11 @@ administration values.
 
 
 [NOTE]
-=======================================================================
-
+====
 For the zip bundle of GlassFish Server 5.0, the default administrator
 login is `admin`, with no password, which means that no login is
 required.
-
-=======================================================================
+====
 
 
 [[GSADG793]][[sthref3]][[giuad]]
@@ -66,12 +65,9 @@ required.
 Table 1-1 Default Administration Values
 
 [width="100%",cols="43%,57%",options="header",]
-|==============================================
+|===
 |Item |Default
 |Domain Name |`domain1`
-| |
-| |
-| |
 |Master Password |`changeit`
 |Administration User |`admin`
 |Administration Server Port |4848
@@ -82,7 +78,7 @@ Table 1-1 Default Administration Values
 |IIOP Port |3700
 |IIOP/SSL Port |3820
 |IIOP/SSL Port With Mutual Authentication |3920
-|==============================================
+|===
 
 
 [[GSADG794]][[sthref4]][[gjhfv]]
@@ -91,13 +87,13 @@ Table 1-1 Default Administration Values
 Table 1-2 Default Locations
 
 [width="100%",cols="43%,57%",options="header",]
-|====================================================
+|===
 |Item |Default
 |Command-line Utility (`asadmin`) |as-install`/bin`
 |Configuration Files |domain-dir`/config`
 |Log Files |domain-dir`/logs`
 |Upgrade Tool (`asupgrade` Command) |as-install`/bin`
-|====================================================
+|===
 
 
 For information about replaceable items and default paths and files, see
@@ -238,27 +234,28 @@ dotted names, see the link:../reference-manual/dotted-names.html#GSRFM00268[`dot
 
 
 [NOTE]
-=======================================================================
-
+====
 Dotted names also apply to monitoring, but the method is different. For
 information on using dotted names for monitoring, see
 link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works].
-
-=======================================================================
+====
 
 
 The general process for working with configuration changes on the
 command line is as follows:
 
-1.  List the modules for the component of interest. +
+1. List the modules for the component of interest.
++
 The following single mode example uses the | (pipe) character and the
-`grep` command to narrow the search: +
-[source,oac_no_warn]
+`grep` command to narrow the search:
++
+[source]
 ----
 asadmin list "*" | grep http | grep listener
 ----
-Information similar to the following is returned: +
-[source,oac_no_warn]
+Information similar to the following is returned:
++
+[source]
 ----
 configs.config.server-config.network-config.network-listeners.network-listener.http-listener-1
 configs.config.server-config.network-config.network-listeners.network-listener.http-listener-2
@@ -272,15 +269,19 @@ configs.config.server-config.network-config.protocols.protocol.http-listener-2.h
 configs.config.server-config.network-config.protocols.protocol.http-listener-2.http.file-cache
 configs.config.server-config.network-config.protocols.protocol.http-listener-2.ssl
 ----
-2.  Get the attributes that apply to the module you are interested in. +
+
+2. Get the attributes that apply to the module you are interested in.
++
 The following multimode example gets the attributes and values for
-`http-listener-1`: +
-[source,oac_no_warn]
+`http-listener-1`:
++
+[source]
 ----
-asadmin> get server-config.network-config.network-listeners.network-listener.http-listener-1.* 
+asadmin> get server-config.network-config.network-listeners.network-listener.http-listener-1.*
 ----
-Information similar to the following is returned: +
-[source,oac_no_warn]
+Information similar to the following is returned:
++
+[source]
 ----
 server.http-service.http-listener.http-listener-1.acceptor-threads = 1
 server.http-service.http-listener.http-listener-1.address = 0.0.0.0
@@ -296,10 +297,13 @@ server.http-service.http-listener.http-listener-1.security-enabled = false
 server.http-service.http-listener.http-listener-1.server-name =
 server.http-service.http-listener.http-listener-1.xpowered-by = true
 ----
-3.  Modify an attribute by using the `set` subcommand. +
+
+3. Modify an attribute by using the `set` subcommand.
++
 This example sets the `security-enabled` attribute of `http-listener-1`
-to true: +
-[source,oac_no_warn]
+to true:
++
+[source]
 ----
 asadmin> set server.http-service.http-listener.http-listener-1.security-enabled = true
 ----
@@ -311,23 +315,19 @@ Configuration Files
 
 The bulk of the configuration information about GlassFish Server
 resources, applications, and instances is stored in the `domain.xml`
-configuration file. This file is the central repository for a given
-administrative domain and contains an XML representation of the
-GlassFish Server domain model. The default location for the `domain.xml`
-file is domain-dir`/config`.
-
+configuration file.
+This file is the central repository for a given
+administrative domain and contains an XML representation of the GlassFish Server domain model.
+The default location for the `domain.xml` file is domain-dir``/config``.
 
 [NOTE]
-=======================================================================
-
+====
 GlassFish Server maintains a backup of the `domain.xml` file that is
 named `domain.xml.bak`. The purpose of this file is solely to enable
 GlassFish Server to start a domain if the `domain.xml` file cannot be
-read. Do not modify or delete the `domain.xml.bak` file and do not use
-this file for any other purpose.
-
-=======================================================================
-
+read.
+Do not modify or delete the `domain.xml.bak` file and do not use this file for any other purpose.
+====
 
 The `logging.properties` file is used to configure logging levels for
 individual modules. The default `logging.properties` file is located in
@@ -339,15 +339,12 @@ The `asenv.conf` file is located in the as-install`/config` directory.
 Its purpose is to store the GlassFish Server environment variables, such
 as the installation location of the database, Message Queue, and so on.
 
-
 [NOTE]
-=======================================================================
-
+====
 Changes are automatically applied to the appropriate configuration file.
-Do not edit the configuration files directly. Manual editing is prone to
-error and can have unexpected results.
-
-=======================================================================
+Do not edit the configuration files directly.
+Manual editing is prone to error and can have unexpected results.
+====
 
 
 [[gitzw]][[GSADG00697]][[impact-of-configuration-changes]]
@@ -357,21 +354,19 @@ Impact of Configuration Changes
 
 Some configuration changes require that you restart the DAS or GlassFish
 Server instances for the changes to take effect. Other changes are
-applied dynamically without requiring that the DAS or instances be
-restarted. The procedures in this guide indicate when a restart is
-required. GlassFish Server enables you to determine whether the DAS or
+applied dynamically without requiring that the DAS or instances be restarted.
+The procedures in this guide indicate when a restart is required.
+GlassFish Server enables you to determine whether the DAS or
 an instance must be restarted to apply configuration changes.
 
 Some changes to resources or connection pools affect the applications
-that use the resources or connection pools. These changes do not require
-restart. However, any applications that use the resources or connection
-pools must be disabled and re-enabled or redeployed for the change to
-take effect.
+that use the resources or connection pools. These changes do not require restart.
+However, any applications that use the resources or connection
+pools must be disabled and re-enabled or redeployed for the change to take effect.
 
 The following topics are addressed here:
 
-* link:#gkvaj[To Determine Whether the DAS or an Instance Requires
-Restart]
+* link:#gkvaj[To Determine Whether the DAS or an Instance Requires Restart]
 * link:#ghciy[Configuration Changes That Require Restart]
 * link:#ghclm[Dynamic Configuration Changes]
 * link:#gkvas[Changes That Affect Applications]
@@ -381,45 +376,44 @@ Restart]
 To Determine Whether the DAS or an Instance Requires Restart
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-1.  Ensure that the DAS is running. +
-To obtain information about the DAS or an instance, a running server is
-required.
-2.  Do one of the following:
-* To determine if the DAS requires restart, list the domains in your
-GlassFish Server installation. +
-Use the link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose. +
-[source,oac_no_warn]
+1. Ensure that the DAS is running.
+To obtain information about the DAS or an instance, a running server is required.
+
+2. Do one of the following:
+* To determine if the DAS requires restart, list the domains in your GlassFish Server installation.
+Use the link:../reference-manual/list-domains.html#GSRFM00163[`list-domains`] subcommand for this purpose.
++
+[source]
 ----
 asadmin> list-domains [--domaindir domain-root-dir]
 ----
++
 The domain-root-dir is the directory that contains the directories in
-which individual domains' configuration is stored. The default is
-as-install`/domains`, where as-install is the base installation
-directory of the GlassFish Server software. +
-If the DAS requires restart, a statement that restart is required is
-displayed.
-* To determine if an instance requires restart, list information about
-the instance. +
-Use the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand for this purpose. +
-[source,oac_no_warn]
+which individual domains' configuration is stored.
+The default is as-install`/domains`, where as-install is the base installation
+directory of the GlassFish Server software.
+If the DAS requires restart, a statement that restart is required is displayed.
+
+* To determine if an instance requires restart, list information about the instance.
+Use the link:../reference-manual/list-instances.html#GSRFM00170[`list-instances`] subcommand for this purpose.
++
+[source]
 ----
 asadmin> list-instances instance-name
 ----
 The instance-name is the name of the instance for which you are listing
-information. +
+information.
 If the instance requires restart, one of the following pieces of
-information is displayed: a statement that restart is required, or a
-list of configuration changes that are not yet applied to the instance.
+information is displayed: a statement that restart is required,
+or a list of configuration changes that are not yet applied to the instance.
 
 [[GSADG00093]][[gkvay]]
-
-
 Example 1-1 Determining if the DAS Requires Restart
 
 This example determines that the DAS for the domain `domain1` requires
 restart to apply configuration changes.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-domains
 domain1 running, restart required to apply configuration changes
@@ -427,17 +421,15 @@ Command list-domains executed successfully.
 ----
 
 [[GSADG00094]][[gkvba]]
-
-
 Example 1-2 Determining if an Instance Requires Restart
 
 This example determines that the instance `pmd-i1` requires restart to
 apply configuration changes.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-instances pmd-i1
-pmd-i1   running;  requires restart  
+pmd-i1   running;  requires restart
 Command list-instances executed successfully.
 ----
 
@@ -463,15 +455,14 @@ The following configuration changes require restart for the changes to
 take effect:
 
 * Changing JVM options
-* Changing port numbers +
+* Changing port numbers
++
 
 [NOTE]
-=======================================================================
-
+====
 Changes to some port numbers, for example HTTP listener ports, do not
 require restart.
-
-=======================================================================
+====
 
 * Changing log handler elements
 * Configuring certificates
@@ -514,16 +505,14 @@ take effect.
 
 
 [NOTE]
-=======================================================================
-
+====
 If you do not know which applications use the changed resources or
 connection pools, you can apply these changes by restarting the clusters
 orGlassFish Server instances to which applications are deployed.
 However, to minimize the disruption to the services that your
 applications provide, avoid restarting clusters or instances to apply
 these changes if possible.
-
-=======================================================================
+====
 
 
 The following changes affect applications:
@@ -596,7 +585,7 @@ number for the domain to be administered. The format for starting the
 Administration Console in a web browser is `http://`hostname`:`port. For
 example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://kindness.example.com:4848
 ----
@@ -605,7 +594,7 @@ If the Administration Console is running on the host where GlassFish
 Server was installed, specify `localhost` for the host name. For
 example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:4848
 ----
@@ -627,8 +616,7 @@ the See Also list.
 
 
 [NOTE]
-=======================================================================
-
+====
 If you try to use the Administration Console from a system through a
 proxy server on another system back to the original system, while using
 the system's full host name (instead of `localhost` or `127.0.0.1`) you
@@ -645,8 +633,7 @@ remote request is accepted as such.
 
 To enable secure admin, see "olink:GSSCG00039[Managing Administrative
 Security]" in GlassFish Server Open Source Edition Security Guide.
-
-=======================================================================
+====
 
 
 [[gcocs]][[GSADG00699]][[asadmin-utility]]
@@ -667,7 +654,7 @@ To issue an `asadmin` subcommand in the standard command shell (single
 mode), go to the as-install`/bin` directory and type the `asadmin`
 command followed by a subcommand. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin list-jdbc-resources
 ----
@@ -677,7 +664,7 @@ the command prompt, after which the `asadmin>` prompt is presented. The
 `asadmin` utility continues to accept subcommands until you exit
 multimode and return to the standard command shell. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jdbc-resources
 ----
@@ -685,14 +672,14 @@ asadmin> list-jdbc-resources
 You can display a help page for any `asadmin` subcommand by typing
 `help` before the subcommand name. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> help restart-domain
 ----
 
 or
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin help restart-domain
 ----
@@ -757,30 +744,32 @@ changing the value of the property `glassfish.osgi.start.level.final`.
 This property controls whether the OSGi start level service enables the
 shell when the DAS or a GlassFish Server instance is started.
 
-1.  Ensure that the DAS is running.
-2.  [[CEGDBDBH]] +
-Change the value of the `glassfish.osgi.start.level.final` property from
-2 to 3. +
+1. Ensure that the DAS is running.
++
+[[CEGDBDBH]]
+2. Change the value of the `glassfish.osgi.start.level.final` property from 2 to 3.
 If the domain includes clustered or standalone instances on remote
-hosts, perform this step on each remote host. +
-You can change this value either by creating a Java system property or
+hosts, perform this step on each remote host. You can change this value either by creating a Java system property or
 by editing a file.
 * To change this value by creating a Java system property, create the
-Java system property `glassfish.osgi.start.level.final` with a value of
-3. +
-[source,oac_no_warn]
+Java system property `glassfish.osgi.start.level.final` with a value of 3.
++
+[source]
 ----
 asadmin> create-jvm-options --target target -Dglassfish.osgi.start.level.final=3
 ----
 target::
-  The target for which you are creating the property. +
-  For the DAS, the target is `server`. +
+  The target for which you are creating the property.
++
+  For the DAS, the target is `server`.
++
   For a clustered or standalone instance, the target is the name of the
   instance.
 * To change this value by editing a file, edit the plain-text file
 as-install`/config/osgi.properties` to change the value of the
 `glassfish.osgi.start.level.final` property from 2 to 3.
-3.  Restart the DAS. +
+
+3. Restart the DAS.
 For instructions, see link:domains.html#ginqj[To Restart a Domain].
 
 [[CJAGIGII]][[GSADG1050]][[to-run-apache-felix-gogo-remote-shell-commands]]
@@ -802,11 +791,10 @@ Gogo remote shell for the execution of OSGi shell commands. Commands are
 executed by the remote shell and results are returned by the `asadmin`
 utility. The `osgi` subcommand is supported in remote mode only.
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
 Remote commands require a running server.
-2.  Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi`]
-subcommand. +
-For the full syntax and options for this subcommand, see `osgi`(1).
+2. Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi`]
+subcommand. For the full syntax and options for this subcommand, see `osgi`(1).
 
 [[GSADG1052]]
 
@@ -814,27 +802,23 @@ To Run Remote Shell Commands Using the `osgi-shell` Subcommand
 
 The `osgi-shell` subcommand provides interactive access to the Apache
 Felix Gogo remote shell for the execution of OSGi shell commands. OSGi
-shell commands are executed on the server and results are printed on the
-client. You can run multiple commands from a file or run commands
-interactively. The `osgi-shell` subcommand is supported in local mode
-only. Unlike other local subcommands, however, the DAS and the server
+shell commands are executed on the server and results are printed on the client.
+You can run multiple commands from a file or run commands interactively.
+The `osgi-shell` subcommand is supported in local mode only.
+Unlike other local subcommands, however, the DAS and the server
 instance whose shell is being accessed must be running.
 
-1.  Ensure that the server is running.
-2.  Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
-subcommand. +
-For the full syntax and options for this subcommand, see
-`osgi-shell`(1).
+1. Ensure that the server is running.
+2. Access the remote shell by using the link:../reference-manual/redeploy.html#GSRFM00217[`osgi-shell`]
+subcommand. For the full syntax and options for this subcommand, see `osgi-shell`(1).
 
 [[GSADG1053]][[sthref5]]
-
-
 Example 1-3 Listing Apache Felix Gogo Remote Shell Commands
 
 This example lists Apache Felix Gogo remote shell commands. Some lines
 of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi help
 felix:bundlelevel
@@ -856,15 +840,13 @@ gogo:echo
 ----
 
 [[GSADG1054]][[sthref6]]
-
-
 Example 1-4 Running a Remote Shell Command
 
 This example runs the Felix Remote Shell Command `lb` without any
 arguments to list all installed OSGi bundles. Some lines of output are
 omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi lb
 START LEVEL 2
@@ -886,8 +868,6 @@ gogo$
 ----
 
 [[GSADG00097]][[gjkrh]]
-
-
 Example 1-5 Determining the Services That an OSGi Bundle Provides
 
 This example runs the Felix Remote Shell Command `inspect` with the
@@ -895,7 +875,7 @@ This example runs the Felix Remote Shell Command `inspect` with the
 that OSGi bundle 251 provides. Some lines of output are omitted from
 this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> osgi inspect service capability 251
 GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides services:
@@ -916,7 +896,7 @@ GlassFish EJB Container for OSGi Enabled EJB Applications (251) provides service
 objectClass = org.glassfish.osgijavaeebase.Extender
 service.id = 68
 ...
-gogo$ 
+gogo$
 ----
 
 [[gkwvx]][[GSADG00303]][[to-download-and-install-the-glassfish-osgi-web-console]]
@@ -934,22 +914,23 @@ In both distributions, the GlassFish OSGi Web Console is provided as an
 extension to the Administration Console and as a standalone web
 application.
 
-1.  Perform one of the following sets of steps, depending on how you are
+1. Perform one of the following sets of steps, depending on how you are
 obtaining the GlassFish OSGi Web Console.
 * If you are obtaining the console as an add-on component, install the
 GlassFish OSGi Admin Console component.
 * If you are obtaining the console from the Maven repository, download
 and unzip the required files.
-1.  Download the following files to the parent of the `glassfish3`
-directory of your GlassFish Server installation. +
-http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip[`glassfish-osgi-http-3.1.2.zip`] +
+2. Download the following files to the parent of the `glassfish3`
+directory of your GlassFish Server installation.
+http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-http/3.1.2/glassfish-osgi-http-3.1.2.zip[`glassfish-osgi-http-3.1.2.zip`]
++
 http://maven.glassfish.org/content/groups/glassfish/org/glassfish/packager/glassfish-osgi-gui/3.1.2/glassfish-osgi-gui-3.1.2.zip[`glassfish-osgi-gui-3.1.2.zip`]
-2.  Unzip the files that you downloaded. +
+3. Unzip the files that you downloaded.
++
 The contents of the files are added to the
 as-install`/modules/autostart` directory of your GlassFish Server
 installation.
-2.  Restart the DAS. +
-For instructions, see link:domains.html#ginqj[To Restart a Domain].
+4. Restart the DAS. For instructions, see link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG797]]
 
@@ -960,8 +941,7 @@ access the console as explained in the following sections:
 
 * link:#BABIDJHF[To Access the GlassFish OSGi Web Console Through the
 GlassFish Server Administration Console]
-* link:#BABDJHAF[To Access the GlassFish OSGi Web Console as a
-Standalone Web Application]
+* link:#BABDJHAF[To Access the GlassFish OSGi Web Console as a Standalone Web Application]
 
 [[BABIDJHF]][[GSADG798]][[to-access-the-glassfish-osgi-web-console-through-the-glassfish-server-administration-console]]
 
@@ -971,34 +951,34 @@ To Access the GlassFish OSGi Web Console Through the GlassFish Server Administra
 A tab for the GlassFish OSGi Web Console is provided for the DAS and for
 every GlassFish Server instance in a domain.
 
-1.  Ensure that the DAS and the instance for which you want to access
+1. Ensure that the DAS and the instance for which you want to access
 the GlassFish OSGi Web Console are running.
-2.  Start the GlassFish Server Administration Console. +
+
+2. Start the GlassFish Server Administration Console.
 For instructions, see link:#ablav[Administration Console].
-3.  Open the Administration Console page for the DAS or instance for
+
+3. Open the Administration Console page for the DAS or instance for
 which you are accessing the GlassFish OSGi Web Console.
-* For the DAS, in the navigation tree, select the server (Admin Server)
-node.
+* For the DAS, in the navigation tree, select the server (Admin Server) node.
 * For a standalone instance, perform these steps:
-1.  In the navigation tree, expand the Standalone Instances node.
-2.  Under the Standalone Instances node, select the instance.
+.. In the navigation tree, expand the Standalone Instances node.
+.. Under the Standalone Instances node, select the instance.
 * For a clustered instance, perform these steps:
-1.  In the navigation tree, expand the Clusters node.
-2.  Under the Clusters node, select the cluster that contains the
-instance. +
-The General Information page for the cluster opens.
-3.  In the General Information page for the cluster, click the Instances
-tab. +
-The Clustered Server Instances page for the cluster opens.
-4.  In the Server Instances table on the Clustered Server Instances
-page, select the instance.
-4.  On the Administration Console page for the DAS or instance, click
-the OSGi Console tab. +
-You are prompted for the user name and password of the administrative
+.. In the navigation tree, expand the Clusters node.
+.. Under the Clusters node, select the cluster that contains the instance.
+   The General Information page for the cluster opens.
+.. In the General Information page for the cluster, click the Instances tab.
+   The Clustered Server Instances page for the cluster opens.
+.. In the Server Instances table on the Clustered Server Instances
+   page, select the instance.
+
+4. On the Administration Console page for the DAS or instance, click
+the OSGi Console tab. You are prompted for the user name and password of the administrative
 user of the GlassFish OSGi Web Console.
-5.  In response to the prompt, provide the user name and password of the
-administrative user of the GlassFish OSGi Web Console. +
-The user name and password of this user are both preset to `admin`. +
+
+5. In response to the prompt, provide the user name and password of the
+administrative user of the GlassFish OSGi Web Console.
+The user name and password of this user are both preset to `admin`.
 The GlassFish OSGi Web Console page opens.
 
 [[BABDJHAF]][[GSADG799]][[to-access-the-glassfish-osgi-web-console-as-a-standalone-web-application]]
@@ -1006,10 +986,12 @@ The GlassFish OSGi Web Console page opens.
 To Access the GlassFish OSGi Web Console as a Standalone Web Application
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
-1.  Ensure that the DAS or the instance for which you want to access the
+1. Ensure that the DAS or the instance for which you want to access the
 GlassFish OSGi Web Console is running.
-2.  In a web browser, open the following location: +
-[source,oac_no_warn]
+
+2. In a web browser, open the following location:
++
+[source]
 ----
 http://host:http-port/osgi/system/console/
 ----
@@ -1017,16 +999,20 @@ host::
   The host where the DAS or instance is running.
 http-port::
   The port on which GlassFish Server listens for HTTP requests. The
-  default is 8080. +
-For example, if the DAS is running on the local host and GlassFish
-Server listens for HTTP requests on the default port, open the following
-location: +
-[source,oac_no_warn]
+  default is 8080.
+
++
+  For example, if the DAS is running on the local host and GlassFish
+  Server listens for HTTP requests on the default port, open the following location:
++
+[source]
 ----
 http://localhost:8080/osgi/system/console/
 ----
-3.  When prompted, provide the user name and password of the
-administrative user of the GlassFish OSGi Web Console. +
+
+3. When prompted, provide the user name and password of the
+administrative user of the GlassFish OSGi Web Console.
++
 The user name and password of this user are both preset to `admin`.
 
 [[ghcjl]][[GSADG00703]][[keytool-utility]]
@@ -1068,7 +1054,7 @@ online help.
 
 
 [NOTE]
-=======================================================================
+====
 
 Instructions written for the GlassFish Server tools use standard UNIX
 forward slashes (/) for directory path separators in commands and file
@@ -1078,13 +1064,13 @@ system, use backslashes (\) instead. For example:
 * UNIX: as-install`/bin/asadmin`
 * Windows: as-install`\bin\asadmin`
 
-=======================================================================
+====
 
 
 The following additional documents address specific administration
 areas:
 
-* Verifying and deploying applications +
+* Verifying and deploying applications
 link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment
 Guide]
 

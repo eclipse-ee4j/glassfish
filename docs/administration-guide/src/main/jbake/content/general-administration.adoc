@@ -4,6 +4,7 @@ title=General Administration
 next=domains.html
 prev=part-runtime-admin.html
 ~~~~~~
+
 General Administration
 ======================
 
@@ -68,7 +69,7 @@ directory is in your path.
 
 The syntax for running the `asadmin` utility is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin [asadmin-util-options] [subcommand [subcommand-options] [operands]]
 ----
@@ -109,7 +110,7 @@ subcommands. Options are case-sensitive.
 
 The `asadmin` utility has the following types of options:
 
-* `asadmin`utility options. These options control the behavior of the
+* `asadmin` utility options. These options control the behavior of the
 `asadmin` utility, not the subcommand. The `asadmin` utility options may
 precede or follow the subcommand, but `asadmin` utility options after
 the subcommand are deprecated. All `asadmin` utility options must either
@@ -122,17 +123,16 @@ subcommand, not the `asadmin` utility. Subcommand options must follow
 the subcommand. For a description of a subcommand's options, see the
 entry for the subcommand in the
 https://javaee.github.io/glassfish/doc/5.0/reference-manual.pdf[GlassFish
-Server Open Source Edition Reference Manual]. +
+Server Open Source Edition Reference Manual].
++
 
 [NOTE]
-=======================================================================
-
+====
 Not all subcommand options are supported for this release of GlassFish
 Server. If you specify an unsupported option, a syntax error does not
 occur. Instead, the command runs successfully and the unsupported option
 is silently ignored.
-
-=======================================================================
+====
 
 
 A subcommand option may have the same name as an `asadmin` utility
@@ -178,14 +178,12 @@ run. If you require the same `asadmin` utility options for multiple
 subcommands, use the `asadmin` utility in multimode. For more
 information, see link:#giodz[To Start a Multimode Session].
 
-1.  In the operating system's command shell, run the `asadmin` utility,
+1. In the operating system's command shell, run the `asadmin` utility,
 specifying the subcommand.
-2.  If necessary, also specify any required `asadmin` utility options,
+2. If necessary, also specify any required `asadmin` utility options,
 subcommand options, and operands.
 
 [[GSADG00098]][[giwdr]]
-
-
 Example 2-1 Running an `asadmin` Utility Subcommand in Single Mode
 
 This example runs the link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`] subcommand
@@ -195,7 +193,7 @@ used.
 The example shows that the application `hello` is deployed on the local
 host.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin list-applications
 hello <web>
@@ -203,8 +201,6 @@ Command list-applications executed successfully.
 ----
 
 [[GSADG00099]][[giwbf]]
-
-
 Example 2-2 Specifying an `asadmin` Utility Option With a Subcommand in
 Single Mode
 
@@ -216,7 +212,7 @@ The example shows that the applications `basic-ezcomp`, `scrumtoys`,
 `ejb31-war`, and `automatic-timer-ejb` are deployed on the host
 `srvr1.example.com`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --host srvr1.example.com list-applications
 basic-ezcomp <web>
@@ -227,8 +223,6 @@ Command list-applications executed successfully.
 ----
 
 [[GSADG00100]][[ghvyk]]
-
-
 Example 2-3 Specifying an `asadmin` Utility Option and a Subcommand
 Option in Single Mode
 
@@ -237,7 +231,7 @@ This example specifies the `--host` `asadmin` utility option and the
 single mode. In this example, the DAS is running on the host
 `srvr1.example.com` and applications of type `web` are to be listed.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --host srvr1.example.com list-applications --type web
 basic-ezcomp <web>
@@ -257,36 +251,34 @@ information is written in the style of UNIX platform man pages. This
 help information is also available in the link:../reference-manual/toc.html#GSRFM[GlassFish Server
 Open Source Edition Reference Manual].
 
-1.  If you are displaying help information for a remote subcommand,
-ensure that the server is running. +
+1. If you are displaying help information for a remote subcommand,
+ensure that the server is running.
++
 Remote subcommands require a running server.
-2.  Specify the subcommand of interest as the operand of the `help`
-subcommand. +
+2. Specify the subcommand of interest as the operand of the `help`
+subcommand.
++
 If you run the `help` subcommand without an operand, help information
 for the `asadmin` utility is displayed.
 
 [[GSADG00101]][[giwgs]]
-
-
 Example 2-4 Displaying Help Information for the `asadmin` Utility
 
 This example displays the help information for the `asadmin` utility.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin help
 ----
 
 [[GSADG00102]][[giusg]]
-
-
 Example 2-5 Displaying Help Information for an `asadmin` Utility
 Subcommand
 
 This example displays the help information for the
 `create-jdbc-resource` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin help create-jdbc-resource
 ----
@@ -315,45 +307,38 @@ in the session.
 
 
 [NOTE]
-===========================================================
-
+====
 Starting a multimode session does not require a running DAS.
+====
 
-===========================================================
-
-
-1.  Do one of the following:
+1. Do one of the following:
 * Run the `asadmin` utility without a subcommand.
 * Use the link:../reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand.
-2.  If necessary, also specify any `asadmin` utility options that will
+2. If necessary, also specify any `asadmin` utility options that will
 apply throughout the multimode session.
-3.  In a multimode session, the `asadmin>` prompt is displayed on the
+3. In a multimode session, the `asadmin>` prompt is displayed on the
 command line. You can now type `asadmin` subcommands at this prompt to
 administer GlassFish Server.
 
 [[GSADG00103]][[givuq]]
-
-
 Example 2-6 Starting a Multimode Session With `asadmin` Utility Options
 
 This example starts a multimode session in which the `asadmin` utility
 options `--user` and `--passwordfile` are set for the session.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --user admin1 --passwordfile pwd.txt multimode
 ----
 
 [[GSADG00104]][[giwgh]]
-
-
 Example 2-7 Starting a Multimode Session by Using the `multimode`
 Subcommand
 
 This example uses the `multimode` subcommand to start a multimode
 session in which the default `asadmin` utility options are used.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin multimode
 ----
@@ -361,14 +346,12 @@ asadmin multimode
 The `asadmin>` prompt is displayed on the command line.
 
 [[GSADG00105]][[ghvzc]]
-
-
 Example 2-8 Running a Subcommand in a Multimode Session
 
 This example starts a multimode session and runs the `list-domains`
 subcommand in the session.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin
 Enter commands one per "line", ^D to quit
@@ -409,13 +392,11 @@ combinations:
 
 
 [CAUTION]
-=======================================================================
-
+====
 Do not type Ctrl-C to end a multimode session. If a domain or GlassFish
 Server instance is started from the multimode session, typing Ctrl-C
 kills the domain or instance process.
-
-=======================================================================
+====
 
 
 You are returned to the operating system's command shell and the
@@ -432,16 +413,15 @@ To Run a Set of `asadmin` Subcommands From a File
 Running a set of `asadmin` subcommands from a file enables you to
 automate repetitive tasks.
 
-1.  Create a plain text file that contains the sequence of subcommands
+1. Create a plain text file that contains the sequence of subcommands
 that you want to run.
-2.  Run the link:../reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand, specifying the
-file that you created. +
+2. Run the link:../reference-manual/multimode.html#GSRFM00213[`multimode`] subcommand, specifying the
+file that you created.
++
 If necessary, also specify any `asadmin` utility options that are
 required to enable subcommands in the file to run.
 
 [[GSADG00106]][[givul]]
-
-
 Example 2-9 Running a Set of `asadmin` Subcommands From a File
 
 This example contains the following:
@@ -453,15 +433,15 @@ a sequence of `asadmin` subcommands
 The `commands_file.txt` file contains the `asadmin` utility subcommands
 to perform the following sequence of operations:
 
-1.  Creating the domain `customdomain`
-2.  Starting the domain `customdomain`
-3.  Listing all available subcommands
-4.  Stopping the domain `customdomain`
-5.  Deleting the domain `customdomain`
+1. Creating the domain `customdomain`
+2. Starting the domain `customdomain`
+3. Listing all available subcommands
+4. Stopping the domain `customdomain`
+5. Deleting the domain `customdomain`
 
 The content of the `commands_file.txt` file is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 create-domain --portbase 9000 customdomain
 start-domain customdomain
@@ -475,7 +455,7 @@ file. Because the `--portbase` option is specified for the
 `create-domain` subcommand in the file, the `--port` `asadmin` utility
 option must also be set.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --port 9048 multimode --file commands_file.txt
 ----
@@ -505,20 +485,16 @@ You can use the `--detach` option of the `asadmin` utility to detach
 enables you to run several independent subcommands from one console or
 script.
 
-1.  Ensure that the server is running. +
-Remote commands require a running server.
-2.  Detach and run the subcommand by using the `asadmin` `--detach`
-option.
+1. Ensure that the server is running. Remote commands require a running server.
+2. Detach and run the subcommand by using the `asadmin` `--detach` option.
 
 [[GSADG1056]][[sthref7]]
-
-
 Example 2-10 Using the `--detach` Option in Single Mode
 
 This example uses the `asadmin` `--detach` option in single mode to run
 the `create-cluster` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin --detach create-cluster Cluster1
 Job ID: 1
@@ -526,14 +502,12 @@ Command create-cluster started successfully.
 ----
 
 [[GSADG1057]][[sthref8]]
-
-
 Example 2-11 Using the `--detach` Option in Multimode
 
 This example uses the `asadmin` `--detach` option in multimode to run
 the `create-cluster` subcommand.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-cluster Cluster1 --detach
 Job ID: 1
@@ -548,14 +522,12 @@ subcommand to reattach to a job and view its status, and the
 about jobs is kept.
 
 [[GSADG1058]][[sthref9]]
-
-
 Example 2-12 Listing Jobs
 
 This example runs the `list-jobs` subcommand in multimode to list jobs
 and job information.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jobs
 JOB ID     COMMAND           STATE       EXIT CODE TIME OF COMPLETION
@@ -565,8 +537,6 @@ Command list-jobs executed successfully
 ----
 
 [[GSADG1059]][[sthref10]]
-
-
 Example 2-13 Attaching to a Subcommand and Checking Its Status
 
 This example runs the `attach` subcommand in multimode to attach to the
@@ -574,7 +544,7 @@ This example runs the `attach` subcommand in multimode to attach to the
 still in progress, the output displays the current status, such as
 percentage complete.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> attach 1
 Command create-cluster executed with status SUCCESS.
@@ -582,15 +552,13 @@ Command attach executed successfully.
 ----
 
 [[GSADG1060]][[sthref11]]
-
-
 Example 2-14 Configuring Managed Jobs
 
 This example runs the `configure-managed-jobs` subcommand in multimode
 to set the job retention period to 36 hours. Time periods can be
 specified in Hh|Mm|Ss for hours, minutes, or seconds.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> configure-managed-jobs --job-retention-period=36h
 Command configure-managed-jobs executed successfully.
@@ -632,22 +600,20 @@ or update one or more system properties of the domain or configuration.
 Any configuration attribute can be overwritten through a system property
 of the corresponding name.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create system properties by using the
-link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create system properties by using the
+link:../reference-manual/create-system-properties.html#GSRFM00059[`create-system-properties`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
 
 [[GSADG00107]][[ggovp]]
-
-
 Example 2-15 Creating a System Property
 
 This example creates a system property associated with
 `http-listener-port=1088` on `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-system-properties http-listener-port=1088
 Command create-system-properties executed successfully.
@@ -669,21 +635,19 @@ Use the `list-system-properties` subcommand in remote mode to list the
 system properties that apply to a domain, cluster, or server instance or
 configuration.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List system properties by using the
-link:../reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List system properties by using the
+link:../reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
++
 The existing system properties are displayed, including predefined
 properties such as `HTTP_LISTENER_PORT` and `HTTP_SSL_LISTENER_PORT`.
 
 [[GSADG00108]][[ggopn]]
-
-
 Example 2-16 Listing System Properties
 
 This example lists the system properties on host `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-system-properties
 http-listener-port=1088
@@ -705,24 +669,21 @@ To Delete a System Property
 Use the `delete-system-property` subcommand in remote mode to delete
 system properties.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the existing system properties by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the existing system properties by using the
 link:../reference-manual/list-system-properties.html#GSRFM00203[`list-system-properties`] subcommand.
-3.  Delete the system property by using the
+3. Delete the system property by using the
 link:../reference-manual/delete-system-property.html#GSRFM00110[`delete-system-property`] subcommand.
-4.  If necessary, notify users that the system property has been
+4. If necessary, notify users that the system property has been
 deleted.
 
 [[GSADG00109]][[ggoph]]
-
-
 Example 2-17 Deleting a System Property
 
 This example deletes a system property named `http-listener-port` from
 `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-system-property http-listener-port
 Command delete-system-property executed successfully.
@@ -762,21 +723,18 @@ To Add the Default Configuration of a Module to `domain.xml`
 Use the `create-module-config` subcommand to add the default
 configuration of a module to `domain.xml`.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Add the default configuration of a module to `domain.xml` by using
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Add the default configuration of a module to `domain.xml` by using
 the link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`create-module-config`] subcommand.
 
 [[GSADG1098]][[sthref12]]
-
-
 Example 2-18 Adding Module Configuration to `domain.xml`
 
 This example adds the default configuration of the web container module
 to `domain1` in `server-config` (the default configuration). Use the
 `--dryrun` option to preview the configuration before it is added.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-module-config web-container
 Command create-module-config executed successfully.
@@ -798,20 +756,17 @@ Use the `delete-module-config` subcommand to remove the configuration of
 a module from `domain.xml` and cause the module to use the default
 configuration included in the module.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Remove the configuration of a module from `domain.xml` by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Remove the configuration of a module from `domain.xml` by using the
 link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`delete-module-config`] subcommand.
 
 [[GSADG1101]][[sthref13]]
-
-
 Example 2-19 Removing Module Configuration From `domain.xml`
 
 This example deletes the configuration of the web container module from
 `domain1` in `server-config` (the default configuration).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-module-config web-container
 Command delete-module-config executed successfully.
@@ -832,20 +787,17 @@ To Display the Current Active Configuration of a Module
 Use the `get-active-module-config` subcommand to display the current
 active configuration of a module.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Display the current active configuration of a module by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Display the current active configuration of a module by using the
 link:../reference-manual/create-jdbc-resource.html#GSRFM00037[`get-active-module-config`] subcommand.
 
 [[GSADG1104]][[sthref14]]
-
-
 Example 2-20 Displaying the Current Active Configuration of a Module
 
 This example displays the current active configuration of the JMS
 service in `server-config` (the default configuration).
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> get-active-module-config jms-service
 At location: domain/configs/config[server-config]
@@ -886,24 +838,23 @@ The XML file must reside in the domain-dir`/config` directory. If you
 specify a relative path or simply provide the name of the XML file, this
 subcommand will prepend domain-dir`/config` to this operand.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Add resources from an XML file by using the
-link:../reference-manual/add-resources.html#GSRFM00001[`add-resources`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Add resources from an XML file by using the
+link:../reference-manual/add-resources.html#GSRFM00001[`add-resources`] subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
-3.  Restart GlassFish Server. +
+3. Restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00110]][[ggozc]]
-
-
 Example 2-21 Adding Resources
 
 This example creates resources using the contents of the `resource.xml`
 file on `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> add-resources c:\tmp\resource.xml
 Command : JDBC resource jdbc1 created successfully.
@@ -944,19 +895,16 @@ cannot communicate with the server by using the specified login
 (user/password) and target (host/port) information, then the local
 version is displayed along with a warning message.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Display the version by using the link:../reference-manual/version.html#GSRFM00261[`version`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Display the version by using the link:../reference-manual/version.html#GSRFM00261[`version`]
 subcommand.
 
 [[GSADG00114]][[ghjnb]]
-
-
 Example 2-22 Displaying Version Information
 
 This example displays the version of GlassFish Server on the local host.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> version
 Version = Oracle GlassFish Server 3.0.1 (build 19)
@@ -979,19 +927,16 @@ Use the `list-applications` subcommand in remote mode to list the
 deployed Java applications. If the `--type` option is not specified, all
 applications are listed.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List applications by using the link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List applications by using the link:../reference-manual/list-applications.html#GSRFM00148[`list-applications`]
 subcommand.
 
 [[GSADG00115]][[ggouk]]
-
-
 Example 2-23 Listing Applications
 
 This example lists the web applications on `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-applications --type web
 hellojsp <web>
@@ -1013,19 +958,16 @@ To List Containers
 Use the `list-containers` subcommand in remote mode to list application
 containers.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List containers by using the link:../reference-manual/list-containers.html#GSRFM00161[`list-containers`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List containers by using the link:../reference-manual/list-containers.html#GSRFM00161[`list-containers`]
 subcommand.
 
 [[GSADG00116]][[ggown]]
-
-
 Example 2-24 Listing Containers
 
 This example lists the containers on `localhost`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-containers
 List all known application containers
@@ -1058,26 +1000,23 @@ Use the `list-modules` subcommand in remote mode to list the modules
 that are accessible to the GlassFish Server module subsystem. The status
 of each module is included. Possible statuses include NEW and READY.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List modules by using the link:../reference-manual/list-modules.html#GSRFM00185[`list-modules`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List modules by using the link:../reference-manual/list-modules.html#GSRFM00185[`list-modules`]
 subcommand.
 
 [[GSADG00117]][[ghlfw]]
-
-
 Example 2-25 Listing Modules
 
 This example lists the accessible modules.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-modules
 ----
 
 Information similar to the following is displayed (partial output):
 
-[source,oac_no_warn]
+[source]
 ----
 List Of Modules
 Module : org.glassfish.web.jstl-connector:10.0.0.b28
@@ -1121,19 +1060,16 @@ Use the `list-commands` subcommand in remote mode to list the deployed
 only local subcommands are listed. By default, this subcommand displays
 a list of local subcommands followed by a list of remote subcommands.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List subcommands by using the link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List subcommands by using the link:../reference-manual/list-commands.html#GSRFM00154[`list-commands`]
 subcommand.
 
 [[GSADG00118]][[ggpdl]]
-
-
 Example 2-26 Listing Subcommands
 
 This example lists only local subcommands.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-commands --localonly
 create-domain
@@ -1174,19 +1110,16 @@ timers owned by a specific server instance. You can use this information
 to decide whether to do a timer migration, or to verify that a migration
 has been completed successfully.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List timers by using the link:../reference-manual/list-timers.html#GSRFM00205[`list-timers`] subcommand.
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List timers by using the link:../reference-manual/list-timers.html#GSRFM00205[`list-timers`] subcommand.
 
 [[GSADG00119]][[giojj]]
-
-
 Example 2-27 Listing Timers
 
 This example lists the timers in a particular standalone server
 instance. There is one currently active timer set.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-timers server
 1
@@ -1201,19 +1134,16 @@ To Show Component Status
 Use the `show-component-status` subcommand in remote mode to get the
 status (either enabled or disabled) of the specified deployed component.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Show component status by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Show component status by using the
 link:../reference-manual/show-component-status.html#GSRFM00232[`show-component-status`] subcommand.
 
 [[GSADG00120]][[gjhkk]]
-
-
 Example 2-28 Showing Status of a Component
 
 This example shows the status of the `MEjbApp` component.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> show-component-status MEjbApp
 Status of MEjbApp is enabled
@@ -1296,24 +1226,21 @@ port::
   The HTTP port or HTTPS port for administration.
 path::
   The path to the object. The path is the dotted name of the object in
-  which each dot (`.`) is replaced with a slash (`/`). +
+  which each dot (`.`) is replaced with a slash (`/`).
++
 
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Note:
+[NOTE]
+====
+The path to a GlassFish Server instance is ``servers/server/``instance-name,
+where instance-name is the name of the instance.
+For the DAS, instance-name is `server` and the path is `servers/server/server`.
+====
 
-The path to a GlassFish Server instance is
-`servers/server/`instance-name, where instance-name is the name of the
-instance. For the DAS, instance-name is `server` and the path is
-`servers/server/server`.
+For more information, see the following documentation:
 
-|=======================================================================
-
-  For more information, see the following documentation: +
-  * The link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page
-  * link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works]
-  * link:overview.html#giusb[How Dotted Names Work for Configuration]
+* The link:../reference-manual/dotted-names.html#GSRFM00268[`dotted-names`(5ASC)] help page
+* link:monitoring.html#ghbaz[How the Monitoring Tree Structure Works]
+* link:overview.html#giusb[How Dotted Names Work for Configuration]
 
 If the URL to a REST resource for GlassFish Server monitoring or
 configuration data is opened in a web browser, the browser displays a
@@ -1338,8 +1265,7 @@ managing a domain.
 
 .*Figure 2-1 Web Page for the REST Resource for Managing a Domain*
 image:img/rest-management.png[
-"Screen capture showing the web page for the REST resource for managing a
-domain."]
+"Screen capture showing the web page for the REST resource for managing a domain."]
 
 
 [[gkwib]][[GSADG00635]][[rest-urls-for-accessing-the-log-file]]
@@ -1419,8 +1345,7 @@ supports |`GET`
 
 
 [NOTE]
-=======================================================================
-
+====
 REST requests that add, update, or delete objects must specify the
 `X-Requested-By` header with the value `GlassFish REST HTML interface`.
 
@@ -1428,8 +1353,7 @@ The `GET` method determines the methods and method parameters that an
 object in the tree supports and provides additional information about
 the object. For details, see link:#gjjel[To Retrieve Data for an Object
 in the Tree].
-
-=======================================================================
+====
 
 
 [[gjjei]][[GSADG00324]][[to-determine-the-methods-and-method-parameters-that-an-object-in-the-tree-supports]]
@@ -1454,30 +1378,28 @@ Configuration Objects].
 
 
 [NOTE]
-=======================================================================
-
+====
 Each `POST` method and `DELETE` method that a REST resource supports has
 an equivalent `asadmin` subcommand. The parameters of a `POST` method or
 a `DELETE` method correspond to the options of the method's equivalent
 `asadmin` subcommand. For information about the options of `asadmin`
 subcommand, see the olink:GSRFM[GlassFish Server Open Source Edition
 Reference Manual].
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Operations on REST resources for GlassFish Server data require a running
 server.
-2.  Use the `GET` method on the REST resource that represents the
-object. +
+2. Use the `GET` method on the REST resource that represents the
+object.
++
 The `GET` method returns the list of methods that the resource supports.
 For each method, the list of acceptable message parameters or the list
 of acceptable query parameters are returned.
 
 [[GSADG00121]][[gjjdi]]
-
-
 Example 2-29 Determining the Methods and Method Parameters That an
 Object in the Tree Supports
 
@@ -1495,7 +1417,7 @@ the `POST` method.
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source]
 ----
 curl -X GET -H "Accept: application/json" http://localhost:4848/management/domain/nodes/node/sj01
 {
@@ -1554,15 +1476,14 @@ You can specify the format in which this information is presented. For
 more information, see link:#gjijz[Formats for Resource Representation of
 Configuration Objects].
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Operations on REST resources for GlassFish Server data require a running
 server.
-2.  Use the `GET` method on the REST resource that represents the
+2. Use the `GET` method on the REST resource that represents the
 object.
 
 [[GSADG00122]][[gjjed]]
-
-
 Example 2-30 Retrieving Data for an Object in the Tree
 
 This example uses the cURL utility to retrieve data for the resource for
@@ -1578,7 +1499,7 @@ for administration is 4848.
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source]
 ----
 curl -X GET -H "Accept: application/json" http://localhost:4848/management/domain/nodes/node/sj01
 {
@@ -1626,24 +1547,25 @@ curl -X GET -H "Accept: application/json" http://localhost:4848/management/domai
 To Add an Object to the Tree
 ++++++++++++++++++++++++++++
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Operations on REST resources for GlassFish Server data require a running
 server.
-2.  Determine the acceptable message parameters for the `POST` method of
-the resource that represents the parent of the object. +
+2. Determine the acceptable message parameters for the `POST` method of
+the resource that represents the parent of the object.
++
 For information about how to perform this step, see link:#gjjei[To
 Determine the Methods and Method Parameters That an Object in the Tree
 Supports].
-3.  Use the `POST` method on the REST resource that represents the
+3. Use the `POST` method on the REST resource that represents the
 parent of the object that you are adding.
-4.  Confirm that the object has been added. +
+4. Confirm that the object has been added.
++
 Perform this step on the resource that represents the object that you
 have just added, not the parent. For information about how to perform
 this step, see link:#gjjel[To Retrieve Data for an Object in the Tree].
 
 [[GSADG00123]][[gjjen]]
-
-
 Example 2-31 Adding an Object to the Tree
 
 This example uses the cURL utility to add a JDBC resource object to the
@@ -1654,11 +1576,12 @@ for administration is 4848.
 
 Line breaks are added to enhance readability.
 
-1.  This step determines the acceptable message parameters for the
-`POST` method of the resource `jdbc-resource`. +
-[source,oac_no_warn]
+1. This step determines the acceptable message parameters for the
+`POST` method of the resource `jdbc-resource`.
++
+[source]
 ----
-curl -X GET -H "Accept: application/json" 
+curl -X GET -H "Accept: application/json"
 http://localhost:4848/management/domain/resources/jdbc-resource
 {
   "command":"Jdbc-resource",
@@ -1686,22 +1609,26 @@ http://localhost:4848/management/domain/resources/jdbc-resource
   }
 }
 ----
-2.  This step adds a resource as a child of the `jdbc-resource`
+2. This step adds a resource as a child of the `jdbc-resource`
 resource. The `-d` option of the cURL utility sets the required message
 parameters as follows:
++
 * `id` is set to `jdbc/myjdbcresource`.
-* `connectionpoolid` is set to `DerbyPool`. +
-[source,oac_no_warn]
+* `connectionpoolid` is set to `DerbyPool`.
++
+[source]
 ----
-curl -X POST -H "X-Requested-By: GlassFish REST HTML interface" 
--d id=jdbc/myjdbcresource -d connectionpoolid=DerbyPool 
+curl -X POST -H "X-Requested-By: GlassFish REST HTML interface"
+-d id=jdbc/myjdbcresource -d connectionpoolid=DerbyPool
 http://localhost:4848/management/domain/resources/jdbc-resource
 ----
-3.  This step confirms that the object has been added by retrieving data
-for the REST resource that represents the object. +
-[source,oac_no_warn]
+
+3. This step confirms that the object has been added by retrieving data
+for the REST resource that represents the object.
++
+[source]
 ----
-curl -X GET -H "Accept: application/json" 
+curl -X GET -H "Accept: application/json"
 http://localhost:4848/management/domain/resources/
 jdbc-resource/jdbc%2Fmyjdbcresource
 {
@@ -1737,23 +1664,21 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 To Update an Object in the Tree
 +++++++++++++++++++++++++++++++
 
-1.  Ensure that the server is running. +
-Operations on REST resources for GlassFish Server data require a running
-server.
-2.  Determine the acceptable message parameters for the `POST` method of
-the resource that represents the object. +
-For information about how to perform this step, see link:#gjjei[To
-Determine the Methods and Method Parameters That an Object in the Tree
-Supports].
-3.  Use the `POST` method on the REST resource that represents the
+1. Ensure that the server is running.
+Operations on REST resources for GlassFish Server data require a running server.
+
+2. Determine the acceptable message parameters for the `POST` method of
+the resource that represents the object.
+For information about how to perform this step,
+see link:#gjjei[To Determine the Methods and Method Parameters That an Object in the Tree Supports].
+
+3. Use the `POST` method on the REST resource that represents the
 object that you are updating.
-4.  Confirm that the object has been updated. +
-For information about how to perform this step, see link:#gjjel[To
-Retrieve Data for an Object in the Tree].
+
+4. Confirm that the object has been updated.
+For information about how to perform this step, see link:#gjjel[To Retrieve Data for an Object in the Tree].
 
 [[GSADG00124]][[gjjhd]]
-
-
 Example 2-32 Updating an Object in the Tree
 
 This example uses the cURL utility to update a JDBC resource in the tree
@@ -1764,11 +1689,12 @@ for administration is 4848.
 
 Line breaks are added to enhance readability.
 
-1.  This step determines the acceptable message parameters for the
-`POST` method of the resource `jdbc-myjdbcresource`. +
-[source,oac_no_warn]
+1. This step determines the acceptable message parameters for the
+`POST` method of the resource `jdbc-myjdbcresource`.
++
+[source]
 ----
-curl -X OPTIONS -H "Accept: application/json" 
+curl -X OPTIONS -H "Accept: application/json"
 http://localhost:4848/management/domain/resources/
 jdbc-resource/jdbc-myjdbcresource
 {
@@ -1798,20 +1724,22 @@ jdbc-resource/jdbc-myjdbcresource
   }
 }
 ----
-2.  This step updates the REST resource `jdbc-myjdbcresource` to disable
+2. This step updates the REST resource `jdbc-myjdbcresource` to disable
 the JDBC resource that `jdbc-myjdbcresource` represents. The `-d` option
-of the cURL utility sets the `enabled` message parameter to `disabled`. +
-[source,oac_no_warn]
+of the cURL utility sets the `enabled` message parameter to `disabled`.
++
+[source]
 ----
-curl -X POST -H "X-Requested-By: GlassFish REST HTML interface" 
+curl -X POST -H "X-Requested-By: GlassFish REST HTML interface"
 -d "enabled=false" http://localhost:4848/management/domain/resources/
 jdbc-resource/jdbc%2Fmyjdbcresource
 ----
-3.  This step confirms that the object has been updated by retrieving
-data for the REST resource that represents the object. +
-[source,oac_no_warn]
+3. This step confirms that the object has been updated by retrieving
+data for the REST resource that represents the object.
++
+[source]
 ----
-curl -X GET -H "Accept: application/json" 
+curl -X GET -H "Accept: application/json"
 http://localhost:4848/management/domain/resources/
 jdbc-resource/jdbc%2Fmyjdbcresource
 {
@@ -1857,21 +1785,22 @@ jdbc-resource/jdbc%2Fmyjdbcresource
 To Delete an Object From the Tree
 +++++++++++++++++++++++++++++++++
 
-1.  Ensure that the server is running. +
+1. Ensure that the server is running.
++
 Operations on REST resources for GlassFish Server data require a running
 server.
-2.  Confirm that the object can be deleted. +
+2. Confirm that the object can be deleted.
++
 For information about how to perform this step, see link:#gjjei[To
 Determine the Methods and Method Parameters That an Object in the Tree
 Supports].
-3.  Confirm that the object has been deleted. +
+3. Confirm that the object has been deleted.
++
 Perform this step on the resource that represents the parent of the
 object that you have just deleted. For information about how to perform
 this step, see link:#gjjel[To Retrieve Data for an Object in the Tree].
 
 [[GSADG00125]][[gjjgp]]
-
-
 Example 2-33 Deleting an Object From the Tree
 
 This example uses the cURL utility to delete a JDBC resource from the
@@ -1882,11 +1811,12 @@ for administration is 4848.
 
 Line breaks and white space are added to enhance readability.
 
-1.  This step confirms that the object can be deleted by retrieving the
-REST methods that the resource `jdbc-myjdbcresource` supports. +
-[source,oac_no_warn]
+1. This step confirms that the object can be deleted by retrieving the
+REST methods that the resource `jdbc-myjdbcresource` supports.
++
+[source]
 ----
-curl -X GET -H "Accept: application/json" 
+curl -X GET -H "Accept: application/json"
 http://localhost:4848/management/domain/resources/
 jdbc-resource/jdbc%2Fmyjdbcresource
 {
@@ -1917,18 +1847,20 @@ jdbc-resource/jdbc%2Fmyjdbcresource
   }
 }
 ----
-2.  This step deletes the `jdbc/myjdbcresource` resource. +
-[source,oac_no_warn]
+2. This step deletes the `jdbc/myjdbcresource` resource.
++
+[source]
 ----
-curl -X DELETE -H "X-Requested-By: GlassFish REST HTML interface" 
+curl -X DELETE -H "X-Requested-By: GlassFish REST HTML interface"
 http://localhost:4848/management/domain/resources/
 jdbc-resource/jdbc%2Fmyjdbcresource
 ----
-3.  This step confirms that the object has been deleted by retrieving
-data for the REST resource that represents the parent of the object. +
-[source,oac_no_warn]
+3. This step confirms that the object has been deleted by retrieving
+data for the REST resource that represents the parent of the object.
++
+[source]
 ----
-curl -X GET -H "Accept: application/json" 
+curl -X GET -H "Accept: application/json"
 http://localhost:4848/management/domain/resources/jdbc-resource
 {
   "command":"Jdbc-resource",
@@ -2007,8 +1939,8 @@ Setting up basic authentication over a secure connection to secure
 GlassFish Server REST interfaces involves the following sequence of
 tasks:
 
-1.  Adding an `admin-realm` user to the `asadmin` user group
-2.  Enabling Secure Sockets Layer (SSL)
+1. Adding an `admin-realm` user to the `asadmin` user group
+2. Enabling Secure Sockets Layer (SSL)
 
 For information about how to perform these tasks from the command line,
 see the following documentation:
@@ -2036,26 +1968,24 @@ credentials to enable the client to pass the credentials with each
 request. If you require a REST client not to cache credentials, your
 client must use session tokens for authentication.
 
-1.  Request a session token by using the `GET` method on the resource at
-`http://`host`:`port`/management/sessions`. +
+1. Request a session token by using the `GET` method on the resource at
+`http://`host`:`port`/management/sessions`.
 GlassFish Server uses basic authentication to authenticate the client,
 generates a session token, and passes the token to the client.
-2.  In each subsequent request that requires authentication, use the
+
+2. In each subsequent request that requires authentication, use the
 token to authenticate the client.
-1.  Create a cookie that is named `gfresttoken` the value of which is
-the token.
-2.  Send the cookie with the request.
-3.  When the token is no longer required, retire the token by using the
+.. Create a cookie that is named `gfresttoken` the value of which is the token.
+.. Send the cookie with the request.
+.. When the token is no longer required, retire the token by using the
 `DELETE` method on the resource at
-`http://`host`:`port`/management/sessions/{`tokenvalue`}`. +
-
+`http://`host`:`port`/management/sessions/{`tokenvalue`}`.
++
 [NOTE]
-=======================================================================
-
+====
 If a client does not explicitly retire a token, the token is retired
 after 30 minutes of inactivity.
-
-=======================================================================
+====
 
 
 [[gjijz]][[GSADG00711]][[formats-for-resource-representation-of-configuration-objects]]
@@ -2100,7 +2030,7 @@ JSON Resource Representation for Configuration Objects
 The general format for the JSON representation of a resource for a
 configuration object is as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "command":"resource",
@@ -2135,7 +2065,8 @@ attributes::
   name-value pair is specified as `"`name`":`value.
 children::
   Zero or more child resources separated by a comma (`,`). Each child
-  resource is specified as "resource-name":"url". +
+  resource is specified as "resource-name":"url".
++
   resource-name;;
     The name of the resource as displayed in client applications that
     access the parent of the resource.
@@ -2148,7 +2079,7 @@ JSON Representation of a Command in a Command List
 
 The JSON representation of a command in a command list is as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "path":"command-path",
@@ -2176,7 +2107,7 @@ JSON Representation of a Method in a Method List
 
 The JSON representation of a method in a method list is as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
     "name":"method-name",
@@ -2211,7 +2142,7 @@ JSON Representation of a Message Parameter or a Query Parameter
 The JSON representation of a message parameter or a query parameter is
 as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 "parameter-name":{attribute-list}
 ----
@@ -2222,19 +2153,22 @@ parameter-name::
   The name of the parameter.
 attribute-list::
   A comma-separated list of name-value pairs of attributes for the
-  parameter. Each pair is in the following format: +
-[source,oac_no_warn]
+  parameter. Each pair is in the following format:
++
+[source,json]
 ----
 "name":"value"
 ----
 ::
-  Possible attributes are as follows: +
+  Possible attributes are as follows:
++
   `defaultValue`;;
     The default value of the parameter.
   `acceptableValues`;;
     The set or range of acceptable values for the parameter.
   `type`;;
-    The data type of the parameter, which is one of the following types: +
+    The data type of the parameter, which is one of the following types:
++
     * `boolean`
     * `int`
     * `string`
@@ -2256,7 +2190,7 @@ example is `http://localhost:4848/management/domain/nodes/node/sj01`.
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "command":"Node",
@@ -2306,7 +2240,7 @@ XML Resource Representation for Configuration Objects
 The general format for the XML representation of a resource for a
 configuration object is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <map>
  <entry key="extraProperties">
@@ -2347,8 +2281,9 @@ methods::
   Representation of a Resource Method].
 attributes::
   Zero or more XML elements that represent the attributes of the
-  resource. Each element specifies a name-value pair as follows: +
-[source,oac_no_warn]
+  resource. Each element specifies a name-value pair as follows:
++
+[source,xml]
 ----
 <entry key="name" value="value"></entry>
 ----
@@ -2358,8 +2293,9 @@ commands::
   element, see link:#gkwaw[XML Representation of a Command].
 children::
   Zero or more XML elements that represent the children of the resource.
-  Each element is specified as follows: +
-[source,oac_no_warn]
+  Each element is specified as follows:
++
+[source,xml]
 ----
 <entry key="resource-name" value="url"></entry>
 ----
@@ -2380,7 +2316,7 @@ XML Representation of a Resource Method
 
 The XML representation of a method in a method list is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <map>
  <entry key="name" value="method-name"></entry>
@@ -2414,7 +2350,7 @@ XML Representation of a Command
 
 The XML representation of a command is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <map>
  <entry key="command" value="command-name"></entry>
@@ -2443,7 +2379,7 @@ XML Representation of a Message Parameter or a Query Parameter
 The XML representation of a message parameter or a query parameter is as
 follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <map>
  <entry key="parameter-name">
@@ -2460,19 +2396,22 @@ parameter-name::
   The name of the parameter.
 attributes::
   One or more XML elements that represent the attributes for the
-  parameter. Each element specifies a name-value pair as follows: +
-[source,oac_no_warn]
+  parameter. Each element specifies a name-value pair as follows:
++
+[source,xml]
 ----
 <entry key="name" value="value"></entry>
 ----
 ::
-  Possible attributes are as follows: +
+  Possible attributes are as follows:
++
   `defaultValue`;;
     The default value of the parameter.
   `acceptablevalues`;;
     The set or range of acceptable values for the parameter.
   `type`;;
-    The data type of the parameter, which is one of the following types: +
+    The data type of the parameter, which is one of the following types:
++
     * `boolean`
     * `int`
     * `string`
@@ -2494,7 +2433,7 @@ example is `http://localhost:4848/management/domain/nodes/node/sj01`.
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <map>
@@ -2582,11 +2521,11 @@ Line breaks and white space are added to enhance readability.
    </entry>
    <entry key="childResources">
     <map>
-     <entry key="application-ref" 
+     <entry key="application-ref"
       value="https://localhost:4848/management/domain/nodes/node/sj01/application-ref"/>
-     <entry key="ssh-connector" 
+     <entry key="ssh-connector"
       value="https://localhost:4848/management/domain/nodes/node/sj01/ssh-connector"/>
-     <entry key="resource-ref" 
+     <entry key="resource-ref"
       value="https://localhost:4848/management/domain/nodes/node/sj01/resource-ref"/>
     </map>
    </entry>
@@ -2640,7 +2579,7 @@ JSON Resource Representation for Monitoring Objects
 The general format for the JSON representation of a resource for a
 monitoring object is as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "message":"",
@@ -2668,7 +2607,8 @@ statistics-list::
   in a Statistics List].
 children::
   Zero or more child resources separated by a comma (`,`). Each child
-  resource is specified as "resource-name":"url". +
+  resource is specified as "resource-name":"url".
++
   resource-name;;
     The name of the resource as displayed in client applications that
     access the parent of the resource.
@@ -2682,7 +2622,7 @@ JSON Representation of a Statistic in a Statistics List
 The JSON representation of a counter statistic in a statistics list is
 as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 "statistic":{
   "count":count,
@@ -2697,11 +2637,11 @@ as follows:
 The JSON representation of a range statistic in a statistics list is as
 follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 "statistic":{
-  "highwatermark":highest-value, 
-  "lowwatermark":lowest-value, 
+  "highwatermark":highest-value,
+  "lowwatermark":lowest-value,
   "current":current-value
   "lastsampletime":last-sample-time,
   "description":"description",
@@ -2732,7 +2672,8 @@ description::
   A textual description of what the statistic represents.
 unit::
   The unit of measurement of the statistic, which is one of the
-  following units of measurement: +
+  following units of measurement:
++
   `count`;;
     The cumulative value of an attribute that increases with time.
   `range`;;
@@ -2748,7 +2689,8 @@ unit::
     example, `CONNECTED`, `CLOSED`, or `DISCONNECTED`.
   `time`;;
     Values of an attribute that provide the following timing
-    measurements for an operation: +
+    measurements for an operation:
++
     * The number of times the operation was performed.
     * The maximum amount of time to perform the operation once.
     * The minimum amount of time to perform the operation once.
@@ -2774,7 +2716,7 @@ example is
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "message":"",
@@ -2785,7 +2727,7 @@ Line breaks and white space are added to enhance readability.
       "loadedclass-count":{
         "count":8521,
         "lastsampletime":1300726961018,
-        "description":"Number of classes currently loaded in the Java virtual 
+        "description":"Number of classes currently loaded in the Java virtual
           machine",
         "unit":"count",
         "name":"LoadedClassCount",
@@ -2794,7 +2736,7 @@ Line breaks and white space are added to enhance readability.
       "totalloadedclass-count":{
         "count":8682,
         "lastsampletime":1300726961018,
-        "description":"Total number of classes that have been loaded since the 
+        "description":"Total number of classes that have been loaded since the
           Java virtual machine has started execution",
         "unit":"count",
         "name":"TotalLoadedClassCount",
@@ -2803,7 +2745,7 @@ Line breaks and white space are added to enhance readability.
       "unloadedclass-count":{
         "count":161,
         "lastsampletime":1300726961018,
-        "description":"Total number of classes unloaded since the Java virtual 
+        "description":"Total number of classes unloaded since the Java virtual
           machine has started execution",
         "unit":"count",
         "name":"UnLoadedClassCount",
@@ -2822,7 +2764,7 @@ XML Resource Representation for Monitoring Objects
 The general format for the XML representation of a resource for a
 monitoring object is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <map>
@@ -2854,8 +2796,9 @@ statistics::
   link:#gkwjv[XML Representation of a Statistic].
 children::
   Zero or more XML elements that represent the children of the resource.
-  Each element is specified as follows: +
-[source,oac_no_warn]
+  Each element is specified as follows:
++
+[source,xml]
 ----
 <entry key="resource-name" value="url"></entry>
 ----
@@ -2874,7 +2817,7 @@ XML Representation of a Statistic
 
 The XML representation of a counter statistic is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <entry key="statistic">
  <map>
@@ -2896,7 +2839,7 @@ The XML representation of a counter statistic is as follows:
 
 The XML representation of a range statistic is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <entry key="statistic">
  <map>
@@ -2928,7 +2871,8 @@ statistic::
   The name of the statistic.
 unit::
   The unit of measurement of the statistic, which is one of the
-  following units of measurement: +
+  following units of measurement:
++
   `count`;;
     The cumulative value of an attribute that increases with time.
   `range`;;
@@ -2944,7 +2888,8 @@ unit::
     example, `CONNECTED`, `CLOSED`, or `DISCONNECTED`.
   `time`;;
     Values of an attribute that provide the following timing
-    measurements for an operation: +
+    measurements for an operation:
++
     * The number of times the operation was performed.
     * The maximum amount of time to perform the operation once.
     * The minimum amount of time to perform the operation once.
@@ -2985,7 +2930,7 @@ example is
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <map>
@@ -3001,7 +2946,7 @@ Line breaks and white space are added to enhance readability.
        </entry><entry key="count">
         <number>161</number>
        </entry>
-       <entry key="description" value="Total number of classes unloaded since 
+       <entry key="description" value="Total number of classes unloaded since
         the Java virtual machine has started execution"/>
        <entry key="name" value="UnLoadedClassCount"/>
        <entry key="lastsampletime">
@@ -3018,7 +2963,7 @@ Line breaks and white space are added to enhance readability.
        <entry key="count">
          number>8682</number>
        </entry>
-       <entry key="description" value="Total number of classes that have been 
+       <entry key="description" value="Total number of classes that have been
         loaded since the Java virtual machine has started execution"/>
        <entry key="name" value="TotalLoadedClassCount"/>
        <entry key="lastsampletime">
@@ -3034,7 +2979,7 @@ Line breaks and white space are added to enhance readability.
        </entry><entry key="count">
         <number>8521</number>
        </entry>
-       <entry key="description" value="Number of classes currently loaded in 
+       <entry key="description" value="Number of classes currently loaded in
         the Java virtual machine"/>
        <entry key="name" value="LoadedClassCount"/>
        <entry key="lastsampletime">
@@ -3099,7 +3044,7 @@ JSON Resource Representation for Log File Details
 The general format for the JSON representation of a resource for log
 file details is as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "records": [
@@ -3119,7 +3064,7 @@ JSON Representation of a Log Record in a Record List
 
 The JSON representation of a log record in a record list is as follows:
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "recordNumber":record-number,
@@ -3177,7 +3122,7 @@ example is `http://localhost:4848/management/domain/view-log/details`.
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source,json]
 ----
 {
   "records": [
@@ -3223,7 +3168,7 @@ XML Resource Representation for Log File Details
 The general format for the XML representation of a resource for log file
 details is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <records>
  records
@@ -3241,10 +3186,10 @@ XML Representation of a Log Record
 
 The XML representation of a log record is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
-<record loggedDateTimeInMS="logged-date" loggedLevel="log-level" 
- loggerName="logger-class-name" messageID="message-id" 
+<record loggedDateTimeInMS="logged-date" loggedLevel="log-level"
+ loggerName="logger-class-name" messageID="message-id"
  nameValuePairs="_ThreadID=thread-id;_thread-name;" productName="product-name"
  recordNumber="record-number"/>
 ----
@@ -3291,20 +3236,20 @@ example is `http://localhost:4848/management/domain/view-log/details`.
 
 Line breaks and white space are added to enhance readability.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <records>
- <record loggedDateTimeInMS="1300743782815" loggedLevel="INFO" 
- loggerName="org.glassfish.admingui" messageID="" 
- nameValuePairs="_ThreadID=25;_ThreadName=Thread-1;" 
+ <record loggedDateTimeInMS="1300743782815" loggedLevel="INFO"
+ loggerName="org.glassfish.admingui" messageID=""
+ nameValuePairs="_ThreadID=25;_ThreadName=Thread-1;"
  productName="glassfish3.1" recordNumber="475"/>
- <record loggedDateTimeInMS="1300728893368" loggedLevel="INFO" 
- loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter" 
-  messageID="" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;" 
+ <record loggedDateTimeInMS="1300728893368" loggedLevel="INFO"
+ loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.admin.adapter"
+  messageID="" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;"
   productName="glassfish3.1" recordNumber="474"/>
- <record loggedDateTimeInMS="1300728893367" loggedLevel="INFO" 
- loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.server" 
- messageid="core10010" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;" 
+ <record loggedDateTimeInMS="1300728893367" loggedLevel="INFO"
+ loggerName="jakarta.enterprise.system.core.com.sun.enterprise.v3.server"
+ messageid="core10010" nameValuePairs="_ThreadID=238;_ThreadName=Thread-1;"
  productName="glassfish3.1" recordNumber="473"/>
 </records>
 ----

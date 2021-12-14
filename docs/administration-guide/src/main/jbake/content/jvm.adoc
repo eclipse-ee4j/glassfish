@@ -4,6 +4,7 @@ title=Administering the Virtual Machine for the Java Platform
 next=threadpools.html
 prev=domains.html
 ~~~~~~
+
 Administering the Virtual Machine for the Java Platform
 =======================================================
 
@@ -56,26 +57,25 @@ options in the Java configuration or the profiler elements of the
 `domain.xml` file. If JVM options are created for a profiler, these
 options are used to record the settings that initiate the profiler.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create JVM options by using the
-link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create JVM options by using the
+link:../reference-manual/create-jvm-options.html#GSRFM00042[`create-jvm-options`] subcommand.
++
 To create more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon (:), use the
-backslash (\) to offset the colon delimiter. +
+backslash (\) to offset the colon delimiter.
++
 Information about properties for the subcommand is included in this help
 page.
-3.  To apply your changes, restart GlassFish Server. See
+3. To apply your changes, restart GlassFish Server. See
 link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00154]][[ghqwm]]
-
-
 Example 4-1 Creating JVM Options
 
 This example sets multiple Java system properties.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options -Dunixlocation=/root/example:
 -Dvariable=\$HOME:
@@ -100,19 +100,16 @@ To List JVM Options
 Use the `list-jvm-options` subcommand in remote mode to list the
 existing JVM options.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List JVM options by using the link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List JVM options by using the link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
 subcommand.
 
 [[GSADG00155]][[ggphx]]
-
-
 Example 4-2 Listing JVM Options
 
 This example lists all JVM options.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jvm-options
 -Djava.security.auth.login.config=${com.sun.aas.instanceRoot}/config/login.conf
@@ -150,27 +147,25 @@ Use the `delete-jvm-options` subcommand in remote mode to delete JVM
 options from the Java configuration or profiler elements of the
 `domain.xml` file.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List JVM options by using the link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List JVM options by using the link:../reference-manual/list-jvm-options.html#GSRFM00180[`list-jvm-options`]
 subcommand.
-3.  If necessary, notify users that the JVM option is being deleted.
-4.  Delete JVM options by using the
-link:../reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`] subcommand. +
+3. If necessary, notify users that the JVM option is being deleted.
+4. Delete JVM options by using the
+link:../reference-manual/delete-jvm-options.html#GSRFM00094[`delete-jvm-options`] subcommand.
++
 To remove more than one JVM option, use a colon (:) to separate the
 options. If the JVM option itself contains a colon, use the backslash
 (\) to offset the colon delimiter.
-5.  To apply your changes, restart GlassFish Server. See
+5. To apply your changes, restart GlassFish Server. See
 link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00156]][[ggpgz]]
-
-
 Example 4-3 Deleting a JVM Option
 
 This example removes a single JVM option.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jvm-options -Dopt1=A
 
@@ -179,13 +174,11 @@ Command delete-jvm-options executed successfully.
 ----
 
 [[GSADG00157]][[ggpkr]]
-
-
 Example 4-4 Deleting Multiple JVM Options
 
 This example removes multiple JVM options.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jvm-options -Doption1=-value1:-Dvariable=\$HOME
 deleted 2 option(s)
@@ -210,20 +203,17 @@ and loggers for a specified instance, including the domain
 administration server (DAS). You can generate the following types of
 reports: summary (default), class, thread, log.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Generate the report by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Generate the report by using the
 link:../reference-manual/generate-jvm-report.html#GSRFM00138[`generate-jvm-report`] subcommand.
 
 [[GSADG00158]][[ghhkr]]
-
-
 Example 4-5 Generating a JVM Report
 
 This example displays summary information about the threads, classes,
 and memory.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> generate-jvm-report --type summary 
 Operating System Information:
@@ -280,23 +270,22 @@ Only one profiler can exist. If a profiler already exists, you receive
 an error message that directs you to delete the existing profiler before
 creating a new one.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a profiler by using the link:../reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]
-subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a profiler by using the link:../reference-manual/create-profiler.html#GSRFM00050[`create-profiler`]
+subcommand.
++
 Information about properties for the subcommand is included in this help
 page.
-3.  To apply your changes, restart GlassFish Server. +
+3. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00159]][[ggpla]]
-
-
 Example 4-6 Creating a Profiler
 
 This example creates a profiler named `sample_profiler`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-profiler --classpath=/home/appserver/ --nativelibrarypath=/u/home/lib
 --enabled=false --property=defaultuser=admin:password=adminadmin sample_profiler
@@ -319,21 +308,19 @@ Use the `delete-profiler` subcommand in remote mode to delete the
 profiler element from the Java configuration. You can then create a new
 profiler.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Delete the profiler by using the link:../reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Delete the profiler by using the link:../reference-manual/delete-profiler.html#GSRFM00102[`delete-profiler`]
 subcommand.
-3.  To apply your changes, restart GlassFish Server. +
+3. To apply your changes, restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00161]][[ggpkc]]
-
-
 Example 4-7 Deleting a Profiler
 
 This example deletes the profiler named `sample_profiler`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-profiler sample_profiler
 Command delete-profiler executed successfully.

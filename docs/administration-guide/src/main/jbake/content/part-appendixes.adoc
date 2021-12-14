@@ -4,16 +4,16 @@ title=Appendixes
 next=asadmin-subcommands.html
 prev=transactions.html
 ~~~~~~
+
 Appendixes
 ==========
 
 [[gitym]][[GSADG00299]][[part-iii]]
 
-Part III +
-----------
+Part III
+--------
 
 [[appendixes]]
 Appendixes
 ----------
-
 

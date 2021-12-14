@@ -4,6 +4,7 @@ title=Administering the Java Naming and Directory Interface (JNDI) Service
 next=transactions.html
 prev=jms.html
 ~~~~~~
+
 Administering the Java Naming and Directory Interface (JNDI) Service
 ====================================================================
 
@@ -189,23 +190,22 @@ To Create a Custom JNDI Resource
 Use the `create-custom-resource` subcommand in remote mode to create a
 custom resource.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Create a custom resource by using the
-link:../reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-resource`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Create a custom resource by using the
+link:../reference-manual/create-custom-resource.html#GSRFM00022[`create-custom-resource`] subcommand.
++
 Information on properties for the subcommand is contained in this help
 page.
-3.  Restart GlassFish Server. +
+3. Restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00284]][[gioyi]]
-
-
 Example 18-1 Creating a Custom Resource
 
 This example creates a custom resource named `sample-custom-resource`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-custom-resource --restype topic --factoryclass com.imq.topic 
 sample_custom_resource
@@ -227,19 +227,16 @@ To List Custom JNDI Resources
 Use the `list-custom-resources` subcommand in remote mode to list the
 existing custom resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the custom resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the custom resources by using the
 link:../reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
 
 [[GSADG00285]][[gioyr]]
-
-
 Example 18-2 Listing Custom Resources
 
 This example lists the existing custom resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-custom-resources
 sample_custom_resource01 
@@ -259,19 +256,17 @@ typing `asadmin help list-custom-resources` at the command line.
 To Update a Custom JNDI Resource
 ++++++++++++++++++++++++++++++++
 
-1.  List the custom resources by using the
+1. List the custom resources by using the
 link:../reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
-2.  Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to modify a custom JNDI
+2. Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to modify a custom JNDI
 resource.
 
 [[GSADG00286]][[giwkg]]
-
-
 Example 18-3 Updating a Custom JNDI Resource
 
 This example modifies a custom resource.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.resources.custom-resource.custom
 /my-custom-resource.property.value=2010server.resources.custom-resource.custom
@@ -286,21 +281,18 @@ To Delete a Custom JNDI Resource
 Use the `delete-custom-resource` subcommand in remote mode to delete a
 custom resource.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the custom resources by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the custom resources by using the
 link:../reference-manual/list-custom-resources.html#GSRFM00162[`list-custom-resources`] subcommand.
-3.  Delete a custom resource by using the
+3. Delete a custom resource by using the
 link:../reference-manual/delete-custom-resource.html#GSRFM00074[`delete-custom-resource`] subcommand.
 
 [[GSADG00287]][[gioxh]]
-
-
 Example 18-4 Deleting a Custom Resource
 
 This example deletes a custom resource named `sample-custom-resource`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-custom-resource sample_custom_resource
 Command delete-custom-resource executed successfully.
@@ -349,23 +341,22 @@ Before You Begin
 The external JNDI factory must implement the
 `javax.naming.spi.InitialContextFactory` interface.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Register an external JNDI resource by using the
-link:../reference-manual/create-jndi-resource.html#GSRFM00041[`create-jndi-resource`] subcommand. +
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Register an external JNDI resource by using the
+link:../reference-manual/create-jndi-resource.html#GSRFM00041[`create-jndi-resource`] subcommand.
++
 Information on properties for the subcommand is contained in this help
 page.
-3.  Restart GlassFish Server. +
+3. Restart GlassFish Server.
++
 See link:domains.html#ginqj[To Restart a Domain].
 
 [[GSADG00288]][[giwcx]]
-
-
 Example 18-5 Registering an External JNDI Resource
 
 In This example `sample_jndi_resource` is registered.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jndi-resource --jndilookupname sample_jndi 
 --restype queue --factoryclass sampleClass --description "this is a sample jndi 
@@ -388,19 +379,16 @@ To List External JNDI Resources
 Use the `list-jndi-resources` subcommand in remote mode to list all
 existing JNDI resources.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the existing JNDI resources by using
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the existing JNDI resources by using
 theolink:GSRFM00179[`list-jndi-resources`] subcommand.
 
 [[GSADG00289]][[giwbe]]
-
-
 Example 18-6 Listing JNDI Resources
 
 This example lists the JNDI resources.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jndi-resources
 jndi_resource1
@@ -425,19 +413,16 @@ Use the `list-jndi-entries` subcommand in remote mode to browse and list
 the entries in the JNDI tree. You can either list all entries, or you
 can specify the JNDI context or subcontext to list specific entries.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the JNDI entries for a configuration by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the JNDI entries for a configuration by using the
 link:../reference-manual/list-jndi-entries.html#GSRFM00178[`list-jndi-entries`] subcommand.
 
 [[GSADG00290]][[giwal]]
-
-
 Example 18-7 Listing JNDI Entries
 
 This example lists all the JNDI entries for the naming service.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-jndi-entries
 jndi_entry03
@@ -458,19 +443,17 @@ typing `asadmin help list-jndi-entries` at the command line.
 To Update an External JNDI Resource
 +++++++++++++++++++++++++++++++++++
 
-1.  List the existing JNDI resources by using
+1. List the existing JNDI resources by using
 theolink:GSRFM00179[`list-jndi-resources`] subcommand.
-2.  Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to modify an external
+2. Use the link:../reference-manual/set.html#GSRFM00226[`set`] subcommand to modify an external
 JNDI resource.
 
 [[GSADG00291]][[giwoa]]
-
-
 Example 18-8 Updating an External JNDI Resource
 
 This example modifies an external resource.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.resources.external-jndi-resource.my-jndi-resource.
 jndi-lookup-name=bar server.resources.external-jndi-resource.my-jndi-resource.jndi-lookup-name=bar 
@@ -484,19 +467,16 @@ To Delete an External JNDI Resource
 Use the `delete-jndi-resource` subcommand in remote mode to remove a
 JNDI resource.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Remove an external JNDI entry by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Remove an external JNDI entry by using the
 link:../reference-manual/delete-jndi-resource.html#GSRFM00093[`delete-jndi-resource`] subcommand.
 
 [[GSADG00292]][[giwby]]
-
-
 Example 18-9 Deleting an External JNDI Resource
 
 This example deletes an external JNDI resource:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> delete-jndi-resource jndi_resource2
 Command delete-jndi-resource executed successfully.
@@ -514,7 +494,7 @@ typing `asadmin help delete-jndi-resource` at the command line.
 Example of Using an External JNDI Resource
 ++++++++++++++++++++++++++++++++++++++++++
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <resources>
  <!-- external-jndi-resource element specifies how to access Java EE resources
@@ -562,22 +542,26 @@ can be managed with the `asadmin` command or with the
 Use the `asadmin` command or directly modify the `glassfish-ejb-jar.xml`
 file to set the `disable-nonportable-jndi-names` property.
 
-* Using the `asadmin` command: +
-[source,oac_no_warn]
+* Using the `asadmin` command:
++
+[source]
 ----
 asadmin> set server.ejb-container.property.disable-nonportable-jndi-names="true"
 ----
 * Directly modifying the `glassfish-ejb-jar.xml` file.
-1.  Add the `disable-nonportable-jndi-names` property to the
+1. Add the `disable-nonportable-jndi-names` property to the
 `ejb-container` element in `glassfish-ejb-jar.xml`.
-2.  Set the value of the `disable-nonportable-jndi-names` boolean, as
-desired. +
+2. Set the value of the `disable-nonportable-jndi-names` boolean, as
+desired.
++
 `false` - Enables the automatic use of GlassFish Server v2-specific JNDI
-names. This is the default setting. +
+names. This is the default setting.
++
 `true` - Disables the automatic use of v2-specific JNDI names. In all
 cases, 5.0-compatible JNDI names will be used.
-3.  Save the `glassfish-ejb-jar.xml` file and restart the GlassFish
-Server domain. +
+3. Save the `glassfish-ejb-jar.xml` file and restart the GlassFish
+Server domain.
++
 This setting applies to all EJBs deployed to the server.
 
 

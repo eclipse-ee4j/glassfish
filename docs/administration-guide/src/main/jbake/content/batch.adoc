@@ -4,6 +4,7 @@ title=Administering Batch Jobs
 next=part-res-and-svcs-admin.html
 prev=lifecycle-modules.html
 ~~~~~~
+
 Administering Batch Jobs
 ========================
 
@@ -79,23 +80,20 @@ To List Batch Jobs
 Use the `list-batch-jobs` subcommand in remote mode to list batch jobs
 and job details.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List batch jobs by using the link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-jobs`]
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List batch jobs by using the link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-jobs`]
 subcommand.
 
 [[GSADG1081]][[sthref67]]
-
-
 Example 10-1 Listing Batch Jobs
 
 This example lists batch jobs for the default server instance, `server`.
 Use `list-batch-jobs -l` to list additional details.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-jobs
-JOBNAME  INSTANCECOUNT 
+JOBNAME  INSTANCECOUNT
 payroll  9
 bonus    6
 Command list-batch-jobs executed successfully.
@@ -121,21 +119,18 @@ existing execution is restarted.
 Use the `list-batch-job-executions` subcommand in remote mode to list
 batch job executions and execution details.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List batch job executions by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List batch job executions by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-job-executions`] subcommand.
 
 [[GSADG1084]][[sthref68]]
-
-
 Example 10-2 Listing Batch Job Executions
 
 This example lists batch job executions for the default server instance,
 `server`, and displays specific details. Use
 `list-batch-job-executions -l` to list additional details.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-job-executions -o=jobname,executionid,batchstatus,exitstatus
 JOBNAME  EXECUTIONID  BATCHSTATUS  EXITSTATUS
@@ -162,16 +157,13 @@ sequential phase of a batch job.
 Use the `list-batch-job-steps` subcommand in remote mode to list steps
 and step details for a specific batch job execution.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  List the execution ID of an execution by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. List the execution ID of an execution by using the
 `list-batch-job-executions` subcommand.
-3.  List steps for a specific batch job execution by using the
+3. List steps for a specific batch job execution by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-job-steps`] subcommand.
 
 [[GSADG1087]][[sthref69]]
-
-
 Example 10-3 Listing Batch Job Steps
 
 This example lists batch job steps and specific step details for a job
@@ -181,7 +173,7 @@ details.
 
 Some lines of output are omitted from this example for readability.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-job-steps o=stepname,stepid,batchstatus,stepmetrics 7
 STEPNAME   STEPID   BATCHSTATUS   STEPMETRICS
@@ -242,14 +234,15 @@ To List the Batch Runtime Configuration
 Use the `list-batch-runtime-configuration` subcommand in remote mode to
 display the configuration of the batch runtime.
 
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Display the configuration of the batch runtime by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Display the configuration of the batch runtime by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`list-batch-runtime-configuration`] subcommand.
-3.  If desired, use the `get` subcommand to view the attributes of the
-data source and managed executor service resources. +
-For example (output omitted): +
-[source,oac_no_warn]
+3. If desired, use the `get` subcommand to view the attributes of the
+data source and managed executor service resources.
++
+For example (output omitted):
++
+[source]
 ----
 asdmin> get resources.jdbc-resource.jdbc/__TimerPool.*
 ...
@@ -258,14 +251,12 @@ asdmin> get resources.managed-executor-service.concurrent/__defaultManagedExecut
 ----
 
 [[GSADG1091]][[sthref70]]
-
-
 Example 10-4 Listing the Batch Runtime Configuration
 
 This example lists the configuration of the batch runtime for the
 default server instance, `server`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> list-batch-runtime-configuration
 DATASOURCELOOKUPNAME     EXECUTORSERVICELOOKUPNAME
@@ -291,8 +282,7 @@ configure the batch runtime.
 
 
 [NOTE]
-=======================================================================
-
+====
 Do not change the data source after the first batch job has been
 submitted to the batch runtime for execution. If the data source must be
 changed, stop and restart the domain and then make the change before any
@@ -302,25 +292,21 @@ inaccessible.
 
 The managed executor service can be changed after a batch job has been
 submitted to the batch runtime without affecting execution of the job.
+====
 
-=======================================================================
 
-
-1.  Ensure that the server is running. +
-Remote subcommands require a running server.
-2.  Configure the batch runtime by using the
+1. Ensure that the server is running. Remote subcommands require a running server.
+2. Configure the batch runtime by using the
 link:../reference-manual/list-jdbc-resources.html#GSRFM00174[`set-batch-runtime-configuration`] subcommand.
 
 [[GSADG1094]][[sthref71]]
-
-
 Example 10-5 Configuring the Batch Runtime
 
 This example configures the batch runtime for the default server
 instance, `server`, to use an existing managed executor service named
 `concurrent/Executor1`.
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set-batch-runtime-configuration --executorservicelookupname concurrent/Executor1
 Command set-batch-runtime-configuration executed successfully.

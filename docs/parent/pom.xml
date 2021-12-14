@@ -127,8 +127,6 @@
                 <configuration>
                     <sourceDirectory>${project.build.directory}/book</sourceDirectory>
                     <sourceDocumentName>book.adoc</sourceDocumentName>
-                    <!-- XXX - below depends on running jbake first -->
-                    <imagesDir>${project.build.directory}/staging/${project.artifactId}/</imagesDir>
                     <backend>pdf</backend>
                     <outputFile>${doc.pdf}</outputFile>
                     <attributes>
@@ -139,14 +137,15 @@
                         <status>${status}</status>
                         <data-uri />
                         <icons>font</icons>
+                        <source-highlighter>coderay</source-highlighter>
                         <pagenums />
                         <toc />
-                        <icons>font</icons>
                         <sectanchors>true</sectanchors>
                         <idprefix />
                         <idseparator>-</idseparator>
                         <docinfo1>true</docinfo1>
                         <embedAssets>true</embedAssets>
+                        <imagesDir>${project.build.directory}/staging/${project.artifactId}</imagesDir>
                     </attributes>
                 </configuration>
                 <executions>

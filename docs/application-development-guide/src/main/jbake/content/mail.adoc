@@ -3,6 +3,7 @@ status=published
 title=Using the Jakarta Mail API
 prev=jms.html
 ~~~~~~
+
 Using the Jakarta Mail API
 ==========================
 
@@ -27,12 +28,10 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 Jakarta Mail resources are supported only in the full Eclipse GlassFish
 Server, not in the Web Profile.
-
-=======================================================================
+====
 
 
 [[beaox]][[GSDVG00200]][[introducing-jakarta-mail]]
@@ -115,7 +114,7 @@ application.
 
 The resource lookup in the application code looks like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
@@ -140,8 +139,9 @@ The following topics are addressed here:
 To Send a Message Using Jakarta Mail
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Import the packages that you need. +
-[source,oac_no_warn]
+1. Import the packages that you need.
++
+[source,java]
 ----
 import java.util.*;
 import jakarta.activation.*;
@@ -149,25 +149,30 @@ import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import javax.naming.*;
 ----
-2.  Look up the Jakarta Mail session. +
-[source,oac_no_warn]
+2. Look up the Jakarta Mail session.
++
+[source,java]
 ----
 InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
 Session session = (Session)ic.lookup(snName);
 ----
 For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
-3.  Override the Jakarta Mail session properties if necessary. +
-For example: +
-[source,oac_no_warn]
+3. Override the Jakarta Mail session properties if necessary.
++
+For example:
++
+[source,java]
 ----
 Properties props = session.getProperties();
 props.put("mail.from", "user2@mailserver.com");
 ----
-4.  Create a `MimeMessage`. +
+4. Create a `MimeMessage`.
++
 The msgRecipient, msgSubject, and msgTxt variables in the following
-example contain input from the user: +
-[source,oac_no_warn]
+example contain input from the user:
++
+[source,java]
 ----
 Message msg = new MimeMessage(session);
 msg.setSubject(msgSubject);
@@ -177,8 +182,9 @@ msg.setRecipients(Message.RecipientType.TO,
    InternetAddress.parse(msgRecipient, false));
 msg.setText(msgTxt);
 ----
-5.  Send the message. +
-[source,oac_no_warn]
+5. Send the message.
++
+[source,java]
 ----
 Transport.send(msg);
 ----
@@ -188,8 +194,9 @@ Transport.send(msg);
 To Read a Message Using Jakarta Mail
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Import the packages that you need. +
-[source,oac_no_warn]
+1. Import the packages that you need.
++
+[source,java]
 ----
 import java.util.*;
 import jakarta.activation.*;
@@ -197,37 +204,44 @@ import jakarta.mail.*;
 import jakarta.mail.internet.*;
 import javax.naming.*;
 ----
-2.  Look up the Jakarta Mail session. +
-[source,oac_no_warn]
+2. Look up the Jakarta Mail session.
++
+[source,java]
 ----
 InitialContext ic = new InitialContext();
 String snName = "java:comp/env/mail/MyMailSession";
 Session session = (jakarta.mail.Session)ic.lookup(snName);
 ----
 For more information, see link:#beapa[Looking Up a Jakarta Mail Session].
-3.  Override the Jakarta Mail session properties if necessary. +
-For example: +
-[source,oac_no_warn]
+3. Override the Jakarta Mail session properties if necessary.
++
+For example:
++
+[source,java]
 ----
 Properties props = session.getProperties();
 props.put("mail.from", "user2@mailserver.com");
 ----
-4.  Get a `Store` object from the `Session`, then connect to the mail
-server using the Store object's `connect` method. +
-You must supply a mail server name, a mail user name, and a password. +
-[source,oac_no_warn]
+4. Get a `Store` object from the `Session`, then connect to the mail
+server using the Store object's `connect` method.
++
+You must supply a mail server name, a mail user name, and a password.
++
+[source,java]
 ----
 Store store = session.getStore();
 store.connect("MailServer", "MailUser", "secret");
 ----
-5.  Get the INBOX folder. +
-[source,oac_no_warn]
+5. Get the INBOX folder.
++
+[source,java]
 ----
 Folder folder = store.getFolder("INBOX");
 ----
-6.  It is efficient to read the `Message` objects (which represent
-messages on the server) into an array. +
-[source,oac_no_warn]
+6. It is efficient to read the `Message` objects (which represent
+messages on the server) into an array.
++
+[source,java]
 ----
 Message[] messages = folder.getMessages();
 ----

@@ -4,6 +4,7 @@ title=Using Container-Managed Persistence
 next=java-clients.html
 prev=ejb.html
 ~~~~~~
+
 Using Container-Managed Persistence
 ===================================
 
@@ -30,16 +31,14 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 (`http://jcp.org/en/jsr/detail?id=318`).
-
-=======================================================================
+====
 
 
 [[beajk]][[GSDVG00150]][[glassfish-server-support-for-cmp]]
@@ -53,32 +52,26 @@ GlassFish Server support for EJB 2.1 CMP beans includes:
 information on CMP is contained in chapters 10, 11, and 14 of the
 Enterprise JavaBeans Specification, v2.1. This includes the following:
 
-** Support for commit options B and C for transactions. See
-link:transaction-service.html#beajh[Commit Options].
+** Support for commit options B and C for transactions.
+   See link:transaction-service.html#beajh[Commit Options].
+** The primary key class must be a subclass of `java.lang.Object`.
+   This ensures portability, and is noted because some vendors allow primitive
+   types (such as `int`) to be used as the primary key class.
 
-** The primary key class must be a subclass of `java.lang.Object`. This
-ensures portability, and is noted because some vendors allow primitive
-types (such as `int`) to be used as the primary key class.
 * The GlassFish Server CMP implementation, which provides the following:
-
 ** An Object/Relational (O/R) mapping tool that creates XML deployment
-descriptors for EJB JAR files that contain beans that use CMP.
-
+   descriptors for EJB JAR files that contain beans that use CMP.
 ** Support for compound (multi-column) primary keys.
-
 ** Support for sophisticated custom finder methods.
-
 ** Standards-based query language (EJB QL).
-
 ** CMP runtime support. See link:#beakb[Configuring the CMP Resource].
-* GlassFish Server performance-related features, including the
-following:
 
+* GlassFish Server performance-related features, including the following:
 ** Version column consistency checking
-
 ** Relationship prefetching
+** Read-Only Beans
 
-** Read-Only Beans +
++
 For details, see link:#beaki[Performance-Related Features].
 
 [[beajl]][[GSDVG00151]][[cmp-mapping]]
@@ -153,16 +146,14 @@ the lists of columns associated with primary and foreign keys).
 
 
 [NOTE]
-=======================================================================
-
+====
 Table names in databases can be case-sensitive. Make sure that the table
 names in the `sun-cmp-mappings.xml` file match the names in the
 database.
 
 Relationships should always be mapped to the primary key field(s) of the
 related table.
-
-=======================================================================
+====
 
 
 The `sun-cmp-mappings.xml` file conforms to the
@@ -301,7 +292,7 @@ element in `glassfish-ejb-jar.xml`. See your database vendor
 documentation to determine whether you need to specify the length. For
 example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <schema-generator-properties>
    <property>
@@ -344,7 +335,7 @@ element in `glassfish-ejb-jar.xml`. See your database vendor
 documentation to determine whether you need to specify the length. For
 example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <schema-generator-properties>
    <property>
@@ -379,8 +370,7 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 Automatic schema generation is supported on an all-or-none basis: it
 expects that no tables exist in the database before it is executed. It
 is not intended to be used as a tool to generate extra tables or
@@ -391,8 +381,7 @@ won't fail if not all tables are dropped. This is done to allow you to
 investigate the problem and fix it manually. You should not rely on the
 partially created database schema to be correct for running the
 application.
-
-=======================================================================
+====
 
 
 [[beajw]][[GSDVG00437]][[supported-data-types-for-cmp]]
@@ -414,7 +403,7 @@ when automatic mapping is used.
 Table 9-1 Java Type to JDBC Type Mappings for CMP
 
 [width="100%",cols="39%,40%,21%",options="header",]
-|============================================
+|===
 |Java Type |JDBC Type |Nullability
 |`boolean` |`BIT` |No
 |`java.lang.Boolean` |`BIT` |Yes
@@ -446,19 +435,17 @@ Table 9-1 Java Type to JDBC Type Mappings for CMP
 |`java.sql.Date` |`DATE` |Yes
 |`java.sql.Time` |`TIME` |Yes
 |`java.sql.Timestamp` |`TIMESTAMP` |Yes
-|============================================
+|===
 
 
 
 [NOTE]
-=======================================================================
-
+====
 Java types assigned to CMP fields must be restricted to Java primitive
 types, Java Serializable types, `java.util.Date`, `java.sql.Date`,
 `java.sql.Time`, or `java.sql.Timestamp`. An entity bean local interface
 type (or a collection of such) can be the type of a CMR field.
-
-=======================================================================
+====
 
 
 The following table contains the mappings of JDBC types to database
@@ -476,7 +463,7 @@ Table 9-2 Mappings of JDBC Types to Database Vendor Specific Types for
 CMP
 
 [width="100%",cols="15%,17%,17%,17%,17%,17%",options="header",]
-|=======================================================================
+|===
 |JDBC Type |Apache Derby, CloudScape |Oracle |DB2 |Sybase ASE 12.5
 |MS-SQL Server
 |`BIT` |`SMALLINT` |`SMALLINT` |`SMALLINT` |`TINYINT` |`BIT`
@@ -509,7 +496,7 @@ CMP
 |`BLOB` |`BLOB` |`BLOB` |`BLOB` |`IMAGE` |`IMAGE`
 
 |`CLOB` |`CLOB` |`CLOB` |`CLOB` |`TEXT` |`NTEXT`
-|=======================================================================
+|===
 
 
 [[beajx]][[GSDVG00438]][[generation-options-for-cmp]]
@@ -529,8 +516,7 @@ control automatic schema generation by the following:
 
 
 [NOTE]
-=======================================================================
-
+====
 Before using these options, make sure you have a properly configured CMP
 resource. See link:#beakb[Configuring the CMP Resource].
 
@@ -542,8 +528,7 @@ Automatic schema generation is not supported for beans with version
 column consistency checking. Instead, work with your database
 administrator to create the schema and add the required triggers. See
 link:#beakj[Version Column Consistency Checking].
-
-=======================================================================
+====
 
 
 The following optional data subelements of the `cmp-resource` element in
@@ -559,7 +544,7 @@ link:#beakb[Configuring the CMP Resource].
 Table 9-3 The `glassfish-ejb-jar.xml` Generation Elements
 
 [width="172%",cols="20%,46%,34%",options="header",]
-|=======================================================================
+|===
 |Element |Default |Description
 |link:../application-deployment-guide/dd-elements.html#GSDPG00131[`create-tables-at-deploy`] |`false` |If `true`, causes
 database tables to be created for beans that are automatically mapped by
@@ -601,7 +586,7 @@ For further information and an example, see
 "link:../application-deployment-guide/dd-elements.html#GSDPG00261[schema-generator-properties]" in GlassFish Server Open
 Source Edition Application Deployment Guide.
 
-|=======================================================================
+|===
 
 
 The following options of the `asadmin deploy` or `asadmin deploydir`
@@ -614,7 +599,7 @@ Table 9-4 The `asadmin deploy` and `asadmin deploydir` Generation
 Options for CMP
 
 [width="172%",cols="16%,46%,38%",options="header",]
-|=======================================================================
+|===
 |Option |Default |Description
 |`--createtables` |none |If `true`, causes database tables to be created
 for beans that need them. No unique constraints are created. If `false`,
@@ -656,7 +641,7 @@ by the `jndi-name` subelement of the `cmp-resource` element in the
 the connection cannot be established, or if the value is not recognized,
 SQL-92 compliance is presumed.
 
-|=======================================================================
+|===
 
 
 If one or more of the beans in the module are manually mapped and you
@@ -673,7 +658,7 @@ automatic removal of database tables at undeployment.
 Table 9-5 The `asadmin undeploy` Generation Options for CMP
 
 [width="172%",cols="10%,46%,44%",options="header",]
-|=======================================================================
+|===
 |Option |Default |Description
 |`--droptables` |none a|
 If `true`, causes database tables that were automatically created when
@@ -683,7 +668,7 @@ undeployed. If `false`, does not drop tables.
 If not specified, the value of the `drop-tables-at-undeploy` attribute
 in `glassfish-ejb-jar.xml` is used.
 
-|=======================================================================
+|===
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
@@ -717,13 +702,11 @@ database, and automatic generation of the schema is performed.
 
 
 [NOTE]
-=======================================================================
-
+====
 Before capturing the database schema automatically, make sure you have a
 properly configured CMP resource. See link:#beakb[Configuring the CMP
 Resource].
-
-=======================================================================
+====
 
 
 [[beaka]][[GSDVG00440]][[using-the-capture-schema-utility]]
@@ -782,7 +765,7 @@ GlassFish Server Open Source Edition Administration Guide.
 For example, if the JDBC resource has the JNDI name `jdbc/MyDatabase`,
 set the CMP resource in the `glassfish-ejb-jar.xml` file as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <cmp-resource>
    <jndi-name>jdbc/MyDatabase</jndi-name>
@@ -807,11 +790,9 @@ The following topics are addressed here:
 
 
 [NOTE]
-==================================================================
-
+====
 Use of any of these features results in a non-portable application.
-
-==================================================================
+====
 
 
 [[beakj]][[GSDVG00441]][[version-column-consistency-checking]]
@@ -831,17 +812,18 @@ dirty instances).
 To Use Version Consistency
 ++++++++++++++++++++++++++
 
-1.  Create the version column in the primary table.
-2.  Give the version column a numeric data type.
-3.  Provide appropriate update triggers on the version column. +
+1. Create the version column in the primary table.
+2. Give the version column a numeric data type.
+3. Provide appropriate update triggers on the version column. +
 These triggers must increment the version column on each update of the
 specified row.
-4.  Specify the version column. +
+4. Specify the version column. +
 This is specified in the `check-version-of-accessed-instances`
 subelement of the `consistency` element in the `sun-cmp-mappings.xml`
 file. See "link:../application-deployment-guide/dd-elements.html#GSDPG00126[consistency]" in GlassFish Server Open
 Source Edition Application Deployment Guide.
-5.  Map the CMP bean to an existing schema. +
+5. Map the CMP bean to an existing schema.
++
 Automatic schema generation is not supported for beans with version
 column consistency checking. Instead, work with your database
 administrator to create the schema and add the required triggers.
@@ -875,7 +857,7 @@ Multilevel relationship prefetching is supported for CMP 2.1 entity
 beans. To enable multilevel relationship prefetching, set the following
 property using the `asadmin create-jvm-options` command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -Dcom.sun.jdo.spi.persistence.support.sqlstore.MULTILEVEL_PREFETCH=true
 ----
@@ -891,13 +873,11 @@ beans avoid database updates completely.
 
 
 [NOTE]
-=======================================================================
-
+====
 Read-only beans are specific to the GlassFish Server and are not part of
 the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
 EJB 2.1 bean results in a non-portable application.
-
-=======================================================================
+====
 
 
 A read-only bean can be used to cache a database entry that is
@@ -954,7 +934,7 @@ this flag is set to `false`.
 To set one of these flags, use the `asadmin create-jvm-options` command.
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -DAllowManagedFieldsInDefaultFetchGroup=true
 ----
@@ -999,7 +979,7 @@ The GlassFish Server specific deployment descriptor
 (`glassfish-ejb-jar.xml`) provides the following elements to store the
 EJB 1.1 finder method settings:
 
-[source,oac_no_warn]
+[source]
 ----
 query-filter
 query-params
@@ -1044,8 +1024,9 @@ line feed) is a separator and is otherwise ignored.
 
 ** Pre- and post-decrement
 * Methods, including object construction, are not supported, except for
-these methods. +
-[source,oac_no_warn]
+these methods.
++
+[source,java]
 ----
 Collection.contains(Object o)
 Collection.isEmpty()
@@ -1053,8 +1034,9 @@ String.startsWith(String s)
 String.endsWith(String e)
 ----
 In addition, the GlassFish Server supports the following nonstandard
-JDOQL methods. +
-[source,oac_no_warn]
+JDOQL methods.
++
+[source,java]
 ----
 String.like(String pattern)
 String.like(String pattern, char escape)
@@ -1071,8 +1053,7 @@ Math.sqrt(double d)
 
 
 [NOTE]
-=======================================================================
-
+====
 Comparisons between floating point values are by nature inexact.
 Therefore, equality comparisons (== and !=) with floating point values
 should be used with caution. Identifiers in the expression are
@@ -1080,8 +1061,7 @@ considered to be in the name space of the candidate class, with the
 addition of declared parameters and variables. As in the Java language,
 `this` is a reserved word, and refers to the current instance being
 evaluated.
-
-=======================================================================
+====
 
 
 The following expressions are supported.
@@ -1131,7 +1111,7 @@ Example 1
 The following query returns all players called Michael. It defines a
 filter that compares the name field with a string literal:
 
-[source,oac_no_warn]
+[source,java]
 ----
 name == "Michael"
 ----
@@ -1139,7 +1119,7 @@ name == "Michael"
 The `finder` element of the `glassfish-ejb-jar.xml` file looks like
 this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <finder>
    <method-name>findPlayerByName</method-name>
@@ -1157,7 +1137,7 @@ two query parameters which are the lower and upper bound for the price:
 double low, double high. The filter compares the query parameters with
 the price field:
 
-[source,oac_no_warn]
+[source,java]
 ----
 low < price && price < high
 ----
@@ -1167,7 +1147,7 @@ Query ordering is set to `price ascending`.
 The `finder` element of the `glassfish-ejb-jar.xml` file looks like
 this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <finder>
    <method-name>findInRange</method-name>
@@ -1188,7 +1168,7 @@ with the specified name. It defines a query parameter for the name
 player's salary is compared. It has the type of the persistence capable
 class that corresponds to the bean:
 
-[source,oac_no_warn]
+[source]
 ----
     mypackage.PlayerEJB_170160966_JDOState player
 ----
@@ -1196,7 +1176,7 @@ class that corresponds to the bean:
 The filter compares the salary of the current player denoted by the
 `this` keyword with the salary of the player with the specified name:
 
-[source,oac_no_warn]
+[source,java]
 ----
     (this.salary> player.salary) && (player.name == name)
 ----
@@ -1204,7 +1184,7 @@ The filter compares the salary of the current player denoted by the
 The `finder` element of the `glassfish-ejb-jar.xml` file looks like
 this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <finder>
    <method-name>findByHigherSalary</method-name>
@@ -1256,9 +1236,9 @@ that is not included in the SELECT clause. To disable the validation of
 the ORDER BY clause against the SELECT clause, set the
 `DISABLE_ORDERBY_VALIDATION` JVM option as follows:
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin create-jvm-options 
+asadmin create-jvm-options
 -Dcom.sun.jdo.spi.persistence.support.ejb.ejbqlc.DISABLE_ORDERBY_VALIDATION=true
 ----
 
@@ -1300,7 +1280,8 @@ bean that uses CMP:
 
 * Do not expose the `get` and `set` methods for CMR fields or the
 persistence collection classes that are used in container-managed
-relationships through the remote interface of the bean. +
+relationships through the remote interface of the bean.
++
 However, you are free to expose the `get` and `set` methods that
 correspond to the CMP fields of the entity bean through the bean's
 remote interface.
@@ -1350,10 +1331,10 @@ and the primary key column is mapped to a VARCHAR column, Sybase
 attempts to convert type VARCHAR to type TEXT and generates the
 following error:
 
-[source,oac_no_warn]
+[source]
 ----
-com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype 
-'TEXT' to 'VARCHAR' is not allowed. Use the CONVERT function to run this query. 
+com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype
+'TEXT' to 'VARCHAR' is not allowed. Use the CONVERT function to run this query.
 ----
 
 To avoid this error, make sure the finder method input is less than 255
@@ -1371,7 +1352,7 @@ the field value exactly matches the value in the database.
 For example, the following code uses a `java.sql.Date` type as a primary
 key field:
 
-[source,oac_no_warn]
+[source,java]
 ----
 java.sql.Date myDate = new java.sql.Date(System.currentTimeMillis())
 BeanA.create(myDate, ...);
@@ -1383,7 +1364,7 @@ client tries to find this bean by primary key as follows, the bean is
 not found in the database because the value does not match the one that
 is stored in the database.
 
-[source,oac_no_warn]
+[source,java]
 ----
 myBean = BeanA.findByPrimaryKey(myDate);
 ----
@@ -1408,7 +1389,7 @@ set to `true`, triggers throw a `java.sql.SQLException`.
 
 Set this property as follows:
 
-[source,oac_no_warn]
+[source,sql]
 ----
 EXEC sp_dboption 'database-name', 'recursive triggers', 'FALSE'
 go
@@ -1416,7 +1397,7 @@ go
 
 You can test this property as follows:
 
-[source,oac_no_warn]
+[source,sql]
 ----
 SELECT DATABASEPROPERTYEX('database-name', 'IsRecursiveTriggersEnabled')
 go
@@ -1439,8 +1420,9 @@ SQL mode.
 * The order of fields in a foreign key index must match the order in the
 explicitly created index on the primary table.
 * The `CREATE TABLE` syntax in the SQL file must end with the following
-line. +
-[source,oac_no_warn]
+line.
++
+[source,sql]
 ----
 )  Engine=InnoDB;
 ----
@@ -1460,21 +1442,23 @@ see `http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html` and
 * MySQL always starts a new connection when `autoCommit==true` is set.
 This ensures that each SQL statement forms a single transaction on its
 own. If you try to rollback or commit an SQL statement, you get an error
-message. +
-[source,oac_no_warn]
+message.
++
+[source]
 ----
-javax.transaction.SystemException: java.sql.SQLException: 
+javax.transaction.SystemException: java.sql.SQLException:
 Can't call rollback when autocommit=true
 
-javax.transaction.SystemException: java.sql.SQLException: 
+javax.transaction.SystemException: java.sql.SQLException:
 Error open transaction is not closed
 ----
 To resolve this issue, add `relaxAutoCommit=true` to the JDBC URL. For
 more information, see `http://forums.mysql.com/read.php?39,31326,31404`.
-* Change the trigger create format from the following: +
-[source,oac_no_warn]
+* Change the trigger create format from the following:
++
+[source,sql]
 ----
-CREATE TRIGGER T_UNKNOWNPKVC1 
+CREATE TRIGGER T_UNKNOWNPKVC1
 BEFORE UPDATE ON UNKNOWNPKVC1
 FOR EACH ROW
         WHEN (NEW.VERSION = OLD.VERSION)
@@ -1483,8 +1467,9 @@ BEGIN
 END;
 /
 ----
-To the following: +
-[source,oac_no_warn]
+To the following:
++
+[source,sql]
 ----
 DELIMITER |
 CREATE TRIGGER T_UNKNOWNPKVC1
@@ -1500,8 +1485,9 @@ DELIMITER ;
 For more information, see
 `http://dev.mysql.com/doc/mysql/en/create-trigger.html`.
 * MySQL does not allow a `DELETE` on a row that contains a reference to
-itself. Here is an example that illustrates the issue. +
-[source,oac_no_warn]
+itself. Here is an example that illustrates the issue.
++
+[source,sql]
 ----
 create table EMPLOYEE (
         empId   int         NOT NULL,
@@ -1514,15 +1500,17 @@ create table EMPLOYEE (
         insert into Employee values (1, 1234.34, 1);
         delete from Employee where empId = 1;
 ----
-This example fails with the following error message. +
-[source,oac_no_warn]
+This example fails with the following error message.
++
+[source]
 ----
-ERROR 1217 (23000): Cannot delete or update a parent row: 
+ERROR 1217 (23000): Cannot delete or update a parent row:
 a foreign key constraint fails
 ----
 To resolve this issue, change the table creation script to the
-following: +
-[source,oac_no_warn]
+following:
++
+[source,sql]
 ----
 create table EMPLOYEE (
         empId   int         NOT NULL,
@@ -1542,27 +1530,29 @@ For more information, see
 * When an SQL script has foreign key constraints defined,
 `capture-schema` fails to capture the table information correctly. To
 work around the problem, remove the constraints and then run
-`capture-schema`. Here is an example that illustrates the issue. +
-[source,oac_no_warn]
+`capture-schema`. Here is an example that illustrates the issue.
++
+[source,sql]
 ----
-CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255) 
-    NOT NULL PRIMARY KEY, 
-CONNECTEDUSERS              BLOB NULL, 
-OWNER                       VARCHAR(256), 
-FK_FOR_ACCESSPRIVILEGES     VARCHAR(256), 
-CONSTRAINT FK_ACCESSPRIVILEGE FOREIGN KEY (FK_FOR_ACCESSPRIVILEGES) 
-    REFERENCES ACCESSPRIVILEGESBEANTABLE (ROOT) 
-) ENGINE=InnoDB;  
+CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255)
+    NOT NULL PRIMARY KEY,
+CONNECTEDUSERS              BLOB NULL,
+OWNER                       VARCHAR(256),
+FK_FOR_ACCESSPRIVILEGES     VARCHAR(256),
+CONSTRAINT FK_ACCESSPRIVILEGE FOREIGN KEY (FK_FOR_ACCESSPRIVILEGES)
+    REFERENCES ACCESSPRIVILEGESBEANTABLE (ROOT)
+) ENGINE=InnoDB;
 ----
 To resolve this issue, change the table creation script to the
-following: +
-[source,oac_no_warn]
+following:
++
+[source,sql]
 ----
-CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255) 
-    NOT NULL PRIMARY KEY, 
-CONNECTEDUSERS              BLOB NULL, 
-OWNER                       VARCHAR(256), 
-FK_FOR_ACCESSPRIVILEGES     VARCHAR(256) 
+CREATE TABLE ADDRESSBOOKBEANTABLE (ADDRESSBOOKNAME VARCHAR(255)
+    NOT NULL PRIMARY KEY,
+CONNECTEDUSERS              BLOB NULL,
+OWNER                       VARCHAR(256),
+FK_FOR_ACCESSPRIVILEGES     VARCHAR(256)
 ) ENGINE=InnoDB;
 ----
 

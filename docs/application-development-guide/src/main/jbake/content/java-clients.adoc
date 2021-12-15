@@ -4,6 +4,7 @@ title=Developing Java Clients
 next=connectors.html
 prev=container_managed-persistence.html
 ~~~~~~
+
 Developing Java Clients
 =======================
 
@@ -25,8 +26,7 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 The Web Profile of the OracleGlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
@@ -39,8 +39,7 @@ full GlassFish Server, not in the Web Profile.
 
 JMS resources are supported only in the full GlassFish Server, not in
 the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
-
-=======================================================================
+====
 
 
 [[beaku]][[GSDVG00159]][[introducing-the-application-client-container]]
@@ -66,12 +65,10 @@ link:debugging-apps.html#gekvq[Application Client Debugging].
 
 
 [NOTE]
-=======================================================================
-
+====
 Interoperability between application clients and GlassFish Servers
 running under different major versions is not supported.
-
-=======================================================================
+====
 
 
 [[fvymq]][[GSDVG00459]][[acc-security]]
@@ -177,35 +174,38 @@ Script]
 To Access an EJB Component From an Application Client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  In your client code, reference the EJB component by using an `@EJB`
-annotation or by looking up the JNDI name as defined in the
-`ejb-jar.xml` file. +
+1. In your client code, reference the EJB component by using an `@EJB`
+annotation or by looking up the JNDI name as defined in the `ejb-jar.xml` file. +
 For more information about naming and lookups, see
 link:jndi.html#beans[Accessing the Naming Context]. +
 If load balancing is enabled as in Step link:#accejb8[7] and the EJB
 components being accessed are in a different cluster, the endpoint list
-must be included in the lookup, as follows: +
-[source,oac_no_warn]
+must be included in the lookup, as follows:
++
+[source]
 ----
 corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
 ----
-2.  Define the `@EJB` annotations or the `ejb-ref` elements in the
+
+2. Define the `@EJB` annotations or the `ejb-ref` elements in the
 `application-client.xml` file. Define the corresponding `ejb-ref`
 elements in the `glassfish-application-client.xml` file. +
 For more information on the `glassfish-application-client.xml` file, see
 "link:../application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
-GlassFish Server Open Source Edition Application Deployment Guide. For a
-general explanation of how to map JNDI names using reference elements,
+GlassFish Server Open Source Edition Application Deployment Guide.
+For a general explanation of how to map JNDI names using reference elements,
 see link:jndi.html#beaoa[Mapping References].
-3.  Deploy the application client and EJB component together in an
-application. +
-For more information on deployment, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server
-Open Source Edition Application Deployment Guide]. To get the client JAR
-file, use the `--retrieve` option of the `asadmin deploy` command. +
+
+3. Deploy the application client and EJB component together in an application. +
+For more information on deployment, see the
+link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition Application Deployment Guide].
+To get the client JAR file, use the `--retrieve` option of the `asadmin deploy` command. +
 To retrieve the stubs and ties generated during deployment, use the
-`asadmin get-client-stubs` command. For details, see the
+`asadmin get-client-stubs` command. +
+For details, see the
 link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
-4.  Ensure that the client JAR file includes the following files:
+
+4. Ensure that the client JAR file includes the following files:
 * A Java class to access the bean.
 * `application-client.xml` - (optional) Java EE application client
 deployment descriptor.
@@ -217,17 +217,18 @@ Edition Application Deployment Guide.
 * The `MANIFEST.MF` file. This file contains a reference to the `main`
 class, which states the complete package prefix and class name of the
 Java client.
-5.  Prepare the client machine. +
+
+5. Prepare the client machine. +
 This step is not needed for Java Web Start. This step is not needed if
 the client and server machines are the same. +
 If you are using the `appclient` script, package the GlassFish Server
 system files required to launch application clients on remote systems
 using the `package-appclient` script, then retrieve the application
 client itself using the `asadmin get-client-stubs` command. +
-For more information, see link:#beakz[Using the `package-appclient`
-Script] and the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
-Reference Manual].
-6.  To access EJB components that are residing in a remote system, make
+For more information, see link:#beakz[Using the `package-appclient` Script]
+and the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
+
+6. To access EJB components that are residing in a remote system, make
 the following changes to the `sun-acc.xml` file or the `appclient`
 script. This step is not needed for Java Web Start.
 * Define the `target-server` element's `address` and `port` attributes
@@ -236,16 +237,18 @@ to reference the remote server machine and its ORB port. See
 Edition Application Deployment Guide.
 * Use the `-targetserver` option of the appclient script to reference
 the remote server machine and its ORB port. For more information, see
-link:#beaky[Running an Application Client Using the `appclient` Script]. +
-To determine the ORB port on the remote server, use the `asadmin get`
-command. For example: +
-[source,oac_no_warn]
+link:#beaky[Running an Application Client Using the `appclient` Script].
++
+To determine the ORB port on the remote server, use the `asadmin get` command. For example:
++
+[source]
 ----
 asadmin --host rmtsrv get server-config.iiop-service.iiop-listener.iiop-listener1.port
 ----
 For more information about the `asadmin get` command, see the
 link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
-7.  [[accejb8]] +
+
+7. [[accejb8]]
 To set up load balancing and failover of remote EJB references, define
 at least two `target-server` elements in the `sun-acc.xml` file or the
 `appclient` script. This step is not needed for Java Web Start. +
@@ -279,25 +282,28 @@ Server Open Source Edition High Availability Administration Guide.
 To Access a JMS Resource From an Application Client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Create a JMS client. +
+1. Create a JMS client.
++
 For detailed instructions on developing a JMS client, see
 "https://javaee.github.io/tutorial/jms-examples.html[Java Message
 Service Examples]" in The Java EE 8 Tutorial.
-2.  Next, configure a JMS resource on the GlassFish Server. +
+2. Next, configure a JMS resource on the GlassFish Server.
++
 For information on configuring JMS resources, see
 "link:../administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
 Destinations]" in GlassFish Server Open Source Edition Administration
 Guide.
-3.  Define the `@Resource` or `@Resources` annotations or the
+3. Define the `@Resource` or `@Resources` annotations or the
 `resource-ref` elements in the `application-client.xml` file. Define the
 corresponding `resource-ref` elements in the
-`glassfish-application-client.xml` file. +
+`glassfish-application-client.xml` file.
++
 For more information on the `glassfish-application-client.xml` file, see
 "link:../application-deployment-guide/dd-files.html#GSDPG00081[The glassfish-application-client.xml file]" in
 GlassFish Server Open Source Edition Application Deployment Guide. For a
 general explanation of how to map JNDI names using reference elements,
 see link:jndi.html#beaoa[Mapping References].
-4.  Ensure that the client JAR file includes the following files:
+4. Ensure that the client JAR file includes the following files:
 * A Java class to access the resource.
 * `application-client.xml` - (optional) Java EE application client
 deployment descriptor.
@@ -309,17 +315,21 @@ Edition Application Deployment Guide.
 * The `MANIFEST.MF` file. This file contains a reference to the `main`
 class, which states the complete package prefix and class name of the
 Java client.
-5.  Prepare the client machine. +
+5. Prepare the client machine.
++
 This step is not needed for Java Web Start. This step is not needed if
-the client and server machines are the same. +
+the client and server machines are the same.
++
 If you are using the `appclient` script, package the GlassFish Server
 system files required to launch application clients on remote systems
 using the `package-appclient` script, then retrieve the application
-client itself using the `asadmin get-client-stubs` command. +
+client itself using the `asadmin get-client-stubs` command.
++
 For more information, see link:#beakz[Using the `package-appclient`
 Script] and the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
 Reference Manual].
-6.  Run the application client. +
+6. Run the application client.
++
 See link:#gavmf[Using Java Web Start] or link:#beaky[Running an
 Application Client Using the `appclient` Script].
 
@@ -363,7 +373,7 @@ command.
 To disable Java Web Start for all eligible application clients in an
 application, use the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set applications.application.app-name.property.java-web-start-enabled="false"
 ----
@@ -371,7 +381,7 @@ asadmin set applications.application.app-name.property.java-web-start-enabled="f
 To disable Java Web Start for a stand-alone eligible application client,
 use the following command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set applications.application.module-name.property.java-web-start-enabled="false"
 ----
@@ -421,7 +431,7 @@ The Application Client URL
 
 The default URL for an application or module generally is as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/context-root
 ----
@@ -429,7 +439,7 @@ http://host:port/context-root
 The default URL for a stand-alone application client module is as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/appclient-module-id
 ----
@@ -438,7 +448,7 @@ The default URL for an application client module embedded within an
 application is as follows. Note that the relative path to the
 application client JAR file is included.
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/application-id/appclient-path
 ----
@@ -470,20 +480,18 @@ and each value must begin with `arg=`. Here is an example URL with a
 `-color` argument for a stand-alone application client. The `-color`
 argument is passed to the application client's `main` method.
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/testClient?arg=-color&arg=red
 ----
 
 
 [NOTE]
-=======================================================================
-
+====
 If you are using the `javaws` URL command to launch Java Web Start with
 a URL that contains arguments, enclose the URL in double quotes (`"`) to
 avoid breaking the URL at the ampersand (`&`) symbol.
-
-=======================================================================
+====
 
 
 Ideally, you should build your production application clients with
@@ -587,25 +595,29 @@ GlassFish Server self-signed certificate. If you use the GlassFish
 Server Java Web Start feature or deploy applications that provide their
 own Java Web Start applications, perform the following steps:
 
-1.  Obtain a trusted certificate from a certification authority if your
+1. Obtain a trusted certificate from a certification authority if your
 organization does not already have one.
-2.  Stop GlassFish Server.
-3.  Replace the GlassFish Server self-signed certificate with the
+
+2. Stop GlassFish Server.
+
+3. Replace the GlassFish Server self-signed certificate with the
 trusted certificate by importing the trusted certificate into the
 GlassFish Server keystore using the `s1as` alias. By default, the
-keystore is located at domain-dir`/config/keystore.jks`. +
+keystore is located at domain-dir`/config/keystore.jks`.
++
 For more information about importing a trusted certificate into the
 domain keystore, see "link:../security-guide/system-security.html#GSSCG00147[Administering JSSE Certificates]"
 in GlassFish Server Open Source Edition Security Guide.
-4.  Delete any signed JARs already generated by GlassFish Server:
-1.  At the command prompt, type: +
-`rm -rf` domain-dir`/java_web_start`
-2.  For each application that contains an application client launched
+
+4. Delete any signed JARs already generated by GlassFish Server:
+.. At the command prompt, type: +
+``rm -rf`` domain-dir``/java_web_start``
+.. For each application that contains an application client launched
 using Java Web Start, type: +
-`rm -rf` domain-dir`/generated/xml/`app-name`/signed`
-3.  Restart GlassFish Server.
-5.  Ensure that the Java security setting on user systems is set to Very
-High.
+``rm -rf`` domain-dir``/generated/xml/``app-name``/signed``
+.. Restart GlassFish Server.
+
+5. Ensure that the Java security setting on user systems is set to Very High.
 
 After you perform these steps, the first time a user launches an
 application client on their system, Java Web Start detects that the
@@ -641,7 +653,7 @@ Guide.
 Next, deploy your application using the `jar-signing-alias` property.
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin deploy --property jar-signing-alias=MyAlias MyApp.ear
 ----
@@ -671,7 +683,7 @@ combination of these for Java Web Start download and launch screens, use
 the `vendor` element in the `glassfish-application-client.xml` file. The
 complete format of this element's data is as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>icon-image-URI::splash-screen-image-URI::vendor-text</vendor>
 ----
@@ -679,14 +691,14 @@ complete format of this element's data is as follows:
 The following example vendor element contains an icon, a splash screen,
 and a text string:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>images/icon.jpg::otherDir/splash.jpg::MyCorp, Inc.</vendor>
 ----
 
 The following example vendor element contains an icon and a text string:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>images/icon.jpg::MyCorp, Inc.</vendor>
 ----
@@ -694,14 +706,14 @@ The following example vendor element contains an icon and a text string:
 The following example vendor element contains a splash screen and a text
 string; note the initial double colon:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>::otherDir/splash.jpg::MyCorp, Inc.</vendor>
 ----
 
 The following example vendor element contains only a text string:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <vendor>MyCorp, Inc.</vendor>
 ----
@@ -747,7 +759,7 @@ specified, a default JNLP file is generated.
 The value of the `jnlp-doc` element is a relative path with the
 following format:
 
-[source,oac_no_warn]
+[source]
 ----
 [path-to-JAR-in-EAR!]path-to-JNLP-in-JAR
 ----
@@ -756,7 +768,7 @@ The default path-to-JAR-in-EAR is the current application client JAR
 file. For example, if the JNLP file is in the application client JAR
 file at `custom/myInfo.jnlp`, the element value would look like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <java-web-start-access>
    <jnlp-doc>custom/myInfo.jnlp</jnlp-doc>
@@ -769,7 +781,7 @@ JNLP file is in a JAR file at `other/myLib.jar`, the element value would
 look like this, with an exclamation point (`!`) separating the path to
 the JAR from the path in the JAR:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <java-web-start-access>
    <jnlp-doc>other/myLib.jar!custom/myInfo.jnlp</jnlp-doc>
@@ -821,7 +833,7 @@ files are resolved within the EAR file. You can place these JNLP files
 directly in the EAR file or inside JAR files that the EAR file contains.
 Use one of these formats for these `href` references:
 
-[source,oac_no_warn]
+[source]
 ----
 [path-to-JAR-in-EAR!]path-to-JNLP-in-JAR
 
@@ -858,7 +870,7 @@ Server can properly place it in the final JNLP file.
 For example, to specify a single native library to be included only for
 Windows systems, the new element to add might be as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <nativelib href="windows/myLib.jar"/>
 ----
@@ -866,7 +878,7 @@ Windows systems, the new element to add might be as follows:
 However, you must indicate where in the overall document this element
 belongs. The actual custom JNLP file should look like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
    <resources os="Windows">
@@ -910,10 +922,10 @@ file you can add to and modify.
 Table 10-1 Owned JNLP File Content
 
 [width="100%",cols="32%,68%",options="header",]
-|=======================================================================
+|===
 |JNLP File Fragment |Description
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp codebase="xxx" ...>
 ----
@@ -923,7 +935,7 @@ packaged in EAR files. The developer controls this content for
 application clients packaged in WAR files.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp href="xxx" ...>
 ----
@@ -933,7 +945,7 @@ packaged in EAR files. The developer controls this content for
 application clients packaged in WAR files.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <security>
@@ -945,7 +957,7 @@ ACC. The permissions requested for other JNLP documents depend on
 whether the JAR files referenced in those documents are signed.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <application-desc>
@@ -954,7 +966,7 @@ a|
 
  |GlassFish Server sets the `main-class` and the arguments to be passed
 to the client.
-|=======================================================================
+|===
 
 
 [[GSDVG557]][[sthref25]][[gkmci]]
@@ -963,10 +975,10 @@ to the client.
 Table 10-2 Defaulted JNLP File Content
 
 [width="100%",cols="39%,61%",options="header",]
-|=======================================================================
+|===
 |JNLP File Fragment |Description
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp spec="xxx" ...>
 ----
@@ -974,7 +986,7 @@ a|
  |Specifies the JNLP specification version.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <information [no-attributes]>
@@ -985,16 +997,16 @@ description text values, icon images, and whether offline execution is
 allowed.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <resources [no-attributes]>
-    <java version="xxx" 
+    <java version="xxx"
         java-vm-args="yyy" ...>
 ----
 
  |Specifies the Java SE version or selected VM parameter settings.
-|=======================================================================
+|===
 
 
 [[GSDVG558]][[sthref26]][[gkmcc]]
@@ -1003,10 +1015,10 @@ a|
 Table 10-3 Merged JNLP File Content
 
 [width="100%",cols="37%,63%",options="header",]
-|=======================================================================
+|===
 |JNLP File Fragment |Description
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <information [attributes]>
@@ -1017,7 +1029,7 @@ a|
 specify child elements; GlassFish Server provides no default children.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <resources [attributes]>
@@ -1028,7 +1040,7 @@ a|
 child elements; GlassFish Server provides no default children.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <resources [no-attributes]>
@@ -1039,7 +1051,7 @@ a|
 provided by GlassFish Server.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <resources [no-attributes]>
@@ -1052,7 +1064,7 @@ correct platform. The full syntax of the `<nativelib>` element lets the
 developer specify the platform for that native library.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <resources [no-attributes]>
@@ -1063,7 +1075,7 @@ a|
 properties defined by GlassFish Server.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <resources [no-attributes]>
@@ -1073,7 +1085,7 @@ a|
  |Specifies another custom JNLP file.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <component-desc ...>
@@ -1083,7 +1095,7 @@ a|
 extension.
 
 a|
-[source,oac_no_warn]
+[source,xml]
 ----
 <jnlp>
   <installer-desc ...>
@@ -1091,7 +1103,7 @@ a|
 
  |Includes another custom JNLP file that specifies an installer
 extension.
-|=======================================================================
+|===
 
 
 [[gipkt]][[GSDVG00465]][[using-the-embeddable-acc]]
@@ -1105,15 +1117,15 @@ application creates the ACC after your application code has started,
 then requests that the ACC start the application client portion. The
 basic model for coding is as follows:
 
-1.  Create a builder object.
-2.  Operate on the builder to configure the ACC.
-3.  Obtain a new ACC instance from the builder.
-4.  Present a client archive or class to the ACC instance.
-5.  Start the client running within the newly created ACC instance.
+1. Create a builder object.
+2. Operate on the builder to configure the ACC.
+3. Obtain a new ACC instance from the builder.
+4. Present a client archive or class to the ACC instance.
+5. Start the client running within the newly created ACC instance.
 
 Your code should follow this general pattern:
 
-[source,oac_no_warn]
+[source,java]
 ----
 // one TargetServer for each ORB endpoint for bootstrapping
 TargetServer[] servers = ...;
@@ -1229,7 +1241,7 @@ the `sun-acc.xml` mechanism or the
 link:securing-apps.html#beacm[Programmatic Login Using the
 ProgrammaticLogin Class] mechanism.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <ior-security-config>
   <transport-config>
@@ -1258,7 +1270,7 @@ in the `glassfish-ejb-jar.xml` file. The following configuration
 establishes SSL between an application client and an EJB component using
 a client certificate.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <ior-security-config>
   <transport-config>
@@ -1288,22 +1300,24 @@ properties as JVM options. See link:#beaky[Running an Application Client
 Using the `appclient` Script].
 * Set the environment variable `VMARGS` in the shell. For example, in
 the `ksh` or `bash` shell, the command to set this environment variable
-would be as follows: +
-[source,oac_no_warn]
+would be as follows:
++
+[source]
 ----
-export VMARGS="-Djavax.net.ssl.keyStore=${keystore.db.file} 
--Djavax.net.ssl.trustStore=${truststore.db.file} 
--Djavax.net.ssl.keyStorePass word=${ssl.password} 
+export VMARGS="-Djavax.net.ssl.keyStore=${keystore.db.file}
+-Djavax.net.ssl.trustStore=${truststore.db.file}
+-Djavax.net.ssl.keyStorePass word=${ssl.password}
 -Djavax.net.ssl.trustStorePassword=${ssl.password}"
 ----
-* Optionally, you can set the `env` element using Ant. For example: +
-[source,oac_no_warn]
+* Optionally, you can set the `env` element using Ant. For example:
++
+[source,xml]
 ----
 <target name="runclient">
   <exec executable="${S1AS_HOME}/bin/appclient">
-    <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${keystore.db.file} 
-      -Djavax.net.ssl.trustStore=${truststore.db.file} 
-      -Djavax.net.ssl.keyStorePasword=${ssl.password} 
+    <env key="VMARGS" value=" -Djavax.net.ssl.keyStore=${keystore.db.file}
+      -Djavax.net.ssl.trustStore=${truststore.db.file}
+      -Djavax.net.ssl.keyStorePasword=${ssl.password}
       -Djavax.net.ssl.trustStorePassword=${ssl.password}"/>
     <arg value="-client"/>
     <arg value="${appClient.jar}"/>
@@ -1321,11 +1335,11 @@ on a GlassFish Server instance that is behind a firewall, you must set
 ORB Virtual Address Agent Implementation (ORBVAA) options. Use the
 `asadmin create-jvm-options` command as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -Dcom.sun.corba.ee.ORBVAAHost=public-IP-adress
 asadmin create-jvm-options -Dcom.sun.corba.ee.ORBVAAPort=public-port
-asadmin create-jvm-options 
+asadmin create-jvm-options
 -Dcom.sun.corba.ee.ORBUserConfigurators.com.sun.corba.ee.impl.plugin.hwlb.VirtualAddressAgentImpl=x
 ----
 
@@ -1367,7 +1381,8 @@ specify the splash screen image using one of the following:
 ** The `-splash` option of the `java` command
 
 ** `SplashScreen-Image` in the manifest for your program (not the
-manifest for the application client) +
+manifest for the application client)
++
 See link:#gipkt[Using the Embeddable ACC].
 
 During application (EAR file) deployment, the GlassFish Server generates
@@ -1441,41 +1456,48 @@ Using the ACC].
 To access an EJB component from a stand-alone client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  In your client code, instantiate the `InitialContext`: +
-[source,oac_no_warn]
+1. In your client code, instantiate the `InitialContext`:
++
+[source,java]
 ----
 InitialContext ctx = new InitialContext();
 ----
 It is not necessary to explicitly instantiate a naming context that
 points to the CosNaming service.
-2.  In the client code, look up the home object by specifying the JNDI
-name of the home object. +
-Here is an EJB 2.x example: +
-[source,oac_no_warn]
+2. In the client code, look up the home object by specifying the JNDI
+name of the home object.
++
+Here is an EJB 2.x example:
++
+[source,java]
 ----
 Object ref = ctx.lookup("jndi-name");
 BeanAHome = (BeanAHome)PortableRemoteObject.narrow(ref,BeanAHome.class);
 ----
-Here is an EJB 3.x example: +
-[source,oac_no_warn]
+Here is an EJB 3.x example:
++
+[source,java]
 ----
 BeanRemoteBusiness bean =(BeanRemoteBusiness) ctx.lookup("com.acme.BeanRemoteBusiness");
 ----
 If load balancing is enabled as in Step link:#CIHJADHD[6] and the EJB
 components being accessed are in a different cluster, the endpoint list
-must be included in the lookup, as follows: +
-[source,oac_no_warn]
+must be included in the lookup, as follows:
++
+[source]
 ----
 corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
 ----
 For more information about naming and lookups, see
 link:jndi.html#beans[Accessing the Naming Context].
-3.  Deploy the EJB component to be accessed. +
+3. Deploy the EJB component to be accessed.
++
 For more information on deployment, see "link:../application-deployment-guide/overview.html#GSDPG00063[About
 Deployment Tools]" in GlassFish Server Open Source Edition Application
 Deployment Guide.
-4.  Copy the as-install`/lib/gf-client.jar` file to the client machine
-and include it in the classpath on the client side. +
+4. Copy the as-install`/lib/gf-client.jar` file to the client machine
+and include it in the classpath on the client side.
++
 The `gf-client.jar` file references GlassFish Server JAR files in its
 `MANIFEST.MF` file. If there is no GlassFish Server installation on the
 client machine, you must also copy the as-install`/modules` directory to
@@ -1483,39 +1505,46 @@ the client machine and maintain its directory structure relative to the
 as-install`/lib/gf-client.jar` file. Or you can use the
 `package-appclient` script; see link:#beakz[Using the
 `package-appclient` Script].
-5.  To access EJB components that are residing in a remote system, set
+5. To access EJB components that are residing in a remote system, set
 the following system properties for the Java Virtual Machine startup
-options: +
-[source,oac_no_warn]
+options:
++
+[source]
 ----
 -Dorg.omg.CORBA.ORBInitialHost=${ORBhost}
 -Dorg.omg.CORBA.ORBInitialPort=${ORBport}
 ----
 Here ORBhost is the GlassFish Server hostname and ORBport is the ORB
 port number (default is `3700` for the default server instance, named
-`server`). +
+`server`).
++
 You can use the `asadmin get` command to get the IIOP port numbers. For
-example: +
-[source,oac_no_warn]
+example:
++
+[source]
 ----
 asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
 ----
-6.  [[CIHJADHD]] +
+6. [[CIHJADHD]]
++
 To set up load balancing and remote EJB reference failover, define the
-`endpoints` property as follows: +
-[source,oac_no_warn]
+`endpoints` property as follows:
++
+[source]
 ----
 -Dcom.sun.appserv.iiop.endpoints=host1:port1,host2:port2,...
 ----
 The `endpoints` property specifies a comma-separated list of one or more
 IIOP endpoints used for load balancing. An IIOP endpoint is in the form
 host`:`port, where the host is an IPv4 address or host name, and the
-port specifies the port number. +
+port specifies the port number.
++
 If the `endpoints` list is changed dynamically in the code, the new list
 is used only if a new `InitialContext` is created.
-7.  Make sure the `etc/hosts` file on the client machine maps the
+7. Make sure the `etc/hosts` file on the client machine maps the
 GlassFish Server hostname and external IP address.
-8.  Run the stand-alone client. +
+8. Run the stand-alone client.
++
 As long as the client environment is set appropriately and the JVM is
 compatible, you merely need to run the `main` class.
 
@@ -1527,17 +1556,21 @@ To access an EJB component from a server-side module
 A server-side module can be a servlet, another EJB component, or another
 type of module.
 
-1.  [[CIHFIJDC]] +
-In your module code, instantiate the `InitialContext`: +
-[source,oac_no_warn]
+1. [[CIHFIJDC]]
++
+In your module code, instantiate the `InitialContext`:
++
+[source,java]
 ----
 InitialContext ctx = new InitialContext();
 ----
 It is not necessary to explicitly instantiate a naming context that
-points to the CosNaming service. +
+points to the CosNaming service.
++
 To set up load balancing and remote EJB reference failover, define the
-`endpoints` property as follows: +
-[source,oac_no_warn]
+`endpoints` property as follows:
++
+[source,java]
 ----
 Hashtable env = new Hashtable();
 env.put("com.sun.appserv.iiop.endpoints","host1:port1,host2:port2,...");
@@ -1546,53 +1579,61 @@ InitialContext ctx = new InitialConext(env);
 The `endpoints` property specifies a comma-separated list of one or more
 IIOP endpoints used for load balancing. An IIOP endpoint is in the form
 host`:`port, where the host is an IPv4 address or host name, and the
-port specifies the port number. +
+port specifies the port number.
++
 You can use the `asadmin get` command to get the IIOP port numbers. For
-example: +
-[source,oac_no_warn]
+example:
++
+[source]
 ----
 asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
 ----
 If the `endpoints` list is changed dynamically in the code, the new list
 is used only if a new `InitialContext` is created.
-2.  In the module code, look up the home object by specifying the JNDI
-name of the home object. +
-Here is an EJB 2.x example: +
-[source,oac_no_warn]
+2. In the module code, look up the home object by specifying the JNDI
+name of the home object.
++
+Here is an EJB 2.x example:
++
+[source,java]
 ----
 Object ref = ctx.lookup("jndi-name");
 BeanAHome = (BeanAHome)PortableRemoteObject.narrow(ref,BeanAHome.class);
 ----
-Here is an EJB 3.x example: +
-[source,oac_no_warn]
+Here is an EJB 3.x example:
++
+[source,java]
 ----
 BeanRemoteBusiness bean =(BeanRemoteBusiness) ctx.lookup("com.acme.BeanRemoteBusiness");
 ----
 If load balancing is enabled as in Step link:#CIHFIJDC[1] and the EJB
 components being accessed are in a different cluster, the endpoint list
-must be included in the lookup, as follows: +
-[source,oac_no_warn]
+must be included in the lookup, as follows:
++
+[source]
 ----
 corbaname:host1:port1,host2:port2,.../NameService#ejb/jndi-name
 ----
 For more information about naming and lookups, see
 link:jndi.html#beans[Accessing the Naming Context].
-3.  Deploy the EJB component to be accessed. +
+3. Deploy the EJB component to be accessed.
++
 For more information on deployment, see "link:../application-deployment-guide/overview.html#GSDPG00063[About
 Deployment Tools]" in GlassFish Server Open Source Edition Application
 Deployment Guide.
-4.  To access EJB components that are residing in a remote system, set
+4. To access EJB components that are residing in a remote system, set
 the following system properties for the Java Virtual Machine startup
-options: +
-[source,oac_no_warn]
+options:
++
+[source]
 ----
 -Dorg.omg.CORBA.ORBInitialHost=${ORBhost}
 -Dorg.omg.CORBA.ORBInitialPort=${ORBport}
 ----
 Here ORBhost is the Application Server hostname and ORBport is the ORB
-port number (default is `3700` for the default server instance, named
-`server`).
-5.  Deploy the module. +
+port number (default is `3700` for the default server instance, named `server`).
+5. Deploy the module.
++
 For more information on deployment, see "link:../application-deployment-guide/overview.html#GSDPG00063[About
 Deployment Tools]" in GlassFish Server Open Source Edition Application
 Deployment Guide.
@@ -1602,20 +1643,23 @@ Deployment Guide.
 To access a JMS resource from a stand-alone client
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Create a JMS client. +
+1. Create a JMS client.
++
 For detailed instructions on developing a JMS client, see
 "https://javaee.github.io/tutorial/jms-examples.html[Java Message
 Service Examples]" in The Java EE 8 Tutorial.
-2.  Configure a JMS resource on GlassFish Server. +
+2. Configure a JMS resource on GlassFish Server.
++
 For information on configuring JMS resources, see
 "link:../administration-guide/jms.html#GSADG00598[Administering JMS Connection Factories and
 Destinations]" in GlassFish Server Open Source Edition Administration
 Guide.
-3.  Copy the following JAR files to the client machine and include them
+3. Copy the following JAR files to the client machine and include them
 in the classpath on the client side:
 * `gf-client.jar` - available at as-install`/lib`
 * `imqjmsra.jar` - available at
-as-install`/lib/install/aplications/jmsra` +
+as-install`/lib/install/aplications/jmsra`
++
 The `gf-client.jar` file references GlassFish Server JAR files in its
 `MANIFEST.MF` file. If there is no GlassFish Server installation on the
 client machine, you must also copy the as-install`/modules` directory to
@@ -1623,24 +1667,28 @@ the client machine and maintain its directory structure relative to the
 as-install`/lib/gf-client.jar` file. Or you can use the
 `package-appclient` script; see link:#beakz[Using the
 `package-appclient` Script].
-4.  To access EJB components that are residing in a remote system, set
+4. To access EJB components that are residing in a remote system, set
 the following system properties for the Java Virtual Machine startup
-options: +
-[source,oac_no_warn]
+options:
++
+[source]
 ----
 -Dorg.omg.CORBA.ORBInitialHost=${ORBhost}
 -Dorg.omg.CORBA.ORBInitialPort=${ORBport}
 ----
 Here ORBhost is the Application Server hostname and ORBport is the ORB
 port number (default is `3700` for the default server instance, named
-`server`). +
+`server`).
++
 You can use the `asadmin get` command to get the IIOP port numbers. For
-example: +
-[source,oac_no_warn]
+example:
++
+[source]
 ----
 asadmin get "configs.config.server-config.iiop-service.iiop-listener.orb-listener-1.*"
 ----
-5.  Run the stand-alone client. +
+5. Run the stand-alone client.
++
 As long as the client environment is set appropriately and the JVM is
 compatible, you merely need to run the `main` class.
 

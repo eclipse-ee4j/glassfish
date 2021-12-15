@@ -4,6 +4,7 @@ title=Developing Lifecycle Listeners
 next=osgi.html
 prev=connectors.html
 ~~~~~~
+
 Developing Lifecycle Listeners
 ==============================
 
@@ -22,13 +23,11 @@ at various phases of the server life cycle.
 
 
 [NOTE]
-=======================================================================
-
+====
 Lifecycle listener modules are deprecated. Support for them is included
 for backward compatibility. Implementing the org.glassfish.api.Startup
 interface instead is recommended.
-
-=======================================================================
+====
 
 
 All lifecycle module classes and interfaces are in the
@@ -81,7 +80,7 @@ can create and simultaneously execute multiple lifecycle modules.
 
 The LifecycleListener interface defines this method:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void handleEvent(com.sun.appserv.server.LifecycleEvent event) 
 throws ServerLifecycleException
@@ -102,14 +101,17 @@ The `LifecycleEvent` Class
 The `com.sun.appserv.server.LifecycleEvent` class defines a server life
 cycle event. The following methods are associated with the event:
 
-* `public java.lang.Object.getData()` +
+* `public java.lang.Object.getData()`
++
 This method returns an instance of `java.util.Properties` that contains
 the properties defined for the lifecycle module.
-* `public int getEventType()` +
+* `public int getEventType()`
++
 This method returns the type of the last event, which is `INIT_EVENT`,
 `STARTUP_EVENT`, `READY_EVENT`, `SHUTDOWN_EVENT`, or
 `TERMINATION_EVENT`.
-* `public com.sun.appserv.server.LifecycleEventContext.getLifecycleEventContext()` +
+* `public com.sun.appserv.server.LifecycleEventContext.getLifecycleEventContext()`
++
 This method returns the lifecycle event context, described next.
 
 A `LifecycleEvent` instance is passed to the
@@ -126,13 +128,17 @@ created when the `LifecycleEvent` class is instantiated at server
 initialization. The LifecycleEventContext interface defines these
 methods:
 
-* `public java.lang.String[].getCmdLineArgs()` +
+* `public java.lang.String[].getCmdLineArgs()`
++
 This method returns the server startup command-line arguments.
-* `public java.lang.String.getInstallRoot()` +
+* `public java.lang.String.getInstallRoot()`
++
 This method returns the server installation root directory.
-* `public java.lang.String.getInstanceName()` +
+* `public java.lang.String.getInstanceName()`
++
 This method returns the server instance name.
-* `public javax.naming.InitialContext.getInitialContext()` +
+* `public javax.naming.InitialContext.getInitialContext()`
++
 This method returns the initial JNDI naming context. The naming
 environment for lifecycle modules is installed after the
 `STARTUP_EVENT`. A lifecycle module can look up any resource by its

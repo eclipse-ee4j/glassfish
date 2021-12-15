@@ -4,6 +4,7 @@ title=Developing Connectors
 next=lifecycle-listeners.html
 prev=java-clients.html
 ~~~~~~
+
 Developing Connectors
 =====================
 
@@ -34,14 +35,12 @@ Specification.
 
 
 [NOTE]
-=======================================================================
-
+====
 If you installed the Web Profile, connector modules that use only
 outbound communication features and work-management that does not
 involve inbound communication features are supported. Other connector
 features are supported only in the full GlassFish Server.
-
-=======================================================================
+====
 
 
 For more information about connectors, see
@@ -371,7 +370,7 @@ configuration settings during creation of a connector connection pool.
 Or, you can use the `asadmin set` command to dynamically reconfigure a
 setting. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server.resources.connector-connection-pool.CCP1.fail-all-connections="true"
 asadmin set server.resources.connector-connection-pool.CCP1.is-connection-validation-required="true"
@@ -402,8 +401,9 @@ is 30 seconds per resource adapter module. To configure this timeout:
 * In the Administration Console, select Connector Service under the
 relevant configuration and edit the shutdown Timeout field. For details,
 click the Help button in the Administration Console.
-* Use the following `asadmin set` command: +
-[source,oac_no_warn]
+* Use the following `asadmin set` command:
++
+[source]
 ----
 asadmin set server.connector-service.shutdown-timeout-in-seconds="num-secs"
 ----
@@ -429,7 +429,7 @@ applications.
 
 To configure this setting, use the `asadmin set` command. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server.connector-service.class-loading-policy="global"
 ----
@@ -590,7 +590,7 @@ message-driven bean has the following activation configuration property
 names: `destinationType`, `SubscriptionDurability`, and
 `MessageSelector`.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <!--  A sample MDB that listens to a JMS Topic -->
 <!-- message-driven bean deployment descriptor -->
@@ -633,7 +633,7 @@ the `jmsra` JMS resource adapter, which is the bundled resource adapter
 for the Message Queue message provider, is specified as the resource
 adapter module identifier for the `SampleMDB` bean.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-ejb-jar>
 <enterprise-beans>
@@ -641,12 +641,12 @@ adapter module identifier for the `SampleMDB` bean.
     <ejb>
        <ejb-name>SampleMDB</ejb-name>
        <jndi-name>SampleQueue</jndi-name>
-    <!-- JNDI name of the destination from which messages would be 
+    <!-- JNDI name of the destination from which messages would be
          delivered from MDB needs to listen to -->
     ...
     <mdb-resource-adapter>
        <resource-adapter-mid>jmsra</resource-adapter-mid>
-       <!-- Resource Adapter Module Id that would deliver messages to 
+       <!-- Resource Adapter Module Id that would deliver messages to
             this message endpoint -->
        </mdb-resource-adapter>
     ...

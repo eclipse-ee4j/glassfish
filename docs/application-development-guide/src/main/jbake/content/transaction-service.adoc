@@ -4,6 +4,7 @@ title=Using the Transaction Service
 next=jndi.html
 prev=jdbc.html
 ~~~~~~
+
 Using the Transaction Service
 =============================
 
@@ -64,7 +65,7 @@ transaction isolation levels.
 Table 15-1 Transaction Isolation Levels
 
 [width="100%",cols="27%,28%,45%",options="header",]
-|=======================================================================
+|===
 |Transaction Isolation Level |`getTransactionIsolation` Return Value
 |Description
 |`read-uncommitted` |`1` |Dirty reads, non-repeatable reads, and phantom
@@ -78,7 +79,7 @@ prevented; phantom reads can occur.
 
 |`serializable` |`8` |Dirty reads, non-repeatable reads and phantom
 reads are prevented.
-|=======================================================================
+|===
 
 
 By default, the transaction isolation level is undefined (empty), and
@@ -93,8 +94,9 @@ the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `transaction-isolation-level` option in the `asadmin set`
-command. For example: +
-[source,oac_no_warn]
+command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.transaction-isolation-level=serializable
 ----
@@ -114,7 +116,7 @@ test your database programmatically using the
 `supportsTransactionIsolationLevel` method in
 `java.sql.DatabaseMetaData`, as shown in the following example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 InitialContext ctx = new InitialContext();
 DataSource ds = (DataSource)
@@ -147,8 +149,9 @@ more information, click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `is-isolation-level-guaranteed` option in the
-`asadmin set` command. For example: +
-[source,oac_no_warn]
+`asadmin set` command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.is-isolation-level-guaranteed=true
 ----
@@ -171,8 +174,9 @@ Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `non-transactional-connections` option in the
-`asadmin set` command. For example: +
-[source,oac_no_warn]
+`asadmin set` command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.non-transactional-connections=true
 ----
@@ -181,12 +185,13 @@ Edition Reference Manual].
 * Use the `DataSource` implementation in the GlassFish Server, which
 provides a `getNonTxConnection` method. This method retrieves a JDBC
 connection that is not in the scope of any transaction. There are two
-variants. +
-[source,oac_no_warn]
+variants.
++
+[source,java]
 ----
 public java.sql.Connection getNonTxConnection() throws java.sql.SQLException
 
-public java.sql.Connection getNonTxConnection(String user, String password) 
+public java.sql.Connection getNonTxConnection(String user, String password)
    throws java.sql.SQLException
 ----
 * Create a resource with the JNDI name ending in `__nontx`. This forces
@@ -275,30 +280,33 @@ There are three commit-time options:
 
 * Option A - The container caches a ready instance between transactions.
 The container ensures that the instance has exclusive access to the
-state of the object in persistent storage. +
+state of the object in persistent storage.
++
 In this case, the container does not have to synchronize the instance's
 state from the persistent storage at the beginning of the next
-transaction. +
+transaction.
++
 
 [NOTE]
-==================================================================
-
+====
 Commit option A is not supported for this GlassFish Server release.
-
-==================================================================
+====
 
 * Option B - The container caches a ready instance between transactions,
 but the container does not ensure that the instance has exclusive access
-to the state of the object in persistent storage. This is the default. +
+to the state of the object in persistent storage. This is the default.
++
 In this case, the container must synchronize the instance's state by
 invoking `ejbLoad` from persistent storage at the beginning of the next
 transaction.
 * Option C - The container does not cache a ready instance between
 transactions, but instead returns the instance to the pool of available
-instances after a transaction has completed. +
+instances after a transaction has completed.
++
 The life cycle for every business method invocation under commit option
-C looks like this. +
-[source,oac_no_warn]
+C looks like this.
++
+[source]
 ----
 ejbActivate   ejbLoad   business method   ejbStore   ejbPassivate
 ----

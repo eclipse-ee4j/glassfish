@@ -4,6 +4,7 @@ title=Configuring the Java Persistence Provider
 next=webapps.html
 prev=webservices.html
 ~~~~~~
+
 Configuring the Java Persistence Provider
 =========================================
 
@@ -46,14 +47,16 @@ Source Edition. EclipseLink is the open source implementation of the
 development framework and the runtime provided in TopLink. EclipseLink
 implements the following specifications, plus value-added extensions:
 
-* Java Persistence Architecture (JPA) 2.0. +
+* Java Persistence Architecture (JPA) 2.0.
++
 JPA 2.0 is part of Java Platform, Enterprise Edition 6 (Java EE 6). It
 includes improvements and enhancements to domain modeling,
 object/relational mapping, `EntityManager` and `Query` interfaces, and
 the Java Persistence Query Language (JPQL). It includes an API for
 criteria queries, a metamodel API, and support for validation. The Java
 Persistence API can be used with non-EJB components outside the EJB
-container. +
+container.
++
 For the JPA 2.0 Specification, see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr317/index.html[Java
 Specification Request (JSR) 317]. For basic information about the Java
@@ -64,15 +67,17 @@ Java EE 8 Tutorial.
 implementation, plus EclipseLink extensions, is called MOXy. The
 `org.eclipse.persistence.moxy.jar` file is bundled with GlassFish
 Server. For more information about MOXy support in GlassFish Server, see
-link:webservices.html#CHDEBBCH[The Databinding Provider]. +
+link:webservices.html#CHDEBBCH[The Databinding Provider].
++
 For the JAXB 2.0 specification, see
 http://jcp.org/aboutJava/communityprocess/pfd/jsr222/index.html[Java
 Specification Request (JSR) 222].
 * EclipseLink utilities are not included but can be used with GlassFish
 Server. Download the EclipseLink zip file at
 `http://www.eclipse.org/eclipselink/downloads/` and unzip it. The
-utility files are located here: +
-[source,oac_no_warn]
+utility files are located here:
++
+[source]
 ----
 bin/jaxb-compiler.cmd
 bin/jaxb-compiler.sh
@@ -86,12 +91,10 @@ GlassFish Server.
 
 
 [NOTE]
-=======================================================================
-
+====
 You must have a license for Oracle Coherence to be able to use TopLink
 Grid.
-
-=======================================================================
+====
 
 
 For information about developing, deploying, and configuring Oracle
@@ -124,27 +127,28 @@ TopLink with WebLogic Server]" in Oracle Fusion Middleware Solution
 Guide for Oracle TopLink. For more detailed explanations of these steps,
 see the links in the steps.
 
-1.  Set up the datasource. See "link:../administration-guide/jdbc.html#GSADG00015[Administering Database
+1. Set up the datasource. See "link:../administration-guide/jdbc.html#GSADG00015[Administering Database
 Connectivity]" in GlassFish Server Open Source Edition Administration
 Guide.
-2.  Create the application. For guidance in writing your application,
+2. Create the application. For guidance in writing your application,
 see "https://javaee.github.io/tutorial/partpersist.html[Persistence]" in
 The Java EE 8 Tutorial.
-3.  Create the `persistence.xml` file. See link:#gbwmj[Specifying the
+3. Create the `persistence.xml` file. See link:#gbwmj[Specifying the
 Database for an Application] for considerations specific to GlassFish
-Server. +
+Server.
++
 If you are using the Java Persistence API by calling
 `Persistence.createEMF()`, see link:#gdkwf[Specifying the Persistence
 Provider for an Application].
-4.  If the security manager is enabled and you are using the Java
+4. If the security manager is enabled and you are using the Java
 Persistence API by calling `Persistence.createEMF()`, see
 link:securing-apps.html#gbyah[Enabling and Disabling the Security
 Manager].
-5.  Deploy the application. See the GlassFish Server Open Source Edition
+5. Deploy the application. See the GlassFish Server Open Source Edition
 Application Deployment Guide.
-6.  Run the application. See "Application Client Launch" and "To Launch
+6. Run the application. See "Application Client Launch" and "To Launch
 an Application" in Administration Console online help.
-7.  Monitor the application. See "link:../administration-guide/monitoring.html#GSADG00011[Administering the
+7. Monitor the application. See "link:../administration-guide/monitoring.html#GSADG00011[Administering the
 Monitoring Service]" in GlassFish Server Open Source Edition
 Administration Guide.
 
@@ -174,14 +178,14 @@ the detected database type's dialect. You can specify the optional
 `eclipselink.target-database` property to guarantee that the database
 type is correct. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
     <persistence xmlns="http://java.sun.com/xml/ns/persistence">
         <persistence-unit name ="em1">
             <jta-data-source>jdbc/MyDB2DB</jta-data-source>
             <properties>
-                <property name="eclipselink.target-database" 
+                <property name="eclipselink.target-database"
                     value="DB2"/>
             </properties>
         </persistence-unit>
@@ -192,7 +196,7 @@ The following `eclipselink.target-database` property values are allowed.
 Supported platforms have been tested with the GlassFish Server and are
 found to be Java EE compatible.
 
-[source,oac_no_warn]
+[source]
 ----
 //Supported platforms
 JavaDB
@@ -228,7 +232,7 @@ If you are using the Java Persistence API by calling
 and any additional properties required by the JDBC driver or the
 database. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
     <persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
@@ -240,7 +244,7 @@ database. For example:
                     value="Derby"/>
                 <!-- JDBC connection properties -->
                 <property name="eclipselink.jdbc.driver" value="org.apache.derby.jdbc.ClientDriver"/>
-                <property name="eclipselink.jdbc.url" 
+                <property name="eclipselink.jdbc.url"
 value="jdbc:derby://localhost:1527/testdb;retrieveMessagesFromServerOnGetMessage=true;create=true;"/>
                 <property name="eclipselink.jdbc.user" value="APP"/>
                 <property name="eclipselink.jdbc.password" value="APP"/>
@@ -274,17 +278,19 @@ set the `provider` element of the `persistence.xml` file to
 You can specify a non-default persistence provider for an application in
 the manner described in the Java Persistence API Specification:
 
-1.  Install the provider. Copy the provider JAR files to the
+1. Install the provider. Copy the provider JAR files to the
 domain-dir`/lib` directory, and restart the GlassFish Server. For more
 information about the domain-dir`/lib` directory, see
 link:class-loaders.html#beadj[Using the Common Class Loader]. The new
 persistence provider is now available to all modules and applications
-deployed on servers that share the same configuration. +
+deployed on servers that share the same configuration.
++
 However, the default provider remains the same, Oracle TopLink or
 EclipseLink.
-2.  In your persistence unit, specify the provider and any properties
-the provider requires in the `persistence.xml` file. For example: +
-[source,oac_no_warn]
+2. In your persistence unit, specify the provider and any properties
+the provider requires in the `persistence.xml` file. For example:
++
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
     <persistence xmlns="http://java.sun.com/xml/ns/persistence">
@@ -301,7 +307,7 @@ To specify the provider programmatically instead of in the
 `persistence.xml` file, set the `javax.persistence.provider` property
 and pass it to the `Map` parameter of the following method:
 
-[source,oac_no_warn]
+[source,java]
 ----
 javax.persistence.Persistence.createEntityManagerFactory(String, Map)
 ----
@@ -372,8 +378,7 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 Automatic schema generation is supported on an all-or-none basis: it
 expects that no tables exist in the database before it is executed. It
 is not intended to be used as a tool to generate extra tables or
@@ -384,8 +389,7 @@ won't fail if not all tables are dropped. Instead, an error is written
 to the server log. This is done to allow you to investigate the problem
 and fix it manually. You should not rely on the partially created
 database schema to be correct for running the application.
-
-=======================================================================
+====
 
 
 [[gcjgl]][[GSDVG00388]][[annotations]]
@@ -425,12 +429,10 @@ control automatic schema generation by the following:
 
 
 [NOTE]
-=======================================================================
-
+====
 Before using these options, make sure you have a properly configured
 database. See link:#gbwmj[Specifying the Database for an Application].
-
-=======================================================================
+====
 
 
 Optional schema generation properties control the automatic creation of
@@ -450,7 +452,7 @@ Table 6-1 The `asadmin deploy` and `asadmin deploydir` Generation
 Options
 
 [width="181%",cols="14%,49%,37%",options="header",]
-|=======================================================================
+|===
 |Option |Default |Description
 |`--createtables` |none |If `true`, causes database tables to be created
 for entities that need them. No unique constraints are created. If
@@ -471,7 +473,7 @@ indicate that tables could not be created.
 If `false`, the `eclipselink.ddl-generation` property setting in
 `persistence.xml` is overridden.
 
-|=======================================================================
+|===
 
 
 The following options of the `asadmin undeploy` command control the
@@ -483,7 +485,7 @@ automatic removal of database tables at undeployment.
 Table 6-2 The `asadmin undeploy` Generation Options
 
 [width="181%",cols="9%,49%,42%",options="header",]
-|=======================================================================
+|===
 |Option |Default |Description
 |`--droptables` |none a|
 If `true`, causes database tables that were automatically created when
@@ -494,7 +496,7 @@ If not specified, tables are dropped only if the
 `eclipselink.ddl-generation` property setting in `persistence.xml` is
 `drop-and-create-tables`.
 
-|=======================================================================
+|===
 
 
 For more information about the `asadmin deploy`, `asadmin deploydir`,
@@ -576,8 +578,9 @@ properly.
 * Refresh the session cache using `EntityManager.refresh()` if you don't
 want to maintain the order during creation or modification of the
 `List`.
-* Disable session cache sharing in `persistence.xml` as follows: +
-[source,oac_no_warn]
+* Disable session cache sharing in `persistence.xml` as follows:
++
+[source,xml]
 ----
 <property name="eclipselink.cache.shared.default" value="false"/>
 ----
@@ -619,7 +622,7 @@ If column names are not explicitly specified on a field, unique
 constraints and foreign key mappings must be specified using uppercase
 references. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Table(name="Department", uniqueConstraints={ @UniqueConstraint ( columnNames= { "DEPTNAME" } ) } )
 ----
@@ -627,7 +630,7 @@ references. For example:
 The other way to handle this is by specifying explicit column names for
 each field with the required case. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Table(name="Department", uniqueConstraints={ @UniqueConstraint ( columnNames= { "deptName" } ) } )
 public class Department{ @Column(name="deptName") private String deptName; }
@@ -652,7 +655,7 @@ SQL Result Set Mapping
 
 Use the following elements:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <sql-result-set-mapping name="SRSMName">
    <entity-result entity-class="entities.someEntity" />
@@ -681,7 +684,7 @@ PostgreSQL stores column and table names in lower case. JDBC queries on
 PostgreSQL retrieve column or table names in lowercase unless the names
 are quoted. For example:
 
-[source,oac_no_warn]
+[source,sql]
 ----
 use aliases Select m.ID AS \"ID\" from Department m
 ----
@@ -699,9 +702,9 @@ and the primary key column is mapped to a VARCHAR column, Sybase
 attempts to convert type VARCHAR to type TEXT and generates the
 following error:
 
-[source,oac_no_warn]
+[source]
 ----
-com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype 
+com.sybase.jdbc2.jdbc.SybSQLException: Implicit conversion from datatype
 'TEXT' to 'VARCHAR' is not allowed. Use the CONVERT function to run this query.
 ----
 
@@ -725,8 +728,9 @@ SQL mode.
 * The order of fields in a foreign key index must match the order in the
 explicitly created index on the primary table.
 * The `CREATE TABLE` syntax in the SQL file must end with the following
-line. +
-[source,oac_no_warn]
+line.
++
+[source,sql]
 ----
 )  Engine=InnoDB;
 ----
@@ -746,20 +750,22 @@ see `http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html` and
 * MySQL always starts a new connection when `autoCommit==true` is set.
 This ensures that each SQL statement forms a single transaction on its
 own. If you try to rollback or commit an SQL statement, you get an error
-message. +
-[source,oac_no_warn]
+message.
++
+[source]
 ----
-javax.transaction.SystemException: java.sql.SQLException: 
+javax.transaction.SystemException: java.sql.SQLException:
 Can't call rollback when autocommit=true
 
-javax.transaction.SystemException: java.sql.SQLException: 
+javax.transaction.SystemException: java.sql.SQLException:
 Error open transaction is not closed
 ----
 To resolve this issue, add `relaxAutoCommit=true` to the JDBC URL. For
 more information, see `http://forums.mysql.com/read.php?39,31326,31404`.
 * MySQL does not allow a `DELETE` on a row that contains a reference to
-itself. Here is an example that illustrates the issue. +
-[source,oac_no_warn]
+itself. Here is an example that illustrates the issue.
++
+[source,sql]
 ----
 create table EMPLOYEE (
         empId   int         NOT NULL,
@@ -772,15 +778,17 @@ create table EMPLOYEE (
         insert into Employee values (1, 1234.34, 1);
         delete from Employee where empId = 1;
 ----
-This example fails with the following error message. +
-[source,oac_no_warn]
+This example fails with the following error message.
++
+[source,java]
 ----
-ERROR 1217 (23000): Cannot delete or update a parent row: 
+ERROR 1217 (23000): Cannot delete or update a parent row:
 a foreign key constraint fails
 ----
 To resolve this issue, change the table creation script to the
-following: +
-[source,oac_no_warn]
+following:
++
+[source,java]
 ----
 create table EMPLOYEE (
         empId   int         NOT NULL,

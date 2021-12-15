@@ -4,6 +4,7 @@ title=Using Enterprise JavaBeans Technology
 next=container_managed-persistence.html
 prev=webapps.html
 ~~~~~~
+
 Using Enterprise JavaBeans Technology
 =====================================
 
@@ -31,8 +32,7 @@ in The Java EE 8 Tutorial.
 
 
 [NOTE]
-=======================================================================
-
+====
 The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
@@ -43,8 +43,7 @@ http://jcp.org/en/jsr/detail?id=318[JSR 318]
 The GlassFish Server is backward compatible with 1.1, 2.0, 2.1, and 3.0
 enterprise beans. However, to take advantage of version 3.1 features,
 you should develop new beans as 3.1 enterprise beans.
-
-=======================================================================
+====
 
 
 [[beahn]][[GSDVG00145]][[value-added-features]]
@@ -74,16 +73,14 @@ Read-only beans avoid database updates completely.
 
 
 [NOTE]
-=======================================================================
-
+====
 Read-only beans are specific to the GlassFish Server and are not part of
 the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
 EJB 2.1 bean results in a non-portable application.
 
 To make an EJB 3.0 entity read-only, use `@Column` annotations to mark
 its columns `insertable=false` and `updatable=false`.
-
-=======================================================================
+====
 
 
 A read-only bean can be used to cache a database entry that is
@@ -270,7 +267,7 @@ The timer service is automatically enabled when you deploy an
 application or module that uses it. You can verify that the timer
 service is running by accessing the following URL:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/ejb-timer-service-app/timer
 ----
@@ -305,22 +302,19 @@ Redelivery Interval::
   default is `5000`.
 Timer DataSource::
   Specifies the database used by the EJB Timer Service. The default is
-  `jdbc/__TimerPool`. +
+  `jdbc/__TimerPool`.
 
-[width="100%",cols="100%",]
-|=======================================================================
-a|
-Caution:
-
-Do not use the `jdbc/__TimerPool` resource for timers in clustered
-GlassFish Server environments. You must instead use a custom JDBC
-resource or the `jdbc/__default` resource. See the instructions below,
-in link:#gktqo[To Deploy an EJB Timer to a Cluster]. Also refer to
-"link:../administration-guide/jdbc.html#GSADG00747[Enabling the jdbc/__default Resource in a Clustered
-Environment]" in GlassFish Server Open Source Edition Administration
-Guide.
-
-|=======================================================================
++
+[CAUTION]
+====
+Do not use the `jdbc/\__TimerPool` resource for timers in clustered
+GlassFish Server environments.
+You must instead use a custom JDBC resource or the `jdbc/__default` resource.
+See the instructions below, in link:#gktqo[To Deploy an EJB Timer to a Cluster].
+Also refer to
+"link:../administration-guide/jdbc.html#GSADG00747[Enabling the jdbc/__default Resource in a Clustered Environment]"
+in GlassFish Server Open Source Edition Administration Guide.
+====
 
 
 For information about the `asadmin list-timers` and
@@ -382,26 +376,25 @@ deploying applications that will use the timer.
 
 
 [CAUTION]
-=======================================================================
-
-Do not use the `jdbc/__TimerPool` resource for timers in clustered
-GlassFish Server environments. You must instead use a custom JDBC
-resource or the `jdbc/__default` resource. See
-"olink:GSADG00747[Enabling the jdbc/__default Resource in a Clustered
-Environment]" in GlassFish Server Open Source Edition Administration
-Guide.
-
-=======================================================================
+====
+Do not use the `jdbc/\__TimerPool` resource for timers in clustered
+GlassFish Server environments.
+You must instead use a custom JDBC resource or the `jdbc/__default` resource.
+See "link:GSADG00747[Enabling the jdbc/__default Resource in a Clustered Environment]"
+in GlassFish Server Open Source Edition Administration Guide.
+====
 
 
-1.  Execute the following command: +
-[source,oac_no_warn]
+1. Execute the following command:
++
+[source]
 ----
 asadmin set configs.config.cluster_name-config.ejb-container.ejb-timer-service.timer-
 datasource=jdbc/my-timer-resource
 ----
-2.  Restart the DAS and the target cluster(s). +
-[source,oac_no_warn]
+2. Restart the DAS and the target cluster(s).
++
+[source]
 ----
 asadmin stop-cluster cluster-name
 asadmin stop-domain domain-name
@@ -535,14 +528,12 @@ subdirectories created under domain-dir`/session-store`.
 
 
 [NOTE]
-=======================================================================
-
+====
 Make sure the `delete` option is set in the `server.policy` file, or
 expired file-based sessions might not be deleted properly. For more
 information about `server.policy`, see link:securing-apps.html#beabx[The
 `server.policy` File].
-
-=======================================================================
+====
 
 
 The Session Store Location setting also determines where the session
@@ -588,38 +579,48 @@ serializable.
 
 [[GSDVG549]][[sthref18]][[fvyed]]
 
-
 Table 8-1 Object Types Supported for Java EE Stateful Session Bean State
 Failover
 
 [width="100%",cols="45%,55%",options="header",]
-|=======================================================================
+|===
 |Java Object Type |Failover Support
-|Colocated or distributed stateless session, stateful session, or entity
-bean reference |Yes
 
-|JNDI context |Yes, `InitialContext` and `java:comp/env`
+|Colocated or distributed stateless session, stateful session, or entity bean reference
+|Yes
 
-|UserTransaction |Yes, but if the instance that fails is never
+|JNDI context
+|Yes, `InitialContext` and `java:comp/env`
+
+|UserTransaction
+|Yes, but if the instance that fails is never
 restarted, any prepared global transactions are lost and might not be
 correctly rolled back or committed.
 
-|JDBC DataSource |No
+|JDBC DataSource
+|No
 
-|Java Message Service (JMS) ConnectionFactory, Destination |No
+|Java Message Service (JMS) ConnectionFactory, Destination
+|No
 
-|JavaMail Session |No
+|JavaMail Session
+|No
 
-|Connection Factory |No
+|Connection Factory
+|No
 
-|Administered Object |No
+|Administered Object
+|No
 
-|Web service reference |No
+|Web service reference
+|No
 
-|Serializable Java types |Yes
+|Serializable Java types
+|Yes
 
-|Extended persistence context |No
-|=======================================================================
+|Extended persistence context
+|No
+|===
 
 
 For more information about the `InitialContext`, see
@@ -631,8 +632,7 @@ in GlassFish Server Open Source Edition Administration Guide.
 
 
 [NOTE]
-=======================================================================
-
+====
 Idempotent URLs are supported along the HTTP path, but not the RMI-IIOP
 path. For more information, see link:webapps.html#beage[Configuring
 Idempotent URL Requests].
@@ -654,8 +654,7 @@ If an SFSB that uses session persistence is undeployed while the
 GlassFish Server instance is stopped, the session data in the
 persistence store might not be cleared. To prevent this, undeploy the
 SFSB while the GlassFish Server instance is running.
-
-=======================================================================
+====
 
 
 Configure SFSB failover by:
@@ -781,7 +780,7 @@ To enable SFSB checkpointing at the SFSB level, set
 `availability-enabled="true"` in the `ejb` element of the SFSB's
 `glassfish-ejb-jar.xml` file as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-ejb-jar>
    ...
@@ -811,7 +810,7 @@ the `ejb` element in `glassfish-ejb-jar.xml`.
 
 For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-ejb-jar>
    ...
@@ -851,8 +850,7 @@ of the SFSB to persistent store.
 
 
 [NOTE]
-=======================================================================
-
+====
 If an SFSB does not participate in any transaction, and if none of its
 methods are explicitly specified in the `checkpoint-at-end-of-method`
 element, the bean's state is not checkpointed at all even if
@@ -862,8 +860,7 @@ For better performance, specify a small subset of methods. The methods
 chosen should accomplish a significant amount of work in the context of
 the Java EE application or should result in some important modification
 to the bean's state.
-
-=======================================================================
+====
 
 
 [[beaii]][[GSDVG00427]][[session-bean-restrictions-and-optimizations]]
@@ -926,16 +923,14 @@ database updates.
 
 
 [NOTE]
-=======================================================================
-
+====
 Read-only beans are specific to the GlassFish Server and are not part of
 the Enterprise JavaBeans Specification, v2.1. Use of this feature for an
 EJB 2.1 bean results in a non-portable application.
 
 To make an EJB 3.0 entity bean read-only, use `@Column` annotations to
 mark its columns `insertable=false` and `updatable=false`.
-
-=======================================================================
+====
 
 
 Read-only beans are best suited for situations where the underlying data
@@ -1007,7 +1002,8 @@ beans:
 
 * Avoid having any `create` or `remove` methods in the home interface.
 * Use any of the valid EJB 2.1 transaction attributes for the
-`trans-attribute` element. +
+`trans-attribute` element.
++
 The reason for having `TX_SUPPORTED` is to allow reading uncommitted
 data in the same transaction. Also, the transaction attributes can be
 used to force `ejbLoad`.
@@ -1047,12 +1043,10 @@ specified.
 
 
 [NOTE]
-=======================================================================
-
+====
 This is the only way to refresh the bean state if the data can be
 modified external to the GlassFish Server.
-
-=======================================================================
+====
 
 
 By default, a single timer is used for all instances of a read-only
@@ -1069,7 +1063,7 @@ need to be refreshed at the same time.
 To set this flag, use the `asadmin create-jvm-options` command. For
 example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -Dcom.sun.ejb.containers.readonly.relative.refresh.mode=true
 ----
@@ -1086,7 +1080,7 @@ ReadOnlyBeanNotifier to force the refresh of read-only beans.
 To do this, invoke the following methods on the ReadOnlyBeanNotifier
 bean:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public interface ReadOnlyBeanNotifier extends java.rmi.Remote {
    refresh(Object PrimaryKey) throws RemoteException;
@@ -1097,18 +1091,18 @@ The implementation of the ReadOnlyBeanNotifier interface is provided by
 the container. The bean looks up ReadOnlyBeanNotifier using a fragment
 of code such as the following example:
 
-[source,oac_no_warn]
+[source,java]
 ----
-com.sun.appserv.ejb.ReadOnlyBeanHelper helper = 
+com.sun.appserv.ejb.ReadOnlyBeanHelper helper =
   new com.sun.appserv.ejb.ReadOnlyBeanHelper();
-com.sun.appserv.ejb.ReadOnlyBeanNotifier notifier = 
+com.sun.appserv.ejb.ReadOnlyBeanNotifier notifier =
   helper.getReadOnlyBeanNotifier("java:comp/env/ejb/ReadOnlyCustomer");
 notifier.refresh(PrimaryKey);
 ----
 
 For a local read-only bean notifier, the lookup has this modification:
 
-[source,oac_no_warn]
+[source,java]
 ----
 helper.getReadOnlyBeanLocalNotifier("java:comp/env/ejb/LocalReadOnlyCustomer");
 ----
@@ -1227,7 +1221,7 @@ Initial and Minimum Pool Size::
   pool. The default is `0`.
 Maximum Pool Size::
   Specifies the maximum number of beans that can be created to satisfy
-  client requests. The default is 3`2`.
+  client requests. The default is `2`.
 Pool Resize Quantity::
   Specifies the number of beans to be created if a request arrives when
   the pool is empty (subject to the Initial and Minimum Pool Size), or
@@ -1248,14 +1242,12 @@ select the Monitor tab.
 
 
 [NOTE]
-=======================================================================
-
+====
 Running monitoring when it is not needed might impact performance, so
 you might choose to turn monitoring off when it is not in use. For
 details, see "olink:GSADG00011[Administering the Monitoring Service]" in
 GlassFish Server Open Source Edition Administration Guide.
-
-=======================================================================
+====
 
 
 [[beaiy]][[GSDVG00433]][[message-driven-bean-restrictions-and-optimizations]]
@@ -1332,7 +1324,7 @@ container behavior, use the `cmt-max-runtime-exceptions` property of the
 MDB container. Here is an example `asadmin set` command that sets this
 property:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server-config.mdb-container.property.cmt-max-runtime-exceptions="5"
 ----
@@ -1352,11 +1344,9 @@ message is a redelivered message.
 
 
 [NOTE]
-=======================================================
-
+====
 The `cmt-max-runtime-exceptions` property is deprecated.
-
-=======================================================
+====
 
 
 

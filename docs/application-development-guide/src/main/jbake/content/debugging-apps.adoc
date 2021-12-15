@@ -4,6 +4,7 @@ title=Debugging Applications
 next=part-apps-and-app-comps.html
 prev=class-loaders.html
 ~~~~~~
+
 Debugging Applications
 ======================
 
@@ -37,7 +38,7 @@ Enabling Debugging
 When you enable debugging, you enable both local and remote debugging.
 To start the server in debug mode, use the `--debug` option as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin start-domain --debug [domain-name]
 ----
@@ -46,14 +47,14 @@ You can then attach to the server from the Java Debugger (`jdb`) at its
 default Java Platform Debugger Architecture (JPDA) port, which is 9009.
 For example, for UNIX systems:
 
-[source,oac_no_warn]
+[source]
 ----
 jdb -attach 9009
 ----
 
 For Windows:
 
-[source,oac_no_warn]
+[source]
 ----
 jdb -connect com.sun.jdi.SocketAttach:port=9009
 ----
@@ -83,13 +84,13 @@ debugging is always turned on.
 To Set the Server to Automatically Start Up in Debug Mode
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Use the Administration Console. Select the JVM Settings component
+1. Use the Administration Console. Select the JVM Settings component
 under the relevant configuration.
-2.  Check the Debug Enabled box.
-3.  To specify a different port (from 9009, the default) to use when
-attaching the JVM software to a debugger, specify `address=` port-number
+2. Check the Debug Enabled box.
+3. To specify a different port (from 9009, the default) to use when
+attaching the JVM software to a debugger, specify ``address=``port-number
 in the Debug Options field.
-4.  To add JPDA options, add any desired JPDA debugging options in Debug
+4. To add JPDA options, add any desired JPDA debugging options in Debug
 Options. See link:#beafe[JPDA Options].
 
 [[GSDVG532]]
@@ -106,7 +107,7 @@ JPDA Options
 
 The default JPDA options in GlassFish Server are as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 -Xdebug -agentlib:transport=dt_socket,server=y,suspend=n,address=9009
 ----
@@ -146,7 +147,7 @@ Application Client Container (ACC), which in turn runs the client, it
 includes on the command line the value of the `VMARGS` environment
 variable. You can set this variable to any suitable value. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 VMARGS=-agentlib:transport=dt_socket,server=y,suspend=y,address=8118
 ----
@@ -166,13 +167,11 @@ Server Open Source Edition Reference Manual].
 
 
 [NOTE]
-=======================================================================
-
+====
 The Application Client Container is supported only in the full GlassFish
 Server, not in the Web Profile. See
 link:java-clients.html#beakt[Developing Java Clients].
-
-=======================================================================
+====
 
 
 [[beafk]][[GSDVG00105]][[open-message-queue-debugging]]
@@ -189,12 +188,10 @@ Message Queue Administration Guide].
 
 
 [NOTE]
-=======================================================================
-
+====
 JMS resources are supported only in the full GlassFish Server, not in
 the Web Profile. See link:jms.html#beaob[Using the Java Message Service].
-
-=======================================================================
+====
 
 
 [[beafl]][[GSDVG00106]][[enabling-verbose-mode]]
@@ -210,7 +207,7 @@ having to view the `server.log` file every time.
 To start the server in verbose mode, use the `--verbose` option as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin start-domain --verbose [domain-name]
 ----
@@ -232,7 +229,7 @@ Class Loader Debugging
 To generate class loading messages, use the following
 `asadmin create-jvm-options` command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -verbose\:class
 ----
@@ -240,7 +237,7 @@ asadmin create-jvm-options -verbose\:class
 To send the JVM messages to a special JVM log file instead of `stdout`,
 use the following `asadmin create-jvm-options` commands:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -XX\:+LogVMOutput
 asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
@@ -248,12 +245,10 @@ asadmin create-jvm-options -XX\:LogFile=${com.sun.aas.instanceRoot}/logs/jvm.log
 
 
 [NOTE]
-=======================================================================
-
+====
 These `-XX` options are specific to the OpenJDK (or Hotspot) JVM and do
 not work with the JRockit JVM.
-
-=======================================================================
+====
 
 
 To send the GlassFish Server messages to the Administration Console
@@ -273,11 +268,9 @@ Cluster component, select the cluster from the table, select the
 Instances tab, select the instance from the table, then click the View
 Log Files button in the General Information page.
 
-To change logging settings, select Logger Settings under the relevant
-configuration.
+To change logging settings, select Logger Settings under the relevant configuration.
 
-For details about logging, click the Help button in the Administration
-Console.
+For details about logging, click the Help button in the Administration Console.
 
 [[beafn]][[GSDVG00109]][[profiling-tools]]
 
@@ -331,28 +324,32 @@ are loaded into the server process.
 To Use HPROF Profiling on UNIX
 ++++++++++++++++++++++++++++++
 
-1.  Use the Administration Console. Select the JVM Settings component
+1. Use the Administration Console. Select the JVM Settings component
 under the relevant configuration. Then select the Profiler tab.
-2.  Edit the following fields:
+2. Edit the following fields:
 * Profiler Name - `hprof`
 * Profiler Enabled - `true`
 * Classpath - (leave blank)
 * Native Library Path - (leave blank)
 * JVM Option - Select Add, type the HPROF JVM option in the Value field,
-then check its box. The syntax of the HPROF JVM option is as follows: +
-[source,oac_no_warn]
+then check its box. The syntax of the HPROF JVM option is as follows:
++
+[source]
 ----
 -Xrunhprof[:help]|[:param=value,param2=value2, ...]
 ----
-Here is an example of params you can use: +
-[source,oac_no_warn]
+Here is an example of params you can use:
++
+[source]
 ----
 -Xrunhprof:file=log.txt,thread=y,depth=3
 ----
-The file parameter determines where the stack dump is written. +
+The file parameter determines where the stack dump is written.
++
 Using help lists parameters that can be passed to HPROF. The output is
-as follows: +
-[source,oac_no_warn]
+as follows:
++
+[source]
 ----
 Hprof usage: -Xrunhprof[:help]|[:<option>=<value>, ...]
 
@@ -370,21 +367,19 @@ lineno=y|n              line number in traces?  y
 thread=y|n              thread in traces?       n
 doe=y|n                 dump on exit?           y
 ----
-::
-
++
 [NOTE]
-=======================================================================
-
+====
 Do not use help in the JVM Option field. This parameter prints text to
 the standard output and then exits.
 
 The help output refers to the parameters as options, but they are not
 the same thing as JVM options.
+====
 
-=======================================================================
-
-3.  [[hprofstp2]] +
-Restart the GlassFish Server. +
+3. [[hprofstp2]]
+Restart the GlassFish Server.
++
 This writes an HPROF stack dump to the file you specified using the file
 HPROF parameter.
 
@@ -404,64 +399,65 @@ libraries are loaded into the server process.
 To Enable Remote Profiling With JProbe
 ++++++++++++++++++++++++++++++++++++++
 
-1.  Install JProbe 3.0.1.1. +
-For details, see the JProbe documentation.
-2.  Configure GlassFish Server using the Administration Console:
-1.  Select the JVM Settings component under the relevant configuration.
-Then select the Profiler tab.
-2.  Edit the following fields before selecting Save and restarting the
-server: +
+1. Install JProbe 3.0.1.1. For details, see the JProbe documentation.
+
+2. Configure GlassFish Server using the Administration Console:
+[arabic]
+.. Select the JVM Settings component under the relevant configuration.
+.. Then select the Profiler tab.
+.. Edit the following fields before selecting Save and restarting the server: +
 Profiler Name - `jprobe` +
 Profiler Enabled - `true` +
 Classpath - (leave blank) +
-Native Library Path - JProbe-dir`/profiler` +
+Native Library Path - JProbe-dir``/profiler`` +
 JVM Option - For each of these options, select Add, type the option in
-the Value field, then check its box: +
-[source,oac_no_warn]
+the Value field, then check its box:
++
+[source]
 ----
     -Xbootclasspath/p:JProbe-dir/profiler/jpagent.jar
     -Xrunjprobeagent
     -Xnoclassgc
 ----
-::
-
++
 [NOTE]
-=======================================================================
-
+====
 If any of the configuration options are missing or incorrect, the
 profiler might experience problems that affect the performance of the
 GlassFish Server.
-
-=======================================================================
-
+====
++
 When the server starts up with this configuration, you can attach the
 profiler.
-3.  Set the following environment variable: +
-[source,oac_no_warn]
+
+3. Set the following environment variable:
++
+[source]
 ----
 JPROBE_ARGS_0=-jp_input=JPL-file-path
 ----
 See Step link:#jprbstp6[6] for instructions on how to create the JPL
 file.
-4.  Start the server instance.
-5.  Launch the `jpprofiler` and attach to Remote Session. The default
-port is `4444`.
-6.  [[jprbstp6]] +
-Create the JPL file using the JProbe Launch Pad. Here are the required
-settings:
-1.  Select Server Side for the type of application.
-2.  On the Program tab, provide the following details: +
+4. Start the server instance.
+
+5. Launch the `jpprofiler` and attach to Remote Session.
+The default port is `4444`.
+
+6. [[jprbstp6]]
+Create the JPL file using the *JProbe Launch Pad*. Here are the required settings: +
+[arabic]
+.. Select Server Side for the type of application.
+.. On the Program tab, provide the following details: +
 Target Server - other-server +
 Server home Directory - as-install +
 Server class File - `com.sun.enterprise.server.J2EERunner` +
 Working Directory - as-install +
-Classpath - as-install`/lib/appserv-rt.jar` +
-Source File Path - source-code-dir (in case you want to get the line
-level details) +
+Classpath - as-install``/lib/appserv-rt.jar`` +
+Source File Path - source-code-dir (in case you want to get the line level details) +
 Server class arguments - (optional) +
 Main Package - `com.sun.enterprise.server` +
-You must also set VM, Attach, and Coverage tabs appropriately. For
-further details, see the JProbe documentation. After you have created
-the JPL file, use this an input to `JPROBE_ARGS_0`.
+You must also set VM, Attach, and Coverage tabs appropriately. +
+For further details, see the JProbe documentation. +
+After you have created the JPL file, use this an input to `JPROBE_ARGS_0`.
 
 

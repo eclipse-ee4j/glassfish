@@ -4,6 +4,7 @@ title=Developing Web Applications
 next=ejb.html
 prev=jpa.html
 ~~~~~~
+
 Developing Web Applications
 ===========================
 
@@ -31,16 +32,14 @@ The Java EE 8 Tutorial.
 
 
 [NOTE]
-=======================================================================
-
+====
 The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 (`http://jcp.org/en/jsr/detail?id=318`).
-
-=======================================================================
+====
 
 
 [[beagj]][[GSDVG00140]][[using-servlets]]
@@ -52,13 +51,11 @@ GlassFish Server supports the Java Servlet Specification version 4.0.
 
 
 [NOTE]
-=======================================================================
-
+====
 Servlet API version 4.0 is fully backward compatible with versions 3.0,
 2.3, 2.4, and 2.5, so all existing servlets should work without
 modification or recompilation.
-
-=======================================================================
+====
 
 
 To develop servlets, use the Java Servlet API. For information about
@@ -105,11 +102,9 @@ caching, you edit specific fields in the `glassfish-web.xml` file.
 
 
 [NOTE]
-===========================================
-
+====
 A servlet that uses caching is not portable.
-
-===========================================
+====
 
 
 For Javadoc tool pages relevant to caching servlet results, see the
@@ -200,7 +195,7 @@ Caching Example
 
 Here is an example cache element in the `glassfish-web.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <cache max-capacity="8192" timeout="60">
 <cache-helper name="myHelper" class-name="MyCacheHelper"/>
@@ -403,7 +398,7 @@ Enabling JSP Caching
 To globally enable JSP caching, set the `jspCachingEnabled` property to
 `true`. The default is `false`. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server-config.web-container.property.jspCachingEnabled="true"
 ----
@@ -413,26 +408,24 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 To enable JSP caching for a single web application, follow these steps:
 
-1.  Extract the `META-INF/jspcachtags.tld` file from the
+1. Extract the `META-INF/jspcachtags.tld` file from the
 as-install`/modules/web-glue.jar` file.
-2.  Create a new JAR file (for example, `jspcachtags.jar`) containing
+2. Create a new JAR file (for example, `jspcachtags.jar`) containing
 just the `META-INF/jspcachtags.tld` file previously extracted.
-3.  Bundle this new JAR file in the `WEB-INF/lib` directory of your web
+3. Bundle this new JAR file in the `WEB-INF/lib` directory of your web
 application.
 
 
 [NOTE]
-=======================================================================
-
+====
 Web applications that use JSP caching without bundling the tag library
 are not portable.
-
-=======================================================================
+====
 
 
 Refer to GlassFish Server tags in JSP files as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <%@ taglib prefix="prefix" uri="http://glassfish.org/taglibs/cache" %>
 ----
@@ -452,7 +445,7 @@ cache in `request` scope, a web application must specify the
 `com.sun.appserv.web.taglibs.cache.CacheRequestListener` in its
 `web.xml` deployment descriptor, as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <listener>
    <listener-class>
@@ -466,7 +459,7 @@ it must specify the
 `com.sun.appserv.web.taglibs.cache.CacheSessionListener` in its
 `web.xml` deployment descriptor, as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <listener>
    <listener-class>
@@ -504,7 +497,7 @@ The following table describes attributes for the `cache` tag.
 Table 7-1 The `cache` Attributes
 
 [width="100%",cols="10%,16%,74%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`key` |ServletPath`_`Suffix |(optional) The name used by the container
 to access the cached entry. The cache key is suffixed to the servlet
@@ -531,7 +524,7 @@ programmatically refresh the cache immediately regardless of the
 
 |`scope` |`application` |(optional) The scope of the cache. Can be
 `request`, `session`, or `application`. See link:#gaxcr[Caching Scope].
-|=======================================================================
+|===
 
 
 [[fvyeh]][[GSDVG00024]][[example-of-cache]]
@@ -540,7 +533,7 @@ Example of `cache`
 
 The following example represents a cached JSP file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <%@ taglib prefix="mypfx" uri="http://glassfish.org/taglibs/cache" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
@@ -584,7 +577,7 @@ The following table describes attributes for the `flush` tag.
 Table 7-2 The `flush` Attributes
 
 [width="100%",cols="11%,20%,69%",options="header",]
-|=======================================================================
+|===
 |Attribute |Default |Description
 |`key` |ServletPath`_`Suffix |(optional) The name used by the container
 to access the cached entry. The cache key is suffixed to the servlet
@@ -594,7 +587,7 @@ the page.
 
 |`scope` |`application` |(optional) The scope of the cache. Can be
 `request`, `session`, or `application`. See link:#gaxcr[Caching Scope].
-|=======================================================================
+|===
 
 
 [[fvyle]][[GSDVG00026]][[examples-of-flush]]
@@ -603,14 +596,14 @@ Examples of `flush`
 
 To flush the entry with `key="foobar"`:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <mypfx:flush key="foobar"/>
 ----
 
 To flush the entire cache:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <c:if test="${empty sessionScope.clearCache}">
    <mypfx:flush />
@@ -690,7 +683,7 @@ session object in conflicting ways. If the persistence type is
 following message in the log file indicates that this might be
 happening:
 
-[source,oac_no_warn]
+[source]
 ----
 Primary Key Constraint violation while saving session session_id
 ----
@@ -709,7 +702,7 @@ Whenever a redeployment is done, the sessions at that transit time
 become invalid unless you use the `--keepstate=true` option of the
 `asadmin redeploy` command. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin redeploy --keepstate=true --name hello.war
 ----
@@ -742,11 +735,10 @@ Logging Session Attributes
 ++++++++++++++++++++++++++
 
 You can write session attribute values to an access log. The access log
-format token `%session.`name`%` logs one of the following:
+format token ``%session.``name``%`` logs one of the following:
 
 * The value of the session attribute with the name name
-* `NULL-SESSION-ATTRIBUTE-`name if the named attribute does not exist in
-the session
+* ``NULL-SESSION-ATTRIBUTE-``name if the named attribute does not exist in the session
 * `NULL-SESSION` if no session exists
 
 For more information about access logging and format tokens, see online
@@ -777,16 +769,14 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 
 [NOTE]
-=======================================================================
-
+====
 Contrary to the Servlet 5.0 specification, GlassFish Server does not
 throw an `IllegalArgumentException` if an object type not supported for
 failover is bound into a distributed session.
 
 Keep the distributed session size as small as possible. Session size has
 a direct impact on overall system throughput.
-
-=======================================================================
+====
 
 
 In the event of an instance or hardware failure, another server instance
@@ -821,7 +811,7 @@ Table 7-3 Object Types Supported for Java EE Web Application Session
 State Failover
 
 [width="100%",cols="45%,55%",options="header",]
-|=======================================================================
+|===
 |Java Object Type |Failover Support
 |Colocated or distributed stateless session, stateful session, or entity
 bean reference |Yes
@@ -847,7 +837,7 @@ correctly rolled back or committed.
 |Serializable Java types |Yes
 
 |Extended persistence context |No
-|=======================================================================
+|===
 
 
 [[beahf]][[GSDVG00403]][[session-managers]]
@@ -872,13 +862,11 @@ servers in the cluster for session persistence
 
 
 [NOTE]
-=======================================================================
-
+====
 If the session manager configuration contains an error, the error is
 written to the server log and the default (`memory`) configuration is
 used.
-
-=======================================================================
+====
 
 
 For more information, see "link:../application-deployment-guide/dd-elements.html#GSDPG00275[session-manager]" in
@@ -900,7 +888,7 @@ edit the `glassfish-web.xml` file as in the following example. The
 included. This overrides the web container availability settings for the
 web application.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app>
 ...
@@ -946,14 +934,12 @@ with a single server instance.
 
 
 [NOTE]
-=======================================================================
-
+====
 Make sure the `delete` option is set in the `server.policy` file, or
 expired file-based sessions might not be deleted properly. For more
 information about `server.policy`, see link:securing-apps.html#beabx[The
 `server.policy` File].
-
-=======================================================================
+====
 
 
 To specify the `file` persistence type for a specific web application,
@@ -961,7 +947,7 @@ edit the `glassfish-web.xml` file as in the following example. Note that
 `persistence-type` must be set to `file`. This overrides the web
 container availability settings for the web application.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app>
 ...
@@ -1018,9 +1004,9 @@ Persistence Scope drop-down lists on the Web Container Availability tab
 in the Administration Console, or use the `asadmin set` command. For
 example:
 
-[source,oac_no_warn]
+[source]
 ----
-asadmin set 
+asadmin set
 server-config.availability-service.web-container-availability.persistence-frequency=time-based
 ----
 
@@ -1034,7 +1020,7 @@ example. Note that `persistence-type` must be set to `replicated`. This
 overrides the web container availability settings for the web
 application.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app>
 ...
@@ -1069,7 +1055,7 @@ first buffered and then replicated using a separate asynchronous thread,
 use the `--asyncreplication=true` option of the `asadmin deploy`
 command. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin deploy --availabilityenabled=true --asyncreplication=true --name hello.war
 ----
@@ -1284,24 +1270,25 @@ one or more Comet contexts.
 The way a developer would use this API in a web component is to perform
 the following tasks:
 
-1.  Register the context path of the application with the `CometContext`
-object: +
-[source,oac_no_warn]
+1. Register the context path of the application with the `CometContext`
+object:
++
+[source,java]
 ----
-CometEngine cometEngine = 
-    CometEngine.getEngine();
-CometContext cometContext = 
-    cometEngine.register(contextPath) 
+CometEngine cometEngine = CometEngine.getEngine();
+CometContext cometContext = cometEngine.register(contextPath)
 ----
-2.  Register the CometHandler implementation with the `CometContext`
-object: +
-[source,oac_no_warn]
+2. Register the CometHandler implementation with the `CometContext`
+object:
++
+[source,java]
 ----
 cometContext.addCometHandler(handler)
 ----
-3.  Notify one or more CometHandler implementations when an event
-happens: +
-[source,oac_no_warn]
+3. Notify one or more CometHandler implementations when an event
+happens:
++
+[source,java]
 ----
 cometContext.notify((Object)(handler))
 ----
@@ -1332,7 +1319,7 @@ the HTTP listener for your application by setting a special attribute in
 the associated protocol configuration. The following example shows the
 `asadmin set` command that adds this attribute:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server-config.network-config.protocols.protocol.http-1.http.comet-support-enabled="true"
 ----
@@ -1350,9 +1337,10 @@ In addition, if your web application includes a servlet, set the
 `load-on-startup` value for your servlet to `0` (zero) so that it will
 not load until the client makes a request to it.
 
-1.  Open the `web.xml` file for your web application in a text editor.
-2.  Add the following XML code to the `web.xml` file: +
-[source,oac_no_warn]
+1. Open the `web.xml` file for your web application in a text editor.
+2. Add the following XML code to the `web.xml` file:
++
+[source,xml]
 ----
 <servlet>
    <servlet-name>Grizzly Cometd Servlet</servlet-name>
@@ -1375,50 +1363,57 @@ not load until the client makes a request to it.
 </servlet-mapping>
 ----
 Note that the `load-on-startup` value for the `CometdServlet` is `1`.
-3.  If your web application includes a servlet, set the
+3. If your web application includes a servlet, set the
 `load-on-startup` value to `0` for your servlet (not the
-`CometdServlet`) as follows: +
-[source,oac_no_warn]
+`CometdServlet`) as follows:
++
+[source,xml]
 ----
 <servlet>
    ...
    <load-on-startup>0</load-on-startup>
 </servlet>
 ----
-4.  Save the `web.xml` file.
+4. Save the `web.xml` file.
 
 [[ghhtv]][[GSDVG00068]][[to-write-deploy-and-run-the-client]]
 
 To Write, Deploy, and Run the Client
 ++++++++++++++++++++++++++++++++++++
 
-1.  Add script tags to the HTML page. For example: +
-[source,oac_no_warn]
+1. Add script tags to the HTML page. For example:
++
+[source,xml]
 ----
 <script type="text/javascript" src="chat.js"></script>
 ----
-2.  In the script, call the needed libraries. For example: +
-[source,oac_no_warn]
+2. In the script, call the needed libraries. For example:
++
+[source]
 ----
 dojo.require("dojo.io.cometd");
 ----
-3.  In the script, use `publish` and `subscribe` methods to send and
-receive messages. For example: +
-[source,oac_no_warn]
+3. In the script, use `publish` and `subscribe` methods to send and
+receive messages. For example:
++
+[source]
 ----
 cometd.subscribe("/chat/demo", false, room, "_chat");
 cometd.publish("/chat/demo", { user: room._username, chat: text});
 ----
-4.  Deploy the web application as you would any other web application.
-For example: +
-[source,oac_no_warn]
+4. Deploy the web application as you would any other web application.
+For example:
++
+[source]
 ----
 asadmin deploy cometd-example.war
 ----
-5.  Run the application as you would any other web application. +
+5. Run the application as you would any other web application.
++
 The context root for the example chat application is `/cometd` and the
-HTML page is `index.html`. So the URL might look like this: +
-[source,oac_no_warn]
+HTML page is `index.html`. So the URL might look like this:
++
+[source]
 ----
 http://localhost:8080/cometd/index.html
 ----
@@ -1530,16 +1525,18 @@ Virtual Server Properties
 You can set virtual server properties in the following ways:
 
 * You can define virtual server properties using the
-`asadmin create-virtual-server` command. For example: +
-[source,oac_no_warn]
+`asadmin create-virtual-server` command. For example:
++
+[source]
 ----
 asadmin create-virtual-server --hosts localhost --property authRealm=ldap MyVS
 ----
 For details and a complete list of virtual server properties, see
 link:../reference-manual/create-virtual-server.html#GSRFM00062[`create-virtual-server`(1)].
 * You can define virtual server properties using the `asadmin set`
-command. For example: +
-[source,oac_no_warn]
+command. For example:
++
+[source]
 ----
 asadmin set server-config.http-service.virtual-server.MyVS.property.authRealm="ldap"
 ----
@@ -1599,7 +1596,7 @@ security. To enable directory listings, in your domain's
 `init-param` named `listings` to `true`. Then redeploy your web
 application if it has already been deployed, or restart the server.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <init-param>
    <param-name>listings</param-name>
@@ -1612,7 +1609,7 @@ listings are sorted. Set the value of the `init-param` named `sortedBy`
 to `NAME`, `SIZE`, or `LAST_MODIFIED`. Then redeploy your web
 application if it has already been deployed, or restart the server.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <init-param>
    <param-name>sortedBy</param-name>
@@ -1636,11 +1633,11 @@ steps.
 To Use the `default-web.xml` File
 +++++++++++++++++++++++++++++++++
 
-1.  Place the JAR file for the filter, security constraint, or other
+1. Place the JAR file for the filter, security constraint, or other
 feature in the domain-dir`/lib` directory.
-2.  Edit the domain-dir`/config/default-web.xml` file to refer to the
+2. Edit the domain-dir`/config/default-web.xml` file to refer to the
 JAR file.
-3.  Restart the server.
+3. Restart the server.
 
 [[beagd]][[GSDVG00411]][[configuring-logging-and-monitoring-in-the-web-container]]
 
@@ -1680,7 +1677,7 @@ To configure idempotent URL response, specify the URLs that can be
 safely retried in `idempotent-url-pattern` elements in the
 `glassfish-web.xml` file. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <idempotent-url-pattern url-pattern="sun_java/*" no-of-retries="10"/>
 ----
@@ -1720,8 +1717,8 @@ specified URL pattern are implicitly retried on another GlassFish Server
 instance.
 
 For example, if the request URL sent to the GlassFish Server is of the
-type `/search/`something`.html`, then the URL pattern can be specified
-as `/search/*`.
+type ``/search/``something``.html``, then the URL pattern can be specified
+as ``/search/*``.
 
 Examples of non-idempotent requests include banking transactions and
 online shopping. If you retry such requests, money might be transferred
@@ -1736,8 +1733,8 @@ In all Editions of the GlassFish Server, the `Enumeration` from
 `request.getHeaders()` contains multiple elements (one element per
 request header) instead of a single, aggregated value.
 
-The header names used in `HttpServletResponse.add`XXX`Header()` and
-`HttpServletResponse.set`XXX`Header()` are returned as they were
+The header names used in ``HttpServletResponse.add``XXX``Header()`` and
+``HttpServletResponse.set``XXX``Header()`` are returned as they were
 created.
 
 [[geqrh]][[GSDVG00414]][[configuring-valves-and-catalina-listeners]]
@@ -1760,7 +1757,7 @@ org.apache.catalina.InstanceListener interface.
 In the `glassfish-web.xml` file, valve and listener properties for a web
 module look like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app ...>
    ...
@@ -1810,7 +1807,7 @@ docroots. The URI pattern of the first alternate docroot uses an exact
 match, whereas the URI patterns of the second and third alternate
 docroots use extension and longest path prefix matches, respectively.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <property name="alternatedocroot_1" value="from=/my.jpg dir=/srv/images/jpg"/>
 <property name="alternatedocroot_2" value="from=*.jpg dir=/srv/images/jpg"/>
@@ -1826,14 +1823,14 @@ Suppose the above examples belong to a web application deployed at
 `http://company22.com/myapp`. The first alternate docroot maps any
 requests with this URL:
 
-[source,oac_no_warn]
+[source]
 ----
 http://company22.com/myapp/my.jpg
 ----
 
 To this resource:
 
-[source,oac_no_warn]
+[source]
 ----
 /svr/images/jpg/my.jpg
 ----
@@ -1841,14 +1838,14 @@ To this resource:
 The second alternate docroot maps any requests with a `*.jpg` suffix,
 such as:
 
-[source,oac_no_warn]
+[source]
 ----
 http://company22.com/myapp/*.jpg
 ----
 
 To this physical location:
 
-[source,oac_no_warn]
+[source]
 ----
 /svr/images/jpg
 ----
@@ -1856,7 +1853,7 @@ To this physical location:
 The third alternate docroot maps any requests whose URI starts with
 `/myapp/jpg/`, such as:
 
-[source,oac_no_warn]
+[source]
 ----
 http://company22.com/myapp/jpg/*
 ----
@@ -1865,28 +1862,28 @@ To the same directory as the second alternate docroot.
 
 For example, the second alternate docroot maps this request:
 
-[source,oac_no_warn]
+[source]
 ----
 http://company22.com/myapp/abc/def/my.jpg
 ----
 
 To:
 
-[source,oac_no_warn]
+[source]
 ----
 /srv/images/jpg/abc/def/my.jpg
 ----
 
 The third alternate docroot maps:
 
-[source,oac_no_warn]
+[source]
 ----
 http://company22.com/myapp/jpg/abc/resource
 ----
 
 To:
 
-[source,oac_no_warn]
+[source]
 ----
 /srv/images/jpg/abc/resource
 ----
@@ -1918,14 +1915,16 @@ the relevant configuration. Open the Virtual Servers component and
 scroll down to the bottom of the page. Enter `contextXmlDefault` as the
 property name and the path and file name relative to domain-dir as the
 property value.
-* Use the `asadmin create-virtual-server` command. For example: +
-[source,oac_no_warn]
+* Use the `asadmin create-virtual-server` command. For example:
++
+[source]
 ----
 asadmin create-virtual-server --property contextXmlDefault=config/vs1ctx.xml vs1
 ----
 * Use the `asadmin set` command for an existing virtual server. For
-example: +
-[source,oac_no_warn]
+example:
++
+[source]
 ----
 asadmin set server-config.http-service.virtual-server.vs1.property.contextXmlDefault=config/myctx.xml
 ----
@@ -1952,7 +1951,7 @@ To enable WebDav in the GlassFish Server, you edit the `web.xml` and
 
 First, enable the WebDav servlet in your `web.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <servlet>
    <servlet-name>webdav</servlet-name>
@@ -1975,7 +1974,7 @@ First, enable the WebDav servlet in your `web.xml` file:
 Then define the servlet mapping associated with your WebDav servlet in
 your `web.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <servlet-mapping>
    <servlet-name>webdav</servlet-name>
@@ -1986,7 +1985,7 @@ your `web.xml` file:
 To protect the WebDav servlet so other users can't modify it, add a
 security constraint in your `web.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <security-constraint>
    <web-resource-collection>
@@ -2011,7 +2010,7 @@ security constraint in your `web.xml` file:
 
 Then define a security role mapping in your `glassfish-web.xml` file:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <security-role-mapping>
    <role-name>Admin</role-name>
@@ -2022,7 +2021,7 @@ Then define a security role mapping in your `glassfish-web.xml` file:
 If you are using the `file` realm, create a user and password. For
 example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-file-user --groups Admin --authrealmname default admin
 ----
@@ -2034,14 +2033,14 @@ Manager].
 You can now use any WebDav client by connecting to the WebDav servlet
 URL, which has this format:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/context-root/webdav/file
 ----
 
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:80/glassfish-webdav/webdav/index.html
 ----
@@ -2058,7 +2057,7 @@ Using SSI
 To enable SSI (server-side includes) processing for a specific web
 module, add the `SSIServlet` to your `web.xml` file as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <web-app>
    <servlet>
@@ -2094,7 +2093,7 @@ You can configure the following `init-param` values for the
 Table 7-4 `SSIServlet` `init-param` Values
 
 [width="100%",cols="28%,11%,20%,41%",options="header",]
-|=======================================================================
+|===
 |init-param |Type |Default |Description
 |buffered |`boolean` |`false` |Specifies whether the output should be
 buffered.
@@ -2112,7 +2111,7 @@ file) |Specifies whether the virtual path of the `#include` directive is
 relative to the `content-root`.
 
 |outputEncoding |`String` |UTF-8 |Specifies encoding for the SSI output.
-|=======================================================================
+|===
 
 
 For more information about SSI, see
@@ -2126,7 +2125,7 @@ Using CGI
 To enable CGI (common gateway interface) processing for a specific web
 module, add the `CGIServlet` to your `web.xml` file as follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <web-app>
    <servlet>
@@ -2152,14 +2151,14 @@ see link:#beagc[Using the `default-web.xml` File].
 
 Invoke the CGI program using a URL of the following format:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:8080/context-root/cgi-bin/cgi-name
 ----
 
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/mycontext/cgi-bin/hello
 ----
@@ -2173,7 +2172,7 @@ You can configure the following `init-param` values for the
 Table 7-5 `CGIServlet` `init-param` Values
 
 [width="100%",cols="25%,11%,27%,37%",options="header",]
-|=======================================================================
+|===
 |init-param |Type |Default |Description
 |cgiPathPrefix |`String` |`WEB-INF/cgi` |Specifies the subdirectory
 containing the CGI programs.
@@ -2188,15 +2187,15 @@ CGI script.
 
 |passShellEnvironment |`boolean` |`false` |Specifies whether to pass
 shell environment properties to the CGI program.
-|=======================================================================
+|===
 
 
 To work with a native executable, do the following:
 
-1.  Set the value of the `init-param` named executable to an empty
+1. Set the value of the `init-param` named executable to an empty
 `String` in the `web.xml` file.
-2.  Make sure the executable has its executable bits set correctly.
-3.  Use directory deployment to deploy the web module. Do not deploy it
+2. Make sure the executable has its executable bits set correctly.
+3. Use directory deployment to deploy the web module. Do not deploy it
 as a WAR file, because the executable bit information is lost during the
 process of `jar` and `unjar`. For more information about directory
 deployment, see the link:../application-deployment-guide/toc.html#GSDPG[GlassFish Server Open Source Edition

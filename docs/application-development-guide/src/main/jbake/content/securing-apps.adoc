@@ -4,6 +4,7 @@ title=Securing Applications
 next=webservices.html
 prev=part-apps-and-app-comps.html
 ~~~~~~
+
 Securing Applications
 =====================
 
@@ -44,16 +45,14 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 (`http://jcp.org/en/jsr/detail?id=318`).
-
-=======================================================================
+====
 
 
 [[beabh]][[GSDVG00114]][[security-goals]]
@@ -250,7 +249,7 @@ permitted by the application or module to principals and groups. For
 example, a `glassfish-web.xml` file for an individually deployed web
 module might contain the following:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-web-app>
     <security-role-mapping>
@@ -279,7 +278,7 @@ user's JAAS login module now can authenticate its custom principal, and
 the authenticated custom principal can further participate in the
 GlassFish Server authorization process. For example:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <security-role-mapping>
     <role-name>administrator</role-name>
@@ -303,14 +302,16 @@ relevant configuration. For details, click the Help button in the
 Administration Console.
 * Use the `asadmin set` command. For details, see the
 link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual]. For
-example, you can set the default principal as follows. +
-[source,oac_no_warn]
+example, you can set the default principal as follows.
++
+[source]
 ----
 asadmin set server-config.security-service.default-principal=dsmith
 asadmin set server-config.security-service.default-principal-password=secret
 ----
-You can set the default principal to role mapping as follows. +
-[source,oac_no_warn]
+You can set the default principal to role mapping as follows.
++
+[source]
 ----
 asadmin set server-config.security-service.activate-default-principal-to-role-mapping=true
 asadmin set server-config.security-service.mapped-principal-class=CustomPrincipalImplClass
@@ -341,7 +342,8 @@ GlassFish Server:
 * `file` - Stores user information in a file. This is the default realm
 when you first install the GlassFish Server.
 * `ldap` - Stores user information in an LDAP directory.
-* `jdbc` - Stores user information in a database. +
+* `jdbc` - Stores user information in a database.
++
 In the JDBC realm, the server gets user credentials from a database. The
 GlassFish Server uses the database information and the enabled JDBC
 realm option in the configuration file. For digest authentication, a
@@ -392,7 +394,7 @@ otherwise the domain's default realm is used.
 For example, a realm is specified in `glassfish-application.xml` as
 follows:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <glassfish-application>
     ...
@@ -445,7 +447,7 @@ must not implement LoginModule directly.
 Custom login modules must provide an implementation for one abstract
 method defined in `AppservPasswordLoginModule`:
 
-[source,oac_no_warn]
+[source,java]
 ----
 abstract protected void authenticateUser() throws LoginException
 ----
@@ -460,7 +462,7 @@ The custom login module can access the following protected object
 fields, which it inherits from `AppservPasswordLoginModule`. These
 contain the user name and password of the user to be authenticated:
 
-[source,oac_no_warn]
+[source,java]
 ----
 protected String _username;
 protected String _password;
@@ -468,7 +470,7 @@ protected String _password;
 
 The `authenticateUser` method must end with the following sequence:
 
-[source,oac_no_warn]
+[source,java]
 ----
 String[] grpList;
 // populate grpList with the set of groups to which
@@ -479,10 +481,9 @@ commitUserAuthentication(grpList);
 Custom realms must extend the `com.sun.appserv.security.AppservRealm`
 class and implement the following methods:
 
-[source,oac_no_warn]
+[source,java]
 ----
-public void init(Properties props) throws BadRealmException, 
-    NoSuchRealmException
+public void init(Properties props) throws BadRealmException, NoSuchRealmException
 ----
 
 This method is invoked during server startup when the realm is initially
@@ -492,7 +493,7 @@ the method returns without throwing an exception, the GlassFish Server
 assumes that the realm is ready to service authentication requests. If
 an exception is thrown, the realm is disabled.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public String getAuthType()
 ----
@@ -500,9 +501,9 @@ public String getAuthType()
 This method returns a descriptive string representing the type of
 authentication done by this realm.
 
-[source,oac_no_warn]
+[source,java]
 ----
-public abstract Enumeration getGroupNames(String username) throws 
+public abstract Enumeration getGroupNames(String username) throws
     InvalidOperationException, NoSuchUserException
 ----
 
@@ -512,28 +513,28 @@ the groups (if any) to which the given `username` belongs in this realm.
 Custom realms that manage users must implement the following additional
 methods:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public abstract boolean supportsUserManagement();
 ----
 
 This method returns `true` if the realm supports user management.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public abstract Enumeration getGroupNames() throws BadRealmException;
 ----
 
 This method returns an `Enumeration` of all group names.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public abstract Enumeration getUserNames() throws BadRealmException;
 ----
 
 This method returns an `Enumeration` of all user names.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public abstract void refresh() throws BadRealmException;
 ----
@@ -541,41 +542,41 @@ public abstract void refresh() throws BadRealmException;
 This method refreshes the realm data so that new users and groups are
 visible.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public abstract void persist() throws BadRealmException;
 ----
 
 This method persists the realm data to permanent storage.
 
-[source,oac_no_warn]
+[source,java]
 ----
-public abstract User getUser(String name) throws NoSuchUserException, 
+public abstract User getUser(String name) throws NoSuchUserException,
 BadRealmException;
 ----
 
 This method returns the information recorded about a particular named
 user.
 
-[source,oac_no_warn]
+[source,java]
 ----
-public abstract void addUser(String name, String password, String[] groupList) throws 
+public abstract void addUser(String name, String password, String[] groupList) throws
 BadRealmException, IASSecurityException;
 ----
 
 This method adds a new user, who cannot already exist.
 
-[source,oac_no_warn]
+[source,java]
 ----
-public abstract void removeUser(String name) throws NoSuchUserException, 
+public abstract void removeUser(String name) throws NoSuchUserException,
 BadRealmException;
 ----
 
 This method removes a user, who must exist.
 
-[source,oac_no_warn]
+[source,java]
 ----
-public abstract void updateUser(String name, String newName, String password, 
+public abstract void updateUser(String name, String newName, String password,
 String[] groups) throws NoSuchUserException, BadRealmException, IASSecurityException;
 ----
 
@@ -583,8 +584,7 @@ This method updates data for a user, who must exist.
 
 
 [NOTE]
-=======================================================================
-
+====
 The array passed to the `commitUseAuthentication` method should be newly
 created and otherwise unreferenced. This is because the group name array
 elements are set to null after authentication as part of cleanup. So the
@@ -597,8 +597,7 @@ Ideally, your custom realm should not return member variables from the
 its `authenticate` method, copy the values from the member variables,
 and return the `String` array. Or it can use `clone` on the member
 variables.
-
-=======================================================================
+====
 
 
 [[BACDEIHB]][[GSDVG563]][[java-ee-security-api-support]]
@@ -703,7 +702,7 @@ For Javadoc tool pages relevant to audit modules, see the
 The `AuditModule` class provides default "no-op" implementations for
 each of the following methods, which your custom class can override.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void init(Properties props)
 ----
@@ -715,7 +714,7 @@ in this method. If the method returns without throwing an exception, the
 GlassFish Server assumes the module realm is ready to service audit
 requests. If an exception is thrown, the module is disabled.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void authentication(String user, String realm, boolean success)
 ----
@@ -724,7 +723,7 @@ This method is invoked when an authentication request has been processed
 by a realm for the given user. The `success` flag indicates whether the
 authorization was granted or denied.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void webInvocation(String user, HttpServletRequest req, String type, boolean success)
 ----
@@ -737,7 +736,7 @@ of `hasUserDataPermission` or `hasResourcePermission` (see
 http://www.jcp.org/en/jsr/detail?id=115[JSR 115]
 (`http://www.jcp.org/en/jsr/detail?id=115`)).
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void ejbInvocation(String user, String ejb, String method, boolean success)
 ----
@@ -747,7 +746,7 @@ authorization. The `success` flag indicates whether the authorization
 was granted or denied. The `ejb` and `method` strings describe the EJB
 component and its method that is being invoked.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void webServiceInvocation(String uri, String endpoint, boolean success)
 ----
@@ -758,7 +757,7 @@ the web service endpoint. The `endpoint` is the name of the endpoint
 representation. The `success` flag indicates whether the authorization
 was granted or denied.
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void ejbAsWebServiceInvocation(String endpoint, boolean success)
 ----
@@ -831,7 +830,7 @@ Server Open Source Edition Reference Manual].
 Table 4-1 Predefined System Properties
 
 [width="100%",cols="29%,17%,54%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`com.sun.aas.installRoot` |depends on operating system |Specifies the
 directory where the GlassFish Server is installed.
@@ -862,7 +861,7 @@ customize configuration.
 |`com.sun.aas.domainName` |`domain1` |Specifies the name of the domain.
 This property is not used in the default configuration, but can be used
 to customize configuration.
-|=======================================================================
+|===
 
 
 [[beabz]][[GSDVG00372]][[changing-permissions-for-an-application]]
@@ -883,7 +882,7 @@ set of permissions, you can add the custom permissions that your
 applications need. The `com.sun.aas.instanceRoot` variable refers to the
 domain-dir. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/-" {
 ...
@@ -892,7 +891,7 @@ grant codeBase "file:${com.sun.aas.instanceRoot}/applications/-" {
 
 You can add permissions to stub code with the following grant block:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/generated/-" {
 ...
@@ -903,7 +902,7 @@ In general, you should add extra permissions only to the applications or
 modules that require them, not to all applications deployed to a domain.
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyApp/-" {
 ...
@@ -912,7 +911,7 @@ grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyApp/-" {
 
 For a module:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyModule/-" {
 ...
@@ -921,11 +920,9 @@ grant codeBase "file:${com.sun.aas.instanceRoot}/applications/MyModule/-" {
 
 
 [NOTE]
-===================================================================
-
+====
 Deployment directories may change between GlassFish Server releases.
-
-===================================================================
+====
 
 
 An alternative way to add permissions to a specific application or
@@ -941,12 +938,12 @@ permission that was not granted and the protection domains, with
 indicated code source and principals that failed the protection check.
 For example, here is the first part of a typical message:
 
-[source,oac_no_warn]
+[source]
 ----
 [#|2005-12-17T16:16:32.671-0200|INFO|sun-appserver-pe9.1|
 javax.enterprise.system.core.security|_ThreadID=14;_ThreadName=Thread-31;|
-JACC Policy Provider: PolicyWrapper.implies, context(null)- 
-permission((java.util.PropertyPermission java.security.manager write)) 
+JACC Policy Provider: PolicyWrapper.implies, context(null)-
+permission((java.util.PropertyPermission java.security.manager write))
 domain that failed(ProtectionDomain
 (file:/E:/glassfish/domains/domain1/applications/cejug-clfds/ ... )
 ...
@@ -954,7 +951,7 @@ domain that failed(ProtectionDomain
 
 Granting the following permission eliminates the message:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/cejug-clfds/-" {
     permission java.util.PropertyPermission "java.security.manager", "write";
@@ -963,14 +960,12 @@ grant codeBase "file:${com.sun.aas.instanceRoot}/applications/cejug-clfds/-" {
 
 
 [NOTE]
-=======================================================================
-
+====
 Do not add `java.security.AllPermission` to the `server.policy` file for
 application code. Doing so completely defeats the purpose of the
 security manager, yet you still get the performance overhead associated
 with it.
-
-=======================================================================
+====
 
 
 As noted in the Java EE specification, an application should provide
@@ -986,7 +981,7 @@ If this is not sufficient, you can add the
 `-Djava.security.debug=failure` JVM option to the domain. Use the
 following `asadmin create-jvm-options` command, then restart the server:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -Djava.security.debug=failure
 ----
@@ -1037,8 +1032,9 @@ the relevant configuration, and check the Security Manager Enabled box.
 Then restart the server. For details, click the Help button in the
 Administration Console.
 * Use the following `asadmin create-jvm-options` command, then restart
-the server: +
-[source,oac_no_warn]
+the server:
++
+[source]
 ----
 asadmin create-jvm-options -Djava.security.manager
 ----
@@ -1054,7 +1050,7 @@ Persistence API by calling `Persistence.createEMF()`, the EclipseLink
 persistence provider requires that you set the
 `eclipselink.security.usedoprivileged` JVM option to `true` as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -Declipselink.security.usedoprivileged=true
 ----
@@ -1072,7 +1068,7 @@ To deploy CDI-enabled Java EE applications in a GlassFish Server 5.0
 domain or cluster for which security manager is enabled, add the
 following permissions to the applications:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/[ApplicationName]" {
  permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
@@ -1083,11 +1079,11 @@ For example, for a CDI application named `foo.war`, add the following
 permissions to the `server.policy` file, restart the domain or cluster,
 and then deploy and use the application.
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:${com.sun.aas.instanceRoot}/applications/foo" {
  permission java.lang.reflect.ReflectPermission "suppressAccessChecks";
-}; 
+};
 ----
 
 For more information about modifying application permissions, see
@@ -1112,22 +1108,18 @@ many hops they travel.
 
 
 [NOTE]
-=======================================================================
-
+====
 Message security (JSR 196) is supported only in the full GlassFish
 Server, not in the Web Profile.
-
-=======================================================================
+====
 
 
 
 [NOTE]
-=======================================================================
-
+====
 In this release of the GlassFish Server, message layer annotations are
 not supported.
-
-=======================================================================
+====
 
 
 For more information about web services, see
@@ -1174,12 +1166,13 @@ select the Message Security component, and select SOAP. Then select
 `XWS_ClientProvider` from the Default Client Provider list. For details,
 click the Help button in the Administration Console.
 * You can enable the message security providers using the following
-commands. +
-[source,oac_no_warn]
+commands.
++
+[source]
 ----
-asadmin set 
+asadmin set
 server-config.security-service.message-security-config.SOAP.default_provider=XWS_ServerProvider
-asadmin set 
+asadmin set
 server-config.security-service.message-security-config.SOAP.default_client_provider=XWS_ClientProvider
 ----
 For more information about the `asadmin set` command, see the
@@ -1235,7 +1228,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 In addition, you can set a few optional provider properties using the
 `asadmin set` command. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server-config.security-service.message-security-config.provider-config.property.debug=true
 ----
@@ -1249,11 +1242,11 @@ properties.
 Table 4-2 Message Security Provider Properties
 
 [width="100%",cols="30%,24%,46%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
-|`security.config` |domain-dir`/``config/``wss-server-``config-1.0.xml`
-a|
-Specifies the location of the message security configuration file. To
+|`security.config`
+|domain-dir`/``config/``wss-server-``config-1.0.xml`
+a|Specifies the location of the message security configuration file. To
 point to a configuration file in the domain-dir`/config` directory, use
 the system property `${com.sun.aas.instanceRoot}/``config/`, for
 example:
@@ -1262,21 +1255,25 @@ example:
 
 See link:#gilzz[System Properties].
 
-|`debug` |`false` |If `true`, enables dumping of server provider debug
-messages to the server log.
+|`debug`
+|`false`
+|If `true`, enables dumping of server provider debug messages to the server log.
 
-|`dynamic.username.password` |`false` |If `true`, signals the provider
-runtime to collect the user name and password from the `CallbackHandler`
-for each request. If `false`, the user name and password for
-`wsse:UsernameToken(s)` is collected once, during module initialization.
+|`dynamic.username.password`
+|`false`
+|If `true`, signals the provider runtime to collect the user name and password from the `CallbackHandler`
+for each request.
+If `false`, the user name and password for `wsse:UsernameToken(s)` is collected once, during module initialization.
 This property is only applicable for a `ClientAuthModule`.
 
-|`encryption.key.alias` |`s1as` |Specifies the encryption key used by
-the provider. The key is identified by its `keystore` alias.
+|`encryption.key.alias`
+|`s1as`
+|Specifies the encryption key used by the provider. The key is identified by its `keystore` alias.
 
-|`signature.key.alias` |`s1as` |Specifies the signature key used by the
-provider. The key is identified by its `keystore` alias.
-|=======================================================================
+|`signature.key.alias`
+|`s1as`
+|Specifies the signature key used by the provider. The key is identified by its `keystore` alias.
+|===
 
 
 [[beacb]][[GSDVG00375]][[message-security-responsibilities]]
@@ -1433,14 +1430,16 @@ To Enable Message Protection for All Methods Using Digital Signature
 
 Follow this procedure.
 
-1.  In a text editor, open the application's `glassfish-ejb-jar.xml`
-file. +
+1. In a text editor, open the application's `glassfish-ejb-jar.xml`
+file.
++
 For the `xms` example, this file is located in the directory
 app-dir`/xms-ejb/src/conf`, where app-dir is defined in link:#beacj[To
 Set Up the Sample Application].
-2.  Modify the `glassfish-ejb-jar.xml` file by adding the
-`message-security-binding` element as shown: +
-[source,oac_no_warn]
+2. Modify the `glassfish-ejb-jar.xml` file by adding the
+`message-security-binding` element as shown:
++
+[source,xml]
 ----
 <glassfish-ejb-jar>
   <enterprise-beans>
@@ -1462,7 +1461,7 @@ Set Up the Sample Application].
   </enterprise-beans>
 </glassfish-ejb-jar>
 ----
-3.  Compile, deploy, and run the application as described in
+3. Compile, deploy, and run the application as described in
 link:#beack[To Run the Sample Application].
 
 [[beach]][[GSDVG00245]][[configuring-message-protection-for-a-specific-method-based-on-digital-signatures]]
@@ -1496,14 +1495,16 @@ Using Digital Signature
 
 Follow this procedure.
 
-1.  In a text editor, open the application's `glassfish-ejb-jar.xml`
-file. +
+1. In a text editor, open the application's `glassfish-ejb-jar.xml`
+file.
++
 For the `xms` example, this file is located in the directory
 app-dir`/xms-ejb/src/conf`, where app-dir is defined in link:#beacj[To
 Set Up the Sample Application].
-2.  Modify the `glassfish-ejb-jar.xml` file by adding the
-`message-security-binding` element as shown: +
-[source,oac_no_warn]
+2. Modify the `glassfish-ejb-jar.xml` file by adding the
+`message-security-binding` element as shown:
++
+[source,xml]
 ----
 <glassfish-ejb-jar>
   <enterprise-beans>
@@ -1535,7 +1536,7 @@ Set Up the Sample Application].
   </enterprise-beans>
 </glassfish-ejb-jar>
 ----
-3.  Compile, deploy, and run the application as described in
+3. Compile, deploy, and run the application as described in
 link:#beack[To Run the Sample Application].
 
 [[beaci]][[GSDVG00377]][[understanding-and-running-the-sample-application]]
@@ -1597,20 +1598,23 @@ as-install`/j2ee14-samples/samples/webservices/security/ejb/apps/xms/`
 or in a directory of your choice. For easy reference throughout the rest
 of this section, this directory is referred to as simply app-dir.
 
-1.  Go to the
+1. Go to the
 http://www.oracle.com/technetwork/java/javaee/download-141771.html[J2EE
 1.4 download URL]
 (`http://www.oracle.com/technetwork/java/javaee/download-141771.html`)
 in your browser.
-2.  Click on the Download button for the Samples Bundle.
-3.  Click on Accept License Agreement.
-4.  Click on the J2EE SDK Samples link.
-5.  Choose a location for the `j2eesdk-1_4_03-samples.zip` file. +
+2. Click on the Download button for the Samples Bundle.
+3. Click on Accept License Agreement.
+4. Click on the J2EE SDK Samples link.
+5. Choose a location for the `j2eesdk-1_4_03-samples.zip` file.
++
 Saving the file to as-install is recommended.
-6.  Unzip the file. +
+6. Unzip the file.
++
 Unzipping to the as-install`/j2ee14-samples` directory is recommended.
-For example, you can use the following command. +
-[source,oac_no_warn]
+For example, you can use the following command.
++
+[source]
 ----
 unzip j2eesdk-1_4_03-samples.zip -d j2ee14-samples
 ----
@@ -1620,17 +1624,19 @@ unzip j2eesdk-1_4_03-samples.zip -d j2ee14-samples
 To Run the Sample Application
 +++++++++++++++++++++++++++++
 
-1.  Make sure that the GlassFish Server is running. +
+1. Make sure that the GlassFish Server is running. +
 Message security providers are set up when the Ant targets are run, so
 you do not need to configure these on the GlassFish Server prior to
 running this example.
-2.  If you are not running HTTP on the default port of 8080, change the
+
+2. If you are not running HTTP on the default port of 8080, change the
 WSDL file for the example to reflect the change, and change the
 `common.properties` file to reflect the change as well. +
 The WSDL file for this example is located at
 app-dir`/xms-ejb/``src/conf/HelloWorld.wsdl`. The port number is in the
-following section: +
-[source,oac_no_warn]
+following section:
++
+[source,xml]
 ----
 <service name="HelloWorld">
   <port name="HelloIFPort" binding="tns:HelloIFBinding">
@@ -1643,23 +1649,28 @@ file are set properly for your installation and environment. If you need
 a more detailed description of this file, refer to the "Configuration"
 section for the web services security applications at
 as-install`/j2ee14-samples/samples/webservices/security/docs/common.html#Logging`.
-3.  Change to the app-dir directory.
-4.  Run the following Ant targets to compile, deploy, and run the
+
+3. Change to the app-dir directory.
+
+4. Run the following Ant targets to compile, deploy, and run the
 example application:
-1.  To compile samples: +
-`ant`
-2.  To deploy samples: +
-`ant deploy`
-3.  To run samples: +
-`ant run` +
+[arabic]
+.. To compile samples: `ant`
+.. To deploy samples: `ant deploy`
+.. To run samples: `ant run`
+
++
 If the sample has compiled and deployed properly, you see the following
 response on your screen after the application has run: +
 `run:[echo] Running the xms program:[exec] Established message level security : Hello Duke!`
-5.  To undeploy the sample, run the following Ant target: +
-[source,oac_no_warn]
+
+5. To undeploy the sample, run the following Ant target:
++
+[source]
 ----
 ant undeploy
 ----
+
 All of the web services security examples use the same web service name
 (`HelloWorld`) and web service ports. These examples show only the
 differences necessary for protecting web services using various
@@ -1687,13 +1698,11 @@ the standard security APIs in the Java EE tutorial.
 
 
 [NOTE]
-=======================================================================
-
+====
 The `com.sun.appserv.security.ProgrammaticLogin` class in GlassFish
 Server is not a Java EE API; therefore, it is not portable to other
 application servers.
-
-=======================================================================
+====
 
 
 The following topics are addressed here:
@@ -1754,7 +1763,7 @@ mechanism.
 To grant the required permission to the application, add the following
 to the domain-dir`/config/server.policy` file:
 
-[source,oac_no_warn]
+[source]
 ----
 grant codeBase "file:jar-file-path" {
      permission com.sun.appserv.security.ProgrammaticLoginPermission
@@ -1781,25 +1790,25 @@ or JSP files and two for EJB components.
 The login methods for servlets or JSP files have the following
 signatures:
 
-[source,oac_no_warn]
+[source,java]
 ----
-public java.lang.Boolean login(String user, String password, 
-    javax.servlet.http.HttpServletRequest request, 
+public java.lang.Boolean login(String user, String password,
+    javax.servlet.http.HttpServletRequest request,
     javax.servlet.http.HttpServletResponse response)
 
-public java.lang.Boolean login(String user, String password, 
-    String realm, javax.servlet.http.HttpServletRequest request, 
-    javax.servlet.http.HttpServletResponse response, boolean errors) 
+public java.lang.Boolean login(String user, String password,
+    String realm, javax.servlet.http.HttpServletRequest request,
+    javax.servlet.http.HttpServletResponse response, boolean errors)
     throws java.lang.Exception
 ----
 
 The login methods for EJB components have the following signatures:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public java.lang.Boolean login(String user, String password)
 
-public java.lang.Boolean login(String user, String password, 
+public java.lang.Boolean login(String user, String password,
     String realm, boolean errors) throws java.lang.Exception
 ----
 
@@ -1824,23 +1833,23 @@ if the actual login fails.
 The logout methods for servlets or JSP files have the following
 signatures:
 
-[source,oac_no_warn]
+[source,java]
 ----
-public java.lang.Boolean logout(HttpServletRequest request, 
+public java.lang.Boolean logout(HttpServletRequest request,
     HttpServletResponse response)
 
-public java.lang.Boolean logout(HttpServletRequest request, 
-    HttpServletResponse response, boolean errors) 
+public java.lang.Boolean logout(HttpServletRequest request,
+    HttpServletResponse response, boolean errors)
     throws java.lang.Exception
 ----
 
 The logout methods for EJB components have the following signatures:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public java.lang.Boolean logout()
 
-public java.lang.Boolean logout(boolean errors) 
+public java.lang.Boolean logout(boolean errors)
     throws java.lang.Exception
 ----
 
@@ -1915,7 +1924,7 @@ expired single sign-on records. The default value is `60`.
 
 Here are example `asadmin set` commands with default values:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-enabled="true"
 asadmin set server-config.http-service.virtual-server.vsrv1.property.sso-max-inactive-seconds="300"
@@ -2015,7 +2024,7 @@ identity store, and a Database identity store. The following snippet
 shows the usage of `DatabaseIdentityStoreDefinition`, which makes
 `DatabaseIdentityStore` available as CDI bean.
 
-[source,oac_no_warn]
+[source,java]
 ----
 @DatabaseIdentityStoreDefinition(
     callerQuery = "#{'select password from caller where name = ?'}",
@@ -2025,7 +2034,7 @@ shows the usage of `DatabaseIdentityStoreDefinition`, which makes
     hashAlgorithmParameters = {
         "Pbkdf2PasswordHash.Iterations=3072",
         "${applicationConfig.dyna}"
-    }   
+    }
 )
 ----
 
@@ -2052,18 +2061,18 @@ A custom authentication mechanism implements the
 `HttpAuthenticationMechanism` interface, introduced in Java EE Security
 API. This interface defines the following three methods.
 
-[source,oac_no_warn]
+[source,java]
 ----
 AuthenticationStatus validateRequest(HttpServletRequest request,
                                      HttpServletResponse response,
                                      HttpMessageContext httpMessageContext
                                     ) throws AuthenticationException;
- 
+
 AuthenticationStatus secureResponse(HttpServletRequest request,
                                     HttpServletResponse response,
                                     HttpMessageContext httpMessageContext
                                     ) throws AuthenticationException;
- 
+
 void cleanSubject(HttpServletRequest request,
                   HttpServletResponse response,
                   HttpMessageContext   httpMessageContext);
@@ -2102,7 +2111,7 @@ API provides default implementation of other two methods. An application
 provider may choose to override the default implementation depending on
 the requirement.
 
-[source,oac_no_warn]
+[source,java]
 ----
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
@@ -2115,35 +2124,35 @@ import javax.security.enterprise.identitystore.CredentialValidationResult;
 import javax.security.enterprise.identitystore.IdentityStoreHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
- 
+
 import static javax.security.enterprise.identitystore.CredentialValidationResult.Status.VALID;
- 
+
 @RequestScoped
 public class MyAuthenticationMechanism implements HttpAuthenticationMechanism {
- 
+
     @Inject
     private IdentityStoreHandler identityStoreHandler;
- 
+
     @Override
     public AuthenticationStatus validateRequest(HttpServletRequest request, HttpServletResponse response, HttpMessageContext httpMessageContext) throws AuthenticationException {
- 
-          // Get the (caller) name and password from the request 
-        // NOTE: This is for the smallest possible example only. In practice 
-        // putting the password in a request query parameter is highly 
-        // insecure and is discouraged. 
+
+          // Get the (caller) name and password from the request
+        // NOTE: This is for the smallest possible example only. In practice
+        // putting the password in a request query parameter is highly
+        // insecure and is discouraged.
         String name = request.getParameter("name");
         String password = request.getParameter("password");
- 
+
         if (name != null && password != null) {
- 
-            // Delegate the {credentials in -> identity data out} function to 
-            // the Identity Store 
+
+            // Delegate the {credentials in -> identity data out} function to
+            // the Identity Store
             CredentialValidationResult result = identityStoreHandler.validate(
                 new UsernamePasswordCredential(name, password));
- 
+
             if (result.getStatus() == VALID) {
-                // Communicate the details of the authenticated user to the 
-                // container. 
+                // Communicate the details of the authenticated user to the
+                // container.
                 response.addHeader("Authentication Mechanism", "MyAuthenticationMechanism");
                 return httpMessageContext.notifyContainerAboutLogin(
                     result.getCallerPrincipal(), result.getCallerGroups());
@@ -2151,10 +2160,10 @@ public class MyAuthenticationMechanism implements HttpAuthenticationMechanism {
                 return httpMessageContext.responseUnauthorized();
             }
         }
- 
+
         return httpMessageContext.doNothing();
     }
- 
+
 }
 ----
 
@@ -2182,10 +2191,10 @@ using `security-constraint` elements).
 The JSR 196 specification defines a simple message processing model
 composed of four interaction points:
 
-1.  `secureRequest` on the client
-2.  `validateRequest` on the server
-3.  `secureResponse` on the server
-4.  `validateResponse` on the client
+1. `secureRequest` on the client
+2. `validateRequest` on the server
+3. `secureResponse` on the server
+4. `validateResponse` on the client
 
 A message processing runtime uses the SPI at these interaction points to
 delegate the corresponding message security processing to authentication
@@ -2260,7 +2269,8 @@ the response to the client.
 value indicates the end of a multi-message security dialog originating
 after the service interaction and during the processing of the
 application response. The container responds to this status value by
-sending the response to the client. +
+sending the response to the client.
++
 The `validateRequest` method may also throw an `AuthException` to
 indicate that the message processing by the SAM failed without
 establishing a failure response message in `messageInfo`.
@@ -2287,7 +2297,7 @@ The class `MySam.java` is a sample SAM implementation. Notice that the
 sample implements the five methods of the ServerAuthModule interface.
 This SAM implements an approximation of HTTP basic authentication.
 
-[source,oac_no_warn]
+[source,java]
 ----
 package tip.sam;
 
@@ -2533,7 +2543,8 @@ following options:
 
 ** Additional Property — Name: `group-name` Value: `user`
 
-** Additional Property — Name: `realm-name` Value: `Sam` +
+** Additional Property — Name: `realm-name` Value: `Sam`
++
 For details, click the Help button in the Administration Console.
 * Use the `asadmin create-message-security-provider` command to
 configure a SAM. Set the following options:
@@ -2547,7 +2558,8 @@ configure a SAM. Set the following options:
 ** `--property group-name=user:realm-name=Sam`
 
 ** Provider name operand — Specify a unique name for the SAM, for
-example `MySAM` +
+example `MySAM`
++
 For details, see the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition
 Reference Manual].
 

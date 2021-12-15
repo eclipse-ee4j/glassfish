@@ -4,6 +4,7 @@ title=Using the Java Naming and Directory Interface
 next=jms.html
 prev=transaction-service.html
 ~~~~~~
+
 Using the Java Naming and Directory Interface
 =============================================
 
@@ -31,16 +32,14 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 The Web Profile of the GlassFish Server supports the EJB 3.1 Lite
 specification, which allows enterprise beans within web applications,
 among other features. The full GlassFish Server supports the entire EJB
 3.1 specification. For details, see
 http://jcp.org/en/jsr/detail?id=318[JSR 318]
 (`http://jcp.org/en/jsr/detail?id=318`).
-
-=======================================================================
+====
 
 
 [[beans]][[GSDVG00192]][[accessing-the-naming-context]]
@@ -73,13 +72,11 @@ Context]
 
 
 [NOTE]
-=======================================================================
-
+====
 Each resource within a server instance must have a unique name. However,
 two resources in different server instances or different domains can
 have the same name.
-
-=======================================================================
+====
 
 
 [[BGBJGGAD]][[GSDVG560]][[portable-global-jndi-names]]
@@ -116,22 +113,22 @@ GlassFish Server V2 Vendor-Specific Global JNDI Names
 GlassFish Server v2 vendor-specific global JNDI names are assigned
 according to the following precedence rules:
 
-1.  A global JNDI name assigned in the `glassfish-ejb-jar.xml`,
+1. A global JNDI name assigned in the `glassfish-ejb-jar.xml`,
 `glassfish-web.xml`, or `glassfish-application-client.xml` deployment
 descriptor file has the highest precedence. See link:#beaoa[Mapping
 References].
-2.  A global JNDI name assigned in a `mapped-name` element in the
+2. A global JNDI name assigned in a `mapped-name` element in the
 `ejb-jar.xml`, `web.xml`, or `application-client.xml` deployment
 descriptor file has the second highest precedence. The following
 elements have `mapped-name` subelements: `resource-ref`,
 `resource-env-ref`, `ejb-ref`, `message-destination`,
 `message-destination-ref`, `session`, `message-driven`, and `entity`.
-3.  A global JNDI name assigned in a `mappedName` attribute of an
+3. A global JNDI name assigned in a `mappedName` attribute of an
 annotation has the third highest precedence. The following annotations
 have `mappedName` attributes: `@jakarta.annotation.Resource`,
 `@javax.ejb.EJB`, `@javax.ejb.Stateless`, `@javax.ejb.Singleton`,
 `@javax.ejb.Stateful`, and `@javax.ejb.MessageDriven`.
-4.  In most cases, a default global JNDI name is assigned (and recorded
+4. In most cases, a default global JNDI name is assigned (and recorded
 in the server log) if no name is assigned in deployment descriptors or
 annotations.
 * For a session or entity bean, a GlassFish Server V2-specific JNDI name
@@ -174,7 +171,7 @@ default JNDI names.
 The default handling of V2-specific JNDI names in GlassFish Server 5.0
 can be managed by using the `asadmin` command:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> set server.ejb-container.property.disable-nonportable-jndi-names="true"
 ----
@@ -207,7 +204,7 @@ property to `org.glassfish.jndi.cosnaming.CNCtxFactory` in the client JVM
 software when accessing EJB components. You can set this property using
 the `asadmin create-jvm-options` command, as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin> create-jvm-options -Djava.naming.factory.initial=org.glassfish.jndi.cosnaming.CNCtxFactory
 ----
@@ -217,7 +214,7 @@ link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Ref
 
 Or you can set this property in the code, as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 Properties properties = null;
       try {
@@ -244,7 +241,7 @@ is prepended to any global JNDI names and is automatically resolved
 during the lookup. The syntax for an interoperable global name is as
 follows:
 
-[source,oac_no_warn]
+[source]
 ----
 corbaname:iiop:host:port#a/b/name
 ----
@@ -265,7 +262,7 @@ name of `a/b/Foo`.
 
 The `ejb-ref` element in `glassfish-web.xml` looks like this:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <ejb-ref>
    <ejb-ref-name>ejb/Foo</ejb-ref-name>
@@ -275,7 +272,7 @@ The `ejb-ref` element in `glassfish-web.xml` looks like this:
 
 The code looks like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 Context ic = new InitialContext();
 Object o = ic.lookup("java:comp/env/ejb/Foo");
@@ -285,7 +282,7 @@ For a client that doesn't run within a Java EE container, the code just
 uses the interoperable global name instead of the simple global JNDI
 name. For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 Context ic = new InitialContext();
 Object o = ic.lookup("corbaname:iiop:host:port#a/b/Foo");
@@ -398,13 +395,15 @@ JavaBeanFactory
 To create a custom resource that provides instances of a JavaBean class,
 follow these steps:
 
-1.  Set the custom resource's factory class to
+1. Set the custom resource's factory class to
 `org.glassfish.resources.custom.factory.JavaBeanFactory`.
-2.  Create a property in the custom resource for each setter method in
-the JavaBean class. +
+2. Create a property in the custom resource for each setter method in
+the JavaBean class.
++
 For example, if the JavaBean class has a method named `setAccount`,
 specify a property named `account` and give it a value.
-3.  Make sure the JavaBean class is accessible to the GlassFish Server. +
+3. Make sure the JavaBean class is accessible to the GlassFish Server.
++
 For example, you can place the JavaBean class in the as-install`/lib`
 directory.
 
@@ -420,15 +419,18 @@ one or both of the following:
 
 * Create a property in the custom resource named
 `org.glassfish.resources.custom.factory.PropertiesFactory.fileName` and
-specify as its value the path to a properties file or an XML file. +
+specify as its value the path to a properties file or an XML file.
++
 The path can be absolute or relative to as-install. The file must be
-accessible to the GlassFish Server. +
+accessible to the GlassFish Server.
++
 If an XML file is specified, it must match the document type definition
 (DTD) specified in the API definition of
 http://download.oracle.com/javase/8/docs/api/java/util/Properties.html[java.util.Properties]
 (`http://docs.oracle.com/javase/8/docs/api/java/util/Properties.html`).
 * Create the desired properties directly as properties of the custom
-resource. +
+resource.
++
 If both the `fileName` property and other properties are specified, the
 resulting property set is the union. If the same property is defined in
 the file and directly in the custom resource, the value of the latter
@@ -442,9 +444,9 @@ PrimitivesAndStringFactory
 To create a custom resource that provides Java primitives to
 applications, follow these steps:
 
-1.  Set the custom resource's factory class to
+1. Set the custom resource's factory class to
 `org.glassfish.resources.custom.factory.PrimitivesAndStringFactory`.
-2.  Set the custom resource's resource type to one of the following or
+2. Set the custom resource's resource type to one of the following or
 its fully qualified wrapper class name equivalent:
 * `int`
 * `long`
@@ -455,8 +457,9 @@ its fully qualified wrapper class name equivalent:
 * `byte`
 * `boolean`
 * `String`
-3.  Create a property in the custom resource named `value` and give it
-the value needed by the application. +
+3. Create a property in the custom resource named `value` and give it
+the value needed by the application.
++
 For example, If the application requires a `double` of value `22.1`,
 create a property with the name `value` and the value `22.1`.
 
@@ -468,16 +471,18 @@ URLFactory
 To create a custom resource that provides URL instances to applications,
 follow these steps:
 
-1.  Set the custom resource's factory class to
+1. Set the custom resource's factory class to
 `org.glassfish.resources.custom.factory.URLObjectFactory`.
-2.  Choose which of the following constructors to use:
+2. Choose which of the following constructors to use:
 * `URL(protocol, host, port, file)`
 * `URL(protocol, host, file)`
 * `URL(spec)`
-3.  Define properties according to the chosen constructor. +
+3. Define properties according to the chosen constructor.
++
 For example, for the first constructor, define properties named
 `protocol`, `host`, `port`, and `file`. Example values might be `http`,
-`localhost`, `8085`, and `index.html`, respectively. +
+`localhost`, `8085`, and `index.html`, respectively.
++
 For the third constructor, define a property named `spec` and assign it
 the value of the entire URL.
 
@@ -524,7 +529,8 @@ the `resource-ref` element in the corresponding Java EE XML file) to the
 absolute JNDI name configured in GlassFish Server.
 * `ejb-ref` - Maps the `@EJB` annotation (or the `ejb-ref` element in
 the corresponding Java EE XML file) to the absolute JNDI name configured
-in GlassFish Server. +
+in GlassFish Server.
++
 JNDI names for EJB components must be unique. For example, appending the
 application name and the module name to the EJB name is one way to
 guarantee unique names. In this case, `mycompany.pkging.pkgingEJB.MyEJB`
@@ -546,7 +552,7 @@ sessions, and so on).
 
 The `@Resource` annotation in the application code looks like this:
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Resource(name="jdbc/helloDbDs") javax.sql.DataSource ds;
 ----
@@ -562,7 +568,7 @@ the `glassfish-web.xml` file maps the `res-ref-name` (the name specified
 in the annotation) to the JNDI name of another JDBC resource configured
 in GlassFish Server.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <resource-ref>
    <res-ref-name>jdbc/helloDbDs</res-ref-name>

@@ -4,6 +4,7 @@ title=Using the Java Message Service
 next=mail.html
 prev=jndi.html
 ~~~~~~
+
 Using the Java Message Service
 ==============================
 
@@ -20,12 +21,10 @@ Open Message Queue software.
 
 
 [NOTE]
-=======================================================================
-
+====
 JMS resources are supported only in the full GlassFish Server, not in
 the Web Profile.
-
-=======================================================================
+====
 
 
 For information about the JMS, see
@@ -138,17 +137,19 @@ The following topics are addressed here:
 To Send SOAP Messages Using the JMS API
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Import the `MessageTransformer` library. +
-[source,oac_no_warn]
+1. Import the `MessageTransformer` library.
++
+[source,java]
 ----
 import com.sun.messaging.xml.MessageTransformer;
 ----
 This is the utility whose methods you use to convert SOAP messages to
 JMS messages and the reverse. You can then send a JMS message containing
 a SOAP payload as if it were a normal JMS message.
-2.  Initialize the `TopicConnectionFactory`, `TopicConnection`,
-`TopicSession`, and publisher. +
-[source,oac_no_warn]
+2. Initialize the `TopicConnectionFactory`, `TopicConnection`,
+`TopicSession`, and publisher.
++
+[source,java]
 ----
 tcf = new TopicConnectionFactory();
 tc = tcf.createTopicConnection();
@@ -156,9 +157,10 @@ session = tc.createTopicSession(false,Session.AUTO_ACKNOWLEDGE);
 topic = session.createTopic(topicName);
 publisher = session.createPublisher(topic);
 ----
-3.  Construct a SOAP message using the SOAP with Attachments API for
-Java (SAAJ). +
-[source,oac_no_warn]
+3. Construct a SOAP message using the SOAP with Attachments API for
+Java (SAAJ).
++
+[source,java]
 ----
 /*construct a default soap MessageFactory */
 MessageFactory mf = MessageFactory.newInstance();
@@ -189,20 +191,22 @@ ap.setContentId("cid-001");
 soapMessage.addAttachmentPart(ap);
 soapMessage.saveChanges();
 ----
-4.  Convert the SOAP message to a JMS message by calling the
-`MessageTransformer.SOAPMessageintoJMSMessage()` method. +
-[source,oac_no_warn]
+4. Convert the SOAP message to a JMS message by calling the
+`MessageTransformer.SOAPMessageintoJMSMessage()` method.
++
+[source,java]
 ----
-Message m = MessageTransformer.SOAPMessageIntoJMSMessage (soapMessage, 
-session );
+Message m = MessageTransformer.SOAPMessageIntoJMSMessage (soapMessage, session );
 ----
-5.  Publish the JMS message. +
-[source,oac_no_warn]
+5. Publish the JMS message.
++
+[source,java]
 ----
 publisher.publish(m);
 ----
-6.  Close the JMS connection. +
-[source,oac_no_warn]
+6. Close the JMS connection.
++
+[source,java]
 ----
 tc.close();
 ----
@@ -212,17 +216,19 @@ tc.close();
 To Receive SOAP Messages Using the JMS API
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Import the `MessageTransformer` library. +
-[source,oac_no_warn]
+1. Import the `MessageTransformer` library.
++
+[source,java]
 ----
 import com.sun.messaging.xml.MessageTransformer;
 ----
 This is the utility whose methods you use to convert SOAP messages to
 JMS messages and the reverse. The JMS message containing the SOAP
 payload is received as if it were a normal JMS message.
-2.  Initialize the `TopicConnectionFactory`, `TopicConnection`,
-`TopicSession`, `TopicSubscriber`, and Topic. +
-[source,oac_no_warn]
+2. Initialize the `TopicConnectionFactory`, `TopicConnection`,
+`TopicSession`, `TopicSubscriber`, and Topic.
++
+[source,java]
 ----
 messageFactory = MessageFactory.newInstance();
 tcf = new com.sun.messaging.TopicConnectionFactory();
@@ -233,16 +239,16 @@ subscriber = session.createSubscriber(topic);
 subscriber.setMessageListener(this);
 tc.start();
 ----
-3.  Use the `OnMessage` method to receive the message. Use the
+3. Use the `OnMessage` method to receive the message. Use the
 `SOAPMessageFromJMSMessage` method to convert the JMS message to a SOAP
-message. +
-[source,oac_no_warn]
+message.
++
+[source,java]
 ----
 public void onMessage (Message message) {
-SOAPMessage soapMessage =
- MessageTransformer.SOAPMessageFromJMSMessage( message,
- messageFactory ); }
+SOAPMessage soapMessage = MessageTransformer.SOAPMessageFromJMSMessage(message, messageFactory );
+}
 ----
-4.  Retrieve the content of the SOAP message.
+4. Retrieve the content of the SOAP message.
 
 

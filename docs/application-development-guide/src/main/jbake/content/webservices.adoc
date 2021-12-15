@@ -4,6 +4,7 @@ title=Developing Web Services
 next=jpa.html
 prev=securing-apps.html
 ~~~~~~
+
 Developing Web Services
 =======================
 
@@ -25,8 +26,7 @@ The following topics are addressed here:
 
 
 [NOTE]
-=======================================================================
-
+====
 If you installed the Web Profile, web services are not supported unless
 the optional Metro Web Services Stack add-on component is downloaded
 from the Update Tool. Without the Metro add-on component, a servlet or
@@ -40,8 +40,7 @@ In addition, the as-install`/modules/webservices-osgi.jar` and
 as-install`/modules/webservices-api-osgi.jar` files must be in
 the classpath of your web services application. IDEs such as NetBeans
 and Eclipse do this automatically.
-
-=======================================================================
+====
 
 
 "https://javaee.github.io/tutorial/partwebsvcs.html[Web Services]" in
@@ -95,13 +94,11 @@ would any servlet, stateless session bean (SLSB), or application.
 
 
 [NOTE]
-=======================================================================
-
+====
 For complex services with dependent classes, user specified WSDL files,
 or other advanced features, autodeployment of an annotated file is not
 sufficient.
-
-=======================================================================
+====
 
 
 The GlassFish Server deployment descriptor files `glassfish-web.xml` and
@@ -125,7 +122,7 @@ The Web Service URI, WSDL File, and Test Page
 Clients can run a deployed web service by accessing its service endpoint
 address URI, which has the following format:
 
-[source,oac_no_warn]
+[source]
 ----
 http://host:port/context-root/servlet-mapping-url-pattern
 ----
@@ -138,7 +135,7 @@ the `web.xml` file.
 In the following example, the context-root is `my-ws` and the
 servlet-mapping-url-pattern is `/simple`:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/my-ws/simple
 ----
@@ -146,7 +143,7 @@ http://localhost:8080/my-ws/simple
 You can view the WSDL file of the deployed service in a browser by
 adding `?WSDL` to the end of the URI. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/my-ws/simple?WSDL
 ----
@@ -154,7 +151,7 @@ http://localhost:8080/my-ws/simple?WSDL
 For debugging, you can run a test page for the deployed service in a
 browser by adding `?Tester` to the end of the URL. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:8080/my-ws/simple?Tester
 ----
@@ -166,13 +163,11 @@ Administration Console.
 
 
 [NOTE]
-=======================================================================
-
+====
 The test page works only for WS-I compliant web services. This means
 that the tester servlet does not work for services with WSDL files that
 use RPC/encoded binding.
-
-=======================================================================
+====
 
 
 Generation of the test page is enabled by default. You can disable the
@@ -208,7 +203,7 @@ com.sun.xml.ws.db.toplink.JAXBContextFactory::
 
 For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin create-jvm-options -Dcom.sun.xml.ws.spi.db.BindingContextFactory=com.sun.xml.ws.db.toplink.JAXBContextFactory
 ----
@@ -221,9 +216,11 @@ Allowed values are as follows:::
 org.jvnet.ws.databinding.DatabindingModeFeature.GLASSFISH_JAXB::
   Specifies the JAXB reference implementation. This is the default.
 com.sun.xml.ws.db.toplink.JAXBContextFactory.ECLIPSELINK_JAXB::
-  Specifies Eclipselink MOXy JAXB binding. +
-For example: +
-[source,oac_no_warn]
+  Specifies Eclipselink MOXy JAXB binding.
++
+For example:
++
+[source,java]
 ----
 import jakarta.xml.ws.WebServiceFeature;
 import org.jvnet.ws.databinding.DatabindingModeFeature;
@@ -233,8 +230,9 @@ WebServiceFeature[] features = {new DatabindingModeFeature(JAXBContextFactory.EC
 ...
 ----
 * Set the `org.jvnet.ws.databinding.DatabindingModeFeature` feature
-using the `@DatabindingMode` annotation. For example: +
-[source,oac_no_warn]
+using the `@DatabindingMode` annotation. For example:
++
+[source,java]
 ----
 import jakarta.jws.WebService;
 import org.jvnet.ws.databinding.DatabindingMode;
@@ -246,14 +244,15 @@ import com.sun.xml.ws.db.toplink.JAXBContextFactory;
 ----
 * Set the `databinding` attribute of the `endpoint` element in the
 `sun-jaxws.xml` file. Allowed values are `glassfish.jaxb` or
-`eclipselink.jaxb`. For example: +
-[source,oac_no_warn]
+`eclipselink.jaxb`. For example:
++
+[source,xml]
 ----
-<endpoint
-name='hello'
-implementation='hello.HelloImpl'
-url-pattern='/hello'
-databinding='eclipselink.jaxb'/>
+<endpoint name='hello'
+  implementation='hello.HelloImpl'
+  url-pattern='/hello'
+  databinding='eclipselink.jaxb'
+/>
 ----
 
 The EclipseLink JAXB compiler is not included but can be used with
@@ -261,7 +260,7 @@ GlassFish Server. Download the EclipseLink zip file at
 `http://www.eclipse.org/eclipselink/downloads/` and unzip it. The
 compiler files are located here:
 
-[source,oac_no_warn]
+[source]
 ----
 bin/jaxb-compiler.cmd
 bin/jaxb-compiler.sh
@@ -326,7 +325,7 @@ deploy a Java EE application or module as a JBI service unit, you need
 only specify a small subset of elements in the `jbi.xml` file. Here is
 an example provider:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://ejbws.jbi.misc/">
@@ -338,7 +337,7 @@ an example provider:
 
 Here is an example consumer:
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <jbi version="1.0" xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns0="http://message.hello.jbi/">

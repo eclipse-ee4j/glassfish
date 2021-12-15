@@ -4,6 +4,7 @@ title=Using the JDBC API for Database Access
 next=transaction-service.html
 prev=part-services-and-apis.html
 ~~~~~~
+
 Using the JDBC API for Database Access
 ======================================
 
@@ -27,13 +28,11 @@ A useful JDBC tutorial is located at
 
 
 [NOTE]
-=======================================================================
-
+====
 The GlassFish Server does not support connection pooling or transactions
 for an application's database access if it does not use standard Java EE
 `DataSource` objects.
-
-=======================================================================
+====
 
 
 The following topics are addressed here:
@@ -77,8 +76,9 @@ click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `init-sql` option in the `asadmin set` command. For
-example: +
-[source,oac_no_warn]
+example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.init-sql="sql-string"
 ----
@@ -127,8 +127,9 @@ of the following ways:
 `create-jdbc-connection-pool` subcommand. For more information, see
 link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-timeout-in-seconds` option in the `set`
-subcommand. For example: +
-[source,oac_no_warn]
+subcommand. For example:
++
+[source]
 ----
 asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-timeout-in-seconds=300
 ----
@@ -149,8 +150,9 @@ pool to a `true` value in one of the following ways:
 `create-jdbc-connection-pool` subcommand. For more information, see
 link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
 * Specify the `statement-leak-reclaim` option in the `set` subcommand.
-For example: +
-[source,oac_no_warn]
+For example:
++
+[source]
 ----
 asadmin set resources.jdbc-connection-pool.pool-name.statement-leak-reclaim=true
 ----
@@ -178,8 +180,9 @@ information, click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `statement-cache-size` option in the `asadmin set`
-command. For example: +
-[source,oac_no_warn]
+command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.statement-cache-size=10
 ----
@@ -209,8 +212,9 @@ information, click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `sql-trace-listeners` option in the `asadmin set` command.
-For example: +
-[source,oac_no_warn]
+For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.sql-trace-listeners=listeners
 ----
@@ -230,12 +234,12 @@ file. The module name under which the SQL operation is logged is
 messages along with the module name to enable easy filtering of the SQL
 logs. A sample SQL trace record looks like this:
 
-[source,oac_no_warn]
+[source]
 ----
 [#|2009-11-27T15:46:52.202+0530|FINE|glassfish 6.0|jakarta.enterprise.resource.sqltrace.com.sun.gjc.util
 |_ThreadID=29;_ThreadName=Thread-1;ClassName=com.sun.gjc.util.SQLTraceLogger;MethodName=sqlTrace;
-|ThreadID=77 | ThreadName=p: thread-pool-1; w: 6 | TimeStamp=1259317012202 
-| ClassName=com.sun.gjc.spi.jdbc40.PreparedStatementWrapper40 | MethodName=executeUpdate 
+|ThreadID=77 | ThreadName=p: thread-pool-1; w: 6 | TimeStamp=1259317012202
+| ClassName=com.sun.gjc.spi.jdbc40.PreparedStatementWrapper40 | MethodName=executeUpdate
 | arg[0]=insert into table1(colName) values(100) | arg[1]=columnNames | |#]
 ----
 
@@ -263,8 +267,9 @@ button in the Administration Console.
 * Specify them using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
 link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
-* Set them using the `set` subcommand. For example: +
-[source,oac_no_warn]
+* Set them using the `set` subcommand. For example:
++
+[source]
 ----
 asadmin set resources.jdbc-connection-pool.pool-name.property.time-to-keep-queries-in-minutes=10
 ----
@@ -312,8 +317,9 @@ button in the Administration Console.
 * Specify it using the `--property` option in the
 `create-jdbc-connection-pool` subcommand. For more information, see
 link:../reference-manual/create-jdbc-connection-pool.html#GSRFM00036[`create-jdbc-connection-pool`(1)].
-* Set it using the `set` subcommand. For example: +
-[source,oac_no_warn]
+* Set it using the `set` subcommand. For example:
++
+[source]
 ----
 asadmin set resources.jdbc-connection-pool.pool-name.property.dynamic-reconfiguration-wait-timeout-in-seconds=15
 ----
@@ -339,8 +345,9 @@ button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `pooling` option in the `asadmin set` command. For
-example: +
-[source,oac_no_warn]
+example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.pooling=false
 ----
@@ -398,8 +405,9 @@ information, click the Help button in the Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `associate-with-thread` option in the `asadmin set`
-command. For example: +
-[source,oac_no_warn]
+command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.associate-with-thread=true
 ----
@@ -438,8 +446,9 @@ information, click the Help button in the Administration Console.
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `is-connection-validation-required`,
 `connection-validation-method`, and `validation-classname` options in
-the `asadmin set` command. For example: +
-[source,oac_no_warn]
+the `asadmin set` command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.MyPool.is-connection-validation-required=true
 asadmin set domain1.resources.jdbc-connection-pool.MyPool.connection-validation-method=custom-validation
@@ -488,14 +497,14 @@ The `DataSource` implementation in the GlassFish Server provides a
 its connection pool when it is closed. The method signature is as
 follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
 public void markConnectionAsBad(java.sql.Connection con)
 ----
 
 For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 com.sun.appserv.jdbc.DataSource ds=
    (com.sun.appserv.jdbc.DataSource)context.lookup("dataSource");
@@ -509,7 +518,7 @@ catch (BadConnectionException e){
    ds.markConnectionAsBad(con) //marking it as bad for removal
 }
 finally{
-   stmt.close();    
+   stmt.close();
    con.close(); //Connection will be destroyed during close.
 }
 ----
@@ -550,7 +559,7 @@ configuration settings during creation of a JDBC connection pool. Or,
 you can use the `asadmin set` command to dynamically reconfigure a
 setting. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 asadmin set server.resources.jdbc-connection-pool.JCPool1.fail-all-connections="true"
 asadmin set server.resources.jdbc-connection-pool.JCPool1.is-connection-validation-required="true"
@@ -610,18 +619,18 @@ The `DataSource` implementation in the GlassFish Server provides a
 from the GlassFish Server's `Connection` wrapper. The method signature
 is as follows:
 
-[source,oac_no_warn]
+[source,java]
 ----
-public java.sql.Connection getConnection(java.sql.Connection con) 
+public java.sql.Connection getConnection(java.sql.Connection con)
 throws java.sql.SQLException
 ----
 
 For example:
 
-[source,oac_no_warn]
+[source,java]
 ----
 InitialContext ctx = new InitialContext();
-com.sun.appserv.jdbc.DataSource ds = (com.sun.appserv.jdbc.DataSource) 
+com.sun.appserv.jdbc.DataSource ds = (com.sun.appserv.jdbc.DataSource)
    ctx.lookup("jdbc/MyBase");
 Connection con = ds.getConnection();
 Connection drivercon = ds.getConnection(con); //get physical connection from wrapper
@@ -667,8 +676,9 @@ Administration Console.
 `asadmin create-jdbc-connection-pool` command. For more information, see
 the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edition Reference Manual].
 * Specify the `allow-non-component-callers` option in the `asadmin set`
-command. For example: +
-[source,oac_no_warn]
+command. For example:
++
+[source]
 ----
 asadmin set domain1.resources.jdbc-connection-pool.DerbyPool.allow-non-component-callers=true
 ----

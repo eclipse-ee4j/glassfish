@@ -4,11 +4,11 @@ title=Developing OSGi-enabled Java EE Applications
 next=part-services-and-apis.html
 prev=lifecycle-listeners.html
 ~~~~~~
+
 Developing OSGi-enabled Java EE Applications
 ============================================
 
 [[GSDVG00015]][[gkpch]]
-
 
 [[developing-osgi-enabled-java-ee-applications]]
 13 Developing OSGi-enabled Java EE Applications
@@ -24,14 +24,12 @@ includes the following sections:
 
 
 [NOTE]
-=======================================================================
-
+====
 Many of the features and interfaces presented in this chapter are
 demonstrated in samples and video clips available from the OSGi section
 of the GlassFish Server wiki. See
 `http://wikis.sun.com/display/GlassFish/Osgi` for more information.
-
-=======================================================================
+====
 
 
 [[gkpay]][[GSDVG00173]][[overview-of-osgi-application-and-glassfish-server]]
@@ -200,11 +198,11 @@ For example, HelloWorldServlet will be available at
 `http://localhost:8080/osgi/helloworld` when the following code is
 executed:
 
-[source,oac_no_warn]
+[source,java]
 ----
 
 HttpService httpService = getHttpService(); // Obtain HttpService
-httpService.registerServlet(httpService.registerServlet("/helloworld", 
+httpService.registerServlet(httpService.registerServlet("/helloworld",
 new HelloWorldServlet(), null, ctx);
 ----
 
@@ -216,7 +214,7 @@ Transaction Service
 The Java Transaction API (JTA) defines three interfaces to interact with
 the transaction management system: `UserTransaction`,
 `TransactionManager`, and `TransactionSynchronizationRegistry`. They all
-belong to the javax.transaction package. `TransactionManager`and
+belong to the javax.transaction package. `TransactionManager` and
 `TransactionSynchronizationRegistry` are intended for system level code,
 such as a persistence provider. Whereas, `UserTransaction` is the entity
 that you should use to control transactions. All the objects of the
@@ -234,14 +232,14 @@ thread. Code that runs in the context of a Java EE component typically
 gets a handle on `UserTransaction` by doing a JNDI lookup in the
 component naming context or by using injection, as shown here:
 
-[source,oac_no_warn]
+[source,java]
 ----
-(UserTransaction)(new InitialContext().lookup("java:comp/UserTransaction")); 
+(UserTransaction)(new InitialContext().lookup("java:comp/UserTransaction"));
 ----
 
 or
 
-[source,oac_no_warn]
+[source,java]
 ----
 @Resource UserTransaction utx;
 ----
@@ -251,7 +249,7 @@ have a Java EE component context, wants to get hold of
 `UserTransaction`, or any of the other JTA artifacts, then they can look
 it up in the service registry. Here is an example of such code:
 
-[source,oac_no_warn]
+[source,java]
 ----
 
 BundleContext context;
@@ -279,11 +277,10 @@ GlassFish Server registers each JDBC data source as an OSGi service with
 `jndi-name`, which is set to the JNDI name of the data source. Here is a
 code sample that looks up a data source service:
 
-[source,oac_no_warn]
+[source,java]
 ----
   @Inject
-  @OSGiService(true,
-         "(jndi-name=jdbc/MyDS)") 
+  @OSGiService(true, "(jndi-name=jdbc/MyDS)")
   private DataSource ds;
 ----
 
@@ -297,23 +294,29 @@ and connection factories, are also automatically made available as OSGi
 services. Their service mappings are as follows.
 
 [width="100%",cols="12%,39%,12%,37%",options="header",]
-|=======================================================================
+|===
 |JMS Object |Service Interface |Service Properties |Comments
-|JMS Queue destination |`jakarta.jms.Queue` |`jndi-name` |`jndi-name` is
-set to the JNDI name of the queue
+|JMS Queue destination
+|`jakarta.jms.Queue`
+|`jndi-name`
+|`jndi-name` is set to the JNDI name of the queue
 
-|JMS Topic destination |`jakarta.jms.Topic` |`jndi-name` |`jndi-name` is
-set to the JNDI name of the topic
+|JMS Topic destination
+|`jakarta.jms.Topic`
+|`jndi-name`
+|`jndi-name` is set to the JNDI name of the topic
 
-|JMS connection factory |`jakarta.jms.QueueConnectionFactory` or
-`jakarta.jms.TopicConnectionFactory` or `jakarta.jms.ConnectionFactory`
-|`jndi-name` a|
-`jndi-name` is set to the JNDI name of the topic.
-
+|JMS connection factory
+|`jakarta.jms.QueueConnectionFactory` +
+or +
+`jakarta.jms.TopicConnectionFactory` +
+or +
+`jakarta.jms.ConnectionFactory`
+|`jndi-name`
+|`jndi-name` is set to the JNDI name of the topic. +
 The actual service interface depends on which type of connection factory
 was created.
-
-|=======================================================================
+|===
 
 
 [[gkunr]][[GSDVG00490]][[developing-web-application-bundles]]
@@ -363,7 +366,7 @@ be compliant with the search order used for traditional WAR files.
 
 Assuming the WAB is structured as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 
   foo.war/
@@ -378,10 +381,10 @@ Assuming the WAB is structured as follows:
 Then the OSGi metadata for the WAB as specified in
 `META-INF/MANIFEST.MF` of the WAB would appear as follows:
 
-[source,oac_no_warn]
+[source]
 ----
 
-  MANIFEST.MF:Manifest-Version: 1.0 
+  MANIFEST.MF:Manifest-Version: 1.0
   Bundle-ManifestVersion: 2
   Bundle-SymbolicName: com.acme.foo
   Bundle-Version: 1.0
@@ -403,13 +406,13 @@ virtue of extending the Context and Dependency Injection (CDI)
 framework. Here's an example of the injection of an OSGi Service into a
 Servlet:
 
-[source,oac_no_warn]
+[source,java]
 ----
 
-  @WebServlet 
-  public class MyServlet extends HttpServlet {   
+  @WebServlet
+  public class MyServlet extends HttpServlet {
     @Inject @OSGiService(dynamic=true)
-    FooService fooService; 
+    FooService fooService;
   }
 ----
 
@@ -438,7 +441,8 @@ available:
 the OSGi service registry.
 * `waitTimeout` — Waits the specified duration for a service that
 matches the criteria specified to appear in the OSGi service registry.
-* `dynamic` — Dynamically obtain a service reference (true/false). +
+* `dynamic` — Dynamically obtain a service reference (true/false).
++
 Since OSGi services are dynamic, they may not match the life cycle of
 the application component that has injected a reference to the service.
 Through this attribute, you could indicate that a service reference can
@@ -449,8 +453,6 @@ to an available implementation when the current service reference is
 invalid.
 
 [[GSDVG00044]][[gkvbk]]
-
-
 Example 13-1 Example of a WAB Using CDI
 
 In this example, Bundle B0 defines a service contract called
@@ -466,7 +468,7 @@ dependency to `com.acme.Foo` by adding a field/setter method and
 qualifies that injection point with `@OsgiService`. For instance,
 BarServlet could look like:
 
-[source,oac_no_warn]
+[source,java]
 ----
 
   @Servlet
@@ -498,21 +500,23 @@ Export-EJB header, please refer to the Publishing EJB as OSGi Service
 section. Here's an example of an EJB Application Bundle with its
 metadata:
 
-[source,oac_no_warn]
+[source]
 ----
-
   myEjb.jar/
            com/acme/Foo
            com/acme/impl/FooEJB
            META-INF/MANIFEST.MF
-  MANIFEST.MF: 
-  Manifest-Version: 1.0 
-  Bundle-ManifestVersion: 2 
-  Bundle-SymbolicName: com.acme.foo EJB bundle 
-  Bundle-Version: 1.0.0.BETA 
-  Bundle-Name: com.acme.foo EJB bundle version 1.0.0.BETA 
-  Export-EJB: ALL 
-  Export-Package: com.acme; version=1.0 
+----
+MANIFEST.MF:
+[source]
+----
+  Manifest-Version: 1.0
+  Bundle-ManifestVersion: 2
+  Bundle-SymbolicName: com.acme.foo EJB bundle
+  Bundle-Version: 1.0.0.BETA
+  Bundle-Name: com.acme.foo EJB bundle version 1.0.0.BETA
+  Export-EJB: ALL
+  Export-Package: com.acme; version=1.0
   Import-Package: javax.ejb; version=[3.0, 4.0), com.acme; version=[1.0, 1.1)
 ----
 
@@ -527,11 +531,11 @@ GlassFish Server makes it easy to use OSGi services by virtue of
 extending the Context and Dependency Injection (CDI) framework. Here's
 an example of injection of an OSGi Service into a servlet:
 
-[source,oac_no_warn]
+[source,java]
 ----
 
-  @Stateless 
-  public class MyEJB {   
+  @Stateless
+  public class MyEJB {
     @Inject @OSGiService(dynamic=true)
     Foo foo;
     ...

@@ -4,6 +4,7 @@ title=Setting Up a Development Environment
 next=class-loaders.html
 prev=part-tasks-and-tools.html
 ~~~~~~
+
 Setting Up a Development Environment
 ====================================
 
@@ -141,7 +142,7 @@ To access the Administration Console, type `http://`host`:4848` in your
 browser. The host is the name of the machine on which the GlassFish
 Server is running. By default, the host is `localhost`. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 http://localhost:4848
 ----

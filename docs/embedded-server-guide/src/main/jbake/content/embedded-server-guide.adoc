@@ -3,15 +3,16 @@ status=published
 title=Eclipse GlassFish Server 7 Embedded Server Guide
 prev=preface.html
 ~~~~~~
+
 Eclipse GlassFish Server 7 Embedded Server Guide
-==================================================
+================================================
 
 [[GSESG00001]][[gjldt]]
 
 
 [[glassfish-server-open-source-edition-4.0-embedded-server-guide]]
 1 Eclipse GlassFish Server 7 Embedded Server Guide
-----------------------------------------------------
+--------------------------------------------------
 
 This document explains how to run applications in embedded GlassFish
 Server Open Source Edition and to develop applications in which
@@ -23,15 +24,11 @@ The following topics are addressed here:
 
 * link:#giidt[Introduction to Embedded GlassFish Server]
 * link:#gkubb[Embedded GlassFish Server File System]
-* link:#giijw[Including the GlassFish Server Embedded Server API in
-Applications]
-* link:#gijhs[Testing Applications with the Maven Plug-in for Embedded
-GlassFish Server]
-* link:#gjlde[Using the EJB 3.1 Embeddable API with Embedded GlassFish
-Server]
+* link:#giijw[Including the GlassFish Server Embedded Server API in Applications]
+* link:#gijhs[Testing Applications with the Maven Plug-in for Embedded GlassFish Server]
+* link:#gjlde[Using the EJB 3.1 Embeddable API with Embedded GlassFish Server]
 * link:#gjlfe[Changing Log Levels in Embedded GlassFish Server]
-* link:#gksmw[Default Java Persistence Data Source for Embedded
-GlassFish Server]
+* link:#gksmw[Default Java Persistence Data Source for Embedded GlassFish Server]
 * link:#gihxf[Restrictions for Embedded GlassFish Server]
 
 [[giidt]][[GSESG00035]][[introduction-to-embedded-glassfish-server]]
@@ -50,16 +47,10 @@ without installation or configuration simplifies the process of bundling
 GlassFish Server with applications.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-Embedded GlassFish Server does not run on the Java Platform, Micro
-Edition (Java ME platform).
-
-|=======================================================================
-
+[NOTE]
+====
+Embedded GlassFish Server does not run on the Java Platform, Micro Edition (Java ME platform).
+====
 
 You can use embedded GlassFish Server in the following ways:
 
@@ -79,16 +70,12 @@ installed and configured GlassFish Server is eliminated. Therefore, you
 can run unit tests automatically in every build.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 For information on how to embed GlassFish Server in an OSGi environment,
 see the link:../add-on-component-development-guide/toc.html#GSACG[GlassFish Server Open Source Edition Add-On
 Component Development Guide].
-
-|=======================================================================
+====
 
 
 [[gkubb]][[GSESG00036]][[embedded-glassfish-server-file-system]]
@@ -138,21 +125,17 @@ GlassFish Server domain directory and are using
 `glassfish-embedded-static-shell.jar`.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you have valid nonembedded GlassFish Server as-install and domain-dir
 directories, specify both in the `BootstrapProperties` and
 `GlassFishProperties` classes respectively as described in
 link:#gihyr[Creating and Configuring an Embedded GlassFish Server].
-
-|=======================================================================
+====
 
 
 If domain-dir is not specified, GlassFish Server creates a directory
-named `gfembed`random-number`tmp` in a temporary directory, where
+named ``gfembed``random-number``tmp`` in a temporary directory, where
 random-number is a randomly generated 19-digit number. GlassFish Server
 then copies configuration files into this directory. The temporary
 directory is the value of the system property `java.io.tmpdir`. You can
@@ -174,18 +157,14 @@ method of the `GlassFishProperties` class as described in
 link:#gihyr[Creating and Configuring an Embedded GlassFish Server].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The built-in `domain.xml` file used by default by Embedded GlassFish
 Server can be downloaded from
 `http://embedded-glassfish.java.net/domain.xml`. You can customize this
 file and pass it in using the `setConfigFileURI` method while creating
 an Embedded GlassFish Server.
-
-|=======================================================================
+====
 
 
 [[giijw]][[GSESG00037]][[including-the-glassfish-server-embedded-server-api-in-applications]]
@@ -238,17 +217,12 @@ GlassFish Server, add one of the following JAR files to your class path:
   Directory].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Oracle GlassFish Server only supports use of the
 `glassfish-embedded-static-shell.jar` file. The other files are part of
-Eclipse GlassFish Server and are offered without official
-support.
-
-|=======================================================================
+Eclipse GlassFish Server and are offered without official support.
+====
 
 
 In addition, add to the class path any other JAR files or classes upon
@@ -277,18 +251,18 @@ Creating and Configuring an Embedded GlassFish Server
 To create and configure an embedded GlassFish Server, perform these
 tasks:
 
-1.  Instantiate the `org.glassfish.embeddable.BootstrapProperties`
+1. Instantiate the `org.glassfish.embeddable.BootstrapProperties`
 class.
-2.  Invoke any methods for configuration settings that you require. This
+2. Invoke any methods for configuration settings that you require. This
 is optional.
-3.  Invoke the `GlassFishRuntime.bootstrap()` or
+3. Invoke the `GlassFishRuntime.bootstrap()` or
 `GlassFishRuntime.bootstrap(BootstrapProperties)` method to create a
 `GlassFishRuntime` object.
-4.  Instantiate the `org.glassfish.embeddable.GlassFishProperties`
+4. Instantiate the `org.glassfish.embeddable.GlassFishProperties`
 class.
-5.  Invoke any methods for configuration settings that you require. This
+5. Invoke any methods for configuration settings that you require. This
 is optional.
-6.  Invoke the `glassfishRuntime.newGlassFish(GlassFishProperties)`
+6. Invoke the `glassfishRuntime.newGlassFish(GlassFishProperties)`
 method to create a `GlassFish` object.
 
 The methods of the `BootstrapProperties` class for setting the server
@@ -300,19 +274,18 @@ each configuration setting is also listed.
 Table 1-1 Methods of the `BootstrapProperties` Class
 
 [width="100%",cols="<29%,<33%,<38%",options="header",]
-|=======================================================================
+|===
 |Purpose |Method |Default Value
-|References an existing link:#gikqf[Installation Root Directory], also
-called as-install a|
-[source,oac_no_warn]
+|References an existing link:#gikqf[Installation Root Directory], also called as-install
+a|[source]
 ----
 setInstallRoot(String as-install)
 ----
 
- |None. If `glassfish-embedded-static-shell.jar` is used, the
+|None. If `glassfish-embedded-static-shell.jar` is used, the
 link:#gikqf[Installation Root Directory] is automatically determined and
 need not be specified.
-|=======================================================================
+|===
 
 
 The methods of the `GlassFishProperties` class for setting the server
@@ -324,71 +297,60 @@ each configuration setting is also listed.
 Table 1-2 Methods of the `GlassFishProperties` Class
 
 [width="100%",cols="<24%,<37%,<39%",options="header",]
-|=======================================================================
+|===
 |Purpose |Method |Default Value
 |References an existing link:#gikvf[Instance Root Directory], also
-called domain-dir a|
-[source,oac_no_warn]
+called domain-dir
+a|
+[source]
 ----
 setInstanceRoot(String domain-dir)
 ----
 
- a|
+a|
 In order of precedence:
 
-* `glassfish.embedded.tmpdir` property value specified in
-`GlassFishProperties` object
+* `glassfish.embedded.tmpdir` property value specified in `GlassFishProperties` object
 * `glassfish.embedded.tmpdir` system property value
 * `java.io.tmp` system property value
-* as-install`/domains/domain1` if a nonembedded installation is
-referenced
+* as-install``/domains/domain1`` if a nonembedded installation is referenced
 
-|Creates a new or references an existing configuration file a|
-[source,oac_no_warn]
+|Creates a new or references an existing configuration file
+a|
+[source]
 ----
 setConfigFileURI(String configFileURI)
 ----
+a|In order of precedence:
 
- a|
-In order of precedence:
-
-* domain-dir`/config/domain.xml` if domain-dir was set using
-`setInstanceRoot`
+* domain-dir``/config/domain.xml`` if domain-dir was set using `setInstanceRoot`
 * built-in embedded `domain.xml`
 
-|Specifies whether the configuration file is read-only a|
-[source,oac_no_warn]
+|Specifies whether the configuration file is read-only
+a|
+[source]
 ----
 setConfigFileReadOnly(boolean readOnly)
 ----
-
- |`true`
+|`true`
 
 |Sets the port on which Embedded GlassFish Server listens.
-|`setPort`(String networkListener, int port) |none
-|=======================================================================
+|`setPort`(String networkListener, int port)
+|none
+|===
 
-
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
-Do not use `setPort` if you are using `setInstanceRoot` or
-`setConfigFileURI`.
-
-|=======================================================================
+[NOTE]
+====
+Do not use `setPort` if you are using `setInstanceRoot` or `setConfigFileURI`.
+====
 
 
 [[GSESG00005]][[gikmz]]
-
-
 Example 1-1 Creating an Embedded GlassFish Server
 
 This example shows code for creating an Embedded GlassFish Server.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.embeddable.*;
@@ -399,8 +361,6 @@ import org.glassfish.embeddable.*;
 ----
 
 [[GSESG00006]][[gksjo]]
-
-
 Example 1-2 Creating an Embedded GlassFish Server with configuration
 customizations
 
@@ -408,11 +368,11 @@ This example shows code for creating an Embedded GlassFish Server using
 the existing domain-dir
 `C:\samples\test\applicationserver\domains\domain1`.
 
-[source,oac_no_warn]
+[source,java]
 ----
-...
+// ...
 import org.glassfish.embeddable.*;
-...
+    // ...
     BootstrapProperties bootstrapProperties = new BootstrapProperties();
     bootstrapProperties.setInstallRoot("C:\\samples\\test\\applicationserver");
     GlassFishRuntime glassfishRuntime = GlassFishRuntime.bootstrap(bootstrapProperties);
@@ -422,8 +382,7 @@ import org.glassfish.embeddable.*;
     GlassFish glassfish = glassfishRuntime.newGlassFish(glassfishProperties);
 
     glassfish.start();
-
-...
+    // ...
 ----
 
 [[gihyz]][[GSESG00044]][[running-an-embedded-glassfish-server]]
@@ -435,8 +394,7 @@ After you create an embedded GlassFish Server as described in
 link:#gihyr[Creating and Configuring an Embedded GlassFish Server], you
 can perform operations such as:
 
-* link:#gjkxx[Setting the Port of an Embedded GlassFish Server From an
-Application]
+* link:#gjkxx[Setting the Port of an Embedded GlassFish Server From an Application]
 * link:#gihzg[Starting an Embedded GlassFish Server From an Application]
 * link:#gihzy[Stopping an Embedded GlassFish Server From an Application]
 
@@ -448,16 +406,11 @@ You must set the server's HTTP or HTTPS port. If you do not set the
 port, your application fails to start and throws an exception. You can
 set the port directly or indirectly.
 
-
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Do not use `setPort` if you are using `setInstanceRoot` or
 `setConfigFileURI`. These methods set the port indirectly.
-
-|=======================================================================
+====
 
 
 * To set the port directly, invoke the `setPort` method of the
@@ -466,14 +419,12 @@ Do not use `setPort` if you are using `setInstanceRoot` or
 port. For more information, see link:#giiak[The `domain.xml` File].
 
 [[GSESG00007]][[gjkxc]]
-
-
 Example 1-3 Setting the port of an Embedded GlassFish Server
 
 This example shows code for setting the port of an embedded GlassFish
 Server.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.embeddable.*;
@@ -492,15 +443,13 @@ To start an embedded GlassFish Server, invoke the `start` method of the
 `GlassFish` object.
 
 [[GSESG00008]][[gilry]]
-
-
 Example 1-4 Starting an Embedded GlassFish Server
 
 This example shows code for setting the port and starting an embedded
 GlassFish Server. This example also includes the code from
 link:#gikmz[Example 1-1] for creating a `GlassFish` object.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.embeddable.*;
@@ -530,8 +479,6 @@ To stop an embedded GlassFish Server, invoke the `stop` method of an
 existing `GlassFish` object.
 
 [[GSESG00009]][[gilnz]]
-
-
 Example 1-5 Stopping an Embedded GlassFish Server
 
 This example shows code for prompting the user to press the Enter key to
@@ -539,7 +486,7 @@ stop an embedded GlassFish Server. Code for creating a `GlassFish`
 object is not shown in this example. For an example of code for creating
 a `GlassFish` object, see link:#gikmz[Example 1-1].
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import java.io.BufferedReader;
@@ -566,8 +513,7 @@ ready to run. By default, an application is enabled when it is deployed.
 
 The following topics are addressed here:
 
-* link:#gilrf[To Deploy an Application From an Archive File or a
-Directory]
+* link:#gilrf[To Deploy an Application From an Archive File or a Directory]
 * link:#gilpm[Undeploying an Application]
 * link:#gjrcs[Creating a Scattered Archive]
 * link:#gkvgc[Creating a Scattered Enterprise Archive]
@@ -601,21 +547,21 @@ Server Open Source Edition Application Deployment Guide.
 If some of the resources needed by an application are not under the
 application's directory, see link:#gjrcs[Creating a Scattered Archive].
 
-1.  Instantiate the `java.io.File` class to represent the archive file
-or directory.
-2.  Invoke the `getDeployer` method of the `GlassFish` object to get an
+1. Instantiate the `java.io.File` class to represent the archive file or directory.
+
+2. Invoke the `getDeployer` method of the `GlassFish` object to get an
 instance of the `org.glassfish.embeddable.Deployer` class.
-3.  Invoke the `deploy``(File` archive`,` params`)` method of the
+
+3. Invoke the `deploy(File archive, String... params)` method of the
 instance of the `Deployer` object. +
 Specify the `java.io.File` class instance you created previously as the
 first method parameter. +
 For information about optional parameters you can set, see the
-descriptions of the link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] subcommand parameters.
+descriptions of the
+link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] subcommand parameters.
 Simply quote each parameter in the method, for example `"--force=true"`.
 
 [[GSESG00010]][[gioph]]
-
-
 Example 1-6 Deploying an Application From an Archive File
 
 This example shows code for deploying an application from the archive
@@ -624,7 +570,7 @@ force parameters. This example also includes the code from
 link:#gikmz[Example 1-1] for creating `GlassFishProperties` and
 `GlassFish` objects.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import java.io.File;
@@ -654,18 +600,14 @@ run in GlassFish Server. For example, before stopping GlassFish Server,
 undeploy all applications that are running in GlassFish Server.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you reference a nonembedded GlassFish Server installation using the
 `glassfish-embedded-static-shell.jar` file and do not undeploy your
 applications in the same server life cycle in which you deployed them,
 expanded archives for these applications remain under the
 domain-dir`/applications` directory.
-
-|=======================================================================
+====
 
 
 To undeploy an application, invoke the `undeploy` method of an existing
@@ -674,7 +616,8 @@ application as a parameter. This name is specified when the application
 is deployed.
 
 For information about optional parameters you can set, see the
-descriptions of the link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] command parameters.
+descriptions of the
+link:../reference-manual/deploy.html#GSRFM00114[`deploy`(1)] command parameters.
 Simply quote each parameter in the method, for example
 `"--cascade=true"`.
 
@@ -683,14 +626,12 @@ of an existing `EmbeddedDeployer` object. This method takes no
 parameters.
 
 [[GSESG00011]][[gilwu]]
-
-
 Example 1-7 Undeploying an Application
 
 This example shows code for undeploying the application that was
 deployed in link:#gioph[Example 1-6].
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.embeddable.*;
@@ -717,11 +658,9 @@ deploying the module.
 
 To create a scattered archive, perform these tasks:
 
-1.  Instantiate the `org.glassfish.embeddable.archive.ScatteredArchive`
-class.
-2.  Invoke the `addClassPath` and `addMetadata` methods if you require
-them.
-3.  Invoke the `toURI` method to deploy the scattered archive.
+1. Instantiate the `org.glassfish.embeddable.archive.ScatteredArchive` class.
+2. Invoke the `addClassPath` and `addMetadata` methods if you require them.
+3. Invoke the `toURI` method to deploy the scattered archive.
 
 The methods of this class for setting the scattered archive
 configuration are listed in the following table. The default value of
@@ -732,68 +671,62 @@ each configuration setting is also listed.
 Table 1-3 Constructors and Methods of the `ScatteredArchive` Class
 
 [width="100%",cols="<52%,<38%,<10%",options="header",]
-|=======================================================================
+|===
 |Purpose |Method |Default Value
-|Creates and names a scattered archive a|
-[source,oac_no_warn]
+|Creates and names a scattered archive
+a|[source,java]
 ----
-ScatteredArchive(String name,
-ScatteredArchive.Type type)
+ScatteredArchive(String name, ScatteredArchive.Type type)
 ----
 
- |None
+|None
 
 |Creates and names a scattered archive based on a top-level directory.
 If the entire module is organized under the topDir, this is the only
 method necessary. The topDir can be null if other methods specify the
-remaining parts of the module. a|
-[source,oac_no_warn]
+remaining parts of the module.
+a|[source,java]
 ----
-ScatteredArchive(String name,
-ScatteredArchive.Type type,
-File topDir)
+ScatteredArchive(String name, ScatteredArchive.Type type, File topDir)
 ----
 
- |None
+|None
 
-|Adds a directory to the classes classpath a|
-[source,oac_no_warn]
+|Adds a directory to the classes classpath
+a|[source,java]
 ----
 addClassPath(File path)
 ----
 
- |None
+|None
 
-|Adds a metadata locator a|
-[source,oac_no_warn]
+|Adds a metadata locator
+a|[source,java]
 ----
 addMetaData(File path)
 ----
 
- |None
+|None
 
-|Adds and names a metadata locator a|
-[source,oac_no_warn]
+|Adds and names a metadata locator
+a|[source,java]
 ----
-addMetaData(File path,
-String name)
+addMetaData(File path, String name)
 ----
 
- |None
+|None
 
 |Gets the deployable URI for this scattered archive a|
-[source,oac_no_warn]
+[source,java]
 ----
 toURI()
 ----
 
- |None
-|=======================================================================
+|None
+|===
 
 
 [[GSESG00012]][[gjrfq]]
-
-
 Example 1-8 Deploying an Application From a Scattered Archive
 
 This example shows code for creating a WAR file and using the
@@ -801,7 +734,7 @@ This example shows code for creating a WAR file and using the
 code from link:#gioph[Example 1-6] for deploying an application from an
 archive file.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import java.io.File;
@@ -848,11 +781,11 @@ deploying the application.
 
 To create a scattered enterprise archive, perform these tasks:
 
-1.  Instantiate the
+1. Instantiate the
 `org.glassfish.embeddable.archive.ScatteredEnterpriseArchive` class.
-2.  Invoke the `addArchive` and `addMetadata` methods if you require
+2. Invoke the `addArchive` and `addMetadata` methods if you require
 them.
-3.  Invoke the `toURI` method to deploy the scattered enterprise
+3. Invoke the `toURI` method to deploy the scattered enterprise
 archive.
 
 The methods of this class for setting the scattered enterprise archive
@@ -865,80 +798,75 @@ Table 1-4 Constructors and Methods of the `ScatteredEnterpriseArchive`
 Class
 
 [width="99%",cols="<42%,<48%,<10%",options="header",]
-|=====================================================
+|===
 |Purpose |Method |Default Value
 |Creates and names a scattered enterprise archive a|
-[source,oac_no_warn]
+[source,java]
 ----
 ScatteredEnterpriseArchive(String name)
 ----
 
  |None
 |Adds a module or library a|
-[source,oac_no_warn]
+[source,java]
 ----
 addArchive(File archive)
 ----
 
  |None
 |Adds a module or library a|
-[source,oac_no_warn]
+[source,java]
 ----
-addArchive(File archive,
-String name)
+addArchive(File archive, String name)
 ----
 
  |None
 |Adds a module or library a|
-[source,oac_no_warn]
+[source,java]
 ----
 addArchive(URI URI)
 ----
 
  |None
 |Adds a module or library a|
-[source,oac_no_warn]
+[source,java]
 ----
-addArchive(URI URI,
-String name)
+addArchive(URI URI, String name)
 ----
 
  |None
 |Adds a metadata locator a|
-[source,oac_no_warn]
+[source,java]
 ----
 addMetaData(File path)
 ----
 
  |None
 |Adds and names a metadata locator a|
-[source,oac_no_warn]
+[source,java]
 ----
-addMetaData(File path,
-String name)
+addMetaData(File path, String name)
 ----
 
  |None
 |Gets the deployable URI for this scattered archive a|
-[source,oac_no_warn]
+[source,java]
 ----
 toURI()
 ----
 
  |None
-|=====================================================
+|===
 
 
 [[GSESG00013]][[gkvga]]
-
-
 Example 1-9 Deploying an Application From a Scattered Enterprise Archive
 
 This example shows code for creating an EAR file and using the
 `addArchive` and `addMetadata` methods. This example also includes code
 similar tolink:#gjrfq[Example 1-8] for creating a scattered archive.
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import java.io.File;
@@ -1001,16 +929,12 @@ of the link:../reference-manual/toc.html#GSRFM[GlassFish Server Open Source Edit
 Manual].
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Ensure that your application has started an embedded GlassFish Server
 before the application attempts to run `asadmin` commands. For more
 information, see link:#gihyz[Running an Embedded GlassFish Server].
-
-|=======================================================================
+====
 
 
 The `org.glassfish.embeddable` package contains classes that you can use
@@ -1019,8 +943,6 @@ and change the command name, parameter names, and parameter values as
 needed.
 
 [[GSESG00014]][[gjldj]]
-
-
 Example 1-10 Running an `asadmin create-jdbc-resource` Command
 
 This example shows code for running an `asadmin create-jdbc-resource`
@@ -1028,7 +950,7 @@ command. Code for creating and starting the server is not shown in this
 example. For an example of code for creating and starting the server,
 see link:#gilry[Example 1-4].
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.embeddable.*;
@@ -1042,8 +964,6 @@ import org.glassfish.embeddable.*;
 ----
 
 [[GSESG00015]][[gjlfm]]
-
-
 Example 1-11 Running an `asadmin set-log-level` Command
 
 This example shows code for running an `asadmin set-log-level` command.
@@ -1051,7 +971,7 @@ Code for creating and starting the server is not shown in this example.
 For an example of code for creating and starting the server, see
 link:#gilry[Example 1-4].
 
-[source,oac_no_warn]
+[source,java]
 ----
 ...
 import org.glassfish.embeddable.*;
@@ -1072,8 +992,6 @@ Sample Applications
 ^^^^^^^^^^^^^^^^^^^
 
 [[GSESG00016]][[gionq]]
-
-
 Example 1-12 Using an Existing `domain.xml` File and Deploying an
 Application From an Archive File
 
@@ -1085,7 +1003,7 @@ preserving this file when the application is stopped.
 * Deploying an application from the archive file
 `c:\samples\simple.war`.
 
-[source,oac_no_warn]
+[source,java]
 ----
 import java.io.File;
 import java.io.BufferedReader;
@@ -1096,7 +1014,6 @@ public class Main {
      /**
      * @param args the command line arguments
      */
-
     public static void main(String[] args) {
         File configFile = new File ("c:\\myapp\\embeddedserver\\domains\\domain1\\config\\domain.xml");
         File war = new File("c:\\samples\\simple.war");
@@ -1146,8 +1063,7 @@ The following topics are addressed here:
 * link:#gihus[To Set Up Your Maven Environment]
 * link:#giivt[To Build and Start an Application From Maven]
 * link:#gijly[To Stop Embedded GlassFish Server]
-* link:#gijjn[To Redeploy an Application That Was Built and Started From
-Maven]
+* link:#gijjn[To Redeploy an Application That Was Built and Started From Maven]
 * link:#gjkps[Maven Goals for Embedded GlassFish Server]
 
 Predefined Maven goals for embedded GlassFish Server are described in
@@ -1175,9 +1091,11 @@ Before You Begin
 Ensure that http://maven.apache.org/[Apache Maven]
 (`http://maven.apache.org/`) is installed.
 
-1.  Identify the Maven plug-in for embedded GlassFish Server. +
-Add the following `plugin` element to your POM file: +
-[source,oac_no_warn]
+1. Identify the Maven plug-in for embedded GlassFish Server.
++
+Add the following `plugin` element to your POM file:
++
+[source,xml]
 ----
 ...
         ...
@@ -1194,14 +1112,16 @@ Add the following `plugin` element to your POM file: +
 ----
 version::
   The version to use. The version of the final promoted build for this
-  release is `3.1`. The Maven plug-in is not bound to a specific version
+  release is `3.1.1`. The Maven plug-in is not bound to a specific version
   of GlassFish Server. You can specify the version you want to use. If
-  no version is specified, a default version, 3.1 for this release, is
-  used.
-2.  Configure the `embedded-glassfish` goal prefix, the application
-name, and other standard settings. +
-Add the following `configuration` element to your POM file: +
-[source,oac_no_warn]
+  no version is specified, a default version is used.
+
+2. Configure the `embedded-glassfish` goal prefix, the application
+name, and other standard settings.
++
+Add the following `configuration` element to your POM file:
++
+[source,xml]
 ----
 ...
         <plugins>
@@ -1223,13 +1143,16 @@ Add the following `configuration` element to your POM file: +
         </plugins>
 ...
 ----
-In the app parameter, substitute the archive file or directory for your
-application. The optional port, contextRoot, and autoDelete parameters
-show example values. For details, see link:#gjkps[Maven Goals for
-Embedded GlassFish Server].
-3.  Perform advanced plug-in configuration. This step is optional. +
-Add the following `configuration` element to your POM file: +
-[source,oac_no_warn]
+app::
+  In the app parameter, substitute the archive file or directory for your
+  application. The optional port, contextRoot, and autoDelete parameters
+  show example values. For details, see link:#gjkps[Maven Goals for
+  Embedded GlassFish Server].
+
+3. Perform advanced plug-in configuration. This step is optional.
+Add the following `configuration` element to your POM file:
++
+[source,xml]
 ----
 ...
         <plugins>
@@ -1273,9 +1196,11 @@ Add the following `configuration` element to your POM file: +
         </plugins>
 ...
 ----
-4.  Configure Maven goals. +
-Add `execution` elements to your POM file: +
-[source,oac_no_warn]
+
+4. Configure Maven goals.
+Add `execution` elements to your POM file:
++
+[source,xml]
 ----
 ...
         <plugins>
@@ -1297,11 +1222,12 @@ Add `execution` elements to your POM file: +
 ...
 ----
 goal::
-  The goal to use. See link:#gjkps[Maven Goals for Embedded GlassFish
-  Server].
-5.  Configure the repository. +
-Add the following `repository` element to your POM file: +
-[source,oac_no_warn]
+  The goal to use. See link:#gjkps[Maven Goals for Embedded GlassFish Server].
+
+5. Configure the repository.
+Add the following `repository` element to your POM file:
++
+[source,xml]
 ----
 <pluginRepositories>
     <pluginRepository>
@@ -1313,15 +1239,11 @@ Add the following `repository` element to your POM file: +
 ----
 
 [[GSESG00017]][[gjkod]]
+Example 1-13 POM File for Configuring Maven to Use Embedded GlassFish Server
 
+This example shows a POM file for configuring Maven to use embedded GlassFish Server.
 
-Example 1-13 POM File for Configuring Maven to Use Embedded GlassFish
-Server
-
-This example shows a POM file for configuring Maven to use embedded
-GlassFish Server.
-
-[source,oac_no_warn]
+[source,xml]
 ----
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
@@ -1387,14 +1309,15 @@ Before You Begin
 Ensure that your Maven environment is configured, as described in
 link:#gihus[To Set Up Your Maven Environment].
 
-1.  Include the path to the Maven executable file `mvn` in your path
+1. Include the path to the Maven executable file `mvn` in your path
 statement.
-2.  Ensure that the `JAVA_HOME` environment variable is defined.
-3.  Create a directory for the Maven project for your application.
-4.  Copy to your project directory the POM file that you created in
+2. Ensure that the `JAVA_HOME` environment variable is defined.
+3. Create a directory for the Maven project for your application.
+4. Copy to your project directory the POM file that you created in
 link:#gihus[To Set Up Your Maven Environment].
-5.  Run the following command in your project directory: +
-[source,oac_no_warn]
+5. Run the following command in your project directory:
++
+[source]
 ----
 mvn install
 ----
@@ -1402,7 +1325,8 @@ This command performs the following actions:
 * Installs the Maven repository in a directory named `.m2` under your
 home directory.
 * Starts Embedded GlassFish Server.
-* Deploys your application. +
+* Deploys your application.
++
 The application continues to run in Embedded GlassFish Server until
 Embedded GlassFish Server is stopped.
 
@@ -1411,11 +1335,12 @@ Embedded GlassFish Server is stopped.
 To Stop Embedded GlassFish Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  Change to the root directory of the Maven project for your
+1. Change to the root directory of the Maven project for your
 application.
-2.  Run the Maven goal to stop the application in embedded GlassFish
-Server. +
-[source,oac_no_warn]
+2. Run the Maven goal to stop the application in embedded GlassFish
+Server.
++
+[source]
 ----
 mvn embedded-glassfish:stop
 ----
@@ -1467,32 +1392,27 @@ parameters described in the following table.
 Table 1-5 `embedded-glassfish:run` Parameters
 
 [width="100%",cols="<18%,<42%,<40%",options="header",]
-|=======================================================================
+|===
 |Parameter |Default |Description
-|app |None |The archive file or directory for the application to be
-deployed.
+|app |None |The archive file or directory for the application to be deployed.
 
 |serverID |`maven` |(optional) The ID of the server to start.
 
-|containerType |`all` |(optional) The container to start: `web`, `ejb`,
-`jpa`, or `all`.
+|containerType |`all` |(optional) The container to start: `web`, `ejb`, `jpa`, or `all`.
 
-|installRoot |None |(optional) The link:#gikqf[Installation Root
-Directory].
+|installRoot |None |(optional) The link:#gikqf[Installation Root Directory].
 
 |instanceRoot a|
 In order of precedence:
 
-* `glassfish.embedded.tmpdir` property value specified in
-`GlassFishProperties` object
+* `glassfish.embedded.tmpdir` property value specified in `GlassFishProperties` object
 * `glassfish.embedded.tmpdir` system property value
 * `java.io.tmp` system property value
-* as-install`/domains/domain1` if a nonembedded installation is
-referenced
+* as-install``/domains/domain1`` if a nonembedded installation is referenced
 
  |(optional) The link:#gikvf[Instance Root Directory]
 
-|configFile |domain-dir`/config/domain.xml` |(optional) The
+|configFile |domain-dir``/config/domain.xml`` |(optional) The
 configuration file.
 
 |port |None. Must be set explicitly or defined in the configuration
@@ -1502,8 +1422,7 @@ file. |The HTTP or HTTPS port.
 In order of precedence:
 
 * The `application-name` or `module-name` in the deployment descriptor.
-* The name of the archive file without the extension or the directory
-name.
+* The name of the archive file without the extension or the directory name.
 
 For more information, see "link:../application-deployment-guide/overview.html#GSDPG00323[Naming Standards]" in
 Eclipse GlassFish Server Application Deployment Guide.
@@ -1541,7 +1460,7 @@ Root Directory] when the server is stopped.
 Caution: Do not set `autoDelete` to `true` if you are using
 `installRoot` to refer to a preexisting GlassFish Server installation.
 
-|=======================================================================
+|===
 
 
 [[gjkwy]][[GSESG00049]][[embedded-glassfishstart-goal]]
@@ -1557,7 +1476,7 @@ following table.
 Table 1-6 `embedded-glassfish:start` Parameters
 
 [width="100%",cols="<17%,<38%,<45%",options="header",]
-|=======================================================================
+|===
 |Parameter |Default |Description
 |serverID |`maven` |(optional) The ID of the server to start.
 
@@ -1589,7 +1508,7 @@ Root Directory] when the server is stopped.
 Caution: Do not set `autoDelete` to `true` if you are using
 `installRoot` to refer to a preexisting GlassFish Server installation.
 
-|=======================================================================
+|===
 
 
 [[gjkvc]][[GSESG00050]][[embedded-glassfishdeploy-goal]]
@@ -1607,7 +1526,7 @@ described in the following table.
 Table 1-7 `embedded-glassfish:deploy` Parameters
 
 [width="100%",cols="<18%,<39%,<43%",options="header",]
-|=======================================================================
+|===
 |Parameter |Default |Description
 |app |None |The archive file or directory for the application to be
 deployed.
@@ -1640,7 +1559,7 @@ CloudScape), and `sybase`, case-insensitive.
 |createTables |Value of the `create-tables-at-deploy` attribute in
 `sun-ejb-jar.xml`. |(optional) If `true`, creates database tables during
 deployment for beans that are automatically mapped by the EJB container.
-|=======================================================================
+|===
 
 
 [[gjkvg]][[GSESG00051]][[embedded-glassfishundeploy-goal]]
@@ -1649,18 +1568,14 @@ deployment for beans that are automatically mapped by the EJB container.
 ++++++++++++++++++++++++++++++++++
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 If you reference a nonembedded GlassFish Server installation using the
 `glassfish-embedded-static-shell.jar` file and do not undeploy your
 applications in the same server life cycle in which you deployed them,
 expanded archives for these applications remain under the
 domain-dir`/applications` directory.
-
-|=======================================================================
+====
 
 
 This goal undeploys an application. You can set the parameters described
@@ -1671,7 +1586,7 @@ in the following table.
 Table 1-8 `embedded-glassfish:undeploy` Parameters
 
 [width="100%",cols="<14%,<34%,<52%",options="header",]
-|=======================================================================
+|===
 |Parameter |Default |Description
 |name |If the name is omitted, all applications are undeployed. |The
 name of the application.
@@ -1697,7 +1612,7 @@ associated with the resource adapter.
 This attribute is applicable to connectors (resource adapters) and
 applications with connector modules.
 
-|=======================================================================
+|===
 
 
 [[gjkyl]][[GSESG00052]][[embedded-glassfishstop-goal]]
@@ -1713,10 +1628,10 @@ following table.
 Table 1-9 `embedded-glassfish:stop` Parameters
 
 [width="100%",cols="<16%,<17%,<67%",options="header",]
-|===========================================================
+|===
 |Parameter |Default |Description
 |serverID |`maven` |(optional) The ID of the server to stop.
-|===========================================================
+|===
 
 
 [[gjkxq]][[GSESG00053]][[embedded-glassfishadmin-goal]]
@@ -1736,7 +1651,7 @@ table.
 Table 1-10 `embedded-glassfish:start` Parameters
 
 [width="100%",cols="<24%,<10%,<66%",options="header",]
-|=======================================================================
+|===
 |Parameter |Default |Description
 |serverID |`maven` |(optional) The ID of the server on which to run the
 command.
@@ -1749,7 +1664,7 @@ command.
 `http://glassfish.java.net/nonav/docs/v3/api/`.
 
 |commandLine |None |The full `asadmin` syntax of the command.
-|=======================================================================
+|===
 
 
 [[gjlde]][[GSESG00039]][[using-the-ejb-3.1-embeddable-api-with-embedded-glassfish-server]]
@@ -1807,47 +1722,49 @@ GlassFish Server]
 To Use the EJB 3.1 Embeddable API with Embedded GlassFish Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-1.  To specify GlassFish Server as the Container Provider, include
+1. To specify GlassFish Server as the Container Provider, include
 `glassfish-embedded-static-shell.jar` or `glassfish-embedded-all.jar` in
-the class path of your embeddable EJB application. +
+the class path of your embeddable EJB application.
++
 Reference the `glassfish-embedded-static-shell.jar` file from the
 as-install`/lib/embedded` directory of a GlassFish Server installation.
-Do not move this file or it will not work. +
+Do not move this file or it will not work.
++
 See link:#giide[Setting the Class Path] and Section 22.3.3 of the EJB
 3.1 Specification, Embeddable Container Bootstrapping.
-2.  Configure any required resources. +
+2. Configure any required resources.
++
 For more information about configuring resources, see the Administration
 Console Online Help or "link:../administration-guide/toc.html#GSADG00298[Resources and Services
 Administration]" in Eclipse GlassFish Server Administration
 Guide. The `jdbc/__default` Java DB database is preconfigured with all
 distributions of GlassFish Server. However, if you are using
 `glassfish-embedded-static-shell.jar`, you must start the database
-manually. +
+manually.
++
 If your embeddable EJB application uses Java Persistence, you do not
 need to specify a JDBC resource. See link:#gksmw[Default Java
 Persistence Data Source for Embedded GlassFish Server].
-3.  Invoke one of the `createEJBContainer` methods. +
+3. Invoke one of the `createEJBContainer` methods.
++
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 Do not deploy your embeddable EJB application or any of its dependent
 Java EE modules before invoking one of the `createEJBContainer` methods.
 These methods perform deployment in the background and do not load
 previously deployed applications or modules.
+====
 
-|=======================================================================
-
-4.  To change the link:#gikvf[Instance Root Directory], set the
+4. To change the link:#gikvf[Instance Root Directory], set the
 `org.glassfish.ejb.embedded.glassfish.instance.root` system property
-value by using the `createEJBContainer``(Map<?, ?> properties)` method. +
+value by using the `createEJBContainer``(Map<?, ?> properties)` method.
++
 The default link:#gikvf[Instance Root Directory] location is
 as-install`/domains/domain1` if a nonembedded installation is
 referenced. This system property applies only to embeddable EJB
 applications used with nonembedded GlassFish Server.
-5.  Close the EJB container properly to release all acquired resources
+5. Close the EJB container properly to release all acquired resources
 and threads.
 
 [[gksnv]][[GSESG00063]][[ejb-3.1-embeddable-api-properties]]
@@ -1867,7 +1784,7 @@ name of the `installation.root` property is
 Table 1-11 EJB 3.1 Embeddable API Properties
 
 [width="100%",cols="<30%,<39%,<31%",options="header",]
-|=======================================================================
+|===
 |Property |Default |Description
 |`installation.root` |GlassFish Server installation location from which
 `glassfish-embedded-static-shell.jar` is referenced |The
@@ -1905,13 +1822,12 @@ instance could be in use by the running nonembedded GlassFish Server.
 |`skip-client-modules` |`false` |If `true`, omits modules from the
 classpath if they are not specified using `EJBContainer.MODULES` and
 have a manifest file with a `Main-Class` attribute.
-|=======================================================================
+|===
 
 
 [[gjxff]][[GSESG00064]][[using-maven-with-the-ejb-3.1-embeddable-api-and-embedded-glassfish-server]]
 
-Using Maven with the EJB 3.1 Embeddable API and Embedded GlassFish
-Server
+Using Maven with the EJB 3.1 Embeddable API and Embedded GlassFish Server
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 When using Maven with the EJB 3.1 Embeddable API and Embedded GlassFish
@@ -1920,15 +1836,13 @@ and stop Embedded GlassFish Server manually or programmatically outside
 of Maven.
 
 [[GSESG00018]][[gjxds]]
-
-
 Example 1-14 Maven POM File for Using the EJB 3.1 Embeddable API with
 Embedded GlassFish Server
 
 This example shows a POM file for configuring Maven to use the EJB 3.1
 Embeddable API with Embedded GlassFish Server.
 
-[source,oac_no_warn]
+[source,xml]
 ----
 <!--
 Line breaks in the following element are for readability purposes only
@@ -2003,14 +1917,12 @@ Both these ways use logger names. For a list of logger names, use the
 link:../reference-manual/list-log-levels.html#GSRFM00183[`list-log-levels`] subcommand.
 
 [[GSESG00019]][[gkrhh]]
-
-
 Example 1-15 Using the GlassFish Server Embedded Server API
 
 This example shows how to set log levels using the `getLogger` method in
 the API.
 
-[source,oac_no_warn]
+[source,java]
 ----
 import org.glassfish.embeddable.*;
 
@@ -2032,14 +1944,12 @@ glassfish.dispose();
 ----
 
 [[GSESG00020]][[gkrgw]]
-
-
 Example 1-16 Creating a Custom Logging Configuration File
 
 This example shows the contents of a custom logging configuration file,
 `customlogging.properties`.
 
-[source,oac_no_warn]
+[source]
 ----
 handlers= java.util.logging.ConsoleHandler
 java.util.logging.ConsoleHandler.level = FINEST
@@ -2050,7 +1960,7 @@ jakarta.enterprise.system.level = FINEST
 Pass the name of this custom logging configuration file to the `java`
 command when you invoke Embedded GlassFish Server. For example:
 
-[source,oac_no_warn]
+[source]
 ----
 java -Djava.util.logging.config.file=customlogging.properties MyEmbeddedGlassFish
 ----

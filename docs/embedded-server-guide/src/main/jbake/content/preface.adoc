@@ -4,6 +4,7 @@ title=Preface
 next=embedded-server-guide.html
 prev=title.html
 ~~~~~~
+
 Preface
 =======
 
@@ -13,18 +14,17 @@ Preface
 -------
 
 [NOTE]
-========================================================================
-
-This documentation is part of the Java Enterprise Edition contribution 
-to the Eclipse Foundation and is not intended for use in relation to 
-Java Enterprise Edition or Orace GlassFish. The documentation is in the 
-process of being revised to reflect the new Jakarta EE branding. 
-Additional changes will be made as requirements and procedures evolve 
-for Jakarta EE. Where applicable, references to Java EE or Java 
-Enterprise Edition should be considered references to Jakarta EE. 
+====
+This documentation is part of the Java Enterprise Edition contribution
+to the Eclipse Foundation and is not intended for use in relation to
+Java Enterprise Edition or Orace GlassFish. The documentation is in the
+process of being revised to reflect the new Jakarta EE branding.
+Additional changes will be made as requirements and procedures evolve
+for Jakarta EE. Where applicable, references to Java EE or Java
+Enterprise Edition should be considered references to Jakarta EE.
 
 Please see the Title page for additional license information.
-========================================================================
+====
 
 This document explains how to run applications in embedded GlassFish
 Server Open Source Edition and to develop applications in which
@@ -33,11 +33,8 @@ who are developing applications to run in embedded GlassFish Server. The
 ability to program in the Java language is assumed.
 
 
-[width="100%",cols="<100%",]
-|=======================================================================
-a|
-Note:
-
+[NOTE]
+====
 The main thrust of the GlassFish Server Open Source Edition 4.0 release
 is to provide an application server for developers to explore and begin
 exploiting the new and updated technologies in the Java EE 7 platform.
@@ -45,8 +42,7 @@ Thus, the embedded server feature of GlassFish Server was not a focus of
 this release. This feature is included in the release, but it may not
 function properly with some of the new features added in support of the
 Java EE 7 platform.
-
-|=======================================================================
+====
 
 
 This preface contains information about and conventions for the entire
@@ -81,7 +77,7 @@ system installation. For an introduction to GlassFish Server, refer to
 the books in the order in which they are listed in the following table.
 
 [width="100%",cols="<30%,<70%",options="header",]
-|=======================================================================
+|===
 |Book Title |Description
 |link:../release-notes/toc.html#GSRLN[Release Notes] |Provides late-breaking information about
 the software and the documentation and includes a comprehensive,
@@ -169,7 +165,7 @@ programming and reference information for developers working with
 Message Queue who want to use the C language binding to the Message
 Queue messaging service to send, receive, and process Message Queue
 messages.
-|=======================================================================
+|===
 
 
 [[GSESG00028]][[giprl]]
@@ -238,7 +234,7 @@ The following table describes the typographic changes that are used in
 this book.
 
 [width="100%",cols="<14%,<37%,<49%",options="header",]
-|=======================================================================
+|===
 |Typeface |Meaning |Example
 |`AaBbCc123` |The names of commands, files, and directories, and
 onscreen computer output a|
@@ -264,7 +260,7 @@ A cache is a copy that is stored locally.
 
 Do not save the file.
 
-|=======================================================================
+|===
 
 
 [[GSESG00030]][[fquvc]]
@@ -277,7 +273,7 @@ Symbol Conventions
 The following table explains symbols that might be used in this book.
 
 [width="100%",cols="<10%,<26%,<28%,<36%",options="header",]
-|=======================================================================
+|===
 |Symbol |Description |Example |Meaning
 |`[ ]` |Contains optional arguments and command options. |`ls [-l]` |The
 `-l` option is not required.
@@ -298,7 +294,7 @@ Control key, release it, and then press the subsequent keys.
 |> |Indicates menu item selection in a graphical user interface. |File >
 New > Templates |From the File menu, choose New. From the New submenu,
 choose Templates.
-|=======================================================================
+|===
 
 
 [[GSESG00031]][[ghpfg]]
@@ -312,7 +308,7 @@ The following table describes the default paths and file names that are
 used in this book.
 
 [width="100%",cols="<14%,<34%,<52%",options="header",]
-|=======================================================================
+|===
 |Placeholder |Description |Default Value
 |as-install + a|
 Represents the base installation directory for GlassFish Server.
@@ -356,7 +352,7 @@ In configuration files, domain-dir is represented as follows:
 
 |instance-dir + |Represents the directory for a server instance.
 |domain-dir`/`instance-name
-|=======================================================================
+|===
 
 
 
